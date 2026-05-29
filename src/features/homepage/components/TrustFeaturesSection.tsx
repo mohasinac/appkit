@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Grid, Heading, Section, Span, Text } from "../../../ui";
+import { Div, Grid, Heading, Section, Span, Text } from "../../../ui";
 
 // --- Types -------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ function TrustFeatureCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="trustfeaturessection-div-373">
       {/* Icon box */}
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30 flex-shrink-0" data-section="trustfeaturessection-div-374">
+      <Div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30 flex-shrink-0">
         {item.renderIcon ? (
           item.renderIcon({ className: "w-7 h-7" })
         ) : (
@@ -51,7 +51,7 @@ function TrustFeatureCard({
             ✓
           </Span>
         )}
-      </div>
+      </Div>
 
       <Heading
         level={3}
@@ -70,7 +70,7 @@ function TrustFeatureCard({
 
 function TrustStripItem({ item }: { item: TrustFeatureItem }) {
   return (
-    <div className="inline-flex flex-shrink-0 items-center gap-2 px-6" data-section="trustfeaturessection-div-375">
+    <Div className="inline-flex flex-shrink-0 items-center gap-2 px-6">
       {item.renderIcon ? (
         item.renderIcon({ className: "w-5 h-5" })
       ) : (
@@ -84,7 +84,7 @@ function TrustStripItem({ item }: { item: TrustFeatureItem }) {
       <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 whitespace-nowrap">
         {item.title}
       </Text>
-    </div>
+    </Div>
   );
 }
 
@@ -123,11 +123,11 @@ export function TrustFeaturesSection({
         ref={sectionRef}
         className={`py-4 overflow-hidden border-y border-zinc-100 dark:border-slate-800 ${className}`}
       >
-        <div className="flex animate-marquee" data-section="trustfeaturessection-div-376">
+        <Div className="flex animate-marquee">
           {doubled.map((item, i) => (
             <TrustStripItem key={`${item.iconName}-${i}`} item={item} />
           ))}
-        </div>
+        </Div>
       </Section>
     );
   }
@@ -137,16 +137,16 @@ export function TrustFeaturesSection({
       ref={sectionRef}
       className={`py-14 px-4 bg-zinc-50 dark:bg-slate-900/80 ${className}`}
     >
-      <div className="max-w-6xl mx-auto" data-section="trustfeaturessection-div-377">
+      <Div className="max-w-6xl mx-auto">
         {title && (
-          <div className="text-center mb-8" data-section="trustfeaturessection-div-378">
+          <Div className="text-center mb-8">
             <Heading
               level={2}
               className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100"
             >
               {title}
             </Heading>
-          </div>
+          </Div>
         )}
         <Grid
           gap="lg"
@@ -161,7 +161,7 @@ export function TrustFeaturesSection({
             />
           ))}
         </Grid>
-      </div>
+      </Div>
     </Section>
   );
 }

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, HorizontalScroller, Section, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
@@ -73,9 +73,9 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
           className="h-16 w-16 rounded object-contain"
         />
       ) : (
-        <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
+        <Div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
           {initial}
-        </div>
+        </Div>
       )}
       <Text className="w-full truncate text-center text-xs font-medium text-zinc-700 dark:text-zinc-300">
         {brand.name}
@@ -111,8 +111,8 @@ export function BrandsSection({
 
   return (
     <Section className={`py-12 px-4 ${themed.bgSecondary} ${className}`}>
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex items-center justify-between">
+      <Div className="mx-auto max-w-7xl">
+        <Div className="mb-6 flex items-center justify-between">
           <>
             <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>
               {title}
@@ -128,20 +128,20 @@ export function BrandsSection({
               {viewMoreLabel}
             </Link>
           )}
-        </div>
+        </Div>
 
         {/* Filter chips */}
         {showFeaturedChip && !isLoading && (
-          <div className="mb-4 flex flex-wrap gap-2">
+          <Div className="mb-4 flex flex-wrap gap-2">
             <BrandFilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
             <BrandFilterChip label="Featured" active={activeFilter === "featured"} onClick={() => setActiveFilter(activeFilter === "featured" ? "all" : "featured")} />
-          </div>
+          </Div>
         )}
 
         {isLoading ? (
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-32 w-36 flex-none animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700 md:h-40" />
+              <Div key={i} className="h-32 w-36 flex-none animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700 md:h-40" />
             ))}
           </div>
         ) : (
@@ -158,13 +158,13 @@ export function BrandsSection({
 
         {/* CTA button */}
         {cta && !isLoading && (
-          <div className="mt-6 text-center">
+          <Div className="mt-6 text-center">
             <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
               {cta.label}
             </Link>
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

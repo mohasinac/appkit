@@ -75,11 +75,11 @@ export function FeaturedResultsSection({
         )}
       </Div>
 
-      <div className="mx-auto max-w-7xl">
+      <Div className="mx-auto max-w-7xl">
         <HorizontalScroller
           items={items}
           renderItem={(item: FeaturedResultItem, i: number) => (
-            <div className="w-full sm:w-auto">
+            <Div className="w-full sm:w-auto">
               <BeforeAfterCard
                 key={item.id ?? `result-${i}`}
                 item={{
@@ -90,7 +90,7 @@ export function FeaturedResultsSection({
                   sortOrder: item.sortOrder ?? i,
                 }}
               />
-            </div>
+            </Div>
           )}
           keyExtractor={(item, i) => item.id ?? `result-${i}`}
           perView={THEME_CONSTANTS.carousel.perView.cards}
@@ -101,7 +101,7 @@ export function FeaturedResultsSection({
           showFadeEdges
           loop
         />
-      </div>
+      </Div>
     </Section>
   );
 }

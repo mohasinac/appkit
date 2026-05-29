@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useMemo } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Heading, RichText, Section, Span, Text, TextLink } from "../../../ui";
+import { Button, Div, Heading, RichText, Section, Span, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
 
 // --- Constants ----------------------------------------------------------------
@@ -123,10 +123,10 @@ export function FAQSection({
 
   return (
     <Section className={`py-16 px-4 sm:px-8 ${themed.bgSecondary} ${className}`}>
-      <div className="w-full max-w-4xl mx-auto" data-section="faqsection-div-320">
+      <Div className="w-full max-w-4xl mx-auto">
 
         {/* Section Header */}
-        <div className="text-center mb-10" data-section="faqsection-div-321">
+        <Div className="text-center mb-10">
           <Heading
             level={2}
             variant="none"
@@ -139,11 +139,11 @@ export function FAQSection({
               {subtitle}
             </Text>
           )}
-        </div>
+        </Div>
 
         {/* Category Tabs — appkit Button with ghost variant */}
         {showTabs && (
-          <div className={`${flex.center} flex-wrap gap-2 mb-8`} data-section="faqsection-div-322">
+          <Div className={`${flex.center} flex-wrap gap-2 mb-8`}>
             <Button
               variant={activeTab === "all" ? "primary" : "ghost"}
               size="sm"
@@ -163,11 +163,11 @@ export function FAQSection({
                 {tab.label}
               </Button>
             ))}
-          </div>
+          </Div>
         )}
 
         {/* FAQ Accordion */}
-        <div className="space-y-2" data-section="faqsection-div-323">
+        <Div className="space-y-2">
           {visibleItems.length === 0 && (
             <Text className={`text-center py-12 ${themed.textSecondary}`}>
               No FAQs in this category yet.
@@ -181,7 +181,6 @@ export function FAQSection({
                 className={`${themed.bgPrimary} rounded-xl overflow-hidden border transition-all duration-200 ${
                   isOpen ? "border-primary/40 shadow-sm" : `${themed.border}`
                 }`}
-                data-section="faqsection-div-324"
               >
                 {/* Question trigger */}
                 <Button
@@ -205,14 +204,13 @@ export function FAQSection({
                 </Button>
 
                 {/* Answer — CSS grid expand/collapse animation */}
-                <div
+                <Div
                   className={`grid transition-all duration-300 ease-out ${
                     isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}
-                  data-section="faqsection-div-325"
                 >
-                  <div className="overflow-hidden" data-section="faqsection-div-326">
-                    <div className="px-5 pb-5 pt-0">
+                  <div className="overflow-hidden">
+                    <Div className="px-5 pb-5 pt-0">
                       {isHtml(faq.answer) ? (
                         <RichText
                           html={faq.answer}
@@ -223,17 +221,17 @@ export function FAQSection({
                           {faq.answer}
                         </Text>
                       )}
-                    </div>
+                    </Div>
                   </div>
-                </div>
+                </Div>
               </div>
             );
           })}
-        </div>
+        </Div>
 
         {/* View More */}
         {viewMoreHref && (
-          <div className="text-center mt-10" data-section="faqsection-div-327">
+          <Div className="text-center mt-10">
             <TextLink
               href={viewMoreHref}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors"
@@ -245,9 +243,9 @@ export function FAQSection({
                 </Span>
               )}
             </TextLink>
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

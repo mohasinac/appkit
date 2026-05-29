@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useAuth } from "../../../react/contexts/SessionContext";
+import { Div } from "../../../ui/components/Div";
 
 const STORAGE_KEY = "letitrip:announcement-dismissed";
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
@@ -58,9 +59,9 @@ export function AnnouncementBar({ message, className = "", onDismiss }: Announce
 
   if (dismissed) return null;
   return (
-    <div className={`relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700 transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner" data-section="announcementbar-div-310">
-      <div className="container mx-auto max-w-[1920px] px-4 sm:px-6 lg:px-8" data-section="announcementbar-div-311">
-        <div className="relative flex items-center justify-center py-2 text-center text-sm font-medium text-white" data-section="announcementbar-div-312">
+    <Div className={`relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700 transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
+      <Div className="container mx-auto max-w-[1920px] px-4 sm:px-6 lg:px-8">
+        <Div className="relative flex items-center justify-center py-2 text-center text-sm font-medium text-white">
           <span>{message}</span>
           <button
             type="button"
@@ -74,8 +75,8 @@ export function AnnouncementBar({ message, className = "", onDismiss }: Announce
           >
             <X className="h-4 w-4" />
           </button>
-        </div>
-      </div>
-    </div>
+        </Div>
+      </Div>
+    </Div>
   );
 }

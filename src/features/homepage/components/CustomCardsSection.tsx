@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, HorizontalScroller, Section, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Section, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
@@ -84,7 +84,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
         )}
 
         {card.buttons && card.buttons.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-2">
+          <Div className="flex flex-wrap gap-2 mt-2">
             {card.buttons.map((btn, i) => (
               <a
                 key={i}
@@ -96,7 +96,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
                 {btn.label}
               </a>
             ))}
-          </div>
+          </Div>
         )}
 
         {card.formEmbed && (
@@ -120,11 +120,11 @@ function SectionHeader({ title }: { title?: string }) {
   const { themed } = THEME_CONSTANTS;
   if (!title) return null;
   return (
-    <div className="mb-6">
+    <Div className="mb-6">
       <Heading level={2} className={themed.textPrimary}>
         {title}
       </Heading>
-    </div>
+    </Div>
   );
 }
 
@@ -142,7 +142,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   if (autoScroll) {
     return (
       <Section className={`py-12 ${themed.bgPrimary}`}>
-        <div className={CLS_CONTAINER}>
+        <Div className={CLS_CONTAINER}>
           <SectionCarousel
             title={title ?? ""}
             items={cards}
@@ -152,7 +152,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
             autoScrollInterval={scrollIntervalMs ?? 3500}
             perView={{ base: 1, sm: 2, md: columns as 1 | 2 | 3 | 4 }}
           />
-        </div>
+        </Div>
       </Section>
     );
   }
@@ -161,16 +161,16 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   if (layout === "row") {
     return (
       <Section className={`py-12 ${themed.bgPrimary}`}>
-        <div className={CLS_CONTAINER}>
+        <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
           <HorizontalScroller gap={16} showArrows snapToItems loop>
             {cards.map((card) => (
-              <div key={card.id} className="w-72 flex-shrink-0">
+              <Div key={card.id} className="w-72 flex-shrink-0">
                 <CardItem card={card} />
-              </div>
+              </Div>
             ))}
           </HorizontalScroller>
-        </div>
+        </Div>
       </Section>
     );
   }
@@ -184,16 +184,16 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
       .join(" ");
     return (
       <Section className={`py-12 ${themed.bgPrimary}`}>
-        <div className={CLS_CONTAINER}>
+        <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
-          <div className={`${masonryClass} gap-4 space-y-4`}>
+          <Div className={`${masonryClass} gap-4 space-y-4`}>
             {cards.map((card) => (
-              <div key={card.id} className="break-inside-avoid">
+              <Div key={card.id} className="break-inside-avoid">
                 <CardItem card={card} />
-              </div>
+              </Div>
             ))}
-          </div>
-        </div>
+          </Div>
+        </Div>
       </Section>
     );
   }
@@ -202,14 +202,14 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   const colsClass = COLS_CLASS[columns as 1 | 2 | 3 | 4] ?? COLS_CLASS[3];
   return (
     <Section className={`py-12 ${themed.bgPrimary}`}>
-      <div className={CLS_CONTAINER}>
+      <Div className={CLS_CONTAINER}>
         <SectionHeader title={title} />
-        <div className={`grid ${colsClass} gap-4`}>
+        <Div className={`grid ${colsClass} gap-4`}>
           {cards.map((card) => (
             <CardItem key={card.id} card={card} />
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Section>
   );
 }

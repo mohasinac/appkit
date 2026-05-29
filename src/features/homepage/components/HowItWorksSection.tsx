@@ -59,29 +59,29 @@ function StepCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="howitworkssection-div-340">
       {/* Step number watermark */}
-      <div
+      <Div
         className="absolute top-4 right-5 font-display text-7xl bg-gradient-to-br from-primary to-cobalt opacity-10 bg-clip-text text-transparent select-none pointer-events-none leading-none"
         aria-hidden="true"
-       data-section="howitworkssection-div-341">
+      >
         {step.number}
-      </div>
+      </Div>
 
       {/* Visible index badge */}
-      <div
+      <Div
         className={`relative z-10 w-10 h-10 rounded-full ${badgeBg} text-white font-bold text-sm flex items-center justify-center mb-5 shadow-md`}
-       data-section="howitworkssection-div-342">
+      >
         {step.number}
-      </div>
+      </Div>
 
       {/* Icon */}
       {step.renderIcon && (
-        <div
+        <Div
           className={`relative z-10 w-14 h-14 rounded-2xl ${iconBg} flex items-center justify-center mb-4 border border-white/80 dark:border-slate-700/50`}
-         data-section="howitworkssection-div-343">
+        >
           <span className={`${iconColor}`} aria-hidden="true">
             {step.renderIcon({ className: "w-6 h-6" })}
           </span>
-        </div>
+        </Div>
       )}
 
       {/* Text */}
@@ -138,15 +138,15 @@ export function HowItWorksSection({
     >
       <Div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div
+        <Div
           className={`text-center mb-12 transition-all duration-700 ${
             visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
           }`}
-         data-section="howitworkssection-div-344">
+        >
           {pillLabel && (
-            <div className="inline-block mb-4 inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" data-section="howitworkssection-div-345">
+            <Div className="inline-block mb-4 inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm">
               {pillLabel}
-            </div>
+            </Div>
           )}
 
           <Heading
@@ -162,7 +162,7 @@ export function HowItWorksSection({
               {subtitle}
             </Text>
           )}
-        </div>
+        </Div>
 
         {/* Steps */}
         <Grid
@@ -181,15 +181,15 @@ export function HowItWorksSection({
 
         {/* CTA */}
         {ctaLabel && onCtaClick && (
-          <div
+          <Div
             className={`text-center transition-all duration-700 delay-500 ${
               visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
             }`}
-           data-section="howitworkssection-div-346">
+          >
             <Button variant="primary" size="lg" onClick={onCtaClick}>
               {ctaLabel}
             </Button>
-          </div>
+          </Div>
         )}
       </Div>
     </Section>

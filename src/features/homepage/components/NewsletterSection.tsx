@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, Section, Text, TextLink } from "../../../ui";
+import { Div, Heading, Section, Text, TextLink } from "../../../ui";
 import { Mail } from "lucide-react";
 
 // --- Types -------------------------------------------------------------------
@@ -26,25 +26,25 @@ export function NewsletterSection({
   return (
     <Section className={`py-16 px-4 relative overflow-hidden ${className}`}>
       {/* Gradient background layer */}
-      <div
+      <Div
         className="absolute inset-0 bg-gradient-to-br from-primary/10 via-cobalt/5 to-secondary/10 dark:from-primary/15 dark:via-cobalt/10 dark:to-secondary/15 pointer-events-none"
         aria-hidden
       />
       {/* Decorative circles */}
-      <div
+      <Div
         className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-primary/5 dark:bg-primary/10 pointer-events-none"
         aria-hidden
       />
-      <div
+      <Div
         className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-cobalt/5 dark:bg-cobalt/10 pointer-events-none"
         aria-hidden
       />
 
-      <div className="relative z-10 max-w-2xl mx-auto text-center" data-section="newslettersection-div-347">
+      <Div className="relative z-10 max-w-2xl mx-auto text-center">
         {/* Icon badge */}
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-5 mx-auto" data-section="newslettersection-div-348">
+        <Div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-5 mx-auto">
           <Mail className="w-7 h-7 text-primary" />
-        </div>
+        </Div>
 
         <Heading
           level={2}
@@ -77,7 +77,7 @@ export function NewsletterSection({
             .
           </Text>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

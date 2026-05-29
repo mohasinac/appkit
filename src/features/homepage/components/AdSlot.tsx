@@ -4,7 +4,7 @@ import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
 import { useActiveAd } from "../hooks/useActiveAd";
 import type { ActiveAdRecord } from "../hooks/useActiveAd";
-import { Text } from "../../../ui";
+import { Div, Text } from "../../../ui";
 
 // ---------------------------------------------------------------------------
 // Props
@@ -91,14 +91,14 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
           loading="lazy"
         />
       ) : null}
-      <div className="flex-1 min-w-0">
+      <Div className="flex-1 min-w-0">
         {creative.title ? (
           <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{creative.title}</Text>
         ) : null}
         {creative.body ? (
           <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{creative.body}</Text>
         ) : null}
-      </div>
+      </Div>
       {creative.ctaLabel ? (
         <span className="flex-shrink-0 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white">
           {creative.ctaLabel}
@@ -150,13 +150,13 @@ export function AdSlot({ id, manualContent, className = "" }: AdSlotProps) {
   if (!content) return null;
 
   return (
-    <div
+    <Div
       className={className}
       data-ad-slot-id={id}
       aria-label="Advertisement"
     >
       {content}
-    </div>
+    </Div>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Grid, Heading, Section, Text } from "../../../ui";
+import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
 // --- Types -------------------------------------------------------------------
 
@@ -30,9 +30,9 @@ export function SiteFeaturesSection({
 
   return (
     <Section className={`p-8 ${themed.bgSecondary} ${className}`}>
-      <div className="w-full" data-section="sitefeaturessection-div-369">
+      <Div className="w-full">
         {/* Section Header */}
-        <div className="text-center mb-12" data-section="sitefeaturessection-div-370">
+        <Div className="text-center mb-12">
           <Heading
             level={2}
             className={`text-3xl md:text-4xl font-bold ${themed.textPrimary} mb-3`}
@@ -46,7 +46,7 @@ export function SiteFeaturesSection({
               {subtitle}
             </Text>
           )}
-        </div>
+        </Div>
 
         {/* Features Grid */}
         <Grid
@@ -57,11 +57,11 @@ export function SiteFeaturesSection({
             <div
               key={feature.id}
               className="p-6 text-center hover:shadow-lg transition-all group rounded-2xl bg-white dark:bg-slate-900 border border-zinc-100 dark:border-slate-800"
-             data-section="sitefeaturessection-div-371">
+            >
               {/* Icon */}
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform" data-section="sitefeaturessection-div-372">
+              <Div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
                 {feature.icon}
-              </div>
+              </Div>
 
               {/* Title */}
               <Heading
@@ -78,7 +78,7 @@ export function SiteFeaturesSection({
             </div>
           ))}
         </Grid>
-      </div>
+      </Div>
     </Section>
   );
 }

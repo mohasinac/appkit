@@ -1,7 +1,7 @@
 "use client";
 
 import type { SocialPost, SocialPlatform } from "../schemas";
-import { Text } from "../../../ui";
+import { Div, Text } from "../../../ui";
 
 // --- Platform brand colours & icons ------------------------------------------
 
@@ -85,25 +85,25 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       />
 
       {/* Play button overlay */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--appkit-color-youtube,#FF0000)] shadow-lg transition-transform duration-200 group-hover:scale-110">
+      <Div className="absolute inset-0 flex items-center justify-center">
+        <Div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--appkit-color-youtube,#FF0000)] shadow-lg transition-transform duration-200 group-hover:scale-110">
           <svg className="ml-1 h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
           </svg>
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       {/* YouTube branding top-right */}
-      <div className={`absolute right-2 top-2 flex items-center gap-1 rounded px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`}>
+      <Div className={`absolute right-2 top-2 flex items-center gap-1 rounded px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`}>
         {meta.icon}
         <span className="hidden sm:inline">{meta.label}</span>
-      </div>
+      </Div>
 
       {/* Channel name bottom-left */}
       {post.channelName && (
-        <div className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-xs text-white backdrop-blur-sm">
+        <Div className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-xs text-white backdrop-blur-sm">
           {post.channelName}
-        </div>
+        </Div>
       )}
 
       {/* Caption hover overlay */}
@@ -148,39 +148,39 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
           loading="lazy"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-zinc-200 dark:bg-zinc-700">
+        <Div className="flex h-full w-full items-center justify-center bg-zinc-200 dark:bg-zinc-700">
           <span className="text-sm text-zinc-400">No preview</span>
-        </div>
+        </Div>
       )}
 
       {/* Video play overlay */}
       {post.mediaType === "video" && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm">
+        <Div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <Div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm">
             <svg className="ml-1 h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5v14l11-7z" />
             </svg>
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
 
       {/* Carousel indicator */}
       {post.mediaType === "carousel" && (
-        <div className="pointer-events-none absolute right-2 top-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-black/50 backdrop-blur-sm">
+        <Div className="pointer-events-none absolute right-2 top-2">
+          <Div className="flex h-6 w-6 items-center justify-center rounded bg-black/50 backdrop-blur-sm">
             <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="2" y="3" width="15" height="15" rx="2" />
               <path d="M7 8h14M7 12h14M7 16h14" />
             </svg>
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
 
       {/* Platform badge */}
-      <div className={`absolute left-2 top-2 flex items-center gap-1 rounded px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`}>
+      <Div className={`absolute left-2 top-2 flex items-center gap-1 rounded px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`}>
         {meta.icon}
         <span className="hidden sm:inline">{meta.label}</span>
-      </div>
+      </Div>
 
       {/* Hover overlay — caption + stats */}
       <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -188,7 +188,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
           <Text className="mb-2 line-clamp-3 text-xs text-white">{post.caption}</Text>
         )}
         {showStats && (
-          <div className="flex items-center gap-3 text-xs text-white/80">
+          <Div className="flex items-center gap-3 text-xs text-white/80">
             {post.stats.likes != null && (
               <span className="flex items-center gap-1">
                 <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
@@ -213,7 +213,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
                 {formatCount(post.stats.comments)}
               </span>
             )}
-          </div>
+          </Div>
         )}
       </div>
     </a>

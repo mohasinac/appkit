@@ -2,6 +2,7 @@ import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import {
   Button,
+  Div,
   Heading,
   HorizontalScroller,
   Section,
@@ -112,16 +113,16 @@ export interface SectionCarouselProps<T = unknown> {
 function CarouselSkeleton({ count }: { count: number }) {
   const { skeleton } = THEME_CONSTANTS;
   return (
-    <div className="flex gap-4 overflow-hidden px-4" data-section="sectioncarousel-div-349">
+    <div className="flex gap-4 overflow-hidden px-4">
       {Array.from({ length: count }).map((_, i) => (
-        <div
+        <Div
           key={i}
           className="flex-none min-w-[clamp(150px,18vw,260px)] max-w-[clamp(240px,36vw,380px)] h-[clamp(180px,26vh,260px)] space-y-2"
-         data-section="sectioncarousel-div-350">
-          <div className={`aspect-square rounded-xl ${skeleton.image}`} />
-          <div className={`${skeleton.text} w-3/4`} />
-          <div className={`${skeleton.text} w-1/2`} />
-        </div>
+        >
+          <Div className={`aspect-square rounded-xl ${skeleton.image}`} />
+          <Div className={`${skeleton.text} w-3/4`} />
+          <Div className={`${skeleton.text} w-1/2`} />
+        </Div>
       ))}
     </div>
   );
@@ -186,20 +187,20 @@ export function SectionCarousel<T = unknown>({
       {/* Background image + overlay */}
       {hasBg && backgroundImage && (
         <>
-          <div className="absolute inset-0 overflow-hidden" data-section="sectioncarousel-div-351">
+          <div className="absolute inset-0 overflow-hidden">
             <MediaImage src={backgroundImage} alt="" size="hero" />
           </div>
-          <div className="absolute inset-0 bg-black/55" />
+          <Div className="absolute inset-0 bg-black/55" />
         </>
       )}
 
       {/* Content — sits above the background */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto" data-section="sectioncarousel-div-352">
+      <Div className="relative z-10 w-full max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-6" data-section="sectioncarousel-div-353">
+        <Div className="text-center mb-6">
           {/* Editorial pill */}
           {headingVariant === "editorial" && pillLabel && (
-            <div className="mb-4" data-section="sectioncarousel-div-354">
+            <Div className="mb-4">
               <Span className={pillClass}>
                 <Span
                   className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
@@ -211,7 +212,7 @@ export function SectionCarousel<T = unknown>({
                   aria-hidden="true"
                 />
               </Span>
-            </div>
+            </Div>
           )}
 
           {/* Heading */}
@@ -231,14 +232,14 @@ export function SectionCarousel<T = unknown>({
 
           {/* Editorial ornament */}
           {headingVariant === "editorial" && (
-            <div
+            <Div
               className={`${flex.center} gap-2 mt-1 text-zinc-400 dark:text-zinc-400 text-xs select-none`}
               aria-hidden="true"
-             data-section="sectioncarousel-div-355">
+            >
               <Span className="h-px w-6 bg-current" />
               <Span className="text-xs">✶</Span>
               <Span className="h-px w-6 bg-current" />
-            </div>
+            </Div>
           )}
 
           {description && (
@@ -246,7 +247,7 @@ export function SectionCarousel<T = unknown>({
               {description}
             </Text>
           )}
-        </div>
+        </Div>
 
         {/* Carousel or skeleton */}
         {isLoading ? (
@@ -273,7 +274,7 @@ export function SectionCarousel<T = unknown>({
 
         {/* View More button */}
         {viewMoreHref && !isLoading && (
-          <div className="mt-6 flex justify-center" data-section="sectioncarousel-div-356">
+          <Div className="mt-6 flex justify-center">
             <TextLink
               href={viewMoreHref}
               className={`inline-flex items-center gap-1.5 rounded-lg border px-6 py-2.5 text-sm font-medium transition-colors ${
@@ -284,9 +285,9 @@ export function SectionCarousel<T = unknown>({
             >
               {viewMoreLabel}
             </TextLink>
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

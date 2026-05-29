@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Grid, Heading, Section, Span, Text } from "../../../ui";
+import { Div, Grid, Heading, Section, Span, Text } from "../../../ui";
 
 // --- Types -------------------------------------------------------------------
 
@@ -59,12 +59,12 @@ export function HowItWorksInfoView({
   const { themed, flex, spacing } = THEME_CONSTANTS;
 
   return (
-    <div
+    <Div
       className={`-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10 ${className}`}
-     data-section="howitworksinfoview-div-333">
+    >
       {/* Header */}
       <Section className={`${heroClass} text-white py-14 md:py-16 lg:py-20`}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-section="howitworksinfoview-div-334">
+        <Div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Heading level={1} variant="none" className="mb-4 text-white">
             {title}
           </Heading>
@@ -73,10 +73,10 @@ export function HowItWorksInfoView({
               {subtitle}
             </Text>
           )}
-        </div>
+        </Div>
       </Section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 lg:py-16" data-section="howitworksinfoview-div-335">
+      <Div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 lg:py-16">
         {/* Optional diagram slot */}
         {renderDiagram?.()}
 
@@ -87,7 +87,7 @@ export function HowItWorksInfoView({
           </Heading>
         )}
 
-        <div className={`${spacing.stack} mb-14`} data-section="howitworksinfoview-div-336">
+        <Div className={`${spacing.stack} mb-14`}>
           {steps.map(
             ({
               number,
@@ -101,12 +101,12 @@ export function HowItWorksInfoView({
                 key={number}
                 className={`flex gap-4 items-start ${themed.bgSecondary} rounded-xl p-6 border ${themed.border}`}
               >
-                <div
+                <Div
                   className={`shrink-0 w-10 h-10 rounded-xl ${stepAccent ?? accentClass} ${flex.center} text-sm font-bold`}
-                 data-section="howitworksinfoview-div-337">
+                >
                   <Span className={textClass}>{number}</Span>
-                </div>
-                <div data-section="howitworksinfoview-div-338">
+                </Div>
+                <Div>
                   <Heading level={3} className="font-semibold mb-1">
                     {icon} {stepTitle}
                   </Heading>
@@ -117,11 +117,11 @@ export function HowItWorksInfoView({
                   >
                     {text}
                   </Text>
-                </div>
+                </Div>
               </Section>
             ),
           )}
-        </div>
+        </Div>
 
         {/* Detail cards */}
         {details.length > 0 && (
@@ -136,7 +136,7 @@ export function HowItWorksInfoView({
                 <div
                   key={dt}
                   className={`${themed.bgSecondary} border ${themed.border} rounded-xl p-5`}
-                 data-section="howitworksinfoview-div-339">
+                >
                   <Heading level={3} className="font-semibold mb-2">
                     {dt}
                   </Heading>
@@ -155,7 +155,7 @@ export function HowItWorksInfoView({
 
         {/* Footer slot (CTAs, links) */}
         {renderFooter?.()}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }

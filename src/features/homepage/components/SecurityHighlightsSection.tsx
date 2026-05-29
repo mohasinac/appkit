@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Grid, Heading, Section, Span, Text, TextLink } from "../../../ui";
+import { Div, Grid, Heading, Section, Span, Text, TextLink } from "../../../ui";
 
 // --- Types -------------------------------------------------------------------
 
@@ -50,11 +50,11 @@ function SecurityCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="securityhighlightssection-div-357">
       {item.renderIcon && (
-        <div className="w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 flex items-center justify-center mb-3" data-section="securityhighlightssection-div-358">
+        <Div className="w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 flex items-center justify-center mb-3">
           <span className={iconColorClass} aria-hidden="true">
             {item.renderIcon({ className: "w-6 h-6" })}
           </span>
-        </div>
+        </Div>
       )}
       <Text className="font-semibold mb-1">{item.title}</Text>
       <Text variant="secondary" className="text-sm leading-relaxed">
@@ -100,9 +100,9 @@ export function SecurityHighlightsSection({
       ref={sectionRef}
       className={`py-14 px-4 ${themed.bgPrimary} ${className}`}
     >
-      <div className="max-w-6xl mx-auto" data-section="securityhighlightssection-div-359">
+      <Div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10" data-section="securityhighlightssection-div-360">
+        <Div className="text-center mb-10">
           {pillLabel && (
             <Span className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm">
               {pillLabel}
@@ -119,7 +119,7 @@ export function SecurityHighlightsSection({
               {subtitle}
             </Text>
           )}
-        </div>
+        </Div>
 
         {/* Cards grid */}
         <Grid
@@ -138,11 +138,11 @@ export function SecurityHighlightsSection({
 
         {/* CTA link */}
         {learnMoreHref && (
-          <div className="text-center mt-8" data-section="securityhighlightssection-div-361">
+          <Div className="text-center mt-8">
             <TextLink href={learnMoreHref}>{learnMoreLabel}</TextLink>
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

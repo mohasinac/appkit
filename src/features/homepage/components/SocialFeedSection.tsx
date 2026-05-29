@@ -1,4 +1,4 @@
-import { Heading, Section, Text } from "../../../ui";
+import { Div, Heading, Section, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { SocialPostCard } from "./SocialPostCard";
 import {
@@ -34,11 +34,11 @@ function platformProfileUrl(platform: SocialPlatform, handle: string): string {
 
 function SocialFeedSkeleton({ count }: { count: number }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+    <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="aspect-square rounded-xl bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
+        <Div key={i} className="aspect-square rounded-xl bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
       ))}
-    </div>
+    </Div>
   );
 }
 
@@ -46,13 +46,13 @@ function SocialFeedSkeleton({ count }: { count: number }) {
 
 function SocialFeedEmpty({ platform }: { platform: SocialPlatform }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-zinc-400">
+    <Div className="flex flex-col items-center justify-center py-16 text-zinc-400">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="3" y="3" width="18" height="18" rx="3" />
         <path d="M9 9h6M9 12h6M9 15h4" />
       </svg>
       <Text size="sm">No posts from {PLATFORM_LABELS[platform]} yet.</Text>
-    </div>
+    </Div>
   );
 }
 
@@ -139,8 +139,8 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
 
   return (
     <Section className={`py-12 ${themed.bgPrimary}`}>
-      <div className="w-full max-w-7xl mx-auto px-4">
-        <div className="mb-8 flex items-end justify-between gap-4">
+      <Div className="w-full max-w-7xl mx-auto px-4">
+        <Div className="mb-8 flex items-end justify-between gap-4">
           <>
             <Heading level={2} className="mb-1">
               {title || `${PLATFORM_LABELS[platform]} Feed`}
@@ -161,26 +161,26 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
               Follow on {PLATFORM_LABELS[platform]} →
             </a>
           )}
-        </div>
+        </Div>
 
         {error ? (
-          <div className="py-12 text-center text-zinc-400 text-sm">{error}</div>
+          <Div className="py-12 text-center text-zinc-400 text-sm">{error}</Div>
         ) : posts.length === 0 ? (
           <SocialFeedEmpty platform={platform} />
         ) : (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {posts.slice(0, count).map((post) => (
-              <div key={post.id} className={cardClass}>
+              <Div key={post.id} className={cardClass}>
                 <SocialPostCard
                   post={post}
                   showCaption={showCaption}
                   showStats={showStats}
                 />
-              </div>
+              </Div>
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Grid, Heading, Section, Text } from "../../../ui";
+import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
 // --- Types -------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ export function TrustIndicatorsSection({
 
   return (
     <Section className={`p-6 ${themed.bgSecondary} ${className}`}>
-      <div className="w-full" data-section="trustindicatorssection-div-379">
+      <Div className="w-full">
         <Grid
           gap="md"
           className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 md:gap-8"
@@ -35,10 +35,10 @@ export function TrustIndicatorsSection({
             <div
               key={index}
               className="text-center p-4 rounded-2xl bg-white dark:bg-slate-900 border border-zinc-100 dark:border-slate-800 hover:shadow-md transition-shadow"
-             data-section="trustindicatorssection-div-380">
-              <div className="text-4xl md:text-5xl mb-2 md:mb-3" data-section="trustindicatorssection-div-381">
+            >
+              <Div className="text-4xl md:text-5xl mb-2 md:mb-3">
                 {indicator.icon}
-              </div>
+              </Div>
               <Heading
                 level={3}
                 className={`text-sm font-semibold ${themed.textPrimary} mb-1 md:mb-2`}
@@ -51,7 +51,7 @@ export function TrustIndicatorsSection({
             </div>
           ))}
         </Grid>
-      </div>
+      </Div>
     </Section>
   );
 }

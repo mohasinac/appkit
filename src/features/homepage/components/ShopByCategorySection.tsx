@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, HorizontalScroller, Section, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
@@ -50,11 +50,11 @@ function CategoryChip({ category }: { category: CategoryItem }) {
           />
         </div>
       ) : (
-        <div className="aspect-video w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" />
+        <Div className="aspect-video w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" />
       )}
 
       <div className="flex flex-1 flex-col p-3 text-left">
-        <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
+        <Div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image
               src={iconSrc}
@@ -69,7 +69,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
           ) : (
             initial
           )}
-        </div>
+        </Div>
         <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-800 dark:text-zinc-200`}>
           {category.name}
         </Text>
@@ -157,8 +157,8 @@ export function ShopByCategorySection({
 
   return (
     <Section className={`py-10 px-4 md:py-12 ${themed.bgSecondary} ${className}`}>
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-6 text-center">
+      <Div className="mx-auto max-w-7xl">
+        <Div className="mb-6 text-center">
           <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>
             {title}
           </Heading>
@@ -167,11 +167,11 @@ export function ShopByCategorySection({
               {subtitle}
             </Text>
           )}
-        </div>
+        </Div>
 
         {/* Filter chips */}
         {hasFilters && !isLoading && (
-          <div className="mb-4 flex flex-wrap gap-2">
+          <Div className="mb-4 flex flex-wrap gap-2">
             <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
             {rootIds.slice(0, 5).map((id) => {
               const cat = allCategories.find((c) => c.id === id);
@@ -185,13 +185,13 @@ export function ShopByCategorySection({
                 />
               );
             })}
-          </div>
+          </Div>
         )}
 
         {isLoading ? (
           <div className="flex gap-3 overflow-hidden px-1">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex-none h-[104px] w-[108px] animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700" />
+              <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700" />
             ))}
           </div>
         ) : (
@@ -214,22 +214,22 @@ export function ShopByCategorySection({
 
         {/* CTA button */}
         {cta && !isLoading && (
-          <div className="mt-6 text-center">
+          <Div className="mt-6 text-center">
             <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
               {cta.label}
             </Link>
-          </div>
+          </Div>
         )}
 
         {/* Fallback view-more link when no CTA configured */}
         {!cta && viewMoreHref && !isLoading && (
-          <div className="mt-6 text-center">
+          <Div className="mt-6 text-center">
             <Link href={viewMoreHref} className="inline-flex items-center gap-1 text-sm font-medium text-[var(--appkit-color-primary)] hover:opacity-80">
               {viewMoreLabel}
             </Link>
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }
