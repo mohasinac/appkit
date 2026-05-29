@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section, Caption } from "../../../ui";
+import { Div, Heading, Text, Section, Caption } from "../../../ui";
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -65,19 +65,19 @@ export async function FeesView({
   void ROUTES; // ROUTES imported for future CTA links if needed
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="feesview-div-100">
+    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
-        <div className={`${page.container.sm} text-center`} data-section="feesview-div-101">
+        <Div className={`${page.container.sm} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
-        </div>
+        </Div>
       </Section>
-      <div className={`${page.container.sm} py-10 md:py-12 lg:py-16 space-y-12`} data-section="feesview-div-102">
+      <Div className={`${page.container.sm} py-10 md:py-12 lg:py-16 space-y-12`}>
         {renderFeeTableSection(t, themed, FEE_ROWS)}
         {renderPayoutExampleSection(t, themed, OFFER_PAYOUT_ROWS)}
         {renderDisclaimerSection(t, themed)}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -90,7 +90,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
   return (
     <Section>
       <Heading level={2} className="mb-6">{t("tableTitle")}</Heading>
-      <div className={`overflow-x-auto rounded-xl border ${themed.border}`} data-section="feesview-div-103">
+      <div className={`overflow-x-auto rounded-xl border ${themed.border}`}>
         <table className="w-full text-sm">
           <thead className={themed.bgSecondary}>
             <tr>
@@ -111,7 +111,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
             ))}
           </tbody>
         </table>
-      </div>
+      </Div>
       <Caption className="mt-3 block text-zinc-500 dark:text-zinc-400">{t("tableNote")}</Caption>
     </Section>
   );
@@ -122,16 +122,16 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
     <Section>
       <Heading level={2} className="mb-3">{t("payoutExampleTitle")}</Heading>
       <Text variant="secondary" className="mb-6">{t("payoutExampleSubtitle")}</Text>
-      <div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-5 max-w-sm`} data-section="feesview-div-104">
+      <div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-5 max-w-sm`}>
         <Heading level={3} className="text-base mb-4">{t("payoutExampleProduct")}</Heading>
-        <div className="space-y-2" data-section="feesview-div-105">
+        <Div className="space-y-2">
           {rows.map((row, i) => (
-            <div key={i} className={`flex justify-between text-sm ${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2 font-bold" : ""}`} data-section="feesview-div-106">
+            <div key={i} className={`flex justify-between text-sm ${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2 font-bold" : ""}`}>
               <Text className={row.highlight ? "font-bold" : "text-neutral-600 dark:text-neutral-400"}>{row.label}</Text>
               <Text className={row.highlight ? "font-bold text-green-700 dark:text-green-400" : ""}>{row.example}</Text>
             </div>
           ))}
-        </div>
+        </Div>
       </div>
     </Section>
   );

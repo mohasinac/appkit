@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section, Stack, Alert } from "../../../ui";
+import { Div, Heading, Text, Section, Stack, Alert } from "../../../ui";
 import { TextLink } from "../../../ui";
 import {
   BookOpen,
@@ -79,20 +79,20 @@ export async function HelpPageView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="helppageview-div-107">
+    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
-        <div className={`${page.container.md} text-center`} data-section="helppageview-div-108">
+        <Div className={`${page.container.md} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
-        </div>
+        </Div>
       </Section>
-      <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="helppageview-div-109">
+      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
         {renderTopicsGrid(t, flex, TOPICS)}
         {renderScamAwarenessAlert(t)}
         {renderTrackOrderSection(t, themed)}
         {renderContactCtaSection(t, themed)}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -106,22 +106,22 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: Topi
   return (
     <Section>
       <Heading level={2} className="mb-6 text-center">{t("browseTopics")}</Heading>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-section="helppageview-div-110">
+      <Div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {topics.map(({ icon: Icon, title, desc, href, color, iconColor }) => (
           <TextLink key={href} href={href} className={`group rounded-xl border p-5 transition-shadow hover:shadow-md ${color} no-underline`}>
-            <div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} data-section="helppageview-div-111">
+            <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
-            </div>
-            <div className={`${flex.row} justify-between items-start`} data-section="helppageview-div-112">
-              <div data-section="helppageview-div-113">
+            </Div>
+            <Div className={`${flex.row} justify-between items-start`}>
+              <Div>
                 <Text className="font-semibold mb-1">{title}</Text>
                 <Text variant="secondary" className="text-sm leading-relaxed">{desc}</Text>
-              </div>
+              </Div>
               <ChevronRight className="w-4 h-4 mt-1 flex-shrink-0 opacity-40 group-hover:opacity-80 transition-opacity" />
-            </div>
+            </Div>
           </TextLink>
         ))}
-      </div>
+      </Div>
     </Section>
   );
 }
@@ -140,10 +140,10 @@ function renderScamAwarenessAlert(t: HelpTranslateFn) {
 function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
     <Section className={`rounded-2xl p-6 border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}>
-      <div className="flex-1" data-section="helppageview-div-114">
+      <Div className="flex-1">
         <Heading level={3} className="mb-1 text-base">{t("trackOrderTitle")}</Heading>
         <Text variant="secondary" className="text-sm">{t("trackOrderText")}</Text>
-      </div>
+      </Div>
       <TextLink href={String(ROUTES.PUBLIC.TRACK_ORDER)} className="flex-shrink-0">{t("trackOrderCta")}</TextLink>
     </Section>
   );

@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
+import { Div, Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { Smartphone, Banknote } from "lucide-react";
@@ -94,22 +94,22 @@ export async function HowCheckoutWorksView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="howcheckoutworksview-div-125">
+    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
-        <div className={`${page.container.md} text-center`} data-section="howcheckoutworksview-div-126">
+        <Div className={`${page.container.md} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
-        </div>
+        </Div>
       </Section>
-      <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="howcheckoutworksview-div-127">
+      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
         {renderCheckoutStepsSection(t, themed, flex, STEPS)}
         <Section>
           <FlowDiagram title={`🗺️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
         {renderPaymentMethodsSection(t, flex, PAYMENT_METHODS)}
         {renderCheckoutCtaSection(t, themed, flex)}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -124,12 +124,12 @@ function renderCheckoutStepsSection(t: CheckoutT, themed: (typeof THEME_CONSTANT
       <Heading level={2} className="mb-8 text-center">{t("stepsTitle")}</Heading>
       <Stack gap="md" className="gap-5">
         {steps.map(({ number, icon, title, text }) => (
-          <div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`} data-section="howcheckoutworksview-div-128">
-            <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center} text-xl`} data-section="howcheckoutworksview-div-129">{icon}</div>
-            <div data-section="howcheckoutworksview-div-130">
+          <div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+            <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
+            <Div>
               <Text className="font-semibold mb-0.5">{number}. {title}</Text>
               <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
-            </div>
+            </Div>
           </div>
         ))}
       </Stack>
@@ -142,17 +142,17 @@ function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS
     <Section>
       <Heading level={2} className="mb-3 text-center">{t("paymentMethodsTitle")}</Heading>
       <Text variant="secondary" className="text-center mb-8 max-w-xl mx-auto">{t("paymentMethodsSubtitle")}</Text>
-      <div className="grid gap-5 md:grid-cols-3" data-section="howcheckoutworksview-div-131">
+      <Div className="grid gap-5 md:grid-cols-3">
         {methods.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <div key={title} className={`rounded-xl border p-5 ${color}`} data-section="howcheckoutworksview-div-132">
-            <div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} data-section="howcheckoutworksview-div-133">
+          <div key={title} className={`rounded-xl border p-5 ${color}`}>
+            <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
-            </div>
+            </Div>
             <Text className="font-semibold mb-1">{title}</Text>
             <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
           </div>
         ))}
-      </div>
+      </Div>
     </Section>
   );
 }
@@ -162,10 +162,10 @@ function renderCheckoutCtaSection(t: CheckoutT, themed: (typeof THEME_CONSTANTS)
     <Section className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}>
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <div className={`${flex.center} gap-4 flex-wrap`} data-section="howcheckoutworksview-div-134">
+      <Div className={`${flex.center} gap-4 flex-wrap`}>
         <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>{t("ctaBrowse")}</TextLink>
         <TextLink href={String(ROUTES.PUBLIC.HOW_ORDERS_WORK)} variant="muted">{t("ctaOrders")}</TextLink>
-      </div>
+      </Div>
     </Section>
   );
 }

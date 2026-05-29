@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section, FlowDiagram } from "../../../ui";
+import { Div, Heading, Text, Section, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
 import {
@@ -160,14 +160,14 @@ export async function SecurityPrivacyView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="securityprivacyview-div-198">
+    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
-        <div className={`${page.container.md} text-center`} data-section="securityprivacyview-div-199">
+        <Div className={`${page.container.md} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
-        </div>
+        </Div>
       </Section>
-      <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="securityprivacyview-div-200">
+      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
         <Section className="text-center">
           <Heading level={2} className="mb-3">{t("overviewTitle")}</Heading>
           <Text variant="secondary" className="max-w-2xl mx-auto">{t("overviewText")}</Text>
@@ -178,8 +178,8 @@ export async function SecurityPrivacyView({
         </Section>
         <Text variant="secondary" className="text-center text-sm">{t("lastUpdated")}</Text>
         {renderSecurityCtaSection(t, themed, flex)}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -190,17 +190,17 @@ type SecurityCard = { icon: any; title: string; text: string; color: string; ico
 function renderSecurityCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: SecurityCard[]) {
   return (
     <Section>
-      <div className="grid gap-5 md:grid-cols-2" data-section="securityprivacyview-div-201">
+      <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <div key={title} className={`rounded-xl border p-5 ${color}`} data-section="securityprivacyview-div-202">
-            <div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} data-section="securityprivacyview-div-203">
+          <div key={title} className={`rounded-xl border p-5 ${color}`}>
+            <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
-            </div>
+            </Div>
             <Text className="font-semibold mb-1">{title}</Text>
             <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
           </div>
         ))}
-      </div>
+      </Div>
     </Section>
   );
 }
@@ -210,10 +210,10 @@ function renderSecurityCtaSection(t: SecurityT, themed: (typeof THEME_CONSTANTS)
     <Section className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}>
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <div className={`${flex.center} gap-4 flex-wrap`} data-section="securityprivacyview-div-204">
+      <Div className={`${flex.center} gap-4 flex-wrap`}>
         <TextLink href={String(ROUTES.PUBLIC.PRIVACY)}>{t("ctaPrivacy")}</TextLink>
         <TextLink href={String(ROUTES.PUBLIC.CONTACT)} variant="muted">{t("ctaContact")}</TextLink>
-      </div>
+      </Div>
     </Section>
   );
 }

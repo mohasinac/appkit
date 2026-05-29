@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
+import { Div, Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { DollarSign, Calendar, Banknote, ShieldCheck } from "lucide-react";
@@ -109,22 +109,22 @@ export async function HowPayoutsWorkView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="howpayoutsworkview-div-151">
+    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
-        <div className={`${page.container.md} text-center`} data-section="howpayoutsworkview-div-152">
+        <Div className={`${page.container.md} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
-        </div>
+        </Div>
       </Section>
-      <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="howpayoutsworkview-div-153">
+      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
         {renderPayoutsStepsSection(t, themed, flex, STEPS)}
         <Section>
           <FlowDiagram title={`💸 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
         {renderPayoutsInfoCardsSection(flex, INFO_CARDS)}
         {renderPayoutsCtaSection(t, themed, flex)}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -139,12 +139,12 @@ function renderPayoutsStepsSection(t: PayoutsT, themed: (typeof THEME_CONSTANTS)
       <Heading level={2} className="mb-8 text-center">{t("stepsTitle")}</Heading>
       <Stack gap="md" className="gap-5">
         {steps.map(({ number, icon, title, text }) => (
-          <div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`} data-section="howpayoutsworkview-div-154">
-            <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center} text-xl`} data-section="howpayoutsworkview-div-155">{icon}</div>
-            <div data-section="howpayoutsworkview-div-156">
+          <div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+            <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
+            <Div>
               <Text className="font-semibold mb-0.5">{number}. {title}</Text>
               <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
-            </div>
+            </Div>
           </div>
         ))}
       </Stack>
@@ -155,17 +155,17 @@ function renderPayoutsStepsSection(t: PayoutsT, themed: (typeof THEME_CONSTANTS)
 function renderPayoutsInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: PayoutsInfoCard[]) {
   return (
     <Section>
-      <div className="grid gap-5 md:grid-cols-2" data-section="howpayoutsworkview-div-157">
+      <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <div key={title} className={`rounded-xl border p-5 ${color}`} data-section="howpayoutsworkview-div-158">
-            <div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} data-section="howpayoutsworkview-div-159">
+          <div key={title} className={`rounded-xl border p-5 ${color}`}>
+            <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
-            </div>
+            </Div>
             <Text className="font-semibold mb-1">{title}</Text>
             <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
           </div>
         ))}
-      </div>
+      </Div>
     </Section>
   );
 }
@@ -175,10 +175,10 @@ function renderPayoutsCtaSection(t: PayoutsT, themed: (typeof THEME_CONSTANTS)["
     <Section className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}>
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <div className={`${flex.center} gap-4 flex-wrap`} data-section="howpayoutsworkview-div-160">
+      <Div className={`${flex.center} gap-4 flex-wrap`}>
         <TextLink href={String(ROUTES.STORE.PAYOUT_SETTINGS)}>{t("ctaPayoutSettings")}</TextLink>
         <TextLink href={String(ROUTES.PUBLIC.FEES)} variant="muted">{t("ctaFees")}</TextLink>
-      </div>
+      </Div>
     </Section>
   );
 }
