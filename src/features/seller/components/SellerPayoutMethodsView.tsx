@@ -167,7 +167,7 @@ export function SellerPayoutMethodsView({
   }, [onEditClick]);
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={0}
         searchValue={searchInput}
@@ -187,7 +187,7 @@ export function SellerPayoutMethodsView({
         }
       />
 
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
@@ -207,23 +207,23 @@ export function SellerPayoutMethodsView({
             <Text className="text-zinc-400 dark:text-zinc-400">
               No payout methods yet — add a UPI VPA or bank account to receive payouts
             </Text>
-            <div className="mt-4">
+            <Div className="mt-4">
               <Button size="sm" onClick={handleCreate}>
                 Add payout method
               </Button>
-            </div>
+            </Div>
           </Div>
         ) : (
-          <div className="space-y-3">
+          <Div className="space-y-3">
             {rows.map((row) => (
               <div
                 key={row.id}
                 className="rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3 min-w-0">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
+                <Div className="flex items-start justify-between gap-4">
+                  <Div className="flex items-start gap-3 min-w-0">
+                    <Div className="min-w-0 flex-1">
+                      <Div className="flex items-center gap-2 flex-wrap">
                         <Text className="text-sm font-medium">{row.label}</Text>
                         <TypeBadge type={row.type} />
                         {row.isDefault && (
@@ -240,13 +240,13 @@ export function SellerPayoutMethodsView({
                         >
                           {row.isActive ? "Active" : "Inactive"}
                         </span>
-                      </div>
+                      </Div>
                       <Text className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
                         {row.maskedIdentifier}
                       </Text>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
+                    </Div>
+                  </Div>
+                  <Div className="flex items-center gap-2 shrink-0">
                     {!row.isDefault && (
                       <Button
                         size="sm"
@@ -272,13 +272,13 @@ export function SellerPayoutMethodsView({
                     >
                       Delete
                     </Button>
-                  </div>
-                </div>
+                  </Div>
+                </Div>
               </div>
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       {deleteTargetId && (
         <ConfirmDeleteModal
@@ -290,6 +290,6 @@ export function SellerPayoutMethodsView({
           isDeleting={deletingId === deleteTargetId}
         />
       )}
-    </div>
+    </Div>
   );
 }

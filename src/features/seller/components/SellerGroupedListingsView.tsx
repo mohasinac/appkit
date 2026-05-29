@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Badge, Button } from "../../../ui";
+import { Badge, Button, Div } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -138,14 +138,14 @@ export function SellerGroupedListingsView({
         ]
       : undefined,
     renderRowActions: (row) => (
-      <div className="flex gap-1">
+      <Div className="flex gap-1">
         <Button size="sm" variant="ghost" onClick={() => onEditClick?.(row.id)}>
           {ACTIONS.STORE["edit-listing"].label}
         </Button>
         <Button size="sm" variant="ghost" onClick={() => onDeleteClick?.(row.id)}>
           {ACTIONS.STORE["delete-listing"].label}
         </Button>
-      </div>
+      </Div>
     ),
   };
 

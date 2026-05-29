@@ -1,6 +1,7 @@
 "use client";
 
 import { Heading, Text } from "../../../ui/components/Typography";
+import { Div } from "../../../ui/components/Div";
 
 interface PrintCenterStore {
   id: string;
@@ -42,10 +43,10 @@ interface PrintCenterViewProps {
 
 export function PrintCenterView({ store, brandName = "LetItRip" }: PrintCenterViewProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center gap-4">
+    <Div className="flex flex-col items-center justify-center py-24 text-center gap-4">
       <Heading level={2}>{brandName} Print Center</Heading>
       {store && <Text size="sm" variant="muted">{store.storeName}</Text>}
       <Text size="sm" variant="muted">Print center features are coming soon.</Text>
-    </div>
+    </Div>
   );
 }

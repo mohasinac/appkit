@@ -4,6 +4,7 @@ import { Modal } from "../../../ui/components/Modal";
 import { Input } from "../../../ui/components/Input";
 import { Button } from "../../../ui/components/Button";
 import { Row } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
 import { Text } from "../../../ui/components/Typography";
 
 export interface PhysicalLocation {
@@ -53,13 +54,13 @@ export function PhysicalLocationModal({ count, onSave, onClose }: PhysicalLocati
         </Row>
       }
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      <Div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         <Text variant="muted">Assign a physical storage location to the selected items. All fields are optional.</Text>
         <Input label="Zone (e.g. A, B, Storage-1)" value={zone} onChange={e => setZone(e.target.value)} placeholder="A" />
         <Input label="Shelf (e.g. 3, Top, Middle)" value={shelf} onChange={e => setShelf(e.target.value)} placeholder="3" />
         <Input label="Bin (e.g. Blue, Box-12)" value={bin} onChange={e => setBin(e.target.value)} placeholder="Blue" />
         {error && <Text variant="error">{error}</Text>}
-      </div>
+      </Div>
     </Modal>
   );
 }

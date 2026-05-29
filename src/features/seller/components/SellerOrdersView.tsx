@@ -174,7 +174,7 @@ function OrderDetailDrawer({
     <SideDrawer isOpen title={`Order ${order?.id ?? orderId}`} onClose={onClose}>
       {loading && (
         <Div className="flex items-center justify-center py-16">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
+          <Div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
         </Div>
       )}
 
@@ -201,17 +201,17 @@ function OrderDetailDrawer({
             {(order.items ?? []).length > 0 && (
               <Div>
                 <Text size="sm" className="font-semibold text-[var(--appkit-color-text-primary)] mb-2">Items</Text>
-                <div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 rounded-lg border border-[var(--appkit-color-border)] dark:border-slate-700">
+                <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 rounded-lg border border-[var(--appkit-color-border)] dark:border-slate-700">
                   {(order.items ?? []).map((item, i) => (
-                    <div key={i} className="flex items-center justify-between px-3 py-2.5 gap-3">
-                      <div className="min-w-0">
+                    <Div key={i} className="flex items-center justify-between px-3 py-2.5 gap-3">
+                      <Div className="min-w-0">
                         <Text size="sm" className="font-medium truncate">{item.title ?? item.productId ?? "Item"}</Text>
                         <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
-                      </div>
+                      </Div>
                       <Text size="sm" className="shrink-0 font-medium">{toRupees(item.price ?? 0)}</Text>
-                    </div>
+                    </Div>
                   ))}
-                </div>
+                </Div>
               </Div>
             )}
 
@@ -240,7 +240,7 @@ function OrderDetailDrawer({
             )}
 
             {/* Update section */}
-            <div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 pt-4 space-y-3">
+            <Div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 pt-4 space-y-3">
               <Heading level={4} className="text-sm font-semibold">Update order</Heading>
               <Select label="New status" value={newStatus} options={UPDATE_STATUS_OPTIONS} onChange={(e) => setNewStatus(e.target.value)} />
               <Input label="Tracking number" value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. 12345678901234" />
@@ -251,14 +251,14 @@ function OrderDetailDrawer({
                   {saveError}
                 </Div>
               )}
-            </div>
+            </Div>
           </div>
 
           {/* Footer */}
-          <div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 px-4 py-3.5 flex items-center justify-end gap-3">
+          <Div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 px-4 py-3.5 flex items-center justify-end gap-3">
             <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
             <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
-          </div>
+          </Div>
         </Stack>
       )}
     </SideDrawer>
@@ -361,10 +361,10 @@ export function SellerOrdersView({
       key: "primary",
       header: "Order",
       render: (row) => (
-        <div className="space-y-0.5 min-w-0">
+        <Div className="space-y-0.5 min-w-0">
           <Text className="font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</Text>
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
-        </div>
+        </Div>
       ),
     },
     {
@@ -444,7 +444,7 @@ export function SellerOrdersView({
     (row: OrderRow) => {
       const isShippable = ["PENDING", "PROCESSING", "CONFIRMED"].includes(row.status?.toUpperCase() ?? "");
       return (
-        <div className="flex items-center gap-1">
+        <Div className="flex items-center gap-1">
           {isShippable && (
             <Button
               variant="ghost"
@@ -465,7 +465,7 @@ export function SellerOrdersView({
           >
             <Eye className="h-4 w-4" />
           </Button>
-        </div>
+        </Div>
       );
     },
     [handleQuickShip],
@@ -532,7 +532,7 @@ export function SellerOrdersView({
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
@@ -551,22 +551,22 @@ export function SellerOrdersView({
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </div>
+        </Div>
       )}
 
       {selection.selectedIds.length > 0 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700">
+        <Div className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700">
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}
             actions={bulkActions}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
@@ -582,7 +582,7 @@ export function SellerOrdersView({
           onToggleSelectAll={() => selection.toggleAll()}
           renderRowActions={renderRowActions}
         />
-      </div>
+      </Div>
 
       {/* Filter sidebar */}
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
@@ -610,6 +610,6 @@ export function SellerOrdersView({
           onClose={() => setSetLocationOpen(false)}
         />
       )}
-    </div>
+    </Div>
   );
 }

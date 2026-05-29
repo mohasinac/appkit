@@ -343,7 +343,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
 
   return (
     <StackedViewShell portal="seller" title="Payout Settings" sections={[
-      <div key="payout">
+      <Div key="payout">
         {error && <Alert variant="error" className="mb-4">{error}</Alert>}
         {success && <Alert variant="success" className="mb-4">Payout details saved.</Alert>}
         <StepForm<PayoutDraft>
@@ -357,7 +357,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
           completeLabel="Save Payout Details"
           isLoading={busy}
         />
-      </div>,
+      </Div>,
     ]} />
   );
 }

@@ -1171,7 +1171,7 @@ export function SellerProductShell({
         previewSlot={previewSlot}
         splitPreview={!!previewSlot}
         renderBottomBar={() => (
-          <div className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
+          <Div className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
             <StepFormActions
               currentStep={currentStep}
               totalSteps={steps.length}
@@ -1185,7 +1185,7 @@ export function SellerProductShell({
                 mandatory fields. The product persists with status:"draft" and
                 can be resumed later from /store/products. */}
             {currentStep === 0 && (
-              <div className="px-5 pb-3">
+              <Div className="px-5 pb-3">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -1194,12 +1194,12 @@ export function SellerProductShell({
                 >
                   Save as draft &amp; finish later
                 </Button>
-              </div>
+              </Div>
             )}
             {stepError && (
               <Text className="px-5 pb-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
             )}
-          </div>
+          </Div>
         )}
       >
         <FormShellProvider isDirty={isDirty} values={draft as Record<string, unknown>}>

@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { StackedViewShell } from "../../../ui";
 import {
   Alert,
+  Div,
   FormField,
   FormGroup,
   Heading,
@@ -292,7 +293,7 @@ export function SellerStorefrontView({
       portal="seller"
       title="Storefront Settings"
       sections={[
-        <div key="stepform">
+        <Div key="stepform">
           {saved && (
             <Alert variant="success" className="mb-6">
               Changes saved successfully.
@@ -309,7 +310,7 @@ export function SellerStorefrontView({
             completeLabel="Save Changes"
             isLoading={busy}
           />
-        </div>,
+        </Div>,
       ]}
     />
   );

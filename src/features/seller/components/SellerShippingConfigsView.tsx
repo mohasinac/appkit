@@ -203,7 +203,7 @@ export function SellerShippingConfigsView({
   }, [onEditClick]);
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={0}
         searchValue={searchInput}
@@ -223,7 +223,7 @@ export function SellerShippingConfigsView({
         }
       />
 
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
@@ -243,11 +243,11 @@ export function SellerShippingConfigsView({
             <Text className="text-zinc-400 dark:text-zinc-400">
               No shipping configs yet — define your first shipping rule
             </Text>
-            <div className="mt-4">
+            <Div className="mt-4">
               <Button size="sm" onClick={handleCreate}>
                 Add shipping config
               </Button>
-            </div>
+            </Div>
           </Div>
         ) : (
           <DataTable
@@ -281,7 +281,7 @@ export function SellerShippingConfigsView({
             )}
           />
         )}
-      </div>
+      </Div>
 
       {deleteTargetId && (
         <ConfirmDeleteModal
@@ -293,6 +293,6 @@ export function SellerShippingConfigsView({
           isDeleting={deletingId === deleteTargetId}
         />
       )}
-    </div>
+    </Div>
   );
 }

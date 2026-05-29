@@ -276,7 +276,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
 
   return (
     <StackedViewShell portal="seller" title="Shipping Configuration" sections={[
-      <div key="shipping">
+      <Div key="shipping">
         {error && <Alert variant="error" className="mb-4">{error}</Alert>}
         {success && <Alert variant="success" className="mb-4">Shipping configuration saved.</Alert>}
         <StepForm<ShippingDraft>
@@ -290,7 +290,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
           completeLabel="Save Configuration"
           isLoading={busy}
         />
-      </div>,
+      </Div>,
     ]} />
   );
 }

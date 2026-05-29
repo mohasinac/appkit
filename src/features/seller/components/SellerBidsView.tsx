@@ -155,10 +155,10 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       key: "productTitle",
       header: "Auction",
       render: (row) => (
-        <div className="space-y-0.5">
+        <Div className="space-y-0.5">
           <Text className="font-medium text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1">{row.productTitle}</Text>
           <Text className="text-xs text-zinc-400 dark:text-zinc-400 font-mono">{row.productId}</Text>
-        </div>
+        </Div>
       ),
     },
     {
@@ -244,7 +244,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
@@ -263,23 +263,23 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </div>
+        </Div>
       )}
 
       {selection.selectedIds.length > 0 && (
-        <div className="sticky z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700"
+        <Div className="sticky z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700"
           style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}
             actions={bulkActions}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
@@ -297,7 +297,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
             onToggleSelectAll={() => selection.toggleAll()}
           />
         ) : (
-          <div className="space-y-3">
+          <Div className="space-y-3">
             {groupedRows.length === 0 && !isLoading && (
               <Text className="text-sm text-zinc-500 dark:text-zinc-400">No bids found for your auctions.</Text>
             )}
@@ -324,7 +324,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                     </span>
                   </button>
                   {!collapsed && (
-                    <div className="border-t border-[var(--appkit-color-border)]">
+                    <Div className="border-t border-[var(--appkit-color-border)]">
                       <DataTable
                         rows={group.bids}
                         columns={columns}
@@ -333,14 +333,14 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                         selectedIds={selection.selectedIdSet}
                         onToggleSelect={selection.toggle}
                       />
-                    </div>
+                    </Div>
                   )}
                 </Div>
               );
             })}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
         <FilterChipGroup
@@ -351,6 +351,6 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
           allId=""
         />
       </ListingFilterDrawer>
-    </div>
+    </Div>
   );
 }

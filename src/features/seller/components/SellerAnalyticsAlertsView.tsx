@@ -85,7 +85,7 @@ function AlertCard({
 
   return (
     <Div surface="card" padding="sm" className="flex items-start justify-between gap-4">
-      <div className="flex-1 min-w-0">
+      <Div className="flex-1 min-w-0">
         <Row className="gap-2 mb-1 flex-wrap">
           <Text className="font-medium text-zinc-900 dark:text-zinc-100 text-sm">{alert.label}</Text>
           <Badge variant={alert.isActive ? "success" : "default"}>
@@ -107,8 +107,8 @@ function AlertCard({
             Last triggered: {new Date(alert.lastTriggeredAt).toLocaleString("en-IN")}
           </Text>
         )}
-      </div>
-      <div className="flex items-center gap-2 shrink-0">
+      </Div>
+      <Div className="flex items-center gap-2 shrink-0">
         <Toggle
           checked={alert.isActive}
           onChange={(v) => onToggle(alert.id, v)}
@@ -122,7 +122,7 @@ function AlertCard({
         >
           Delete
         </Button>
-      </div>
+      </Div>
     </Div>
   );
 }
@@ -223,7 +223,7 @@ export function SellerAnalyticsAlertsView({
   }, []);
 
   return (
-    <div className="space-y-6">
+    <Div className="space-y-6">
       <Row justify="between">
         <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           {labels.title ?? "Analytics Alerts"}
@@ -243,7 +243,7 @@ export function SellerAnalyticsAlertsView({
             Create Alert
           </Heading>
           <Form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(); }}>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <Div className="grid sm:grid-cols-2 gap-4">
               <Input
                 label="Alert label"
                 value={draft.label}
@@ -277,9 +277,9 @@ export function SellerAnalyticsAlertsView({
                 onValueChange={(v) => setDraft((d) => ({ ...d, windowHours: v }))}
                 options={WINDOW_OPTIONS}
               />
-            </div>
+            </Div>
 
-            <div className="mt-3">
+            <Div className="mt-3">
               <Text className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                 Notify via
               </Text>
@@ -299,7 +299,7 @@ export function SellerAnalyticsAlertsView({
                   </button>
                 ))}
               </Row>
-            </div>
+            </Div>
 
             <FormActions align="right" className="mt-4">
               <Button type="submit" isLoading={createMutation.isPending}>
@@ -311,11 +311,11 @@ export function SellerAnalyticsAlertsView({
       )}
 
       {isLoading && (
-        <div className="space-y-2">
+        <Div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+            <Div key={i} className="h-16 rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
           ))}
-        </div>
+        </Div>
       )}
 
       {!isLoading && alerts.length === 0 && !showForm && (
@@ -325,7 +325,7 @@ export function SellerAnalyticsAlertsView({
       )}
 
       {!isLoading && alerts.length > 0 && (
-        <div className="space-y-3">
+        <Div className="space-y-3">
           {alerts.map((alert) => (
             <AlertCard
               key={alert.id}
@@ -334,8 +334,8 @@ export function SellerAnalyticsAlertsView({
               onDelete={(id) => deleteMutation.mutate(id)}
             />
           ))}
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

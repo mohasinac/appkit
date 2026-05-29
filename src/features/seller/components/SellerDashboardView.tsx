@@ -18,7 +18,7 @@ export interface SellerDashboardViewProps extends Omit<
 
 function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <Div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (
         <Div
           key={i}
@@ -26,8 +26,8 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
         >
           {isLoading ? (
             <>
-              <div className="h-3 w-16 animate-pulse rounded bg-[var(--appkit-color-border)]" />
-              <div className="mt-3 h-6 w-20 animate-pulse rounded bg-[var(--appkit-color-border)]" />
+              <Div className="h-3 w-16 animate-pulse rounded bg-[var(--appkit-color-border)]" />
+              <Div className="mt-3 h-6 w-20 animate-pulse rounded bg-[var(--appkit-color-border)]" />
             </>
           ) : (
             <>
@@ -39,20 +39,20 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
           )}
         </Div>
       ))}
-    </div>
+    </Div>
   );
 }
 
 function DefaultQuickActionsPlaceholder() {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <Div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (
         <Div
           key={i}
           className="h-12 animate-pulse rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-border)]"
         />
       ))}
-    </div>
+    </Div>
   );
 }
 

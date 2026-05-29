@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Badge, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
+import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -55,19 +55,19 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
           className="w-10 h-10 rounded-lg object-cover border border-[var(--appkit-color-border)]"
         />
       ) : (
-        <div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center">
+        <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center">
           <span className="text-xs text-[var(--appkit-color-text-faint)]">–</span>
-        </div>
+        </Div>
       ),
   },
   {
     key: "primary",
     header: "Prize Draw",
     render: (row) => (
-      <div className="space-y-1">
+      <Div className="space-y-1">
         <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
         <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.secondary}</span>
-      </div>
+      </Div>
     ),
   },
   {

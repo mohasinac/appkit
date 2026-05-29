@@ -118,7 +118,7 @@ export function SellerCouponsView({
         <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           Status
         </Text>
-        <div className="flex flex-wrap gap-2">
+        <Div className="flex flex-wrap gap-2">
           {[
             { label: "All", value: "" },
             { label: "Active", value: "true" },
@@ -137,7 +137,7 @@ export function SellerCouponsView({
               {opt.label}
             </button>
           ))}
-        </div>
+        </Div>
       </Div>
     ),
     renderCards: (rows, _view, _selection, isLoading) =>

@@ -141,7 +141,7 @@ function GroupsContent({
           const isOpen = openGroups[group.title] ?? false;
           const hasActive = group.items.some((i) => activeHref === i.href);
           return (
-            <div key={group.title} className="mb-0.5">
+            <Div key={group.title} className="mb-0.5">
               <button
                 type="button"
                 onClick={() => toggle(group.title)}
@@ -168,7 +168,7 @@ function GroupsContent({
                   ))}
                 </Ul>
               )}
-            </div>
+            </Div>
           );
         })}
       </Nav>
@@ -178,7 +178,7 @@ function GroupsContent({
 
 function DrawerPanel({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
-    <div className="hidden md:block">
+    <Div className="hidden md:block">
       <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
@@ -186,7 +186,7 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
         aria-label={title}
         className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
       >
-        <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+        <Div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
           <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">{title}</span>
           <button
             type="button"
@@ -198,10 +198,10 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </div>
+        </Div>
         <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
-    </div>
+    </Div>
   );
 }
 
@@ -260,8 +260,8 @@ export function StoreSidebar({
         >
           {/* Nav panel */}
           <div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-700 flex flex-col overflow-hidden shadow-xl">
-            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-              <div className="flex items-center gap-3 min-w-0">
+            <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+              <Div className="flex items-center gap-3 min-w-0">
                 {storeLogoURL ? (
                   <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
                 ) : (
@@ -270,8 +270,8 @@ export function StoreSidebar({
                   </Div>
                 )}
                 <Text className={CLS_STORE_NAME}>{storeName || panelTitle}</Text>
-              </div>
-            </div>
+              </Div>
+            </Div>
             <div className="flex-1 overflow-y-auto">{navContent}</div>
           </div>
 
@@ -279,7 +279,7 @@ export function StoreSidebar({
         </div>
 
         {/* Mobile: bottom sheet */}
-        <div className="md:hidden">
+        <Div className="md:hidden">
           <BottomSheet open={mobileOpen} onClose={close} title={panelTitle}>
             {groups ? (
               <GroupsContent groups={groups} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
@@ -287,7 +287,7 @@ export function StoreSidebar({
               <FlatContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
             )}
           </BottomSheet>
-        </div>
+        </Div>
       </>
     );
   }
@@ -299,7 +299,7 @@ export function StoreSidebar({
           <DrawerPanel title={panelTitle} onClose={close}>{navContent}</DrawerPanel>,
           document.body
         )}
-      <div className="md:hidden">
+      <Div className="md:hidden">
         <BottomSheet open={mobileOpen} onClose={close} title={panelTitle}>
           {groups ? (
             <GroupsContent groups={groups} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
@@ -307,7 +307,7 @@ export function StoreSidebar({
             <FlatContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
           )}
         </BottomSheet>
-      </div>
+      </Div>
     </>
   );
 }

@@ -118,14 +118,14 @@ export function SellerGoogleReviewsView({
 
   if (loading) {
     return (
-      <div className="space-y-4 py-6 px-4">
+      <Div className="space-y-4 py-6 px-4">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
             className="h-12 animate-pulse rounded-xl border border-zinc-100 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800"
           />
         ))}
-      </div>
+      </Div>
     );
   }
 
@@ -137,7 +137,7 @@ export function SellerGoogleReviewsView({
     : "Never";
 
   return (
-    <div className="py-4 px-3 sm:px-4 max-w-2xl">
+    <Div className="py-4 px-3 sm:px-4 max-w-2xl">
       <Stack gap="lg">
         {/* Settings */}
         <Section>
@@ -175,7 +175,7 @@ export function SellerGoogleReviewsView({
         {(draft.averageRating !== undefined || draft.totalReviews !== undefined) && (
           <Section>
             <Heading level={3} className="mb-3">Review Stats</Heading>
-            <div className="flex flex-wrap gap-6">
+            <Div className="flex flex-wrap gap-6">
               {draft.averageRating !== undefined && (
                 <Div>
                   <Text className="text-xs text-[var(--appkit-color-text-muted)] uppercase tracking-wide">
@@ -202,7 +202,7 @@ export function SellerGoogleReviewsView({
                 </Text>
                 <Text className="text-sm">{formattedLastSync}</Text>
               </Div>
-            </div>
+            </Div>
           </Section>
         )}
 
@@ -213,7 +213,7 @@ export function SellerGoogleReviewsView({
         )}
 
         {/* Actions */}
-        <div className="flex items-center justify-between gap-3 border-t border-[var(--appkit-color-border)] pt-4">
+        <Div className="flex items-center justify-between gap-3 border-t border-[var(--appkit-color-border)] pt-4">
           <Button
             variant="outline"
             size="sm"
@@ -234,8 +234,8 @@ export function SellerGoogleReviewsView({
           >
             {ACTIONS.STORE["save-google-settings"].label}
           </Button>
-        </div>
+        </Div>
       </Stack>
-    </div>
+    </Div>
   );
 }

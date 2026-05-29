@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Div, Heading, Input, Row, Select, Stack, Text } from "../../../ui";
+import { Badge, Button, Div, Heading, Input, Row, Select, Span, Stack, Text } from "../../../ui";
 import type { SelectOption } from "../../../ui";
+import { ProductInlineSelect } from "./ProductInlineSelect";
+import { CategoryInlineSelect } from "./CategoryInlineSelect";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
+
+const CLS_SECTION_LABEL = "font-medium text-[var(--appkit-color-text-secondary)] mb-3";
 
 const TYPE_OPTIONS: SelectOption[] = [
   { value: "percentage", label: "Percentage off (e.g. 10%)" },
@@ -25,6 +29,8 @@ export interface CouponEditorDraft {
   startDate: string;
   endDate: string;
   isActive: boolean;
+  applicableProducts: string[];
+  applicableCategories: string[];
 }
 
 export interface SellerCouponEditorViewProps {
@@ -45,6 +51,8 @@ const EMPTY_DRAFT: CouponEditorDraft = {
   startDate: "",
   endDate: "",
   isActive: true,
+  applicableProducts: [],
+  applicableCategories: [],
 };
 
 // ---------------------------------------------------------------------------
@@ -175,10 +183,10 @@ export function SellerCouponEditorView({
 
           {/* Usage limits */}
           <Div>
-            <Text size="sm" className="font-medium text-[var(--appkit-color-text-secondary)] mb-3">
+            <Text size="sm" className={CLS_SECTION_LABEL}>
               Usage Limits
             </Text>
-            <div className="grid grid-cols-2 gap-3">
+            <Div className="grid grid-cols-2 gap-3">
               <Input
                 label="Total Uses"
                 type="number"
@@ -195,15 +203,15 @@ export function SellerCouponEditorView({
                 onChange={(e) => set("perUserLimit", e.target.value)}
                 placeholder="0 = unlimited"
               />
-            </div>
+            </Div>
           </Div>
 
           {/* Dates */}
           <Div>
-            <Text size="sm" className="font-medium text-[var(--appkit-color-text-secondary)] mb-3">
+            <Text size="sm" className={CLS_SECTION_LABEL}>
               Validity Period
             </Text>
-            <div className="grid grid-cols-2 gap-3">
+            <Div className="grid grid-cols-2 gap-3">
               <Input
                 label="Start Date"
                 type="date"
@@ -218,7 +226,66 @@ export function SellerCouponEditorView({
                 onChange={(e) => set("endDate", e.target.value)}
                 required
               />
-            </div>
+            </Div>
+          </Div>
+
+          {/* Applicability — restrict to specific products / categories */}
+          <Div>
+            <Text size="sm" className={CLS_SECTION_LABEL}>
+              Applicability (optional)
+            </Text>
+            <Stack gap="sm">
+              <Div>
+                <Text size="xs" className="mb-1 text-[var(--appkit-color-text-secondary)]">
+                  Applicable products
+                </Text>
+                <ProductInlineSelect
+                  scope="store"
+                  multiple
+                  value={draft.applicableProducts}
+                  onChange={(v) => set("applicableProducts", v)}
+                  placeholder="Restrict to specific products…"
+                />
+              </Div>
+              <Div>
+                <Text size="xs" className="mb-1 text-[var(--appkit-color-text-secondary)]">
+                  Applicable categories
+                </Text>
+                <CategoryInlineSelect
+                  value=""
+                  onChange={(id) => {
+                    if (!id || draft.applicableCategories.includes(id)) return;
+                    set("applicableCategories", [...draft.applicableCategories, id]);
+                  }}
+                  placeholder="Add a category…"
+                />
+                {draft.applicableCategories.length > 0 && (
+                  <Div className="flex flex-wrap gap-2 pt-2">
+                    {draft.applicableCategories.map((cid) => (
+                      <Span
+                        key={cid}
+                        className="inline-flex items-center gap-1 rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-800 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                      >
+                        {cid}
+                        <button
+                          type="button"
+                          aria-label={`Remove ${cid}`}
+                          className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100"
+                          onClick={() =>
+                            set("applicableCategories", draft.applicableCategories.filter((c) => c !== cid))
+                          }
+                        >
+                          ×
+                        </button>
+                      </Span>
+                    ))}
+                  </Div>
+                )}
+              </Div>
+              <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">
+                Leave both empty to apply the coupon to every product in your store.
+              </Text>
+            </Stack>
           </Div>
 
           {/* Active toggle */}
@@ -230,14 +297,14 @@ export function SellerCouponEditorView({
                 onChange={(e) => set("isActive", e.target.checked)}
                 className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
               />
-              <div className="flex-1 min-w-0">
+              <Div className="flex-1 min-w-0">
                 <Text size="sm" className="font-medium text-[var(--appkit-color-text-primary)]">
                   Active
                 </Text>
                 <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">
                   Customers can apply this coupon at checkout
                 </Text>
-              </div>
+              </Div>
             </label>
           </Div>
         </Stack>

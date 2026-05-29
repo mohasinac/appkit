@@ -340,7 +340,7 @@ export function SellerTemplatesView({
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
@@ -365,13 +365,13 @@ export function SellerTemplatesView({
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={safePage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
       {selection.selectedCount > 0 && (
@@ -382,7 +382,7 @@ export function SellerTemplatesView({
         />
       )}
 
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
@@ -436,7 +436,7 @@ export function SellerTemplatesView({
             )}
           />
         )}
-      </div>
+      </Div>
 
       <FilterDrawer
         open={filterOpen}
@@ -468,14 +468,14 @@ export function SellerTemplatesView({
         mode={drawerMode}
         isDirty={draft.name !== "" || draft.category !== "" || draft.brand !== ""}
         footer={
-          <div className="flex items-center justify-end gap-2">
+          <Div className="flex items-center justify-end gap-2">
             <Button size="sm" variant="ghost" onClick={closeDrawer} disabled={saving}>
               Cancel
             </Button>
             <Button size="sm" isLoading={saving} onClick={handleSave}>
               {drawerMode === "create" ? "Create Template" : "Save Changes"}
             </Button>
-          </div>
+          </Div>
         }
       >
         <Stack gap="md">
@@ -537,6 +537,6 @@ export function SellerTemplatesView({
           isDeleting={deletingId === deleteTargetId}
         />
       )}
-    </div>
+    </Div>
   );
 }
