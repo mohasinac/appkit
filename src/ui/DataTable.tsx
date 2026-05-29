@@ -10,6 +10,7 @@ import { AnimatedList } from "./components/Motion";
 import { GRID_MAP } from "./components/Layout";
 import type { GridCols } from "./components/Layout";
 import { Row } from "./components/Layout";
+import { Div } from "./components/Div";
 import type { TableColumn, TableConfig, PaginationConfig } from "../contracts";
 import { mergeTableConfig, DEFAULT_PAGINATION_CONFIG } from "../contracts";
 
@@ -224,11 +225,11 @@ export function DataTable<T extends object>({
   // --- Loading state ----------------------------------------------------------
   if (loading) {
     return (
-      <div className="appkit-data-table__wrapper" data-section="datatable-div-630">
-        <div className="appkit-data-table__loading" data-section="datatable-div-631">
+      <Div className="appkit-data-table__wrapper">
+        <Div className="appkit-data-table__loading">
           <Spinner size="lg" label={labelLoading} />
-        </div>
-      </div>
+        </Div>
+      </Div>
     );
   }
 
@@ -236,9 +237,9 @@ export function DataTable<T extends object>({
   if (data.length === 0) {
     if (emptyState) return <>{emptyState}</>;
     return (
-      <div className="appkit-data-table__wrapper" data-section="datatable-div-632">
-        <div className="appkit-data-table__empty" data-section="datatable-div-633">
-          <div className="text-center px-4" data-section="datatable-div-634">
+      <Div className="appkit-data-table__wrapper">
+        <Div className="appkit-data-table__empty">
+          <Div className="text-center px-4">
             {emptyIcon ?? (
               <svg
                 className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-400"
@@ -261,20 +262,20 @@ export function DataTable<T extends object>({
             <Text size="sm" variant="secondary" className="mt-1">
               {emptyMessage ?? noDataDescription}
             </Text>
-          </div>
-        </div>
-      </div>
+          </Div>
+        </Div>
+      </Div>
     );
   }
 
   const renderViewToggle = () => {
     if (!showViewToggle) return null;
     return (
-      <div
+      <Div
         className="appkit-data-table__view-toggle"
         role="toolbar"
         aria-label="View mode"
-       data-section="datatable-div-635">
+      >
         {showTableView && (
           <Button
             type="button"
@@ -349,7 +350,7 @@ export function DataTable<T extends object>({
             />
           </svg>
         </Button>
-      </div>
+      </Div>
     );
   };
 
@@ -390,7 +391,7 @@ export function DataTable<T extends object>({
 
   // --- Main render -------------------------------------------------------------
   return (
-    <div className="appkit-data-table" data-section="datatable-div-637">
+    <Div className="appkit-data-table">
       {renderViewToggle()}
 
       {/* Non-table views */}
@@ -400,7 +401,7 @@ export function DataTable<T extends object>({
 
       {/* Mobile cards in table mode */}
       {activeViewMode === "table" && mobileCardRender && (
-        <div className="appkit-data-table__mobile-cards" data-section="datatable-div-638">
+        <Div className="appkit-data-table__mobile-cards">
           {paginatedData.map((item) => (
             <SelectableCard
               key={keyExtractor(item)}
@@ -418,15 +419,15 @@ export function DataTable<T extends object>({
               {mobileCardRender(item)}
             </SelectableCard>
           ))}
-        </div>
+        </Div>
       )}
 
       {/* Desktop table */}
       {activeViewMode === "table" && (
-        <div className="appkit-data-table__wrapper" data-section="datatable-div-639">
-          <div
+        <Div className="appkit-data-table__wrapper">
+          <Div
             className={`appkit-data-table__scroll ${stickyHeader ? "appkit-data-table__scroll--sticky" : ""}`}
-           data-section="datatable-div-640">
+          >
             <table className="appkit-data-table__table">
               <thead
                 className={`appkit-data-table__thead ${stickyHeader ? "appkit-data-table__thead--sticky" : ""}`}
@@ -550,13 +551,13 @@ export function DataTable<T extends object>({
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
 
       {/* Pagination */}
       {!externalPagination && totalPages > 1 && (
-        <div className="appkit-data-table__pagination" data-section="datatable-div-641">
+        <Div className="appkit-data-table__pagination">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -566,9 +567,9 @@ export function DataTable<T extends object>({
             showPrevNext={resolvedPag.showPrevNext}
             size={resolvedPag.size}
           />
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }
 
@@ -591,11 +592,10 @@ function DataTableViewToggle({
 }: DataTableViewToggleProps) {
   if (!showViewToggle) return null;
   return (
-    <div
+    <Div
       className="appkit-data-table__view-toggle"
       role="toolbar"
       aria-label="View mode"
-      data-section="datatable-div-635"
     >
       {showTableView && (
         <Button
@@ -638,7 +638,7 @@ function DataTableViewToggle({
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
         </svg>
       </Button>
-    </div>
+    </Div>
   );
 }
 
@@ -680,10 +680,9 @@ function DataTableTableView<T extends object>({
   onRowSelectionChange,
 }: DataTableTableViewProps<T>) {
   return (
-    <div className="appkit-data-table__wrapper" data-section="datatable-div-639">
-      <div
+    <Div className="appkit-data-table__wrapper">
+      <Div
         className={`appkit-data-table__scroll ${stickyHeader ? "appkit-data-table__scroll--sticky" : ""}`}
-        data-section="datatable-div-640"
       >
         <table className="appkit-data-table__table">
           <thead className={`appkit-data-table__thead ${stickyHeader ? "appkit-data-table__thead--sticky" : ""}`}>
@@ -774,8 +773,8 @@ function DataTableTableView<T extends object>({
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -798,20 +797,20 @@ function SelectableCard({
   children,
   listMode = false,
 }: SelectableCardProps) {
-  if (!selectable) return <div className="h-full" data-section="datatable-div-642">{children}</div>;
+  if (!selectable) return <Div className="h-full">{children}</Div>;
   return (
-    <div className="relative group h-full" data-section="datatable-div-643">
+    <Div className="relative group h-full">
       {/* Checkbox overlay — always visible, bg/shadow ensures contrast over any card background */}
-      <div
+      <Div
         className={[
           "absolute z-10",
           listMode ? "left-2 top-1/2 -translate-y-1/2" : "top-2 left-2",
         ].join(" ")}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-6 h-6 rounded-md bg-white/95 dark:bg-slate-800/95 shadow-md flex items-center justify-center" data-section="datatable-div-645">
+        <Div className="w-6 h-6 rounded-md bg-white/95 dark:bg-slate-800/95 shadow-md flex items-center justify-center">
           {/* relative wrapper ensures checkmark SVG centers over the input */}
-          <div className="relative flex items-center justify-center" data-section="datatable-div-646">
+          <Div className="relative flex items-center justify-center">
             <input
               type="checkbox"
               className={[
@@ -840,16 +839,16 @@ function SelectableCard({
                 />
               </svg>
             )}
-          </div>
-        </div>
-      </div>
+          </Div>
+        </Div>
+      </Div>
       {selected && (
-        <div
+        <Div
           className="absolute inset-0 z-[5] rounded-xl ring-2 ring-primary ring-offset-0 pointer-events-none"
           aria-hidden="true"
         />
       )}
       {children}
-    </div>
+    </Div>
   );
 }

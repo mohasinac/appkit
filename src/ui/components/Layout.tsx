@@ -313,6 +313,10 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   wrap?: boolean;
   /** Render as a different element. Defaults to `"div"`. */
   as?: React.ElementType;
+  /** Forwarded to the underlying element when `as="button"`. */
+  type?: "button" | "submit" | "reset";
+  /** Forwarded to the underlying element when `as="button"` or similar. */
+  disabled?: boolean;
   children?: React.ReactNode;
 }
 
@@ -335,7 +339,7 @@ export function Row({
   const Tag = (as ?? "div") as React.ElementType;
   const classes = [
     "appkit-row",
-    centered ? "appkit-row--centered" : ITEMS_MAP[align],
+    centered ? "appkit-row--centered" : align !== "center" ? ITEMS_MAP[align] : "",
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],
     wrap ? "appkit-row--wrap" : "",
