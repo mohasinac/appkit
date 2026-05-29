@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { BulkActionBar, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Text } from "../../../ui";
+import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Text } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -132,7 +132,7 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [] } } : {});
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
@@ -162,34 +162,34 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-6">
+      <Div className="py-6">
         {isLoading ? (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (
               <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-                <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-3 space-y-2">
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
                 </div>
               </div>
             ))}
-          </div>
+          </Div>
         ) : products.length === 0 ? (
           <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No classified listings found.
           </Text>
         ) : (
-          <div className={view === "list" ? "flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800" : gridClass}>
+          <Div className={view === "list" ? "flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800" : gridClass}>
             {(products as any[]).map((product) => (
               <InteractiveProductCard
                 key={product.id}
@@ -203,9 +203,9 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
                 onSelect={(id) => selection.toggle(id)}
               />
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       <FilterDrawer
         open={filterOpen}
@@ -220,6 +220,6 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
       </FilterDrawer>
 
       <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
-    </div>
+    </Div>
   );
 }

@@ -27,6 +27,7 @@ import { Drawer } from "./Drawer";
 import { BulkActionBar } from "./BulkActionBar";
 import type { BulkActionItem } from "./BulkActionBar";
 import type { ViewPortal } from "./Layout";
+import { Div } from "./Div";
 
 export interface ListingLayoutLabels {
   filtersTitle?: string;
@@ -181,22 +182,21 @@ export function ListingLayout({
 
       {/* Status tabs */}
       {statusTabsSlot && (
-        <div className="appkit-listing-layout__status-tabs" data-section="listinglayout-div-539">
+        <Div className="appkit-listing-layout__status-tabs">
           {statusTabsSlot}
-        </div>
+        </Div>
       )}
 
       {/* Sticky toolbar */}
-      <div
+      <Div
         className={[
           "appkit-listing-layout__toolbar",
           effectiveIsDashboard
             ? "appkit-listing-layout__toolbar--dashboard"
             : "appkit-listing-layout__toolbar--page",
-        ].join(" ")}
-       data-section="listinglayout-div-540">
+        ].join(" ")}>
         {/* Desktop (lg+): single flex row */}
-        <div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--desktop" data-section="listinglayout-div-541">
+        <Div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--desktop">
           {hasFilter && (
             <Button
               type="button"
@@ -224,29 +224,29 @@ export function ListingLayout({
           )}
 
           {searchSlot && (
-            <div className="appkit-listing-layout__search" data-section="listinglayout-div-542">{searchSlot}</div>
+            <Div className="appkit-listing-layout__search">{searchSlot}</Div>
           )}
 
-          <div className="appkit-listing-layout__toolbar-actions" data-section="listinglayout-div-543">
+          <Div className="appkit-listing-layout__toolbar-actions">
             {sortSlot}
             {viewToggleSlot && (
-              <div className="appkit-listing-layout__view-toggle-wrap" data-section="listinglayout-div-544">
+              <Div className="appkit-listing-layout__view-toggle-wrap">
                 {viewToggleSlot}
-              </div>
+              </Div>
             )}
             {actionsSlot}
           </div>
 
           {toolbarPaginationSlot && (
-            <div className="appkit-listing-layout__toolbar-pagination" data-section="listinglayout-div-545">
+            <Div className="appkit-listing-layout__toolbar-pagination">
               {toolbarPaginationSlot}
-            </div>
+            </Div>
           )}
-        </div>
+        </Div>
 
         {/* Mobile/Tablet (< lg): two stacked rows */}
-        <div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--mobile" data-section="listinglayout-div-546">
-          <div className="appkit-listing-layout__mobile-row-1" data-section="listinglayout-div-547">
+        <Div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--mobile">
+          <Div className="appkit-listing-layout__mobile-row-1">
             {hasFilter && (
               <Button
                 type="button"
@@ -274,24 +274,24 @@ export function ListingLayout({
               </Button>
             )}
             {searchSlot && (
-              <div className="appkit-listing-layout__search" data-section="listinglayout-div-548">{searchSlot}</div>
+              <Div className="appkit-listing-layout__search">{searchSlot}</Div>
             )}
-          </div>
+          </Div>
 
           {(sortSlot || viewToggleSlot || actionsSlot) && (
-            <div className="appkit-listing-layout__mobile-row-2" data-section="listinglayout-div-549">
-              <div className="appkit-listing-layout__mobile-row-2__inner" data-section="listinglayout-div-550">
+            <Div className="appkit-listing-layout__mobile-row-2">
+              <Div className="appkit-listing-layout__mobile-row-2__inner">
                 {sortSlot}
                 {viewToggleSlot}
                 {actionsSlot}
-              </div>
-            </div>
+              </Div>
+            </Div>
           )}
-        </div>
+        </Div>
 
         {/* Bulk action bar — desktop, inside toolbar */}
         {selectedCount > 0 && (
-          <div className="appkit-listing-layout__bulk-bar" data-section="listinglayout-div-551">
+          <Div className="appkit-listing-layout__bulk-bar">
             <BulkActionBar
               selectedCount={selectedCount}
               onClearSelection={onClearSelection}
@@ -302,12 +302,12 @@ export function ListingLayout({
                 clearSelection: l.clearAll,
               }}
             />
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       {/* Sidebar + Content area */}
-      <div className="appkit-listing-layout__body" data-section="listinglayout-div-552">
+      <Div className="appkit-listing-layout__body">
         {/* Desktop filter sidebar */}
         {hasFilter && (
           <Aside
@@ -322,9 +322,9 @@ export function ListingLayout({
                 : "appkit-listing-layout__sidebar--collapsed",
             ].join(" ")}
           >
-            <div className="appkit-listing-layout__sidebar-panel" data-section="listinglayout-div-553">
+            <Div className="appkit-listing-layout__sidebar-panel">
               {/* Panel header */}
-              <div className="appkit-listing-layout__sidebar-header" data-section="listinglayout-div-554">
+              <Div className="appkit-listing-layout__sidebar-header">
                 <Text weight="semibold" size="sm">
                   {panelTitle}
                 </Text>
@@ -339,15 +339,15 @@ export function ListingLayout({
                     {l.clearAll}
                   </Button>
                 )}
-              </div>
+              </Div>
 
               {/* Scrollable facets */}
-              <div className="appkit-listing-layout__sidebar-facets" data-section="listinglayout-div-555">
+              <Div className="appkit-listing-layout__sidebar-facets">
                 {filterContent}
-              </div>
+              </Div>
 
               {/* Apply button */}
-              <div className="appkit-listing-layout__sidebar-footer" data-section="listinglayout-div-556">
+              <Div className="appkit-listing-layout__sidebar-footer">
                 <Button
                   type="button"
                   variant="primary"
@@ -359,18 +359,18 @@ export function ListingLayout({
                     ? `${l.applyFilters} (${filterPendingCount})`
                     : l.applyFilters}
                 </Button>
-              </div>
-            </div>
+              </Div>
+            </Div>
           </Aside>
         )}
 
         {/* Main content */}
-        <div className="appkit-listing-layout__content" data-section="listinglayout-div-557">
+        <Div className="appkit-listing-layout__content">
           {activeFiltersSlot}
           {resultCountSlot && (
-            <div className="appkit-listing-layout__result-count" data-section="listinglayout-div-558">
+            <Div className="appkit-listing-layout__result-count">
               {resultCountSlot}
-            </div>
+            </Div>
           )}
 
           {errorSlot ? (
@@ -379,14 +379,14 @@ export function ListingLayout({
             <>
               {children}
               {paginationSlot && (
-                <div className="appkit-listing-layout__pagination" data-section="listinglayout-div-559">
+                <Div className="appkit-listing-layout__pagination">
                   {paginationSlot}
-                </div>
+                </Div>
               )}
             </>
           )}
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       {/* Mobile sticky pagination bar */}
       {toolbarPaginationSlot && (
@@ -417,7 +417,7 @@ export function ListingLayout({
               : panelTitle
           }
           footer={
-            <div className="appkit-listing-layout__mobile-overlay-footer" data-section="listinglayout-div-560">
+            <Div className="appkit-listing-layout__mobile-overlay-footer">
               <Button
                 type="button"
                 variant="secondary"
@@ -436,7 +436,7 @@ export function ListingLayout({
                   ? `${l.applyFilters} (${filterPendingCount})`
                   : l.applyFilters}
               </Button>
-            </div>
+            </Div>
           }
         >
           {filterContent}

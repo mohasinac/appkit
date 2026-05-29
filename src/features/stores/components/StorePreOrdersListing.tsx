@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { FilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
 import { MarketplacePreorderCard } from "../../pre-orders/components/MarketplacePreorderCard";
 import { ProductFilters } from "../../products/components/ProductFilters";
 import { ROUTES } from "../../../next";
@@ -82,7 +82,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4";
 
   return (
-    <div className="min-h-[200px]">
+    <Div className="min-h-[200px]">
       <ListingToolbar
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
@@ -106,38 +106,38 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-6">
+      <Div className="py-6">
         {isLoading ? (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
                 className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse"
               >
-                <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-3 space-y-2">
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-                  <div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+                  <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
                 </div>
               </div>
             ))}
-          </div>
+          </Div>
         ) : preOrders.length === 0 ? (
           <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             This store has no pre-orders yet.
           </Text>
         ) : view === "list" ? (
-          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -146,9 +146,9 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
               />
             ))}
-          </div>
+          </Div>
         ) : (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -157,9 +157,9 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
               />
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       <FilterDrawer
         open={filterOpen}
@@ -172,6 +172,6 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
       >
         <ProductFilters table={pendingTable as any} currencyPrefix="₹" />
       </FilterDrawer>
-    </div>
+    </Div>
   );
 }

@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo } from "react";
 
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
-import { BulkActionBar, ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { BulkActionBar, Div, ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROUTES } from "../../../next";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
@@ -142,7 +142,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   const selection = useBulkSelection({ items: stores, keyExtractor: (s) => s.id ?? s.storeSlug });
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={activeFilterCount}
@@ -188,39 +188,39 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={table.getNumber("page", 1)}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
       {/* ── Store grid ─────────────────────────────────────────────────── */}
-      <div className="py-6">
+      <Div className="py-6">
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-                <div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-4 space-y-2.5">
-                  <div className="flex items-center gap-2">
-                    <div className="h-10 w-10 rounded-lg bg-zinc-200 dark:bg-slate-700" />
-                  </div>
-                  <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+                  <Div className="flex items-center gap-2">
+                    <Div className="h-10 w-10 rounded-lg bg-zinc-200 dark:bg-slate-700" />
+                  </Div>
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
                 </div>
               </div>
             ))}
-          </div>
+          </Div>
         ) : stores.length === 0 ? (
           <Text className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No stores found.
           </Text>
         ) : view === "list" ? (
-          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
             {stores.map((store) => {
               const storeKey = store.storeSlug ?? store.id;
               return (
@@ -234,9 +234,9 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
                 />
               );
             })}
-          </div>
+          </Div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {stores.map((store) => {
               const storeKey = store.storeSlug ?? store.id;
               useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
@@ -266,16 +266,16 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
                 />
               );
             })}
-          </div>
+          </Div>
         )}
 
-      </div>
+      </Div>
 
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={pendingFilterCount}>
         <StoreFilters table={pendingTable} />
       </ListingFilterDrawer>
-    </div>
+    </Div>
   );
 }
