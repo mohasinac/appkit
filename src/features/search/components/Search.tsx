@@ -6,7 +6,7 @@ const CLS_HOVER_ROW = "hover:bg-zinc-100 dark:hover:bg-slate-800";
 const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400";
 const CLS_TRUNCATE = "font-medium truncate";
 import type { LucideIcon } from "lucide-react";
-import { Button, Input, Li, Row, Span, Text, Ul } from "../../../ui";
+import { Button, Div, Input, Li, Row, Span, Text, Ul } from "../../../ui";
 import { useNavSuggestions } from "../hooks/useNavSuggestions";
 import type { NavSuggestionRecord } from "../hooks/useNavSuggestions";
 
@@ -121,7 +121,7 @@ function SuggestionItem({
         className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
       >
         <Span className="text-sm">{typeIcons[suggestion.type]}</Span>
-        <div className="flex-1 min-w-0" data-section="search-div-441">
+        <Div className="flex-1 min-w-0">
           <Text size="sm" className={CLS_TRUNCATE}>
             {suggestion.title}
           </Text>
@@ -479,11 +479,11 @@ export function Search({
             )}
 
             {query && suggestionsLoading && (
-              <div className="px-4 py-3" data-section="search-div-431">
+              <Div className="px-4 py-3">
                 <Text variant="secondary" size="sm">
                   {labels.searching}
                 </Text>
-              </div>
+              </Div>
             )}
 
             {query &&
@@ -503,7 +503,7 @@ export function Search({
                     <Span className="text-sm">
                       {typeIcons[suggestion.type]}
                     </Span>
-                    <div className="flex-1 min-w-0" data-section="search-div-432">
+                    <Div className="flex-1 min-w-0">
                       <Text size="sm" className={CLS_TRUNCATE}>
                         {suggestion.title}
                       </Text>
@@ -635,9 +635,9 @@ export function Search({
 
   return (
     <div className="border-b border-zinc-200 bg-white shadow-md dark:border-slate-800 dark:bg-slate-950 animate-[fadeIn_150ms_ease-out]" data-section="search-div-433">
-      <div className="container mx-auto px-4 py-3 md:py-4 relative" data-section="search-div-434">
+      <Div className="container mx-auto px-4 py-3 md:py-4 relative">
         <Row gap="sm" className="md:gap-3">
-          <div className="flex-1 relative" data-section="search-div-435">
+          <Div className="flex-1 relative">
             <Input
               ref={inputRef}
               bare
@@ -648,7 +648,7 @@ export function Search({
               onKeyDown={handleOverlayKeyDown}
               className="w-full rounded-lg border border-zinc-300 bg-white text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
             />
-          </div>
+          </Div>
 
           {resourceTypes && resourceTypes.length > 0 && (
             <select
@@ -709,10 +709,10 @@ export function Search({
         </Row>
 
         {(filteredSiteLinks.length > 0 || query) && (
-          <div className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 space-y-2 z-50" data-section="search-div-436">
+          <Div className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 space-y-2 z-50">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
-              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900" data-section="search-div-437">
-                <div className="px-4 py-2 border-b border-zinc-200 dark:border-slate-700" data-section="search-div-438">
+              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+                <Div className="px-4 py-2 border-b border-zinc-200 dark:border-slate-700">
                   <Text
                     variant="secondary"
                     size="xs"
@@ -720,7 +720,7 @@ export function Search({
                   >
                     {labels.quickLinks}
                   </Text>
-                </div>
+                </Div>
                 <Ul>
                   {filteredSiteLinks.map((link) => {
                     const Icon = link.icon;
@@ -753,13 +753,13 @@ export function Search({
             )}
 
             {query && (
-              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900" data-section="search-div-439">
+              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
                 {suggestionsLoading ? (
-                  <div className="px-4 py-3" data-section="search-div-440">
+                  <Div className="px-4 py-3">
                     <Text variant="secondary" size="sm">
                       {labels.searching}
                     </Text>
-                  </div>
+                  </Div>
                 ) : suggestions.length > 0 ? (
                   <Ul>
                     {suggestions.map((suggestion, suggestionIndex) => (
@@ -803,9 +803,9 @@ export function Search({
                 </Button>
               </div>
             )}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
     </div>
   );
 }

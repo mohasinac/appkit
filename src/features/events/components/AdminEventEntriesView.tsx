@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
   Button,
+  Div,
   Input,
   Select,
   StackedViewShell,
@@ -182,7 +183,7 @@ export function AdminEventEntriesView({
       key: "points",
       header: "Points",
       render: (row) => (
-        <div className="flex items-center gap-1.5" data-section="adminevententriesview-points">
+        <Div className="flex items-center gap-1.5">
           <input
             type="number"
             min={0}
@@ -207,14 +208,14 @@ export function AdminEventEntriesView({
           >
             Save
           </Button>
-        </div>
+        </Div>
       ),
     },
     {
       key: "actions",
       header: "Actions",
       render: (row) => (
-        <div className="flex items-center gap-2 flex-wrap" data-section="adminevententriesview-div-274">
+        <Div className="flex items-center gap-2 flex-wrap">
           <Button
             size="sm"
             variant="secondary"
@@ -240,13 +241,13 @@ export function AdminEventEntriesView({
               {expandedEntryId === row.id ? "Hide" : "Responses"}
             </Button>
           )}
-        </div>
+        </Div>
       ),
     },
   ], [reviewMutation, pointsMutation, pointsInputs, expandedEntryId]);
 
   const statsSection = (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" data-section="adminevententriesview-div-275">
+    <Div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <Alert variant="info" title="Total entries">
         {String(statsQuery.data?.stats?.totalEntries ?? 0)}
       </Alert>
@@ -256,11 +257,11 @@ export function AdminEventEntriesView({
       <Alert variant="warning" title="Flagged">
         {String(statsQuery.data?.stats?.flaggedEntries ?? 0)}
       </Alert>
-    </div>
+    </Div>
   );
 
   const filtersSection = (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3" data-section="adminevententriesview-div-276">
+    <Div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       <Input
         label="Search entries"
         value={searchQuery}
@@ -279,7 +280,7 @@ export function AdminEventEntriesView({
           setStatusFilter(event.target.value as EntryReviewStatus | "all");
         }}
       />
-    </div>
+    </Div>
   );
 
   const expandedEntry = expandedEntryId ? rows.find((r) => r.id === expandedEntryId) : null;
@@ -289,16 +290,16 @@ export function AdminEventEntriesView({
       <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
         Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
       </Text>
-      <div className="space-y-2">
+      <Div className="space-y-2">
         {Object.entries(expandedEntry.formResponses).map(([key, value]) => (
-          <div key={key} className="space-y-0.5">
+          <Div key={key} className="space-y-0.5">
             <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400">{key}</Text>
             <Text className="text-sm text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap break-words">
               {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}
             </Text>
-          </div>
+          </Div>
         ))}
-      </div>
+      </Div>
     </div>
   ) : null;
 

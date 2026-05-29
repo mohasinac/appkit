@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "../../../ui";
 
 export interface EventParticipateViewProps {
   isLoading?: boolean;
@@ -31,7 +32,7 @@ export function EventParticipateView({
 }: EventParticipateViewProps) {
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
-    return <div className="flex justify-center py-20" data-section="eventparticipateview-div-283">Loading…</div>;
+    return <Div className="flex justify-center py-20">Loading…</Div>;
   }
 
   if (renderAuthGate) return <>{renderAuthGate()}</>;
@@ -39,10 +40,10 @@ export function EventParticipateView({
   if (isSubmitted && renderSuccess) return <>{renderSuccess()}</>;
 
   return (
-    <div className={`max-w-xl mx-auto space-y-6 ${className}`} data-section="eventparticipateview-div-284">
+    <Div className={`max-w-xl mx-auto space-y-6 ${className}`}>
       {renderEventInfo?.()}
       {renderForm?.()}
       {renderAction?.()}
-    </div>
+    </Div>
   );
 }

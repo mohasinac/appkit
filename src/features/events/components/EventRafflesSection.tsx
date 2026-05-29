@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   Container,
+  Div,
   Heading,
   Section,
   Stack,
@@ -75,11 +76,11 @@ export async function EventRafflesSection({
               </Link>
             </Stack>
           ) : (
-            <div className="fluid-grid-card gap-3">
+            <Div className="fluid-grid-card gap-3">
               {events.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
-            </div>
+            </Div>
           )}
         </Stack>
       </Container>

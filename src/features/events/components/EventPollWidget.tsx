@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
-import { LoginRequiredModal, Text } from "../../../ui";
+import { Div, LoginRequiredModal, Text } from "../../../ui";
 
 interface EventPollWidgetProps {
   eventId: string;
@@ -77,25 +77,25 @@ export function EventPollWidget({
 
   if (isEnded) {
     return (
-      <div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-4 space-y-3 ${className}`} data-section="eventpollwidget-div-1">
+      <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-4 space-y-3 ${className}`}>
         <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">This poll has closed.</Text>
         {totalEntries !== undefined && (
           <Text className="text-sm text-zinc-400 dark:text-zinc-400">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
         )}
-        <div className="space-y-2" data-section="eventpollwidget-div-2">
+        <Div className="space-y-2">
           {pollConfig.options.map((opt) => (
-            <div key={opt.id} className="rounded-lg border border-zinc-100 dark:border-zinc-800 px-4 py-2.5 text-sm text-zinc-600 dark:text-zinc-400" data-section="eventpollwidget-div-3">
+            <Div key={opt.id} className="rounded-lg border border-zinc-100 dark:border-zinc-800 px-4 py-2.5 text-sm text-zinc-600 dark:text-zinc-400">
               {opt.label}
-            </div>
+            </Div>
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
     );
   }
 
   if (pollConfig.requireLogin && !user) {
     return (
-      <div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-6 py-8 text-center space-y-3 ${className}`} data-section="eventpollwidget-div-4">
+      <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-6 py-8 text-center space-y-3 ${className}`}>
         <Text className="font-semibold text-zinc-900 dark:text-zinc-100">Login to vote</Text>
         <Text className="text-sm text-zinc-500 dark:text-zinc-400">You need an account to participate in this poll.</Text>
         <a
@@ -104,21 +104,21 @@ export function EventPollWidget({
         >
           Log In
         </a>
-      </div>
+      </Div>
     );
   }
 
   if (isSubmitted) {
     return (
-      <div className={`rounded-xl border border-green-200 dark:border-green-800 bg-success-surface px-6 py-8 text-center space-y-2 ${className}`} data-section="eventpollwidget-div-5">
+      <Div className={`rounded-xl border border-green-200 dark:border-green-800 bg-success-surface px-6 py-8 text-center space-y-2 ${className}`}>
         <Text className="font-semibold text-success">Vote recorded!</Text>
         <Text className="text-sm text-zinc-500 dark:text-zinc-400">Thanks for participating.</Text>
-      </div>
+      </Div>
     );
   }
 
   return (
-    <div className={`space-y-4 ${className}`} data-section="eventpollwidget-div-6">
+    <Div className={`space-y-4 ${className}`}>
       <LoginRequiredModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -127,7 +127,7 @@ export function EventPollWidget({
       <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
         {isMulti ? "Select all that apply:" : "Choose one:"}
       </Text>
-      <div className="space-y-2" data-section="eventpollwidget-div-7">
+      <Div className="space-y-2">
         {pollConfig.options.map((opt) => (
           <label
             key={opt.id}
@@ -163,6 +163,6 @@ export function EventPollWidget({
       >
         {isLoading ? "Submitting…" : "Submit Vote"}
       </button>
-    </div>
+    </Div>
   );
 }

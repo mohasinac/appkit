@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useEvents } from "../hooks/useEvents";
-import { ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
 import { EventCard } from "./EventCard";
 import { EventFilters, EVENT_PUBLIC_SORT_OPTIONS } from "./EventFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
@@ -134,7 +134,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
   }, [searchInput, table]);
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={activeFilterCount}
@@ -154,54 +154,54 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
       {/* ── Event grid ─────────────────────────────────────────────────── */}
-      <div className="py-6">
+      <Div className="py-6">
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-                <div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-4 space-y-2">
-                  <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-                  <div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded mt-2" />
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
+                  <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded mt-2" />
                 </div>
               </div>
             ))}
-          </div>
+          </Div>
         ) : events.length === 0 ? (
           <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No events found.
           </Text>
         ) : view === "list" ? (
-          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
-          </div>
+          </Div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
         <EventFilters table={pendingTable} variant="public" />
       </ListingFilterDrawer>
-    </div>
+    </Div>
   );
 }

@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBlogPosts } from "../hooks/useBlog";
-import { ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { BlogCard } from "./BlogListView";
 import { BlogFilters, BLOG_PUBLIC_SORT_OPTIONS } from "./BlogFilters";
@@ -18,19 +18,19 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   const { isLoading, posts, view } = props;
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-            <div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
+            <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
             <div className="p-5 space-y-2">
-              <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/4" />
-              <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-              <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-              <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
+              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/4" />
+              <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
             </div>
           </div>
         ))}
-      </div>
+      </Div>
     );
   }
   if (posts.length === 0) {
@@ -38,15 +38,15 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   }
   if (view === "list") {
     return (
-      <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+      <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
         {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
-      </div>
+      </Div>
     );
   }
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
-    </div>
+    </Div>
   );
 }
 
@@ -164,7 +164,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
   }, [searchInput, table]);
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={activeFilterCount}
@@ -184,20 +184,20 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
       {/* ── Blog grid ──────────────────────────────────────────────────── */}
-      <div className="py-6">{renderBlogGrid({ isLoading, posts, view })}</div>
+      <Div className="py-6">{renderBlogGrid({ isLoading, posts, view })}</Div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {renderBlogFilterDrawer({ filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable })}
-    </div>
+    </Div>
   );
 }
