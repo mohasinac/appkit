@@ -5,10 +5,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
   ConfirmDeleteModal,
+  Div,
   Form,
   Input,
   Select,
   StackedViewShell,
+  Span,
+  Text,
   Toggle,
   useToast,
 } from "../../../ui";
@@ -17,6 +20,8 @@ import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/for
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { CouponType } from "../../promotions/types";
+import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
+import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 
 // --- Types -------------------------------------------------------------------
 
@@ -40,6 +45,7 @@ interface CouponPayload {
   restrictions: {
     firstTimeUserOnly: boolean;
     combineWithSellerCoupons: boolean;
+    applicableProducts?: string[];
     applicableCategories?: string[];
   };
   applicableToAuctions?: boolean;
@@ -124,10 +130,10 @@ function CouponDiscountFields({
         />
       )}
       {type === "buy_x_get_y" && (
-        <div className="grid grid-cols-2 gap-4">
+        <Div className="grid grid-cols-2 gap-4">
           <Input label="Buy quantity" value={buyQty} onChange={(e) => setBuyQty(e.target.value)} type="number" min={1} required />
           <Input label="Get quantity" value={getQty} onChange={(e) => setGetQty(e.target.value)} type="number" min={1} required />
-        </div>
+        </Div>
       )}
     </>
   );
@@ -154,17 +160,17 @@ function CouponValidityFields({
 }: CouponValidityFieldsProps) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <Div className="grid grid-cols-2 gap-4">
         <Input label="Total usage limit (optional)" value={totalLimit} onChange={(e) => setTotalLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
         <Input label="Per-user limit (optional)" value={perUserLimit} onChange={(e) => setPerUserLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
-      </div>
+      </Div>
       {isEdit && (
         <Input label="Current usage" value={String(currentUsage)} disabled helperText="Read-only — updated by orders." />
       )}
-      <div className="grid grid-cols-2 gap-4">
+      <Div className="grid grid-cols-2 gap-4">
         <Input label="Start date" value={startDate} onChange={(e) => setStartDate(e.target.value)} type="date" required />
         <Input label="End date (optional)" value={endDate} onChange={(e) => setEndDate(e.target.value)} type="date" helperText="Leave blank for no expiry." />
-      </div>
+      </Div>
       <Toggle label="Active" checked={isActive} onChange={setIsActive} />
     </>
   );
@@ -213,6 +219,8 @@ export function AdminCouponEditorView({
   const [firstTimeOnly, setFirstTimeOnly] = React.useState(false);
   const [combinable, setCombinable] = React.useState(false);
   const [appliesToAuctions, setAppliesToAuctions] = React.useState(false);
+  const [applicableProducts, setApplicableProducts] = React.useState<string[]>([]);
+  const [applicableCategories, setApplicableCategories] = React.useState<string[]>([]);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
@@ -249,6 +257,8 @@ export function AdminCouponEditorView({
     setIsActive(c.validity?.isActive ?? false);
     setFirstTimeOnly(c.restrictions?.firstTimeUserOnly ?? false);
     setCombinable(c.restrictions?.combineWithSellerCoupons ?? false);
+    setApplicableProducts(Array.isArray(c.restrictions?.applicableProducts) ? c.restrictions.applicableProducts : []);
+    setApplicableCategories(Array.isArray(c.restrictions?.applicableCategories) ? c.restrictions.applicableCategories : []);
     setAppliesToAuctions(c.applicableToAuctions ?? false);
   }, [couponQuery.data]);
 
@@ -288,6 +298,8 @@ export function AdminCouponEditorView({
         restrictions: {
           firstTimeUserOnly: firstTimeOnly,
           combineWithSellerCoupons: combinable,
+          ...(applicableProducts.length > 0 && { applicableProducts }),
+          ...(applicableCategories.length > 0 && { applicableCategories }),
         },
         applicableToAuctions: appliesToAuctions,
       };
@@ -443,8 +455,66 @@ export function AdminCouponEditorView({
             onChange={setAppliesToAuctions}
           />
 
+          {/* Applicability — restrict the coupon to a specific set of products or categories. */}
+          <Div className="space-y-1">
+            <label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+              Applicable products (optional)
+            </label>
+            <ProductInlineSelect
+              scope="admin"
+              multiple
+              value={applicableProducts}
+              onChange={setApplicableProducts}
+              placeholder="Restrict to specific products…"
+            />
+            <Text size="xs" color="muted">
+              Leave empty to apply the coupon to every eligible product.
+            </Text>
+          </Div>
+
+          <Div className="space-y-1">
+            <label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+              Applicable categories (optional)
+            </label>
+            {/* CategoryInlineSelect is single-select today; we maintain a chip list around it. */}
+            <CategoryInlineSelect
+              value=""
+              onChange={(id) => {
+                if (!id || applicableCategories.includes(id)) return;
+                setApplicableCategories([...applicableCategories, id]);
+              }}
+              allowCreate
+              placeholder="Add a category…"
+            />
+            {applicableCategories.length > 0 && (
+              <Div className="flex flex-wrap gap-2 pt-1">
+                {applicableCategories.map((cid) => (
+                  <Span
+                    key={cid}
+                    className="inline-flex items-center gap-1 rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-800 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                  >
+                    {cid}
+                    <button
+                      type="button"
+                      aria-label={`Remove ${cid}`}
+                      className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100"
+                      onClick={() =>
+                        setApplicableCategories(applicableCategories.filter((c) => c !== cid))
+                      }
+                    >
+                      ×
+                    </button>
+                  </Span>
+                ))}
+              </Div>
+            )}
+            <Text size="xs" color="muted">
+              Leave empty to apply the coupon to every category.
+            </Text>
+          </Div>
+
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <Div className="flex gap-3 pt-2">
             <Button
               type="submit"
               isLoading={isSubmitting}
@@ -462,7 +532,7 @@ export function AdminCouponEditorView({
                 Delete coupon
               </Button>
             )}
-          </div>
+          </Div>
     </Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Pencil } from "lucide-react";
-import { Badge, Button, FilterChipGroup, ListingLayout, Text } from "../../../ui";
+import { Badge, Button, Div, FilterChipGroup, ListingLayout, Text } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -47,12 +47,12 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     key: "primary",
     header: "Prize Draw",
     render: (row) => (
-      <div className="space-y-1">
+      <Div className="space-y-1">
         <Text className="font-semibold text-[var(--appkit-color-text)] line-clamp-1">
           {row.primary}
         </Text>
         <Text className="text-xs text-[var(--appkit-color-text-muted)]">{row.storeName}</Text>
-      </div>
+      </Div>
     ),
   },
   {

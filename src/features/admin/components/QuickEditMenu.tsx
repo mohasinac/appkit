@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "../../../ui/components/Button";
+import { Div } from "../../../ui";
 import { useClickOutside, useKeyPress } from "../../../react";
 import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
 import type { QuickFieldDef } from "../../shell/QuickFormDrawer";
@@ -73,9 +74,9 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
             className={`appkit-row-action-menu__dropdown ${align === "right" ? "appkit-row-action-menu__dropdown--right" : "appkit-row-action-menu__dropdown--left"}`}
           >
             {actions.map((action, idx) => (
-              <div key={`${action.label}-${idx}`}>
+              <Div key={`${action.label}-${idx}`}>
                 {action.separator && idx > 0 && (
-                  <div className="appkit-row-action-menu__separator" />
+                  <Div className="appkit-row-action-menu__separator" />
                 )}
                 <Button
                   type="button"
@@ -90,7 +91,7 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
                   )}
                   {action.label}
                 </Button>
-              </div>
+              </Div>
             ))}
           </div>
         )}

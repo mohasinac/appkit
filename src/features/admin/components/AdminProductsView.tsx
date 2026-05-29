@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { ListingLayout, Text, Toggle, useToast } from "../../../ui";
+import { Div, ListingLayout, Text, Toggle, useToast } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -59,10 +59,10 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       header: "Item",
       sortable: true,
       render: (row) => (
-        <div className="space-y-1">
+        <Div className="space-y-1">
           <Text className="font-semibold text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
-        </div>
+        </Div>
       ),
     },
     {

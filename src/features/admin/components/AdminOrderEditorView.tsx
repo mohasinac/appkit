@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
+  Div,
   Form,
   FormActions,
   Input,
@@ -130,7 +131,7 @@ export function AdminOrderEditorView({
           onValueChange={setCarrier}
         />
 
-        <div className="flex flex-col gap-1">
+        <Div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
             Internal note (optional)
           </label>
@@ -141,7 +142,7 @@ export function AdminOrderEditorView({
             placeholder="Reason for status change, escalation notes…"
             className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
-        </div>
+        </Div>
 
         {(status === "refunded" || status === "return_requested") && (
           <Input

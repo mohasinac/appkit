@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Card, CardBody, ConfirmDeleteModal, Form, PaginatedSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, Card, CardBody, ConfirmDeleteModal, Div, Form, PaginatedSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -184,8 +184,8 @@ export function AdminCategoryEditorView({
         <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
           Identity
         </Text>
-        <div className="space-y-4">
-          <div className="grid sm:grid-cols-2 gap-4">
+        <Div className="space-y-4">
+          <Div className="grid sm:grid-cols-2 gap-4">
             <FieldInput
               name="name"
               label="Category name"
@@ -204,14 +204,14 @@ export function AdminCategoryEditorView({
               placeholder="toys-and-games"
               helperText="Auto-generated from name. Used in URLs."
             />
-          </div>
+          </Div>
           <Input
             label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Brief description of the category"
           />
-          <div className="flex flex-col gap-1">
+          <Div className="flex flex-col gap-1">
             <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Parent category
             </Text>
@@ -234,8 +234,8 @@ export function AdminCategoryEditorView({
             <Text className="text-xs text-neutral-500 dark:text-neutral-400">
               Leave empty to create a root category.
             </Text>
-          </div>
-        </div>
+          </Div>
+        </Div>
       </Card>
 
       {/* ── Display ── */}
@@ -243,7 +243,7 @@ export function AdminCategoryEditorView({
         <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
           Display
         </Text>
-        <div className="space-y-4">
+        <Div className="space-y-4">
           <Input
             label="Display order"
             value={order}
@@ -254,11 +254,11 @@ export function AdminCategoryEditorView({
           />
           <Toggle label="Active" checked={isActive} onChange={setIsActive} />
           <Toggle label="Show in menu" checked={showInMenu} onChange={setShowInMenu} />
-        </div>
+        </Div>
       </Card>
 
       {/* Mobile-only action buttons */}
-      <div className="flex gap-3 lg:hidden">
+      <Div className="flex gap-3 lg:hidden">
         <Button type="submit" isLoading={isSubmitting} disabled={!name || isSubmitting}>
           {isEdit ? "Save changes" : "Create category"}
         </Button>
@@ -272,7 +272,7 @@ export function AdminCategoryEditorView({
             Delete category
           </Button>
         )}
-      </div>
+      </Div>
     </Form>
     </FormShellContext.Provider>
   );
@@ -282,12 +282,12 @@ export function AdminCategoryEditorView({
   }
 
   const twoPanel = (
-    <div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
+    <Div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
       <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
-      <div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
+      <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 
   return (

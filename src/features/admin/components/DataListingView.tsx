@@ -27,6 +27,7 @@ import { Plus } from "lucide-react";
 import {
   BulkActionBar,
   Button,
+  Div,
   ListingFilterDrawer,
   ListingToolbar,
   Pagination,
@@ -241,7 +242,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
   const isEditorOpen = panel.isCreateOpen || panel.isEditOpen;
 
   return (
-    <div className={config.className ?? "min-h-screen"}>
+    <Div className={config.className ?? "min-h-screen"}>
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
@@ -260,7 +261,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
         hasActiveState={hasActiveState}
         extra={
           config.primaryAction || config.toolbarExtra ? (
-            <div className="flex items-center gap-2">
+            <Div className="flex items-center gap-2">
               {config.toolbarExtra}
               {config.primaryAction && (
                 <Button
@@ -276,7 +277,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
                   {config.primaryAction.label}
                 </Button>
               )}
-            </div>
+            </Div>
           ) : undefined
         }
       />
@@ -292,20 +293,20 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
       )}
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
-          </div>
+          </Div>
         )}
         {view === "table" ? (
           <DataTable
@@ -346,7 +347,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             onToggleSelect={selection.toggle}
           />
         )}
-      </div>
+      </Div>
 
       {config.renderFilterPanel && (
         <ListingFilterDrawer
@@ -380,6 +381,6 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             })}
         </SideDrawer>
       )}
-    </div>
+    </Div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ListingLayout, Text } from "../../../ui";
+import { Div, ListingLayout, Text } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -35,14 +35,14 @@ const COLUMNS: AdminTableColumn<BrandRow>[] = [
     header: "Brand",
     sortable: true,
     render: (row) => (
-      <div className="space-y-1">
+      <Div className="space-y-1">
         <Text className="font-semibold text-zinc-900 dark:text-zinc-100">
           {row.primary}
         </Text>
         <Text className="text-xs text-zinc-500 dark:text-zinc-400">
           {row.secondary}
         </Text>
-      </div>
+      </Div>
     ),
   },
   {
@@ -116,11 +116,11 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
       },
     ] satisfies BulkActionItem[],
   renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-    <div className="space-y-2">
+    <Div className="space-y-2">
       <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
         Status
       </Text>
-      <div className="flex flex-wrap gap-2">
+      <Div className="flex flex-wrap gap-2">
         {[
           { label: "All", value: "" },
           { label: "Active", value: "true" },
@@ -141,8 +141,8 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
             {opt.label}
           </button>
         ))}
-      </div>
-    </div>
+      </Div>
+    </Div>
   ),
   renderEditor: ({ editId, closePanel }) => (
     <AdminBrandEditorView

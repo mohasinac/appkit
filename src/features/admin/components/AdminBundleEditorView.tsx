@@ -13,7 +13,7 @@
  * static).
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -30,13 +30,13 @@ import {
   useToast,
 } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
-import {
-  BundleItemsPicker,
-  defaultBundleItemsFetch,
-  type BundleItemSearchResult,
-} from "../../categories/components/BundleItemsPicker";
 import { BundleDynamicRuleEditor } from "../../categories/components/BundleDynamicRuleEditor";
+import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
+import {
+  BUNDLE_MIN_ITEMS,
+  BUNDLE_MAX_ITEMS,
+} from "../../../_internal/shared/features/categories/bundle-config";
 import type { BundleQueryRule, CategoryDocument } from "../../categories/schemas";
 
 type DynamicRule = Extract<BundleQueryRule, { type: "dynamic" }>;
@@ -136,7 +136,6 @@ export function AdminBundleEditorView({
   const [deleting, setDeleting] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [metadata, setMetadata] = useState<Record<string, BundleItemSearchResult>>({});
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
   const { showToast } = useToast();
 
@@ -269,8 +268,6 @@ export function AdminBundleEditorView({
       setDeleting(false);
     }
   }, [bundleId, onDeleted, showToast]);
-
-  const fetchProducts = useMemo(() => defaultBundleItemsFetch, []);
 
   if (loading) {
     return (
@@ -412,14 +409,29 @@ export function AdminBundleEditorView({
               </Stack>
 
               {form.ruleType === "static" ? (
-                <BundleItemsPicker
-                  value={form.productIds}
-                  onChange={(next) =>
-                    setForm((f) => ({ ...f, productIds: next }))
-                  }
-                  fetchProducts={fetchProducts}
-                  initialMetadata={metadata}
-                />
+                <Stack gap="xs">
+                  <Text size="sm" weight="semibold">
+                    {BUNDLE_COPY.adminEditor.ruleTypeStatic} products ({BUNDLE_MIN_ITEMS}–{BUNDLE_MAX_ITEMS})
+                  </Text>
+                  <ProductInlineSelect
+                    scope="admin"
+                    multiple
+                    value={form.productIds}
+                    onChange={(ids) => setForm((f) => ({ ...f, productIds: ids }))}
+                    disabled={saving}
+                    placeholder="Search and select products…"
+                  />
+                  {form.productIds.length > 0 && form.productIds.length < BUNDLE_MIN_ITEMS && (
+                    <Text size="xs" color="danger">
+                      Select at least {BUNDLE_MIN_ITEMS} products (currently {form.productIds.length}).
+                    </Text>
+                  )}
+                  {form.productIds.length > BUNDLE_MAX_ITEMS && (
+                    <Text size="xs" color="danger">
+                      Maximum {BUNDLE_MAX_ITEMS} products allowed (currently {form.productIds.length}).
+                    </Text>
+                  )}
+                </Stack>
               ) : (
                 <BundleDynamicRuleEditor
                   value={form.dynamicRule}

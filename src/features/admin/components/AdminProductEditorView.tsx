@@ -7,6 +7,7 @@ import {
   Card,
   CardBody,
   ConfirmDeleteModal,
+  Div,
   PaginatedSelect,
   Form,
   Stack,
@@ -25,6 +26,7 @@ import { ProductForm } from "../../products/components/ProductForm";
 import type { ProductFormValue, BrandSelectorRenderArgs } from "../../products/components/ProductForm";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { GroupSettingsPanel } from "../../products/components/GroupSettingsPanel";
+import { GroupInlineSelect } from "../../seller/components/GroupInlineSelect";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { BrandQuickCreateForm } from "./BrandQuickCreateForm";
 
@@ -272,7 +274,7 @@ export function AdminProductEditorView({
         <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
           Classification
         </Text>
-        <div className="space-y-4">
+        <Div className="space-y-4">
           <Stack gap="xs">
             <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               Store
@@ -308,6 +310,17 @@ export function AdminProductEditorView({
                   )
                 : undefined
             }
+            renderGroupJoinField={({ label, value, onChange, disabled }) => (
+              <GroupInlineSelect
+                scope="admin"
+                value={value ?? ""}
+                onChange={(id) => onChange(id || undefined)}
+                disabled={disabled}
+                label={label}
+                placeholder="None (standalone product)"
+                allowCreate={false}
+              />
+            )}
             renderCategorySelector={({ label, value, onChange, disabled }) => (
               <Stack gap="xs">
                 <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -357,11 +370,11 @@ export function AdminProductEditorView({
               </Stack>
             )}
           />
-        </div>
+        </Div>
       </Card>
 
       {/* Mobile-only action buttons */}
-      <div className="flex gap-3 lg:hidden">
+      <Div className="flex gap-3 lg:hidden">
         <Button
           type="submit"
           isLoading={isSubmitting}
@@ -379,7 +392,7 @@ export function AdminProductEditorView({
             Delete product
           </Button>
         )}
-      </div>
+      </Div>
     </Form>
   );
 
@@ -388,12 +401,12 @@ export function AdminProductEditorView({
   }
 
   const twoPanel = (
-    <div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
+    <Div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
       <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
-      <div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
+      <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 
   return (

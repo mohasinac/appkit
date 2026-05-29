@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Alert,
   Button,
+  Div,
   Form,
   FormActions,
   Input,
@@ -91,7 +92,7 @@ interface AdScheduleSectionProps {
 
 function renderAdScheduleSection({ startAt, setStartAt, endAt, setEndAt }: AdScheduleSectionProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-238">
+    <Div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <Input
         label="Start at (ISO)"
         value={startAt}
@@ -104,7 +105,7 @@ function renderAdScheduleSection({ startAt, setStartAt, endAt, setEndAt }: AdSch
         onChange={(event) => setEndAt(event.target.value)}
         placeholder="2026-05-30T23:59:59.000Z"
       />
-    </div>
+    </Div>
   );
 }
 
@@ -125,7 +126,7 @@ function renderAdCreativeSection({
   adsenseSlot, setAdsenseSlot, thirdPartyUrl, setThirdPartyUrl, provider,
 }: AdCreativeSectionProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-239">
+    <Div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <Input label="Creative title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Catch the mega sale" />
       <Input label="Creative body" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Up to 40% off this weekend" />
       <Input label="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
@@ -137,7 +138,7 @@ function renderAdCreativeSection({
       {provider === "thirdParty" ? (
         <Input label="Third-party URL" value={thirdPartyUrl} onChange={(e) => setThirdPartyUrl(e.target.value)} placeholder="https://adnetwork.example/slot" />
       ) : null}
-    </div>
+    </Div>
   );
 }
 
@@ -396,7 +397,7 @@ export function AdminAdEditorView({
             onChange={(event) => setName(event.target.value)}
             placeholder="Summer Campaign"
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3" data-section="adminadeditorview-div-235">
+          <Div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <Select
               label="Provider"
               value={provider}
@@ -424,7 +425,7 @@ export function AdminAdEditorView({
               value={String(priority)}
               onChange={(event) => setPriority(Number(event.target.value || 0))}
             />
-          </div>
+          </Div>
 
           <Toggle
             checked={requiresConsent}
@@ -432,9 +433,9 @@ export function AdminAdEditorView({
             label="Require user ad-consent for this ad"
           />
 
-          <div className="space-y-2" data-section="adminadeditorview-div-236">
+          <Div className="space-y-2">
             <Text className="text-sm font-medium">Placements</Text>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2" data-section="adminadeditorview-div-237">
+            <Div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {placements.map((placement) => (
                 <label
                   key={placement.id}
@@ -448,8 +449,8 @@ export function AdminAdEditorView({
                   <span className="text-sm">{placement.label}</span>
                 </label>
               ))}
-            </div>
-          </div>
+            </Div>
+          </Div>
 
           {scheduleSection}
           {creativeSection}

@@ -377,14 +377,14 @@ export function AdminSupportTicketDetailView({
                       : "bg-info-surface border border-blue-200 dark:border-blue-800"
                   }`}
                 >
-                  <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
+                  <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
                     <span className="font-medium text-zinc-600 dark:text-zinc-300">
                       {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
                     </span>
                     {msg.createdAt && (
                       <span>{new Date(msg.createdAt).toLocaleString()}</span>
                     )}
-                  </div>
+                  </Div>
                   <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
                 </div>
               ))}

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Input, Select, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Input, Select, StackedViewShell, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -100,7 +100,7 @@ function AdsSettingsPanel({
           {serverCredentialIssues.join("; ")}
         </Alert>
       ) : null}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadsview-div-246">
+      <Div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Input
           label="AdSense client id"
           value={adsenseClientId}
@@ -113,11 +113,11 @@ function AdsSettingsPanel({
           onChange={(event) => setThirdPartyScriptUrl(event.target.value)}
           placeholder={providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
         />
-      </div>
+      </Div>
       <Text className="text-xs text-neutral-500 dark:text-zinc-400">
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
-      <div className="flex items-center justify-between gap-3" data-section="adminadsview-div-247">
+      <Div className="flex items-center justify-between gap-3">
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
@@ -134,7 +134,7 @@ function AdsSettingsPanel({
         >
           {settingsMutation.isPending ? "Saving..." : "Save settings"}
         </Button>
-      </div>
+      </Div>
       {localCredentialIssues.length > 0 ? (
         <Alert variant="error" title="Fix settings before saving">
           {localCredentialIssues.join("; ")}
@@ -164,7 +164,7 @@ interface AdsFilterRowProps {
 
 function AdsFilterRow({ q, setQ, status, setStatus, provider, setProvider, placement, setPlacement, placements, onPageReset }: AdsFilterRowProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-3" data-section="adminadsview-div-248">
+    <Div className="grid grid-cols-1 md:grid-cols-4 gap-3">
       <Input
         label="Search"
         value={q}
@@ -203,7 +203,7 @@ function AdsFilterRow({ q, setQ, status, setStatus, provider, setProvider, place
         ]}
         onChange={(event) => { onPageReset(); setPlacement(event.target.value); }}
       />
-    </div>
+    </Div>
   );
 }
 
@@ -277,10 +277,10 @@ export function AdminAdsView({
       key: "name",
       header: "Ad",
       render: (row) => (
-        <div data-section="adminadsview-div-241">
+        <Div>
           <Text className="font-medium">{row.name}</Text>
           <Text className="text-xs text-neutral-500 dark:text-zinc-400">{row.id}</Text>
-        </div>
+        </Div>
       ),
     },
     {
@@ -292,12 +292,12 @@ export function AdminAdsView({
       key: "status",
       header: "Status",
       render: (row) => (
-        <div data-section="adminadsview-div-242">
+        <Div>
           <Text className="text-xs uppercase tracking-wide">{row.status}</Text>
           {row.publishReady === false ? (
             <Text className="text-[11px] text-error">Publish blocked</Text>
           ) : null}
-        </div>
+        </Div>
       ),
     },
     {
@@ -314,7 +314,7 @@ export function AdminAdsView({
         const nextStatus: AdminAdStatus = row.status === "active" ? "paused" : "active";
         const cannotPublish = nextStatus === "active" && row.publishReady === false;
         return (
-          <div className="flex items-center gap-2" data-section="adminadsview-div-243">
+          <Div className="flex items-center gap-2">
             {renderEditLink ? renderEditLink(row) : (
               <a
                 className="inline-flex h-8 items-center rounded-md border border-neutral-200 px-3 text-xs dark:border-slate-700"
@@ -331,7 +331,7 @@ export function AdminAdsView({
             >
               {row.status === "active" ? "Pause" : "Publish"}
             </Button>
-          </div>
+          </Div>
         );
       },
     },
@@ -380,7 +380,7 @@ export function AdminAdsView({
       {...rest}
       title={labels.title ?? "Ad Inventory"}
       sections={[
-        <div className="flex items-center justify-between gap-3" data-section="adminadsview-div-244">
+        <Div className="flex items-center justify-between gap-3">
           <Text variant="secondary">Manage ad inventory, placement mapping, and publishing state.</Text>
           <a
             href={createHref}
@@ -388,7 +388,7 @@ export function AdminAdsView({
           >
             New ad
           </a>
-        </div>,
+        </Div>,
         adsQuery.error ? (
           <Alert variant="error" title="Could not load ads">
             {adsQuery.error instanceof Error ? adsQuery.error.message : "Unknown error"}

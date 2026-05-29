@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
   ConfirmDeleteModal,
+  Div,
   Form,
   Input,
   StackedViewShell,
@@ -146,7 +147,7 @@ export function AdminBrandEditorView({
       }}
       className="space-y-4"
     >
-          <div className="grid sm:grid-cols-2 gap-4">
+          <Div className="grid sm:grid-cols-2 gap-4">
             <FieldInput
               name="name"
               label="Brand name"
@@ -166,7 +167,7 @@ export function AdminBrandEditorView({
               placeholder="brand-hot-wheels"
               helperText="Auto-generated from name. Must start with 'brand-'."
             />
-          </div>
+          </Div>
 
           <Input
             label="Description"
@@ -175,7 +176,7 @@ export function AdminBrandEditorView({
             placeholder="Brief description of the brand"
           />
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <Div className="grid sm:grid-cols-2 gap-4">
             <ImageUpload
               label="Logo"
               currentImage={logoURL}
@@ -189,9 +190,9 @@ export function AdminBrandEditorView({
               onUpload={(file) => upload(file, "brands", true, { type: "brand-banner", brand: name || slug })}
               onChange={setBannerURL}
             />
-          </div>
+          </Div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <Div className="grid sm:grid-cols-2 gap-4">
             <Input
               label="Website"
               value={website}
@@ -208,7 +209,7 @@ export function AdminBrandEditorView({
               min={0}
               placeholder="0"
             />
-          </div>
+          </Div>
 
           <Toggle
             label="Active"
@@ -216,7 +217,7 @@ export function AdminBrandEditorView({
             onChange={setIsActive}
           />
 
-          <div className="flex gap-3 pt-2">
+          <Div className="flex gap-3 pt-2">
             <Button
               type="submit"
               isLoading={isSubmitting}
@@ -233,7 +234,7 @@ export function AdminBrandEditorView({
                 Delete brand
               </Button>
             )}
-          </div>
+          </Div>
     </Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal

@@ -132,7 +132,7 @@ export function AdminScammerEditorView({
             <Text className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Names / Aliases
             </Text>
-            <div className="flex flex-wrap gap-1">
+            <Div className="flex flex-wrap gap-1">
               {displayNames.map((name, i) => (
                 <span
                   key={i}
@@ -141,7 +141,7 @@ export function AdminScammerEditorView({
                   {name}
                 </span>
               ))}
-            </div>
+            </Div>
           </Div>
         )}
 
@@ -149,31 +149,31 @@ export function AdminScammerEditorView({
         {(phones.length > 0 || upiIds.length > 0) && (
           <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
             {phones.length > 0 && (
-              <div className="mb-2">
+              <Div className="mb-2">
                 <Text className={CLS_SECTION_LABEL}>
                   Phone numbers
                 </Text>
-                <div className="flex flex-wrap gap-1">
+                <Div className="flex flex-wrap gap-1">
                   {phones.map((p, i) => (
                     <code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
                       {p}
                     </code>
                   ))}
-                </div>
-              </div>
+                </Div>
+              </Div>
             )}
             {upiIds.length > 0 && (
               <>
                 <Text className={CLS_SECTION_LABEL}>
                   UPI IDs
                 </Text>
-                <div className="flex flex-wrap gap-1">
+                <Div className="flex flex-wrap gap-1">
                   {upiIds.map((u, i) => (
                     <code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
                       {u}
                     </code>
                   ))}
-                </div>
+                </Div>
               </>
             )}
           </Div>

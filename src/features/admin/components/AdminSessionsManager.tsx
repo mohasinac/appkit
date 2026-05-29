@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "../../../ui";
 
 export interface AdminSessionsManagerProps {
   renderHeader?: () => React.ReactNode;
@@ -16,11 +17,11 @@ export function AdminSessionsManager({
   className = "",
 }: AdminSessionsManagerProps) {
   return (
-    <div className={`space-y-6 ${className}`} data-section="adminsessionsmanager-div-256">
+    <Div className={`space-y-6 ${className}`}>
       {renderHeader?.()}
       {renderStats()}
       {renderTable()}
       {renderConfirmModal?.()}
-    </div>
+    </Div>
   );
 }

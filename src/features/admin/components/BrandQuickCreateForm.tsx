@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Form, Input, Toggle, useToast } from "../../../ui";
+import { Button, Div, Form, Input, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -62,14 +62,14 @@ export function BrandQuickCreateForm({ onSaved, onCancel }: BrandQuickCreateForm
         placeholder="Optional brief description"
       />
       <Toggle label="Active" checked={isActive} onChange={setIsActive} />
-      <div className="flex gap-3 pt-2">
+      <Div className="flex gap-3 pt-2">
         <Button type="submit" isLoading={mutation.isPending} disabled={!name || mutation.isPending}>
           Create brand
         </Button>
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
-      </div>
+      </Div>
     </Form>
   );
 }

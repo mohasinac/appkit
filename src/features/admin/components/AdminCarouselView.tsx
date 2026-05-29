@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BulkActionBar, ConfirmDeleteModal, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Text } from "../../../ui";
+import { BulkActionBar, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -147,12 +147,12 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
   const displayRows = (localRows.length > 0 ? localRows : fetchedRows as CarouselRow[]).map((row) => ({
     ...row,
     secondary: (
-      <div className="flex items-center gap-3">
+      <Div className="flex items-center gap-3">
         {row.thumbnailUrl && (
           <img src={row.thumbnailUrl} alt="" className="w-14 h-9 object-cover rounded flex-shrink-0 bg-zinc-200 dark:bg-zinc-800" />
         )}
         <span className="text-sm text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</span>
-      </div>
+      </Div>
     ) as unknown as string,
   }));
 
@@ -216,7 +216,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
   ];
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
@@ -232,9 +232,9 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </div>
+        </Div>
       )}
 
       {selection.selectedCount > 0 && bulkActions.length > 0 && (
@@ -245,11 +245,11 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
         />
       )}
 
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
-          </div>
+          </Div>
         )}
         <DataTable
           rows={displayRows as any}
@@ -258,20 +258,20 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
           emptyLabel="No carousel slides — use 'New slide' to add one"
           getRowHref={(row) => `/admin/carousel/${row.id}/edit`}
         />
-      </div>
+      </Div>
 
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-          <div className="space-y-2">
+          <Div className="space-y-2">
             <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</Text>
-            <div className="flex flex-wrap gap-2">
+            <Div className="flex flex-wrap gap-2">
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
                 <button key={opt.label} type="button"
                   onClick={() => setPendingFilters((p) => ({ ...p, active: opt.value }))}
                   className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.active || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
                 >{opt.label}</button>
               ))}
-            </div>
-          </div>
+            </Div>
+          </Div>
       </ListingFilterDrawer>
 
       {deleteTargetId && (
@@ -284,6 +284,6 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
           isDeleting={deleteMutation.isPending}
         />
       )}
-    </div>
+    </Div>
   );
 }

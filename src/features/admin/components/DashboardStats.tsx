@@ -3,7 +3,7 @@
 import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
-import { Grid, Text } from "../../../ui";
+import { Div, Grid, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
@@ -31,7 +31,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         aria-hidden="true"
       />
 
-      <div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
+      <Div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
         {/* Text block */}
         <div className="min-w-0 flex-1 overflow-hidden">
           <Text className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)] truncate">
@@ -52,7 +52,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         >
           <Icon className="w-5 h-5 text-white drop-shadow-sm" />
         </div>
-      </div>
+      </Div>
     </div>
   );
 }
@@ -60,14 +60,14 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
 function SkeletonCard() {
   return (
     <div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden p-5 animate-pulse">
-      <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
-      <div className="flex items-start justify-between gap-3 pt-1">
-        <div className="flex-1 space-y-2">
-          <div className="h-2.5 w-20 rounded bg-[var(--appkit-color-border)]" />
-          <div className="h-7 w-24 rounded bg-[var(--appkit-color-border)]" />
-        </div>
-        <div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-border)]" />
-      </div>
+      <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
+      <Div className="flex items-start justify-between gap-3 pt-1">
+        <Div className="flex-1 space-y-2">
+          <Div className="h-2.5 w-20 rounded bg-[var(--appkit-color-border)]" />
+          <Div className="h-7 w-24 rounded bg-[var(--appkit-color-border)]" />
+        </Div>
+        <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-border)]" />
+      </Div>
     </div>
   );
 }

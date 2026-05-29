@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
+import { ConfirmDeleteModal, Div, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -126,11 +126,11 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <div className="space-y-2">
+      <Div className="space-y-2">
         <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           Status
         </Text>
-        <div className="flex flex-wrap gap-2">
+        <Div className="flex flex-wrap gap-2">
           {[
             { label: "All", value: "" },
             { label: "Active only", value: "true" },
@@ -148,8 +148,8 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
               {opt.label}
             </button>
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
     ),
   };
 

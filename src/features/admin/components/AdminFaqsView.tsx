@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Heading, ListingLayout, Span, Text } from "../../../ui";
+import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -35,14 +35,14 @@ const COLUMNS: AdminTableColumn<FaqRow>[] = [
     header: "Question",
     sortable: true,
     render: (row) => (
-      <div className="space-y-1">
+      <Div className="space-y-1">
         <Text className="font-semibold text-zinc-900 dark:text-zinc-100">
           {row.primary}
         </Text>
         <Text className="text-xs text-zinc-500 dark:text-zinc-400">
           {row.secondary}
         </Text>
-      </div>
+      </Div>
     ),
   },
   {
@@ -137,11 +137,11 @@ export function AdminFaqsView({
             : []),
         ] satisfies BulkActionItem[],
       renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-        <div className="space-y-2">
+        <Div className="space-y-2">
           <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
             Status
           </Text>
-          <div className="flex flex-wrap gap-2">
+          <Div className="flex flex-wrap gap-2">
             {[
               { label: "All", value: "" },
               { label: "Published", value: "true" },
@@ -162,8 +162,8 @@ export function AdminFaqsView({
                 {opt.label}
               </button>
             ))}
-          </div>
-        </div>
+          </Div>
+        </Div>
       ),
       renderEditor: ({ editId, closePanel }) => (
         <AdminFaqEditorView

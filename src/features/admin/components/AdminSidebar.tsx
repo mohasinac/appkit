@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Nav } from "../../../ui";
+import { Div, Nav, Span } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -52,7 +52,7 @@ function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: bo
           : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800/60 hover:text-zinc-800 dark:hover:text-zinc-200"
       }`}
     >
-      {item.icon && <span className="shrink-0 text-base opacity-60">{item.icon}</span>}
+      {item.icon && <Span size="base" className="shrink-0 opacity-60">{item.icon}</Span>}
       <span className="flex-1 truncate">{item.label}</span>
     </Link>
   );
@@ -81,7 +81,7 @@ function GroupsContent({
         const isOpen = openGroups[group.title] ?? false;
         const hasActive = group.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/"));
         return (
-          <div key={group.title} className="mb-0.5">
+          <Div key={group.title} className="mb-0.5">
             <button
               type="button"
               onClick={() => toggle(group.title)}
@@ -108,7 +108,7 @@ function GroupsContent({
                 ))}
               </ul>
             )}
-          </div>
+          </Div>
         );
       })}
     </Nav>
@@ -125,7 +125,7 @@ function DrawerPanel({
   children: React.ReactNode;
 }) {
   return (
-    <div className="hidden md:block">
+    <Div className="hidden md:block">
       <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
@@ -133,7 +133,7 @@ function DrawerPanel({
         aria-label={title}
         className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
       >
-        <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+        <Div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
           <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">{title}</span>
           <button
             type="button"
@@ -145,10 +145,10 @@ function DrawerPanel({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </div>
+        </Div>
         <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
-    </div>
+    </Div>
   );
 }
 
@@ -219,22 +219,22 @@ export function AdminSidebar({
         >
           {/* Nav panel */}
           <div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
-            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+            <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               {renderHeader ? renderHeader() : <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">Admin Panel</span>}
-            </div>
+            </Div>
             <div className="flex-1 overflow-y-auto">{navContent}</div>
-            {renderFooter && <div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800">{renderFooter()}</div>}
+            {renderFooter && <Div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800">{renderFooter()}</Div>}
           </div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </div>
 
         {/* Mobile: bottom sheet */}
-        <div className="md:hidden">
+        <Div className="md:hidden">
           <BottomSheet open={mobileOpen} onClose={close} title="Admin Panel">
             {mobileNavContent}
           </BottomSheet>
-        </div>
+        </Div>
       </>
     );
   }
@@ -246,11 +246,11 @@ export function AdminSidebar({
           <DrawerPanel title="Admin Panel" onClose={close}>{navContent}</DrawerPanel>,
           document.body
         )}
-      <div className="md:hidden">
+      <Div className="md:hidden">
         <BottomSheet open={mobileOpen} onClose={close} title="Admin Panel">
           {mobileNavContent}
         </BottomSheet>
-      </div>
+      </Div>
     </>
   );
 }

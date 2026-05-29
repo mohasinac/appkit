@@ -11,6 +11,7 @@ import {
   RichTextEditor,
   RichTextRenderer,
   Select,
+  Span,
   StackedViewShell,
   TagInput,
   Text,
@@ -225,7 +226,7 @@ export function AdminBlogEditorView({
       validate: (values) =>
         !values.title.trim() ? "Title is required" : null,
       render: ({ values, onChange }) => (
-        <div className="space-y-5">
+        <Div className="space-y-5">
           <Heading level={3} className="mb-2">Content</Heading>
           <Input
             label="Title"
@@ -252,7 +253,7 @@ export function AdminBlogEditorView({
             onChange={(e) => onChange({ excerpt: e.target.value })}
             placeholder="Short summary shown in listings and cards"
           />
-          <div className="space-y-1">
+          <Div className="space-y-1">
             <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Content
             </Text>
@@ -262,14 +263,14 @@ export function AdminBlogEditorView({
               placeholder="Write your article here..."
               minHeightClassName="min-h-[320px]"
             />
-          </div>
-        </div>
+          </Div>
+        </Div>
       ),
     },
     {
       label: "Media",
       render: ({ values, onChange }) => (
-        <div className="space-y-5">
+        <Div className="space-y-5">
           <Heading level={3} className="mb-2">Media</Heading>
           <ImageUpload
             label="Cover Image"
@@ -290,7 +291,7 @@ export function AdminBlogEditorView({
             placeholder="e.g. dQw4w9WgXcQ"
             helperText="The 11-character video ID from the YouTube URL."
           />
-        </div>
+        </Div>
       ),
     },
     {
@@ -303,9 +304,9 @@ export function AdminBlogEditorView({
           ),
         );
         return (
-          <div className="space-y-5">
+          <Div className="space-y-5">
             <Heading level={3} className="mb-2">SEO &amp; Tags</Heading>
-            <div className="grid grid-cols-2 gap-4">
+            <Div className="grid grid-cols-2 gap-4">
               <Select
                 label="Category"
                 options={CATEGORY_OPTIONS}
@@ -318,7 +319,7 @@ export function AdminBlogEditorView({
                   ~{readTime} min (auto-calculated from content)
                 </Text>
               </Div>
-            </div>
+            </Div>
             <TagInput
               label="Tags"
               value={values.tags}
@@ -338,16 +339,16 @@ export function AdminBlogEditorView({
               placeholder="SEO description — max 160 chars"
               maxLength={160}
             />
-          </div>
+          </Div>
         );
       },
     },
     {
       label: "Publish",
       render: ({ values, onChange }) => (
-        <div className="space-y-5">
+        <Div className="space-y-5">
           <Heading level={3} className="mb-2">Publish Settings</Heading>
-          <div className="grid grid-cols-2 gap-4">
+          <Div className="grid grid-cols-2 gap-4">
             <Select
               label="Status"
               options={STATUS_OPTIONS}
@@ -361,7 +362,7 @@ export function AdminBlogEditorView({
               type="date"
               helperText="Auto-set to now when publishing."
             />
-          </div>
+          </Div>
           <Input
             label="Author Name"
             value={values.authorName}
@@ -374,7 +375,7 @@ export function AdminBlogEditorView({
             onChange={(checked) => onChange({ isFeatured: checked })}
           />
           {isEdit && (
-            <div className="pt-4 border-t border-[var(--appkit-color-border)]">
+            <Div className="pt-4 border-t border-[var(--appkit-color-border)]">
               <Button
                 type="button"
                 variant="danger"
@@ -384,9 +385,9 @@ export function AdminBlogEditorView({
               >
                 Delete post
               </Button>
-            </div>
+            </Div>
           )}
-        </div>
+        </Div>
       ),
     },
   ];
@@ -430,9 +431,9 @@ export function AdminBlogEditorView({
       key="preview"
       className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] p-5 max-h-[calc(100vh-12rem)] overflow-y-auto"
     >
-      <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+      <Div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
         <span>Live preview</span>
-      </div>
+      </Div>
       {draft.coverImage ? (
         <img src={draft.coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
       ) : null}
@@ -450,16 +451,17 @@ export function AdminBlogEditorView({
       ) : null}
       <RichTextRenderer html={draft.content || "<em>No content yet…</em>"} />
       {draft.tags.length > 0 ? (
-        <div className="mt-6 flex flex-wrap gap-1.5">
+        <Div className="mt-6 flex flex-wrap gap-1.5">
           {draft.tags.map((t) => (
-            <span
+            <Span
               key={t}
-              className="px-2 py-0.5 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] text-xs"
+              size="xs"
+              className="px-2 py-0.5 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)]"
             >
               #{t}
-            </span>
+            </Span>
           ))}
-        </div>
+        </Div>
       ) : null}
     </div>
   );
@@ -470,12 +472,12 @@ export function AdminBlogEditorView({
       {...rest}
       title={isEdit ? "Edit Post" : "New Blog Post"}
       sections={[
-        <div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
-          <div>{formContent}</div>
-          <div className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start">
+        <Div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
+          <Div>{formContent}</Div>
+          <Div className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start">
             {previewSection}
-          </div>
-        </div>,
+          </Div>
+        </Div>,
       ]}
     />
   );

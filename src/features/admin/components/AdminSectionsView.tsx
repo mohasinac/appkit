@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
+import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 import {
   Button,
   Checkbox,
@@ -12,6 +14,7 @@ import {
   Input,
   Modal,
   Select,
+  Stack,
   Text,
   Textarea,
   useToast,
@@ -147,6 +150,7 @@ import {
 
 const CLS_SECTION_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
 const LBL_FILTER_BY_CATEGORY = "Filter by category";
+const PH_FILTER_BY_CATEGORY = "Filter by category…";
 const LBL_MAX_ITEMS = "Max items";
 const LBL_AUTOMATIC = "Automatic";
 const LBL_MANUAL_IDS = "Manual IDs";
@@ -672,12 +676,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           options={[...RESOURCE_SORT_OPTIONS]}
         />
 
-        <Input
-          label={LBL_FILTER_BY_CATEGORY}
-          value={productsBuilder.filterByCategory}
-          onChange={(e) => setProductsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
-          placeholder="category-pokemon-cards"
-        />
+        <Stack gap="xs">
+          <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
+          <CategoryInlineSelect
+            value={productsBuilder.filterByCategory}
+            onChange={(id) => setProductsBuilder((prev) => ({ ...prev, filterByCategory: id }))}
+            placeholder={PH_FILTER_BY_CATEGORY}
+          />
+        </Stack>
 
         <Select
           label={LBL_MAX_ITEMS}
@@ -706,16 +712,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         {renderProductsCategorySelectors()}
 
         {productsBuilder.resourceMode === "manual" ? (
-          <Textarea
-            label="Manual product resource IDs (comma-separated)"
-            value={productsBuilder.manualResourceIds}
-            onChange={(event) =>
-              setProductsBuilder((prev) => ({
-                ...prev,
-                manualResourceIds: event.target.value,
-              }))
+          <ProductInlineSelect
+            scope="admin"
+            multiple
+            value={productsBuilder.manualResourceIds ? productsBuilder.manualResourceIds.split(",").map((s) => s.trim()).filter(Boolean) : []}
+            onChange={(ids) =>
+              setProductsBuilder((prev) => ({ ...prev, manualResourceIds: ids.join(",") }))
             }
-            rows={3}
+            placeholder="Search and select products…"
           />
         ) : null}
 
@@ -865,12 +869,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           options={[...RESOURCE_SORT_OPTIONS]}
         />
 
-        <Input
-          label={LBL_FILTER_BY_CATEGORY}
-          value={auctionsBuilder.filterByCategory}
-          onChange={(e) => setAuctionsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
-          placeholder="category-pokemon-cards"
-        />
+        <Stack gap="xs">
+          <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
+          <CategoryInlineSelect
+            value={auctionsBuilder.filterByCategory}
+            onChange={(id) => setAuctionsBuilder((prev) => ({ ...prev, filterByCategory: id }))}
+            placeholder={PH_FILTER_BY_CATEGORY}
+          />
+        </Stack>
 
         <Select
           label={LBL_MAX_ITEMS}
@@ -899,16 +905,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         {renderAuctionsCategorySelectors()}
 
         {auctionsBuilder.resourceMode === "manual" ? (
-          <Textarea
-            label="Manual auction resource IDs (comma-separated)"
-            value={auctionsBuilder.manualResourceIds}
-            onChange={(event) =>
-              setAuctionsBuilder((prev) => ({
-                ...prev,
-                manualResourceIds: event.target.value,
-              }))
+          <ProductInlineSelect
+            scope="admin"
+            multiple
+            value={auctionsBuilder.manualResourceIds ? auctionsBuilder.manualResourceIds.split(",").map((s) => s.trim()).filter(Boolean) : []}
+            onChange={(ids) =>
+              setAuctionsBuilder((prev) => ({ ...prev, manualResourceIds: ids.join(",") }))
             }
-            rows={3}
+            placeholder="Search and select auctions…"
           />
         ) : null}
 
@@ -1090,12 +1094,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           options={[...RESOURCE_SORT_OPTIONS]}
         />
 
-        <Input
-          label={LBL_FILTER_BY_CATEGORY}
-          value={preOrdersBuilder.filterByCategory}
-          onChange={(e) => setPreOrdersBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
-          placeholder="category-beyblade-tops"
-        />
+        <Stack gap="xs">
+          <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
+          <CategoryInlineSelect
+            value={preOrdersBuilder.filterByCategory}
+            onChange={(id) => setPreOrdersBuilder((prev) => ({ ...prev, filterByCategory: id }))}
+            placeholder={PH_FILTER_BY_CATEGORY}
+          />
+        </Stack>
 
         <Select
           label={LBL_MAX_ITEMS}
@@ -1129,16 +1135,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         })}
 
         {preOrdersBuilder.resourceMode === "manual" ? (
-          <Textarea
-            label="Manual pre-order resource IDs (comma-separated)"
-            value={preOrdersBuilder.manualResourceIds}
-            onChange={(event) =>
-              setPreOrdersBuilder((prev) => ({
-                ...prev,
-                manualResourceIds: event.target.value,
-              }))
+          <ProductInlineSelect
+            scope="admin"
+            multiple
+            value={preOrdersBuilder.manualResourceIds ? preOrdersBuilder.manualResourceIds.split(",").map((s) => s.trim()).filter(Boolean) : []}
+            onChange={(ids) =>
+              setPreOrdersBuilder((prev) => ({ ...prev, manualResourceIds: ids.join(",") }))
             }
-            rows={3}
+            placeholder="Search and select pre-orders…"
           />
         ) : null}
 
@@ -1231,12 +1235,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           options={[...RESOURCE_SORT_OPTIONS]}
         />
 
-        <Input
-          label={LBL_FILTER_BY_CATEGORY}
-          value={storesBuilder.filterByCategory}
-          onChange={(e) => setStoresBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
-          placeholder="category-pokemon-cards"
-        />
+        <Stack gap="xs">
+          <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
+          <CategoryInlineSelect
+            value={storesBuilder.filterByCategory}
+            onChange={(id) => setStoresBuilder((prev) => ({ ...prev, filterByCategory: id }))}
+            placeholder={PH_FILTER_BY_CATEGORY}
+          />
+        </Stack>
 
         <Select
           label={LBL_MAX_ITEMS}
@@ -1383,12 +1389,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           options={[...RESOURCE_SORT_OPTIONS]}
         />
 
-        <Input
-          label={LBL_FILTER_BY_CATEGORY}
-          value={eventsBuilder.filterByCategory}
-          onChange={(e) => setEventsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
-          placeholder="category-events"
-        />
+        <Stack gap="xs">
+          <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
+          <CategoryInlineSelect
+            value={eventsBuilder.filterByCategory}
+            onChange={(id) => setEventsBuilder((prev) => ({ ...prev, filterByCategory: id }))}
+            placeholder={PH_FILTER_BY_CATEGORY}
+          />
+        </Stack>
 
         <Select
           label={LBL_MAX_ITEMS}
@@ -2052,13 +2060,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           placeholder="store-pokemon-palace"
           helperText="Leave blank to show bundles from all stores."
         />
-        <Input
-          label={LBL_FILTER_BY_CATEGORY}
-          value={featuredBundlesBuilder.categorySlug}
-          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, categorySlug: e.target.value }))}
-          placeholder="category-trading-cards"
-          helperText="Leave blank to show bundles from all categories."
-        />
+        <Stack gap="xs">
+          <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
+          <CategoryInlineSelect
+            value={featuredBundlesBuilder.categorySlug}
+            onChange={(id) => setFeaturedBundlesBuilder((prev) => ({ ...prev, categorySlug: id }))}
+            placeholder={PH_FILTER_BY_CATEGORY}
+          />
+          <Text size="xs" color="muted">Leave blank to show bundles from all categories.</Text>
+        </Stack>
         <Select
           label="Sort by"
           value={featuredBundlesBuilder.sortBy}
@@ -2519,7 +2529,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   return (
     <>
-      <div className="py-4 px-3 sm:px-4">
+      <Div className="py-4 px-3 sm:px-4">
         <Div className="mb-4 flex items-center justify-between gap-3">
           <Div>
             <Text className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Homepage Sections</Text>
@@ -2535,12 +2545,12 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           </Div>
         </Div>
         {errorMessage && (
-          <div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
-          </div>
+          </Div>
         )}
         <DataTable rows={rows} isLoading={isLoading} emptyLabel="No sections found" />
-      </div>
+      </Div>
 
       <Div className="mt-4 space-y-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
         <Div className="flex items-center justify-between gap-3">

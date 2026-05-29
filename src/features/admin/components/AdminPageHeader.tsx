@@ -1,4 +1,4 @@
-import { Heading, Nav, Text, Span, Button, Row } from "@mohasinac/appkit/ui";
+import { Div, Heading, Nav, Text, Span, Button, Row } from "@mohasinac/appkit/ui";
 import { ChevronRight } from "lucide-react";
 
 /**
@@ -75,7 +75,7 @@ export function AdminPageHeader({
   },
 }: AdminPageHeaderProps) {
   return (
-    <div className={`${themeConfig.gradient} p-6 ${className}`} data-section="adminpageheader-div-253">
+    <div className={`${themeConfig.gradient} p-6 ${className}`}>
       {breadcrumb && breadcrumb.length > 0 && (
         <Nav
           aria-label="Breadcrumb"
@@ -100,8 +100,8 @@ export function AdminPageHeader({
           ))}
         </Nav>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" data-section="adminpageheader-div-254">
-        <div className={themeConfig.spacingClass} data-section="adminpageheader-div-255">
+      <Div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <Div className={themeConfig.spacingClass}>
           <Row gap="sm" wrap>
             <Heading level={2} className={themeConfig.titleClass}>
               {title}
@@ -116,7 +116,7 @@ export function AdminPageHeader({
               {description}
             </Text>
           )}
-        </div>
+        </Div>
 
         {actionLabel && onAction && (
           <Button
@@ -129,7 +129,7 @@ export function AdminPageHeader({
             {actionLabel}
           </Button>
         )}
-      </div>
+      </Div>
     </div>
   );
 }

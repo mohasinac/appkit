@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
   ConfirmDeleteModal,
+  Div,
   Form,
   Input,
   StackedViewShell,
@@ -121,7 +122,7 @@ export function AdminSublistingCategoryEditorView({
           }}
           className="space-y-4"
         >
-          <div className="grid sm:grid-cols-2 gap-4">
+          <Div className="grid sm:grid-cols-2 gap-4">
             <FieldInput
               name="name"
               label="Category name"
@@ -137,7 +138,7 @@ export function AdminSublistingCategoryEditorView({
               placeholder="e.g. PSA 10, 108/120, STH"
               helperText="Grade, card number, or series code. Optional."
             />
-          </div>
+          </Div>
 
           <Input
             label="Description"
@@ -158,7 +159,7 @@ export function AdminSublistingCategoryEditorView({
             onChange={setCoverImage}
           />
 
-          <div className="flex gap-3 pt-2">
+          <Div className="flex gap-3 pt-2">
             <Button
               type="submit"
               isLoading={isSubmitting}
@@ -176,7 +177,7 @@ export function AdminSublistingCategoryEditorView({
                 Delete
               </Button>
             )}
-          </div>
+          </Div>
         </Form>
         </FormShellContext.Provider>,
       ]}

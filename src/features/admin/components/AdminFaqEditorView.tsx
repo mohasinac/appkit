@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -175,7 +175,7 @@ export function AdminFaqEditorView({
             helperText="Auto-generated from question. Must start with 'faq-'."
           />
 
-          <div className="space-y-1">
+          <Div className="space-y-1">
             <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Answer
             </Text>
@@ -185,9 +185,9 @@ export function AdminFaqEditorView({
               placeholder="Write a clear, helpful answer..."
               minHeightClassName="min-h-[200px]"
             />
-          </div>
+          </Div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <Div className="grid grid-cols-2 gap-4">
             <Select
               label="Category"
               options={CATEGORY_OPTIONS}
@@ -202,7 +202,7 @@ export function AdminFaqEditorView({
               min={0}
               helperText="Lower = shown first within category."
             />
-          </div>
+          </Div>
 
           <Input
             label="Priority"
@@ -228,7 +228,7 @@ export function AdminFaqEditorView({
             <Toggle label="Show in footer FAQ links" checked={showInFooter} onChange={setShowInFooter} />
           </div>
 
-          <div className="flex gap-3 pt-2">
+          <Div className="flex gap-3 pt-2">
             <Button
               type="submit"
               isLoading={isSubmitting}
@@ -246,7 +246,7 @@ export function AdminFaqEditorView({
                 Delete FAQ
               </Button>
             )}
-          </div>
+          </Div>
     </Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
+import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -43,12 +43,12 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
     key: "primary",
     header: "Name / Aliases",
     render: (row) => (
-      <div className="space-y-0.5">
+      <Div className="space-y-0.5">
         <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
         {row.secondary ? (
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
         ) : null}
-      </div>
+      </Div>
     ),
   },
   {

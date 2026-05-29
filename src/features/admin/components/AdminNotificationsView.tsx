@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
+import { ConfirmDeleteModal, Div, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -135,11 +135,11 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <div className="space-y-2">
+      <Div className="space-y-2">
         <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           Type
         </Text>
-        <div className="flex flex-wrap gap-2">
+        <Div className="flex flex-wrap gap-2">
           {NOTIF_TYPES.map((opt) => (
             <button
               key={opt}
@@ -154,8 +154,8 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
               {opt}
             </button>
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
     ),
   };
 

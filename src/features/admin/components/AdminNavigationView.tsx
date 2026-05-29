@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, ConfirmDeleteModal, RowActionMenu, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, ConfirmDeleteModal, Div, RowActionMenu, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -36,19 +36,19 @@ function NavItemRow({
 }: NavItemRowProps) {
   return (
     <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-zinc-900">
-      <div className="flex flex-col gap-0.5 shrink-0">
+      <Div className="flex flex-col gap-0.5 shrink-0">
         <button type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move up">▲</button>
         <button type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move down">▼</button>
-      </div>
-      <div className="flex-1 min-w-0">
+      </Div>
+      <Div className="flex-1 min-w-0">
         <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-100 truncate">
           {item.parentId ? <span className="text-zinc-400 mr-1">↳</span> : null}
           {item.label}
         </Text>
         <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{item.href}</Text>
-      </div>
+      </Div>
       <Toggle checked={item.isVisible ?? true} onChange={(val) => onVisibilityChange(item.id!, val)} label="" />
       <RowActionMenu actions={[
         { label: ROW_ACTION_META[ROW_ACTION_ID.EDIT].label, onClick: () => onEdit(item) },
@@ -149,7 +149,7 @@ export function AdminNavigationView({
               {error instanceof Error ? error.message : "Unknown error"}
             </Alert>
           ) : null,
-          <div key="header" className="flex items-center justify-between mb-4">
+          <Div key="header" className="flex items-center justify-between mb-4">
             <Text className="text-sm text-zinc-500 dark:text-zinc-400">
               {sorted.length} nav item{sorted.length !== 1 ? "s" : ""}
             </Text>
@@ -161,7 +161,7 @@ export function AdminNavigationView({
             >
               + New item
             </Button>
-          </div>,
+          </Div>,
           sorted.length === 0 && !isLoading ? (
             <Text key="empty" className="text-sm text-zinc-400 dark:text-zinc-400 py-8 text-center">
               No nav items yet. Click "New item" to add one.

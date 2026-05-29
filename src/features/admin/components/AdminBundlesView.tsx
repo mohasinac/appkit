@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { Badge, Button, Stack, Text, useToast } from "../../../ui";
+import { Badge, Button, Div, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -203,11 +203,11 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
-        <div className="space-y-2">
+        <Div className="space-y-2">
           <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
             Status
           </Text>
-          <div className="flex flex-wrap gap-2">
+          <Div className="flex flex-wrap gap-2">
             {[
               { label: "All", value: "" },
               { label: "Active", value: "true" },
@@ -226,13 +226,13 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
                 {opt.label}
               </button>
             ))}
-          </div>
-        </div>
-        <div className="space-y-2">
+          </Div>
+        </Div>
+        <Div className="space-y-2">
           <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
             Stock
           </Text>
-          <div className="flex flex-wrap gap-2">
+          <Div className="flex flex-wrap gap-2">
             {[
               { label: "All", value: "" },
               { label: "Sold out", value: "out_of_stock" },
@@ -252,8 +252,8 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
                 {opt.label}
               </button>
             ))}
-          </div>
-        </div>
+          </Div>
+        </Div>
       </>
     ),
   };

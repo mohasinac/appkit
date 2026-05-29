@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Form, FormActions, Select, SideDrawer, Text, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, FormActions, Select, SideDrawer, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -99,7 +99,7 @@ interface PermissionDomainsPanelProps {
 
 function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPanelProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <Div className="flex flex-col gap-2">
       <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
         Permissions
         <span className="ml-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">
@@ -119,7 +119,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
                   {checked}/{domainPerms.length}
                 </span>
               </summary>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
+              <Div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
                 {domainPerms.map((perm) => (
                   <label
                     key={perm}
@@ -134,12 +134,12 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
                     {formatPermLabel(perm)}
                   </label>
                 ))}
-              </div>
+              </Div>
             </details>
           );
         })}
       </div>
-    </div>
+    </Div>
   );
 }
 
@@ -261,7 +261,7 @@ export function AdminEmployeeEditorView({
       >
         <Form onSubmit={handleSubmit} className="flex flex-col gap-5 p-4">
           {mode === "invite" && (
-            <div className="flex flex-col gap-1.5">
+            <Div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 Email address
               </label>
@@ -273,10 +273,10 @@ export function AdminEmployeeEditorView({
                 placeholder="employee@example.com"
                 className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
               />
-            </div>
+            </Div>
           )}
 
-          <div className="flex flex-col gap-1.5">
+          <Div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Permission group
             </label>
@@ -289,7 +289,7 @@ export function AdminEmployeeEditorView({
               Selecting a group auto-fills the permissions below. You can still
               customise individual permissions.
             </Text>
-          </div>
+          </Div>
 
           <PermissionDomainsPanel permissions={permissions} togglePerm={togglePerm} />
 

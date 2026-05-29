@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
+import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
@@ -56,7 +56,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
     render: (row) => {
       const priority = toStringValue(row._raw?.priority, "normal");
       return (
-        <div className="space-y-1">
+        <Div className="space-y-1">
           <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
           {row.secondary ? (
             <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
@@ -68,7 +68,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
           >
             {priority}
           </span>
-        </div>
+        </Div>
       );
     },
   },

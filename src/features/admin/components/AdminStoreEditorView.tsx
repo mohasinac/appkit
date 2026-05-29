@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
+  Div,
   Form,
   FormActions,
   Label,
@@ -148,7 +149,7 @@ export function AdminStoreEditorView({
   );
 
   const renderNotesSection = () => (
-    <div className="flex flex-col gap-1">
+    <Div className="flex flex-col gap-1">
       <Label>Admin notes (optional)</Label>
       <textarea
         value={adminNotes}
@@ -157,7 +158,7 @@ export function AdminStoreEditorView({
         placeholder="e.g. Reason for suspension, approval notes…"
         className={TEXTAREA_CHROME}
       />
-    </div>
+    </Div>
   );
 
   const renderTogglesSection = () => (
@@ -169,7 +170,7 @@ export function AdminStoreEditorView({
 
   const renderSuspensionSection = () =>
     storeStatus === "suspended" ? (
-      <div className="flex flex-col gap-1">
+      <Div className="flex flex-col gap-1">
         <Label>Suspension reason (optional)</Label>
         <textarea
           value={suspensionReason}
@@ -182,7 +183,7 @@ export function AdminStoreEditorView({
     ) : null;
 
   const renderCapabilitiesSection = () => (
-    <div className="flex flex-col gap-2">
+    <Div className="flex flex-col gap-2">
       <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
         Capabilities
         <span className="ml-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">
@@ -200,7 +201,7 @@ export function AdminStoreEditorView({
                   {checked}/{group.caps.length}
                 </span>
               </summary>
-              <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
+              <Div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
                 {group.caps.map((cap) => (
                   <label
                     key={cap.key}
@@ -215,12 +216,12 @@ export function AdminStoreEditorView({
                     {cap.label}
                   </label>
                 ))}
-              </div>
+              </Div>
             </details>
           );
         })}
       </div>
-    </div>
+    </Div>
   );
 
   const renderActionsSection = () => (

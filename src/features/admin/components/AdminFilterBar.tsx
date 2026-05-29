@@ -1,4 +1,4 @@
-import { Button } from "@mohasinac/appkit/ui";
+import { Button, Div } from "@mohasinac/appkit/ui";
 
 /**
  * AdminFilterBar Component
@@ -85,9 +85,9 @@ export function AdminFilterBar({
 
   const innerContent = (
     <>
-      <div className={`grid ${gridCols[columns]} gap-4`} data-section="adminfilterbar-div-249">{children}</div>
+      <Div className={`grid ${gridCols[columns]} gap-4`}>{children}</Div>
       {deferred && (
-        <div className={`${themeConfig.flexEnd} gap-2 mt-3`} data-section="adminfilterbar-div-250">
+        <Div className={`${themeConfig.flexEnd} gap-2 mt-3`}>
           {pendingCount > 0 && (
             <Button variant="ghost" size="sm" onClick={onReset}>
               {labels.reset}
@@ -98,7 +98,7 @@ export function AdminFilterBar({
               ? `${labels.applyCount || labels.apply} (${pendingCount})`
               : labels.apply}
           </Button>
-        </div>
+        </Div>
       )}
     </>
   );
@@ -114,12 +114,12 @@ export function AdminFilterBar({
     );
   }
 
-  if (!withCard) return <div className={className} data-section="adminfilterbar-div-251">{innerContent}</div>;
+  if (!withCard) return <Div className={className}>{innerContent}</Div>;
 
   // Fallback: render as plain div if no Card provided but withCard=true
   return (
-    <div className={`${themeConfig.cardPadding} ${className}`} data-section="adminfilterbar-div-252">
+    <Div className={`${themeConfig.cardPadding} ${className}`}>
       {innerContent}
-    </div>
+    </Div>
   );
 }

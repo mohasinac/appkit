@@ -7,6 +7,7 @@ import {
   Card,
   CardBody,
   ConfirmDeleteModal,
+  Div,
   Form,
   Input,
   Select,
@@ -198,8 +199,8 @@ export function AdminAddressEditorView({
       {/* ── Ownership ── */}
       <Card variant="outlined" padding="lg">
         <SectionHeading>Ownership</SectionHeading>
-        <div className="space-y-4">
-          <div className="flex gap-6">
+        <Div className="space-y-4">
+          <Div className="flex gap-6">
             {(["user", "store"] as AddressOwnerType[]).map((type) => (
               <label
                 key={type}
@@ -221,7 +222,7 @@ export function AdminAddressEditorView({
                 </span>
               </label>
             ))}
-          </div>
+          </Div>
           <Input
             label={form.ownerType === "user" ? "User ID" : "Store ID (slug)"}
             value={form.ownerId}
@@ -236,14 +237,14 @@ export function AdminAddressEditorView({
                 : "Store slug (e.g. store-pokemon-palace)"
             }
           />
-        </div>
+        </Div>
       </Card>
 
       {/* ── Contact & Location ── */}
       <Card variant="outlined" padding="lg">
         <SectionHeading>Contact &amp; Location</SectionHeading>
-        <div className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
+        <Div className="space-y-4">
+          <Div className="grid gap-4 sm:grid-cols-2">
             <Input
               label="Label"
               value={form.label}
@@ -258,7 +259,7 @@ export function AdminAddressEditorView({
               required
               placeholder="Recipient name (PII)"
             />
-          </div>
+          </Div>
           <Input
             label="Phone"
             value={form.phone}
@@ -274,7 +275,7 @@ export function AdminAddressEditorView({
             required
             placeholder="House/flat no., street (PII)"
           />
-          <div className="grid gap-4 sm:grid-cols-2">
+          <Div className="grid gap-4 sm:grid-cols-2">
             <Input
               label="Address Line 2"
               value={form.addressLine2 ?? ""}
@@ -287,8 +288,8 @@ export function AdminAddressEditorView({
               onChange={(e) => set("landmark", e.target.value)}
               placeholder="Near hospital, etc. (optional)"
             />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-3">
+          </Div>
+          <Div className="grid gap-4 sm:grid-cols-3">
             <Input
               label="City"
               value={form.city}
@@ -312,14 +313,14 @@ export function AdminAddressEditorView({
               placeholder="400001"
               maxLength={6}
             />
-          </div>
+          </Div>
           <Input
             label="Country"
             value={form.country}
             onChange={(e) => set("country", e.target.value)}
             placeholder="India"
           />
-        </div>
+        </Div>
       </Card>
 
       {/* ── Flags ── */}
@@ -333,7 +334,7 @@ export function AdminAddressEditorView({
       </Card>
 
       {/* Mobile action buttons */}
-      <div className="flex gap-3 lg:hidden">
+      <Div className="flex gap-3 lg:hidden">
         <Button
           type="submit"
           isLoading={isSubmitting}
@@ -351,17 +352,17 @@ export function AdminAddressEditorView({
             Delete address
           </Button>
         )}
-      </div>
+      </Div>
     </Form>
   );
 
   const twoPanel = (
-    <div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
+    <Div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
       <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
-      <div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
+      <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 
   return (
