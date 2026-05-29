@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { Columns, Heart, ShoppingCart } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { BulkActionBar, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Text, useToast } from "../../../ui";
+import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Text, useToast } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -200,7 +200,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         ] } } : {});
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={filterActiveCount}
@@ -281,37 +281,37 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
       {/* ── Pre-order grid ─────────────────────────────────────────────── */}
-      <div className="py-6">
+      <Div className="py-6">
         {isLoading ? (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (
               <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-                <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-3 space-y-2">
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-                  <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
-                  <div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+                  <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
                 </div>
               </div>
             ))}
-          </div>
+          </Div>
         ) : preOrders.length === 0 ? (
           <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No pre-orders found.
           </Text>
         ) : view === "list" ? (
-          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -325,9 +325,9 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 onSelect={(id) => selection.toggle(id)}
               />
             ))}
-          </div>
+          </Div>
         ) : (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -341,10 +341,10 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 onSelect={(id) => selection.toggle(id)}
               />
             ))}
-          </div>
+          </Div>
         )}
 
-      </div>
+      </Div>
 
 
       <CompareOverlay
@@ -372,6 +372,6 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         <PreOrderFilters table={pendingTable as any} currencyPrefix="₹" categoryOptions={categoryOptions} brandOptions={brandOptions} />
       </FilterDrawer>
       <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
-    </div>
+    </Div>
   );
 }

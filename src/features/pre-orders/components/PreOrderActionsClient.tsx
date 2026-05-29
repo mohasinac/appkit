@@ -97,29 +97,29 @@ export function PreOrderActionsClient({
 
       {tags.length > 0 && (
         <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-          <div className="flex flex-wrap gap-1.5">
+          <Div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
                 {tag}
               </span>
             ))}
-          </div>
+          </Div>
         </Div>
       )}
 
       <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <div className="flex flex-wrap gap-4 justify-center text-center">
+        <Div className="flex flex-wrap gap-4 justify-center text-center">
           {[
             { icon: "🔒", label: "Secure\nPayment" },
             { icon: "📅", label: "Guaranteed\nDelivery" },
             { icon: "↩", label: "Free\nCancellation" },
           ].map(({ icon, label }) => (
-            <div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+            <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
               <span className="text-base">{icon}</span>
               <span className="whitespace-pre-line leading-tight">{label}</span>
-            </div>
+            </Div>
           ))}
-        </div>
+        </Div>
       </Div>
     </Div>
   );
