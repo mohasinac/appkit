@@ -601,6 +601,8 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       canSort: true,
     },
     createdAt: { canFilter: true, canSort: true },
+  storeId: { canFilter: true, canSort: false },
+  scope: { canFilter: true, canSort: false },
   };
 
   /**
