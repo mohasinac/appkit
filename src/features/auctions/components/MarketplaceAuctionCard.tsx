@@ -154,13 +154,13 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
         />
       )}
       <Div className={`absolute left-2 z-10 flex flex-col gap-1 ${product.featured ? "top-8" : "top-2"}`}>
-        {!isEnded ? <Span className="rounded-full bg-rose-600/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.liveBadge}</Span> : null}
-        {isEndingSoon ? <Span className="rounded-full bg-amber-500/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.endingSoon}</Span> : null}
-        {isEnded ? <Span className="rounded-full bg-zinc-600/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.ended}</Span> : null}
-        {product.status === "sold" ? <Span className="rounded-full bg-zinc-700/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.sold}</Span> : null}
+        {!isEnded ? <Span size="xs" weight="bold" className="rounded-full bg-rose-600/90 px-2 py-0.5 text-white">{mergedLabels.liveBadge}</Span> : null}
+        {isEndingSoon ? <Span size="xs" weight="bold" className="rounded-full bg-amber-500/90 px-2 py-0.5 text-white">{mergedLabels.endingSoon}</Span> : null}
+        {isEnded ? <Span size="xs" weight="bold" className="rounded-full bg-zinc-600/90 px-2 py-0.5 text-white">{mergedLabels.ended}</Span> : null}
+        {product.status === "sold" ? <Span size="xs" weight="bold" className="rounded-full bg-zinc-700/90 px-2 py-0.5 text-white">{mergedLabels.sold}</Span> : null}
       </Div>
       <Div className="pointer-events-none absolute bottom-2 right-2 z-10">
-        <Span className="inline-flex items-center gap-1 rounded-full bg-amber-600/90 px-2 py-0.5 text-xs font-semibold text-white">
+        <Span size="xs" weight="semibold" className="inline-flex items-center gap-1 rounded-full bg-amber-600/90 px-2 py-0.5 text-white">
           <Gavel className="h-3 w-3" />
           {mergedLabels.typeBadge}
         </Span>

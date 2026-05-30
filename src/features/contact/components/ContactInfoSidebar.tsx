@@ -35,7 +35,7 @@ export function ContactInfoSidebar({
         <Stack gap="md">
           {infoItems.map((item) => (
             <Div key={item.label} className="flex items-start gap-3">
-              <Span className="text-xl flex-shrink-0 mt-0.5">{item.icon}</Span>
+              <Span size="xl" className="flex-shrink-0 mt-0.5">{item.icon}</Span>
               <Div>
                 <Text className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide mb-0.5">
                   {item.label}

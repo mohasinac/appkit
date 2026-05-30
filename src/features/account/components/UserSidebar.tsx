@@ -56,7 +56,7 @@ function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boo
   return (
     <>
       <Link href={item.href} onClick={handleClick} className={linkClass}>
-        {item.icon && <Span className="shrink-0 text-base opacity-70">{item.icon}</Span>}
+        {item.icon && <Span size="base" className="shrink-0 opacity-70">{item.icon}</Span>}
         <Span className="flex-1 truncate">{item.label}</Span>
       </Link>
       {showConfirm && item.confirm && (

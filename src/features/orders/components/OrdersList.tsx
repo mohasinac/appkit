@@ -68,18 +68,19 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           )}
         </Div>
         <Span
-          className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusColor}`}
+          size="xs" weight="semibold"
+          className={`rounded-full px-3 py-1 capitalize ${statusColor}`}
         >
           {labels[order.orderStatus] ?? order.orderStatus.replace(/_/g, " ")}
         </Span>
       </Row>
       {revealsRemaining > 0 && (
         <Row gap="sm" className="mt-2">
-          <Span className="inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-xs font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+          <Span size="xs" weight="semibold" className="inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300">
             {revealsRemaining} {revealsRemaining === 1 ? "reveal" : "reveals"} pending
           </Span>
           {earliestDeadline && (
-            <Span className="text-xs text-zinc-500 dark:text-zinc-400">
+            <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
               before {new Date(earliestDeadline).toLocaleDateString(getDefaultLocale(), { month: "short", day: "numeric" })}
             </Span>
           )}
@@ -105,16 +106,16 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           </Row>
         ))}
         {order.items.length > 3 && (
-          <Span className="self-center text-xs text-zinc-400 dark:text-zinc-400">
+          <Span size="xs" className="self-center text-zinc-400 dark:text-zinc-400">
             +{order.items.length - 3} more
           </Span>
         )}
       </Row>
         <Row justify="between" className="mt-4 border-t border-neutral-100 dark:border-slate-700 pt-3">
-          <Span className="text-sm text-neutral-500 dark:text-zinc-400">
+          <Span size="sm" className="text-neutral-500 dark:text-zinc-400">
           {order.currency ?? ""} Total
         </Span>
-          <Span className="font-semibold text-neutral-900 dark:text-zinc-100">
+          <Span weight="semibold" className="text-neutral-900 dark:text-zinc-100">
           {formatCurrency(order.total, order.currency)}
         </Span>
       </Row>

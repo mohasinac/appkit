@@ -62,7 +62,7 @@ export function EventLeaderboard({
             key={entry.userId}
             className="flex items-center justify-between p-3 rounded-xl border"
            data-section="eventleaderboard-div-282">
-            <Span className="font-medium">
+            <Span weight="medium">
               #{entry.rank} {entry.userDisplayName}
             </Span>
             <Span>

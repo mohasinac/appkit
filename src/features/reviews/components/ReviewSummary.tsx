@@ -34,11 +34,11 @@ export function ReviewSummary({
     >
       {/* Score block */}
       <Div className="flex flex-col items-center gap-1 sm:items-start">
-        <Span className="text-5xl font-bold leading-none text-neutral-900 dark:text-white">
+        <Span weight="bold" className="text-5xl leading-none text-neutral-900 dark:text-white">
           {averageRating.toFixed(1)}
         </Span>
         <StarRating value={averageRating} size="md" readOnly />
-        <Text className="text-sm text-neutral-500 dark:text-zinc-400">
+        <Text size="sm" className="text-neutral-500 dark:text-zinc-400">
           {totalReviews.toLocaleString()} review
           {totalReviews !== 1 ? "s" : ""}
         </Text>
@@ -51,10 +51,10 @@ export function ReviewSummary({
           const pct = totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0;
           return (
             <Div key={star} className="flex items-center gap-2">
-              <Span className="w-4 text-right text-xs font-medium text-neutral-600 dark:text-zinc-400 tabular-nums">
+              <Span size="xs" weight="medium" className="w-4 text-right text-neutral-600 dark:text-zinc-400 tabular-nums">
                 {star}
               </Span>
-              <Span className="text-yellow-400 text-xs">★</Span>
+              <Span size="xs" className="text-yellow-400">★</Span>
               <Div
                 className="flex-1 h-2 rounded-full bg-neutral-100 dark:bg-zinc-800 overflow-hidden"
                 role="progressbar"
@@ -68,7 +68,7 @@ export function ReviewSummary({
                   style={{ width: `${pct}%` }}
                 />
               </Div>
-              <Span className="w-8 text-right text-xs text-zinc-400 dark:text-zinc-400 tabular-nums">
+              <Span size="xs" className="w-8 text-right text-zinc-400 dark:text-zinc-400 tabular-nums">
                 {pct}%
               </Span>
             </Div>

@@ -122,7 +122,7 @@ export function ImageLightbox({
       {/* Top bar */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/60 to-transparent">
         {/* Counter */}
-        <Span className="text-white/70 text-sm font-medium">
+        <Span size="sm" weight="medium" className="text-white/70">
           {hasMultiple ? `${currentIndex + 1} / ${images.length}` : ""}
         </Span>
 

@@ -127,10 +127,10 @@ export function BeforeAfterCard({
         </Div>
 
         {/* Labels */}
-        <Span className="absolute top-3 left-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white">
+        <Span size="xs" weight="medium" className="absolute top-3 left-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-white">
           {beforeLabel}
         </Span>
-        <Span className="absolute top-3 right-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white">
+        <Span size="xs" weight="medium" className="absolute top-3 right-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-white">
           {afterLabel}
         </Span>
       </Div>

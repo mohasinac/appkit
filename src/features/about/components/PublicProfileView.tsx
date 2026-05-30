@@ -159,7 +159,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
           <Stack gap="xs" className="text-center sm:text-left">
             <Div className="flex flex-wrap gap-1 justify-center sm:justify-start">
               <Heading level={1} variant="none" className="text-white mb-0">{displayName}</Heading>
-              {isSeller && <Span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white/90">{t("roleSeller")}</Span>}
+              {isSeller && <Span size="xs" weight="semibold" className="rounded-full bg-white/20 px-2.5 py-0.5 text-white/90">{t("roleSeller")}</Span>}
             </Div>
             <Text variant="none" className="text-white/60 text-sm">{memberSince}</Text>
           </Stack>
@@ -199,7 +199,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
       <Stack gap="sm" className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} p-6`}>
         {pub.bio && <Text className="text-sm leading-relaxed text-neutral-700 dark:text-zinc-300">{pub.bio}</Text>}
         <Row gap="md" wrap>
-          {pub.location && <Span className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
+          {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
           {pub.website && <a href={pub.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-primary hover:underline"><Globe className="w-4 h-4" />{pub.website.replace(/^https?:\/\//, "")}</a>}
         </Row>
       </Stack>

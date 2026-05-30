@@ -72,15 +72,15 @@ export function BeforeAfterSlider({
       </Div>
 
       {/* Labels */}
-      <Span className="absolute left-2 top-2 rounded bg-black/40 px-2 py-0.5 text-xs font-medium text-white">
+      <Span size="xs" weight="medium" className="absolute left-2 top-2 rounded bg-black/40 px-2 py-0.5 text-white">
         Before
       </Span>
-      <Span className="absolute right-2 top-2 rounded bg-black/40 px-2 py-0.5 text-xs font-medium text-white">
+      <Span size="xs" weight="medium" className="absolute right-2 top-2 rounded bg-black/40 px-2 py-0.5 text-white">
         After
       </Span>
 
       {item.durationWeeks && (
-        <Span className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/50 px-3 py-1 text-xs font-medium text-white">
+        <Span size="xs" weight="medium" className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/50 px-3 py-1 text-white">
           {item.durationWeeks} weeks
         </Span>
       )}

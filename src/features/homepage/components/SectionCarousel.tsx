@@ -237,7 +237,7 @@ export function SectionCarousel<T = unknown>({
               aria-hidden="true"
             >
               <Span className="h-px w-6 bg-current" />
-              <Span className="text-xs">✶</Span>
+              <Span size="xs">✶</Span>
               <Span className="h-px w-6 bg-current" />
             </Div>
           )}

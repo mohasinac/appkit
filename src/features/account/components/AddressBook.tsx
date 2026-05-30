@@ -59,7 +59,7 @@ export function AddressCard({
   return (
     <Div surface="card" padding="sm" className="relative">
       {address.isDefault && (
-        <Span className="absolute right-3 top-3 rounded-full bg-success-surface px-2 py-0.5 text-xs font-medium text-success">
+        <Span size="xs" weight="medium" className="absolute right-3 top-3 rounded-full bg-success-surface px-2 py-0.5 text-success">
           {labels.defaultBadge ?? "Default"}
         </Span>
       )}

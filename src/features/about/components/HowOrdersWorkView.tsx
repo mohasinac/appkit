@@ -191,8 +191,8 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
         {statuses.map(({ status, icon, badge, desc }) => (
           <Div key={status} className={`flex items-start gap-4 p-4 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
-              <Span className="text-xl">{icon}</Span>
-              <Span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
+              <Span size="xl">{icon}</Span>
+              <Span size="xs" weight="semibold" className={`px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
             </Row>
             <Text variant="secondary" className="text-sm leading-relaxed">{desc}</Text>
           </Div>

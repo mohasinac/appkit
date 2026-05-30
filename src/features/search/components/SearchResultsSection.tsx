@@ -173,7 +173,7 @@ export function SearchResultsSection({
             >
               {L.prevPage}
             </Button>
-            <Span className="text-sm text-zinc-600 dark:text-zinc-400 tabular-nums">
+            <Span size="sm" className="text-zinc-600 dark:text-zinc-400 tabular-nums">
               {urlPage} / {totalPages}
             </Span>
             <Button

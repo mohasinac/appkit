@@ -104,7 +104,7 @@ export function SwitchFilter({
 
       {!isCollapsed && (
         <Div className="mt-3 flex items-center justify-between gap-3">
-          <Span className="text-sm text-zinc-700 dark:text-zinc-300">
+          <Span size="sm" className="text-zinc-700 dark:text-zinc-300">
             {label}
           </Span>
           <Toggle checked={checked} onChange={onChange} size="sm" />

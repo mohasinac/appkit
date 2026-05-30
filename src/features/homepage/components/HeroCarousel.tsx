@@ -270,7 +270,7 @@ function CarouselCardRenderer({
           className={`${position.fill} ${flex.center} font-semibold text-white hover:bg-black/20 transition-colors rounded-none p-0`}
           onClick={makeButtonClickHandler(card.buttons[0].href, card.buttons[0].openInNewTab, push)}
         >
-          <Span className="text-lg md:text-2xl">{card.buttons[0].text}</Span>
+          <Span size="lg" className="md:text-2xl">{card.buttons[0].text}</Span>
         </Button>
       )}
     </Div>

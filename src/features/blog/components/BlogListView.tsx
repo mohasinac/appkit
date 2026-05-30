@@ -64,16 +64,16 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       </Div>
       <Div className="flex flex-1 flex-col p-5">
         <Row className="mb-2 gap-2 flex-wrap">
-          <Span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium capitalize text-primary">
+          <Span size="xs" weight="medium" className="rounded-full bg-primary/10 px-2 py-0.5 capitalize text-primary">
             {post.category}
           </Span>
           {post.isFeatured && (
-            <Span className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">
+            <Span size="xs" weight="medium" className="rounded-full bg-yellow-100 px-2 py-0.5 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">
               Featured
             </Span>
           )}
           {post.readTimeMinutes && (
-            <Span className="text-xs text-zinc-400 dark:text-zinc-400">
+            <Span size="xs" className="text-zinc-400 dark:text-zinc-400">
               {post.readTimeMinutes} min read
             </Span>
           )}
@@ -104,7 +104,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
           ) : null}
           <Text className="text-xs text-neutral-500 dark:text-zinc-400 min-w-0">
             {post.authorName && (
-              <Span className="font-medium text-neutral-700 dark:text-zinc-300">
+              <Span weight="medium" className="text-neutral-700 dark:text-zinc-300">
                 {safeDisplayName(post.authorName, "Author")}
               </Span>
             )}

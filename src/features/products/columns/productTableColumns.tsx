@@ -71,7 +71,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
           ) : (
             <Div className="h-8 w-8 flex-shrink-0 rounded bg-zinc-200 dark:bg-slate-700" />
           )}
-          <Span className="max-w-[180px] truncate font-medium">
+          <Span weight="medium" className="max-w-[180px] truncate">
             {product.title}
           </Span>
         </Row>
@@ -134,7 +134,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       sortable: true,
       width: "15%",
       render: (product: T) => (
-        <Span className="block max-w-[120px] truncate text-sm">
+        <Span size="sm" className="block max-w-[120px] truncate">
           {product.storeName ?? "-"}
         </Span>
       ),

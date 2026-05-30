@@ -108,7 +108,7 @@ export function RadioGroup({
                     ].join(" ")}
                   />
                 </span>
-                <Span className="text-sm text-zinc-700 dark:text-zinc-200">
+                <Span size="sm" className="text-zinc-700 dark:text-zinc-200">
                   {option.label}
                 </Span>
               </Label>

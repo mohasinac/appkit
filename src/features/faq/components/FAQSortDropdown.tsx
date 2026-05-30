@@ -26,7 +26,7 @@ export function FAQSortDropdown({
 
   return (
     <Div className="flex items-center gap-3">
-      <Span className="text-sm text-zinc-600 dark:text-zinc-400">
+      <Span size="sm" className="text-zinc-600 dark:text-zinc-400">
         {labels?.label ?? "Sort"}
       </Span>
       <Div className="min-w-44">

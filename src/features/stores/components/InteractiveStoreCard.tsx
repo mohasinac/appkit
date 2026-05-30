@@ -154,11 +154,11 @@ export function InteractiveStoreCard({
 
           {/* CTA */}
           <Div className="mt-3 pt-2.5 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-            <Span className="text-xs font-semibold text-primary group-hover:underline transition-colors">
+            <Span size="xs" weight="semibold" className="text-primary group-hover:underline transition-colors">
               {labels.visitStore ?? "Visit store"} →
             </Span>
             {store.totalReviews != null && store.totalReviews > 0 && (
-              <Span className="text-xs text-zinc-400 dark:text-zinc-400">
+              <Span size="xs" className="text-zinc-400 dark:text-zinc-400">
                 {store.totalReviews} {labels.reviews ?? "reviews"}
               </Span>
             )}

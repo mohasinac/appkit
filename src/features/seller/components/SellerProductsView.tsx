@@ -139,7 +139,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
         />
       ) : (
         <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center">
-          <Span className="text-xs text-[var(--appkit-color-text-faint)]">–</Span>
+          <Span size="xs" className="text-[var(--appkit-color-text-faint)]">–</Span>
         </Div>
       ),
   },
@@ -153,7 +153,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
           <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>
             {row.listingKind}
           </Badge>
-          <Span className="text-xs text-[var(--appkit-color-text-muted)]">{row.secondary}</Span>
+          <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.secondary}</Span>
         </Row>
       </Div>
     ),
@@ -163,7 +163,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     header: "Price",
     className: "w-28 text-right",
     render: (row) => (
-      <Span className="text-sm font-medium text-[var(--appkit-color-text)]">{row.price}</Span>
+      <Span size="sm" weight="medium" className="text-[var(--appkit-color-text)]">{row.price}</Span>
     ),
   },
   {
@@ -191,7 +191,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     header: "Updated",
     className: "w-28",
     render: (row) => (
-      <Span className="text-xs text-[var(--appkit-color-text-muted)]">{row.updatedAt}</Span>
+      <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.updatedAt}</Span>
     ),
   },
   {
@@ -200,11 +200,11 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     className: "w-28",
     render: (row) =>
       row.physicalLocation ? (
-        <Span className="text-xs font-mono text-[var(--appkit-color-text-muted)]">
+        <Span size="xs" className="font-mono text-[var(--appkit-color-text-muted)]">
           {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
         </Span>
       ) : (
-        <Span className="text-xs text-[var(--appkit-color-text-faint)]">—</Span>
+        <Span size="xs" className="text-[var(--appkit-color-text-faint)]">—</Span>
       ),
   },
 ];

@@ -104,12 +104,12 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               {review.rating}.0
             </Span>
             {review.verified && (
-              <Span className="inline-flex items-center gap-1 rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
+              <Span size="xs" weight="semibold" className="inline-flex items-center gap-1 rounded-full bg-success-surface px-3 py-1 text-success">
                 ✓ Verified Purchase
               </Span>
             )}
             {review.featured && (
-              <Span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+              <Span size="xs" weight="semibold" className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
                 ★ Featured
               </Span>
             )}
@@ -144,7 +144,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   {displayName}
                 </Link>
               ) : (
-                <Span weight="semibold" className="text-sm text-neutral-900 dark:text-white">
+                <Span size="sm" weight="semibold" className="text-neutral-900 dark:text-white">
                   {review.isAnonymous ? "Anonymous" : displayName}
                 </Span>
               )}
@@ -190,7 +190,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                     style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                   />
                   <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
-                    <Span className="text-white text-xl">🔍</Span>
+                    <Span size="xl" className="text-white">🔍</Span>
                   </Row>
                 </button>
               ))}
@@ -294,12 +294,12 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             </Link>
           ) : (
             <Row surface="default" gap="sm" className="rounded-xl border border-neutral-200 dark:border-zinc-700 p-4">
-              <Span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
+              <Span size="xl" className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
                 👤
               </Span>
               <Div className="min-w-0">
-                <Span className="block text-xs text-zinc-400 dark:text-zinc-400 mb-0.5">Reviewer</Span>
-                <Span className="block text-sm font-medium text-neutral-900 dark:text-white truncate">
+                <Span size="xs" className="block text-zinc-400 dark:text-zinc-400 mb-0.5">Reviewer</Span>
+                <Span size="sm" weight="medium" className="block text-neutral-900 dark:text-white truncate">
                   Anonymous
                 </Span>
               </Div>

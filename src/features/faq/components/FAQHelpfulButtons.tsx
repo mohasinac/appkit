@@ -80,8 +80,8 @@ export function FAQHelpfulButtons({
                 : "bg-white text-zinc-800 hover:bg-green-50 dark:bg-slate-800 dark:text-zinc-100 dark:hover:bg-green-900/20"
           }`}
         >
-          <Span className="text-sm">{labels?.yes ?? "Yes"}</Span>
-          <Span className="text-sm text-zinc-500 dark:text-zinc-400">
+          <Span size="sm">{labels?.yes ?? "Yes"}</Span>
+          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
             ({helpful})
           </Span>
         </Button>
@@ -98,8 +98,8 @@ export function FAQHelpfulButtons({
                 : "bg-white text-zinc-800 hover:bg-red-50 dark:bg-slate-800 dark:text-zinc-100 dark:hover:bg-red-900/20"
           }`}
         >
-          <Span className="text-sm">{labels?.no ?? "No"}</Span>
-          <Span className="text-sm text-zinc-500 dark:text-zinc-400">
+          <Span size="sm">{labels?.no ?? "No"}</Span>
+          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
             ({notHelpful})
           </Span>
         </Button>

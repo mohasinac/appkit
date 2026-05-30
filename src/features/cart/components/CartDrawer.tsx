@@ -44,7 +44,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Text>
           )}
           {isOutOfStock && (
-            <Span className="flex-shrink-0 rounded bg-error-surface px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-error">
+            <Span weight="semibold" className="flex-shrink-0 rounded bg-error-surface px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-error">
               Out of Stock
             </Span>
           )}
@@ -75,7 +75,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               >
                 −
               </Button>
-              <Span className="min-w-[1.5rem] text-center text-sm">
+              <Span size="sm" className="min-w-[1.5rem] text-center">
                 {item.quantity}
               </Span>
               <Button
@@ -89,7 +89,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Row>
           )}
           {isOutOfStock && (
-            <Span className="text-xs text-zinc-400 dark:text-zinc-400">Qty: {item.quantity}</Span>
+            <Span size="xs" className="text-zinc-400 dark:text-zinc-400">Qty: {item.quantity}</Span>
           )}
         </Row>
       </Div>
@@ -189,7 +189,7 @@ export function CartDrawer({
               <Span className="text-neutral-600 dark:text-zinc-300">
                 {labels.subtotal ?? "Subtotal"}
               </Span>
-              <Span className="font-semibold">
+              <Span weight="semibold">
                 {formatCurrency(subtotal, currency)}
               </Span>
             </Row>

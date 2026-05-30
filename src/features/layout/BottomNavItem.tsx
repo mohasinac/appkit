@@ -62,7 +62,7 @@ export function BottomNavItem({
             </Span>
           )}
         </Span>
-        <Span className="text-[10px] font-medium leading-none">{label}</Span>
+        <Span weight="medium" className="text-[10px] leading-none">{label}</Span>
       </a>
     </Li>
   );

@@ -92,7 +92,7 @@ export function AdminPageHeader({
                   {crumb.label}
                 </themeConfig.TextLink>
               ) : (
-                <Span className="text-zinc-700 dark:text-zinc-200 font-medium">
+                <Span weight="medium" className="text-zinc-700 dark:text-zinc-200">
                   {crumb.label}
                 </Span>
               )}

@@ -92,12 +92,13 @@ export function BlogFeaturedCard({
           {/* Category + featured badges */}
           <Row className="gap-1.5 mb-2 flex-wrap">
             <Span
-              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+              size="xs" weight="medium"
+              className={`inline-block px-2 py-0.5 rounded-full capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
             >
               {post.category}
             </Span>
             {post.isFeatured && (
-              <Span className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 px-2 py-0.5 rounded-full text-xs font-medium">
+              <Span size="xs" weight="medium" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 px-2 py-0.5 rounded-full">
                 {labels.featuredBadge ?? "Featured"}
               </Span>
             )}

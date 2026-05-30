@@ -105,16 +105,16 @@ function PreOrderInfoSection({
       {/* Pre-order badge + production status + title */}
       <Div>
         <Row gap="xs" className="mb-2 flex-wrap">
-          <Span className="inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+          <Span size="xs" weight="semibold" className="inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-indigo-700 dark:text-indigo-300">
             Pre-Order
           </Span>
           {productionStatus && (
-            <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300">
+            <Span size="xs" weight="medium" className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-zinc-600 dark:text-zinc-300">
               {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
             </Span>
           )}
           {maxPerUser !== null && (
-            <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-200">
+            <Span size="xs" weight="medium" className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-800 dark:text-amber-200">
               Limit: {maxPerUser} per customer
             </Span>
           )}
@@ -128,7 +128,7 @@ function PreOrderInfoSection({
         <Row align="center" gap="xs" className="text-sm text-zinc-600 dark:text-zinc-400">
           <Span>📅</Span>
           <Span>Estimated delivery:</Span>
-          <Span className="font-medium">
+          <Span weight="medium">
             {deliveryDate.toLocaleDateString(undefined, { year: "numeric", month: "long" })}
           </Span>
         </Row>
@@ -167,7 +167,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {!category && categoryName && (
-            <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">
               {categoryName}
             </Span>
           )}
@@ -180,7 +180,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {brand && !brandSlug && (
-            <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">
               {brand}
             </Span>
           )}
@@ -276,7 +276,7 @@ function PreOrderBuyBarPanel({
             <Text className="text-xs text-zinc-500 dark:text-zinc-400">
               {reservedCount} of {reserveTarget} reserved
             </Text>
-            <Span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
+            <Span size="xs" weight="semibold" className="text-primary-600 dark:text-primary-400">
               {progressPct}%
             </Span>
           </Row>
@@ -325,7 +325,7 @@ function PreOrderBuyBarPanel({
             <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
               <Row wrap gap="xs">
                 {tags.map((tag) => (
-                  <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
+                  <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300">
                     {tag}
                   </Span>
                 ))}
@@ -340,7 +340,7 @@ function PreOrderBuyBarPanel({
                 { icon: "↩", label: "Free\nCancellation" },
               ].map(({ icon, label }) => (
                 <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
-                  <Span className="text-base">{icon}</Span>
+                  <Span size="base">{icon}</Span>
                   <Span className="whitespace-pre-line leading-tight">{label}</Span>
                 </Div>
               ))}

@@ -39,7 +39,7 @@ export function PreOrderTag({
 }: PreOrderTagProps) {
   return (
     <Div className={`inline-flex flex-col ${className}`}>
-      <Span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white">
+      <Span size="xs" weight="bold" className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-white">
         {label}
       </Span>
       {estimatedDate && (

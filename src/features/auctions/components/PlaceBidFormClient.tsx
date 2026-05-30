@@ -130,10 +130,10 @@ export function PlaceBidFormClient({
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">Starting bid</Text>
         </Row>
         <Row justify="between" align="baseline">
-          <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
+          <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
             {formatCurrency(currentBid, currency)}
           </Span>
-          <Span className="text-sm text-zinc-500 dark:text-zinc-400">
+          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
             {formatCurrency(startingBid, currency)}
           </Span>
         </Row>

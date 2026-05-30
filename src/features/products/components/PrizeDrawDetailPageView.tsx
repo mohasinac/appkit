@@ -229,21 +229,23 @@ export async function PrizeDrawDetailPageView({
             <Stack gap="md">
               <Div>
                 <Row gap="xs" className="mb-2 flex-wrap">
-                  <Span className="inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-xs font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+                  <Span size="xs" weight="semibold" className="inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300">
                     Prize Draw
                   </Span>
                   <Span
-                    className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusClass(revealStatus)}`}
+                    size="xs"
+                    weight="semibold"
+                    className={`inline-block rounded-full px-2.5 py-0.5 ${statusClass(revealStatus)}`}
                   >
                     {statusLabel(revealStatus)}
                   </Span>
                   {maxPerUser !== null && (
-                    <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                    <Span size="xs" weight="medium" className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-zinc-700 dark:text-zinc-300">
                       Limit: {maxPerUser} entries per customer
                     </Span>
                   )}
                   {maxPerUser !== null && userEntriesUsed !== null && (
-                    <Span className="inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-xs font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+                    <Span size="xs" weight="semibold" className="inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300">
                       You have used {userEntriesUsed}/{maxPerUser}
                     </Span>
                   )}

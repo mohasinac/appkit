@@ -36,12 +36,12 @@ function DualSlider({
   return (
     <Stack gap="sm" className="w-full">
       <Div className="flex items-center justify-between">
-        <Span className="text-sm font-semibold tabular-nums text-primary-600 dark:text-secondary-400">
+        <Span size="sm" weight="semibold" className="tabular-nums text-primary-600 dark:text-secondary-400">
           {prefix}
           {minNum}
         </Span>
-        <Span className="text-xs text-zinc-500 dark:text-zinc-400">-</Span>
-        <Span className="text-sm font-semibold tabular-nums text-primary-600 dark:text-secondary-400">
+        <Span size="xs" className="text-zinc-500 dark:text-zinc-400">-</Span>
+        <Span size="sm" weight="semibold" className="tabular-nums text-primary-600 dark:text-secondary-400">
           {prefix}
           {maxNum}
         </Span>
@@ -65,11 +65,11 @@ function DualSlider({
       </Stack>
 
       <Div className="flex items-center justify-between">
-        <Span className="text-xs text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
           {prefix}
           {minBound}
         </Span>
-        <Span className="text-xs text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
           {prefix}
           {maxBound}
         </Span>
@@ -164,7 +164,7 @@ export function RangeFilter({
           <Span className="flex items-center gap-2">
             {title}
             {hasValue && (
-              <Span className="inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20">
+              <Span size="xs" className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20">
                 1
               </Span>
             )}
@@ -239,7 +239,7 @@ export function RangeFilter({
               )}
               <Div className="relative">
                 {prefix && (
-                  <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-400 pointer-events-none">
+                  <Span size="xs" className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-400 pointer-events-none">
                     {prefix}
                   </Span>
                 )}
@@ -255,7 +255,7 @@ export function RangeFilter({
               </Div>
             </Div>
 
-            <Span className="flex-shrink-0 pb-1.5 text-zinc-400 dark:text-zinc-400 text-xs">
+            <Span size="xs" className="flex-shrink-0 pb-1.5 text-zinc-400 dark:text-zinc-400">
               -
             </Span>
 
@@ -267,7 +267,7 @@ export function RangeFilter({
               )}
               <Div className="relative">
                 {prefix && (
-                  <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-400 pointer-events-none">
+                  <Span size="xs" className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-400 pointer-events-none">
                     {prefix}
                   </Span>
                 )}

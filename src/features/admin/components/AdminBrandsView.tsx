@@ -50,7 +50,7 @@ const COLUMNS: AdminTableColumn<BrandRow>[] = [
     header: "Status",
     className: "w-32",
     render: (row) => (
-      <Span className="inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300">
+      <Span size="xs" weight="medium" className="inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300">
         {row.status}
       </Span>
     ),

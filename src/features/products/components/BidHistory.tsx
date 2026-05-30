@@ -94,10 +94,10 @@ export function BidHistory({
               key={bid.id}
               className="flex items-center justify-between rounded-lg border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 text-sm"
              data-section="bidhistory-div-422">
-              <Span className="font-bold text-primary-600 dark:text-primary-400">
+              <Span weight="bold" className="text-primary-600 dark:text-primary-400">
                 {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
               </Span>
-              <Span className="text-xs text-zinc-400 dark:text-zinc-400">
+              <Span size="xs" className="text-zinc-400 dark:text-zinc-400">
                 {formatBidDate(bid.placedAt)}
               </Span>
             </div>

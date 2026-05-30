@@ -189,11 +189,13 @@ export function MarketplacePrizeDrawCard({
         </TextLink>
 
         <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
-          <Span className="inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-xs font-medium text-white">
+          <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-white">
             {mergedLabels.prizeDrawBadge}
           </Span>
           <Span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusVariant(status)}`}
+            size="xs"
+            weight="medium"
+            className={`inline-flex items-center rounded-full px-2 py-0.5 ${statusVariant(status)}`}
           >
             {statusLabel(status, mergedLabels)}
           </Span>
@@ -201,7 +203,7 @@ export function MarketplacePrizeDrawCard({
 
         {status === "closed" ? (
           <Div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <Span className="rounded bg-zinc-900/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
+            <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 uppercase tracking-wider text-white">
               {mergedLabels.closedBadge}
             </Span>
           </Div>
@@ -234,7 +236,7 @@ export function MarketplacePrizeDrawCard({
         <Row justify="between" className="mt-1 gap-2">
           <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             {formatCurrency(pricePerEntry, getDefaultCurrency())}{" "}
-            <Span className="text-xs font-normal text-[var(--appkit-color-text-muted)]">
+            <Span size="xs" weight="normal" className="text-[var(--appkit-color-text-muted)]">
               {mergedLabels.pricePerEntryLabel}
             </Span>
           </Text>

@@ -605,14 +605,15 @@ function UniverseBrowseRow({
             (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
           }}
         >
-          <Span className="text-base select-none" aria-hidden="true">{icon}</Span>
+          <Span size="base" aria-hidden="true" className="select-none">{icon}</Span>
           <Span
-            className="text-xs font-black uppercase tracking-wide"
+            size="xs"
+            className="font-black uppercase tracking-wide"
             style={{ fontFamily: FONT_BANGERS, letterSpacing: "0.1em", color: "#E2E8F0" }}
           >
             {label}
           </Span>
-          <Span className="ml-auto text-xs" style={{ color: "#475569", transition: "color 0.15s" }}>
+          <Span size="xs" className="ml-auto" style={{ color: "#475569", transition: "color 0.15s" }}>
             →
           </Span>
         </Link>

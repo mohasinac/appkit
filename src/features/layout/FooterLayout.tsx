@@ -99,11 +99,11 @@ export function FooterLayout({
                       {item.icon}
                     </Span>
                     <Span>
-                      <Span className="font-bold text-zinc-900 dark:text-zinc-100 block text-sm">
+                      <Span size="sm" weight="bold" className="text-zinc-900 dark:text-zinc-100 block">
                         {item.label}
                       </Span>
                       {item.subtitle && (
-                        <Span className="text-zinc-500 dark:text-zinc-400 text-xs block">
+                        <Span size="xs" className="text-zinc-500 dark:text-zinc-400 block">
                           {item.subtitle}
                         </Span>
                       )}

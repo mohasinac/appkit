@@ -191,7 +191,7 @@ function renderBellButton(props: {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
       {unreadCount > 0 && (
-        <Span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full font-semibold shadow-md">
+        <Span size="xs" weight="semibold" className="absolute -top-1 -right-1 bg-red-500 text-white min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full shadow-md">
           {unreadCount > 99 ? "99+" : unreadCount}
         </Span>
       )}
@@ -213,7 +213,7 @@ function renderNotificationDropdown(props: {
       <Row justify="between" gap="none" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-800">
         <Heading level={3} className="font-semibold text-zinc-900 dark:text-white">
           {labels.title}
-          {unreadCount > 0 && <Span className="ml-2 text-xs bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full font-medium">{unreadCount} {labels.unread}</Span>}
+          {unreadCount > 0 && <Span size="xs" weight="medium" className="ml-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full">{unreadCount} {labels.unread}</Span>}
         </Heading>
         {unreadCount > 0 && (
           <Button onClick={handleMarkAllRead} disabled={isMarkingAll} className="text-xs text-primary hover:underline font-medium disabled:opacity-50">
@@ -254,14 +254,14 @@ function renderNotificationListContent(props: {
     <Ul>
       {notifications.map((notification) => (
         <Li key={notification.id} className={`group flex items-start gap-3 px-4 py-3 border-b border-zinc-200 dark:border-slate-800 last:border-0 transition-colors hover:bg-zinc-50 dark:hover:bg-slate-900 ${!notification.isRead ? "bg-primary/5 dark:bg-primary/10" : ""}`}>
-          <Span className="text-xl flex-shrink-0 mt-0.5">{notificationIcons[notification.type] ?? "🔔"}</Span>
+          <Span size="xl" className="flex-shrink-0 mt-0.5">{notificationIcons[notification.type] ?? "🔔"}</Span>
           <Div className="flex-1 min-w-0">
             <Div className={`flex items-start justify-between ${THEME_CONSTANTS.spacing.gap.xs}`}>
               <Text size="sm" className="font-medium text-zinc-900 dark:text-white leading-tight">
                 {notification.title}
                 {!notification.isRead && <Span className="ml-1.5 inline-block w-2 h-2 rounded-full bg-primary flex-shrink-0 align-middle" />}
               </Text>
-              <Span className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0">{formatRelativeTime(notification.createdAt)}</Span>
+              <Span size="xs" className="text-zinc-500 dark:text-zinc-400 flex-shrink-0">{formatRelativeTime(notification.createdAt)}</Span>
             </Div>
             <Text size="sm" className={`text-zinc-600 dark:text-zinc-300 mt-0.5 ${THEME_CONSTANTS.utilities.textClamp2}`}>{notification.message}</Text>
             <Row gap="3" className="mt-1.5">

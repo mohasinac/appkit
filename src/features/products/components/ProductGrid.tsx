@@ -134,12 +134,12 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           {!selectionMode && !isSelected && (
             <>
               {discount && (
-                <Span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                <Span weight="bold" className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] text-white shadow-sm">
                   -{discount}%
                 </Span>
               )}
               {typeBadge && (
-                <Span className={`rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${typeBadge.cls}`}>
+                <Span weight="bold" className={`rounded-full px-2 py-0.5 text-[10px] shadow-sm ${typeBadge.cls}`}>
                   {typeBadge.label}
                 </Span>
               )}
@@ -258,7 +258,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               ))}
               {overflow > 0 && (
                 <Span
-                  className="inline-flex items-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:text-zinc-400"
+                  weight="medium"
+                  className="inline-flex items-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-600 dark:text-zinc-400"
                   title={categories.slice(MAX_CHIPS).join(", ")}
                 >
                   +{overflow}
@@ -298,11 +299,11 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         {/* Price row */}
         <Div className="mt-auto pt-2">
           <Row align="baseline" className="gap-2">
-            <Span className="text-base font-bold text-primary dark:text-primary-400">
+            <Span size="base" weight="bold" className="text-primary dark:text-primary-400">
               {formatCurrency(product.price, getDefaultCurrency())}
             </Span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <Span className="text-xs text-zinc-400 line-through dark:text-zinc-400">
+              <Span size="xs" className="text-zinc-400 line-through dark:text-zinc-400">
                 {formatCurrency(product.originalPrice, getDefaultCurrency())}
               </Span>
             )}
@@ -542,11 +543,11 @@ function ProductListRow<T extends ProductItem = ProductItem>({
           </Span>
         )}
         <Div className="flex items-center gap-2 flex-wrap mt-0.5">
-          <Span className="text-sm font-semibold text-primary">
+          <Span size="sm" weight="semibold" className="text-primary">
             {formatCurrency(product.price, getDefaultCurrency())}
           </Span>
           {discount && (
-            <Span className="text-[10px] font-bold text-rose-500">-{discount}%</Span>
+            <Span weight="bold" className="text-[10px] text-rose-500">-{discount}%</Span>
           )}
           {product.rating !== undefined && (
             <Span className="text-[11px] text-zinc-400 dark:text-zinc-400 flex items-center gap-0.5">
@@ -560,7 +561,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             if (stock === undefined) return null;
             if (stock <= 0) {
               return (
-                <Span className="text-[11px] font-semibold text-rose-500">
+                <Span weight="semibold" className="text-[11px] text-rose-500">
                   Out of stock
                 </Span>
               );
@@ -568,7 +569,8 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             const low = stock <= 5;
             return (
               <Span
-                className={`text-[11px] font-medium ${
+                weight="medium"
+                className={`text-[11px] ${
                   low
                     ? "text-warning"
                     : "text-zinc-400 dark:text-zinc-400"

@@ -437,7 +437,7 @@ export async function ProductDetailPageView({
               {/* Title + condition badge */}
               <Div>
                 {condition && (
-                  <Span className="mb-2 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium capitalize text-zinc-600 dark:text-zinc-300">
+                  <Span size="xs" weight="medium" className="mb-2 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 capitalize text-zinc-600 dark:text-zinc-300">
                     {condition === "new"
                       ? "Brand New"
                       : condition === "like_new"
@@ -461,12 +461,14 @@ export async function ProductDetailPageView({
               {avgRating !== null ? (
                 <Row align="center" gap="sm">
                   <StarRating value={avgRating} />
-                  <Span className="text-sm text-zinc-600 dark:text-zinc-400">
+                  <Span size="sm" className="text-zinc-600 dark:text-zinc-400">
                     {avgRating.toFixed(1)}
                     {reviewCount ? ` (${reviewCount} reviews)` : ""}
                   </Span>
                   <Span
-                    className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    size="xs"
+                    weight="medium"
+                    className={`ml-auto rounded-full px-2.5 py-0.5 ${
                       inStock
                         ? "bg-success-surface text-success"
                         : "bg-error-surface text-error"
@@ -506,7 +508,7 @@ export async function ProductDetailPageView({
                     </Link>
                   ))}
                   {subcategory && (
-                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400 capitalize">
+                    <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400 capitalize">
                       {subcategory}
                     </Span>
                   )}
@@ -519,7 +521,7 @@ export async function ProductDetailPageView({
                     </Link>
                   )}
                   {brand && !brandSlug && (
-                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                    <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">
                       {brand}
                     </Span>
                   )}
@@ -648,10 +650,10 @@ export async function ProductDetailPageView({
                     </Text>
                     {formattedOriginal && discount && (
                       <>
-                        <Span className="text-sm text-zinc-400 line-through dark:text-zinc-400">
+                        <Span size="sm" className="text-zinc-400 line-through dark:text-zinc-400">
                           {formattedOriginal}
                         </Span>
-                        <Span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
+                        <Span size="xs" weight="bold" className="rounded-full bg-red-500 px-2 py-0.5 text-white">
                           -{discount}%
                         </Span>
                       </>
@@ -782,7 +784,7 @@ export async function ProductDetailPageView({
                     { icon: "⭐", label: "Quality\nGuarantee" },
                   ].map(({ icon, label }) => (
                     <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
-                      <Span className="text-base">{icon}</Span>
+                      <Span size="base">{icon}</Span>
                       <Span className="whitespace-pre-line leading-tight">{label}</Span>
                     </Div>
                   ))}
@@ -860,7 +862,7 @@ export async function ProductDetailPageView({
                   <ol className="space-y-3">
                     {howToUse.map((step, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
-                        <Span className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-xs font-bold text-primary-700 dark:text-primary-300">
+                        <Span size="xs" weight="bold" className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300">
                           {i + 1}
                         </Span>
                         {step}
@@ -888,7 +890,7 @@ export async function ProductDetailPageView({
               ? () => (
                   <Div className="rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/60 dark:bg-teal-900/20 p-5">
                     <Div className="flex items-center gap-2 mb-3">
-                      <Span className="text-teal-600 dark:text-teal-400 text-base" aria-hidden="true">📦</Span>
+                      <Span size="base" className="text-teal-600 dark:text-teal-400" aria-hidden="true">📦</Span>
                       <Text className="text-sm font-semibold text-teal-800 dark:text-teal-200">
                         Part of {bundleMemberships.length === 1 ? "a bundle" : `${bundleMemberships.length} bundles`}
                       </Text>

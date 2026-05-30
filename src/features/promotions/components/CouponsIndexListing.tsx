@@ -185,7 +185,7 @@ export function CouponsIndexListing({
         {hasActiveFilters && (
           <Row gap="xs" wrap className="mt-2">
             {activeType && (
-              <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
+              <Span size="xs" weight="medium" className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2.5 py-1">
                 {COUPON_TYPES.find((t) => t.value === activeType)?.label ?? activeType}
                 <Button variant="ghost" type="button" onClick={() => { table.set(TABLE_KEYS.TYPE, ""); }} aria-label="Remove type filter" className={CLS_CHIP_BTN}>
                   <X className="h-3 w-3" />
@@ -193,7 +193,7 @@ export function CouponsIndexListing({
               </Span>
             )}
             {table.get(TABLE_KEYS.DATE_FROM) && (
-              <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
+              <Span size="xs" weight="medium" className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2.5 py-1">
                 From: {table.get(TABLE_KEYS.DATE_FROM)}
                 <Button variant="ghost" type="button" onClick={() => { table.set(TABLE_KEYS.DATE_FROM, ""); }} aria-label="Remove from-date filter" className={CLS_CHIP_BTN}>
                   <X className="h-3 w-3" />
@@ -201,7 +201,7 @@ export function CouponsIndexListing({
               </Span>
             )}
             {table.get(TABLE_KEYS.DATE_TO) && (
-              <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
+              <Span size="xs" weight="medium" className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2.5 py-1">
                 To: {table.get(TABLE_KEYS.DATE_TO)}
                 <Button variant="ghost" type="button" onClick={() => { table.set(TABLE_KEYS.DATE_TO, ""); }} aria-label="Remove to-date filter" className={CLS_CHIP_BTN}>
                   <X className="h-3 w-3" />

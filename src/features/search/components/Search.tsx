@@ -120,7 +120,7 @@ function SuggestionItem({
         onMouseEnter={() => onHover(itemIndex)}
         className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
       >
-        <Span className="text-sm">{typeIcons[suggestion.type]}</Span>
+        <Span size="sm">{typeIcons[suggestion.type]}</Span>
         <Div className="flex-1 min-w-0">
           <Text size="sm" className={CLS_TRUNCATE}>
             {suggestion.title}
@@ -131,7 +131,7 @@ function SuggestionItem({
             </Text>
           )}
         </Div>
-        <Span className={`text-xs px-2 py-0.5 rounded-full ${typeBadges[suggestion.type]}`}>
+        <Span size="xs" className={`px-2 py-0.5 rounded-full ${typeBadges[suggestion.type]}`}>
           {suggestion.type}
         </Span>
       </Button>
@@ -500,7 +500,7 @@ export function Search({
                     onMouseEnter={() => setActiveIndex(itemIndex)}
                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
                   >
-                    <Span className="text-sm">
+                    <Span size="sm">
                       {typeIcons[suggestion.type]}
                     </Span>
                     <Div className="flex-1 min-w-0">

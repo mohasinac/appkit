@@ -64,7 +64,7 @@ export function Slider({
         <div className="mb-2 flex items-center justify-between gap-3" data-section="slider-div-608">
           {label ? <Label htmlFor={inputId}>{label}</Label> : <span />}
           {showValue ? (
-            <Span className="text-sm tabular-nums text-zinc-600 dark:text-zinc-300">
+            <Span size="sm" className="tabular-nums text-zinc-600 dark:text-zinc-300">
               {value}
             </Span>
           ) : null}

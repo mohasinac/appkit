@@ -139,11 +139,11 @@ export function MarketplacePreorderCard({
         </TextLink>
 
         <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
-          <Span className="inline-flex items-center rounded-full bg-cobalt px-2 py-0.5 text-xs font-medium text-white">
+          <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-cobalt px-2 py-0.5 text-white">
             {mergedLabels.preOrderBadge}
           </Span>
           {product.featured && (
-            <Span className="inline-flex items-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-medium text-white">
+            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-amber-500 px-2 py-0.5 text-white">
               {mergedLabels.featuredBadge}
             </Span>
           )}

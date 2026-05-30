@@ -104,9 +104,9 @@ function AddressCard({
       <Row align="start" justify="between" gap="xs">
         <Row gap="xs" className="min-w-0">
           <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
-          <Span weight="semibold" className="text-sm text-zinc-900 dark:text-zinc-100 truncate">{address.label}</Span>
+          <Span size="sm" weight="semibold" className="text-zinc-900 dark:text-zinc-100 truncate">{address.label}</Span>
           {address.isDefault && (
-            <Span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs px-2 py-0.5 font-medium">
+            <Span size="xs" weight="medium" className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2 py-0.5">
               <Star className="h-3 w-3" />
               Default
             </Span>
@@ -419,7 +419,7 @@ export function SellerAddressesView({
               onChange={(e) => set("isDefault", e.target.checked)}
               className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
             />
-            <Span className="text-sm text-zinc-700 dark:text-zinc-300">Set as default pickup address</Span>
+            <Span size="sm" className="text-zinc-700 dark:text-zinc-300">Set as default pickup address</Span>
           </label>
         </Stack>
       </SideDrawer>

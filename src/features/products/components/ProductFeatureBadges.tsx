@@ -61,7 +61,7 @@ export function ProductFeatureBadges({
   if (featured) {
     badges.push({
       key: "featured",
-      icon: <Span className="text-xs">★</Span>,
+      icon: <Span size="xs">★</Span>,
       label: labels.featured,
       colorClass: "text-amber-700 dark:text-amber-300",
       bgClass:
@@ -72,7 +72,7 @@ export function ProductFeatureBadges({
   if (fasterDelivery) {
     badges.push({
       key: "fasterDelivery",
-      icon: <Span className="text-xs">⚡</Span>,
+      icon: <Span size="xs">⚡</Span>,
       label: labels.fasterDelivery,
       colorClass: "text-orange-700 dark:text-orange-300",
       bgClass:
@@ -83,7 +83,7 @@ export function ProductFeatureBadges({
   if (ratedSeller) {
     badges.push({
       key: "ratedSeller",
-      icon: <Span className="text-xs">✓</Span>,
+      icon: <Span size="xs">✓</Span>,
       label: labels.ratedSeller,
       colorClass: "text-primary",
       bgClass: "bg-primary/5 dark:bg-primary/10 border-primary/20",
@@ -104,7 +104,7 @@ export function ProductFeatureBadges({
 
     badges.push({
       key: "condition",
-      icon: <Span className="text-xs">▣</Span>,
+      icon: <Span size="xs">▣</Span>,
       label: `${labels.condition}: ${conditionLabel}`,
       colorClass: "text-primary",
       bgClass:
@@ -115,7 +115,7 @@ export function ProductFeatureBadges({
   if (returnable && condition === "new") {
     badges.push({
       key: "returnable",
-      icon: <Span className="text-xs">↺</Span>,
+      icon: <Span size="xs">↺</Span>,
       label: labels.returnable,
       colorClass: "text-teal-700 dark:text-teal-300",
       bgClass:
@@ -126,7 +126,7 @@ export function ProductFeatureBadges({
   if (freeShipping) {
     badges.push({
       key: "freeShipping",
-      icon: <Span className="text-xs">🚚</Span>,
+      icon: <Span size="xs">🚚</Span>,
       label: labels.freeShipping,
       colorClass: "text-emerald-700 dark:text-emerald-300",
       bgClass:
@@ -137,7 +137,7 @@ export function ProductFeatureBadges({
   if (codAvailable) {
     badges.push({
       key: "cod",
-      icon: <Span className="text-xs">₹</Span>,
+      icon: <Span size="xs">₹</Span>,
       label: labels.codAvailable,
       colorClass: "text-purple-700 dark:text-purple-300",
       bgClass:
@@ -148,7 +148,7 @@ export function ProductFeatureBadges({
   if (wishlistCount && wishlistCount > 0) {
     badges.push({
       key: "wishlist",
-      icon: <Span className="text-xs">♥</Span>,
+      icon: <Span size="xs">♥</Span>,
       label: labels.wishlistCount(wishlistCount),
       colorClass: "text-pink-700 dark:text-pink-300",
       bgClass:
@@ -163,7 +163,7 @@ export function ProductFeatureBadges({
 
     badges.push({
       key: "categoryCount",
-      icon: <Span className="text-xs">▦</Span>,
+      icon: <Span size="xs">▦</Span>,
       label: labels.categoryProductCount(formattedCount, categoryName),
       colorClass: "text-zinc-700 dark:text-zinc-300",
       bgClass:

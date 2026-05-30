@@ -130,7 +130,7 @@ export function AboutView({
             renderCtaButtons()
           ) : (
             <Row justify="center" gap="3" wrap>
-              <Span className="text-white/70 text-sm">
+              <Span size="sm" className="text-white/70">
                 {labels.ctaSell} · {labels.ctaShop}
               </Span>
             </Row>

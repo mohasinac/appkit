@@ -64,7 +64,7 @@ export function getCategoryTableColumns(
           <Div style={{ paddingLeft: `${cat.tier * 20}px` }}>
             {cat.name}
             {cat.tier > 0 && (
-              <Span className="text-zinc-400 dark:text-zinc-400 text-xs ml-2">
+              <Span size="xs" className="text-zinc-400 dark:text-zinc-400 ml-2">
                 (Tier {cat.tier})
               </Span>
             )}
@@ -80,7 +80,7 @@ export function getCategoryTableColumns(
         key: "metrics",
         header: L.colProducts,
         render: (cat: Category) => (
-          <Span className="text-sm">
+          <Span size="sm">
             {cat.metrics.productCount} ({cat.metrics.totalProductCount})
           </Span>
         ),

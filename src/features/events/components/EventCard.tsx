@@ -91,7 +91,7 @@ export function EventCard({
       </Link>
       <Div className="flex flex-1 flex-col p-4">
         <Div className="flex items-start justify-between gap-2 mb-2">
-          <Span className="text-lg" aria-hidden="true">
+          <Span size="lg" aria-hidden="true">
             {TYPE_ICONS[event.type]}
           </Span>
           <EventStatusBadge status={event.status} />

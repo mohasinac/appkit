@@ -107,7 +107,7 @@ export function AsyncFacetSection({
           <Row as={Span} gap="xs">
             {title}
             {hasValue && (
-              <Span className="inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20">
+              <Span size="xs" className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20">
                 {selected.length}
               </Span>
             )}
@@ -149,13 +149,14 @@ export function AsyncFacetSection({
           {selectedLabels.map((label) => (
             <Span
               key={label}
-              className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-zinc-100 dark:bg-slate-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-600"
+              size="xs"
+              className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-slate-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-600"
             >
               {label}
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-zinc-400 dark:text-zinc-400">
+            <Span size="xs" className="inline-flex items-center px-2 py-0.5 rounded-full text-zinc-400 dark:text-zinc-400">
               +{selected.length - 3} more
             </Span>
           )}
@@ -186,11 +187,11 @@ export function AsyncFacetSection({
                   aria-label={opt.label}
                   className="flex-shrink-0 w-4 h-4 rounded border-zinc-300 dark:border-slate-600 cursor-pointer text-primary-600 dark:text-secondary-500"
                 />
-                <Span className="flex-1 text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate">
+                <Span size="sm" className="flex-1 text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate">
                   {opt.label}
                 </Span>
                 {opt.count !== undefined && (
-                  <Span className="text-xs text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
+                  <Span size="xs" className="text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
                     {opt.count}
                   </Span>
                 )}

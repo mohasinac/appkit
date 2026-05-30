@@ -244,7 +244,8 @@ export function CharacterHotspotForm({
               )}
             </Div>
             <Span
-              className="mt-1 text-center text-[10px] font-medium"
+              weight="medium"
+              className="mt-1 text-center text-[10px]"
               style={{ color: "var(--color-muted)" }}
             >
               {s.label}
@@ -275,10 +276,10 @@ export function CharacterHotspotForm({
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Span className="text-3xl">🖼</Span>
-            <Span className="font-medium">
+            <Span weight="medium">
               {uploading ? "Uploading…" : "Click to choose image"}
             </Span>
-            <Span className="text-xs" style={{ color: "var(--color-muted)" }}>
+            <Span size="xs" style={{ color: "var(--color-muted)" }}>
               JPG, PNG, WebP — wide landscape images work best
             </Span>
             <Input

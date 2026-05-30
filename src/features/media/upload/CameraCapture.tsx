@@ -92,7 +92,7 @@ export default function CameraCapture({
         <Div className="absolute inset-0 flex items-center justify-center bg-black/60">
           <Div className="flex flex-col items-center gap-2">
             <Spinner />
-            <Span className="text-white text-sm">{t("starting")}</Span>
+            <Span size="sm" className="text-white">{t("starting")}</Span>
           </Div>
         </Div>
       )}

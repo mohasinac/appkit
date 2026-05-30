@@ -64,7 +64,7 @@ export function FeaturedResultsSection({
           aria-hidden="true"
         >
           <Span className="h-px w-6 bg-current" />
-          <Span className="text-xs">{ornamentLabel}</Span>
+          <Span size="xs">{ornamentLabel}</Span>
           <Span className="h-px w-6 bg-current" />
         </Div>
 

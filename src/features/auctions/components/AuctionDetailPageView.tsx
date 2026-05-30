@@ -81,11 +81,11 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
     <Stack gap="md">
       <Div>
         <Row gap="xs" className="mb-2 flex-wrap">
-          <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">🏷️ Live Auction</Span>
+          <Span size="xs" weight="semibold" className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-700 dark:text-amber-300">🏷️ Live Auction</Span>
           {isEnded ? (
-            <Span className="inline-block rounded-full bg-error-surface px-2.5 py-0.5 text-xs font-medium text-error">Ended</Span>
+            <Span size="xs" weight="medium" className="inline-block rounded-full bg-error-surface px-2.5 py-0.5 text-error">Ended</Span>
           ) : (
-            <Span className="inline-block rounded-full bg-success-surface px-2.5 py-0.5 text-xs font-medium text-success">Active</Span>
+            <Span size="xs" weight="medium" className="inline-block rounded-full bg-success-surface px-2.5 py-0.5 text-success">Active</Span>
           )}
         </Row>
         <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">{title}</Heading>
@@ -93,24 +93,24 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       <Div>
         <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-0.5">Current bid</Text>
         <Row align="center" gap="sm" wrap>
-          <Span className="text-2xl font-bold text-primary-600 dark:text-primary-400">{formatCurrency(currentBid, currency)}</Span>
-          <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
+          <Span weight="bold" className="text-2xl text-primary-600 dark:text-primary-400">{formatCurrency(currentBid, currency)}</Span>
+          <Span size="sm" weight="medium" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-zinc-600 dark:text-zinc-300">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
         </Row>
-        {endDate && <Text className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">{isEnded ? "Ended" : "Ends"} <Span className="font-medium text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
+        {endDate && <Text className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">{isEnded ? "Ended" : "Ends"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
         <Row align="center" gap="sm" className="rounded-lg border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3 py-2">
-          <Span className="text-xs text-zinc-600 dark:text-zinc-400">Buy Now:</Span>
-          <Span className="text-base font-bold text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
+          <Span size="xs" className="text-zinc-600 dark:text-zinc-400">Buy Now:</Span>
+          <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
         </Row>
       )}
       <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
       {(categoryName || category || brand) && (
         <Row gap="sm" wrap>
           {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
-          {!category && categoryName && <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">{categoryName}</Span>}
+          {!category && categoryName && <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">{categoryName}</Span>}
           {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
-          {brand && !brandSlug && <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">{brand}</Span>}
+          {brand && !brandSlug && <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">{brand}</Span>}
         </Row>
       )}
       {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
@@ -145,7 +145,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
     <Section className="mt-10">
       <Heading level={2} className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-50">Store Reviews</Heading>
       <Div className="mb-4 flex items-center gap-3">
-        <Span className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{avg.toFixed(1)}</Span>
+        <Span weight="bold" className="text-3xl text-zinc-900 dark:text-zinc-50">{avg.toFixed(1)}</Span>
         <Div>
           <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}>★</Span>)}</Row>
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
@@ -156,8 +156,8 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
           <Div key={review.id} surface="card" padding="sm" className="space-y-1.5">
             <Row justify="between" align="center">
               <Row gap="xs" align="center">
-                <Span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{review.userName}</Span>
-                <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={`text-xs ${star <= review.rating ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}`}>★</Span>)}</Row>
+                <Span size="sm" weight="medium" className="text-zinc-800 dark:text-zinc-200">{review.userName}</Span>
+                <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} size="xs" className={star <= review.rating ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}>★</Span>)}</Row>
               </Row>
             </Row>
             {review.title && <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{review.title}</Text>}
@@ -319,10 +319,10 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 {/* Compact summary card — modal owns the form */}
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-3">
                   <Row justify="between" align="baseline">
-                    <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
+                    <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
                       {formatCurrency(currentBid, currency)}
                     </Span>
-                    <Span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
                       {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
                     </Span>
                   </Row>
@@ -372,7 +372,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
                     <Row wrap gap="xs">
                       {tags.map((tag) => (
-                        <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
+                        <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300">
                           {tag}
                         </Span>
                       ))}
@@ -386,10 +386,10 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             !isEnded && onPlaceBid ? (
               <Div className="lg:hidden rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4 space-y-3">
                 <Row align="center" gap="sm">
-                  <Span className="text-base font-bold text-primary-600 dark:text-primary-400">
+                  <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
                   </Span>
-                  <Span className="text-xs text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
+                  <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
                 </Row>
                 <PlaceBidModalButton
                   productId={String(product.id)}
@@ -410,10 +410,10 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             ) : !isEnded ? (
               <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4 lg:hidden">
                 <Row align="center" gap="sm" className="mb-3">
-                  <Span className="text-base font-bold text-primary-600 dark:text-primary-400">
+                  <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
                   </Span>
-                  <Span className="text-xs text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
+                  <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
                 </Row>
                 <Button variant="primary" size="md" className="w-full">
                   Place Bid

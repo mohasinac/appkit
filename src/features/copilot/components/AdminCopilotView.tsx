@@ -52,7 +52,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
       >
         <Text className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</Text>
         {msg.durationMs ? (
-          <Span className="mt-1 block text-xs opacity-60">{(msg.durationMs / 1000).toFixed(1)}s</Span>
+          <Span size="xs" className="mt-1 block opacity-60">{(msg.durationMs / 1000).toFixed(1)}s</Span>
         ) : null}
       </Div>
     </Div>
@@ -85,7 +85,7 @@ function renderCopilotChatPanel(props: {
         {isLoading ? (
           <Div className="flex justify-start">
             <Div className="rounded-2xl rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5">
-              <Span className="text-sm opacity-60 animate-pulse">Thinking...</Span>
+              <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
             </Div>
           </Div>
         ) : null}
@@ -217,7 +217,7 @@ export function AdminCopilotView({
               {isLoading ? (
                 <Div className="flex justify-start">
                   <Div className="rounded-2xl rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5">
-                    <Span className="text-sm opacity-60 animate-pulse">Thinking...</Span>
+                    <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
                   </Div>
                 </Div>
               ) : null}

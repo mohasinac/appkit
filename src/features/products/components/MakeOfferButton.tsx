@@ -94,7 +94,7 @@ export function MakeOfferButton({
   if (state === "success") {
     return (
       <Div className={`rounded-xl border border-emerald-200 dark:border-emerald-800 bg-success-surface p-4 text-center space-y-1 ${className}`}>
-        <Span className="text-lg">🎉</Span>
+        <Span size="lg">🎉</Span>
         <Text className="text-sm font-medium text-success">
           Offer sent!
         </Text>
@@ -108,7 +108,7 @@ export function MakeOfferButton({
   if (state === "pending") {
     return (
       <Div className={`rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-4 text-center space-y-1 ${className}`}>
-        <Span className="text-lg">⏳</Span>
+        <Span size="lg">⏳</Span>
         <Text className="text-sm font-medium text-amber-800 dark:text-amber-300">
           Offer Pending
         </Text>

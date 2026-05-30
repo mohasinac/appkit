@@ -120,7 +120,7 @@ export function FilterFacetSection({
         >
           {title}
           {hasValue && (
-            <Span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">
+            <Span weight="bold" className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">
               {selected.length}
             </Span>
           )}
@@ -162,7 +162,7 @@ export function FilterFacetSection({
                       aria-label={option.label}
                       className="h-3.5 w-3.5 flex-shrink-0 cursor-pointer rounded border-zinc-300 text-primary-600 dark:border-slate-600 dark:text-secondary-500"
                     />
-                    <Span className="flex-1 truncate text-xs text-zinc-700 dark:text-zinc-300">
+                    <Span size="xs" className="flex-1 truncate text-zinc-700 dark:text-zinc-300">
                       {option.label}
                     </Span>
                     {option.count !== undefined && (
@@ -217,7 +217,7 @@ export function FilterFacetSection({
           <Row as={Span} gap="xs">
             {title}
             {hasValue && (
-              <Span className="inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20">
+              <Span size="xs" className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20">
                 {selected.length}
               </Span>
             )}
@@ -273,13 +273,14 @@ export function FilterFacetSection({
           {selectedLabels.map((label) => (
             <Span
               key={label}
-              className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-zinc-100 dark:bg-slate-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-600"
+              size="xs"
+              className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-slate-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-600"
             >
               {label}
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-zinc-400 dark:text-zinc-400">
+            <Span size="xs" className="inline-flex items-center px-2 py-0.5 rounded-full text-zinc-400 dark:text-zinc-400">
               +{selected.length - 3} more
             </Span>
           )}
@@ -334,11 +335,11 @@ export function FilterFacetSection({
                     )}
                   />
                 )}
-                <Span className="flex-1 text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate">
+                <Span size="sm" className="flex-1 text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate">
                   {option.label}
                 </Span>
                 {option.count !== undefined && (
-                  <Span className="text-xs text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
+                  <Span size="xs" className="text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
                     {option.count}
                   </Span>
                 )}

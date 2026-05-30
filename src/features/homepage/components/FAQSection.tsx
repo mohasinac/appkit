@@ -190,7 +190,8 @@ export function FAQSection({
                   aria-expanded={isOpen}
                 >
                   <Span
-                    className={`text-sm font-medium flex-1 leading-snug ${
+                    size="sm" weight="medium"
+                    className={`flex-1 leading-snug ${
                       isOpen ? "text-primary" : themed.textPrimary
                     }`}
                   >
@@ -238,7 +239,7 @@ export function FAQSection({
             >
               {viewMoreLabel}
               {hasMore && moreCount > 0 && (
-                <Span className="bg-primary text-white text-xs px-2 py-0.5 rounded-full">
+                <Span size="xs" className="bg-primary text-white px-2 py-0.5 rounded-full">
                   +{moreCount}
                 </Span>
               )}

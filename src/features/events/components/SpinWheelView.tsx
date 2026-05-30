@@ -159,7 +159,7 @@ export function SpinWheelView({
             <>
               <Text className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
                 {l.couponHint}{" "}
-                <Span className="font-mono font-semibold">{resultCoupon}</Span>
+                <Span weight="semibold" className="font-mono">{resultCoupon}</Span>
               </Text>
               {/* Plan §10 — surfacing the won coupon as a usable CTA: copies
                   the code to the clipboard and deep-links to /checkout?coupon=…

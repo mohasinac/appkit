@@ -158,7 +158,7 @@ export function MarketplaceBundleCard({
         </TextLink>
 
         <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
-          <Span className="inline-flex items-center rounded-full bg-violet-600 px-2 py-0.5 text-xs font-medium text-white">
+          <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-violet-600 px-2 py-0.5 text-white">
             {mergedLabels.bundleBadge}
           </Span>
           <Span
@@ -174,7 +174,7 @@ export function MarketplaceBundleCard({
 
         {stock === "out_of_stock" && (
           <Div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <Span className="rounded bg-zinc-900/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
+            <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 uppercase tracking-wider text-white">
               {mergedLabels.outOfStockBadge}
             </Span>
           </Div>

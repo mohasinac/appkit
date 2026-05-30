@@ -271,7 +271,7 @@ export default function BottomActions() {
               aria-label="Clear selection"
             >
               <X className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
-              <Span className="text-xs font-semibold tabular-nums whitespace-nowrap leading-none">
+              <Span size="xs" weight="semibold" className="tabular-nums whitespace-nowrap leading-none">
                 {bulk.noun
                   ? `${bulk.selectedCount} ${bulk.noun}`
                   : `${bulk.selectedCount} selected`}

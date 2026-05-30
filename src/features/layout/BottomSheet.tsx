@@ -83,7 +83,7 @@ export function BottomSheet({
           <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-600" />
 
           {title && (
-            <Span className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 mt-2">
+            <Span size="sm" weight="semibold" className="text-zinc-800 dark:text-zinc-100 mt-2">
               {title}
             </Span>
           )}

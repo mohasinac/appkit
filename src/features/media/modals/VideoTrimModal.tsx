@@ -117,7 +117,7 @@ export function VideoTrimModal({
             <Stack gap="xs">
               <Row justify="between">
                 <Text size="sm">{t("trimStart")}</Text>
-                <Span className="text-sm font-mono tabular-nums">
+                <Span size="sm" className="font-mono tabular-nums">
                   {formatTime(startTime)}
                 </Span>
               </Row>
@@ -133,7 +133,7 @@ export function VideoTrimModal({
             <Stack gap="xs">
               <Row justify="between">
                 <Text size="sm">{t("trimEnd")}</Text>
-                <Span className="text-sm font-mono tabular-nums">
+                <Span size="sm" className="font-mono tabular-nums">
                   {formatTime(endTime)}
                 </Span>
               </Row>

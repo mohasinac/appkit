@@ -75,16 +75,16 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           )}
           <Div className="flex-1 min-w-0">
             <Row wrap gap="sm">
-              <Span className="font-medium text-neutral-900 dark:text-white">
+              <Span weight="medium" className="text-neutral-900 dark:text-white">
                 {displayName}
               </Span>
               {review.verified && (
-                <Span className="rounded-full bg-success-surface px-2 py-0.5 text-xs font-medium text-success">
+                <Span size="xs" weight="medium" className="rounded-full bg-success-surface px-2 py-0.5 text-success">
                   Verified
                 </Span>
               )}
               {date && (
-                <Span className="text-xs text-zinc-400 dark:text-zinc-400">
+                <Span size="xs" className="text-zinc-400 dark:text-zinc-400">
                   {date}
                 </Span>
               )}

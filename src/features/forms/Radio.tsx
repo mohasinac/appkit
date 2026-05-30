@@ -59,7 +59,7 @@ export function RadioGroup({
                   onChange={() => !option.disabled && onChange?.(option.value)}
                   className="w-4 h-4 text-primary-600 dark:text-secondary-500 border-zinc-300 dark:border-slate-600 focus:ring-primary-500/30 dark:focus:ring-secondary-400/30"
                 />
-                <Span className="text-sm text-zinc-700 dark:text-zinc-300">
+                <Span size="sm" className="text-zinc-700 dark:text-zinc-300">
                   {option.label}
                 </Span>
               </label>

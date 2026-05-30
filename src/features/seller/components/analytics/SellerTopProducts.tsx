@@ -40,7 +40,7 @@ export function SellerTopProducts({
         <Div className="divide-y divide-neutral-100 dark:divide-neutral-800">
           {products.map((product, index) => (
             <Div key={product.productId} className="flex items-center gap-4 py-3">
-              <Span className="w-6 text-sm font-bold text-neutral-500 dark:text-neutral-400">
+              <Span size="sm" weight="bold" className="w-6 text-neutral-500 dark:text-neutral-400">
                 {index + 1}.
               </Span>
               <Div className="flex-1 min-w-0">
@@ -50,7 +50,7 @@ export function SellerTopProducts({
                 </Text>
               </Div>
               <Div className="text-right ml-2">
-                <Span className="text-sm font-semibold text-success">
+                <Span size="sm" weight="semibold" className="text-success">
                   {formatRevenue(product.revenue)}
                 </Span>
                 {renderProductLink?.(product)}

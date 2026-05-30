@@ -67,7 +67,7 @@ export function StoreHeader({
                 {store.storeName}
               </Heading>
               {store.averageRating != null && store.averageRating > 0 && (
-                <Span className="inline-flex items-center gap-1 text-sm font-medium text-amber-500">
+                <Span size="sm" weight="medium" className="inline-flex items-center gap-1 text-amber-500">
                   ★ {store.averageRating.toFixed(1)}
                 </Span>
               )}

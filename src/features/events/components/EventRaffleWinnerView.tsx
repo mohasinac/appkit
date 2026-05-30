@@ -98,7 +98,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           {typeof event.raffleEntryCount === "number" ? (
             <Span>
               {l.poolLabel}:{" "}
-              <Span className="font-medium text-zinc-900 dark:text-zinc-100">
+              <Span weight="medium" className="text-zinc-900 dark:text-zinc-100">
                 {event.raffleEntryCount}
               </Span>
             </Span>

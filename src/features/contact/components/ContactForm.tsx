@@ -144,7 +144,7 @@ export function ContactForm({
           className="h-10 w-full rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition"
         />
       )}
-      {errors[id] && <Span className="text-xs text-red-500">{errors[id]}</Span>}
+      {errors[id] && <Span size="xs" className="text-red-500">{errors[id]}</Span>}
     </Div>
   );
 
