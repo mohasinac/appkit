@@ -57,7 +57,7 @@ export function ClassifiedFilters({
         />
       ) : null}
 
-      <div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
+      <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
         <label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
           City / Area
         </label>
@@ -68,7 +68,7 @@ export function ClassifiedFilters({
           placeholder="e.g. Mumbai"
           className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-[var(--appkit-color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
         />
-      </div>
+      </Div>
 
       <FilterFacetSection
         title="Negotiable"

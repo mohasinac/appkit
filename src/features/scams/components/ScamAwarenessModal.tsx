@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Shield, IndianRupee, UserX, CreditCard, Package, UserCheck, ShieldAlert, Truck } from "lucide-react";
-import { Modal, Stack, Row, Heading, Text, Checkbox } from "../../../ui";
+import { Div, Modal, Stack, Row, Heading, Text, Checkbox } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SCAM_CATEGORIES } from "../constants/scam-types";
@@ -68,7 +68,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
         </Text>
 
         {/* Category cards */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {SCAM_CATEGORIES.map((cat) => (
             <div
               key={cat.id}
@@ -87,7 +87,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
               </Stack>
             </div>
           ))}
-        </div>
+        </Div>
 
         {/* Links */}
         <Row gap="md" className="flex-wrap text-sm">

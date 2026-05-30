@@ -10,10 +10,10 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
     key: "primary",
     header: "Name",
     render: (row) => (
-      <div className="space-y-0.5">
+      <Div className="space-y-0.5">
         <Text className="font-medium text-zinc-900 dark:text-zinc-100">{String(row.primary ?? "")}</Text>
         {row.secondary ? <Text className="text-xs text-zinc-500 dark:text-zinc-400">{String(row.secondary)}</Text> : null}
-      </div>
+      </Div>
     ),
   },
   {

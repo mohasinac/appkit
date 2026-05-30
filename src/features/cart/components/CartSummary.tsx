@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading } from "../../../ui";
+import { Div, Heading } from "../../../ui";
 
 export interface CartSummaryProps {
   isLoading?: boolean;
@@ -27,7 +27,7 @@ export function CartSummary({
   className = "",
 }: CartSummaryProps) {
   return (
-    <div className={`space-y-4 ${className}`} data-section="cartsummary-div-260">
+    <Div className={`space-y-4 ${className}`}>
       {labels.title && (
         <Heading level={2} className="text-base font-bold" variant="none">
           {labels.title}
@@ -38,6 +38,6 @@ export function CartSummary({
       {renderTotal?.()}
       {renderCheckoutAction?.()}
       {renderContinueShopping?.()}
-    </div>
+    </Div>
   );
 }

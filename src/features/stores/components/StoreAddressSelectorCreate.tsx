@@ -1,5 +1,5 @@
 "use client";
-import { Label } from "../../../ui";
+import { Div, Label } from "../../../ui";
 import { AddressInlineSelect } from "../../account/components/AddressInlineSelect";
 
 export interface StoreAddressSelectorCreateLabels {
@@ -37,7 +37,7 @@ export function StoreAddressSelectorCreate({
 }: StoreAddressSelectorCreateProps) {
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
   return (
-    <div data-section="storeaddressselectorcreate-div-442">
+    <Div>
       {label && <Label className="mb-1.5">{label}</Label>}
       <AddressInlineSelect
         ownerType="store"
@@ -49,6 +49,6 @@ export function StoreAddressSelectorCreate({
         drawerTitle={mergedLabels.addAddress}
         onCreated={onCreated}
       />
-    </div>
+    </Div>
   );
 }

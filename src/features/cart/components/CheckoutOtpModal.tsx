@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "../../../ui";
 
 export interface CheckoutOtpModalProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ export function CheckoutOtpModal({
         isOpen,
         title,
         onClose,
-        children: <div className={className} data-section="checkoutotpmodal-div-261">{renderBody()}</div>,
+        children: <Div className={className}>{renderBody()}</Div>,
       })}
     </>
   );

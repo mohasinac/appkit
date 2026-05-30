@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import {
   Container,
+  Div,
   Heading,
   Main,
   Section,
@@ -396,7 +397,7 @@ export function ScamProfileView({
   return (
     <Main>
       {/* Breadcrumb strip */}
-      <div className="border-b appkit-breadcrumb-strip">
+      <Div className="border-b appkit-breadcrumb-strip">
         <Container size="xl" className="py-3">
           <Breadcrumb
             items={[
@@ -406,7 +407,7 @@ export function ScamProfileView({
             ]}
           />
         </Container>
-      </div>
+      </Div>
 
       <Section className="py-10">
         <Container size="xl">
