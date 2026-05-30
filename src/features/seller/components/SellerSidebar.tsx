@@ -259,7 +259,7 @@ export function StoreSidebar({
           }}
         >
           {/* Nav panel */}
-          <Div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-700 flex flex-col overflow-hidden shadow-xl">
+          <Div surface="sidePanel" className="flex-1 border-r border-zinc-200 dark:border-slate-700 flex flex-col overflow-hidden shadow-xl">
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <Div className="flex items-center gap-3 min-w-0">
                 {storeLogoURL ? (

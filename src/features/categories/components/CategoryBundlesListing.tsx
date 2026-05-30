@@ -151,7 +151,7 @@ export function CategoryBundlesListing({
               <Div key={bundle.id} className="flex flex-col">
                 <MarketplaceBundleCard bundle={bundle} />
                 {onBuyNow && (
-                  <Div className="border-t border-zinc-100 px-3 pt-2 pb-3 dark:border-zinc-800 -mt-px rounded-b-xl border border-t-0 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                  <Div surface="default" className="border-t border-zinc-100 px-3 pt-2 pb-3 dark:border-zinc-800 -mt-px rounded-b-xl border border-t-0 border-zinc-200 dark:border-zinc-800">
                     <BundleBuyNowCta
                       bundleSlug={bundle.slug}
                       outOfStock={bundle.bundleStockStatus === "out_of_stock"}

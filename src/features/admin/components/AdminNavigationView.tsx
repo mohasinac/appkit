@@ -35,7 +35,7 @@ function NavItemRow({
   onMoveUp, onMoveDown, onVisibilityChange, onEdit, onDelete,
 }: NavItemRowProps) {
   return (
-    <Div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-zinc-900">
+    <Div surface="default" className="flex items-center gap-3 px-4 py-3">
       <Div className="flex flex-col gap-0.5 shrink-0">
         <button type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move up">▲</button>

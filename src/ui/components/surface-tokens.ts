@@ -17,6 +17,7 @@ export const SURFACE_MAP = {
   interactive: "bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md hover:border-primary-300/60 dark:hover:border-secondary-500/60 transition-all cursor-pointer",
   glass: "backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border border-zinc-200/60 dark:border-slate-700/40 rounded-2xl shadow-lg",
   form: "bg-white dark:bg-slate-900 rounded-2xl border border-zinc-200 dark:border-slate-700 shadow-sm",
+  sidePanel: "bg-white dark:bg-slate-950",
 } as const;
 
 export type SurfaceKey = keyof typeof SURFACE_MAP;
