@@ -124,13 +124,13 @@ function renderCheckoutStepsSection(t: CheckoutT, themed: (typeof THEME_CONSTANT
       <Heading level={2} className="mb-8 text-center">{t("stepsTitle")}</Heading>
       <Stack gap="md" className="gap-5">
         {steps.map(({ number, icon, title, text }) => (
-          <div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+          <Div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
             <Div>
               <Text className="font-semibold mb-0.5">{number}. {title}</Text>
               <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
             </Div>
-          </div>
+          </Div>
         ))}
       </Stack>
     </Section>
@@ -144,13 +144,13 @@ function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS
       <Text variant="secondary" className="text-center mb-8 max-w-xl mx-auto">{t("paymentMethodsSubtitle")}</Text>
       <Div className="grid gap-5 md:grid-cols-3">
         {methods.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <div key={title} className={`rounded-xl border p-5 ${color}`}>
+          <Div key={title} className={`rounded-xl border p-5 ${color}`}>
             <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Text className="font-semibold mb-1">{title}</Text>
             <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
-          </div>
+          </Div>
         ))}
       </Div>
     </Section>

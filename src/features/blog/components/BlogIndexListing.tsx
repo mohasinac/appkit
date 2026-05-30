@@ -20,15 +20,15 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
     return (
       <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+          <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
             <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
-            <div className="p-5 space-y-2">
+            <Div className="p-5 space-y-2">
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/4" />
               <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-            </div>
-          </div>
+            </Div>
+          </Div>
         ))}
       </Div>
     );

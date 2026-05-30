@@ -26,13 +26,13 @@ function renderCategoryGrid(props: {
     return (
       <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+          <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
             <Div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
-            <div className="p-3.5 space-y-2">
+            <Div className="p-3.5 space-y-2">
               <Div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-            </div>
-          </div>
+            </Div>
+          </Div>
         ))}
       </Div>
     );

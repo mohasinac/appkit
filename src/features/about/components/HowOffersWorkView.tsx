@@ -104,13 +104,13 @@ function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
       <Heading level={2} className="mb-8 text-center">{t("stepsTitle")}</Heading>
       <Stack gap="md" className="gap-5">
         {steps.map(({ number, icon, title, text }) => (
-          <div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+          <Div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
             <Div>
               <Text className="font-semibold mb-0.5">{number}. {title}</Text>
               <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
             </Div>
-          </div>
+          </Div>
         ))}
       </Stack>
     </Section>

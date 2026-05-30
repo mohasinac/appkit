@@ -90,7 +90,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
   return (
     <Section>
       <Heading level={2} className="mb-6">{t("tableTitle")}</Heading>
-      <div className={`overflow-x-auto rounded-xl border ${themed.border}`}>
+      <Div className={`overflow-x-auto rounded-xl border ${themed.border}`}>
         <table className="w-full text-sm">
           <thead className={themed.bgSecondary}>
             <tr>
@@ -111,7 +111,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
             ))}
           </tbody>
         </table>
-      </div>
+      </Div>
       <Caption className="mt-3 block text-zinc-500 dark:text-zinc-400">{t("tableNote")}</Caption>
     </Section>
   );
@@ -122,7 +122,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
     <Section>
       <Heading level={2} className="mb-3">{t("payoutExampleTitle")}</Heading>
       <Text variant="secondary" className="mb-6">{t("payoutExampleSubtitle")}</Text>
-      <div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-5 max-w-sm`}>
+      <Div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-5 max-w-sm`}>
         <Heading level={3} className="text-base mb-4">{t("payoutExampleProduct")}</Heading>
         <Div className="space-y-2">
           {rows.map((row, i) => (
@@ -132,7 +132,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
             </Div>
           ))}
         </Div>
-      </div>
+      </Div>
     </Section>
   );
 }

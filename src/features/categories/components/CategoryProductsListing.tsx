@@ -30,14 +30,14 @@ function renderCategoryProductGrid(props: { isLoading: boolean; products: any[];
     return (
       <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+          <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
             <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
-            <div className="p-3 space-y-2">
+            <Div className="p-3 space-y-2">
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
               <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
-            </div>
-          </div>
+            </Div>
+          </Div>
         ))}
       </Div>
     );

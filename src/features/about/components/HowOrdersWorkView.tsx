@@ -189,13 +189,13 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
       <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
       <Div className="space-y-3">
         {statuses.map(({ status, icon, badge, desc }) => (
-          <div key={status} className={`flex items-start gap-4 p-4 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+          <Div key={status} className={`flex items-start gap-4 p-4 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
               <Span className="text-xl">{icon}</Span>
               <Span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
             </Row>
             <Text variant="secondary" className="text-sm leading-relaxed">{desc}</Text>
-          </div>
+          </Div>
         ))}
       </Div>
     </Section>
@@ -207,13 +207,13 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
     <Section>
       <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <div key={title} className={`rounded-xl border p-5 ${color}`}>
+          <Div key={title} className={`rounded-xl border p-5 ${color}`}>
             <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Text className="font-semibold mb-1">{title}</Text>
             <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
-          </div>
+          </Div>
         ))}
       </Div>
     </Section>

@@ -192,13 +192,13 @@ function renderSecurityCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], card
     <Section>
       <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <div key={title} className={`rounded-xl border p-5 ${color}`}>
+          <Div key={title} className={`rounded-xl border p-5 ${color}`}>
             <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Text className="font-semibold mb-1">{title}</Text>
             <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
-          </div>
+          </Div>
         ))}
       </Div>
     </Section>
