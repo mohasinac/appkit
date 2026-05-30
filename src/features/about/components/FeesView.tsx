@@ -126,10 +126,10 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
         <Heading level={3} className="text-base mb-4">{t("payoutExampleProduct")}</Heading>
         <Div className="space-y-2">
           {rows.map((row, i) => (
-            <div key={i} className={`flex justify-between text-sm ${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2 font-bold" : ""}`}>
+            <Div key={i} className={`flex justify-between text-sm ${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2 font-bold" : ""}`}>
               <Text className={row.highlight ? "font-bold" : "text-neutral-600 dark:text-neutral-400"}>{row.label}</Text>
               <Text className={row.highlight ? "font-bold text-green-700 dark:text-green-400" : ""}>{row.example}</Text>
-            </div>
+            </Div>
           ))}
         </Div>
       </div>
