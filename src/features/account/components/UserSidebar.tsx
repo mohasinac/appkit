@@ -178,7 +178,7 @@ function DrawerPanel({
       {/* Backdrop */}
       <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       {/* Panel — slides in from RIGHT */}
-      <div
+      <Div
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -197,8 +197,8 @@ function DrawerPanel({
             </svg>
           </button>
         </Div>
-        <div className="flex-1 overflow-y-auto">{children}</div>
-      </div>
+        <Div className="flex-1 overflow-y-auto">{children}</Div>
+      </Div>
     </Div>
   );
 }
@@ -242,14 +242,14 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           }}
         >
           {/* Nav panel */}
-          <div className="flex-1 bg-white dark:bg-slate-900 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
+          <Div className="flex-1 bg-white dark:bg-slate-900 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">My Account</span>
             </Div>
-            <div className="flex-1 overflow-y-auto">
+            <Div className="flex-1 overflow-y-auto">
               <DrawerContent groups={groups} items={items} activeHref={pathname} />
-            </div>
-          </div>
+            </Div>
+          </Div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </Div>

@@ -60,7 +60,7 @@ export function FAQHelpfulButtons({
   };
 
   return (
-    <div className="rounded-lg bg-zinc-100 p-6 dark:bg-slate-700" data-section="faqhelpfulbuttons-div-285">
+    <Div className="rounded-lg bg-zinc-100 p-6 dark:bg-slate-700">
       <Text className="mb-3 text-sm text-zinc-600 dark:text-zinc-300">
         {userVote
           ? (labels?.thanksForFeedback ?? "Thanks for your feedback")
@@ -104,6 +104,6 @@ export function FAQHelpfulButtons({
           </Span>
         </Button>
       </Div>
-    </div>
+    </Div>
   );
 }

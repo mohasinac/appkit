@@ -367,9 +367,9 @@ export function AdminSupportTicketDetailView({
             <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
               Messages ({messages.length})
             </Text>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
+            <Div className="space-y-2 max-h-64 overflow-y-auto">
               {messages.map((msg, i) => (
-                <div
+                <Div
                   key={msg.id ?? i}
                   className={`rounded-lg p-3 text-sm ${
                     msg.authorRole === "user"
@@ -386,9 +386,9 @@ export function AdminSupportTicketDetailView({
                     )}
                   </Div>
                   <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
-                </div>
+                </Div>
               ))}
-            </div>
+            </Div>
           </Div>
         )}
 

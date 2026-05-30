@@ -125,13 +125,13 @@ export function CategoryForm({
           <Label className="block text-sm font-medium mb-2">
             {L.categoryImage}
           </Label>
-          <div className="relative h-32 w-40 overflow-hidden rounded">
+          <Div className="relative h-32 w-40 overflow-hidden rounded">
             <MediaImage
               src={category.display.coverImage}
               alt={category.name || ""}
               size="card"
             />
-          </div>
+          </Div>
         </Div>
       )}
 

@@ -35,7 +35,7 @@ function NavItemRow({
   onMoveUp, onMoveDown, onVisibilityChange, onEdit, onDelete,
 }: NavItemRowProps) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-zinc-900">
+    <Div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-zinc-900">
       <Div className="flex flex-col gap-0.5 shrink-0">
         <button type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move up">▲</button>
@@ -54,7 +54,7 @@ function NavItemRow({
         { label: ROW_ACTION_META[ROW_ACTION_ID.EDIT].label, onClick: () => onEdit(item) },
         { label: ROW_ACTION_META[ROW_ACTION_ID.DELETE].label, destructive: true, onClick: () => onDelete(item) },
       ]} />
-    </div>
+    </Div>
   );
 }
 
@@ -167,7 +167,7 @@ export function AdminNavigationView({
               No nav items yet. Click "New item" to add one.
             </Text>
           ) : null,
-          <div key="list" className="divide-y divide-zinc-200 dark:divide-zinc-700 rounded-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
+          <Div key="list" className="divide-y divide-zinc-200 dark:divide-zinc-700 rounded-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
             {sorted.map((item, idx) => (
               <NavItemRow
                 key={item.id}
@@ -182,7 +182,7 @@ export function AdminNavigationView({
                 onDelete={setDeleteTarget}
               />
             ))}
-          </div>,
+          </Div>,
         ]}
       />
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Div } from "../../../ui";
 import { BidHistory } from "../../products/components/BidHistory";
 import type { BidHistoryEntry } from "../../products/components/BidHistory";
 
@@ -13,7 +14,7 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-6 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden">
+    <Div className="mt-6 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -40,14 +41,14 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
       </button>
 
       {open && (
-        <div className="px-4 py-4 bg-white dark:bg-zinc-900">
+        <Div className="px-4 py-4 bg-white dark:bg-zinc-900">
           <BidHistory
             bids={bids}
             isEmpty={bids.length === 0}
             currency={currency}
           />
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

@@ -255,17 +255,17 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
           {(selectedTicket.messages ?? []).length > 0 && (
             <Div className="space-y-2">
               <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Messages</Text>
-              <div className="space-y-2 max-h-72 overflow-y-auto">
+              <Div className="space-y-2 max-h-72 overflow-y-auto">
                 {(selectedTicket.messages ?? []).map((msg, i) => (
-                  <div key={msg.id ?? i} className={`rounded-lg p-3 text-sm ${msg.authorRole === "user" ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700" : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"}`}>
+                  <Div key={msg.id ?? i} className={`rounded-lg p-3 text-sm ${msg.authorRole === "user" ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700" : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"}`}>
                     <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
                       <span className="font-medium text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</span>
                       {msg.createdAt && <span>{new Date(msg.createdAt).toLocaleString()}</span>}
                     </Div>
                     <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
-                  </div>
+                  </Div>
                 ))}
-              </div>
+              </Div>
             </Div>
           )}
           {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (

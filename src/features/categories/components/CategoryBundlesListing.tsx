@@ -151,14 +151,14 @@ export function CategoryBundlesListing({
               <Div key={bundle.id} className="flex flex-col">
                 <MarketplaceBundleCard bundle={bundle} />
                 {onBuyNow && (
-                  <div className="border-t border-zinc-100 px-3 pt-2 pb-3 dark:border-zinc-800 -mt-px rounded-b-xl border border-t-0 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                  <Div className="border-t border-zinc-100 px-3 pt-2 pb-3 dark:border-zinc-800 -mt-px rounded-b-xl border border-t-0 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
                     <BundleBuyNowCta
                       bundleSlug={bundle.slug}
                       outOfStock={bundle.bundleStockStatus === "out_of_stock"}
                       onBuyNow={onBuyNow}
                       compact
                     />
-                  </div>
+                  </Div>
                 )}
               </Div>
             ))}
@@ -175,7 +175,7 @@ export function CategoryBundlesListing({
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <div className="space-y-4 p-4">
+        <Div className="space-y-4 p-4">
           <label className="flex items-center justify-between gap-3 cursor-pointer">
             <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Show out-of-stock bundles</span>
             <button
@@ -194,7 +194,7 @@ export function CategoryBundlesListing({
               />
             </button>
           </label>
-        </div>
+        </Div>
       </FilterDrawer>
     </Div>
   );

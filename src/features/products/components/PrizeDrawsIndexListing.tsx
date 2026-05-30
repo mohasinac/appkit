@@ -183,12 +183,12 @@ export function PrizeDrawsIndexListing({
                 className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse"
               >
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
-                <div className="p-3 space-y-2">
+                <Div className="p-3 space-y-2">
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
                   <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
-                </div>
-              </div>
+                </Div>
+              </Div>
             ))}
           </Div>
         ) : filteredDraws.length === 0 ? (

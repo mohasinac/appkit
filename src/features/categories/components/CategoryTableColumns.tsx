@@ -37,7 +37,7 @@ export function getCategoryTableColumns(
         key: "image",
         header: "",
         render: (cat: Category) => (
-          <div className="relative w-9 h-9 rounded overflow-hidden flex-shrink-0" data-section="categorytablecolumns-div-270">
+          <Div className="relative w-9 h-9 rounded overflow-hidden flex-shrink-0">
             {cat.display?.coverImage ? (
               <MediaImage
                 src={cat.display.coverImage}
@@ -46,14 +46,14 @@ export function getCategoryTableColumns(
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div
+              <Div
                 className="w-full h-full flex items-center justify-center text-base"
                 style={{ backgroundColor: cat.display?.color ?? "#94a3b8", color: "#fff" }}
-               data-section="categorytablecolumns-div-271">
+              >
                 {cat.display?.icon ?? "🗂️"}
-              </div>
+              </Div>
             )}
-          </div>
+          </Div>
         ),
       },
       {

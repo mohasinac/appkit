@@ -209,7 +209,7 @@ export function FAQSection({
                     isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
-                  <div className="overflow-hidden">
+                  <Div className="overflow-hidden">
                     <Div className="px-5 pb-5 pt-0">
                       {isHtml(faq.answer) ? (
                         <RichText
@@ -222,7 +222,7 @@ export function FAQSection({
                         </Text>
                       )}
                     </Div>
-                  </div>
+                  </Div>
                 </Div>
               </div>
             );

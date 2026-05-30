@@ -90,7 +90,7 @@ function renderCopilotChatPanel(props: {
           </Div>
         ) : null}
         {error ? <Text className="text-center text-sm text-red-500">{labels?.errorLabel ?? "An error occurred. Please try again."}</Text> : null}
-        <div ref={messagesEndRef} />
+        <Div ref={messagesEndRef} />
       </Div>
       <Div className="border-t border-neutral-200 dark:border-slate-700 p-3">
         <form onSubmit={handleSubmit} className="flex gap-2">
@@ -226,7 +226,7 @@ export function AdminCopilotView({
                   {labels.errorLabel ?? "An error occurred. Please try again."}
                 </Text>
               ) : null}
-              <div ref={messagesEndRef} />
+              <Div ref={messagesEndRef} />
             </Div>
 
             <Div className="border-t border-neutral-200 dark:border-slate-700 p-3">

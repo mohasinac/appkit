@@ -36,11 +36,11 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
   if (images.length === 0) {
     return (
-      <div className="overflow-hidden rounded-xl border border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+      <Div className="overflow-hidden rounded-xl border border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
         <Div className="flex aspect-square items-center justify-center text-zinc-300 dark:text-zinc-700">
           <PlaceholderSvg />
         </Div>
-      </div>
+      </Div>
     );
   }
 
@@ -68,7 +68,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
       {/* Thumbnail strip */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <Div className="flex gap-2 overflow-x-auto pb-1">
           {images.map((src, i) => (
             <button
               key={i}
@@ -85,7 +85,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
               <img src={src} alt="" className="h-full w-full object-cover" />
             </button>
           ))}
-        </div>
+        </Div>
       )}
 
       {/* Image counter */}

@@ -108,9 +108,9 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Caption hover overlay */}
       {showCaption && post.caption && (
-        <div className="absolute inset-0 flex flex-col justify-end bg-black/60 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <Div className="absolute inset-0 flex flex-col justify-end bg-black/60 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <Text className="line-clamp-2 text-xs text-white">{post.caption}</Text>
-        </div>
+        </Div>
       )}
     </a>
   );
@@ -183,7 +183,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       </Div>
 
       {/* Hover overlay — caption + stats */}
-      <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+      <Div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         {showCaption && post.caption && (
           <Text className="mb-2 line-clamp-3 text-xs text-white">{post.caption}</Text>
         )}
@@ -215,7 +215,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
             )}
           </Div>
         )}
-      </div>
+      </Div>
     </a>
   );
 }

@@ -139,11 +139,11 @@ export function BrandsSection({
         )}
 
         {isLoading ? (
-          <div className="flex gap-3 overflow-hidden">
+          <Div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 8 }).map((_, i) => (
               <Div key={i} className="h-32 w-36 flex-none animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700 md:h-40" />
             ))}
-          </div>
+          </Div>
         ) : (
           <HorizontalScroller
             items={brands}

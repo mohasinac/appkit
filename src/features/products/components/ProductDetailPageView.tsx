@@ -886,7 +886,7 @@ export async function ProductDetailPageView({
           renderBundleSection={
             bundleMemberships.length > 0
               ? () => (
-                  <div className="rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/60 dark:bg-teal-900/20 p-5">
+                  <Div className="rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/60 dark:bg-teal-900/20 p-5">
                     <Div className="flex items-center gap-2 mb-3">
                       <Span className="text-teal-600 dark:text-teal-400 text-base" aria-hidden="true">📦</Span>
                       <Text className="text-sm font-semibold text-teal-800 dark:text-teal-200">
@@ -913,7 +913,7 @@ export async function ProductDetailPageView({
                         </Div>
                       ))}
                     </Div>
-                  </div>
+                  </Div>
                 )
               : undefined
           }

@@ -286,7 +286,7 @@ export function AdminEventEntriesView({
   const expandedEntry = expandedEntryId ? rows.find((r) => r.id === expandedEntryId) : null;
 
   const responsesPanelSection = expandedEntry?.formResponses && Object.keys(expandedEntry.formResponses).length > 0 ? (
-    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4 space-y-3">
+    <Div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4 space-y-3">
       <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
         Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
       </Text>
@@ -300,7 +300,7 @@ export function AdminEventEntriesView({
           </Div>
         ))}
       </Div>
-    </div>
+    </Div>
   ) : null;
 
   const tableSection = (

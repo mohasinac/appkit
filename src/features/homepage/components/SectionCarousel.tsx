@@ -113,7 +113,7 @@ export interface SectionCarouselProps<T = unknown> {
 function CarouselSkeleton({ count }: { count: number }) {
   const { skeleton } = THEME_CONSTANTS;
   return (
-    <div className="flex gap-4 overflow-hidden px-4">
+    <Div className="flex gap-4 overflow-hidden px-4">
       {Array.from({ length: count }).map((_, i) => (
         <Div
           key={i}
@@ -124,7 +124,7 @@ function CarouselSkeleton({ count }: { count: number }) {
           <Div className={`${skeleton.text} w-1/2`} />
         </Div>
       ))}
-    </div>
+    </Div>
   );
 }
 
@@ -187,9 +187,9 @@ export function SectionCarousel<T = unknown>({
       {/* Background image + overlay */}
       {hasBg && backgroundImage && (
         <>
-          <div className="absolute inset-0 overflow-hidden">
+          <Div className="absolute inset-0 overflow-hidden">
             <MediaImage src={backgroundImage} alt="" size="hero" />
-          </div>
+          </Div>
           <Div className="absolute inset-0 bg-black/55" />
         </>
       )}

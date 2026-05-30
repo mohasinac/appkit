@@ -634,7 +634,7 @@ export function Search({
   if (!isOpen) return null;
 
   return (
-    <div className="border-b border-zinc-200 bg-white shadow-md dark:border-slate-800 dark:bg-slate-950 animate-[fadeIn_150ms_ease-out]" data-section="search-div-433">
+    <Div className="border-b border-zinc-200 bg-white shadow-md dark:border-slate-800 dark:bg-slate-950 animate-[fadeIn_150ms_ease-out]">
       <Div className="container mx-auto px-4 py-3 md:py-4 relative">
         <Row gap="sm" className="md:gap-3">
           <Div className="flex-1 relative">
@@ -711,7 +711,7 @@ export function Search({
         {(filteredSiteLinks.length > 0 || query) && (
           <Div className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 space-y-2 z-50">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
-              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+              <Div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
                 <Div className="px-4 py-2 border-b border-zinc-200 dark:border-slate-700">
                   <Text
                     variant="secondary"
@@ -749,11 +749,11 @@ export function Search({
                     );
                   })}
                 </Ul>
-              </div>
+              </Div>
             )}
 
             {query && (
-              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+              <Div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
                 {suggestionsLoading ? (
                   <Div className="px-4 py-3">
                     <Text variant="secondary" size="sm">
@@ -801,11 +801,11 @@ export function Search({
                     {labels.browseProducts(query)}
                   </Text>
                 </Button>
-              </div>
+              </Div>
             )}
           </Div>
         )}
       </Div>
-    </div>
+    </Div>
   );
 }

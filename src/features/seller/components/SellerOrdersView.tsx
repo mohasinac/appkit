@@ -186,7 +186,7 @@ function OrderDetailDrawer({
 
       {order && !loading && (
         <Stack gap="none" className="flex flex-col">
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <Div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
             {/* Status row */}
             <Div className="flex items-center justify-between">
               <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>
@@ -252,7 +252,7 @@ function OrderDetailDrawer({
                 </Div>
               )}
             </Div>
-          </div>
+          </Div>
 
           {/* Footer */}
           <Div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 px-4 py-3.5 flex items-center justify-end gap-3">

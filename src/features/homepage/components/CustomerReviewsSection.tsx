@@ -43,14 +43,14 @@ export function CustomerReviewsSection<T = unknown>({
       <Section className={`p-8 ${themed.bgPrimary} ${className}`}>
         <Div className="w-full max-w-7xl mx-auto">
           <Div className={`h-8 ${skeleton.base} mb-8 max-w-xs mx-auto`} />
-          <div className="flex gap-6 overflow-hidden">
+          <Div className="flex gap-6 overflow-hidden">
             {[...Array(3)].map((_, i) => (
               <Div
                 key={i}
                 className={`${skeleton.card} h-[clamp(180px,26vh,260px)] min-w-[clamp(150px,18vw,260px)] max-w-[clamp(240px,36vw,380px)] flex-none`}
               />
             ))}
-          </div>
+          </Div>
         </Div>
       </Section>
     );

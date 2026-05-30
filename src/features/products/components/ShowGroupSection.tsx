@@ -86,14 +86,14 @@ function GroupTableRow({ member }: { member: GroupMember }) {
   return (
     <tr className="border-b border-zinc-100 dark:border-zinc-800 last:border-0">
       <td className="py-2 pr-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-700">
+        <Div className="w-10 h-10 rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-700">
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={image} alt={member.title} className="w-full h-full object-cover" loading="lazy" />
           ) : (
             <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800" />
           )}
-        </div>
+        </Div>
       </td>
       <td className="py-2 pr-3">
         <Text className="text-sm text-zinc-800 dark:text-zinc-200 font-medium line-clamp-2">{member.title}</Text>
@@ -142,7 +142,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
   const useDrawer = members.length >= 5;
 
   const tableContent = (
-    <div className="overflow-x-auto">
+    <Div className="overflow-x-auto">
       <table className="w-full text-left min-w-[400px]">
         <thead>
           <tr className="border-b border-zinc-200 dark:border-zinc-700">
@@ -157,12 +157,12 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
           {members.map((m) => <GroupTableRow key={m.id} member={m} />)}
         </tbody>
       </table>
-    </div>
+    </Div>
   );
 
   return (
     <>
-      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-800/40 overflow-hidden">
+      <Div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-800/40 overflow-hidden">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -190,7 +190,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
         </button>
 
         {open && (
-          <div className="px-4 pb-4 pt-1 overflow-x-auto">
+          <Div className="px-4 pb-4 pt-1 overflow-x-auto">
             <Div className="flex gap-3 min-w-0">
               {/* Parent first */}
               {[...members]
@@ -203,9 +203,9 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
                   />
                 ))}
             </Div>
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       {useDrawer ? (
         <SideDrawer

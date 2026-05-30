@@ -127,7 +127,7 @@ function DrawerPanel({
   return (
     <Div className="hidden md:block">
       <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
-      <div
+      <Div
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -146,8 +146,8 @@ function DrawerPanel({
             </svg>
           </button>
         </Div>
-        <div className="flex-1 overflow-y-auto">{children}</div>
-      </div>
+        <Div className="flex-1 overflow-y-auto">{children}</Div>
+      </Div>
     </Div>
   );
 }
@@ -218,13 +218,13 @@ export function AdminSidebar({
           }}
         >
           {/* Nav panel */}
-          <div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
+          <Div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               {renderHeader ? renderHeader() : <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">Admin Panel</span>}
             </Div>
-            <div className="flex-1 overflow-y-auto">{navContent}</div>
+            <Div className="flex-1 overflow-y-auto">{navContent}</Div>
             {renderFooter && <Div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800">{renderFooter()}</Div>}
-          </div>
+          </Div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </Div>

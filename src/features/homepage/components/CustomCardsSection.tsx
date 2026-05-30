@@ -61,16 +61,16 @@ function CardItem({ card }: { card: CustomCardsCard }) {
       style={cardStyle}
     >
       {card.image && (
-        <div className="relative w-full aspect-video overflow-hidden">
+        <Div className="relative w-full aspect-video overflow-hidden">
           <MediaImage
             src={card.image}
             alt={card.imageAlt ?? ""}
             size="card"
           />
-        </div>
+        </Div>
       )}
 
-      <div className="flex flex-col gap-2 p-4 flex-1">
+      <Div className="flex flex-col gap-2 p-4 flex-1">
         {card.eyebrow && (
           <Text className="text-xs font-semibold uppercase tracking-widest opacity-70">
             {card.eyebrow}
@@ -109,8 +109,8 @@ function CardItem({ card }: { card: CustomCardsCard }) {
             title="Embedded form"
           />
         )}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 

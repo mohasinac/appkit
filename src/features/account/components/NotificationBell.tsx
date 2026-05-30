@@ -163,7 +163,7 @@ export function NotificationBell({
     ));
 
   return (
-    <div className="relative" ref={dropdownRef} data-section="notificationbell-div-227">
+    <Div className="relative" ref={dropdownRef}>
       {renderBellButton({ hideOnMobile, buttonClassName, labels, unreadCount, handleToggle, isOpen })}
       {isOpen && renderNotificationDropdown({
         dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead,
@@ -171,7 +171,7 @@ export function NotificationBell({
         handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref,
         setIsOpen,
       })}
-    </div>
+    </Div>
   );
 }
 
@@ -209,7 +209,7 @@ function renderNotificationDropdown(props: {
 }) {
   const { dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead, isLoading, notifications, notificationIcons, handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref, setIsOpen } = props;
   return (
-    <div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 overflow-hidden ${dropdownClassName}`} data-section="notificationbell-div-228">
+    <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 overflow-hidden ${dropdownClassName}`}>
       <Row justify="between" gap="none" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-800">
         <Heading level={3} className="font-semibold text-zinc-900 dark:text-white">
           {labels.title}
@@ -221,15 +221,15 @@ function renderNotificationDropdown(props: {
           </Button>
         )}
       </Row>
-      <div className="max-h-96 overflow-y-auto" data-section="notificationbell-div-229">
+      <Div className="max-h-96 overflow-y-auto">
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
-      </div>
+      </Div>
       {viewAllHref && (
         <Div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800 text-center">
           {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-sm text-primary hover:underline font-medium", children: labels.viewAll })}
         </Div>
       )}
-    </div>
+    </Div>
   );
 }
 

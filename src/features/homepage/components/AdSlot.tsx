@@ -41,7 +41,7 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
   }, []);
 
   return (
-    <div ref={ref} data-section="adslot-div-296">
+    <Div ref={ref}>
       <ins
         className="adsbygoogle"
         style={{ display: "block" }}
@@ -50,7 +50,7 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
         data-ad-format={config.adsenseFormat ?? "auto"}
         data-full-width-responsive="true"
       />
-    </div>
+    </Div>
   );
 }
 

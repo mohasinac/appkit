@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Div } from "../../../ui";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
@@ -85,7 +86,7 @@ export function CategoryDetailTabs({
 
   return (
     <>
-      <div className="flex border-b border-zinc-200 dark:border-slate-700 mb-6 overflow-x-auto">
+      <Div className="flex border-b border-zinc-200 dark:border-slate-700 mb-6 overflow-x-auto">
         {visibleTabs.map((t) => (
           <button
             key={t.id}
@@ -100,7 +101,7 @@ export function CategoryDetailTabs({
             {tabLabel(t.label, countFor(t.id as CategoryTabId))}
           </button>
         ))}
-      </div>
+      </Div>
 
       {activeTab === "products" && (
         <CategoryProductsListing

@@ -79,7 +79,7 @@ export function ProductTabsShell({
 
   return (
     <Div className={`mt-8 ${className}`}>
-      <div className="mb-6 flex gap-1 overflow-x-auto border-b border-zinc-200 dark:border-zinc-700 pb-px">
+      <Div className="mb-6 flex gap-1 overflow-x-auto border-b border-zinc-200 dark:border-zinc-700 pb-px">
         {allTabs.map((t) => (
           <button
             key={t.id}
@@ -94,7 +94,7 @@ export function ProductTabsShell({
             {t.label}
           </button>
         ))}
-      </div>
+      </Div>
       <div>{activeContent}</div>
     </Div>
   );

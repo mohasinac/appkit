@@ -74,7 +74,7 @@ function ReviewCard({
     : null;
 
   return (
-    <div className="flex flex-col gap-3 p-4 rounded-xl bg-[var(--appkit-color-surface)] shadow-sm border border-[var(--appkit-color-border)]">
+    <Div className="flex flex-col gap-3 p-4 rounded-xl bg-[var(--appkit-color-surface)] shadow-sm border border-[var(--appkit-color-border)]">
       <Div className="flex items-center gap-3">
         {review.authorPhotoUrl ? (
           <img
@@ -108,7 +108,7 @@ function ReviewCard({
       )}
 
       <GoogleBadge />
-    </div>
+    </Div>
   );
 }
 

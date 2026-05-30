@@ -208,7 +208,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       {childCategories.length > 0 && (
         <Section surface="default" className="border-b border-zinc-100 dark:border-zinc-800">
           <Div className="max-w-7xl mx-auto px-4 py-3">
-            <div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            <Div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
               {childCategories.map((child) => (
                 <Link
                   key={child.id}
@@ -226,7 +226,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                   )}
                 </Link>
               ))}
-            </div>
+            </Div>
           </Div>
         </Section>
       )}

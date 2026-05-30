@@ -75,7 +75,7 @@ export function AdminPageHeader({
   },
 }: AdminPageHeaderProps) {
   return (
-    <div className={`${themeConfig.gradient} p-6 ${className}`}>
+    <Div className={`${themeConfig.gradient} p-6 ${className}`}>
       {breadcrumb && breadcrumb.length > 0 && (
         <Nav
           aria-label="Breadcrumb"
@@ -130,6 +130,6 @@ export function AdminPageHeader({
           </Button>
         )}
       </Div>
-    </div>
+    </Div>
   );
 }

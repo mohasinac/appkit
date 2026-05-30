@@ -180,7 +180,7 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
   return (
     <Div className="hidden md:block">
       <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
-      <div
+      <Div
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -199,8 +199,8 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
             </svg>
           </button>
         </Div>
-        <div className="flex-1 overflow-y-auto">{children}</div>
-      </div>
+        <Div className="flex-1 overflow-y-auto">{children}</Div>
+      </Div>
     </Div>
   );
 }
@@ -259,7 +259,7 @@ export function StoreSidebar({
           }}
         >
           {/* Nav panel */}
-          <div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-700 flex flex-col overflow-hidden shadow-xl">
+          <Div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-700 flex flex-col overflow-hidden shadow-xl">
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <Div className="flex items-center gap-3 min-w-0">
                 {storeLogoURL ? (
@@ -272,8 +272,8 @@ export function StoreSidebar({
                 <Text className={CLS_STORE_NAME}>{storeName || panelTitle}</Text>
               </Div>
             </Div>
-            <div className="flex-1 overflow-y-auto">{navContent}</div>
-          </div>
+            <Div className="flex-1 overflow-y-auto">{navContent}</Div>
+          </Div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </Div>

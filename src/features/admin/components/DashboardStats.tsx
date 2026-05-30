@@ -23,9 +23,9 @@ interface StatCardProps {
 
 function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCardProps) {
   return (
-    <div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <Div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       {/* 3-px gradient top accent */}
-      <div
+      <Div
         className="absolute top-0 left-0 right-0 h-[3px]"
         style={{ background: gradient }}
         aria-hidden="true"
@@ -33,7 +33,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
 
       <Div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
         {/* Text block */}
-        <div className="min-w-0 flex-1 overflow-hidden">
+        <Div className="min-w-0 flex-1 overflow-hidden">
           <Text className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)] truncate">
             {label}
           </Text>
@@ -43,7 +43,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
           {sub && (
             <Text className="mt-1.5 text-xs text-[var(--appkit-color-text-muted)]">{sub}</Text>
           )}
-        </div>
+        </Div>
 
         {/* Icon pill */}
         <Div
@@ -53,13 +53,13 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
           <Icon className="w-5 h-5 text-white drop-shadow-sm" />
         </Div>
       </Div>
-    </div>
+    </Div>
   );
 }
 
 function SkeletonCard() {
   return (
-    <div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden p-5 animate-pulse">
+    <Div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden p-5 animate-pulse">
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
       <Div className="flex items-start justify-between gap-3 pt-1">
         <Div className="flex-1 space-y-2">
@@ -68,7 +68,7 @@ function SkeletonCard() {
         </Div>
         <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-border)]" />
       </Div>
-    </div>
+    </Div>
   );
 }
 

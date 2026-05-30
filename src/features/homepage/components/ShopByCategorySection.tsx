@@ -40,7 +40,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
       className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
     >
       {coverImage && isImageUrl(coverImage) ? (
-        <div className="aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-slate-800">
+        <Div className="aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-slate-800">
           <Image
             src={coverImage}
             alt={category.name}
@@ -48,12 +48,12 @@ function CategoryChip({ category }: { category: CategoryItem }) {
             height={180}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-        </div>
+        </Div>
       ) : (
         <Div className="aspect-video w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" />
       )}
 
-      <div className="flex flex-1 flex-col p-3 text-left">
+      <Div className="flex flex-1 flex-col p-3 text-left">
         <Div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image
@@ -79,7 +79,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Text className="mt-auto pt-3 text-xs font-medium text-primary dark:text-primary-400">
           Browse category →
         </Text>
-      </div>
+      </Div>
     </Link>
   );
 }
@@ -189,11 +189,11 @@ export function ShopByCategorySection({
         )}
 
         {isLoading ? (
-          <div className="flex gap-3 overflow-hidden px-1">
+          <Div className="flex gap-3 overflow-hidden px-1">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700" />
             ))}
-          </div>
+          </Div>
         ) : (
           <HorizontalScroller
             items={categories}
