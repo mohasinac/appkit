@@ -179,7 +179,7 @@ export function AdminStoreEditorView({
           placeholder="e.g. Policy violation, fraudulent activity…"
           className={TEXTAREA_CHROME}
         />
-      </div>
+      </Div>
     ) : null;
 
   const renderCapabilitiesSection = () => (

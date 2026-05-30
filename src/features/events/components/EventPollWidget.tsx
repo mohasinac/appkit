@@ -144,7 +144,7 @@ export function EventPollWidget({
             <span className="text-sm text-zinc-700 dark:text-zinc-300">{opt.label}</span>
           </label>
         ))}
-      </div>
+      </Div>
       {pollConfig.allowComment && (
         <textarea
           value={comment}

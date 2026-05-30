@@ -130,7 +130,7 @@ function SuggestionItem({
               {suggestion.subtitle}
             </Text>
           )}
-        </div>
+        </Div>
         <Span className={`text-xs px-2 py-0.5 rounded-full ${typeBadges[suggestion.type]}`}>
           {suggestion.type}
         </Span>
@@ -516,7 +516,7 @@ export function Search({
                           {suggestion.subtitle}
                         </Text>
                       )}
-                    </div>
+                    </Div>
                   </Button>
                 );
               })}

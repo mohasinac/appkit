@@ -235,7 +235,7 @@ export function ListingLayout({
               </Div>
             )}
             {actionsSlot}
-          </div>
+          </Div>
 
           {toolbarPaginationSlot && (
             <Div className="appkit-listing-layout__toolbar-pagination">
