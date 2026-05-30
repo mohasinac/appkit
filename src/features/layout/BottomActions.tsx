@@ -33,7 +33,7 @@ import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import type { BottomAction } from "./BottomActionsContext";
 import { useClickOutside } from "../../react";
-import { Row, Span, Text, Button } from "../../ui";
+import { Div, Row, Span, Text, Button } from "../../ui";
 
 // Token values inlined from @mohasinac/appkit/tokens
 const BOTTOM_NAV_BG =
@@ -246,16 +246,16 @@ export default function BottomActions() {
 
       {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
       {isBulkMode && (
-        <div className="h-[3px] w-full bg-gradient-to-r from-primary-600 via-secondary-400 to-primary-600 dark:from-primary-600 dark:via-primary-400 dark:to-primary-600" />
+        <Div className="h-[3px] w-full bg-gradient-to-r from-primary-600 via-secondary-400 to-primary-600 dark:from-primary-600 dark:via-primary-400 dark:to-primary-600" />
       )}
 
       {/* -- Info label row (page mode only) --------------------------------- */}
       {infoLabel && !isBulkMode && (
-        <div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80" data-section="bottomactions-div-403">
+        <Div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80">
           <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 leading-5 truncate">
             {infoLabel}
           </Text>
-        </div>
+        </Div>
       )}
 
       {/* -- Main action row -------------------------------------------------- */}

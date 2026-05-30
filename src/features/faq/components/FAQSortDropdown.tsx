@@ -1,4 +1,4 @@
-import { Select, Span } from "../../../ui";
+import { Div, Select, Span } from "../../../ui";
 
 export type FAQSortOption = "helpful" | "newest" | "alphabetical";
 
@@ -25,17 +25,17 @@ export function FAQSortDropdown({
   ];
 
   return (
-    <div className="flex items-center gap-3" data-section="faqsortdropdown-div-294">
+    <Div className="flex items-center gap-3">
       <Span className="text-sm text-zinc-600 dark:text-zinc-400">
         {labels?.label ?? "Sort"}
       </Span>
-      <div className="min-w-44" data-section="faqsortdropdown-div-295">
+      <Div className="min-w-44">
         <Select
           value={selectedSort}
           onValueChange={(value) => onSortChange(value as FAQSortOption)}
           options={sortOptions}
         />
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }

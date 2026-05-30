@@ -5,6 +5,7 @@ const CLS_ICON_SM = "h-3 w-3 shrink-0";
 import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
 import {
   Container,
+  Div,
   Heading,
   Main,
   Section,
@@ -144,7 +145,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
   return (
     <Main>
       {/* Site-wide notice: all profiles are moderation-verified */}
-      <div className="border-b appkit-alert--warning rounded-none">
+      <Div className="border-b appkit-alert--warning rounded-none">
         <Container size="xl" className="py-2.5">
           <Alert variant="warning" compact>
             All profiles on this page have been verified by our moderation team. If you recognise a
@@ -155,7 +156,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
             .
           </Alert>
         </Container>
-      </div>
+      </Div>
 
       <Section className="py-10">
         <Container size="xl">
@@ -182,7 +183,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
 
             {/* Search + sort + type filter form (GET — SSR-friendly) */}
             <form method="GET" className="flex flex-wrap gap-3">
-              <div className="flex-1 min-w-48">
+              <Div className="flex-1 min-w-48">
                 <Input
                   type="search"
                   name="q"
@@ -190,7 +191,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
                   placeholder="Search name, phone, UPI ID, or email…"
                   icon={<Search className="h-4 w-4" />}
                 />
-              </div>
+              </Div>
               <select
                 name="scamType"
                 defaultValue={scamType}

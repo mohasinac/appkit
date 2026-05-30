@@ -286,7 +286,7 @@ export function CouponCard({
       {/* Copy code block + Claim CTA (public surfaces). On admin/CRUD surfaces
           the Claim button is hidden via `hideClaim` since admins aren't
           redeeming the coupons they're managing. */}
-      <div className={`flex items-center gap-2 rounded-lg border border-dashed px-3 py-2 ${colors.code}`}>
+      <Div className={`flex items-center gap-2 rounded-lg border border-dashed px-3 py-2 ${colors.code}`}>
         <span className="flex-1 font-mono text-sm font-bold tracking-widest uppercase select-all">
           {n.code || "—"}
         </span>
@@ -300,9 +300,9 @@ export function CouponCard({
             {copied ? labels.copied : labels.copy}
           </button>
         )}
-      </div>
+      </Div>
       {showClaim && n.code && n.isActive && (
-        <div className="mt-2">
+        <Div className="mt-2">
           <button
             type="button"
             onClick={handleClaim}
@@ -312,7 +312,7 @@ export function CouponCard({
           >
             {claiming ? labels.claiming : labels.claim}
           </button>
-        </div>
+        </Div>
       )}
 
       {/* Meta row */}

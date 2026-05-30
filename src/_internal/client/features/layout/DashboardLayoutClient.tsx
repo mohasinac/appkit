@@ -31,6 +31,7 @@ import type { DashboardVariant, SidebarNavGroup, SectionResponsive } from "../..
 import { DASHBOARD_DESKTOP_MEDIA_QUERY } from "../../../shared/features/layout/config";
 import { filterNavItems } from "./filterNavItems";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
+import { Div } from "../../../../ui";
 
 export interface DashboardLayoutClientProps {
   /** Drives sidebar component selection + accent colour. */
@@ -190,13 +191,13 @@ export function DashboardLayoutClient({
       {/* Content area — full width on both mobile and desktop.
           md:pl-14 clears the sidebar toggle tab (w-9 = 2.25 rem) + margin so the toggle does not overlap.
           Inner wrapper caps width on ultra-wide screens so content does not flush to the far left. */}
-      <div className={[
+      <Div className={[
         "w-full flex-1 flex flex-col min-h-[calc(100dvh-var(--header-height,3.5rem))]",
         contentPadding ?? DEFAULT_CONTENT_PADDING,
         contentSurface,
       ].filter(Boolean).join(" ")}>
-        <div className={["w-full flex-1 mx-auto", contentMaxWidth ?? DEFAULT_CONTENT_MAX_WIDTH].filter(Boolean).join(" ")}>{children}</div>
-      </div>
+        <Div className={["w-full flex-1 mx-auto", contentMaxWidth ?? DEFAULT_CONTENT_MAX_WIDTH].filter(Boolean).join(" ")}>{children}</Div>
+      </Div>
     </>
   );
 }

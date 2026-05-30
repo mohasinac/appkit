@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Span, Text } from "../../../ui";
+import { Button, Div, Span, Text } from "../../../ui";
 
 interface FAQHelpfulButtonsProps {
   faqId: string;
@@ -67,7 +67,7 @@ export function FAQHelpfulButtons({
           : (labels?.wasThisHelpful ?? "Was this helpful?")}
       </Text>
 
-      <div className="flex gap-3" data-section="faqhelpfulbuttons-div-286">
+      <Div className="flex gap-3">
         <Button
           variant="ghost"
           onClick={() => handleVote(true)}
@@ -103,7 +103,7 @@ export function FAQHelpfulButtons({
             ({notHelpful})
           </Span>
         </Button>
-      </div>
+      </Div>
     </div>
   );
 }

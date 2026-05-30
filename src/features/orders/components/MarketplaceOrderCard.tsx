@@ -148,10 +148,10 @@ export function MarketplaceOrderCard({
         <div
           className={`flex items-start gap-3 ${selectable ? "pl-8" : ""} ${isListVariant ? "min-w-0 flex-1" : ""}`}
          data-section="marketplaceordercard-div-413">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-slate-800" data-section="marketplaceordercard-div-414">
+          <Div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-slate-800">
             <Package className="h-5 w-5 text-zinc-500 dark:text-slate-400" />
-          </div>
-          <div className="min-w-0 space-y-1" data-section="marketplaceordercard-div-415">
+          </Div>
+          <Div className="min-w-0 space-y-1">
             <TextLink href={detailHref} className="leading-tight">
               <Text weight="semibold" className="truncate">
                 {order.productTitle ?? shortId}
@@ -168,7 +168,7 @@ export function MarketplaceOrderCard({
                 {mergedLabels.items}: <Span weight="medium">{itemCount}</Span>
               </Caption>
             )}
-          </div>
+          </Div>
         </div>
 
         <div
@@ -183,7 +183,7 @@ export function MarketplaceOrderCard({
             </Text>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2" data-section="marketplaceordercard-div-418">
+          <Div className="flex flex-wrap items-center gap-2">
             {(isShipped || isDelivered) &&
               trackHref &&
               order.trackingNumber && (
@@ -214,7 +214,7 @@ export function MarketplaceOrderCard({
             >
               {mergedLabels.viewOrder}
             </Button>
-          </div>
+          </Div>
         </div>
       </div>
     </div>
