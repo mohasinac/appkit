@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Button, Input, Progress, Text, useToast } from "../../ui";
+import { Alert, Button, Div, Input, Progress, Text, useToast } from "../../ui";
 import { useMediaUpload } from "./hooks/useMedia";
 import { ImageCropModal, type ImageCropData } from "./modals/ImageCropModal";
 import { AvatarDisplay } from "../../ui/components/AvatarDisplay";
@@ -171,18 +171,18 @@ export function AvatarUpload({
 
   return (
     <>
-      <div className="space-y-4" data-section="avatarupload-div-404">
-        <div className="flex items-start gap-6" data-section="avatarupload-div-405">
-          <div className="shrink-0" data-section="avatarupload-div-406">
+      <Div className="space-y-4">
+        <Div className="flex items-start gap-6">
+          <Div className="shrink-0">
             <AvatarDisplay
               cropData={hasPending ? pendingCropData : cropData}
               size="2xl"
               className={`border-4 ${hasPending ? "border-primary/60 ring-2 ring-primary/20" : "border-zinc-200 dark:border-slate-700"}`}
               displayName={displayName}
             />
-          </div>
+          </Div>
 
-          <div className="flex-1 space-y-3" data-section="avatarupload-div-407">
+          <Div className="flex-1 space-y-3">
             <Text variant="secondary" className="text-xs">
               JPG, PNG, WEBP or GIF up to 10MB.
             </Text>
@@ -197,11 +197,11 @@ export function AvatarUpload({
             ) : null}
 
             {hasPending && !isUploading ? (
-              <div className="space-y-2" data-section="avatarupload-div-408">
+              <Div className="space-y-2">
                 <Text variant="secondary" className="text-xs text-primary">
                   {t.readyToSave}
                 </Text>
-                <div className="flex gap-3" data-section="avatarupload-div-409">
+                <Div className="flex gap-3">
                   <Button type="button" onClick={handleConfirmSave} size="sm">
                     {t.saveAvatar}
                   </Button>
@@ -213,12 +213,12 @@ export function AvatarUpload({
                   >
                     {t.cancelChange}
                   </Button>
-                </div>
-              </div>
+                </Div>
+              </Div>
             ) : null}
 
             {!hasPending && !isUploading ? (
-              <div className="flex gap-3" data-section="avatarupload-div-410">
+              <Div className="flex gap-3">
                 <Button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -236,7 +236,7 @@ export function AvatarUpload({
                     {t.removePhoto}
                   </Button>
                 ) : null}
-              </div>
+              </Div>
             ) : null}
 
             <Input
@@ -248,13 +248,13 @@ export function AvatarUpload({
               className="hidden"
               aria-label={t.changePhoto}
             />
-          </div>
-        </div>
+          </Div>
+        </Div>
 
         {uploadApiError ? (
           <Alert variant="error">{uploadApiError.message}</Alert>
         ) : null}
-      </div>
+      </Div>
 
       {showCropModal && tempImageUrl ? (
         <ImageCropModal

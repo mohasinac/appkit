@@ -176,7 +176,7 @@ function DrawerPanel({
   return (
     <Div className="hidden md:block">
       {/* Backdrop */}
-      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       {/* Panel — slides in from RIGHT */}
       <div
         role="dialog"
@@ -224,7 +224,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
       <>
         {/* Desktop backdrop */}
         {desktopOpen && (
-          <div
+          <Div
             className="hidden md:block fixed inset-0 bg-black/40 backdrop-blur-[2px] z-30"
             onClick={handleToggle}
             aria-hidden="true"
@@ -232,7 +232,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
         )}
 
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
-        <div
+        <Div
           className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
           style={{
             top: "var(--header-height, 3.5rem)",
@@ -252,7 +252,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           </div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
-        </div>
+        </Div>
 
         {/* Mobile: bottom sheet */}
         <Div className="md:hidden">

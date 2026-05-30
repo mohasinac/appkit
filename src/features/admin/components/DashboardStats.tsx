@@ -46,12 +46,12 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         </div>
 
         {/* Icon pill */}
-        <div
+        <Div
           className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
           style={{ background: gradient, opacity: 0.92 }}
         >
           <Icon className="w-5 h-5 text-white drop-shadow-sm" />
-        </div>
+        </Div>
       </Div>
     </div>
   );

@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
-import { Text } from "../../ui";
+import { Div, Text } from "../../ui";
 
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
 
@@ -147,7 +147,7 @@ export function QuickFormDrawer({
   return (
     <>
       {/* Backdrop */}
-      <div
+      <Div
         className="fixed inset-0 bg-black/40 backdrop-blur-[2px]"
         style={{ zIndex: "calc(var(--appkit-z-modal) + 1)" }}
         aria-hidden="true"
@@ -164,7 +164,7 @@ export function QuickFormDrawer({
         style={{ zIndex: "calc(var(--appkit-z-modal) + 2)" }}
       >
         {/* Header */}
-        <div className="flex-shrink-0 flex items-center gap-3 px-4 py-4 border-b border-[var(--appkit-color-border)]">
+        <Div className="flex-shrink-0 flex items-center gap-3 px-4 py-4 border-b border-[var(--appkit-color-border)]">
           <Text className="flex-1 text-base font-semibold text-[var(--appkit-color-text)]">{title}</Text>
           <button
             type="button"
@@ -174,7 +174,7 @@ export function QuickFormDrawer({
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
+        </Div>
 
         {/* Scrollable body */}
         <form
@@ -186,7 +186,7 @@ export function QuickFormDrawer({
             const value = values[field.name];
             if (field.type === "toggle") {
               return (
-                <div key={field.name} className="space-y-1">
+                <Div key={field.name} className="space-y-1">
                   <Toggle
                     checked={!!value}
                     onChange={(checked) => set(field.name, checked)}
@@ -195,11 +195,11 @@ export function QuickFormDrawer({
                   {field.helperText && (
                     <Text className="text-xs text-[var(--appkit-color-text-muted)]">{field.helperText}</Text>
                   )}
-                </div>
+                </Div>
               );
             }
             return (
-              <div key={field.name}>
+              <Div key={field.name}>
                 <FormField
                   name={field.name}
                   label={field.label}
@@ -224,14 +224,14 @@ export function QuickFormDrawer({
                     {field.helperText}
                   </Text>
                 )}
-              </div>
+              </Div>
             );
           })}
           {renderExtra?.(values, set)}
         </form>
 
         {/* Footer */}
-        <div className="flex-shrink-0 flex items-center justify-between gap-2 px-4 py-4 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]">
+        <Div className="flex-shrink-0 flex items-center justify-between gap-2 px-4 py-4 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]">
           <Button variant="outline" size="sm" onClick={handleClose} disabled={busy}>
             {cancelLabel}
           </Button>
@@ -244,7 +244,7 @@ export function QuickFormDrawer({
           >
             {submitLabel} →
           </Button>
-        </div>
+        </Div>
       </div>
     </>
   );

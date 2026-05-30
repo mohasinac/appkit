@@ -179,7 +179,7 @@ function GroupsContent({
 function DrawerPanel({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <Div className="hidden md:block">
-      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
         aria-modal="true"
@@ -241,7 +241,7 @@ export function StoreSidebar({
       <>
         {/* Desktop backdrop */}
         {desktopOpen && (
-          <div
+          <Div
             className="hidden md:block fixed inset-0 bg-black/40 backdrop-blur-[2px] z-30"
             onClick={handleToggle}
             aria-hidden="true"
@@ -249,7 +249,7 @@ export function StoreSidebar({
         )}
 
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
-        <div
+        <Div
           className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
           style={{
             top: "var(--header-height, 3.5rem)",
@@ -276,7 +276,7 @@ export function StoreSidebar({
           </div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
-        </div>
+        </Div>
 
         {/* Mobile: bottom sheet */}
         <Div className="md:hidden">

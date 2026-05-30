@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
-import { Text, useToast } from "../../ui";
+import { Div, Text, useToast } from "../../ui";
 
 export interface StepDef<T extends object = Record<string, unknown>> {
   label: string;
@@ -55,7 +55,7 @@ export function StepFormActions({
   const nextStepLabel = `Next →`;
 
   return (
-    <div className="flex items-center justify-between gap-2 px-5 py-3 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
+    <Div className="flex items-center justify-between gap-2 px-5 py-3 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
       <>
         {!isFirst && onPrev && (
           <Button variant="outline" size="sm" onClick={onPrev} disabled={disabled || isLoading}>
@@ -63,7 +63,7 @@ export function StepFormActions({
           </Button>
         )}
       </>
-      <div className="flex items-center gap-3">
+      <Div className="flex items-center gap-3">
         <span className="text-xs text-[var(--appkit-color-text-muted)]">
           {currentStep + 1} / {totalSteps}
         </span>
@@ -76,8 +76,8 @@ export function StepFormActions({
         >
           {isLast ? completeLabel : nextStepLabel}
         </Button>
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -101,7 +101,7 @@ export function StepIndicator({
         const isActive = i === currentStep;
         const hasError = stepErrors?.[i] === true;
         return (
-          <div key={i} className="flex items-center gap-0 flex-shrink-0">
+          <Div key={i} className="flex items-center gap-0 flex-shrink-0">
             <button
               type="button"
               disabled={!isDone && !isActive}
@@ -140,7 +140,7 @@ export function StepIndicator({
               <span className="hidden sm:inline">{step.label}</span>
             </button>
             {i < steps.length - 1 && (
-              <div
+              <Div
                 className={classNames(
                   "w-6 h-px flex-shrink-0 mx-1",
                   i < currentStep
@@ -149,7 +149,7 @@ export function StepIndicator({
                 )}
               />
             )}
-          </div>
+          </Div>
         );
       })}
     </nav>
@@ -218,7 +218,7 @@ export function StepForm<T extends object = Record<string, unknown>>({
   const isLast = currentStep === steps.length - 1;
 
   return (
-    <div className="flex flex-col">
+    <Div className="flex flex-col">
       <StepIndicator
         steps={steps}
         currentStep={currentStep}
@@ -226,9 +226,9 @@ export function StepForm<T extends object = Record<string, unknown>>({
         onStepClick={(i) => { if (i < currentStep) { setStepError(null); onStepChange(i); } }}
       />
 
-      <div className="flex-1">
+      <Div className="flex-1">
         {currentStepDef?.render({ values, onChange, errors: fieldErrors })}
-      </div>
+      </Div>
 
       {!hideActions && stepError && (
         <Text className="mt-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
@@ -245,6 +245,6 @@ export function StepForm<T extends object = Record<string, unknown>>({
           disabled={isLoading}
         />
       )}
-    </div>
+    </Div>
   );
 }

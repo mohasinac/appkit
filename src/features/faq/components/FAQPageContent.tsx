@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Heading, Input, SlottedListingView, Text } from "../../../ui";
+import { Div, Heading, Input, SlottedListingView, Text } from "../../../ui";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";
 import { FAQSortDropdown, type FAQSortOption } from "./FAQSortDropdown";
@@ -121,27 +121,27 @@ export function FAQPageContent({
   };
 
   return (
-    <div className="py-12" data-section="faqpagecontent-div-287">
-      <div className="mb-12 text-center" data-section="faqpagecontent-div-288">
+    <Div className="py-12">
+      <Div className="mb-12 text-center">
         <Heading level={1} className="mb-4 text-3xl font-bold sm:text-4xl">
           {labels.title}
         </Heading>
         <Text className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-300">
           {labels.subtitle}
         </Text>
-      </div>
+      </Div>
 
-      <div className="mb-8 lg:hidden" data-section="faqpagecontent-div-289">
+      <Div className="mb-8 lg:hidden">
         {renderMobileCategoryTabs({
           selectedCategory,
           total,
           categoryCounts,
           onSelect: handleCategorySelect,
         })}
-      </div>
+      </Div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12" data-section="faqpagecontent-div-290">
-        <div className="hidden lg:col-span-4 lg:block xl:col-span-3" data-section="faqpagecontent-div-291">
+      <Div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <Div className="hidden lg:col-span-4 lg:block xl:col-span-3">
           <FAQCategorySidebar
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
@@ -157,9 +157,9 @@ export function FAQPageContent({
               contactSupport: labels.contactSupport,
             }}
           />
-        </div>
+        </Div>
 
-        <div className="col-span-1 lg:col-span-8 xl:col-span-9" data-section="faqpagecontent-div-292">
+        <Div className="col-span-1 lg:col-span-8 xl:col-span-9">
           <SlottedListingView
             portal="public"
             inlineToolbar
@@ -208,7 +208,7 @@ export function FAQPageContent({
           />
 
           {faqs.length > 0 ? (
-            <div className="mt-12" data-section="faqpagecontent-div-293">
+            <Div className="mt-12">
               <ContactCTA
                 email={contact.email}
                 phone={contact.phone}
@@ -223,10 +223,10 @@ export function FAQPageContent({
                   contactTeam: labels.contactTeam,
                 }}
               />
-            </div>
+            </Div>
           ) : null}
-        </div>
-      </div>
-    </div>
+        </Div>
+      </Div>
+    </Div>
   );
 }
