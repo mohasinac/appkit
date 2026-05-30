@@ -278,7 +278,7 @@ export function AdminCategoryEditorView({
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formContent}</div>;
+    return <Div className="overflow-y-auto p-4">{formContent}</Div>;
   }
 
   const twoPanel = (

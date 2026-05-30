@@ -106,7 +106,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           ({permissions.size} selected)
         </span>
       </span>
-      <div className="rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] overflow-y-auto">
+      <Div className="rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] overflow-y-auto">
         {PERMISSION_DOMAINS.map((domain) => {
           const domainPerms = getPermissionsForDomain(domain.prefix);
           if (domainPerms.length === 0) return null;
@@ -138,7 +138,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
             </details>
           );
         })}
-      </div>
+      </Div>
     </Div>
   );
 }

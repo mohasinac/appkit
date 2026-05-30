@@ -250,7 +250,7 @@ export function AdminBrandEditorView({
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formSection}</div>;
+    return <Div className="overflow-y-auto p-4">{formSection}</Div>;
   }
 
   return (

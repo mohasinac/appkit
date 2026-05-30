@@ -455,14 +455,14 @@ export function AdminAdEditorView({
           {scheduleSection}
           {creativeSection}
 
-          <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3" data-section="adminadeditorview-div-240">
+          <Div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3">
             <Text className="text-sm font-medium mb-1">Preview</Text>
             <Text className="text-xs text-neutral-500 dark:text-zinc-400">
               {title || name || "Untitled ad"}
             </Text>
             {body ? <Text className="text-sm mt-1">{body}</Text> : null}
             {ctaLabel ? <Text className="text-xs mt-1">CTA: {ctaLabel} ({ctaHref || "#"})</Text> : null}
-          </div>
+          </Div>
 
           {publishHardeningRequired && publishIssues.length > 0 ? (
             <Alert variant="warning" title="Publish readiness issues">

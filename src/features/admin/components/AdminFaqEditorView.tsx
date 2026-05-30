@@ -220,13 +220,13 @@ export function AdminFaqEditorView({
             placeholder="e.g. shipping, pokemon, returns"
           />
 
-          <div className="space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
+          <Div className="space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
             <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Visibility</Text>
             <Toggle label="Active (visible to users)" checked={isActive} onChange={setIsActive} />
             <Toggle label="Pinned (always shown at top)" checked={isPinned} onChange={setIsPinned} />
             <Toggle label="Show on homepage FAQ section" checked={showOnHomepage} onChange={setShowOnHomepage} />
             <Toggle label="Show in footer FAQ links" checked={showInFooter} onChange={setShowInFooter} />
-          </div>
+          </Div>
 
           <Div className="flex gap-3 pt-2">
             <Button
@@ -262,7 +262,7 @@ export function AdminFaqEditorView({
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formSection}</div>;
+    return <Div className="overflow-y-auto p-4">{formSection}</Div>;
   }
 
   return (

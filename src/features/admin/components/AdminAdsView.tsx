@@ -90,7 +90,7 @@ function AdsSettingsPanel({
   currentConsentRequired, settingsMessage, onSave,
 }: AdsSettingsPanelProps) {
   return (
-    <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3 space-y-3" data-section="adminadsview-div-245">
+    <Div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3 space-y-3">
       <Text className="text-sm font-semibold">Provider and publish settings</Text>
       <Text className="text-xs text-neutral-500 dark:text-zinc-400">
         Save provider credentials here before publishing AdSense or third-party inventory.
@@ -145,7 +145,7 @@ function AdsSettingsPanel({
           {settingsMessage}
         </Alert>
       ) : null}
-    </div>
+    </Div>
   );
 }
 
