@@ -188,7 +188,7 @@ function renderTicketListArea(props: {
       <ul className="space-y-3">
         {tickets.map((ticket) => (
           <li key={ticket.id}>
-            <button type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
+            <Button variant="ghost" type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
               <Div className="flex items-start justify-between gap-2">
                 <Div className="min-w-0 flex-1">
                   <Text className="font-medium text-zinc-900 dark:text-zinc-100 truncate">{ticket.subject}</Text>

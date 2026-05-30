@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BulkActionBar, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Text } from "../../../ui";
+import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -265,10 +265,10 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
             <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</Text>
             <Div className="flex flex-wrap gap-2">
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
-                <button key={opt.label} type="button"
+                <Button key={opt.label} variant="ghost" type="button"
                   onClick={() => setPendingFilters((p) => ({ ...p, active: opt.value }))}
-                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.active || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                >{opt.label}</button>
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors min-h-0 h-auto ${(pendingFilters.active || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                >{opt.label}</Button>
               ))}
             </Div>
           </Div>

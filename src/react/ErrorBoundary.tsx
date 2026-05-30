@@ -11,7 +11,7 @@
 
 import { Component, type ReactNode, type ErrorInfo } from "react";
 import { Logger } from "../core/Logger";
-import { Heading, Text } from "../ui";
+import { Button, Heading, Text } from "../ui";
 import {
   trackError,
   ErrorCategory,
@@ -75,9 +75,9 @@ function DefaultFallback({
           {error.message}
         </pre>
       )}
-      <button onClick={onReset} type="button">
+      <Button onClick={onReset} type="button">
         Try again
-      </button>
+      </Button>
     </div>
   );
 }

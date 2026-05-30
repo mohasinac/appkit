@@ -113,7 +113,7 @@ function FormFieldBuilder({ fields, setFields }: FormFieldBuilderProps) {
           <Stack key={field.id} gap="xs" surface="default" rounded="lg" border="default" padding="sm">
             <Row justify="between" gap="xs">
               <Text size="xs" weight="medium" color="muted">Field {idx + 1}</Text>
-              <button type="button" onClick={() => removeField(field.id)} className="text-zinc-400 hover:text-red-500 transition-colors text-lg leading-none px-1" aria-label="Remove field">×</button>
+              <Button variant="ghost" type="button" onClick={() => removeField(field.id)} className="text-zinc-400 hover:text-red-500 transition-colors text-lg leading-none px-1 p-0 min-h-0 h-auto rounded-none" aria-label="Remove field">×</Button>
             </Row>
             <Grid cols={2} gap="xs">
               <Select label="Type" value={field.type} options={FORM_FIELD_TYPE_OPTIONS} onChange={(e) => updateField(field.id, { type: e.target.value as FormFieldType, options: undefined })} />
@@ -587,7 +587,7 @@ export function AdminEventEditorView({
                       />
                     </Div>
                     {values.pollOptions.length > 2 && (
-                      <button type="button" onClick={() => onChange({ pollOptions: values.pollOptions.filter((o) => o.id !== opt.id) })} className="text-zinc-400 hover:text-red-500 transition-colors px-2 py-1 text-lg leading-none" aria-label="Remove option">×</button>
+                      <Button variant="ghost" type="button" onClick={() => onChange({ pollOptions: values.pollOptions.filter((o) => o.id !== opt.id) })} className="text-zinc-400 hover:text-red-500 transition-colors px-2 py-1 text-lg leading-none p-0 min-h-0 h-auto rounded-none" aria-label="Remove option">×</Button>
                     )}
                   </Row>
                 ))}
@@ -706,7 +706,7 @@ export function AdminEventEditorView({
                           <Toggle checked={p.isActive} onChange={(v) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, isActive: v } : sp) })} label="" />
                         </Row>
                         <Row centered className="col-span-1 pb-2">
-                          <button type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className="text-zinc-400 hover:text-red-500 text-lg leading-none px-2" aria-label="Remove prize">×</button>
+                          <Button variant="ghost" type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className="text-zinc-400 hover:text-red-500 text-lg leading-none px-2 p-0 min-h-0 h-auto rounded-none" aria-label="Remove prize">×</Button>
                         </Row>
                       </Grid>
                     ))}

@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingFilterDrawer, Pagination, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
+import { Button, ListingFilterDrawer, Pagination, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
 import type { CouponType } from "../types";
@@ -11,6 +11,8 @@ import { COUPON_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 
 const DEFAULT_SORT = sortBy(COUPON_FIELDS.CREATED_AT);
+
+const CLS_CHIP_BTN = "p-0 min-h-0 h-auto inline-flex";
 
 const COUPON_SORT_OPTIONS = [
   { value: sortBy(COUPON_FIELDS.NAME, "ASC"), label: "Name A–Z" },
@@ -185,25 +187,25 @@ export function CouponsIndexListing({
             {activeType && (
               <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 {COUPON_TYPES.find((t) => t.value === activeType)?.label ?? activeType}
-                <button type="button" onClick={() => { table.set(TABLE_KEYS.TYPE, ""); }} aria-label="Remove type filter">
+                <Button variant="ghost" type="button" onClick={() => { table.set(TABLE_KEYS.TYPE, ""); }} aria-label="Remove type filter" className={CLS_CHIP_BTN}>
                   <X className="h-3 w-3" />
-                </button>
+                </Button>
               </Span>
             )}
             {table.get(TABLE_KEYS.DATE_FROM) && (
               <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 From: {table.get(TABLE_KEYS.DATE_FROM)}
-                <button type="button" onClick={() => { table.set(TABLE_KEYS.DATE_FROM, ""); }} aria-label="Remove from-date filter">
+                <Button variant="ghost" type="button" onClick={() => { table.set(TABLE_KEYS.DATE_FROM, ""); }} aria-label="Remove from-date filter" className={CLS_CHIP_BTN}>
                   <X className="h-3 w-3" />
-                </button>
+                </Button>
               </Span>
             )}
             {table.get(TABLE_KEYS.DATE_TO) && (
               <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 To: {table.get(TABLE_KEYS.DATE_TO)}
-                <button type="button" onClick={() => { table.set(TABLE_KEYS.DATE_TO, ""); }} aria-label="Remove to-date filter">
+                <Button variant="ghost" type="button" onClick={() => { table.set(TABLE_KEYS.DATE_TO, ""); }} aria-label="Remove to-date filter" className={CLS_CHIP_BTN}>
                   <X className="h-3 w-3" />
-                </button>
+                </Button>
               </Span>
             )}
             <button

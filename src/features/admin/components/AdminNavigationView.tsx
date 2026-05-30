@@ -37,10 +37,10 @@ function NavItemRow({
   return (
     <Div surface="default" className="flex items-center gap-3 px-4 py-3">
       <Div className="flex flex-col gap-0.5 shrink-0">
-        <button type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
-          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move up">▲</button>
-        <button type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}
-          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move down">▼</button>
+        <Button variant="ghost" type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
+          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>
+        <Button variant="ghost" type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}
+          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
       </Div>
       <Div className="flex-1 min-w-0">
         <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-100 truncate">

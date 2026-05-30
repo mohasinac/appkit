@@ -12,7 +12,7 @@
  */
 
 import { useEffect } from "react";
-import { Heading, Text } from "../../ui";
+import { Button, Heading, Text } from "../../ui";
 import {
   trackError,
   ErrorCategory,
@@ -70,9 +70,9 @@ export function GlobalError({ error, reset }: GlobalErrorProps) {
             {error.digest ? `\n(digest: ${error.digest})` : ""}
           </pre>
         )}
-        <button onClick={reset} type="button">
+        <Button onClick={reset} type="button">
           Try again
-        </button>
+        </Button>
       </body>
     </html>
   );

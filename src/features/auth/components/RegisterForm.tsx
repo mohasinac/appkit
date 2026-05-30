@@ -1,6 +1,6 @@
 "use client"
 import React, { FormEvent, useCallback, useState } from "react";
-import { Alert, Div, Heading, Label, Text } from "../../../ui";
+import { Alert, Button, Div, Heading, Label, Text } from "../../../ui";
 
 export interface RegisterFormValues {
   email: string;
@@ -144,9 +144,9 @@ export function RegisterForm({
 
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
           {renderRegisterFormFields({ values, setValues, labels, renderTermsLink, renderPasswordStrength })}
-          <button type="submit" disabled={isLoading} className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors">
+          <Button type="submit" isLoading={isLoading} disabled={isLoading} className="w-full">
             {isLoading ? (labels.submittingLabel ?? "Creating account…") : (labels.submitLabel ?? "Create account")}
-          </button>
+          </Button>
         </form>
 
         {renderSocialButtons?.()}

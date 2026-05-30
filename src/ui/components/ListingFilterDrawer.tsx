@@ -2,6 +2,7 @@
 
 import React from "react";
 import { X } from "lucide-react";
+import { Button } from "./Button";
 
 export interface ListingFilterDrawerProps {
   open: boolean;
@@ -29,22 +30,22 @@ export function ListingFilterDrawer({
           <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
           <div className="flex items-center gap-2">
             {activeCount > 0 && (
-              <button type="button" onClick={onClear} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">
+              <Button variant="ghost" type="button" onClick={onClear} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors min-h-0 h-auto p-0">
                 Clear all
-              </button>
+              </Button>
             )}
-            <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+            <Button variant="ghost" type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors min-h-0 h-auto">
               <X className="h-5 w-5" />
-            </button>
+            </Button>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
           {children}
         </div>
         <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <button type="button" onClick={onApply} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+          <Button type="button" onClick={onApply} className="w-full">
             Apply Filters{activeCount > 0 ? ` (${activeCount})` : ""}
-          </button>
+          </Button>
         </div>
       </div>
     </>
