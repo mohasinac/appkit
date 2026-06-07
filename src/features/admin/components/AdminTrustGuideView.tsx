@@ -1,6 +1,6 @@
 import React from "react";
 import { Shield, Ban, AlertTriangle, Headphones, Flag, ClipboardList } from "lucide-react";
-import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 const STILL_ALLOWED = "✓ Still allowed";
@@ -25,15 +25,15 @@ export function AdminTrustGuideView() {
           content: (
             <>
               <Div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--appkit-color-border)]">
+                <Table className="w-full text-sm border-collapse">
+                  <Thead>
+                    <Tr className="border-b border-[var(--appkit-color-border)]">
                       {["", "Soft Ban", "Hard Ban"].map((h) => (
-                        <th key={h} className="text-left py-2 pr-4 font-semibold text-[var(--appkit-color-text)]">{h}</th>
+                        <Th key={h} className="text-left py-2 pr-4 font-semibold text-[var(--appkit-color-text)]">{h}</Th>
                       ))}
-                    </tr>
-                  </thead>
-                  <tbody className="text-[var(--appkit-color-text-muted)] text-sm">
+                    </Tr>
+                  </Thead>
+                  <Tbody className="text-[var(--appkit-color-text-muted)] text-sm">
                     {[
                       ["Login", STILL_ALLOWED, "✗ Blocked"],
                       ["Browse", STILL_ALLOWED, STILL_ALLOWED],
@@ -42,14 +42,14 @@ export function AdminTrustGuideView() {
                       ["Bid", "Can restrict with place_bids scope", "✗ Blocked"],
                       ["Duration", "Set expiry date", "Permanent until admin lifts"],
                     ].map(([action, soft, hard]) => (
-                      <tr key={action} className="border-b border-[var(--appkit-color-border)]/50">
-                        <td className="py-2 pr-4 font-medium text-[var(--appkit-color-text)]">{action}</td>
-                        <td className="py-2 pr-4">{soft}</td>
-                        <td className="py-2">{hard}</td>
-                      </tr>
+                      <Tr key={action} className="border-b border-[var(--appkit-color-border)]/50">
+                        <Td className="py-2 pr-4 font-medium text-[var(--appkit-color-text)]">{action}</Td>
+                        <Td className="py-2 pr-4">{soft}</Td>
+                        <Td className="py-2">{hard}</Td>
+                      </Tr>
                     ))}
-                  </tbody>
-                </table>
+                  </Tbody>
+                </Table>
               </Div>
               <Text className="text-sm text-[var(--appkit-color-text-muted)] mt-3">
                 <Span weight="bold" className="text-[var(--appkit-color-text)]">Soft ban scopes</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write_reviews</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">create_listings</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">open_tickets</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">join_events</code>. Multiple scopes can be combined.

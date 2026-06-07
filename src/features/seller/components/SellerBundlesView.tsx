@@ -7,6 +7,8 @@ import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../..";
+
+const CLS_ITEMS_PILL = "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 tabular-nums";
 import {
   toRecordArray,
   toRelativeDate,
@@ -38,7 +40,7 @@ const COLUMNS: AdminTableColumn<BundleRow>[] = [
     key: "itemCount",
     header: "Items",
     render: (row) => (
-      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 tabular-nums">
+      <span className={CLS_ITEMS_PILL}>
         {row.itemCount}
       </span>
     ),

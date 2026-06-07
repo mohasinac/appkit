@@ -4,6 +4,8 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { THEME_CONSTANTS } from "../../../tokens";
 
+const CLS_PRIZE_BADGE = "inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300";
+
 const STATUS_COLORS: Record<OrderStatus, string> = {
   pending: "bg-warning-surface text-warning",
   confirmed: "bg-info-surface text-info",
@@ -76,7 +78,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       </Row>
       {revealsRemaining > 0 && (
         <Row gap="sm" className="mt-2">
-          <Span size="xs" weight="semibold" className="inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300">
+          <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>
             {revealsRemaining} {revealsRemaining === 1 ? "reveal" : "reveals"} pending
           </Span>
           {earliestDeadline && (

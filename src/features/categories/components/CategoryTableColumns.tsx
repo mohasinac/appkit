@@ -2,6 +2,8 @@ import { Div, StatusBadge, Span, Button } from "../../../ui";
 import type { Category } from "../types";
 import { MediaImage } from "../../media";
 
+const CLS_DELETE_BTN = "text-red-600 hover:text-red-800 dark:text-red-400";
+
 export interface CategoryTableColumnsLabels {
   colName?: string;
   colSlug?: string;
@@ -115,7 +117,7 @@ export function getCategoryTableColumns(
             e.stopPropagation();
             onDelete(cat);
           }}
-          className="text-red-600 hover:text-red-800 dark:text-red-400"
+          className={CLS_DELETE_BTN}
         >
           {L.actionDelete}
         </Button>

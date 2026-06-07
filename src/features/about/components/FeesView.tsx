@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Text, Section, Caption } from "../../../ui";
+import { Div, Heading, Text, Section, Caption, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -94,26 +94,26 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
     <Section>
       <Heading level={2} className="mb-6">{t("tableTitle")}</Heading>
       <Div className={`overflow-x-auto rounded-xl border ${themed.border}`}>
-        <table className="w-full text-sm">
-          <thead className={themed.bgSecondary}>
-            <tr>
-              <th className="py-3 px-4 text-left font-semibold">{t("colFeeType")}</th>
-              <th className="py-3 px-4 text-left font-semibold">{t("colRate")}</th>
-              <th className="py-3 px-4 text-left font-semibold">{t("colPaidBy")}</th>
-              <th className="py-3 px-4 text-left font-semibold hidden md:table-cell">{t("colNote")}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+        <Table className="w-full text-sm">
+          <Thead className={themed.bgSecondary}>
+            <Tr>
+              <Th className="py-3 px-4 text-left font-semibold">{t("colFeeType")}</Th>
+              <Th className="py-3 px-4 text-left font-semibold">{t("colRate")}</Th>
+              <Th className="py-3 px-4 text-left font-semibold">{t("colPaidBy")}</Th>
+              <Th className="py-3 px-4 text-left font-semibold hidden md:table-cell">{t("colNote")}</Th>
+            </Tr>
+          </Thead>
+          <Tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
             {rows.map((row) => (
-              <tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 dark:hover:bg-neutral-800/50`}>
-                <td className="py-3 px-4 font-medium">{row.category}</td>
-                <td className={CLS_RATE_CELL}>{row.rate}</td>
-                <td className="py-3 px-4"><Caption>{row.who}</Caption></td>
-                <td className="py-3 px-4 text-neutral-500 dark:text-neutral-400 hidden md:table-cell text-xs">{row.note}</td>
-              </tr>
+              <Tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 dark:hover:bg-neutral-800/50`}>
+                <Td className="py-3 px-4 font-medium">{row.category}</Td>
+                <Td className={CLS_RATE_CELL}>{row.rate}</Td>
+                <Td className="py-3 px-4"><Caption>{row.who}</Caption></Td>
+                <Td className="py-3 px-4 text-neutral-500 dark:text-neutral-400 hidden md:table-cell text-xs">{row.note}</Td>
+              </Tr>
             ))}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </Div>
       <Caption className="mt-3 block text-zinc-500 dark:text-zinc-400">{t("tableNote")}</Caption>
     </Section>

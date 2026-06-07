@@ -14,6 +14,10 @@ import {
 import { formatCurrency } from "../../../../utils/number.formatter";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
+const CLS_WARN_BOX = "rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm";
+const CLS_WARN_TITLE = "font-medium text-amber-900";
+const CLS_WARN_BODY = "mt-1 text-amber-800";
+
 export interface LiveItemDetailViewProps {
   product: ProductDocument | null;
   isLoading?: boolean;
@@ -85,11 +89,11 @@ export function LiveItemDetailView({
 
           {/* Jurisdiction info */}
           {jurisdictions.length > 0 && (
-            <Div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm">
-              <Text className="font-medium text-amber-900">
+            <Div className={CLS_WARN_BOX}>
+              <Text className={CLS_WARN_TITLE}>
                 Delivery restrictions
               </Text>
-              <Text className="mt-1 text-amber-800">
+              <Text className={CLS_WARN_BODY}>
                 This item can only be shipped to: {jurisdictions.join(", ")}
               </Text>
             </Div>

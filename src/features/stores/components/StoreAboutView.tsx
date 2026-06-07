@@ -2,6 +2,9 @@ import React from "react";
 import { Div, Heading, RichText, Text } from "../../../ui";
 
 const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
+const CLS_WARN_BOX = "bg-yellow-50 border border-yellow-200 rounded-lg p-4";
+const CLS_WARN_TITLE = "text-yellow-800 font-medium";
+const CLS_WARN_BODY = "text-yellow-700 mt-1";
 import type { StoreDetail } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -114,12 +117,12 @@ export function StoreAboutView({
 
       {/* Vacation mode notice */}
       {store.isVacationMode && (
-        <Div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <Text className="text-yellow-800 font-medium">
+        <Div className={CLS_WARN_BOX}>
+          <Text className={CLS_WARN_TITLE}>
             {labels.vacationModeLabel ?? "This store is on vacation mode"}
           </Text>
           {store.vacationMessage && (
-            <Text className="text-yellow-700 mt-1">
+            <Text className={CLS_WARN_BODY}>
               {store.vacationMessage}
             </Text>
           )}

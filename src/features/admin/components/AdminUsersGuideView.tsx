@@ -1,6 +1,6 @@
 import React from "react";
 import { Users, Search, Edit, Monitor, UserCog, AlertTriangle } from "lucide-react";
-import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminUsersGuideView() {
@@ -22,15 +22,15 @@ export function AdminUsersGuideView() {
           Icon: Users, title: "User Roles Overview",
           content: (
             <Div className="overflow-x-auto">
-              <table className="w-full text-sm border-collapse">
-                <thead>
-                  <tr className="border-b border-[var(--appkit-color-border)]">
+              <Table className="w-full text-sm border-collapse">
+                <Thead>
+                  <Tr className="border-b border-[var(--appkit-color-border)]">
                     {["Role", "What they can do", "How assigned"].map((h) => (
-                      <th key={h} className="text-left py-2 pr-4 font-semibold text-[var(--appkit-color-text)]">{h}</th>
+                      <Th key={h} className="text-left py-2 pr-4 font-semibold text-[var(--appkit-color-text)]">{h}</Th>
                     ))}
-                  </tr>
-                </thead>
-                <tbody className="text-[var(--appkit-color-text-muted)]">
+                  </Tr>
+                </Thead>
+                <Tbody className="text-[var(--appkit-color-text-muted)]">
                   {[
                     ["user", "Browse, buy, bid, wishlist, reviews, support tickets", "Auto on registration"],
                     ["seller", "Everything above + store management + listings", "Auto when store is created"],
@@ -38,14 +38,14 @@ export function AdminUsersGuideView() {
                     ["employee", "Assigned permission-group access to admin sections", "Admin team invite"],
                     ["admin", "Full access to all admin sections, bypasses RBAC checks", "Manual via Firebase console"],
                   ].map(([role, can, how]) => (
-                    <tr key={role} className="border-b border-[var(--appkit-color-border)]/50">
-                      <td className="py-2 pr-4 font-mono text-xs text-[var(--appkit-color-primary)]">{role}</td>
-                      <td className="py-2 pr-4">{can}</td>
-                      <td className="py-2">{how}</td>
-                    </tr>
+                    <Tr key={role} className="border-b border-[var(--appkit-color-border)]/50">
+                      <Td className="py-2 pr-4 font-mono text-xs text-[var(--appkit-color-primary)]">{role}</Td>
+                      <Td className="py-2 pr-4">{can}</Td>
+                      <Td className="py-2">{how}</Td>
+                    </Tr>
                   ))}
-                </tbody>
-              </table>
+                </Tbody>
+              </Table>
             </Div>
           ),
         },

@@ -5,6 +5,8 @@ import { ACTION_META, ACTION_ID } from "../../products/constants/action-defs";
 import type { ActionId } from "../../products/constants/action-defs";
 import { useToast } from "../../../ui";
 
+const CLS_CUSTOM_PILL = "inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
+
 export interface ActionPermissionsManagerProps {
   initialConfig: Record<string, { enabled: boolean }>;
   onUpdate: (actionId: string, enabled: boolean) => Promise<void>;
@@ -154,7 +156,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                   </td>
                   <td className="px-4 py-3">
                     {meta.requiresAuth ? (
-                      <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                      <span className={CLS_CUSTOM_PILL}>
                         Auth required
                       </span>
                     ) : (

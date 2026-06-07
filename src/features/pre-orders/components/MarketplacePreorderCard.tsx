@@ -9,6 +9,11 @@ import { ROUTES } from "../../../next";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+
+const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-amber-500 px-2 py-0.5 text-white";
+const CLS_SALE_BADGE = "rounded-full bg-teal-600 px-2 py-0.5 text-xs font-bold text-white";
+const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white";
+const CLS_LIMITED_BADGE = "rounded-full bg-sky-600 px-2 py-0.5 text-xs font-bold text-white";
 import {
   BaseListingCard,
   Button,
@@ -143,7 +148,7 @@ export function MarketplacePreorderCard({
             {mergedLabels.preOrderBadge}
           </Span>
           {product.featured && (
-            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-amber-500 px-2 py-0.5 text-white">
+            <Span size="xs" weight="medium" className={CLS_PREORDER_BADGE}>
               {mergedLabels.featuredBadge}
             </Span>
           )}
@@ -152,7 +157,7 @@ export function MarketplacePreorderCard({
         <Div className="absolute left-2 top-2 flex flex-col gap-1 pointer-events-none">
           {product.partOfBundleIds && product.partOfBundleIds.length > 0 && (
             <Span
-              className="rounded-full bg-teal-600 px-2 py-0.5 text-xs font-bold text-white"
+              className={CLS_SALE_BADGE}
               title={product.partOfBundleTitles?.[0] ? `In bundle: ${product.partOfBundleTitles[0]}` : "In a bundle"}
             >
               Bundled
@@ -160,7 +165,7 @@ export function MarketplacePreorderCard({
           )}
           {product.groupId && (
             <Span
-              className="rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white"
+              className={CLS_TRENDING_BADGE}
               title={product.groupTitle ? `Part of set: ${product.groupTitle}` : "Part of a set"}
             >
               {product.isGroupParent ? "Set Parent" : "In Set"}
@@ -168,7 +173,7 @@ export function MarketplacePreorderCard({
           )}
           {product.sublistingCategoryId && (
             <Span
-              className="rounded-full bg-sky-600 px-2 py-0.5 text-xs font-bold text-white"
+              className={CLS_LIMITED_BADGE}
               title="Has variants or sub-listings"
             >
               Has Variants

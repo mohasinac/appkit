@@ -17,6 +17,8 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
 import { safeDisplayName } from "../../../security";
 
+const CLS_FEATURED_BADGE = "rounded-full bg-yellow-100 px-2 py-0.5 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300";
+
 interface BlogCardProps {
   post: BlogPost;
   href?: string;
@@ -68,7 +70,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             {post.category}
           </Span>
           {post.isFeatured && (
-            <Span size="xs" weight="medium" className="rounded-full bg-yellow-100 px-2 py-0.5 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">
+            <Span size="xs" weight="medium" className={CLS_FEATURED_BADGE}>
               Featured
             </Span>
           )}

@@ -2,6 +2,10 @@ import React from "react";
 import { Div, Heading, Text, Button } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
+const CLS_SUCCESS_CIRCLE = "w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6";
+const CLS_ERROR_CIRCLE = "w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6";
+const CLS_ERROR_ICON = "w-6 h-6 text-red-600";
+
 export interface VerifyEmailViewProps {
   /** Status of the verification */
   status: "loading" | "success" | "error";
@@ -48,7 +52,7 @@ export function VerifyEmailView({
 
         {status === "success" && (
           <>
-            <Div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+            <Div className={CLS_SUCCESS_CIRCLE}>
               <svg
                 className={`w-6 h-6 ${THEME_CONSTANTS.themed.textSuccess}`}
                 fill="none"
@@ -77,9 +81,9 @@ export function VerifyEmailView({
 
         {status === "error" && (
           <>
-            <Div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6">
+            <Div className={CLS_ERROR_CIRCLE}>
               <svg
-                className="w-6 h-6 text-red-600"
+                className={CLS_ERROR_ICON}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
