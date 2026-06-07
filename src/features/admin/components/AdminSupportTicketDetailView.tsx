@@ -7,9 +7,11 @@ import {
   Div,
   FormActions,
   Input,
+  Label,
   Row,
   Select,
   SideDrawer,
+  Span,
   Text,
   Toggle,
   useToast,
@@ -337,25 +339,27 @@ export function AdminSupportTicketDetailView({
       <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         {/* Meta row */}
         <Div className="flex flex-wrap items-center gap-2">
-          <span
-            className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+          <Span
+            size="xs"
+            weight="medium"
+            className={`inline-flex rounded-full px-2.5 py-1 ${
               STATUS_COLOR[currentStatus ?? "open"] ?? STATUS_COLOR.open
             }`}
           >
             {(currentStatus ?? "open").replace(/_/g, " ")}
-          </span>
-          <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+          </Span>
+          <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
             {category}
-          </span>
+          </Span>
           {orderId && (
-            <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
               Order: {orderId}
-            </span>
+            </Span>
           )}
         </Div>
 
         <Div className="text-sm text-zinc-500 dark:text-zinc-400">
-          From: <span className="font-medium text-zinc-700 dark:text-zinc-200">{userDisplayName}</span>
+          From: <Span weight="medium" className="text-zinc-700 dark:text-zinc-200">{userDisplayName}</Span>
         </Div>
 
         {/* Description */}
@@ -387,11 +391,11 @@ export function AdminSupportTicketDetailView({
                   }`}
                 >
                   <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
-                    <span className="font-medium text-zinc-600 dark:text-zinc-300">
+                    <Span weight="medium" className="text-zinc-600 dark:text-zinc-300">
                       {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
-                    </span>
+                    </Span>
                     {msg.createdAt && (
-                      <span>{new Date(msg.createdAt).toLocaleString()}</span>
+                      <Span>{new Date(msg.createdAt).toLocaleString()}</Span>
                     )}
                   </Div>
                   <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
@@ -403,9 +407,9 @@ export function AdminSupportTicketDetailView({
 
         {/* Reply box */}
         <Div className="flex flex-col gap-1">
-          <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+          <Label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
             Reply to user
-          </label>
+          </Label>
           <textarea
             value={replyBody}
             onChange={(e) => setReplyBody(e.target.value)}
@@ -443,9 +447,9 @@ export function AdminSupportTicketDetailView({
 
         {/* Internal notes */}
         <Div className="flex flex-col gap-1">
-          <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+          <Label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
             Internal notes (staff only)
-          </label>
+          </Label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
