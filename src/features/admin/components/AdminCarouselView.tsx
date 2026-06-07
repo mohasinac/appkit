@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Text } from "../../../ui";
+import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Span, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -151,7 +151,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
         {row.thumbnailUrl && (
           <img src={row.thumbnailUrl} alt="" className="w-14 h-9 object-cover rounded flex-shrink-0 bg-zinc-200 dark:bg-zinc-800" />
         )}
-        <span className="text-sm text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</span>
+        <Span size="sm" className="text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</Span>
       </Div>
     ) as unknown as string,
   }));
@@ -176,7 +176,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     {
       key: "primary",
       header: "Title",
-      render: (row) => <span className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</span>,
+      render: (row) => <Span weight="medium" className="text-zinc-900 dark:text-zinc-100">{row.primary}</Span>,
     },
     {
       key: "secondary",
@@ -187,15 +187,15 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       key: "status",
       header: "Status",
       render: (row) => (
-        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${row.status === "Active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`}>
+        <Span size="xs" weight="medium" className={`inline-flex items-center rounded-full px-2 py-0.5 ${row.status === "Active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`}>
           {row.status}
-        </span>
+        </Span>
       ),
     },
     {
       key: "updatedAt",
       header: "Updated",
-      render: (row) => <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>,
+      render: (row) => <Span size="sm" className="text-zinc-500 dark:text-zinc-400">{row.updatedAt}</Span>,
     },
     {
       key: "actions",

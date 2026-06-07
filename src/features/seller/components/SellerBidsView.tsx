@@ -4,7 +4,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { Badge, BulkActionBar, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, Text, useToast } from "../../../ui";
+import { Badge, BulkActionBar, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, Span, Text, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -165,16 +165,16 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       key: "userName",
       header: "Bidder",
       className: "w-36",
-      render: (row) => <span className="text-sm text-zinc-700 dark:text-zinc-300">{row.userName}</span>,
+      render: (row) => <Span size="sm" className="text-zinc-700 dark:text-zinc-300">{row.userName}</Span>,
     },
     {
       key: "bidAmount",
       header: "Bid",
       className: "w-28 text-right",
       render: (row) => (
-        <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
+        <Span size="sm" weight="semibold" className="text-zinc-900 dark:text-zinc-100">
           {toRupees(row.bidAmount)}
-        </span>
+        </Span>
       ),
     },
     {
@@ -191,7 +191,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       key: "bidDate",
       header: "Date",
       className: "w-28",
-      render: (row) => <span className="text-xs text-zinc-500 dark:text-zinc-400">{row.bidDate}</span>,
+      render: (row) => <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{row.bidDate}</Span>,
     },
   ];
 
@@ -313,15 +313,15 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                     onClick={() => toggleGroup(group.id)}
                     className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-raised)]"
                   >
-                    <span className="truncate">
+                    <Span className="truncate">
                       {group.title}{" "}
-                      <span className="text-xs text-[var(--appkit-color-text-muted)] font-normal">
+                      <Span size="xs" weight="normal" className="text-[var(--appkit-color-text-muted)]">
                         · {group.bids.length} bid{group.bids.length === 1 ? "" : "s"}
-                      </span>
-                    </span>
-                    <span aria-hidden className="text-[var(--appkit-color-text-muted)]">
+                      </Span>
+                    </Span>
+                    <Span aria-hidden className="text-[var(--appkit-color-text-muted)]">
                       {collapsed ? "▸" : "▾"}
-                    </span>
+                    </Span>
                   </button>
                   {!collapsed && (
                     <Div className="border-t border-[var(--appkit-color-border)]">

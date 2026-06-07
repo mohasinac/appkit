@@ -4,10 +4,13 @@ import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
+  Code,
   Div,
   FormActions,
+  Label,
   Select,
   SideDrawer,
+  Span,
   Text,
   useToast,
 } from "../../../ui";
@@ -117,17 +120,19 @@ export function AdminScammerEditorView({
       <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         {/* Status badge */}
         <Div className="flex items-center gap-2">
-          <span
-            className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+          <Span
+            size="xs"
+            weight="medium"
+            className={`inline-flex rounded-full px-2.5 py-1 ${
               STATUS_COLOR[currentStatus ?? "pending_review"] ?? STATUS_COLOR.pending_review
             }`}
           >
             {(currentStatus ?? "pending_review").replace(/_/g, " ")}
-          </span>
+          </Span>
           {scamType && (
-            <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
               {scamType.replace(/_/g, " ")}
-            </span>
+            </Span>
           )}
         </Div>
 
@@ -139,12 +144,13 @@ export function AdminScammerEditorView({
             </Text>
             <Div className="flex flex-wrap gap-1">
               {displayNames.map((name, i) => (
-                <span
+                <Span
                   key={i}
-                  className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800"
+                  size="xs"
+                  className="rounded-full bg-zinc-100 px-2.5 py-0.5 dark:bg-zinc-800"
                 >
                   {name}
-                </span>
+                </Span>
               ))}
             </Div>
           </Div>
@@ -160,9 +166,9 @@ export function AdminScammerEditorView({
                 </Text>
                 <Div className="flex flex-wrap gap-1">
                   {phones.map((p, i) => (
-                    <code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
+                    <Code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
                       {p}
-                    </code>
+                    </Code>
                   ))}
                 </Div>
               </Div>
@@ -174,9 +180,9 @@ export function AdminScammerEditorView({
                 </Text>
                 <Div className="flex flex-wrap gap-1">
                   {upiIds.map((u, i) => (
-                    <code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
+                    <Code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
                       {u}
-                    </code>
+                    </Code>
                   ))}
                 </Div>
               </>
@@ -199,9 +205,9 @@ export function AdminScammerEditorView({
         {/* Reporter */}
         <Div className="text-xs text-zinc-500 dark:text-zinc-400">
           Reported by:{" "}
-          <span className="font-medium text-zinc-700 dark:text-zinc-300">
+          <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">
             {reportedByAnon ? "Anonymous" : (reportedBy ?? "Unknown")}
-          </span>
+          </Span>
         </Div>
 
         <hr className="border-zinc-200 dark:border-zinc-700" />
@@ -216,9 +222,9 @@ export function AdminScammerEditorView({
 
         {/* Verification note */}
         <Div className="flex flex-col gap-1">
-          <label className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <Label className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             Verification note (internal)
-          </label>
+          </Label>
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}

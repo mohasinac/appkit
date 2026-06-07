@@ -10,6 +10,7 @@ import {
   Label,
   Select,
   SideDrawer,
+  Span,
   StackedViewShell,
   Toggle,
   useToast,
@@ -184,22 +185,22 @@ export function AdminStoreEditorView({
 
   const renderCapabilitiesSection = () => (
     <Div className="flex flex-col gap-2">
-      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">
         Capabilities
-        <span className="ml-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" weight="normal" className="ml-2 text-zinc-500 dark:text-zinc-400">
           ({capabilities.size} active)
-        </span>
-      </span>
+        </Span>
+      </Span>
       <Div className="rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700">
         {CAPABILITY_GROUPS.map((group) => {
           const checked = group.caps.filter((c) => capabilities.has(c.key)).length;
           return (
             <details key={group.label} className="group">
-              <summary className="flex cursor-pointer items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
-                <span>{group.label}</span>
-                <span className="text-xs font-normal normal-case text-zinc-400 dark:text-zinc-400">
+              <summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
+                <Span size="xs">{group.label}</Span>
+                <Span size="xs" weight="normal" className="normal-case text-zinc-400 dark:text-zinc-400">
                   {checked}/{group.caps.length}
-                </span>
+                </Span>
               </summary>
               <Div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
                 {group.caps.map((cap) => (
