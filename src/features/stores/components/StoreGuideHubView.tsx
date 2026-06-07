@@ -14,6 +14,10 @@ import { Div, Heading, Text, Section } from "../../../ui";
 import type { StoreDocument } from "../schemas";
 import { ROUTES } from "../../../next/routing/route-map";
 
+const CLS_CHECK_ICON = "w-5 h-5 flex-shrink-0 text-emerald-500";
+const CLS_SUCCESS_BOX = "rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 px-5 py-4";
+const CLS_SUCCESS_BODY = "text-sm font-medium text-emerald-700 dark:text-emerald-400";
+
 // -- Guide cards ---------------------------------------------------------------
 
 interface GuideCard {
@@ -221,7 +225,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   }`}
                 >
                   {done ? (
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-500" />
+                    <CheckCircle2 className={CLS_CHECK_ICON} />
                   ) : (
                     <Circle className="w-5 h-5 flex-shrink-0 text-[var(--appkit-color-text-muted)]" />
                   )}
@@ -239,8 +243,8 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
             </Div>
           </Div>
           {completedCount === steps.length && (
-            <Div className="rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 px-5 py-4">
-              <Text className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
+            <Div className={CLS_SUCCESS_BOX}>
+              <Text className={CLS_SUCCESS_BODY}>
                 🎉 You&apos;re all set! Your store is fully configured.
               </Text>
             </Div>

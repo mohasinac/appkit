@@ -162,39 +162,43 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     });
   }, [localCart, router, requireAuth]);
 
+  const handleBulkAddToCart = useCallback(() => {
+    const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+    selected.forEach((p) => {
+      const snapshot = { productTitle: p.title, productImage: p.mainImage, price: p.price, storeId: p.storeId, storeName: p.storeName };
+      localCart.add(p.id, 1, snapshot);
+      pushCartOp({ op: "add", productId: p.id, quantity: 1, ...snapshot });
+    });
+    showToast(`${selected.length} items added to cart`, "success");
+    selection.clearSelection();
+  }, [products, selection, localCart, showToast]);
+
+  const handleBulkAddToWishlist = useCallback(() => {
+    requireAuth(ACTION_ID.ADD_TO_WISHLIST, () => {
+      const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+      selected.forEach((p) => {
+        localWishlist.add(p.id, "product");
+        pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
+      });
+      showToast(`${selected.length} items added to wishlist`, "success");
+      selection.clearSelection();
+    });
+  }, [products, selection, localWishlist, showToast, requireAuth]);
+
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
           {
             id: ACTION_ID.ADD_TO_CART,
             label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
             icon: <ShoppingCart className="h-3.5 w-3.5" />,
             variant: "primary",
-            onClick: () => {
-              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-              selected.forEach((p) => {
-                const snapshot = { productTitle: p.title, productImage: p.mainImage, price: p.price, storeId: p.storeId, storeName: p.storeName };
-                localCart.add(p.id, 1, snapshot);
-                pushCartOp({ op: "add", productId: p.id, quantity: 1, ...snapshot });
-              });
-              showToast(`${selected.length} items added to cart`, "success");
-              selection.clearSelection();
-            },
+            onClick: handleBulkAddToCart,
           },
           {
             id: ACTION_ID.ADD_TO_WISHLIST,
             label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
             icon: <Heart className="h-3.5 w-3.5" />,
             variant: "secondary",
-            onClick: () => {
-              requireAuth(ACTION_ID.ADD_TO_WISHLIST, () => {
-                const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-                selected.forEach((p) => {
-                  localWishlist.add(p.id, "product");
-                  pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
-                });
-                showToast(`${selected.length} items added to wishlist`, "success");
-                selection.clearSelection();
-              });
-            },
+            onClick: handleBulkAddToWishlist,
           },
           {
             id: ACTION_ID.COMPARE,

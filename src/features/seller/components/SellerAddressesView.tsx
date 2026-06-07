@@ -8,6 +8,8 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
+const CLS_DEFAULT_PILL = "inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2 py-0.5";
+const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -106,7 +108,7 @@ function AddressCard({
           <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
           <Span size="sm" weight="semibold" className="text-zinc-900 dark:text-zinc-100 truncate">{address.label}</Span>
           {address.isDefault && (
-            <Span size="xs" weight="medium" className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2 py-0.5">
+            <Span size="xs" weight="medium" className={CLS_DEFAULT_PILL}>
               <Star className="h-3 w-3" />
               Default
             </Span>
@@ -125,7 +127,7 @@ function AddressCard({
             type="button"
             onClick={onDelete}
             title="Delete address"
-            className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            className={CLS_DELETE_BTN}
           >
             <Trash2 className="h-4 w-4" />
           </button>

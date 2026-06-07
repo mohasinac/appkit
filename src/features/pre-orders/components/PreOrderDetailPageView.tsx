@@ -2,6 +2,8 @@ import Link from "next/link";
 import { productRepository } from "../../../repositories";
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
+const CLS_PREORDER_BADGE = "inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-indigo-700 dark:text-indigo-300";
+const CLS_STATUS_BADGE = "inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-800 dark:text-amber-200";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -105,7 +107,7 @@ function PreOrderInfoSection({
       {/* Pre-order badge + production status + title */}
       <Div>
         <Row gap="xs" className="mb-2 flex-wrap">
-          <Span size="xs" weight="semibold" className="inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-indigo-700 dark:text-indigo-300">
+          <Span size="xs" weight="semibold" className={CLS_PREORDER_BADGE}>
             Pre-Order
           </Span>
           {productionStatus && (
@@ -114,7 +116,7 @@ function PreOrderInfoSection({
             </Span>
           )}
           {maxPerUser !== null && (
-            <Span size="xs" weight="medium" className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-800 dark:text-amber-200">
+            <Span size="xs" weight="medium" className={CLS_STATUS_BADGE}>
               Limit: {maxPerUser} per customer
             </Span>
           )}

@@ -17,6 +17,11 @@ export interface MakeOfferButtonProps {
 
 type State = "idle" | "confirm" | "loading" | "success" | "pending" | "error";
 
+const CLS_SUCCESS_BOX = "rounded-xl border border-emerald-200 dark:border-emerald-800 bg-success-surface p-4 text-center space-y-1";
+const CLS_PENDING_BOX = "rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-4 text-center space-y-1";
+const CLS_PENDING_TITLE = "text-sm font-medium text-amber-800 dark:text-amber-300";
+const CLS_PENDING_BODY = "text-xs text-amber-700 dark:text-amber-400";
+
 function isActiveOfferError(msg: string): boolean {
   return msg.includes("active offer") || msg.includes("ACTIVE_OFFER");
 }
@@ -93,7 +98,7 @@ export function MakeOfferButton({
 
   if (state === "success") {
     return (
-      <Div className={`rounded-xl border border-emerald-200 dark:border-emerald-800 bg-success-surface p-4 text-center space-y-1 ${className}`}>
+      <Div className={`${CLS_SUCCESS_BOX} ${className}`}>
         <Span size="lg">🎉</Span>
         <Text className="text-sm font-medium text-success">
           Offer sent!
@@ -107,12 +112,12 @@ export function MakeOfferButton({
 
   if (state === "pending") {
     return (
-      <Div className={`rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-4 text-center space-y-1 ${className}`}>
+      <Div className={`${CLS_PENDING_BOX} ${className}`}>
         <Span size="lg">⏳</Span>
-        <Text className="text-sm font-medium text-amber-800 dark:text-amber-300">
+        <Text className={CLS_PENDING_TITLE}>
           Offer Pending
         </Text>
-        <Text className="text-xs text-amber-700 dark:text-amber-400">
+        <Text className={CLS_PENDING_BODY}>
           You already have an offer on this item. Check My Offers for updates.
         </Text>
       </Div>

@@ -3,6 +3,8 @@ import { Package, FolderTree, Tag, Star, AlertTriangle } from "lucide-react";
 import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
+const CLS_CODE = "text-xs bg-amber-100 dark:bg-amber-900/30 px-1 rounded";
+
 export function AdminCatalogGuideView() {
   return (
     <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
@@ -70,8 +72,8 @@ export function AdminCatalogGuideView() {
             <Alert variant="warning">
               <ul className="space-y-1 text-sm">
                 <li>✗ Publishing a product with no images — buyers cannot evaluate it.</li>
-                <li>✗ Creating a subcategory without setting <code className="text-xs bg-amber-100 dark:bg-amber-900/30 px-1 rounded">rootId</code> — category tree breaks.</li>
-                <li>✗ Setting <code className="text-xs bg-amber-100 dark:bg-amber-900/30 px-1 rounded">parentId</code> of a root category to anything other than <code className="text-xs bg-amber-100 dark:bg-amber-900/30 px-1 rounded">null</code> — creates circular hierarchy.</li>
+                <li>✗ Creating a subcategory without setting <code className={CLS_CODE}>rootId</code> — category tree breaks.</li>
+                <li>✗ Setting <code className={CLS_CODE}>parentId</code> of a root category to anything other than <code className={CLS_CODE}>null</code> — creates circular hierarchy.</li>
                 <li>✗ Duplicating brand slugs — Firestore document ID collision, second write silently overwrites the first.</li>
                 <li>✗ Writing raw Firebase Storage URLs to Firestore — breaks the media watermark proxy and CDN caching.</li>
               </ul>

@@ -21,6 +21,13 @@ import {
 } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
+const CLS_STAR_ICON = "h-5 w-5 fill-amber-400 text-amber-400";
+const CLS_LIVE_BADGE = "rounded-full bg-rose-600/90 px-2 py-0.5 text-white";
+const CLS_ENDING_BADGE = "rounded-full bg-amber-500/90 px-2 py-0.5 text-white";
+const CLS_RESERVE_BADGE = "inline-flex items-center gap-1 rounded-full bg-amber-600/90 px-2 py-0.5 text-white";
+const CLS_HEART_ON = "fill-rose-500 text-rose-500";
+const CLS_HEART_OFF = "text-zinc-400";
+
 export interface MarketplaceAuctionCardData {
   id: string;
   title: string;
@@ -142,7 +149,7 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
       ) : null}
       {product.featured ? (
         <Div className="pointer-events-none absolute left-2 top-2 z-10">
-          <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+          <Star className={CLS_STAR_ICON} />
         </Div>
       ) : null}
       {onSelect && (

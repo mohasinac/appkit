@@ -93,6 +93,26 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     }
   }
 
+  async listByOwnerType(
+    ownerType: AddressOwnerType,
+    limit = 500,
+  ): Promise<AddressDocument[]> {
+    try {
+      const snapshot = await this.getCollection()
+        .where(ADDRESS_FIELDS.OWNER_TYPE, "==", ownerType)
+        .orderBy(ADDRESS_FIELDS.CREATED_AT, "desc")
+        .limit(limit)
+        .get();
+
+      return snapshot.docs.map((doc) => this.mapDoc<AddressDocument>(doc));
+    } catch (error) {
+      throw new DatabaseError(
+        `Failed to list addresses by ownerType=${ownerType}`,
+        error,
+      );
+    }
+  }
+
   async countByOwner(
     ownerType: AddressOwnerType,
     ownerId: string,

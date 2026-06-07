@@ -22,8 +22,8 @@ const DEFAULT_SORT = sortBy(STORE_FIELDS.CREATED_AT);
 const STORE_SORT_OPTIONS = [
   { value: sortBy(STORE_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(STORE_FIELDS.STORE_NAME, "ASC"), label: "Name A–Z" },
-  { value: "-itemsSold", label: "Most Sales" },
-  { value: "-averageRating", label: "Top Rated" },
+  { value: sortBy(STORE_FIELDS.STATS_FIELDS.ITEMS_SOLD), label: "Most Sales" },
+  { value: sortBy(STORE_FIELDS.STATS_FIELDS.AVERAGE_RATING), label: "Top Rated" },
 ] as const;
 
 const FILTER_KEYS = [TABLE_KEYS.CATEGORY, "rating", "minProductCount", "maxProductCount", TABLE_KEYS.FEATURED];

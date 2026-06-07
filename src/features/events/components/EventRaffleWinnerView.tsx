@@ -30,6 +30,10 @@ export interface EventRaffleWinnerViewProps {
   };
 }
 
+const CLS_PANEL = "rounded-2xl border border-amber-200 bg-amber-50/60 dark:border-amber-700 dark:bg-amber-900/20 p-6 space-y-3";
+const CLS_LABEL = "text-xs uppercase tracking-wide text-amber-700 dark:text-amber-300";
+const CLS_WINNER_NAME = "mt-1 text-2xl font-bold text-amber-900 dark:text-amber-100";
+
 const DEFAULT_LABELS: Required<NonNullable<EventRaffleWinnerViewProps["labels"]>> = {
   heading: "Raffle Winner",
   winnerLabel: "Winner",
@@ -60,19 +64,19 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
         🎟️ {l.heading}
       </Heading>
 
-      <Div className="rounded-2xl border border-amber-200 bg-amber-50/60 dark:border-amber-700 dark:bg-amber-900/20 p-6 space-y-3">
+      <Div className={CLS_PANEL}>
         <Div>
-          <Text className="text-xs uppercase tracking-wide text-amber-700 dark:text-amber-300">
+          <Text className={CLS_LABEL}>
             {l.winnerLabel}
           </Text>
-          <Text className="mt-1 text-2xl font-bold text-amber-900 dark:text-amber-100">
+          <Text className={CLS_WINNER_NAME}>
             {event.raffleWinnerDisplayName?.trim() || l.anonymous}
           </Text>
         </Div>
 
         {event.rafflePrize ? (
           <Div>
-            <Text className="text-xs uppercase tracking-wide text-amber-700 dark:text-amber-300">
+            <Text className={CLS_LABEL}>
               {l.prizeLabel}
             </Text>
             <Text className="mt-1 text-base text-zinc-800 dark:text-zinc-100">

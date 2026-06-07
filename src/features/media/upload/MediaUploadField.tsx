@@ -25,6 +25,10 @@ import { inferMediaTypeFromMime, type MediaField } from "../types/index";
  */
 export type MediaUploadFieldKind = "image" | "video" | "pdf" | "auto";
 
+const CLS_PDF_BADGE = "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300";
+const CLS_PDF_NAME = "text-sm font-medium text-blue-600 underline break-all dark:text-blue-400";
+const CLS_PDF_LINK = "text-sm underline break-all text-blue-600 dark:text-blue-400";
+
 const KIND_DEFAULTS: Record<
   Exclude<MediaUploadFieldKind, "auto">,
   { accept: string; maxSizeMB: number }
@@ -247,18 +251,18 @@ function MediaPreviewPanel({
             />
           </Div>
           <Row gap="md" align="center">
-            <Div aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
+            <Div aria-hidden className={CLS_PDF_BADGE}>
               <span className="text-xs font-bold">PDF</span>
             </Div>
             <a href={value} target="_blank" rel="noopener noreferrer"
-              className="text-sm font-medium text-blue-600 underline break-all dark:text-blue-400">
+              className={CLS_PDF_NAME}>
               {filenameFromUrl(value)}
             </a>
           </Row>
         </Div>
       ) : (
         <a href={value} target="_blank" rel="noopener noreferrer"
-          className="text-sm underline break-all text-blue-600 dark:text-blue-400">
+          className={CLS_PDF_LINK}>
           {filenameFromUrl(value)}
         </a>
       )}

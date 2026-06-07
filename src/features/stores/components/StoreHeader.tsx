@@ -13,6 +13,11 @@ import { ShareButton } from "../../products/components/ShareButton";
 import { StoreScopedSearch } from "./StoreScopedSearch";
 import type { StoreDetail } from "../types";
 
+const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-2xl shadow-sm";
+const CLS_STARS = "inline-flex items-center gap-1 text-amber-500";
+const CLS_FOLLOW_BTN = "rounded-lg border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors";
+const CLS_WARN_BANNER = "mt-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-3 py-2 text-sm text-yellow-700 dark:text-yellow-300";
+
 interface StoreHeaderProps {
   store: StoreDetail;
   labels?: {
@@ -54,7 +59,7 @@ export function StoreHeader({
               style={{ backgroundImage: `url(${store.storeLogoURL})` }}
             />
           ) : (
-            <Div className="-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-2xl shadow-sm">
+            <Div className={CLS_AVATAR}>
               {store.storeName[0]?.toUpperCase()}
             </Div>
           )}
@@ -67,7 +72,7 @@ export function StoreHeader({
                 {store.storeName}
               </Heading>
               {store.averageRating != null && store.averageRating > 0 && (
-                <Span size="sm" weight="medium" className="inline-flex items-center gap-1 text-amber-500">
+                <Span size="sm" weight="medium" className={CLS_STARS}>
                   ★ {store.averageRating.toFixed(1)}
                 </Span>
               )}
@@ -100,7 +105,7 @@ export function StoreHeader({
                 variant="outline"
                 size="sm"
                 onClick={() => onFollow(store.storeSlug)}
-                className="rounded-lg border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors"
+                className={CLS_FOLLOW_BTN}
               >
                 {labels.follow ?? "Follow"}
               </Button>
@@ -109,7 +114,7 @@ export function StoreHeader({
         </Div>
 
         {store.isVacationMode && (
-          <Text className="mt-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-3 py-2 text-sm text-yellow-700 dark:text-yellow-300">
+          <Text className={CLS_WARN_BANNER}>
             {store.vacationMessage ??
               labels.vacationMode ??
               "Store is on vacation mode"}

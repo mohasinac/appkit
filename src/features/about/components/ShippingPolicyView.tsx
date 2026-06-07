@@ -6,6 +6,8 @@ import { TextLink } from "../../../ui";
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
+const CLS_FOOTER_LINK = "text-sky-600 dark:text-sky-400 hover:underline";
+
 export interface ShippingPolicyViewProps {
   heroBannerClass?: string;
 }
@@ -131,25 +133,25 @@ export async function ShippingPolicyView({
         <Div className={`mt-12 pt-8 border-t ${themed.border} flex gap-6 text-sm`}>
           <TextLink
             href={String(ROUTES.PUBLIC.TRACK_ORDER)}
-            className="text-sky-600 dark:text-sky-400 hover:underline"
+            className={CLS_FOOTER_LINK}
           >
             {t("trackOrder")}
           </TextLink>
           <TextLink
             href={String(ROUTES.PUBLIC.HELP)}
-            className="text-sky-600 dark:text-sky-400 hover:underline"
+            className={CLS_FOOTER_LINK}
           >
             {t("helpCenter")}
           </TextLink>
           <TextLink
             href={String(ROUTES.PUBLIC.CONTACT)}
-            className="text-sky-600 dark:text-sky-400 hover:underline"
+            className={CLS_FOOTER_LINK}
           >
             {t("contactUs")}
           </TextLink>
           <TextLink
             href={String(ROUTES.PUBLIC.REFUND_POLICY)}
-            className="text-sky-600 dark:text-sky-400 hover:underline"
+            className={CLS_FOOTER_LINK}
           >
             Refund Policy
           </TextLink>

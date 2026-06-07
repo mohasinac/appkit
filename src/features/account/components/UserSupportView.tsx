@@ -196,7 +196,7 @@ function renderTicketListArea(props: {
                 </Div>
                 <span className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</span>
               </Div>
-            </button>
+            </Button>
           </li>
         ))}
       </ul>

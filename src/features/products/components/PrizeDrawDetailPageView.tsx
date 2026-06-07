@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { orderRepository, productRepository } from "../../../repositories";
+
+const CLS_PRIZE_BADGE = "inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -229,7 +231,7 @@ export async function PrizeDrawDetailPageView({
             <Stack gap="md">
               <Div>
                 <Row gap="xs" className="mb-2 flex-wrap">
-                  <Span size="xs" weight="semibold" className="inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300">
+                  <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>
                     Prize Draw
                   </Span>
                   <Span
@@ -245,7 +247,7 @@ export async function PrizeDrawDetailPageView({
                     </Span>
                   )}
                   {maxPerUser !== null && userEntriesUsed !== null && (
-                    <Span size="xs" weight="semibold" className="inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300">
+                    <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>
                       You have used {userEntriesUsed}/{maxPerUser}
                     </Span>
                   )}

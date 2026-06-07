@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Button, Div, Input, Slider, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
+const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20";
+const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 rounded-full transition-colors";
+
 interface DualSliderProps {
   minValue: string;
   maxValue: string;
@@ -164,7 +167,7 @@ export function RangeFilter({
           <Span className="flex items-center gap-2">
             {title}
             {hasValue && (
-              <Span size="xs" className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20">
+              <Span size="xs" className={CLS_BADGE_COUNT}>
                 1
               </Span>
             )}
@@ -194,7 +197,7 @@ export function RangeFilter({
             onClick={onClear}
             variant="ghost"
             size="sm"
-            className="inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 rounded-full transition-colors"
+            className={CLS_CLEAR_BTN}
             aria-label="Clear"
           >
             <svg

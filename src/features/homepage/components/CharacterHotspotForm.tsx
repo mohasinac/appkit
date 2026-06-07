@@ -31,6 +31,10 @@ function randomId() {
 const CLS_STEP = "space-y-4 rounded-lg border-2 p-6";
 const CLS_IMG_WRAP = "relative w-full overflow-hidden rounded-lg";
 const CLS_INPUT = "rounded border-2 px-3 py-2 text-sm outline-none";
+const CLS_ERROR_BANNER = "rounded border border-red-200 bg-red-50 px-4 py-2 text-sm font-bold text-red-600";
+const CLS_SUCCESS_BANNER = "rounded border border-green-200 bg-green-50 px-4 py-2 text-sm font-bold text-green-700";
+const CLS_SUCCESS_TEXT = "text-xs font-medium text-green-700";
+const CLS_DELETE_PIN = "shrink-0 rounded p-1 text-xs text-red-500 hover:bg-red-50";
 const STY_BORDER_INK = "2px solid var(--border-ink)";
 const STY_CENTERED = "translate(-50%, -50%)";
 
@@ -184,12 +188,12 @@ export function CharacterHotspotForm({
   return (
     <Div className="mx-auto max-w-3xl space-y-6">
       {error && (
-        <Text className="rounded border border-red-200 bg-red-50 px-4 py-2 text-sm font-bold text-red-600">
+        <Text className={CLS_ERROR_BANNER}>
           {error}
         </Text>
       )}
       {success && (
-        <Text className="rounded border border-green-200 bg-green-50 px-4 py-2 text-sm font-bold text-green-700">
+        <Text className={CLS_SUCCESS_BANNER}>
           Saved to database successfully!
         </Text>
       )}
@@ -305,7 +309,7 @@ export function CharacterHotspotForm({
                   sizes="680px"
                 />
               </Div>
-              <Text className="text-xs font-medium text-green-700">
+              <Text className={CLS_SUCCESS_TEXT}>
                 ✓ Image uploaded
               </Text>
             </Div>
@@ -905,7 +909,7 @@ export function CharacterHotspotForm({
                       type="button"
                       onClick={() => deletePin(pin.id)}
                       variant="ghost"
-                      className="shrink-0 rounded p-1 text-xs text-red-500 hover:bg-red-50"
+                      className={CLS_DELETE_PIN}
                       title="Remove pin"
                     >
                       ✕

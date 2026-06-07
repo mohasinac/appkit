@@ -178,7 +178,7 @@ export function PrizeDrawsIndexListing({
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 8 }).map((_, i) => (
-              <div
+              <Div
                 key={i}
                 className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse"
               >

@@ -275,6 +275,63 @@ interface StockResult {
   emailOtpUsed: boolean;
 }
 
+type CouponAccumEntry = { couponId: string; code: string; orderIds: string[]; totalDiscount: number };
+
+async function flushCouponUsageAccumulator(
+  accumulator: Map<string, CouponAccumEntry>,
+  uid: string,
+): Promise<void> {
+  if (accumulator.size === 0) return;
+  Promise.all(
+    [...accumulator.values()].map(async ({ couponId, code, orderIds: ids, totalDiscount }) => {
+      await couponsRepository.applyCoupon(couponId, code, uid, ids, totalDiscount);
+      try {
+        const coupon = await couponsRepository.findById(couponId);
+        const perUserLimit = coupon?.usage?.perUserLimit ?? 1;
+        const newCount = await couponsRepository.getUserCouponUsageCount(uid, couponId);
+        if (newCount >= perUserLimit) {
+          await claimedCouponsRepository
+            .markUsed(uid, code, ids[0] ?? "")
+            .catch(() => { /* no claim row — coupon never went through the wallet */ });
+        }
+      } catch (err) {
+        serverLogger.warn("Failed to update claimed-coupon status", { err });
+      }
+    }),
+  ).catch((err: unknown) => serverLogger.error("Failed to record coupon usage:", err));
+}
+
+function grantConsentOtpBypassCredit(
+  db: FirebaseFirestore.Firestore,
+  uid: string,
+  emailOtpUsed: boolean,
+  unavailableCount: number,
+): void {
+  if (!emailOtpUsed || unavailableCount === 0) return;
+  const metaRef = consentOtpRateLimitRef(db, uid);
+  metaRef
+    .get()
+    .then((snap: FirebaseFirestore.DocumentSnapshot) => {
+      const cur = snap.exists ? ((snap.data()?.bypassCredits as number) ?? 0) : 0;
+      return metaRef.set(
+        { bypassCredits: Math.min(cur + 1, CONSENT_OTP_MAX_BYPASS_CREDITS) },
+        { merge: true },
+      );
+    })
+    .catch((err: unknown) =>
+      serverLogger.warn("Failed to grant consent OTP bypass credit", { err }),
+    );
+}
+
+function dispatchOrderConfirmationEmails(
+  emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][],
+): void {
+  if (emailsToSend.length === 0) return;
+  Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
+    (err: unknown) => serverLogger.error("Order confirmation email error:", err),
+  );
+}
+
 /**
  * Place order(s) from the user's cart in a single Firestore transaction.
  *
@@ -574,10 +631,7 @@ export async function createCheckoutOrderAction(
     0,
   );
 
-  const couponUsageAccumulator = new Map<
-    string,
-    { couponId: string; code: string; orderIds: string[]; totalDiscount: number }
-  >();
+  const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
 
   for (const { items: group, orderType } of orderGroups) {
     const firstItem = group[0].item;
@@ -780,57 +834,9 @@ export async function createCheckoutOrderAction(
     });
   }
 
-  if (couponUsageAccumulator.size > 0) {
-    Promise.all(
-      [...couponUsageAccumulator.values()].map(async ({ couponId, code, orderIds: ids, totalDiscount }) => {
-        await couponsRepository.applyCoupon(couponId, code, uid, ids, totalDiscount);
-        // Flip the user's claimed-coupon wallet row to "used" when the
-        // per-user redemption limit has been reached (default: single-use
-        // when `perUserLimit` is absent or 1). Multi-use coupons with
-        // remaining redemptions stay "active" in the wallet.
-        try {
-          const coupon = await couponsRepository.findById(couponId);
-          // Default to single-use (1) when the coupon has no explicit
-          // per-user cap configured. Coupons issued via the wallet are
-          // claim-once-use-once by design unless the seller opts into a
-          // higher cap.
-          const perUserLimit = coupon?.usage?.perUserLimit ?? 1;
-          const newCount = await couponsRepository.getUserCouponUsageCount(uid, couponId);
-          if (newCount >= perUserLimit) {
-            await claimedCouponsRepository
-              .markUsed(uid, code, ids[0] ?? "")
-              .catch(() => { /* no claim row — coupon never went through the wallet */ });
-          }
-        } catch (err) {
-          serverLogger.warn("Failed to update claimed-coupon status", { err });
-        }
-      }),
-    ).catch((err: unknown) =>
-      serverLogger.error("Failed to record coupon usage:", err),
-    );
-  }
-
-  if (emailOtpUsed && unavailable.length > 0) {
-    const metaRef = consentOtpRateLimitRef(db, uid);
-    metaRef
-      .get()
-      .then((snap: FirebaseFirestore.DocumentSnapshot) => {
-        const cur = snap.exists ? ((snap.data()?.bypassCredits as number) ?? 0) : 0;
-        return metaRef.set(
-          { bypassCredits: Math.min(cur + 1, CONSENT_OTP_MAX_BYPASS_CREDITS) },
-          { merge: true },
-        );
-      })
-      .catch((err: unknown) =>
-        serverLogger.warn("Failed to grant consent OTP bypass credit", { err }),
-      );
-  }
-
-  if (emailsToSend.length > 0) {
-    Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
-      (err: unknown) => serverLogger.error("Order confirmation email error:", err),
-    );
-  }
+  await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
+  grantConsentOtpBypassCredit(db, uid, emailOtpUsed, unavailable.length);
+  dispatchOrderConfirmationEmails(emailsToSend);
 
   serverLogger.info(
     `createCheckoutOrderAction: ${orderIds.length} order(s) placed for uid=${uid}` +

@@ -2,6 +2,9 @@
 import React, { useState, useCallback } from "react";
 import { Button, Div, Heading, Span, Text, Textarea } from "../../../ui";
 
+const CLS_FIELD_ERROR = "text-red-500";
+const CLS_ERROR_BANNER = "rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 px-4 py-3 text-sm text-red-700 dark:text-red-300";
+
 interface ContactFormData {
   name: string;
   email: string;
@@ -144,7 +147,7 @@ export function ContactForm({
           className="h-10 w-full rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition"
         />
       )}
-      {errors[id] && <Span size="xs" className="text-red-500">{errors[id]}</Span>}
+      {errors[id] && <Span size="xs" className={CLS_FIELD_ERROR}>{errors[id]}</Span>}
     </Div>
   );
 
@@ -159,7 +162,7 @@ export function ContactForm({
       </Heading>
 
       {submitError && (
-        <Div className="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+        <Div className={CLS_ERROR_BANNER}>
           {submitError}
         </Div>
       )}

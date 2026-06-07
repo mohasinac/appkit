@@ -44,6 +44,13 @@ export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "
   embedded?: boolean;
 }
 
+const CLS_REMOVE_BTN = "text-zinc-400 hover:text-red-500 transition-colors text-lg leading-none px-1 p-0 min-h-0 h-auto rounded-none";
+const CLS_REMOVE_BTN_PX2 = "text-zinc-400 hover:text-red-500 transition-colors px-2 py-1 text-lg leading-none p-0 min-h-0 h-auto rounded-none";
+const CLS_REMOVE_BTN_LG = "text-zinc-400 hover:text-red-500 text-lg leading-none px-2 p-0 min-h-0 h-auto rounded-none";
+const CLS_RAFFLE_PANEL = "border border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/20";
+const CLS_RAFFLE_HEADING = "text-amber-900 dark:text-amber-100";
+const CLS_RAFFLE_BODY = "text-amber-800 dark:text-amber-200";
+
 const EVENT_TYPE_OPTIONS = [
   { label: "Sale", value: "sale" },
   { label: "Offer / Coupon", value: "offer" },
@@ -113,7 +120,7 @@ function FormFieldBuilder({ fields, setFields }: FormFieldBuilderProps) {
           <Stack key={field.id} gap="xs" surface="default" rounded="lg" border="default" padding="sm">
             <Row justify="between" gap="xs">
               <Text size="xs" weight="medium" color="muted">Field {idx + 1}</Text>
-              <Button variant="ghost" type="button" onClick={() => removeField(field.id)} className="text-zinc-400 hover:text-red-500 transition-colors text-lg leading-none px-1 p-0 min-h-0 h-auto rounded-none" aria-label="Remove field">×</Button>
+              <Button variant="ghost" type="button" onClick={() => removeField(field.id)} className={CLS_REMOVE_BTN} aria-label="Remove field">×</Button>
             </Row>
             <Grid cols={2} gap="xs">
               <Select label="Type" value={field.type} options={FORM_FIELD_TYPE_OPTIONS} onChange={(e) => updateField(field.id, { type: e.target.value as FormFieldType, options: undefined })} />
@@ -290,6 +297,36 @@ const DEFAULT_DRAFT: EventDraft = {
   spinWindowEnd: "",
 };
 
+// --- Pure build helpers (module-level, no component closure) -----------------
+
+function buildEventTypeConfig(draft: EventDraft): Record<string, unknown> {
+  if (draft.type === "sale") return { saleConfig: { discountPercent: Number(draft.discountPercent) || 10, bannerText: draft.saleBannerText || undefined } };
+  if (draft.type === "offer") return { offerConfig: { couponId: draft.couponId, displayCode: draft.displayCode, bannerText: draft.offerBannerText || undefined } };
+  if (draft.type === "poll") return { pollConfig: { options: draft.pollOptions.filter((o) => o.label.trim()), allowMultiSelect: draft.allowMultiSelect, allowComment: draft.allowComment, resultsVisibility: draft.resultsVisibility } };
+  if (draft.type === "survey") return { surveyConfig: { requireLogin: draft.requireLogin, maxEntriesPerUser: Number(draft.maxEntriesPerUser) || 1, hasLeaderboard: draft.hasLeaderboard, hasPointSystem: draft.hasPointSystem, pointsLabel: draft.hasPointSystem ? (draft.pointsLabel.trim() || "Points") : undefined, entryReviewRequired: draft.entryReviewRequired, formFields: draft.surveyFields.map((f, i) => ({ ...f, order: i })) } };
+  if (draft.type === "feedback") return { feedbackConfig: { anonymous: draft.anonymous, formFields: draft.feedbackFields.map((f, i) => ({ ...f, order: i })) } };
+  return {};
+}
+
+function buildEventRaffleFields(draft: EventDraft): Record<string, unknown> {
+  const isRaffleType = draft.type === "raffle" || draft.type === "spin_wheel";
+  const fields: Record<string, unknown> = {};
+  if (!draft.hasRaffle && !isRaffleType) return fields;
+  fields.hasRaffle = true;
+  fields.raffleType = isRaffleType && draft.type === "spin_wheel" ? "spin_wheel" : draft.raffleType;
+  if (Number(draft.raffleTopN) > 0) fields.raffleTopN = Number(draft.raffleTopN);
+  if (draft.rafflePrize) fields.rafflePrize = draft.rafflePrize;
+  if (draft.rafflePrizeCouponId) fields.rafflePrizeCouponId = draft.rafflePrizeCouponId;
+  if (draft.rafflePrizeProductIds.length > 0) fields.rafflePrizeProductIds = draft.rafflePrizeProductIds;
+  if (draft.raffleType === "spin_wheel" || draft.type === "spin_wheel") {
+    fields.spinPrizes = draft.spinPrizes;
+    if (Number(draft.spinMaxPerUser) > 0) fields.spinMaxPerUser = Number(draft.spinMaxPerUser);
+    if (draft.spinWindowStart) fields.spinWindowStart = toISOString(draft.spinWindowStart);
+    if (draft.spinWindowEnd) fields.spinWindowEnd = toISOString(draft.spinWindowEnd);
+  }
+  return fields;
+}
+
 // --- Component ---------------------------------------------------------------
 
 export function AdminEventEditorView({
@@ -375,32 +412,6 @@ export function AdminEventEditorView({
   // --- save ---
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const buildTypeConfig = (): Record<string, unknown> => {
-        if (draft.type === "sale") return { saleConfig: { discountPercent: Number(draft.discountPercent) || 10, bannerText: draft.saleBannerText || undefined } };
-        if (draft.type === "offer") return { offerConfig: { couponId: draft.couponId, displayCode: draft.displayCode, bannerText: draft.offerBannerText || undefined } };
-        if (draft.type === "poll") return { pollConfig: { options: draft.pollOptions.filter((o) => o.label.trim()), allowMultiSelect: draft.allowMultiSelect, allowComment: draft.allowComment, resultsVisibility: draft.resultsVisibility } };
-        if (draft.type === "survey") return { surveyConfig: { requireLogin: draft.requireLogin, maxEntriesPerUser: Number(draft.maxEntriesPerUser) || 1, hasLeaderboard: draft.hasLeaderboard, hasPointSystem: draft.hasPointSystem, pointsLabel: draft.hasPointSystem ? (draft.pointsLabel.trim() || "Points") : undefined, entryReviewRequired: draft.entryReviewRequired, formFields: draft.surveyFields.map((f, i) => ({ ...f, order: i })) } };
-        if (draft.type === "feedback") return { feedbackConfig: { anonymous: draft.anonymous, formFields: draft.feedbackFields.map((f, i) => ({ ...f, order: i })) } };
-        return {};
-      };
-
-      const isRaffleType = draft.type === "raffle" || draft.type === "spin_wheel";
-      const raffleFields: Record<string, unknown> = {};
-      if (draft.hasRaffle || isRaffleType) {
-        raffleFields.hasRaffle = true;
-        raffleFields.raffleType = isRaffleType && draft.type === "spin_wheel" ? "spin_wheel" : draft.raffleType;
-        if (Number(draft.raffleTopN) > 0) raffleFields.raffleTopN = Number(draft.raffleTopN);
-        if (draft.rafflePrize) raffleFields.rafflePrize = draft.rafflePrize;
-        if (draft.rafflePrizeCouponId) raffleFields.rafflePrizeCouponId = draft.rafflePrizeCouponId;
-        if (draft.rafflePrizeProductIds.length > 0) raffleFields.rafflePrizeProductIds = draft.rafflePrizeProductIds;
-        if (draft.raffleType === "spin_wheel" || draft.type === "spin_wheel") {
-          raffleFields.spinPrizes = draft.spinPrizes;
-          if (Number(draft.spinMaxPerUser) > 0) raffleFields.spinMaxPerUser = Number(draft.spinMaxPerUser);
-          if (draft.spinWindowStart) raffleFields.spinWindowStart = toISOString(draft.spinWindowStart);
-          if (draft.spinWindowEnd) raffleFields.spinWindowEnd = toISOString(draft.spinWindowEnd);
-        }
-      }
-
       const payload: Record<string, unknown> = {
         type: draft.type,
         title: draft.title,
@@ -410,8 +421,8 @@ export function AdminEventEditorView({
         startsAt: toISOString(draft.startsAt),
         endsAt: toISOString(draft.endsAt),
         coverImageUrl: draft.coverImageUrl || undefined,
-        ...buildTypeConfig(),
-        ...raffleFields,
+        ...buildEventTypeConfig(draft),
+        ...buildEventRaffleFields(draft),
       };
 
       if (eventId) {
@@ -587,7 +598,7 @@ export function AdminEventEditorView({
                       />
                     </Div>
                     {values.pollOptions.length > 2 && (
-                      <Button variant="ghost" type="button" onClick={() => onChange({ pollOptions: values.pollOptions.filter((o) => o.id !== opt.id) })} className="text-zinc-400 hover:text-red-500 transition-colors px-2 py-1 text-lg leading-none p-0 min-h-0 h-auto rounded-none" aria-label="Remove option">×</Button>
+                      <Button variant="ghost" type="button" onClick={() => onChange({ pollOptions: values.pollOptions.filter((o) => o.id !== opt.id) })} className={CLS_REMOVE_BTN_PX2} aria-label="Remove option">×</Button>
                     )}
                   </Row>
                 ))}
@@ -706,7 +717,7 @@ export function AdminEventEditorView({
                           <Toggle checked={p.isActive} onChange={(v) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, isActive: v } : sp) })} label="" />
                         </Row>
                         <Row centered className="col-span-1 pb-2">
-                          <Button variant="ghost" type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className="text-zinc-400 hover:text-red-500 text-lg leading-none px-2 p-0 min-h-0 h-auto rounded-none" aria-label="Remove prize">×</Button>
+                          <Button variant="ghost" type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className={CLS_REMOVE_BTN_LG} aria-label="Remove prize">×</Button>
                         </Row>
                       </Grid>
                     ))}
@@ -721,18 +732,18 @@ export function AdminEventEditorView({
 
                 {/* Manual trigger + winner (edit mode only) */}
                 {isEdit && (
-                  <Stack gap="xs" rounded="lg" padding="sm" className="border border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/20">
+                  <Stack gap="xs" rounded="lg" padding="sm" className={CLS_RAFFLE_PANEL}>
                     <Row justify="between" gap="sm">
-                      <Text size="sm" weight="medium" className="text-amber-900 dark:text-amber-100">
+                      <Text size="sm" weight="medium" className={CLS_RAFFLE_HEADING}>
                         {raffleWinnerName ? `Winner: ${raffleWinnerName}` : "Raffle not yet triggered"}
                       </Text>
                       <Button type="button" variant="primary" size="sm" onClick={() => triggerRaffleMutation.mutate()} disabled={triggerRaffleMutation.isPending || Boolean(raffleWinnerName)}>
                         {triggerRaffleMutation.isPending ? "Triggering…" : raffleWinnerName ? "Already triggered" : "Trigger Raffle Now"}
                       </Button>
                     </Row>
-                    {raffleEntryCount !== null && <Text size="xs" className="text-amber-800 dark:text-amber-200">Pool size: {raffleEntryCount}</Text>}
-                    {raffleGithubUrl && <Text size="xs" className="break-all text-amber-800 dark:text-amber-200">Fairness proof: {raffleGithubUrl}</Text>}
-                    {triggerMessage && <Text size="xs" className="text-amber-900 dark:text-amber-100">{triggerMessage}</Text>}
+                    {raffleEntryCount !== null && <Text size="xs" className={CLS_RAFFLE_BODY}>Pool size: {raffleEntryCount}</Text>}
+                    {raffleGithubUrl && <Text size="xs" className={`break-all ${CLS_RAFFLE_BODY}`}>Fairness proof: {raffleGithubUrl}</Text>}
+                    {triggerMessage && <Text size="xs" className={CLS_RAFFLE_HEADING}>{triggerMessage}</Text>}
                   </Stack>
                 )}
               </Stack>

@@ -14,6 +14,10 @@ import {
 import { Div, Heading, Text, Section, Alert } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
+const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-6";
+const CLS_WARN_HEAD = "font-semibold text-amber-800 dark:text-amber-300 mb-1";
+const CLS_WARN_BODY = "text-sm text-amber-700 dark:text-amber-400";
+
 // ─── Guide cards ──────────────────────────────────────────────────────────────
 
 interface AdminGuideCard {
@@ -182,14 +186,14 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
       )}
 
       {/* Trust & Safety callout */}
-      <Section className="rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-6">
+      <Section className={CLS_WARN_PANEL}>
         <Div className="flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
           <Div>
-            <Text className="font-semibold text-amber-800 dark:text-amber-300 mb-1">
+            <Text className={CLS_WARN_HEAD}>
               Remember: with great access comes responsibility
             </Text>
-            <Text className="text-sm text-amber-700 dark:text-amber-400">
+            <Text className={CLS_WARN_BODY}>
               Admin actions are logged. Never access user PII (email, phone) without a legitimate support reason. Never grant capabilities or permissions without documented approval. When in doubt, escalate to a senior admin.
             </Text>
           </Div>

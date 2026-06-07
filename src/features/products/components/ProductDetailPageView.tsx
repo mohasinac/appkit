@@ -3,6 +3,21 @@ import { productRepository, reviewRepository } from "../../../repositories";
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const ACTION_NOT_WIRED = "Action not wired";
+
+const CLS_STAR_FULL = "text-yellow-400 text-sm";
+const CLS_STAR_HALF = "text-yellow-300 text-sm";
+const CLS_STAR_EMPTY = "text-zinc-300 dark:text-zinc-600 text-sm";
+const CLS_STOCK_IN = "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
+const CLS_STOCK_OUT = "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+const CLS_BUNDLE_PILL = "inline-flex items-center gap-1 rounded-full border border-teal-300 bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-500 hover:bg-teal-100 dark:border-teal-800/60 dark:bg-teal-900/30 dark:text-teal-300 dark:hover:border-teal-600 dark:hover:bg-teal-900/50";
+const CLS_DISCOUNT_BADGE = "rounded-full bg-red-500 px-2 py-0.5 text-white";
+const CLS_FREE_SHIPPING_ICON = "mt-0.5 flex-shrink-0 text-emerald-500";
+const CLS_BUNDLE_BOX = "rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/60 dark:bg-teal-900/20 p-5";
+const CLS_BUNDLE_ICON = "text-teal-600 dark:text-teal-400";
+const CLS_BUNDLE_TITLE = "text-sm font-semibold text-teal-800 dark:text-teal-200";
+const CLS_BUNDLE_ROW = "flex items-center justify-between gap-4 rounded-lg border border-teal-200 dark:border-teal-800/50 bg-white dark:bg-teal-900/30 px-4 py-3";
+const CLS_BUNDLE_LABEL = "text-xs text-teal-600 dark:text-teal-400 font-medium uppercase tracking-wide mb-0.5";
+const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-teal-600 hover:bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -163,10 +178,10 @@ function StarRating({ value }: { value: number }) {
           key={i}
           className={
             i < full
-              ? "text-yellow-400 text-sm"
+              ? CLS_STAR_FULL
               : i === full && half
-                ? "text-yellow-300 text-sm"
-                : "text-zinc-300 dark:text-zinc-600 text-sm"
+                ? CLS_STAR_HALF
+                : CLS_STAR_EMPTY
           }
         >
           ★
@@ -483,9 +498,7 @@ export async function ProductDetailPageView({
               ) : (
                 <Span
                   className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-                    inStock
-                      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                      : "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                    inStock ? CLS_STOCK_IN : CLS_STOCK_OUT
                   }`}
                 >
                   {inStock ? "✓ In Stock" : "✗ Out of Stock"}
@@ -537,7 +550,7 @@ export async function ProductDetailPageView({
                     <Link
                       key={b.id}
                       href={String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id))}
-                      className="inline-flex items-center gap-1 rounded-full border border-teal-300 bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-500 hover:bg-teal-100 dark:border-teal-800/60 dark:bg-teal-900/30 dark:text-teal-300 dark:hover:border-teal-600 dark:hover:bg-teal-900/50"
+                      className={CLS_BUNDLE_PILL}
                     >
                       <Span aria-hidden="true">📦</Span>
                       In bundle: {b.title}
@@ -653,7 +666,7 @@ export async function ProductDetailPageView({
                         <Span size="sm" className="text-zinc-400 line-through dark:text-zinc-400">
                           {formattedOriginal}
                         </Span>
-                        <Span size="xs" weight="bold" className="rounded-full bg-red-500 px-2 py-0.5 text-white">
+                        <Span size="xs" weight="bold" className={CLS_DISCOUNT_BADGE}>
                           -{discount}%
                         </Span>
                       </>
@@ -726,7 +739,7 @@ export async function ProductDetailPageView({
                 <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 space-y-2.5">
                   {freeShipping && (
                     <Row align="start" gap="sm">
-                      <Span className="mt-0.5 flex-shrink-0 text-emerald-500">🚚</Span>
+                      <Span className={CLS_FREE_SHIPPING_ICON}>🚚</Span>
                       <Div>
                         <Text className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                           Free Delivery
@@ -888,18 +901,18 @@ export async function ProductDetailPageView({
           renderBundleSection={
             bundleMemberships.length > 0
               ? () => (
-                  <Div className="rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/60 dark:bg-teal-900/20 p-5">
+                  <Div className={CLS_BUNDLE_BOX}>
                     <Div className="flex items-center gap-2 mb-3">
-                      <Span size="base" className="text-teal-600 dark:text-teal-400" aria-hidden="true">📦</Span>
-                      <Text className="text-sm font-semibold text-teal-800 dark:text-teal-200">
+                      <Span size="base" className={CLS_BUNDLE_ICON} aria-hidden="true">📦</Span>
+                      <Text className={CLS_BUNDLE_TITLE}>
                         Part of {bundleMemberships.length === 1 ? "a bundle" : `${bundleMemberships.length} bundles`}
                       </Text>
                     </Div>
                     <Div className="flex flex-col gap-3">
                       {bundleMemberships.map((b) => (
-                        <Div key={b.id} className="flex items-center justify-between gap-4 rounded-lg border border-teal-200 dark:border-teal-800/50 bg-white dark:bg-teal-900/30 px-4 py-3">
+                        <Div key={b.id} className={CLS_BUNDLE_ROW}>
                           <Div className="min-w-0">
-                            <Text className="text-xs text-teal-600 dark:text-teal-400 font-medium uppercase tracking-wide mb-0.5">
+                            <Text className={CLS_BUNDLE_LABEL}>
                               Included in bundle
                             </Text>
                             <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 truncate">
@@ -908,7 +921,7 @@ export async function ProductDetailPageView({
                           </Div>
                           <Link
                             href={String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id))}
-                            className="flex-shrink-0 rounded-lg bg-teal-600 hover:bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors"
+                            className={CLS_BUNDLE_CTA}
                           >
                             View Bundle →
                           </Link>

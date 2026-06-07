@@ -5,6 +5,12 @@ import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Span, Text
 import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
+const CLS_WHEEL = "relative mx-auto aspect-square w-64 overflow-hidden rounded-full border-4 border-amber-400 bg-gradient-to-br from-amber-100 via-rose-100 to-violet-100 dark:from-amber-900/40 dark:via-rose-900/40 dark:to-violet-900/40";
+const CLS_PRIZE_BOX = "rounded-xl border border-emerald-300 bg-success-surface dark:border-emerald-700 p-4 text-center";
+const CLS_PRIZE_TITLE = "mt-1 text-lg font-bold text-emerald-900 dark:text-emerald-100";
+const CLS_PRIZE_BODY = "mt-2 text-sm text-emerald-800 dark:text-emerald-200";
+const CLS_ERROR_TEXT = "text-sm text-rose-600 dark:text-rose-400 text-center";
+
 export interface SpinWheelViewProps {
   eventId: string;
   prizes: SpinPrize[];
@@ -126,7 +132,7 @@ export function SpinWheelView({
       </Heading>
 
       <Div
-        className="relative mx-auto aspect-square w-64 overflow-hidden rounded-full border-4 border-amber-400 bg-gradient-to-br from-amber-100 via-rose-100 to-violet-100 dark:from-amber-900/40 dark:via-rose-900/40 dark:to-violet-900/40"
+        className={CLS_WHEEL}
         aria-label="Spin wheel"
       >
         <Div
@@ -148,16 +154,16 @@ export function SpinWheelView({
       </Div>
 
       {wonPrize ? (
-        <Div className="rounded-xl border border-emerald-300 bg-success-surface dark:border-emerald-700 p-4 text-center">
+        <Div className={CLS_PRIZE_BOX}>
           <Text className="text-sm uppercase tracking-wide text-success">
             {l.wonHeadline}
           </Text>
-          <Text className="mt-1 text-lg font-bold text-emerald-900 dark:text-emerald-100">
+          <Text className={CLS_PRIZE_TITLE}>
             {wonPrize.label}
           </Text>
           {resultCoupon ? (
             <>
-              <Text className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
+              <Text className={CLS_PRIZE_BODY}>
                 {l.couponHint}{" "}
                 <Span weight="semibold" className="font-mono">{resultCoupon}</Span>
               </Text>
@@ -174,7 +180,7 @@ export function SpinWheelView({
       ) : null}
 
       {error ? (
-        <Text className="text-sm text-rose-600 dark:text-rose-400 text-center">
+        <Text className={CLS_ERROR_TEXT}>
           {error}
         </Text>
       ) : null}

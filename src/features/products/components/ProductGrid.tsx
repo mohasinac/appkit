@@ -17,6 +17,22 @@ import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
 import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
+const CLS_BADGE_AUCTION = "bg-amber-500 text-white";
+const CLS_BADGE_PREORDER = "bg-violet-600 text-white";
+const CLS_BADGE_NEW = "rounded-full bg-rose-500 px-2 py-0.5 text-[10px] text-white shadow-sm";
+const CLS_BADGE_SALE = "rounded-full bg-teal-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_LIMITED = "rounded-full bg-sky-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
+const CLS_HEART_ACTIVE = "bg-rose-500 text-white hover:bg-rose-600";
+const CLS_HEART_IDLE = "bg-white/90 dark:bg-slate-800/90 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800";
+const CLS_STAR = "text-[11px] text-amber-400";
+const CLS_DISCOUNT_TEXT = "mt-1 text-[11px] font-semibold text-rose-500";
+const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-rose-500";
+const CLS_STAR_BARE = "text-amber-400";
+const CLS_BID_TEXT = "text-[11px] text-rose-500";
+const CLS_HEART_ROSE_ACTIVE = "text-rose-500";
+const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-zinc-600 hover:text-rose-400";
+
 // --- ProductCard --------------------------------------------------------------
 
 interface ProductCardProps<T extends ProductItem = ProductItem> {
@@ -61,9 +77,9 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   const isPreOrder = isPreOrderListing(product);
 
   const typeBadge = isAuction
-    ? { label: "Auction", cls: "bg-amber-500 text-white" }
+    ? { label: "Auction", cls: CLS_BADGE_AUCTION }
     : isPreOrder
-      ? { label: "Pre-Order", cls: "bg-violet-600 text-white" }
+      ? { label: "Pre-Order", cls: CLS_BADGE_PREORDER }
       : null;
 
   const longPress = useLongPress(() => onSelect?.(product.id));
@@ -134,7 +150,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           {!selectionMode && !isSelected && (
             <>
               {discount && (
-                <Span weight="bold" className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] text-white shadow-sm">
+                <Span weight="bold" className={CLS_BADGE_NEW}>
                   -{discount}%
                 </Span>
               )}
@@ -149,7 +165,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                   without nesting inside the card's outer Link. */}
               {product.partOfBundleIds && product.partOfBundleIds.length > 0 && (
                 <Span
-                  className="rounded-full bg-teal-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm"
+                  className={CLS_BADGE_SALE}
                   title={
                     product.partOfBundleTitles && product.partOfBundleTitles.length > 0
                       ? `In bundle: ${product.partOfBundleTitles[0]}`
@@ -162,7 +178,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {/* "Set" pill — product is part of a curated group/set */}
               {product.groupId && (
                 <Span
-                  className="rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm"
+                  className={CLS_BADGE_TRENDING}
                   title={product.groupTitle ? `Part of set: ${product.groupTitle}` : "Part of a set"}
                 >
                   {product.isGroupParent ? "Set Parent" : "In Set"}
@@ -171,7 +187,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {/* "Variants" pill — product has sub-listings/variants */}
               {product.sublistingCategoryId && (
                 <Span
-                  className="rounded-full bg-sky-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm"
+                  className={CLS_BADGE_LIMITED}
                   title="Has variants or sub-listings"
                 >
                   Has Variants
@@ -204,8 +220,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               "absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full shadow-sm",
               "transition-all duration-150",
               isWishlisted
-                ? "bg-rose-500 text-white hover:bg-rose-600"
-                : "bg-white/90 dark:bg-slate-800/90 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800",
+                ? CLS_HEART_ACTIVE
+                : CLS_HEART_IDLE,
             ].join(" ")}
           >
             <svg
@@ -288,7 +304,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
         {product.rating !== undefined && (
           <Row className="mt-1 gap-1">
-            <Span className="text-[11px] text-amber-400">★</Span>
+            <Span className={CLS_STAR}>★</Span>
             <Span className="text-[11px] text-zinc-500 dark:text-zinc-400">
               {product.rating.toFixed(1)}
               {product.reviewCount ? ` (${product.reviewCount})` : ""}
@@ -315,7 +331,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             if (stock === undefined || isAuction) return null;
             if (stock <= 0) {
               return (
-                <Text className="mt-1 text-[11px] font-semibold text-rose-500">
+                <Text className={CLS_DISCOUNT_TEXT}>
                   Out of stock
                 </Text>
               );
@@ -547,11 +563,11 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             {formatCurrency(product.price, getDefaultCurrency())}
           </Span>
           {discount && (
-            <Span weight="bold" className="text-[10px] text-rose-500">-{discount}%</Span>
+            <Span weight="bold" className={CLS_DISCOUNT_TEXT_BARE}>-{discount}%</Span>
           )}
           {product.rating !== undefined && (
             <Span className="text-[11px] text-zinc-400 dark:text-zinc-400 flex items-center gap-0.5">
-              <Span className="text-amber-400">★</Span>
+              <Span className={CLS_STAR_BARE}>★</Span>
               {product.rating.toFixed(1)}
             </Span>
           )}
@@ -561,7 +577,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             if (stock === undefined) return null;
             if (stock <= 0) {
               return (
-                <Span weight="semibold" className="text-[11px] text-rose-500">
+                <Span weight="semibold" className={CLS_BID_TEXT}>
                   Out of stock
                 </Span>
               );
@@ -594,7 +610,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             onAddToWishlist(product.id);
           }}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-base leading-none ${isWishlisted ? "text-rose-500" : "text-zinc-300 dark:text-zinc-600 hover:text-rose-400"}`}
+          className={`flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-base leading-none ${isWishlisted ? CLS_HEART_ROSE_ACTIVE : CLS_HEART_ROSE_IDLE}`}
         >
           {isWishlisted ? "♥" : "♡"}
         </Button>

@@ -4,6 +4,12 @@ import { Button, Div, Input, Row, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FilterOption } from "./filterUtils";
 
+const CLS_OPTION_SELECTED = "border-emerald-500 bg-emerald-50 text-emerald-700 dark:border-emerald-500/60 dark:bg-emerald-900/20 dark:text-emerald-300";
+const CLS_OPTION_DOT = "inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white";
+const CLS_CLEAR_BTN = "w-full py-1 text-xs text-zinc-400 transition-colors hover:text-red-600";
+const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20";
+const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-zinc-100 dark:hover:bg-slate-700 transition-colors rounded-full";
+
 export interface FacetOption extends FilterOption {
   count?: number;
 }
@@ -114,13 +120,13 @@ export function FilterFacetSection({
           className={cn(
             "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
             hasValue
-              ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:border-emerald-500/60 dark:bg-emerald-900/20 dark:text-emerald-300"
+              ? CLS_OPTION_SELECTED
               : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400 dark:border-slate-700 dark:bg-slate-900 dark:text-zinc-200 dark:hover:border-slate-500",
           )}
         >
           {title}
           {hasValue && (
-            <Span weight="bold" className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white">
+            <Span weight="bold" className={CLS_OPTION_DOT}>
               {selected.length}
             </Span>
           )}
@@ -183,7 +189,7 @@ export function FilterFacetSection({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="w-full py-1 text-xs text-zinc-400 transition-colors hover:text-red-600"
+                  className={CLS_CLEAR_BTN}
                   onClick={() => { onChange([]); onClear?.(); setDropdownOpen(false); }}
                 >
                   Clear
@@ -217,7 +223,7 @@ export function FilterFacetSection({
           <Row as={Span} gap="xs">
             {title}
             {hasValue && (
-              <Span size="xs" className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20">
+              <Span size="xs" className={CLS_BADGE_COUNT}>
                 {selected.length}
               </Span>
             )}
@@ -246,7 +252,7 @@ export function FilterFacetSection({
             onClick={onClear}
             variant="ghost"
             size="sm"
-            className="inline-flex items-center justify-center w-5 h-5 p-0 text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-zinc-100 dark:hover:bg-slate-700 transition-colors rounded-full"
+            className={CLS_CLEAR_ICON}
             aria-label="Clear filter"
           >
             <svg

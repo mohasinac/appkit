@@ -9,7 +9,6 @@ export type {
   AppkitBrandConfig,
   AppkitSeoConfig,
   AppkitI18nConfig,
-  AppkitImagePattern,
   FirestoreIndex,
   FirestoreIndexField,
   FirestoreFieldOverride,

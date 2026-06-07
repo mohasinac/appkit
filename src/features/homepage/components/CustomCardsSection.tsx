@@ -56,7 +56,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
   if (card.textColor) cardStyle.color = card.textColor;
 
   return (
-    <div
+    <Div
       className={`flex flex-col overflow-hidden ${radiusClass} ${shadowClass} bg-[var(--appkit-color-surface)]`}
       style={cardStyle}
     >

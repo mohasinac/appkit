@@ -138,13 +138,6 @@ export interface AppkitI18nConfig {
   enableLocaleCookie?: boolean;
 }
 
-export interface AppkitImagePattern {
-  protocol?: "http" | "https";
-  hostname: string;
-  port?: string;
-  pathname?: string;
-}
-
 export interface AppkitVercelConfig {
   /** Vercel project ID */
   projectId: string;
@@ -167,8 +160,6 @@ export interface AppkitConfig {
   seo?: AppkitSeoConfig;
   /** i18n / next-intl routing options */
   i18n?: AppkitI18nConfig;
-  /** next/image remotePatterns for external image hosts (demo / seed data) */
-  externalImagePatterns?: AppkitImagePattern[];
   /** Route configuration for smoke tests and theme probing */
   routes?: {
     /** Routes to SSR-verify: must return 200 + expected strings in initial HTML */

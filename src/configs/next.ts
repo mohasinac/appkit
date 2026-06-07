@@ -12,8 +12,8 @@ import path from "path";
  *   current and future @google-cloud/* subpackage (incl. build/protos/**) is
  *   included in Vercel Lambda bundles without needing per-package entries.
  * - Consumer additions to the same route key are MERGED (union), not replaced.
- * - `images.remotePatterns` restricts to Firebase Storage + localhost; consumer
- *   can append additional patterns via `images.remotePatterns`.
+ * - `images.unoptimized: true` by default so any external host loads without
+ *   remotePatterns maintenance (consumer can override).
  * - `experimental.serverActions.bodySizeLimit` set to "4mb"
  * - Optional `IgnorePlugin` for optional native deps (request, fast-crc32c)
  *
@@ -311,29 +311,16 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     return consumerWebpack ? consumerWebpack(config, ctx) : config;
   }
 
-  // Default remotePatterns: Firebase Storage + localhost only.
-  // External URLs are watermarked via /api/media/ext — they must never be
-  // loaded directly by next/image. Consumer can append additional patterns.
-  const defaultRemotePatterns = [
-    { protocol: "https", hostname: "firebasestorage.googleapis.com" },
-    { protocol: "https", hostname: "*.firebasestorage.googleapis.com" },
-    { protocol: "https", hostname: "storage.googleapis.com" },
-    { protocol: "http", hostname: "localhost" },
-    { protocol: "http", hostname: "127.0.0.1" },
-  ];
+  // Default to `unoptimized: true` so any external image host loads without
+  // remotePatterns maintenance. Pre-launch demo data pulls from various
+  // hosts (ygoprodeck, unsplash, picsum); prod images move to Firebase
+  // Storage via /api/media. Consumer can still pass an explicit
+  // `images.unoptimized: false` + remotePatterns to opt back in.
   const consumerImages = (override.images as Record<string, unknown>) ?? {};
-  const consumerRemotePatterns = (consumerImages.remotePatterns as unknown[]) ?? [];
-  const mergedRemotePatterns = [
-    ...defaultRemotePatterns,
-    ...consumerRemotePatterns.filter(
-      (p) =>
-        !defaultRemotePatterns.some(
-          (d) =>
-            (d as Record<string, unknown>).hostname ===
-            (p as Record<string, unknown>).hostname,
-        ),
-    ),
-  ];
+  const mergedImages = {
+    unoptimized: true,
+    ...consumerImages,
+  };
 
   // Turbopack (used by `next build`) has its own alias system separate from
   // webpack. Mirror the firebase deduplication alias so prod builds share the
@@ -350,10 +337,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
   };
 
   return {
-    images: {
-      ...consumerImages,
-      remotePatterns: mergedRemotePatterns,
-    },
+    images: mergedImages,
     ...rest,
     serverExternalPackages: mergedExternal,
     experimental: mergedExperimental,

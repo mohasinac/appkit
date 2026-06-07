@@ -47,11 +47,11 @@ const ADMIN_STORE_ADDRESSES_CONFIG: ListingViewConfig<AdminStoreAddressesRespons
         .join(", "),
       secondary: [
         toStringValue(item.storeId ?? item.storeName, "Unknown store"),
-        toStringValue(item.pincode, ""),
+        toStringValue(item.postalCode, ""),
       ]
         .filter(Boolean)
         .join(" · "),
-      status: item.isPickupLocation ? "pickup" : "standard",
+      status: item.isDefault ? "default" : "standard",
       updatedAt: toStringValue(item.storeId, ""),
     })),
   getTotal: (response, mappedRows) =>

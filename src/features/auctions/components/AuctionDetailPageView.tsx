@@ -3,6 +3,9 @@ import { productRepository } from "../../../repositories";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
+const CLS_LIVE_BADGE = "inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-700 dark:text-amber-300";
+const CLS_STAR_ON = "text-amber-400";
+const CLS_STAR_OFF = "text-zinc-200 dark:text-zinc-700";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -81,7 +84,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
     <Stack gap="md">
       <Div>
         <Row gap="xs" className="mb-2 flex-wrap">
-          <Span size="xs" weight="semibold" className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-700 dark:text-amber-300">🏷️ Live Auction</Span>
+          <Span size="xs" weight="semibold" className={CLS_LIVE_BADGE}>🏷️ Live Auction</Span>
           {isEnded ? (
             <Span size="xs" weight="medium" className="inline-block rounded-full bg-error-surface px-2.5 py-0.5 text-error">Ended</Span>
           ) : (
@@ -147,7 +150,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
       <Div className="mb-4 flex items-center gap-3">
         <Span weight="bold" className="text-3xl text-zinc-900 dark:text-zinc-50">{avg.toFixed(1)}</Span>
         <Div>
-          <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}>★</Span>)}</Row>
+          <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
         </Div>
       </Div>
@@ -157,7 +160,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
             <Row justify="between" align="center">
               <Row gap="xs" align="center">
                 <Span size="sm" weight="medium" className="text-zinc-800 dark:text-zinc-200">{review.userName}</Span>
-                <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} size="xs" className={star <= review.rating ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}>★</Span>)}</Row>
+                <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} size="xs" className={star <= review.rating ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
               </Row>
             </Row>
             {review.title && <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{review.title}</Text>}

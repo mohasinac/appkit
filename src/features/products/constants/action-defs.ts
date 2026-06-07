@@ -47,7 +47,7 @@ function regLabel(resource: ActionResource, id: string, fallback: string): strin
 
 // ─────────────────────────────────────────────────────────────────────────────
 // § 1  Product / listing actions
-//      Used by: detail pages, BulkActionsBar, BuyBar
+//      Used by: detail pages, bulk action bars, mobile bottom bars
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ACTION_ID = {
@@ -190,14 +190,14 @@ export const DETAIL_ACTIONS = {
   preorder: [ACTION_ID.RESERVE_NOW, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.SHARE],
 } as const satisfies Record<string, readonly ActionId[]>;
 
-// Mobile BuyBar — 1–2 primary CTAs only (limited horizontal space)
+// Mobile bottom bar — 1–2 primary CTAs only (limited horizontal space)
 export const MOBILE_PRIMARY_ACTIONS = {
   product:  [ACTION_ID.BUY_NOW, ACTION_ID.ADD_TO_CART],
   auction:  [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_AUCTION],
   preorder: [ACTION_ID.RESERVE_NOW],
 } as const satisfies Record<string, readonly ActionId[]>;
 
-// Listing page bulk actions — shown in BulkActionsBar when items are selected
+// Listing page bulk actions — shown in the bottom action bar when items are selected
 export const LISTING_BULK_ACTIONS = {
   products:  [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
   auctions:  [ACTION_ID.WATCH_AUCTION, ACTION_ID.UNWATCH_AUCTION, ACTION_ID.COMPARE],

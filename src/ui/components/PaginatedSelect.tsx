@@ -88,8 +88,7 @@ const CREATE_SENTINEL = "__paginated_select_create__";
 
 /**
  * PaginatedSelect — searchable, async-paginated select with optional multi-mode
- * and optional inline create-new drawer. Replaces DynamicSelect, InlineCreateSelect,
- * and PaginatedMultiSelect.
+ * and optional inline create-new drawer.
  *
  * @example single-select
  * <PaginatedSelect value={storeId} onChange={setStoreId} loadOptions={loadStores} />

@@ -4,6 +4,12 @@ import React, { useState, useEffect, useCallback } from "react";
 const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all";
 const CLS_RELATED_LABEL = "text-xs text-zinc-400 dark:text-zinc-400 mb-0.5";
 const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors";
+const CLS_RATING_PILL = "inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
+const CLS_HELPFUL_ACTIVE = "border-emerald-200 bg-success-surface text-success dark:border-emerald-800 cursor-default";
+const CLS_ICON_ORANGE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30 text-xl";
+const CLS_ICON_BLUE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-xl";
+const CLS_ICON_PURPLE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl";
+const CLS_ICON_PURPLE_BARE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30";
 import Link from "next/link";
 import { Div, Grid, Heading, RichText, Row, Section, Span, StarRating, Stack, Text } from "../../../ui";
 import { maskName } from "../../../security";
@@ -109,7 +115,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </Span>
             )}
             {review.featured && (
-              <Span size="xs" weight="semibold" className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+              <Span size="xs" weight="semibold" className={CLS_RATING_PILL}>
                 ★ Featured
               </Span>
             )}
@@ -232,7 +238,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             disabled={voted || voting}
             className={`ml-auto flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
               voted
-                ? "border-emerald-200 bg-success-surface text-success dark:border-emerald-800 cursor-default"
+                ? CLS_HELPFUL_ACTIVE
                 : "border-neutral-300 dark:border-zinc-600 text-neutral-700 dark:text-zinc-200 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
             }`}
           >
@@ -248,7 +254,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               href={productHref}
               className={CLS_RELATED_LINK}
             >
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30 text-xl">
+              <span className={CLS_ICON_ORANGE}>
                 📦
               </span>
               <Div className="min-w-0">
@@ -265,7 +271,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               href={sellerHref}
               className={CLS_RELATED_LINK}
             >
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-xl">
+              <span className={CLS_ICON_BLUE}>
                 🏪
               </span>
               <Div className="min-w-0">
@@ -282,7 +288,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               href={reviewerHref}
               className={CLS_RELATED_LINK}
             >
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
+              <span className={CLS_ICON_PURPLE}>
                 👤
               </span>
               <Div className="min-w-0">
@@ -294,7 +300,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             </Link>
           ) : (
             <Row surface="default" gap="sm" className="rounded-xl border border-neutral-200 dark:border-zinc-700 p-4">
-              <Span size="xl" className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
+              <Span size="xl" className={CLS_ICON_PURPLE_BARE}>
                 👤
               </Span>
               <Div className="min-w-0">
