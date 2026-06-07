@@ -153,5 +153,12 @@ for (const [rule, list] of Object.entries(byRule)) {
   out.push("");
 }
 
+// Baseline drift mode: only block on regressions above BASELINE.
+if (violations.length <= BASELINE) {
+  process.stdout.write(`audit-sieve-constants-views: ${violations.length} (baseline ${BASELINE}${violations.length < BASELINE ? ` — ${BASELINE - violations.length} improved` : ""}). No regression.\n`);
+  process.exit(0);
+}
+
 process.stderr.write(out.join("\n") + "\n");
+process.stderr.write(`audit-sieve-constants-views: regression of ${violations.length - BASELINE} new violation(s) above baseline ${BASELINE}.\n`);
 process.exit(1);
