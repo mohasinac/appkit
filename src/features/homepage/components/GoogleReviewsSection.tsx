@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Section, Text } from "../../../ui";
+import { Div, Heading, Section, Span, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
@@ -38,7 +38,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function GoogleBadge() {
   return (
-    <span className="inline-flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+    <Span size="xs" className="inline-flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
       <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" aria-hidden="true">
         <path
           fill="#4285F4"
@@ -58,7 +58,7 @@ function GoogleBadge() {
         />
       </svg>
       Posted on Google
-    </span>
+    </Span>
   );
 }
 
@@ -94,9 +94,9 @@ function ReviewCard({
           />
         ) : (
           <Div className="w-9 h-9 rounded-full bg-[var(--appkit-color-primary)] flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-sm font-bold">
+            <Span size="sm" weight="bold" className="text-white">
               {review.authorName.charAt(0).toUpperCase()}
-            </span>
+            </Span>
           </Div>
         )}
         <Div className="min-w-0">

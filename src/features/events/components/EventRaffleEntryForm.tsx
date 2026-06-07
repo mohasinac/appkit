@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../../../ui/components/Button";
-import { Div, Heading, Stack, Text } from "../../../ui";
+import { Div, Heading, Label, Span, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 
 const __P = {
@@ -92,9 +92,9 @@ export function EventRaffleEntryForm({
         </Div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3">
-          <label htmlFor="raffle-message" className="block text-sm font-medium">
-            Message <span className="text-zinc-400">(optional)</span>
-          </label>
+          <Label htmlFor="raffle-message" className="block text-sm font-medium">
+            Message <Span className="text-zinc-400">(optional)</Span>
+          </Label>
           <textarea
             id="raffle-message"
             value={message}

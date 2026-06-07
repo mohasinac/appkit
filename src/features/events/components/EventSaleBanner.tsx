@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Stack, Text } from "../../../ui";
+import { Div, Heading, Span, Stack, Text } from "../../../ui";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -51,8 +51,8 @@ export function EventSaleBanner({
         </Stack>
         {couponCode ? (
           <Div className="inline-flex items-center gap-3 rounded-lg bg-white/10 px-4 py-2 backdrop-blur">
-            <span className="text-xs uppercase tracking-wide opacity-80">Code</span>
-            <span className="font-mono text-lg font-bold">{couponCode}</span>
+            <Span size="xs" className="uppercase tracking-wide opacity-80">Code</Span>
+            <Span size="lg" weight="bold" className="font-mono">{couponCode}</Span>
           </Div>
         ) : null}
         <Div>

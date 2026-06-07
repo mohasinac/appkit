@@ -5,7 +5,7 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
-import { Div } from "../../../ui";
+import { Div, Label } from "../../../ui";
 
 type LoadOptionsFn = AsyncFacetSectionProps["loadOptions"];
 
@@ -62,9 +62,9 @@ export function LiveItemFilters({
       ) : null}
 
       <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
-        <label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
+        <Label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
           Species / Animal
-        </label>
+        </Label>
         <input
           type="text"
           value={table.get("species") || ""}
@@ -75,9 +75,9 @@ export function LiveItemFilters({
       </Div>
 
       <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
-        <label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
+        <Label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
           Jurisdiction (state/UT)
-        </label>
+        </Label>
         <input
           type="text"
           value={table.get("jurisdiction") || ""}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Button, Div, LoginRequiredModal, Stack, Text } from "../../../ui";
+import { Button, Div, LoginRequiredModal, Span, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 
@@ -99,9 +99,9 @@ export function PreOrderActionsClient({
         <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
           <Div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
-              <span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
+              <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300">
                 {tag}
-              </span>
+              </Span>
             ))}
           </Div>
         </Div>
@@ -115,8 +115,8 @@ export function PreOrderActionsClient({
             { icon: "↩", label: "Free\nCancellation" },
           ].map(({ icon, label }) => (
             <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
-              <span className="text-base">{icon}</span>
-              <span className="whitespace-pre-line leading-tight">{label}</span>
+              <Span size="base">{icon}</Span>
+              <Span className="whitespace-pre-line leading-tight">{label}</Span>
             </Div>
           ))}
         </Div>

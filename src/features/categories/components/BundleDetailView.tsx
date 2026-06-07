@@ -16,11 +16,14 @@ import {
   Container,
   Div,
   Heading,
+  Li,
   Main,
   Row,
   Section,
+  Span,
   Stack,
   Text,
+  Ul,
 } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
@@ -158,19 +161,19 @@ export function BundleDetailView({
               {members.length === 0 ? (
                 <Text color="muted">{BUNDLE_COPY.detail.emptyMembers}</Text>
               ) : (
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <Ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {members.map((p, i) => (
-                    <li key={p.id} className="flex items-center gap-2 rounded-lg border border-zinc-100 dark:border-zinc-800 px-3 py-2 text-sm">
-                      <span className="text-xs font-semibold text-zinc-400 w-5">#{i + 1}</span>
+                    <Li key={p.id} className="flex items-center gap-2 rounded-lg border border-zinc-100 dark:border-zinc-800 px-3 py-2 text-sm">
+                      <Span size="xs" weight="semibold" className="text-zinc-400 w-5">#{i + 1}</Span>
                       <Link
                         href={String(ROUTES.PUBLIC.PRODUCT_DETAIL?.(p.slug ?? p.id) ?? "#")}
                         className="flex-1 truncate font-medium hover:underline hover:text-primary"
                       >
                         {p.title}
                       </Link>
-                    </li>
+                    </Li>
                   ))}
-                </ul>
+                </Ul>
               )}
             </Stack>
           </Stack>
