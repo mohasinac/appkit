@@ -6,6 +6,8 @@ import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../../seller/schemas";
 
+const CLS_COUNTER_AMOUNT = "text-sm font-semibold text-blue-600 dark:text-blue-400";
+
 export interface UserOffersPanelProps {
   fetchEndpoint?: string;
   onAcceptCounter: (offerId: string) => Promise<void>;
@@ -102,7 +104,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         {offer.counterAmount != null && (
           <Div>
             <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Seller Counter</Text>
-            <Text className="text-sm font-semibold text-blue-600 dark:text-blue-400">{formatRupees(offer.counterAmount)}</Text>
+            <Text className={CLS_COUNTER_AMOUNT}>{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
         {offer.lockedPrice != null && (

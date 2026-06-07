@@ -1,6 +1,8 @@
 import type { PreOrderStatus } from "../types";
 import { Div, Span } from "../../../ui";
 
+const CLS_NEW_BADGE = "rounded-full bg-indigo-600 px-2.5 py-0.5 text-white";
+
 const STATUS_MAP: Record<PreOrderStatus, { label: string; color: string }> = {
   pending: { label: "Pending", color: "bg-warning-surface text-warning" },
   confirmed: { label: "Confirmed", color: "bg-info-surface text-info" },
@@ -39,7 +41,7 @@ export function PreOrderTag({
 }: PreOrderTagProps) {
   return (
     <Div className={`inline-flex flex-col ${className}`}>
-      <Span size="xs" weight="bold" className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-white">
+      <Span size="xs" weight="bold" className={CLS_NEW_BADGE}>
         {label}
       </Span>
       {estimatedDate && (

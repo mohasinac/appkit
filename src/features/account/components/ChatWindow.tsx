@@ -2,6 +2,8 @@ import React from "react";
 import { Div, Heading, Row, Span } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
+const CLS_DOT_ON = "bg-emerald-500";
+
 export interface ChatWindowLabels {
   title?: string;
   connected?: string;
@@ -38,7 +40,7 @@ export function ChatWindow({
         <Row className={THEME_CONSTANTS.spacing.gap.xs}>
           {labels.title && <Heading level={4}>{labels.title}</Heading>}
           <Span
-            className={`w-2 h-2 rounded-full ${isConnected ? "bg-emerald-500" : "bg-zinc-400"}`}
+            className={`w-2 h-2 rounded-full ${isConnected ? CLS_DOT_ON : "bg-zinc-400"}`}
             aria-label={isConnected ? labels.connected : labels.disconnected}
           />
         </Row>

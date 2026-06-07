@@ -21,6 +21,8 @@ import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
+const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow";
+
 export interface PrizeDrawCollageProps {
   items: PrizeDrawItem[];
   highlightItemNumber?: number;
@@ -135,7 +137,7 @@ export function PrizeDrawCollage({
                       className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/30 to-black/60 mix-blend-multiply"
                     />
                     <Div className="absolute inset-0 flex items-center justify-center">
-                      <Text className="rotate-[-12deg] rounded bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow">
+                      <Text className={CLS_WON_STAMP}>
                         {wonLabel}
                       </Text>
                     </Div>

@@ -8,6 +8,8 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const CLS_RATING_BADGE = "absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/50 backdrop-blur-sm px-2 py-0.5 text-xs font-semibold text-yellow-300";
+
 export interface InteractiveStoreCardProps {
   store: StoreListItem;
   href: string;
@@ -88,7 +90,7 @@ export function InteractiveStoreCard({
 
           {/* Rating badge — top right */}
           {store.averageRating != null && store.averageRating > 0 && (
-            <Div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/50 backdrop-blur-sm px-2 py-0.5 text-xs font-semibold text-yellow-300">
+            <Div className={CLS_RATING_BADGE}>
               ★ {store.averageRating.toFixed(1)}
             </Div>
           )}

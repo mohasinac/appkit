@@ -2,6 +2,9 @@ import React from "react";
 import { Div, Span, Text } from "../../../ui";
 import { StarRating } from "../../../ui";
 
+const CLS_STAR = "text-yellow-400";
+const CLS_BAR = "h-full rounded-full bg-yellow-400 transition-all duration-300";
+
 // --- ReviewSummary ------------------------------------------------------------
 
 export interface ReviewSummaryProps {
@@ -54,7 +57,7 @@ export function ReviewSummary({
               <Span size="xs" weight="medium" className="w-4 text-right text-neutral-600 dark:text-zinc-400 tabular-nums">
                 {star}
               </Span>
-              <Span size="xs" className="text-yellow-400">★</Span>
+              <Span size="xs" className={CLS_STAR}>★</Span>
               <Div
                 className="flex-1 h-2 rounded-full bg-neutral-100 dark:bg-zinc-800 overflow-hidden"
                 role="progressbar"
@@ -64,7 +67,7 @@ export function ReviewSummary({
                 aria-label={`${star} star: ${pct}%`}
               >
                 <Div
-                  className="h-full rounded-full bg-yellow-400 transition-all duration-300"
+                  className={CLS_BAR}
                   style={{ width: `${pct}%` }}
                 />
               </Div>

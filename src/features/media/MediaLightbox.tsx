@@ -45,6 +45,7 @@ export interface MediaLightboxProps {
   labels?: LightboxLabels;
 }
 
+const CLS_CLOSE_HOVER = "hover:!bg-red-500/50";
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 4;
 const ZOOM_STEP = 0.5;
@@ -159,7 +160,7 @@ function LightboxControlsBar({
       <IconBtn onClick={toggleFullscreen} ariaLabel={isFullscreen ? L.exitFullscreen : L.enterFullscreen}>
         {isFullscreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
       </IconBtn>
-      <IconBtn onClick={onClose} ariaLabel={L.close} className="hover:!bg-red-500/50">
+      <IconBtn onClick={onClose} ariaLabel={L.close} className={CLS_CLOSE_HOVER}>
         <X className="w-7 h-7" />
       </IconBtn>
       {items.length > 1 && (

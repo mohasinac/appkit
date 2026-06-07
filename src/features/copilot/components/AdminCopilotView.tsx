@@ -38,6 +38,7 @@ export interface AdminCopilotViewProps {
 }
 
 const LBL_CONVERSATION_ID = "Conversation ID";
+const CLS_ERROR_TEXT = "text-center text-sm text-red-500";
 
 function MessageBubble({ msg }: { msg: CopilotMessage }) {
   const isUser = msg.role === "user";
@@ -89,7 +90,7 @@ function renderCopilotChatPanel(props: {
             </Div>
           </Div>
         ) : null}
-        {error ? <Text className="text-center text-sm text-red-500">{labels?.errorLabel ?? "An error occurred. Please try again."}</Text> : null}
+        {error ? <Text className={CLS_ERROR_TEXT}>{labels?.errorLabel ?? "An error occurred. Please try again."}</Text> : null}
         <Div ref={messagesEndRef} />
       </Div>
       <Div className="border-t border-neutral-200 dark:border-slate-700 p-3">
@@ -222,7 +223,7 @@ export function AdminCopilotView({
                 </Div>
               ) : null}
               {error ? (
-                <Text className="text-center text-sm text-red-500">
+                <Text className={CLS_ERROR_TEXT}>
                   {labels.errorLabel ?? "An error occurred. Please try again."}
                 </Text>
               ) : null}

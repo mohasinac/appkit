@@ -41,6 +41,7 @@ const BOTTOM_NAV_BG =
 const Z_BOTTOM_ACTIONS = "z-40";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
+const CLS_COUNT_BADGE = "bg-red-500 text-white";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -155,7 +156,7 @@ function PageActionsRow({
             {action.label && <Span className="truncate leading-none">{action.label}</Span>}
             {action.badge !== undefined && (
               <Span
-                className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full ${FLEX_CENTER} px-1 pointer-events-none select-none`}
+                className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] ${CLS_COUNT_BADGE} text-[10px] font-bold rounded-full ${FLEX_CENTER} px-1 pointer-events-none select-none`}
                 aria-hidden="true"
               >
                 {action.badge}

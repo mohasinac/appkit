@@ -10,6 +10,8 @@ import {
   Text,
 } from "../../../ui";
 
+const CLS_ERROR_TEXT = "mt-3 text-sm text-red-300";
+
 export interface NewsletterBannerProps {
   /**
    * Called when the user submits the form. Throw on failure — the component
@@ -117,7 +119,7 @@ export function NewsletterBanner({
         )}
 
         {error && (
-          <Text className="mt-3 text-sm text-red-300">{errorMessage}</Text>
+          <Text className={CLS_ERROR_TEXT}>{errorMessage}</Text>
         )}
 
         <Text className="mt-4 text-xs text-white/40">

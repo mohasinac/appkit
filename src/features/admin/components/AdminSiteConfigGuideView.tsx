@@ -3,6 +3,8 @@ import { Settings } from "lucide-react";
 import { Div, Heading, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
+const CLS_HEADER_ICON = "w-5 h-5 text-amber-500";
+
 export function AdminSiteConfigGuideView() {
   const SETTING_GROUPS = [
     { name: "branding", desc: "Site name, tagline, logo URL, favicon. These values override the default SVG wordmark." },
@@ -49,7 +51,7 @@ export function AdminSiteConfigGuideView() {
 
       <Section className={GC.sectionWrap}>
         <Div className={GC.sectionHeader}>
-          <Settings className="w-5 h-5 text-amber-500" />
+          <Settings className={CLS_HEADER_ICON} />
           <Heading level={2} className={GC.sectionTitle}>API Keys &amp; Integrations</Heading>
         </Div>
         <Div className="px-6 py-5">

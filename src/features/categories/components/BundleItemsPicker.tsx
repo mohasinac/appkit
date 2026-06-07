@@ -45,6 +45,7 @@ export interface BundleItemsPickerProps {
 }
 
 const SEARCH_DEBOUNCE_MS = 250;
+const CLS_ROW_SELECTED = "bg-blue-50 dark:bg-blue-950";
 
 function renderBundleSelectedChips(props: {
   value: string[]; metadata: Record<string, BundleItemSearchResult>; remove: (id: string) => void;
@@ -86,7 +87,7 @@ function renderBundleSearchResults(props: {
             const isSelected = selectedSet.has(r.id);
             const atCap = !isSelected && value.length >= maxItems;
             return (
-              <Row key={r.id} gap="sm" align="center" className={`border-b border-zinc-100 px-3 py-2 last:border-b-0 dark:border-zinc-800 ${isSelected ? "bg-blue-50 dark:bg-blue-950" : ""} ${atCap ? "opacity-50" : ""}`}>
+              <Row key={r.id} gap="sm" align="center" className={`border-b border-zinc-100 px-3 py-2 last:border-b-0 dark:border-zinc-800 ${isSelected ? CLS_ROW_SELECTED : ""} ${atCap ? "opacity-50" : ""}`}>
                 <Checkbox checked={isSelected} disabled={atCap} onChange={() => toggle(r.id)} aria-label={BUNDLE_COPY.picker.toggleAria(r.title)} />
                 <Stack gap="xs" className="flex-1">
                   <Text size="sm" weight="medium">{r.title}</Text>

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Button, Div, Row, Span, Text, Toggle } from "../../ui";
 import { cn } from "./filterUtils";
 
+const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 rounded-full transition-colors";
+
 export interface SwitchFilterProps {
   title: string;
   label: string;
@@ -81,7 +83,7 @@ export function SwitchFilter({
             onClick={onClear}
             variant="ghost"
             size="sm"
-            className="inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 rounded-full transition-colors"
+            className={CLS_CLEAR_BTN}
             aria-label="Clear"
           >
             <svg

@@ -6,6 +6,8 @@ import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
 import { Div, LoginRequiredModal, Text } from "../../../ui";
 
+const CLS_THANKS_BOX = "rounded-xl border border-green-200 dark:border-green-800 bg-success-surface px-6 py-8 text-center space-y-2";
+
 interface EventPollWidgetProps {
   eventId: string;
   pollConfig: PollConfig;
@@ -110,7 +112,7 @@ export function EventPollWidget({
 
   if (isSubmitted) {
     return (
-      <Div className={`rounded-xl border border-green-200 dark:border-green-800 bg-success-surface px-6 py-8 text-center space-y-2 ${className}`}>
+      <Div className={`${CLS_THANKS_BOX} ${className}`}>
         <Text className="font-semibold text-success">Vote recorded!</Text>
         <Text className="text-sm text-zinc-500 dark:text-zinc-400">Thanks for participating.</Text>
       </Div>

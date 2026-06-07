@@ -5,6 +5,8 @@ import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
+const CLS_PDF_LINK = "text-sm underline break-all text-blue-600 dark:text-blue-400";
+
 export interface MediaUploadListProps {
   label: string;
   value: MediaField[];
@@ -188,7 +190,7 @@ export function MediaUploadList({
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm underline break-all text-blue-600 dark:text-blue-400"
+                  className={CLS_PDF_LINK}
                 >
                   {fileNameFromUrl(item.url)}
                 </a>

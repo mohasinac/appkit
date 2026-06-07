@@ -5,6 +5,8 @@ import { Div, Span, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { CategoryItem } from "../types";
 
+const CLS_FEATURED_DOT = "absolute left-2 top-2 rounded-full bg-amber-400 p-1 leading-none";
+
 // --- CategoryCard -------------------------------------------------------------
 
 export interface CategoryCardProps {
@@ -48,7 +50,7 @@ export function CategoryCard({
         )}
         {/* Featured badge */}
         {category.isFeatured && (
-          <Span size="xs" className="absolute left-2 top-2 rounded-full bg-amber-400 p-1 leading-none">
+          <Span size="xs" className={CLS_FEATURED_DOT}>
             ★
           </Span>
         )}

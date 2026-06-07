@@ -1,6 +1,9 @@
 import React from "react";
 import { Label, Text } from "./Typography";
 
+const CLS_INPUT_ERROR = "border-red-400 focus-visible:border-red-500 focus-visible:ring-red-500/20 dark:border-red-500";
+const CLS_INPUT_SUCCESS_ICON = "h-4 w-4 text-green-600 dark:text-green-400";
+
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
   error?: React.ReactNode;
@@ -36,7 +39,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const variantClass =
       error || variant === "error"
-        ? "border-red-400 focus-visible:border-red-500 focus-visible:ring-red-500/20 dark:border-red-500"
+        ? CLS_INPUT_ERROR
         : variant === "ghost"
           ? "border-transparent bg-transparent shadow-none"
           : "";
@@ -69,7 +72,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       rightIcon ??
       (success && !error ? (
         <svg
-          className="h-4 w-4 text-green-600 dark:text-green-400"
+          className={CLS_INPUT_SUCCESS_ICON}
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"

@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 
+const CLS_WA_BTN = "inline-flex items-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-600";
+
 interface WhatsAppChatButtonProps {
   waNumber: string;
   message?: string;
@@ -20,7 +22,7 @@ export function WhatsAppChatButton({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-600 ${className ?? ""}`}
+      className={`${CLS_WA_BTN} ${className ?? ""}`}
     >
       <svg
         className="h-4 w-4"

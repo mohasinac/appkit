@@ -18,6 +18,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const REL_NOOPENER = "noopener noreferrer";
+const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-rose-500 dark:hover:bg-zinc-800";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Div, Heading, Row, Stack, Text } from "../../../ui";
@@ -176,7 +177,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
             type="button"
             onClick={() => onRemove(item.id)}
             aria-label={`${labels.remove} ${item.title ?? item.id}`}
-            className="shrink-0 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-rose-500 dark:hover:bg-zinc-800"
+            className={CLS_REMOVE_BTN}
           >
             <X className="h-4 w-4" />
           </button>

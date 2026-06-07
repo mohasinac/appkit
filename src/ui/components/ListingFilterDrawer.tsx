@@ -4,6 +4,8 @@ import React from "react";
 import { X } from "lucide-react";
 import { Button } from "./Button";
 
+const CLS_CLEAR_BTN = "text-xs text-zinc-500 hover:text-error dark:text-zinc-400 transition-colors min-h-0 h-auto p-0";
+
 export interface ListingFilterDrawerProps {
   open: boolean;
   onClose: () => void;
@@ -30,7 +32,7 @@ export function ListingFilterDrawer({
           <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
           <div className="flex items-center gap-2">
             {activeCount > 0 && (
-              <Button variant="ghost" type="button" onClick={onClear} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors min-h-0 h-auto p-0">
+              <Button variant="ghost" type="button" onClick={onClear} className={CLS_CLEAR_BTN}>
                 Clear all
               </Button>
             )}

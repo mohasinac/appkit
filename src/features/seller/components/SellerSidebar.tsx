@@ -9,6 +9,9 @@ import { SidebarCollapseToggle } from "../../../_internal/client/features/layout
 const CLS_STORE_AVATAR = "h-8 w-8 rounded-md bg-cover bg-center flex-shrink-0";
 const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary";
 const CLS_STORE_NAME = "text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate";
+const CLS_NAV_ACTIVE = "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300";
+const CLS_NAV_BADGE = "shrink-0 rounded-full bg-orange-500 px-1.5 py-0.5 text-[10px] text-white leading-none";
+const CLS_NAV_ICON_ACTIVE = "text-orange-600 dark:text-orange-400";
 
 export interface StoreNavItem {
   href: string;
@@ -49,14 +52,14 @@ function NavLink({ item, isActive, onClick }: { item: StoreNavItem; isActive: bo
       onClick={onClick}
       className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
         isActive
-          ? "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300"
+          ? CLS_NAV_ACTIVE
           : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800/60 hover:text-zinc-800 dark:hover:text-zinc-200"
       }`}
     >
       {item.icon && <Span size="base" className="shrink-0 opacity-60">{item.icon}</Span>}
       <Span className="flex-1 truncate">{item.label}</Span>
       {item.badge != null && item.badge > 0 && (
-        <Span weight="bold" className="shrink-0 rounded-full bg-orange-500 px-1.5 py-0.5 text-[10px] text-white leading-none">
+        <Span weight="bold" className={CLS_NAV_BADGE}>
           {item.badge}
         </Span>
       )}
@@ -147,7 +150,7 @@ function GroupsContent({
                 onClick={() => toggle(group.title)}
                 className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
                   hasActive && !isOpen
-                    ? "text-orange-600 dark:text-orange-400"
+                    ? CLS_NAV_ICON_ACTIVE
                     : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                 }`}
               >

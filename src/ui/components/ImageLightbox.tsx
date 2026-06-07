@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCw, Maximize2 } fr
 import { Button } from "./Button";
 import { Text, Span } from "./Typography";
 
+const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-red-500/60 text-white flex items-center justify-center";
+
 export interface LightboxImage {
   src: string;
   alt?: string;
@@ -173,7 +175,7 @@ export function ImageLightbox({
           <Button
             variant="ghost" size="sm" type="button"
             onClick={onClose}
-            className="w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-red-500/60 text-white flex items-center justify-center"
+            className={CLS_CLOSE_BTN}
             aria-label="Close lightbox"
           >
             <X className="w-5 h-5" />

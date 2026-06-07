@@ -26,6 +26,7 @@ export interface RefundRequestViewProps {
 }
 
 const ACK_COUNT = REFUND_COPY.request.acknowledgments.length;
+const CLS_WARN_PANEL = "rounded-xl border border-amber-200 bg-warning-surface p-4 dark:border-amber-800";
 
 export function RefundRequestView({
   order,
@@ -55,7 +56,7 @@ export function RefundRequestView({
   if (order.contestable === false) {
     return (
       <Div
-        className={`rounded-xl border border-amber-200 bg-warning-surface p-4 dark:border-amber-800 ${className}`}
+        className={`${CLS_WARN_PANEL} ${className}`}
       >
         <Text size="sm" className="text-warning">
           {REFUND_COPY.request.alreadyRefundedMessage}

@@ -4,6 +4,8 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
+const CLS_REMOVE_BTN = "self-start text-zinc-400 dark:text-zinc-400 transition hover:text-red-500";
+
 interface CartItemRowProps {
   item: CartItem;
   onQtyChange?: (id: string, qty: number) => void;
@@ -99,7 +101,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
           variant="ghost"
           size="sm"
           aria-label={ACTIONS.CART["remove-item"].ariaLabel}
-          className="self-start text-zinc-400 dark:text-zinc-400 transition hover:text-red-500"
+          className={CLS_REMOVE_BTN}
         >
           ✕
         </Button>

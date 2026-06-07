@@ -5,6 +5,8 @@ import type { CustomField, CustomSection } from "../schemas/firestore";
 import { MAX_CUSTOM_SECTIONS } from "../schemas/firestore";
 import { CustomFieldsEditor } from "./CustomFieldsEditor";
 
+const CLS_REMOVE = "text-zinc-400 hover:text-red-500 dark:hover:text-red-400 text-xs";
+
 export interface CustomSectionsEditorProps {
   sections: CustomSection[];
   onChange: (sections: CustomSection[]) => void;
@@ -56,7 +58,7 @@ export function CustomSectionsEditor({
               variant="ghost"
               size="sm"
               onClick={() => remove(i)}
-              className="text-zinc-400 hover:text-red-500 dark:hover:text-red-400 text-xs"
+              className={CLS_REMOVE}
             >
               Remove
             </Button>

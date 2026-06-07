@@ -7,6 +7,8 @@ import { ROUTES } from "../../../next";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+
+const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-white";
 import {
   BaseListingCard,
   Button,
@@ -189,7 +191,7 @@ export function MarketplacePrizeDrawCard({
         </TextLink>
 
         <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
-          <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-white">
+          <Span size="xs" weight="medium" className={CLS_PRIZE_PILL}>
             {mergedLabels.prizeDrawBadge}
           </Span>
           <Span
