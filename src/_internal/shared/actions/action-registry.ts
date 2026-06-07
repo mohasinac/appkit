@@ -1598,6 +1598,12 @@ export const ACTIONS: ActionTree = {
       description: "Cancel a single event entry.",
       kind: "danger",
       permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Cancel this entry?",
+        body: "This will remove the participant from the event. They can re-register if the event is still open.",
+        confirmLabel: "Cancel entry",
+        confirmKind: "danger",
+      },
     },
     // ── Review management (row-level) ─────────────────────────────────
     "feature-review": {

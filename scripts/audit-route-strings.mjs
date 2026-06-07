@@ -35,7 +35,7 @@ const SUPPRESS_RE = /\/\/\s*audit-route-strings-ok\b/;
 const DASH_RE = /(\/(?:admin|store|user)\/[a-z0-9][a-z0-9\-\/]*)/;
 
 // Baseline drift — currently 5. Drive to 0 by replacing literals with ROUTES.*.
-const BASELINE = 5;
+const BASELINE = 0;
 
 const RE_NAV = /\b(?:router\.(?:push|replace|prefetch)|redirect|permanentRedirect)\s*\(\s*["'`]([^"'`]+)["'`]/g;
 const RE_HREF = /\bhref\s*=\s*["'`]([^"'`]+)["'`]/g;

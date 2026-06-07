@@ -26,7 +26,7 @@ const REGISTRY = join(APPKIT_ROOT, "src", "_internal", "shared", "actions", "act
 
 // Baseline drift — currently 1 (admin.cancel-entry). Drive to 0 by adding a
 // confirmation block to that ActionDef in action-registry.ts.
-const BASELINE = 1;
+const BASELINE = 0;
 
 const src = readFileSync(REGISTRY, "utf8");
 
