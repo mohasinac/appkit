@@ -167,7 +167,7 @@ export type { UseEntityDeleteOptions, UseEntityDeleteReturn } from "./react/hook
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./constants/index";
 export { Container, Grid, Row, Stack } from "./ui/components/Layout";
 export { Div } from "./ui/components/Div";
-export { Main, Section } from "./ui/components/Semantic";
+export { Main, Section, Nav, Ul, Ol, Li, Table, Thead, Tbody, Tr, Th, Td } from "./ui/components/Semantic";
 export { Badge } from "./ui/components/Badge";
 export { Button } from "./ui/components/Button";
 export { ClaimCouponButton } from "./ui/components/ClaimCouponButton";
