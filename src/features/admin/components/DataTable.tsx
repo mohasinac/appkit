@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { AdminTableColumn } from "../types";
-import { BaseListingCard, Button, Div, Span, Text } from "../../../ui";
+import { BaseListingCard, Button, Div, Span, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __O = {
@@ -26,16 +26,16 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
     header: "Status",
     className: "w-32",
     render: (row) => (
-      <span className="inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300">
+      <Span size="xs" weight="medium" className="inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300">
         {String(row.status ?? "—")}
-      </span>
+      </Span>
     ),
   },
   {
     key: "updatedAt",
     header: "Updated",
     className: "w-32",
-    render: (row) => <span className="text-sm text-zinc-500 dark:text-zinc-400">{String(row.updatedAt ?? "")}</span>,
+    render: (row) => <Span size="sm" className="text-zinc-500 dark:text-zinc-400">{String(row.updatedAt ?? "")}</Span>,
   },
 ];
 
@@ -91,7 +91,7 @@ function SelectableRow<T extends { id: string }>({
     : undefined;
   const isInteractive = Boolean(onRowClick ?? rowHref);
   return (
-    <tr
+    <Tr
       data-testid="data-table-row"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -105,7 +105,7 @@ function SelectableRow<T extends { id: string }>({
       className={`border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
     >
       {selectionEnabled && (
-        <td className="relative w-10 px-2 py-3" onClick={(e) => e.stopPropagation()}>
+        <Td className="relative w-10 px-2 py-3" onClick={(e) => e.stopPropagation()}>
           <BaseListingCard.Checkbox
             selected={isSelected}
             onSelect={(e) => { e.preventDefault(); onToggle?.(row.id, !isSelected); }}
@@ -113,24 +113,24 @@ function SelectableRow<T extends { id: string }>({
             position="top-1/2 left-2 -translate-y-1/2"
             data-testid="row-checkbox"
           />
-        </td>
+        </Td>
       )}
       {columns.map((col) => (
-        <td
+        <Td
           key={col.key}
           className={`px-4 py-3 text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`}
         >
           {col.render
             ? col.render(row)
             : String((row as Record<string, unknown>)[col.key] ?? "")}
-        </td>
+        </Td>
       ))}
       {renderRowActions && (
-        <td className="px-2 py-3" onClick={(e) => e.stopPropagation()}>
+        <Td className="px-2 py-3" onClick={(e) => e.stopPropagation()}>
           {renderRowActions(row)}
-        </td>
+        </Td>
       )}
-    </tr>
+    </Tr>
   );
 }
 
@@ -159,11 +159,11 @@ export function DataTable<T extends { id: string }>({
   return (
     <Div surface="card" className={`${__O.hidden}`}>
       <Div className={`${__O.xAuto}`}>
-        <table data-testid="data-table" className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800">
+        <Table data-testid="data-table" className="w-full text-sm">
+          <Thead>
+            <Tr className="border-b border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800">
               {selectionEnabled && (
-                <th scope="col" className="w-10 px-2 py-3">
+                <Th scope="col" className="w-10 px-2 py-3">
                   {onToggleSelectAll && (
                     <input
                       type="checkbox"
@@ -174,10 +174,10 @@ export function DataTable<T extends { id: string }>({
                       className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 accent-zinc-900 dark:accent-zinc-100"
                     />
                   )}
-                </th>
+                </Th>
               )}
               {columns.map((col) => (
-                <th
+                <Th
                   key={col.key}
                   scope="col"
                   onClick={
@@ -191,32 +191,32 @@ export function DataTable<T extends { id: string }>({
                       {sortDir === "asc" ? "↑" : "↓"}
                     </Span>
                   )}
-                </th>
+                </Th>
               ))}
-              {renderRowActions && <th scope="col" className="w-12 px-2 py-3" />}
-            </tr>
-          </thead>
-          <tbody>
+              {renderRowActions && <Th scope="col" className="w-12 px-2 py-3" />}
+            </Tr>
+          </Thead>
+          <Tbody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <tr key={i} className="border-b border-neutral-100 dark:border-slate-700">
-                  {selectionEnabled && <td className="w-10 px-2 py-3" />}
+                <Tr key={i} className="border-b border-neutral-100 dark:border-slate-700">
+                  {selectionEnabled && <Td className="w-10 px-2 py-3" />}
                   {columns.map((col) => (
-                    <td key={col.key} className="px-4 py-3">
+                    <Td key={col.key} className="px-4 py-3">
                       <Div className="h-4 w-full animate-pulse rounded bg-neutral-200 dark:bg-slate-700" />
-                    </td>
+                    </Td>
                   ))}
-                </tr>
+                </Tr>
               ))
             ) : rows.length === 0 ? (
-              <tr>
-                <td
+              <Tr>
+                <Td
                   colSpan={columns.length + (selectionEnabled ? 1 : 0) + (renderRowActions ? 1 : 0)}
                   className="px-4 py-12 text-center text-neutral-500 dark:text-zinc-400"
                 >
                   {emptyLabel}
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             ) : (
               rows.map((row) => (
                 <SelectableRow
@@ -232,8 +232,8 @@ export function DataTable<T extends { id: string }>({
                 />
               ))
             )}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </Div>
       {totalPages > 1 && onPageChange && (
         <Div className="flex items-center justify-end gap-2 border-t border-neutral-200 dark:border-slate-700 px-4 py-3">

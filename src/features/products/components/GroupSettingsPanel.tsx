@@ -11,6 +11,7 @@ import {
   Row,
   Select,
   SideDrawer,
+  Span,
   Stack,
   Text,
   Tabs,
@@ -277,9 +278,9 @@ export function GroupSettingsPanel({
         <Heading level={3} className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
           Group Settings
         </Heading>
-        <span className="text-xs text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+        <Span size="xs" className="text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
           {open ? "▲" : "▼"}
-        </span>
+        </Span>
       </button>
 
       {open && (
@@ -334,7 +335,7 @@ export function GroupSettingsPanel({
                   <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}
                     <Row align="center" gap="sm" className="py-2">
-                      <span className="rounded bg-[var(--appkit-color-primary,#6366f1)]/10 text-[var(--appkit-color-primary,#6366f1)] text-[10px] font-semibold px-1.5 py-0.5">Parent</span>
+                      <Span weight="semibold" className="rounded bg-[var(--appkit-color-primary,#6366f1)]/10 text-[var(--appkit-color-primary,#6366f1)] text-[10px] px-1.5 py-0.5">Parent</Span>
                       <Text className="text-sm text-zinc-800 dark:text-zinc-200 flex-1">{productSlug}</Text>
                     </Row>
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (
@@ -390,9 +391,9 @@ export function GroupSettingsPanel({
             <Stack gap="xs">
               <Text className="text-sm text-zinc-600 dark:text-zinc-400">
                 Part of:{" "}
-                <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                <Span weight="medium" className="text-zinc-800 dark:text-zinc-200">
                   {groupTitle ?? groupParentSlug}
-                </span>
+                </Span>
               </Text>
               <Text className="text-xs text-zinc-500 dark:text-zinc-400">
                 Parent listing: <code className="font-mono">{groupParentSlug}</code>

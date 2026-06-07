@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Button, ListingFilterDrawer, Pagination, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
+import { Button, Label, ListingFilterDrawer, Pagination, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
 import type { CouponType } from "../types";
@@ -290,7 +290,7 @@ export function CouponsIndexListing({
           </Heading>
           <Stack gap="xs">
             {COUPON_TYPES.map((t) => (
-              <label key={t.value} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-700 dark:text-zinc-300">
+              <Label key={t.value} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-700 dark:text-zinc-300">
                 <input
                   type="radio"
                   name="coupon-type"
@@ -300,7 +300,7 @@ export function CouponsIndexListing({
                   className="accent-primary"
                 />
                 {t.label}
-              </label>
+              </Label>
             ))}
             {pendingTable.get(TABLE_KEYS.TYPE) && (
               <button
@@ -321,7 +321,7 @@ export function CouponsIndexListing({
           </Heading>
           <Stack gap="sm">
             <>
-              <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">From date</label>
+              <Label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">From date</Label>
               <input
                 type="date"
                 value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
@@ -330,7 +330,7 @@ export function CouponsIndexListing({
               />
             </>
             <>
-              <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">To date</label>
+              <Label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">To date</Label>
               <input
                 type="date"
                 value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}
