@@ -4,6 +4,10 @@ import { Button, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
+const CLS_GRADIENT_BG = "absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600";
+const CLS_CTA_BTN_SM = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0";
+const CLS_CTA_BTN_LG = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2";
+
 // --- Types -------------------------------------------------------------------
 
 export interface AdvertisementBannerProps {
@@ -131,7 +135,7 @@ export function AdvertisementBanner({
           {/* Gradient background */}
           {!backgroundColor && (
             <Div
-              className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600"
+              className={CLS_GRADIENT_BG}
               aria-hidden
             />
           )}
@@ -159,7 +163,7 @@ export function AdvertisementBanner({
                   variant="secondary"
                   size="sm"
                   onClick={onCtaClick}
-                  className="bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0"
+                  className={CLS_CTA_BTN_SM}
                 >
                   {ctaLabel}
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -194,7 +198,7 @@ export function AdvertisementBanner({
                   variant="secondary"
                   size="lg"
                   onClick={onCtaClick}
-                  className="bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2"
+                  className={CLS_CTA_BTN_LG}
                 >
                   {ctaLabel}
                   <ArrowRight className="w-4 h-4" />

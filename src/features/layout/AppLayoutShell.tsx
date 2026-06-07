@@ -149,6 +149,7 @@ const DEFAULT_LIGHT_BG = {
 
 const CLS_STAT_BOX = "flex flex-col items-center gap-1 p-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-center";
 const CLS_STAT_LABEL = "text-xs text-zinc-500 dark:text-zinc-400";
+const CLS_LOGOUT_BTN = "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/30 dark:hover:text-red-300";
 
 const DEFAULT_DARK_BG = {
   type: "color" as const,
@@ -528,7 +529,7 @@ function SidebarContent({
             <button
               type="button"
               onClick={() => { onLogout(); onAfterLogout(); }}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/30 dark:hover:text-red-300"
+              className={CLS_LOGOUT_BTN}
             >
               {labels.logout}
             </button>

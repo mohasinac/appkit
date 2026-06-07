@@ -138,6 +138,7 @@ export const DEFAULT_ROUTE_MAP = {
     BIDS: "/user/bids",
     RETURNS: "/user/returns",
     SUPPORT: "/user/support",
+    SUPPORT_NEW: "/user/support/new",
     SUPPORT_TICKET: (id: string) => `/user/support/${id}`,
     PRE_ORDERS: "/user/pre-orders",
     DIGITAL_CODES: "/user/digital-codes",

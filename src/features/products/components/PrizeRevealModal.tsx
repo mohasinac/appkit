@@ -22,6 +22,8 @@ import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
+const CLS_REFUND_NOTE = "rounded border border-yellow-400/40 bg-yellow-50 px-4 py-3 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100";
+
 export interface PrizeRevealResponse {
   prizeWon?: {
     itemNumber: number;
@@ -215,7 +217,7 @@ export function PrizeRevealModal({
       />
       <Stack gap="md">
         {phase === "refunded" ? (
-          <Div className="rounded border border-yellow-400/40 bg-yellow-50 px-4 py-3 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100">
+          <Div className={CLS_REFUND_NOTE}>
             <Heading level={3} className="mb-1">
               Pool exhausted — you've been refunded
             </Heading>

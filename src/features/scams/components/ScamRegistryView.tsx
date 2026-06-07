@@ -1,7 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_ICON_SM = "h-3 w-3 shrink-0";
+const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-red-500 dark:text-zinc-600";
+const CLS_PILL_LINK = "inline-flex items-center gap-1 rounded-full bg-rose-100 dark:bg-rose-900/30 px-2.5 py-0.5 text-xs font-medium text-rose-700 dark:text-rose-300 hover:bg-rose-200 transition-colors";
 import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
 import {
   Container,
@@ -23,7 +26,6 @@ import { listVerifiedScammers } from "../actions/scam-actions";
 import type { ScammerDocument } from "../schemas/firestore";
 import { SCAM_PLATFORM_LABELS } from "../schemas/firestore";
 import { SCAM_TYPES, SCAM_TYPE_LABELS } from "../constants/scam-types";
-import { ROUTES } from "../../../next/routing/route-map";
 
 const SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest Reports" },
@@ -100,7 +102,7 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
                 : "1 victim reported"}
               {scammer.amountLost ? ` · ${formatPaise(scammer.amountLost)} lost` : ""}
             </Text>
-            <ChevronRight className="h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-red-500 dark:text-zinc-600" />
+            <ChevronRight className={CLS_ROW_CHEVRON} />
           </Row>
         </Stack>
       </Card>
@@ -219,7 +221,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
               </button>
               {(query || scamType || sort !== "-createdAt") && (
                 <Link
-                  href="/scams"
+                  href={ROUTES.PUBLIC.SCAMS as string}
                   className="rounded-lg border border-zinc-300 dark:border-slate-600 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   Clear
@@ -233,7 +235,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
                 <Text variant="secondary" className="text-xs">Filtering by:</Text>
                 <Link
                   href={buildHref({ scamType: "" })}
-                  className="inline-flex items-center gap-1 rounded-full bg-rose-100 dark:bg-rose-900/30 px-2.5 py-0.5 text-xs font-medium text-rose-700 dark:text-rose-300 hover:bg-rose-200 transition-colors"
+                  className={CLS_PILL_LINK}
                 >
                   {SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS]}
                   <span aria-hidden="true">×</span>

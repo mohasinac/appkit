@@ -22,6 +22,8 @@ import {
 import { apiClient } from "../../../http";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 
+const CLS_DELETE_LINK = "text-red-500 hover:text-red-600";
+
 export interface GroupSettingsPanelProps {
   productId: string;
   productSlug: string;
@@ -346,7 +348,7 @@ export function GroupSettingsPanel({
                           size="sm"
                           onClick={() => requestUnlinkChild(child.id)}
                           isLoading={loading}
-                          className="text-red-500 hover:text-red-600 text-xs"
+                          className={`${CLS_DELETE_LINK} text-xs`}
                         >
                           Unlink
                         </Button>
@@ -371,7 +373,7 @@ export function GroupSettingsPanel({
                   size="sm"
                   onClick={requestDissolveGroup}
                   isLoading={loading}
-                  className="text-red-500 hover:text-red-600"
+                  className={CLS_DELETE_LINK}
                 >
                   Dissolve group
                 </Button>
@@ -397,7 +399,7 @@ export function GroupSettingsPanel({
                 size="sm"
                 onClick={requestLeaveGroup}
                 isLoading={loading}
-                className="text-red-500 hover:text-red-600 w-fit"
+                className={`${CLS_DELETE_LINK} w-fit`}
               >
                 Leave group
               </Button>

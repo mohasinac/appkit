@@ -6,6 +6,9 @@ import { BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Text } from "../..
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const CLS_TOGGLE_ON = "h-4 w-4 text-emerald-600 dark:text-emerald-400";
+const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50";
+
 const TYPE_COLORS: Record<CouponType, { card: string; code: string }> = {
   percentage:   { card: "bg-purple-50 border-purple-200 dark:bg-purple-950/30 dark:border-purple-800", code: "bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200 border-purple-300 dark:border-purple-700" },
   fixed:        { card: "bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800",   code: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200 border-green-300 dark:border-green-700" },
@@ -354,7 +357,7 @@ export function CouponCard({
               className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-black/30 transition-colors disabled:opacity-50"
             >
               {n.isActive
-                ? <ToggleRight className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                ? <ToggleRight className={CLS_TOGGLE_ON} />
                 : <ToggleLeft className="h-4 w-4" />}
             </button>
           )}
@@ -365,7 +368,7 @@ export function CouponCard({
               disabled={busy === "delete"}
               title={labels.delete}
               aria-label={labels.delete}
-              className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
+              className={CLS_DELETE_BTN}
             >
               <Trash2 className="h-4 w-4" />
             </button>

@@ -13,6 +13,9 @@
 
 import { useCallback } from "react";
 import { Button, Div, FormField, Heading, Row, Span, Stack, Text } from "../../../ui";
+
+const CLS_WARN_BOX = "rounded border border-yellow-400/40 bg-yellow-50 px-3 py-2 text-sm text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100";
+const CLS_WON_BADGE = "rounded bg-red-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white";
 import { ImageUpload } from "../../media";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
@@ -144,7 +147,7 @@ export function PrizeDrawItemsEditor({
           into a new prize-draw listing.
         </Div>
       ) : warning ? (
-        <Div className="rounded border border-yellow-400/40 bg-yellow-50 px-3 py-2 text-sm text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100">
+        <Div className={CLS_WARN_BOX}>
           {warning}
         </Div>
       ) : null}
@@ -161,7 +164,7 @@ export function PrizeDrawItemsEditor({
             >
               {locked ? (
                 <Div className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 dark:bg-black/40 rounded-lg pointer-events-none">
-                  <Text className="rounded bg-red-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                  <Text className={CLS_WON_BADGE}>
                     Won — locked
                   </Text>
                 </Div>

@@ -61,6 +61,9 @@ export interface NotificationBellProps {
   hideOnMobile?: boolean;
 }
 
+const CLS_UNREAD_BADGE = "absolute -top-1 -right-1 bg-red-500 text-white min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full shadow-md";
+const CLS_UNREAD_PILL = "ml-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full";
+
 const DEFAULT_ICONS: Record<string, string> = {
   order_placed: "🛍️",
   order_confirmed: "✅",
@@ -191,7 +194,7 @@ function renderBellButton(props: {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
       {unreadCount > 0 && (
-        <Span size="xs" weight="semibold" className="absolute -top-1 -right-1 bg-red-500 text-white min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full shadow-md">
+        <Span size="xs" weight="semibold" className={CLS_UNREAD_BADGE}>
           {unreadCount > 99 ? "99+" : unreadCount}
         </Span>
       )}
@@ -213,7 +216,7 @@ function renderNotificationDropdown(props: {
       <Row justify="between" gap="none" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-800">
         <Heading level={3} className="font-semibold text-zinc-900 dark:text-white">
           {labels.title}
-          {unreadCount > 0 && <Span size="xs" weight="medium" className="ml-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full">{unreadCount} {labels.unread}</Span>}
+          {unreadCount > 0 && <Span size="xs" weight="medium" className={CLS_UNREAD_PILL}>{unreadCount} {labels.unread}</Span>}
         </Heading>
         {unreadCount > 0 && (
           <Button onClick={handleMarkAllRead} disabled={isMarkingAll} className="text-xs text-primary hover:underline font-medium disabled:opacity-50">
