@@ -23,6 +23,7 @@ import {
   Heading,
   Main,
   Section,
+  Span,
   Text,
   Grid,
   Stack,
@@ -478,9 +479,9 @@ export function ScamProfileView({
                     <Stack gap="xs" as="ol">
                       {scamTypeDef.howToAvoid.map((tip, i) => (
                         <Row key={i} gap="sm" align="start" as="li">
-                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--appkit-color-success,theme(colors.green.600))]/10 text-xs font-bold text-[color:var(--appkit-color-success,theme(colors.green.700))]">
+                          <Span size="xs" weight="bold" className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--appkit-color-success,theme(colors.green.600))]/10 text-[color:var(--appkit-color-success,theme(colors.green.700))]">
                             {i + 1}
-                          </span>
+                          </Span>
                           <Text variant="secondary" className="text-sm leading-relaxed">{tip}</Text>
                         </Row>
                       ))}

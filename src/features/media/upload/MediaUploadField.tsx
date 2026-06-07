@@ -9,7 +9,7 @@
 import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import { Alert, Button, Div, Label, Row, Spinner, Text } from "../../../ui";
+import { Alert, Button, Div, Label, Row, Span, Spinner, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";
@@ -260,7 +260,7 @@ function MediaPreviewPanel({
           </Div>
           <Row gap="md" align="center">
             <Div aria-hidden className={CLS_PDF_BADGE}>
-              <span className="text-xs font-bold">PDF</span>
+              <Span size="xs" weight="bold">PDF</Span>
             </Div>
             <a href={value} target="_blank" rel="noopener noreferrer"
               className={CLS_PDF_NAME}>

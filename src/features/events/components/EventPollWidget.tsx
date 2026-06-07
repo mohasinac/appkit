@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
-import { Div, LoginRequiredModal, Text } from "../../../ui";
+import { Div, LoginRequiredModal, Span, Text } from "../../../ui";
 
 const CLS_THANKS_BOX = "rounded-xl border border-green-200 dark:border-green-800 bg-success-surface px-6 py-8 text-center space-y-2";
 
@@ -143,7 +143,7 @@ export function EventPollWidget({
               onChange={() => toggleVote(opt.id)}
               className="accent-primary"
             />
-            <span className="text-sm text-zinc-700 dark:text-zinc-300">{opt.label}</span>
+            <Span size="sm" className="text-zinc-700 dark:text-zinc-300">{opt.label}</Span>
           </label>
         ))}
       </Div>

@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Span, Text, Section, Stack, FlowDiagram } from "../../../ui";
+import { Div, Heading, Li, Span, Text, Section, Stack, Ul, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
 
@@ -127,14 +127,14 @@ function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
   return (
     <Section className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} ${__P.p6}`}>
       <Heading level={2} className="mb-4">{t("rulesTitle")}</Heading>
-      <ul className="space-y-2">
+      <Ul className="space-y-2">
         {rules.map((rule) => (
-          <li key={rule} className="flex items-start gap-2 text-sm">
+          <Li key={rule} className="flex items-start gap-2 text-sm">
             <Span color="primary" className="mt-0.5">•</Span>
             <Text variant="secondary">{rule}</Text>
-          </li>
+          </Li>
         ))}
-      </ul>
+      </Ul>
     </Section>
   );
 }

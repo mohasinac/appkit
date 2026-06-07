@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, HorizontalScroller, Section, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
@@ -73,7 +73,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
               aria-hidden={true}
             />
           ) : iconSrc ? (
-            <span aria-hidden="true" className="text-lg leading-none">{iconSrc}</span>
+            <Span size="lg" aria-hidden="true" className="leading-none">{iconSrc}</Span>
           ) : (
             initial
           )}

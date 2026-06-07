@@ -4,7 +4,7 @@ import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
 import { useActiveAd } from "../hooks/useActiveAd";
 import type { ActiveAdRecord } from "../hooks/useActiveAd";
-import { Div, Text } from "../../../ui";
+import { Div, Span, Text } from "../../../ui";
 
 // ---------------------------------------------------------------------------
 // Props
@@ -100,9 +100,9 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
         ) : null}
       </Div>
       {creative.ctaLabel ? (
-        <span className="flex-shrink-0 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white">
+        <Span size="xs" weight="semibold" className="flex-shrink-0 rounded-md bg-primary px-3 py-1.5 text-white">
           {creative.ctaLabel}
-        </span>
+        </Span>
       ) : null}
     </a>
   );

@@ -290,9 +290,9 @@ export function CouponCard({
           the Claim button is hidden via `hideClaim` since admins aren't
           redeeming the coupons they're managing. */}
       <Div className={`flex items-center gap-2 rounded-lg border border-dashed px-3 py-2 ${colors.code}`}>
-        <span className="flex-1 font-mono text-sm font-bold tracking-widest uppercase select-all">
+        <Span size="sm" weight="bold" className="flex-1 font-mono tracking-widest uppercase select-all">
           {n.code || "—"}
-        </span>
+        </Span>
         {n.code && (
           <button
             type="button"

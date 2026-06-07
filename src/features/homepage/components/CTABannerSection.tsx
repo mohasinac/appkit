@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Section, Text } from "../../../ui";
+import { Div, Heading, Section, Span, Text } from "../../../ui";
 
 export interface CTABannerSectionProps {
   title?: string;
@@ -24,9 +24,9 @@ export function CTABannerSection({
   return (
     <Section className={`bg-gradient-to-r from-primary-600 to-primary-700 py-16 px-4 ${className}`}>
       <Div className="mx-auto max-w-3xl text-center">
-        <span className="mb-4 inline-block text-2xl" aria-hidden="true">
+        <Span className="mb-4 inline-block text-2xl" aria-hidden="true">
           ✨
-        </span>
+        </Span>
         <Heading level={2} className="text-2xl font-bold text-white md:text-3xl lg:text-4xl">
           {title}
         </Heading>

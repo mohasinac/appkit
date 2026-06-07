@@ -8,6 +8,7 @@ import {
   FormField,
   FormGroup,
   Heading,
+  Label,
   RichTextEditor,
   Stack,
   Text,
@@ -255,7 +256,7 @@ export function ProductForm({
         {/* Mode selector */}
         <Div className="flex gap-3 flex-wrap">
           {(["single", "unbranded", "mixed"] as const).map((mode) => (
-            <label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none text-sm text-zinc-700 dark:text-zinc-300">
+            <Label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none text-sm text-zinc-700 dark:text-zinc-300">
               <input
                 type="radio"
                 name="brandMode"
@@ -274,7 +275,7 @@ export function ProductForm({
                 className="accent-primary"
               />
               {mode === "single" ? "Single Brand" : mode === "unbranded" ? "Unbranded" : "Mixed Brands"}
-            </label>
+            </Label>
           ))}
         </Div>
         {/* Help text for unbranded / mixed */}

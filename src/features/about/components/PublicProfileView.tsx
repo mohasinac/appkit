@@ -209,7 +209,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
         {pub.bio && <Text className="text-sm leading-relaxed text-neutral-700 dark:text-zinc-300">{pub.bio}</Text>}
         <Row gap="md" wrap>
           {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
-          {pub.website && <a href={pub.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-primary hover:underline"><Globe className="w-4 h-4" />{pub.website.replace(/^https?:\/\//, "")}</a>}
+          {pub.website && <a href={pub.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-primary hover:underline"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></a>}
         </Row>
       </Stack>
     </Section>

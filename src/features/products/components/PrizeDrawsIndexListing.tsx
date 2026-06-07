@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, Pagination, Span, Text } from "../../../ui";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
@@ -146,9 +146,9 @@ export function PrizeDrawsIndexListing({
         hasActiveState={hasActiveState}
         extra={
           <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
-            <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+            <Span size="xs" className="hidden sm:inline text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
               Show closed
-            </span>
+            </Span>
             <button
               type="button"
               role="switch"

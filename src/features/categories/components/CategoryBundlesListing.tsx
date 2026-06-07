@@ -10,7 +10,7 @@
  */
 
 import React, { useMemo, useCallback, useState } from "react";
-import { Div, Text } from "../../../ui";
+import { Div, Span, Text } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import type { CategoryDocument } from "../schemas";
@@ -181,7 +181,7 @@ export function CategoryBundlesListing({
       >
         <Div className={`space-y-4 ${__P.p4}`}>
           <label className="flex items-center justify-between gap-3 cursor-pointer">
-            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Show out-of-stock bundles</span>
+            <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">Show out-of-stock bundles</Span>
             <button
               type="button"
               role="switch"

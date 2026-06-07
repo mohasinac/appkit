@@ -91,9 +91,9 @@ export function EventCard({
           </Div>
         ) : (
           <Div className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center">
-            <span className="text-5xl opacity-40" aria-hidden="true">
+            <Span className="text-5xl opacity-40" aria-hidden="true">
               {TYPE_ICONS[event.type]}
-            </span>
+            </Span>
           </Div>
         )}
       </Link>
