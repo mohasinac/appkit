@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next";
-import { Div, Row, Text } from "../../../ui";
+import { Div, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
@@ -133,16 +133,16 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
         aria-expanded={open}
       >
         <Row align="center" gap="xs">
-          <span className="text-xs text-zinc-400 dark:text-zinc-400 mr-1">
+          <Span size="xs" className="text-zinc-400 dark:text-zinc-400 mr-1">
             {open ? "â–¼" : "â–¶"}
-          </span>
+          </Span>
           <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
             More listings like this:{" "}
-            <span className="text-[var(--appkit-color-primary,#6366f1)]">{label}</span>
+            <Span className="text-[var(--appkit-color-primary,#6366f1)]">{label}</Span>
           </Text>
-          <span className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5 text-xs text-zinc-600 dark:text-zinc-400">
+          <Span size="xs" className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5 text-zinc-600 dark:text-zinc-400">
             {listings.length}
-          </span>
+          </Span>
         </Row>
         {category && (
           <Link

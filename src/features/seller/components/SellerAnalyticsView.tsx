@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { StackedViewShell, Row, Text } from "../../../ui";
+import { StackedViewShell, Label, Row, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 
 export interface SellerAnalyticsViewProps extends Omit<
@@ -32,7 +32,7 @@ function DefaultDateRange({
 }) {
   return (
     <Row gap="md" align="center" wrap className="flex-wrap">
-      <label className="flex items-center gap-2 text-sm text-[var(--appkit-color-text-muted)]">
+      <Label className="flex items-center gap-2 text-sm text-[var(--appkit-color-text-muted)]">
         <Text size="sm" variant="secondary">{labels.dateFrom ?? "From"}</Text>
         <input
           type="date"
@@ -40,8 +40,8 @@ function DefaultDateRange({
           onChange={(e) => onChange(e.target.value, to)}
           className="appkit-input text-sm py-1.5 px-3"
         />
-      </label>
-      <label className="flex items-center gap-2 text-sm text-[var(--appkit-color-text-muted)]">
+      </Label>
+      <Label className="flex items-center gap-2 text-sm text-[var(--appkit-color-text-muted)]">
         <Text size="sm" variant="secondary">{labels.dateTo ?? "To"}</Text>
         <input
           type="date"
@@ -49,7 +49,7 @@ function DefaultDateRange({
           onChange={(e) => onChange(from, e.target.value)}
           className="appkit-input text-sm py-1.5 px-3"
         />
-      </label>
+      </Label>
     </Row>
   );
 }

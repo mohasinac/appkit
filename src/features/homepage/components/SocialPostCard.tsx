@@ -1,7 +1,7 @@
 "use client";
 
 import type { SocialPost, SocialPlatform } from "../schemas";
-import { Div, Text } from "../../../ui";
+import { Div, Span, Text } from "../../../ui";
 
 const __P = {
   p3: "p-3",
@@ -153,7 +153,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
         />
       ) : (
         <Div className="flex h-full w-full items-center justify-center bg-zinc-200 dark:bg-zinc-700">
-          <span className="text-sm text-zinc-400">No preview</span>
+          <Span size="sm" className="text-zinc-400">No preview</Span>
         </Div>
       )}
 

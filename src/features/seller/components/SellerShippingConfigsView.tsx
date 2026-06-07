@@ -11,6 +11,7 @@ import {
   Div,
   ListingToolbar,
   RowActionMenu,
+  Span,
   Text,
   useToast,
 } from "../../../ui";
@@ -63,9 +64,9 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
       <Div>
         <Text className="text-sm font-medium">{row.label}</Text>
         {row.isDefault && (
-          <span className="mt-0.5 inline-flex items-center rounded-full px-1.5 py-px text-xs font-medium bg-success-surface text-success">
+          <Span size="xs" weight="medium" className="mt-0.5 inline-flex items-center rounded-full px-1.5 py-px bg-success-surface text-success">
             Default
-          </span>
+          </Span>
         )}
       </Div>
     ),
@@ -74,9 +75,9 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "method",
     header: "Method",
     render: (row) => (
-      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
+      <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
         {row.method.replace(/_/g, " ")}
-      </span>
+      </Span>
     ),
   },
   {

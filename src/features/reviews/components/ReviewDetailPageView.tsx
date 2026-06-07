@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { reviewRepository } from "../../../repositories";
-import { Container, Div, Heading, Main, Section, Text } from "../../../ui";
+import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { Review } from "../types";
 import { ReviewDetailShell } from "./ReviewDetailShell";
@@ -47,19 +47,19 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
     <Main>
       {/* Breadcrumb */}
       <Div className="border-b border-neutral-100 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 py-2.5 px-4">
-        <nav className="mx-auto max-w-3xl flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-400" aria-label="Breadcrumb">
+        <Nav className="mx-auto max-w-3xl flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-400" aria-label="Breadcrumb">
           <Link href={String(ROUTES.HOME)} className="hover:text-primary transition-colors">
             Home
           </Link>
-          <span>/</span>
+          <Span>/</Span>
           <Link href={String(ROUTES.PUBLIC.REVIEWS)} className="hover:text-primary transition-colors">
             Reviews
           </Link>
-          <span>/</span>
-          <span className="text-neutral-700 dark:text-zinc-300 truncate max-w-[200px]">
+          <Span>/</Span>
+          <Span className="text-neutral-700 dark:text-zinc-300 truncate max-w-[200px]">
             {review.title ?? review.id}
-          </span>
-        </nav>
+          </Span>
+        </Nav>
       </Div>
 
       <ReviewDetailShell

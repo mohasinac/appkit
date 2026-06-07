@@ -1,6 +1,6 @@
 "use client";
 import React, { useId } from "react";
-import { Button, Div, Heading, Input, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, Input, Span, Stack, Text } from "../../../ui";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 import { MAX_CUSTOM_SECTIONS } from "../schemas/firestore";
 import { CustomFieldsEditor } from "./CustomFieldsEditor";
@@ -88,7 +88,7 @@ export function CustomSectionsEditor({
               className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400"
             >
               Body text{" "}
-              <span className="text-zinc-400 font-normal">(optional)</span>
+              <Span weight="normal" className="text-zinc-400">(optional)</Span>
             </label>
             <textarea
               id={`${baseId}-text-${i}`}
@@ -105,7 +105,7 @@ export function CustomSectionsEditor({
           <Div>
             <Text className="mb-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">
               Fields{" "}
-              <span className="text-zinc-400 font-normal">(optional)</span>
+              <Span weight="normal" className="text-zinc-400">(optional)</Span>
             </Text>
             <CustomFieldsEditor
               fields={section.fields ?? []}

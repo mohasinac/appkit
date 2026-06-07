@@ -13,11 +13,13 @@ import {
   Div,
   FilterDrawer,
   Input,
+  Label,
   ListingToolbar,
   Pagination,
   RowActionMenu,
   Select,
   SideDrawer,
+  Span,
   Stack,
   Text,
   useToast,
@@ -115,9 +117,9 @@ const COLUMNS: DataTableColumn<TemplateRow>[] = [
     header: "Condition",
     render: (row) =>
       row.condition ? (
-        <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
+        <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
           {row.condition.replace(/_/g, " ")}
-        </span>
+        </Span>
       ) : (
         <Text className="text-sm text-[var(--appkit-color-text-muted)]">—</Text>
       ),
@@ -453,9 +455,9 @@ export function SellerTemplatesView({
       >
         <Div className={`space-y-4 ${__P.p4}`}>
           <Div>
-            <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Condition
-            </label>
+            </Label>
             <Select
               value={pendingCondition}
               onValueChange={setPendingCondition}
