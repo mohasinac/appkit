@@ -6,9 +6,12 @@ import {
   Button,
   Div,
   FormActions,
+  Label,
   Select,
   SideDrawer,
+  Span,
   Text,
+  Ul,
   useToast,
 } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -197,7 +200,7 @@ function renderTicketListArea(props: {
           <Text className="text-sm text-zinc-500 dark:text-zinc-400">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}
-      <ul className="space-y-3">
+      <Ul className="space-y-3">
         {tickets.map((ticket) => (
           <li key={ticket.id}>
             <Button variant="ghost" type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
@@ -206,12 +209,12 @@ function renderTicketListArea(props: {
                   <Text className="font-medium text-zinc-900 dark:text-zinc-100 truncate">{ticket.subject}</Text>
                   <Text className="text-xs text-zinc-500 dark:text-zinc-400">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
                 </Div>
-                <span className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</span>
+                <Span size="xs" weight="medium" className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</Span>
               </Div>
             </Button>
           </li>
         ))}
-      </ul>
+      </Ul>
     </>
   );
 }
@@ -224,17 +227,17 @@ function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen
       <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         <Select label="Category" options={CATEGORY_OPTIONS} value={newCategory} onValueChange={setNewCategory} />
         <Div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Subject</label>
+          <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Subject</Label>
           <input type="text" value={newSubject} onChange={(e) => setNewSubject(e.target.value)} placeholder="Brief description of the issue" className={CLS_INPUT} />
         </Div>
         {newCategory === "order_issue" && (
           <Div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Order ID</label>
+            <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Order ID</Label>
             <input type="text" value={newOrderId} onChange={(e) => setNewOrderId(e.target.value)} placeholder="e.g. order-3-20260508-a1b2c3" className={CLS_INPUT} />
           </Div>
         )}
         <Div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Description</label>
+          <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Description</Label>
           <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} rows={4} placeholder="Describe the issue in detail…" className={CLS_INPUT} />
         </Div>
         <FormActions align="right">
@@ -254,9 +257,9 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
       {selectedTicket && (
         <Div className={`flex flex-col gap-4 ${__P.p4}`}>
           <Div className="flex flex-wrap gap-2">
-            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`}>{selectedTicket.status.replace(/_/g, " ")}</span>
-            <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{selectedTicket.category.replace(/_/g, " ")}</span>
-            {selectedTicket.orderId && <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">Order: {selectedTicket.orderId}</span>}
+            <Span size="xs" weight="medium" className={`inline-flex rounded-full px-2.5 py-1 ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`}>{selectedTicket.status.replace(/_/g, " ")}</Span>
+            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{selectedTicket.category.replace(/_/g, " ")}</Span>
+            {selectedTicket.orderId && <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">Order: {selectedTicket.orderId}</Span>}
           </Div>
           {selectedTicket.description && (
             <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
@@ -271,8 +274,8 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <Div key={msg.id ?? i} className={`rounded-lg ${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`}>
                     <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
-                      <span className="font-medium text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</span>
-                      {msg.createdAt && <span>{new Date(msg.createdAt).toLocaleString()}</span>}
+                      <Span weight="medium" className="text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</Span>
+                      {msg.createdAt && <Span>{new Date(msg.createdAt).toLocaleString()}</Span>}
                     </Div>
                     <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
                   </Div>
@@ -282,7 +285,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
           )}
           {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (
             <Div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Reply</label>
+              <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Reply</Label>
               <textarea value={replyBody} onChange={(e) => setReplyBody(e.target.value)} rows={3} placeholder="Add a message to your ticket…" className={CLS_INPUT} />
               <Button type="button" variant="primary" size="sm" isLoading={replyMutation.isPending} disabled={!replyBody.trim() || replyMutation.isPending} onClick={() => replyMutation.mutate()}>Send reply</Button>
             </Div>
