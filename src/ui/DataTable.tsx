@@ -5,7 +5,7 @@ const CLS_CHECKBOX = "rounded border-zinc-300";
 import { Button } from "./components/Button";
 import { Spinner } from "./components/Spinner";
 import { Pagination } from "./components/Pagination";
-import { Text } from "./components/Typography";
+import { Span, Text } from "./components/Typography";
 import { AnimatedList } from "./components/Motion";
 import { GRID_MAP } from "./components/Layout";
 import type { GridCols } from "./components/Layout";
@@ -478,7 +478,7 @@ export function DataTable<T extends object>({
                       <Row gap="sm">
                         {col.header}
                         {col.sortable && (
-                          <span className="text-zinc-400 dark:text-zinc-400" aria-hidden="true">
+                          <Span className="text-zinc-400 dark:text-zinc-400" aria-hidden="true">
                             {sortKey === col.key ? (
                               sortDirection === "asc" ? (
                                 "↑"
@@ -486,9 +486,9 @@ export function DataTable<T extends object>({
                                 "↓"
                               )
                             ) : (
-                              <span className="opacity-30">↕</span>
+                              <Span className="opacity-30">↕</Span>
                             )}
-                          </span>
+                          </Span>
                         )}
                       </Row>
                     </th>
@@ -723,9 +723,9 @@ function DataTableTableView<T extends object>({
                   <Row gap="sm">
                     {col.header}
                     {col.sortable && (
-                      <span className="text-zinc-400 dark:text-zinc-400" aria-hidden="true">
-                        {sortKey === col.key ? (sortDirection === "asc" ? "↑" : "↓") : <span className="opacity-30">↕</span>}
-                      </span>
+                      <Span className="text-zinc-400 dark:text-zinc-400" aria-hidden="true">
+                        {sortKey === col.key ? (sortDirection === "asc" ? "↑" : "↓") : <Span className="opacity-30">↕</Span>}
+                      </Span>
                     )}
                   </Row>
                 </th>
