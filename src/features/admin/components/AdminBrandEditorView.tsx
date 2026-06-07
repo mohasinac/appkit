@@ -19,6 +19,10 @@ import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -254,7 +258,7 @@ export function AdminBrandEditorView({
   );
 
   if (embedded) {
-    return <Div className={`${__O.yAuto} p-4`}>{formSection}</Div>;
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formSection}</Div>;
   }
 
   return (

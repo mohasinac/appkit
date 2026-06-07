@@ -4,6 +4,10 @@ import React from "react";
 import type { AdminListingScaffoldRow } from "./DataListingView";
 import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -153,7 +157,7 @@ function AdminCardItem({
           )}
         </Row>
       )}
-      <Stack gap="xs" className="p-3.5">
+      <Stack gap="xs" className={`${__P.p3}.5`}>
         <Stack gap="none">
           <Text size="sm" weight="semibold" className="line-clamp-2 leading-snug text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
           <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>

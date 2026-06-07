@@ -17,6 +17,10 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   auto: "overflow-auto",
   hidden: "overflow-hidden",
@@ -355,7 +359,7 @@ export function CompareOverlay({
         </button>
       </Row>
 
-      <Div className={`flex-1 ${__O.auto} p-4`}>
+      <Div className={`flex-1 ${__O.auto} ${__P.p4}`}>
         {isLoading ? (
           <Text variant="secondary" className="text-center py-12">
             Loadingâ€¦

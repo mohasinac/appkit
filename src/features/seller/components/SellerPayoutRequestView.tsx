@@ -10,6 +10,11 @@ import {
   Text,
 } from "../../../ui";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 interface PayoutSummary {
   availableEarnings: number;
   hasPendingPayout: boolean;
@@ -92,7 +97,7 @@ export function SellerPayoutRequestView({
 
   return (
     <>
-      <Div className="p-4 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
+      <Div className={`${__P.p4} rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]`}>
         <Div className="flex flex-wrap items-center justify-between gap-3">
           <Div>
             <Text className="text-sm text-[var(--appkit-color-text-muted)]">Available for Payout</Text>
@@ -127,8 +132,8 @@ export function SellerPayoutRequestView({
         onClose={() => { setModalOpen(false); setSubmitError(null); }}
         title="Request Payout"
       >
-        <Stack gap="md" className="p-4">
-          <Div className="p-3 rounded bg-[var(--appkit-color-surface-muted)]">
+        <Stack gap="md" className={`${__P.p4}`}>
+          <Div className={`${__P.p3} rounded bg-[var(--appkit-color-surface-muted)]`}>
             <Text className="text-sm text-[var(--appkit-color-text-muted)]">Amount to be paid</Text>
             <Text className="text-xl font-bold">{rupees(summary?.availableEarnings ?? 0)}</Text>
             <Text className="text-xs text-[var(--appkit-color-text-muted)]">

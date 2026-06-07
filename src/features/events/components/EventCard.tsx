@@ -10,6 +10,10 @@ import { EventStatusBadge } from "./EventStatusBadge";
 import { ROUTES } from "../../../next";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -93,7 +97,7 @@ export function EventCard({
           </Div>
         )}
       </Link>
-      <Div className="flex flex-1 flex-col p-4">
+      <Div className={`flex flex-1 flex-col ${__P.p4}`}>
         <Div className="flex items-start justify-between gap-2 mb-2">
           <Span size="lg" aria-hidden="true">
             {TYPE_ICONS[event.type]}

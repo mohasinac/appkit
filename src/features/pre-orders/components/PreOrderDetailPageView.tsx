@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { productRepository } from "../../../repositories";
 
+const __P = {
+  p3: "p-3",
+  p5: "p-5",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -222,7 +227,7 @@ function PreOrderInfoSection({
       )}
 
       {safeSeller && (
-        <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
+        <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
           <Row justify="between" align="center">
             <Div>
               <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">
@@ -275,7 +280,7 @@ function PreOrderBuyBarPanel({
   onReserveNow,
 }: PreOrderBuyBarPanelProps) {
   return (
-    <Div id="pre-order-buy-bar" className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+    <Div id="pre-order-buy-bar" className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
       {reserveTarget > 0 && (
         <Div className="space-y-2">
           <Row justify="between" align="center">

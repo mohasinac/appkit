@@ -16,6 +16,10 @@ import type { ProductDocument } from "../../../../features/products/schemas/fire
 import type { RevealedCode } from "./CodeRevealPanel";
 import { CodeRevealPanel } from "./CodeRevealPanel";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -97,7 +101,7 @@ export function DigitalCodeDetailView({
               fetchCode={fetchCode}
             />
           ) : (
-            <Div className="rounded-lg border border-border bg-muted/40 p-4">
+            <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
               <Text className="text-sm text-muted-foreground">
                 After purchase, return to your order to reveal the code instantly.
               </Text>

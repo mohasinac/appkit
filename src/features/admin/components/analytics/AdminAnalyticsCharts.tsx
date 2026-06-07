@@ -5,6 +5,11 @@ import dynamic from "next/dynamic";
 import { Div, Heading } from "../../../../ui";
 import type { AnalyticsMonthEntry } from "../../types";
 
+const __P = {
+  p4: "p-4",
+  p6: "p-6",
+} as const;
+
 // recharts exports generic components (<DataPointType>) that don't satisfy
 // next/dynamic's ComponentType<P> constraint — cast each to ComponentType<any>.
 const ResponsiveContainer = dynamic(
@@ -67,7 +72,7 @@ function ChartCard({
         }}
         aria-hidden="true"
       />
-      <Div className="p-4 sm:p-6 pt-5 sm:pt-7">
+      <Div className={`${__P.p4} sm:${__P.p6} pt-5 sm:pt-7`}>
         {title && (
           <Heading level={3} className="text-sm font-semibold text-[var(--appkit-color-text)] mb-4">
             {title}

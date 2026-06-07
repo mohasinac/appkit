@@ -10,6 +10,10 @@ import { ROUTES } from "../../../next";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 const PREORDER_SORT_OPTIONS = [
@@ -124,7 +128,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
                 className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse"
               >
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
-                <Div className="p-3 space-y-2">
+                <Div className={`${__P.p3} space-y-2`}>
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
                   <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />

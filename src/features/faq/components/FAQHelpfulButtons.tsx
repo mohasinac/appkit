@@ -2,6 +2,10 @@
 import { useState } from "react";
 import { Button, Div, Span, Text } from "../../../ui";
 
+const __P = {
+  p6: "p-6",
+} as const;
+
 interface FAQHelpfulButtonsProps {
   faqId: string;
   initialHelpful: number;
@@ -60,7 +64,7 @@ export function FAQHelpfulButtons({
   };
 
   return (
-    <Div className="rounded-lg bg-zinc-100 p-6 dark:bg-slate-700">
+    <Div className={`rounded-lg bg-zinc-100 ${__P.p6} dark:bg-slate-700`}>
       <Text className="mb-3 text-sm text-zinc-600 dark:text-zinc-300">
         {userVote
           ? (labels?.thanksForFeedback ?? "Thanks for your feedback")

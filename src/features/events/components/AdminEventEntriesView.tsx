@@ -18,6 +18,10 @@ import type { AdminTableColumn } from "../../admin/types";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { EventEntryItem, EventEntryListResponse } from "../types";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 interface AdminEventStatsResponse {
   event?: {
     title?: string;
@@ -286,7 +290,7 @@ export function AdminEventEntriesView({
   const expandedEntry = expandedEntryId ? rows.find((r) => r.id === expandedEntryId) : null;
 
   const responsesPanelSection = expandedEntry?.formResponses && Object.keys(expandedEntry.formResponses).length > 0 ? (
-    <Div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4 space-y-3">
+    <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 ${__P.p4} space-y-3`}>
       <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
         Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
       </Text>

@@ -22,6 +22,10 @@ import {
 } from "../../../_internal/shared/features/categories/bundle-config";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -57,7 +61,7 @@ function renderBundleSelectedChips(props: {
   const { value, metadata, remove } = props;
   if (value.length === 0) return null;
   return (
-    <Div className="flex flex-wrap gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900">
+    <Div className={`flex flex-wrap gap-2 rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900`}>
       {value.map((id) => {
         const meta = metadata[id];
         const label = meta?.title ?? id;

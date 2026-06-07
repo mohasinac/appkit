@@ -19,6 +19,10 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 function validateThirdPartyUrl(url: string, issues: string[]): void {
   if (!url.trim()) {
     issues.push("Third-party ads require a third-party URL");
@@ -455,7 +459,7 @@ export function AdminAdEditorView({
           {scheduleSection}
           {creativeSection}
 
-          <Div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3">
+          <Div className={`rounded-lg border border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
             <Text className="text-sm font-medium mb-1">Preview</Text>
             <Text className="text-xs text-neutral-500 dark:text-zinc-400">
               {title || name || "Untitled ad"}

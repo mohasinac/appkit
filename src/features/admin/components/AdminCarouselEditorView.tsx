@@ -27,6 +27,10 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const CLS_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
 const CLS_ROW_BETWEEN = "flex items-center justify-between";
 const CLS_SECTION_HEADING = "text-sm font-semibold text-zinc-900 dark:text-zinc-100";
@@ -186,7 +190,7 @@ function BackgroundEditor({
               placeholder="https://..."
             />
           )}
-          <Div className="space-y-2 rounded-lg border border-zinc-200 dark:border-zinc-800 p-3">
+          <Div className={`space-y-2 rounded-lg border border-zinc-200 dark:border-zinc-800 ${__P.p3}`}>
             <Toggle
               label="Dim overlay"
               checked={value.dimOverlay?.enabled ?? false}
@@ -323,7 +327,7 @@ function CardEditor({
           )}
         </Row>
         {buttons.map((btn, bi) => (
-          <Div key={btn.id ?? bi} className="rounded-lg border border-zinc-200 dark:border-zinc-800 p-3 space-y-2">
+          <Div key={btn.id ?? bi} className={`rounded-lg border border-zinc-200 dark:border-zinc-800 ${__P.p3} space-y-2`}>
             <Row className={CLS_ROW_BETWEEN}>
               <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Button {bi + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => set({ buttons: buttons.filter((_, i) => i !== bi) })}>✕</Button>
@@ -537,7 +541,7 @@ export function AdminCarouselEditorView({
             <Input label="Heading" value={overlayTitle} onChange={(e) => setOverlayTitle(e.target.value)} placeholder="India's #1 Collectibles Marketplace" />
             <Input label="Subtitle" value={overlaySubtitle} onChange={(e) => setOverlaySubtitle(e.target.value)} placeholder="Pokémon TCG · Hot Wheels · Beyblade X" />
             <Input label="Description" value={overlayDesc} onChange={(e) => setOverlayDesc(e.target.value)} placeholder="One sentence description..." />
-            <Div className="rounded-lg border border-zinc-200 dark:border-zinc-800 p-3 space-y-2">
+            <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-800 ${__P.p3} space-y-2`}>
               <Text className="text-sm font-medium">CTA button</Text>
               <Input label="Button text" value={overlayBtnText} onChange={(e) => setOverlayBtnText(e.target.value)} placeholder="Shop Now" />
               <Input label="Button link" value={overlayBtnLink} onChange={(e) => setOverlayBtnLink(e.target.value)} placeholder="/products" />

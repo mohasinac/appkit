@@ -3,6 +3,10 @@ import Link from "next/link";
 import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import type { PromoBanner } from "../types";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 export interface PromoGridProps {
   banners: PromoBanner[];
   /** Eyebrow label above the section heading. Default: "LIMITED TIME". */
@@ -102,7 +106,7 @@ export function PromoGrid({
                 className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 style={{ boxShadow: "inset 0 0 0 2px var(--color-yellow)" }}
               />
-              <Div className="absolute bottom-0 left-0 right-0 p-4">
+              <Div className={`absolute bottom-0 left-0 right-0 ${__P.p4}`}>
                 <Text
                   className="leading-tight"
                   style={{

@@ -5,6 +5,10 @@ import { Div, Heading, Stack, Text } from "../../../ui";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 
+const __P = {
+  p6: "p-6",
+} as const;
+
 export interface EventOfferCardProps {
   /** Coupon code to copy. */
   couponCode: string;
@@ -43,7 +47,7 @@ export function EventOfferCard({
   };
 
   return (
-    <Div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 p-6">
+    <Div className={`rounded-2xl border border-zinc-200 dark:border-zinc-700 ${__P.p6}`}>
       <Stack gap="md">
         <Stack gap="xs">
           <Heading level={2} className="text-2xl font-semibold">

@@ -22,6 +22,10 @@ import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const CLS_REFUND_NOTE = "rounded border border-yellow-400/40 bg-yellow-50 px-4 py-3 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100";
 
 export interface PrizeRevealResponse {
@@ -253,7 +257,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "revealing" ? (
-          <Div className="rounded bg-[var(--appkit-color-surface-muted)] p-4 text-center">
+          <Div className={`rounded bg-[var(--appkit-color-surface-muted)] ${__P.p4} text-center`}>
             <Text className="text-lg font-semibold">Rolling…</Text>
             <Text className="text-sm text-[var(--appkit-color-text-muted)]">
               The winner was locked by the server before this animation started.
@@ -263,7 +267,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "won" && winner ? (
-          <Div className="rounded-lg border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] p-4 text-center">
+          <Div className={`rounded-lg border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center`}>
             <Text className="text-xs uppercase tracking-wider text-[var(--appkit-color-text-muted)]">
               You won
             </Text>

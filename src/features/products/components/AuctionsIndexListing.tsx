@@ -18,6 +18,10 @@ import { ACTION_ID } from "../constants/action-defs";
 import { AUCTION_PUBLIC_SORT_OPTIONS } from "../constants/sieve";
 import { useBottomActions } from "../../layout";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -236,7 +240,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
             {Array.from({ length: 8 }).map((_, i) => (
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
-                <Div className="p-3 space-y-2">
+                <Div className={`${__P.p3} space-y-2`}>
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
                   <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />

@@ -2,6 +2,10 @@ import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
+const __P = {
+  p6: "p-6",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface TrustIndicatorItem {
@@ -25,7 +29,7 @@ export function TrustIndicatorsSection({
   const { themed } = THEME_CONSTANTS;
 
   return (
-    <Section className={`p-6 ${themed.bgSecondary} ${className}`}>
+    <Section className={`${__P.p6} ${themed.bgSecondary} ${className}`}>
       <Div className="w-full">
         <Grid
           gap="md"

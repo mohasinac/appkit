@@ -6,6 +6,10 @@ import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
 import type { GoogleReview } from "../lib/google-reviews-fetcher";
 import type { GoogleReviewsSectionConfig } from "../schemas";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const CLS_STAR_ON = "text-yellow-400";
 const CLS_STAR_OFF = "text-zinc-300 dark:text-zinc-600";
 const CLS_GMAPS_LINK = "shrink-0 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline";
@@ -78,7 +82,7 @@ function ReviewCard({
     : null;
 
   return (
-    <Div className="flex flex-col gap-3 p-4 rounded-xl bg-[var(--appkit-color-surface)] shadow-sm border border-[var(--appkit-color-border)]">
+    <Div className={`flex flex-col gap-3 ${__P.p4} rounded-xl bg-[var(--appkit-color-surface)] shadow-sm border border-[var(--appkit-color-border)]`}>
       <Div className="flex items-center gap-3">
         {review.authorPhotoUrl ? (
           <img

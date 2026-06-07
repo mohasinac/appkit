@@ -13,6 +13,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+const __P = {
+  p6: "p-6",
+  p8: "p-8",
+} as const;
+
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -139,7 +144,7 @@ function renderScamAwarenessAlert(t: HelpTranslateFn) {
 
 function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
-    <Section className={`rounded-2xl p-6 border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}>
+    <Section className={`rounded-2xl ${__P.p6} border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}>
       <Div className="flex-1">
         <Heading level={3} className="mb-1 text-base">{t("trackOrderTitle")}</Heading>
         <Text variant="secondary" className="text-sm">{t("trackOrderText")}</Text>
@@ -151,7 +156,7 @@ function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
 
 function renderContactCtaSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
-    <Section className={`rounded-2xl p-8 text-center border ${themed.border} ${themed.bgSecondary}`}>
+    <Section className={`rounded-2xl ${__P.p8} text-center border ${themed.border} ${themed.bgSecondary}`}>
       <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />
       <Heading level={2} className="mb-3">{t("contactTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("contactText")}</Text>

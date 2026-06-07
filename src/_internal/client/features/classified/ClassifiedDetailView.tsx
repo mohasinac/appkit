@@ -19,6 +19,10 @@ import type { ProductDocument } from "../../../../features/products/schemas/fire
 import type { ConversationDocument } from "../../../../features/messages/schemas/firestore";
 import type { startClassifiedConversationAction } from "../../../server/features/classified/actions";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -105,7 +109,7 @@ export function ClassifiedDetailView({
 
           {/* Contact Seller CTA */}
           {conversation ? (
-            <Div className="rounded-lg border border-border bg-muted/40 p-4">
+            <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
               <Text className="mb-2 font-medium">Conversation started!</Text>
               <Link
                 href={ROUTES.USER.MESSAGES}

@@ -4,6 +4,10 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
   yAuto: "overflow-y-auto",
@@ -156,7 +160,7 @@ export function CartDrawer({
         onClick={onClose}
       />
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white dark:bg-slate-900 shadow-xl">
-        <Row justify="between" className="border-b border-neutral-200 dark:border-slate-700 p-4">
+        <Row justify="between" className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p4}`}>
           <Heading level={2} className="text-lg font-semibold">
             {labels.title ?? "Cart"}
           </Heading>
@@ -170,7 +174,7 @@ export function CartDrawer({
             ✕
           </Button>
         </Row>
-        <Div className={`flex-1 ${__O.yAuto} p-4 space-y-3`}>
+        <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-3`}>
           {isLoading ? (
             <Div className="flex justify-center py-12">
               <Div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 dark:border-slate-600 border-t-neutral-800 dark:border-t-zinc-200" />
@@ -191,7 +195,7 @@ export function CartDrawer({
           )}
         </Div>
         {items.length > 0 && (
-          <Div className="border-t border-neutral-200 dark:border-slate-700 p-4 space-y-4">
+          <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p4} space-y-4`}>
             <Row justify="between" className="text-sm">
               <Span className="text-neutral-600 dark:text-zinc-300">
                 {labels.subtotal ?? "Subtotal"}

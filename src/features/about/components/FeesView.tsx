@@ -2,6 +2,10 @@ import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Heading, Text, Section, Caption, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
 
+const __P = {
+  p5: "p-5",
+} as const;
+
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
@@ -129,7 +133,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
     <Section>
       <Heading level={2} className="mb-3">{t("payoutExampleTitle")}</Heading>
       <Text variant="secondary" className="mb-6">{t("payoutExampleSubtitle")}</Text>
-      <Div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-5 max-w-sm`}>
+      <Div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} ${__P.p5} max-w-sm`}>
         <Heading level={3} className="text-base mb-4">{t("payoutExampleProduct")}</Heading>
         <Div className="space-y-2">
           {rows.map((row, i) => (
@@ -146,7 +150,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
 
 function renderDisclaimerSection(t: TranslateFn, themed: ThemedTokens) {
   return (
-    <Section className={`rounded-xl border ${themed.border} p-5 ${themed.bgSecondary}`}>
+    <Section className={`rounded-xl border ${themed.border} ${__P.p5} ${themed.bgSecondary}`}>
       <Heading level={3} className="text-base mb-2">{t("disclaimerTitle")}</Heading>
       <Caption className="leading-relaxed">{t("disclaimerText")}</Caption>
     </Section>

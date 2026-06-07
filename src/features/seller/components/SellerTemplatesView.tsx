@@ -34,6 +34,10 @@ import {
 } from "../hooks/useSellerListingData";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const PAGE_SIZE = 25;
 const DEFAULT_SORT = "name";
 
@@ -447,7 +451,7 @@ export function SellerTemplatesView({
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <Div className="space-y-4 p-4">
+        <Div className={`space-y-4 ${__P.p4}`}>
           <Div>
             <label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Condition

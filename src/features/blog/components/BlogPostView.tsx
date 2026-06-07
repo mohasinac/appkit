@@ -11,6 +11,10 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
 
+const __P = {
+  p8: "p-8",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -124,7 +128,7 @@ export function BlogPostView({
   if (error || !post) {
     if (renderError) return <>{renderError(error ?? null)}</>;
     return (
-      <Div className="flex flex-col items-center justify-center min-h-screen gap-4 p-8">
+      <Div className={`flex flex-col items-center justify-center min-h-screen gap-4 ${__P.p8}`}>
         <Heading level={1} className="text-xl font-semibold">
           {labels.notFound ?? "Post not found"}
         </Heading>

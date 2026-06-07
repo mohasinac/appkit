@@ -21,6 +21,10 @@ import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
+const __P = {
+  p6: "p-6",
+} as const;
+
 const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow";
 
 export interface PrizeDrawCollageProps {
@@ -79,7 +83,7 @@ export function PrizeDrawCollage({
 
   if (!items.length) {
     return (
-      <Div className="rounded border border-dashed border-[var(--appkit-color-border)] p-6 text-center">
+      <Div className={`rounded border border-dashed border-[var(--appkit-color-border)] ${__P.p6} text-center`}>
         <Text className="text-sm text-[var(--appkit-color-text-muted)]">
           No prizes configured yet.
         </Text>

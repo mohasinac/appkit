@@ -148,6 +148,11 @@ import {
   parseCollectionCardsBuilder,
 } from "./sections/adminSectionsBuildParse";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 const CLS_SECTION_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
 const LBL_FILTER_BY_CATEGORY = "Filter by category";
 const PH_FILTER_BY_CATEGORY = "Filter by category…";
@@ -961,7 +966,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         {statsBuilder.stats.map((stat, index) => (
-          <Div key={`stat-row-${index}`} className="space-y-3 rounded-md border border-zinc-200 p-3 dark:border-slate-700">
+          <Div key={`stat-row-${index}`} className={`space-y-3 rounded-md border border-zinc-200 ${__P.p3} dark:border-slate-700`}>
             <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Stat {index + 1}
             </Text>
@@ -1673,7 +1678,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Trust Indicators Builder</Text>
         <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         {trustIndicatorsBuilder.indicators.map((ind, index) => (
-          <Div key={ind.id} className="space-y-2 rounded-md border border-zinc-200 p-3 dark:border-slate-700">
+          <Div key={ind.id} className={`space-y-2 rounded-md border border-zinc-200 ${__P.p3} dark:border-slate-700`}>
             <Div className="flex items-center justify-between">
               <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Indicator {index + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
@@ -2552,7 +2557,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <DataTable rows={rows} isLoading={isLoading} emptyLabel="No sections found" />
       </Div>
 
-      <Div className="mt-4 space-y-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+      <Div className={`mt-4 space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
         <Div className="flex items-center justify-between gap-3">
           <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Reorder Sections

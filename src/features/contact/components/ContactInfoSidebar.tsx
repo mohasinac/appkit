@@ -1,6 +1,10 @@
 import React from "react";
 import { Aside, Div, Heading, Span, Stack, Text } from "../../../ui";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 export interface ContactInfoItem {
   icon: string;
   label: string;
@@ -57,7 +61,7 @@ export function ContactInfoSidebar({
       </Div>
 
       {(labels.businessHoursLabel || labels.responseTimeLabel) && (
-        <Stack gap="sm" className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800/60 p-4">
+        <Stack gap="sm" className={`rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800/60 ${__P.p4}`}>
           {labels.businessHoursLabel && labels.businessHoursValue && (
             <Div>
               <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">

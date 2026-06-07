@@ -14,6 +14,11 @@ import {
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -69,7 +74,7 @@ export function AdminContactEditorView({
       onClose={onClose}
       title={subject ?? "Contact Submission"}
     >
-      <Div className="flex flex-col gap-5 p-4">
+      <Div className={`flex flex-col gap-5 ${__P.p4}`}>
         {/* Status badge */}
         <Div className="flex items-center gap-2">
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">Status:</Text>
@@ -100,7 +105,7 @@ export function AdminContactEditorView({
           <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
             Message
           </Text>
-          <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-3 max-h-64 ${__O.yAuto}`}>
+          <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 ${__P.p3} max-h-64 ${__O.yAuto}`}>
             <Text className="text-sm text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap leading-relaxed">
               {message ?? "No message body."}
             </Text>

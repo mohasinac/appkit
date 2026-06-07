@@ -7,6 +7,10 @@ import { Badge, Button, Div, Row, Text } from "../../../ui";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { CARD_BORDER, CARD_BORDER_ACTIVE, CARD_GRID_CLS, CARD_LIST_CLS, KIND_BADGE_VARIANT } from "./seller-products-styles";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 export interface SellerProductsCardsRowShape {
   id: string;
   primary: string;
@@ -78,7 +82,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
                   —
                 </Div>
               )}
-              <Div className="p-3 space-y-1">
+              <Div className={`${__P.p3} space-y-1`}>
                 <Text className="font-medium text-sm line-clamp-1">{row.primary}</Text>
                 <Row className="gap-2">
                   <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>

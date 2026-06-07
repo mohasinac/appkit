@@ -14,6 +14,10 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { CATEGORY_FIELDS } from "../../../constants/field-names";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -32,7 +36,7 @@ function renderCategoryGrid(props: {
         {Array.from({ length: 10 }).map((_, i) => (
           <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
             <Div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
-            <Div className="p-3.5 space-y-2">
+            <Div className={`${__P.p3}.5 space-y-2`}>
               <Div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
             </Div>

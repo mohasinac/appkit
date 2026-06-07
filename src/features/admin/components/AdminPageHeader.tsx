@@ -1,6 +1,10 @@
 import { Div, Heading, Nav, Text, Span, Button, Row } from "@mohasinac/appkit/ui";
 import { ChevronRight } from "lucide-react";
 
+const __P = {
+  p6: "p-6",
+} as const;
+
 /**
  * AdminPageHeader Component
  *
@@ -75,7 +79,7 @@ export function AdminPageHeader({
   },
 }: AdminPageHeaderProps) {
   return (
-    <Div className={`${themeConfig.gradient} p-6 ${className}`}>
+    <Div className={`${themeConfig.gradient} ${__P.p6} ${className}`}>
       {breadcrumb && breadcrumb.length > 0 && (
         <Nav
           aria-label="Breadcrumb"

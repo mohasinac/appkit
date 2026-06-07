@@ -3,6 +3,10 @@
 import type { SocialPost, SocialPlatform } from "../schemas";
 import { Div, Text } from "../../../ui";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 // --- Platform brand colours & icons ------------------------------------------
 
 const PLATFORM_META: Record<SocialPlatform, { label: string; colorClass: string; icon: React.ReactNode }> = {
@@ -108,7 +112,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Caption hover overlay */}
       {showCaption && post.caption && (
-        <Div className="absolute inset-0 flex flex-col justify-end bg-black/60 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <Div className={`absolute inset-0 flex flex-col justify-end bg-black/60 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
           <Text className="line-clamp-2 text-xs text-white">{post.caption}</Text>
         </Div>
       )}
@@ -183,7 +187,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       </Div>
 
       {/* Hover overlay — caption + stats */}
-      <Div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+      <Div className={`pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
         {showCaption && post.caption && (
           <Text className="mb-2 line-clamp-3 text-xs text-white">{post.caption}</Text>
         )}

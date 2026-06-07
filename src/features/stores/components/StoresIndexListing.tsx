@@ -17,6 +17,10 @@ import { STORE_FIELDS } from "../../../constants/field-names";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import { useBottomActions } from "../../layout";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -208,7 +212,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
-                <Div className="p-4 space-y-2.5">
+                <Div className={`${__P.p4} space-y-2.5`}>
                   <Div className="flex items-center gap-2">
                     <Div className="h-10 w-10 rounded-lg bg-zinc-200 dark:bg-slate-700" />
                   </Div>

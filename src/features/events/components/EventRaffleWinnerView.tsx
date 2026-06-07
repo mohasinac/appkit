@@ -1,5 +1,9 @@
 import { Article, ClaimCouponButton, Div, Heading, Span, Text, TextLink } from "../../../ui";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 export interface RaffleWinnerEvent {
   rafflePrize?: string;
   raffleWinnerUserId?: string;
@@ -116,7 +120,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
       </Div>
 
       {event.raffleGithubFunctionUrl ? (
-        <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 text-sm">
+        <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 ${__P.p4} text-sm`}>
           <Text className="font-medium text-zinc-700 dark:text-zinc-200">
             {l.fairnessLabel}
           </Text>

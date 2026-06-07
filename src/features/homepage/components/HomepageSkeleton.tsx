@@ -1,6 +1,10 @@
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Grid, Row, Section, Stack } from "../../../ui";
 
+const __P = {
+  p8: "p-8",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -24,7 +28,7 @@ export function HomepageSkeleton() {
       />
 
       {/* Trust Features skeleton — 4 cards */}
-      <Section className={`p-8 ${themed.bgPrimary}`}>
+      <Section className={`${__P.p8} ${themed.bgPrimary}`}>
         <Grid className="grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Div
@@ -36,7 +40,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Top Categories skeleton — 6 tiles */}
-      <Section className={`p-8 ${themed.bgSecondary}`}>
+      <Section className={`${__P.p8} ${themed.bgSecondary}`}>
         <Div className={`${skeleton.heading} w-48 mx-auto mb-6`} />
         <Grid className="grid-cols-2 sm:grid-cols-4">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -46,7 +50,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Featured Products skeleton — 5 cards */}
-      <Section className={`p-8 ${themed.bgPrimary}`}>
+      <Section className={`${__P.p8} ${themed.bgPrimary}`}>
         <Row className={`${flex.between} mb-6`}>
           <Div className={`${skeleton.heading} w-52`} />
           <Div className={`${skeleton.text} w-24`} />
@@ -63,7 +67,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Featured Auctions skeleton — 5 cards */}
-      <Section className={`p-8 ${themed.bgSecondary}`}>
+      <Section className={`${__P.p8} ${themed.bgSecondary}`}>
         <Row className={`${flex.between} mb-6`}>
           <Div className={`${skeleton.heading} w-56`} />
           <Div className={`${skeleton.text} w-24`} />
@@ -80,7 +84,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Newsletter skeleton */}
-      <Section className={`p-8 ${themed.bgPrimary}`}>
+      <Section className={`${__P.p8} ${themed.bgPrimary}`}>
         <Div
           className={`${skeleton.card} rounded-2xl max-w-2xl mx-auto ${newsletterH}`}
         />

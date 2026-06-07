@@ -17,6 +17,11 @@ import {
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -329,7 +334,7 @@ export function AdminSupportTicketDetailView({
       onClose={onClose}
       title={subject ?? "Support Ticket"}
     >
-      <Div className="flex flex-col gap-4 p-4">
+      <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         {/* Meta row */}
         <Div className="flex flex-wrap items-center gap-2">
           <span
@@ -355,7 +360,7 @@ export function AdminSupportTicketDetailView({
 
         {/* Description */}
         {description && (
-          <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
+          <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
             <Text className="mb-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
               Description
             </Text>

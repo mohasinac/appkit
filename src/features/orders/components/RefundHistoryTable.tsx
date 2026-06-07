@@ -13,6 +13,10 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import type { OrderDocument, OrderRefundEvent } from "../schemas";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 export interface RefundHistoryTableProps {
   order: Pick<OrderDocument, "refunds" | "contestable" | "totalPrice" | "currency">;
   className?: string;
@@ -97,7 +101,7 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
       )}
 
       {events.length > 0 && (
-        <Div className="p-4">
+        <Div className={`${__P.p4}`}>
           <Heading level={4} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
             {REFUND_COPY.history.heading}
           </Heading>

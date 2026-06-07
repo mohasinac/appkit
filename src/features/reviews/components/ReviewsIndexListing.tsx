@@ -11,6 +11,10 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { REVIEW_FIELDS } from "../../../constants/field-names";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -173,7 +177,7 @@ export function ReviewsIndexListing({
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
-                <Div className="p-4 space-y-3">
+                <Div className={`${__P.p4} space-y-3`}>
                   <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />

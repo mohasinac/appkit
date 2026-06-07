@@ -9,6 +9,10 @@ import {
   TextLink,
 } from "../../../ui";
 
+const __P = {
+  p8: "p-8",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -44,7 +48,7 @@ export function CustomerReviewsSection<T = unknown>({
 
   if (isLoading) {
     return (
-      <Section className={`p-8 ${themed.bgPrimary} ${className}`}>
+      <Section className={`${__P.p8} ${themed.bgPrimary} ${className}`}>
         <Div className="w-full max-w-7xl mx-auto">
           <Div className={`h-8 ${skeleton.base} mb-8 max-w-xs mx-auto`} />
           <Div className={`flex gap-6 ${__O.hidden}`}>

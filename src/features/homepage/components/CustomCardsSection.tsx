@@ -5,6 +5,10 @@ import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -74,7 +78,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
         </Div>
       )}
 
-      <Div className="flex flex-col gap-2 p-4 flex-1">
+      <Div className={`flex flex-col gap-2 ${__P.p4} flex-1`}>
         {card.eyebrow && (
           <Text className="text-xs font-semibold uppercase tracking-widest opacity-70">
             {card.eyebrow}

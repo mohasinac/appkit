@@ -11,6 +11,11 @@ import type { ProductDocument } from "../../products/schemas/firestore";
 import { isAuctionListing, isPreOrderListing } from "../../products/utils/listing-type";
 import { User, Star, ShoppingBag, Package, Trophy, Globe, MapPin, ExternalLink } from "lucide-react";
 
+const __P = {
+  p4: "p-4",
+  p6: "p-6",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -186,7 +191,7 @@ function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statIte
   return (
     <Grid gap="md" className="grid-cols-2 sm:grid-cols-4">
       {statItems.map(({ icon: Icon, label, value }) => (
-        <Div key={label} rounded="xl" className={`border ${themed.border} ${themed.bgPrimary} p-4 text-center`}>
+        <Div key={label} rounded="xl" className={`border ${themed.border} ${themed.bgPrimary} ${__P.p4} text-center`}>
           <Row centered className={`${flex.center} mb-1`}><Icon className="w-4 h-4 text-neutral-400" /></Row>
           <Text className="text-lg font-bold">{value}</Text>
           <Text variant="secondary" className="text-xs">{label}</Text>
@@ -200,7 +205,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
   if (!pub?.bio && !pub?.location && !pub?.website) return null;
   return (
     <Section>
-      <Stack gap="sm" className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} p-6`}>
+      <Stack gap="sm" className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} ${__P.p6}`}>
         {pub.bio && <Text className="text-sm leading-relaxed text-neutral-700 dark:text-zinc-300">{pub.bio}</Text>}
         <Row gap="md" wrap>
           {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
@@ -215,7 +220,7 @@ function renderStoreDescriptionSection(themed: ProfileThemed, isSeller: boolean,
   if (!isSeller || !storeSlug || !storeDescription) return null;
   return (
     <Section>
-      <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-6`}>
+      <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} ${__P.p6}`}>
         <Heading level={3} className="mb-2">{storeName}</Heading>
         <Text variant="secondary" className="text-sm leading-relaxed">{storeDescription}</Text>
         <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">{t("visitStore")} →</Link>

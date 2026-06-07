@@ -36,6 +36,10 @@ import { StepDef, StepForm } from "../../shell";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -787,7 +791,7 @@ export function AdminEventEditorView({
   );
 
   if (embedded) {
-    return <Div className={`${__O.yAuto} p-4`}>{formContent}</Div>;
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formContent}</Div>;
   }
 
   return (

@@ -14,6 +14,11 @@ import {
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 const CLS_SECTION_LABEL = "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
 
 export interface AdminScammerEditorViewProps {
@@ -109,7 +114,7 @@ export function AdminScammerEditorView({
       onClose={onClose}
       title={displayNames.length > 0 ? displayNames[0] : "Scammer Profile"}
     >
-      <Div className="flex flex-col gap-4 p-4">
+      <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         {/* Status badge */}
         <Div className="flex items-center gap-2">
           <span
@@ -147,7 +152,7 @@ export function AdminScammerEditorView({
 
         {/* Contact identifiers */}
         {(phones.length > 0 || upiIds.length > 0) && (
-          <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
+          <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
             {phones.length > 0 && (
               <Div className="mb-2">
                 <Text className={CLS_SECTION_LABEL}>
@@ -181,7 +186,7 @@ export function AdminScammerEditorView({
 
         {/* Description */}
         {description && (
-          <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
+          <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
             <Text className={CLS_SECTION_LABEL}>
               Description
             </Text>

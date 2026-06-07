@@ -5,6 +5,10 @@ import { Div, Heading, Stack, Text } from "../../../ui";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 
+const __P = {
+  p6: "p-6",
+} as const;
+
 export interface EventSaleBannerProps {
   /** Discount percent (e.g. 20 = 20% off). */
   discountPercent?: number;
@@ -37,7 +41,7 @@ export function EventSaleBanner({
     : `${ROUTES.PUBLIC.PRODUCTS}?onSale=true`;
 
   return (
-    <Div className="rounded-2xl bg-gradient-to-br from-[var(--appkit-color-primary)] to-[var(--appkit-color-secondary)] p-6 text-white shadow-lg">
+    <Div className={`rounded-2xl bg-gradient-to-br from-[var(--appkit-color-primary)] to-[var(--appkit-color-secondary)] ${__P.p6} text-white shadow-lg`}>
       <Stack gap="md">
         <Stack gap="xs">
           <Heading level={2} className="text-3xl font-bold">

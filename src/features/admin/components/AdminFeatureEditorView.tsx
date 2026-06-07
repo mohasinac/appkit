@@ -33,6 +33,10 @@ import type {
   ProductFeatureScope,
 } from "../../products/schemas/product-features";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -384,7 +388,7 @@ export function AdminFeatureEditorView({
   );
 
   if (embedded) {
-    return <Div className={`${__O.yAuto} p-4`}>{formSection}{deleteModal}</Div>;
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formSection}{deleteModal}</Div>;
   }
 
   return (

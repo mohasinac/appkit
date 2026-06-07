@@ -4,6 +4,10 @@ import { Alert, Badge, Div, FormField, FormGroup, Heading, Stack, Text, Toggle }
 import { StackedViewShell } from "../../../ui";
 import { StepDef, StepForm } from "../../shell";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 type PayoutMethod = "upi" | "bank_transfer";
 type AccountType = "savings" | "current";
 
@@ -330,7 +334,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
             helpText="Payouts are held until your balance exceeds this amount. Leave blank for no minimum."
             disabled={busy}
           />
-          <Div className="p-3 rounded-lg bg-[var(--appkit-color-surface-alt)] border border-[var(--appkit-color-border)]">
+          <Div className={`${__P.p3} rounded-lg bg-[var(--appkit-color-surface-alt)] border border-[var(--appkit-color-border)]`}>
             <Text className="text-sm font-medium mb-1">Payout Schedule</Text>
             <Text className="text-sm text-[var(--appkit-color-text-muted)]">
               Auto-payouts run every Monday for the previous week&apos;s settled orders. Manual payouts can be requested from the Payouts page at any time.

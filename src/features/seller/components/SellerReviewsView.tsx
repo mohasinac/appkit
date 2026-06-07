@@ -21,6 +21,11 @@ import { StackedViewShell } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 interface ReviewItem {
   id: string;
   productId: string;
@@ -372,9 +377,9 @@ export function SellerReviewsView({
         title={replyTarget?.sellerReply ? "Edit Reply" : "Reply to Review"}
         mode="create"
       >
-        <Stack gap="md" className="p-4">
+        <Stack gap="md" className={`${__P.p4}`}>
           {replyTarget && (
-            <Div className="p-3 rounded bg-[var(--appkit-color-surface-muted)]">
+            <Div className={`${__P.p3} rounded bg-[var(--appkit-color-surface-muted)]`}>
               <Stars rating={replyTarget.rating} />
               <Text className="text-sm mt-1">{replyTarget.comment}</Text>
             </Div>

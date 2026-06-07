@@ -21,6 +21,10 @@ import {
   useMediaUpload,
 } from "../../media";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 interface BrowsedFile {
   name: string;
   size: number;
@@ -88,7 +92,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
   }, [files, search]);
 
   return (
-    <Div className="space-y-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+    <Div className={`space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
       <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
         Browse existing media
       </Text>

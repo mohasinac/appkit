@@ -4,6 +4,10 @@ import { Button, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
+const __P = {
+  p8: "p-8",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -50,7 +54,7 @@ export function AdvertisementBanner({
 
   if (isLoading) {
     return (
-      <Section className={`p-8 ${wrapClass} ${className}`}>
+      <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
           <Div className="h-72 bg-zinc-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
         </Div>
@@ -61,7 +65,7 @@ export function AdvertisementBanner({
   // -- Split layout: when a backgroundImage is provided --
   if (backgroundImage) {
     return (
-      <Section className={`p-8 ${wrapClass} ${className}`}>
+      <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
           <Div className={`relative ${__O.hidden} rounded-2xl bg-zinc-900 shadow-xl`}>
             <Grid className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`}>
@@ -124,7 +128,7 @@ export function AdvertisementBanner({
 
   // -- Full-width gradient layout --
   return (
-    <Section className={`p-8 ${wrapClass} ${className}`}>
+    <Section className={`${__P.p8} ${wrapClass} ${className}`}>
       <Div className={CLS_CONTAINER}>
         <Row
           align="center"

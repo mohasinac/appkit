@@ -9,6 +9,10 @@ import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -57,7 +61,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Div className="aspect-video w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" />
       )}
 
-      <Div className="flex flex-1 flex-col p-3 text-left">
+      <Div className={`flex flex-1 flex-col ${__P.p3} text-left`}>
         <Div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image

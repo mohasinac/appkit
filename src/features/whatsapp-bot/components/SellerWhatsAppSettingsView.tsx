@@ -2,6 +2,10 @@
 
 import React from "react";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -412,7 +416,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Text>
 
         {/* Simulated WhatsApp catalog tile grid */}
-        <Div className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 p-3`}>
+        <Div className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`}>
           <Row gap="sm" align="center" className="mb-3">
             <Div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
               <Text className="text-white text-xs font-bold">W</Text>

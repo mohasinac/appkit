@@ -5,6 +5,10 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
 import { Button, Div, Input, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
 
+const __P = {
+  p5: "p-5",
+} as const;
+
 const BID_ERROR_DISPLAY: Record<string, string> = {
   BID_AUCTION_ENDED: "This auction has closed. No more bids are accepted.",
   BID_AMOUNT_TOO_LOW: "Your bid must exceed the current winning bid.",
@@ -122,7 +126,7 @@ export function PlaceBidFormClient({
   }
 
   return (
-    <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+    <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
       {/* Current / starting bid summary */}
       <Div className="space-y-1">
         <Row justify="between" align="center">

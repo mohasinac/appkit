@@ -5,6 +5,10 @@ import { Div, Span, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { CategoryItem } from "../types";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -61,7 +65,7 @@ export function CategoryCard({
       </Div>
 
       {/* Content */}
-      <Div className="flex flex-1 flex-col p-3.5">
+      <Div className={`flex flex-1 flex-col ${__P.p3}.5`}>
         <Text className={`font-semibold text-sm leading-snug ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`}>
           {category.name}
         </Text>

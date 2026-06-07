@@ -22,6 +22,10 @@ import { apiClient } from "../../../http";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AnalyticsAlertDocument } from "../../store-extensions/schemas/firestore";
 
+const __P = {
+  p5: "p-5",
+} as const;
+
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
@@ -238,7 +242,7 @@ export function SellerAnalyticsAlertsView({
       </Text>
 
       {showForm && (
-        <Section className="border border-zinc-200 dark:border-zinc-700 rounded-xl p-5 space-y-4">
+        <Section className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__P.p5} space-y-4`}>
           <Heading level={3} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             Create Alert
           </Heading>

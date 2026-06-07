@@ -23,6 +23,10 @@ import type { CouponType } from "../../promotions/types";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -552,7 +556,7 @@ export function AdminCouponEditorView({
   );
 
   if (embedded) {
-    return <Div className={`${__O.yAuto} p-4`}>{formSection}</Div>;
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formSection}</Div>;
   }
 
   return (

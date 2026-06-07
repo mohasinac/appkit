@@ -2,6 +2,10 @@ import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
+const __P = {
+  p8: "p-8",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface SiteFeatureItem {
@@ -29,7 +33,7 @@ export function SiteFeaturesSection({
   const { themed } = THEME_CONSTANTS;
 
   return (
-    <Section className={`p-8 ${themed.bgSecondary} ${className}`}>
+    <Section className={`${__P.p8} ${themed.bgSecondary} ${className}`}>
       <Div className="w-full">
         {/* Section Header */}
         <Div className="text-center mb-12">

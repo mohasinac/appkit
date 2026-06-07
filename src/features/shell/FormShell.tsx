@@ -6,6 +6,10 @@ import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
 import { Div, Row, Span, Stack, Text } from "../../ui";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
   xAuto: "overflow-x-auto",
@@ -307,7 +311,7 @@ export function FormShell({
                 <Div className="max-w-3xl mx-auto px-5 py-6 sm:px-6 lg:max-w-none lg:px-0 lg:py-0">
                   {children}
                 </Div>
-                <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] p-4`}>
+                <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] ${__P.p4}`}>
                   <Row gap="xs" className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
                     <Eye className="w-3.5 h-3.5" />
                     <Span>Live preview</Span>

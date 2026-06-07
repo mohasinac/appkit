@@ -3,6 +3,12 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Heading, Span, Text, Section, Stack, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
+
+const __P = {
+  p5: "p-5",
+  p6: "p-6",
+  p8: "p-8",
+} as const;
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -104,7 +110,7 @@ function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
       <Heading level={2} className="mb-8 text-center">{t("stepsTitle")}</Heading>
       <Stack gap="md" className="gap-5">
         {steps.map(({ number, icon, title, text }) => (
-          <Div key={number} className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+          <Div key={number} className={`flex items-start gap-4 ${__P.p5} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
             <Div>
               <Text className="font-semibold mb-0.5">{number}. {title}</Text>
@@ -119,7 +125,7 @@ function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
 
 function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["themed"], rules: string[]) {
   return (
-    <Section className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-6`}>
+    <Section className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} ${__P.p6}`}>
       <Heading level={2} className="mb-4">{t("rulesTitle")}</Heading>
       <ul className="space-y-2">
         {rules.map((rule) => (
@@ -135,7 +141,7 @@ function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
 
 function renderOffersCtaSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
   return (
-    <Section className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}>
+    <Section className={`rounded-2xl ${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`}>
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
       <Div className={`${flex.center} gap-4 flex-wrap`}>

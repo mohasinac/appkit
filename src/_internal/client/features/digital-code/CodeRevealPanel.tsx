@@ -3,6 +3,10 @@
 import React, { useState } from "react";
 import { Button, Div, Span, Stack, Text } from "../../../../ui";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 export interface RevealedCode {
   code: string;
   orderId: string;
@@ -48,7 +52,7 @@ export function CodeRevealPanel({
   }
 
   return (
-    <Div className="rounded-lg border border-border bg-muted/40 p-4">
+    <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
       <Stack gap="sm">
         <Text className="font-medium">Your Digital Code</Text>
         {!revealed ? (

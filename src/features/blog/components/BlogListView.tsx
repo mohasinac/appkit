@@ -17,6 +17,10 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
 import { safeDisplayName } from "../../../security";
 
+const __P = {
+  p5: "p-5",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
   xAuto: "overflow-x-auto",
@@ -69,7 +73,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
           </Div>
         )}
       </Div>
-      <Div className="flex flex-1 flex-col p-5">
+      <Div className={`flex flex-1 flex-col ${__P.p5}`}>
         <Row className="mb-2 gap-2 flex-wrap">
           <Span size="xs" weight="medium" className="rounded-full bg-primary/10 px-2 py-0.5 capitalize text-primary">
             {post.category}
@@ -203,7 +207,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
             className="animate-pulse overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-100 dark:bg-slate-800"
           >
             <Div className="aspect-video bg-neutral-200 dark:bg-slate-700" />
-            <Div className="space-y-2 p-5">
+            <Div className={`space-y-2 ${__P.p5}`}>
               <Div className="h-4 w-16 rounded bg-neutral-200 dark:bg-slate-700" />
               <Div className="h-5 w-full rounded bg-neutral-200 dark:bg-slate-700" />
               <Div className="h-4 w-3/4 rounded bg-neutral-200 dark:bg-slate-700" />

@@ -1,6 +1,10 @@
 import React from "react";
 import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
 
+const __P = {
+  p8: "p-8",
+} as const;
+
 export interface AboutHowItem {
   title: string;
   text: string;
@@ -122,7 +126,7 @@ export function AboutView({
           </Div>
         </Section>
 
-        <Section className={`text-center ${ctaBannerClass} rounded-2xl p-8 md:p-12 text-white`}>
+        <Section className={`text-center ${ctaBannerClass} rounded-2xl ${__P.p8} md:p-12 text-white`}>
           <Heading level={2} variant="none" className="text-3xl font-bold mb-8 text-white">
             {labels.ctaTitle}
           </Heading>

@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { Alert, Button, Div, FormField, Stack, Text } from "../../../ui";
 import type { SellerProductDraft, SellerProductShellProps } from "./SellerProductShell";
 
+const __P = {
+  p5: "p-5",
+} as const;
+
 export interface QuickProductFormProps {
   values: SellerProductDraft;
   onChange: (partial: Partial<SellerProductDraft>) => void;
@@ -78,7 +82,7 @@ export function QuickProductForm({
   };
 
   return (
-    <Stack gap="lg" className="p-5">
+    <Stack gap="lg" className={`${__P.p5}`}>
       <Div>
         <Text className="text-sm text-zinc-500 dark:text-zinc-400">
           Quick add — fill the essentials and publish. You can add more details later.

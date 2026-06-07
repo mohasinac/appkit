@@ -14,6 +14,11 @@ import {
 import { apiClient } from "../../../http";
 import { SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -216,7 +221,7 @@ function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen
   const { newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation } = props;
   return (
     <SideDrawer isOpen={newTicketOpen} onClose={() => setNewTicketOpen(false)} title="Open a support ticket">
-      <Div className="flex flex-col gap-4 p-4">
+      <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         <Select label="Category" options={CATEGORY_OPTIONS} value={newCategory} onValueChange={setNewCategory} />
         <Div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Subject</label>
@@ -247,14 +252,14 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
   return (
     <SideDrawer isOpen={detailOpen} onClose={() => setDetailOpen(false)} title={selectedTicket?.subject ?? "Ticket"}>
       {selectedTicket && (
-        <Div className="flex flex-col gap-4 p-4">
+        <Div className={`flex flex-col gap-4 ${__P.p4}`}>
           <Div className="flex flex-wrap gap-2">
             <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`}>{selectedTicket.status.replace(/_/g, " ")}</span>
             <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{selectedTicket.category.replace(/_/g, " ")}</span>
             {selectedTicket.orderId && <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">Order: {selectedTicket.orderId}</span>}
           </Div>
           {selectedTicket.description && (
-            <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
               <Text className="mb-1 text-xs font-semibold text-zinc-500 uppercase tracking-wide">Your description</Text>
               <Text className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">{selectedTicket.description}</Text>
             </Div>
@@ -264,7 +269,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
               <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Messages</Text>
               <Div className={`space-y-2 max-h-72 ${__O.yAuto}`}>
                 {(selectedTicket.messages ?? []).map((msg, i) => (
-                  <Div key={msg.id ?? i} className={`rounded-lg p-3 text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`}>
+                  <Div key={msg.id ?? i} className={`rounded-lg ${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`}>
                     <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
                       <span className="font-medium text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</span>
                       {msg.createdAt && <span>{new Date(msg.createdAt).toLocaleString()}</span>}

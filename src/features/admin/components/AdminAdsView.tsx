@@ -9,6 +9,10 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { DataTable } from "./DataTable";
 import type { AdminTableColumn } from "../types";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 export type AdminAdStatus = "draft" | "active" | "scheduled" | "paused";
 export type AdminAdProvider = "manual" | "adsense" | "thirdParty";
 
@@ -90,7 +94,7 @@ function AdsSettingsPanel({
   currentConsentRequired, settingsMessage, onSave,
 }: AdsSettingsPanelProps) {
   return (
-    <Div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3 space-y-3">
+    <Div className={`rounded-lg border border-neutral-200 dark:border-slate-700 ${__P.p3} space-y-3`}>
       <Text className="text-sm font-semibold">Provider and publish settings</Text>
       <Text className="text-xs text-neutral-500 dark:text-zinc-400">
         Save provider credentials here before publishing AdSense or third-party inventory.

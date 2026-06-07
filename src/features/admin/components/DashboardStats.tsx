@@ -7,6 +7,10 @@ import { Div, Grid, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
+const __P = {
+  p5: "p-5",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -63,7 +67,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
 
 function SkeletonCard() {
   return (
-    <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} p-5 animate-pulse`}>
+    <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} ${__P.p5} animate-pulse`}>
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
       <Div className="flex items-start justify-between gap-3 pt-1">
         <Div className="flex-1 space-y-2">

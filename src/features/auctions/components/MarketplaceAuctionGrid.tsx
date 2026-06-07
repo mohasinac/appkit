@@ -9,6 +9,10 @@ import {
   type MarketplaceAuctionCardLabels,
 } from "./MarketplaceAuctionCard";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -49,7 +53,7 @@ function AuctionCardSkeleton({
     return (
       <Div className={`flex min-h-[220px] flex-row ${__O.hidden} rounded-xl bg-zinc-200 animate-pulse`}>
         <Div className="aspect-square w-40 flex-shrink-0 bg-zinc-300" />
-        <Div className="flex-1 space-y-2 p-3">
+        <Div className={`flex-1 space-y-2 ${__P.p3}`}>
           <Div className="h-4 w-2/3 rounded bg-zinc-300" />
           <Div className="h-3 w-full rounded bg-zinc-300" />
           <Div className="h-3 w-3/4 rounded bg-zinc-300" />
@@ -66,7 +70,7 @@ function AuctionCardSkeleton({
   return (
     <Div className={`${__O.hidden} rounded-xl bg-zinc-200 animate-pulse`}>
       <Div className="aspect-square bg-zinc-300" />
-      <Div className="space-y-2 p-3">
+      <Div className={`space-y-2 ${__P.p3}`}>
         <Div className="h-4 w-3/4 rounded bg-zinc-300" />
         <Div className="h-3 w-1/3 rounded bg-zinc-300" />
         <Div className="h-5 w-1/2 rounded bg-zinc-300" />

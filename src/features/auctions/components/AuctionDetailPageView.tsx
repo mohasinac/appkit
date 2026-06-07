@@ -2,6 +2,12 @@ import Link from "next/link";
 import { productRepository } from "../../../repositories";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+  p5: "p-5",
+} as const;
+
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const CLS_LIVE_BADGE = "inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-700 dark:text-amber-300";
 const CLS_STAR_ON = "text-amber-400";
@@ -127,7 +133,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       )}
       {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4" />}
       {safeSeller && (
-        <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
+        <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
           <Row justify="between" align="center">
             <Div>
               <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">Listed by</Text>
@@ -320,7 +326,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             onPlaceBid ? (
               <Div id="auction-bid-form" className="space-y-3">
                 {/* Compact summary card — modal owns the form */}
-                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-3">
+                <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-3`}>
                   <Row justify="between" align="baseline">
                     <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
                       {formatCurrency(currentBid, currency)}
@@ -348,7 +354,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               </Div>
             ) : (
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
-              <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+              <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
                 <Div className="space-y-1">
                   <Text className="text-xs text-zinc-500 dark:text-zinc-400">
                     Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
@@ -387,7 +393,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           }
           renderMobileBidForm={() =>
             !isEnded && onPlaceBid ? (
-              <Div className="lg:hidden rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4 space-y-3">
+              <Div className={`lg:hidden rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p4} space-y-3`}>
                 <Row align="center" gap="sm">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
@@ -411,7 +417,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 />
               </Div>
             ) : !isEnded ? (
-              <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4 lg:hidden">
+              <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p4} lg:hidden`}>
                 <Row align="center" gap="sm" className="mb-3">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}

@@ -9,6 +9,10 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -94,7 +98,7 @@ export function BlogFeaturedCard({
         </Div>
 
         {/* Content */}
-        <Div className="flex flex-1 flex-col p-4">
+        <Div className={`flex flex-1 flex-col ${__P.p4}`}>
           {/* Category + featured badges */}
           <Row className="gap-1.5 mb-2 flex-wrap">
             <Span

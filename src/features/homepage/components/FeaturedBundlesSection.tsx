@@ -19,6 +19,10 @@ import {
 import type { CategoryDocument } from "../../categories/schemas";
 import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -133,7 +137,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
         </Row>
       </Link>
       {onBuyNow && (
-        <Div className="border-t border-zinc-100 p-3 pt-2 dark:border-zinc-800">
+        <Div className={`border-t border-zinc-100 ${__P.p3} pt-2 dark:border-zinc-800`}>
           <BundleBuyNowCta
             bundleSlug={bundle.slug}
             outOfStock={stock === "out_of_stock"}

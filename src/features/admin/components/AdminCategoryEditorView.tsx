@@ -9,6 +9,10 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -282,7 +286,7 @@ export function AdminCategoryEditorView({
   );
 
   if (embedded) {
-    return <Div className={`${__O.yAuto} p-4`}>{formContent}</Div>;
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formContent}</Div>;
   }
 
   const twoPanel = (

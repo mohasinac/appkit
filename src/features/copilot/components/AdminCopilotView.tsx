@@ -17,6 +17,11 @@ import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
 import { THEME_CONSTANTS } from "../../../tokens";
 
+const __P = {
+  p3: "p-3",
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -74,12 +79,12 @@ function renderCopilotChatPanel(props: {
   const { messages, conversationId, isLoading, error, input, setInput, labels, messagesEndRef, handleSubmit } = props;
   return (
     <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
-      <Div className="border-b border-neutral-200 dark:border-slate-700 p-3">
+      <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
         <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
       </Div>
-      <Div className={`flex-1 ${__O.yAuto} p-4 space-y-4`}>
+      <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
         {messages.length === 0 ? (
           <Div className="flex flex-col items-center justify-center h-full text-center">
             <Text className="font-medium">{labels?.noMessages ?? "No messages yet"}</Text>
@@ -97,7 +102,7 @@ function renderCopilotChatPanel(props: {
         {error ? <Text className={CLS_ERROR_TEXT}>{labels?.errorLabel ?? "An error occurred. Please try again."}</Text> : null}
         <Div ref={messagesEndRef} />
       </Div>
-      <Div className="border-t border-neutral-200 dark:border-slate-700 p-3">
+      <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder={labels?.inputPlaceholder ?? "Ask anything..."} disabled={isLoading} className="flex-1 h-10 rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition disabled:opacity-60" />
           <Button type="submit" variant="primary" disabled={isLoading || !input.trim()} className="shrink-0">
@@ -201,13 +206,13 @@ export function AdminCopilotView({
         ),
         <Div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
           <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
-            <Div className="border-b border-neutral-200 dark:border-slate-700 p-3">
+            <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
               </Text>
             </Div>
 
-            <Div className={`flex-1 ${__O.yAuto} p-4 space-y-4`}>
+            <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
               {messages.length === 0 ? (
                 <Div className="flex flex-col items-center justify-center h-full text-center">
                   <Text className="font-medium">{labels.noMessages ?? "No messages yet"}</Text>
@@ -234,7 +239,7 @@ export function AdminCopilotView({
               <Div ref={messagesEndRef} />
             </Div>
 
-            <Div className="border-t border-neutral-200 dark:border-slate-700 p-3">
+            <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <input
                   type="text"

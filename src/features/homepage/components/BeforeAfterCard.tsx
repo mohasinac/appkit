@@ -4,6 +4,10 @@ import Image from "next/image";
 import { Div, Span, Text } from "../../../ui";
 import type { BeforeAfterItem } from "../types";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -140,7 +144,7 @@ export function BeforeAfterCard({
       </Div>
 
       {/* Caption */}
-      <Div className="p-4">
+      <Div className={`${__P.p4}`}>
         <Text className="text-foreground text-sm font-medium">
           {item.caption}
         </Text>

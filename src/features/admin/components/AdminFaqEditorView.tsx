@@ -8,6 +8,10 @@ import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/for
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -224,7 +228,7 @@ export function AdminFaqEditorView({
             placeholder="e.g. shipping, pokemon, returns"
           />
 
-          <Div className="space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
+          <Div className={`space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 ${__P.p4}`}>
             <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Visibility</Text>
             <Toggle label="Active (visible to users)" checked={isActive} onChange={setIsActive} />
             <Toggle label="Pinned (always shown at top)" checked={isPinned} onChange={setIsPinned} />
@@ -266,7 +270,7 @@ export function AdminFaqEditorView({
   );
 
   if (embedded) {
-    return <Div className={`${__O.yAuto} p-4`}>{formSection}</Div>;
+    return <Div className={`${__O.yAuto} ${__P.p4}`}>{formSection}</Div>;
   }
 
   return (

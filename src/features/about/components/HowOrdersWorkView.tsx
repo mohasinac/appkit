@@ -5,6 +5,12 @@ import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { PackageSearch, MapPinned, FileText, XCircle } from "lucide-react";
 
+const __P = {
+  p4: "p-4",
+  p5: "p-5",
+  p8: "p-8",
+} as const;
+
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -189,7 +195,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
       <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
       <Div className="space-y-3">
         {statuses.map(({ status, icon, badge, desc }) => (
-          <Div key={status} className={`flex items-start gap-4 p-4 rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+          <Div key={status} className={`flex items-start gap-4 ${__P.p4} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
               <Span size="xl">{icon}</Span>
               <Span size="xs" weight="semibold" className={`px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
@@ -207,7 +213,7 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
     <Section>
       <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <Div key={title} className={`rounded-xl border p-5 ${color}`}>
+          <Div key={title} className={`rounded-xl border ${__P.p5} ${color}`}>
             <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
@@ -222,7 +228,7 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
 
 function renderOrdersCtaSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
   return (
-    <Section className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}>
+    <Section className={`rounded-2xl ${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`}>
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
       <Div className={`${flex.center} gap-4 flex-wrap`}>

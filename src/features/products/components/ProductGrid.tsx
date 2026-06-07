@@ -17,6 +17,10 @@ import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
 import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -247,7 +251,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Content area */}
-      <Div className="flex flex-1 flex-col p-3 pt-2.5">
+      <Div className={`flex flex-1 flex-col ${__P.p3} pt-2.5`}>
         <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-900 dark:text-white leading-snug`}>
           {product.title}
         </Text>

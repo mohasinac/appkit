@@ -22,6 +22,10 @@ import {
 import { apiClient } from "../../../http";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const CLS_DELETE_LINK = "text-red-500 hover:text-red-600";
 
 export interface GroupSettingsPanelProps {
@@ -279,7 +283,7 @@ export function GroupSettingsPanel({
       </button>
 
       {open && (
-        <Stack gap="sm" className="mt-3 p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-800/30">
+        <Stack gap="sm" className={`mt-3 ${__P.p4} rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-800/30`}>
           {/* State 1: Not in a group */}
           {!groupId && !groupParentSlug && (
             <Stack gap="xs">

@@ -14,6 +14,10 @@ import {
 import { formatCurrency } from "../../../../utils/number.formatter";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -105,7 +109,7 @@ export function LiveItemDetailView({
 
           {/* Transport */}
           {transport && (
-            <Div className="rounded-lg border border-border bg-muted/40 p-4 text-sm">
+            <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4} text-sm`}>
               <Text className="font-medium">Transport</Text>
               <Text className="text-muted-foreground">
                 Method: {transport.method}
@@ -118,7 +122,7 @@ export function LiveItemDetailView({
 
           {/* Care info */}
           {meta?.careInfo && (
-            <Div className="rounded-lg border border-border bg-muted/40 p-4 text-sm">
+            <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4} text-sm`}>
               <Text className="font-medium">Care information</Text>
               <Text className="mt-1 text-muted-foreground">{meta.careInfo}</Text>
             </Div>

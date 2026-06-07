@@ -18,6 +18,10 @@ import { BundleBuyNowCta } from "./BundleBuyNowCta";
 import { MarketplaceBundleCard } from "../../products/components/MarketplaceBundleCard";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 
+const __P = {
+  p4: "p-4",
+} as const;
+
 const PAGE_SIZE = 12;
 const FILTER_KEYS = ["showOutOfStock"];
 const SORT_OPTIONS = [
@@ -175,7 +179,7 @@ export function CategoryBundlesListing({
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <Div className="space-y-4 p-4">
+        <Div className={`space-y-4 ${__P.p4}`}>
           <label className="flex items-center justify-between gap-3 cursor-pointer">
             <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Show out-of-stock bundles</span>
             <button

@@ -4,6 +4,10 @@ import { Button } from "../../../ui/components/Button";
 import { Div, Heading, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 
+const __P = {
+  p6: "p-6",
+} as const;
+
 export interface EventRaffleEntryFormProps {
   /** Event id used for the entry POST. */
   eventId: string;
@@ -64,7 +68,7 @@ export function EventRaffleEntryForm({
           : "Spin the wheel to claim your prize.";
 
   return (
-    <Div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 p-6 space-y-4">
+    <Div className={`rounded-2xl border border-zinc-200 dark:border-zinc-700 ${__P.p6} space-y-4`}>
       {prizeLabel ? (
         <Stack gap="xs">
           <Badge variant="warning">Prize</Badge>

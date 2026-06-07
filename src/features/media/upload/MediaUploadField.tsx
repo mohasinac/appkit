@@ -17,6 +17,10 @@ import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
+const __P = {
+  p3: "p-3",
+} as const;
+
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -230,7 +234,7 @@ function MediaPreviewPanel({
   tMediaEditor: (key: string) => string;
 }) {
   return (
-    <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
+    <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 ${__P.p3}`}>
       {isVideo(value) ? (
         <Div className="space-y-2">
           <Div className={`relative aspect-video ${__O.hidden} rounded-lg`}>
