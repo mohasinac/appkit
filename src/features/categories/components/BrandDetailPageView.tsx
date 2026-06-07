@@ -5,7 +5,7 @@ import {
   productRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { Container, Div, Heading, Main, Section, Text } from "../../../ui";
+import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
@@ -122,32 +122,32 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
         <Div className={`relative z-10 max-w-7xl mx-auto px-4 ${hasCover ? "py-12" : "py-8"}`}>
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
+          <Nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
             <Link
               href={String(ROUTES.HOME)}
               className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
             >
               Home
             </Link>
-            <span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</span>
+            <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
             <Link
               href={String((ROUTES.PUBLIC as any).BRANDS ?? "/brands")}
               className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
             >
               Brands
             </Link>
-            <span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</span>
-            <span className={hasCover ? "text-white font-medium" : "text-zinc-900 dark:text-zinc-100 font-medium"}>
+            <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
+            <Span weight="medium" className={hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-100"}>
               {brand?.name ?? slug}
-            </span>
-          </nav>
+            </Span>
+          </Nav>
 
           {/* Brand logo + name */}
           <Div className="flex items-center gap-4 mb-3">
             {brand?.display?.icon && (
-              <span className={`text-5xl leading-none ${!hasCover ? "" : ""}`}>
+              <Span className="text-5xl leading-none">
                 {brand.display.icon}
-              </span>
+              </Span>
             )}
             <>
               <Heading level={1} className={`text-3xl md:text-4xl font-bold ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`}>
@@ -164,30 +164,30 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           {/* Item count chips */}
           <Div className="flex flex-wrap gap-2 mt-3">
             {counts.products > 0 && (
-              <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${
                 hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"
               }`}>
                 {counts.products.toLocaleString()} {counts.products === 1 ? "product" : "products"}
-              </span>
+              </Span>
             )}
             {counts.auctions > 0 && (
-              <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${
                 hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
               }`}>
                 {counts.auctions.toLocaleString()} {counts.auctions === 1 ? "auction" : "auctions"}
-              </span>
+              </Span>
             )}
             {counts.preOrders > 0 && (
-              <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${
                 hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400"
               }`}>
                 {counts.preOrders.toLocaleString()} {counts.preOrders === 1 ? "pre-order" : "pre-orders"}
-              </span>
+              </Span>
             )}
             {totalItems === 0 && (
-              <span className={`text-sm ${hasCover ? "text-white/60" : "text-zinc-400"}`}>
+              <Span size="sm" className={hasCover ? "text-white/60" : "text-zinc-400"}>
                 No items listed yet
-              </span>
+              </Span>
             )}
           </Div>
         </Div>
