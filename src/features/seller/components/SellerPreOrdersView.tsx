@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
+import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRE_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -49,7 +49,7 @@ const PRE_ORDER_COLUMNS: AdminTableColumn<PreOrderRow>[] = [
         />
       ) : (
         <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center">
-          <span className="text-xs text-[var(--appkit-color-text-faint)]">–</span>
+          <Span size="xs" className="text-[var(--appkit-color-text-faint)]">–</Span>
         </Div>
       ),
   },
@@ -59,7 +59,7 @@ const PRE_ORDER_COLUMNS: AdminTableColumn<PreOrderRow>[] = [
     render: (row) => (
       <Div className="space-y-1">
         <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
-        <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.secondary}</span>
+        <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.secondary}</Span>
       </Div>
     ),
   },
@@ -68,7 +68,7 @@ const PRE_ORDER_COLUMNS: AdminTableColumn<PreOrderRow>[] = [
     header: "Price",
     className: "w-28 text-right",
     render: (row) => (
-      <span className="text-sm font-medium text-[var(--appkit-color-text)]">{row.price}</span>
+      <Span size="sm" weight="medium" className="text-[var(--appkit-color-text)]">{row.price}</Span>
     ),
   },
   {
@@ -92,7 +92,7 @@ const PRE_ORDER_COLUMNS: AdminTableColumn<PreOrderRow>[] = [
     header: "Est. Delivery",
     className: "w-36",
     render: (row) => (
-      <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.deliveryDate}</span>
+      <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.deliveryDate}</Span>
     ),
   },
   {
@@ -100,7 +100,7 @@ const PRE_ORDER_COLUMNS: AdminTableColumn<PreOrderRow>[] = [
     header: "Updated",
     className: "w-28",
     render: (row) => (
-      <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.updatedAt}</span>
+      <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.updatedAt}</Span>
     ),
   },
 ];

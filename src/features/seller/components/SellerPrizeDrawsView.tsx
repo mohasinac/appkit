@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
+import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -56,7 +56,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
         />
       ) : (
         <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center">
-          <span className="text-xs text-[var(--appkit-color-text-faint)]">–</span>
+          <Span size="xs" className="text-[var(--appkit-color-text-faint)]">–</Span>
         </Div>
       ),
   },
@@ -66,7 +66,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     render: (row) => (
       <Div className="space-y-1">
         <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
-        <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.secondary}</span>
+        <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.secondary}</Span>
       </Div>
     ),
   },
@@ -75,7 +75,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     header: "Entry Fee",
     className: "w-28 text-right",
     render: (row) => (
-      <span className="text-sm font-medium text-[var(--appkit-color-text)]">{row.entryFee}</span>
+      <Span size="sm" weight="medium" className="text-[var(--appkit-color-text)]">{row.entryFee}</Span>
     ),
   },
   {
@@ -91,7 +91,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     header: "Draw Date",
     className: "w-32",
     render: (row) => (
-      <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.drawDate}</span>
+      <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.drawDate}</Span>
     ),
   },
   {
@@ -99,7 +99,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     header: "Updated",
     className: "w-28",
     render: (row) => (
-      <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.updatedAt}</span>
+      <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.updatedAt}</Span>
     ),
   },
 ];

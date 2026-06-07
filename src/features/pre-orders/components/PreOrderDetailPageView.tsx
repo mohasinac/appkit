@@ -24,12 +24,18 @@ import {
   Div,
   Heading,
   Main,
+  Nav,
   RichText,
   Row,
   Section,
   Span,
   Stack,
   Text,
+  Ul,
+  Li,
+  Dl,
+  Dt,
+  Dd,
 } from "../../../ui";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { PreOrderBottomActions } from "./PreOrderBottomActions";
@@ -207,14 +213,14 @@ function PreOrderInfoSection({
           <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             About this product
           </Text>
-          <ul className="space-y-1.5">
+          <Ul className="space-y-1.5">
             {features.map((f, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+              <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                 <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
                 {f}
-              </li>
+              </Li>
             ))}
-          </ul>
+          </Ul>
         </Div>
       )}
 
@@ -492,7 +498,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
       <Container size="xl" className="px-4 py-6">
         {/* Breadcrumb + share */}
         <Div className="mb-4 flex items-center justify-between flex-wrap gap-2">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
+          <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
             <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
             <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className={CLS_BREADCRUMB_LINK}>Pre-Orders</Link>
@@ -506,7 +512,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
             )}
             <Span aria-hidden>/</Span>
             <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
-          </nav>
+          </Nav>
           <ShareButton title={title} />
         </Div>
 
@@ -570,21 +576,21 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               }
               specsContent={
                 specs.length > 0 ? (
-                  <dl className="divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden text-sm">
+                  <Dl className="divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden text-sm">
                     {specs.map((s, i) => (
-                      <div
+                      <Div
                         key={i}
                         className="flex gap-4 px-4 py-3 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50"
                       >
-                        <dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
+                        <Dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
                           {s.name}
-                        </dt>
-                        <dd className="flex-1 text-zinc-600 dark:text-zinc-400">
+                        </Dt>
+                        <Dd className="flex-1 text-zinc-600 dark:text-zinc-400">
                           {s.value}{s.unit ? ` ${s.unit}` : ""}
-                        </dd>
-                      </div>
+                        </Dd>
+                      </Div>
                     ))}
-                  </dl>
+                  </Dl>
                 ) : undefined
               }
               customTabs={customSections.map((s) => ({
