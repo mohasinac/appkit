@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Button, ConfirmDeleteModal, Div, Grid, Heading, Label, Row, SideDrawer, Span, Stack, Text } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Grid, Heading, Label, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -318,36 +318,36 @@ export function SellerAddressesView({
               </Grid>
             ) : (
               <Div className={`${__O.xAuto} rounded-lg border border-zinc-200 dark:border-slate-700`}>
-                <table className="w-full text-sm">
-                  <thead className="bg-zinc-50 dark:bg-slate-800">
-                    <tr>
-                      <th className="text-left px-3 py-2 font-semibold">Label</th>
-                      <th className="text-left px-3 py-2 font-semibold">Name</th>
-                      <th className="text-left px-3 py-2 font-semibold">City</th>
-                      <th className="text-left px-3 py-2 font-semibold">Phone</th>
-                      <th className="text-right px-3 py-2 font-semibold">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <Table className="w-full text-sm">
+                  <Thead className="bg-zinc-50 dark:bg-slate-800">
+                    <Tr>
+                      <Th className="text-left px-3 py-2 font-semibold">Label</Th>
+                      <Th className="text-left px-3 py-2 font-semibold">Name</Th>
+                      <Th className="text-left px-3 py-2 font-semibold">City</Th>
+                      <Th className="text-left px-3 py-2 font-semibold">Phone</Th>
+                      <Th className="text-right px-3 py-2 font-semibold">Actions</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
                     {addresses.map((addr) => (
-                      <tr
+                      <Tr
                         key={addr.id}
                         className={`border-t border-zinc-100 dark:border-slate-700 ${deletingId === addr.id ? "opacity-50" : ""}`}
                       >
-                        <td className="px-3 py-2">{addr.label}</td>
-                        <td className="px-3 py-2">{addr.fullName}</td>
-                        <td className="px-3 py-2">{addr.city}, {addr.state}</td>
-                        <td className="px-3 py-2 tabular-nums">{addr.phone}</td>
-                        <td className="px-3 py-2 text-right">
+                        <Td className="px-3 py-2">{addr.label}</Td>
+                        <Td className="px-3 py-2">{addr.fullName}</Td>
+                        <Td className="px-3 py-2">{addr.city}, {addr.state}</Td>
+                        <Td className="px-3 py-2 tabular-nums">{addr.phone}</Td>
+                        <Td className="px-3 py-2 text-right">
                           <Row justify="end" className="gap-1">
                             <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
                             <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
                           </Row>
-                        </td>
-                      </tr>
+                        </Td>
+                      </Tr>
                     ))}
-                  </tbody>
-                </table>
+                  </Tbody>
+                </Table>
               </Div>
             )}
           </>

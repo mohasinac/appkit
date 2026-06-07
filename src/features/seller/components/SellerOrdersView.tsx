@@ -6,7 +6,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Stack, Text, useToast } from "../../../ui";
+import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps, SelectOption } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -375,7 +375,7 @@ export function SellerOrdersView({
       key: "totalAmount",
       header: "Total",
       className: "w-28",
-      render: (row) => <span className="text-sm font-semibold">{toRupees(row.totalAmount)}</span>,
+      render: (row) => <Span size="sm" weight="semibold">{toRupees(row.totalAmount)}</Span>,
     },
     {
       key: "status",
@@ -393,11 +393,11 @@ export function SellerOrdersView({
       className: "w-28",
       render: (row) =>
         row.physicalLocation ? (
-          <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
+          <Span size="xs" className="font-mono text-zinc-500 dark:text-zinc-400">
             {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
-          </span>
+          </Span>
         ) : (
-          <span className="text-xs text-zinc-400 dark:text-zinc-400">—</span>
+          <Span size="xs" className="text-zinc-400 dark:text-zinc-400">—</Span>
         ),
     },
     {
@@ -407,9 +407,9 @@ export function SellerOrdersView({
       render: (row) => {
         const r = row as unknown as { shippingMethod?: string; carrier?: string; trackingNumber?: string };
         return (
-          <span className="text-xs text-zinc-600 dark:text-zinc-300">
+          <Span size="xs" className="text-zinc-600 dark:text-zinc-300">
             {r.shippingMethod ?? r.carrier ?? "—"}
-          </span>
+          </Span>
         );
       },
     },
@@ -420,9 +420,9 @@ export function SellerOrdersView({
       render: (row) => {
         const r = row as unknown as { weightGrams?: number };
         return (
-          <span className="text-xs text-zinc-500 dark:text-zinc-400 tabular-nums">
+          <Span size="xs" className="text-zinc-500 dark:text-zinc-400 tabular-nums">
             {r.weightGrams ? `${r.weightGrams} g` : "—"}
-          </span>
+          </Span>
         );
       },
     },
@@ -430,7 +430,7 @@ export function SellerOrdersView({
       key: "updatedAt",
       header: "Date",
       className: "w-28",
-      render: (row) => <span className="text-xs text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>,
+      render: (row) => <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{row.updatedAt}</Span>,
     },
   ];
 
