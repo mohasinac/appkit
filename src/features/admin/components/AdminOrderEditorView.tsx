@@ -8,6 +8,7 @@ import {
   Form,
   FormActions,
   Input,
+  Label,
   Select,
   SideDrawer,
   useToast,
@@ -132,9 +133,9 @@ export function AdminOrderEditorView({
         />
 
         <Div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
             Internal note (optional)
-          </label>
+          </Label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}

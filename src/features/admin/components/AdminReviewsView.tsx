@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Div, FilterChipGroup, ListingLayout, Modal, RowActionMenu, useToast } from "../../../ui";
+import { Button, Div, FilterChipGroup, Label, ListingLayout, Modal, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -221,9 +221,9 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       >
         <Div className="space-y-4">
           <Div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Admin reply
-            </label>
+            </Label>
             <textarea
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}

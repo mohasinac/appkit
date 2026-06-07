@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
+import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -70,7 +70,7 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
     header: "Updated",
     className: "w-32",
     render: (row) => (
-      <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>
+      <Span size="sm" className="text-zinc-500 dark:text-zinc-400">{row.updatedAt}</Span>
     ),
   },
 ];

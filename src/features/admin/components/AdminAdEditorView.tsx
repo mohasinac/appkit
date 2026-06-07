@@ -10,6 +10,7 @@ import {
   FormActions,
   Input,
   Select,
+  Span,
   StackedViewShell,
   Text,
   Toggle,
@@ -450,7 +451,7 @@ export function AdminAdEditorView({
                     checked={selectedPlacements.includes(placement.id)}
                     onChange={() => togglePlacement(placement.id)}
                   />
-                  <span className="text-sm">{placement.label}</span>
+                  <Span size="sm">{placement.label}</Span>
                 </label>
               ))}
             </Div>

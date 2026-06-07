@@ -11,6 +11,7 @@ import {
   Form,
   Input,
   Select,
+  Span,
   StackedViewShell,
   Text,
   Toggle,
@@ -217,9 +218,9 @@ export function AdminAddressEditorView({
                   }}
                   className="accent-[var(--appkit-color-primary)]"
                 />
-                <span className="text-sm capitalize text-[var(--appkit-color-text)]">
+                <Span size="sm" className="capitalize text-[var(--appkit-color-text)]">
                   {type}
-                </span>
+                </Span>
               </label>
             ))}
           </Div>

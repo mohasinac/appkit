@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Select, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Input, Label, Select, StackedViewShell, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -122,14 +122,14 @@ function AdsSettingsPanel({
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
       <Div className="flex items-center justify-between gap-3">
-        <label className="flex items-center gap-2 text-sm">
+        <Label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
             checked={consentRequired}
             onChange={(event) => setConsentRequired(event.target.checked)}
           />
           Require consent globally for ad rendering
-        </label>
+        </Label>
         <Button
           size="sm"
           variant="outline"

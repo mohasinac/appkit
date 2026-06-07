@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, ConfirmDeleteModal, Div, RowActionMenu, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, ConfirmDeleteModal, Div, RowActionMenu, Span, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -48,7 +48,7 @@ function NavItemRow({
       </Div>
       <Div className="flex-1 min-w-0">
         <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-100 truncate">
-          {item.parentId ? <span className="text-zinc-400 mr-1">↳</span> : null}
+          {item.parentId ? <Span className="text-zinc-400 mr-1">↳</Span> : null}
           {item.label}
         </Text>
         <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{item.href}</Text>
