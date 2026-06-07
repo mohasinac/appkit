@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Div, Form, FormActions, Select, SideDrawer, Text, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, FormActions, Label, Select, SideDrawer, Span, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -100,12 +100,12 @@ interface PermissionDomainsPanelProps {
 function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPanelProps) {
   return (
     <Div className="flex flex-col gap-2">
-      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">
         Permissions
-        <span className="ml-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" weight="normal" className="ml-2 text-zinc-500 dark:text-zinc-400">
           ({permissions.size} selected)
-        </span>
-      </span>
+        </Span>
+      </Span>
       <Div className="rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] overflow-y-auto">
         {PERMISSION_DOMAINS.map((domain) => {
           const domainPerms = getPermissionsForDomain(domain.prefix);
@@ -113,11 +113,11 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           const checked = domainPerms.filter((p) => permissions.has(p)).length;
           return (
             <details key={domain.prefix} className="group">
-              <summary className="flex cursor-pointer items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
-                <span>{domain.label}</span>
-                <span className="text-xs font-normal normal-case text-zinc-400 dark:text-zinc-400">
+              <summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
+                <Span size="xs">{domain.label}</Span>
+                <Span size="xs" weight="normal" className="normal-case text-zinc-400 dark:text-zinc-400">
                   {checked}/{domainPerms.length}
-                </span>
+                </Span>
               </summary>
               <Div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
                 {domainPerms.map((perm) => (
@@ -262,9 +262,9 @@ export function AdminEmployeeEditorView({
         <Form onSubmit={handleSubmit} className="flex flex-col gap-5 p-4">
           {mode === "invite" && (
             <Div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 Email address
-              </label>
+              </Label>
               <input
                 type="email"
                 required
@@ -277,9 +277,9 @@ export function AdminEmployeeEditorView({
           )}
 
           <Div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Permission group
-            </label>
+            </Label>
             <Select
               value={group}
               onChange={(e) => applyGroupPreset(e.target.value)}
