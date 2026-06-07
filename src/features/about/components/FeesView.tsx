@@ -4,6 +4,9 @@ import { Div, Heading, Text, Section, Caption } from "../../../ui";
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
+const CLS_RATE_CELL = "py-3 px-4 font-semibold text-violet-700 dark:text-violet-400";
+const CLS_HIGHLIGHT = "font-bold text-green-700 dark:text-green-400";
+
 export interface FeesViewProps {
   heroBannerClass?: string;
 }
@@ -104,7 +107,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
             {rows.map((row) => (
               <tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 dark:hover:bg-neutral-800/50`}>
                 <td className="py-3 px-4 font-medium">{row.category}</td>
-                <td className="py-3 px-4 font-semibold text-violet-700 dark:text-violet-400">{row.rate}</td>
+                <td className={CLS_RATE_CELL}>{row.rate}</td>
                 <td className="py-3 px-4"><Caption>{row.who}</Caption></td>
                 <td className="py-3 px-4 text-neutral-500 dark:text-neutral-400 hidden md:table-cell text-xs">{row.note}</td>
               </tr>
@@ -128,7 +131,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
           {rows.map((row, i) => (
             <Div key={i} className={`flex justify-between text-sm ${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2 font-bold" : ""}`}>
               <Text className={row.highlight ? "font-bold" : "text-neutral-600 dark:text-neutral-400"}>{row.label}</Text>
-              <Text className={row.highlight ? "font-bold text-green-700 dark:text-green-400" : ""}>{row.example}</Text>
+              <Text className={row.highlight ? CLS_HIGHLIGHT : ""}>{row.example}</Text>
             </Div>
           ))}
         </Div>
