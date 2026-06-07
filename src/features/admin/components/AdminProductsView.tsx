@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { Div, ListingLayout, Text, Toggle, useToast } from "../../../ui";
+import { Div, ListingLayout, Span, Text, Toggle, useToast } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -71,9 +71,9 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       sortable: true,
       className: "w-36",
       render: (row) => (
-        <span className="inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300">
+        <Span size="xs" weight="medium" className="inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300">
           {row.status}
-        </span>
+        </Span>
       ),
     },
     {
@@ -82,7 +82,7 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       sortable: true,
       className: "w-36",
       render: (row) => (
-        <span className="text-sm text-zinc-600 dark:text-zinc-300">{row.updatedAt}</span>
+        <Span size="sm" className="text-zinc-600 dark:text-zinc-300">{row.updatedAt}</Span>
       ),
     },
   ];

@@ -8,6 +8,7 @@ import {
   Div,
   Form,
   Input,
+  Label,
   Select,
   StackedViewShell,
   Span,
@@ -465,9 +466,9 @@ export function AdminCouponEditorView({
 
           {/* Applicability — restrict the coupon to a specific set of products or categories. */}
           <Div className="space-y-1">
-            <label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+            <Label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
               Applicable products (optional)
-            </label>
+            </Label>
             <ProductInlineSelect
               scope="admin"
               multiple
@@ -481,9 +482,9 @@ export function AdminCouponEditorView({
           </Div>
 
           <Div className="space-y-1">
-            <label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+            <Label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
               Applicable categories (optional)
-            </label>
+            </Label>
             {/* CategoryInlineSelect is single-select today; we maintain a chip list around it. */}
             <CategoryInlineSelect
               value=""
