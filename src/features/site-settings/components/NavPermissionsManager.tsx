@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useTransition } from "react";
-import { Toggle, Text, Div, Stack, Input } from "../../../ui";
+import { Toggle, Text, Div, Stack, Input, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
 import { useToast } from "../../../ui";
 
 const __O = {
@@ -58,39 +58,39 @@ export function NavPermissionsManager({
             {group.groupLabel}
           </Text>
           <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">
-                  <th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Nav Item</th>
-                  <th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Route</th>
-                  <th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Permission</th>
-                  <th className="px-4 py-3 text-right font-semibold text-zinc-700 dark:text-zinc-300">Enabled</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table className="w-full text-sm">
+              <Thead>
+                <Tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">
+                  <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Nav Item</Th>
+                  <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Route</Th>
+                  <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Permission</Th>
+                  <Th className="px-4 py-3 text-right font-semibold text-zinc-700 dark:text-zinc-300">Enabled</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
                 {group.items.map((item, idx) => {
                   const hasId = !!item.id;
                   const enabled = hasId ? isEnabled(item.id!) : true;
                   return (
-                    <tr
+                    <Tr
                       key={item.href}
                       className={[
                         idx % 2 === 0 ? "bg-white dark:bg-slate-900" : "bg-zinc-50/50 dark:bg-slate-800/50",
                         !enabled ? "opacity-60" : "",
                       ].join(" ")}
                     >
-                      <td className="px-4 py-3">
+                      <Td className="px-4 py-3">
                         <Div>
                           <Text className="font-medium text-zinc-900 dark:text-zinc-100">{item.label}</Text>
                           {item.id && (
                             <Text className="text-xs text-zinc-400 dark:text-zinc-400">{item.id}</Text>
                           )}
                         </Div>
-                      </td>
-                      <td className="px-4 py-3">
+                      </Td>
+                      <Td className="px-4 py-3">
                         <code className="text-xs text-zinc-500 dark:text-zinc-400">{item.href}</code>
-                      </td>
-                      <td className="px-4 py-3">
+                      </Td>
+                      <Td className="px-4 py-3">
                         {item.requiredPermission ? (
                           <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
                             {item.requiredPermission}
@@ -98,8 +98,8 @@ export function NavPermissionsManager({
                         ) : (
                           <Text className="text-xs text-zinc-400">—</Text>
                         )}
-                      </td>
-                      <td className="px-4 py-3 text-right">
+                      </Td>
+                      <Td className="px-4 py-3 text-right">
                         {hasId ? (
                           <Toggle
                             checked={enabled}
@@ -109,12 +109,12 @@ export function NavPermissionsManager({
                         ) : (
                           <Text className="text-xs text-zinc-400 italic">Legacy — always visible</Text>
                         )}
-                      </td>
-                    </tr>
+                      </Td>
+                    </Tr>
                   );
                 })}
-              </tbody>
-            </table>
+              </Tbody>
+            </Table>
           </Div>
         </Div>
       ))}

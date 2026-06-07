@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useTransition, useMemo } from "react";
-import { Toggle, Badge, Text, Div, Stack, Row, Input } from "../../../ui";
+import { Toggle, Badge, Text, Div, Stack, Row, Input, Span, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
 import { ACTION_META, ACTION_ID } from "../../products/constants/action-defs";
 import type { ActionId } from "../../products/constants/action-defs";
 import { useToast } from "../../../ui";
@@ -123,51 +123,51 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
       </Div>
 
       <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">
-              <th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Action</th>
-              <th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Category</th>
-              <th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Auth</th>
-              <th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Permission</th>
-              <th className="px-4 py-3 text-right font-semibold text-zinc-700 dark:text-zinc-300">Enabled</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="w-full text-sm">
+          <Thead>
+            <Tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">
+              <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Action</Th>
+              <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Category</Th>
+              <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Auth</Th>
+              <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Permission</Th>
+              <Th className="px-4 py-3 text-right font-semibold text-zinc-700 dark:text-zinc-300">Enabled</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {filteredActions.map((id, idx) => {
               const meta = ACTION_META[id];
               const enabled = isEnabled(id);
               const category = CATEGORY_LABELS[id] ?? "Other";
               const categoryColor = CATEGORY_COLORS[category] ?? CATEGORY_COLORS["Account"];
               return (
-                <tr
+                <Tr
                   key={id}
                   className={[
                     idx % 2 === 0 ? "bg-white dark:bg-slate-900" : "bg-zinc-50/50 dark:bg-slate-800/50",
                     !enabled ? "opacity-60" : "",
                   ].join(" ")}
                 >
-                  <td className="px-4 py-3">
+                  <Td className="px-4 py-3">
                     <Div>
                       <Text className="font-medium text-zinc-900 dark:text-zinc-100">{meta.label}</Text>
                       <Text className="text-xs text-zinc-400 dark:text-zinc-400">{id}</Text>
                     </Div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${categoryColor}`}>
+                  </Td>
+                  <Td className="px-4 py-3">
+                    <Span size="xs" weight="medium" className={`inline-block rounded-full px-2 py-0.5 ${categoryColor}`}>
                       {category}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
+                    </Span>
+                  </Td>
+                  <Td className="px-4 py-3">
                     {meta.requiresAuth ? (
-                      <span className={CLS_CUSTOM_PILL}>
+                      <Span className={CLS_CUSTOM_PILL}>
                         Auth required
-                      </span>
+                      </Span>
                     ) : (
                       <Text className="text-xs text-zinc-400">—</Text>
                     )}
-                  </td>
-                  <td className="px-4 py-3">
+                  </Td>
+                  <Td className="px-4 py-3">
                     {meta.requiredPermission ? (
                       <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
                         {meta.requiredPermission}
@@ -175,19 +175,19 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                     ) : (
                       <Text className="text-xs text-zinc-400">—</Text>
                     )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
+                  </Td>
+                  <Td className="px-4 py-3 text-right">
                     <Toggle
                       checked={enabled}
                       onChange={(v) => handleToggle(id, v)}
                       aria-label={`Toggle ${meta.label}`}
                     />
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               );
             })}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </Div>
     </Stack>
   );
