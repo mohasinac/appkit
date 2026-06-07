@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Pencil } from "lucide-react";
-import { Badge, Button, Div, FilterChipGroup, ListingLayout, Text } from "../../../ui";
+import { Badge, Button, Div, FilterChipGroup, ListingLayout, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -60,7 +60,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     header: "Entry Fee",
     className: "w-28 text-right",
     render: (row) => (
-      <span className="text-sm font-medium text-[var(--appkit-color-text)]">{row.entryFee}</span>
+      <Span size="sm" weight="medium" className="text-[var(--appkit-color-text)]">{row.entryFee}</Span>
     ),
   },
   {
@@ -75,7 +75,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     header: "Draw Date",
     className: "w-32",
     render: (row) => (
-      <span className="text-sm text-[var(--appkit-color-text-muted)]">{row.drawDate}</span>
+      <Span size="sm" className="text-[var(--appkit-color-text-muted)]">{row.drawDate}</Span>
     ),
   },
   {
@@ -84,7 +84,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     sortable: true,
     className: "w-32",
     render: (row) => (
-      <span className="text-sm text-[var(--appkit-color-text-muted)]">{row.updatedAt}</span>
+      <Span size="sm" className="text-[var(--appkit-color-text-muted)]">{row.updatedAt}</Span>
     ),
   },
 ];

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Badge, Button, Div } from "../../../ui";
+import { Badge, Button, Div, Span } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -47,7 +47,7 @@ const COLUMNS: AdminTableColumn<GroupedRow>[] = [
   {
     key: "title",
     header: "Title",
-    render: (r) => <span className="font-medium text-zinc-900 dark:text-zinc-100">{r.title}</span>,
+    render: (r) => <Span weight="medium" className="text-zinc-900 dark:text-zinc-100">{r.title}</Span>,
   },
   {
     key: "groupTheme",
@@ -59,7 +59,7 @@ const COLUMNS: AdminTableColumn<GroupedRow>[] = [
   {
     key: "productCount",
     header: "Products",
-    render: (r) => <span className="text-sm text-zinc-600 dark:text-zinc-400">{r.productCount}</span>,
+    render: (r) => <Span size="sm" className="text-zinc-600 dark:text-zinc-400">{r.productCount}</Span>,
   },
   {
     key: "visibilityStatus",
@@ -82,7 +82,7 @@ const COLUMNS: AdminTableColumn<GroupedRow>[] = [
   {
     key: "createdAt",
     header: "Created",
-    render: (r) => <span className="text-xs text-zinc-500 dark:text-zinc-400">{r.createdAt}</span>,
+    render: (r) => <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{r.createdAt}</Span>,
   },
 ];
 
