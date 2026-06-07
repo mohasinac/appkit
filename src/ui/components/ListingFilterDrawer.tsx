@@ -3,6 +3,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import { Button } from "./Button";
+import { Span } from "./Typography";
 
 const CLS_CLEAR_BTN = "text-xs text-zinc-500 hover:text-error dark:text-zinc-400 transition-colors min-h-0 h-auto p-0";
 
@@ -29,7 +30,7 @@ export function ListingFilterDrawer({
       <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={onClose} />
       <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
         <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <Span size="base" weight="semibold" className="text-zinc-900 dark:text-zinc-100">Filters</Span>
           <div className="flex items-center gap-2">
             {activeCount > 0 && (
               <Button variant="ghost" type="button" onClick={onClear} className={CLS_CLEAR_BTN}>

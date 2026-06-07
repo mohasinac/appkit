@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, type ReactNode } from "react";
 import { Div } from "./Div";
+import { Span } from "./Typography";
 
 const __O = {
   xAuto: "overflow-x-auto",
@@ -91,9 +92,9 @@ export function DetailPageTabs({
             >
               {tab.label}
               {typeof tab.count === "number" ? (
-                <span className="ml-2 inline-flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 text-xs">
+                <Span size="xs" className="ml-2 inline-flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5">
                   {tab.count}
-                </span>
+                </Span>
               ) : null}
             </button>
           );

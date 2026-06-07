@@ -1,5 +1,5 @@
 import React from "react";
-import { Label, Text } from "./Typography";
+import { Label, Span, Text } from "./Typography";
 
 export interface DateInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
   label?: React.ReactNode;
@@ -99,7 +99,7 @@ export function DateRangeInput({
           min={startMin}
           max={startMax ?? endValue}
         />
-        <span className="mb-2.5 shrink-0 text-sm text-[var(--appkit-color-text-muted)]">–</span>
+        <Span size="sm" className="mb-2.5 shrink-0 text-[var(--appkit-color-text-muted)]">–</Span>
         <DateInput
           label={endLabel}
           value={endValue}

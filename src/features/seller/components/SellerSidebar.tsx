@@ -195,7 +195,7 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
         className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
       >
         <Div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">{title}</span>
+          <Span size="xs" weight="semibold" className="uppercase tracking-widest text-zinc-400 dark:text-zinc-400">{title}</Span>
           <button
             type="button"
             onClick={onClose}

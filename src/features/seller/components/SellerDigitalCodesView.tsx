@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
+import { ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -54,9 +54,9 @@ const COLUMNS: AdminTableColumn<DigitalCodeRow>[] = [
     key: "deliveryMethod",
     header: "Delivery",
     render: (row) => (
-      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
+      <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
         {row.deliveryMethod.replace(/-/g, " ")}
-      </span>
+      </Span>
     ),
   },
   {

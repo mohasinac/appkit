@@ -11,6 +11,7 @@ import {
   Square,
 } from "lucide-react";
 import { SortDropdown } from "./SortDropdown";
+import { Div } from "./Div";
 import { Span } from "./Typography";
 
 const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-400 transition-colors";
@@ -224,14 +225,14 @@ export function ListingToolbar({
           )}
 
           {sortOptions && sortValue !== undefined && onSortChange && (
-            <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
+            <Div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
               <Span size="xs" className="hidden md:inline whitespace-nowrap">{l.sort}</Span>
               <SortDropdown
                 value={sortValue}
                 onChange={onSortChange}
                 options={sortOptions as any}
               />
-            </div>
+            </Div>
           )}
 
           {!hideViewToggle && onViewChange && (

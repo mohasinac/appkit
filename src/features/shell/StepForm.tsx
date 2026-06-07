@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
-import { Div, Text, useToast } from "../../ui";
+import { Div, Span, Text, useToast } from "../../ui";
 
 export interface StepDef<T extends object = Record<string, unknown>> {
   label: string;
@@ -64,9 +64,9 @@ export function StepFormActions({
         )}
       </>
       <Div className="flex items-center gap-3">
-        <span className="text-xs text-[var(--appkit-color-text-muted)]">
+        <Span size="xs" className="text-[var(--appkit-color-text-muted)]">
           {currentStep + 1} / {totalSteps}
-        </span>
+        </Span>
         <Button
           variant="primary"
           size="sm"

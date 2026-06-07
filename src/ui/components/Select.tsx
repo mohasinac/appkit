@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "./Div";
 import { Label, Text } from "./Typography";
 
 export interface SelectOption<V = string> {
@@ -102,7 +103,7 @@ export function Select<V extends string = string>({
           ))}
         </select>
 
-        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-400" data-section="select-div-594">
+        <Div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-400" data-section="select-div-594">
           <svg
             className="h-4 w-4"
             viewBox="0 0 20 20"
@@ -115,7 +116,7 @@ export function Select<V extends string = string>({
               clipRule="evenodd"
             />
           </svg>
-        </div>
+        </Div>
       </div>
 
       {error ? (

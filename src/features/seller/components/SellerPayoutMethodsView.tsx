@@ -9,6 +9,7 @@ import {
   ConfirmDeleteModal,
   Div,
   ListingToolbar,
+  Span,
   Text,
   useToast,
 } from "../../../ui";
@@ -229,9 +230,9 @@ export function SellerPayoutMethodsView({
                         <Text className="text-sm font-medium">{row.label}</Text>
                         <TypeBadge type={row.type} />
                         {row.isDefault && (
-                          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-success-surface text-success">
+                          <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-success-surface text-success">
                             Default
-                          </span>
+                          </Span>
                         )}
                         <span
                           className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${

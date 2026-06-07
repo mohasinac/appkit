@@ -12,6 +12,7 @@ import {
   Row,
   Select,
   SideDrawer,
+  Span,
   Stack,
   Text,
   Textarea,
@@ -61,9 +62,9 @@ const EMPTY_STAR = "☆";
 
 function Stars({ rating }: { rating: number }) {
   return (
-    <span className="text-[var(--appkit-color-warning,#f59e0b)] text-sm">
+    <Span size="sm" className="text-[var(--appkit-color-warning,#f59e0b)]">
       {Array.from({ length: 5 }, (_, i) => (i < rating ? STAR : EMPTY_STAR)).join("")}
-    </span>
+    </Span>
   );
 }
 
