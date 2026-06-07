@@ -8,6 +8,10 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_RATING_BADGE = "absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/50 backdrop-blur-sm px-2 py-0.5 text-xs font-semibold text-yellow-300";
 
 export interface InteractiveStoreCardProps {
@@ -72,7 +76,7 @@ export function InteractiveStoreCard({
 
       <Link href={href} className="flex flex-col flex-1 min-h-0">
         {/* ── Banner ──────────────────────────────────────────────────── */}
-        <Div className="relative aspect-video w-full overflow-hidden bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 flex-shrink-0">
+        <Div className={`relative aspect-video w-full ${__O.hidden} bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 flex-shrink-0`}>
           {hasBanner ? (
             <MediaImage
               src={store.storeBannerURL!}

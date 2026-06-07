@@ -7,6 +7,11 @@ import { ConfirmDeleteModal, Div, Li, Nav, Span, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
+const __O = {
+  hidden: "overflow-hidden",
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface UserNavItem {
   href: string;
   label: string;
@@ -197,7 +202,7 @@ function DrawerPanel({
             </svg>
           </button>
         </Div>
-        <Div className="flex-1 overflow-y-auto">{children}</Div>
+        <Div className={`flex-1 ${__O.yAuto}`}>{children}</Div>
       </Div>
     </Div>
   );
@@ -242,11 +247,11 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           }}
         >
           {/* Nav panel */}
-          <Div surface="default" className="flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
+          <Div surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden} shadow-xl`}>
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">My Account</span>
             </Div>
-            <Div className="flex-1 overflow-y-auto">
+            <Div className={`flex-1 ${__O.yAuto}`}>
               <DrawerContent groups={groups} items={items} activeHref={pathname} />
             </Div>
           </Div>

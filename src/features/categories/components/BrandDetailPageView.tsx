@@ -10,6 +10,10 @@ import { BrandDetailTabs } from "./BrandDetailTabs";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface BrandDetailPageViewProps {
   slug: string;
   initialBrand?: CategoryDocument | null;
@@ -103,7 +107,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
   return (
     <Main>
       {/* ── Brand Hero ──────────────────────────────────────────────────── */}
-      <Section className={`relative overflow-hidden ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
+      <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
         {hasCover && (
           <>
             <div

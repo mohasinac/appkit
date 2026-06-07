@@ -18,6 +18,10 @@ import type { StackedViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 interface FlagData {
   flags: Record<string, unknown>;
   rollouts: Record<string, number>;
@@ -74,7 +78,7 @@ interface AccordionSectionProps {
 function AccordionSection({ title, defaultOpen = true, children }: AccordionSectionProps) {
   const [open, setOpen] = React.useState(defaultOpen);
   return (
-    <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
+    <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 ${__O.hidden}`}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

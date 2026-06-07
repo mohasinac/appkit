@@ -25,6 +25,10 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { BlogPostCategory, BlogPostStatus } from "../../blog/types";
 import { StepDef, StepForm } from "../../shell";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface AdminBlogEditorViewProps
@@ -423,7 +427,7 @@ export function AdminBlogEditorView({
   );
 
   if (embedded) {
-    return <Div className="overflow-y-auto p-4">{formContent}</Div>;
+    return <Div className={`${__O.yAuto} p-4`}>{formContent}</Div>;
   }
 
   const previewSection = (

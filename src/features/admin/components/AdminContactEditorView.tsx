@@ -14,6 +14,10 @@ import {
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface AdminContactEditorViewProps {
   open: boolean;
   onClose: () => void;
@@ -96,7 +100,7 @@ export function AdminContactEditorView({
           <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
             Message
           </Text>
-          <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-3 max-h-64 overflow-y-auto">
+          <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-3 max-h-64 ${__O.yAuto}`}>
             <Text className="text-sm text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap leading-relaxed">
               {message ?? "No message body."}
             </Text>

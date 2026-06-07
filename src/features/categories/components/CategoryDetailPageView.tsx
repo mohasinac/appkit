@@ -10,6 +10,11 @@ import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../.
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import type { CategoryItem } from "../types";
 
+const __O = {
+  hidden: "overflow-hidden",
+  xAuto: "overflow-x-auto",
+} as const;
+
 export interface CategoryDetailPageViewProps {
   slug: string;
 }
@@ -127,7 +132,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   return (
     <Main>
       {/* ── Hero / Banner ───────────────────────────────────────────────── */}
-      <Section className={`relative overflow-hidden ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
+      <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
         {hasCover && (
           <>
             <div
@@ -208,7 +213,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       {childCategories.length > 0 && (
         <Section surface="default" className="border-b border-zinc-100 dark:border-zinc-800">
           <Div className="max-w-7xl mx-auto px-4 py-3">
-            <Div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+            <Div className={`flex gap-2.5 ${__O.xAuto} pb-1`} style={{ scrollbarWidth: "none" }}>
               {childCategories.map((child) => (
                 <Link
                   key={child.id}

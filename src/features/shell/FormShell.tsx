@@ -6,6 +6,12 @@ import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
 import { Div, Row, Span, Stack, Text } from "../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+  xAuto: "overflow-x-auto",
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface FormShellSection {
   id: string;
   label: string;
@@ -240,7 +246,7 @@ export function FormShell({
         </Row>
 
         {/* ── Body (left nav + scrollable content) ───────── */}
-        <Div className="flex flex-1 overflow-hidden">
+        <Div className={`flex flex-1 ${__O.hidden}`}>
           {/* Left section nav — desktop only (lg+), hidden in preview mode */}
           {sections && sections.length > 0 && !previewMode && (
             <nav
@@ -262,7 +268,7 @@ export function FormShell({
 
           {/* Mobile horizontal section strip */}
           {sections && sections.length > 0 && !previewMode && (
-            <Row gap="px" className="lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 overflow-x-auto px-5 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]">
+            <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-5 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`}>
               {sections.map((sec) => (
                 <button
                   key={sec.id}
@@ -301,7 +307,7 @@ export function FormShell({
                 <Div className="max-w-3xl mx-auto px-5 py-6 sm:px-6 lg:max-w-none lg:px-0 lg:py-0">
                   {children}
                 </Div>
-                <Div className="hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] p-4">
+                <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] p-4`}>
                   <Row gap="xs" className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
                     <Eye className="w-3.5 h-3.5" />
                     <Span>Live preview</Span>

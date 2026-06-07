@@ -9,6 +9,10 @@ import {
   TextLink,
 } from "../../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface CustomerReviewsSectionProps<T = unknown> {
@@ -43,7 +47,7 @@ export function CustomerReviewsSection<T = unknown>({
       <Section className={`p-8 ${themed.bgPrimary} ${className}`}>
         <Div className="w-full max-w-7xl mx-auto">
           <Div className={`h-8 ${skeleton.base} mb-8 max-w-xs mx-auto`} />
-          <Div className="flex gap-6 overflow-hidden">
+          <Div className={`flex gap-6 ${__O.hidden}`}>
             {[...Array(3)].map((_, i) => (
               <Div
                 key={i}

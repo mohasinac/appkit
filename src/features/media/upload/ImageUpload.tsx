@@ -27,6 +27,10 @@ import type { ImageCropData } from "../modals/ImageCropModal";
 import { ImageEditor } from "../modals/ImageEditor";
 import CameraCapture from "./CameraCapture";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface ImageUploadProps {
   currentImage?: string;
   onUpload: (file: File) => Promise<string>;
@@ -224,7 +228,7 @@ export function ImageUpload({
       <Div className="relative">
         {preview ? (
           <Div className="space-y-2">
-            <Div className="relative h-32 max-w-xs mx-auto overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+            <Div className={`relative h-32 max-w-xs mx-auto ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`}>
               <MediaImage src={preview} alt="Preview" size="card" />
               {uploading && progress > 0 && (
                 <Div className="absolute inset-x-0 bottom-0">

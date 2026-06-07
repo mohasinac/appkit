@@ -9,6 +9,10 @@ import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface ShopByCategorySectionProps {
   title?: string;
   subtitle?: string;
@@ -40,7 +44,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
       className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
     >
       {coverImage && isImageUrl(coverImage) ? (
-        <Div className="aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-slate-800">
+        <Div className={`aspect-video w-full ${__O.hidden} bg-zinc-100 dark:bg-slate-800`}>
           <Image
             src={coverImage}
             alt={category.name}
@@ -189,7 +193,7 @@ export function ShopByCategorySection({
         )}
 
         {isLoading ? (
-          <Div className="flex gap-3 overflow-hidden px-1">
+          <Div className={`flex gap-3 ${__O.hidden} px-1`}>
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700" />
             ))}

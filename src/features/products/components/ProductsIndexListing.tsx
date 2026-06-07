@@ -24,6 +24,10 @@ import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { useBottomActions } from "../../layout";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 type ViewMode = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
@@ -309,7 +313,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         {isLoading ? (
           <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 10 }).map((_, i) => (
-              <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+              <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <Div className="p-3 space-y-2">
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />

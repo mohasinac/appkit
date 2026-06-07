@@ -36,6 +36,10 @@ import { StepDef, StepForm } from "../../shell";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 // --- Constants ---------------------------------------------------------------
 
 export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
@@ -783,7 +787,7 @@ export function AdminEventEditorView({
   );
 
   if (embedded) {
-    return <Div className="overflow-y-auto p-4">{formContent}</Div>;
+    return <Div className={`${__O.yAuto} p-4`}>{formContent}</Div>;
   }
 
   return (

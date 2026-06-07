@@ -13,6 +13,10 @@ import { ShareButton } from "../../products/components/ShareButton";
 import { StoreScopedSearch } from "./StoreScopedSearch";
 import type { StoreDetail } from "../types";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-2xl shadow-sm";
 const CLS_STARS = "inline-flex items-center gap-1 text-amber-500";
 const CLS_FOLLOW_BTN = "rounded-lg border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors";
@@ -40,7 +44,7 @@ export function StoreHeader({
   return (
     <Section surface="default" className={`border-b border-gray-200 dark:border-slate-700 ${className}`}>
       {store.storeBannerURL && (
-          <Div className="h-40 md:h-56 overflow-hidden bg-gray-100 dark:bg-slate-800">
+          <Div className={`h-40 md:h-56 ${__O.hidden} bg-gray-100 dark:bg-slate-800`}>
           <Div
             role="img"
             aria-label={`${store.storeName} banner`}

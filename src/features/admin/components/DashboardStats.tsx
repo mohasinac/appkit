@@ -7,6 +7,10 @@ import { Div, Grid, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // Brand gradient stop colors (mirrors SiteLogo wordmark gradient)
 const BRAND_FROM = "var(--appkit-color-primary-700, #1343de)";
 const BRAND_MID  = "var(--appkit-color-cobalt, #3570fc)";
@@ -23,7 +27,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCardProps) {
   return (
-    <Div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} shadow-sm hover:shadow-md transition-shadow`}>
       {/* 3-px gradient top accent */}
       <Div
         className="absolute top-0 left-0 right-0 h-[3px]"
@@ -33,7 +37,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
 
       <Div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
         {/* Text block */}
-        <Div className="min-w-0 flex-1 overflow-hidden">
+        <Div className={`min-w-0 flex-1 ${__O.hidden}`}>
           <Text className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)] truncate">
             {label}
           </Text>
@@ -59,7 +63,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
 
 function SkeletonCard() {
   return (
-    <Div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden p-5 animate-pulse">
+    <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} p-5 animate-pulse`}>
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
       <Div className="flex items-start justify-between gap-3 pt-1">
         <Div className="flex-1 space-y-2">

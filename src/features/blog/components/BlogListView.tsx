@@ -17,6 +17,11 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
 import { safeDisplayName } from "../../../security";
 
+const __O = {
+  hidden: "overflow-hidden",
+  xAuto: "overflow-x-auto",
+} as const;
+
 const CLS_FEATURED_BADGE = "rounded-full bg-yellow-100 px-2 py-0.5 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300";
 
 interface BlogCardProps {
@@ -50,7 +55,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       onClick={onClick && !href ? () => onClick(post) : undefined}
       className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition hover:shadow-md ${isInteractive ? "cursor-pointer" : ""} ${className}`}
     >
-      <Div className="aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-slate-800 flex-shrink-0">
+      <Div className={`aspect-video w-full ${__O.hidden} bg-neutral-100 dark:bg-slate-800 flex-shrink-0`}>
         {coverImageUrl ? (
           <Div
             role="img"
@@ -141,7 +146,7 @@ export function BlogCategoryTabs({
   labels = {},
 }: BlogCategoryTabsProps) {
   return (
-    <Div className="scrollbar-none flex gap-2 overflow-x-auto pb-1">
+    <Div className={`scrollbar-none flex gap-2 ${__O.xAuto} pb-1`}>
       <Button
         onClick={() => onSelect(null)}
         variant={!active ? "primary" : "ghost"}

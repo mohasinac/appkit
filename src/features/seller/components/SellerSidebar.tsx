@@ -6,6 +6,11 @@ import { Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
+const __O = {
+  hidden: "overflow-hidden",
+  yAuto: "overflow-y-auto",
+} as const;
+
 const CLS_STORE_AVATAR = "h-8 w-8 rounded-md bg-cover bg-center flex-shrink-0";
 const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary";
 const CLS_STORE_NAME = "text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate";
@@ -202,7 +207,7 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
             </svg>
           </button>
         </Div>
-        <Div className="flex-1 overflow-y-auto">{children}</Div>
+        <Div className={`flex-1 ${__O.yAuto}`}>{children}</Div>
       </Div>
     </Div>
   );
@@ -262,7 +267,7 @@ export function StoreSidebar({
           }}
         >
           {/* Nav panel */}
-          <Div surface="sidePanel" className="flex-1 border-r border-zinc-200 dark:border-slate-700 flex flex-col overflow-hidden shadow-xl">
+          <Div surface="sidePanel" className={`flex-1 border-r border-zinc-200 dark:border-slate-700 flex flex-col ${__O.hidden} shadow-xl`}>
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <Div className="flex items-center gap-3 min-w-0">
                 {storeLogoURL ? (
@@ -275,7 +280,7 @@ export function StoreSidebar({
                 <Text className={CLS_STORE_NAME}>{storeName || panelTitle}</Text>
               </Div>
             </Div>
-            <Div className="flex-1 overflow-y-auto">{navContent}</Div>
+            <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
           </Div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />

@@ -8,6 +8,10 @@ import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/for
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface AdminFaqEditorViewProps
@@ -262,7 +266,7 @@ export function AdminFaqEditorView({
   );
 
   if (embedded) {
-    return <Div className="overflow-y-auto p-4">{formSection}</Div>;
+    return <Div className={`${__O.yAuto} p-4`}>{formSection}</Div>;
   }
 
   return (

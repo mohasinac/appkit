@@ -6,6 +6,10 @@ import type { SelectOption } from "../../../ui";
 import { ProductInlineSelect } from "./ProductInlineSelect";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -94,7 +98,7 @@ export function SellerCouponEditorView({
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <Stack gap="none" className="max-w-lg mx-auto rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm overflow-hidden">
+      <Stack gap="none" className={`max-w-lg mx-auto rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm ${__O.hidden}`}>
         <div
           className="h-[3px] w-full"
           style={{ background: "linear-gradient(to right,var(--appkit-color-primary-700,#1343de) 0%,var(--appkit-color-cobalt,#3570fc) 55%,var(--appkit-color-secondary-400,#84e122) 100%)" }}

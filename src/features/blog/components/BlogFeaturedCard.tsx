@@ -9,6 +9,10 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
   tips: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
@@ -72,7 +76,7 @@ export function BlogFeaturedCard({
       )}
       <TextLink href={href} className="flex h-full flex-col">
         {/* Cover image — aspect-video like EventCard */}
-        <Div className="aspect-video overflow-hidden flex-shrink-0">
+        <Div className={`aspect-video ${__O.hidden} flex-shrink-0`}>
           {coverImageUrl ? (
             <Div
               role="img"

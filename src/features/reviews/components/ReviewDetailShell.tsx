@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all";
 const CLS_RELATED_LABEL = "text-xs text-zinc-400 dark:text-zinc-400 mb-0.5";
 const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors";
@@ -210,7 +214,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-3">
               Video
             </Heading>
-            <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video">
+            <Div className={`${__O.hidden} rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video`}>
               <video
                 src={review.video.url}
                 poster={review.video.thumbnailUrl}

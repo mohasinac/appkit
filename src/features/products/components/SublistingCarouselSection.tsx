@@ -7,6 +7,11 @@ import { Div, Row, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
+const __O = {
+  hidden: "overflow-hidden",
+  xAuto: "overflow-x-auto",
+} as const;
+
 interface CarouselListing {
   id: string;
   title: string;
@@ -120,7 +125,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
   const label = category?.name ?? "More listings like this";
 
   return (
-    <Div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-800/40 overflow-hidden">
+    <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-800/40 ${__O.hidden}`}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -151,7 +156,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
       </button>
 
       {open && (
-        <Div className="px-4 pb-4 pt-1 overflow-x-auto">
+        <Div className={`px-4 pb-4 pt-1 ${__O.xAuto}`}>
           <Div className="flex gap-3 min-w-0">
             {listings.map((listing) => (
               <ListingThumb

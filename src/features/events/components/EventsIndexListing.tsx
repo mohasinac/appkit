@@ -11,6 +11,10 @@ import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/si
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const PAGE_SIZE = 24;
 const FILTER_KEYS = [TABLE_KEYS.TYPE, TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO, TABLE_KEYS.SHOW_EXPIRED];
 
@@ -168,7 +172,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
         {isLoading ? (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+              <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
                 <Div className="p-4 space-y-2">
                   <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />

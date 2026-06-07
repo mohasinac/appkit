@@ -4,6 +4,10 @@ import { ChevronRight } from "lucide-react";
 import { Div, Row, Text, Badge } from "../../../ui";
 import type { BidDocument } from "../schemas/firestore";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 function paise(amount: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -75,7 +79,7 @@ function AuctionRow({
   const isWinning = auction.bids.some((b) => b.isWinning);
 
   return (
-    <Div className="border border-[var(--appkit-color-border)] rounded-xl overflow-hidden bg-[var(--appkit-color-surface)] shadow-sm">
+    <Div className={`border border-[var(--appkit-color-border)] rounded-xl ${__O.hidden} bg-[var(--appkit-color-surface)] shadow-sm`}>
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}

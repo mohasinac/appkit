@@ -19,6 +19,10 @@ import { ACTION_ID } from "../../products/constants/action-defs";
 import { useToast } from "../../../ui";
 import { useBottomActions } from "../../layout";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 const SORT_OPTIONS = [
@@ -175,7 +179,7 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (
-              <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+              <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <Div className="p-3 space-y-2">
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />

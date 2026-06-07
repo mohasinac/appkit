@@ -13,6 +13,10 @@ import {
 } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // --- Props -------------------------------------------------------------------
 
 export interface SectionCarouselProps<T = unknown> {
@@ -113,7 +117,7 @@ export interface SectionCarouselProps<T = unknown> {
 function CarouselSkeleton({ count }: { count: number }) {
   const { skeleton } = THEME_CONSTANTS;
   return (
-    <Div className="flex gap-4 overflow-hidden px-4">
+    <Div className={`flex gap-4 ${__O.hidden} px-4`}>
       {Array.from({ length: count }).map((_, i) => (
         <Div
           key={i}
@@ -187,7 +191,7 @@ export function SectionCarousel<T = unknown>({
       {/* Background image + overlay */}
       {hasBg && backgroundImage && (
         <>
-          <Div className="absolute inset-0 overflow-hidden">
+          <Div className={`absolute inset-0 ${__O.hidden}`}>
             <MediaImage src={backgroundImage} alt="" size="hero" />
           </Div>
           <Div className="absolute inset-0 bg-black/55" />

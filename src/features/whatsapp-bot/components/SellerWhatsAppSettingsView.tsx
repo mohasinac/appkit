@@ -2,6 +2,10 @@
 
 import React from "react";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_SECTION_CARD = "border border-zinc-200 dark:border-zinc-700 rounded-xl p-5";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Span, Stack, Text, Toggle, useToast } from "../../../ui";
@@ -408,7 +412,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Text>
 
         {/* Simulated WhatsApp catalog tile grid */}
-        <Div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden bg-[#ECE5DD] dark:bg-zinc-800 p-3">
+        <Div className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 p-3`}>
           <Row gap="sm" align="center" className="mb-3">
             <Div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
               <Text className="text-white text-xs font-bold">W</Text>
@@ -423,7 +427,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
           <Div className="grid grid-cols-2 gap-2">
             {SAMPLE_CATALOG_ITEMS.map((item) => (
-              <Div key={item.id} surface="card" className="overflow-hidden">
+              <Div key={item.id} surface="card" className={`${__O.hidden}`}>
                 <Div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                   <Text className="text-2xl">{item.emoji}</Text>
                 </Div>

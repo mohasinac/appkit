@@ -5,6 +5,10 @@ import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency as defaultFormatCurrency } from "../../../utils/number.formatter";
 import type { ProductItem } from "../types";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const STATUS_STYLES: Record<string, string> = {
   published:
     "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300",
@@ -64,7 +68,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       render: (product: T) => (
         <Row gap="sm">
           {product.mainImage ? (
-            <Div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded">
+            <Div className={`relative h-8 w-8 flex-shrink-0 ${__O.hidden} rounded`}>
               <MediaImage
                 src={product.mainImage}
                 alt={product.title}

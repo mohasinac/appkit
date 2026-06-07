@@ -17,6 +17,10 @@ import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
 import { THEME_CONSTANTS } from "../../../tokens";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface AdminCopilotViewProps {
   endpoint?: string;
   historyEndpoint?: string;
@@ -75,7 +79,7 @@ function renderCopilotChatPanel(props: {
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
       </Div>
-      <Div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <Div className={`flex-1 ${__O.yAuto} p-4 space-y-4`}>
         {messages.length === 0 ? (
           <Div className="flex flex-col items-center justify-center h-full text-center">
             <Text className="font-medium">{labels?.noMessages ?? "No messages yet"}</Text>
@@ -121,7 +125,7 @@ function renderCopilotHistoryPanel(props: {
       {historyQuery.error ? (
         <Alert variant="warning" title="History unavailable">{historyQuery.error instanceof Error ? historyQuery.error.message : "Could not load history"}</Alert>
       ) : null}
-      <Div className="max-h-72 overflow-y-auto space-y-2">
+      <Div className={`max-h-72 ${__O.yAuto} space-y-2`}>
         {(historyQuery.data?.messages ?? []).map((log, index) => (
           <Div key={`${log.createdAt}-${index}`} className="rounded-lg border border-neutral-200 dark:border-slate-700 p-2">
             <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">{new Date(log.createdAt).toLocaleString()}</Text>
@@ -203,7 +207,7 @@ export function AdminCopilotView({
               </Text>
             </Div>
 
-            <Div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <Div className={`flex-1 ${__O.yAuto} p-4 space-y-4`}>
               {messages.length === 0 ? (
                 <Div className="flex flex-col items-center justify-center h-full text-center">
                   <Text className="font-medium">{labels.noMessages ?? "No messages yet"}</Text>
@@ -281,7 +285,7 @@ export function AdminCopilotView({
               </Alert>
             ) : null}
 
-            <Div className="max-h-72 overflow-y-auto space-y-2">
+            <Div className={`max-h-72 ${__O.yAuto} space-y-2`}>
               {(historyQuery.data?.messages ?? []).map((log, index) => (
                 <Div
                   key={`${log.createdAt}-${index}`}

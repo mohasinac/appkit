@@ -2,6 +2,10 @@
 import React, { useState, type ReactNode } from "react";
 import { Div } from "./Div";
 
+const __O = {
+  xAuto: "overflow-x-auto",
+} as const;
+
 export interface DetailPageTab {
   /** Stable tab id used for the URL `tab=` param and ARIA wiring. */
   id: string;
@@ -64,7 +68,7 @@ export function DetailPageTabs({
         .filter(Boolean)
         .join(" ")}
     >
-      <Div role="tablist" aria-orientation="horizontal" className="flex gap-2 border-b border-zinc-200 dark:border-zinc-700 overflow-x-auto">
+      <Div role="tablist" aria-orientation="horizontal" className={`flex gap-2 border-b border-zinc-200 dark:border-zinc-700 ${__O.xAuto}`}>
         {tabs.map((tab) => {
           const isActive = tab.id === active?.id;
           return (

@@ -14,6 +14,10 @@ import {
 import { formatCurrency } from "../../../../utils/number.formatter";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_WARN_BOX = "rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm";
 const CLS_WARN_TITLE = "font-medium text-amber-900";
 const CLS_WARN_BODY = "mt-1 text-amber-800";
@@ -53,7 +57,7 @@ export function LiveItemDetailView({
         <Stack gap="lg">
           {/* Gallery */}
           {product.images.length > 0 && (
-            <Div className="overflow-hidden rounded-lg bg-muted">
+            <Div className={`${__O.hidden} rounded-lg bg-muted`}>
               <img
                 src={product.mainImage || product.images[0]}
                 alt={product.title}

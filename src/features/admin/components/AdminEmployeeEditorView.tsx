@@ -11,6 +11,10 @@ import {
   type EmployeeGroup,
 } from "../../auth/permissions/constants";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface AdminEmployeeEditorViewProps {
@@ -106,7 +110,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           ({permissions.size} selected)
         </Span>
       </Span>
-      <Div className="rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] overflow-y-auto">
+      <Div className={`rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] ${__O.yAuto}`}>
         {PERMISSION_DOMAINS.map((domain) => {
           const domainPerms = getPermissionsForDomain(domain.prefix);
           if (domainPerms.length === 0) return null;

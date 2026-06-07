@@ -11,6 +11,10 @@ import { CATEGORY_PAGE_TABS, type CategoryTabId } from "../../products/constants
 import type { CategoryDocument } from "../schemas";
 import type { StoreListItem } from "../../stores/types";
 
+const __O = {
+  xAuto: "overflow-x-auto",
+} as const;
+
 function tabLabel(label: string, count?: number) {
   if (!count) return label;
   return `${label} (${count.toLocaleString()})`;
@@ -86,7 +90,7 @@ export function CategoryDetailTabs({
 
   return (
     <>
-      <Div className="flex border-b border-zinc-200 dark:border-slate-700 mb-6 overflow-x-auto">
+      <Div className={`flex border-b border-zinc-200 dark:border-slate-700 mb-6 ${__O.xAuto}`}>
         {visibleTabs.map((t) => (
           <button
             key={t.id}

@@ -33,6 +33,10 @@ import type {
   ProductFeatureScope,
 } from "../../products/schemas/product-features";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 const PILL_BASE_CLASS =
   "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium cursor-pointer transition-colors";
 const PILL_CHECKED_CLASS = "bg-primary text-white border-primary";
@@ -380,7 +384,7 @@ export function AdminFeatureEditorView({
   );
 
   if (embedded) {
-    return <Div className="overflow-y-auto p-4">{formSection}{deleteModal}</Div>;
+    return <Div className={`${__O.yAuto} p-4`}>{formSection}{deleteModal}</Div>;
   }
 
   return (

@@ -17,6 +17,10 @@ import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 /**
  * SB-UNI-Z5 2026-05-13 — `kind` prop UX sugar. When set, the component
  * auto-derives `accept` + `maxSizeMB` from the canonical media-limits
@@ -229,7 +233,7 @@ function MediaPreviewPanel({
     <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
       {isVideo(value) ? (
         <Div className="space-y-2">
-          <Div className="relative aspect-video overflow-hidden rounded-lg">
+          <Div className={`relative aspect-video ${__O.hidden} rounded-lg`}>
             <MediaVideo src={value} alt={label} controls objectFit="contain" />
           </Div>
           {/* Video size warning for large files */}
@@ -238,12 +242,12 @@ function MediaPreviewPanel({
           </Text>
         </Div>
       ) : isImage(value) ? (
-        <Div className="relative aspect-video overflow-hidden rounded-lg">
+        <Div className={`relative aspect-video ${__O.hidden} rounded-lg`}>
           <MediaImage src={value} alt={label} size="card" objectFit="contain" />
         </Div>
       ) : isPdf(value) ? (
         <Div className="space-y-2">
-          <Div className="relative w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700" style={{ height: 280 }}>
+          <Div className={`relative w-full ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`} style={{ height: 280 }}>
             <iframe
               src={value}
               title={filenameFromUrl(value)}

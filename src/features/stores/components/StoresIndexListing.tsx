@@ -17,6 +17,10 @@ import { STORE_FIELDS } from "../../../constants/field-names";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import { useBottomActions } from "../../layout";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const DEFAULT_SORT = sortBy(STORE_FIELDS.CREATED_AT);
 
 const STORE_SORT_OPTIONS = [
@@ -202,7 +206,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         {isLoading ? (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+              <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
                 <Div className="p-4 space-y-2.5">
                   <Div className="flex items-center gap-2">

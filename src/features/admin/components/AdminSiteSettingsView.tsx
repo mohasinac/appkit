@@ -10,6 +10,10 @@ import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface AdminSiteSettingsViewProps
@@ -615,7 +619,7 @@ export function AdminSiteSettingsView({
               <Slider label={`Opacity — ${watermarkOpacity}%`} value={watermarkOpacity} onChange={setWatermarkOpacity} min={5} max={100} step={5} />
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Text size="xs" color="muted">Preview (text watermark only)</Text>
-                <Row surface="default" justify="end" align="end" className="relative h-32 overflow-hidden rounded">
+                <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden} rounded`}>
                   <Span
                     weight="medium"
                     className="text-zinc-400 select-none p-2"

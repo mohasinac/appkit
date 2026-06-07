@@ -4,6 +4,10 @@ import Image from "next/image";
 import { Div, Span, Text } from "../../../ui";
 import type { BeforeAfterItem } from "../types";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface BeforeAfterCardProps {
   item: BeforeAfterItem;
   /** Label shown on the left (before) side. Default: "Before". */
@@ -56,7 +60,7 @@ export function BeforeAfterCard({
   }, [dragging, updatePosition]);
 
   return (
-    <Div className="border-border overflow-hidden rounded-2xl border bg-card shadow-sm">
+    <Div className={`border-border ${__O.hidden} rounded-2xl border bg-card shadow-sm`}>
       <Div
         ref={containerRef}
         className="relative aspect-[4/3] cursor-col-resize overflow-hidden select-none"

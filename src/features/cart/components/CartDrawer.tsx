@@ -4,6 +4,11 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
+const __O = {
+  hidden: "overflow-hidden",
+  yAuto: "overflow-y-auto",
+} as const;
+
 const CLS_REMOVE_BTN = "self-start text-zinc-400 dark:text-zinc-400 transition hover:text-red-500";
 
 interface CartItemRowProps {
@@ -19,7 +24,7 @@ interface CartItemRowProps {
 export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
     <Div surface="card" padding="sm" className={`flex gap-4 transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
-      <Div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 dark:bg-slate-800">
+      <Div className={`h-20 w-20 flex-shrink-0 ${__O.hidden} rounded-lg bg-neutral-100 dark:bg-slate-800`}>
         {item.meta.image && (
           <Div
             role="img"
@@ -165,7 +170,7 @@ export function CartDrawer({
             ✕
           </Button>
         </Row>
-        <Div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <Div className={`flex-1 ${__O.yAuto} p-4 space-y-3`}>
           {isLoading ? (
             <Div className="flex justify-center py-12">
               <Div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 dark:border-slate-600 border-t-neutral-800 dark:border-t-zinc-200" />

@@ -4,6 +4,10 @@ import { Div, Heading, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 import type { ProductGrading } from "../schemas/firestore";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface ProductGradingTabProps {
   grading: ProductGrading;
   /** Optional resolved media URL for the slab/grade image. */
@@ -64,7 +68,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
       </Div>
 
       {slabImageUrl ? (
-        <Div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-700">
+        <Div className={`${__O.hidden} rounded-2xl border border-zinc-200 dark:border-zinc-700`}>
           {/* eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements */}
           <img src={slabImageUrl} alt="Slab certificate image" className="w-full h-auto" />
         </Div>

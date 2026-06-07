@@ -5,6 +5,10 @@ import { Div } from "../../../ui";
 import { BidHistory } from "../../products/components/BidHistory";
 import type { BidHistoryEntry } from "../../products/components/BidHistory";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 interface CollapsibleBidHistoryProps {
   bids: BidHistoryEntry[];
   currency: string;
@@ -14,7 +18,7 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
   const [open, setOpen] = useState(false);
 
   return (
-    <Div className="mt-6 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden">
+    <Div className={`mt-6 rounded-xl border border-zinc-100 dark:border-zinc-800 ${__O.hidden}`}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

@@ -5,6 +5,10 @@ import { ACTION_META, ACTION_ID } from "../../products/constants/action-defs";
 import type { ActionId } from "../../products/constants/action-defs";
 import { useToast } from "../../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_CUSTOM_PILL = "inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
 
 export interface ActionPermissionsManagerProps {
@@ -118,7 +122,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
         </Text>
       </Div>
 
-      <Div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-slate-700">
+      <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">

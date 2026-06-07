@@ -21,6 +21,10 @@ import { useGuestCart } from "../../cart/hooks/useGuestCart";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const FILTER_KEYS = ["condition", "brand", "minPrice", "maxPrice"];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +34,7 @@ function renderCategoryProductGrid(props: { isLoading: boolean; products: any[];
     return (
       <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         {Array.from({ length: 8 }).map((_, i) => (
-          <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+          <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
             <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
             <Div className="p-3 space-y-2">
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />

@@ -7,6 +7,10 @@ import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/const
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 
+const __O = {
+  xAuto: "overflow-x-auto",
+} as const;
+
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
 const CLS_DEFAULT_PILL = "inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2 py-0.5";
 const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors";
@@ -313,7 +317,7 @@ export function SellerAddressesView({
                 ))}
               </Grid>
             ) : (
-              <Div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-slate-700">
+              <Div className={`${__O.xAuto} rounded-lg border border-zinc-200 dark:border-slate-700`}>
                 <table className="w-full text-sm">
                   <thead className="bg-zinc-50 dark:bg-slate-800">
                     <tr>

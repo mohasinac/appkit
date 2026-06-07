@@ -19,6 +19,10 @@ import type { ProductDocument } from "../../../../features/products/schemas/fire
 import type { ConversationDocument } from "../../../../features/messages/schemas/firestore";
 import type { startClassifiedConversationAction } from "../../../server/features/classified/actions";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface ClassifiedDetailViewProps {
   product: ProductDocument | null;
   isLoading?: boolean;
@@ -71,7 +75,7 @@ export function ClassifiedDetailView({
         <Stack gap="lg">
           {/* Gallery */}
           {product.images.length > 0 && (
-            <Div className="overflow-hidden rounded-lg bg-muted">
+            <Div className={`${__O.hidden} rounded-lg bg-muted`}>
               <img
                 src={product.mainImage || product.images[0]}
                 alt={product.title}

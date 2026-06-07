@@ -4,6 +4,10 @@ import React from "react";
 import type { AdminListingScaffoldRow } from "./DataListingView";
 import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 interface AdminViewCardsProps {
   rows: AdminListingScaffoldRow[];
   view: "grid" | "list";
@@ -44,7 +48,7 @@ function SkeletonCard({ view }: { view: "grid" | "list" }) {
     );
   }
   return (
-    <Div rounded="xl" border="subtle" className="overflow-hidden animate-pulse">
+    <Div rounded="xl" border="subtle" className={`${__O.hidden} animate-pulse`}>
       <Stack gap="xs" padding="md">
         <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
         <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
@@ -176,7 +180,7 @@ export function AdminViewCards({
     const count = view === "grid" ? 12 : 8;
     if (view === "list") {
       return (
-        <Div rounded="xl" border="subtle" className="overflow-hidden divide-y divide-zinc-100 dark:divide-slate-700">
+        <Div rounded="xl" border="subtle" className={`${__O.hidden} divide-y divide-zinc-100 dark:divide-slate-700`}>
           {Array.from({ length: count }).map((_, i) => <SkeletonCard key={i} view="list" />)}
         </Div>
       );
@@ -196,7 +200,7 @@ export function AdminViewCards({
 
   if (view === "list") {
     return (
-      <Div rounded="xl" border="subtle" className="overflow-hidden divide-y divide-zinc-100 dark:divide-slate-700">
+      <Div rounded="xl" border="subtle" className={`${__O.hidden} divide-y divide-zinc-100 dark:divide-slate-700`}>
         {rows.map((row) => (
           <AdminCardItem
             key={row.id}

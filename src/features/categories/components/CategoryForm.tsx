@@ -6,6 +6,10 @@ import { FormField } from "../../../ui";
 import { flattenCategories, type Category } from "../types";
 import { normalizeRichTextHtml, slugify } from "../../../utils/string.formatter";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface CategoryFormLabels {
   name?: string;
   slug?: string;
@@ -125,7 +129,7 @@ export function CategoryForm({
           <Label className="block text-sm font-medium mb-2">
             {L.categoryImage}
           </Label>
-          <Div className="relative h-32 w-40 overflow-hidden rounded">
+          <Div className={`relative h-32 w-40 ${__O.hidden} rounded`}>
             <MediaImage
               src={category.display.coverImage}
               alt={category.name || ""}

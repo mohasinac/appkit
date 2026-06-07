@@ -5,6 +5,10 @@ import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_PDF_LINK = "text-sm underline break-all text-blue-600 dark:text-blue-400";
 
 export interface MediaUploadListProps {
@@ -169,7 +173,7 @@ export function MediaUploadList({
               className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3"
             >
               {item.type === "video" ? (
-                <Div className="relative aspect-square max-h-24 overflow-hidden rounded-lg">
+                <Div className={`relative aspect-square max-h-24 ${__O.hidden} rounded-lg`}>
                   <MediaVideo
                     src={item.url}
                     alt={item.alt || `Media ${index + 1}`}
@@ -177,7 +181,7 @@ export function MediaUploadList({
                   />
                 </Div>
               ) : item.type === "image" ? (
-                <Div className="relative aspect-square max-h-24 overflow-hidden rounded-lg">
+                <Div className={`relative aspect-square max-h-24 ${__O.hidden} rounded-lg`}>
                   <MediaImage
                     src={item.url}
                     alt={item.alt || `Media ${index + 1}`}

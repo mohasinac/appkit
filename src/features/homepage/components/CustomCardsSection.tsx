@@ -5,6 +5,10 @@ import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // --- Constants ---------------------------------------------------------------
 
 const CLS_CONTAINER = "w-full max-w-7xl mx-auto px-4";
@@ -61,7 +65,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
       style={cardStyle}
     >
       {card.image && (
-        <Div className="relative w-full aspect-video overflow-hidden">
+        <Div className={`relative w-full aspect-video ${__O.hidden}`}>
           <MediaImage
             src={card.image}
             alt={card.imageAlt ?? ""}

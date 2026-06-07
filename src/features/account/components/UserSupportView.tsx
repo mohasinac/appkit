@@ -14,6 +14,10 @@ import {
 import { apiClient } from "../../../http";
 import { SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 interface TicketMessage {
@@ -258,7 +262,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
           {(selectedTicket.messages ?? []).length > 0 && (
             <Div className="space-y-2">
               <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Messages</Text>
-              <Div className="space-y-2 max-h-72 overflow-y-auto">
+              <Div className={`space-y-2 max-h-72 ${__O.yAuto}`}>
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <Div key={msg.id ?? i} className={`rounded-lg p-3 text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`}>
                     <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">

@@ -26,6 +26,10 @@ import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
 import { useBottomActions } from "../../layout";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
@@ -186,7 +190,7 @@ function OrderDetailDrawer({
 
       {order && !loading && (
         <Stack gap="none" className="flex flex-col">
-          <Div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <Div className={`flex-1 ${__O.yAuto} px-4 py-4 space-y-5`}>
             {/* Status row */}
             <Div className="flex items-center justify-between">
               <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>

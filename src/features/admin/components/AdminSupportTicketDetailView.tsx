@@ -17,6 +17,10 @@ import {
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 interface TicketMessageClient {
   id?: string;
   authorId?: string;
@@ -367,7 +371,7 @@ export function AdminSupportTicketDetailView({
             <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
               Messages ({messages.length})
             </Text>
-            <Div className="space-y-2 max-h-64 overflow-y-auto">
+            <Div className={`space-y-2 max-h-64 ${__O.yAuto}`}>
               {messages.map((msg, i) => (
                 <Div
                   key={msg.id ?? i}

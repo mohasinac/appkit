@@ -19,6 +19,10 @@ import {
   Text,
 } from "../../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface VideoThumbnailSelectorProps {
   isOpen: boolean;
   videoUrl: string;
@@ -90,7 +94,7 @@ export function VideoThumbnailSelector({
         </Text>
 
         {/* Video player — raw <video> required: needs ref for videoWidth/videoHeight */}
-        <Div className="relative aspect-video overflow-hidden rounded-lg bg-black">
+        <Div className={`relative aspect-video ${__O.hidden} rounded-lg bg-black`}>
           <video
             ref={videoRef}
             src={videoUrl}

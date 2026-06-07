@@ -3,6 +3,10 @@ import React, { useState, useTransition } from "react";
 import { Toggle, Text, Div, Stack, Input } from "../../../ui";
 import { useToast } from "../../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface NavItem {
   id?: string;
   label: string;
@@ -53,7 +57,7 @@ export function NavPermissionsManager({
           <Text className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             {group.groupLabel}
           </Text>
-          <Div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-slate-700">
+          <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">

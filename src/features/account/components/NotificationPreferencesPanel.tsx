@@ -6,6 +6,10 @@ import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { NotificationPreferences, NotificationChannelPrefs, NotificationTypePrefs } from "../types";
 import type { NotificationChannelConfig } from "../../admin/schemas/firestore";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 interface SiteSettingsShape {
   notificationChannels?: NotificationChannelConfig;
 }
@@ -73,7 +77,7 @@ function ToggleRow({
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Div className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden">
+    <Div className={`rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`}>
       <Div className="px-4 py-3 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-alt,var(--appkit-color-surface))]">
         <Text className="text-xs font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
           {title}

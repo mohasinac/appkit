@@ -14,6 +14,10 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { CATEGORY_FIELDS } from "../../../constants/field-names";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const PAGE_SIZE = 24;
 
 function renderCategoryGrid(props: {
@@ -26,7 +30,7 @@ function renderCategoryGrid(props: {
     return (
       <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
-          <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+          <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
             <Div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
             <Div className="p-3.5 space-y-2">
               <Div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />

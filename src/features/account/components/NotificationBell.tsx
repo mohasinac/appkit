@@ -17,6 +17,11 @@ import { formatRelativeTime } from "../../../utils";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { useNotifications } from "../hooks/useNotifications";
 
+const __O = {
+  hidden: "overflow-hidden",
+  yAuto: "overflow-y-auto",
+} as const;
+
 interface NotificationItem {
   id: string;
   type: string;
@@ -212,7 +217,7 @@ function renderNotificationDropdown(props: {
 }) {
   const { dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead, isLoading, notifications, notificationIcons, handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref, setIsOpen } = props;
   return (
-    <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 overflow-hidden ${dropdownClassName}`}>
+    <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 ${__O.hidden} ${dropdownClassName}`}>
       <Row justify="between" gap="none" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-800">
         <Heading level={3} className="font-semibold text-zinc-900 dark:text-white">
           {labels.title}
@@ -224,7 +229,7 @@ function renderNotificationDropdown(props: {
           </Button>
         )}
       </Row>
-      <Div className="max-h-96 overflow-y-auto">
+      <Div className={`max-h-96 ${__O.yAuto}`}>
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
       </Div>
       {viewAllHref && (

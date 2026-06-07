@@ -4,6 +4,10 @@ import { Button, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_GRADIENT_BG = "absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600";
 const CLS_CTA_BTN_SM = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0";
 const CLS_CTA_BTN_LG = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2";
@@ -59,7 +63,7 @@ export function AdvertisementBanner({
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
-          <Div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl">
+          <Div className={`relative ${__O.hidden} rounded-2xl bg-zinc-900 shadow-xl`}>
             <Grid className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`}>
               {/* Left: image */}
               <Div className={`relative ${THEME_CONSTANTS.card.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`}>
@@ -141,7 +145,7 @@ export function AdvertisementBanner({
           )}
 
           {/* Decorative blobs */}
-          <Div className="absolute inset-0 overflow-hidden" aria-hidden>
+          <Div className={`absolute inset-0 ${__O.hidden}`} aria-hidden>
             <Div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-3xl animate-pulse" />
             <Div className="absolute -bottom-16 right-0 w-80 h-80 rounded-full bg-cobalt/20 blur-3xl animate-pulse" />
           </Div>

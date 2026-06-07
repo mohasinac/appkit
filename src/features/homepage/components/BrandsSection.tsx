@@ -9,6 +9,10 @@ import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CTA_CLASSES: Record<SectionCTA["variant"], string> = {
   filled: "rounded-lg bg-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90",
   outline: "rounded-lg border border-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-[var(--appkit-color-primary)] hover:bg-[var(--appkit-color-primary)]/10",
@@ -139,7 +143,7 @@ export function BrandsSection({
         )}
 
         {isLoading ? (
-          <Div className="flex gap-3 overflow-hidden">
+          <Div className={`flex gap-3 ${__O.hidden}`}>
             {Array.from({ length: 8 }).map((_, i) => (
               <Div key={i} className="h-32 w-36 flex-none animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700 md:h-40" />
             ))}

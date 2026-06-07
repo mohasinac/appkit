@@ -3,6 +3,10 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Div, Li, Nav, Span, Ul } from "../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 export interface NavbarLayoutItem {
   href: string;
   label: string;
@@ -125,7 +129,7 @@ export function NavbarLayout({
     >
       <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] flex items-center h-10">
         {/* Scrollable items area */}
-        <Div className="relative flex-1 overflow-hidden">
+        <Div className={`relative flex-1 ${__O.hidden}`}>
           {canScrollLeft && (
             <button
               type="button"

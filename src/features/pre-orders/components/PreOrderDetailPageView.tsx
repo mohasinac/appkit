@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { productRepository } from "../../../repositories";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const CLS_PREORDER_BADGE = "inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-indigo-700 dark:text-indigo-300";
 const CLS_STATUS_BADGE = "inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-800 dark:text-amber-200";
@@ -282,7 +286,7 @@ function PreOrderBuyBarPanel({
               {progressPct}%
             </Span>
           </Row>
-          <Div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+          <Div className={`h-2 w-full ${__O.hidden} rounded-full bg-zinc-200 dark:bg-zinc-700`}>
             <Div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progressPct}%` }} />
           </Div>
         </Div>

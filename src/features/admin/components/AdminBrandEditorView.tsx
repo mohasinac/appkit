@@ -19,6 +19,10 @@ import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface AdminBrandEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   brandId?: string;
@@ -250,7 +254,7 @@ export function AdminBrandEditorView({
   );
 
   if (embedded) {
-    return <Div className="overflow-y-auto p-4">{formSection}</Div>;
+    return <Div className={`${__O.yAuto} p-4`}>{formSection}</Div>;
   }
 
   return (

@@ -2,6 +2,10 @@ import React from "react";
 import { Div, Heading, Section, Text, TextLink } from "../../../ui";
 import { Mail } from "lucide-react";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // --- Types -------------------------------------------------------------------
 
 export interface NewsletterSectionProps {
@@ -24,7 +28,7 @@ export function NewsletterSection({
   className = "",
 }: NewsletterSectionProps) {
   return (
-    <Section className={`py-16 px-4 relative overflow-hidden ${className}`}>
+    <Section className={`py-16 px-4 relative ${__O.hidden} ${className}`}>
       {/* Gradient background layer */}
       <Div
         className="absolute inset-0 bg-gradient-to-br from-primary/10 via-cobalt/5 to-secondary/10 dark:from-primary/15 dark:via-cobalt/10 dark:to-secondary/15 pointer-events-none"

@@ -35,6 +35,10 @@ import { BundleBuyNowCta } from "./BundleBuyNowCta";
 import { BundleCollage } from "./BundleCollage";
 import { ROUTES } from "../../../next/routing/route-map";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
 const STOCK_BADGE_TEXT: Record<StockKey, string> = {
@@ -73,7 +77,7 @@ export function BundleDetailView({
                 {members.length > 0 ? (
                   <BundleCollage members={members} />
                 ) : (
-                  <Div className="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-800">
+                  <Div className={`aspect-video w-full ${__O.hidden} rounded-2xl bg-zinc-100 dark:bg-zinc-800`}>
                     {cover ? (
                       // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
                       <img

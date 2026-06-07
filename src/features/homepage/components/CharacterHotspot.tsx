@@ -7,6 +7,10 @@ import { useMediaQuery } from "../../../react";
 import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin as HotspotPinData } from "../types";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 /* -- Fallback when no Firestore config is saved yet --------------------------
    Consumers can override the full config via the `config` prop.
 ----------------------------------------------------------------- */
@@ -347,7 +351,7 @@ function HotspotImageLayer({
   panoramicAlt: string;
 }) {
   return (
-    <Div className="absolute inset-0 overflow-hidden">
+    <Div className={`absolute inset-0 ${__O.hidden}`}>
       <Image
         src={panoramicImage}
         alt={panoramicAlt}

@@ -1,6 +1,10 @@
 "use client"
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const SVG_PATH_SEARCH = "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z";
 const CLS_HOVER_ROW = "hover:bg-zinc-100 dark:hover:bg-slate-800";
 const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400";
@@ -711,7 +715,7 @@ export function Search({
         {(filteredSiteLinks.length > 0 || query) && (
           <Div className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 space-y-2 z-50">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
-              <Div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+              <Div className={`rounded-xl ${__O.hidden} border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900`}>
                 <Div className="px-4 py-2 border-b border-zinc-200 dark:border-slate-700">
                   <Text
                     variant="secondary"
@@ -753,7 +757,7 @@ export function Search({
             )}
 
             {query && (
-              <Div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+              <Div className={`rounded-xl ${__O.hidden} border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900`}>
                 {suggestionsLoading ? (
                   <Div className="px-4 py-3">
                     <Text variant="secondary" size="sm">

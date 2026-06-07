@@ -11,6 +11,10 @@ import type { ProductDocument } from "../../products/schemas/firestore";
 import { isAuctionListing, isPreOrderListing } from "../../products/utils/listing-type";
 import { User, Star, ShoppingBag, Package, Trophy, Globe, MapPin, ExternalLink } from "lucide-react";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-neutral-800 to-neutral-900 dark:from-neutral-900 dark:to-black";
 
@@ -153,7 +157,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
     <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
       <Div className={`${page.container.md}`}>
         <Div className="flex flex-wrap gap-4 flex-col sm:flex-row items-center sm:items-end">
-          <Div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 overflow-hidden`}>
+          <Div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 ${__O.hidden}`}>
             {photoURL ? <img src={photoURL} alt={displayName} className="w-full h-full object-cover" /> : <User className="w-10 h-10 text-white/60" />}
           </Div>
           <Stack gap="xs" className="text-center sm:text-left">

@@ -4,6 +4,11 @@ import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import { Div, Text } from "../../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+  xAuto: "overflow-x-auto",
+} as const;
+
 export interface ProductGalleryClientProps {
   images: string[];
   productName?: string;
@@ -36,7 +41,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
   if (images.length === 0) {
     return (
-      <Div className="overflow-hidden rounded-xl border border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+      <Div className={`${__O.hidden} rounded-xl border border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900`}>
         <Div className="flex aspect-square items-center justify-center text-zinc-300 dark:text-zinc-700">
           <PlaceholderSvg />
         </Div>
@@ -68,7 +73,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
       {/* Thumbnail strip */}
       {images.length > 1 && (
-        <Div className="flex gap-2 overflow-x-auto pb-1">
+        <Div className={`flex gap-2 ${__O.xAuto} pb-1`}>
           {images.map((src, i) => (
             <button
               key={i}

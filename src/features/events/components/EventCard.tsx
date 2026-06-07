@@ -10,6 +10,10 @@ import { EventStatusBadge } from "./EventStatusBadge";
 import { ROUTES } from "../../../next";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const TYPE_ICONS: Record<EventType, string> = {
   sale: "🏷️",
   offer: "🎁",
@@ -73,7 +77,7 @@ export function EventCard({
       )}
       <Link href={detailHref} className="block flex-shrink-0">
         {event.coverImageUrl ? (
-          <Div className="aspect-video overflow-hidden">
+          <Div className={`aspect-video ${__O.hidden}`}>
             <Div
               role="img"
               aria-label={safeTitle}

@@ -5,6 +5,10 @@ import { Div, Span, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { CategoryItem } from "../types";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_FEATURED_DOT = "absolute left-2 top-2 rounded-full bg-amber-400 p-1 leading-none";
 
 // --- CategoryCard -------------------------------------------------------------
@@ -28,7 +32,7 @@ export function CategoryCard({
   const inner = (
     <Div className="flex h-full flex-col">
       {/* Image area — fixed aspect ratio */}
-      <Div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700 flex-shrink-0">
+      <Div className={`relative aspect-[4/3] w-full ${__O.hidden} bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700 flex-shrink-0`}>
         {category.display?.coverImage ? (
           <Div
             role="img"

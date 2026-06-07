@@ -17,6 +17,11 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+const __O = {
+  auto: "overflow-auto",
+  hidden: "overflow-hidden",
+} as const;
+
 const REL_NOOPENER = "noopener noreferrer";
 const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-rose-500 dark:hover:bg-zinc-800";
 import Link from "next/link";
@@ -186,7 +191,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
 
       <FieldRow label={labels.field.image}>
         <Link href={href} target="_blank" rel={REL_NOOPENER}>
-          <Div className="relative aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+          <Div className={`relative aspect-square ${__O.hidden} rounded-lg bg-zinc-100 dark:bg-zinc-800`}>
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -350,7 +355,7 @@ export function CompareOverlay({
         </button>
       </Row>
 
-      <Div className="flex-1 overflow-auto p-4">
+      <Div className={`flex-1 ${__O.auto} p-4`}>
         {isLoading ? (
           <Text variant="secondary" className="text-center py-12">
             Loadingâ€¦

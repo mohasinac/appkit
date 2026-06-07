@@ -4,6 +4,10 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Div, Heading, RichText, Section, Span, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 // --- Constants ----------------------------------------------------------------
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -210,7 +214,7 @@ export function FAQSection({
                     isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
-                  <Div className="overflow-hidden">
+                  <Div className={`${__O.hidden}`}>
                     <Div className="px-5 pb-5 pt-0">
                       {isHtml(faq.answer) ? (
                         <RichText

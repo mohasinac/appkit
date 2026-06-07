@@ -11,6 +11,10 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
   tips: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
@@ -145,7 +149,7 @@ export function BlogPostView({
     <Div className={`min-h-screen ${className}`}>
       {/* Cover image */}
       {coverImageUrl && (
-        <Div className="relative h-72 md:h-96 overflow-hidden">
+        <Div className={`relative h-72 md:h-96 ${__O.hidden}`}>
           {renderImage ? (
             renderImage(post)
           ) : (

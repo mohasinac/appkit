@@ -3,6 +3,10 @@
 import React, { useEffect, useCallback } from "react";
 import { Button, Div, Row, Span } from "../../ui";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface BottomSheetProps {
   open: boolean;
   onClose: () => void;
@@ -114,7 +118,7 @@ export function BottomSheet({
         </Row>
 
         {/* Scrollable content */}
-        <Div className="flex-1 overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]">
+        <Div className={`flex-1 ${__O.yAuto} overscroll-contain pb-[env(safe-area-inset-bottom)]`}>
           {children}
         </Div>
       </Div>

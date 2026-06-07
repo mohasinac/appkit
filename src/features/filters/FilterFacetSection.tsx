@@ -4,6 +4,10 @@ import { Button, Div, Input, Row, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FilterOption } from "./filterUtils";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 const CLS_OPTION_SELECTED = "border-emerald-500 bg-emerald-50 text-emerald-700 dark:border-emerald-500/60 dark:bg-emerald-900/20 dark:text-emerald-300";
 const CLS_OPTION_DOT = "inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[10px] text-white";
 const CLS_CLEAR_BTN = "w-full py-1 text-xs text-zinc-400 transition-colors hover:text-red-600";
@@ -151,7 +155,7 @@ export function FilterFacetSection({
                 />
               </Div>
             )}
-            <Div className="max-h-56 overflow-y-auto py-1">
+            <Div className={`max-h-56 ${__O.yAuto} py-1`}>
               {filtered.map((option) => {
                 const isSelected = selected.includes(option.value);
                 return (

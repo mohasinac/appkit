@@ -22,6 +22,10 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { PREORDER_SORT_OPTIONS } from "../../products/constants/sieve";
 import { useBottomActions } from "../../layout";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const DEFAULT_SORT = PREORDER_SORT_OPTIONS[2].value;
 
 const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.BRAND, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.STORE_ID, TABLE_KEYS.PREORDER_STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
@@ -299,7 +303,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (
-              <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+              <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <Div className="p-3 space-y-2">
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />

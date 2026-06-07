@@ -19,6 +19,10 @@ import {
 import type { CategoryDocument } from "../../categories/schemas";
 import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const PLACEHOLDER_EMOJI = "📦" as const;
 
 export interface FeaturedBundlesSectionProps {
@@ -96,7 +100,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
       className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
     >
       <Link href={href} className="group block p-3 hover:no-underline">
-        <Div className="mb-2 aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+        <Div className={`mb-2 aspect-square ${__O.hidden} rounded-lg bg-zinc-100 dark:bg-zinc-800`}>
           {cover ? (
             // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
             <img

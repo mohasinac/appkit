@@ -10,6 +10,10 @@ import { TABLE_KEYS } from "../../../constants/table-keys";
 import { COUPON_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const DEFAULT_SORT = sortBy(COUPON_FIELDS.CREATED_AT);
 
 const CLS_CHIP_BTN = "p-0 min-h-0 h-auto inline-flex";
@@ -141,7 +145,7 @@ export function CouponsIndexListing({
           </button>
 
           {/* Search */}
-          <Row surface="default" className="flex-1 overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600">
+          <Row surface="default" className={`flex-1 ${__O.hidden} rounded-lg border border-zinc-300 dark:border-slate-600`}>
             <input
               type="text"
               value={searchInput}

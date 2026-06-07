@@ -17,6 +17,10 @@ import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
 import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_BADGE_AUCTION = "bg-amber-500 text-white";
 const CLS_BADGE_PREORDER = "bg-violet-600 text-white";
 const CLS_BADGE_NEW = "rounded-full bg-rose-500 px-2 py-0.5 text-[10px] text-white shadow-sm";
@@ -120,7 +124,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Image area */}
-      <Div className="relative overflow-hidden bg-zinc-100 dark:bg-slate-800 aspect-square">
+      <Div className={`relative ${__O.hidden} bg-zinc-100 dark:bg-slate-800 aspect-square`}>
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}
@@ -536,7 +540,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Thumbnail */}
-      <Div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-neutral-100 dark:bg-zinc-800">
+      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg ${__O.hidden} bg-neutral-100 dark:bg-zinc-800`}>
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}

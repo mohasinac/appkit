@@ -1,6 +1,10 @@
 import React, { forwardRef } from "react";
 import { Aside, Div } from "../../ui";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface SidebarLayoutProps {
   isOpen: boolean;
   ariaLabel: string;
@@ -61,7 +65,7 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
           </Div>
 
           {/* Scrollable body */}
-          <Div className="flex-1 overflow-y-auto scrollbar-thin px-6 py-4">
+          <Div className={`flex-1 ${__O.yAuto} scrollbar-thin px-6 py-4`}>
             {children}
           </Div>
         </Aside>

@@ -2,6 +2,10 @@ import { Div, StatusBadge, Span, Button } from "../../../ui";
 import type { Category } from "../types";
 import { MediaImage } from "../../media";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 const CLS_DELETE_BTN = "text-red-600 hover:text-red-800 dark:text-red-400";
 
 export interface CategoryTableColumnsLabels {
@@ -39,7 +43,7 @@ export function getCategoryTableColumns(
         key: "image",
         header: "",
         render: (cat: Category) => (
-          <Div className="relative w-9 h-9 rounded overflow-hidden flex-shrink-0">
+          <Div className={`relative w-9 h-9 rounded ${__O.hidden} flex-shrink-0`}>
             {cat.display?.coverImage ? (
               <MediaImage
                 src={cat.display.coverImage}

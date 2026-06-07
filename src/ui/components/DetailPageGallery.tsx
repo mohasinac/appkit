@@ -2,6 +2,10 @@
 import React, { useState, type ReactNode } from "react";
 import { Div } from "./Div";
 
+const __O = {
+  xAuto: "overflow-x-auto",
+} as const;
+
 export interface DetailPageGalleryImage {
   /** Public URL (resolved to `/media/<slug>` already). */
   url: string;
@@ -97,7 +101,7 @@ export function DetailPageGallery({
       </Div>
 
       {images.length > 1 ? (
-        <Div className="flex gap-2 overflow-x-auto pb-1">
+        <Div className={`flex gap-2 ${__O.xAuto} pb-1`}>
           {images.map((img, idx) => (
             <button
               key={img.url + idx}

@@ -22,6 +22,10 @@ import {
 } from "../../../_internal/shared/features/categories/bundle-config";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 
+const __O = {
+  yAuto: "overflow-y-auto",
+} as const;
+
 export interface BundleItemSearchResult {
   id: string;
   title: string;
@@ -82,7 +86,7 @@ function renderBundleSearchResults(props: {
         <Text size="sm" color="muted">{BUNDLE_COPY.picker.noMatches(debouncedQuery)}</Text>
       )}
       {results.length > 0 && (
-        <Div className="max-h-72 overflow-y-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
+        <Div className={`max-h-72 ${__O.yAuto} rounded-lg border border-zinc-200 dark:border-zinc-700`}>
           {results.map((r) => {
             const isSelected = selectedSet.has(r.id);
             const atCap = !isSelected && value.length >= maxItems;

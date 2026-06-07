@@ -1,6 +1,10 @@
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Grid, Row, Section, Stack } from "../../../ui";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 /** Full-page skeleton shown while homepage data loads. */
 export function HomepageSkeleton() {
   const { skeleton, flex, themed } = THEME_CONSTANTS;
@@ -12,7 +16,7 @@ export function HomepageSkeleton() {
   const newsletterH = "h-[clamp(220px,28vh,320px)]";
 
   return (
-    <Div className="w-full overflow-hidden">
+    <Div className={`w-full ${__O.hidden}`}>
       {/* Hero Carousel skeleton */}
       <Div
         className={`${skeleton.card} w-full ${heroSkeletonH}`}

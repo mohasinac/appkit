@@ -5,6 +5,11 @@ import type { AdminTableColumn } from "../types";
 import { BaseListingCard, Button, Div, Span, Text } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const __O = {
+  hidden: "overflow-hidden",
+  xAuto: "overflow-x-auto",
+} as const;
+
 const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
   {
     key: "primary",
@@ -152,8 +157,8 @@ export function DataTable<T extends { id: string }>({
   const allRowsSelected =
     selectionEnabled && rows.length > 0 && rows.every((r) => selectedIds?.has(r.id));
   return (
-    <Div surface="card" className="overflow-hidden">
-      <Div className="overflow-x-auto">
+    <Div surface="card" className={`${__O.hidden}`}>
+      <Div className={`${__O.xAuto}`}>
         <table data-testid="data-table" className="w-full text-sm">
           <thead>
             <tr className="border-b border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800">

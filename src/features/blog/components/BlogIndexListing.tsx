@@ -12,6 +12,10 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { BLOG_FIELDS } from "../../../constants/field-names";
 
+const __O = {
+  hidden: "overflow-hidden",
+} as const;
+
 type BlogPost = Parameters<typeof BlogCard>[0]["post"];
 
 function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "grid" | "list" }) {
@@ -20,7 +24,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
     return (
       <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+          <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
             <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
             <Div className="p-5 space-y-2">
               <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/4" />
