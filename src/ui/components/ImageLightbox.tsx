@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCw, Maximize2 } from "lucide-react";
 import { Button } from "./Button";
+import { Div } from "./Div";
 import { Text, Span } from "./Typography";
 
 const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-red-500/60 text-white flex items-center justify-center";
@@ -208,9 +209,9 @@ export function ImageLightbox({
           }}
         />
         {image.badge && (
-          <div className="absolute left-3 top-3 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white pointer-events-none">
+          <Div className="absolute left-3 top-3 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white pointer-events-none">
             {image.badge}
-          </div>
+          </Div>
         )}
       </div>
 
@@ -278,12 +279,12 @@ export function ImageLightbox({
       )}
 
       {/* Keyboard hint */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/30 text-[11px] flex gap-4">
-        <span>← → navigate</span>
-        <span>scroll to zoom</span>
-        <span>R to rotate</span>
-        <span>0 to reset</span>
-      </div>
+      <Div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/30 text-[11px] flex gap-4">
+        <Span>← → navigate</Span>
+        <Span>scroll to zoom</Span>
+        <Span>R to rotate</Span>
+        <Span>0 to reset</Span>
+      </Div>
     </div>,
     document.body,
   );

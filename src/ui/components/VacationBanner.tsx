@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Alert } from "./Alert";
+import { Div } from "./Div";
 import { Span } from "./Typography";
 
 export interface VacationBannerProps {
@@ -29,16 +30,16 @@ export function VacationBanner({
     });
   return (
     <Alert variant="warning" className={className}>
-      <div className="text-sm">
+      <Div className="text-sm">
         <Span weight="bold">
           {storeName ? `${storeName} is on vacation` : "Store is on vacation"}
         </Span>
-        {message ? <span> — {message}</span> : null}
-        {formattedDate ? <span> Returns {formattedDate}.</span> : null}
-        <div className="text-xs opacity-80 mt-1">
+        {message ? <Span> — {message}</Span> : null}
+        {formattedDate ? <Span> Returns {formattedDate}.</Span> : null}
+        <Div className="text-xs opacity-80 mt-1">
           New orders are paused; you can still wishlist items.
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Alert>
   );
 }
