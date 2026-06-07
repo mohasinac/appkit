@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next";
-import { Div, Row, Text, Modal, SideDrawer, Button } from "../../../ui";
+import { Div, Row, Span, Table, Thead, Tbody, Tr, Th, Td, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isPreOrderListing } from "../utils/listing-type";
 
@@ -70,9 +70,9 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
           </Div>
         )}
         {member.isGroupParent && (
-          <span className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary,#6366f1)] text-white text-[8px] leading-none px-1 py-0.5 rounded-tl">
+          <Span className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary,#6366f1)] text-white text-[8px] leading-none px-1 py-0.5 rounded-tl">
             Set
-          </span>
+          </Span>
         )}
       </div>
       <Text className="text-[10px] text-center text-zinc-600 dark:text-zinc-400 leading-tight line-clamp-2 w-full">
@@ -89,8 +89,8 @@ function GroupTableRow({ member }: { member: GroupMember }) {
   const image = member.images?.[0] ?? "";
 
   return (
-    <tr className="border-b border-zinc-100 dark:border-zinc-800 last:border-0">
-      <td className="py-2 pr-3">
+    <Tr className="border-b border-zinc-100 dark:border-zinc-800 last:border-0">
+      <Td className="py-2 pr-3">
         <Div className={`w-10 h-10 rounded-full ${__O.hidden} border border-zinc-200 dark:border-zinc-700`}>
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -99,28 +99,28 @@ function GroupTableRow({ member }: { member: GroupMember }) {
             <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800" />
           )}
         </Div>
-      </td>
-      <td className="py-2 pr-3">
+      </Td>
+      <Td className="py-2 pr-3">
         <Text className="text-sm text-zinc-800 dark:text-zinc-200 font-medium line-clamp-2">{member.title}</Text>
         {member.isGroupParent && (
-          <span className="text-[10px] text-[var(--appkit-color-primary,#6366f1)] font-semibold">Parent</span>
+          <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary,#6366f1)]">Parent</Span>
         )}
-      </td>
-      <td className="py-2 pr-3">
+      </Td>
+      <Td className="py-2 pr-3">
         <Text className="text-sm text-zinc-700 dark:text-zinc-300">{price}</Text>
-      </td>
-      <td className="py-2 pr-3">
+      </Td>
+      <Td className="py-2 pr-3">
         <Text className="text-xs text-zinc-500 dark:text-zinc-400 capitalize">{member.condition ?? "â€”"}</Text>
-      </td>
-      <td className="py-2">
+      </Td>
+      <Td className="py-2">
         <Link
           href={href}
           className="text-xs text-[var(--appkit-color-primary,#6366f1)] hover:underline"
         >
           View â†’
         </Link>
-      </td>
-    </tr>
+      </Td>
+    </Tr>
   );
 }
 
@@ -148,20 +148,20 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
 
   const tableContent = (
     <Div className={`${__O.xAuto}`}>
-      <table className="w-full text-left min-w-[400px]">
-        <thead>
-          <tr className="border-b border-zinc-200 dark:border-zinc-700">
-            <th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Image</th>
-            <th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Name</th>
-            <th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Price</th>
-            <th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Condition</th>
-            <th className="pb-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400"></th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table className="w-full text-left min-w-[400px]">
+        <Thead>
+          <Tr className="border-b border-zinc-200 dark:border-zinc-700">
+            <Th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Image</Th>
+            <Th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Name</Th>
+            <Th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Price</Th>
+            <Th className="pb-2 pr-3 text-xs font-semibold text-zinc-500 dark:text-zinc-400">Condition</Th>
+            <Th className="pb-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400"></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
           {members.map((m) => <GroupTableRow key={m.id} member={m} />)}
-        </tbody>
-      </table>
+        </Tbody>
+      </Table>
     </Div>
   );
 
@@ -175,13 +175,13 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
           aria-expanded={open}
         >
           <Row align="center" gap="xs">
-            <span className="text-xs text-zinc-400 dark:text-zinc-400 mr-1">{open ? "â–¼" : "â–¶"}</span>
+            <Span size="xs" className="text-zinc-400 dark:text-zinc-400 mr-1">{open ? "â–¼" : "â–¶"}</Span>
             <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
               {parentLabel}
             </Text>
-            <span className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5 text-xs text-zinc-600 dark:text-zinc-400">
+            <Span size="xs" className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5 text-zinc-600 dark:text-zinc-400">
               {members.length}
-            </span>
+            </Span>
           </Row>
           <Button
             type="button"
