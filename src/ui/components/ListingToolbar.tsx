@@ -11,6 +11,7 @@ import {
   Square,
 } from "lucide-react";
 import { SortDropdown } from "./SortDropdown";
+import { Span } from "./Typography";
 
 const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-400 transition-colors";
 const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-rose-500 dark:hover:text-rose-400 transition-colors";
@@ -171,9 +172,9 @@ export function ListingToolbar({
               }
               {allSelected ? l.deselectAll : l.selectAll(bulkTotalCount)}
             </button>
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">
+            <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
               {l.selected(bulkSelectedCount)}
-            </span>
+            </Span>
             <button
               type="button"
               onClick={onBulkClear}
@@ -215,16 +216,16 @@ export function ListingToolbar({
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline">{l.filters}</span>
               {filterCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-[10px] font-bold text-white">
+                <Span weight="bold" className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-[10px] text-white">
                   {filterCount}
-                </span>
+                </Span>
               )}
             </button>
           )}
 
           {sortOptions && sortValue !== undefined && onSortChange && (
-            <div className="flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-              <span className="hidden md:inline whitespace-nowrap text-xs">{l.sort}</span>
+            <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
+              <Span size="xs" className="hidden md:inline whitespace-nowrap">{l.sort}</Span>
               <SortDropdown
                 value={sortValue}
                 onChange={onSortChange}
