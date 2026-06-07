@@ -34,7 +34,7 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
         {/* Backdrop overlay */}
         {isOpen && (
           <Div
-            className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[45] transition-opacity duration-300"
+            className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[var(--appkit-z-overlay)] transition-opacity duration-300"
             onClick={onClose}
             aria-hidden="true"
           />

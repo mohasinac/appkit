@@ -6,6 +6,10 @@ import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
 import type { GoogleReview } from "../lib/google-reviews-fetcher";
 import type { GoogleReviewsSectionConfig } from "../schemas";
 
+const CLS_STAR_ON = "text-yellow-400";
+const CLS_STAR_OFF = "text-zinc-300 dark:text-zinc-600";
+const CLS_GMAPS_LINK = "shrink-0 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline";
+
 // --- Star Rating -------------------------------------------------------------
 
 function StarRating({ rating }: { rating: number }) {
@@ -14,7 +18,7 @@ function StarRating({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
-          className={`w-4 h-4 ${star <= rating ? "text-yellow-400" : "text-zinc-300 dark:text-zinc-600"}`}
+          className={`w-4 h-4 ${star <= rating ? CLS_STAR_ON : CLS_STAR_OFF}`}
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -220,7 +224,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
               href={mapsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+              className={CLS_GMAPS_LINK}
             >
               View on Google →
             </a>

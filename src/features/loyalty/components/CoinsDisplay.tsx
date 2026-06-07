@@ -1,6 +1,9 @@
 import React from "react";
 import { Div, Span, Text } from "../../../ui";
 
+const CLS_COIN_PILL = "inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800";
+const CLS_COIN_TOTAL = "text-3xl font-bold text-amber-600";
+
 interface CoinsBadgeProps {
   coins: number;
   className?: string;
@@ -9,7 +12,7 @@ interface CoinsBadgeProps {
 export function CoinsBadge({ coins, className }: CoinsBadgeProps) {
   return (
     <Span
-      className={`inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 ${className ?? ""}`}
+      className={`${CLS_COIN_PILL} ${className ?? ""}`}
     >
       <Span aria-hidden="true">🪙</Span>
       {coins.toLocaleString()}
@@ -25,7 +28,7 @@ interface CoinsDisplayProps {
 export function CoinsDisplay({ coins, label = "HC Coins" }: CoinsDisplayProps) {
   return (
     <Div className="flex flex-col items-center gap-1">
-      <Text className="text-3xl font-bold text-amber-600">
+      <Text className={CLS_COIN_TOTAL}>
         {coins.toLocaleString()}
       </Text>
       <Text className="text-sm text-gray-500">{label}</Text>

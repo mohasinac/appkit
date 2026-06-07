@@ -12,6 +12,9 @@ import {
 } from "lucide-react";
 import { SortDropdown } from "./SortDropdown";
 
+const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-400 transition-colors";
+const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-rose-500 dark:hover:text-rose-400 transition-colors";
+
 export interface ListingToolbarSortOption {
   value: string;
   label: string;
@@ -174,7 +177,7 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onBulkClear}
-              className="text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-400 transition-colors"
+              className={CLS_CLEAR_LINK}
             >
               {l.clearSelection}
             </button>
@@ -267,7 +270,7 @@ export function ListingToolbar({
               onClick={onResetAll}
               aria-label={l.resetAll}
               title={l.resetAll}
-              className="flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+              className={CLS_CLEAR_ICON_BTN}
             >
               <RotateCcw className="h-4 w-4" />
             </button>

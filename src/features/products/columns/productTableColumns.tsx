@@ -15,6 +15,9 @@ const STATUS_STYLES: Record<string, string> = {
   sold: "bg-primary/10 dark:bg-primary/20 text-primary",
 };
 
+const CLS_LOW_STOCK = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+const CLS_DELETE = "text-red-600 hover:text-red-800 dark:text-red-400";
+
 export interface ProductTableColumnLabels {
   title: string;
   category: string;
@@ -151,7 +154,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
             className={[
               "rounded px-2 py-1 text-xs font-medium",
               featured
-                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                ? CLS_LOW_STOCK
                 : "bg-zinc-100 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300",
             ].join(" ")}
           >
@@ -182,7 +185,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
           e.stopPropagation();
           onDelete(product);
         }}
-        className="text-red-600 hover:text-red-800 dark:text-red-400"
+        className={CLS_DELETE}
       >
         {labels.delete}
       </Button>

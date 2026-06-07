@@ -6,6 +6,10 @@ import type { CategoryDocument } from "../../categories/schemas/firestore";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+
+const CLS_BUNDLE_PILL = "inline-flex items-center rounded-full bg-violet-600 px-2 py-0.5 text-white";
+const CLS_STOCK_OK = "bg-emerald-600 text-white";
+const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-1.5 text-center text-xs font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
 import {
   BaseListingCard,
   Div,
@@ -158,14 +162,14 @@ export function MarketplaceBundleCard({
         </TextLink>
 
         <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
-          <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-violet-600 px-2 py-0.5 text-white">
+          <Span size="xs" weight="medium" className={CLS_BUNDLE_PILL}>
             {mergedLabels.bundleBadge}
           </Span>
           <Span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
               stock === "out_of_stock"
                 ? "bg-zinc-500 text-white"
-                : "bg-emerald-600 text-white"
+                : CLS_STOCK_OK
             }`}
           >
             {stock === "out_of_stock" ? mergedLabels.outOfStockBadge : mergedLabels.inStockBadge}
@@ -215,7 +219,7 @@ export function MarketplaceBundleCard({
           </Text>
         </Row>
         <div
-          className="mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-1.5 text-center text-xs font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]"
+          className={CLS_VIEW_BTN}
           role="button"
           tabIndex={0}
           onClick={handleNavigate}

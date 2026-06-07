@@ -50,7 +50,7 @@ export function SkipToMain({ mainId = "main-content" }: { mainId?: string }) {
   return (
     <Link
       href={`#${mainId}`}
-      className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white dark:focus:bg-slate-900 focus:text-zinc-900 dark:focus:text-zinc-100 focus:shadow-lg focus:ring-2 focus:ring-primary-500 focus:outline-none text-sm font-medium"
+      className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[var(--appkit-z-toast)] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white dark:focus:bg-slate-900 focus:text-zinc-900 dark:focus:text-zinc-100 focus:shadow-lg focus:ring-2 focus:ring-primary-500 focus:outline-none text-sm font-medium"
     >
       Skip to main content
     </Link>
