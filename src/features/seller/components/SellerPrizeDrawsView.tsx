@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
@@ -140,12 +141,12 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
     searchPlaceholder: "Search prize draws by name…",
     emptyLabel: "No prize draws listed yet",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "prize-draws", "listing"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
       { value: "prizeDrawEndDate", label: "Draw Date Soon" },
     ],

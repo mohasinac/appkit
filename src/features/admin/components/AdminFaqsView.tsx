@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useMemo } from "react";
 import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
@@ -85,12 +86,12 @@ export function AdminFaqsView({
       searchPlaceholder: "Search questions, categories, or tokens",
       emptyLabel: "No FAQs found",
       filterKeys: ["isActive"],
-      defaultSort: "priority",
+      defaultSort: sortBy("priority", "ASC"),
       queryKey: ["admin", "faqs", "listing"],
       endpoint: ADMIN_ENDPOINTS.FAQS,
       sortOptions: [
         { value: "priority", label: "Priority" },
-        { value: "-createdAt", label: "Newest" },
+        { value: sortBy("createdAt", "DESC"), label: "Newest" },
         { value: "question", label: "Question A–Z" },
       ],
       columns: COLUMNS,

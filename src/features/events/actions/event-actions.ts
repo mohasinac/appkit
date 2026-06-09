@@ -5,6 +5,7 @@
  * Auth, rate-limiting, and input validation are handled by the calling server action.
  */
 
+import { sortBy } from "@mohasinac/appkit";
 import { serverLogger } from "../../../monitoring";
 import { eventRepository } from "../repository/events.repository";
 import { eventEntryRepository } from "../repository/event-entry.repository";
@@ -314,7 +315,7 @@ export async function adminGetEventEntries(
   params?: { page?: number; pageSize?: number },
 ): Promise<EventEntryDocument[]> {
   const result = await eventEntryRepository.listForEvent(eventId, {
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     page: params?.page ?? 1,
     pageSize: params?.pageSize ?? 50,
   });

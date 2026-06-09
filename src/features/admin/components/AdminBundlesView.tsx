@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Badge, Button, Div, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
@@ -112,16 +113,16 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     searchPlaceholder: "Search bundles by name or slug…",
     emptyLabel: BUNDLE_COPY.adminList.empty,
     filterKeys: ["isActive", "bundleStockStatus"],
-    defaultSort: "name",
+    defaultSort: sortBy("name", "ASC"),
     queryKey: ["admin", "bundles", "listing"],
     endpoint: ADMIN_ENDPOINTS.BUNDLES,
     sortOptions: [
-      { value: "name", label: "Name A–Z" },
-      { value: "-name", label: "Name Z–A" },
-      { value: "-bundlePriceInPaise", label: "Price high→low" },
+      { value: sortBy("name", "ASC"), label: "Name A–Z" },
+      { value: sortBy("name", "DESC"), label: "Name Z–A" },
+      { value: sortBy("bundlePriceInPaise", "DESC"), label: "Price high→low" },
       { value: "bundlePriceInPaise", label: "Price low→high" },
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>

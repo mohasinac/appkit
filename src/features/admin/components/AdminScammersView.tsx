@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -95,14 +96,14 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
     searchPlaceholder: "Search by name, phone, UPI ID",
     emptyLabel: "No scammer profiles found",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "scammers", "listing"],
     endpoint: ADMIN_ENDPOINTS.SCAMMERS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
-      { value: "-views", label: "Most viewed" },
-      { value: "-incidentCount", label: "Most incidents" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
+      { value: sortBy("views", "DESC"), label: "Most viewed" },
+      { value: sortBy("incidentCount", "DESC"), label: "Most incidents" },
     ],
     columns: SCAMMER_COLUMNS,
     mapRows: (response) =>

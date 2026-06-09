@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { UserPlus } from "lucide-react";
 import { Button, FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
@@ -95,12 +96,12 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
     searchPlaceholder: "Search by name or email",
     emptyLabel: "No employees found",
     filterKeys: ["group"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "team", "listing"],
     endpoint: ADMIN_ENDPOINTS.TEAM,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "displayName", label: "Name A–Z" },
     ],
     mapRows: (response) =>

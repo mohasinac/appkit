@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
@@ -63,11 +64,11 @@ export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEn
     searchPlaceholder: "Search by user name or event ID",
     emptyLabel: "No entries found",
     filterKeys: ["status"],
-    defaultSort: "-submittedAt",
+    defaultSort: sortBy("submittedAt", "DESC"),
     queryKey: ["admin", "event-entries", "listing"],
     endpoint: ADMIN_ENDPOINTS.ADMIN_EVENT_ENTRIES,
     sortOptions: [
-      { value: "-submittedAt", label: "Newest" },
+      { value: sortBy("submittedAt", "DESC"), label: "Newest" },
       { value: "submittedAt", label: "Oldest" },
     ],
     mapRows: (response) =>

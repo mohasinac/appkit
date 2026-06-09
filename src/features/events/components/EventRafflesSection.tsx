@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import Link from "next/link";
 import {
   Container,
@@ -33,7 +34,7 @@ export async function EventRafflesSection({
   try {
     const result = await eventRepository.list({
       filters: "hasRaffle==true,status==active",
-      sorts: "-startsAt",
+      sorts: sortBy("startsAt", "DESC"),
       pageSize: limit,
     });
     events = (result.items ?? []) as unknown as EventItem[];

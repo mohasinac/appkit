@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import Link from "next/link";
 import {
   Container,
@@ -34,7 +35,7 @@ export async function PrizeDrawsSection({
   try {
     const result = await productRepository.list({
       filters: "listingType==prize-draw,status==published",
-      sorts: "-createdAt",
+      sorts: sortBy("createdAt", "DESC"),
       pageSize: limit,
     });
     draws = (result.items ?? []) as ProductDocument[];

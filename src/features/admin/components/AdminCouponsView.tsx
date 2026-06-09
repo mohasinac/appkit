@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Div, FilterChipGroup, ListingLayout, Text, useToast } from "../../../ui";
@@ -85,12 +86,12 @@ export function AdminCouponsView({
     searchPlaceholder: "Search codes, campaigns, or seller scopes",
     emptyLabel: "No coupons found",
     filterKeys: ["type"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "coupons", "listing"],
     endpoint: ADMIN_ENDPOINTS.COUPONS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "code", label: "Code A–Z" },
     ],
     hideTableView: true,

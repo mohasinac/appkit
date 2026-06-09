@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -32,12 +33,12 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
   searchPlaceholder: "Search by user ID or session",
   emptyLabel: "No carts found",
   filterKeys: ["type"],
-  defaultSort: "-updatedAt",
+  defaultSort: sortBy("updatedAt", "DESC"),
   queryKey: ["admin", "carts", "listing"],
   endpoint: ADMIN_ENDPOINTS.ADMIN_CARTS,
   sortOptions: [
-    { value: "-updatedAt", label: "Recently updated" },
-    { value: "updatedAt", label: "Oldest" },
+    { value: sortBy("updatedAt", "DESC"), label: "Recently updated" },
+    { value: sortBy("updatedAt", "ASC"), label: "Oldest" },
   ],
   mapRows: (response) =>
     toRecordArray(response.items).map((item, index) => {

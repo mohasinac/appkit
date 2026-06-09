@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
@@ -71,14 +72,14 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
   searchPlaceholder: "Search categories, slugs, or parent category",
   emptyLabel: "No categories found",
   filterKeys: ["isActive", "isFeatured"],
-  defaultSort: "name",
+  defaultSort: sortBy("name", "ASC"),
   pageSize: 50,
   queryKey: ["admin", "categories", "listing"],
   endpoint: `${CATEGORY_ENDPOINTS.LIST}?flat=true`,
   sortOptions: [
-    { value: "name", label: "Name A–Z" },
-    { value: "-name", label: "Name Z–A" },
-    { value: "-createdAt", label: "Newest" },
+    { value: sortBy("name", "ASC"), label: "Name A–Z" },
+    { value: sortBy("name", "DESC"), label: "Name Z–A" },
+    { value: sortBy("createdAt", "DESC"), label: "Newest" },
   ],
   columns: COLUMNS,
   mapRows: (response) => {

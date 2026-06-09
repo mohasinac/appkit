@@ -24,7 +24,7 @@ export const EVENT_ADMIN_SORT_OPTIONS = [
   { value: sortBy(EVENT_FIELDS.STARTS_AT, "ASC"), label: "Starts Soonest" },
   { value: sortBy(EVENT_FIELDS.ENDS_AT), label: "Ends Latest" },
   { value: sortBy(EVENT_FIELDS.ENDS_AT, "ASC"), label: "Ends Soonest" },
-  { value: "-stats.totalEntries", label: "Most Entries" },
+  { value: sortBy("stats.totalEntries", "DESC"), label: "Most Entries" },
   { value: sortBy(EVENT_FIELDS.CREATED_AT), label: "Newest First" },
 ] as const;
 
@@ -35,7 +35,7 @@ export const EVENT_PUBLIC_SORT_OPTIONS = [
   { value: sortBy(EVENT_FIELDS.STARTS_AT), label: "Starts Latest" },
   { value: sortBy(EVENT_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
   { value: sortBy(EVENT_FIELDS.TITLE), label: "Title Z–A" },
-  { value: "-stats.totalEntries", label: "Most Entries" },
+  { value: sortBy("stats.totalEntries", "DESC"), label: "Most Entries" },
 ] as const;
 
 // Backward-compatible alias.

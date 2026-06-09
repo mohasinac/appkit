@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Pencil } from "lucide-react";
 import { Badge, Button, Div, FilterChipGroup, ListingLayout, Span, Text } from "../../../ui";
@@ -106,12 +107,12 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
     searchPlaceholder: "Search prize draws by name or store…",
     emptyLabel: "No prize draws found",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "prize-draws", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
       { value: "prizeDrawEndDate", label: "Draw Date Soon" },
     ],

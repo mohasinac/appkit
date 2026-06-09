@@ -4,6 +4,7 @@
  * AdminDigitalCodesView — admin browse of digital-code listings (W1-29).
  */
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -36,12 +37,12 @@ const ADMIN_DIGITAL_CODES_CONFIG: ListingViewConfig<AdminProductsResponse, Digit
   searchPlaceholder: "Search digital code listings",
   emptyLabel: "No digital code listings",
   filterKeys: [],
-  defaultSort: "-createdAt",
+  defaultSort: sortBy("createdAt", "DESC"),
   queryKey: ["admin", "digital-codes", "listing"],
   endpoint: ADMIN_ENDPOINTS.PRODUCTS,
   sortOptions: [
-    { value: "-createdAt", label: "Newest" },
-    { value: "createdAt", label: "Oldest" },
+    { value: sortBy("createdAt", "DESC"), label: "Newest" },
+    { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     { value: "title", label: "Title A–Z" },
   ],
   mapRows: (response) =>

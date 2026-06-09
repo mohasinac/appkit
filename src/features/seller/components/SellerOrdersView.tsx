@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Eye, Printer, MapPin, Truck } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -38,8 +39,8 @@ const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest" },
+  { value: sortBy("createdAt", "ASC"), label: "Oldest" },
 ];
 const STATUS_OPTIONS = SELLER_ORDER_STATUS_TABS;
 

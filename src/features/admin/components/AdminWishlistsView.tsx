@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -31,12 +32,12 @@ const ADMIN_WISHLISTS_CONFIG: ListingViewConfig<AdminWishlistsResponse, Wishlist
   searchPlaceholder: "Search by user ID",
   emptyLabel: "No user wishlists found",
   filterKeys: [],
-  defaultSort: "-updatedAt",
+  defaultSort: sortBy("updatedAt", "DESC"),
   queryKey: ["admin", "wishlists", "listing"],
   endpoint: ADMIN_ENDPOINTS.ADMIN_WISHLISTS,
   sortOptions: [
-    { value: "-updatedAt", label: "Recently updated" },
-    { value: "-itemCount", label: "Largest first" },
+    { value: sortBy("updatedAt", "DESC"), label: "Recently updated" },
+    { value: sortBy("itemCount", "DESC"), label: "Largest first" },
   ],
   mapRows: (response) =>
     toRecordArray(response.items).map((item, index) => {

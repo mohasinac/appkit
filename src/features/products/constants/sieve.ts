@@ -96,8 +96,8 @@ export const PREORDER_SORT_OPTIONS = [
 export const BUNDLE_SORT_OPTIONS = [
   ...BASE_TIME_SORTS.slice(0, 1), // Newest First
   ...BASE_PRICE_SORTS,
-  { value: "-savingsAmount", label: "Most Savings" },
-  { value: "-bundleItemCount", label: "Most Items" },
+  { value: sortBy("savingsAmount", "DESC"), label: "Most Savings" },
+  { value: sortBy("bundleItemCount", "DESC"), label: "Most Items" },
 ] as const satisfies readonly SortOption[];
 
 // ---------------------------------------------------------------------------

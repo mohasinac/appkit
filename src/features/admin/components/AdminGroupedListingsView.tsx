@@ -5,6 +5,7 @@
  * W1-29 — pairs with the new GET /api/admin/grouped-listings endpoint.
  */
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -117,12 +118,12 @@ export function AdminGroupedListingsView({
         searchPlaceholder: "Search grouped listings by title or seller",
         emptyLabel: "No grouped listings",
         filterKeys: [],
-        defaultSort: "-createdAt",
+        defaultSort: sortBy("createdAt", "DESC"),
         queryKey: ["admin", "grouped-listings", refreshKey],
         endpoint: ADMIN_ENDPOINTS.GROUPED_LISTINGS,
         sortOptions: [
-          { value: "-createdAt", label: "Newest" },
-          { value: "createdAt", label: "Oldest" },
+          { value: sortBy("createdAt", "DESC"), label: "Newest" },
+          { value: sortBy("createdAt", "ASC"), label: "Oldest" },
           { value: "title", label: "Title A–Z" },
         ],
         mapRows: (response) =>

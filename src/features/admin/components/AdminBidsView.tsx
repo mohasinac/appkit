@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
@@ -68,13 +69,13 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
     searchPlaceholder: "Search bids, products, or bidder IDs",
     emptyLabel: "No bids found",
     filterKeys: ["status"],
-    defaultSort: "-bidTime",
+    defaultSort: sortBy("bidTime", "DESC"),
     queryKey: ["admin", "bids", "listing"],
     endpoint: ADMIN_ENDPOINTS.BIDS,
     sortOptions: [
-      { value: "-bidTime", label: "Newest" },
+      { value: sortBy("bidTime", "DESC"), label: "Newest" },
       { value: "bidTime", label: "Oldest" },
-      { value: "-amount", label: "Highest amount" },
+      { value: sortBy("amount", "DESC"), label: "Highest amount" },
     ],
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({

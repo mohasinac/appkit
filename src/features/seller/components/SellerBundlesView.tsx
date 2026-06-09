@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
@@ -117,16 +118,16 @@ export function SellerBundlesView({
     searchPlaceholder: "Search bundles...",
     emptyLabel: "No bundles yet — create a bundle to group multiple products together",
     filterKeys: [],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "bundles"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "productTitle", label: "Name A–Z" },
-      { value: "-productTitle", label: "Name Z–A" },
-      { value: "price", label: "Price: Low–High" },
-      { value: "-price", label: "Price: High–Low" },
+      { value: sortBy("productTitle", "DESC"), label: "Name Z–A" },
+      { value: sortBy("price", "ASC"), label: "Price: Low–High" },
+      { value: sortBy("price", "DESC"), label: "Price: High–Low" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>

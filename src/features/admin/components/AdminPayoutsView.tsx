@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -104,13 +105,13 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
     searchPlaceholder: "Search stores, payout IDs, or order groups",
     emptyLabel: "No payouts found",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "payouts", "listing"],
     endpoint: ADMIN_ENDPOINTS.PAYOUTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
-      { value: "-amount", label: "Highest amount" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
+      { value: sortBy("amount", "DESC"), label: "Highest amount" },
     ],
     mapRows: (response) =>
       toRecordArray(response.payouts).map((item, index) => ({

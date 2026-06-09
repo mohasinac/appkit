@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
@@ -129,15 +130,15 @@ export function SellerClassifiedView({
     searchPlaceholder: "Search classified listings...",
     emptyLabel: "No classified listings yet — post your first buy/sell/trade ad",
     filterKeys: [],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "classified"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "productTitle", label: "Name A–Z" },
-      { value: "price", label: "Price: Low–High" },
-      { value: "-price", label: "Price: High–Low" },
+      { value: sortBy("price", "ASC"), label: "Price: Low–High" },
+      { value: sortBy("price", "DESC"), label: "Price: High–Low" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>

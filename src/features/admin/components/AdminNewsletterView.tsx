@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
@@ -89,11 +90,11 @@ export function AdminNewsletterView({
     searchPlaceholder: "Search by email or source",
     emptyLabel: "No subscribers found",
     filterKeys: ["status"],
-    defaultSort: "-subscribedAt",
+    defaultSort: sortBy("subscribedAt", "DESC"),
     queryKey: ["admin", "newsletter", "listing"],
     endpoint: ADMIN_ENDPOINTS.NEWSLETTER,
     sortOptions: [
-      { value: "-subscribedAt", label: "Newest" },
+      { value: sortBy("subscribedAt", "DESC"), label: "Newest" },
       { value: "subscribedAt", label: "Oldest" },
     ],
     mapRows: (response) =>

@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, Div, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
@@ -82,12 +83,12 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
     searchPlaceholder: "Search by title or user ID",
     emptyLabel: "No notifications found",
     filterKeys: ["type"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "notifications", "listing"],
     endpoint: ADMIN_ENDPOINTS.ADMIN_NOTIFICATIONS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({

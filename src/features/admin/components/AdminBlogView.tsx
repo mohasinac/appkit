@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
@@ -50,13 +51,13 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
     searchPlaceholder: "Search articles, authors, or tags",
     emptyLabel: "No blog posts found",
     filterKeys: ["status", "isFeatured"],
-    defaultSort: "-publishedAt",
+    defaultSort: sortBy("publishedAt", "DESC"),
     queryKey: ["admin", "blog", "listing"],
     endpoint: ADMIN_ENDPOINTS.BLOG,
     sortOptions: [
-      { value: "-publishedAt", label: "Latest" },
+      { value: sortBy("publishedAt", "DESC"), label: "Latest" },
       { value: "publishedAt", label: "Oldest" },
-      { value: "-createdAt", label: "Newest draft" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest draft" },
       { value: "title", label: "Title A–Z" },
     ],
     mapRows: (response) =>

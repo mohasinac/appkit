@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -29,9 +30,9 @@ const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
 const DEFAULT_SORT = "-bidDate";
 const SORT_OPTIONS = [
-  { value: "-bidDate", label: "Newest" },
+  { value: sortBy("bidDate", "DESC"), label: "Newest" },
   { value: "bidDate", label: "Oldest" },
-  { value: "-bidAmount", label: "Highest Bid" },
+  { value: sortBy("bidAmount", "DESC"), label: "Highest Bid" },
   { value: "bidAmount", label: "Lowest Bid" },
 ];
 const STATUS_OPTIONS = SELLER_BID_STATUS_TABS;

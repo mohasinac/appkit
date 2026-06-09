@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
@@ -76,12 +77,12 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
     searchPlaceholder: "Search stores, slugs, or owner names",
     emptyLabel: "No stores found",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "stores", "listing"],
     endpoint: ADMIN_ENDPOINTS.STORES,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "storeName", label: "Name A–Z" },
     ],
     mapRows: (response) =>

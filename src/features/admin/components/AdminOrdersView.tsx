@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { FilterChipGroup, ListingLayout, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
@@ -65,12 +66,12 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
     searchPlaceholder: "Search orders, buyers, or tracking IDs",
     emptyLabel: "No orders found",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "orders", "listing"],
     endpoint: ADMIN_ENDPOINTS.ORDERS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.orders).map((item, index) => ({

@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -39,14 +40,14 @@ export function AdminSublistingCategoriesView({
     searchPlaceholder: "Search sub-listing categories…",
     emptyLabel: "No sub-listing categories found",
     filterKeys: [],
-    defaultSort: "name",
+    defaultSort: sortBy("name", "ASC"),
     queryKey: ["admin", "sublisting-categories", "listing"],
     endpoint: ADMIN_ENDPOINTS.SUBLISTING_CATEGORIES,
     sortOptions: [
-      { value: "name", label: "Name A–Z" },
-      { value: "-name", label: "Name Z–A" },
-      { value: "-productCount", label: "Most listings" },
-      { value: "-createdAt", label: "Newest" },
+      { value: sortBy("name", "ASC"), label: "Name A–Z" },
+      { value: sortBy("name", "DESC"), label: "Name Z–A" },
+      { value: sortBy("productCount", "DESC"), label: "Most listings" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({

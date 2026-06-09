@@ -5,6 +5,7 @@
  * Read-only summary with edit-handoff to the seller-portal edit route.
  */
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -37,12 +38,12 @@ const ADMIN_CLASSIFIED_CONFIG: ListingViewConfig<AdminProductsResponse, Classifi
   searchPlaceholder: "Search classified by name or seller",
   emptyLabel: "No classified listings",
   filterKeys: [],
-  defaultSort: "-createdAt",
+  defaultSort: sortBy("createdAt", "DESC"),
   queryKey: ["admin", "classified", "listing"],
   endpoint: ADMIN_ENDPOINTS.PRODUCTS,
   sortOptions: [
-    { value: "-createdAt", label: "Newest" },
-    { value: "createdAt", label: "Oldest" },
+    { value: sortBy("createdAt", "DESC"), label: "Newest" },
+    { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     { value: "title", label: "Title A–Z" },
   ],
   mapRows: (response) =>

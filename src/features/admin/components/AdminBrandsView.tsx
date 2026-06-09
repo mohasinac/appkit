@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, ListingLayout, Text } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
@@ -71,14 +72,14 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
   searchPlaceholder: "Search brands by name or slug",
   emptyLabel: "No brands found",
   filterKeys: ["isActive"],
-  defaultSort: "displayOrder",
+  defaultSort: sortBy("displayOrder", "ASC"),
   queryKey: ["admin", "brands", "listing"],
   endpoint: ADMIN_ENDPOINTS.BRANDS,
   sortOptions: [
-    { value: "displayOrder", label: "Display order" },
-    { value: "name", label: "Name A–Z" },
-    { value: "-name", label: "Name Z–A" },
-    { value: "-createdAt", label: "Newest" },
+    { value: sortBy("displayOrder", "ASC"), label: "Display order" },
+    { value: sortBy("name", "ASC"), label: "Name A–Z" },
+    { value: sortBy("name", "DESC"), label: "Name Z–A" },
+    { value: sortBy("createdAt", "DESC"), label: "Newest" },
   ],
   columns: COLUMNS,
   mapRows: (response) =>

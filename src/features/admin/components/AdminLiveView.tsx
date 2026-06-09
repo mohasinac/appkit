@@ -4,6 +4,7 @@
  * AdminLiveView — admin browse of live-item listings (W1-29).
  */
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -36,12 +37,12 @@ const ADMIN_LIVE_CONFIG: ListingViewConfig<AdminProductsResponse, LiveRow> = {
   searchPlaceholder: "Search live items",
   emptyLabel: "No live item listings",
   filterKeys: [],
-  defaultSort: "-createdAt",
+  defaultSort: sortBy("createdAt", "DESC"),
   queryKey: ["admin", "live-items", "listing"],
   endpoint: ADMIN_ENDPOINTS.PRODUCTS,
   sortOptions: [
-    { value: "-createdAt", label: "Newest" },
-    { value: "createdAt", label: "Oldest" },
+    { value: sortBy("createdAt", "DESC"), label: "Newest" },
+    { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     { value: "title", label: "Title A–Z" },
   ],
   mapRows: (response) =>

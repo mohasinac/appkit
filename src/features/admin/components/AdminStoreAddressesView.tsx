@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import {
   toRecordArray,
@@ -28,7 +29,7 @@ const ADMIN_STORE_ADDRESSES_CONFIG: ListingViewConfig<AdminStoreAddressesRespons
   searchPlaceholder: "Search by label, city, or store ID",
   emptyLabel: "No store addresses found",
   filterKeys: [],
-  defaultSort: "storeId",
+  defaultSort: sortBy("storeId", "ASC"),
   queryKey: ["admin", "store-addresses", "listing"],
   endpoint: ADMIN_ENDPOINTS.STORE_ADDRESSES,
   sortOptions: [

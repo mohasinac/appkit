@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
@@ -77,12 +78,12 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
     searchPlaceholder: "Search by order ID or buyer",
     emptyLabel: "No return requests",
     filterKeys: [],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "return-requests", "listing"],
     endpoint: `${ADMIN_ENDPOINTS.ORDERS}?status=return_requested`,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({

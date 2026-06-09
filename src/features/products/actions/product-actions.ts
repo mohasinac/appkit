@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import { productRepository } from "../repository/products.repository";
 import { ProductStatusValues } from "../schemas";
 import type { ProductDocument } from "../schemas";
@@ -73,7 +74,7 @@ export async function getFeaturedProducts(
 ): Promise<ProductListResult> {
   return productRepository.list({
     filters: `featured==true,${PUBLISHED_CLAUSE}`,
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize,
   });
@@ -84,7 +85,7 @@ export async function getFeaturedAuctions(
 ): Promise<ProductListResult> {
   return productRepository.list({
     filters: AUCTIONS_PUBLISHED,
-    sorts: "auctionEndDate",
+    sorts: sortBy("auctionEndDate", "ASC"),
     page: 1,
     pageSize,
   });
@@ -95,7 +96,7 @@ export async function getLatestProducts(
 ): Promise<ProductListResult> {
   return productRepository.list({
     filters: PUBLISHED_CLAUSE,
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize,
   });
@@ -106,7 +107,7 @@ export async function getLatestAuctions(
 ): Promise<ProductListResult> {
   return productRepository.list({
     filters: AUCTIONS_PUBLISHED,
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize,
   });
@@ -129,7 +130,7 @@ export async function getFeaturedPreOrders(
 ): Promise<ProductListResult> {
   return productRepository.list({
     filters: PREORDERS_PUBLISHED,
-    sorts: "preOrderDeliveryDate",
+    sorts: sortBy("preOrderDeliveryDate", "ASC"),
     page: 1,
     pageSize,
   });
@@ -140,7 +141,7 @@ export async function getLatestPreOrders(
 ): Promise<ProductListResult> {
   return productRepository.list({
     filters: PREORDERS_PUBLISHED,
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize,
   });
@@ -170,7 +171,7 @@ export async function getRelatedProducts(
 ): Promise<ProductListResult> {
   const result = await productRepository.list({
     filters: `categoryId==${categoryId},${PUBLISHED_CLAUSE}`,
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize: limit + 1,
   });

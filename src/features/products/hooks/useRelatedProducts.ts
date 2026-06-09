@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { ProductItem, ProductListResponse } from "../types";
@@ -21,7 +22,7 @@ export function useRelatedProducts(
     : "listingType==standard";
   const params = new URLSearchParams({
     filters: `status==published,category==${encodeURIComponent(category)},${listingTypeClause}`,
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     pageSize: String(limit),
   });
 

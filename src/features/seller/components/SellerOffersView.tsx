@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -55,12 +56,12 @@ export function SellerOffersView({
     searchPlaceholder: "Search offers by product or buyer name",
     emptyLabel: "No offers received",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "offers", "listing"],
     endpoint: SELLER_ENDPOINTS.OFFERS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.offers).map((item, index) => ({

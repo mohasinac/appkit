@@ -4,6 +4,7 @@
  * AdminHistoryView — read-only admin insights for the top-level `history` collection.
  * One row per user with item count + last visit. Mirrors AdminWishlistsView.
  */
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -35,12 +36,12 @@ const ADMIN_HISTORY_CONFIG: ListingViewConfig<AdminHistoryResponse, HistoryRow> 
   searchPlaceholder: "Search by user ID",
   emptyLabel: "No user history records found",
   filterKeys: [],
-  defaultSort: "-updatedAt",
+  defaultSort: sortBy("updatedAt", "DESC"),
   queryKey: ["admin", "history", "listing"],
   endpoint: ADMIN_ENDPOINTS.ADMIN_HISTORY,
   sortOptions: [
-    { value: "-updatedAt", label: "Recently active" },
-    { value: "-itemCount", label: "Largest first" },
+    { value: sortBy("updatedAt", "DESC"), label: "Recently active" },
+    { value: sortBy("itemCount", "DESC"), label: "Largest first" },
   ],
   mapRows: (response) =>
     toRecordArray(response.items).map((item, index) => {

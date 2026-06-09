@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import { z } from "zod";
 import { serverLogger } from "../../../monitoring";
 import { blogRepository } from "../repository/blog.repository";
@@ -176,7 +177,7 @@ export async function getFeaturedBlogPosts(
 ): Promise<BlogPostDocument[]> {
   const result = await blogRepository.listPublished(
     { featuredOnly: true },
-    { sorts: "-publishedAt", page: 1, pageSize: count },
+    { sorts: sortBy("publishedAt", "DESC"), page: 1, pageSize: count },
   );
   return result.items;
 }
@@ -186,7 +187,7 @@ export async function getLatestBlogPosts(
 ): Promise<BlogPostDocument[]> {
   const result = await blogRepository.listPublished(
     {},
-    { sorts: "-publishedAt", page: 1, pageSize: count },
+    { sorts: sortBy("publishedAt", "DESC"), page: 1, pageSize: count },
   );
   return result.items;
 }

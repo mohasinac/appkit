@@ -1,4 +1,5 @@
 "use client";
+import { sortBy } from "@mohasinac/appkit";
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
@@ -23,27 +24,27 @@ export const CATEGORY_FILTER_KEYS = {
 
 export const CATEGORY_ADMIN_SORT_OPTIONS = [
   { value: "order", label: "Order Asc" },
-  { value: "-order", label: "Order Desc" },
-  { value: "name", label: "Name A-Z" },
-  { value: "-name", label: "Name Z-A" },
+  { value: sortBy("order", "DESC"), label: "Order Desc" },
+  { value: sortBy("name", "ASC"), label: "Name A-Z" },
+  { value: sortBy("name", "DESC"), label: "Name Z-A" },
   { value: "tier", label: "Tier Low to High" },
-  { value: "-tier", label: "Tier High to Low" },
-  { value: "-metrics.totalItemCount", label: "Most Items" },
-  { value: "-createdAt", label: "Newest First" },
+  { value: sortBy("tier", "DESC"), label: "Tier High to Low" },
+  { value: sortBy("metrics.totalItemCount", "DESC"), label: "Most Items" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest First" },
 ] as const;
 
 export const CATEGORY_SELLER_SORT_OPTIONS = [
   { value: "order", label: "Order Asc" },
-  { value: "name", label: "Name A-Z" },
-  { value: "-name", label: "Name Z-A" },
-  { value: "-metrics.totalItemCount", label: "Most Items" },
+  { value: sortBy("name", "ASC"), label: "Name A-Z" },
+  { value: sortBy("name", "DESC"), label: "Name Z-A" },
+  { value: sortBy("metrics.totalItemCount", "DESC"), label: "Most Items" },
 ] as const;
 
 export const CATEGORY_PUBLIC_SORT_OPTIONS = [
   { value: "order", label: "Recommended" },
-  { value: "name", label: "Name A-Z" },
-  { value: "-name", label: "Name Z-A" },
-  { value: "-metrics.totalItemCount", label: "Most Items" },
+  { value: sortBy("name", "ASC"), label: "Name A-Z" },
+  { value: sortBy("name", "DESC"), label: "Name Z-A" },
+  { value: sortBy("metrics.totalItemCount", "DESC"), label: "Most Items" },
 ] as const;
 
 export function getCategoryFilterKeys(

@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback, useMemo } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
@@ -44,9 +45,9 @@ const PAGE_SIZE = 25;
 const DEFAULT_SORT = "name";
 
 const SORT_OPTIONS = [
-  { value: "name", label: "Name A–Z" },
-  { value: "-name", label: "Name Z–A" },
-  { value: "-createdAt", label: "Newest" },
+  { value: sortBy("name", "ASC"), label: "Name A–Z" },
+  { value: sortBy("name", "DESC"), label: "Name Z–A" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest" },
 ];
 
 const CONDITION_OPTIONS = [

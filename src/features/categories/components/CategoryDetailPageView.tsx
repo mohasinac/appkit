@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import Link from "next/link";
 import {
@@ -33,7 +34,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       ? productRepository
           .list({
             filters: `status==published,${catFilter},listingType==standard`,
-            sorts: "-createdAt",
+            sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 24,
           })
@@ -43,7 +44,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       ? productRepository
           .list({
             filters: `status==published,${catFilter},listingType==auction`,
-            sorts: "auctionEndDate",
+            sorts: sortBy("auctionEndDate", "ASC"),
             page: 1,
             pageSize: 1,
           })
@@ -53,7 +54,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       ? productRepository
           .list({
             filters: `status==published,${catFilter},listingType==pre-order`,
-            sorts: "-createdAt",
+            sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 1,
           })
@@ -63,7 +64,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       ? productRepository
           .list({
             filters: `status==published,${catFilter},listingType==prize-draw`,
-            sorts: "-createdAt",
+            sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 1,
           })

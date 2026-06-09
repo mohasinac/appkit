@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -97,12 +98,12 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
     searchPlaceholder: "Search users, email, or seller handles",
     emptyLabel: "No users found",
     filterKeys: ["status", "role"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "users", "listing"],
     endpoint: ADMIN_ENDPOINTS.USERS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "displayName", label: "Name A–Z" },
     ],
     mapRows: (response) =>

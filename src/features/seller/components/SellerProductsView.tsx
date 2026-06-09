@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
@@ -45,12 +46,12 @@ const FILTER_KEYS = [
 ];
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest" },
+  { value: sortBy("createdAt", "ASC"), label: "Oldest" },
   { value: "title", label: "Title A–Z" },
-  { value: "-title", label: "Title Z–A" },
-  { value: "-price", label: "Price High" },
-  { value: "price", label: "Price Low" },
+  { value: sortBy("title", "DESC"), label: "Title Z–A" },
+  { value: sortBy("price", "DESC"), label: "Price High" },
+  { value: sortBy("price", "ASC"), label: "Price Low" },
 ];
 const STATUS_OPTIONS = SELLER_PRODUCT_STATUS_TABS;
 

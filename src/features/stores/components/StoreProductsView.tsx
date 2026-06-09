@@ -1,4 +1,5 @@
 "use client"
+import { sortBy } from "@mohasinac/appkit";
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { Div, Heading, Input, Select, SlottedListingView } from "../../../ui";
@@ -82,10 +83,10 @@ export function StoreProductsView({
               value={sort}
               onValueChange={setSort}
               options={[
-                { value: "-createdAt", label: "Newest" },
-                { value: "createdAt", label: "Oldest" },
-                { value: "price", label: "Price: Low to High" },
-                { value: "-price", label: "Price: High to Low" },
+                { value: sortBy("createdAt", "DESC"), label: "Newest" },
+                { value: sortBy("createdAt", "ASC"), label: "Oldest" },
+                { value: sortBy("price", "ASC"), label: "Price: Low to High" },
+                { value: sortBy("price", "DESC"), label: "Price: High to Low" },
               ]}
               className="min-w-44"
             />

@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Main } from "../../../ui";
 import { carouselRepository, faqsRepository, siteSettingsRepository } from "../../../repositories";
@@ -118,7 +119,7 @@ export async function MarketplaceHomepageView({
     activeTypes.has("categories") ? listTopLevelCategories(12).catch(() => null) : null,
     activeTypes.has("brands") ? listBrandCategories(12).catch(() => null) : null,
     activeTypes.has("featured-bundles") ? listFeaturedBundles(8).catch(() => null) : null,
-    activeTypes.has("stores") ? listStores({ pageSize: 8, sorts: "-averageRating" }).catch(() => null) : null,
+    activeTypes.has("stores") ? listStores({ pageSize: 8, sorts: sortBy("averageRating", "DESC") }).catch(() => null) : null,
     activeTypes.has("blog-articles") ? getFeaturedBlogPosts(6).catch(() => null) : null,
     activeTypes.has("events") ? listPublicEvents({ filters: "status==active", pageSize: 6 }).catch(() => null) : null,
   ]);

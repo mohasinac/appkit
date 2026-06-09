@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, Div, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
@@ -71,13 +72,13 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
     searchPlaceholder: "Search by user or device",
     emptyLabel: "No sessions found",
     filterKeys: ["isActive"],
-    defaultSort: "-lastActivity",
+    defaultSort: sortBy("lastActivity", "DESC"),
     queryKey: ["admin", "sessions", "listing"],
     endpoint: ADMIN_ENDPOINTS.SESSIONS,
     sortOptions: [
-      { value: "-lastActivity", label: "Most recent" },
+      { value: sortBy("lastActivity", "DESC"), label: "Most recent" },
       { value: "lastActivity", label: "Least recent" },
-      { value: "-createdAt", label: "Newest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.sessions).map((item, index) => {

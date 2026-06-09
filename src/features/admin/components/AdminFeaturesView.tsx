@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ListingLayout, Row } from "../../../ui";
@@ -78,15 +79,15 @@ export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps
     searchPlaceholder: "Search features by label",
     emptyLabel: "No features found",
     filterKeys: [],
-    defaultSort: "displayOrder",
+    defaultSort: sortBy("displayOrder", "ASC"),
     pageSize: PAGE_SIZE,
     queryKey: ["admin", "features", "listing", scopeFilter],
     endpoint: `${ADMIN_ENDPOINTS.PRODUCT_FEATURES}?scope=${scopeFilter}`,
     sortOptions: [
-      { value: "displayOrder", label: "Display order" },
+      { value: sortBy("displayOrder", "ASC"), label: "Display order" },
       { value: "label", label: "Label A–Z" },
-      { value: "-label", label: "Label Z–A" },
-      { value: "-createdAt", label: "Newest" },
+      { value: sortBy("label", "DESC"), label: "Label Z–A" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
     ],
     mapRows: (response) => toRecordArray(response.items).map(mapFeatureRow),
     getTotal: (response, mappedRows) =>

@@ -5,6 +5,7 @@
  * Auth and rate-limit stay in consumer server-action wrappers.
  */
 
+import { sortBy } from "@mohasinac/appkit";
 import {
   AuthorizationError,
   NotFoundError,
@@ -237,7 +238,7 @@ export async function listReviewsByProduct(
   pageSize = 10,
 ): Promise<FirebaseSieveResult<ReviewDocument>> {
   const result = await reviewRepository.listForProduct(productId, {
-    sorts: "-createdAt",
+    sorts: sortBy("createdAt", "DESC"),
     page,
     pageSize,
   });

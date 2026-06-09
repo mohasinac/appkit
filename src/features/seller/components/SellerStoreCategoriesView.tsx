@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { X, Plus } from "lucide-react";
@@ -32,10 +33,10 @@ import { TABLE_KEYS } from "../../../constants/table-keys";
 const PAGE_SIZE = 25;
 const DEFAULT_SORT = "displayOrder";
 const SORT_OPTIONS = [
-  { value: "displayOrder", label: "Display Order" },
+  { value: sortBy("displayOrder", "ASC"), label: "Display Order" },
   { value: "label", label: "Label A–Z" },
-  { value: "-label", label: "Label Z–A" },
-  { value: "-createdAt", label: "Newest" },
+  { value: sortBy("label", "DESC"), label: "Label Z–A" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest" },
 ];
 
 interface CategoryRow {

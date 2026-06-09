@@ -9,6 +9,7 @@
  * sort/search/filter/pagination on top of the initial snapshot.
  */
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useMemo, useCallback, useState } from "react";
 import { Div, Span, Text } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
@@ -25,10 +26,10 @@ const __P = {
 const PAGE_SIZE = 12;
 const FILTER_KEYS = ["showOutOfStock"];
 const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "price", label: "Price: Low to High" },
-  { value: "-price", label: "Price: High to Low" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest First" },
+  { value: sortBy("createdAt", "ASC"), label: "Oldest First" },
+  { value: sortBy("price", "ASC"), label: "Price: Low to High" },
+  { value: sortBy("price", "DESC"), label: "Price: High to Low" },
 ] as const;
 const DEFAULT_SORT = "-createdAt";
 

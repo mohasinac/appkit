@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -53,12 +54,12 @@ export function SellerPayoutsView({
     searchPlaceholder: "Search payouts by payout # or amount",
     emptyLabel: "No payouts found",
     filterKeys: ["status"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "payouts", "listing"],
     endpoint: SELLER_ENDPOINTS.PAYOUTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.payouts).map((item, index) => ({

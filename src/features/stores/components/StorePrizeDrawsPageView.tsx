@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { productRepository } from "../../../repositories";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
@@ -27,7 +28,7 @@ export async function StorePrizeDrawsPageView({
   const result = await productRepository
     .list({
       filters: `storeId==${storeId},status==published,listingType==prize-draw`,
-      sorts: "-createdAt",
+      sorts: sortBy("createdAt", "DESC"),
       page: 1,
       pageSize: 24,
     })

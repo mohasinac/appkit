@@ -1,4 +1,5 @@
 "use client";
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import type {
@@ -42,7 +43,7 @@ async function loadSublistingOptions(
   const params = new URLSearchParams({
     page: String(page),
     pageSize: "25",
-    sorts: "name",
+    sorts: sortBy("name", "ASC"),
   });
   if (query.trim()) params.set("q", query.trim());
   const res = await apiClient.get<{

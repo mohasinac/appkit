@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
@@ -82,14 +83,14 @@ export function SellerAuctionsView({
     searchPlaceholder: "Search auctions by product name",
     emptyLabel: "No auctions found",
     filterKeys: ["status"],
-    defaultSort: "endsAt",
+    defaultSort: sortBy("endsAt", "ASC"),
     queryKey: ["seller", "auctions", "listing"],
     endpoint: SELLER_ENDPOINTS.AUCTIONS,
     sortOptions: [
       { value: "endsAt", label: "Ending soon" },
-      { value: "-endsAt", label: "Ending latest" },
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("endsAt", "DESC"), label: "Ending latest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
     mapRows: (response) =>
       toRecordArray(response.auctions).map((item, index) => ({

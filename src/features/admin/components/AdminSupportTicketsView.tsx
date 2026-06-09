@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -116,13 +117,13 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
     searchPlaceholder: "Search by subject",
     emptyLabel: "No support tickets found",
     filterKeys: ["status", "priority"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "support-tickets", "listing"],
     endpoint: ADMIN_ENDPOINTS.SUPPORT_TICKETS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
-      { value: "-updatedAt", label: "Recently updated" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
+      { value: sortBy("updatedAt", "DESC"), label: "Recently updated" },
     ],
     columns: TICKET_COLUMNS,
     mapRows: (response) =>

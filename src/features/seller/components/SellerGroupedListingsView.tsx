@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Badge, Button, Div, Span } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
@@ -103,14 +104,14 @@ export function SellerGroupedListingsView({
     searchPlaceholder: "Search grouped listings",
     emptyLabel: "No grouped listings yet",
     filterKeys: [],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "grouped-listings"],
     endpoint: SELLER_ENDPOINTS.GROUPED_LISTINGS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
-      { value: "-title", label: "Title Z–A" },
+      { value: sortBy("title", "DESC"), label: "Title Z–A" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>

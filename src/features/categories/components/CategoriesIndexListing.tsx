@@ -88,7 +88,7 @@ const FILTER_KEYS = [TABLE_KEYS.IS_FEATURED, "isBrand", "rootOnly", "tier", "min
 const SORT_OPTIONS = [
   { value: sortBy(CATEGORY_FIELDS.NAME, "ASC"), label: "Name A–Z" },
   { value: sortBy(CATEGORY_FIELDS.NAME), label: "Name Z–A" },
-  { value: "-productCount", label: "Most Products" },
+  { value: sortBy("productCount", "DESC"), label: "Most Products" },
 ];
 
 export interface CategoriesIndexListingProps {

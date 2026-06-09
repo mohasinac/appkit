@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
@@ -59,13 +60,13 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
     searchPlaceholder: "Search events by title or type",
     emptyLabel: "No events found",
     filterKeys: ["status", "type"],
-    defaultSort: "-startsAt",
+    defaultSort: sortBy("startsAt", "DESC"),
     queryKey: ["admin", "events", "listing"],
     endpoint: ADMIN_ENDPOINTS.EVENTS,
     sortOptions: [
-      { value: "-startsAt", label: "Starting soonest" },
+      { value: sortBy("startsAt", "DESC"), label: "Starting soonest" },
       { value: "startsAt", label: "Starting latest" },
-      { value: "-createdAt", label: "Newest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: "title", label: "Title A–Z" },
     ],
     mapRows: (response) =>

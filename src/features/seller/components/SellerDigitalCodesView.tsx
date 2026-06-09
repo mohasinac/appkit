@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
@@ -131,14 +132,14 @@ export function SellerDigitalCodesView({
     searchPlaceholder: "Search digital code listings...",
     emptyLabel: "No digital code listings yet",
     filterKeys: [],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "digital-codes"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "productTitle", label: "Name A–Z" },
-      { value: "price", label: "Price: Low–High" },
+      { value: sortBy("price", "ASC"), label: "Price: Low–High" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>

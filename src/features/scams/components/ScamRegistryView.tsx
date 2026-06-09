@@ -1,3 +1,4 @@
+import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -28,10 +29,10 @@ import { SCAM_PLATFORM_LABELS } from "../schemas/firestore";
 import { SCAM_TYPES, SCAM_TYPE_LABELS } from "../constants/scam-types";
 
 const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest Reports" },
-  { value: "createdAt", label: "Oldest Reports" },
-  { value: "-incidentCount", label: "Most Victims" },
-  { value: "-amountLost", label: "Highest Loss" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest Reports" },
+  { value: sortBy("createdAt", "ASC"), label: "Oldest Reports" },
+  { value: sortBy("incidentCount", "DESC"), label: "Most Victims" },
+  { value: sortBy("amountLost", "DESC"), label: "Highest Loss" },
 ] as const;
 
 type SearchParams = Record<string, string | string[]>;

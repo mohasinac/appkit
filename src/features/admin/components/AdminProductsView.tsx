@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Div, ListingLayout, Span, Text, Toggle, useToast } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
@@ -167,14 +168,14 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     searchPlaceholder: "Search products, SKUs, or seller names",
     emptyLabel: "No products found",
     filterKeys: ["status", "type", "showSold"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "products", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
-      { value: "-price", label: "Highest price" },
+      { value: sortBy("price", "DESC"), label: "Highest price" },
     ],
     columns: [...buildBaseColumns(), flagColumn],
     mapRows: (response) =>

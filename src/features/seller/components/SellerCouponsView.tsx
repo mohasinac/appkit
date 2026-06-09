@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Div, ListingLayout, Text, useToast } from "../../../ui";
@@ -91,12 +92,12 @@ export function SellerCouponsView({
     searchPlaceholder: "Search by coupon code",
     emptyLabel: "No coupons found — create your first coupon",
     filterKeys: ["isActive"],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "coupons", "listing"],
     endpoint: SELLER_ENDPOINTS.COUPONS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "code", label: "Code A–Z" },
     ],
     hideTableView: true,

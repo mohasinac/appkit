@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FilterChipGroup, Label, ListingLayout, Modal, RowActionMenu, useToast } from "../../../ui";
@@ -109,14 +110,14 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
     searchPlaceholder: "Search reviews, products, or seller names",
     emptyLabel: "No reviews found",
     filterKeys: ["status", "rating"],
-    defaultSort: "-publishedAt",
+    defaultSort: sortBy("publishedAt", "DESC"),
     queryKey: ["admin", "reviews", "listing"],
     endpoint: ADMIN_ENDPOINTS.REVIEWS,
     sortOptions: [
-      { value: "-publishedAt", label: "Newest" },
+      { value: sortBy("publishedAt", "DESC"), label: "Newest" },
       { value: "publishedAt", label: "Oldest" },
-      { value: "-rating", label: "Highest rating" },
-      { value: "rating", label: "Lowest rating" },
+      { value: sortBy("rating", "DESC"), label: "Highest rating" },
+      { value: sortBy("rating", "ASC"), label: "Lowest rating" },
     ],
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({

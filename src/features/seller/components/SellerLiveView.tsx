@@ -1,5 +1,6 @@
 "use client";
 
+import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, Div, RowActionMenu, Text } from "../../../ui";
@@ -143,15 +144,15 @@ export function SellerLiveView({
     searchPlaceholder: "Search live item listings...",
     emptyLabel: "No live item listings yet",
     filterKeys: [],
-    defaultSort: "-createdAt",
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "live-items"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
     sortOptions: [
-      { value: "-createdAt", label: "Newest" },
-      { value: "createdAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "productTitle", label: "Name A–Z" },
-      { value: "price", label: "Price: Low–High" },
-      { value: "-price", label: "Price: High–Low" },
+      { value: sortBy("price", "ASC"), label: "Price: Low–High" },
+      { value: sortBy("price", "DESC"), label: "Price: High–Low" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>
