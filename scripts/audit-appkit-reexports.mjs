@@ -32,9 +32,8 @@ const BARRELS = ["index.ts", "client.ts", "server.ts"]
 const RE_EXPORT_STAR = /^\s*export\s*\*\s*(?:as\s+\w+\s*)?from\s+["']([^"']+)["']/;
 const RE_EXPORT_FROM = /^\s*export\s*\{[^}]*\}\s*from\s+["']([^"']+)["']/;
 
-// Baseline drift — currently 63 (1 EXPORT_STAR + 62 INTERNAL_REEXPORT).
-// Drive toward 0 by either (a) hoisting symbols out of _internal/, or
-// (b) renaming the consumers to import from the defining module directly.
+// Baseline drift — drive toward 0 by either (a) hoisting symbols out of _internal/,
+// or (b) renaming the consumers to import from the defining module directly.
 const BASELINE = 63;
 
 const violations = [];
