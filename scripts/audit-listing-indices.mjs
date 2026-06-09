@@ -46,7 +46,10 @@ const SUMMARY_ONLY = process.argv.includes("--summary-only");
 
 // Baseline drift — only regressions block. Drive toward 0 as indices are added.
 // Initial: 91 blocking issues (61 missing + 30 orphan/unsat) across 39 views.
-const BASELINE = 91;
+// LOCKED P4 (2026-06-08): all 91 → 0. Extracted 64 missing composite indices
+// from audit output into firestore.indexes.json; updated audit to recognize
+// Firestore's single-field auto-indexes (no composite needed when there are no filters).
+const BASELINE = 0;
 
 // ───────────────────────────────────────────────────────────────────────────────
 // 1. Endpoint → collection map  (mirror of LISTERS in listingProcessor.ts)
@@ -441,7 +444,15 @@ for (const page of pageEntries) {
   for (const sortVal of page.sortValues) {
     const parsed = parseSortToken(sortVal);
     if (!parsed) continue;
-    if (!indexedFields.has(`${page.collection}|${parsed.field}`)) {
+    // When the query has NO filters, Firestore's single-field auto-indexes
+    // handle the sort natively — no composite index required. Skip the
+    // orphan check in that case.
+    if (
+      page.filterClauses.length === 0 &&
+      !indexedFields.has(`${page.collection}|${parsed.field}`)
+    ) {
+      // Allowed: single-field sort with no filter is auto-indexed by Firestore.
+    } else if (!indexedFields.has(`${page.collection}|${parsed.field}`)) {
       addOrphan(sortOrphans, `${page.collection}|${parsed.field}`, page.ref);
     }
     // Required-index derivation: for each filter-combo state, try the sort
