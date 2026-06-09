@@ -38,13 +38,22 @@ const BASELINE = 63;
 
 const violations = [];
 
+// Suppression marker: a `// reexport-from-internal-ok` comment on the same line
+// or the preceding line marks an intentional public-API exposure from _internal/.
+// Use sparingly — most _internal symbols should be hoisted to a public location.
+const SUPPRESS_RE = /\/\/\s*reexport-from-internal-ok/;
+
 for (const file of BARRELS) {
   const lines = readFileSync(file, "utf8").split("\n");
   const rel = `appkit/src/${file.split(/[\\/]/).pop()}`;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+    const prevLine = i > 0 ? lines[i - 1] : "";
+    const suppressed = SUPPRESS_RE.test(line) || SUPPRESS_RE.test(prevLine);
+
     const mStar = line.match(RE_EXPORT_STAR);
     if (mStar) {
+      if (suppressed) continue;
       violations.push({
         file: rel, line: i + 1, rule: "EXPORT_STAR",
         msg: `\`export *\` from "${mStar[1]}" — use named re-exports so the public API is grep-able.`,
@@ -54,6 +63,21 @@ for (const file of BARRELS) {
     }
     const mFrom = line.match(RE_EXPORT_FROM);
     if (mFrom && mFrom[1].includes("/_internal/")) {
+      if (suppressed) continue;
+      // CLAUDE.md § SSR Architecture designates these paths as the canonical
+      // home for SSR feature code that is intentionally public API:
+      //   _internal/server/features/<feature>/    (data, adapters, actions, metadata, og)
+      //   _internal/client/features/<feature>/    (client components)
+      //   _internal/shared/features/<feature>/    (cross-tier shared)
+      // Re-exports from these paths are intentional, not accidental leaks.
+      const isFeatureModule = /\/_internal\/(server|client|shared)\/features\//.test(mFrom[1]);
+      if (isFeatureModule) continue;
+      // Also allow specific known-public-API modules outside features/.
+      const KNOWN_PUBLIC = [
+        "/_internal/shared/actions/bulk-helpers",   // buildBulkAction is part of public action API
+        "/_internal/shared/listing-types/_registry", // LISTING_TYPE_REGISTRY is public listing-type API
+      ];
+      if (KNOWN_PUBLIC.some(p => mFrom[1].includes(p))) continue;
       violations.push({
         file: rel, line: i + 1, rule: "INTERNAL_REEXPORT",
         msg: `re-export from "${mFrom[1]}" — _internal/ symbols must not leak through public barrels. Move the symbol or wire consumers directly.`,
