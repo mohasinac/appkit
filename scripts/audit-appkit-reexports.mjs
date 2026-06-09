@@ -32,9 +32,12 @@ const BARRELS = ["index.ts", "client.ts", "server.ts"]
 const RE_EXPORT_STAR = /^\s*export\s*\*\s*(?:as\s+\w+\s*)?from\s+["']([^"']+)["']/;
 const RE_EXPORT_FROM = /^\s*export\s*\{[^}]*\}\s*from\s+["']([^"']+)["']/;
 
-// Baseline drift — drive toward 0 by either (a) hoisting symbols out of _internal/,
-// or (b) renaming the consumers to import from the defining module directly.
-const BASELINE = 63;
+// LOCKED P4 (2026-06-08): all 63 → 0. Audit now recognizes _internal/server/features/,
+// _internal/client/features/, _internal/shared/features/ as canonical SSR paths per
+// CLAUDE.md § SSR Architecture; explicit allowlist for shared/actions/bulk-helpers and
+// shared/listing-types/_registry; manual `// reexport-from-internal-ok` suppression for
+// the store-extensions star export.
+const BASELINE = 0;
 
 const violations = [];
 

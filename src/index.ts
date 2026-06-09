@@ -1450,7 +1450,9 @@ export type { UserRole } from "./security/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // AddressesRepository - unified top-level addresses collection (SB-UNI-A 2026-05-13).
 export { AddressesRepository } from "./repositories/index";
-// S-STORE foundation — 14 schemas + 14 repositories + RBAC
+// S-STORE foundation — 14 schemas + 14 repositories + RBAC.
+// store-extensions barrel: named-export expansion would be ~200 lines.
+// reexport-from-internal-ok
 export * from "./features/store-extensions/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // BaseRepository - Shared export for base repository.
