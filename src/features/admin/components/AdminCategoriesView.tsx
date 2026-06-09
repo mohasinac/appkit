@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
@@ -101,7 +102,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
     typeof response.total === "number" ? response.total : mappedRows.length,
   buildFilters: (state) => {
     const parts: string[] = [];
-    if (state.isActive) parts.push(`isActive==${state.isActive}`);
+    if (state.isActive) parts.push(sieveFilter("isActive", SIEVE_OP.EQ, state.isActive));
     if (state.isFeatured === "true") parts.push("isFeatured==true");
     return parts.join(",") || undefined;
   },

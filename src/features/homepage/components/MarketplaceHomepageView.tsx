@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Main } from "../../../ui";
@@ -121,7 +122,7 @@ export async function MarketplaceHomepageView({
     activeTypes.has("featured-bundles") ? listFeaturedBundles(8).catch(() => null) : null,
     activeTypes.has("stores") ? listStores({ pageSize: 8, sorts: sortBy("averageRating", "DESC") }).catch(() => null) : null,
     activeTypes.has("blog-articles") ? getFeaturedBlogPosts(6).catch(() => null) : null,
-    activeTypes.has("events") ? listPublicEvents({ filters: "status==active", pageSize: 6 }).catch(() => null) : null,
+    activeTypes.has("events") ? listPublicEvents({ filters: sieveFilter("status", SIEVE_OP.EQ, "active"), pageSize: 6 }).catch(() => null) : null,
   ]);
 
   // ProductDocument / BlogDocument / EventDocument have Date fields and extra Firestore-only

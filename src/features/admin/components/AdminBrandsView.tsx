@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, ListingLayout, Text } from "../../../ui";
@@ -98,7 +99,7 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
   getTotal: (response, mappedRows) =>
     typeof response.total === "number" ? response.total : mappedRows.length,
   buildFilters: (state) =>
-    state.isActive ? `isActive==${state.isActive}` : undefined,
+    state.isActive ? sieveFilter("isActive", SIEVE_OP.EQ, state.isActive) : undefined,
   primaryAction: {
     label: "Add Brand",
     onClick: ({ openCreatePanel }) => openCreatePanel(),

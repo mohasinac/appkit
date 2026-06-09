@@ -1,3 +1,4 @@
+import { sieveAnd, sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import Link from "next/link";
@@ -27,13 +28,13 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
 
   // Use categorySlugs@=<id> (array-contains) — products store category FK in
   // the categorySlugs[] array, not the legacy `category` string field.
-  const catFilter = category?.id ? `categorySlugs@=${category.id}` : null;
+  const catFilter = category?.id ? sieveFilter("categorySlugs", SIEVE_OP.CONTAINS, category.id) : null;
 
   const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories] = await Promise.all([
     catFilter
       ? productRepository
           .list({
-            filters: `status==published,${catFilter},listingType==standard`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
             sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 24,
@@ -43,7 +44,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     catFilter
       ? productRepository
           .list({
-            filters: `status==published,${catFilter},listingType==auction`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "auction")),
             sorts: sortBy("auctionEndDate", "ASC"),
             page: 1,
             pageSize: 1,
@@ -53,7 +54,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     catFilter
       ? productRepository
           .list({
-            filters: `status==published,${catFilter},listingType==pre-order`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")),
             sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 1,
@@ -63,7 +64,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     catFilter
       ? productRepository
           .list({
-            filters: `status==published,${catFilter},listingType==prize-draw`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), catFilter, sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")),
             sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 1,
@@ -90,7 +91,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   const storeResults = await Promise.all(
     storeCategorySlugs.map((catSlug) =>
       storeRepository
-        .listStores({ filters: `storeCategory==${catSlug}`, page: 1, pageSize: 50 }, true)
+        .listStores({ filters: sieveFilter("storeCategory", SIEVE_OP.EQ, catSlug), page: 1, pageSize: 50 }, true)
         .catch(() => null),
     ),
   );

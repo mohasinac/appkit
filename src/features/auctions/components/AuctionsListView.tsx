@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
@@ -19,18 +20,18 @@ function buildAuctionFilters(params: SearchParams): string {
   const parts: string[] = ["status==published", "listingType==auction"];
   const minBid = sp(params, "minBid");
   const maxBid = sp(params, "maxBid");
-  if (minBid) parts.push(`currentBid>=${minBid}`);
-  if (maxBid) parts.push(`currentBid<=${maxBid}`);
+  if (minBid) parts.push(sieveFilter("currentBid", SIEVE_OP.GTE, minBid));
+  if (maxBid) parts.push(sieveFilter("currentBid", SIEVE_OP.LTE, maxBid));
   const store = sp(params, "store");
   if (store) {
     const values = store.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(`storeId==${values[0]}`);
-    else if (values.length > 1) parts.push(`storeId==${values.join("|")}`);
+    if (values.length === 1) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, values[0]));
+    else if (values.length > 1) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, values.join("|")));
   }
   const dateFrom = sp(params, "dateFrom");
   const dateTo = sp(params, "dateTo");
-  if (dateFrom) parts.push(`auctionEndDate>=${dateFrom}`);
-  if (dateTo) parts.push(`auctionEndDate<=${dateTo}`);
+  if (dateFrom) parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, dateFrom));
+  if (dateTo) parts.push(sieveFilter("auctionEndDate", SIEVE_OP.LTE, dateTo));
   return parts.join(",");
 }
 

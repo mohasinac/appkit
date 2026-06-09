@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import React from "react";
 import { categoriesRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
@@ -22,13 +23,13 @@ function buildCategoryFilters(params: SearchParams): string {
   if (rootOnly === "true") parts.push("tier==0");
   const minItemCount = sp(params, "minItemCount");
   const maxItemCount = sp(params, "maxItemCount");
-  if (minItemCount) parts.push(`metrics.totalItemCount>=${minItemCount}`);
-  if (maxItemCount) parts.push(`metrics.totalItemCount<=${maxItemCount}`);
+  if (minItemCount) parts.push(sieveFilter("metrics.totalItemCount", SIEVE_OP.GTE, minItemCount));
+  if (maxItemCount) parts.push(sieveFilter("metrics.totalItemCount", SIEVE_OP.LTE, maxItemCount));
   const tier = sp(params, "tier");
   if (tier) {
     const values = tier.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(`tier==${values[0]}`);
-    else if (values.length > 1) parts.push(`tier==${values.join("|")}`);
+    if (values.length === 1) parts.push(sieveFilter("tier", SIEVE_OP.EQ, values[0]));
+    else if (values.length > 1) parts.push(sieveFilter("tier", SIEVE_OP.EQ, values.join("|")));
   }
   return parts.join(",");
 }

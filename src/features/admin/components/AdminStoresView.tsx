@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -100,7 +101,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) =>
-      state.status && state.status !== "All" ? `status==${state.status}` : undefined,
+      state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
     onRowClick: (row) => setEditorRow(row),
     buildBulkActions: (selection): BulkActionItem[] => [
       {

@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
@@ -83,8 +84,8 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) => {
       const parts: string[] = [];
-      if (state.status && state.status !== "All") parts.push(`status==${state.status}`);
-      if (state.type && state.type !== "All") parts.push(`type==${state.type}`);
+      if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
+      if (state.type && state.type !== "All") parts.push(sieveFilter("type", SIEVE_OP.EQ, state.type));
       return parts.join(",") || undefined;
     },
     primaryAction: {

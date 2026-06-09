@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import React, { cache } from "react";
 import type { ReactNode } from "react";
 import { storeRepository, productRepository, categoriesRepository, siteSettingsRepository, reviewRepository, couponsRepository } from "../../../repositories";
@@ -62,19 +63,19 @@ export async function StoreDetailLayoutView({
   const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, couponsCount, reviewsCount] = storeId
     ? await Promise.all([
         productRepository
-          .list({ filters: `storeId==${storeId},status==published,listingType==standard`, page: 1, pageSize: 1 })
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         productRepository
-          .list({ filters: `storeId==${storeId},status==published,listingType==auction`, page: 1, pageSize: 1 })
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "auction")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         productRepository
-          .list({ filters: `storeId==${storeId},status==published,listingType==pre-order`, page: 1, pageSize: 1 })
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         productRepository
-          .list({ filters: `storeId==${storeId},status==published,listingType==prize-draw`, page: 1, pageSize: 1 })
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         // SB-UNI-D — bundles live on categories with categoryType:"bundle"
@@ -84,11 +85,11 @@ export async function StoreDetailLayoutView({
           .then((rows) => rows.filter((c) => c.createdByStoreId === storeId).length)
           .catch(() => 0),
         couponsRepository
-          .list({ filters: `sellerId==${storeId},validity.isActive==true`, page: 1, pageSize: 1 })
+          .list({ filters: sieveAnd(sieveFilter("sellerId", SIEVE_OP.EQ, storeId), sieveFilter("validity.isActive", SIEVE_OP.EQ, "true")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         reviewRepository
-          .listAll({ filters: `storeId==${storeId},status==approved`, page: 1, pageSize: 1 })
+          .listAll({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "approved")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
       ])

@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Badge, Button, Div, Stack, Text, useToast } from "../../../ui";
@@ -144,9 +145,9 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (filterState) => {
       const parts: string[] = [];
-      if (filterState.isActive) parts.push(`isActive==${filterState.isActive}`);
+      if (filterState.isActive) parts.push(sieveFilter("isActive", SIEVE_OP.EQ, filterState.isActive));
       if (filterState.bundleStockStatus)
-        parts.push(`bundleStockStatus==${filterState.bundleStockStatus}`);
+        parts.push(sieveFilter("bundleStockStatus", SIEVE_OP.EQ, filterState.bundleStockStatus));
       return parts.join(",") || undefined;
     },
     getRowHref: getEditHref,

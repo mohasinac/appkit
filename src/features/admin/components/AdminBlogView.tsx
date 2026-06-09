@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
@@ -78,7 +79,7 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
     },
     buildFilters: (state) => {
       const filterParts: string[] = [];
-      if (state.status && state.status !== "All") filterParts.push(`status==${state.status}`);
+      if (state.status && state.status !== "All") filterParts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
       if (state.isFeatured === "true") filterParts.push("isFeatured==true");
       return filterParts.join(",") || undefined;
     },

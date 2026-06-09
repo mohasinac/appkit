@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { productRepository } from "../../../repositories";
@@ -27,7 +28,7 @@ export async function StorePrizeDrawsPageView({
 
   const result = await productRepository
     .list({
-      filters: `storeId==${storeId},status==published,listingType==prize-draw`,
+      filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")),
       sorts: sortBy("createdAt", "DESC"),
       page: 1,
       pageSize: 24,

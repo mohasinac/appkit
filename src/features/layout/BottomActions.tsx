@@ -10,7 +10,7 @@
  * Two modes:
  *  - **Page mode** — shows registered page-level actions inline (Add to Cart,
  *    Buy Now, Place Bid, Proceed to Checkout, etc.) with an optional info label.
- *  - **Bulk mode** — activates when `bulk.selectedCount > 0`; shows:
+ *  - **Bulk mode** — activates when sieveFilter("bulk.selectedCount", SIEVE_OP.GT, "0"); shows:
  *      • Selection count pill on the left (tap to deselect all)
  *      • An upward-opening type-picker dropdown (middle, flex-1) — tap to
  *        choose WHICH action to run; the chosen label is always visible.
@@ -28,6 +28,7 @@
  * // Features use `useBottomActions` to register their actions.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { useState, useRef, useEffect } from "react";
 import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
 import { useBottomActionsContext } from "./BottomActionsContext";

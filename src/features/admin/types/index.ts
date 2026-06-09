@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import type React from "react";
 import type { TableColumn } from "../../../contracts";
 
@@ -11,7 +12,7 @@ export { ADMIN_PRODUCT_STATUS_OPTIONS } from "./product.types";
 
 /**
  * Admin-specific column definition that narrows `render` to `React.ReactNode`.
- * Extends `TableColumn<T>` from `@mohasinac/contracts` so it is compatible
+ * Extends sieveFilter("TableColumn", SIEVE_OP.LT, "T>") from `@mohasinac/contracts` so it is compatible
  * with column arrays built from the base type.
  */
 export interface AdminTableColumn<T = Record<string, unknown>> extends Omit<

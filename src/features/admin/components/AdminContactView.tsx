@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -119,7 +120,7 @@ export function AdminContactView({
       if (typeof response.meta?.total === "number") return response.meta.total;
       return mappedRows.length;
     },
-    buildFilters: (f) => (f.status && f.status !== "All" ? `status==${f.status}` : undefined),
+    buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
     buildBulkActions: (selection): BulkActionItem[] => [
       ...(onBulkMarkRead
         ? [

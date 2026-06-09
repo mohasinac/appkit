@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -110,7 +111,7 @@ export function SellerCouponsView({
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) =>
-      state.isActive ? `isActive==${state.isActive}` : undefined,
+      state.isActive ? sieveFilter("isActive", SIEVE_OP.EQ, state.isActive) : undefined,
     primaryAction: onCreateClick
       ? { label: "Add Coupon", onClick: () => onCreateClick() }
       : undefined,

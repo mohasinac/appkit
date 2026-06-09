@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -137,7 +138,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       if (f.status && f.status !== "All") {
         parts.push(f.status === "Active" ? "disabled==false" : "disabled==true");
       }
-      if (f.role && f.role !== "All") parts.push(`role==${f.role}`);
+      if (f.role && f.role !== "All") parts.push(sieveFilter("role", SIEVE_OP.EQ, f.role));
       return parts.join(",") || undefined;
     },
     onRowClick: (row) => {

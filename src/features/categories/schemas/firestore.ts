@@ -5,6 +5,7 @@
  * and hierarchy helpers for the categories feature.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { generateCategoryId } from "../../../utils/id-generators";
 import { slugify } from "../../../utils/string.formatter";
 import type {
@@ -46,7 +47,7 @@ export type BundleQueryRule =
 /**
  * Per-member metadata stored alongside `bundleProductIds`.
  * `drawCount` — only meaningful when the member product has
- * `listingType === "prize-draw"`. Represents how many draw entries
+ * sieveFilter("listingType", SIEVE_OP.EQ, "= "prize-draw""). Represents how many draw entries
  * the buyer receives for that product when they purchase the bundle
  * (e.g. drawCount=5 means 5 raffle entries, not 5 copies of the draw).
  */

@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -133,8 +134,8 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (f) => {
       const parts: string[] = [];
-      if (f.status && f.status !== "All") parts.push(`status==${f.status}`);
-      if (f.rating && f.rating !== "All") parts.push(`rating==${f.rating}`);
+      if (f.status && f.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
+      if (f.rating && f.rating !== "All") parts.push(sieveFilter("rating", SIEVE_OP.EQ, f.rating));
       return parts.join(",") || undefined;
     },
     buildBulkActions: (selection): BulkActionItem[] => [

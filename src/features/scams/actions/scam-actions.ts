@@ -1,5 +1,6 @@
 "use server";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { scammerRepository } from "../repository/scammer.repository";
 import type {
   ScammerDocument,
@@ -36,8 +37,8 @@ export async function listVerifiedScammers(
 
   // scamType / scamPlatform filter chips — status==verified is enforced by the base query
   const filters: string[] = [];
-  if (params.scamType)     filters.push(`scamType==${params.scamType}`);
-  if (params.scamPlatform) filters.push(`scamPlatform==${params.scamPlatform}`);
+  if (params.scamType)     filters.push(sieveFilter("scamType", SIEVE_OP.EQ, String(params.scamType)));
+  if (params.scamPlatform) filters.push(sieveFilter("scamPlatform", SIEVE_OP.EQ, String(params.scamPlatform)));
 
   const result = await scammerRepository.listVerified({
     filters: filters.join(",") || undefined,

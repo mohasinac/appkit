@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import Link from "next/link";
@@ -31,7 +32,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     brandName
       ? productRepository
           .list({
-            filters: `status==published,brand==${brandName},listingType==standard`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
             sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 24,
@@ -41,7 +42,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     brandName
       ? productRepository
           .list({
-            filters: `status==published,brand==${brandName},listingType==auction`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "auction")),
             sorts: sortBy("auctionEndDate", "ASC"),
             page: 1,
             pageSize: 1,
@@ -51,7 +52,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     brandName
       ? productRepository
           .list({
-            filters: `status==published,brand==${brandName},listingType==pre-order`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "pre-order")),
             sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 1,
@@ -61,7 +62,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     brandName
       ? productRepository
           .list({
-            filters: `status==published,brand==${brandName},listingType==prize-draw`,
+            filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("brand", SIEVE_OP.EQ, brandName), sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw")),
             sorts: sortBy("createdAt", "DESC"),
             page: 1,
             pageSize: 1,

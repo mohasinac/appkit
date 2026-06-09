@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
@@ -19,14 +20,14 @@ function buildLiveFilters(params: SearchParams): string {
   const parts: string[] = ["status==published", "listingType==live"];
   const minPrice = sp(params, "minPrice");
   const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(`price>=${minPrice}`);
-  if (maxPrice) parts.push(`price<=${maxPrice}`);
+  if (minPrice) parts.push(sieveFilter("price", SIEVE_OP.GTE, minPrice));
+  if (maxPrice) parts.push(sieveFilter("price", SIEVE_OP.LTE, maxPrice));
   const species = sp(params, "species");
-  if (species) parts.push(`liveSpecies==${species}`);
+  if (species) parts.push(sieveFilter("liveSpecies", SIEVE_OP.EQ, species));
   const liveSex = sp(params, "liveSex");
-  if (liveSex) parts.push(`liveSex==${liveSex}`);
+  if (liveSex) parts.push(sieveFilter("liveSex", SIEVE_OP.EQ, liveSex));
   const transport = sp(params, "liveTransportMethod");
-  if (transport) parts.push(`liveTransportMethod==${transport}`);
+  if (transport) parts.push(sieveFilter("liveTransportMethod", SIEVE_OP.EQ, transport));
   return parts.join(",");
 }
 

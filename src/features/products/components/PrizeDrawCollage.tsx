@@ -4,7 +4,7 @@
  * PrizeDrawCollage (SB4-B)
  *
  * Read-only display of a prize-draw's full prize pool. Each cell shows the
- * primary image, item-number badge, and title. Items with `isWon === true`
+ * primary image, item-number badge, and title. Items with sieveFilter("isWon", SIEVE_OP.EQ, "= true")
  * are dimmed under a diagonal overlay with a "Won" label so the public
  * collage truthfully reflects what's still up for grabs.
  *
@@ -15,6 +15,7 @@
  * adds an emphasis ring to the cell that just won.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, Text } from "../../../ui";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";

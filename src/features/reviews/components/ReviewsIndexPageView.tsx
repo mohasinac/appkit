@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import React from "react";
 import { reviewRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
@@ -17,17 +18,17 @@ function buildReviewFilters(params: SearchParams): string {
   const rating = sp(params, "rating");
   if (rating) {
     const values = rating.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(`rating==${values[0]}`);
-    else if (values.length > 1) parts.push(`rating==${values.join("|")}`);
+    if (values.length === 1) parts.push(sieveFilter("rating", SIEVE_OP.EQ, values[0]));
+    else if (values.length > 1) parts.push(sieveFilter("rating", SIEVE_OP.EQ, values.join("|")));
   }
   const minVotes = sp(params, "minVotes");
-  if (minVotes) parts.push(`helpfulCount>=${minVotes}`);
+  if (minVotes) parts.push(sieveFilter("helpfulCount", SIEVE_OP.GTE, minVotes));
   const maxVotes = sp(params, "maxVotes");
-  if (maxVotes) parts.push(`helpfulCount<=${maxVotes}`);
+  if (maxVotes) parts.push(sieveFilter("helpfulCount", SIEVE_OP.LTE, maxVotes));
   const dateFrom = sp(params, "dateFrom");
   const dateTo = sp(params, "dateTo");
-  if (dateFrom) parts.push(`createdAt>=${dateFrom}`);
-  if (dateTo) parts.push(`createdAt<=${dateTo}`);
+  if (dateFrom) parts.push(sieveFilter("createdAt", SIEVE_OP.GTE, dateFrom));
+  if (dateTo) parts.push(sieveFilter("createdAt", SIEVE_OP.LTE, dateTo));
   const q = sp(params, "q");
   if (q) parts.push(`productTitle@=*${q}`);
   return parts.join(",");

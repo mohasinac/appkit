@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
@@ -149,8 +150,8 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
     },
     buildFilters: (f) => {
       const parts: string[] = [];
-      if (f.status && f.status !== "All") parts.push(`status==${f.status}`);
-      if (f.priority && f.priority !== "All") parts.push(`priority==${f.priority}`);
+      if (f.status && f.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
+      if (f.priority && f.priority !== "All") parts.push(sieveFilter("priority", SIEVE_OP.EQ, f.priority));
       return parts.join(",") || undefined;
     },
     renderRowActions: (row) => (

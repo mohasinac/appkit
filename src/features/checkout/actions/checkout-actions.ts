@@ -6,6 +6,7 @@
  * Auth, rate-limiting, and Next.js specifics are handled by the consumer.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { timingSafeEqual } from "crypto";
 import { ValidationError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
@@ -165,7 +166,7 @@ export async function grantCheckoutConsentViaSms(
  * `verifiedVia: "admin_bypass"` marker prevents bypass-credit grants.
  *
  * Security: callers MUST verify the requesting user is an admin AND that
- * `siteSettings.featureFlags.adminCheckoutBypass === true` before calling this.
+ * sieveFilter("siteSettings.featureFlags.adminCheckoutBypass", SIEVE_OP.EQ, "= true") before calling this.
  */
 export async function grantAdminCheckoutBypass(
   userId: string,

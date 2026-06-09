@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
 import {
   buildColumns,
@@ -30,7 +31,7 @@ export type ProductSortValue =
  * Default admin column definitions for a product table.
  * These are plain data — no React imports, no JSX.
  *
- * Use with `DataTable<T>` from `@mohasinac/feat-admin`.
+ * Use with sieveFilter("DataTable", SIEVE_OP.LT, "T>") from `@mohasinac/feat-admin`.
  *
  * @example — consumer app overrides/extends columns
  * ```ts

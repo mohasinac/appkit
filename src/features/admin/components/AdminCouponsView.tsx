@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -103,7 +104,7 @@ export function AdminCouponsView({
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) =>
-      state.type && state.type !== "All" ? `type==${state.type}` : undefined,
+      state.type && state.type !== "All" ? sieveFilter("type", SIEVE_OP.EQ, state.type) : undefined,
     primaryAction: {
       label: "Add Coupon",
       onClick: ({ openCreatePanel }) => openCreatePanel(),

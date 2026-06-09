@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { Container, Main, Heading, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
@@ -19,12 +20,12 @@ function buildPreOrderFilters(params: SearchParams): string {
   const parts: string[] = ["status==published", "listingType==pre-order"];
   const minPrice = sp(params, "minPrice");
   const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(`price>=${minPrice}`);
-  if (maxPrice) parts.push(`price<=${maxPrice}`);
+  if (minPrice) parts.push(sieveFilter("price", SIEVE_OP.GTE, minPrice));
+  if (maxPrice) parts.push(sieveFilter("price", SIEVE_OP.LTE, maxPrice));
   const store = sp(params, "storeId");
-  if (store) parts.push(`storeId==${store}`);
+  if (store) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, store));
   const preOrderProductionStatus = sp(params, "preOrderProductionStatus");
-  if (preOrderProductionStatus) parts.push(`preOrderProductionStatus==${preOrderProductionStatus}`);
+  if (preOrderProductionStatus) parts.push(sieveFilter("preOrderProductionStatus", SIEVE_OP.EQ, preOrderProductionStatus));
   return parts.join(",");
 }
 

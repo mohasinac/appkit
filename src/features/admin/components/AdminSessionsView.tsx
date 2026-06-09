@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -106,7 +107,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
       }),
     getTotal: (response, mappedRows) =>
       typeof response.count === "number" ? response.count : mappedRows.length,
-    buildFilters: (state) => (state.isActive ? `isActive==${state.isActive}` : undefined),
+    buildFilters: (state) => (state.isActive ? sieveFilter("isActive", SIEVE_OP.EQ, state.isActive) : undefined),
     buildBulkActions: (selection) => [
       {
         id: ROW_ACTION_ID.REVOKE,

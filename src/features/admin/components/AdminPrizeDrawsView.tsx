@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Pencil } from "lucide-react";
@@ -136,7 +137,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) => {
-      const status = state.status && state.status !== "All" ? `status==${state.status}` : null;
+      const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==prize-draw", status].filter(Boolean).join(",");
     },
     getRowHref: (row) => String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id)),

@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Div, ListingLayout, Span, Text, Toggle, useToast } from "../../../ui";
@@ -202,7 +203,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     buildFilters: (state) => {
       const parts: string[] = [];
       if (state.showSold !== "true") parts.push("isSold==false");
-      if (state.status && state.status !== "All") parts.push(`status==${state.status}`);
+      if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
       const typeFilter = TYPE_FILTER_MAP[state.type];
       if (typeFilter) parts.push(typeFilter);
       return parts.join(",") || undefined;

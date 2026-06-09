@@ -1,4 +1,5 @@
 "use client";
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import React, { useState, useCallback, useMemo } from "react";
 
 
@@ -129,10 +130,10 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   const filterParts: string[] = [];
   if (ratingRaw) {
     const ratings = ratingRaw.split("|").filter(Boolean);
-    if (ratings.length === 1) filterParts.push(`averageRating>=${ratings[0]}`);
+    if (ratings.length === 1) filterParts.push(sieveFilter("averageRating", SIEVE_OP.GTE, ratings[0]));
   }
-  if (minProductCount) filterParts.push(`stats.totalProducts>=${minProductCount}`);
-  if (maxProductCount) filterParts.push(`stats.totalProducts<=${maxProductCount}`);
+  if (minProductCount) filterParts.push(sieveFilter("stats.totalProducts", SIEVE_OP.GTE, minProductCount));
+  if (maxProductCount) filterParts.push(sieveFilter("stats.totalProducts", SIEVE_OP.LTE, maxProductCount));
   if (featured === "true") filterParts.push("isFeatured==true");
 
   const { stores, totalPages, isLoading } = useStores(

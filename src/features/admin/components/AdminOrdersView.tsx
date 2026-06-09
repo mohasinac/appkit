@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { FilterChipGroup, ListingLayout, useToast } from "../../../ui";
@@ -86,7 +87,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       })),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-    buildFilters: (f) => (f.status && f.status !== "All" ? `status==${f.status}` : undefined),
+    buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
     buildBulkActions: (selection): BulkActionItem[] => [
       {
         id: "mark-shipped",

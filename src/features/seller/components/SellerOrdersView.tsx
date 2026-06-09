@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Eye, Printer, MapPin, Truck } from "lucide-react";
@@ -322,7 +323,7 @@ export function SellerOrdersView({
   const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
 
   const statusRaw = table.get("status");
-  const filters = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
+  const filters = statusRaw && statusRaw !== "All" ? sieveFilter("status", SIEVE_OP.EQ, statusRaw) : undefined;
 
   const { rows, total, isLoading, errorMessage } = useSellerListingData<
     SellerOrdersResponse,

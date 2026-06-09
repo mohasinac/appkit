@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import Link from "next/link";
 import {
@@ -34,7 +35,7 @@ export async function PrizeDrawsSection({
   let draws: ProductDocument[] = [];
   try {
     const result = await productRepository.list({
-      filters: "listingType==prize-draw,status==published",
+      filters: sieveAnd(sieveFilter("listingType", SIEVE_OP.EQ, "prize-draw"), sieveFilter("status", SIEVE_OP.EQ, "published")),
       sorts: sortBy("createdAt", "DESC"),
       pageSize: limit,
     });

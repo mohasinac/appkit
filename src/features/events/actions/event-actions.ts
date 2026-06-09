@@ -5,6 +5,7 @@
  * Auth, rate-limiting, and input validation are handled by the calling server action.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import { serverLogger } from "../../../monitoring";
 import { eventRepository } from "../repository/events.repository";
@@ -251,11 +252,11 @@ export async function listPublicEvents(
     if (sp.has("pageSize")) pageSize = Number(sp.get("pageSize"));
     if (!filters) {
       const parts: string[] = [];
-      if (sp.has("status")) parts.push(`status==${sp.get("status")}`);
-      if (sp.has("type")) parts.push(`type==${sp.get("type")}`);
+      if (sp.has("status")) parts.push(sieveFilter("status", SIEVE_OP.EQ, sp.get("status")!));
+      if (sp.has("type")) parts.push(sieveFilter("type", SIEVE_OP.EQ, sp.get("type")!));
       if (sp.has("types")) {
         const types = sp.get("types")!.split(",");
-        if (types.length === 1) parts.push(`type==${types[0]}`);
+        if (types.length === 1) parts.push(sieveFilter("type", SIEVE_OP.EQ, types[0]));
       }
       if (parts.length) filters = parts.join(",");
     }

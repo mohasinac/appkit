@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useMemo } from "react";
 import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
@@ -113,7 +114,7 @@ export function AdminFaqsView({
       getTotal: (response, mappedRows) =>
         typeof response.total === "number" ? response.total : mappedRows.length,
       buildFilters: (state) =>
-        state.isActive ? `isActive==${state.isActive}` : undefined,
+        state.isActive ? sieveFilter("isActive", SIEVE_OP.EQ, state.isActive) : undefined,
       primaryAction: {
         label: "Add FAQ",
         onClick: ({ openCreatePanel }) => openCreatePanel(),

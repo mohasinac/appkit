@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
@@ -19,14 +20,14 @@ function buildClassifiedFilters(params: SearchParams): string {
   const parts: string[] = ["status==published", "listingType==classified"];
   const minPrice = sp(params, "minPrice");
   const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(`price>=${minPrice}`);
-  if (maxPrice) parts.push(`price<=${maxPrice}`);
+  if (minPrice) parts.push(sieveFilter("price", SIEVE_OP.GTE, minPrice));
+  if (maxPrice) parts.push(sieveFilter("price", SIEVE_OP.LTE, maxPrice));
   const city = sp(params, "city");
-  if (city) parts.push(`classifiedCity==${city}`);
+  if (city) parts.push(sieveFilter("classifiedCity", SIEVE_OP.EQ, city));
   const negotiable = sp(params, "negotiable");
-  if (negotiable === "true") parts.push(`classifiedNegotiable==true`);
+  if (negotiable === "true") parts.push(sieveFilter("classifiedNegotiable", SIEVE_OP.EQ, "true"));
   const acceptsShipping = sp(params, "acceptsShipping");
-  if (acceptsShipping === "true") parts.push(`classifiedAcceptsShipping==true`);
+  if (acceptsShipping === "true") parts.push(sieveFilter("classifiedAcceptsShipping", SIEVE_OP.EQ, "true"));
   return parts.join(",");
 }
 

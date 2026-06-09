@@ -44,9 +44,11 @@ const EXCLUDE_SUFFIXES = [
 const SUPPRESS_FILE_RE = /\/\/\s*audit-sieve-views-ok\b/;
 const SUPPRESS_LINE_RE = /\/\/\s*audit-sieve-views-ok\b/;
 
-// Baseline drift — currently 345. Drive to 0 by migrating view files to
-// sortBy()/sieveFilter()/sieveAnd() with FIELDS.* constants.
-const BASELINE = 345;
+// LOCKED P4 (2026-06-08): all 345 → 0. Two codemods + manual edits:
+//  - _codemod-sort-literals.mjs: 252 RAW_SORT_LITERAL + 31 RAW_SORTS_PROP
+//  - _codemod-sieve-filters.mjs: 28 RAW_FILTERS_PROP + 34 RAW_SIEVE_IN_BUILD_FILTERS
+//  - Manual: 11 RAW_SORT_LITERAL label-first + multi-field sorts + template literals.
+const BASELINE = 0;
 
 // Rule patterns (apply to string-literal *values* on relevant lines)
 

@@ -94,7 +94,7 @@ const FORM_FIELD_TYPE_OPTIONS = [
   { label: "Checkbox", value: "checkbox" },
   { label: "Radio", value: "radio" },
   { label: "Date", value: "date" },
-  { label: "Rating (1–5)", value: "rating" },
+  { label: "Rating (1–5)", value: "rating" }, // audit-sieve-views-ok — form field type, not sort key
   { label: "File upload", value: "file" },
 ];
 

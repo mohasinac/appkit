@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -108,7 +109,7 @@ export function SellerAuctionsView({
         ? response.meta.total
         : mappedRows.length,
     buildFilters: (state) =>
-      state.status && state.status !== "All" ? `status==${state.status}` : undefined,
+      state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
     buildBulkActions: onBulkDelete
       ? (selection): BulkActionItem[] => [
           {

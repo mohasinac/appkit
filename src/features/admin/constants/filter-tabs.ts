@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 /**
  * Admin filter-chip tab sets (SB10-C completion, S8 2026-05-13).
  *
@@ -11,7 +12,7 @@
  */
 
 export interface AdminFilterTab {
-  /** Filter value — empty when `id === "All"`. */
+  /** Filter value — empty when sieveFilter("id", SIEVE_OP.EQ, "= "All""). */
   id: string;
   /** Display text. */
   label: string;

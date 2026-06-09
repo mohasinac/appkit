@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
@@ -19,10 +20,10 @@ function buildDigitalCodeFilters(params: SearchParams): string {
   const parts: string[] = ["status==published", "listingType==digital-code"];
   const minPrice = sp(params, "minPrice");
   const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(`price>=${minPrice}`);
-  if (maxPrice) parts.push(`price<=${maxPrice}`);
+  if (minPrice) parts.push(sieveFilter("price", SIEVE_OP.GTE, minPrice));
+  if (maxPrice) parts.push(sieveFilter("price", SIEVE_OP.LTE, maxPrice));
   const deliveryMethod = sp(params, "deliveryMethod");
-  if (deliveryMethod) parts.push(`digitalCodeDelivery==${deliveryMethod}`);
+  if (deliveryMethod) parts.push(sieveFilter("digitalCodeDelivery", SIEVE_OP.EQ, deliveryMethod));
   return parts.join(",");
 }
 

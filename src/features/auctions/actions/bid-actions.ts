@@ -5,6 +5,7 @@
  * input validation are handled by the calling server action.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import { serverLogger } from "../../../monitoring";
 import { bidRepository } from "../repository/bid.repository";
@@ -286,7 +287,7 @@ export async function listBidsByProduct(
   params?: { page?: number; pageSize?: number },
 ): Promise<FirebaseSieveResult<Omit<BidDocument, "userEmail">>> {
   const result = await bidRepository.list({
-    filters: `productId==${productId}`,
+    filters: sieveFilter("productId", SIEVE_OP.EQ, productId),
     sorts: sortBy("bidDate", "DESC"),
     page: params?.page ?? 1,
     pageSize: params?.pageSize ?? 20,

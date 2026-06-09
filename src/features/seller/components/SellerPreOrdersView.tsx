@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -171,7 +172,7 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: (state) => {
-      const status = state.status && state.status !== "All" ? `status==${state.status}` : null;
+      const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==pre-order", status].filter(Boolean).join(",");
     },
     getRowHref: (row) => String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)),

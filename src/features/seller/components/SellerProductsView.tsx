@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -284,10 +285,10 @@ export function SellerProductsView({
     showSold;
 
   const statusRaw = table.get("status");
-  const statusFilter = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
+  const statusFilter = statusRaw && statusRaw !== "All" ? sieveFilter("status", SIEVE_OP.EQ, statusRaw) : undefined;
   // SB1-G — single-field listingType clause. The repository's Sieve aliases
   // accept both `==auction|preorder|standard` and `==pre-order` directly.
-  const kindFilter = listingKind === "all" ? undefined : `listingType==${listingKind}`;
+  const kindFilter = listingKind === "all" ? undefined : sieveFilter("listingType", SIEVE_OP.EQ, listingKind);
   const soldFilter = showSold ? undefined : "isSold==false";
 
   const filters = [statusFilter, kindFilter, soldFilter].filter(Boolean).join(",") || undefined;

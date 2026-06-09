@@ -1,3 +1,4 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { Container, Main, Heading, Section, Text } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
@@ -19,12 +20,12 @@ function buildPrizeDrawFilters(params: SearchParams): string {
   const parts: string[] = ["status==published", "listingType==prize-draw"];
   const minPrice = sp(params, "minPrice");
   const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(`pricePerEntry>=${minPrice}`);
-  if (maxPrice) parts.push(`pricePerEntry<=${maxPrice}`);
+  if (minPrice) parts.push(sieveFilter("pricePerEntry", SIEVE_OP.GTE, minPrice));
+  if (maxPrice) parts.push(sieveFilter("pricePerEntry", SIEVE_OP.LTE, maxPrice));
   const store = sp(params, "storeId");
-  if (store) parts.push(`storeId==${store}`);
+  if (store) parts.push(sieveFilter("storeId", SIEVE_OP.EQ, store));
   const status = sp(params, "prizeRevealStatus");
-  if (status) parts.push(`prizeRevealStatus==${status}`);
+  if (status) parts.push(sieveFilter("prizeRevealStatus", SIEVE_OP.EQ, status));
   return parts.join(",");
 }
 

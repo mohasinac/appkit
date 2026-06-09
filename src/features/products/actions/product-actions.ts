@@ -1,3 +1,4 @@
+import { sieveAnd, sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import { productRepository } from "../repository/products.repository";
 import { ProductStatusValues } from "../schemas";
@@ -10,12 +11,12 @@ import type {
 /**
  * Reusable Sieve clauses. Single source of truth for the listing-type
  * discriminator across every action helper in this file. SB1-G (S21 2026-05-12)
- * routes everything through `listingType==X` â€” the legacy boolean flags are
+ * routes everything through sieveFilter("listingType", SIEVE_OP.EQ, "X") â€” the legacy boolean flags are
  * never emitted by code under our control any more.
  */
-const PUBLISHED_CLAUSE = "status==published";
-const AUCTIONS_PUBLISHED = `listingType==auction,${PUBLISHED_CLAUSE}`;
-const PREORDERS_PUBLISHED = `listingType==pre-order,${PUBLISHED_CLAUSE}`;
+const PUBLISHED_CLAUSE = sieveFilter("status", SIEVE_OP.EQ, "published");
+const AUCTIONS_PUBLISHED = sieveAnd(sieveFilter("listingType", SIEVE_OP.EQ, "auction"), PUBLISHED_CLAUSE);
+const PREORDERS_PUBLISHED = sieveAnd(sieveFilter("listingType", SIEVE_OP.EQ, "pre-order"), PUBLISHED_CLAUSE);
 
 export interface ProductListActionParams {
   filters?: string;
@@ -46,9 +47,9 @@ export async function listProducts(
   } = params;
 
   const compoundFilters: string[] = [];
-  if (listingType) compoundFilters.push(`listingType==${listingType}`);
+  if (listingType) compoundFilters.push(sieveFilter("listingType", SIEVE_OP.EQ, listingType));
   if (featured === true) compoundFilters.push("featured==true");
-  if (storeId) compoundFilters.push(`storeId==${storeId}`);
+  if (storeId) compoundFilters.push(sieveFilter("storeId", SIEVE_OP.EQ, storeId));
   if (filters) compoundFilters.push(filters);
   const mergedFilters =
     compoundFilters.length > 0 ? compoundFilters.join(",") : undefined;
@@ -73,7 +74,7 @@ export async function getFeaturedProducts(
   pageSize = 8,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: `featured==true,${PUBLISHED_CLAUSE}`,
+    filters: sieveAnd(sieveFilter("featured", SIEVE_OP.EQ, "true"), PUBLISHED_CLAUSE),
     sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize,
@@ -170,7 +171,7 @@ export async function getRelatedProducts(
   limit = 6,
 ): Promise<ProductListResult> {
   const result = await productRepository.list({
-    filters: `categoryId==${categoryId},${PUBLISHED_CLAUSE}`,
+    filters: sieveAnd(sieveFilter("categoryId", SIEVE_OP.EQ, categoryId), PUBLISHED_CLAUSE),
     sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize: limit + 1,

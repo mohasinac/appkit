@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { UserPlus } from "lucide-react";
@@ -129,7 +130,7 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
       return mappedRows.length;
     },
     buildFilters: (state) =>
-      state.group && state.group !== "All" ? `permissionGroup==${state.group}` : undefined,
+      state.group && state.group !== "All" ? sieveFilter("permissionGroup", SIEVE_OP.EQ, state.group) : undefined,
     toolbarExtra: (
       <Button
         type="button"

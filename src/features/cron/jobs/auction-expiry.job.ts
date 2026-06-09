@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import type { IRepository } from "../../../contracts";
 import { createCronJob } from "../registry";
 
@@ -5,7 +6,7 @@ import { createCronJob } from "../registry";
  * Built-in job: Close live auctions whose `endTime` has passed.
  *
  * Run interval: every 5 minutes (recommended).
- * Requires an `IRepository<AuctionDocument>` injected at registration time.
+ * Requires an sieveFilter("IRepository", SIEVE_OP.LT, "AuctionDocument>") injected at registration time.
  *
  * @example
  * ```ts
@@ -41,7 +42,7 @@ export function createAuctionExpiryJob(
     },
     async (ctx) => {
       const result = await auctionRepo.findAll({
-        filters: `status==live,endTime<=${ctx.scheduleTime}`,
+        filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "live"), sieveFilter("endTime", SIEVE_OP.LTE, ctx.scheduleTime)),
         perPage: 500,
       });
 

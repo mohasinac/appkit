@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import Link from "next/link";
 import {
@@ -33,7 +34,7 @@ export async function EventRafflesSection({
   let events: EventItem[] = [];
   try {
     const result = await eventRepository.list({
-      filters: "hasRaffle==true,status==active",
+      filters: sieveAnd(sieveFilter("hasRaffle", SIEVE_OP.EQ, "true"), sieveFilter("status", SIEVE_OP.EQ, "active")),
       sorts: sortBy("startsAt", "DESC"),
       pageSize: limit,
     });

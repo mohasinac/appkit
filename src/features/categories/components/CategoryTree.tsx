@@ -1,4 +1,5 @@
 "use client"
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { useState } from "react";
 import { Div, Span, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
@@ -105,7 +106,7 @@ export interface CategoryTreeProps {
  * CategoryTree — hierarchical expandable navigation for categories.
  *
  * Builds a tree from a flat list by grouping on `rootId` and `parentIds`.
- * Root-level nodes have `tier === 0` or no `parentIds`.
+ * Root-level nodes have sieveFilter("tier", SIEVE_OP.EQ, "= 0") or no `parentIds`.
  */
 export function CategoryTree({
   categories,

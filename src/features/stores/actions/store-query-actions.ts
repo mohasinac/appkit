@@ -5,6 +5,7 @@
  * auctions and reviews.  No auth — callers decide whether auth is needed.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { NotFoundError } from "../../../errors";
 
 const ERR_STORE_NOT_FOUND = "Store not found";
@@ -81,7 +82,7 @@ export async function getStoreProducts(
   }
 
   const filtersArr = [
-    `storeId==${storeDoc.id}`,
+    sieveFilter("storeId", SIEVE_OP.EQ, storeDoc.id),
     "status==published",
     "listingType==standard",
   ];
@@ -111,7 +112,7 @@ export async function getStoreAuctions(
   }
 
   const filtersArr = [
-    `storeId==${storeDoc.id}`,
+    sieveFilter("storeId", SIEVE_OP.EQ, storeDoc.id),
     "status==published",
     "listingType==auction",
   ];

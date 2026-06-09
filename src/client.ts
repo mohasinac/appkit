@@ -165,6 +165,8 @@ export type { UseEntityDeleteOptions, UseEntityDeleteReturn } from "./react/hook
 
 // Client-safe constants, UI primitives, and views
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./constants/index";
+export { SORT_DIR, sortBy } from "./constants/sort";
+export { SIEVE_OP, sieveFilter, sieveAnd, sieveMultiEq } from "./utils/sieve-builder";
 export { Container, Grid, Row, Stack } from "./ui/components/Layout";
 export { Div } from "./ui/components/Div";
 export { Main, Section, Nav, Ul, Ol, Li, Table, Thead, Tbody, Tr, Th, Td } from "./ui/components/Semantic";

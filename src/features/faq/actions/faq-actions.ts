@@ -1,5 +1,7 @@
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { z } from "zod";
 import { serverLogger } from "../../../monitoring";
+import { sortBy } from "../../../constants/sort";
 import { faqsRepository } from "../repository/faqs.repository";
 import type { FAQDocument } from "../schemas";
 import type {
@@ -138,10 +140,10 @@ export async function listPublicFaqs(
   limit = 20,
 ): Promise<FAQDocument[]> {
   const filters = ["isActive==true"];
-  if (category) filters.push(`category==${category}`);
+  if (category) filters.push(sieveFilter("category", SIEVE_OP.EQ, category));
   const result = await faqsRepository.list({
     filters: filters.join(","),
-    sorts: "-priority,order",
+    sorts: [sortBy("priority", "DESC"), sortBy("order", "ASC")].join(","),
     page: 1,
     pageSize: limit,
   });

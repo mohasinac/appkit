@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -116,7 +117,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
   const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
 
   const statusRaw = table.get("status");
-  const filters = statusRaw ? `status==${statusRaw}` : undefined;
+  const filters = statusRaw ? sieveFilter("status", SIEVE_OP.EQ, statusRaw) : undefined;
   const productIdFilter = table.get("productId") || undefined;
 
   const endpointWithProduct = productIdFilter

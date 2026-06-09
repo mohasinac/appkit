@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -129,7 +130,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: (state) =>
-      state.status && state.status !== "All" ? `status==${state.status}` : undefined,
+      state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
     toolbarExtra: (
       <Button type="button" variant="outline" size="sm" onClick={handleExportCsv}>
         {ACTIONS.ADMIN["export-csv"].label}

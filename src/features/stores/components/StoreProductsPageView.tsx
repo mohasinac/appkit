@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import React from "react";
 import { productRepository } from "../../../repositories";
 import { parseListingSearchParams } from "../../../utils/listing-params";
@@ -33,7 +34,7 @@ export async function StoreProductsPageView({
 
   const result = await productRepository
     .list({
-      filters: `storeId==${storeId},status==published,listingType==standard`,
+      filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")),
       sorts,
       page,
       pageSize,

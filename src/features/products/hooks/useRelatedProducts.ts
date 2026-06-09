@@ -1,4 +1,4 @@
-import { sortBy } from "@mohasinac/appkit";
+import { sieveAnd, sieveFilter, SIEVE_OP, sortBy } from "@mohasinac/appkit";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { ProductItem, ProductListResponse } from "../types";
@@ -18,10 +18,14 @@ export function useRelatedProducts(
   isAuction = false,
 ) {
   const listingTypeClause = isAuction
-    ? "listingType==auction"
-    : "listingType==standard";
+    ? sieveFilter("listingType", SIEVE_OP.EQ, "auction")
+    : sieveFilter("listingType", SIEVE_OP.EQ, "standard");
   const params = new URLSearchParams({
-    filters: `status==published,category==${encodeURIComponent(category)},${listingTypeClause}`,
+    filters: sieveAnd(
+      sieveFilter("status", SIEVE_OP.EQ, "published"),
+      sieveFilter("category", SIEVE_OP.EQ, encodeURIComponent(category)),
+      listingTypeClause,
+    ),
     sorts: sortBy("createdAt", "DESC"),
     pageSize: String(limit),
   });

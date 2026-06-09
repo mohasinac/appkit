@@ -5,6 +5,7 @@
  * are handled by the calling server action in the consumer.
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { productRepository } from "../../products/repository/products.repository";
 import { serverLogger } from "../../../monitoring";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase";
@@ -37,14 +38,14 @@ export async function searchProducts(
   } = query;
 
   const filterParts: string[] = ["status==published"];
-  if (category) filterParts.push(`category==${category}`);
-  if (subcategory) filterParts.push(`subcategory==${subcategory}`);
-  if (minPrice > 0) filterParts.push(`price>=${minPrice}`);
+  if (category) filterParts.push(sieveFilter("category", SIEVE_OP.EQ, category));
+  if (subcategory) filterParts.push(sieveFilter("subcategory", SIEVE_OP.EQ, subcategory));
+  if (minPrice > 0) filterParts.push(sieveFilter("price", SIEVE_OP.GTE, minPrice));
   if (maxPrice > 0 && maxPrice >= minPrice)
-    filterParts.push(`price<=${maxPrice}`);
-  if (condition) filterParts.push(`condition==${condition}`);
+    filterParts.push(sieveFilter("price", SIEVE_OP.LTE, maxPrice));
+  if (condition) filterParts.push(sieveFilter("condition", SIEVE_OP.EQ, condition));
   // SB1-G Phase 4 — canonical listingType discriminator.
-  if (listingType) filterParts.push(`listingType==${listingType}`);
+  if (listingType) filterParts.push(sieveFilter("listingType", SIEVE_OP.EQ, listingType));
   if (q.trim()) filterParts.push(`title_=${q.trim()}`);
 
   const sieveResult = await productRepository.list({

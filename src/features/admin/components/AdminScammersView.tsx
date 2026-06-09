@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
@@ -129,7 +130,7 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
       if (typeof response.total === "number") return response.total;
       return mappedRows.length;
     },
-    buildFilters: (f) => (f.status && f.status !== "All" ? `status==${f.status}` : undefined),
+    buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

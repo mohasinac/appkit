@@ -1,3 +1,4 @@
+import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import type { IRepository } from "../../../contracts";
 import { createCronJob } from "../registry";
 
@@ -36,7 +37,7 @@ export function createPreOrderReminderJob(
     async () => {
       const cutoff = sevenDaysFromNow();
       const result = await preOrderRepo.findAll({
-        filters: `status==confirmed,expectedShippingDate<=${cutoff}`,
+        filters: sieveAnd(sieveFilter("status", SIEVE_OP.EQ, "confirmed"), sieveFilter("expectedShippingDate", SIEVE_OP.LTE, cutoff)),
         perPage: 500,
       });
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -93,7 +94,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) =>
-      state.status && state.status !== "All" ? `status==${state.status}` : undefined,
+      state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
     buildBulkActions: (selection): BulkActionItem[] => [
       {
         id: ROW_ACTION_ID.CANCEL,

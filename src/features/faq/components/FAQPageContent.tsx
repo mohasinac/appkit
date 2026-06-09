@@ -3,6 +3,7 @@
 import React from "react";
 
 import { Div, Heading, Input, SlottedListingView, Text } from "../../../ui";
+import { sortBy } from "../../../constants/sort";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";
 import { FAQSortDropdown, type FAQSortOption } from "./FAQSortDropdown";
@@ -97,7 +98,7 @@ export function FAQPageContent({
 
   const { faqs: allMatchingFaqs } = useFaqList({
     search: searchValue.trim() || undefined,
-    sorts: "-priority,order",
+    sorts: [sortBy("priority", "DESC"), sortBy("order", "ASC")].join(","),
     page: 1,
     pageSize: 200,
   });

@@ -9,7 +9,7 @@
  *
  * Supports two modes:
  *  - Page mode: primary page actions (Add to Cart, Buy Now, Place Bid, etc.)
- *  - Bulk mode: activated when `bulk.selectedCount > 0` — shows selection
+ *  - Bulk mode: activated when sieveFilter("bulk.selectedCount", SIEVE_OP.GT, "0") — shows selection
  *    count + custom bulk action buttons (Delete, Archive, Export, etc.)
  *
  * @example — product detail page
@@ -37,6 +37,7 @@
  * ```
  */
 
+import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import React, {
   createContext,
   useCallback,
