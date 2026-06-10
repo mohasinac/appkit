@@ -190,6 +190,7 @@ export function useGoogleLogin(options?: {
   }, []); // mount once — uses refs, no stale closure risk
 
   const mutate = useCallback(async () => {
+    // toast-intentionally-silent — errors surfaced via onErrorRef.current() callback
     calledRef.current = false; // reset for each new auth flow
     const popup = window.open(
       `${window.location.origin}/auth.html`,

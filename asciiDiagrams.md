@@ -4,6 +4,7 @@ ASCII diagrams for non-trivial components and architectural flows. Updated along
 
 ## Index
 
+- [Strict-0 Audit Model](#strict-0-audit-model) — all audits hard-fail on any violation; per-line suppression markers replace baseline drift
 - [S-STORE Foundation](#s-store-foundation) — 14-collection store-extensions feature
 - [BottomActions + BulkActionBar](#bottomactions--bulkactionbar) — mobile vs desktop action bars
 - [Toast Audit Pattern](#toast-audit-pattern) — async handler error propagation + audit script
@@ -15,6 +16,62 @@ ASCII diagrams for non-trivial components and architectural flows. Updated along
 - [StepForm inside StackedViewShell](#stepform-inside-stackedviewshell-w6w7) — multi-step store/admin settings forms
 - [MarketplaceBundleCard](#marketplacebundlecard-w3) — 2x2 collage + BaseListingCard wrapper
 - [Vacation Banner](#vacationbanner) — store-paused notice flow
+- [Event Participate flow](#event-participate-flow) — auth gate, no-form redirect, Skeleton default, submit timeout
+- [Search suggestions + `?q=` carry-through](#search-suggestions--q-carry-through) — page hits + listing-page redirect with query
+- [Listing API sieve fallback](#listing-api-sieve-fallback) — Function-first / repo-fallback with full Sieve, no in-memory drop
+
+---
+
+## Strict-0 Audit Model
+
+Every audit in `scripts/audit-*.mjs` and `appkit/scripts/audit-*.mjs` runs in strict zero-tolerance mode. There is no `BASELINE` constant, no baseline-drift tolerance branch, and no per-rule baseline. Any violation `> 0` fails the audit, which fails the Stop hook and `npm run check`.
+
+```
+                  ┌──────────────────────┐
+                  │  npm run check       │
+                  └──────────┬───────────┘
+                             │ fail-fast, in order
+        ┌────────────────────┼────────────────────┐
+        ▼                    ▼                    ▼
+  check:types          check:audits          check:lint
+  (tsc both repos)     (all audits)        (eslint src + appkit/src)
+        │                    │                    │
+        └────── all 3 must exit 0 ────────────────┘
+                             │
+                             ▼
+                  every audit prints "clean ✓"
+                  (no BASELINE / no tolerance)
+```
+
+### Per-line suppression markers
+
+Legitimate dynamic patterns get an explicit marker at the site of the decision, each with a brief reason:
+
+| Marker | Audit | Use for |
+|---|---|---|
+| `// audit-inline-style-ok: <reason>` | `audit-inline-styles` | dynamic `backgroundImage: url(...)`, computed percentages/timings, z-index var expressions, pass-through style props |
+| `// toast-handled-by-hook` | `audit-toast-coverage` | wrapper around hook that owns the toast (e.g. `useEntityDelete`) |
+| `// toast-intentionally-silent — <reason>` | `audit-toast-coverage` | data loaders / refetch / background ops with inline-error state |
+| `// reexport-from-internal-ok` | `audit-appkit-reexports` | star-exports from `_internal/` that are intentional public API |
+| `// audit-sieve-views-ok` | `audit-sieve-constants-views` | unavoidable raw sort/filter literal in a view |
+
+### Adding a new check
+
+```
+1. Write the audit script under scripts/ or appkit/scripts/
+2. Use the canonical exit pattern:
+     if (violations.length === 0) {
+       console.log("audit-X: clean ✓");
+       process.exit(0);
+     }
+     // ... print details ...
+     process.exit(1);
+3. Add an npm script entry: "audit:X": "node scripts/audit-X.mjs"
+4. Wire into check:audits in package.json
+5. (Optional) Add to scripts/claude-hooks/check-on-stop.mjs if fast enough
+```
+
+Do not introduce a `BASELINE` constant. If a legitimate dynamic pattern is not yet captured by an existing suppression marker, add a new marker name to that audit (5–10 lines of code) rather than tolerating a non-zero baseline.
 
 ---
 
@@ -330,4 +387,203 @@ Drop-in on:
   - store profile/about    (header banner)
 
 Source of truth: StoreDocument.{isVacationMode, vacationMessage, vacationReturnDate}.
+```
+
+---
+
+## Event Participate flow
+
+```
+URL: /events/[id]/participate
+         |
+         v
++------------------------------------------------------------+
+| participate/page.tsx (server)                              |
+|                                                            |
+| await getEventCached(id)                                   |
+|                                                            |
+| if (eventType in {POLL, SALE, OFFER}) OR not active:       |
+|     redirect(ROUTES.PUBLIC.EVENT_DETAIL(id))               |
+|                                                            |
+| else render <EventParticipateClient event hasLeaderboard/> |
++------------------------------------------------------------+
+         |
+         v
++------------------------------------------------------------+
+| EventParticipateClient (client)                            |
+|                                                            |
+| requireLogin =                                             |
+|   (isSurvey  && surveyConfig?.requireLogin !== false)      |
+|   || (event.type==="poll" && pollConfig?.requireLogin===true) |
+|                                                            |
+| NOTE: hasLeaderboard is intentionally NOT in this rule.    |
+|       Coupling auth to a UX affordance forced login walls  |
+|       on free sale / offer / raffle events. See cluster #1 |
+|       in plan the-events-are-having-snappy-otter.md.       |
+|                                                            |
+| if (requireLogin && !user) return renderLoginRequired()    |
+|                                                            |
+| if (event.type === "spin_wheel") return <SpinWheelView/>   |
+|                                                            |
+| handleSubmit:                                              |
+|   const ctl = new AbortController();                       |
+|   const tId = setTimeout(() => ctl.abort(), 15_000);       |
+|   try { fetch(..., { signal: ctl.signal }) }               |
+|   catch AbortError -> toast("Submission timed out")        |
+|   finally { clearTimeout(tId); setIsLoading(false) }       |
+|                                                            |
+| return <EventParticipateView                               |
+|          isLoading={isLoading}                             |
+|          renderForm={pollOrSurveyOrFeedbackForm}           |
+|          renderAction={submitOrLimitMessage}               |
+|          renderSuccess={successPanel}                      |
+|        />                                                  |
++------------------------------------------------------------+
+         |
+         v
++------------------------------------------------------------+
+| EventParticipateView (appkit)                              |
+|                                                            |
+| if (isLoading) {                                           |
+|   if (renderSkeleton) return renderSkeleton()              |
+|   return <Skeleton x3 stack>      <-- replaced bare        |
+|                                       "Loading..." string  |
+| }                                                          |
+|                                                            |
+| if (renderAuthGate) return renderAuthGate()                |
+| if (isSubmitted && renderSuccess) return renderSuccess()   |
+| return <Div>{info}{form}{action}</Div>                     |
++------------------------------------------------------------+
+
+Guards (audits):
+  - audit-auth-gate-derivation blocks `requireLogin = ... || hasX`
+  - audit-spinner-defaults blocks bare "Loading..." in view components
+```
+
+---
+
+## Search suggestions + `?q=` carry-through
+
+```
+User types "auc" in nav search
+         |
+         v
++--------------------------------------------------+
+| useNavSuggestions (debounce 250ms)               |
+| GET /api/search/suggestions?q=auc                |
++--------------------------------------------------+
+         |
+         v
++--------------------------------------------------+
+| /api/search/suggestions/route.ts                 |
+|                                                  |
+| PAGE_SUGGESTIONS table (8 destinations):         |
+|   Auctions / Products / Pre-orders / Stores /    |
+|   Categories / Blog / Events / FAQs              |
+|   each: { title, subtitle, url, keywords[] }     |
+|                                                  |
+| pageHits = PAGE_SUGGESTIONS                      |
+|   .filter(p => p.title.toLowerCase().includes(q) |
+|              || p.keywords.some(k=>k.includes(q)))|
+|   .slice(0, 3)                                   |
+|   .map(p => ({ type: "page", ...p }))            |
+|                                                  |
+| return [ ...pageHits,    <-- pages FIRST         |
+|          ...products,                            |
+|          ...categories,                          |
+|          ...blog,                                |
+|          ...events ]                             |
++--------------------------------------------------+
+         |
+         v
++--------------------------------------------------+
+| Search.tsx — handleSuggestionClick(record)       |
+|                                                  |
+| if (record.type === "page" && query.trim()) {    |
+|   const sep = record.url.includes("?") ? "&":"?";|
+|   router.push(`${record.url}${sep}q=${enc(q)}`); |
+|   return;                                        |
+| }                                                |
+| router.push(record.url);  <-- detail records     |
++--------------------------------------------------+
+         |
+         v
+URL becomes /auctions?q=auc
+         |
+         v
+Listing page useUrlTable() reads ?q= and pre-fills
+toolbar input + applies the sieve immediately.
+
+Detail-page record types (product / category / blog / event)
+intentionally do NOT carry the query — they target a single
+resource, not a listing.
+```
+
+---
+
+## Listing API sieve fallback
+
+```
+GET /api/products?q=blue-eyes&inStock=true&pageSize=20
+         |
+         v
++--------------------------------------------------+
+| /api/products/route.ts                           |
+|                                                  |
+| 1. Parse params                                  |
+| 2. if (pageSize > 50) return 400                 |
+|    (CLAUDE.md Rule #6 — Hobby Fluid cap)         |
+| 3. Build:                                        |
+|    filtersBase = base filters (status, types,    |
+|                  listingType, store, brand, etc.)|
+|    filters     = sieveAnd(                       |
+|                    filtersBase,                  |
+|                    q ? CONTAINS_CI(title, q),    |
+|                    inStock ? GT(stock, 0),       |
+|                    dateFromClause, dateToClause, |
+|                    features[0] if single)        |
++--------------------------------------------------+
+         |
+         v
++--------------------------------------------------+
+| Try listingProcessor Firebase Function FIRST     |
+| (FIREBASE_FUNCTION_LISTING_URL)                  |
+|   upstream = callListingProcessor("products",    |
+|                { filters, sorts, page, pageSize })|
++--------------------------------------------------+
+         |
+         |  on Function failure (cold start / 401 / network)
+         v
++--------------------------------------------------+
+| Local repo FALLBACK                              |
+|                                                  |
+| productRepository.list({                         |
+|   filters,              <-- FULL sieve, not the  |
+|   sorts,                    base subset. Same    |
+|   page, pageSize        })  predicate the Function|
+|                             would have applied.  |
+|                                                  |
+| Sieve adapter (db-firebase/sieve.ts) pushes      |
+| every clause it can into Firestore .where().     |
+| NO in-memory .filter() over fetched docs.        |
++--------------------------------------------------+
+         |
+         v
++--------------------------------------------------+
+| Catch (error) — recoverable DB errors:           |
+|   FAILED_PRECONDITION / index error -> empty +   |
+|     warning "run: firebase deploy --only         |
+|     firestore:indexes"                           |
+|   PERMISSION_DENIED -> empty + rules warning     |
++--------------------------------------------------+
+
+Guards (audits):
+  - audit-root-cause blocks new in-memory filtering patterns
+  - audit-listing-pagesize blocks new pageSize > 50 caps
+  - audit-sieve-constants blocks raw "==" / "@=" literals
+
+Note: prompt.md Rule #7 — no workarounds, no fallbacks that
+silently drop predicates. Both the Function path and the repo
+path receive the SAME `filters` value; they only differ in
+where the Sieve adapter runs (Function vCPU vs. Vercel Lambda).
 ```

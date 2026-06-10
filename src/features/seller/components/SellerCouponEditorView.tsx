@@ -101,6 +101,7 @@ export function SellerCouponEditorView({
       <Stack gap="none" className={`max-w-lg mx-auto rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm ${__O.hidden}`}>
         <div
           className="h-[3px] w-full"
+          // audit-inline-style-ok: runtime theme gradient
           style={{ background: "linear-gradient(to right,var(--appkit-color-primary-700,#1343de) 0%,var(--appkit-color-cobalt,#3570fc) 55%,var(--appkit-color-secondary-400,#84e122) 100%)" }}
           aria-hidden="true"
         />

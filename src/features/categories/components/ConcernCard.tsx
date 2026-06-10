@@ -25,6 +25,7 @@ export function ConcernCard({
           role="img"
           aria-label={concern.name}
           className="h-16 w-16 rounded-full bg-center bg-cover"
+          // audit-inline-style-ok: dynamic image URL
           style={{ backgroundImage: `url(${concern.display.coverImage})` }}
         />
       )}

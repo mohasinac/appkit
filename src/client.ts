@@ -30,6 +30,8 @@ export {
 export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
 // S-STORE — pure-UI primitives + Seller view consumed by new dashboard pages
 export { EmptyState } from "./ui/components/EmptyState";
+export { Skeleton } from "./ui/components/Skeleton";
+export type { SkeletonProps } from "./ui/components/Skeleton";
 export { Divider } from "./ui/components/Divider";
 export { TabStrip } from "./ui/components/TabStrip";
 export { SellerProductsView } from "./features/seller/components/SellerProductsView";

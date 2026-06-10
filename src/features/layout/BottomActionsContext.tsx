@@ -200,7 +200,7 @@ export function BottomActionsProvider({
       setInfoLabel,
       clearAll,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [state, setActions, setBulkConfig, setInfoLabel, clearAll],
   );
 

@@ -44,12 +44,6 @@ const EXCLUDE_SUFFIXES = [
 const SUPPRESS_FILE_RE = /\/\/\s*audit-sieve-views-ok\b/;
 const SUPPRESS_LINE_RE = /\/\/\s*audit-sieve-views-ok\b/;
 
-// LOCKED P4 (2026-06-08): all 345 → 0. Two codemods + manual edits:
-//  - _codemod-sort-literals.mjs: 252 RAW_SORT_LITERAL + 31 RAW_SORTS_PROP
-//  - _codemod-sieve-filters.mjs: 28 RAW_FILTERS_PROP + 34 RAW_SIEVE_IN_BUILD_FILTERS
-//  - Manual: 11 RAW_SORT_LITERAL label-first + multi-field sorts + template literals.
-const BASELINE = 0;
-
 // Rule patterns (apply to string-literal *values* on relevant lines)
 
 // RAW_SORT_LITERAL — `defaultSort: "-createdAt"` or `value: "-price"` inside sortOptions
@@ -155,12 +149,11 @@ for (const [rule, list] of Object.entries(byRule)) {
   out.push("");
 }
 
-// Baseline drift mode: only block on regressions above BASELINE.
-if (violations.length <= BASELINE) {
-  process.stdout.write(`audit-sieve-constants-views: ${violations.length} (baseline ${BASELINE}${violations.length < BASELINE ? ` — ${BASELINE - violations.length} improved` : ""}). No regression.\n`);
+if (violations.length === 0) {
+  process.stdout.write("audit-sieve-constants-views: clean ✓\n");
   process.exit(0);
 }
 
 process.stderr.write(out.join("\n") + "\n");
-process.stderr.write(`audit-sieve-constants-views: regression of ${violations.length - BASELINE} new violation(s) above baseline ${BASELINE}.\n`);
+process.stderr.write(`audit-sieve-constants-views: ${violations.length} violation(s).\n`);
 process.exit(1);

@@ -114,6 +114,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           <>
             <div
               className="absolute inset-0 bg-center bg-cover"
+              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${coverImage})` }}
             />
             <Div className="absolute inset-0 bg-black/55" />
@@ -122,6 +123,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
         {!hasCover && (
           <div
             className="absolute inset-0 opacity-10"
+            // audit-inline-style-ok: runtime theme color
             style={{ backgroundColor: brandColor }}
           />
         )}

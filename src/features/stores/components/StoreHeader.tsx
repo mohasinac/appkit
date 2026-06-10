@@ -49,6 +49,7 @@ export function StoreHeader({
             role="img"
             aria-label={`${store.storeName} banner`}
             className="h-full w-full bg-center bg-cover"
+            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${store.storeBannerURL})` }}
           />
         </Div>
@@ -60,6 +61,7 @@ export function StoreHeader({
               role="img"
               aria-label={store.storeName}
               className="-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-center bg-cover shadow-sm"
+              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${store.storeLogoURL})` }}
             />
           ) : (

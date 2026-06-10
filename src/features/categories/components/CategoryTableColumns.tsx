@@ -54,6 +54,7 @@ export function getCategoryTableColumns(
             ) : (
               <Div
                 className="w-full h-full flex items-center justify-center text-base"
+                // audit-inline-style-ok: runtime theme color
                 style={{ backgroundColor: cat.display?.color ?? "#94a3b8", color: "#fff" }}
               >
                 {cat.display?.icon ?? "🗂️"}
@@ -67,6 +68,7 @@ export function getCategoryTableColumns(
         header: L.colName,
         sortable: true,
         render: (cat: Category) => (
+          // audit-inline-style-ok: computed pixel offset
           <Div style={{ paddingLeft: `${cat.tier * 20}px` }}>
             {cat.name}
             {cat.tier > 0 && (

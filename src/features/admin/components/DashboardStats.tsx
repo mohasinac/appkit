@@ -35,6 +35,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
       {/* 3-px gradient top accent */}
       <Div
         className="absolute top-0 left-0 right-0 h-[3px]"
+        // audit-inline-style-ok: runtime theme gradient
         style={{ background: gradient }}
         aria-hidden="true"
       />
@@ -56,6 +57,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         {/* Icon pill */}
         <Div
           className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+          // audit-inline-style-ok: runtime theme gradient
           style={{ background: gradient, opacity: 0.92 }}
         >
           <Icon className="w-5 h-5 text-white drop-shadow-sm" />

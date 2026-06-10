@@ -65,6 +65,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             role="img"
             aria-label={post.title}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
+            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${coverImageUrl})` }}
           />
         ) : (
@@ -106,6 +107,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
               role="img"
               aria-label={post.authorName ?? "author"}
               className="h-7 w-7 flex-shrink-0 rounded-full bg-center bg-cover"
+              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${post.authorAvatar})` }}
             />
           ) : post.authorName ? (

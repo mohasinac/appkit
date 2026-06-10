@@ -20,6 +20,7 @@ import {
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
 import { getAdminDb } from "../../../providers/db-firebase";
+import { CAROUSEL_FIELDS } from "../../../constants/field-names";
 
 export class CarouselsRepository extends BaseRepository<CarouselDocument> {
   constructor() {
@@ -32,7 +33,7 @@ export class CarouselsRepository extends BaseRepository<CarouselDocument> {
       const db = getAdminDb();
       const snap = await db
         .collection(CAROUSELS_COLLECTION)
-        .orderBy("name")
+        .orderBy(CAROUSEL_FIELDS.NAME)
         .get();
       return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as CarouselDocument);
     } catch (err) {

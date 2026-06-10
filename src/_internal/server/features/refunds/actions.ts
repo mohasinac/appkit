@@ -18,6 +18,7 @@
 import { randomUUID } from "crypto";
 import { getProviders } from "../../../../contracts/registry";
 import { orderRepository } from "../../../..";
+import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { NotFoundError, ValidationError } from "../../../../errors";
 import { serverLogger } from "../../../../monitoring";
 import type { OrderRefundEvent, RefundType } from "../../../../features/orders/schemas";
@@ -142,7 +143,7 @@ export async function processRefundAction(
         .doc(item.productId)
         .collection(PRODUCT_CODES_SUBCOLLECTION)
         .where("orderId", "==", input.orderId)
-        .where("status", "==", "available")
+        .where(ORDER_FIELDS.STATUS, "==", "available")
         .limit(1)
         .get()
         .then((snap) => {

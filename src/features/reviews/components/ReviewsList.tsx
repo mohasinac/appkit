@@ -66,6 +66,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               role="img"
               aria-label={displayName}
               className="h-9 w-9 flex-shrink-0 rounded-full bg-center bg-cover"
+              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
@@ -120,6 +121,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
                 role="img"
                 aria-label={`Review image ${i + 1}`}
                 className="h-16 w-16 rounded-lg bg-center bg-cover border border-neutral-100 dark:border-zinc-700"
+                // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
               />
             ))}

@@ -210,7 +210,7 @@ export function AsyncFacetSection({
 
           {loading && (
             <Text className="text-xs text-zinc-400 dark:text-zinc-400 py-1 animate-pulse">
-              Loading…
+              Loading…{/* audit-spinner-defaults-ok — inline facet-loader; structural skeleton would mis-fit a single-line dropdown row */}
             </Text>
           )}
 

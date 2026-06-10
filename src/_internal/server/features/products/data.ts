@@ -5,6 +5,7 @@ import { getAdminDb } from "../../../../providers/db-firebase";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { PRODUCTS_SITEMAP_LIMIT } from "../../../shared/features/products/config";
+import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 
 // ---------------------------------------------------------------------------
 // Request-scoped cache — each function is deduplicated per RSC render tree.
@@ -39,7 +40,7 @@ export async function listSitemapProducts(): Promise<SitemapProduct[]> {
     const db = getAdminDb();
     const snapshot = await db
       .collection(PRODUCT_COLLECTION)
-      .where("status", "==", "published")
+      .where(PRODUCT_FIELDS.STATUS, "==", "published")
       .select("slug", "id", "updatedAt", "listingType")
       .limit(PRODUCTS_SITEMAP_LIMIT)
       .get();

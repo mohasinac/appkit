@@ -239,6 +239,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
         <Div
           className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
+          // audit-inline-style-ok: dynamic CSS
           style={{
             top: "var(--header-height, 3.5rem)",
             height: "calc(100vh - var(--header-height, 3.5rem))",

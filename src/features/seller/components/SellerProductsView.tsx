@@ -470,6 +470,7 @@ export function SellerProductsView({
         {totalPages > 1 && (
           <Div
             className="sticky z-10 flex justify-center bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-1.5"
+            // audit-inline-style-ok: sticky header offset
             style={{ top: "calc(var(--header-height, 0px) + 44px)" }}
           >
             <Pagination
@@ -482,6 +483,7 @@ export function SellerProductsView({
 
         {selection.selectedIds.length > 0 && (
           <Div className="sticky z-20 px-3 lg:px-4 py-2 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]"
+            // audit-inline-style-ok: sticky header offset
             style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
             <BulkActionBar
               selectedCount={selection.selectedIds.length}

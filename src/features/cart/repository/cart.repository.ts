@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import type { DocumentReference } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError, NotFoundError, ValidationError } from "../../../errors";
+import { CART_FIELDS } from "../../../constants/field-names";
 
 const ERR_CART_ITEM_NOT_FOUND = "Cart item not found";
 const ERR_CART_ITEM_LOCKED = "This item requires payment and cannot be removed or modified.";
@@ -370,7 +371,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
     cutoff.setDate(cutoff.getDate() - ttlDays);
     const snap = await this.db
       .collection(this.collection)
-      .where("updatedAt", "<", cutoff)
+      .where(CART_FIELDS.UPDATED_AT, "<", cutoff)
       .limit(500)
       .get();
     return snap.docs.map((d) => d.ref as DocumentReference);

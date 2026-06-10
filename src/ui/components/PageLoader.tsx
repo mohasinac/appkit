@@ -68,7 +68,7 @@ export function PageLoader({ children }: PageLoaderProps) {
         ) : (
           <>
             <Spinner size="lg" />
-            <Text className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</Text>
+            <Text className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</Text>{/* audit-spinner-defaults-ok — PageLoader primitive: spinner + label by design */}
           </>
         )}
       </div>

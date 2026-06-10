@@ -134,6 +134,7 @@ export function NotificationBell({
   const emitError = onMarkAllReadError ?? showError;
 
   const handleMarkAllRead = useCallback(async () => {
+    // toast-intentionally-silent — uses emitError(labels.error) callback for feedback
     try {
       await markAllRead(undefined);
       refetch();

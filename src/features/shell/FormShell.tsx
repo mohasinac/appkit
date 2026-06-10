@@ -163,6 +163,7 @@ export function FormShell({
       {/* Backdrop */}
       <Div
         className="fixed inset-0 bg-black/50 backdrop-blur-[2px]"
+        // audit-inline-style-ok: z-index token
         style={{ zIndex: "calc(var(--appkit-z-modal) - 1)" }}
         aria-hidden="true"
         onClick={attemptClose}
@@ -175,6 +176,7 @@ export function FormShell({
         aria-modal="true"
         aria-label={title}
         className="fixed top-0 bottom-0 left-0 right-0 lg:left-[10%] lg:right-[10%] flex flex-col bg-[var(--appkit-color-surface)] shadow-2xl"
+        // audit-inline-style-ok: z-index token
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
         {/* ── Top bar ─────────────────────────────────────── */}
@@ -368,11 +370,13 @@ export function FormShell({
         <>
           <Div
             className="fixed inset-0 bg-black/60"
+            // audit-inline-style-ok: z-index token
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
             onClick={() => setShowUnsaved(false)}
           />
           <Div
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)] rounded-xl shadow-2xl p-6"
+            // audit-inline-style-ok: z-index token
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
           >
             <Row gap="sm" align="start" className="mb-4">

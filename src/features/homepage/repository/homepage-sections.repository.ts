@@ -5,6 +5,7 @@
  */
 
 import { DatabaseError } from "../../../errors";
+import { HOMEPAGE_SECTION_FIELDS } from "../../../constants/field-names";
 import {
   BaseRepository,
   prepareForFirestore,
@@ -66,8 +67,8 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("enabled", "==", true)
-        .orderBy("order", "asc")
+        .where(HOMEPAGE_SECTION_FIELDS.ENABLED, "==", true)
+        .orderBy(HOMEPAGE_SECTION_FIELDS.ORDER, "asc")
         .get();
 
       return snapshot.docs.map((doc) =>
@@ -84,8 +85,8 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("enabled", "==", false)
-        .orderBy("order", "asc")
+        .where(HOMEPAGE_SECTION_FIELDS.ENABLED, "==", false)
+        .orderBy(HOMEPAGE_SECTION_FIELDS.ORDER, "asc")
         .get();
 
       return snapshot.docs.map((doc) =>
@@ -104,7 +105,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("type", "==", type)
+        .where(HOMEPAGE_SECTION_FIELDS.TYPE, "==", type)
         .limit(1)
         .get();
 

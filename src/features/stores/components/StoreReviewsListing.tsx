@@ -195,14 +195,14 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
           </Text>
         ) : view === "list" ? (
           <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            { }
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review as any} context="store" />
             ))}
           </Div>
         ) : (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            { }
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review as any} context="store" />
             ))}

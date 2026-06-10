@@ -49,7 +49,6 @@ const SUMMARY_ONLY = process.argv.includes("--summary-only");
 // LOCKED P4 (2026-06-08): all 91 → 0. Extracted 64 missing composite indices
 // from audit output into firestore.indexes.json; updated audit to recognize
 // Firestore's single-field auto-indexes (no composite needed when there are no filters).
-const BASELINE = 0;
 
 // ───────────────────────────────────────────────────────────────────────────────
 // 1. Endpoint → collection map  (mirror of LISTERS in listingProcessor.ts)
@@ -594,16 +593,12 @@ if (blockingCount === 0) {
   process.exit(0);
 }
 
-if (blockingCount <= BASELINE) {
-  console.log(
-    `audit-listing-indices: ${blockingCount} blocking (baseline ${BASELINE} — ${BASELINE - blockingCount} improved). No regression.`,
-  );
+if (blockingCount === 0) {
+  console.log("audit-listing-indices: clean ✓");
   if (!SUMMARY_ONLY) process.stderr.write(out.join("\n") + "\n");
   process.exit(0);
 }
 
-console.error(
-  `audit-listing-indices: ${blockingCount} blocking (baseline ${BASELINE} — regression of ${blockingCount - BASELINE}).\n`,
-);
+console.error(`audit-listing-indices: ${blockingCount} blocking violation(s).\n`);
 process.stderr.write(out.join("\n") + "\n");
 process.exit(1);

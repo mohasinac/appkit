@@ -62,6 +62,7 @@ export function BackgroundRenderer({
 
   return (
     <>
+      // audit-inline-style-ok: computed style fn
       <div className="appkit-bg-renderer" style={getBackgroundStyle()} data-section="backgroundrenderer-div-456">
         {config.type === "video" && (
           <video
@@ -83,6 +84,7 @@ export function BackgroundRenderer({
         )}
       </div>
 
+      // audit-inline-style-ok: pass-through style prop
       <div className="appkit-bg-renderer__overlay" style={overlayStyle} />
     </>
   );

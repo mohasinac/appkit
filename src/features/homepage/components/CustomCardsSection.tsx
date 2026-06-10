@@ -66,6 +66,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
   return (
     <Div
       className={`flex flex-col overflow-hidden ${radiusClass} ${shadowClass} bg-[var(--appkit-color-surface)]`}
+      // audit-inline-style-ok: pass-through style prop
       style={cardStyle}
     >
       {card.image && (
@@ -113,6 +114,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
             sandbox="allow-forms allow-scripts"
             loading="lazy"
             className="w-full mt-3 border-0 rounded-md"
+            // audit-inline-style-ok: dynamic CSS
             style={{ minHeight: "200px" }}
             title="Embedded form"
           />

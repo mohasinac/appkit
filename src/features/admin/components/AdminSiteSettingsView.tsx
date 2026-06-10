@@ -623,6 +623,7 @@ export function AdminSiteSettingsView({
                   <Span
                     weight="medium"
                     className="text-zinc-400 select-none p-2"
+                    // audit-inline-style-ok: computed pixel offset
                     style={{ fontSize: `${Math.max(10, watermarkSize / 5)}px`, opacity: watermarkOpacity / 100 }}
                   >
                     {watermarkText}

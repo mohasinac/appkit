@@ -58,28 +58,28 @@ export async function fetchLiveStats(
     tasks.push(
       productRepository.count()
         .then((n) => { resolvedPresets.total_listings = String(n); })
-        .catch(() => {}),
+        .catch(() => {}), // audit-silent-catch-ok: homepage stat falls back to preset string
     );
   }
   if (neededPresets.has("verified_sellers")) {
     tasks.push(
       storeRepository.count()
         .then((n) => { resolvedPresets.verified_sellers = String(n); })
-        .catch(() => {}),
+        .catch(() => {}), // audit-silent-catch-ok: homepage stat falls back to preset string
     );
   }
   if (neededPresets.has("total_buyers")) {
     tasks.push(
       userRepository.countByRole("user")
         .then((n) => { resolvedPresets.total_buyers = String(n); })
-        .catch(() => {}),
+        .catch(() => {}), // audit-silent-catch-ok: homepage stat falls back to preset string
     );
   }
   if (neededPresets.has("total_orders")) {
     tasks.push(
       orderRepository.count()
         .then((n) => { resolvedPresets.total_orders = String(n); })
-        .catch(() => {}),
+        .catch(() => {}), // audit-silent-catch-ok: homepage stat falls back to preset string
     );
   }
   if (neededPresets.has("total_reviews") || neededPresets.has("platform_rating")) {
@@ -97,7 +97,7 @@ export async function fetchLiveStats(
             resolvedPresets.platform_rating = avg.toFixed(1) + "★";
           }
         })
-        .catch(() => {}),
+        .catch(() => {}), // audit-silent-catch-ok: homepage stat falls back to preset string
     );
   }
 

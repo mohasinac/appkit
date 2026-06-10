@@ -23,6 +23,7 @@ import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { BaseRepository } from "../../../providers/db-firebase";
 import { prepareForFirestore } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
+import { CONVERSATION_FIELDS, STORE_FIELDS } from "../../../constants/field-names";
 import type { ChatRoomCreateInput, ChatRoomDocument } from "../schemas";
 import { CHAT_ROOM_COLLECTION } from "../schemas";
 import {
@@ -99,11 +100,11 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
     try {
       const [asBuyer, asSeller] = await Promise.all([
         this.getCollection()
-          .where("buyerId", "==", userId)
+          .where(CONVERSATION_FIELDS.BUYER_ID, "==", userId)
           .where("adminDeleted", "==", false)
           .get(),
         this.getCollection()
-          .where("ownerId", "==", userId)
+          .where(STORE_FIELDS.OWNER_ID, "==", userId)
           .where("adminDeleted", "==", false)
           .get(),
       ]);
@@ -132,14 +133,14 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
     try {
       const [asBuyer, asSeller] = await Promise.all([
         this.getCollection()
-          .where("buyerId", "==", userId)
+          .where(CONVERSATION_FIELDS.BUYER_ID, "==", userId)
           .where("adminDeleted", "==", false)
-          .orderBy("updatedAt", "desc")
+          .orderBy(CONVERSATION_FIELDS.UPDATED_AT, "desc")
           .get(),
         this.getCollection()
-          .where("ownerId", "==", userId)
+          .where(STORE_FIELDS.OWNER_ID, "==", userId)
           .where("adminDeleted", "==", false)
-          .orderBy("updatedAt", "desc")
+          .orderBy(CONVERSATION_FIELDS.UPDATED_AT, "desc")
           .get(),
       ]);
 

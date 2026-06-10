@@ -131,8 +131,8 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("type", "==", type)
-        .orderBy("createdAt", "desc")
+        .where(COUPON_FIELDS.TYPE, "==", type)
+        .orderBy(COUPON_FIELDS.CREATED_AT, "desc")
         .get();
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));
@@ -153,8 +153,8 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("createdBy", "==", userId)
-        .orderBy("createdAt", "desc")
+        .where(COUPON_FIELDS.CREATED_BY, "==", userId)
+        .orderBy(COUPON_FIELDS.CREATED_AT, "desc")
         .get();
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));

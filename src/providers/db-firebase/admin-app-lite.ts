@@ -18,7 +18,7 @@ function parsePrivateKey(raw: string): string {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_firebase_admin_app_lite__: App | null | undefined;
 }
 

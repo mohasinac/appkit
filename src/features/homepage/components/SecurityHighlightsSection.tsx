@@ -47,6 +47,7 @@ function SecurityCard({
         colorClass,
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
+      // audit-inline-style-ok: computed timing
       style={{ transitionDelay: `${delay}ms` }}
      data-section="securityhighlightssection-div-357">
       {item.renderIcon && (

@@ -170,6 +170,7 @@ export function SellerAddressesView({
   const [deleteTargetAddr, setDeleteTargetAddr] = useState<AddressDoc | null>(null);
 
   const load = useCallback(async () => {
+    // toast-intentionally-silent — error rendered inline via setErrorMessage()
     setIsLoading(true);
     setErrorMessage(null);
     try {
@@ -255,6 +256,7 @@ export function SellerAddressesView({
   return (
     <Div className="min-h-screen">
       {/* Header */}
+      // audit-inline-style-ok: dynamic CSS
       <Row justify="between" className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3" style={{ top: "var(--header-height, 0px)" }}>
         <Stack gap="none">
           <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Pickup Addresses</Heading>

@@ -118,7 +118,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       .collection(this.collection)
       .where(REVIEW_FIELDS.PRODUCT_ID, "==", productId)
       .where(REVIEW_FIELDS.STATUS, "==", "approved")
-      .orderBy("createdAt", "desc")
+      .orderBy(REVIEW_FIELDS.CREATED_AT, "desc")
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
@@ -129,7 +129,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       .collection(this.collection)
       .where(REVIEW_FIELDS.STORE_ID, "==", storeId)
       .where(REVIEW_FIELDS.STATUS, "==", "approved")
-      .orderBy("createdAt", "desc")
+      .orderBy(REVIEW_FIELDS.CREATED_AT, "desc")
       .limit(50)
       .get();
 

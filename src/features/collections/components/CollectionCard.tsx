@@ -21,6 +21,7 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
           role="img"
           aria-label={collection.title}
           className={`${LAYOUT.cardHeight.md} w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105`}
+          // audit-inline-style-ok: dynamic image URL
           style={{ backgroundImage: `url(${collection.image})` }}
         />
       ) : (

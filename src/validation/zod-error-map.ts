@@ -84,7 +84,7 @@ export function zodErrorMap(
 }
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_zod_applied__: boolean | undefined;
 }
 

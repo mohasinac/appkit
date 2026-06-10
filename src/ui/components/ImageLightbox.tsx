@@ -197,12 +197,14 @@ export function ImageLightbox({
       )}
 
       {/* Image */}
+      // audit-inline-style-ok: dynamic CSS
       <div className="appkit-lightbox__image-wrap" style={{ cursor: zoom > 100 ? "grab" : "default" }}>
         <img
           src={image.src}
           alt={image.alt ?? ""}
           className="appkit-lightbox__img"
           draggable={false}
+          // audit-inline-style-ok: dynamic CSS
           style={{
             transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
             transition: "transform 0.2s ease",

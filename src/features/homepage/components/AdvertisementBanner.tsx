@@ -138,6 +138,7 @@ export function AdvertisementBanner({
               ? "h-[clamp(112px,16vh,160px)]"
               : "min-h-[clamp(240px,34vh,360px)]",
           ].join(" ")}
+          // audit-inline-style-ok: optional inline color
           style={backgroundColor ? { backgroundColor } : undefined}
         >
           {/* Gradient background */}

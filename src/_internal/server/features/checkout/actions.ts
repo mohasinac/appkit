@@ -8,6 +8,7 @@
  */
 
 import { ApiError, ValidationError, NotFoundError, ERROR_MESSAGES } from "../../../../errors";
+import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring";
 import {
   unitOfWork,
@@ -87,7 +88,7 @@ async function claimDigitalCodeForOrder(
     .collection(PRODUCT_COLLECTION)
     .doc(productId)
     .collection(PRODUCT_CODES_SUBCOLLECTION);
-  const snap = await codesRef.where("status", "==", "available").limit(1).get();
+  const snap = await codesRef.where(ORDER_FIELDS.STATUS, "==", "available").limit(1).get();
   if (snap.empty) {
     serverLogger.warn("claimDigitalCode: code pool exhausted", { productId, orderId });
     return;
@@ -393,7 +394,7 @@ export async function createCheckoutOrderAction(
     if (!addressId) {
       failedCheckoutRepository
         .logCheckout(uid, "address_not_found", "Address required for physical cart", { addressId: "", paymentMethod })
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     const addressDoc = await unitOfWork.addresses.findById(addressId);
@@ -404,7 +405,7 @@ export async function createCheckoutOrderAction(
     if (!resolvedAddress) {
       failedCheckoutRepository
         .logCheckout(uid, "address_not_found", "Address not found", { addressId, paymentMethod })
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     shippingAddress = formatShippingAddress(resolvedAddress);
@@ -588,7 +589,7 @@ export async function createCheckoutOrderAction(
         addressId,
         paymentMethod,
       })
-      .catch(() => {});
+      .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
     throw err;
   }
   const { available, unavailable, emailOtpUsed } = stockResult;
@@ -600,7 +601,7 @@ export async function createCheckoutOrderAction(
         paymentMethod,
         cartItemCount: cartItems.length,
       })
-      .catch(() => {});
+      .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
   }
 
@@ -932,7 +933,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
         gatewayPaymentId: razorpay_payment_id,
         addressId,
       })
-      .catch(() => {});
+      .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
   }
 
@@ -987,7 +988,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
       throw new ApiError(
         403,
         "Order verification required. Please complete OTP verification and retry.",
@@ -1060,7 +1061,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
       throw new ValidationError(
         exists
           ? ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK
@@ -1101,7 +1102,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
       throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
     }
   }
@@ -1350,7 +1351,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
   });
   if (!isDigitalCartRazorpay && addressId) {
     const otpRefForDelete = consentOtpRef(db, uid, addressId);
-    otpRefForDelete.delete().catch(() => {});
+    otpRefForDelete.delete().catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
   }
 
   if (emailsToSend.length > 0) {

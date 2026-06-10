@@ -142,6 +142,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 role="img"
                 aria-label={displayName}
                 className="h-11 w-11 flex-shrink-0 rounded-full bg-center bg-cover ring-2 ring-white dark:ring-zinc-800"
+                // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${review.userAvatar})` }}
               />
             ) : (
@@ -201,6 +202,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 >
                   <Div
                     className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
+                    // audit-inline-style-ok: dynamic image URL
                     style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                   />
                   <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
@@ -398,6 +400,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                       ? "border-white scale-110"
                       : "border-transparent opacity-60 hover:opacity-100"
                   }`}
+                  // audit-inline-style-ok: dynamic image URL
                   style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                 />
               ))}

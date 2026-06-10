@@ -61,6 +61,7 @@ export function useConversation(conversationId: string | null): UseConversationR
   const [isConnected, setIsConnected] = useState(false);
 
   const refetch = useCallback(async () => {
+    // toast-intentionally-silent — error stored in setError() for UI inline render
     if (!conversationId) {
       setConversation(null);
       return;
@@ -127,6 +128,7 @@ export function useConversation(conversationId: string | null): UseConversationR
   );
 
   const markRead = useCallback(async () => {
+    // toast-intentionally-silent — best-effort background op
     if (!conversationId) return;
     try {
       await fetch(READ_ENDPOINT(conversationId), {

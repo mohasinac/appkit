@@ -8,6 +8,7 @@ import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/cat
 import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores";
 import { SCAMMER_COLLECTION } from "../../../../features/scams/schemas/firestore";
 import { serverLogger } from "../../../../monitoring/server-logger";
+import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 
 // Product field strings — matches consumer field-names.ts
 const PRODUCT_STATUS = "status";
@@ -221,7 +222,7 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
     const db = getAdminDb();
     const snap = await db
       .collection(SCAMMER_COLLECTION)
-      .where("status", "==", "verified")
+      .where(PRODUCT_FIELDS.STATUS, "==", "verified")
       .select("seo", "updatedAt")
       .limit(2000)
       .get();

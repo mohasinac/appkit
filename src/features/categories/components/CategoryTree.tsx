@@ -47,6 +47,7 @@ function CategoryTreeNode({
         }}
         className={`flex cursor-pointer items-center gap-1 rounded-md px-2 py-1.5 text-sm transition select-none
           ${isActive ? "bg-primary-50 font-semibold text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`}
+        // audit-inline-style-ok: computed pixel offset
         style={{ paddingLeft: `${8 + indent}px` }}
       >
         {hasChildren && (

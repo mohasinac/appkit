@@ -11,6 +11,7 @@ import {
   type ProductTemplateDocument,
   type ProductTemplateUpdateInput,
 } from "../schemas/product-templates";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 function slugify(name: string): string {
   return name
@@ -58,8 +59,8 @@ export class ProductTemplateRepository extends BaseRepository<ProductTemplateDoc
   async findByStore(storeId: string): Promise<ProductTemplateDocument[]> {
     const snap = await this.db
       .collection(this.collection)
-      .where("storeId", "==", storeId)
-      .orderBy("createdAt", "desc")
+      .where(PRODUCT_FIELDS.STORE_ID, "==", storeId)
+      .orderBy(PRODUCT_FIELDS.CREATED_AT, "desc")
       .get();
     return snap.docs.map((d) => this.mapDoc<ProductTemplateDocument>(d));
   }
@@ -68,7 +69,7 @@ export class ProductTemplateRepository extends BaseRepository<ProductTemplateDoc
     storeId: string,
     model: SieveModel,
   ): Promise<FirebaseSieveResult<ProductTemplateDocument>> {
-    const baseQuery = this.getCollection().where("storeId", "==", storeId);
+    const baseQuery = this.getCollection().where(PRODUCT_FIELDS.STORE_ID, "==", storeId);
     return this.sieveQuery<ProductTemplateDocument>(
       model,
       {

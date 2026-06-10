@@ -26,7 +26,6 @@ const REGISTRY = join(APPKIT_ROOT, "src", "_internal", "shared", "actions", "act
 
 // Baseline drift — currently 1 (admin.cancel-entry). Drive to 0 by adding a
 // confirmation block to that ActionDef in action-registry.ts.
-const BASELINE = 0;
 
 const src = readFileSync(REGISTRY, "utf8");
 
@@ -96,7 +95,7 @@ if (violations.length <= BASELINE) {
   process.exit(0);
 }
 
-const out = [`audit-action-confirmation: ${violations.length} danger ActionDef(s) without confirmation (baseline ${BASELINE} — regression of ${violations.length - BASELINE}).\n`];
+const out = [`audit-action-confirmation: ${violations.length} danger ActionDef(s) without confirmation .\n`];
 out.push("Each action below has kind:'danger' or destructive:true but no `confirmation` config.");
 out.push("Missing confirmation = immediate destructive execution with no user warning.\n");
 out.push("Fix: add a confirmation block to the ActionDef in action-registry.ts:");

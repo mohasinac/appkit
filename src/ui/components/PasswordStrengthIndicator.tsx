@@ -64,6 +64,7 @@ export function PasswordStrengthIndicator({
         <div className="appkit-password-strength__track" data-section="passwordstrengthindicator-div-568">
           <div
             className={`appkit-password-strength__fill ${strengthColor}`}
+            // audit-inline-style-ok: computed percentage
             style={{ width: `${strength}%` }}
             role="progressbar"
             aria-valuenow={Math.round(strength)}

@@ -96,6 +96,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
                 role="img"
                 aria-label={item.title}
                 className="h-10 w-10 rounded-lg bg-center bg-cover"
+                // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${item.image})` }}
               />
             )}

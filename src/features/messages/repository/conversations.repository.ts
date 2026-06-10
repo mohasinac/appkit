@@ -11,6 +11,7 @@
 
 import { getAdminDb } from "../../../providers/db-firebase";
 import { serverLogger } from "../../../monitoring";
+import { CONVERSATION_FIELDS } from "../../../constants/field-names";
 import {
   CONVERSATIONS_COLLECTION,
   type ConversationDocument,
@@ -129,16 +130,16 @@ export class ConversationsRepository {
 
   async listByBuyer(buyerId: string): Promise<ConversationDocument[]> {
     const snap = await this.collection()
-      .where("buyerId", "==", buyerId)
-      .orderBy("lastMessageAt", "desc")
+      .where(CONVERSATION_FIELDS.BUYER_ID, "==", buyerId)
+      .orderBy(CONVERSATION_FIELDS.LAST_MESSAGE_AT, "desc")
       .get();
     return snap.docs.map((d) => normaliseDoc(d.id, d.data()));
   }
 
   async listByStore(storeId: string): Promise<ConversationDocument[]> {
     const snap = await this.collection()
-      .where("storeId", "==", storeId)
-      .orderBy("lastMessageAt", "desc")
+      .where(CONVERSATION_FIELDS.STORE_ID, "==", storeId)
+      .orderBy(CONVERSATION_FIELDS.LAST_MESSAGE_AT, "desc")
       .get();
     return snap.docs.map((d) => normaliseDoc(d.id, d.data()));
   }

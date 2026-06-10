@@ -124,7 +124,7 @@ export function NotificationPreferencesPanel({
         if (prefs?.channels) setChannels((prev) => ({ ...prev, ...prefs.channels }));
         if (prefs?.types)    setTypes((prev)    => ({ ...prev, ...prefs.types }));
       })
-      .catch(() => {})
+      .catch(() => {}) // audit-silent-catch-ok: defaults render if fetch fails; user can still edit and save
       .finally(() => setLoading(false));
   }, [fetchUrl]);
 

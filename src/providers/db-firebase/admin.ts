@@ -28,7 +28,7 @@ function nodeCwd(): string { return (module as any).require("process").cwd(); }
 // Lazy loaders — prevents webpack from bundling firebase-admin into browser chunks.
 // (module as any).require() is used because webpack's static analysis does NOT trace
 // module.require() calls, unlike calls to the literal `require` or aliased `require`.
-/* eslint-disable @typescript-eslint/no-require-imports */
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function loadApp() {
   return (module as any).require(
@@ -86,15 +86,15 @@ function parsePrivateKey(raw: string): string {
 // multiple copies of this package in the same process) share one SDK instance.
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_firebase_admin_app__: App | null | undefined;
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_firebase_admin_auth__: Auth | null | undefined;
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_firebase_admin_db__: Firestore | null | undefined;
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_firebase_admin_storage__: Storage | null | undefined;
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_firebase_admin_rtdb__: Database | null | undefined;
 }
 

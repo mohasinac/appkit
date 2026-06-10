@@ -14,7 +14,7 @@ const ORDERS_COLLECTION = "orders";
 async function reconcileCategories(ctx: JobContext): Promise<void> {
   const snap = await ctx.db
     .collection(PRODUCT_COLLECTION)
-    .where("status", "==", ProductStatusValues.PUBLISHED)
+    .where(ORDER_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
     .limit(QUERY_LIMIT)
     .get();
 
@@ -79,13 +79,13 @@ async function reconcileStores(ctx: JobContext): Promise<void> {
       const [productsSnap, ordersSnap, reviewStats] = await Promise.all([
         ctx.db
           .collection(PRODUCT_COLLECTION)
-          .where("sellerId", "==", sellerId)
-          .where("status", "==", ProductStatusValues.PUBLISHED)
+          .where(ORDER_FIELDS.SELLER_ID, "==", sellerId)
+          .where(ORDER_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
           .limit(QUERY_LIMIT)
           .get(),
         ctx.db
           .collection(ORDERS_COLLECTION)
-          .where("sellerId", "==", sellerId)
+          .where(ORDER_FIELDS.SELLER_ID, "==", sellerId)
           .where(ORDER_FIELDS.STATUS, "==", ORDER_FIELDS.STATUS_VALUES.DELIVERED)
           .limit(QUERY_LIMIT)
           .get(),

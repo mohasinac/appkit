@@ -80,6 +80,7 @@ export function AvatarDisplay({
      data-section="avatardisplay-div-455">
       <div
         className={UI_AVATAR_DISPLAY.imageInner}
+        // audit-inline-style-ok: dynamic CSS
         style={{
           backgroundImage: `url(${cropData.url})`,
           backgroundSize: "cover",

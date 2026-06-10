@@ -5,7 +5,7 @@ import {
 import { getAdminAppLite } from "./admin-app-lite";
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_firebase_admin_storage_lite__: Storage | null | undefined;
 }
 

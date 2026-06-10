@@ -370,6 +370,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
           {/* Action buttons */}
           {(onAddToCart || onBuyNow) && (
+            // audit-inline-style-ok: runtime grid template
             <Div className="mt-2 grid gap-1.5" style={{ gridTemplateColumns: onBuyNow && onAddToCart ? "1fr 1fr" : "1fr" }}>
               {onBuyNow && (
                 <Button

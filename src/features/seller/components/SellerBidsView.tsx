@@ -272,6 +272,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
 
       {selection.selectedIds.length > 0 && (
         <Div className="sticky z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700"
+          // audit-inline-style-ok: sticky header offset
           style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
           <BulkActionBar
             selectedCount={selection.selectedIds.length}

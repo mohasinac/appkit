@@ -330,7 +330,7 @@ export function GroupSettingsPanel({
                   Members ({childSlugsCount + 1} — including this listing)
                 </Text>
                 {loading && !children ? (
-                  <Text className="text-xs text-zinc-400 dark:text-zinc-400">Loading…</Text>
+                  <Text className="text-xs text-zinc-400 dark:text-zinc-400">Loading…{/* audit-spinner-defaults-ok — single-line inline panel section, skeleton would over-claim space */}</Text>
                 ) : (
                   <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}

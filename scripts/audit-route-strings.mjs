@@ -35,7 +35,6 @@ const SUPPRESS_RE = /\/\/\s*audit-route-strings-ok\b/;
 const DASH_RE = /(\/(?:admin|store|user)\/[a-z0-9][a-z0-9\-\/]*)/;
 
 // Baseline drift — currently 5. Drive to 0 by replacing literals with ROUTES.*.
-const BASELINE = 0;
 
 const RE_NAV = /\b(?:router\.(?:push|replace|prefetch)|redirect|permanentRedirect)\s*\(\s*["'`]([^"'`]+)["'`]/g;
 const RE_HREF = /\bhref\s*=\s*["'`]([^"'`]+)["'`]/g;
@@ -90,7 +89,7 @@ if (violations.length <= BASELINE) {
   process.exit(0);
 }
 
-const out = [`audit-route-strings: ${violations.length} hardcoded dashboard route(s) (baseline ${BASELINE} — regression of ${violations.length - BASELINE}).\n`];
+const out = [`audit-route-strings: ${violations.length} hardcoded dashboard route(s) .\n`];
 out.push("Use ROUTES.{ADMIN,STORE,USER}.* from @mohasinac/appkit (appkit/src/next/routing/route-map.ts).");
 out.push("Suppress with `// audit-route-strings-ok` on the same line if intentional.\n");
 for (const v of violations) {

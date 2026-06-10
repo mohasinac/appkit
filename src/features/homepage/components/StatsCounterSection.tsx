@@ -38,6 +38,7 @@ function StatCard({
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
         !isLast ? "border-r border-zinc-200 dark:border-slate-700" : "",
       ].join(" ")}
+      // audit-inline-style-ok: computed timing
       style={{ transitionDelay: `${delay}ms` }}
     >
       {stat.renderIcon && (

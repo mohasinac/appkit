@@ -47,11 +47,12 @@ export function Skeleton({
   return (
     <div
       className={`appkit-skeleton ${variantClass} ${animationClass} ${className}`}
+      // audit-inline-style-ok: pass-through style prop
       style={style}
       role="status"
       aria-label="Loading"
      data-section="skeleton-div-606">
-      <span className="appkit-sr-only">Loading...</span>
+      <span className="appkit-sr-only">Loading...</span>{/* audit-spinner-defaults-ok — sr-only label inside the Skeleton primitive itself */}
     </div>
   );
 }

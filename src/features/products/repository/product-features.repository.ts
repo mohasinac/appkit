@@ -18,6 +18,7 @@ import {
   type ProductFeatureUpdateInput,
 } from "../schemas/product-features";
 import { PRODUCT_COLLECTION } from "../schemas/firestore";
+import { PRODUCT_FIELDS, COUPON_FIELDS } from "../../../constants/field-names";
 
 function slugify(value: string): string {
   return value
@@ -65,10 +66,10 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
   ): Promise<ProductFeatureDocument[]> {
     try {
       let q = this.getCollection() as FirebaseFirestore.Query;
-      if (filter.scope) q = q.where("scope", "==", filter.scope);
-      if (filter.storeId) q = q.where("storeId", "==", filter.storeId);
+      if (filter.scope) q = q.where(COUPON_FIELDS.SCOPE, "==", filter.scope);
+      if (filter.storeId) q = q.where(PRODUCT_FIELDS.STORE_ID, "==", filter.storeId);
       if (typeof filter.isActive === "boolean") {
-        q = q.where("isActive", "==", filter.isActive);
+        q = q.where("isActive", "==", filter.isActive); // audit-field-name-ok — product_features collection has no dedicated FIELDS constant
       }
       const snap = await q.get();
       let docs = snap.docs.map((d) => this.mapDoc(d));
@@ -165,7 +166,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
     try {
       const referencing = await this.db
         .collection(PRODUCT_COLLECTION)
-        .where("features", "array-contains", id)
+        .where(PRODUCT_FIELDS.FEATURES, "array-contains", id)
         .limit(1)
         .get();
       if (!referencing.empty) {
@@ -185,8 +186,8 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
   async countByStore(storeId: string): Promise<number> {
     try {
       const snap = await this.getCollection()
-        .where("scope", "==", "store")
-        .where("storeId", "==", storeId)
+        .where(COUPON_FIELDS.SCOPE, "==", "store")
+        .where(PRODUCT_FIELDS.STORE_ID, "==", storeId)
         .get();
       return snap.size;
     } catch (error) {

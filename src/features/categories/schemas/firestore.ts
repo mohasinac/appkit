@@ -418,6 +418,7 @@ export const CATEGORY_FIELDS = {
   DISPLAY: "display",
   IS_ACTIVE: "isActive",
   IS_SEARCHABLE: "isSearchable",
+  CATEGORY_TYPE: "categoryType",
   CREATED_BY: "createdBy",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",

@@ -139,6 +139,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           <>
             <div
               className="absolute inset-0 bg-center bg-cover"
+              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${coverImage})` }}
             />
             <Div className="absolute inset-0 bg-black/55" />
@@ -215,6 +216,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       {childCategories.length > 0 && (
         <Section surface="default" className="border-b border-zinc-100 dark:border-zinc-800">
           <Div className="max-w-7xl mx-auto px-4 py-3">
+            // audit-inline-style-ok: dynamic CSS
             <Div className={`flex gap-2.5 ${__O.xAuto} pb-1`} style={{ scrollbarWidth: "none" }}>
               {childCategories.map((child) => (
                 <Link

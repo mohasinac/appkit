@@ -19,6 +19,7 @@ import {
   createClaimedCouponId,
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
+import { COUPON_USAGE_FIELDS } from "../../../constants/field-names";
 
 export interface ClaimedCouponCreateInput {
   userId: string;
@@ -74,7 +75,7 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
     try {
       const snap = await this.db
         .collection(this.collection)
-        .where("userId", "==", userId)
+        .where(COUPON_USAGE_FIELDS.USER_ID, "==", userId)
         .get();
       const now = Date.now();
       const rows: ClaimedCouponDocument[] = [];

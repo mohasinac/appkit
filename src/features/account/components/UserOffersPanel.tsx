@@ -193,6 +193,7 @@ export function UserOffersPanel({
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const loadOffers = useCallback(async () => {
+    // toast-intentionally-silent — error rendered inline via setFetchError()
     setLoading(true);
     setFetchError("");
     try {

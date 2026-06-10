@@ -203,7 +203,7 @@ export function AdminSupportTicketDetailView({
             (notes ? notes + "\n" : "") +
             `[${new Date().toISOString()}] Applied store change to ${linkedStoreId}: status=${storeStatus}, verified=${storeIsVerified}, featured=${storeIsFeatured}`,
         })
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();
     },
     onError: (err: unknown) => {
@@ -260,7 +260,7 @@ export function AdminSupportTicketDetailView({
             `[${new Date().toISOString()}] Lifted hard ban for ${linkedUserId}`,
           status: "resolved",
         })
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();
     },
     onError: (err: unknown) => {
@@ -284,7 +284,7 @@ export function AdminSupportTicketDetailView({
             `[${new Date().toISOString()}] Lifted create_support_tickets soft ban for ${linkedUserId}`,
           status: "resolved",
         })
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();
     },
     onError: (err: unknown) => {
@@ -321,7 +321,7 @@ export function AdminSupportTicketDetailView({
               .map((it) => `${it.productId}x${it.quantity}`)
               .join(", ")}`,
         })
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();
       setOrderItemsOpen(false);
     },
@@ -551,7 +551,7 @@ interface OrderItemEdit {
   totalPrice: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function OrderItemsPanel(props: {
   linkedOrderId: string | undefined;
   orderItemsOpen: boolean;
@@ -668,7 +668,7 @@ function OrderItemsPanel(props: {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function StoreChangePanel(props: {
   linkedStoreId: string | undefined;
   storeStatus: string;
@@ -748,7 +748,7 @@ function StoreChangePanel(props: {
 }
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function UnbanRequestPanel(props: {
   linkedUserId: string | undefined;
   liftHardBan: any;

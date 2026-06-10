@@ -56,6 +56,7 @@ function StepCard({
         "transition-all duration-300",
         visible ? CLS_VISIBLE : "opacity-0 translate-y-8",
       ].join(" ")}
+      // audit-inline-style-ok: computed timing
       style={{ transitionDelay: `${delay}ms` }}
      data-section="howitworkssection-div-340">
       {/* Step number watermark */}

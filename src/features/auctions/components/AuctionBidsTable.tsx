@@ -112,6 +112,7 @@ function AuctionRow({
         <Div className="border-t border-[var(--appkit-color-border)]">
           <div
             className="grid text-xs font-medium text-[var(--appkit-color-text-muted)] uppercase tracking-wide px-4 py-2 border-b border-[var(--appkit-color-border-subtle)]"
+            // audit-inline-style-ok: runtime grid template
             style={{ gridTemplateColumns: portal === "buyer" ? "1fr auto auto" : "1fr 1fr auto auto" }}
           >
             <span>{portal === "buyer" ? "Amount" : "Bidder"}</span>
@@ -123,6 +124,7 @@ function AuctionRow({
             <div
               key={bid.id}
               className="grid items-center px-4 py-2.5 border-b border-[var(--appkit-color-border-subtle)] last:border-0 hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
+              // audit-inline-style-ok: runtime grid template
               style={{ gridTemplateColumns: portal === "buyer" ? "1fr auto auto" : "1fr 1fr auto auto" }}
             >
               {portal !== "buyer" && (

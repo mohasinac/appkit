@@ -151,6 +151,7 @@ export function SellerStoreCategoriesView({
   const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
 
   const handleDelete = useCallback(async (id: string) => {
+    // toast-handled-by-hook (useEntityDelete)
     if (!onDelete) return;
     await performDelete(id);
     setDeleteTargetId(null);

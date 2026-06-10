@@ -11,6 +11,7 @@ import {
   type FirebaseSieveResult,
   type SieveModel,
 } from "../../../providers/db-firebase";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import {
   CATEGORY_FIELDS,
   CATEGORIES_COLLECTION,
@@ -166,9 +167,9 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("tier", "==", 0)
-        .where("isActive", "==", true)
-        .orderBy("order", "asc")
+        .where(CATEGORY_FIELDS.TIER, "==", 0)
+        .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
+        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
         .get();
 
       return snapshot.docs
@@ -185,8 +186,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("isLeaf", "==", true)
-        .where("isActive", "==", true)
+        .where(CATEGORY_FIELDS.IS_LEAF, "==", true)
+        .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
         .limit(500)
         .get();
 
@@ -202,9 +203,9 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("tier", "==", tier)
-        .where("isActive", "==", true)
-        .orderBy("order", "asc")
+        .where(CATEGORY_FIELDS.TIER, "==", tier)
+        .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
+        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
         .get();
 
       return snapshot.docs
@@ -221,9 +222,9 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("rootId", "==", rootId)
-        .orderBy("tier", "asc")
-        .orderBy("order", "asc")
+        .where(CATEGORY_FIELDS.ROOT_ID, "==", rootId)
+        .orderBy(CATEGORY_FIELDS.TIER, "asc")
+        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
         .get();
 
       return snapshot.docs.map((doc) => this.mapDoc<CategoryDocument>(doc));
@@ -239,7 +240,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       const snapshot = await this.db
         .collection(this.collection)
         .where("parentIds", "array-contains", parentId)
-        .orderBy("order", "asc")
+        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
         .limit(100)
         .get();
 
@@ -260,8 +261,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("isFeatured", "==", true)
-        .where("isActive", "==", true)
+        .where(CATEGORY_FIELDS.IS_FEATURED, "==", true)
+        .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
         .orderBy("featuredPriority", "asc")
         .get();
 
@@ -280,8 +281,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       const snapshot = await this.db
         .collection(this.collection)
         .where("isBrand", "==", true)
-        .where("isActive", "==", true)
-        .orderBy("order", "asc")
+        .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
+        .orderBy(CATEGORY_FIELDS.ORDER, "asc")
         .get();
 
       const brands = snapshot.docs.map((doc) =>
@@ -547,8 +548,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   ): Promise<CategoryDocument[]> {
     let q: FirebaseFirestore.Query = this.db
       .collection(this.collection)
-      .where("categoryType", "==", type);
-    if (opts.activeOnly) q = q.where("isActive", "==", true);
+      .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", type);
+    if (opts.activeOnly) q = q.where(CATEGORY_FIELDS.IS_ACTIVE, "==", true);
     if (opts.limit) q = q.limit(opts.limit);
     const snap = await q.get();
     return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
@@ -561,9 +562,9 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   ): Promise<CategoryDocument | null> {
     let q: FirebaseFirestore.Query = this.db
       .collection(this.collection)
-      .where("slug", "==", slug)
+      .where(CATEGORY_FIELDS.SLUG, "==", slug)
       .limit(1);
-    if (type) q = q.where("categoryType", "==", type);
+    if (type) q = q.where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", type);
     const snap = await q.get();
     if (snap.empty) return null;
     return this.mapDoc<CategoryDocument>(snap.docs[0]);
@@ -581,8 +582,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     const snap = await this.db
       .collection("products")
       .where("sublistingCategoryId", "==", sublistingId)
-      .where("status", "==", "published")
-      .orderBy("price", "asc")
+      .where(PRODUCT_FIELDS.STATUS, "==", "published")
+      .orderBy(PRODUCT_FIELDS.PRICE, "asc")
       .limit(limit)
       .get();
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -613,9 +614,9 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   async findActiveBrands(): Promise<CategoryDocument[]> {
     const snap = await this.db
       .collection(this.collection)
-      .where("categoryType", "==", "brand")
-      .where("isActive", "==", true)
-      .orderBy("order", "asc")
+      .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", "brand")
+      .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
+      .orderBy(CATEGORY_FIELDS.ORDER, "asc")
       .get();
     return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
   }

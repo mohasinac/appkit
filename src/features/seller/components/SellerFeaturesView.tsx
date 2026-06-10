@@ -13,6 +13,7 @@ import {
   Text,
   Toggle,
   useToast,
+  Skeleton,
 } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ERROR_MESSAGES } from "../../../errors/messages";
@@ -132,9 +133,11 @@ export function SellerFeaturesView() {
       )}
 
       {featuresQuery.isLoading ? (
-        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
-          Loading…
-        </Text>
+        <Stack gap="sm">
+          <Skeleton variant="rectangular" height="48px" />
+          <Skeleton variant="rectangular" height="48px" />
+          <Skeleton variant="rectangular" height="48px" />
+        </Stack>
       ) : features.length === 0 ? (
         <Div className={EMPTY_STATE_CLASS}>
           You haven&apos;t created any custom features yet.

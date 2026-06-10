@@ -148,8 +148,8 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
         .collection(SCAMMER_COLLECTION)
         .doc(scammerId)
         .collection(SCAMMER_INCIDENTS_SUBCOLLECTION)
-        .where("status", "==", "verified" as ScammerStatus)
-        .orderBy("createdAt", "desc")
+        .where(SCAMMER_FIELDS.STATUS, "==", "verified" as ScammerStatus)
+        .orderBy(SCAMMER_FIELDS.CREATED_AT, "desc")
         .limit(20)
         .get();
       return snap.docs.map((d) => this.mapDoc<ScammerIncidentDocument>(d));
@@ -165,7 +165,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
         .doc(scammerId)
         .collection(SCAMMER_COMMENTS_SUBCOLLECTION)
         .where("isHidden", "==", false)
-        .orderBy("createdAt", "desc")
+        .orderBy(SCAMMER_FIELDS.CREATED_AT, "desc")
         .limit(30)
         .get();
       return snap.docs.map((d) => this.mapDoc<ScammerCommentDocument>(d));

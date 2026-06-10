@@ -34,6 +34,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             role="img"
             aria-label={item.meta.title}
             className="h-full w-full bg-center bg-cover"
+            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${item.meta.image})` }}
           />
         )}

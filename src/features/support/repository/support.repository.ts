@@ -9,6 +9,7 @@ import type {
   SieveModel,
 } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
+import { SUPPORT_TICKET_FIELDS } from "../../../constants/field-names";
 import {
   SUPPORT_TICKET_COLLECTION,
   ACTIVE_TICKET_STATUSES,
@@ -81,8 +82,8 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     const snaps = await Promise.all(
       ACTIVE_TICKET_STATUSES.map((s) =>
         col
-          .where("userId", "==", userId)
-          .where("status", "==", s)
+          .where(SUPPORT_TICKET_FIELDS.USER_ID, "==", userId)
+          .where(SUPPORT_TICKET_FIELDS.STATUS, "==", s)
           .select()
           .get(),
       ),
@@ -96,9 +97,9 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   ): Promise<SupportTicketDocument | null> {
     const col = this.db.collection(SUPPORT_TICKET_COLLECTION);
     const snap = await col
-      .where("userId", "==", userId)
+      .where(SUPPORT_TICKET_FIELDS.USER_ID, "==", userId)
       .where("orderId", "==", orderId)
-      .where("status", "in", ACTIVE_TICKET_STATUSES)
+      .where(SUPPORT_TICKET_FIELDS.STATUS, "in", ACTIVE_TICKET_STATUSES)
       .limit(1)
       .get();
     if (snap.empty) return null;
@@ -112,9 +113,9 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   ): Promise<SupportTicketDocument | null> {
     const col = this.db.collection(SUPPORT_TICKET_COLLECTION);
     const snap = await col
-      .where("userId", "==", userId)
-      .where("category", "==", category)
-      .where("status", "==", "waiting_on_user")
+      .where(SUPPORT_TICKET_FIELDS.USER_ID, "==", userId)
+      .where(SUPPORT_TICKET_FIELDS.CATEGORY, "==", category)
+      .where(SUPPORT_TICKET_FIELDS.STATUS, "==", "waiting_on_user")
       .limit(1)
       .get();
     if (snap.empty) return null;

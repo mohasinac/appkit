@@ -34,7 +34,6 @@ const ALLOW = [
 const SUPPRESS_RE = /\/\/\s*audit-listing-type-reads-ok\b/;
 
 // Baseline drift — keep at 0 (currently clean).
-const BASELINE = 0;
 
 const RE = /\.(isAuction|isPreOrder|isPreorder)\b/g;
 
@@ -85,7 +84,7 @@ if (violations.length <= BASELINE) {
   process.exit(0);
 }
 
-const out = [`audit-listing-type-reads: ${violations.length} consumer read(s) of removed boolean fields (baseline ${BASELINE} — regression of ${violations.length - BASELINE}).\n`];
+const out = [`audit-listing-type-reads: ${violations.length} consumer read(s) of removed boolean fields .\n`];
 out.push("Fix: import { isAuctionListing, isPreOrderListing, normalizeListingType } from '@mohasinac/appkit'");
 out.push("       const auction = isAuctionListing(product);   // replaces product.isAuction\n");
 for (const v of violations) {

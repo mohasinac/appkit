@@ -290,6 +290,7 @@ function SidebarUserHeader({
           {user.role && user.role !== "user" && (
             <Div
               className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 text-white text-[9px] font-bold leading-none select-none"
+              // audit-inline-style-ok: runtime brand gradient
               style={{ background: ROLE_DOT_COLORS[user.role] ?? "#6b7280" }}
               title={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               aria-label={user.role}

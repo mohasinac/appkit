@@ -344,6 +344,7 @@ export function CompareOverlay({
   if (!isOpen) return null;
 
   return (
+    // audit-inline-style-ok: pass-through style prop
     <Div className={OVERLAY_CLASS} style={OVERLAY_STYLE} role="dialog" aria-modal="true" aria-label={labels.title}>
       <Row justify="between" align="center" className={HEADER_CLASS}>
         <Heading level={2} className="text-base font-semibold">
@@ -373,6 +374,7 @@ export function CompareOverlay({
             {/* Desktop / tablet â€” grid of columns */}
             <Div
               className="hidden md:grid gap-4"
+              // audit-inline-style-ok: dynamic CSS
               style={{
                 gridTemplateColumns: `repeat(${trimmed.length}, minmax(0, 1fr))`,
               }}

@@ -42,6 +42,7 @@ export function useChat(
   const unsubscribeRef = useRef<Unsubscribe | null>(null);
 
   const connectAndSubscribe = useCallback(async () => {
+    // toast-intentionally-silent — error stored in setError() for UI inline render
     if (!chatId) return;
 
     setIsLoading(true);

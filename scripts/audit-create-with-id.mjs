@@ -38,7 +38,6 @@ const SUPPRESS_RE = /\/\/\s*audit-create-with-id-ok\b/;
 const HAS_OVERRIDE_RE = /\b(?:async\s+)?createWithId\s*[(<]/;
 
 // Baseline drift — keep at 0 (currently clean).
-const BASELINE = 0;
 
 function walk(dir, files = []) {
   let entries;
@@ -76,7 +75,7 @@ if (violations.length <= BASELINE) {
   process.exit(0);
 }
 
-const out = [`audit-create-with-id: ${violations.length} PII repo(s) missing createWithId override (baseline ${BASELINE} — regression of ${violations.length - BASELINE}).\n`];
+const out = [`audit-create-with-id: ${violations.length} PII repo(s) missing createWithId override .\n`];
 out.push("Each repo handles PII (encryptPii / blindIndex / encryptUserData) but does NOT");
 out.push("override createWithId — direct callers will bypass encryption and write plaintext.");
 out.push("Fix: add `async createWithId(id, data, ...): ...` that applies the same encrypt step");

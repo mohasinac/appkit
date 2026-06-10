@@ -10,7 +10,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Cropper, CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
-import { Button, Div, Modal, Row, Text } from "../../../ui";
+import { Button, Div, Modal, Row, Text, useToast } from "../../../ui";
 
 export interface ImageEditorProps {
   isOpen: boolean;
@@ -34,6 +34,7 @@ export function ImageEditor({
   maxOutputWidth = 2048,
 }: ImageEditorProps) {
   const t = useTranslations("mediaEditor");
+  const { showToast } = useToast();
   const cropperRef = useRef<CropperRef>(null);
   const [rotation, setRotation] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -86,10 +87,12 @@ export function ImageEditor({
       const ext = outputFormat.split("/")[1] || "webp";
       const file = new File([blob], `cropped.${ext}`, { type: outputFormat });
       onSave(file);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to save image.", "error");
     } finally {
       setSaving(false);
     }
-  }, [maxOutputWidth, outputFormat, outputQuality, onSave]);
+  }, [maxOutputWidth, outputFormat, outputQuality, onSave, showToast]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("cropTitle")} size="lg">

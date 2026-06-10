@@ -192,7 +192,7 @@ export const serverLogger = {
       data: sanitized,
     };
     console.info(`[INFO] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch(() => {});
+    if (isFileLoggingEnabled) writeLog(entry).catch(() => {}); // audit-silent-catch-ok: logger must never throw
   },
 
   warn(message: string, data?: unknown): void {
@@ -204,7 +204,7 @@ export const serverLogger = {
       data: sanitized,
     };
     console.warn(`[WARN] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch(() => {});
+    if (isFileLoggingEnabled) writeLog(entry).catch(() => {}); // audit-silent-catch-ok: logger must never throw
   },
 
   error(message: string, data?: unknown): void {
@@ -216,7 +216,7 @@ export const serverLogger = {
       data: sanitized,
     };
     console.error(`[ERROR] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch(() => {});
+    if (isFileLoggingEnabled) writeLog(entry).catch(() => {}); // audit-silent-catch-ok: logger must never throw
   },
 };
 

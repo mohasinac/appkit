@@ -68,6 +68,7 @@ export function ReviewSummary({
               >
                 <Div
                   className={CLS_BAR}
+                  // audit-inline-style-ok: computed percentage
                   style={{ width: `${pct}%` }}
                 />
               </Div>

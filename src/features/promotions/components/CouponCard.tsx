@@ -187,7 +187,7 @@ export function CouponCard({
 
   const handleCopy = () => {
     if (!n.code) return;
-    navigator.clipboard.writeText(n.code).catch(() => {});
+    navigator.clipboard.writeText(n.code).catch(() => {}); // audit-silent-catch-ok: clipboard denial is non-fatal; "Copied" UI simply won't toggle
     setCopied(true);
     onCopy?.(n.code);
     setTimeout(() => setCopied(false), 2000);

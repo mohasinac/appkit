@@ -118,6 +118,7 @@ function ZonePicker({
       <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">Zone (row × col grid)</Text>
       <div
         className="grid gap-1"
+        // audit-inline-style-ok: dynamic CSS
         style={{ gridTemplateRows: "repeat(2, 1fr)", gridTemplateColumns: "repeat(3, 1fr)", width: 150 }}
       >
         {zones.map((z) => {

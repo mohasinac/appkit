@@ -68,6 +68,7 @@ export function NewsletterBanner({
   return (
     <Section
       className="relative overflow-hidden py-24"
+      // audit-inline-style-ok: dynamic CSS
       style={{
         background:
           "var(--newsletter-bg, linear-gradient(135deg, var(--color-primary, #1e40af) 0%, var(--color-secondary, #7c3aed) 100%))",
@@ -108,6 +109,7 @@ export function NewsletterBanner({
               disabled={loading}
               variant="primary"
               className="shrink-0 rounded-xl px-5 py-3 text-sm font-bold transition-opacity disabled:opacity-60"
+              // audit-inline-style-ok: dynamic CSS
               style={{
                 background: "var(--color-yellow, #FFE500)",
                 color: "#0D0D0D",

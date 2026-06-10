@@ -42,11 +42,13 @@ export function CategoryCard({
             role="img"
             aria-label={category.name}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
+            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${category.display.coverImage})` }}
           />
         ) : category.display?.color ? (
           <Div
             className="h-full w-full opacity-80"
+            // audit-inline-style-ok: runtime theme color
             style={{ backgroundColor: category.display.color }}
           />
         ) : null}

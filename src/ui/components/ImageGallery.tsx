@@ -141,6 +141,7 @@ export default function ImageGallery({
             role="img"
             aria-label={currentImage.alt}
             className="appkit-image-gallery__image"
+            // audit-inline-style-ok: dynamic CSS
             style={{
               backgroundImage: `url(${currentImage.src})`,
               transform: `scale(${scale})`,

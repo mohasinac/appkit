@@ -86,6 +86,7 @@ export function BlogFeaturedCard({
               role="img"
               aria-label={safeTitle}
               className="h-full w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${coverImageUrl})` }}
             />
           ) : (

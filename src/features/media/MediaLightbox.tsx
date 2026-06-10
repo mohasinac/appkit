@@ -188,6 +188,7 @@ function LightboxThumbnailStrip({
   return (
     <Div
       className="flex gap-2 px-4 py-3 bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0 justify-center"
+      // audit-inline-style-ok: safe-area inset
       style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
     >
       {items.map((item, i) => (
@@ -468,6 +469,7 @@ export function MediaLightbox({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        // audit-inline-style-ok: dynamic CSS
         style={{
           cursor: zoom > 1 ? (isDragging ? "grabbing" : "grab") : "default",
           touchAction: "none",
@@ -478,6 +480,7 @@ export function MediaLightbox({
       >
         <Div
           className="absolute inset-0"
+          // audit-inline-style-ok: dynamic CSS
           style={{
             transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
             transformOrigin: "center center",

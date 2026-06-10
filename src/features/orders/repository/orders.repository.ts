@@ -145,13 +145,12 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     const now = new Date();
     const snapshot = await this.db
       .collection(this.collection)
-      .where("userId", "==", userId)
-      .where(
-        "orderDate",
+      .where(ORDER_FIELDS.USER_ID, "==", userId)
+      .where(ORDER_FIELDS.ORDER_DATE,
         ">=",
         new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000),
       )
-      .orderBy("orderDate", "desc")
+      .orderBy(ORDER_FIELDS.ORDER_DATE, "desc")
       .get();
 
     return snapshot.docs.map((doc) =>
@@ -223,7 +222,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   async deleteByUser(userId: string): Promise<number> {
     try {
       const snapshot = await this.getCollection()
-        .where("userId", "==", userId)
+        .where(ORDER_FIELDS.USER_ID, "==", userId)
         .get();
 
       if (snapshot.empty) return 0;
@@ -388,9 +387,9 @@ class OrderRepository extends BaseRepository<OrderDocument> {
 
     const snap = await this.db
       .collection(this.collection)
-      .where("status", "==", OrderStatusValues.PENDING)
-      .where("paymentStatus", "==", "pending")
-      .where("createdAt", "<", cutoff)
+      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.PENDING)
+      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "pending")
+      .where(ORDER_FIELDS.CREATED_AT, "<", cutoff)
       .limit(500)
       .get();
 
@@ -409,9 +408,9 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   > {
     const snap = await this.db
       .collection(this.collection)
-      .where("payoutStatus", "==", "eligible")
-      .where("shippingMethod", "==", "shiprocket")
-      .where("status", "==", OrderStatusValues.DELIVERED)
+      .where(ORDER_FIELDS.PAYOUT_STATUS, "==", "eligible")
+      .where(ORDER_FIELDS.SHIPPING_METHOD, "==", "shiprocket")
+      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.DELIVERED)
       .limit(500)
       .get();
 
@@ -434,9 +433,9 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   > {
     const snap = await this.db
       .collection(this.collection)
-      .where("payoutStatus", "==", "eligible")
-      .where("status", "==", OrderStatusValues.DELIVERED)
-      .where("updatedAt", "<=", cutoff)
+      .where(ORDER_FIELDS.PAYOUT_STATUS, "==", "eligible")
+      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.DELIVERED)
+      .where(ORDER_FIELDS.UPDATED_AT, "<=", cutoff)
       .limit(500)
       .get();
 

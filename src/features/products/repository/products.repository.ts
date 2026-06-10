@@ -606,9 +606,9 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     if (searchTokens.length > 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
       // Firestore cannot combine two array operators in one query
     } else if (searchTokens.length === 1) {
-      baseQuery = baseQuery.where("searchTokens", "array-contains", searchTokens[0]) as typeof baseQuery;
+      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TOKENS, "array-contains", searchTokens[0]) as typeof baseQuery;
     } else if (searchTokens.length > 1) {
-      baseQuery = baseQuery.where("searchTokens", "array-contains-any", searchTokens) as typeof baseQuery;
+      baseQuery = baseQuery.where(PRODUCT_FIELDS.SEARCH_TOKENS, "array-contains-any", searchTokens) as typeof baseQuery;
     }
 
     if (searchTokens.length === 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
@@ -738,8 +738,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   async getStaleDraftRefs(cutoff: Date): Promise<DocumentReference[]> {
     const snap = await this.db
       .collection(this.collection)
-      .where("status", "==", "draft")
-      .where("updatedAt", "<", cutoff)
+      .where(PRODUCT_FIELDS.STATUS, "==", "draft")
+      .where(PRODUCT_FIELDS.UPDATED_AT, "<", cutoff)
       .limit(200)
       .get();
     return snap.docs.map((d) => d.ref as DocumentReference);

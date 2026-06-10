@@ -5,6 +5,7 @@ import {
   type GroupedListingDocument,
 } from "../../../../features/grouped/schemas/firestore";
 import { productRepository } from "../../../../repositories";
+import { PRODUCT_FIELDS, CATEGORY_FIELDS } from "../../../../constants/field-names";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import {
   GROUPED_LISTINGS_FEATURED_LIMIT,
@@ -67,7 +68,7 @@ export const getGroupedListingForDetail = cache(
       const db = getAdminDb();
       const snap = await db
         .collection(GROUPED_LISTINGS_COLLECTION)
-        .where("slug", "==", slug)
+        .where(CATEGORY_FIELDS.SLUG, "==", slug)
         .limit(1)
         .get();
       if (snap.empty) {
@@ -112,13 +113,13 @@ export async function listGroupedListings(
     const db = getAdminDb();
     let q: FirebaseFirestore.Query = db
       .collection(GROUPED_LISTINGS_COLLECTION)
-      .where("isActive", "==", true);
-    if (params.featuredOnly) q = q.where("isFeatured", "==", true);
-    if (params.storeId) q = q.where("storeId", "==", params.storeId);
-    if (params.brandSlug) q = q.where("brandSlug", "==", params.brandSlug);
-    if (params.categorySlug) q = q.where("categorySlug", "==", params.categorySlug);
+      .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true);
+    if (params.featuredOnly) q = q.where(CATEGORY_FIELDS.IS_FEATURED, "==", true);
+    if (params.storeId) q = q.where(PRODUCT_FIELDS.STORE_ID, "==", params.storeId);
+    if (params.brandSlug) q = q.where(PRODUCT_FIELDS.BRAND_SLUG, "==", params.brandSlug);
+    if (params.categorySlug) q = q.where(PRODUCT_FIELDS.CATEGORY_SLUG, "==", params.categorySlug);
     const snap = await q
-      .orderBy("createdAt", "desc")
+      .orderBy(PRODUCT_FIELDS.CREATED_AT, "desc")
       .limit(params.limit ?? GROUPED_LISTINGS_PAGE_SIZE)
       .get();
     return snap.docs.map(mapDoc);
@@ -144,7 +145,7 @@ export async function listSitemapGroupedListings(): Promise<SitemapGroupedListin
     const db = getAdminDb();
     const snap = await db
       .collection(GROUPED_LISTINGS_COLLECTION)
-      .where("isActive", "==", true)
+      .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
       .select("slug", "updatedAt")
       .limit(GROUPED_LISTINGS_SITEMAP_LIMIT)
       .get();

@@ -10,6 +10,7 @@ import type {
 } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import { increment } from "../../../contracts/field-ops";
+import { FAQ_FIELDS } from "../../../constants/field-names";
 import type { FAQ, FAQCategory } from "../types";
 import {
   FAQS_COLLECTION,
@@ -180,24 +181,21 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
     }
 
     if (tags.length === 1) {
-      baseQuery = baseQuery.where("tags", "array-contains", tags[0]) as any;
+      baseQuery = baseQuery.where(FAQ_FIELDS.TAGS, "array-contains", tags[0]) as any;
     } else if (tags.length > 1) {
-      baseQuery = baseQuery.where(
-        "tags",
+      baseQuery = baseQuery.where(FAQ_FIELDS.TAGS,
         "array-contains-any",
         tags.slice(0, 10),
       ) as any;
     }
 
     if (searchTokens.length === 1) {
-      baseQuery = baseQuery.where(
-        "searchTokens",
+      baseQuery = baseQuery.where(FAQ_FIELDS.SEARCH_TOKENS,
         "array-contains",
         searchTokens[0],
       ) as any;
     } else if (searchTokens.length > 1) {
-      baseQuery = baseQuery.where(
-        "searchTokens",
+      baseQuery = baseQuery.where(FAQ_FIELDS.SEARCH_TOKENS,
         "array-contains-any",
         searchTokens,
       ) as any;
@@ -224,9 +222,9 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
   async getFAQsByCategory(category: FAQCategory): Promise<FAQDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where("category", "==", category)
-      .where("isActive", "==", true)
-      .orderBy("order", "asc")
+      .where(FAQ_FIELDS.CATEGORY, "==", category)
+      .where(FAQ_FIELDS.IS_ACTIVE, "==", true)
+      .orderBy(FAQ_FIELDS.ORDER, "asc")
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<FAQDocument>(doc));
@@ -235,9 +233,9 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
   async getHomepageFAQs(): Promise<FAQDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where("showOnHomepage", "==", true)
-      .where("isActive", "==", true)
-      .orderBy("priority", "desc")
+      .where(FAQ_FIELDS.SHOW_ON_HOMEPAGE, "==", true)
+      .where(FAQ_FIELDS.IS_ACTIVE, "==", true)
+      .orderBy(FAQ_FIELDS.PRIORITY, "desc")
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<FAQDocument>(doc));
@@ -246,9 +244,9 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
   async getFooterFAQs(): Promise<FAQDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where("showInFooter", "==", true)
-      .where("isActive", "==", true)
-      .orderBy("order", "asc")
+      .where(FAQ_FIELDS.SHOW_IN_FOOTER, "==", true)
+      .where(FAQ_FIELDS.IS_ACTIVE, "==", true)
+      .orderBy(FAQ_FIELDS.ORDER, "asc")
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<FAQDocument>(doc));
@@ -257,22 +255,22 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
   async getPinnedFAQs(category?: FAQCategory): Promise<FAQDocument[]> {
     let query = this.db
       .collection(this.collection)
-      .where("isPinned", "==", true)
-      .where("isActive", "==", true);
+      .where(FAQ_FIELDS.IS_PINNED, "==", true)
+      .where(FAQ_FIELDS.IS_ACTIVE, "==", true);
 
     if (category) {
-      query = query.where("category", "==", category);
+      query = query.where(FAQ_FIELDS.CATEGORY, "==", category);
     }
 
-    const snapshot = await query.orderBy("order", "asc").get();
+    const snapshot = await query.orderBy(FAQ_FIELDS.ORDER, "asc").get();
     return snapshot.docs.map((doc) => this.mapDoc<FAQDocument>(doc));
   }
 
   async searchByTag(tag: string): Promise<FAQDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where("tags", "array-contains", tag)
-      .where("isActive", "==", true)
+      .where(FAQ_FIELDS.TAGS, "array-contains", tag)
+      .where(FAQ_FIELDS.IS_ACTIVE, "==", true)
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<FAQDocument>(doc));
@@ -281,7 +279,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
   async getMostHelpful(limit: number = 10): Promise<FAQDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where("isActive", "==", true)
+      .where(FAQ_FIELDS.IS_ACTIVE, "==", true)
       .orderBy("stats.helpful", "desc")
       .limit(limit)
       .get();

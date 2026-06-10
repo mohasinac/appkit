@@ -34,7 +34,7 @@ function defaultSink(event: ActionEvent): void {
   if (typeof window === "undefined") {
     // SSR / Node — best-effort console log; production servers can swap
     // the sink to a real logger via `setActionTrackerSink`.
-    // eslint-disable-next-line no-console
+     
     if (process.env.NODE_ENV !== "production") {
       console.debug("[action-tracker]", event);
     }
@@ -44,7 +44,7 @@ function defaultSink(event: ActionEvent): void {
   // deployed; for now stay silent in prod to avoid 404 noise + dev-mode
   // logs surface the events.
   if (process.env.NODE_ENV !== "production") {
-    // eslint-disable-next-line no-console
+     
     console.debug("[action-tracker]", event);
   }
 }
@@ -72,7 +72,7 @@ export const actionTracker = {
       const result = currentSink(event);
       // Swallow promise rejections so the caller path is never affected.
       if (result && typeof (result as Promise<void>).catch === "function") {
-        (result as Promise<void>).catch(() => {});
+        (result as Promise<void>).catch(() => {}); // audit-silent-catch-ok: telemetry sink must not break callers
       }
     } catch {
       // Intentionally swallowed — telemetry must never break callers.

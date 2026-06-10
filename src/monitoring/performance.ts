@@ -22,7 +22,7 @@ export interface PerformanceProvider {
 const PROVIDER_KEY = "__mohasinac_perf_provider__" as const;
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_perf_provider__: PerformanceProvider | undefined;
 }
 

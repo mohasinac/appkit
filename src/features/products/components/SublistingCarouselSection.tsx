@@ -112,7 +112,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
         setCategory(res.data?.category ?? null);
         setListings(res.data?.listings ?? []);
       })
-      .catch(() => {})
+      .catch(() => {}) // audit-silent-catch-ok: sublisting carousel is supplementary; main PDP renders without it
       .finally(() => setLoading(false));
   }, [sublistingCategoryId]);
 

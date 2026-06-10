@@ -171,7 +171,7 @@ function attachCopyButtons(container: HTMLDivElement) {
             btn.textContent = "Copy";
           }, 1800);
         })
-        .catch(() => {});
+        .catch(() => {}); // audit-silent-catch-ok: clipboard denial is non-fatal; "Copied!" label simply won't toggle
     });
 
     pre.appendChild(btn);

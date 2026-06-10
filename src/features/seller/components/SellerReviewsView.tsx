@@ -164,6 +164,7 @@ export function SellerReviewsView({
   );
 
   const fetchReviews = useCallback(async () => {
+    // toast-intentionally-silent — error stored in setError() for UI inline render
     setLoading(true);
     setError(null);
     try {

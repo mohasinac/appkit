@@ -4,7 +4,7 @@ import type {
   WriteBatch,
 } from "firebase-admin/firestore";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports
+ 
 const getAdminDb: () => Firestore = () =>
   (
     (module as any).require(

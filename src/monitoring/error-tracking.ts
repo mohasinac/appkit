@@ -51,7 +51,7 @@ export type ErrorTrackerFn = (
 const TRACKER_KEY = "__mohasinac_error_tracker__" as const;
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __mohasinac_error_tracker__: ErrorTrackerFn | undefined;
 }
 

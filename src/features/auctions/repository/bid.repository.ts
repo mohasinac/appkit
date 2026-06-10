@@ -104,7 +104,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
     let query = this.db
       .collection(this.collection)
       .where(BID_FIELDS.USER_ID, "==", userId)
-      .orderBy("createdAt", "desc")
+      .orderBy(BID_FIELDS.CREATED_AT, "desc")
       .limit(pageSize + 1);
     if (startAfterDoc) query = query.startAfter(startAfterDoc);
     const snap = await query.get();
@@ -130,7 +130,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
       .collection(this.collection)
       .where(BID_FIELDS.PRODUCT_ID, "==", productId)
       .where(BID_FIELDS.STATUS, "==", "active")
-      .orderBy("bidAmount", "desc")
+      .orderBy(BID_FIELDS.BID_AMOUNT, "desc")
       .get();
 
     return snapshot.docs.map((doc) => ({
@@ -229,9 +229,9 @@ export class BidRepository extends BaseRepository<BidDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("productId", "==", productId)
-        .where("status", "==", "active")
-        .orderBy("bidAmount", "desc")
+        .where(BID_FIELDS.PRODUCT_ID, "==", productId)
+        .where(BID_FIELDS.STATUS, "==", "active")
+        .orderBy(BID_FIELDS.BID_AMOUNT, "desc")
         .limit(1)
         .get();
 
@@ -257,8 +257,8 @@ export class BidRepository extends BaseRepository<BidDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("productId", "==", productId)
-        .orderBy("bidAmount", "desc")
+        .where(BID_FIELDS.PRODUCT_ID, "==", productId)
+        .orderBy(BID_FIELDS.BID_AMOUNT, "desc")
         .get();
 
       return snapshot.docs.map((doc) => this.mapDoc<BidDocument>(doc));
@@ -307,7 +307,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
       // Set all bids for this product to not winning
       const allBidsSnapshot = await this.db
         .collection(this.collection)
-        .where("productId", "==", productId)
+        .where(BID_FIELDS.PRODUCT_ID, "==", productId)
         .get();
 
       allBidsSnapshot.docs.forEach((doc) => {
@@ -341,7 +341,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
       const bidsSnapshot = await this.db
         .collection(this.collection)
-        .where("productId", "==", productId)
+        .where(BID_FIELDS.PRODUCT_ID, "==", productId)
         .get();
 
       bidsSnapshot.docs.forEach((doc) => {
@@ -370,7 +370,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
       const bidsSnapshot = await this.db
         .collection(this.collection)
-        .where("productId", "==", productId)
+        .where(BID_FIELDS.PRODUCT_ID, "==", productId)
         .get();
 
       bidsSnapshot.docs.forEach((doc) => {
@@ -396,7 +396,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
   async countByProduct(productId: string): Promise<number> {
     try {
       return await getFirestoreCount(
-        this.db.collection(this.collection).where("productId", "==", productId),
+        this.db.collection(this.collection).where(BID_FIELDS.PRODUCT_ID, "==", productId),
       );
     } catch (error) {
       throw new DatabaseError(
@@ -412,7 +412,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
   async countByUser(userId: string): Promise<number> {
     try {
       return await getFirestoreCount(
-        this.db.collection(this.collection).where("userId", "==", userId),
+        this.db.collection(this.collection).where(BID_FIELDS.USER_ID, "==", userId),
       );
     } catch (error) {
       throw new DatabaseError(

@@ -360,7 +360,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
                 <li className={C.empty}>{noResultsText}</li>
               )}
 
-              {loading && <li className={C.loading}>Loading…</li>}
+              {loading && <li className={C.loading}>Loading…</li>}{/* audit-spinner-defaults-ok — paginated-select dropdown loader, inline by design */}
 
               {hasMore && !loading && (
                 <li>

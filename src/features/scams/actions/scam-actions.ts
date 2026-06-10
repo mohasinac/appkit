@@ -69,7 +69,7 @@ export async function getPublicScammerById(id: string): Promise<ScammerDocument 
   if (!doc || doc.status !== "verified") return null;
 
   // Increment views — non-blocking.
-  scammerRepository.incrementViews(doc.id).catch(() => {});
+  scammerRepository.incrementViews(doc.id).catch(() => {}); // audit-silent-catch-ok: view-count is best-effort analytics
 
   return doc;
 }

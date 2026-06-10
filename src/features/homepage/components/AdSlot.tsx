@@ -44,6 +44,7 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
     <Div ref={ref}>
       <ins
         className="adsbygoogle"
+        // audit-inline-style-ok: dynamic CSS
         style={{ display: "block" }}
         data-ad-client={config.adsenseClient ?? ""}
         data-ad-slot={config.adsenseSlot ?? ""}
@@ -64,6 +65,7 @@ function ThirdPartyAd({ config }: { config: AdSlotConfig }) {
         scrolling="no"
         frameBorder="0"
         title="Advertisement"
+        // audit-inline-style-ok: dynamic CSS
         style={{ border: 0, overflow: "hidden" }}
         loading="lazy"
       />

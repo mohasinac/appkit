@@ -31,7 +31,6 @@ const SKIP_DIRS = new Set(["node_modules", "dist", ".next", ".git", "__tests__"]
 const SUPPRESS_RE = /\/\/\s*audit-paginated-select-ok\b/;
 
 // Baseline drift — keep at 0 (currently clean).
-const BASELINE = 0;
 
 // JSX element opener (<Select ...>) capturing tag + props blob
 const RE_OPEN = /<(Select|FieldSelect)\b([^>]*?)>/g;
@@ -136,7 +135,7 @@ if (violations.length <= BASELINE) {
   process.exit(0);
 }
 
-const out = [`audit-paginated-select: ${violations.length} <Select> with >5 inline options (baseline ${BASELINE} — regression of ${violations.length - BASELINE}).\n`];
+const out = [`audit-paginated-select: ${violations.length} <Select> with >5 inline options .\n`];
 out.push("Replace with <PaginatedSelect from '@mohasinac/appkit'> — handles search, virtualization,");
 out.push("and optional inline-create flow. See CLAUDE.md → UI Primitive Rules.\n");
 for (const v of violations) {

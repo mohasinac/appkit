@@ -23,6 +23,7 @@ import {
   createCarouselId,
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
+import { CAROUSEL_FIELDS } from "../../../constants/field-names";
 
 /**
  * Repository for carousel slide management
@@ -92,8 +93,8 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("active", "==", true)
-        .orderBy("order", "asc")
+        .where(CAROUSEL_FIELDS.ACTIVE, "==", true)
+        .orderBy(CAROUSEL_FIELDS.ORDER, "asc")
         .limit(MAX_ACTIVE_SLIDES)
         .get();
 
@@ -116,8 +117,8 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("active", "==", false)
-        .orderBy("createdAt", "desc")
+        .where(CAROUSEL_FIELDS.ACTIVE, "==", false)
+        .orderBy(CAROUSEL_FIELDS.CREATED_AT, "desc")
         .get();
 
       return snapshot.docs.map((doc) =>
@@ -140,8 +141,8 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where("createdBy", "==", userId)
-        .orderBy("createdAt", "desc")
+        .where(CAROUSEL_FIELDS.CREATED_BY, "==", userId)
+        .orderBy(CAROUSEL_FIELDS.CREATED_AT, "desc")
         .get();
 
       return snapshot.docs.map((doc) =>
@@ -277,7 +278,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
   async getActiveCount(): Promise<number> {
     try {
       return await getFirestoreCount(
-        this.db.collection(this.collection).where("active", "==", true),
+        this.db.collection(this.collection).where(CAROUSEL_FIELDS.ACTIVE, "==", true),
       );
     } catch (error) {
       throw new DatabaseError(

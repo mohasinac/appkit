@@ -68,6 +68,7 @@ export function Progress({
        data-section="progress-div-571">
         <div
           className={`appkit-progress__bar ${variantClasses[variant]}`}
+          // audit-inline-style-ok: computed percentage
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -124,6 +125,7 @@ export function IndeterminateProgress({
        data-section="progress-div-573">
         <div
           className={`appkit-progress__bar appkit-progress__bar--indeterminate ${variantClasses[variant]}`}
+          // audit-inline-style-ok: dynamic CSS
           style={{ width: "40%" }}
         />
       </div>

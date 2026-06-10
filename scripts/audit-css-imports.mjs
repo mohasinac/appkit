@@ -25,7 +25,6 @@ const SKIP_DIRS = new Set(["node_modules", "dist", ".next", ".git"]);
 const RE = /^\s*@import\s+["']([^"']+)["']/;
 
 // Baseline drift — keep at 0 (currently clean).
-const BASELINE = 0;
 
 function walk(dir, files = []) {
   let entries;
@@ -65,7 +64,7 @@ if (violations.length <= BASELINE) {
   process.exit(0);
 }
 
-const out = [`audit-css-imports: ${violations.length} CSS @import of node_modules (baseline ${BASELINE} — regression of ${violations.length - BASELINE}).\n`];
+const out = [`audit-css-imports: ${violations.length} CSS @import of node_modules .\n`];
 out.push("Turbopack inlines @import before PostCSS — breaks tailwindcss + autoprefixer.");
 out.push("Fix: import the package CSS via JS in layout.tsx instead:");
 out.push(`     import "pkg/styles";\n`);

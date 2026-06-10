@@ -169,7 +169,7 @@ export function MarketplacePrizeDrawCard({
                     className="relative overflow-hidden bg-[var(--appkit-color-surface-muted)]"
                   >
                     {img ? (
-                      /* eslint-disable-next-line @next/next/no-raw-media-elements, @next/next/no-img-element */
+                      /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         src={img}
                         alt={it?.title ?? `Prize ${i + 1}`}

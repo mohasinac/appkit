@@ -41,6 +41,7 @@ export function AdminStatCard({
       {/* 3-px gradient top accent */}
       <div
         className="absolute top-0 left-0 right-0 h-[3px]"
+        // audit-inline-style-ok: dynamic CSS
         style={{ background: resolvedGradient }}
         aria-hidden="true"
       />
@@ -64,6 +65,7 @@ export function AdminStatCard({
         {icon && (
           <Div
             className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-xl"
+            // audit-inline-style-ok: dynamic CSS
             style={{ background: resolvedGradient }}
           >
             {icon}

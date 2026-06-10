@@ -491,6 +491,7 @@ export const CATEGORY_FIELDS = {
   IS_FEATURED: "isFeatured",
   SHOW_ON_HOMEPAGE: "showOnHomepage",
   ICON: "icon",
+  ORDER: "order",
   DISPLAY_ORDER: "displayOrder",
   IS_ACTIVE: "isActive",
   // SB-UNI — categoryType discriminator (category/brand/sublisting/bundle)
@@ -753,6 +754,7 @@ export const SUPPORT_TICKET_FIELDS = {
   USER_ID: "userId",
   STORE_ID: "storeId",
   SUBJECT: "subject",
+  CATEGORY: "category",
   STATUS: "status",
   PRIORITY: "priority",
   CREATED_AT: "createdAt",
@@ -781,6 +783,7 @@ export const SUPPORT_TICKET_FIELDS = {
 
 export const CAROUSEL_FIELDS = {
   ID: "id",
+  NAME: "name",
   TITLE: "title",
   ORDER: "order",
   ACTIVE: "active",

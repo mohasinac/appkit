@@ -472,6 +472,7 @@ export function DataTable<T extends object>({
                           : undefined
                       }
                       className={`appkit-data-table__th ${col.sortable ? "appkit-data-table__th--sortable" : ""}`}
+                      // audit-inline-style-ok: dynamic CSS
                       style={{ width: col.width }}
                       onClick={() => col.sortable && handleSort(col.key)}
                     >
@@ -717,6 +718,7 @@ function DataTableTableView<T extends object>({
                       : undefined
                   }
                   className={`appkit-data-table__th ${col.sortable ? "appkit-data-table__th--sortable" : ""}`}
+                  // audit-inline-style-ok: dynamic CSS
                   style={{ width: col.width }}
                   onClick={() => col.sortable && onSort(col.key)}
                 >

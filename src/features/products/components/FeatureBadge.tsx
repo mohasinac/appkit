@@ -97,6 +97,7 @@ export function FeatureBadge({ featureId, features }: FeatureBadgeProps) {
     <Span
       title={f.description ?? undefined}
       className={BADGE_BASE_CLASS}
+      // audit-inline-style-ok: computed color style fn
       style={colorStyleFor(f.iconColor)}
     >
       <FeatureIcon icon={f.icon} />

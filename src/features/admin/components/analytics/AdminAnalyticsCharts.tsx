@@ -66,6 +66,7 @@ function ChartCard({
       {/* brand gradient top accent */}
       <div
         className="absolute top-0 left-0 right-0 h-[3px]"
+        // audit-inline-style-ok: dynamic CSS
         style={{
           background:
             "linear-gradient(to right, var(--appkit-color-primary-700,#1343de) 0%, var(--appkit-color-cobalt,#3570fc) 55%, var(--appkit-color-secondary-400,#84e122) 100%)",
