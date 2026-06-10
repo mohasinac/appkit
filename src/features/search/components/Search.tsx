@@ -255,6 +255,17 @@ export function Search({
   const handleSuggestionClick = (record: NavSuggestionRecord) => {
     setIsInlineOpen(false);
     onClose?.();
+    // For "page" suggestions, the target is a listing page that filters by ?q=
+    // — carry the typed query into the URL so the destination pre-fills its
+    // search input and applies the filter immediately. For non-page records
+    // (product/category/blog/event), the URL already targets a specific
+    // detail page so the query is irrelevant.
+    const trimmed = query.trim();
+    if (record.type === "page" && trimmed) {
+      const sep = record.url.includes("?") ? "&" : "?";
+      router.push(`${record.url}${sep}q=${encodeURIComponent(trimmed)}`);
+      return;
+    }
     router.push(record.url);
   };
 
@@ -473,6 +484,7 @@ export function Search({
         {isInlineOpen && (filteredQuickLinks.length > 0 || query) && (
           <div
             className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
+            // audit-inline-style-ok: z-index token
             style={{ zIndex: "var(--appkit-z-dropdown)" }}
             onMouseDown={(event) => event.preventDefault()}
           >
