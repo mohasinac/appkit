@@ -142,8 +142,11 @@ export function BottomNavbar({
   return (
     <BottomNavLayout ariaLabel={labels.mobileNav}>
       {/* 1 — Home */}
-      // audit-inline-style-ok: pass-through style prop
-      <Li className="flex-1" style={itemStyle}>
+      <Li
+        className="flex-1"
+        // audit-inline-style-ok: pass-through style prop
+        style={itemStyle}
+      >
         <NavItem
           href={homeHref}
           label={labels.home}
@@ -162,8 +165,11 @@ export function BottomNavbar({
       </Li>
 
       {/* 2 — Shop */}
-      // audit-inline-style-ok: pass-through style prop
-      <Li className="flex-1" style={itemStyle}>
+      <Li
+        className="flex-1"
+        // audit-inline-style-ok: pass-through style prop
+        style={itemStyle}
+      >
         <NavItem
           href={shopHref}
           label={labels.products}
@@ -182,8 +188,11 @@ export function BottomNavbar({
       </Li>
 
       {/* 3 — Search */}
-      // audit-inline-style-ok: pass-through style prop
-      <Li className="flex-1" style={itemStyle}>
+      <Li
+        className="flex-1"
+        // audit-inline-style-ok: pass-through style prop
+        style={itemStyle}
+      >
         <button
           type="button"
           onClick={onSearchToggle}
@@ -198,8 +207,11 @@ export function BottomNavbar({
       </Li>
 
       {/* 4 — Cart */}
-      // audit-inline-style-ok: pass-through style prop
-      <Li className="flex-1" style={itemStyle}>
+      <Li
+        className="flex-1"
+        // audit-inline-style-ok: pass-through style prop
+        style={itemStyle}
+      >
         <TextLink
           href={cartHref}
           variant="none"
@@ -216,8 +228,11 @@ export function BottomNavbar({
       </Li>
 
       {/* 5 — Profile / Login */}
-      // audit-inline-style-ok: pass-through style prop
-      <Li className="flex-1" style={itemStyle}>
+      <Li
+        className="flex-1"
+        // audit-inline-style-ok: pass-through style prop
+        style={itemStyle}
+      >
         {user ? (
           <TextLink
             href={profileHref}

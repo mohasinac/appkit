@@ -256,8 +256,12 @@ export function SellerAddressesView({
   return (
     <Div className="min-h-screen">
       {/* Header */}
-      // audit-inline-style-ok: dynamic CSS
-      <Row justify="between" className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3" style={{ top: "var(--header-height, 0px)" }}>
+      <Row
+        justify="between"
+        className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3"
+        // audit-inline-style-ok: dynamic CSS
+        style={{ top: "var(--header-height, 0px)" }}
+      >
         <Stack gap="none">
           <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Pickup Addresses</Heading>
           <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>

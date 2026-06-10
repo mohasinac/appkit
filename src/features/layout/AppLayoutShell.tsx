@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-// QueryClientProvider intentionally NOT imported here — see the comment in the
-// component body. The consumer-level QueryProvider owns the QueryClient.
+// QueryClientProvider intentionally NOT imported here. Consumer's QueryProvider
+// owns the singleton; nesting another would risk Turbopack chunk-splitting.
+// The actual 2.8.8 SSR crash was a peer-dep duplicate fixed by the
+// scripts/dedupe-peer-deps.mjs postinstall hook (see scripts/ and CLAUDE.md #19).
 import {
   Main,
   Div,
@@ -592,10 +594,11 @@ export function AppLayoutShell({
   darkBackground = DEFAULT_DARK_BG,
 }: AppLayoutShellProps) {
   // QueryClientProvider used to be created here so AppLayoutShell could stand
-  // alone, but the consumer's QueryProvider wraps the entire app and nesting a
-  // second QueryClientProvider risks splitting QueryClientContext across
-  // Turbopack chunks → "No QueryClient set" on every SSR route. Rely on the
-  // outer consumer-supplied QueryClient instead.
+  // alone. The real cause of the 2026-06-10/11 "No QueryClient set" prod crash
+  // turned out to be a peer-dep duplicate of @tanstack/query-core under
+  // appkit/node_modules/ (fixed by scripts/dedupe-peer-deps.mjs in the
+  // postinstall hook). Keeping this nested provider removed regardless because
+  // a single consumer-level QueryProvider is the correct architecture.
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();

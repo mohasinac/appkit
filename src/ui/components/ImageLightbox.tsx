@@ -197,8 +197,11 @@ export function ImageLightbox({
       )}
 
       {/* Image */}
-      // audit-inline-style-ok: dynamic CSS
-      <div className="appkit-lightbox__image-wrap" style={{ cursor: zoom > 100 ? "grab" : "default" }}>
+      <div
+        className="appkit-lightbox__image-wrap"
+        // audit-inline-style-ok: dynamic CSS
+        style={{ cursor: zoom > 100 ? "grab" : "default" }}
+      >
         <img
           src={image.src}
           alt={image.alt ?? ""}
