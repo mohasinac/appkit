@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { BlockHeader, Button, Div, Row, SiteLogo, Span } from "../../ui";
+import { Avatar, BlockHeader, Button, Div, Row, SiteLogo, Span } from "../../ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {
@@ -251,21 +251,12 @@ export function TitleBarLayout({
       aria-label={user ? `Profile — ${user.displayName ?? user.email}` : "Sign in"}
       className={`relative ${iconBtn}`}
     >
-      {user?.photoURL ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={user.photoURL}
-          alt={user.displayName ?? "Profile"}
-          width={28}
-          height={28}
-          loading="lazy"
-          className="w-7 h-7 rounded-full object-cover"
-        />
-      ) : (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0zM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-        </svg>
-      )}
+      <Avatar
+        src={user?.photoURL ?? undefined}
+        name={user?.displayName ?? user?.email ?? undefined}
+        alt={user?.displayName ?? "Profile"}
+        size="sm"
+      />
     </Link>
   ) : null;
 

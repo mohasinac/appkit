@@ -18,6 +18,7 @@
 import type { StoreDocument } from "../features/stores/schemas";
 import { STORE_FIELDS } from "../constants/field-names";
 import type { StoreCapability } from "../features/auth/permissions/constants";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -33,9 +34,9 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "The official LetItRip curated store. Hand-picked premium Yu-Gi-Oh! collectibles — authenticated graded slabs, Egyptian God cards, sealed vintage product, and rare 1st Edition singles. Every item personally inspected.",
     storeCategory: "category-singles",
     storeLogoURL:
-      "https://images.ygoprodeck.com/images/cards/small/10000015.jpg",
+      seedExtMedia("https://images.ygoprodeck.com/images/cards/small/10000015.jpg"),
     storeBannerURL:
-      "https://images.ygoprodeck.com/images/cards/cropped/10000015.jpg",
+      seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/10000015.jpg"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Curated by the LetItRip team. All cards authenticated and graded by PSA/BGS/CGC before listing. Fast dispatch, collector-grade packaging.",
     location: "Mumbai, Maharashtra, India",
@@ -118,9 +119,9 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "The definitive Yu-Gi-Oh! card store by Seto Kaiba. Massive inventory of Duel Monsters era singles, GX era cards, graded slabs, sealed booster boxes, accessories, and rare collectibles. Authenticated and documented.",
     storeCategory: "category-singles",
     storeLogoURL:
-      "https://images.ygoprodeck.com/images/cards/small/23995346.jpg",
+      seedExtMedia("https://images.ygoprodeck.com/images/cards/small/23995346.jpg"),
     storeBannerURL:
-      "https://images.ygoprodeck.com/images/cards/cropped/23995346.jpg",
+      seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/23995346.jpg"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "CEO of Kaiba Corp. My vault contains the finest YGO cards in the world. Every card authenticated, graded, and catalogued. Blue-Eyes White Dragon specialist.",
     location: "Domino City, Japan",
@@ -197,8 +198,8 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "India's top Pokémon TCG store. Booster packs, Elite Trainer Boxes, singles, graded slabs, and Japanese exclusives. Base Set to Scarlet & Violet — if it's Pokémon, we've got it.",
     storeCategory: "category-pokemon-tcg",
-    storeLogoURL: "/media/store-logo-pokemon-palace-20260101.jpg",
-    storeBannerURL: "/media/store-banner-pokemon-palace-20260101.jpg",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-pokemon-palace-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-pokemon-palace-20260101/1600/400"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Pokémon Master turned seller. Building the largest Pokémon TCG collection marketplace in India.",
     location: "Bengaluru, Karnataka, India",
@@ -229,8 +230,8 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Multi-TCG collectibles store. Yu-Gi-Oh!, Pokémon, One Piece, Dragon Ball Super, and Cardfight!! Vanguard. Singles, sealed product, and tournament accessories.",
     storeCategory: "category-trading-cards",
-    storeLogoURL: "/media/store-logo-cardgame-hub-20260101.jpg",
-    storeBannerURL: "/media/store-banner-cardgame-hub-20260101.jpg",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-cardgame-hub-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-cardgame-hub-20260101/1600/400"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "TCG enthusiast since 2010. Running local tournaments and selling authentic cards from my personal collection and distributor stock.",
     location: "Hyderabad, Telangana, India",
@@ -260,8 +261,8 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "India's premier diecast collectibles store. Hot Wheels mainline, Premium, Treasure Hunts, Super TH, Tomica, Matchbox, and Maisto. New arrivals every week.",
     storeCategory: "category-diecast-vehicles",
-    storeLogoURL: "/media/store-logo-diecast-depot-20260101.jpg",
-    storeBannerURL: "/media/store-banner-diecast-depot-20260101.jpg",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-diecast-depot-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-diecast-depot-20260101/1600/400"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Collecting diecast since 1998. Over 5,000 Hot Wheels in my personal collection. Now sharing the hobby with collectors across India.",
     location: "Delhi, NCR, India",
@@ -291,8 +292,8 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Everything Beyblade — X, Burst, Metal Fight, and vintage original series. Takara-Tomy authentic stock, tournament-grade stadiums, launchers, and rare limited editions.",
     storeCategory: "category-spinning-tops",
-    storeLogoURL: "/media/store-logo-beyblade-arena-20260101.jpg",
-    storeBannerURL: "/media/store-banner-beyblade-arena-20260101.jpg",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-beyblade-arena-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-beyblade-arena-20260101/1600/400"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Beyblade champion turned seller. Importing authentic Takara-Tomy Beyblades directly from Japan. Let It Rip!",
     location: "Chennai, Tamil Nadu, India",
@@ -322,8 +323,8 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Anime figures and model kits imported from Japan. Nendoroid, S.H.Figuarts, figma, Funko Pop, and scale figures. Plus Gunpla and 30 Minutes Missions kits.",
     storeCategory: "category-action-figures",
-    storeLogoURL: "/media/store-logo-tokyo-toys-india-20260101.jpg",
-    storeBannerURL: "/media/store-banner-tokyo-toys-india-20260101.jpg",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-tokyo-toys-india-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-tokyo-toys-india-20260101/1600/400"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Direct imports from Akihabara and Nipponbashi. Authentic figures with original Japanese packaging. No bootlegs, ever.",
     location: "Pune, Maharashtra, India",
@@ -355,8 +356,8 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     storeDescription:
       "Gunpla and mecha model kits — HG, RG, MG, PG, SD grades by Bandai, plus Frame Arms by Kotobukiya and 30 Minutes Missions. Tools, paints, and accessories.",
     storeCategory: "category-model-kits",
-    storeLogoURL: "/media/store-logo-gundam-galaxy-20260101.jpg",
-    storeBannerURL: "/media/store-banner-gundam-galaxy-20260101.jpg",
+    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-gundam-galaxy-20260101/400/400"),
+    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-gundam-galaxy-20260101/1600/400"),
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Building Gunpla since 2005. Over 200 kits built. Importing directly from Bandai Hobby distributors in Japan and Hong Kong.",
     location: "Kolkata, West Bengal, India",

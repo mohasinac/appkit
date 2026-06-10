@@ -10,6 +10,7 @@
 import type { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTokens } from "../utils/search-tokens";
+import { seedExtMedia } from "./_helpers/media";
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   return {
@@ -55,9 +56,9 @@ const _rawClassifiedsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 1,
     availableQuantity: 1,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-kaiba-corp-cards",
@@ -88,9 +89,9 @@ const _rawClassifiedsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 1,
     availableQuantity: 1,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.exodiaHead}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.exodiaHead}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.exodiaHead}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.exodiaHead}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",
@@ -121,9 +122,9 @@ const _rawClassifiedsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 1,
     availableQuantity: 1,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.jinzo}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.jinzo}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.jinzo}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.jinzo}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-kaiba-corp-cards",
@@ -154,10 +155,10 @@ const _rawClassifiedsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 1,
     availableQuantity: 1,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.kuriboh}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.kuriboh}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.kuriboh}.jpg`,
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.gaiaFierceKnight}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.kuriboh}.jpg`),
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.gaiaFierceKnight}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",
@@ -188,9 +189,9 @@ const _rawClassifiedsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 1,
     availableQuantity: 1,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.potOfGreed}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.potOfGreed}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.potOfGreed}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.potOfGreed}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-kaiba-corp-cards",

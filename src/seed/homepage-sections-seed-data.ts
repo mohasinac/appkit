@@ -14,6 +14,7 @@
  */
 
 import type { HomepageSectionDocument } from "../features/homepage/schemas";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -177,7 +178,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       height: "md",
-      backgroundImage: "https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg",
+      backgroundImage: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
       content: {
         title: "Complete Your Exodia Set",
         subtitle: "All 5 pieces available — LOB 1st Edition to modern reprints",

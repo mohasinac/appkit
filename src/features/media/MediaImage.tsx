@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Div, Span } from "../../ui";
+import { resolveMediaUrl } from "../../utils/media-url";
 
 // --- Size presets -------------------------------------------------------------
 
@@ -79,8 +80,9 @@ export function MediaImage({
   const [isLoaded, setIsLoaded] = useState(false);
   const icon = fallback ?? FALLBACK_ICONS[size];
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
+  const resolvedSrc = resolveMediaUrl(src);
 
-  if (!src || hasError) {
+  if (!resolvedSrc || hasError) {
     return (
       <Div
         className={`relative w-full h-full overflow-hidden flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl${className ? ` ${className}` : ""}`}
@@ -93,9 +95,9 @@ export function MediaImage({
   }
 
   const isSvg =
-    src.toLowerCase().endsWith(".svg") ||
-    src.includes("image/svg") ||
-    /[./]svg(\?|$)/i.test(src);
+    resolvedSrc.toLowerCase().endsWith(".svg") ||
+    resolvedSrc.includes("image/svg") ||
+    /[./]svg(\?|$)/i.test(resolvedSrc);
 
   return (
     <Div
@@ -108,7 +110,7 @@ export function MediaImage({
         />
       )}
       <Image
-        src={src}
+        src={resolvedSrc}
         alt={alt}
         fill
         priority={priority}

@@ -251,8 +251,11 @@ function MediaPreviewPanel({
         </Div>
       ) : isPdf(value) ? (
         <Div className="space-y-2">
-          // audit-inline-style-ok: dynamic CSS
-          <Div className={`relative w-full ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`} style={{ height: 280 }}>
+          <Div
+            className={`relative w-full ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`}
+            // audit-inline-style-ok: dynamic CSS
+            style={{ height: 280 }}
+          >
             <iframe
               src={value}
               title={filenameFromUrl(value)}

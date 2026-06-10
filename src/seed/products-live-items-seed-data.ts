@@ -13,6 +13,7 @@
 import type { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTokens } from "../utils/search-tokens";
+import { seedExtMedia } from "./_helpers/media";
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   return {
@@ -44,9 +45,9 @@ const _rawLiveItemsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 1,
     availableQuantity: 1,
-    mainImage: "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=800&fit=crop",
+    mainImage: seedExtMedia("https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=800&fit=crop"),
     images: [
-      "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&h=800&fit=crop"),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",
@@ -86,9 +87,9 @@ const _rawLiveItemsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 3,
     availableQuantity: 3,
-    mainImage: "https://images.unsplash.com/photo-1520302519878-3c0a981b76e1?w=800&h=800&fit=crop",
+    mainImage: seedExtMedia("https://images.unsplash.com/photo-1520302519878-3c0a981b76e1?w=800&h=800&fit=crop"),
     images: [
-      "https://images.unsplash.com/photo-1520302519878-3c0a981b76e1?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1520302519878-3c0a981b76e1?w=800&h=800&fit=crop"),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",
@@ -128,9 +129,9 @@ const _rawLiveItemsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 8,
     availableQuantity: 8,
-    mainImage: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=800&fit=crop",
+    mainImage: seedExtMedia("https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=800&fit=crop"),
     images: [
-      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=800&fit=crop"),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-kaiba-corp-cards",
@@ -170,9 +171,9 @@ const _rawLiveItemsSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 2,
     availableQuantity: 2,
-    mainImage: "https://images.unsplash.com/photo-1585095595205-e68428a9e205?w=800&h=800&fit=crop",
+    mainImage: seedExtMedia("https://images.unsplash.com/photo-1585095595205-e68428a9e205?w=800&h=800&fit=crop"),
     images: [
-      "https://images.unsplash.com/photo-1585095595205-e68428a9e205?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1585095595205-e68428a9e205?w=800&h=800&fit=crop"),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",

@@ -15,6 +15,7 @@
 
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
 import { SCAMMER_FIELDS } from "../constants/field-names";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date("2026-05-10T00:00:00.000Z");
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -38,7 +39,7 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
       "Seller listed a Blue-Eyes White Dragon LOB 1st Edition PSA 9 on a Facebook group for ₹25,000 — significantly below market. When I messaged, he asked for ₹5,000 advance to 'hold' the card before shipping. After I paid via UPI (9876543210@paytm), he went silent. The account name on UPI matched 'YGO King'. Later found 2 more people in the same group who had the same experience with the same UPI ID.",
     amountLost: 500000,
     itemInvolved: "Blue-Eyes White Dragon LOB 1st Edition PSA 9 (Yu-Gi-Oh!)",
-    evidence: ["/media/scammer-evidence-ygoking-chat-screenshot-20260402.jpg"],
+    evidence: [seedExtMedia("https://picsum.photos/seed/scammer-evidence-ygoking-chat-screenshot-20260402/800/600")],
     reportedBy: "user-yugi-muto",
     reportedByAnon: false,
     status: SCAMMER_FIELDS.STATUS_VALUES.VERIFIED,

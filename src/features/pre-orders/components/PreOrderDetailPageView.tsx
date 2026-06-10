@@ -298,8 +298,11 @@ function PreOrderBuyBarPanel({
             </Span>
           </Row>
           <Div className={`h-2 w-full ${__O.hidden} rounded-full bg-zinc-200 dark:bg-zinc-700`}>
-            // audit-inline-style-ok: computed percentage
-            <Div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progressPct}%` }} />
+            <Div
+              className="h-full rounded-full bg-primary transition-all"
+              // audit-inline-style-ok: computed percentage
+              style={{ width: `${progressPct}%` }}
+            />
           </Div>
         </Div>
       )}

@@ -17,6 +17,7 @@
  * @tag sideEffects:none
  */
 
+import { seedExtMedia } from "./_helpers/media";
 import type {
   AnalyticsAlertDocument,
   AnalyticsCardDocument,
@@ -151,10 +152,10 @@ export const analyticsAlertsSeedData: Partial<AnalyticsAlertDocument>[] = [
 
 // ───── storeCategories (4 records) ────────────────────────────────────────
 export const storeCategoriesSeedData: Partial<StoreCategoryDocument>[] = [
-  { id: "scat-kaiba-lob-singles", storeId: "store-kaiba-corp-cards", label: "LOB Singles", slug: "lob-singles", displayOrder: 0, productIds: [], isActive: true, description: "Legend of Blue Eyes White Dragon singles.", coverImageUrl: "https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg" },
-  { id: "scat-kaiba-graded-slabs", storeId: "store-kaiba-corp-cards", label: "Graded Slabs", slug: "graded-slabs", displayOrder: 1, productIds: [], isActive: true, description: "PSA, BGS, and CGC graded Yu-Gi-Oh! slabs.", coverImageUrl: "https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg" },
-  { id: "scat-letitrip-sealed", storeId: "store-letitrip-official", label: "Sealed Products", slug: "sealed-products", displayOrder: 0, productIds: [], isActive: true, description: "Factory-sealed booster boxes, tins, and structure decks.", coverImageUrl: "https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg" },
-  { id: "scat-letitrip-accessories", storeId: "store-letitrip-official", label: "Accessories", slug: "accessories", displayOrder: 1, productIds: [], isActive: true, description: "Deck boxes, sleeves, playmats, and binders.", coverImageUrl: "https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg" },
+  { id: "scat-kaiba-lob-singles", storeId: "store-kaiba-corp-cards", label: "LOB Singles", slug: "lob-singles", displayOrder: 0, productIds: [], isActive: true, description: "Legend of Blue Eyes White Dragon singles.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg") },
+  { id: "scat-kaiba-graded-slabs", storeId: "store-kaiba-corp-cards", label: "Graded Slabs", slug: "graded-slabs", displayOrder: 1, productIds: [], isActive: true, description: "PSA, BGS, and CGC graded Yu-Gi-Oh! slabs.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg") },
+  { id: "scat-letitrip-sealed", storeId: "store-letitrip-official", label: "Sealed Products", slug: "sealed-products", displayOrder: 0, productIds: [], isActive: true, description: "Factory-sealed booster boxes, tins, and structure decks.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg") },
+  { id: "scat-letitrip-accessories", storeId: "store-letitrip-official", label: "Accessories", slug: "accessories", displayOrder: 1, productIds: [], isActive: true, description: "Deck boxes, sleeves, playmats, and binders.", coverImageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg") },
 ];
 
 // ───── listingTemplates (4 records) ───────────────────────────────────────
@@ -211,9 +212,9 @@ export const moderationQueueSeedData: Partial<ModerationQueueDocument>[] = [
   { id: "mod-video-blue-eyes-auction", mediaType: "video", mediaUrl: "/media/product-video-blue-eyes-lob-psa10-20260518.mp4", entityType: "product", entityId: "auction-blue-eyes-lob-1st-psa10", ownerId: "user-seto-kaiba", storeId: "store-kaiba-corp-cards", status: "pending", submittedAt: new Date(NOW.getTime() - 3600_000) },
   { id: "mod-video-dark-magician-unbox", mediaType: "video", mediaUrl: "/media/product-video-dark-magician-lob-20260518.mp4", entityType: "product", entityId: "product-dark-magician-lob-nm", ownerId: "user-seto-kaiba", storeId: "store-kaiba-corp-cards", status: "pending", submittedAt: new Date(NOW.getTime() - 7200_000) },
   { id: "mod-review-exodia", mediaType: "rich-text", entityType: "review", entityId: "review-exodia-head-yugi-20260510", ownerId: "user-yugi-muto", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
-  { id: "mod-image-kaiba-banner", mediaType: "image", mediaUrl: "/media/store-banner-kaiba-corp-cards-20260518.jpg", entityType: "storefront", entityId: "store-kaiba-corp-cards", ownerId: "user-seto-kaiba", storeId: "store-kaiba-corp-cards", status: "auto-approved", submittedAt: new Date(NOW.getTime() - 172800_000) },
+  { id: "mod-image-kaiba-banner", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/store-banner-kaiba-corp-cards-20260518/1600/400"), entityType: "storefront", entityId: "store-kaiba-corp-cards", ownerId: "user-seto-kaiba", storeId: "store-kaiba-corp-cards", status: "auto-approved", submittedAt: new Date(NOW.getTime() - 172800_000) },
   { id: "mod-blog-grading-guide", mediaType: "rich-text", entityType: "blog", entityId: "blog-how-to-grade-yugioh-cards", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 432000_000), submittedAt: new Date(NOW.getTime() - 438000_000) },
-  { id: "mod-event-cover-tournament", mediaType: "image", mediaUrl: "/media/event-cover-ygo-duel-championship-20260518.jpg", entityType: "event", entityId: "event-ygo-duel-championship-june-2026", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
+  { id: "mod-event-cover-tournament", mediaType: "image", mediaUrl: seedExtMedia("https://picsum.photos/seed/event-cover-ygo-duel-championship-20260518/1200/600"), entityType: "event", entityId: "event-ygo-duel-championship-june-2026", ownerId: "user-admin-letitrip", status: "approved", reviewerId: "user-admin-letitrip", reviewedAt: new Date(NOW.getTime() - 86400_000), submittedAt: new Date(NOW.getTime() - 90000_000) },
 ];
 
 // ───── reports (5 records) ────────────────────────────────────────────────
@@ -236,7 +237,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     category: "trading-cards",
     brand: "konami",
     maxBudgetInPaise: 25000000,
-    imageUrls: ["https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"],
+    imageUrls: [seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg")],
     status: "open",
     replyCount: 2,
     replies: [],
@@ -252,7 +253,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     category: "trading-cards",
     brand: "konami",
     maxBudgetInPaise: 15000000,
-    imageUrls: ["https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"],
+    imageUrls: [seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg")],
     status: "open",
     replyCount: 0,
     replies: [],
@@ -268,7 +269,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
     category: "trading-cards",
     brand: "konami",
     maxBudgetInPaise: 1500000,
-    imageUrls: ["https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"],
+    imageUrls: [seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg")],
     status: "fulfilled",
     replyCount: 4,
     replies: [],

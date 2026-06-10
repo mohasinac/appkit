@@ -247,6 +247,22 @@
         ".read": "auth != null && auth.token.bulkJobId == $jobId",
         ".write": false
       }
+    },
+
+    // ============================================================
+    // Seed Run Progress Channel — admin-only demo seed UI
+    // ============================================================
+    // POST /api/demo/seed/event/init creates the node, issues a custom
+    // token with { seedRunId: runId }. POST /api/demo/seed writes
+    // per-collection progress under /seed_events/{runId}/cols/{name}
+    // and overall meta under /seed_events/{runId}/meta as it runs.
+    // The SeedPanel subscribes for real-time updates.
+    // ============================================================
+    "seed_events": {
+      "$runId": {
+        ".read": "auth != null && auth.token.seedRunId == $runId",
+        ".write": false
+      }
     }
   }
 }

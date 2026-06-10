@@ -10,6 +10,7 @@
 import type { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTokens } from "../utils/search-tokens";
+import { seedExtMedia } from "./_helpers/media";
 
 function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
   return {
@@ -50,9 +51,9 @@ const _rawDigitalCodesSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 50,
     availableQuantity: 50,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.darkMagician}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.darkMagician}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.darkMagician}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.darkMagician}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",
@@ -86,9 +87,9 @@ const _rawDigitalCodesSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 25,
     availableQuantity: 25,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",
@@ -122,9 +123,9 @@ const _rawDigitalCodesSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 100,
     availableQuantity: 100,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-kaiba-corp-cards",
@@ -158,9 +159,9 @@ const _rawDigitalCodesSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 20,
     availableQuantity: 20,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.cyberDragon}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.cyberDragon}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.cyberDragon}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.cyberDragon}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-letitrip-official",
@@ -194,9 +195,9 @@ const _rawDigitalCodesSeedData: Partial<ProductDocument>[] = [
     currency: "INR",
     stockQuantity: 30,
     availableQuantity: 30,
-    mainImage: `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.obeliskTheTormentor}.jpg`,
+    mainImage: seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.obeliskTheTormentor}.jpg`),
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.obeliskTheTormentor}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.obeliskTheTormentor}.jpg`),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeId: "store-kaiba-corp-cards",

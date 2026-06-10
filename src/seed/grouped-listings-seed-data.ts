@@ -15,6 +15,7 @@
 
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
+import { seedExtMedia } from "./_helpers/media";
 
 // Card ID mappings for YGOPRODECK image API
 const CARD_IDS = {
@@ -44,7 +45,7 @@ const _rawGroupedListingsSeedData: Partial<ProductDocument>[] = [
     listingType: "standard" as const,
     categorySlugs: ["category-booster-boxes", "category-sealed-products"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     ],
 
     stockQuantity: 1,
@@ -93,7 +94,7 @@ const _rawGroupedListingsSeedData: Partial<ProductDocument>[] = [
     listingType: "standard" as const,
     categorySlugs: ["category-starter-structure", "category-sealed-products"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.kaibaTin}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.kaibaTin}.jpg`),
     ],
 
     stockQuantity: 3,
@@ -143,7 +144,7 @@ const _rawGroupedListingsSeedData: Partial<ProductDocument>[] = [
     listingType: "standard" as const,
     categorySlugs: ["category-booster-boxes", "category-sealed-products"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     ],
 
     stockQuantity: 2,

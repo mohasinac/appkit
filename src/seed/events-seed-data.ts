@@ -19,6 +19,7 @@ import type {
   EventEntryDocument,
 } from "../features/events/schemas";
 import { EVENT_FIELDS, EVENT_ENTRY_FIELDS } from "../features/events/schemas";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -35,7 +36,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(5),
     endsAt: daysAhead(10),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg", alt: "Dark Magician — Yugi's ace" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"), alt: "Dark Magician — Yugi's ace" },
     tags: ["poll", "duel-monsters", "season-1"],
     pollConfig: {
       options: [
@@ -65,7 +66,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
     endsAt: daysAhead(14),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg", alt: "Blue-Eyes White Dragon" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"), alt: "Blue-Eyes White Dragon" },
     tags: ["survey", "card-storage", "community"],
     surveyConfig: {
       requireLogin: true,
@@ -95,7 +96,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(2),
     endsAt: daysAhead(7),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/55144522.jpg", alt: "Pot of Greed" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/55144522.jpg"), alt: "Pot of Greed" },
     tags: ["sale", "clearance", "duel-monsters", "singles"],
     saleConfig: {
       discountPercent: 20,
@@ -118,7 +119,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
     endsAt: daysAhead(14),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg", alt: "Dark Magician Girl" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg"), alt: "Dark Magician Girl" },
     tags: ["raffle", "psa-10", "dark-magician-girl", "giveaway"],
     hasRaffle: true,
     raffleType: "open_raffle",
@@ -140,7 +141,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(7),
     endsAt: daysAhead(23),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/40640057.jpg", alt: "Kuriboh" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/40640057.jpg"), alt: "Kuriboh" },
     tags: ["spin-wheel", "daily", "prizes", "coupons"],
     spinPrizes: [
       { id: "spin-10pct", label: "10% Off Coupon", couponId: "coupon-yugi10", weight: 15, isActive: true },
@@ -167,7 +168,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(10),
     endsAt: daysAhead(20),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/89943723.jpg", alt: "Elemental HERO Neos" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89943723.jpg"), alt: "Elemental HERO Neos" },
     tags: ["feedback", "gx-era", "community"],
     feedbackConfig: {
       formFields: [
@@ -192,7 +193,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
     startsAt: daysAhead(5),
     endsAt: daysAhead(20),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/83764718.jpg", alt: "Monster Reborn" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/83764718.jpg"), alt: "Monster Reborn" },
     tags: ["offer", "buy-3-get-1", "singles", "upcoming"],
     offerConfig: {
       couponId: "coupon-buy3get1",
@@ -215,7 +216,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
     startsAt: daysAgo(30),
     endsAt: daysAgo(5),
-    coverImage: { type: "image", url: "https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg", alt: "Blue-Eyes White Dragon" },
+    coverImage: { type: "image", url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"), alt: "Blue-Eyes White Dragon" },
     tags: ["raffle", "lob", "1st-edition", "ended", "winner"],
     hasRaffle: true,
     raffleType: "open_raffle",

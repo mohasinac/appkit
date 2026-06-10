@@ -14,6 +14,7 @@ import type {
 } from "../features/products/schemas";
 import { PRODUCT_FIELDS, SCHEMA_DEFAULTS } from "../constants/field-names";
 import { buildSearchTokens } from "../utils/search-tokens";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -36,10 +37,10 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 50,
     availableQuantity: 50,
     mainImage:
-      "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop"),
     images: [
-      "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop"),
+      seedExtMedia("https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop"),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
@@ -92,10 +93,10 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 100,
     availableQuantity: 100,
     mainImage:
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=800&fit=crop"),
     images: [
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=800&fit=crop",
+      seedExtMedia("https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=800&fit=crop"),
+      seedExtMedia("https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=800&fit=crop"),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Diecast Depot",
@@ -139,7 +140,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       title: "Charizard-themed Elite Trainer Box (sealed)",
       description: "Scarlet & Violet 151 ETB featuring Charizard art.",
       images: [
-        "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 549900,
@@ -149,7 +150,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 2,
       title: "PSA 9 Base Set Blastoise Holo (#2/102)",
       images: [
-        "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&h=600&fit=crop"),
       ],
       condition: "graded",
       estimatedValue: 1249900,
@@ -159,7 +160,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 3,
       title: "Pokémon 151 Booster Bundle (6 packs)",
       images: [
-        "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 199900,
@@ -169,7 +170,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 4,
       title: "Pikachu V-UNION Special Collection",
       images: [
-        "https://images.unsplash.com/photo-1628968434441-d9c61d543a91?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1628968434441-d9c61d543a91?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 299900,
@@ -179,7 +180,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 5,
       title: "Mewtwo VSTAR Premium Collection",
       images: [
-        "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 249900,
@@ -189,7 +190,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 6,
       title: "Paldean Fates 3-Pack Tin",
       images: [
-        "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 99900,
@@ -199,7 +200,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 7,
       title: "Eevee Heroes Booster Box (Japanese)",
       images: [
-        "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 1999900,
@@ -209,7 +210,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 8,
       title: "Ancient Mew Promo Card (sealed)",
       images: [
-        "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 79900,
@@ -219,7 +220,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       itemNumber: 9,
       title: "Pokémon Center Plush — Snorlax",
       images: [
-        "https://images.unsplash.com/photo-1542779283-5a86fe9aab09?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1542779283-5a86fe9aab09?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 449900,
@@ -230,7 +231,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       title: "Mystery Holo Lot — 10 cards",
       description: "10 random holographic rares from various sets.",
       images: [
-        "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
       estimatedValue: 149900,
@@ -245,7 +246,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 1,
       title: "1969 Volkswagen Squareback STH",
       images: [
-        "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 899900,
@@ -255,7 +256,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 2,
       title: "Datsun 510 STH (Mountain Metal)",
       images: [
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 499900,
@@ -265,7 +266,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 3,
       title: "Custom Mustang STH",
       images: [
-        "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 599900,
@@ -275,7 +276,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 4,
       title: "Porsche 935 STH (Mountain Metal)",
       images: [
-        "https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 449900,
@@ -285,7 +286,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 5,
       title: "Nissan Skyline GT-R (R32) STH",
       images: [
-        "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 699900,
@@ -295,7 +296,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 6,
       title: "'71 Datsun Bluebird 510 Wagon STH",
       images: [
-        "https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 549900,
@@ -305,7 +306,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 7,
       title: "Toyota AE86 Sprinter Trueno STH",
       images: [
-        "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 799900,
@@ -315,7 +316,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       itemNumber: 8,
       title: "Mazda RX-7 STH (FD)",
       images: [
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop",
+        seedExtMedia("https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop"),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 649900,

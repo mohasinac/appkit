@@ -19,6 +19,7 @@ const _phonePrefix = getDefaultPhonePrefix();
 const _locale = getSeedLocale();
 
 import type { SiteSettingsDocument } from "../features/admin/schemas";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -169,7 +170,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
       "pre-order konami",
       "duel monsters cards",
     ],
-    ogImage: "https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg",
+    ogImage: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"),
   },
   features: [
     {
@@ -333,7 +334,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     placements: adPlacementsSeed,
     providerCredentials: {
       adsenseClientId: "ca-pub-0000000000000000",
-      thirdPartyScriptUrl: "https://cdn.example-ads.com/ad-runtime.js",
+      thirdPartyScriptUrl: seedExtMedia("https://cdn.example-ads.com/ad-runtime.js"),
     },
     inventory: [
       {
@@ -350,7 +351,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
         creative: {
           title: "LOB 1st Edition Mega Drop",
           body: "Limited Legend of Blue Eyes singles and sealed packs — this weekend only.",
-          imageUrl: "https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg",
+          imageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"),
           ctaLabel: "Explore Deals",
           ctaHref: "/promotions/deals",
         },
@@ -369,7 +370,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
         creative: {
           title: "Graded Slab Auctions",
           body: "PSA 10 Blue-Eyes and Dark Magician auctions ending this week.",
-          imageUrl: "https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg",
+          imageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"),
           ctaLabel: "View Auctions",
           ctaHref: "/auctions",
         },
@@ -390,7 +391,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
         creative: {
           title: "Complete Your Exodia",
           body: "All 5 Forbidden One pieces available — LOB to modern reprints.",
-          imageUrl: "https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg",
+          imageUrl: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
           ctaLabel: "Browse Exodia",
           ctaHref: "/products?q=exodia",
         },

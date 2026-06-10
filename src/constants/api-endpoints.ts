@@ -520,6 +520,7 @@ export const BEFORE_AFTER_ENDPOINTS = {
 
 export const DEMO_ENDPOINTS = {
   SEED: "/api/demo/seed",
+  SEED_EVENT_INIT: "/api/demo/seed/event/init",
 } as const;
 
 // ---------------------------------------------------------------------------

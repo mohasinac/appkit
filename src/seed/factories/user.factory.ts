@@ -1,5 +1,6 @@
 // appkit/src/seed/factories/user.factory.ts
 import { getSeedLocale, pick } from "../seed-market-config";
+import { seedExtMedia } from "../_helpers/media";
 
 let _seq = 1;
 
@@ -43,7 +44,7 @@ export function makeFullUser(
   overrides: Partial<SeedBaseUserDocument> = {},
 ): SeedBaseUserDocument {
   return makeUser({
-    photoURL: "https://example.com/avatar.jpg",
+    photoURL: seedExtMedia("https://example.com/avatar.jpg"),
     emailVerified: true,
     ...overrides,
   });

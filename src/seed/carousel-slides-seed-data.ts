@@ -14,6 +14,7 @@
  */
 
 import type { CarouselSlideDocument } from "../features/homepage/schemas";
+import { seedExtMedia } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -26,7 +27,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: "https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg",
+      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     settings: { autoplayDelayMs: 5000, height: "tall" },
@@ -41,7 +42,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: "https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg",
+      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
     link: { url: "/auctions", openInNewTab: false },
@@ -57,7 +58,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: "https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg",
+      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
       dimOverlay: { enabled: true, opacity: 0.45 },
     },
     link: { url: "/products?q=exodia", openInNewTab: false },
@@ -73,7 +74,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: "https://images.ygoprodeck.com/images/cards/cropped/89943723.jpg",
+      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89943723.jpg"),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
     link: { url: "/pre-orders", openInNewTab: false },
@@ -89,7 +90,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: true,
     background: {
       type: "image",
-      url: "https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg",
+      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg"),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     link: { url: "/categories/category-graded-cards", openInNewTab: false },
@@ -105,7 +106,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: false,
     background: {
       type: "image",
-      url: "https://images.ygoprodeck.com/images/cards/cropped/83764718.jpg",
+      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/83764718.jpg"),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     settings: { autoplayDelayMs: 5000, height: "tall" },

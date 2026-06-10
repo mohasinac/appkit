@@ -9,4 +9,5 @@ export const RTDB_PATHS = {
   AUTH_EVENTS: "auth_events",
   PAYMENT_EVENTS: "payment_events",
   BULK_EVENTS: "bulk_events",
+  SEED_EVENTS: "seed_events",
 } as const;

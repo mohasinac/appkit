@@ -1,6 +1,7 @@
 "use client"
 import { useRef, useEffect } from "react";
 import { Div, Span } from "../../ui";
+import { resolveMediaUrl } from "../../utils/media-url";
 
 export interface MediaVideoProps {
   /** Video URL. When undefined the fallback placeholder is rendered. */
@@ -36,6 +37,8 @@ export function MediaVideo({
 }: MediaVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
+  const resolvedSrc = resolveMediaUrl(src);
+  const resolvedPoster = resolveMediaUrl(thumbnailUrl);
 
   // Apply trimStart on load
   useEffect(() => {
@@ -62,7 +65,7 @@ export function MediaVideo({
     return () => el.removeEventListener("timeupdate", onTimeUpdate);
   }, [trimEnd, trimStart]);
 
-  if (!src) {
+  if (!resolvedSrc) {
     return (
       <Div
         className="absolute inset-0 flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl"
@@ -77,8 +80,8 @@ export function MediaVideo({
   return (
     <video
       ref={videoRef}
-      src={src}
-      poster={thumbnailUrl}
+      src={resolvedSrc}
+      poster={resolvedPoster}
       controls={controls}
       autoPlay={autoPlayMuted}
       muted={autoPlayMuted}

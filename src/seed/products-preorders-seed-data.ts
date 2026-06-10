@@ -16,6 +16,7 @@
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTokens } from "../utils/search-tokens";
+import { seedExtMedia } from "./_helpers/media";
 
 // Card ID mappings for YGOPRODECK image API
 const CARD_IDS = {
@@ -40,7 +41,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     listingType: "pre-order" as const,
     categorySlugs: ["category-sealed-products", "category-booster-boxes"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     ],
     isSold: false,
     availableQuantity: 1,
@@ -73,7 +74,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     listingType: "pre-order" as const,
     categorySlugs: ["category-sealed-products", "category-booster-packs"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`),
     ],
     isSold: false,
     availableQuantity: 1,
@@ -106,7 +107,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     listingType: "pre-order" as const,
     categorySlugs: ["category-sealed-products", "category-collector-tins"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.blueEyesWhiteDragon}.jpg`),
     ],
     isSold: false,
     availableQuantity: 1,
@@ -139,7 +140,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     listingType: "pre-order" as const,
     categorySlugs: ["category-sealed-products", "category-starter-structure"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.darkMagician}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.darkMagician}.jpg`),
     ],
     isSold: false,
     availableQuantity: 1,
@@ -172,7 +173,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     listingType: "pre-order" as const,
     categorySlugs: ["category-sealed-products", "category-booster-boxes"],
     images: [
-      `https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`,
+      seedExtMedia(`https://images.ygoprodeck.com/images/cards/cropped/${CARD_IDS.elementalHeroNeos}.jpg`),
     ],
     isSold: false,
     availableQuantity: 1,
