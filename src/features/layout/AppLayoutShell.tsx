@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// QueryClientProvider intentionally NOT imported here — see the comment in the
+// component body. The consumer-level QueryProvider owns the QueryClient.
 import {
   Main,
   Div,
@@ -590,7 +591,11 @@ export function AppLayoutShell({
   lightBackground = DEFAULT_LIGHT_BG,
   darkBackground = DEFAULT_DARK_BG,
 }: AppLayoutShellProps) {
-  const [queryClient] = useState(() => new QueryClient());
+  // QueryClientProvider used to be created here so AppLayoutShell could stand
+  // alone, but the consumer's QueryProvider wraps the entire app and nesting a
+  // second QueryClientProvider risks splitting QueryClientContext across
+  // Turbopack chunks → "No QueryClient set" on every SSR route. Rely on the
+  // outer consumer-supplied QueryClient instead.
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -671,7 +676,7 @@ export function AppLayoutShell({
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <Div className="flex min-h-screen w-full flex-col overflow-x-clip transition-colors duration-300">
         <BackgroundRenderer
           mode={theme === "dark" ? "dark" : "light"}
@@ -757,6 +762,6 @@ export function AppLayoutShell({
         />
         <UnsavedChangesModal />
       </Div>
-    </QueryClientProvider>
+    </>
   );
 }
