@@ -1,5 +1,6 @@
 import React from "react";
 import { Div } from "../../../ui";
+import { Skeleton } from "../../../ui/components/Skeleton";
 
 export interface EventParticipateViewProps {
   isLoading?: boolean;
@@ -32,7 +33,13 @@ export function EventParticipateView({
 }: EventParticipateViewProps) {
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
-    return <Div className="flex justify-center py-20">Loading…</Div>;
+    return (
+      <Div className="max-w-xl mx-auto space-y-4 py-6">
+        <Skeleton variant="rectangular" height="32px" />
+        <Skeleton variant="rectangular" height="80px" />
+        <Skeleton variant="rectangular" height="48px" />
+      </Div>
+    );
   }
 
   if (renderAuthGate) return <>{renderAuthGate()}</>;
