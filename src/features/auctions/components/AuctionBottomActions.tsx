@@ -2,7 +2,7 @@
 
 import { useBottomActions } from "../../layout/hooks/useBottomActions";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { ACTION_ID } from "../../products/constants/action-defs";
+import { ACTION_ID, ACTION_META } from "../../products/constants/action-defs";
 
 export interface AuctionBottomActionsProps {
   currentBid: number;
@@ -17,15 +17,14 @@ export function AuctionBottomActions({
   bidCount,
   isEnded,
 }: AuctionBottomActionsProps) {
+  const placeBidMeta = ACTION_META[ACTION_ID.PLACE_BID];
   useBottomActions(
     isEnded
       ? {}
       : {
           actions: [
             {
-              id: ACTION_ID.PLACE_BID,
-              label: "Place Bid",
-              variant: "primary",
+              ...placeBidMeta,
               onClick: () => {
                 document
                   .getElementById("auction-bid-form")
