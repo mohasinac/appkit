@@ -52,12 +52,12 @@ export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "
   embedded?: boolean;
 }
 
-const CLS_REMOVE_BTN = "text-zinc-400 hover:text-red-500 transition-colors text-lg leading-none px-1 p-0 min-h-0 h-auto rounded-none";
-const CLS_REMOVE_BTN_PX2 = "text-zinc-400 hover:text-red-500 transition-colors px-2 py-1 text-lg leading-none p-0 min-h-0 h-auto rounded-none";
-const CLS_REMOVE_BTN_LG = "text-zinc-400 hover:text-red-500 text-lg leading-none px-2 p-0 min-h-0 h-auto rounded-none";
-const CLS_RAFFLE_PANEL = "border border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/20";
-const CLS_RAFFLE_HEADING = "text-amber-900 dark:text-amber-100";
-const CLS_RAFFLE_BODY = "text-amber-800 dark:text-amber-200";
+const CLS_REMOVE_BTN = "text-zinc-400 hover:text-error transition-colors text-lg leading-none px-1 p-0 min-h-0 h-auto rounded-none";
+const CLS_REMOVE_BTN_PX2 = "text-zinc-400 hover:text-error transition-colors px-2 py-1 text-lg leading-none p-0 min-h-0 h-auto rounded-none";
+const CLS_REMOVE_BTN_LG = "text-zinc-400 hover:text-error text-lg leading-none px-2 p-0 min-h-0 h-auto rounded-none";
+const CLS_RAFFLE_PANEL = "border border-warning bg-warning-surface dark:border-warning dark:bg-warning-surface";
+const CLS_RAFFLE_HEADING = "text-warning dark:text-warning";
+const CLS_RAFFLE_BODY = "text-warning dark:text-warning";
 
 const EVENT_TYPE_OPTIONS = [
   { label: "Sale", value: "sale" },

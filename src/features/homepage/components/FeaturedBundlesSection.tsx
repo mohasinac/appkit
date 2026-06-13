@@ -106,7 +106,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
       <Link href={href} className="group block p-3 hover:no-underline">
         <Div className={`mb-2 aspect-square ${__O.hidden} rounded-lg bg-zinc-100 dark:bg-zinc-800`}>
           {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={cover}
               alt={bundle.name}

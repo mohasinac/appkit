@@ -6,7 +6,7 @@ import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../../seller/schemas";
 
-const CLS_COUNTER_AMOUNT = "text-sm font-semibold text-blue-600 dark:text-blue-400";
+const CLS_COUNTER_AMOUNT = "text-sm font-semibold text-info dark:text-info";
 
 export interface UserOffersPanelProps {
   fetchEndpoint?: string;

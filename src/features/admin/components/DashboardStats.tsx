@@ -16,9 +16,9 @@ const __O = {
 } as const;
 
 // Brand gradient stop colors (mirrors SiteLogo wordmark gradient)
-const BRAND_FROM = "var(--appkit-color-primary-700, #1343de)";
-const BRAND_MID  = "var(--appkit-color-cobalt, #3570fc)";
-const BRAND_TO   = "var(--appkit-color-secondary-400, #84e122)";
+const BRAND_FROM = "var(--appkit-color-primary-700)";
+const BRAND_MID  = "var(--appkit-color-cobalt)";
+const BRAND_TO   = "var(--appkit-color-secondary-400)";
 
 interface StatCardProps {
   label: string;

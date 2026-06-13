@@ -58,7 +58,7 @@ function ToggleRow({
           "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent",
           "transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2",
           "focus-visible:ring-[var(--appkit-color-primary)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          checked ? "bg-[var(--appkit-color-primary)]" : "bg-[var(--appkit-color-border-strong,#a1a1aa)]",
+          checked ? "bg-[var(--appkit-color-primary)]" : "bg-[var(--appkit-color-text-faint)]",
         ].join(" ")}
       >
         <span
@@ -238,7 +238,7 @@ export function NotificationPreferencesPanel({
 
       <Row justify="end" gap="sm">
         {saved && (
-          <Text className="text-sm text-[var(--appkit-color-success,#16a34a)] self-center">
+          <Text className="text-sm text-[var(--appkit-color-success)] self-center">
             Preferences saved ✓
           </Text>
         )}

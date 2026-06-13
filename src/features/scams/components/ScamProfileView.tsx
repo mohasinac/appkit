@@ -36,6 +36,7 @@ import {
   Breadcrumb,
   EmptyState,
 } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import type {
   ScammerDocument,
   ScammerIncidentDocument,
@@ -495,10 +496,8 @@ export function ScamProfileView({
                   <Heading level={2} className="text-base font-semibold">Evidence</Heading>
                   <Row gap="sm" wrap>
                     {scammer.evidence.map((url, i) => (
-                      <a key={i} href={url} target="_blank" rel="noopener noreferrer">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt={`Evidence ${i + 1}`}
-                          className="h-32 w-auto rounded-lg border object-cover shadow-sm hover:opacity-90" />
+                      <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block h-32 w-32 rounded-lg overflow-hidden border shadow-sm hover:opacity-90">
+                        <MediaImage src={url} alt={`Evidence ${i + 1}`} size="thumbnail" />
                       </a>
                     ))}
                   </Row>

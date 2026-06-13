@@ -42,7 +42,7 @@ export function Checkbox({
               "peer w-5 h-5 rounded-md border-2 cursor-pointer",
               "transition-all duration-200 appearance-none",
               error
-                ? "border-red-400 dark:border-red-500"
+                ? "border-error dark:border-error"
                 : "border-zinc-300 dark:border-slate-600",
               "checked:bg-primary-600 checked:border-primary-600",
               "dark:checked:bg-secondary-500 dark:checked:border-secondary-500",

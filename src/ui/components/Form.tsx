@@ -1,8 +1,22 @@
+"use client";
 import React from "react";
 import { Row } from "./Layout";
+import {
+  FormShellContext,
+  useFormShellState,
+  type UseFormShellStateResult,
+} from "../forms/FormShell";
 
-export interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
-  children: React.ReactNode;
+export interface FormProps
+  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "children"> {
+  /**
+   * Either a React node or a render function that receives the FormShell
+   * helpers. Use the function form when the submit handler needs to surface
+   * server-side errors inline on a `<FieldInput>` via `setFieldError`.
+   */
+  children:
+    | React.ReactNode
+    | ((helpers: UseFormShellStateResult) => React.ReactNode);
 }
 
 export type GapToken = "none" | "xs" | "sm" | "md" | "lg" | "xl";
@@ -17,16 +31,38 @@ const GAP_MAP: Record<GapToken, string> = {
 };
 
 /**
- * Semantic `<form>` wrapper. Passes all standard form attributes through.
+ * Canonical `<Form>` wrapper. Mounts `FormShellContext.Provider` so child
+ * `<FieldInput>` / `<FieldSelect>` / `<FieldTextarea>` / `<FieldCheckbox>`
+ * surface errors inline without any extra wiring.
+ *
+ * For wizard-style multi-step forms with auto-save, draft, publish — use
+ * `<FormShell steps={...}>` instead.
+ *
+ * Example:
+ *   <Form onSubmit={onSubmit}>
+ *     {({ setFieldError }) => (
+ *       <>
+ *         <FieldInput name="email" label="Email" required />
+ *         <Button type="submit">Sign in</Button>
+ *       </>
+ *     )}
+ *   </Form>
  */
 export function Form({ children, className = "", ...props }: FormProps) {
+  const helpers = useFormShellState();
+  const content =
+    typeof children === "function"
+      ? (children as (h: UseFormShellStateResult) => React.ReactNode)(helpers)
+      : children;
   return (
-    <form
-      className={["appkit-form", className].filter(Boolean).join(" ")}
-      {...props}
-    >
-      {children}
-    </form>
+    <FormShellContext.Provider value={helpers.shellCtx}>
+      <form
+        className={["appkit-form", className].filter(Boolean).join(" ")}
+        {...props}
+      >
+        {content}
+      </form>
+    </FormShellContext.Provider>
   );
 }
 

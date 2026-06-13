@@ -10,10 +10,10 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
-const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-amber-500 px-2 py-0.5 text-white";
-const CLS_SALE_BADGE = "rounded-full bg-teal-600 px-2 py-0.5 text-xs font-bold text-white";
+const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-surface px-2 py-0.5 text-white";
+const CLS_SALE_BADGE = "rounded-full bg-success-surface px-2 py-0.5 text-xs font-bold text-white";
 const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white";
-const CLS_LIMITED_BADGE = "rounded-full bg-sky-600 px-2 py-0.5 text-xs font-bold text-white";
+const CLS_LIMITED_BADGE = "rounded-full bg-info-surface px-2 py-0.5 text-xs font-bold text-white";
 import {
   BaseListingCard,
   Button,

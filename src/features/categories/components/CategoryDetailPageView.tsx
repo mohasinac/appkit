@@ -189,7 +189,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             )}
             {auctionCount > 0 && (
               <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${
-                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning"
               }`}>
                 {auctionCount.toLocaleString()} {auctionCount === 1 ? "auction" : "auctions"}
               </Span>
@@ -203,7 +203,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             )}
             {storeCount > 0 && (
               <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${
-                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success"
               }`}>
                 {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
               </Span>

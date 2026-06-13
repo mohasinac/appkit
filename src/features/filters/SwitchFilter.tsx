@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Div, Row, Span, Text, Toggle } from "../../ui";
 import { cn } from "./filterUtils";
 
-const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 rounded-full transition-colors";
+const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error rounded-full transition-colors";
 
 export interface SwitchFilterProps {
   title: string;

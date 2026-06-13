@@ -132,7 +132,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
 
   const cardClass =
     layout === "carousel"
-      ? "flex-shrink-0 w-48 sm:w-56 snap-start"
+      ? "flex-shrink-0 w-[85%] sm:w-56 snap-start"
       : layout === "masonry"
         ? "break-inside-avoid"
         : "";

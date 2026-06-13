@@ -34,9 +34,9 @@ export interface EventRaffleWinnerViewProps {
   };
 }
 
-const CLS_PANEL = "rounded-2xl border border-amber-200 bg-amber-50/60 dark:border-amber-700 dark:bg-amber-900/20 p-6 space-y-3";
-const CLS_LABEL = "text-xs uppercase tracking-wide text-amber-700 dark:text-amber-300";
-const CLS_WINNER_NAME = "mt-1 text-2xl font-bold text-amber-900 dark:text-amber-100";
+const CLS_PANEL = "rounded-2xl border border-warning bg-warning-surface/60 dark:border-warning dark:bg-warning-surface p-6 space-y-3";
+const CLS_LABEL = "text-xs uppercase tracking-wide text-warning dark:text-warning";
+const CLS_WINNER_NAME = "mt-1 text-2xl font-bold text-warning dark:text-warning";
 
 const DEFAULT_LABELS: Required<NonNullable<EventRaffleWinnerViewProps["labels"]>> = {
   heading: "Raffle Winner",

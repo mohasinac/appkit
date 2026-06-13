@@ -31,10 +31,10 @@ function randomId() {
 const CLS_STEP = "space-y-4 rounded-lg border-2 p-6";
 const CLS_IMG_WRAP = "relative w-full overflow-hidden rounded-lg";
 const CLS_INPUT = "rounded border-2 px-3 py-2 text-sm outline-none";
-const CLS_ERROR_BANNER = "rounded border border-red-200 bg-red-50 px-4 py-2 text-sm font-bold text-red-600";
-const CLS_SUCCESS_BANNER = "rounded border border-green-200 bg-green-50 px-4 py-2 text-sm font-bold text-green-700";
-const CLS_SUCCESS_TEXT = "text-xs font-medium text-green-700";
-const CLS_DELETE_PIN = "shrink-0 rounded p-1 text-xs text-red-500 hover:bg-red-50";
+const CLS_ERROR_BANNER = "rounded border border-error bg-error-surface px-4 py-2 text-sm font-bold text-error";
+const CLS_SUCCESS_BANNER = "rounded border border-success bg-success-surface px-4 py-2 text-sm font-bold text-success";
+const CLS_SUCCESS_TEXT = "text-xs font-medium text-success";
+const CLS_DELETE_PIN = "shrink-0 rounded p-1 text-xs text-error hover:bg-error-surface";
 const STY_BORDER_INK = "2px solid var(--border-ink)";
 const STY_CENTERED = "translate(-50%, -50%)";
 

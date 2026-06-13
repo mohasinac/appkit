@@ -206,37 +206,6 @@ export const usersSeedData: Partial<UserDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── Seller: Ravi (Diecast Depot owner) ──────────────────────────────────────
-  {
-    uid: "user-ravi-diecast",
-    email: "ravi@diecastdepot.in",
-    phoneNumber: `${_ph}9999900005`,
-    phoneVerified: true,
-    displayName: "Ravi Kumar",
-    photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-ravi-kumar-20260101/400/400"),
-    role: USER_FIELDS.ROLE_VALUES.SELLER,
-    emailVerified: true,
-    disabled: false,
-    storeId: "store-diecast-depot",
-    storeSlug: "store-diecast-depot",
-    storeStatus: "approved",
-    publicProfile: {
-      isPublic: true,
-      showEmail: false,
-      showPhone: false,
-      showOrders: false,
-      showWishlist: false,
-      bio: "Hot Wheels collector since 1998. Over 5,000 diecast in my personal collection.",
-      location: "Delhi, NCR",
-      storeName: "Diecast Depot",
-      storeCategory: "diecast-vehicles",
-    },
-    stats: { totalOrders: 8, auctionsWon: 2, itemsSold: 340, reviewsCount: 12 },
-    metadata: { lastSignInTime: daysAgo(2), creationTime: daysAgo(250).toISOString(), loginCount: 150 },
-    createdAt: daysAgo(250),
-    updatedAt: daysAgo(2),
-  },
-
   // ── Seller: Tyson (Beyblade Arena owner) ────────────────────────────────────
   {
     uid: "user-tyson-blader",

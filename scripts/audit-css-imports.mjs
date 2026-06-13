@@ -59,11 +59,6 @@ if (violations.length === 0) {
   process.exit(0);
 }
 
-if (violations.length <= BASELINE) {
-  console.log(`audit-css-imports: ${violations.length} (baseline ${BASELINE}). No regression.`);
-  process.exit(0);
-}
-
 const out = [`audit-css-imports: ${violations.length} CSS @import of node_modules .\n`];
 out.push("Turbopack inlines @import before PostCSS — breaks tailwindcss + autoprefixer.");
 out.push("Fix: import the package CSS via JS in layout.tsx instead:");

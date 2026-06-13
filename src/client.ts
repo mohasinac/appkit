@@ -44,6 +44,7 @@ export { FilterDrawer } from "./ui/components/FilterDrawer";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // Modal - Component for modal.
 export { Modal } from "./ui/components/Modal";
+export { Form } from "./ui/components/Form";
 export { QuickCreateModal } from "./ui/components/QuickCreateModal";
 export type { QuickCreateModalProps } from "./ui/components/QuickCreateModal";
 export { VacationBanner } from "./ui/components/VacationBanner";

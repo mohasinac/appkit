@@ -8,7 +8,7 @@ export function AdminAnalyticsGuideView() {
     <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
       <Section>
         <Div className="flex items-center gap-3 mb-2">
-          <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700,#4f46e5) 0%,var(--appkit-color-cobalt,#2563eb) 100%)" }}>
+          <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <BarChart2 className="w-5 h-5 text-white" />
           </Div>
           <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>

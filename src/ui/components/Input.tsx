@@ -2,8 +2,8 @@ import React from "react";
 import { Div } from "./Div";
 import { Label, Text } from "./Typography";
 
-const CLS_INPUT_ERROR = "border-red-400 focus-visible:border-red-500 focus-visible:ring-red-500/20 dark:border-red-500";
-const CLS_INPUT_SUCCESS_ICON = "h-4 w-4 text-green-600 dark:text-green-400";
+const CLS_INPUT_ERROR = "border-error focus-visible:border-error focus-visible:ring-error/20 dark:border-error";
+const CLS_INPUT_SUCCESS_ICON = "h-4 w-4 text-success dark:text-success";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;

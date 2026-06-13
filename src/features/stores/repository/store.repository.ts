@@ -291,7 +291,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     const available = await this.isSlugAvailable(newSlug);
     if (!available) throw new DatabaseError(`Slug "${newSlug}" is already taken`);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     const { id: _id, ...data } = existing;
     const newDoc: Omit<StoreDocument, "id"> = {
       ...data,

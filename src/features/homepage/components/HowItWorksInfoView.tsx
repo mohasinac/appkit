@@ -9,7 +9,7 @@ export interface HowItWorksInfoStep {
   icon: string;
   title: string;
   text: string;
-  /** Optional accent colour class for the step number badge, e.g. "bg-emerald-100 …" */
+  /** Optional accent colour class for the step number badge, e.g. "bg-success-surface …" */
   accentClass?: string;
   /** Optional text colour class for the number */
   textClass?: string;
@@ -53,7 +53,7 @@ export function HowItWorksInfoView({
   details = [],
   renderDiagram,
   renderFooter,
-  accentClass = "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400",
+  accentClass = "bg-info-surface dark:bg-info-surface text-info dark:text-info",
   className = "",
 }: HowItWorksInfoViewProps) {
   const { themed, flex, spacing } = THEME_CONSTANTS;

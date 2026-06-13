@@ -106,7 +106,7 @@ function CapabilityTable() {
                     <td className="px-6 py-2 text-[var(--appkit-color-text-muted)] align-top">{unlocks}</td>
                     <td className="px-6 py-2 align-top">
                       {defaultOn ? (
-                        <span className="inline-block rounded-full bg-[var(--appkit-color-success,#16a34a)]/10 text-[var(--appkit-color-success,#16a34a)] text-xs px-2 py-0.5 font-medium">On</span>
+                        <span className="inline-block rounded-full bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)] text-xs px-2 py-0.5 font-medium">On</span>
                       ) : (
                         <span className="inline-block rounded-full bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] text-xs px-2 py-0.5 font-medium">Off</span>
                       )}
@@ -165,7 +165,7 @@ function LockedFeatureGuide() {
           <Div className="flex items-center gap-2">
             <Text className="font-mono text-sm font-semibold text-[var(--appkit-color-text)]">{cap}</Text>
             {contractRequired && (
-              <span className="inline-block rounded-full bg-[var(--appkit-color-warning,#ca8a04)]/10 text-[var(--appkit-color-warning,#ca8a04)] text-xs px-2 py-0.5 font-medium">Requires agreement</span>
+              <span className="inline-block rounded-full bg-[var(--appkit-color-warning)]/10 text-[var(--appkit-color-warning)] text-xs px-2 py-0.5 font-medium">Requires agreement</span>
             )}
           </Div>
           <Div>

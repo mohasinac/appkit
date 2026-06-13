@@ -33,9 +33,9 @@ const __O = {
  */
 export type MediaUploadFieldKind = "image" | "video" | "pdf" | "auto";
 
-const CLS_PDF_BADGE = "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300";
-const CLS_PDF_NAME = "text-sm font-medium text-blue-600 underline break-all dark:text-blue-400";
-const CLS_PDF_LINK = "text-sm underline break-all text-blue-600 dark:text-blue-400";
+const CLS_PDF_BADGE = "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-error-surface text-error dark:bg-error-surface dark:text-error";
+const CLS_PDF_NAME = "text-sm font-medium text-info underline break-all dark:text-info";
+const CLS_PDF_LINK = "text-sm underline break-all text-info dark:text-info";
 
 const KIND_DEFAULTS: Record<
   Exclude<MediaUploadFieldKind, "auto">,

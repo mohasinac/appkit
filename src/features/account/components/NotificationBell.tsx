@@ -66,8 +66,8 @@ export interface NotificationBellProps {
   hideOnMobile?: boolean;
 }
 
-const CLS_UNREAD_BADGE = "absolute -top-1 -right-1 bg-red-500 text-white min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full shadow-md";
-const CLS_UNREAD_PILL = "ml-2 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full";
+const CLS_UNREAD_BADGE = "absolute -top-1 -right-1 bg-error-surface text-white min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full shadow-md";
+const CLS_UNREAD_PILL = "ml-2 bg-error-surface text-error dark:bg-error-surface dark:text-error px-2 py-0.5 rounded-full";
 
 const DEFAULT_ICONS: Record<string, string> = {
   order_placed: "🛍️",

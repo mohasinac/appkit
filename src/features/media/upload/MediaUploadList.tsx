@@ -9,7 +9,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_PDF_LINK = "text-sm underline break-all text-blue-600 dark:text-blue-400";
+const CLS_PDF_LINK = "text-sm underline break-all text-info dark:text-info";
 
 export interface MediaUploadListProps {
   label: string;

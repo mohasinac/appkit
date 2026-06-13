@@ -533,14 +533,20 @@ export function AdminSiteSettingsView({
               <Grid gap="md" className="grid-cols-3">
                 <Stack gap="none">
                   <Text size="sm" weight="medium" color="muted" className="mb-1">Primary color</Text>
+                  {/* audit-raw-form-input-ok: native browser color picker — no appkit primitive */}
+                  {/* audit-hex-tokens-ok: color picker fallback when no value set */}
                   <input type="color" value={primaryColor || "#000000"} onChange={(e) => setPrimaryColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
                 </Stack>
                 <Stack gap="none">
                   <Text size="sm" weight="medium" color="muted" className="mb-1">Secondary color</Text>
+                  {/* audit-raw-form-input-ok: native browser color picker */}
+                  {/* audit-hex-tokens-ok: color picker fallback when no value set */}
                   <input type="color" value={secondaryColor || "#000000"} onChange={(e) => setSecondaryColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
                 </Stack>
                 <Stack gap="none">
                   <Text size="sm" weight="medium" color="muted" className="mb-1">Accent color</Text>
+                  {/* audit-raw-form-input-ok: native browser color picker */}
+                  {/* audit-hex-tokens-ok: color picker fallback when no value set */}
                   <input type="color" value={accentColor || "#000000"} onChange={(e) => setAccentColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
                 </Stack>
               </Grid>
@@ -560,6 +566,8 @@ export function AdminSiteSettingsView({
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder="/products" disabled={!announcementEnabled} />
               <Stack gap="none">
                 <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
+                {/* audit-raw-form-input-ok: native browser color picker */}
+                {/* audit-hex-tokens-ok: color picker fallback (blue-700 announcement default) */}
                 <input type="color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" disabled={!announcementEnabled} />
               </Stack>
               <GroupSaveButton isPending={announcementMutation.isPending} />

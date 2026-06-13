@@ -22,8 +22,10 @@ export type { ToggleProps } from "./Toggle";
 export { Slider } from "./Slider";
 export type { SliderProps } from "./Slider";
 
-export { Form, FormGroup, FormFieldSpan, FormActions } from "./Form";
-export type { FormProps, FormGroupProps, FormActionsProps } from "./Form";
+// Legacy Form / FormGroup / FormFieldSpan / FormActions removed —
+// the canonical primitives live in `ui/components/Form.tsx` and provide
+// FormShellContext.Provider for FieldInput/FieldSelect/etc.
+// Consumers should import from `@mohasinac/appkit/ui`.
 
 export {
   cn,

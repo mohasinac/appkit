@@ -112,7 +112,7 @@ export function SellerPayoutRequestView({
             {summary.hasPendingPayout && <Badge variant="warning">Payout in progress</Badge>}
             {submitted && <Badge variant="success">Payout requested!</Badge>}
             {!payoutDetails?.isConfigured && (
-              <Text className="text-sm text-[var(--appkit-color-warning,#f59e0b)]">
+              <Text className="text-sm text-[var(--appkit-color-warning)]">
                 Set up payout details first
               </Text>
             )}
@@ -148,7 +148,7 @@ export function SellerPayoutRequestView({
           <Div>
             <Text className="text-sm font-medium mb-1.5">Notes (optional)</Text>
             <textarea
-              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-input-bg,var(--appkit-color-surface))] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)] dark:bg-[var(--appkit-color-surface-dark,#1e2330)] dark:border-[var(--appkit-color-border-dark)]"
+              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

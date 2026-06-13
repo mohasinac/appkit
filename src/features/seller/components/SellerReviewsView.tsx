@@ -62,7 +62,7 @@ const EMPTY_STAR = "☆";
 
 function Stars({ rating }: { rating: number }) {
   return (
-    <Span size="sm" className="text-[var(--appkit-color-warning,#f59e0b)]">
+    <Span size="sm" className="text-[var(--appkit-color-warning)]">
       {Array.from({ length: 5 }, (_, i) => (i < rating ? STAR : EMPTY_STAR)).join("")}
     </Span>
   );
@@ -390,7 +390,7 @@ export function SellerReviewsView({
           <Div>
             <Text className="text-sm font-medium mb-1.5">Store reply</Text>
             <textarea
-              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-input-bg,var(--appkit-color-surface))] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)] dark:bg-[var(--appkit-color-surface-dark,#1e2330)] dark:border-[var(--appkit-color-border-dark)]"
+              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
               rows={5}
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}

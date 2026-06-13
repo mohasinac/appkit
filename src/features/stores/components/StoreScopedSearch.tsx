@@ -39,6 +39,7 @@ export function StoreScopedSearch({
   };
 
   return (
+    // audit-raw-form-input-ok: store-scoped search bar — single query field, no validation needed
     <form onSubmit={submit} className={`w-full ${className}`}>
       <Row gap="sm" align="center" className="w-full">
         <Input

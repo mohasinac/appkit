@@ -2,9 +2,9 @@ import React from "react";
 import { Div, Heading, Text, Button } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
-const CLS_SUCCESS_CIRCLE = "w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6";
-const CLS_ERROR_CIRCLE = "w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6";
-const CLS_ERROR_ICON = "w-6 h-6 text-red-600";
+const CLS_SUCCESS_CIRCLE = "w-12 h-12 rounded-full bg-success-surface flex items-center justify-center mx-auto mb-6";
+const CLS_ERROR_CIRCLE = "w-12 h-12 rounded-full bg-error-surface flex items-center justify-center mx-auto mb-6";
+const CLS_ERROR_ICON = "w-6 h-6 text-error";
 
 export interface VerifyEmailViewProps {
   /** Status of the verification */

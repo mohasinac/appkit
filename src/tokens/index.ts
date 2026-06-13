@@ -912,8 +912,8 @@ export const THEME_CONSTANTS = {
       standard: { base: 1, md: 3, lg: 4 } as const,
       /** Cards: 1 on mobile, 2 on sm, 3 on md, 4 on lg+ */
       cards: { base: 1, sm: 2, md: 3, lg: 4 } as const,
-      /** Compact cards: 2 on mobile, 3 on sm, 4 on md, 5 on xl+ */
-      compact: { base: 2, sm: 3, md: 4, xl: 5 } as const,
+      /** Compact cards: 1 on mobile, 2 on sm, 4 on md, 5 on xl+ */
+      compact: { base: 1, sm: 2, md: 4, xl: 5 } as const,
       /** Reviews: 1 on mobile, 2 on sm, 3 on md/lg, 4 on 2xl+ */
       reviews: { base: 1, sm: 2, md: 3, lg: 3, "2xl": 4 } as const,
       /** Events: 1 on mobile, 2 on sm, 3 on md/lg */

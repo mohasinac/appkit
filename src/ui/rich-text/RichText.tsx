@@ -157,6 +157,7 @@ function attachCopyButtons(container: HTMLDivElement) {
     btn.style.cssText =
       "position:absolute;top:8px;right:8px;padding:2px 10px;font-size:11px;font-family:inherit;" +
       "border-radius:6px;border:1px solid rgba(148,163,184,.4);background:rgba(30,41,59,.75);" +
+      // audit-hex-tokens-ok: copy-button text colour for code blocks (slate-200)
       "color:#e2e8f0;cursor:pointer;line-height:1.6;user-select:none;transition:background .15s;";
 
     btn.addEventListener("click", () => {

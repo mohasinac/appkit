@@ -13,7 +13,7 @@ const __O = {
   yAuto: "overflow-y-auto",
 } as const;
 
-const CLS_REMOVE_BTN = "self-start text-zinc-400 dark:text-zinc-400 transition hover:text-red-500";
+const CLS_REMOVE_BTN = "self-start text-zinc-400 dark:text-zinc-400 transition hover:text-error";
 
 interface CartItemRowProps {
   item: CartItem;

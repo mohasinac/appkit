@@ -12,7 +12,7 @@
  * Opaque sentinel value returned by field operation helpers.
  * Each DB provider wraps its native sentinel (e.g. `FieldValue`) in this type.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export type FieldSentinel = any;
 
 // --- Operation interface ---------------------------------------------------

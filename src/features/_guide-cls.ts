@@ -10,5 +10,5 @@ export const GC = {
   textMuted: "text-sm text-[var(--appkit-color-text-muted)]",
   textStrong: "text-[var(--appkit-color-text)]",
   code: "text-xs bg-[var(--appkit-color-border)] px-1 py-0.5 rounded",
-  pageHeaderGradient: "linear-gradient(135deg,var(--appkit-color-primary-700,#4f46e5) 0%,var(--appkit-color-cobalt,#2563eb) 100%)",
+  pageHeaderGradient: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",
 };

@@ -47,12 +47,12 @@ export function PasswordStrengthIndicator({
 
   const strengthColor =
     strength <= 25
-      ? "bg-red-500"
+      ? "bg-error-surface"
       : strength <= 50
-        ? "bg-orange-500"
+        ? "bg-warning-surface"
         : strength <= 75
-          ? "bg-yellow-500"
-          : "bg-green-500";
+          ? "bg-warning-surface"
+          : "bg-success-surface";
 
   return (
     <div

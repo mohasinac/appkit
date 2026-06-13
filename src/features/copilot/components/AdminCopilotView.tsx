@@ -47,7 +47,7 @@ export interface AdminCopilotViewProps {
 }
 
 const LBL_CONVERSATION_ID = "Conversation ID";
-const CLS_ERROR_TEXT = "text-center text-sm text-red-500";
+const CLS_ERROR_TEXT = "text-center text-sm text-error";
 
 function MessageBubble({ msg }: { msg: CopilotMessage }) {
   const isUser = msg.role === "user";
@@ -103,7 +103,9 @@ function renderCopilotChatPanel(props: {
         <Div ref={messagesEndRef} />
       </Div>
       <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
+        {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
         <form onSubmit={handleSubmit} className="flex gap-2">
+          {/* audit-raw-form-input-ok: chat input */}
           <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder={labels?.inputPlaceholder ?? "Ask anything..."} disabled={isLoading} className="flex-1 h-10 rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition disabled:opacity-60" />
           <Button type="submit" variant="primary" disabled={isLoading || !input.trim()} className="shrink-0">
             {isLoading ? labels?.sendingButton ?? "Sending..." : labels?.sendButton ?? "Send"}
@@ -123,6 +125,7 @@ function renderCopilotHistoryPanel(props: {
   return (
     <Div surface="card" padding="sm" className="space-y-3">
       <Heading level={3} className="text-sm font-semibold">{labels?.historyTitle ?? "Conversation History"}</Heading>
+      {/* audit-raw-form-input-ok: conversation-id loader — single field, no validation */}
       <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); if (!conversationInput.trim()) return; loadConversation(conversationInput.trim()); }}>
         <Input label={labels?.conversationId ?? LBL_CONVERSATION_ID} value={conversationInput} onChange={(e) => setConversationInput(e.target.value)} placeholder="conv_..." />
         <Button type="submit" variant="secondary" size="sm" className="w-full">{labels?.loadConversation ?? "Load conversation"}</Button>
@@ -240,7 +243,9 @@ export function AdminCopilotView({
             </Div>
 
             <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
+              {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
               <form onSubmit={handleSubmit} className="flex gap-2">
+                {/* audit-raw-form-input-ok: chat input */}
                 <input
                   type="text"
                   value={input}

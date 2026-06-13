@@ -20,14 +20,14 @@ const __O = {
 } as const;
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
-  news: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
-  tips: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
+  news: "bg-info-surface text-info dark:bg-info-surface dark:text-info",
+  tips: "bg-success-surface text-success dark:bg-success-surface dark:text-success",
   guides: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300",
   updates: "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300",
-  community: "bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300",
+  community: "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
 };
 
-const CLS_FEATURED_BADGE = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 px-2 py-0.5 rounded-full";
+const CLS_FEATURED_BADGE = "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning px-2 py-0.5 rounded-full";
 
 export interface BlogPostViewProps {
   slug: string;

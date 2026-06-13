@@ -26,7 +26,7 @@ const __P = {
   p6: "p-6",
 } as const;
 
-const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow";
+const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-error-surface px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow";
 
 export interface PrizeDrawCollageProps {
   items: PrizeDrawItem[];

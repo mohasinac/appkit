@@ -4,13 +4,14 @@ import {
   Button,
   Div,
   Heading,
-  Input,
   Section,
   Span,
   Text,
 } from "../../../ui";
+import { Form } from "../../../ui/components/Form";
+import { FieldInput } from "../../../ui/forms/FieldInput";
 
-const CLS_ERROR_TEXT = "mt-3 text-sm text-red-300";
+const CLS_ERROR_TEXT = "mt-3 text-sm text-error";
 
 export interface NewsletterBannerProps {
   /**
@@ -95,14 +96,15 @@ export function NewsletterBanner({
             {successMessage}
           </Text>
         ) : (
-          <form onSubmit={handleSubmit} className="mt-8 flex gap-3">
-            <Input
+          <Form onSubmit={handleSubmit} className="mt-8 flex gap-3">
+            <FieldInput
+              name="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={setEmail}
               placeholder={placeholder}
               required
-              className="flex-1 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/40"
+              className="flex-1"
             />
             <Button
               type="submit"
@@ -117,7 +119,7 @@ export function NewsletterBanner({
             >
               {loading ? "…" : ctaLabel}
             </Button>
-          </form>
+          </Form>
         )}
 
         {error && (

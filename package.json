@@ -158,7 +158,7 @@
     "audit:paginated-select": "node scripts/audit-paginated-select.mjs",
     "audit:sieve-views": "node scripts/audit-sieve-constants-views.mjs",
     "check:types": "tsc --noEmit",
-    "check:audits": "node scripts/audit-violations.mjs && node scripts/verify-entries.mjs && node scripts/verify-css-build.mjs && node scripts/audit-use-client.mjs && node scripts/audit-double-navigation.mjs && node scripts/audit-repository-fields.mjs && node scripts/audit-query-provider.mjs && node scripts/audit-export-paths.mjs && node scripts/audit-listing-indices.mjs --summary-only && node scripts/audit-listing-type-reads.mjs && node scripts/audit-create-with-id.mjs && node scripts/audit-css-imports.mjs && node scripts/audit-appkit-reexports.mjs && node scripts/audit-action-confirmation.mjs && node scripts/audit-route-strings.mjs && node scripts/audit-paginated-select.mjs && node scripts/audit-sieve-constants-views.mjs",
+    "check:audits": "node scripts/audit-violations.mjs && node scripts/verify-entries.mjs && node scripts/verify-css-build.mjs && node scripts/audit-use-client.mjs && node scripts/audit-double-navigation.mjs && node scripts/audit-repository-fields.mjs && node scripts/audit-query-provider.mjs && node scripts/audit-export-paths.mjs && node scripts/audit-listing-indices.mjs && node scripts/audit-listing-type-reads.mjs && node scripts/audit-create-with-id.mjs && node scripts/audit-css-imports.mjs && node scripts/audit-appkit-reexports.mjs && node scripts/audit-action-confirmation.mjs && node scripts/audit-route-strings.mjs && node scripts/audit-paginated-select.mjs && node scripts/audit-sieve-constants-views.mjs",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "check": "npm run check:types && npm run check:audits"

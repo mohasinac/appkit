@@ -27,7 +27,7 @@ const HANDLE_STYLE: React.CSSProperties = {
 };
 
 const CHEVRON_STYLE: React.CSSProperties = {
-  color: "var(--appkit-color-text-on-primary, #ffffff)",
+  color: "var(--appkit-color-text-on-primary)",
 };
 
 export function SidebarCollapseToggle({
@@ -42,14 +42,14 @@ export function SidebarCollapseToggle({
       onClick={onToggle}
       aria-label={expanded ? expandedLabel : collapsedLabel}
       aria-expanded={expanded}
-      // eslint-disable-next-line lir/no-inline-static-style
+       
       // audit-inline-style-ok: pass-through style prop
       style={HANDLE_STYLE}
       className="w-9 shrink-0 flex items-center justify-center cursor-pointer rounded-r-[1.25rem] shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]"
     >
       <svg
         className={`w-4 h-4 drop-shadow-sm transition-transform duration-300 ${expanded ? "" : "rotate-180"}`}
-        // eslint-disable-next-line lir/no-inline-static-style
+         
         // audit-inline-style-ok: pass-through style prop
         style={CHEVRON_STYLE}
         fill="none"

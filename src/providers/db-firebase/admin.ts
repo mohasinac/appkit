@@ -17,8 +17,8 @@ import type { Firestore } from "firebase-admin/firestore";
 import type { Storage } from "firebase-admin/storage";
 import type { Database } from "firebase-admin/database";
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
+ 
 function nodePath() { return require("path") as typeof import("path"); }
 function nodeFs()   { return require("fs")   as typeof import("fs"); }
 // process.cwd() is Node.js-only; access via module.require so the Edge
@@ -29,7 +29,7 @@ function nodeCwd(): string { return (module as any).require("process").cwd(); }
 // (module as any).require() is used because webpack's static analysis does NOT trace
 // module.require() calls, unlike calls to the literal `require` or aliased `require`.
  
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 function loadApp() {
   return (module as any).require(
     "firebase-admin/app",
@@ -55,7 +55,7 @@ function loadDatabase() {
     "firebase-admin/database",
   ) as typeof import("firebase-admin/database");
 }
-/* eslint-enable @typescript-eslint/no-require-imports */
+ 
 
 // --- Private key normalisation ------------------------------------------------
 //

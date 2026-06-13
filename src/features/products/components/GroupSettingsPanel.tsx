@@ -27,7 +27,7 @@ const __P = {
   p4: "p-4",
 } as const;
 
-const CLS_DELETE_LINK = "text-red-500 hover:text-red-600";
+const CLS_DELETE_LINK = "text-error hover:text-error";
 
 export interface GroupSettingsPanelProps {
   productId: string;
@@ -335,7 +335,7 @@ export function GroupSettingsPanel({
                   <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}
                     <Row align="center" gap="sm" className="py-2">
-                      <Span weight="semibold" className="rounded bg-[var(--appkit-color-primary,#6366f1)]/10 text-[var(--appkit-color-primary,#6366f1)] text-[10px] px-1.5 py-0.5">Parent</Span>
+                      <Span weight="semibold" className="rounded bg-[var(--appkit-color-primary)]/10 text-[var(--appkit-color-primary)] text-[10px] px-1.5 py-0.5">Parent</Span>
                       <Text className="text-sm text-zinc-800 dark:text-zinc-200 flex-1">{productSlug}</Text>
                     </Row>
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (

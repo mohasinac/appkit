@@ -69,8 +69,8 @@ function ListingThumb({
       <div
         className={`w-14 h-14 rounded-full overflow-hidden border-2 transition-all ${
           isCurrent
-            ? "border-[var(--appkit-color-primary,#6366f1)] ring-2 ring-[var(--appkit-color-primary,#6366f1)]/30"
-            : "border-zinc-200 dark:border-zinc-700 group-hover:border-[var(--appkit-color-primary,#6366f1)]"
+            ? "border-[var(--appkit-color-primary)] ring-2 ring-[var(--appkit-color-primary)]/30"
+            : "border-zinc-200 dark:border-zinc-700 group-hover:border-[var(--appkit-color-primary)]"
         }`}
       >
         {image ? (
@@ -138,7 +138,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
           </Span>
           <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
             More listings like this:{" "}
-            <Span className="text-[var(--appkit-color-primary,#6366f1)]">{label}</Span>
+            <Span className="text-[var(--appkit-color-primary)]">{label}</Span>
           </Text>
           <Span size="xs" className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5 text-zinc-600 dark:text-zinc-400">
             {listings.length}
@@ -148,7 +148,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
           <Link
             href={String(ROUTES.PUBLIC.SUBLISTING_CATEGORY(category.slug))}
             onClick={(e) => e.stopPropagation()}
-            className="text-xs text-[var(--appkit-color-primary,#6366f1)] hover:underline ml-3 flex-shrink-0"
+            className="text-xs text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >
             View all â†’
           </Link>

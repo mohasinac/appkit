@@ -72,7 +72,7 @@ export function AdminPageHeader({
   actionDisabled = false,
   className = "",
   themeConfig = {
-    gradient: "bg-blue-50",
+    gradient: "bg-info-surface",
     titleClass: "text-3xl font-bold",
     subtitleClass: "text-lg text-gray-700",
     spacingClass: "space-y-1",

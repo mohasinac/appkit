@@ -69,7 +69,7 @@ function ChartCard({
         // audit-inline-style-ok: dynamic CSS
         style={{
           background:
-            "linear-gradient(to right, var(--appkit-color-primary-700,#1343de) 0%, var(--appkit-color-cobalt,#3570fc) 55%, var(--appkit-color-secondary-400,#84e122) 100%)",
+            "linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-cobalt) 55%, var(--appkit-color-secondary-400) 100%)",
         }}
         aria-hidden="true"
       />

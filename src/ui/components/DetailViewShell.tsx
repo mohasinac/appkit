@@ -61,8 +61,10 @@ export interface DetailViewShellProps {
    */
   stickyActionRail?: boolean;
   /**
-   * Top offset for the sticky action rail (e.g. `"top-16"` for a 64px title
-   * bar). Defaults to `"top-6"` (24px, for pages without a sticky header).
+   * Top offset for the sticky action rail. Defaults to
+   * `"top-[var(--header-height,0px)]"` so the rail tracks the runtime header
+   * height. Override only when the rail sits inside a scroll container with
+   * its own header (e.g. modals).
    */
   stickyRailOffset?: string;
   className?: string;
@@ -84,7 +86,7 @@ export function DetailViewShell({
   belowFold = [],
   afterMain,
   stickyActionRail = false,
-  stickyRailOffset = "top-6",
+  stickyRailOffset = "top-[var(--header-height,0px)]",
   className = "",
 }: DetailViewShellProps) {
   if (isLoading && renderSkeleton) {

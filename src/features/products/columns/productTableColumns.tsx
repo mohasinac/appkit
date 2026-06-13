@@ -11,16 +11,16 @@ const __O = {
 
 const STATUS_STYLES: Record<string, string> = {
   published:
-    "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300",
+    "bg-success-surface text-success dark:bg-success-surface dark:text-success",
   draft: "bg-zinc-100 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300",
   out_of_stock:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300",
-  discontinued: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
+    "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
+  discontinued: "bg-error-surface text-error dark:bg-error-surface dark:text-error",
   sold: "bg-primary/10 dark:bg-primary/20 text-primary",
 };
 
-const CLS_LOW_STOCK = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-const CLS_DELETE = "text-red-600 hover:text-red-800 dark:text-red-400";
+const CLS_LOW_STOCK = "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning";
+const CLS_DELETE = "text-error hover:text-error dark:text-error";
 
 export interface ProductTableColumnLabels {
   title: string;

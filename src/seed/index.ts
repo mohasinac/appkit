@@ -184,9 +184,7 @@ export { carouselsSeedData } from "./carousels-seed-data";
 export { wishlistsSeedData } from "./wishlists-seed-data";
 export { historySeedData } from "./history-seed-data";
 export { conversationsSeedData } from "./conversations-seed-data";
-// SB-UNI-B — sublistingCategoriesSeedData merged into categoriesSeedData with categoryType:"sublisting".
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
-// SB-UNI-V — bundlesSeedData merged into categoriesSeedData with categoryType:"bundle".
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";

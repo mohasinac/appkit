@@ -1,9 +1,9 @@
 import React from "react";
 import { Div, Text, Heading } from "../../../../ui";
 
-const BRAND_FROM = "var(--appkit-color-primary-700, #1343de)";
-const BRAND_MID  = "var(--appkit-color-cobalt, #3570fc)";
-const BRAND_TO   = "var(--appkit-color-secondary-400, #84e122)";
+const BRAND_FROM = "var(--appkit-color-primary-700)";
+const BRAND_MID  = "var(--appkit-color-cobalt)";
+const BRAND_TO   = "var(--appkit-color-secondary-400)";
 
 const GRADIENTS: Record<string, string> = {
   brand:  `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 55%, ${BRAND_TO} 100%)`,

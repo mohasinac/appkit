@@ -25,21 +25,21 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_BADGE_AUCTION = "bg-amber-500 text-white";
+const CLS_BADGE_AUCTION = "bg-warning-surface text-white";
 const CLS_BADGE_PREORDER = "bg-violet-600 text-white";
-const CLS_BADGE_NEW = "rounded-full bg-rose-500 px-2 py-0.5 text-[10px] text-white shadow-sm";
-const CLS_BADGE_SALE = "rounded-full bg-teal-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_NEW = "rounded-full bg-error-surface px-2 py-0.5 text-[10px] text-white shadow-sm";
+const CLS_BADGE_SALE = "rounded-full bg-success-surface px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
 const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
-const CLS_BADGE_LIMITED = "rounded-full bg-sky-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
-const CLS_HEART_ACTIVE = "bg-rose-500 text-white hover:bg-rose-600";
-const CLS_HEART_IDLE = "bg-white/90 dark:bg-slate-800/90 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800";
-const CLS_STAR = "text-[11px] text-amber-400";
-const CLS_DISCOUNT_TEXT = "mt-1 text-[11px] font-semibold text-rose-500";
-const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-rose-500";
-const CLS_STAR_BARE = "text-amber-400";
-const CLS_BID_TEXT = "text-[11px] text-rose-500";
-const CLS_HEART_ROSE_ACTIVE = "text-rose-500";
-const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-zinc-600 hover:text-rose-400";
+const CLS_BADGE_LIMITED = "rounded-full bg-info-surface px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
+const CLS_HEART_ACTIVE = "bg-error-surface text-white hover:bg-error-surface";
+const CLS_HEART_IDLE = "bg-white/90 dark:bg-slate-800/90 text-zinc-500 dark:text-zinc-400 hover:text-error hover:bg-white dark:hover:bg-slate-800";
+const CLS_STAR = "text-[11px] text-warning";
+const CLS_DISCOUNT_TEXT = "mt-1 text-[11px] font-semibold text-error";
+const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-error";
+const CLS_STAR_BARE = "text-warning";
+const CLS_BID_TEXT = "text-[11px] text-error";
+const CLS_HEART_ROSE_ACTIVE = "text-error";
+const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-zinc-600 hover:text-error";
 
 // --- ProductCard --------------------------------------------------------------
 

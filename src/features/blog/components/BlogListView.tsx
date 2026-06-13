@@ -26,7 +26,7 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const CLS_FEATURED_BADGE = "rounded-full bg-yellow-100 px-2 py-0.5 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300";
+const CLS_FEATURED_BADGE = "rounded-full bg-warning-surface px-2 py-0.5 text-warning dark:bg-warning-surface dark:text-warning";
 
 interface BlogCardProps {
   post: BlogPost;

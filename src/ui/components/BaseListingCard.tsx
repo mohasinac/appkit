@@ -217,7 +217,7 @@ function BaseListingCardIconOverlay({
     const isMediaUrl = icon.startsWith("/media/") || icon.startsWith("http");
     if (isMediaUrl) {
       return (
-        // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           key={key}
           src={icon}

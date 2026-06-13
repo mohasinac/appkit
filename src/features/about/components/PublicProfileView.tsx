@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews } from "../../auth/actions/profile-actions";
+import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews, getReviewsAuthoredBy } from "../../auth/actions/profile-actions";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { ProductCard } from "../../products/components/ProductGrid";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
 import type { ProductItem } from "../../products/types";
@@ -15,6 +16,8 @@ const __P = {
   p4: "p-4",
   p6: "p-6",
 } as const;
+
+const CLS_EMPTY_ICON = "w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -75,10 +78,11 @@ export async function PublicProfileView({
   const profile = await getPublicUserProfile(userId).catch(() => null);
   const storeId = profile?.storeSlug ?? null;
 
-  const [products, reviews, store] = await Promise.all([
+  const [products, reviewsReceived, store, reviewsAuthored] = await Promise.all([
     storeId ? getProfileStoreProducts(storeId).catch(() => []) : Promise.resolve([]),
     storeId ? getSellerReviews(storeId).catch(() => []) : Promise.resolve([]),
     storeId ? storeRepository.findById(storeId).catch(() => null) : Promise.resolve(null),
+    getReviewsAuthoredBy(userId).catch(() => []),
   ]);
 
   const isSeller = profile?.role === "seller" || profile?.role === "admin";
@@ -97,7 +101,7 @@ export async function PublicProfileView({
   const stats = profile?.stats;
 
   const listingCount = products.length;
-  const reviewCount = reviews.length;
+  const reviewCount = reviewsAuthored.length + reviewsReceived.length;
   const itemsSold = stats?.itemsSold ?? 0;
   const auctionsWon = stats?.auctionsWon ?? 0;
   const totalOrders = stats?.totalOrders ?? 0;
@@ -117,7 +121,8 @@ export async function PublicProfileView({
         {renderProfileBioSection(themed, pub)}
         {renderStoreDescriptionSection(themed, isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
         {renderProfileListingsSection(t, themed, products, storeSlug ?? null)}
-        {renderProfileReviewsSection(t, themed, reviews, storeSlug ?? null)}
+        {renderAuthoredReviewsSection(t, themed, reviewsAuthored, displayName)}
+        {isSeller && storeSlug && renderProfileReviewsSection(t, themed, reviewsReceived, storeSlug)}
         <Row justify="center" className="pt-2">
           <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
             ← {t("backHome")}
@@ -132,11 +137,11 @@ type ProfileT = Awaited<ReturnType<typeof import("next-intl/server").getTranslat
 type ProfileThemed = (typeof THEME_CONSTANTS)["themed"];
 type ProfileFlex = (typeof THEME_CONSTANTS)["flex"];
 type ProfilePage = (typeof THEME_CONSTANTS)["page"];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type PubProfile = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type ProfileProduct = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type ProfileReview = any;
 
 function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewCount: number; itemsSold: number; auctionsWon: number; totalOrders: number; isSeller: boolean }) {
@@ -163,7 +168,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
       <Div className={`${page.container.md}`}>
         <Div className="flex flex-wrap gap-4 flex-col sm:flex-row items-center sm:items-end">
           <Div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 ${__O.hidden}`}>
-            {photoURL ? <img src={photoURL} alt={displayName} className="w-full h-full object-cover" /> : <User className="w-10 h-10 text-white/60" />}
+            {photoURL ? <MediaImage src={photoURL} alt={displayName} size="avatar" fallback="👤" /> : <User className="w-10 h-10 text-white/60" />}
           </Div>
           <Stack gap="xs" className="text-center sm:text-left">
             <Div className="flex flex-wrap gap-1 justify-center sm:justify-start">
@@ -186,7 +191,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statItems: { icon: any; label: string; value: string }[]) {
   return (
     <Grid gap="md" className="grid-cols-2 sm:grid-cols-4">
@@ -235,7 +240,7 @@ function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, produc
       <Heading level={2} className="mb-4">{t("listingsTitle")}</Heading>
       {products.length === 0 ? (
         <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
-          <ShoppingBag className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
+          <ShoppingBag className={CLS_EMPTY_ICON} />
           <Text variant="secondary" className="text-sm">{t("noListings")}</Text>
         </Div>
       ) : (
@@ -255,11 +260,11 @@ function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, produc
 function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews: ProfileReview[], storeSlug: string | null) {
   return (
     <Section>
-      <Heading level={2} className="mb-4">{t("reviewsTitle")}</Heading>
+      <Heading level={2} className="mb-4">{t("reviewsReceivedTitle")}</Heading>
       {reviews.length === 0 ? (
         <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
-          <Star className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
-          <Text variant="secondary" className="text-sm">{t("noReviews")}</Text>
+          <Star className={CLS_EMPTY_ICON} />
+          <Text variant="secondary" className="text-sm">{t("noReviewsReceived")}</Text>
         </Div>
       ) : (
         <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
@@ -270,6 +275,24 @@ function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews
         <Div className="mt-4 text-center">
           <Link href={String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug))} className="text-sm font-medium text-primary hover:underline">{t("viewAllReviews", { count: reviews.length })}</Link>
         </Div>
+      )}
+    </Section>
+  );
+}
+
+function renderAuthoredReviewsSection(t: ProfileT, themed: ProfileThemed, reviews: ProfileReview[], displayName: string) {
+  return (
+    <Section>
+      <Heading level={2} className="mb-4">{t("reviewsAuthoredTitle", { name: displayName })}</Heading>
+      {reviews.length === 0 ? (
+        <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+          <Star className={CLS_EMPTY_ICON} />
+          <Text variant="secondary" className="text-sm">{t("noReviewsAuthored", { name: displayName })}</Text>
+        </Div>
+      ) : (
+        <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
+          {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
+        </Grid>
       )}
     </Section>
   );

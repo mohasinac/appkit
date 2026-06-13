@@ -4,11 +4,16 @@
 
 import React from "react";
 import { Badge, Button, Div, Row, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { CARD_BORDER, CARD_BORDER_ACTIVE, CARD_GRID_CLS, CARD_LIST_CLS, KIND_BADGE_VARIANT } from "./seller-products-styles";
 
 const __P = {
   p3: "p-3",
+} as const;
+
+const __O = {
+  hidden: "overflow-hidden",
 } as const;
 
 export interface SellerProductsCardsRowShape {
@@ -75,13 +80,9 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               />
             </Div>
             <a href={href} className="block">
-              {row.imageUrl ? (
-                <img src={row.imageUrl} alt="" className="w-full aspect-square object-cover" />
-              ) : (
-                <Div className="w-full aspect-square bg-[var(--appkit-color-surface-raised)] flex items-center justify-center text-[var(--appkit-color-text-faint)]">
-                  —
-                </Div>
-              )}
+              <Div className="w-full aspect-square">
+                <MediaImage src={row.imageUrl} alt={row.primary} size="card" />
+              </Div>
               <Div className={`${__P.p3} space-y-1`}>
                 <Text className="font-medium text-sm line-clamp-1">{row.primary}</Text>
                 <Row className="gap-2">
@@ -110,11 +111,9 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               className="h-4 w-4 rounded border-[var(--appkit-color-border)]"
               aria-label="Select"
             />
-            {row.imageUrl ? (
-              <img src={row.imageUrl} alt="" className="w-12 h-12 rounded object-cover" />
-            ) : (
-              <Div className="w-12 h-12 rounded bg-[var(--appkit-color-surface-raised)]" />
-            )}
+            <Div className={`w-12 h-12 rounded ${__O.hidden}`}>
+              <MediaImage src={row.imageUrl} alt={row.primary} size="thumbnail" />
+            </Div>
             <a href={href} className="flex-1 min-w-0">
               <Text className="font-medium text-sm line-clamp-1">{row.primary}</Text>
               <Row className="gap-2">

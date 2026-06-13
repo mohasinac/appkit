@@ -140,6 +140,17 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return this.findBy(REVIEW_FIELDS.USER_ID, userId);
   }
 
+  async findApprovedByUser(userId: string): Promise<ReviewDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(REVIEW_FIELDS.USER_ID, "==", userId)
+      .where(REVIEW_FIELDS.STATUS, "==", "approved")
+      .orderBy(REVIEW_FIELDS.CREATED_AT, "desc")
+      .limit(50)
+      .get();
+    return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
+  }
+
   async findPending(): Promise<ReviewDocument[]> {
     return this.findBy(REVIEW_FIELDS.STATUS, "pending");
   }

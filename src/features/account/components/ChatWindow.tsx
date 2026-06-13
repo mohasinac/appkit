@@ -2,7 +2,7 @@ import React from "react";
 import { Div, Heading, Row, Span } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
-const CLS_DOT_ON = "bg-emerald-500";
+const CLS_DOT_ON = "bg-success-surface";
 
 export interface ChatWindowLabels {
   title?: string;

@@ -185,7 +185,7 @@ export async function HowOrdersWorkView({
 }
 
 type OrdersT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type OrderInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type OrderStatus = { status: string; icon: string; badge: string; desc: string };
 

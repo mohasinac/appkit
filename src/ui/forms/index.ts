@@ -5,7 +5,7 @@ export type {
   FormShellContextValue,
   UseFormShellStateResult,
 } from "./FormShell";
-export { FormShell, FormShellProvider, FormShellContext, useFormShell, useFormShellState } from "./FormShell";
+export { FormShell, FormShellProvider, FormShellContext, useFormShell, useFormShellState, applyZodIssues } from "./FormShell";
 
 export type { FieldInputProps } from "./FieldInput";
 export { FieldInput } from "./FieldInput";
@@ -15,3 +15,6 @@ export { FieldSelect } from "./FieldSelect";
 
 export type { FieldCheckboxProps } from "./FieldCheckbox";
 export { FieldCheckbox } from "./FieldCheckbox";
+
+export type { FieldTextareaProps } from "./FieldTextarea";
+export { FieldTextarea } from "./FieldTextarea";

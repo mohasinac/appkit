@@ -17,10 +17,10 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-2xl shadow-sm";
-const CLS_STARS = "inline-flex items-center gap-1 text-amber-500";
-const CLS_FOLLOW_BTN = "rounded-lg border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors";
-const CLS_WARN_BANNER = "mt-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-3 py-2 text-sm text-yellow-700 dark:text-yellow-300";
+const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-warning-surface dark:bg-warning-surface flex items-center justify-center text-warning dark:text-warning font-bold text-2xl shadow-sm";
+const CLS_STARS = "inline-flex items-center gap-1 text-warning";
+const CLS_FOLLOW_BTN = "rounded-lg border border-warning px-4 py-2 text-sm font-medium text-warning hover:bg-warning-surface transition-colors";
+const CLS_WARN_BANNER = "mt-3 rounded-lg bg-warning-surface dark:bg-warning-surface border border-warning dark:border-warning px-3 py-2 text-sm text-warning dark:text-warning";
 
 interface StoreHeaderProps {
   store: StoreDetail;

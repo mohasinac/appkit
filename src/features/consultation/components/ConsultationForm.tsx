@@ -1,6 +1,9 @@
 "use client"
 import React from "react";
-import { Button, Div, Input, Row, Select, Textarea } from "../../../ui";
+import { Button, Div, Row, Select } from "../../../ui";
+import { Form } from "../../../ui/components/Form";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import type { BookConsultationInput } from "../types";
 
 interface ConsultationFormProps {
@@ -38,15 +41,6 @@ export function ConsultationForm({
     message: "",
   });
 
-  function handleChange(
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
-
   function handleValueChange<K extends keyof BookConsultationInput>(
     name: K,
     value: BookConsultationInput[K],
@@ -69,33 +63,30 @@ export function ConsultationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <Input
+    <Form onSubmit={handleSubmit} className="space-y-4">
+      <FieldInput
         name="name"
         type="text"
         placeholder="Full name"
         value={form.name}
-        onChange={handleChange}
+        onChange={(v) => handleValueChange("name", v)}
         required
-        className={CLS_INPUT}
       />
-      <Input
+      <FieldInput
         name="email"
         type="email"
         placeholder="Email address"
         value={form.email}
-        onChange={handleChange}
+        onChange={(v) => handleValueChange("email", v)}
         required
-        className={CLS_INPUT}
       />
-      <Input
+      <FieldInput
         name="phone"
         type="tel"
         placeholder="Phone number"
         value={form.phone}
-        onChange={handleChange}
+        onChange={(v) => handleValueChange("phone", v)}
         required
-        className={CLS_INPUT}
       />
       {concerns.length > 0 && (
         <Row wrap gap="sm">
@@ -118,19 +109,19 @@ export function ConsultationForm({
         </Row>
       )}
       <Div className="flex gap-3">
-        <Input
+        <FieldInput
           name="preferredDate"
           type="date"
           value={form.preferredDate}
-          onChange={handleChange}
+          onChange={(v) => handleValueChange("preferredDate", v)}
           required
-          className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="flex-1"
         />
         <Select
           value={form.preferredTime}
           onValueChange={(value) => handleValueChange("preferredTime", value)}
           options={TIME_SLOTS.map((t) => ({ value: t, label: t }))}
-          className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="flex-1"
         />
       </Div>
       <Select
@@ -140,24 +131,23 @@ export function ConsultationForm({
           { value: "remote", label: "Remote (Video Call)" },
           { value: "in-person", label: "In-Person" },
         ]}
-        className={CLS_INPUT}
       />
-      <Textarea
+      <FieldTextarea
         name="message"
         placeholder="Any additional notes (optional)"
         value={form.message}
-        onChange={handleChange}
+        onChange={(v) => handleValueChange("message", v)}
         rows={3}
-        className={CLS_INPUT}
       />
       <Button
         type="submit"
+        isLoading={isPending}
         disabled={isPending}
         variant="primary"
-        className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90 disabled:opacity-60"
+        className="w-full"
       >
         {isPending ? "Booking..." : "Book Consultation"}
       </Button>
-    </form>
+    </Form>
   );
 }

@@ -92,7 +92,7 @@ export function DetailPageGallery({
           ASPECT_CLASS[aspect],
         ].join(" ")}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={active.url}
           alt={active.alt ?? title ?? ""}
@@ -115,7 +115,7 @@ export function DetailPageGallery({
                   : "border-transparent hover:border-zinc-300 dark:hover:border-zinc-600",
               ].join(" ")}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img.url}
                 alt={img.alt ?? `${title ?? ""} ${idx + 1}`}

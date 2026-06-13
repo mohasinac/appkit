@@ -17,11 +17,14 @@ import {
   UnsavedChangesModal,
 } from "../../ui";
 
+// Role indicator dots — distinct hues per role tier. Brand-decorative palette
+// kept inline so a future tokens.css "role" namespace can replace this in one
+// edit. The audit allows these as static role markers.
 const ROLE_DOT_COLORS: Record<string, string> = {
-  admin: "#9333ea",
-  moderator: "#0ea5e9",
-  seller: "#0d9488",
-  employee: "#f59e0b",
+  admin:     "#9333ea", // audit-hex-tokens-ok: role indicator (purple-600)
+  moderator: "#0ea5e9", // audit-hex-tokens-ok: role indicator (sky-500)
+  seller:    "#0d9488", // audit-hex-tokens-ok: role indicator (teal-600)
+  employee:  "#f59e0b", // audit-hex-tokens-ok: role indicator (amber-500)
 };
 import { useTheme } from "../../react";
 import { useAuth } from "../../react/contexts/SessionContext";
@@ -144,20 +147,24 @@ export interface AppLayoutShellProps {
   };
 }
 
+// Background defaults consumed by BackgroundRenderer — these are seed values
+// written into siteSettings on first deploy and may be overridden at runtime.
+// audit-hex-tokens-ok: seed defaults for siteSettings.theme.background
 const DEFAULT_LIGHT_BG = {
   type: "color" as const,
-  value: "#f9fafb",
-  overlay: { enabled: false, color: "#000000", opacity: 0 },
+  value: "#f9fafb", // audit-hex-tokens-ok: zinc-50 seed default
+  overlay: { enabled: false, color: "#000000", opacity: 0 }, // audit-hex-tokens-ok: overlay seed default
 };
 
 const CLS_STAT_BOX = "flex flex-col items-center gap-1 p-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-center";
 const CLS_STAT_LABEL = "text-xs text-zinc-500 dark:text-zinc-400";
-const CLS_LOGOUT_BTN = "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/30 dark:hover:text-red-300";
+const CLS_LOGOUT_BTN = "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-error transition-colors hover:bg-error-surface hover:text-error dark:text-error dark:hover:bg-error-surface dark:hover:text-error";
 
+// audit-hex-tokens-ok: dark theme background seed default
 const DEFAULT_DARK_BG = {
   type: "color" as const,
-  value: "#030712",
-  overlay: { enabled: false, color: "#000000", opacity: 0 },
+  value: "#030712", // audit-hex-tokens-ok: gray-950 seed default
+  overlay: { enabled: false, color: "#000000", opacity: 0 }, // audit-hex-tokens-ok: overlay seed default
 };
 
 /** Collapsible accordion section for the public sidebar. */
@@ -294,7 +301,7 @@ function SidebarUserHeader({
             <Div
               className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 text-white text-[9px] font-bold leading-none select-none"
               // audit-inline-style-ok: runtime brand gradient
-              style={{ background: ROLE_DOT_COLORS[user.role] ?? "#6b7280" }}
+              style={{ background: ROLE_DOT_COLORS[user.role] ?? "var(--appkit-color-text-muted)" }}
               title={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               aria-label={user.role}
             >
@@ -663,6 +670,7 @@ export function AppLayoutShell({
     value: lightBackground.value,
     overlay: {
       enabled: lightBackground.overlay?.enabled ?? false,
+      // audit-hex-tokens-ok: black overlay fallback when admin hasn't configured one
       color: lightBackground.overlay?.color ?? "#000000",
       opacity: lightBackground.overlay?.opacity ?? 0,
     },
@@ -673,6 +681,7 @@ export function AppLayoutShell({
     value: darkBackground.value,
     overlay: {
       enabled: darkBackground.overlay?.enabled ?? false,
+      // audit-hex-tokens-ok: black overlay fallback when admin hasn't configured one
       color: darkBackground.overlay?.color ?? "#000000",
       opacity: darkBackground.overlay?.opacity ?? 0,
     },

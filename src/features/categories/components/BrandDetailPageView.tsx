@@ -89,7 +89,10 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
   const coverImage = brand?.display?.coverImage;
   const hasCover = Boolean(coverImage);
-  const brandColor = brand?.display?.color || "#6366f1";
+  // Brand accent — falls back to the primary theme token when the brand hasn't
+  // configured one. The value is consumed as `style={{ backgroundColor }}` so it
+  // accepts both CSS vars and raw hex written by an admin.
+  const brandColor = brand?.display?.color || "var(--appkit-color-primary)";
 
   const counts = {
     products: productsResult?.total ?? brand?.metrics?.productCount ?? 0,
@@ -180,7 +183,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
             )}
             {counts.auctions > 0 && (
               <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${
-                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning"
               }`}>
                 {counts.auctions.toLocaleString()} {counts.auctions === 1 ? "auction" : "auctions"}
               </Span>

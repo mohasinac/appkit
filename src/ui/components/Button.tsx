@@ -166,7 +166,7 @@ export function Button({
         >
           <div
             style={{
-              background: "var(--appkit-surface, #fff)",
+              background: "var(--appkit-color-surface)",
               borderRadius: "var(--appkit-radius-lg, 12px)",
               padding: "1.5rem",
               maxWidth: "380px", width: "calc(100% - 2rem)",
@@ -179,7 +179,7 @@ export function Button({
             >
               {confirmDef.title}
             </p>
-            <p style={{ fontSize: "0.875rem", color: "var(--appkit-color-muted, #6b7280)", marginBottom: "1.25rem" }}>
+            <p style={{ fontSize: "0.875rem", color: "var(--appkit-color-text-muted)", marginBottom: "1.25rem" }}>
               {confirmDef.body}
             </p>
             <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>

@@ -62,17 +62,17 @@ export function SiteLogo({
             <stop
               offset="0%"
               // audit-inline-style-ok: SVG gradient stop
-              style={{ stopColor: "var(--appkit-color-primary-700, #1343de)" }}
+              style={{ stopColor: "var(--appkit-color-primary-700)" }}
             />
             <stop
               offset="55%"
               // audit-inline-style-ok: SVG gradient stop
-              style={{ stopColor: "var(--appkit-color-cobalt, #3570fc)" }}
+              style={{ stopColor: "var(--appkit-color-cobalt)" }}
             />
             <stop
               offset="100%"
               // audit-inline-style-ok: SVG gradient stop
-              style={{ stopColor: "var(--appkit-color-secondary-400, #84e122)" }}
+              style={{ stopColor: "var(--appkit-color-secondary-400)" }}
             />
           </linearGradient>
         </defs>

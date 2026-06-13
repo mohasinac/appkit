@@ -125,7 +125,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           className="px-6 py-8 md:px-10"
           style={{
             background:
-              "linear-gradient(135deg,var(--appkit-color-primary-700,#4f46e5) 0%,var(--appkit-color-cobalt,#2563eb) 60%,var(--appkit-color-secondary-400,#7c3aed) 100%)",
+              "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 60%,var(--appkit-color-secondary-400) 100%)",
           }}
         >
           <Div className="flex items-center gap-3 mb-3">
@@ -164,7 +164,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                     className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
                     style={{
                       background:
-                        "linear-gradient(135deg,var(--appkit-color-primary-700,#4f46e5) 0%,var(--appkit-color-cobalt,#2563eb) 100%)",
+                        "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",
                     }}
                   >
                     <Icon className="w-4 h-4 text-white" />
@@ -206,7 +206,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   style={{
                     width: `${Math.round((completedCount / steps.length) * 100)}%`,
                     background:
-                      "linear-gradient(90deg,var(--appkit-color-primary-700,#4f46e5),var(--appkit-color-cobalt,#2563eb))",
+                      "linear-gradient(90deg,var(--appkit-color-primary-700),var(--appkit-color-cobalt))",
                   }}
                 />
               </Div>

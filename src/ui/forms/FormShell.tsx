@@ -93,6 +93,22 @@ export interface UseFormShellStateResult {
   hasErrors: boolean;
 }
 
+/**
+ * `applyZodIssues` — pipe every issue from a Zod safeParse failure into the
+ * FormShellContext error map. Use after `schema.safeParse(values)` returns
+ * `success: false` to surface inline errors on `<FieldInput>` etc.
+ */
+export function applyZodIssues(
+  issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey>; message: string }>,
+  setFieldError: (name: string, error: string | null) => void,
+): void {
+  for (const issue of issues) {
+    const key = issue.path[0];
+    if (key == null) continue;
+    setFieldError(String(key), issue.message);
+  }
+}
+
 export function useFormShellState(): UseFormShellStateResult {
   const [errors, setErrors] = useState<Record<string, string>>({});
 

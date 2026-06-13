@@ -61,8 +61,8 @@ export function WishlistToggleButton({
           transition-all duration-150
           ${
             inWishlist
-              ? "bg-rose-50 text-rose-500 hover:bg-rose-100"
-              : "bg-white/80 text-zinc-400 hover:text-rose-400"
+              ? "bg-error-surface text-error hover:bg-error-surface"
+              : "bg-white/80 text-zinc-400 hover:text-error"
           }
           ${sizeClasses[size]}
           ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}

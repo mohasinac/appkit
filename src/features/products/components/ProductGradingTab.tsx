@@ -2,6 +2,7 @@
 import React from "react";
 import { Div, Heading, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
+import { MediaImage } from "../../media/MediaImage";
 import type { ProductGrading } from "../schemas/firestore";
 
 const __O = {
@@ -68,9 +69,8 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
       </Div>
 
       {slabImageUrl ? (
-        <Div className={`${__O.hidden} rounded-2xl border border-zinc-200 dark:border-zinc-700`}>
-          {/* eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements */}
-          <img src={slabImageUrl} alt="Slab certificate image" className="w-full h-auto" />
+        <Div className={`${__O.hidden} rounded-2xl border border-zinc-200 dark:border-zinc-700 aspect-[4/3] w-full`}>
+          <MediaImage src={slabImageUrl} alt="Slab certificate image" size="gallery" objectFit="contain" />
         </Div>
       ) : null}
 

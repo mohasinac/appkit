@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../../../ui/components/Button";
-import { Div, Heading, Label, Span, Stack, Text } from "../../../ui";
+import { Form } from "../../../ui/components/Form";
+import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
+import { Div, Heading, Span, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 
 const __P = {
@@ -91,24 +93,22 @@ export function EventRaffleEntryForm({
           You&apos;ve used all {maxEntriesPerUser} entry slot{maxEntriesPerUser === 1 ? "" : "s"} for this raffle.
         </Div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <Label htmlFor="raffle-message" className="block text-sm font-medium">
-            Message <Span className="text-zinc-400">(optional)</Span>
-          </Label>
-          <textarea
-            id="raffle-message"
+        <Form onSubmit={handleSubmit} className="space-y-3">
+          <FieldTextarea
+            name="message"
+            label="Message"
+            hint="optional — share why you'd like to win"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={setMessage}
             rows={3}
             maxLength={500}
-            className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 px-3 py-2 text-sm bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
             placeholder="Share why you'd like to win"
             disabled={busy}
           />
           <Button type="submit" variant="primary" disabled={busy}>
             {busy ? "Submitting…" : "Enter raffle"}
           </Button>
-        </form>
+        </Form>
       )}
     </Div>
   );

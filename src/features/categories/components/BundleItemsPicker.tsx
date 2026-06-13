@@ -53,7 +53,7 @@ export interface BundleItemsPickerProps {
 }
 
 const SEARCH_DEBOUNCE_MS = 250;
-const CLS_ROW_SELECTED = "bg-blue-50 dark:bg-blue-950";
+const CLS_ROW_SELECTED = "bg-info-surface dark:bg-info-surface";
 
 function renderBundleSelectedChips(props: {
   value: string[]; metadata: Record<string, BundleItemSearchResult>; remove: (id: string) => void;

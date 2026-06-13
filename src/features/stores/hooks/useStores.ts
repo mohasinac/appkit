@@ -13,7 +13,7 @@ import { STORE_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseStoresOptions {
   enabled?: boolean;
   endpoint?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   initialData?: any;
   staleTime?: number;
 }

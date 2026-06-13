@@ -31,7 +31,7 @@ const __O = {
 
 const FILTER_KEYS = ["condition", "brand", "minPrice", "maxPrice"];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function renderCategoryProductGrid(props: { isLoading: boolean; products: any[]; view: ViewMode; getProductHref: (p: any) => string; onWishlistToggle: (id: string) => void; wishlistedIds: Set<string>; onAddToCart: (p: any) => void }) {
   const { isLoading, products, view, getProductHref, onWishlistToggle, wishlistedIds, onAddToCart } = props;
   if (isLoading) {
@@ -212,7 +212,7 @@ export function CategoryProductsListing({
       <Div className="py-6">
         {renderCategoryProductGrid({
           isLoading, products: products as any[], view,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           getProductHref: (p: any) => String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id)),
           onWishlistToggle: handleWishlistToggle, wishlistedIds, onAddToCart: handleAddToCart,
         })}

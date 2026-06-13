@@ -42,7 +42,7 @@ const BOTTOM_NAV_BG =
 const Z_BOTTOM_ACTIONS = "z-40";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
-const CLS_COUNT_BADGE = "bg-red-500 text-white";
+const CLS_COUNT_BADGE = "bg-error-surface text-white";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 

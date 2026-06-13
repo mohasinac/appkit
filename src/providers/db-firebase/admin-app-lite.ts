@@ -1,13 +1,13 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 
-/* eslint-disable @typescript-eslint/no-require-imports */
+ 
 function nodePath() { return require("path") as typeof import("path"); }
 function nodeFs()   { return require("fs")   as typeof import("fs"); }
 // process.cwd() is Node.js-only; access via module.require so the Edge
 // static analyser does not flag this file.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function nodeCwd(): string { return (module as any).require("process").cwd(); }
-/* eslint-enable @typescript-eslint/no-require-imports */
+ 
 
 function parsePrivateKey(raw: string): string {
   return raw

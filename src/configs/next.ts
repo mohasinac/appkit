@@ -211,7 +211,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   function mergedWebpack(config: any, ctx: any): any {
     const { isServer, webpack } = ctx as { isServer: boolean; webpack: { IgnorePlugin: new (opts: unknown) => unknown; NormalModuleReplacementPlugin: new (regex: RegExp, fn: (resource: { request: string }) => void) => unknown } };
 

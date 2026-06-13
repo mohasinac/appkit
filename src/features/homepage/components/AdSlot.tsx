@@ -31,7 +31,7 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
         {},
       );

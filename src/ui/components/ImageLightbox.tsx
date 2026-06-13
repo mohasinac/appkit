@@ -6,7 +6,7 @@ import { Button } from "./Button";
 import { Div } from "./Div";
 import { Text, Span } from "./Typography";
 
-const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-red-500/60 text-white flex items-center justify-center";
+const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-error-surface text-white flex items-center justify-center";
 
 export interface LightboxImage {
   src: string;

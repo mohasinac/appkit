@@ -32,8 +32,8 @@ export const DASHBOARD_ACCENT_CLASSES: Record<DashboardVariant, {
     hoverBg: "hover:bg-zinc-50 dark:hover:bg-slate-800/60",
   },
   store: {
-    activeBg: "bg-orange-50 dark:bg-orange-900/20",
-    activeText: "text-orange-700 dark:text-orange-300",
+    activeBg: "bg-warning-surface dark:bg-warning-surface",
+    activeText: "text-warning dark:text-warning",
     hoverBg: "hover:bg-zinc-50 dark:hover:bg-slate-800/60",
   },
   user: {

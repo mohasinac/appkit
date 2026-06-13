@@ -134,7 +134,7 @@ export async function HowPayoutsWorkView({
 }
 
 type PayoutsT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type PayoutsInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type PayoutsStep = { number: number; icon: string; title: string; text: string };
 

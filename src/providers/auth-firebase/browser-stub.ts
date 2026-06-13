@@ -8,7 +8,7 @@
  * into the client bundle.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 export const firebaseAuthProvider: any = null;
 export const firebaseSessionProvider: any = null;

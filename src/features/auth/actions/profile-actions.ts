@@ -108,3 +108,29 @@ export async function getProfileStoreProducts(storeId: string) {
   const products = await productRepository.findByStore(storeId);
   return products.filter((p) => p.status === ProductStatusValues.PUBLISHED);
 }
+
+/** Approved reviews AUTHORED by this user (not reviews of their store). */
+export async function getReviewsAuthoredBy(userId: string) {
+  const snapshot = await reviewRepository.findApprovedByUser(userId).catch(() => []);
+  return snapshot.map((r): Review => ({
+    id: r.id,
+    productId: r.productId,
+    productTitle: r.productTitle,
+    userId: r.userId,
+    userName: maskPublicReview(r).userName,
+    userAvatar: r.userAvatar,
+    rating: r.rating as Review["rating"],
+    title: r.title,
+    comment: r.comment,
+    images: r.images?.map((url) => ({ url })),
+    status: r.status,
+    helpfulCount: r.helpfulCount,
+    reportCount: r.reportCount,
+    verified: r.verified,
+    featured: r.featured,
+    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : undefined,
+    updatedAt: r.updatedAt instanceof Date ? r.updatedAt.toISOString() : undefined,
+    storeSlug: r.storeId,
+    storeName: r.storeName,
+  }));
+}

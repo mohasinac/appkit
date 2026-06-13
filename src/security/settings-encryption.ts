@@ -1,8 +1,8 @@
 // crypto is a Node.js built-in. Use require() to keep it out of the static
 // import graph so Next.js Edge bundler does not warn about this file.
-/* eslint-disable @typescript-eslint/no-require-imports */
+ 
 function nodeCrypto() { return require("crypto") as typeof import("crypto"); }
-/* eslint-enable @typescript-eslint/no-require-imports */
+ 
 
 const ALGORITHM = "aes-256-gcm" as const;
 const IV_BYTES = 12;

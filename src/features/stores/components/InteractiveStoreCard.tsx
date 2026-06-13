@@ -12,7 +12,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_RATING_BADGE = "absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/50 backdrop-blur-sm px-2 py-0.5 text-xs font-semibold text-yellow-300";
+const CLS_RATING_BADGE = "absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/50 backdrop-blur-sm px-2 py-0.5 text-xs font-semibold text-warning";
 
 export interface InteractiveStoreCardProps {
   store: StoreListItem;

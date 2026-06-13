@@ -8,7 +8,7 @@ import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 const CLS_BUNDLE_PILL = "inline-flex items-center rounded-full bg-violet-600 px-2 py-0.5 text-white";
-const CLS_STOCK_OK = "bg-emerald-600 text-white";
+const CLS_STOCK_OK = "bg-success-surface text-white";
 const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-1.5 text-center text-xs font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
 import {
   BaseListingCard,

@@ -63,9 +63,9 @@ export function ProductFeatureBadges({
       key: "featured",
       icon: <Span size="xs">★</Span>,
       label: labels.featured,
-      colorClass: "text-amber-700 dark:text-amber-300",
+      colorClass: "text-warning dark:text-warning",
       bgClass:
-        "bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800",
+        "bg-warning-surface dark:bg-warning-surface border-warning dark:border-warning",
     });
   }
 
@@ -74,9 +74,9 @@ export function ProductFeatureBadges({
       key: "fasterDelivery",
       icon: <Span size="xs">⚡</Span>,
       label: labels.fasterDelivery,
-      colorClass: "text-orange-700 dark:text-orange-300",
+      colorClass: "text-warning dark:text-warning",
       bgClass:
-        "bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800",
+        "bg-warning-surface dark:bg-warning-surface border-warning dark:border-warning",
     });
   }
 
@@ -117,9 +117,9 @@ export function ProductFeatureBadges({
       key: "returnable",
       icon: <Span size="xs">↺</Span>,
       label: labels.returnable,
-      colorClass: "text-teal-700 dark:text-teal-300",
+      colorClass: "text-success dark:text-success",
       bgClass:
-        "bg-teal-50 dark:bg-teal-900/30 border-teal-200 dark:border-teal-800",
+        "bg-success-surface dark:bg-success-surface border-success dark:border-success",
     });
   }
 
@@ -128,9 +128,9 @@ export function ProductFeatureBadges({
       key: "freeShipping",
       icon: <Span size="xs">🚚</Span>,
       label: labels.freeShipping,
-      colorClass: "text-emerald-700 dark:text-emerald-300",
+      colorClass: "text-success dark:text-success",
       bgClass:
-        "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800",
+        "bg-success-surface dark:bg-success-surface border-success dark:border-success",
     });
   }
 

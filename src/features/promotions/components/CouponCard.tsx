@@ -6,14 +6,14 @@ import { BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Text } from "../..
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
-const CLS_TOGGLE_ON = "h-4 w-4 text-emerald-600 dark:text-emerald-400";
-const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50";
+const CLS_TOGGLE_ON = "h-4 w-4 text-success dark:text-success";
+const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors disabled:opacity-50";
 
 const TYPE_COLORS: Record<CouponType, { card: string; code: string }> = {
   percentage:   { card: "bg-purple-50 border-purple-200 dark:bg-purple-950/30 dark:border-purple-800", code: "bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200 border-purple-300 dark:border-purple-700" },
-  fixed:        { card: "bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800",   code: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200 border-green-300 dark:border-green-700" },
-  free_shipping:{ card: "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800",      code: "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 border-blue-300 dark:border-blue-700" },
-  buy_x_get_y:  { card: "bg-orange-50 border-orange-200 dark:bg-orange-950/30 dark:border-orange-800", code: "bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-200 border-orange-300 dark:border-orange-700" },
+  fixed:        { card: "bg-success-surface border-success dark:bg-success-surface dark:border-success",   code: "bg-success-surface dark:bg-success-surface text-success dark:text-success border-success dark:border-success" },
+  free_shipping:{ card: "bg-info-surface border-info dark:bg-info-surface dark:border-info",      code: "bg-info-surface dark:bg-info-surface text-info dark:text-info border-info dark:border-info" },
+  buy_x_get_y:  { card: "bg-warning-surface border-warning dark:bg-warning-surface dark:border-warning", code: "bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border-warning dark:border-warning" },
 };
 
 /**
@@ -310,7 +310,7 @@ export function CouponCard({
             type="button"
             onClick={handleClaim}
             disabled={claiming}
-            className="w-full rounded-md px-3 py-1.5 text-xs font-semibold transition-all active:scale-95 bg-[var(--appkit-color-primary-700)] text-[var(--appkit-color-text-on-primary,#fff)] hover:bg-[var(--appkit-color-primary-800)] disabled:opacity-50"
+            className="w-full rounded-md px-3 py-1.5 text-xs font-semibold transition-all active:scale-95 bg-[var(--appkit-color-primary-700)] text-[var(--appkit-color-text-on-primary)] hover:bg-[var(--appkit-color-primary-800)] disabled:opacity-50"
             aria-label={`Claim coupon ${n.code} and apply at checkout`}
           >
             {claiming ? labels.claiming : labels.claim}

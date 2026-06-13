@@ -22,9 +22,9 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_WARN_BOX = "rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm";
-const CLS_WARN_TITLE = "font-medium text-amber-900";
-const CLS_WARN_BODY = "mt-1 text-amber-800";
+const CLS_WARN_BOX = "rounded-lg border border-warning bg-warning-surface p-4 text-sm";
+const CLS_WARN_TITLE = "font-medium text-warning";
+const CLS_WARN_BODY = "mt-1 text-warning";
 
 export interface LiveItemDetailViewProps {
   product: ProductDocument | null;

@@ -2,9 +2,9 @@ import React from "react";
 import { Div, Heading, RichText, Text } from "../../../ui";
 
 const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
-const CLS_WARN_BOX = "bg-yellow-50 border border-yellow-200 rounded-lg p-4";
-const CLS_WARN_TITLE = "text-yellow-800 font-medium";
-const CLS_WARN_BODY = "text-yellow-700 mt-1";
+const CLS_WARN_BOX = "bg-warning-surface border border-warning rounded-lg p-4";
+const CLS_WARN_TITLE = "text-warning font-medium";
+const CLS_WARN_BODY = "text-warning mt-1";
 import type { StoreDetail } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";

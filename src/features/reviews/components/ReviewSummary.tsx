@@ -2,8 +2,8 @@ import React from "react";
 import { Div, Span, Text } from "../../../ui";
 import { StarRating } from "../../../ui";
 
-const CLS_STAR = "text-yellow-400";
-const CLS_BAR = "h-full rounded-full bg-yellow-400 transition-all duration-300";
+const CLS_STAR = "text-warning";
+const CLS_BAR = "h-full rounded-full bg-warning-surface transition-all duration-300";
 
 // --- ReviewSummary ------------------------------------------------------------
 

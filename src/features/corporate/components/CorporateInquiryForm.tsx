@@ -1,14 +1,16 @@
 "use client"
 import React from "react";
-import { Button, Div, Input, Text, Textarea } from "../../../ui";
+import { Button, Div, Text } from "../../../ui";
+import { Form } from "../../../ui/components/Form";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
+import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import type { SubmitCorporateInquiryInput } from "../types";
 
 interface CorporateInquiryFormProps {
   onSubmit: (data: SubmitCorporateInquiryInput) => Promise<void>;
   isPending?: boolean;
 }
-
-const CLS_INPUT = "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm";
 
 export function CorporateInquiryForm({
   onSubmit,
@@ -27,21 +29,8 @@ export function CorporateInquiryForm({
     message: "",
   });
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    const { name, value, type } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox"
-          ? (e.target as HTMLInputElement).checked
-          : type === "number"
-            ? value === ""
-              ? undefined
-              : Number(value)
-            : value,
-    }));
+  function patch<K extends keyof SubmitCorporateInquiryInput>(key: K, value: SubmitCorporateInquiryInput[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -50,108 +39,95 @@ export function CorporateInquiryForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <Form onSubmit={handleSubmit} className="space-y-4">
       <Div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Input
+        <FieldInput
           name="companyName"
           type="text"
           placeholder="Company name"
           value={form.companyName}
-          onChange={handleChange}
+          onChange={(v) => patch("companyName", v)}
           required
-          className={CLS_INPUT}
         />
-        <Input
+        <FieldInput
           name="contactPerson"
           type="text"
           placeholder="Contact person"
           value={form.contactPerson}
-          onChange={handleChange}
+          onChange={(v) => patch("contactPerson", v)}
           required
-          className={CLS_INPUT}
         />
-        <Input
+        <FieldInput
           name="designation"
           type="text"
           placeholder="Designation (optional)"
           value={form.designation ?? ""}
-          onChange={handleChange}
-          className={CLS_INPUT}
+          onChange={(v) => patch("designation", v)}
         />
-        <Input
+        <FieldInput
           name="email"
           type="email"
           placeholder="Business email"
           value={form.email}
-          onChange={handleChange}
+          onChange={(v) => patch("email", v)}
           required
-          className={CLS_INPUT}
         />
-        <Input
+        <FieldInput
           name="phone"
           type="tel"
           placeholder="Phone number"
           value={form.phone}
-          onChange={handleChange}
+          onChange={(v) => patch("phone", v)}
           required
-          className={CLS_INPUT}
         />
-        <Input
+        <FieldInput
           name="units"
           type="number"
           placeholder="Number of units"
           value={form.units}
-          onChange={handleChange}
+          onChange={(v) => patch("units", v === "" ? 0 : Number(v))}
           min={1}
           required
-          className={CLS_INPUT}
         />
-        <Input
+        <FieldInput
           name="budgetPerUnit"
           type="number"
           placeholder="Budget per unit (optional)"
           value={form.budgetPerUnit ?? ""}
-          onChange={handleChange}
+          onChange={(v) => patch("budgetPerUnit", v === "" ? undefined : Number(v))}
           min={0}
-          className={CLS_INPUT}
         />
-        <Input
+        <FieldInput
           name="deliveryDateRequired"
           type="date"
           placeholder="Required by (optional)"
           value={form.deliveryDateRequired ?? ""}
-          onChange={handleChange}
-          className={CLS_INPUT}
+          onChange={(v) => patch("deliveryDateRequired", v)}
         />
       </Div>
-      <Div className="flex items-center gap-2 text-sm text-neutral-700">
-        <input
-          name="customBranding"
-          type="checkbox"
-          checked={form.customBranding}
-          onChange={handleChange}
-          className="h-4 w-4 rounded border-neutral-300"
-        />
-        <Text className="text-sm text-neutral-700">
-          Custom branding required
-        </Text>
-      </Div>
-      <Textarea
+      <FieldCheckbox
+        name="customBranding"
+        label="Custom branding required"
+        checked={form.customBranding}
+        onChange={(c) => patch("customBranding", c)}
+      />
+      <FieldTextarea
         name="message"
         placeholder="Additional requirements (optional)"
         value={form.message ?? ""}
-        onChange={handleChange}
+        onChange={(v) => patch("message", v)}
         rows={4}
-        className={CLS_INPUT}
       />
       <Button
         type="submit"
+        isLoading={isPending}
         disabled={isPending}
         variant="primary"
-        className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90 disabled:opacity-60"
+        className="w-full"
       >
         {isPending ? "Submitting..." : "Submit Inquiry"}
       </Button>
-    </form>
+      <Text size="xs" variant="secondary">We'll respond within 1-2 business days.</Text>
+    </Form>
   );
 }

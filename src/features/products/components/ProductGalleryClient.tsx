@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import { Div, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -55,7 +56,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
     <Div className="space-y-3">
       {/* Main image — click to open lightbox */}
       <div
-        className="overflow-hidden rounded-xl border border-zinc-100 dark:border-zinc-800 cursor-zoom-in"
+        className="overflow-hidden rounded-xl border border-zinc-100 dark:border-zinc-800 cursor-zoom-in aspect-square w-full"
         onClick={() => setLightboxIndex(activeIndex)}
         role="button"
         tabIndex={0}
@@ -64,10 +65,11 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
         }}
         aria-label={`View ${productName ?? "product"} image in full screen`}
       >
-        <img
+        <MediaImage
           src={mainImage}
           alt={productName ? `${productName} — image ${activeIndex + 1}` : `Product image ${activeIndex + 1}`}
-          className="aspect-square w-full object-cover transition-transform duration-300 hover:scale-105"
+          size="gallery"
+          className="transition-transform duration-300 hover:scale-105"
         />
       </div>
 
@@ -87,7 +89,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
               aria-label={`View image ${i + 1}`}
               aria-current={i === activeIndex ? "true" : undefined}
             >
-              <img src={src} alt="" className="h-full w-full object-cover" />
+              <MediaImage src={src} alt={`Thumbnail ${i + 1}`} size="thumbnail" />
             </button>
           ))}
         </Div>

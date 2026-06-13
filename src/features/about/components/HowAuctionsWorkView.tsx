@@ -134,7 +134,7 @@ export async function HowAuctionsWorkView({
 }
 
 type AuctionT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type AuctionInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type AuctionStep = { number: number; icon: string; title: string; text: string };
 

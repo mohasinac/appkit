@@ -6,7 +6,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_DELETE_BTN = "text-red-600 hover:text-red-800 dark:text-red-400";
+const CLS_DELETE_BTN = "text-error hover:text-error dark:text-error";
 
 export interface CategoryTableColumnsLabels {
   colName?: string;
@@ -55,7 +55,7 @@ export function getCategoryTableColumns(
               <Div
                 className="w-full h-full flex items-center justify-center text-base"
                 // audit-inline-style-ok: runtime theme color
-                style={{ backgroundColor: cat.display?.color ?? "#94a3b8", color: "#fff" }}
+                style={{ backgroundColor: cat.display?.color ?? "var(--appkit-color-text-faint)", color: "var(--appkit-color-text-on-primary)" }}
               >
                 {cat.display?.icon ?? "🗂️"}
               </Div>

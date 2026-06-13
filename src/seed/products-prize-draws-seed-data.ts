@@ -77,37 +77,42 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 2. Hot Wheels Treasure Hunt
+  // 2. Yu-Gi-Oh! Vintage Booster Box Draw
   {
-    id: "prize-hot-wheels-treasure-hunt",
-    slug: "prize-hot-wheels-treasure-hunt",
-    title: "Hot Wheels Super Treasure Hunt Draw",
+    id: "prize-ygo-vintage-booster-draw",
+    slug: "prize-ygo-vintage-booster-draw",
+    title: "Yu-Gi-Oh! Vintage Booster Box Draw",
     description:
-      "8 confirmed Super Treasure Hunt Hot Wheels — including a 1969 Volkswagen Squareback, Datsun 510, and Custom Mustang. Single entry, single reveal, single prize. RNG verified post-reveal on GitHub.",
-    categorySlugs: ["category-diecast-vehicles"],
-    categoryNames: ["Diecast Vehicles"],
-    brand: "Hot Wheels",
-    brandSlug: "brand-hot-wheels",
+      "8 confirmed vintage YGO sealed booster boxes — LOB, MRD, PSV, IOC, AST, SOD, EEN, POTD. Single entry, single reveal, single prize. RNG verified post-reveal on GitHub.",
+    categorySlugs: ["category-sealed-products", "category-booster-boxes"],
+    categoryNames: ["Sealed Products", "Booster Boxes 24-pack"],
+    brand: "Konami",
+    brandSlug: "brand-konami",
     price: 29900, // ₹299 per entry
     currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 100,
     availableQuantity: 100,
-    mainImage:
-      seedExtMedia("https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=800&fit=crop"),
+    mainImage: seedExtMedia(
+      "https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg",
+    ),
     images: [
-      seedExtMedia("https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=800&fit=crop"),
-      seedExtMedia("https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=800&fit=crop"),
+      seedExtMedia(
+        "https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg",
+      ),
+      seedExtMedia(
+        "https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg",
+      ),
     ],
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
-    storeName: "Diecast Depot",
-    storeId: "store-diecast-depot",
+    storeName: "Kaiba Corp Card Vault",
+    storeId: "store-kaiba-corp-cards",
     featured: true,
     isPromoted: false,
     tags: [
-      "hot-wheels",
+      "yugioh",
       "prize-draw",
-      "super-treasure-hunt",
-      "diecast",
+      "sealed-booster",
+      "vintage",
       "fair-rng",
     ],
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
@@ -120,11 +125,11 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealStatus: "pending",
     prizeRevealDeadlineDays: 3,
     prizeGithubFileUrl:
-      "https://github.com/letitripin/proof-of-fairness/blob/main/draws/prize-hot-wheels-treasure-hunt.json",
+      "https://github.com/letitripin/proof-of-fairness/blob/main/draws/prize-ygo-vintage-booster-draw.json",
     maxPerUser: 10,
-    prizeDrawItems: _hotWheelsPrizeItems(),
+    prizeDrawItems: _ygoVintageBoosterItems(),
     shippingInfo:
-      "Each prize ships within 5 business days of reveal. Insured for declared value.",
+      "Each sealed booster box ships within 5 business days of reveal. Insured at declared value.",
     returnPolicy:
       "Prize-draw entries are non-refundable once the reveal window opens. Pool-exhausted entries auto-refund.",
     allowOffers: false,
@@ -240,13 +245,16 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
   ];
 }
 
-function _hotWheelsPrizeItems(): PrizeDrawItem[] {
+function _ygoVintageBoosterItems(): PrizeDrawItem[] {
   return [
     {
       itemNumber: 1,
-      title: "1969 Volkswagen Squareback STH",
+      title: "Legend of Blue Eyes White Dragon (LOB) Booster Box",
+      description: "24-pack sealed booster box. The set that started it all.",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 899900,
@@ -254,9 +262,11 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
     },
     {
       itemNumber: 2,
-      title: "Datsun 510 STH (Mountain Metal)",
+      title: "Metal Raiders (MRD) Booster Box",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/44095762.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 499900,
@@ -264,9 +274,11 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
     },
     {
       itemNumber: 3,
-      title: "Custom Mustang STH",
+      title: "Pharaoh's Servant (PSV) Booster Box",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/25833572.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 599900,
@@ -274,9 +286,11 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
     },
     {
       itemNumber: 4,
-      title: "Porsche 935 STH (Mountain Metal)",
+      title: "Invasion of Chaos (IOC) Booster Box",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/82301904.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 449900,
@@ -284,9 +298,11 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
     },
     {
       itemNumber: 5,
-      title: "Nissan Skyline GT-R (R32) STH",
+      title: "Ancient Sanctuary (AST) Booster Box",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/77585513.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 699900,
@@ -294,9 +310,11 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
     },
     {
       itemNumber: 6,
-      title: "'71 Datsun Bluebird 510 Wagon STH",
+      title: "Soul of the Duelist (SOD) Booster Box",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/78193831.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 549900,
@@ -304,9 +322,11 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
     },
     {
       itemNumber: 7,
-      title: "Toyota AE86 Sprinter Trueno STH",
+      title: "Elemental Energy (EEN) Booster Box",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/20721928.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 799900,
@@ -314,9 +334,11 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
     },
     {
       itemNumber: 8,
-      title: "Mazda RX-7 STH (FD)",
+      title: "Power of the Duelist (POTD) Booster Box",
       images: [
-        seedExtMedia("https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop"),
+        seedExtMedia(
+          "https://images.ygoprodeck.com/images/cards/cropped/89943723.jpg",
+        ),
       ],
       condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 649900,

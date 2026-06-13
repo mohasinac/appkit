@@ -17,10 +17,10 @@ export interface MakeOfferButtonProps {
 
 type State = "idle" | "confirm" | "loading" | "success" | "pending" | "error";
 
-const CLS_SUCCESS_BOX = "rounded-xl border border-emerald-200 dark:border-emerald-800 bg-success-surface p-4 text-center space-y-1";
-const CLS_PENDING_BOX = "rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-4 text-center space-y-1";
-const CLS_PENDING_TITLE = "text-sm font-medium text-amber-800 dark:text-amber-300";
-const CLS_PENDING_BODY = "text-xs text-amber-700 dark:text-amber-400";
+const CLS_SUCCESS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface p-4 text-center space-y-1";
+const CLS_PENDING_BOX = "rounded-xl border border-warning dark:border-warning bg-warning-surface dark:bg-warning-surface p-4 text-center space-y-1";
+const CLS_PENDING_TITLE = "text-sm font-medium text-warning dark:text-warning";
+const CLS_PENDING_BODY = "text-xs text-warning dark:text-warning";
 
 function isActiveOfferError(msg: string): boolean {
   return msg.includes("active offer") || msg.includes("ACTIVE_OFFER");

@@ -4,8 +4,8 @@ import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_ICON_SM = "h-3 w-3 shrink-0";
-const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-red-500 dark:text-zinc-600";
-const CLS_PILL_LINK = "inline-flex items-center gap-1 rounded-full bg-rose-100 dark:bg-rose-900/30 px-2.5 py-0.5 text-xs font-medium text-rose-700 dark:text-rose-300 hover:bg-rose-200 transition-colors";
+const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-error dark:text-zinc-600";
+const CLS_PILL_LINK = "inline-flex items-center gap-1 rounded-full bg-error-surface dark:bg-error-surface px-2.5 py-0.5 text-xs font-medium text-error dark:text-error hover:bg-error-surface transition-colors";
 import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
 import {
   Container,
@@ -185,6 +185,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
             </Row>
 
             {/* Search + sort + type filter form (GET — SSR-friendly) */}
+            {/* audit-raw-form-input-ok: plain GET-form URL search/filter — SSR-friendly */}
             <form method="GET" className="flex flex-wrap gap-3">
               <Div className="flex-1 min-w-48">
                 <Input

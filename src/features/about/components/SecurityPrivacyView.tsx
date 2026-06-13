@@ -189,7 +189,7 @@ export async function SecurityPrivacyView({
 }
 
 type SecurityT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type SecurityCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 
 function renderSecurityCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: SecurityCard[]) {

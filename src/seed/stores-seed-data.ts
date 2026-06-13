@@ -252,37 +252,6 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── Store 5: Diecast Depot (Hot Wheels, Tomica, Matchbox) ─────────────────
-  {
-    id: "store-diecast-depot",
-    storeSlug: "store-diecast-depot",
-    ownerId: "user-ravi-diecast",
-    storeName: "Diecast Depot",
-    storeDescription:
-      "India's premier diecast collectibles store. Hot Wheels mainline, Premium, Treasure Hunts, Super TH, Tomica, Matchbox, and Maisto. New arrivals every week.",
-    storeCategory: "category-diecast-vehicles",
-    storeLogoURL: seedExtMedia("https://picsum.photos/seed/store-logo-diecast-depot-20260101/400/400"),
-    storeBannerURL: seedExtMedia("https://picsum.photos/seed/store-banner-diecast-depot-20260101/1600/400"),
-    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "Collecting diecast since 1998. Over 5,000 Hot Wheels in my personal collection. Now sharing the hobby with collectors across India.",
-    location: "Delhi, NCR, India",
-    socialLinks: { instagram: "https://instagram.com/diecastdepot.in", facebook: "https://facebook.com/diecastdepot" },
-    returnPolicy: "3-day returns on carded items only. No returns on loose or opened items.",
-    shippingPolicy: "Free shipping on 5+ items or orders above ₹999. Dispatched within 24 hours.",
-    shippingConfig: {
-      defaultProviderId: "provider-diecast-standard",
-      providers: [
-        { providerId: "provider-diecast-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 3900, freeAboveInPaise: 99900 }, etaDaysMin: 3, etaDaysMax: 5, requiresAwbUpload: true },
-      ],
-    },
-    isPublic: true,
-    isVacationMode: false,
-    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 12, averageRating: 4.6 },
-    capabilities: ["verified_seller", "create_coupons", "suggest_brands", "bulk_listing_import"] as StoreCapability[],
-    createdAt: daysAgo(250),
-    updatedAt: daysAgo(2),
-  },
-
   // ── Store 6: Beyblade Arena (spinning tops specialist) ────────────────────
   {
     id: "store-beyblade-arena",

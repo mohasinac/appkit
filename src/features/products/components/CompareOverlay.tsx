@@ -27,7 +27,7 @@ const __O = {
 } as const;
 
 const REL_NOOPENER = "noopener noreferrer";
-const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-rose-500 dark:hover:bg-zinc-800";
+const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-error dark:hover:bg-zinc-800";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Div, Heading, Row, Stack, Text } from "../../../ui";

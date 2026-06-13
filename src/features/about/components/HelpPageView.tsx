@@ -104,7 +104,7 @@ export async function HelpPageView({
 type HelpTranslateFn = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
 type HelpThemedTokens = (typeof THEME_CONSTANTS)["themed"];
 type HelpFlexTokens = (typeof THEME_CONSTANTS)["flex"];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type TopicItem = { icon: any; title: string; desc: string; href: string; color: string; iconColor: string };
 
 function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: TopicItem[]) {

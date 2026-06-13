@@ -3,7 +3,11 @@
 import React, { useState, useTransition } from "react";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
-import { Button, Div, Input, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
+import { Button, Div, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
+import { Form } from "../../../ui/components/Form";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { placeBidSchema } from "../schemas/bid-input";
 
 const __P = {
   p5: "p-5",
@@ -54,17 +58,55 @@ export function PlaceBidFormClient({
 }: PlaceBidFormClientProps) {
   const minBid = currentBid + minBidIncrement;
   const [bidAmount, setBidAmount] = useState<string>(String(minBid));
+  const [stepMul, setStepMul] = useState<1 | 5 | 10 | "custom">(1);
   const [isPending, startTransition] = useTransition();
   const [isBuyNowPending, startBuyNowTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  function applyPreset(n: 1 | 5 | 10) {
+    setStepMul(n);
+    setBidAmount(String(currentBid + minBidIncrement * n));
+  }
+
   const buyNowAvailable = buyNowPrice !== null && !isEnded && !bidsHaveStarted && !!onBuyNow;
+  const schema = placeBidSchema(minBid, minBidIncrement);
+
+  async function submitBid(
+    amount: number,
+    setFieldError: (name: string, error: string | null) => void,
+  ) {
+    try {
+      const result = await onPlaceBid({ productId, bidAmount: amount });
+      const errorMsg = bidErrorMessage(result);
+      if (errorMsg) {
+        setFieldError("bidAmount", errorMsg);
+        return;
+      }
+      setSuccess(true);
+      setBidAmount(String(amount + minBidIncrement));
+      setStepMul(1);
+    } catch (err: unknown) {
+      if (isAuthError(err)) {
+        setShowLoginModal(true);
+      } else {
+        setFieldError(
+          "bidAmount",
+          err instanceof Error ? err.message : "Failed to place bid. Please try again.",
+        );
+      }
+    }
+  }
+
+  function bidErrorMessage(result: unknown): string | null {
+    if (!result || typeof result !== "object" || !("ok" in result)) return null;
+    const r = result as { ok: boolean; error?: string; code?: string };
+    if (r.ok !== false) return null;
+    return (r.code && BID_ERROR_DISPLAY[r.code]) ?? r.error ?? "Failed to place bid. Please try again.";
+  }
 
   function handleBuyNow() {
     if (!onBuyNow) return;
-    setError(null);
     setSuccess(false);
     startBuyNowTransition(async () => {
       try {
@@ -75,52 +117,12 @@ export function PlaceBidFormClient({
           "ok" in result &&
           (result as { ok: boolean }).ok === false
         ) {
-          const r = result as { error?: string };
-          setError(r.error ?? "Buy Now failed. Please try again.");
+          setSuccess(false);
           return;
         }
         setSuccess(true);
       } catch (err: unknown) {
-        if (isAuthError(err)) {
-          setShowLoginModal(true);
-        } else {
-          setError(err instanceof Error ? err.message : "Buy Now failed. Please try again.");
-        }
-      }
-    });
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const amount = Number(bidAmount);
-    if (!amount || amount < minBid) {
-      setError(`Bid must be at least ${formatCurrency(minBid, currency)}`);
-      return;
-    }
-    setError(null);
-    setSuccess(false);
-    startTransition(async () => {
-      try {
-        const result = await onPlaceBid({ productId, bidAmount: amount });
-        if (
-          result &&
-          typeof result === "object" &&
-          "ok" in result &&
-          (result as { ok: boolean }).ok === false
-        ) {
-          const r = result as { error?: string; code?: string };
-          const display = (r.code && BID_ERROR_DISPLAY[r.code]) ?? r.error ?? "Failed to place bid. Please try again.";
-          setError(display);
-          return;
-        }
-        setSuccess(true);
-        setBidAmount(String(amount + minBidIncrement));
-      } catch (err: unknown) {
-        if (isAuthError(err)) {
-          setShowLoginModal(true);
-        } else {
-          setError(err instanceof Error ? err.message : "Failed to place bid. Please try again.");
-        }
+        if (isAuthError(err)) setShowLoginModal(true);
       }
     });
   }
@@ -153,55 +155,105 @@ export function PlaceBidFormClient({
         message="You need to be signed in to place a bid. Please log in or create an account to continue."
       />
 
-      {/* Bid form */}
-      <form onSubmit={handleSubmit}>
-        <Stack gap="sm">
-          <Input
-            type="number"
-            value={bidAmount}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setBidAmount(e.target.value)
-            }
-            placeholder={`At least ${formatCurrency(minBid, currency)}`}
-            min={minBid}
-            step={minBidIncrement}
-            aria-label="Your bid amount"
-            disabled={isEnded || isPending}
-          />
+      <Form
+        onSubmit={(e) => {
+          // handler wired through render-prop below — keeps setFieldError in scope
+          e.preventDefault();
+        }}
+      >
+        {({ setFieldError, clearErrors }) => (
+          <Stack gap="sm">
+            <Row gap="xs" wrap role="radiogroup" aria-label="Bid amount preset">
+              {([1, 5, 10] as const).map((n) => (
+                <Button
+                  key={n}
+                  type="button"
+                  variant={stepMul === n ? "primary" : "secondary"}
+                  size="sm"
+                  role="radio"
+                  aria-checked={stepMul === n}
+                  disabled={isEnded || isPending}
+                  onClick={() => {
+                    clearErrors();
+                    applyPreset(n);
+                  }}
+                >
+                  +{formatCurrency(minBidIncrement * n, currency)}
+                </Button>
+              ))}
+              <Button
+                type="button"
+                variant={stepMul === "custom" ? "primary" : "ghost"}
+                size="sm"
+                role="radio"
+                aria-checked={stepMul === "custom"}
+                disabled={isEnded || isPending}
+                onClick={() => setStepMul("custom")}
+              >
+                Custom
+              </Button>
+            </Row>
 
-          {error && (
-            <Text className="text-xs text-error">{error}</Text>
-          )}
-          {success && (
-            <Text className="text-xs text-success">
-              ✓ Bid placed successfully!
-            </Text>
-          )}
+            <FieldInput
+              name="bidAmount"
+              type="number"
+              value={bidAmount}
+              readOnly={stepMul !== "custom"}
+              onChange={(value) => {
+                setBidAmount(value);
+                clearErrors();
+              }}
+              placeholder={`At least ${formatCurrency(minBid, currency)}`}
+              min={minBid}
+              aria-label="Your bid amount"
+              disabled={isEnded || isPending}
+            />
+            {stepMul === "custom" && (
+              <Text size="xs" color="muted" aria-live="polite">
+                Any amount ≥ {formatCurrency(minBid, currency)} is accepted.
+              </Text>
+            )}
 
-          <Button
-            variant="primary"
-            size="md"
-            className="w-full"
-            disabled={isEnded || isPending}
-            type="submit"
-          >
-            {isPending ? "Placing Bid…" : isEnded ? "Auction Ended" : "Place Bid"}
-          </Button>
+            {success && (
+              <Text className="text-xs text-success">
+                ✓ Bid placed successfully!
+              </Text>
+            )}
 
-          {buyNowAvailable && (
             <Button
-              variant="secondary"
+              variant="primary"
               size="md"
               className="w-full"
+              disabled={isEnded || isPending}
+              isLoading={isPending}
               type="button"
-              disabled={isBuyNowPending || isPending}
-              onClick={handleBuyNow}
+              onClick={() => {
+                clearErrors();
+                const parsed = schema.safeParse({ bidAmount });
+                if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
+                setSuccess(false);
+                startTransition(() => submitBid(parsed.data.bidAmount, setFieldError));
+              }}
             >
-              {isBuyNowPending ? "Processing…" : `Buy Now — ${formatCurrency(buyNowPrice!, currency)}`}
+              {isEnded ? "Auction Ended" : "Place Bid"}
             </Button>
-          )}
-        </Stack>
-      </form>
+
+            {buyNowAvailable && (
+              <Button
+                variant="secondary"
+                size="md"
+                className="w-full"
+                type="button"
+                disabled={isBuyNowPending || isPending}
+                isLoading={isBuyNowPending}
+                onClick={handleBuyNow}
+              >
+                {`Buy Now — ${formatCurrency(buyNowPrice!, currency)}`}
+              </Button>
+            )}
+          </Stack>
+        )}
+      </Form>
 
       {/* Tags */}
       {tags.length > 0 && (

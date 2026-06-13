@@ -38,7 +38,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     const variantClass =
       error || variant === "error"
-        ? "border-red-400 focus-visible:border-red-500 focus-visible:ring-red-500/20 dark:border-red-500"
+        ? "border-error focus-visible:border-error focus-visible:ring-error/20 dark:border-error"
         : variant === "ghost"
           ? "border-transparent bg-transparent shadow-none"
           : "";

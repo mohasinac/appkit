@@ -183,7 +183,7 @@ export const cartsSeedData: CartDocument[] = [
         productId: "product-potd-booster-box",
         productTitle: "Power of the Duelist Booster Box 24pk",
         productImage: seedExtMedia("https://images.ygoprodeck.com/images/cards/small/89943723.jpg"),
-        price: 2299900,
+        price: 899900,
         currency: _CURRENCY,
         quantity: 1,
         storeId: "store-kaiba-corp-cards",

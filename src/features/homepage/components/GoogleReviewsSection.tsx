@@ -203,7 +203,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
       ? "flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory"
       : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4";
 
-  const cardClass = layout === "carousel" ? "flex-shrink-0 w-72 snap-start" : "";
+  const cardClass = layout === "carousel" ? "flex-shrink-0 w-[85%] sm:w-72 snap-start" : "";
 
   const mapsHref =
     googleMapsUrl || (placeId ? `https://search.google.com/local/reviews?placeid=${placeId}` : "");

@@ -38,7 +38,7 @@ const _rawGroupedListingsSeedData: Partial<ProductDocument>[] = [
     slug: "group-lob-booster-box",
     description:
       "Legend of Blue Eyes White Dragon complete booster box containing 24 sealed booster packs. This is the parent product; you can also purchase individual packs or the promo card separately.",
-    price: 4999900, // ₹49,999
+    price: 999900, // ₹9,999
     currency: "INR",
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
@@ -137,7 +137,7 @@ const _rawGroupedListingsSeedData: Partial<ProductDocument>[] = [
     slug: "group-potd-booster-box",
     description:
       "Power of the Duelist complete booster box containing 24 sealed booster packs. Purchase the full box or individual packs and the featured promo card separately.",
-    price: 2299900, // ₹22,999
+    price: 899900, // ₹8,999
     currency: "INR",
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,

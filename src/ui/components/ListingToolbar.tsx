@@ -14,8 +14,8 @@ import { SortDropdown } from "./SortDropdown";
 import { Div } from "./Div";
 import { Span } from "./Typography";
 
-const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-400 transition-colors";
-const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-rose-500 dark:hover:text-rose-400 transition-colors";
+const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-error dark:text-zinc-400 transition-colors";
+const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-error dark:hover:text-error transition-colors";
 
 export interface ListingToolbarSortOption {
   value: string;

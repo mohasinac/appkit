@@ -57,6 +57,7 @@ function makeCard(zone: 1 | 2 | 3 | 4 | 5 | 6 = 1): CarouselCard {
     id: `card-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     zone,
     background: { type: "color", color: "var(--appkit-color-primary)" },
+    // audit-hex-tokens-ok: default white text on colored bg — written into Firestore card
     content: { title: "", subtitle: "", textColor: "#ffffff", textAlign: "left" },
     buttons: [],
     hover: { effect: "scale" },
@@ -220,6 +221,7 @@ function BackgroundEditor({
           label="Colour (CSS token or hex)"
           value={value.color ?? ""}
           onChange={(e) => set({ color: e.target.value })}
+          // audit-hex-tokens-ok: placeholder text shown to admin as example
           placeholder="var(--appkit-color-primary) or #1a1a2e"
         />
       )}
@@ -314,6 +316,7 @@ function CardEditor({
         <Input label="Title" value={card.content?.title ?? ""} onChange={(e) => setContent({ title: e.target.value })} />
         <Input label="Subtitle" value={card.content?.subtitle ?? ""} onChange={(e) => setContent({ subtitle: e.target.value || undefined })} />
         <Input label="Description" value={card.content?.description ?? ""} onChange={(e) => setContent({ description: e.target.value || undefined })} />
+        {/* audit-hex-tokens-ok: text-color default when card has none set */}
         <Input label="Text colour (CSS)" value={card.content?.textColor ?? "#ffffff"} onChange={(e) => setContent({ textColor: e.target.value })} />
         <Select label="Text align" value={card.content?.textAlign ?? "left"} onChange={(e) => setContent({ textAlign: e.target.value as "left" | "center" | "right" })} options={TEXT_ALIGN_OPTIONS} />
       </Div>

@@ -387,7 +387,7 @@ export function AdminSupportTicketDetailView({
                   className={`rounded-lg p-3 text-sm ${
                     msg.authorRole === "user"
                       ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700"
-                      : "bg-info-surface border border-blue-200 dark:border-blue-800"
+                      : "bg-info-surface border border-info dark:border-info"
                   }`}
                 >
                   <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">

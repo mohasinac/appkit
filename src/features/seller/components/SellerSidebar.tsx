@@ -14,9 +14,9 @@ const __O = {
 const CLS_STORE_AVATAR = "h-8 w-8 rounded-md bg-cover bg-center flex-shrink-0";
 const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary";
 const CLS_STORE_NAME = "text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate";
-const CLS_NAV_ACTIVE = "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300";
-const CLS_NAV_BADGE = "shrink-0 rounded-full bg-orange-500 px-1.5 py-0.5 text-[10px] text-white leading-none";
-const CLS_NAV_ICON_ACTIVE = "text-orange-600 dark:text-orange-400";
+const CLS_NAV_ACTIVE = "bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning";
+const CLS_NAV_BADGE = "shrink-0 rounded-full bg-warning-surface px-1.5 py-0.5 text-[10px] text-white leading-none";
+const CLS_NAV_ICON_ACTIVE = "text-warning dark:text-warning";
 
 export interface StoreNavItem {
   href: string;

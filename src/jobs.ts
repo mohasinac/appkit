@@ -79,6 +79,18 @@ export {
   bindToFirebase,
 } from "./_internal/server/jobs/index.js";
 
+// Function registry (Track A) — typed declarative manifest of every appkit
+// Firebase function. Consumers extend by passing a second registry to
+// mergeFunctionRegistries(...) and binding the result with
+// bindAllFromRegistry(...).
+export {
+  defineFunction,
+  mergeFunctionRegistries,
+  bindAllFromRegistry,
+  APPKIT_FUNCTIONS,
+  APPKIT_FUNCTIONS_BY_NAME,
+} from "./_internal/server/functions/index.js";
+
 export type {
   PromotionsCallableResult,
   AdminAnalyticsResult,
@@ -95,3 +107,18 @@ export type {
   CallableHandler,
   BindHttpsOptions,
 } from "./_internal/server/jobs/index.js";
+
+export type {
+  DocumentCreatedTrigger,
+  DocumentTriggerFunctionDefinition,
+  DocumentUpdatedTrigger,
+  DocumentWrittenTrigger,
+  FunctionDefinition,
+  FunctionMemory,
+  FunctionOptions,
+  FunctionTrigger,
+  HttpsFunctionDefinition,
+  HttpsTrigger,
+  ScheduledFunctionDefinition,
+  ScheduleTrigger,
+} from "./_internal/server/functions/index.js";

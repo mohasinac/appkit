@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next";
 import { Div, Row, Span, Table, Thead, Tbody, Tr, Th, Td, Text, Modal, SideDrawer, Button } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isPreOrderListing } from "../utils/listing-type";
 
@@ -57,20 +58,13 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
       <div
         className={`relative w-14 h-14 rounded-full overflow-hidden border-2 transition-all ${
           isCurrent
-            ? "border-[var(--appkit-color-primary,#6366f1)] ring-2 ring-[var(--appkit-color-primary,#6366f1)]/30"
-            : "border-zinc-200 dark:border-zinc-700 group-hover:border-[var(--appkit-color-primary,#6366f1)]"
+            ? "border-[var(--appkit-color-primary)] ring-2 ring-[var(--appkit-color-primary)]/30"
+            : "border-zinc-200 dark:border-zinc-700 group-hover:border-[var(--appkit-color-primary)]"
         }`}
       >
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={image} alt={member.title} className="w-full h-full object-cover" loading="lazy" />
-        ) : (
-          <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
-            â—¯
-          </Div>
-        )}
+        <MediaImage src={image} alt={member.title} size="card" />
         {member.isGroupParent && (
-          <Span className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary,#6366f1)] text-white text-[8px] leading-none px-1 py-0.5 rounded-tl">
+          <Span className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-white text-[8px] leading-none px-1 py-0.5 rounded-tl">
             Set
           </Span>
         )}
@@ -92,18 +86,13 @@ function GroupTableRow({ member }: { member: GroupMember }) {
     <Tr className="border-b border-zinc-100 dark:border-zinc-800 last:border-0">
       <Td className="py-2 pr-3">
         <Div className={`w-10 h-10 rounded-full ${__O.hidden} border border-zinc-200 dark:border-zinc-700`}>
-          {image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={image} alt={member.title} className="w-full h-full object-cover" loading="lazy" />
-          ) : (
-            <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800" />
-          )}
+          <MediaImage src={image} alt={member.title} size="thumbnail" />
         </Div>
       </Td>
       <Td className="py-2 pr-3">
         <Text className="text-sm text-zinc-800 dark:text-zinc-200 font-medium line-clamp-2">{member.title}</Text>
         {member.isGroupParent && (
-          <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary,#6366f1)]">Parent</Span>
+          <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary)]">Parent</Span>
         )}
       </Td>
       <Td className="py-2 pr-3">
@@ -115,7 +104,7 @@ function GroupTableRow({ member }: { member: GroupMember }) {
       <Td className="py-2">
         <Link
           href={href}
-          className="text-xs text-[var(--appkit-color-primary,#6366f1)] hover:underline"
+          className="text-xs text-[var(--appkit-color-primary)] hover:underline"
         >
           View â†’
         </Link>
@@ -188,7 +177,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); setShowAll(true); }}
-            className="text-xs text-[var(--appkit-color-primary,#6366f1)] hover:underline ml-3 flex-shrink-0"
+            className="text-xs text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >
             View whole group â†’
           </Button>

@@ -12,7 +12,7 @@
  * and tree-shake the unused exports away.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 export function getAdminApp(): never {
   throw new Error("getAdminApp is server-only");

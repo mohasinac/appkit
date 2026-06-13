@@ -114,7 +114,7 @@ export function NonRefundableConsentModal({
           <Text className="font-semibold">{itemTitle}</Text>
         )}
         {priceLabel && (
-          <Text className="text-[var(--appkit-color-text-muted,#6b7280)]">
+          <Text className="text-[var(--appkit-color-text-muted)]">
             Total: {priceLabel}
           </Text>
         )}

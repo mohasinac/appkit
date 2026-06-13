@@ -12,7 +12,7 @@ const __O = {
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const CLS_PREORDER_BADGE = "inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-indigo-700 dark:text-indigo-300";
-const CLS_STATUS_BADGE = "inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-800 dark:text-amber-200";
+const CLS_STATUS_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-2.5 py-0.5 text-warning dark:text-warning";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";

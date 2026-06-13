@@ -1,6 +1,12 @@
 "use client"
-import React, { FormEvent, useCallback, useState } from "react";
-import { Alert, Button, Div, Heading, Label, Text } from "../../../ui";
+import React, { useState } from "react";
+import { z } from "zod";
+import { Alert, Button, Div, Heading, Text } from "../../../ui";
+import { Form } from "../../../ui/components/Form";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
+import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { registerSchema } from "../schemas";
 
 export interface RegisterFormValues {
   email: string;
@@ -38,44 +44,16 @@ export interface RegisterFormProps {
   className?: string;
 }
 
-type RegisterLabels = RegisterFormProps["labels"] & object;
-
-function renderRegisterFormFields(props: {
-  values: RegisterFormValues;
-  setValues: (v: RegisterFormValues) => void;
-  labels: RegisterLabels;
-  renderTermsLink?: () => React.ReactNode;
-  renderPasswordStrength?: (password: string) => React.ReactNode;
-}) {
-  const { values, setValues, labels, renderTermsLink, renderPasswordStrength } = props;
-  const CLS_INPUT = "w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary";
-  const CLS_LABEL = "block text-sm font-medium mb-1";
-  return (
-    <>
-      <Div>
-        <Label htmlFor="reg-name" className={CLS_LABEL}>{labels?.displayNameLabel ?? "Full name"}</Label>
-        <input id="reg-name" name="displayName" type="text" autoComplete="name" required placeholder={labels?.displayNamePlaceholder ?? "Your name"} value={values.displayName} onChange={(e) => setValues({ ...values, displayName: e.target.value })} className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
-      </Div>
-      <Div>
-        <Label htmlFor="reg-email" className={CLS_LABEL}>{labels?.emailLabel ?? "Email address"}</Label>
-        <input id="reg-email" name="email" type="email" autoComplete="username" required placeholder={labels?.emailPlaceholder ?? "you@example.com"} value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} className={CLS_INPUT} />
-      </Div>
-      <Div>
-        <Label htmlFor="reg-password" className={CLS_LABEL}>{labels?.passwordLabel ?? "Password"}</Label>
-        <input id="reg-password" name="password" type="password" autoComplete="new-password" required placeholder={labels?.passwordPlaceholder ?? "••••••••"} value={values.password} onChange={(e) => setValues({ ...values, password: e.target.value })} className={CLS_INPUT} />
-        {renderPasswordStrength?.(values.password)}
-      </Div>
-      <Div>
-        <Label htmlFor="reg-confirm" className={CLS_LABEL}>{labels?.confirmPasswordLabel ?? "Confirm password"}</Label>
-        <input id="reg-confirm" name="confirmPassword" type="password" autoComplete="new-password" required placeholder={labels?.confirmPasswordPlaceholder ?? "••••••••"} value={values.confirmPassword} onChange={(e) => setValues({ ...values, confirmPassword: e.target.value })} className={CLS_INPUT} />
-      </Div>
-      <Div className="flex items-start gap-2">
-        <input id="reg-terms" type="checkbox" required checked={values.acceptTerms} onChange={(e) => setValues({ ...values, acceptTerms: e.target.checked })} className="mt-0.5 h-4 w-4 rounded border-neutral-300 dark:border-slate-600 accent-primary" />
-        <Label htmlFor="reg-terms" className="text-sm leading-snug">{labels?.acceptTermsLabel ?? "I accept the"} {renderTermsLink?.()}</Label>
-      </Div>
-    </>
-  );
-}
+const registerClientSchema = registerSchema.extend({
+  displayName: z.string().min(1, "Enter your name"),
+  confirmPassword: z.string().min(6),
+  acceptTerms: z.literal(true, {
+    errorMap: () => ({ message: "You must accept the terms to continue" }),
+  }),
+}).refine((v) => v.password === v.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
 export function RegisterForm({
   onSubmit,
@@ -96,27 +74,9 @@ export function RegisterForm({
     displayName: "",
     acceptTerms: false,
   });
-  const [validationError, setValidationError] = useState<string | null>(null);
-
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
-      setValidationError(null);
-      if (values.password !== values.confirmPassword) {
-        setValidationError(labels.passwordMismatch ?? "Passwords do not match");
-        return;
-      }
-      await onSubmit(values);
-    },
-    [onSubmit, values, labels.passwordMismatch],
-  );
-
-  const displayError = error ?? validationError;
 
   return (
-    <Div
-      className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}
-    >
+    <Div className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}>
       <Div className="max-w-md w-full space-y-6">
         <Div className="text-center">
           <Heading level={1} className="text-3xl font-extrabold">
@@ -136,18 +96,89 @@ export function RegisterForm({
           </Alert>
         )}
 
-        {displayError && (
+        {error && (
           <Alert variant="error" compact>
-            {displayError}
+            {error}
           </Alert>
         )}
 
-        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-          {renderRegisterFormFields({ values, setValues, labels, renderTermsLink, renderPasswordStrength })}
-          <Button type="submit" isLoading={isLoading} disabled={isLoading} className="w-full">
-            {isLoading ? (labels.submittingLabel ?? "Creating account…") : (labels.submitLabel ?? "Create account")}
-          </Button>
-        </form>
+        <Form className="space-y-4" noValidate onSubmit={(e) => e.preventDefault()}>
+          {({ setFieldError, clearErrors }) => (
+            <>
+              <FieldInput
+                name="displayName"
+                label={labels.displayNameLabel ?? "Full name"}
+                type="text"
+                autoComplete="name"
+                required
+                placeholder={labels.displayNamePlaceholder ?? "Your name"}
+                value={values.displayName}
+                onChange={(v) => setValues({ ...values, displayName: v })}
+              />
+              <FieldInput
+                name="email"
+                label={labels.emailLabel ?? "Email address"}
+                type="email"
+                autoComplete="username"
+                required
+                placeholder={labels.emailPlaceholder ?? "you@example.com"}
+                value={values.email}
+                onChange={(v) => setValues({ ...values, email: v })}
+              />
+              <Div>
+                <FieldInput
+                  name="password"
+                  label={labels.passwordLabel ?? "Password"}
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  placeholder={labels.passwordPlaceholder ?? "••••••••"}
+                  value={values.password}
+                  onChange={(v) => setValues({ ...values, password: v })}
+                />
+                {renderPasswordStrength?.(values.password)}
+              </Div>
+              <FieldInput
+                name="confirmPassword"
+                label={labels.confirmPasswordLabel ?? "Confirm password"}
+                type="password"
+                autoComplete="new-password"
+                required
+                placeholder={labels.confirmPasswordPlaceholder ?? "••••••••"}
+                value={values.confirmPassword}
+                onChange={(v) => setValues({ ...values, confirmPassword: v })}
+              />
+              <FieldCheckbox
+                name="acceptTerms"
+                label={`${labels.acceptTermsLabel ?? "I accept the terms"}`}
+                checked={values.acceptTerms}
+                onChange={(c) => setValues({ ...values, acceptTerms: c })}
+              />
+              {renderTermsLink && (
+                <Text size="xs" variant="secondary">
+                  {renderTermsLink()}
+                </Text>
+              )}
+              <Button
+                type="submit"
+                isLoading={isLoading}
+                disabled={isLoading}
+                className="w-full"
+                onClick={async () => {
+                  // toast-handled-by-hook: onSubmit prop's mutation hook owns toast UX
+                  clearErrors();
+                  const parsed = registerClientSchema.safeParse(values);
+                  if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
+                  await onSubmit(values);
+                }}
+              >
+                {isLoading
+                  ? (labels.submittingLabel ?? "Creating account…")
+                  : (labels.submitLabel ?? "Create account")}
+              </Button>
+            </>
+          )}
+        </Form>
 
         {renderSocialButtons?.()}
       </Div>

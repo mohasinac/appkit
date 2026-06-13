@@ -58,7 +58,7 @@ export function DashboardScaffold({
     <Div className={`appkit-dashboard-scaffold flex min-h-screen ${className ?? ""}`}>
       {nav ? (
         <aside
-          className="sticky top-0 hidden h-screen w-64 shrink-0 overflow-y-auto border-r border-[var(--appkit-color-border,#e5e7eb)] lg:block"
+          className="sticky top-0 hidden h-screen w-64 shrink-0 overflow-y-auto border-r border-[var(--appkit-color-border)] lg:block"
           data-dashboard-slot="sidebar"
         >
           {nav}
@@ -78,7 +78,7 @@ export function DashboardScaffold({
             onClick={() => setDrawerOpen(false)}
             role="presentation"
           />
-          <nav className="relative h-full w-64 overflow-y-auto bg-[var(--appkit-color-surface,#ffffff)] shadow-xl">
+          <nav className="relative h-full w-64 overflow-y-auto bg-[var(--appkit-color-surface)] shadow-xl">
             {nav}
           </nav>
         </div>
@@ -87,7 +87,7 @@ export function DashboardScaffold({
       <Div className="flex min-w-0 flex-1 flex-col">
         {(slotPageHeader || slotMenuToggle) && (
           <div
-            className="sticky top-0 z-20 flex items-center gap-3 border-b border-[var(--appkit-color-border,#e5e7eb)] bg-[var(--appkit-color-surface,#ffffff)] px-4 py-2"
+            className="sticky top-0 z-20 flex items-center gap-3 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-2"
             data-dashboard-slot="page-header"
           >
             {slotMenuToggle ? (
@@ -105,7 +105,7 @@ export function DashboardScaffold({
 
         {bottomNav ? (
           <nav
-            className="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--appkit-color-border,#e5e7eb)] bg-[var(--appkit-color-surface,#ffffff)] lg:hidden"
+            className="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] lg:hidden"
             data-dashboard-slot="bottom-nav"
           >
             {bottomNav}

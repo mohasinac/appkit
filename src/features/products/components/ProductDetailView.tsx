@@ -27,8 +27,10 @@ export interface ProductDetailViewProps extends Omit<
    */
   stickyActionRail?: boolean;
   /**
-   * Top offset for the sticky action rail. Defaults to `"top-20"` (below the
-   * title bar on typical letitrip page layout).
+   * Top offset for the sticky action rail. Defaults to
+   * `"top-[var(--header-height,0px)]"` so the rail tracks the runtime header
+   * height (which varies by breakpoint and announcement-banner state) instead
+   * of being pinned at a hardcoded pixel value.
    */
   stickyRailOffset?: string;
 }
@@ -44,7 +46,7 @@ export function ProductDetailView({
   renderRelated,
   isLoading = false,
   stickyActionRail = true,
-  stickyRailOffset = "top-20",
+  stickyRailOffset = "top-[var(--header-height,0px)]",
   ...rest
 }: ProductDetailViewProps) {
   const sublistingNode = renderSublistingSection?.();

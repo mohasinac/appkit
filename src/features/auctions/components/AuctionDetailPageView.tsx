@@ -9,8 +9,8 @@ const __P = {
 } as const;
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
-const CLS_LIVE_BADGE = "inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-amber-700 dark:text-amber-300";
-const CLS_STAR_ON = "text-amber-400";
+const CLS_LIVE_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-2.5 py-0.5 text-warning dark:text-warning";
+const CLS_STAR_ON = "text-warning";
 const CLS_STAR_OFF = "text-zinc-200 dark:text-zinc-700";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";

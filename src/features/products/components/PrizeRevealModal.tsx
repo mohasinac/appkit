@@ -26,7 +26,7 @@ const __P = {
   p4: "p-4",
 } as const;
 
-const CLS_REFUND_NOTE = "rounded border border-yellow-400/40 bg-yellow-50 px-4 py-3 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100";
+const CLS_REFUND_NOTE = "rounded border border-warning/40 bg-warning-surface px-4 py-3 text-warning dark:bg-warning-surface dark:text-warning";
 
 export interface PrizeRevealResponse {
   prizeWon?: {

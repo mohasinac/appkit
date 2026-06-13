@@ -5,7 +5,7 @@ import type { SelectOption } from "../../../ui";
 import type { CustomField, CustomFieldType } from "../schemas/firestore";
 import { MAX_CUSTOM_FIELDS } from "../schemas/firestore";
 
-const CLS_REMOVE = "text-zinc-400 hover:text-red-500 dark:hover:text-red-400 px-2";
+const CLS_REMOVE = "text-zinc-400 hover:text-error dark:hover:text-error px-2";
 
 const TYPE_OPTIONS: SelectOption<CustomFieldType>[] = [
   { value: "text", label: "Text" },

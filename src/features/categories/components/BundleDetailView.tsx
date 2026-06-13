@@ -1,13 +1,12 @@
 /**
  * BundleDetailView — public detail page for a bundle (categoryType:"bundle"
- * row on the categories collection). Rebuilt in S-SBUNI-3 2026-05-13 after
- * the SB-UNI-V deletion. Slot-shell pattern: parent passes the doc + the
- * resolved product members; this view stays presentational.
+ * row on the categories collection). Slot-shell pattern: parent passes the
+ * doc + the resolved product members; this view stays presentational.
  *
  * Members rendered as a simple grid of product cards (links to PDPs). The
- * "Buy bundle" CTA + non-refundable consent modal are intentionally NOT
- * wired yet — bundle add-to-cart needs the SB-UNI-3 carry-over cohort
- * (cart line `{bundleCategorySlug, qty}` + N-line checkout expansion).
+ * "Buy now" CTA is wired via the `onBuyNow` prop — the consumer page action
+ * delegates to addBundleToCartAction + redirect to checkout
+ * (see src/actions/bundle.actions.ts).
  */
 
 import React from "react";
@@ -36,6 +35,7 @@ import {
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { BundleBuyNowCta } from "./BundleBuyNowCta";
 import { BundleCollage } from "./BundleCollage";
+import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const __O = {
@@ -81,18 +81,9 @@ export function BundleDetailView({
                   <BundleCollage members={members} />
                 ) : (
                   <Div className={`aspect-video w-full ${__O.hidden} rounded-2xl bg-zinc-100 dark:bg-zinc-800`}>
-                    {cover ? (
-                      // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
-                      <img
-                        src={cover}
-                        alt={bundle.name}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <Div className="flex h-full w-full items-center justify-center text-6xl">
-                        {PLACEHOLDER_EMOJI}
-                      </Div>
-                    )}
+                    <Div className="h-full w-full">
+                      <MediaImage src={cover} alt={bundle.name} size="hero" fallback={PLACEHOLDER_EMOJI} />
+                    </Div>
                   </Div>
                 )}
               </Div>

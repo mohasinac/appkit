@@ -12,10 +12,10 @@ const __O = {
 const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all";
 const CLS_RELATED_LABEL = "text-xs text-zinc-400 dark:text-zinc-400 mb-0.5";
 const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors";
-const CLS_RATING_PILL = "inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
-const CLS_HELPFUL_ACTIVE = "border-emerald-200 bg-success-surface text-success dark:border-emerald-800 cursor-default";
-const CLS_ICON_ORANGE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30 text-xl";
-const CLS_ICON_BLUE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-xl";
+const CLS_RATING_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface px-3 py-1 text-warning dark:bg-warning-surface dark:text-warning";
+const CLS_HELPFUL_ACTIVE = "border-success bg-success-surface text-success dark:border-success cursor-default";
+const CLS_ICON_ORANGE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-warning-surface dark:bg-warning-surface text-xl";
+const CLS_ICON_BLUE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-info-surface dark:bg-info-surface text-xl";
 const CLS_ICON_PURPLE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl";
 const CLS_ICON_PURPLE_BARE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30";
 import Link from "next/link";

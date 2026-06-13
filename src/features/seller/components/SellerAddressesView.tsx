@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
 import { Button, ConfirmDeleteModal, Div, Grid, Heading, Label, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -12,8 +14,8 @@ const __O = {
 } as const;
 
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
-const CLS_DEFAULT_PILL = "inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 px-2 py-0.5";
-const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors";
+const CLS_DEFAULT_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border border-warning dark:border-warning px-2 py-0.5";
+const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -250,8 +252,7 @@ export function SellerAddressesView({
   const set = (key: keyof AddressDraft, value: string | boolean) =>
     setDraft((p) => ({ ...p, [key]: value }));
 
-  const handleTextField = (key: keyof AddressDraft) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => set(key, e.target.value);
+  const setField = (key: keyof AddressDraft) => (value: string) => set(key, value);
 
   return (
     <Div className="min-h-screen">
@@ -381,58 +382,42 @@ export function SellerAddressesView({
             </Div>
           )}
 
-          <Field label="Label *" hint="e.g. Warehouse, Shop, Home">
-            <input type="text" value={draft.label} onChange={handleTextField("label")} placeholder="Warehouse" maxLength={60} className={INPUT_CLS} />
-          </Field>
+          <FieldInput
+            name="label"
+            label="Label *"
+            hint="e.g. Warehouse, Shop, Home"
+            type="text"
+            value={draft.label}
+            onChange={setField("label")}
+            placeholder="Warehouse"
+            maxLength={60}
+          />
 
           <Grid cols={2} gap="sm">
-            <Field label="Full Name *">
-              <input type="text" value={draft.fullName} onChange={handleTextField("fullName")} placeholder="Ravi Kumar" maxLength={100} className={INPUT_CLS} />
-            </Field>
-            <Field label="Phone *">
-              <input type="tel" value={draft.phone} onChange={handleTextField("phone")} placeholder="+91 98765 43210" maxLength={20} className={INPUT_CLS} />
-            </Field>
+            <FieldInput name="fullName" label="Full Name *" type="text" value={draft.fullName} onChange={setField("fullName")} placeholder="Ravi Kumar" maxLength={100} />
+            <FieldInput name="phone" label="Phone *" type="tel" value={draft.phone} onChange={setField("phone")} placeholder="+91 98765 43210" maxLength={20} />
           </Grid>
 
-          <Field label="Address Line 1 *">
-            <input type="text" value={draft.addressLine1} onChange={handleTextField("addressLine1")} placeholder="Shop 12, Main Market" maxLength={200} className={INPUT_CLS} />
-          </Field>
-
-          <Field label="Address Line 2">
-            <input type="text" value={draft.addressLine2} onChange={handleTextField("addressLine2")} placeholder="Building / Floor (optional)" maxLength={200} className={INPUT_CLS} />
-          </Field>
-
-          <Field label="Landmark">
-            <input type="text" value={draft.landmark} onChange={handleTextField("landmark")} placeholder="Near metro station (optional)" maxLength={100} className={INPUT_CLS} />
-          </Field>
+          <FieldInput name="addressLine1" label="Address Line 1 *" type="text" value={draft.addressLine1} onChange={setField("addressLine1")} placeholder="Shop 12, Main Market" maxLength={200} />
+          <FieldInput name="addressLine2" label="Address Line 2" type="text" value={draft.addressLine2} onChange={setField("addressLine2")} placeholder="Building / Floor (optional)" maxLength={200} />
+          <FieldInput name="landmark" label="Landmark" type="text" value={draft.landmark} onChange={setField("landmark")} placeholder="Near metro station (optional)" maxLength={100} />
 
           <Grid cols={2} gap="sm">
-            <Field label="City *">
-              <input type="text" value={draft.city} onChange={handleTextField("city")} placeholder="Mumbai" maxLength={100} className={INPUT_CLS} />
-            </Field>
-            <Field label="State *">
-              <input type="text" value={draft.state} onChange={handleTextField("state")} placeholder="Maharashtra" maxLength={100} className={INPUT_CLS} />
-            </Field>
+            <FieldInput name="city" label="City *" type="text" value={draft.city} onChange={setField("city")} placeholder="Mumbai" maxLength={100} />
+            <FieldInput name="state" label="State *" type="text" value={draft.state} onChange={setField("state")} placeholder="Maharashtra" maxLength={100} />
           </Grid>
 
           <Grid cols={2} gap="sm">
-            <Field label="Postal Code *">
-              <input type="text" value={draft.postalCode} onChange={handleTextField("postalCode")} placeholder="400001" maxLength={10} className={INPUT_CLS} />
-            </Field>
-            <Field label="Country *">
-              <input type="text" value={draft.country} onChange={handleTextField("country")} placeholder="India" maxLength={60} className={INPUT_CLS} />
-            </Field>
+            <FieldInput name="postalCode" label="Postal Code *" type="text" value={draft.postalCode} onChange={setField("postalCode")} placeholder="400001" maxLength={10} />
+            <FieldInput name="country" label="Country *" type="text" value={draft.country} onChange={setField("country")} placeholder="India" maxLength={60} />
           </Grid>
 
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={draft.isDefault}
-              onChange={(e) => set("isDefault", e.target.checked)}
-              className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
-            />
-            <Span size="sm" className="text-zinc-700 dark:text-zinc-300">Set as default pickup address</Span>
-          </label>
+          <FieldCheckbox
+            name="isDefault"
+            label="Set as default pickup address"
+            checked={draft.isDefault}
+            onChange={(c) => set("isDefault", c)}
+          />
         </Stack>
       </SideDrawer>
 

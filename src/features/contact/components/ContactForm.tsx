@@ -2,8 +2,8 @@
 import React, { useState, useCallback } from "react";
 import { Button, Div, Heading, Span, Text, Textarea } from "../../../ui";
 
-const CLS_FIELD_ERROR = "text-red-500";
-const CLS_ERROR_BANNER = "rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 px-4 py-3 text-sm text-red-700 dark:text-red-300";
+const CLS_FIELD_ERROR = "text-error";
+const CLS_ERROR_BANNER = "rounded-lg bg-error-surface dark:bg-error-surface border border-error dark:border-error px-4 py-3 text-sm text-error dark:text-error";
 
 interface ContactFormData {
   name: string;

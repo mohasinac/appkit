@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { Button, Checkbox, Div, FormField, FormGroup } from "../../../ui";
-import { useFormShellState } from "../../../ui/forms";
+import { Form } from "../../../ui/components/Form";
 import type { AddressFormData } from "../hooks/useAddresses";
 import { THEME_CONSTANTS } from "../../../tokens";
 
@@ -86,8 +86,6 @@ export function AddressForm({
   const mergedPlaceholders = { ...DEFAULT_PLACEHOLDERS, ...placeholders };
   const effectiveSubmitLabel = submitLabel ?? mergedLabels.save;
 
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
-
   const [formData, setFormData] = useState<AddressFormData>({
     label: initialData?.label || "",
     fullName: initialData?.fullName || "",
@@ -106,28 +104,10 @@ export function AddressForm({
     value: string | boolean,
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (typeof value === "string" && value.trim()) setFieldError(field as string, null);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearErrors();
-    const errs: Record<string, string> = {};
-    if (!formData.fullName.trim()) errs["fullName"] = "Full name is required";
-    if (!formData.phone.trim()) errs["phone"] = "Phone number is required";
-    if (!formData.addressLine1.trim()) errs["addressLine1"] = "Address is required";
-    if (!formData.city.trim()) errs["city"] = "City is required";
-    if (!formData.state.trim()) errs["state"] = "State is required";
-    if (!formData.postalCode.trim()) errs["postalCode"] = "Postal code is required";
-    if (Object.keys(errs).length > 0) {
-      Object.entries(errs).forEach(([k, v]) => setFieldError(k, v));
-      return;
-    }
-    await onSubmit(formData);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <Form onSubmit={(e) => e.preventDefault()} className="space-y-4">{({ setFieldError, clearErrors }) => (<>
       <FormField
         label={mergedLabels.label}
         name="label"
@@ -146,7 +126,6 @@ export function AddressForm({
         onChange={(value) => handleChange("fullName", value)}
         placeholder={mergedPlaceholders.fullName}
         required
-        error={shellCtx.errors["fullName"]}
       />
 
       <FormField
@@ -157,7 +136,6 @@ export function AddressForm({
         onChange={(value) => handleChange("phone", value)}
         placeholder={mergedPlaceholders.phone}
         required
-        error={shellCtx.errors["phone"]}
       />
 
       <FormField
@@ -168,7 +146,6 @@ export function AddressForm({
         onChange={(value) => handleChange("addressLine1", value)}
         placeholder={mergedPlaceholders.addressLine1}
         required
-        error={shellCtx.errors["addressLine1"]}
       />
 
       <FormField
@@ -189,7 +166,6 @@ export function AddressForm({
           onChange={(value) => handleChange("city", value)}
           placeholder={mergedPlaceholders.city}
           required
-          error={shellCtx.errors["city"]}
         />
 
         <FormField
@@ -200,7 +176,6 @@ export function AddressForm({
           onChange={(value) => handleChange("state", value)}
           placeholder={mergedPlaceholders.state}
           required
-          error={shellCtx.errors["state"]}
         />
 
         <FormField
@@ -211,7 +186,6 @@ export function AddressForm({
           onChange={(value) => handleChange("postalCode", value)}
           placeholder={mergedPlaceholders.postalCode}
           required
-          error={shellCtx.errors["postalCode"]}
         />
       </FormGroup>
 
@@ -241,10 +215,32 @@ export function AddressForm({
           {mergedLabels.cancel}
         </Button>
 
-        <Button type="submit" variant="primary" disabled={isLoading}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={isLoading}
+          isLoading={isLoading}
+          onClick={async () => {
+            // toast-handled-by-hook: onSubmit prop's mutation hook owns toast UX
+            clearErrors();
+            const errs: Record<string, string> = {};
+            if (!formData.fullName.trim()) errs["fullName"] = "Full name is required";
+            if (!formData.phone.trim()) errs["phone"] = "Phone number is required";
+            if (!formData.addressLine1.trim()) errs["addressLine1"] = "Address is required";
+            if (!formData.city.trim()) errs["city"] = "City is required";
+            if (!formData.state.trim()) errs["state"] = "State is required";
+            if (!formData.postalCode.trim()) errs["postalCode"] = "Postal code is required";
+            if (Object.keys(errs).length > 0) {
+              Object.entries(errs).forEach(([k, v]) => setFieldError(k, v));
+              return;
+            }
+            await onSubmit(formData);
+          }}
+        >
           {isLoading ? mergedLabels.loading : effectiveSubmitLabel}
         </Button>
       </Div>
-    </form>
+    </>)}
+    </Form>
   );
 }

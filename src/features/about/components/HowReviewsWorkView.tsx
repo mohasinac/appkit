@@ -116,7 +116,7 @@ export async function HowReviewsWorkView({
 }
 
 type ReviewsT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 type ReviewsInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type ReviewsStep = { number: number; icon: string; title: string; text: string };
 

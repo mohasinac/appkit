@@ -13,7 +13,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_FEATURED_DOT = "absolute left-2 top-2 rounded-full bg-amber-400 p-1 leading-none";
+const CLS_FEATURED_DOT = "absolute left-2 top-2 rounded-full bg-warning-surface p-1 leading-none";
 
 // --- CategoryCard -------------------------------------------------------------
 

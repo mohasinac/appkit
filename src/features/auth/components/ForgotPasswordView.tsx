@@ -1,6 +1,10 @@
 "use client"
-import React, { FormEvent, useCallback, useState } from "react";
-import { Alert, Div, Heading, Label, Text } from "../../../ui";
+import React, { useState } from "react";
+import { Alert, Button, Div, Heading, Text } from "../../../ui";
+import { Form } from "../../../ui/components/Form";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { applyZodIssues } from "../../../ui/forms/FormShell";
+import { forgotPasswordSchema } from "../schemas";
 
 export interface ForgotPasswordViewProps {
   onSubmit: (email: string) => Promise<void>;
@@ -30,18 +34,8 @@ export function ForgotPasswordView({
 }: ForgotPasswordViewProps) {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
-      await onSubmit(email);
-    },
-    [onSubmit, email],
-  );
-
   return (
-    <Div
-      className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}
-    >
+    <Div className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}>
       <Div className="max-w-md w-full space-y-6">
         <Div className="text-center">
           <Heading level={1} className="text-3xl font-extrabold">
@@ -66,36 +60,39 @@ export function ForgotPasswordView({
         )}
 
         {!success && (
-          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-            <Div>
-              <Label
-                htmlFor="fp-email"
-                className="block text-sm font-medium mb-1"
-              >
-                {labels.emailLabel ?? "Email address"}
-              </Label>
-              <input
-                id="fp-email"
-                name="email"
-                type="email"
-                autoComplete="username"
-                required
-                placeholder={labels.emailPlaceholder ?? "you@example.com"}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </Div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-primary/90 transition-colors"
-            >
-              {isLoading
-                ? (labels.submittingLabel ?? "Sending…")
-                : (labels.submitLabel ?? "Send reset link")}
-            </button>
-          </form>
+          <Form className="space-y-4" noValidate onSubmit={(e) => e.preventDefault()}>
+            {({ setFieldError, clearErrors }) => (
+              <>
+                <FieldInput
+                  name="email"
+                  label={labels.emailLabel ?? "Email address"}
+                  type="email"
+                  autoComplete="username"
+                  required
+                  placeholder={labels.emailPlaceholder ?? "you@example.com"}
+                  value={email}
+                  onChange={setEmail}
+                />
+                <Button
+                  type="submit"
+                  isLoading={isLoading}
+                  disabled={isLoading}
+                  className="w-full"
+                  onClick={async () => {
+                    // toast-handled-by-hook: onSubmit prop's mutation hook owns toast UX
+                    clearErrors();
+                    const parsed = forgotPasswordSchema.safeParse({ email });
+                    if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
+                    await onSubmit(parsed.data.email);
+                  }}
+                >
+                  {isLoading
+                    ? (labels.submittingLabel ?? "Sending…")
+                    : (labels.submitLabel ?? "Send reset link")}
+                </Button>
+              </>
+            )}
+          </Form>
         )}
 
         {renderBackLink && (

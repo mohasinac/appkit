@@ -6,7 +6,6 @@ import {
   Button,
   Div,
   FormActions,
-  Label,
   Select,
   SideDrawer,
   Span,
@@ -14,6 +13,8 @@ import {
   Ul,
   useToast,
 } from "../../../ui";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { apiClient } from "../../../http";
 import { SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -76,7 +77,7 @@ const CATEGORY_OPTIONS = [
 ];
 
 const CLS_MSG_USER = "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700";
-const CLS_MSG_STAFF = "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800";
+const CLS_MSG_STAFF = "bg-info-surface border border-info dark:bg-info-surface dark:border-info";
 
 const STATUS_BADGE: Record<string, string> = {
   open: "bg-info-surface text-info",
@@ -219,27 +220,39 @@ function renderTicketListArea(props: {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen: (v: boolean) => void; newCategory: string; setNewCategory: (v: string) => void; newSubject: string; setNewSubject: (v: string) => void; newOrderId: string; setNewOrderId: (v: string) => void; newDescription: string; setNewDescription: (v: string) => void; createMutation: any }) {
   const { newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation } = props;
   return (
     <SideDrawer isOpen={newTicketOpen} onClose={() => setNewTicketOpen(false)} title="Open a support ticket">
       <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         <Select label="Category" options={CATEGORY_OPTIONS} value={newCategory} onValueChange={setNewCategory} />
-        <Div className="flex flex-col gap-1">
-          <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Subject</Label>
-          <input type="text" value={newSubject} onChange={(e) => setNewSubject(e.target.value)} placeholder="Brief description of the issue" className={CLS_INPUT} />
-        </Div>
+        <FieldInput
+          name="subject"
+          label="Subject"
+          type="text"
+          value={newSubject}
+          onChange={setNewSubject}
+          placeholder="Brief description of the issue"
+        />
         {newCategory === "order_issue" && (
-          <Div className="flex flex-col gap-1">
-            <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Order ID</Label>
-            <input type="text" value={newOrderId} onChange={(e) => setNewOrderId(e.target.value)} placeholder="e.g. order-3-20260508-a1b2c3" className={CLS_INPUT} />
-          </Div>
+          <FieldInput
+            name="orderId"
+            label="Order ID"
+            type="text"
+            value={newOrderId}
+            onChange={setNewOrderId}
+            placeholder="e.g. order-3-20260508-a1b2c3"
+          />
         )}
-        <Div className="flex flex-col gap-1">
-          <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Description</Label>
-          <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} rows={4} placeholder="Describe the issue in detail…" className={CLS_INPUT} />
-        </Div>
+        <FieldTextarea
+          name="description"
+          label="Description"
+          value={newDescription}
+          onChange={setNewDescription}
+          rows={4}
+          placeholder="Describe the issue in detail…"
+        />
         <FormActions align="right">
           <Button type="button" variant="secondary" onClick={() => setNewTicketOpen(false)}>Cancel</Button>
           <Button type="button" isLoading={createMutation.isPending} disabled={!newSubject.trim() || !newDescription.trim() || createMutation.isPending} onClick={() => createMutation.mutate()}>Submit ticket</Button>
@@ -249,7 +262,7 @@ function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (v: boolean) => void; selectedTicket: SupportTicket | null; replyBody: string; setReplyBody: (v: string) => void; replyMutation: any }) {
   const { detailOpen, setDetailOpen, selectedTicket, replyBody, setReplyBody, replyMutation } = props;
   return (
@@ -284,9 +297,15 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
             </Div>
           )}
           {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (
-            <Div className="flex flex-col gap-1">
-              <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Reply</Label>
-              <textarea value={replyBody} onChange={(e) => setReplyBody(e.target.value)} rows={3} placeholder="Add a message to your ticket…" className={CLS_INPUT} />
+            <Div className="flex flex-col gap-2">
+              <FieldTextarea
+                name="reply"
+                label="Reply"
+                value={replyBody}
+                onChange={setReplyBody}
+                rows={3}
+                placeholder="Add a message to your ticket…"
+              />
               <Button type="button" variant="primary" size="sm" isLoading={replyMutation.isPending} disabled={!replyBody.trim() || replyMutation.isPending} onClick={() => replyMutation.mutate()}>Send reply</Button>
             </Div>
           )}
