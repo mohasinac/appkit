@@ -28,6 +28,7 @@ const ROLE_DOT_COLORS: Record<string, string> = {
 };
 import { useTheme } from "../../react";
 import { useAuth } from "../../react/contexts/SessionContext";
+import { isBuyerUser } from "../auth/role-predicates";
 import { NavbarWithSettings } from "./NavbarWithSettings";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import BottomActions from "./BottomActions";
@@ -297,7 +298,7 @@ function SidebarUserHeader({
             displayName={user.displayName}
             email={user.email}
           />
-          {user.role && user.role !== "user" && (
+          {user.role && !isBuyerUser(user) && (
             <Div
               className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 text-white text-[9px] font-bold leading-none select-none"
               // audit-inline-style-ok: runtime brand gradient

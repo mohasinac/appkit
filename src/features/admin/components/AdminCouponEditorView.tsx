@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import {
   Button,
   ConfirmDeleteModal,
@@ -33,6 +34,16 @@ const __O = {
 } as const;
 
 // --- Types -------------------------------------------------------------------
+
+const couponFormSchema = z.object({
+  code: z.string().min(2, "Coupon code is required").max(40).regex(/^[A-Z0-9_-]+$/i),
+  name: z.string().min(1).max(120),
+  type: z.enum(["percentage", "fixed", "free_shipping", "buy_x_get_y"]),
+  scope: z.enum(["admin", "seller"]),
+  validity: z.object({
+    isActive: z.boolean(),
+  }).passthrough(),
+}).passthrough();
 
 export interface AdminCouponEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
@@ -233,7 +244,7 @@ export function AdminCouponEditorView({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(couponFormSchema);
 
   // --- load existing data (edit mode) ---
   const couponQuery = useQuery({

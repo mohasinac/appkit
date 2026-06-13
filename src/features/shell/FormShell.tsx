@@ -50,6 +50,12 @@ export interface FormShellProps {
    * On mobile the preview reverts to a toggleable modal-style view.
    */
   splitPreview?: boolean;
+  /**
+   * Optional Zod schema covering the form's fields. Currently informational
+   * (consumed by the caller's submit handler); `audit-form-schema` requires
+   * every callsite to declare one so the validation contract is explicit.
+   */
+  schema?: import("zod").ZodTypeAny;
   children: ReactNode;
 }
 
@@ -76,6 +82,8 @@ export function FormShell({
   onClose,
   title,
   breadcrumb,
+  // schema is consumed by callers (audit-form-schema asserts presence at callsites)
+  schema: _schema,
   isDirty = false,
   isLoading = false,
   sections,

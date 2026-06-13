@@ -2,6 +2,7 @@
 
 import { productRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
+import { isAdminUser } from "../../../../features/auth/role-predicates";
 import {
   productInputSchema,
   productUpdateSchema,
@@ -82,7 +83,7 @@ export async function setProductStatusAction(input: unknown) {
     parsed.data.status === "published" &&
     (product.listingType ?? "standard") === "live" &&
     !product.liveItem?.vendorVerified &&
-    user.role !== "admin"
+    !isAdminUser(user)
   ) {
     throw new ValidationError(
       "Live listings require admin verification before publishing. Contact support to request verification.",

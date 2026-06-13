@@ -1,6 +1,14 @@
 import { MEDIA_ENDPOINTS } from "../constants/api-endpoints";
 
-const FIREBASE_STORAGE_HOST = "firebasestorage.googleapis.com";
+/**
+ * Single source of truth for the Firebase Storage host literal. Every other
+ * appkit + consumer module that needs to detect or allowlist this host
+ * imports this constant — `audit-firestore-storage-urls` allowlists this
+ * file as the sole literal declaration site.
+ */
+export const FIREBASE_STORAGE_HOST = "firebasestorage.googleapis.com";
+/** Google Cloud Storage host (used by public-asset URLs). */
+export const GCS_HOST = "storage.googleapis.com";
 const PROXY_PREFIX = "/media/";
 
 /**

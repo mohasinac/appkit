@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import {
   Alert,
   Button,
@@ -41,6 +42,12 @@ import type {
   CarouselSlideHeight,
   CarouselHoverEffect,
 } from "../../homepage/schemas/firestore";
+
+const carouselSlideSchema = z.object({
+  title: z.string().min(1, "Slide title is required").max(150),
+  order: z.number().int().min(0),
+  active: z.boolean(),
+}).passthrough();
 
 export interface AdminCarouselEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
@@ -395,7 +402,7 @@ export function AdminCarouselEditorView({
   const [errorMsg, setErrorMsg] = React.useState("");
   const [successMsg, setSuccessMsg] = React.useState("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(carouselSlideSchema);
 
   const slideQuery = useQuery({
     queryKey: ["admin", "carousel", slideId],

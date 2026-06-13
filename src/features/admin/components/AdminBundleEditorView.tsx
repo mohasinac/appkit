@@ -14,6 +14,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from "react";
+import { z } from "zod";
 import {
   Button,
   Checkbox,
@@ -87,6 +88,16 @@ const EMPTY_FORM: FormState = {
   coverImage: "",
 };
 
+const bundleFormSchema = z.object({
+  name: z.string().min(1, "Bundle name is required").max(150),
+  description: z.string().max(2000).optional().or(z.literal("")),
+  priceRupees: z.string().regex(/^\d+(\.\d{1,2})?$/, "Enter a valid price"),
+  ruleType: z.enum(["static", "dynamic"]),
+  productIds: z.array(z.string()),
+  isActive: z.boolean(),
+  coverImage: z.string().optional().or(z.literal("")),
+}).passthrough();
+
 async function parseResponseError(res: Response): Promise<string> {
   const err = (await res.json().catch(() => null)) as {
     error?: { message?: string };
@@ -136,7 +147,7 @@ export function AdminBundleEditorView({
   const [deleting, setDeleting] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(bundleFormSchema);
   const { showToast } = useToast();
 
   // Load existing bundle on mount when editing

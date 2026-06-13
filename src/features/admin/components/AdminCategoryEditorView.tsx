@@ -2,12 +2,20 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import { Button, Card, CardBody, ConfirmDeleteModal, Div, Form, PaginatedSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+
+const categoryFormSchema = z.object({
+  name: z.string().min(1, "Category name is required").max(120),
+  slug: z.string().regex(/^[a-z0-9-]+$/, "Lowercase letters, digits and hyphens only").optional().or(z.literal("")),
+  parentId: z.string().nullable().optional(),
+  isActive: z.boolean().optional(),
+}).passthrough();
 
 const __P = {
   p4: "p-4",
@@ -76,7 +84,7 @@ export function AdminCategoryEditorView({
   const [isActive, setIsActive] = React.useState(true);
   const [showInMenu, setShowInMenu] = React.useState(true);
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(categoryFormSchema);
 
   const categoryQuery = useQuery({
     queryKey: ["admin", "category", categoryId],

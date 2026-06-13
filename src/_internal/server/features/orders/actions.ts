@@ -10,6 +10,7 @@ import {
 import { assertOrderCancellable, assertOrderOwnership, assertReturnWindowOpen } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 import { OrderNotFoundError, OrderOwnershipError } from "../../../shared/features/orders/errors";
+import { isAdminUser } from "../../../../features/auth/role-predicates";
 
 export async function createOrderAction(input: unknown) {
   const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -44,7 +45,7 @@ export async function updateOrderStatusAction(input: unknown) {
   if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
   const order = await orderRepository.findById(parsed.data.orderId).catch(() => null);
   if (!order) throw new OrderNotFoundError(parsed.data.orderId);
-  if (user.role !== "admin" && order.storeId !== user.uid) {
+  if (!isAdminUser(user) && order.storeId !== user.uid) {
     throw new OrderOwnershipError(parsed.data.orderId);
   }
   return orderRepository.updateStatus(parsed.data.orderId, parsed.data.status as any, {

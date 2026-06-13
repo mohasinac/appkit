@@ -91,6 +91,12 @@ export interface UseFormShellStateResult {
   setFieldError: (name: string, error: string | null) => void;
   clearErrors: () => void;
   hasErrors: boolean;
+  /**
+   * Run the Zod schema (if one was passed to `useFormShellState`) against the
+   * supplied values, write inline errors via `setFieldError`, and return the
+   * parsed value on success or null on failure.
+   */
+  validate: <T = unknown>(values: Record<string, unknown>) => T | null;
 }
 
 /**
@@ -109,7 +115,15 @@ export function applyZodIssues(
   }
 }
 
-export function useFormShellState(): UseFormShellStateResult {
+/**
+ * `useFormShellState(schema?)` — caller-owned form state with optional Zod
+ * validation. When a schema is supplied, `validate(values)` runs it and pipes
+ * issues into the FormShellContext error map. `audit-form-schema` requires
+ * every callsite to pass a schema.
+ */
+export function useFormShellState<TSchema extends import("zod").ZodTypeAny = import("zod").ZodTypeAny>(
+  schema?: TSchema,
+): UseFormShellStateResult {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const setFieldError = useCallback((name: string, error: string | null) => {
@@ -121,6 +135,20 @@ export function useFormShellState(): UseFormShellStateResult {
   }, []);
 
   const clearErrors = useCallback(() => setErrors({}), []);
+
+  const validate = useCallback(
+    <T = unknown,>(values: Record<string, unknown>): T | null => {
+      if (!schema) return values as T;
+      const parsed = schema.safeParse(values);
+      if (parsed.success) {
+        setErrors({});
+        return parsed.data as T;
+      }
+      applyZodIssues(parsed.error.issues, setFieldError);
+      return null;
+    },
+    [schema, setFieldError],
+  );
 
   const shellCtx = useMemo<FormShellContextValue>(() => ({
     errors,
@@ -139,7 +167,7 @@ export function useFormShellState(): UseFormShellStateResult {
     stepErrorCounts: [],
   }), [errors, setFieldError]);
 
-  return { shellCtx, setFieldError, clearErrors, hasErrors: Object.keys(errors).length > 0 };
+  return { shellCtx, setFieldError, clearErrors, hasErrors: Object.keys(errors).length > 0, validate };
 }
 
 // ─── StepIndicator ───────────────────────────────────────────────────────────

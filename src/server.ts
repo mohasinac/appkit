@@ -1539,3 +1539,23 @@ export { getLiveItemForDetail, type LiveDataOptions } from "./_internal/server/f
 export { toClientLiveItem, type LiveItemClientShape } from "./_internal/server/features/live/adapters";
 export { buildLiveItemMetadata, type LiveItemMetadataOptions } from "./_internal/server/features/live/metadata";
 export { renderLiveItemOg, renderLiveItemOgImage, renderLiveItemOgFromDoc, type LiveItemOgData } from "./_internal/server/features/live/og";
+
+// ── Track H — Payment + Shipping provider abstraction ────────────────────────
+// In-process mock implementations. Real providers continue to live in
+// appkit/src/providers/payment-razorpay + shipping-shiprocket and are
+// registered separately. The resolver helper sits next to them so consumers
+// can drive selection from siteSettings.featureFlags.useMockPayment.
+export {
+  MockRazorpayProvider,
+  MockShiprocketProvider,
+  resolvePaymentProvider,
+  resolveShippingProvider,
+  type MockWebhookEvent,
+  type MockWebhookPayload,
+  type WebhookSink,
+  type ShipmentEvent,
+  type ShipmentEventSink,
+  type PaymentResolutionFactories,
+  type ProviderResolutionContext,
+  type ShippingResolutionFactories,
+} from "./_internal/server/providers";

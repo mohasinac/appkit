@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import {
   Button,
   ConfirmDeleteModal,
@@ -18,6 +19,17 @@ import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+
+const brandFormSchema = z.object({
+  name: z.string().min(1, "Brand name is required").max(120),
+  slug: z.string().regex(/^[a-z0-9-]+$/i).optional().or(z.literal("")),
+  description: z.string().max(2000).optional().or(z.literal("")),
+  logoURL: z.string().url().optional().or(z.literal("")),
+  bannerURL: z.string().url().optional().or(z.literal("")),
+  website: z.string().url().optional().or(z.literal("")),
+  isActive: z.boolean(),
+  displayOrder: z.number().int().min(0).optional(),
+});
 
 const __P = {
   p4: "p-4",
@@ -73,7 +85,7 @@ export function AdminBrandEditorView({
   const [displayOrder, setDisplayOrder] = React.useState<string>("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(brandFormSchema);
 
   const brandQuery = useQuery({
     queryKey: ["admin", "brand", brandId],

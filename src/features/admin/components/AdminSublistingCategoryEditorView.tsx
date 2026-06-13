@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import {
   Button,
   ConfirmDeleteModal,
@@ -13,6 +14,12 @@ import {
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+
+const sublistingCategoryFormSchema = z.object({
+  name: z.string().min(1, "Name is required").max(120),
+  slug: z.string().regex(/^[a-z0-9-]+$/, "Lowercase letters, digits and hyphens only").optional().or(z.literal("")),
+  parentId: z.string().nullable().optional(),
+}).passthrough();
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -102,7 +109,7 @@ export function AdminSublistingCategoryEditorView({
 
   const { upload } = useMediaUpload();
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(sublistingCategoryFormSchema);
 
   return (
     <>

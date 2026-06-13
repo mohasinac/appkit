@@ -2,11 +2,22 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+
+const faqFormSchema = z.object({
+  question: z.string().min(5, "Question must be at least 5 characters").max(500),
+  answer: z.object({
+    text: z.string().min(1, "Answer is required"),
+    format: z.enum(["html", "markdown", "text"]).optional(),
+  }).passthrough(),
+  category: z.string().min(1, "Category is required"),
+  isActive: z.boolean().optional(),
+}).passthrough();
 
 const __P = {
   p4: "p-4",
@@ -72,7 +83,7 @@ export function AdminFaqEditorView({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(faqFormSchema);
 
   // --- load existing FAQ (edit mode) ---
   const faqQuery = useQuery({

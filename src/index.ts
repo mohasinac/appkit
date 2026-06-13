@@ -1599,6 +1599,8 @@ export { sessionRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // siteSettingsRepository - Shared export for site settings repository.
 export { siteSettingsRepository } from "./repositories/index";
+// ADMIN_CHECKOUT_BYPASS_FLAG_KEY - field name for the admin checkout bypass flag.
+export { ADMIN_CHECKOUT_BYPASS_FLAG_KEY } from "./features/admin/schemas/firestore";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // smsCounterRepository - Shared export for sms counter repository.
 export { smsCounterRepository } from "./repositories/index";
@@ -8939,7 +8941,7 @@ export { formatFileSize } from "./utils/number.formatter";
 export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
 export type { MediaFilenameContext } from "./utils/id-generators";
-export { resolveMediaUrl } from "./utils/media-url";
+export { resolveMediaUrl, FIREBASE_STORAGE_HOST, GCS_HOST } from "./utils/media-url";
 
 export { generateFAQId } from "./utils/id-generators";
 export type { GenerateFAQIdInput } from "./utils/id-generators";

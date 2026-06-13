@@ -16,10 +16,12 @@ export const objectIdSchema = z.string().regex(/^[a-z0-9-]+$/);
 
 export const urlSchema = z.string().url().max(2048);
 
+import { FIREBASE_STORAGE_HOST, GCS_HOST } from "../utils/media-url";
+
 /** Default approved media domains. Extend via `createMediaUrlSchema`. */
 export const APPROVED_MEDIA_DOMAINS = [
-  "firebasestorage.googleapis.com",
-  "storage.googleapis.com",
+  FIREBASE_STORAGE_HOST,
+  GCS_HOST,
   "res.cloudinary.com",
   "images.unsplash.com",
   // Add site-specific CDN domains by calling createMediaUrlSchema(extraDomains)

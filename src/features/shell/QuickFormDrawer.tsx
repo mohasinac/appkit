@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
+import type { ZodType } from "zod";
 import { Button } from "../../ui/components/Button";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
@@ -29,6 +30,13 @@ export interface QuickFormDrawerProps {
   submitLabel?: string;
   cancelLabel?: string;
   isLoading?: boolean;
+  /**
+   * Zod schema covering every field. When supplied, replaces the manual
+   * `required` check — the Zod parse becomes the single source of validation
+   * truth. `audit-quick-form-drawer-schema` requires every callsite to pass
+   * this prop.
+   */
+  schema?: ZodType<Record<string, unknown>> | ZodType<unknown>;
   /** Extra content rendered below auto-generated fields. */
   renderExtra?: (
     values: Record<string, unknown>,
@@ -63,6 +71,7 @@ export function QuickFormDrawer({
   submitLabel = "Save",
   cancelLabel = "Cancel",
   isLoading = false,
+  schema,
   renderExtra,
 }: QuickFormDrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -84,6 +93,23 @@ export function QuickFormDrawer({
   };
 
   const validate = (): boolean => {
+    // Schema-first: when a Zod schema is supplied, it is the single source of
+    // truth — manual `required` checks are skipped entirely. Falls back to
+    // the manual check only when the callsite has not yet been migrated.
+    if (schema) {
+      const parsed = schema.safeParse(values);
+      if (parsed.success) {
+        setErrors({});
+        return true;
+      }
+      const errs: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const path = issue.path[0];
+        if (typeof path === "string" && !errs[path]) errs[path] = issue.message;
+      }
+      setErrors(errs);
+      return false;
+    }
     const errs: Record<string, string> = {};
     for (const f of fields) {
       if (f.required) {

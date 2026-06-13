@@ -12,6 +12,7 @@
  */
 
 import { serverLogger } from "../../../monitoring";
+import { isAdminUser, isSellerUser } from "../../auth/role-predicates";
 import {
   ApiError,
   AuthorizationError,
@@ -176,7 +177,7 @@ export async function becomeSeller(
   userId: string,
 ): Promise<BecomeSellerResult> {
   const profile = await userRepository.findById(userId);
-  if (profile?.role === "seller" || profile?.role === "admin") {
+  if (profile && (isSellerUser(profile) || isAdminUser(profile))) {
     return {
       alreadySeller: true,
       storeStatus:

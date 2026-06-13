@@ -21,6 +21,7 @@ import { storeRepository } from "../../../stores/repository/store.repository";
 // `onProductStockChange` Firebase Function (see functions/src/bundle-stock-sync.ts).
 import { sanitizeProductForPublic } from "../../utils/sanitize";
 import { serverLogger } from "../../../../monitoring/server-logger";
+import { isAdminUser, isModeratorUser } from "../../../auth/role-predicates";
 
 const ERR_DB_NOT_REGISTERED = "Database provider not registered";
 const ERR_PRODUCT_NOT_FOUND = "Product not found";
@@ -152,8 +153,8 @@ export const PATCH = createRouteHandler<
 
     const ownerStore = product.storeId ? await storeRepository.findByOwnerId(user?.uid ?? "") : null;
     const isOwner = !!ownerStore && ownerStore.id === product.storeId;
-    const isModerator = user?.role === "moderator";
-    const isAdmin = user?.role === "admin";
+    const isModerator = isModeratorUser(user);
+    const isAdmin = isAdminUser(user);
 
     if (!isOwner && !isModerator && !isAdmin) {
       return NextResponse.json(
@@ -232,8 +233,8 @@ export const DELETE = createRouteHandler<never, { id: string }>({
 
     const ownerStore = product.storeId ? await storeRepository.findByOwnerId(user?.uid ?? "") : null;
     const isOwner = !!ownerStore && ownerStore.id === product.storeId;
-    const isModerator = user?.role === "moderator";
-    const isAdmin = user?.role === "admin";
+    const isModerator = isModeratorUser(user);
+    const isAdmin = isAdminUser(user);
 
     if (!isOwner && !isModerator && !isAdmin) {
       return NextResponse.json(

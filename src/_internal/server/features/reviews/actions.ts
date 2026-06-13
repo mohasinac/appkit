@@ -1,6 +1,7 @@
 "use server";
 
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
+import { isAdminUser } from "../../../../features/auth/role-predicates";
 import {
   reviewRepository,
   productRepository,
@@ -78,7 +79,7 @@ export async function deleteReviewAction(input: unknown) {
 
   const { reviewId } = parsed.data;
 
-  if (user.role !== "admin") {
+  if (!isAdminUser(user)) {
     await assertReviewOwnership(reviewId, user.uid);
   } else {
     await getReviewOrThrow(reviewId);

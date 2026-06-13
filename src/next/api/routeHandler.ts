@@ -18,6 +18,7 @@
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../contracts";
+import { isAdminUser } from "../../features/auth/role-predicates";
 
 /** Minimal schema interface compatible with Zod v3 and v4. */
 interface ParseableSchema<TOutput> {
@@ -180,7 +181,7 @@ export function createRouteHandler<
       }
 
       // -- Permission check (employee fine-grained) --------------------------
-      if (options.permission && user && user.role !== "admin") {
+      if (options.permission && user && !isAdminUser(user)) {
         const { rbac } = getProviders();
         if (!rbac) {
           return NextResponse.json(

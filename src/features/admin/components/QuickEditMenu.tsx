@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { MoreHorizontal } from "lucide-react";
+import type { ZodType } from "zod";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui";
 import { useClickOutside, useKeyPress } from "../../../react";
@@ -16,6 +17,8 @@ export interface QuickEditAction {
   // Form quick-edit — if fields provided, clicking opens a QuickFormDrawer
   formTitle?: string;
   fields?: QuickFieldDef[];
+  /** Zod schema covering every field — required by audit-quick-form-drawer-schema. */
+  schema?: ZodType<Record<string, unknown>> | ZodType<unknown>;
   defaultValues?: Record<string, unknown>;
   onSubmit?: (values: Record<string, unknown>) => void | Promise<void>;
   submitLabel?: string;
@@ -103,6 +106,7 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
           onClose={() => setActiveFormIndex(null)}
           title={activeAction.formTitle ?? activeAction.label}
           fields={activeAction.fields}
+          schema={activeAction.schema}
           defaultValues={activeAction.defaultValues}
           onSubmit={async (vals) => {
             await activeAction.onSubmit?.(vals);

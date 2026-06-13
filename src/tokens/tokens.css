@@ -245,9 +245,9 @@
   --appkit-color-focus-ring:       #3570fc;    /* primary-500 = cobalt blue */
 }
 
-/* --- Colour — Brand (dark mode overrides) --------------------------------- */
+/* --- Theme — Dark ([data-theme="dark"]) ----------------------------------- */
 /* Dark mode: both primary & secondary become Hot Pink (Beyblade 2 dominant colour) */
-.dark {
+[data-theme="dark"] {
   --appkit-color-primary:          #e91e8c;
   --appkit-color-primary-50:       #fdf0f8;
   --appkit-color-primary-100:      #fce2f2;
@@ -273,10 +273,7 @@
   --appkit-color-secondary-800:    #900f56;
   --appkit-color-secondary-900:    #771249;
   --appkit-color-secondary-950:    #480525;
-}
 
-/* --- Colour — Semantic (dark mode overrides) ------------------------------ */
-.dark {
   --appkit-color-bg:               #020617;    /* slate-950 */
   --appkit-color-surface:          #0f172a;    /* slate-900 */
   --appkit-color-surface-elevated: rgba(15, 23, 42, 0.9);
@@ -301,9 +298,78 @@
   --appkit-color-info-surface:     rgba(12, 74, 110, 0.25);
 
   --appkit-color-focus-ring:       #f063b9;    /* primary-400 in dark = hot pink */
-  /* Dark-mode glow: use hot pink instead of cobalt */
   --appkit-shadow-glow:            0 0 0 1px rgba(233,30,140,0.12), 0 4px 16px -4px rgba(233,30,140,0.22);
   --appkit-shadow-glow-pink:       0 0 0 1px rgba(233,30,140,0.14), 0 4px 20px -4px rgba(233,30,140,0.28);
+}
+
+/* --- Theme — Cobalt Night ([data-theme="cobalt-night"]) ------------------- */
+/* Cobalt Night: keeps the cobalt primary but pairs it with a deep-blue dark surface */
+[data-theme="cobalt-night"] {
+  --appkit-color-primary:          #5992ff;
+  --appkit-color-primary-500:      #5992ff;
+  --appkit-color-primary-600:      #3570fc;
+  --appkit-color-secondary:        #84e122;
+  --appkit-color-secondary-500:    #84e122;
+
+  --appkit-color-bg:               #111e58;    /* primary-950 */
+  --appkit-color-surface:          #1536b4;    /* primary-800 */
+  --appkit-color-surface-elevated: rgba(21, 54, 180, 0.9);
+  --appkit-color-surface-input:    rgba(24, 49, 142, 0.6);
+
+  --appkit-color-border:           #1343de;    /* primary-700 */
+  --appkit-color-border-subtle:    rgba(24, 49, 142, 0.6);
+
+  --appkit-color-text:             #eef5ff;    /* primary-50 */
+  --appkit-color-text-muted:       #bcd4ff;    /* primary-200 */
+  --appkit-color-text-faint:       #8eb9ff;    /* primary-300 */
+
+  --appkit-color-success:          #4ade80;
+  --appkit-color-success-surface:  rgba(20, 83, 45, 0.3);
+  --appkit-color-warning:          #fbbf24;
+  --appkit-color-warning-surface:  rgba(120, 53, 15, 0.3);
+  --appkit-color-error:            #f87171;
+  --appkit-color-error-surface:    rgba(127, 29, 29, 0.3);
+  --appkit-color-info:             #38bdf8;
+  --appkit-color-info-surface:     rgba(12, 74, 110, 0.3);
+
+  --appkit-color-focus-ring:       #8eb9ff;
+  --appkit-shadow-glow:            0 0 0 1px rgba(89,146,255,0.18), 0 4px 16px -4px rgba(89,146,255,0.30);
+  --appkit-shadow-glow-pink:       0 0 0 1px rgba(89,146,255,0.18), 0 4px 20px -4px rgba(89,146,255,0.30);
+}
+
+/* --- Theme — Sunset ([data-theme="sunset"]) ------------------------------- */
+/* Sunset: warm amber primary on a deep-rose body — daytime warm palette */
+[data-theme="sunset"] {
+  --appkit-color-primary:          #f59e0b;    /* amber-500 */
+  --appkit-color-primary-500:      #f59e0b;
+  --appkit-color-primary-600:      #d97706;
+  --appkit-color-secondary:        #f43f5e;    /* rose-500 */
+  --appkit-color-secondary-500:    #f43f5e;
+
+  --appkit-color-bg:               #fff7ed;    /* orange-50 */
+  --appkit-color-surface:          #ffffff;
+  --appkit-color-surface-elevated: #ffffff;
+  --appkit-color-surface-input:    #fffbeb;    /* amber-50 */
+
+  --appkit-color-border:           #fed7aa;    /* orange-200 */
+  --appkit-color-border-subtle:    #ffedd5;    /* orange-100 */
+
+  --appkit-color-text:             #431407;    /* orange-950 */
+  --appkit-color-text-muted:       #9a3412;    /* orange-800 */
+  --appkit-color-text-faint:       #c2410c;    /* orange-700 */
+
+  --appkit-color-success:          #16a34a;
+  --appkit-color-success-surface:  #f0fdf4;
+  --appkit-color-warning:          #d97706;
+  --appkit-color-warning-surface:  #fef3c7;
+  --appkit-color-error:            #dc2626;
+  --appkit-color-error-surface:    #fef2f2;
+  --appkit-color-info:             #0284c7;
+  --appkit-color-info-surface:     #f0f9ff;
+
+  --appkit-color-focus-ring:       #f59e0b;
+  --appkit-shadow-glow:            0 0 0 1px rgba(245,158,11,0.18), 0 4px 16px -4px rgba(245,158,11,0.30);
+  --appkit-shadow-glow-pink:       0 0 0 1px rgba(244,63,94,0.18), 0 4px 20px -4px rgba(244,63,94,0.30);
 }
 
 /* --- Typography ----------------------------------------------------------- */

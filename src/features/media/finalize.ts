@@ -1,4 +1,5 @@
 import { getAdminStorage } from "../../providers/db-firebase";
+import { FIREBASE_STORAGE_HOST, GCS_HOST } from "../../utils/media-url";
 import type { MediaField } from "./types";
 
 const TMP_MEDIA_PREFIX = "tmp/";
@@ -14,14 +15,14 @@ export function extractStoragePathFromUrl(
   try {
     const parsed = new URL(url);
 
-    if (parsed.hostname === "storage.googleapis.com") {
+    if (parsed.hostname === GCS_HOST) {
       const parts = parsed.pathname.split("/").filter(Boolean);
       if (parts.length >= 2 && parts[0] === bucketName) {
         return parts.slice(1).join("/");
       }
     }
 
-    if (parsed.hostname === "firebasestorage.googleapis.com") {
+    if (parsed.hostname === FIREBASE_STORAGE_HOST) {
       const match = parsed.pathname.match(/\/v0\/b\/([^/]+)\/o\/(.+)$/);
       if (match && match[1] === bucketName) {
         return decodeURIComponent(match[2]);

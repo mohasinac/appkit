@@ -10,6 +10,7 @@ import { ReviewCard } from "../../reviews/components/ReviewsList";
 import type { ProductItem } from "../../products/types";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { isAuctionListing, isPreOrderListing } from "../../products/utils/listing-type";
+import { isAdminUser, isSellerUser } from "../../auth/role-predicates";
 import { User, Star, ShoppingBag, Package, Trophy, Globe, MapPin, ExternalLink } from "lucide-react";
 
 const __P = {
@@ -85,7 +86,7 @@ export async function PublicProfileView({
     getReviewsAuthoredBy(userId).catch(() => []),
   ]);
 
-  const isSeller = profile?.role === "seller" || profile?.role === "admin";
+  const isSeller = isSellerUser(profile) || isAdminUser(profile);
   // For sellers: lead with store identity (name + logo). For buyers: user identity.
   const displayName = isSeller && store?.storeName
     ? store.storeName

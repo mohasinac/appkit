@@ -38,6 +38,8 @@ interface BaseProps<V> {
     onCancel: () => void;
   }) => ReactNode;
   createFields?: QuickFieldDef[];
+  /** Zod schema for the inline create form — forwarded to QuickFormDrawer. */
+  createSchema?: import("zod").ZodType<Record<string, unknown>> | import("zod").ZodType<unknown>;
   onCreateSubmit?: (
     values: Record<string, unknown>,
   ) => Promise<PaginatedSelectOption<V>>;
@@ -119,6 +121,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     drawerTitle,
     renderCreateForm,
     createFields,
+    createSchema,
     onCreateSubmit,
     createSubmitLabel,
   } = props;
@@ -417,6 +420,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
           onClose={() => setDrawerOpen(false)}
           title={drawerTitle ?? `Create ${createLabel}`}
           fields={createFields}
+          schema={createSchema}
           submitLabel={createSubmitLabel ?? `Create ${createLabel}`}
           onSubmit={async (values) => {
             const option = await onCreateSubmit(values);

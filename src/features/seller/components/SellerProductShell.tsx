@@ -1,6 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
 import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
 import { FormShellProvider } from "../../../ui/forms";
@@ -89,6 +90,15 @@ export interface SellerProductDraft {
   liveJurisdictions?: string[];
   liveCites?: boolean;
 }
+
+const sellerProductSchema = z.object({
+  title: z.string().min(1, "Product title is required").max(200),
+  description: z.string().max(10000).optional().or(z.literal("")),
+  price: z.number().min(0).optional(),
+  category: z.string().optional(),
+  brand: z.string().optional(),
+  isActive: z.boolean().optional(),
+}).passthrough();
 
 export interface SellerProductShellProps {
   mode: "create" | "edit";
@@ -1134,6 +1144,7 @@ export function SellerProductShell({
           breadcrumb={breadcrumb}
           isDirty={isDirty}
           isLoading={isLoading}
+          schema={sellerProductSchema}
         >
           <QuickProductForm
             values={draft}

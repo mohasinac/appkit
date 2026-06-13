@@ -1,5 +1,6 @@
 import type { UserDocument, UserSoftBan } from "../schemas/firestore";
 import type { BannedAction } from "../permissions/constants";
+import { isAdminUser, isEmployeeUser } from "../role-predicates";
 
 /**
  * Returns true when the user has an active (non-expired) soft ban for the
@@ -9,7 +10,7 @@ export function isSoftBanned(
   user: Pick<UserDocument, "role" | "softBans">,
   action: BannedAction,
 ): boolean {
-  if (user.role === "admin" || user.role === "employee") return false;
+  if (isAdminUser(user) || isEmployeeUser(user)) return false;
   if (!user.softBans || user.softBans.length === 0) return false;
 
   const now = new Date();
