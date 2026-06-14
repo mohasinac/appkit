@@ -35,7 +35,7 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
     key: "updatedAt",
     header: "Updated",
     className: "w-32",
-    render: (row) => <Span size="sm" className="text-zinc-500 dark:text-zinc-400">{String(row.updatedAt ?? "")}</Span>,
+    render: (row) => <Span size="sm" color="muted">{String(row.updatedAt ?? "")}</Span>,
   },
 ];
 

@@ -399,7 +399,7 @@ export function SellerOrdersView({
             {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
           </Span>
         ) : (
-          <Span size="xs" className="text-zinc-400 dark:text-zinc-400">—</Span>
+          <Span size="xs" color="muted">—</Span>
         ),
     },
     {
@@ -432,7 +432,7 @@ export function SellerOrdersView({
       key: "updatedAt",
       header: "Date",
       className: "w-28",
-      render: (row) => <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{row.updatedAt}</Span>,
+      render: (row) => <Span size="xs" color="muted">{row.updatedAt}</Span>,
     },
   ];
 

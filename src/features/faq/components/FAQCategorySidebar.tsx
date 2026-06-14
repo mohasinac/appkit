@@ -61,7 +61,7 @@ export function FAQCategorySidebar({
               {labels?.allFaqs ?? "All FAQs"}
             </Span>
           </Row>
-          <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
+          <Span size="xs" color="muted">
             {totalCount}
           </Span>
         </Row>
@@ -90,7 +90,7 @@ export function FAQCategorySidebar({
                   ) : null}
                   <Span size="sm">{category.label}</Span>
                 </Row>
-                <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
+                <Span size="xs" color="muted">
                   {count}
                 </Span>
               </Row>

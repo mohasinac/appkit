@@ -43,7 +43,7 @@ function DualSlider({
           {prefix}
           {minNum}
         </Span>
-        <Span size="xs" className="text-zinc-500 dark:text-zinc-400">-</Span>
+        <Span size="xs" color="muted">-</Span>
         <Span size="sm" weight="semibold" className="tabular-nums text-primary-600 dark:text-secondary-400">
           {prefix}
           {maxNum}
@@ -68,11 +68,11 @@ function DualSlider({
       </Stack>
 
       <Div className="flex items-center justify-between">
-        <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" color="muted">
           {prefix}
           {minBound}
         </Span>
-        <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" color="muted">
           {prefix}
           {maxBound}
         </Span>

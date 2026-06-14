@@ -52,7 +52,7 @@ export function AdminTrustGuideView() {
                 </Table>
               </Div>
               <Text className="text-sm text-[var(--appkit-color-text-muted)] mt-3">
-                <Span weight="bold" className="text-[var(--appkit-color-text)]">Soft ban scopes</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write_reviews</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">create_listings</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">open_tickets</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">join_events</code>. Multiple scopes can be combined.
+                <Span weight="bold">Soft ban scopes</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write_reviews</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">create_listings</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">open_tickets</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">join_events</code>. Multiple scopes can be combined.
               </Text>
             </>
           ),
@@ -61,10 +61,10 @@ export function AdminTrustGuideView() {
           Icon: AlertTriangle, title: "Scam Registry",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">27 scam types</Span>: Documented in the registry, covering fake payments, empty-box shipping, counterfeit graded cards, and more.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Scammer profile</Span>: Stored with slug prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">scammer-</code>. Includes phone, UPI VPA, and social handles as identifiers.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Report review</Span>: All community-submitted reports go through a review queue before publishing. Require at least 2 corroborating reports or 1 strong piece of evidence (payment screenshot, police complaint).</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Takedown requests</Span>: Route to senior admin with legal involvement. Preserve evidence before any deletion.</li>
+              <li><Span weight="bold">27 scam types</Span>: Documented in the registry, covering fake payments, empty-box shipping, counterfeit graded cards, and more.</li>
+              <li><Span weight="bold">Scammer profile</Span>: Stored with slug prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">scammer-</code>. Includes phone, UPI VPA, and social handles as identifiers.</li>
+              <li><Span weight="bold">Report review</Span>: All community-submitted reports go through a review queue before publishing. Require at least 2 corroborating reports or 1 strong piece of evidence (payment screenshot, police complaint).</li>
+              <li><Span weight="bold">Takedown requests</Span>: Route to senior admin with legal involvement. Preserve evidence before any deletion.</li>
             </ul>
           ),
         },
@@ -72,10 +72,10 @@ export function AdminTrustGuideView() {
           Icon: Headphones, title: "Support Tickets",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">SLA</Span>: 24–48 hours first response. Escalation: 72-hour unresponded tickets go to senior admin queue automatically.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Categories</Span>: order_issue, billing_payment, account_access, seller_dispute, technical, other.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Limit</Span>: Buyers can have 2 active general tickets + 1 per active order. This prevents abuse. Admins can override the limit for legitimate edge cases.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Closing tickets</Span>: Only close a ticket after confirming the issue is resolved. Auto-close (7 days no response from buyer) is enabled for status-inquiry tickets only.</li>
+              <li><Span weight="bold">SLA</Span>: 24–48 hours first response. Escalation: 72-hour unresponded tickets go to senior admin queue automatically.</li>
+              <li><Span weight="bold">Categories</Span>: order_issue, billing_payment, account_access, seller_dispute, technical, other.</li>
+              <li><Span weight="bold">Limit</Span>: Buyers can have 2 active general tickets + 1 per active order. This prevents abuse. Admins can override the limit for legitimate edge cases.</li>
+              <li><Span weight="bold">Closing tickets</Span>: Only close a ticket after confirming the issue is resolved. Auto-close (7 days no response from buyer) is enabled for status-inquiry tickets only.</li>
             </ul>
           ),
         },
@@ -84,9 +84,9 @@ export function AdminTrustGuideView() {
           content: (
             <ul className={GC.listMuted}>
               <li>The moderation queue surfaces flagged listings, reviews, and user-generated content for review.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Listing flags</Span>: Counterfeit claim, inappropriate images, misleading description. Each flag requires a decision: dismiss, warn seller, remove listing.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Review flags</Span>: PII in review text, slurs, spam. Decision: edit (remove PII), hide (dispute pending), or delete (violation confirmed).</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Appeals</Span>: Any moderation action can be appealed by the seller/user via a support ticket. Document your original decision clearly in the mod log.</li>
+              <li><Span weight="bold">Listing flags</Span>: Counterfeit claim, inappropriate images, misleading description. Each flag requires a decision: dismiss, warn seller, remove listing.</li>
+              <li><Span weight="bold">Review flags</Span>: PII in review text, slurs, spam. Decision: edit (remove PII), hide (dispute pending), or delete (violation confirmed).</li>
+              <li><Span weight="bold">Appeals</Span>: Any moderation action can be appealed by the seller/user via a support ticket. Document your original decision clearly in the mod log.</li>
             </ul>
           ),
         },

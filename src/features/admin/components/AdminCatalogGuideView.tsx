@@ -24,11 +24,11 @@ export function AdminCatalogGuideView() {
           Icon: Package, title: "Product Management",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Listing types</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">standard</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">product-</code>), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction-</code>), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pre-order</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">preorder-</code>).</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Admin vs store creation</Span>: Admins can create products on behalf of any store via the store picker in AdminProductEditorView.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Status lifecycle</Span>: DRAFT → PUBLISHED → ARCHIVED. Published products appear in search. Archived products are hidden but not deleted.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">J13 rule</Span>: Always use <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">listingType</code> field — the legacy <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isAuction</code>/<code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isPreOrder</code> booleans have been removed. All queries use <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">where(&quot;listingType&quot;, &quot;==&quot;, x)</code>.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Media URLs</Span>: Never write raw Firebase Storage URLs to Firestore. All product image URLs must use the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/[slug]</code> proxy format.</li>
+              <li><Span weight="bold">Listing types</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">standard</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">product-</code>), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction-</code>), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pre-order</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">preorder-</code>).</li>
+              <li><Span weight="bold">Admin vs store creation</Span>: Admins can create products on behalf of any store via the store picker in AdminProductEditorView.</li>
+              <li><Span weight="bold">Status lifecycle</Span>: DRAFT → PUBLISHED → ARCHIVED. Published products appear in search. Archived products are hidden but not deleted.</li>
+              <li><Span weight="bold">J13 rule</Span>: Always use <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">listingType</code> field — the legacy <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isAuction</code>/<code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isPreOrder</code> booleans have been removed. All queries use <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">where(&quot;listingType&quot;, &quot;==&quot;, x)</code>.</li>
+              <li><Span weight="bold">Media URLs</Span>: Never write raw Firebase Storage URLs to Firestore. All product image URLs must use the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/[slug]</code> proxy format.</li>
             </ul>
           ),
         },
@@ -36,11 +36,11 @@ export function AdminCatalogGuideView() {
           Icon: FolderTree, title: "Category Taxonomy",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">3-tier system</Span>: Root (tier 1) → Subcategory (tier 2) → Leaf (tier 3). Only leaf categories can be assigned to products.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Key fields</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">parentId</code> points to the direct parent; <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">rootId</code> always points to the tier-1 root; <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">path</code> stores the full hierarchy path.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">isLeaf</Span>: Must be <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">true</code> on any category that can be selected in the product form. Tier-1 and tier-2 categories must have <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isLeaf: false</code>.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Slug prefix</Span>: All category slugs start with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">category-</code>.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Adding a new root</Span>: Rare. Requires: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">display.icon</code>, decision on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">showOnHomepage</code>, and a senior admin sign-off.</li>
+              <li><Span weight="bold">3-tier system</Span>: Root (tier 1) → Subcategory (tier 2) → Leaf (tier 3). Only leaf categories can be assigned to products.</li>
+              <li><Span weight="bold">Key fields</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">parentId</code> points to the direct parent; <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">rootId</code> always points to the tier-1 root; <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">path</code> stores the full hierarchy path.</li>
+              <li><Span weight="bold">isLeaf</Span>: Must be <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">true</code> on any category that can be selected in the product form. Tier-1 and tier-2 categories must have <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isLeaf: false</code>.</li>
+              <li><Span weight="bold">Slug prefix</Span>: All category slugs start with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">category-</code>.</li>
+              <li><Span weight="bold">Adding a new root</Span>: Rare. Requires: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">display.icon</code>, decision on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">showOnHomepage</code>, and a senior admin sign-off.</li>
             </ul>
           ),
         },
@@ -48,10 +48,10 @@ export function AdminCatalogGuideView() {
           Icon: Tag, title: "Brands",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Slug prefix</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">brand-</code>. Slugs are immutable after products reference them.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">displayOrder</Span>: Controls the sort order on public brand pages. Lower numbers appear first.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">isActive: false</Span>: Hides the brand from public discovery but preserves historical product links. Use this instead of deleting a brand.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">logoURL / bannerURL</Span>: Must use the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/</code> proxy — never raw Storage URLs.</li>
+              <li><Span weight="bold">Slug prefix</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">brand-</code>. Slugs are immutable after products reference them.</li>
+              <li><Span weight="bold">displayOrder</Span>: Controls the sort order on public brand pages. Lower numbers appear first.</li>
+              <li><Span weight="bold">isActive: false</Span>: Hides the brand from public discovery but preserves historical product links. Use this instead of deleting a brand.</li>
+              <li><Span weight="bold">logoURL / bannerURL</Span>: Must use the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/</code> proxy — never raw Storage URLs.</li>
             </ul>
           ),
         },
@@ -59,10 +59,10 @@ export function AdminCatalogGuideView() {
           Icon: Star, title: "Reviews",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">isVerifiedPurchase</Span>: Set automatically by the system after order DELIVERED. Never manually toggle this field.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">sellerResponse</Span>: Written by the seller via their store dashboard. Admins should not edit seller responses — only remove clearly violating ones.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">When to delete vs hide</Span>: Delete for violations (PII, slurs, spam). Hide (move to unlisted) if a dispute is pending resolution.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">helpfulCount</Span>: Read-only — incremented by buyer votes. Do not manually edit this field.</li>
+              <li><Span weight="bold">isVerifiedPurchase</Span>: Set automatically by the system after order DELIVERED. Never manually toggle this field.</li>
+              <li><Span weight="bold">sellerResponse</Span>: Written by the seller via their store dashboard. Admins should not edit seller responses — only remove clearly violating ones.</li>
+              <li><Span weight="bold">When to delete vs hide</Span>: Delete for violations (PII, slurs, spam). Hide (move to unlisted) if a dispute is pending resolution.</li>
+              <li><Span weight="bold">helpfulCount</Span>: Read-only — incremented by buyer votes. Do not manually edit this field.</li>
             </ul>
           ),
         },

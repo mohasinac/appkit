@@ -232,7 +232,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                   )}
                   {child.name}
                   {(child.metrics?.productCount ?? 0) > 0 && (
-                    <Span size="xs" className="text-zinc-400 dark:text-zinc-400">
+                    <Span size="xs" color="muted">
                       {(child.metrics?.productCount ?? 0).toLocaleString()}
                     </Span>
                   )}

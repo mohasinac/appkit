@@ -139,7 +139,7 @@ export function PlaceBidFormClient({
           <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
             {formatCurrency(currentBid, currency)}
           </Span>
-          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
+          <Span size="sm" color="muted">
             {formatCurrency(startingBid, currency)}
           </Span>
         </Row>

@@ -85,7 +85,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
                 </Span>
               )}
               {date && (
-                <Span size="xs" className="text-zinc-400 dark:text-zinc-400">
+                <Span size="xs" color="muted">
                   {date}
                 </Span>
               )}

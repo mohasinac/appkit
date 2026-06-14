@@ -143,7 +143,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
           <Span weight="bold" className="text-2xl text-zinc-900 dark:text-zinc-100">
             {averageRating.toFixed(1)}
           </Span>
-          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">/ 5 · {totalReviews} reviews</Span>
+          <Span size="sm" color="muted">/ 5 · {totalReviews} reviews</Span>
         </Row>
       )}
 

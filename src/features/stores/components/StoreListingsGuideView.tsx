@@ -167,8 +167,8 @@ function AuctionWalkthrough() {
       <Div>
         <Text className={SUBHEADING}>Reserve price vs starting bid</Text>
         <Text className="leading-relaxed">
-          The <Span weight="bold" className="text-[var(--appkit-color-text)]">starting bid</Span> is the minimum first bid a buyer can place.
-          The <Span weight="bold" className="text-[var(--appkit-color-text)]">reserve price</Span> is the minimum price you are willing to accept —
+          The <Span weight="bold">starting bid</Span> is the minimum first bid a buyer can place.
+          The <Span weight="bold">reserve price</Span> is the minimum price you are willing to accept —
           if bidding does not reach the reserve, you are not obligated to sell. The reserve is hidden from buyers.
         </Text>
       </Div>
@@ -226,7 +226,7 @@ function PreorderWalkthrough() {
       <Div>
         <Text className={SUBHEADING}>Deposit mechanic</Text>
         <Text className="leading-relaxed">
-          Set a <Span weight="bold" className="text-[var(--appkit-color-text)]">deposit percentage</Span> (e.g. 20%). Buyers pay the deposit at checkout.
+          Set a <Span weight="bold">deposit percentage</Span> (e.g. 20%). Buyers pay the deposit at checkout.
           The balance is collected when the item arrives and you mark the pre-order ready. Buyers see both amounts clearly on the checkout page.
         </Text>
       </Div>

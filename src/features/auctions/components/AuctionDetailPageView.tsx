@@ -337,7 +337,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
                       {formatCurrency(currentBid, currency)}
                     </Span>
-                    <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
+                    <Span size="xs" color="muted">
                       {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
                     </Span>
                   </Row>
@@ -404,7 +404,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
                   </Span>
-                  <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
+                  <Span size="xs" color="muted">{bidCount} bids</Span>
                 </Row>
                 <PlaceBidModalButton
                   productId={String(product.id)}
@@ -428,7 +428,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
                   </Span>
-                  <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
+                  <Span size="xs" color="muted">{bidCount} bids</Span>
                 </Row>
                 <Button variant="primary" size="md" className="w-full">
                   Place Bid

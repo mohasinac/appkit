@@ -175,13 +175,13 @@ function CancellationsSection() {
         <Text className={SUBHEADING}>Who can cancel</Text>
         <ul className="space-y-1 pl-5">
           <li className={LIST_DISC}>
-            <Span weight="bold" className="text-[var(--appkit-color-text)]">Buyer</Span> — can self-cancel any time before the order reaches SHIPPED status.
+            <Span weight="bold">Buyer</Span> — can self-cancel any time before the order reaches SHIPPED status.
           </li>
           <li className={LIST_DISC}>
-            <Span weight="bold" className="text-[var(--appkit-color-text)]">Seller (you)</Span> — can cancel any time before SHIPPED (e.g. item found damaged during packaging).
+            <Span weight="bold">Seller (you)</Span> — can cancel any time before SHIPPED (e.g. item found damaged during packaging).
           </li>
           <li className={LIST_DISC}>
-            <Span weight="bold" className="text-[var(--appkit-color-text)]">LetItRip admin</Span> — can force-cancel at any status for policy violations or unresolved disputes.
+            <Span weight="bold">LetItRip admin</Span> — can force-cancel at any status for policy violations or unresolved disputes.
           </li>
         </ul>
       </Div>
@@ -189,7 +189,7 @@ function CancellationsSection() {
         <Text className={SUBHEADING}>Refund timeline</Text>
         <Text className="leading-relaxed">
           Cancellation triggers an automatic Razorpay refund. Funds typically reach the buyer in
-          <Span weight="bold" className="text-[var(--appkit-color-text)]"> 3–7 business days</Span> depending on the payment method (UPI is usually 1–2 business days).
+          <Span weight="bold"> 3–7 business days</Span> depending on the payment method (UPI is usually 1–2 business days).
         </Text>
       </Div>
       <Div>
@@ -216,7 +216,7 @@ function ReturnsSection() {
       <Div>
         <Text className={SUBHEADING}>When a buyer can raise a return</Text>
         <Text className="leading-relaxed">
-          Buyers can open a return request within the <Span weight="bold" className="text-[var(--appkit-color-text)]">return window</Span> after the order is marked DELIVERED.
+          Buyers can open a return request within the <Span weight="bold">return window</Span> after the order is marked DELIVERED.
           The default return window is 7 days. Stores with the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">extended_return_window</code> capability can offer 30 days.
         </Text>
       </Div>
@@ -256,7 +256,7 @@ function AuctionOrdersSection() {
       <Div>
         <Text className={SUBHEADING}>Payment window</Text>
         <Text className="leading-relaxed">
-          Auction winners have <Span weight="bold" className="text-[var(--appkit-color-text)]">48 hours</Span> from auction end to complete payment.
+          Auction winners have <Span weight="bold">48 hours</Span> from auction end to complete payment.
           You will receive a notification when the auction closes and again when the winner pays.
         </Text>
       </Div>

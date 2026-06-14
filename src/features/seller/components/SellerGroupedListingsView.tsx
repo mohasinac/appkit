@@ -83,7 +83,7 @@ const COLUMNS: AdminTableColumn<GroupedRow>[] = [
   {
     key: "createdAt",
     header: "Created",
-    render: (r) => <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{r.createdAt}</Span>,
+    render: (r) => <Span size="xs" color="muted">{r.createdAt}</Span>,
   },
 ];
 

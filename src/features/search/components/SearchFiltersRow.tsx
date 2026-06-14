@@ -79,7 +79,7 @@ export function SearchFiltersRow({
             placeholder={L.minPrice}
             className="w-28 rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
           />
-          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">–</Span>
+          <Span size="sm" color="muted">–</Span>
           <Input
             type="number"
             min={0}

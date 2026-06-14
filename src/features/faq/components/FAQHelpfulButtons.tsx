@@ -85,7 +85,7 @@ export function FAQHelpfulButtons({
           }`}
         >
           <Span size="sm">{labels?.yes ?? "Yes"}</Span>
-          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
+          <Span size="sm" color="muted">
             ({helpful})
           </Span>
         </Button>
@@ -103,7 +103,7 @@ export function FAQHelpfulButtons({
           }`}
         >
           <Span size="sm">{labels?.no ?? "No"}</Span>
-          <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
+          <Span size="sm" color="muted">
             ({notHelpful})
           </Span>
         </Button>

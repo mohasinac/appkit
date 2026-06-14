@@ -193,7 +193,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       key: "bidDate",
       header: "Date",
       className: "w-28",
-      render: (row) => <Span size="xs" className="text-zinc-500 dark:text-zinc-400">{row.bidDate}</Span>,
+      render: (row) => <Span size="xs" color="muted">{row.bidDate}</Span>,
     },
   ];
 

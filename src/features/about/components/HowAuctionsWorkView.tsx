@@ -142,7 +142,7 @@ function renderAuctionStepsSection(t: AuctionT, themed: (typeof THEME_CONSTANTS)
   return (
     <Section>
       <Heading level={2} className="mb-8 text-center">{t("stepsTitle")}</Heading>
-      <Stack gap="md" className="gap-5">
+      <Stack gap="5">
         {steps.map(({ number, icon, title, text }) => (
           <Div key={number} className={`flex items-start gap-4 ${__P.p5} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center} text-xl`}>{icon}</Div>

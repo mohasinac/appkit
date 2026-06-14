@@ -101,7 +101,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Row>
           )}
           {isOutOfStock && (
-            <Span size="xs" className="text-zinc-400 dark:text-zinc-400">Qty: {item.quantity}</Span>
+            <Span size="xs" color="muted">Qty: {item.quantity}</Span>
           )}
         </Row>
       </Div>

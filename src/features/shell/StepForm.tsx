@@ -64,7 +64,7 @@ export function StepFormActions({
         )}
       </>
       <Div className="flex items-center gap-3">
-        <Span size="xs" className="text-[var(--appkit-color-text-muted)]">
+        <Span size="xs" color="muted">
           {currentStep + 1} / {totalSteps}
         </Span>
         <Button

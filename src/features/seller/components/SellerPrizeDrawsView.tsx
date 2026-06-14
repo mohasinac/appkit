@@ -58,7 +58,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
         />
       ) : (
         <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center">
-          <Span size="xs" className="text-[var(--appkit-color-text-faint)]">–</Span>
+          <Span size="xs" color="faint">–</Span>
         </Div>
       ),
   },
@@ -68,7 +68,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     render: (row) => (
       <Div className="space-y-1">
         <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
-        <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.secondary}</Span>
+        <Span size="xs" color="muted">{row.secondary}</Span>
       </Div>
     ),
   },
@@ -93,7 +93,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     header: "Draw Date",
     className: "w-32",
     render: (row) => (
-      <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.drawDate}</Span>
+      <Span size="xs" color="muted">{row.drawDate}</Span>
     ),
   },
   {
@@ -101,7 +101,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     header: "Updated",
     className: "w-28",
     render: (row) => (
-      <Span size="xs" className="text-[var(--appkit-color-text-muted)]">{row.updatedAt}</Span>
+      <Span size="xs" color="muted">{row.updatedAt}</Span>
     ),
   },
 ];

@@ -93,7 +93,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
     header: "Updated",
     className: "w-32",
     render: (row) => (
-      <Span size="sm" className="text-zinc-500 dark:text-zinc-400">{row.updatedAt}</Span>
+      <Span size="sm" color="muted">{row.updatedAt}</Span>
     ),
   },
 ];

@@ -196,7 +196,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     {
       key: "updatedAt",
       header: "Updated",
-      render: (row) => <Span size="sm" className="text-zinc-500 dark:text-zinc-400">{row.updatedAt}</Span>,
+      render: (row) => <Span size="sm" color="muted">{row.updatedAt}</Span>,
     },
     {
       key: "actions",

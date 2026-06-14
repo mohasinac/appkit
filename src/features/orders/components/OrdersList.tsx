@@ -82,7 +82,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
             {revealsRemaining} {revealsRemaining === 1 ? "reveal" : "reveals"} pending
           </Span>
           {earliestDeadline && (
-            <Span size="xs" className="text-zinc-500 dark:text-zinc-400">
+            <Span size="xs" color="muted">
               before {new Date(earliestDeadline).toLocaleDateString(getDefaultLocale(), { month: "short", day: "numeric" })}
             </Span>
           )}

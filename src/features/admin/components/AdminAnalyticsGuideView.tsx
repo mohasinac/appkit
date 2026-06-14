@@ -22,10 +22,10 @@ export function AdminAnalyticsGuideView() {
           title: "Revenue Dashboard",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">GMV (Gross Merchandise Value)</Span>: Total order subtotals across all stores. Does not deduct platform commission or refunds.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Net Revenue</Span>: GMV × platformFee — refunded orders excluded.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Period filter</Span>: Last 7 / 30 / 90 days, or custom date range. All monetary values shown in INR.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Payout total</Span>: Total disbursed to sellers in the same period. Revenue - Payout = Platform earnings.</li>
+              <li><Span weight="bold">GMV (Gross Merchandise Value)</Span>: Total order subtotals across all stores. Does not deduct platform commission or refunds.</li>
+              <li><Span weight="bold">Net Revenue</Span>: GMV × platformFee — refunded orders excluded.</li>
+              <li><Span weight="bold">Period filter</Span>: Last 7 / 30 / 90 days, or custom date range. All monetary values shown in INR.</li>
+              <li><Span weight="bold">Payout total</Span>: Total disbursed to sellers in the same period. Revenue - Payout = Platform earnings.</li>
             </ul>
           ),
         },
@@ -43,9 +43,9 @@ export function AdminAnalyticsGuideView() {
           title: "Product Performance",
           content: (
             <ul className={GC.listMuted}>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Top products by orders</Span>: Which products drive the most completed transactions.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Top products by views</Span>: High views but low orders may indicate pricing, photos, or description issues.</li>
-              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Return rate</Span>: Products with &gt;10% return rate need review — usually a condition description or photo quality issue.</li>
+              <li><Span weight="bold">Top products by orders</Span>: Which products drive the most completed transactions.</li>
+              <li><Span weight="bold">Top products by views</Span>: High views but low orders may indicate pricing, photos, or description issues.</li>
+              <li><Span weight="bold">Return rate</Span>: Products with &gt;10% return rate need review — usually a condition description or photo quality issue.</li>
             </ul>
           ),
         },
