@@ -248,3 +248,31 @@
     grid-template-columns: 1fr 1fr 320px;
   }
 }
+
+/* Variant catalogue: divider primitives for Stack/Row. `divide` prop emits a
+   themed border-on-children rule that respects the active theme via CSS vars. */
+.appkit-stack--divide > * + * { border-top: 1px solid var(--appkit-color-border); padding-top: var(--appkit-space-3); }
+.appkit-stack--divide-subtle > * + * { border-top: 1px solid var(--appkit-color-border-subtle); }
+.appkit-row--divide > * + * { border-left: 1px solid var(--appkit-color-border); padding-left: var(--appkit-space-3); margin-left: var(--appkit-space-3); }
+.appkit-row--divide-subtle > * + * { border-left: 1px solid var(--appkit-color-border-subtle); }
+
+
+/* Semantic — Section.tone gradient variants (catalogue). Consume themed
+   gradient tokens so admin custom themes restyle automatically. */
+.appkit-section--tone-page-header { background-image: var(--appkit-gradient-page-header); }
+.appkit-section--tone-hero        { background-image: var(--appkit-gradient-section-mesh); }
+.appkit-section--tone-accent-banner { background-image: var(--appkit-gradient-accent-banner); }
+
+/* Semantic — Ul/Ol marker presets */
+.appkit-list--marker-disc    { list-style: disc; padding-left: 1.25rem; }
+.appkit-list--marker-decimal { list-style: decimal; padding-left: 1.25rem; }
+.appkit-list--marker-none    { list-style: none; padding-left: 0; }
+.appkit-list--marker-check   { list-style: none; padding-left: 0; }
+.appkit-list--marker-check > li::before { content: "✓ "; color: var(--appkit-color-success); margin-right: 0.25rem; }
+.appkit-list--marker-arrow   { list-style: none; padding-left: 0; }
+.appkit-list--marker-arrow > li::before { content: "→ "; color: var(--appkit-color-primary); margin-right: 0.25rem; }
+
+.appkit-list--spacing-tight       > li + li { margin-top: 0.25rem; }
+.appkit-list--spacing-comfortable > li + li { margin-top: 0.5rem; }
+.appkit-list--spacing-loose       > li + li { margin-top: 1rem; }
+

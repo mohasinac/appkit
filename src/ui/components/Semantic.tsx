@@ -40,13 +40,43 @@ import { buildSurfaceClasses } from "./surface-tokens";
  * Use for thematically grouped content that would appear in an outline.
  * Prefer this over a plain `<div data-section="semantic-div-596">` when the block has a heading.
  */
+/**
+ * Themed gradient tones for Section. Each tone resolves to a
+ * `--appkit-gradient-*` CSS variable so admin custom themes restyle the
+ * section without consumer changes.
+ */
+export type SectionTone = "plain" | "page-header" | "hero" | "accent-banner";
+
+const SECTION_TONE_MAP: Record<SectionTone, string> = {
+  plain: "",
+  "page-header": "appkit-section--tone-page-header",
+  hero: "appkit-section--tone-hero",
+  "accent-banner": "appkit-section--tone-accent-banner",
+};
+
 export interface SectionProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
+  /**
+   * Themed background tone. Defaults to `"plain"`. Use `"page-header"` for
+   * subtle gradient page-headers, `"hero"` for radial mesh hero backgrounds,
+   * `"accent-banner"` for primary→secondary brand banners.
+   */
+  tone?: SectionTone;
   children: React.ReactNode;
 }
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
-    <section className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} ref={ref as React.Ref<HTMLElement>} {...props}>
+  ({ tone = "plain", className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
+    <section
+      className={[
+        SECTION_TONE_MAP[tone],
+        buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      ref={ref as React.Ref<HTMLElement>}
+      {...props}
+    >
       {children}
     </section>
   ),
@@ -206,13 +236,46 @@ export function BlockFooter({
  * </Ul>
  * ```
  */
+/** Marker presets for `<Ul>` / `<Ol>`. */
+export type ListMarker = "disc" | "decimal" | "none" | "check" | "arrow";
+/** Spacing between list items. */
+export type ListSpacing = "tight" | "comfortable" | "loose" | "none";
+
+const LIST_MARKER_MAP: Record<ListMarker, string> = {
+  disc: "appkit-list--marker-disc",
+  decimal: "appkit-list--marker-decimal",
+  none: "appkit-list--marker-none",
+  check: "appkit-list--marker-check",
+  arrow: "appkit-list--marker-arrow",
+};
+
+const LIST_SPACING_MAP: Record<ListSpacing, string> = {
+  none: "",
+  tight: "appkit-list--spacing-tight",
+  comfortable: "appkit-list--spacing-comfortable",
+  loose: "appkit-list--spacing-loose",
+};
+
 export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
+  /** Marker style — replaces consumer `list-disc`/`list-none` className. */
+  marker?: ListMarker;
+  /** Vertical spacing between items — replaces consumer `space-y-N`. */
+  spacing?: ListSpacing;
   children: React.ReactNode;
 }
 
-export function Ul({ className = "", children, ...props }: UlProps) {
+export function Ul({ marker, spacing, className = "", children, ...props }: UlProps) {
   return (
-    <ul className={className} {...props}>
+    <ul
+      className={[
+        marker ? LIST_MARKER_MAP[marker] : "",
+        spacing ? LIST_SPACING_MAP[spacing] : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      {...props}
+    >
       {children}
     </ul>
   );
@@ -231,12 +294,25 @@ export function Ul({ className = "", children, ...props }: UlProps) {
  * ```
  */
 export interface OlProps extends React.HTMLAttributes<HTMLOListElement> {
+  /** Marker style — defaults to `"decimal"` for ordered lists. */
+  marker?: ListMarker;
+  /** Vertical spacing between items — replaces consumer `space-y-N`. */
+  spacing?: ListSpacing;
   children: React.ReactNode;
 }
 
-export function Ol({ className = "", children, ...props }: OlProps) {
+export function Ol({ marker = "decimal", spacing, className = "", children, ...props }: OlProps) {
   return (
-    <ol className={className} {...props}>
+    <ol
+      className={[
+        LIST_MARKER_MAP[marker],
+        spacing ? LIST_SPACING_MAP[spacing] : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      {...props}
+    >
       {children}
     </ol>
   );

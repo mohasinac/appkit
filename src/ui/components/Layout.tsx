@@ -254,15 +254,29 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
   centered?: boolean;
   /** Cross-axis (horizontal) alignment. Defaults to `"stretch"`. */
   align?: Extract<ItemsAlign, "start" | "center" | "end" | "stretch">;
+  /**
+   * Render a themed top-border between adjacent children. `true` / `"default"`
+   * uses the active theme's border colour; `"subtle"` uses border-subtle.
+   * Replaces the recurrent `divide-y divide-zinc-200 dark:divide-zinc-700`
+   * className pattern (which bypasses theme tokens).
+   */
+  divide?: boolean | "default" | "subtle";
   /** Render as a different element. Defaults to `"div"`. */
   as?: React.ElementType;
   children?: React.ReactNode;
+}
+
+function resolveDivideClass(divide: StackProps["divide"], axis: "stack" | "row"): string {
+  if (!divide) return "";
+  const base = `appkit-${axis}--divide`;
+  return divide === "subtle" ? `${base}-subtle` : base;
 }
 
 export function Stack({
   gap = "md",
   centered = false,
   align = "stretch",
+  divide,
   as,
   surface,
   padding,
@@ -279,6 +293,7 @@ export function Stack({
     GAP_MAP[gap],
     centered ? "appkit-stack--centered" : "",
     !centered && align !== "stretch" ? ITEMS_MAP[align] : "",
+    resolveDivideClass(divide, "stack"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,
   ]
@@ -320,6 +335,13 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   justify?: JustifyContent;
   /** Allow children to wrap onto multiple lines. */
   wrap?: boolean;
+  /**
+   * Render a themed left-border between adjacent children. `true` / `"default"`
+   * uses the active theme's border colour; `"subtle"` uses border-subtle.
+   * Replaces the recurrent `divide-x divide-zinc-200 dark:divide-zinc-700`
+   * className pattern (which bypasses theme tokens).
+   */
+  divide?: boolean | "default" | "subtle";
   /** Render as a different element. Defaults to `"div"`. */
   as?: React.ElementType;
   /** Forwarded to the underlying element when `as="button"`. */
@@ -335,6 +357,7 @@ export function Row({
   align = "center",
   justify = "start",
   wrap = false,
+  divide,
   as,
   surface,
   padding,
@@ -352,6 +375,7 @@ export function Row({
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],
     wrap ? "appkit-row--wrap" : "",
+    resolveDivideClass(divide, "row"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,
   ]
