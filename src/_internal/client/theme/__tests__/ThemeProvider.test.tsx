@@ -85,9 +85,11 @@ describe("ThemeProvider", () => {
 
   it("toggleTheme flips preference between light and dark", () => {
     mockMatchMedia(false);
-    let captured: ReturnType<typeof useTheme> | null = null;
+    const captured: { current: ReturnType<typeof useTheme> | null } = {
+      current: null,
+    };
     function Capture() {
-      captured = useTheme();
+      captured.current = useTheme();
       return null;
     }
     render(
@@ -95,10 +97,10 @@ describe("ThemeProvider", () => {
         <Capture />
       </ThemeProvider>,
     );
-    expect(captured?.effectiveMode).toBe("light");
-    act(() => captured?.toggleTheme());
-    expect(captured?.effectiveMode).toBe("dark");
-    expect(captured?.preference).toBe("dark");
+    expect(captured.current?.effectiveMode).toBe("light");
+    act(() => captured.current?.toggleTheme());
+    expect(captured.current?.effectiveMode).toBe("dark");
+    expect(captured.current?.preference).toBe("dark");
   });
 
   it("writes inline CSS variables from the active theme to <html>", () => {
