@@ -1,6 +1,38 @@
 export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
+import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
+
+// ─── Firestore document schema (W2) ───────────────────────────────────────────
+// Mirrors BlogPostDocument in ./firestore.ts. Registered into SCHEMAS.firestore.blogPosts.
+
+export const blogPostStatusEnumSchema = z.enum(["draft", "published", "archived"]);
+
+export const blogPostFirestoreSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  excerpt: z.string(),
+  content: z.string(),
+  coverImage: mediaFieldSchema.optional(),
+  contentImages: z.array(mediaFieldSchema).optional(),
+  additionalImages: z.array(mediaFieldSchema).optional(),
+  category: z.string(),
+  tags: z.array(z.string()),
+  isFeatured: z.boolean(),
+  status: blogPostStatusEnumSchema,
+  publishedAt: firestoreDateSchema.optional(),
+  authorId: z.string(),
+  authorName: z.string(),
+  authorAvatar: z.string().optional(),
+  readTimeMinutes: z.number().int().nonnegative(),
+  views: z.number().int().nonnegative(),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  ...auditTimestampsShape,
+});
+
+export type BlogPostFromSchema = z.infer<typeof blogPostFirestoreSchema>;
 
 const blogCoverImageSchema = z
   .union([

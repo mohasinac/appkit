@@ -1,5 +1,51 @@
 export * from "./firestore";
 import { z } from "zod";
+import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
+
+// ─── Firestore document schema (W2) ───────────────────────────────────────────
+// Mirrors ReviewDocument in ./firestore.ts. Registered into SCHEMAS.firestore.reviews.
+
+export const reviewVideoFieldSchema = z.object({
+  url: z.string(),
+  thumbnailUrl: z.string(),
+  duration: z.number().nonnegative(),
+  trimStart: z.number().optional(),
+  trimEnd: z.number().optional(),
+});
+
+export const reviewFirestoreSchema = z.object({
+  id: z.string(),
+  productId: z.string(),
+  productTitle: z.string(),
+  storeId: z.string().optional(),
+  storeName: z.string().optional(),
+  userId: z.string(),
+  userSlug: z.string().optional(),
+  userName: z.string(),
+  userAvatar: z.string().optional(),
+  rating: z.number().int().min(1).max(5),
+  title: z.string(),
+  comment: z.string(),
+  images: z.array(z.string()).optional(),
+  hasImages: z.boolean().optional(),
+  video: reviewVideoFieldSchema.optional(),
+  status: z.enum(["pending", "approved", "rejected"]),
+  moderatorId: z.string().optional(),
+  moderatorNote: z.string().optional(),
+  rejectionReason: z.string().optional(),
+  helpfulCount: z.number().int().nonnegative(),
+  reportCount: z.number().int().nonnegative(),
+  verified: z.boolean(),
+  featured: z.boolean().optional(),
+  isAnonymous: z.boolean().optional(),
+  sellerReply: z.string().optional(),
+  sellerRepliedAt: firestoreDateSchema.optional(),
+  approvedAt: firestoreDateSchema.optional(),
+  rejectedAt: firestoreDateSchema.optional(),
+  ...auditTimestampsShape,
+});
+
+export type ReviewFromSchema = z.infer<typeof reviewFirestoreSchema>;
 
 // --- Sub-schemas --------------------------------------------------------------
 

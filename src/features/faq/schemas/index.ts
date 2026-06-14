@@ -69,3 +69,45 @@ export const faqListParamsSchema = z.object({
 });
 
 export * from "./firestore";
+
+// ─── Firestore document schema (W2) ───────────────────────────────────────────
+// Mirrors FAQDocument in ./firestore.ts. Registered into SCHEMAS.firestore.faqs.
+
+import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
+
+export const faqSeoSchema = z.object({
+  slug: z.string(),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+});
+
+export const faqStatsFullSchema = z.object({
+  views: z.number().int().nonnegative(),
+  helpful: z.number().int().nonnegative(),
+  notHelpful: z.number().int().nonnegative(),
+  lastViewed: firestoreDateSchema.optional(),
+});
+
+export const faqFirestoreSchema = z.object({
+  id: z.string(),
+  question: z.string(),
+  answer: faqAnswerSchema,
+  category: faqCategorySchema,
+  showOnHomepage: z.boolean(),
+  showInFooter: z.boolean(),
+  isPinned: z.boolean(),
+  order: z.number().int(),
+  priority: z.number().int(),
+  tags: z.array(z.string()),
+  searchTokens: z.array(z.string()).optional(),
+  relatedFAQs: z.array(z.string()),
+  useSiteSettings: z.boolean(),
+  variables: z.record(z.string(), z.string()).optional(),
+  stats: faqStatsFullSchema,
+  seo: faqSeoSchema,
+  isActive: z.boolean(),
+  createdBy: z.string(),
+  ...auditTimestampsShape,
+});
+
+export type FAQFromSchema = z.infer<typeof faqFirestoreSchema>;

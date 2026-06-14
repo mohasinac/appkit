@@ -23,18 +23,75 @@
 //      asserts every feature export appears in SCHEMAS, every API route in
 //      `src/app/api/**` has an entry, and every Firestore collection in the
 //      CLAUDE.md seed table has a `firestore.<collection>` entry.
-//
-// W2–W7 incrementally populate the buckets. W1 ships the empty scaffold.
 
 import type { SchemaRegistry } from "./types";
 
+// ── W2 — Firestore document schemas ──────────────────────────────────────────
+import { addressFirestoreSchema } from "../features/addresses/schemas";
+import { blogPostFirestoreSchema } from "../features/blog/schemas";
+import { categoryFirestoreSchema } from "../features/categories/schemas";
+import { conversationFirestoreSchema } from "../features/messages/schemas";
+import {
+  carouselFirestoreSchema,
+  carouselSlideFirestoreSchema,
+  homepageSectionFirestoreSchema,
+} from "../features/homepage/schemas";
+import { faqFirestoreSchema } from "../features/faq/schemas";
+import { groupedListingFirestoreSchema } from "../features/grouped/schemas";
+import { orderFirestoreSchema } from "../features/orders/schemas";
+import { payoutFirestoreSchema } from "../features/payments/schemas";
+import {
+  claimedCouponFirestoreSchema,
+  couponFirestoreSchema,
+  couponUsageFirestoreSchema,
+} from "../features/promotions/schemas";
+import { reviewFirestoreSchema } from "../features/reviews/schemas";
+import {
+  scammerCommentFirestoreSchema,
+  scammerContestFirestoreSchema,
+  scammerFirestoreSchema,
+  scammerIncidentFirestoreSchema,
+} from "../features/scams/schemas";
+import { serverErrorFirestoreSchema } from "../features/server-errors/schemas";
+import { storeFirestoreSchema } from "../features/stores/schemas";
+import { supportTicketFirestoreSchema } from "../features/support/schemas";
+
 // ---------------------------------------------------------------------------
-// Firestore document schemas — populated by W2 as each missing Zod schema is
-// authored. Seed-table coverage is enforced by `audit-firestore-schema-coverage`.
-// Existing schemas re-export through here without forking.
+// Firestore document schemas — populated by W2.
+//
+// Coverage of the CLAUDE.md § Seed Data Reference table. Collections marked
+// (W2) were authored as part of the W2 workstream; others rely on schemas
+// already shipped in pre-existing per-feature files. The
+// `audit-firestore-schema-coverage` audit will surface any drift between this
+// map and the live seed table.
 // ---------------------------------------------------------------------------
 const firestore = {
-  // Populated in W2. Each entry: <collection>: <feature>FirestoreSchema.
+  addresses: addressFirestoreSchema,                         // W2
+  blogPosts: blogPostFirestoreSchema,                        // W2
+  carousels: carouselFirestoreSchema,                        // W2
+  carouselSlides: carouselSlideFirestoreSchema,              // W2
+  categories: categoryFirestoreSchema,                       // W2
+  claimedCoupons: claimedCouponFirestoreSchema,              // W2
+  conversations: conversationFirestoreSchema,                // W2
+  coupons: couponFirestoreSchema,                            // W2
+  couponUsage: couponUsageFirestoreSchema,                   // W2
+  faqs: faqFirestoreSchema,                                  // W2
+  groupedListings: groupedListingFirestoreSchema,            // W2
+  homepageSections: homepageSectionFirestoreSchema,          // W2
+  orders: orderFirestoreSchema,                              // W2
+  payouts: payoutFirestoreSchema,                            // W2
+  reviews: reviewFirestoreSchema,                            // W2
+  scammerProfiles: scammerFirestoreSchema,                   // W2
+  scammerIncidents: scammerIncidentFirestoreSchema,          // W2 (subcollection)
+  scammerComments: scammerCommentFirestoreSchema,            // W2 (subcollection)
+  scammerContests: scammerContestFirestoreSchema,            // W2 (subcollection)
+  serverErrors: serverErrorFirestoreSchema,                  // W2
+  stores: storeFirestoreSchema,                              // W2
+  supportTickets: supportTicketFirestoreSchema,              // W2
+  // Remaining CLAUDE.md collections (users, brands, products, bids, carts,
+  // wishlists, history, events, eventEntries, notifications, sessions,
+  // siteSettings) wire in via their pre-existing Zod schemas — registered as
+  // those are touched in W5/W7.
 } as const;
 
 // ---------------------------------------------------------------------------
