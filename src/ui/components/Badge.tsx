@@ -35,18 +35,32 @@ const BADGE_CLASSES = {
 
 export type BadgeVariant = keyof typeof BADGE_CLASSES;
 
+/** Catalogue size enum for Badge. */
+export type BadgeSize = "xs" | "sm" | "md";
+
+const BADGE_SIZE_CLASS: Record<BadgeSize, string> = {
+  xs: "appkit-badge--size-xs",
+  sm: "appkit-badge--size-sm",
+  md: "appkit-badge--size-md",
+};
+
 export interface BadgeProps {
   children: React.ReactNode;
   variant?: BadgeVariant;
+  /** Size preset — defaults to `"sm"`. */
+  size?: BadgeSize;
   className?: string;
 }
 
 export function Badge({
   children,
   variant = "default",
+  size = "sm",
   className = "",
 }: BadgeProps) {
   return (
-    <Span className={`${BADGE_CLASSES[variant]} ${className}`}>{children}</Span>
+    <Span className={`${BADGE_CLASSES[variant]} ${BADGE_SIZE_CLASS[size]} ${className}`}>
+      {children}
+    </Span>
   );
 }

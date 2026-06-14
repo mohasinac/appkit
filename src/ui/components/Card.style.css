@@ -188,3 +188,36 @@
 .dark .appkit-card__footer {
   border-top-color: var(--appkit-color-border);
 }
+
+/* Card — chat-bubble variants (mine/theirs for messages feature) */
+.appkit-card--chat-bubble {
+  display: inline-block;
+  max-width: 80%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  border: 1px solid var(--appkit-color-border);
+  background-color: var(--appkit-color-surface);
+}
+.appkit-card--chat-bubble-mine {
+  display: inline-block;
+  max-width: 80%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem 1rem 0 1rem;
+  background-color: var(--appkit-color-primary);
+  color: var(--appkit-color-text-on-primary);
+  margin-left: auto;
+}
+.appkit-card--chat-bubble-theirs {
+  display: inline-block;
+  max-width: 80%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem 1rem 1rem 0;
+  background-color: var(--appkit-color-surface-elevated);
+  border: 1px solid var(--appkit-color-border);
+}
+
+/* Badge size variants — catalogue tokens. */
+.appkit-badge--size-xs { font-size: 0.625rem; padding: 0.0625rem 0.375rem; }
+.appkit-badge--size-sm { font-size: 0.75rem;  padding: 0.125rem  0.5rem; }
+.appkit-badge--size-md { font-size: 0.875rem; padding: 0.25rem   0.625rem; }
+

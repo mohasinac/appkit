@@ -24,7 +24,10 @@ type CardVariant =
   | "stat-teal"
   | "stat-amber"
   | "stat-rose"
-  | "stat-emerald";
+  | "stat-emerald"
+  | "chat-bubble"
+  | "chat-bubble-mine"
+  | "chat-bubble-theirs";
 type CardPadding = "none" | "sm" | "md" | "lg";
 
 const UI_CARD = {
@@ -47,6 +50,9 @@ const UI_CARD = {
     "stat-amber": "appkit-card--stat-amber",
     "stat-rose": "appkit-card--stat-rose",
     "stat-emerald": "appkit-card--stat-emerald",
+    "chat-bubble": "appkit-card--chat-bubble",
+    "chat-bubble-mine": "appkit-card--chat-bubble-mine",
+    "chat-bubble-theirs": "appkit-card--chat-bubble-theirs",
   },
   padding: {
     none: "",
