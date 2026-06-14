@@ -44,7 +44,7 @@ export function VerifyEmailView({
             <Heading level={2} className="text-xl font-semibold mb-2">
               {labels.loadingTitle ?? "Verifying your email…"}
             </Heading>
-            <Text className="text-zinc-500 dark:text-zinc-400">
+            <Text color="muted">
               {labels.loadingDescription ?? "Please wait a moment."}
             </Text>
           </>

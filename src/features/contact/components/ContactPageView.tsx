@@ -34,7 +34,7 @@ export function ContactPageView() {
             <Heading level={1} className="text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
               Contact Us
             </Heading>
-            <Text className="text-zinc-500 dark:text-zinc-400">
+            <Text color="muted">
               Questions, support requests, or partnership inquiries.
             </Text>
           </Stack>

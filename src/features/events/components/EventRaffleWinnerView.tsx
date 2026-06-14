@@ -54,7 +54,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
   if (!event.raffleWinnerUserId) {
     return (
       <Div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 px-6 py-10 text-center">
-        <Text className="text-zinc-500 dark:text-zinc-400">{l.notDrawnYet}</Text>
+        <Text color="muted">{l.notDrawnYet}</Text>
       </Div>
     );
   }

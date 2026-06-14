@@ -194,7 +194,7 @@ export function FAQPageContent({
             )}
             renderTable={() =>
               isLoading ? (
-                <Text className="text-zinc-500 dark:text-zinc-400">
+                <Text color="muted">
                   {labels.loading}
                 </Text>
               ) : renderAccordion ? (

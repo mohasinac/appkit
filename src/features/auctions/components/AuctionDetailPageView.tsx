@@ -207,7 +207,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               <Heading level={1} className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
                 Auction Not Found
               </Heading>
-              <Text className="text-zinc-500 dark:text-zinc-400">
+              <Text color="muted">
                 This auction may have ended or the link is incorrect.
               </Text>
               <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className="text-sm font-medium text-primary-600 hover:underline">

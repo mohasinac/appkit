@@ -118,7 +118,7 @@ export async function PrizeDrawDetailPageView({
               >
                 Prize Draw Not Found
               </Heading>
-              <Text className="text-zinc-500 dark:text-zinc-400">
+              <Text color="muted">
                 The prize draw you are looking for may have been removed.
               </Text>
               <Link

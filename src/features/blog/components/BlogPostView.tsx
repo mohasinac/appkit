@@ -132,7 +132,7 @@ export function BlogPostView({
         <Heading level={1} className="text-xl font-semibold">
           {labels.notFound ?? "Post not found"}
         </Heading>
-        <Text className="text-zinc-500 dark:text-zinc-400">
+        <Text color="muted">
           {labels.notFoundDescription ?? "This post is not available."}
         </Text>
         {renderBackButton?.()}

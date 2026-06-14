@@ -233,7 +233,7 @@ export async function ProductDetailPageView({
               >
                 Product Not Found
               </Heading>
-              <Text className="text-zinc-500 dark:text-zinc-400">
+              <Text color="muted">
                 The product you are looking for may have been removed or the
                 link is incorrect.
               </Text>

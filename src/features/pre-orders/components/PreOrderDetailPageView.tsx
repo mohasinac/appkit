@@ -387,7 +387,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               <Heading level={1} className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
                 Pre-Order Not Found
               </Heading>
-              <Text className="text-zinc-500 dark:text-zinc-400">
+              <Text color="muted">
                 The pre-order item you are looking for may have been removed.
               </Text>
               <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className="text-sm font-medium text-primary-600 hover:underline">
