@@ -33,6 +33,9 @@ import { getProviders } from "../../contracts";
 import { isAdminUser } from "../../features/auth/role-predicates";
 import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
 import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
+import { SCHEMAS } from "../../schemas/registry";
+import type { RegisteredApiRouteKey } from "../../schemas/registry";
+import type { ApiRouteKey } from "../../schemas/types";
 
 /** Minimal schema interface compatible with Zod v3 and v4. */
 interface ParseableSchema<TOutput> {
@@ -59,7 +62,17 @@ interface RouteHandlerOptions<
   authOptional?: boolean;
   roles?: readonly string[];
   permission?: string;
-  schema?: ParseableSchema<TInput>;
+  /**
+   * Body validator. Accepts either:
+   *  - A Zod-compatible schema with `safeParse` (existing usage)
+   *  - A registered API route key like `"POST /api/wishlist"` — the helper
+   *    looks up `SCHEMAS.api[key].body` from the central registry (W4).
+   *    Keys must be registered in `appkit/src/schemas/registry.ts`.
+   *
+   * When a key is used, the parsed body is still typed via TInput; provide
+   * the inferred type as the generic for end-to-end safety.
+   */
+  schema?: ParseableSchema<TInput> | ApiRouteKey;
   /**
    * When `true`, the wrapper allows requests with no body or empty/malformed body
    * to reach the handler (body will be `undefined`). Only valid when `schema` is
@@ -255,13 +268,31 @@ export function createRouteHandler<
       // -- Body parsing ------------------------------------------------------
       let body: TInput | undefined;
       if (options.schema) {
+        // Resolve the schema — either a direct ParseableSchema or a
+        // registry key string. Keys resolve against SCHEMAS.api[key].body.
+        let resolvedSchema: ParseableSchema<TInput>;
+        if (typeof options.schema === "string") {
+          const key = options.schema as RegisteredApiRouteKey;
+          const entry = SCHEMAS.api[key];
+          if (!entry || !("body" in entry) || !entry.body) {
+            return errorJson(
+              500,
+              HTTP_ERROR_CODES.INTERNAL,
+              `Route schema not registered: ${String(options.schema)}`,
+              requestId,
+            );
+          }
+          resolvedSchema = entry.body as unknown as ParseableSchema<TInput>;
+        } else {
+          resolvedSchema = options.schema;
+        }
         let raw: unknown;
         try {
           raw = await request.json();
         } catch {
           return errorJson(400, HTTP_ERROR_CODES.VALIDATION_FAILED, "Invalid JSON body", requestId);
         }
-        const result = options.schema.safeParse(raw);
+        const result = resolvedSchema.safeParse(raw);
         if (!result.success) {
           return errorJson(
             400,

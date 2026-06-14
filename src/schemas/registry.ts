@@ -95,11 +95,27 @@ const firestore = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// API route schemas — populated by W4 as each route is bound to schema.
-// Key shape: `${verb} ${pathPattern}`, e.g. "POST /api/wishlist".
+// API route schemas — W4 seed cohort. Each entry maps an HTTP-verb-and-path
+// key to its `{ body?, query?, params?, response? }` schema bundle. The
+// `createRouteHandler` helper accepts either a direct Zod schema or one of
+// these keys.
 // ---------------------------------------------------------------------------
+import {
+  postApiWishlist,
+  postApiAuthSession,
+  postApiAdminProductsIdGroup,
+  postApiMediaSign,
+  postApiMediaFinalize,
+  getApiSearchSuggestions,
+} from "./api-routes";
+
 const api = {
-  // Populated in W4. Each entry: [key]: { body?, query?, params?, response? }.
+  "POST /api/wishlist": postApiWishlist,
+  "POST /api/auth/session": postApiAuthSession,
+  "POST /api/admin/products/[id]/group": postApiAdminProductsIdGroup,
+  "POST /api/media/sign": postApiMediaSign,
+  "POST /api/media/finalize": postApiMediaFinalize,
+  "GET /api/search/suggestions": getApiSearchSuggestions,
 } as const;
 
 // ---------------------------------------------------------------------------
