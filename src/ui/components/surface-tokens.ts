@@ -8,16 +8,22 @@
 
 export const SURFACE_MAP = {
   none: "",
-  default: "bg-white dark:bg-slate-900",
-  muted: "bg-zinc-50 dark:bg-slate-950",
-  subtle: "bg-zinc-100 dark:bg-slate-900",
-  inset: "bg-zinc-200 dark:bg-slate-800",
-  card: "bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-700 rounded-xl shadow-sm",
-  elevated: "bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-700 rounded-2xl shadow-md",
-  interactive: "bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md hover:border-primary-300/60 dark:hover:border-secondary-500/60 transition-all cursor-pointer",
-  glass: "backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border border-zinc-200/60 dark:border-slate-700/40 rounded-2xl shadow-lg",
-  form: "bg-white dark:bg-slate-900 rounded-2xl border border-zinc-200 dark:border-slate-700 shadow-sm",
-  sidePanel: "bg-white dark:bg-slate-950",
+  default: "bg-[var(--appkit-color-surface)]",
+  muted: "bg-[var(--appkit-color-bg)]",
+  subtle: "bg-[var(--appkit-color-border-subtle)]",
+  inset: "bg-[var(--appkit-color-surface-input)]",
+  card: "bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] rounded-xl shadow-sm",
+  elevated: "bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] rounded-2xl shadow-md",
+  interactive: "bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] rounded-xl shadow-sm hover:shadow-md hover:border-[var(--appkit-color-primary-300)] transition-all cursor-pointer",
+  glass: "backdrop-blur-md border border-[var(--appkit-color-border-subtle)] rounded-2xl shadow-lg bg-[image:var(--appkit-gradient-glass)]",
+  form: "bg-[var(--appkit-color-surface)] rounded-2xl border border-[var(--appkit-color-border)] shadow-sm",
+  sidePanel: "bg-[var(--appkit-color-surface)]",
+  // Status-tinted surfaces — drawn from the active theme so admin custom themes
+  // automatically restyle status callouts.
+  "success-surface": "bg-[var(--appkit-color-success-surface)]",
+  "danger-surface": "bg-[var(--appkit-color-error-surface)]",
+  "warning-surface": "bg-[var(--appkit-color-warning-surface)]",
+  "info-surface": "bg-[var(--appkit-color-info-surface)]",
 } as const;
 
 export type SurfaceKey = keyof typeof SURFACE_MAP;
@@ -30,9 +36,12 @@ export const PADDING_MAP = {
   lg: "p-6",
   xl: "p-8",
   card: "p-5 sm:p-6 lg:p-8",
+  "card-tight": "p-3 sm:p-4",
   section: "py-10 sm:py-14 xl:py-20",
   sectionSm: "py-6 sm:py-10",
   page: "py-6 sm:py-8 lg:py-10",
+  hero: "py-12 sm:py-16 lg:py-24",
+  toolbar: "px-3 py-1.5",
   inline: "px-4 py-3",
   inlineSm: "px-3 py-2",
   inlineLg: "px-6 py-4",
@@ -71,6 +80,42 @@ export const SHADOW_MAP = {
 } as const;
 
 export type ShadowKey = keyof typeof SHADOW_MAP;
+
+/**
+ * Named gap presets consumed by `<Stack>` / `<Row>` / `<Grid>` `gap` props.
+ *
+ * The variant catalogue blocks raw `space-y-*` / `gap-*` literals at the call
+ * site; consumers pick a token name and the primitive resolves it here.
+ *
+ * The mapping uses Tailwind's `gap-*` utility for *both* axes — `<Stack>`
+ * renders `flex-col`, so `gap` collapses to vertical spacing automatically.
+ */
+export const GAP_PRESETS = {
+  none: "gap-0",
+  px: "gap-px",
+  xs: "gap-1",
+  sm: "gap-2",
+  dense: "gap-2",
+  md: "gap-3",
+  comfortable: "gap-3",
+  lg: "gap-4",
+  loose: "gap-4",
+  xl: "gap-5",
+  "2xl": "gap-6",
+  section: "gap-6 sm:gap-8",
+  hero: "gap-10 sm:gap-12",
+} as const;
+
+export type GapPresetKey = keyof typeof GAP_PRESETS;
+
+/**
+ * Named padding presets consumed by `<Container>` / `<Section>` / `<Card>` /
+ * `<Stack>` / `<Row>` / `<Div>` `padding` props. Re-exports `PADDING_MAP` under
+ * the catalogue alias so existing consumers keep working while new code uses
+ * the catalogue name.
+ */
+export const PADDING_PRESETS = PADDING_MAP;
+export type PaddingPresetKey = PaddingKey;
 
 export interface SurfaceProps {
   surface?: SurfaceKey;

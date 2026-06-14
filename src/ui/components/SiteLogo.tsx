@@ -1,50 +1,91 @@
+/**
+ * LetItRip site logo — SVG wordmark "LetItRip" + small ".in" superscript.
+ *
+ * Single source of truth for the site brand mark. The wordmark gradient
+ * follows the active theme via `var(--appkit-gradient-logo)`, so a custom
+ * admin theme automatically restyles the logo without forking the SVG.
+ *
+ * Sizes are responsive presets — the variant catalogue forbids consumer-side
+ * className overrides on primitive components.
+ */
+import { MediaImage } from "../../features/media/MediaImage";
+
+export type SiteLogoSize = "sm" | "md" | "lg" | "xl" | "hero";
+export type SiteLogoTone = "brand" | "mono" | "inverse" | "on-primary";
+
 export interface SiteLogoProps {
-  /** Tailwind height class. Logo width scales from viewBox. */
-  className?: string;
+  /**
+   * Responsive height preset. Default `"md"` matches the title-bar height
+   * across breakpoints used by `TitleBarLayout`.
+   */
+  size?: SiteLogoSize;
+  /**
+   * `"brand"` (default) renders the themed gradient wordmark.
+   * `"mono"` renders the wordmark in `currentColor`.
+   * `"inverse"` renders in `var(--appkit-color-text-on-primary)` for use on
+   * primary-coloured surfaces.
+   * `"on-primary"` renders the wordmark in `var(--appkit-color-text)` — for
+   * dark-primary surfaces in light mode etc.
+   */
+  tone?: SiteLogoTone;
   /** Accessible title; defaults to "LetItRip.in". */
   title?: string;
   /**
-   * Visual variant:
-   *  - "gradient" (default): brand-gradient wordmark on transparent background
-   *  - "solid": single-colour wordmark using currentColor (useful on coloured surfaces)
-   */
-  variant?: "gradient" | "solid";
-  /**
-   * Optional image URL — when provided, renders an <img> instead of the SVG
-   * wordmark. Used to honour admin-uploaded site logos. Falls back to the
-   * SVG wordmark automatically when empty/undefined.
+   * Optional admin-uploaded image URL. When present, renders an `<MediaImage>`
+   * instead of the SVG wordmark (so the watermark proxy applies). Falls back
+   * to the SVG when empty/undefined.
    */
   src?: string;
 }
 
-const GRADIENT_ID = "letitrip-logo-gradient";
+const GRADIENT_ID = "appkit-logo-gradient";
 
-/**
- * LetItRip site logo — SVG wordmark "LetItRip" + small ".in" superscript.
- *
- * Single source of truth for the site brand mark. Used by the title bar
- * and the welcome / hero section. Scales cleanly at any size via Tailwind
- * height class on the parent (the SVG fills available width via viewBox).
- */
+const SIZE_HEIGHTS: Record<SiteLogoSize, string> = {
+  sm: "h-5",
+  md: "h-7 md:h-9 lg:h-10",
+  lg: "h-9 md:h-11 lg:h-12",
+  xl: "h-12 md:h-16 lg:h-20",
+  hero: "h-24 xl:h-32 2xl:h-40",
+};
+
+function resolveFill(tone: SiteLogoTone): string {
+  switch (tone) {
+    case "mono":
+      return "currentColor";
+    case "inverse":
+      return "var(--appkit-color-text-on-primary)";
+    case "on-primary":
+      return "var(--appkit-color-text)";
+    case "brand":
+    default:
+      return `url(#${GRADIENT_ID})`;
+  }
+}
+
 export function SiteLogo({
-  className = "h-7",
+  size = "md",
+  tone = "brand",
   title = "LetItRip.in",
-  variant = "gradient",
   src,
 }: SiteLogoProps) {
+  const heightCls = SIZE_HEIGHTS[size];
+
   if (src) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <MediaImage
         src={src}
         alt={title}
-        data-testid="site-logo"
-        className={`block w-auto object-contain ${className}`}
+        size="thumbnail"
+        objectFit="contain"
+        // audit-variant-ok: SiteLogo uses a fixed-height responsive class set
+        // backed by the catalogued `size` enum; no consumer-provided overrides.
+        className={`block w-auto ${heightCls}`}
       />
     );
   }
 
-  const fill = variant === "gradient" ? `url(#${GRADIENT_ID})` : "currentColor";
+  const fill = resolveFill(tone);
+  const isGradient = tone === "brand";
 
   return (
     <svg
@@ -53,25 +94,29 @@ export function SiteLogo({
       role="img"
       aria-label={title}
       data-testid="site-logo"
-      className={`block w-auto ${className}`}
+      // audit-variant-ok: SiteLogo uses a fixed-height responsive class set
+      // backed by the catalogued `size` enum; no consumer-provided overrides.
+      className={`block w-auto ${heightCls}`}
     >
       <title>{title}</title>
-      {variant === "gradient" && (
+      {isGradient && (
         <defs>
+          {/* Embedded linearGradient references the active theme's
+              --appkit-gradient-logo stops via a fallback CSS reference path. */}
           <linearGradient id={GRADIENT_ID} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop
               offset="0%"
-              // audit-inline-style-ok: SVG gradient stop
+              // audit-inline-style-ok: SVG gradient stop must be inline
               style={{ stopColor: "var(--appkit-color-primary-700)" }}
             />
             <stop
               offset="55%"
-              // audit-inline-style-ok: SVG gradient stop
-              style={{ stopColor: "var(--appkit-color-cobalt)" }}
+              // audit-inline-style-ok: SVG gradient stop must be inline
+              style={{ stopColor: "var(--appkit-color-primary-500)" }}
             />
             <stop
               offset="100%"
-              // audit-inline-style-ok: SVG gradient stop
+              // audit-inline-style-ok: SVG gradient stop must be inline
               style={{ stopColor: "var(--appkit-color-secondary-400)" }}
             />
           </linearGradient>
@@ -88,7 +133,7 @@ export function SiteLogo({
       >
         LetItRip
       </text>
-      {/* .in TLD badge — pill background makes it read as a designed element, not a floating label */}
+      {/* .in TLD badge — pill background reads as a designed element. */}
       <rect x="169" y="5" width="43" height="21" rx="10.5" fill={fill} opacity="0.12" />
       <text
         x="174"

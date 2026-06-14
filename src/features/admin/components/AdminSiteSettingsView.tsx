@@ -10,6 +10,11 @@ import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import {
+  ThemeManagerView,
+  type ThemeManagerValue,
+} from "../../site-settings/components/ThemeManagerView";
+import { DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from "../../../tokens/themes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -112,6 +117,13 @@ export function AdminSiteSettingsView({
   const [accentColor, setAccentColor] = React.useState("");
   const [defaultTheme, setDefaultTheme] = React.useState("light");
   const [fontFamily, setFontFamily] = React.useState("inter");
+
+  // Theme registry (custom themes + default-light / default-dark pointers).
+  const [themeRegistry, setThemeRegistry] = React.useState<ThemeManagerValue>({
+    themes: [],
+    defaultLightThemeId: DEFAULT_LIGHT_THEME.id,
+    defaultDarkThemeId: DEFAULT_DARK_THEME.id,
+  });
 
   // ③ Announcement
   const [announcementEnabled, setAnnouncementEnabled] = React.useState(false);
@@ -246,6 +258,21 @@ export function AdminSiteSettingsView({
     setDefaultTheme(s.appearance?.defaultTheme ?? "light");
     setFontFamily(s.appearance?.fontFamily ?? "inter");
 
+    const themeBlock = (s as Record<string, unknown>).theme as
+      | {
+          themes?: Array<Record<string, unknown>>;
+          defaultLightThemeId?: string;
+          defaultDarkThemeId?: string;
+        }
+      | undefined;
+    setThemeRegistry({
+      themes: (themeBlock?.themes ?? []) as unknown as ThemeManagerValue["themes"],
+      defaultLightThemeId:
+        themeBlock?.defaultLightThemeId ?? DEFAULT_LIGHT_THEME.id,
+      defaultDarkThemeId:
+        themeBlock?.defaultDarkThemeId ?? DEFAULT_DARK_THEME.id,
+    });
+
     setAnnouncementEnabled(s.announcementBar?.enabled ?? false);
     setAnnouncementText(s.announcementBar?.text ?? s.announcementBar?.message ?? "");
     setAnnouncementLink(s.announcementBar?.link ?? "");
@@ -370,6 +397,13 @@ export function AdminSiteSettingsView({
   const appearanceMutation = useSave("Appearance", () => ({
     appearance: { primaryColor, secondaryColor, accentColor, defaultTheme, fontFamily },
   }));
+  const themeMutation = useSave("Themes", () => ({
+    theme: {
+      themes: themeRegistry.themes,
+      defaultLightThemeId: themeRegistry.defaultLightThemeId,
+      defaultDarkThemeId: themeRegistry.defaultDarkThemeId,
+    },
+  }));
   const announcementMutation = useSave("Announcement", () => ({
     announcementBar: { enabled: announcementEnabled, text: announcementText, link: announcementLink, backgroundColor: announcementBg },
   }));
@@ -470,6 +504,7 @@ export function AdminSiteSettingsView({
               ["about", "⓪ About"],
               ["branding", "① Branding"],
               ["appearance", "② Appearance"],
+              ["themes", "②ᵃ Themes"],
               ["announcement", "③ Announcement"],
               ["seo", "④ SEO"],
               ["contact", "⑤ Contact & Social"],
@@ -556,6 +591,24 @@ export function AdminSiteSettingsView({
                 <Select label="Font family" options={FONT_OPTIONS} value={fontFamily} onValueChange={setFontFamily} />
               </Grid>
               <GroupSaveButton isPending={appearanceMutation.isPending} />
+            </Form>
+          </TabsContent>
+
+          {/* ②ᵃ Themes — admin-authored theme records */}
+          <TabsContent value="themes">
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+                themeMutation.mutate();
+              }}
+              className="space-y-4 pt-4"
+            >
+              <ThemeManagerView
+                value={themeRegistry}
+                onChange={setThemeRegistry}
+                previewOrigin="/"
+              />
+              <GroupSaveButton isPending={themeMutation.isPending} />
             </Form>
           </TabsContent>
 

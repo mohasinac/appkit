@@ -32,8 +32,11 @@ import { buildSurfaceClasses } from "./surface-tokens";
 // --- Token maps --------------------------------------------------------------
 
 /**
- * Gap tokens — maps to `gap-*` Tailwind classes.
- * Mirrors THEME_CONSTANTS.spacing.gap in the host app.
+ * Gap tokens — maps to compiled `.appkit-gap--*` rules in `Layout.style.css`.
+ *
+ * The variant catalogue ships the canonical names (`dense`, `comfortable`,
+ * `loose`, `section`, `hero`) alongside the legacy scalar names so existing
+ * call sites keep working while new code adopts the catalogue tokens.
  */
 const GAP_MAP = {
   none: "",
@@ -47,6 +50,12 @@ const GAP_MAP = {
   lg: "appkit-gap--lg",
   xl: "appkit-gap--xl",
   "2xl": "appkit-gap--2xl",
+  // Catalogue aliases — preferred by the variant audit.
+  dense: "appkit-gap--dense",
+  comfortable: "appkit-gap--comfortable",
+  loose: "appkit-gap--loose",
+  section: "appkit-gap--section",
+  hero: "appkit-gap--hero",
 } as const;
 
 export type GapKey = keyof typeof GAP_MAP;

@@ -42,10 +42,52 @@ const TYPOGRAPHY = {
 
 export type ColorVariant = keyof typeof TYPOGRAPHY.colorVariant;
 
+/** Shared text-shaping modifiers added by the variant-catalogue rollout. */
+export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
+export type TextAlign = "start" | "center" | "end" | "justify";
+export type FontFamily = "sans" | "display" | "editorial" | "mono";
+export type TextGradient = "none" | "brand" | "brand-tri" | "accent";
+/** Multi-line ellipsis: `true` = 1 line; pass `2`, `3`, or `4` for line-clamp. */
+export type TextTruncate = boolean | 1 | 2 | 3 | 4;
+
+function shapingClasses(opts: {
+  transform?: TextTransform;
+  truncate?: TextTruncate;
+  numeric?: boolean;
+  italic?: boolean;
+  family?: FontFamily;
+  align?: TextAlign;
+  gradient?: TextGradient;
+}): string[] {
+  const out: string[] = [];
+  if (opts.transform && opts.transform !== "none") {
+    out.push(`appkit-text--transform-${opts.transform}`);
+  }
+  if (opts.truncate) {
+    const lines = typeof opts.truncate === "number" ? opts.truncate : 1;
+    out.push(`appkit-text--truncate-${lines}`);
+  }
+  if (opts.numeric) out.push("appkit-text--numeric");
+  if (opts.italic) out.push("appkit-text--italic");
+  if (opts.family) out.push(`appkit-font--${opts.family}`);
+  if (opts.align) out.push(`appkit-text--align-${opts.align}`);
+  if (opts.gradient && opts.gradient !== "none") {
+    out.push(`appkit-text--gradient-${opts.gradient}`);
+  }
+  return out;
+}
+
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   variant?: "primary" | "secondary" | "muted" | "none";
   color?: ColorVariant;
+  transform?: TextTransform;
+  truncate?: TextTruncate;
+  numeric?: boolean;
+  italic?: boolean;
+  family?: FontFamily;
+  align?: TextAlign;
+  gradient?: TextGradient;
   children: React.ReactNode;
 }
 
@@ -53,6 +95,13 @@ export function Heading({
   level = 1,
   variant = "primary",
   color,
+  transform,
+  truncate,
+  numeric,
+  italic,
+  family,
+  align,
+  gradient,
   className = "",
   children,
   ...props
@@ -66,6 +115,7 @@ export function Heading({
         "appkit-heading",
         TYPOGRAPHY.headingLevel[level],
         TYPOGRAPHY.colorVariant[resolvedColor],
+        ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
         className,
       ]
         .filter(Boolean)
@@ -84,6 +134,13 @@ interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   color?: ColorVariant;
   size?: "xs" | "sm" | "base" | "lg" | "xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
+  transform?: TextTransform;
+  truncate?: TextTruncate;
+  numeric?: boolean;
+  italic?: boolean;
+  family?: FontFamily;
+  align?: TextAlign;
+  gradient?: TextGradient;
   /** Override the rendered element. Defaults to `p`. */
   as?: React.ElementType;
   children: React.ReactNode;
@@ -94,6 +151,13 @@ export function Text({
   color,
   size = "base",
   weight = "normal",
+  transform,
+  truncate,
+  numeric,
+  italic,
+  family,
+  align,
+  gradient,
   className = "",
   as: Tag = "p",
   children,
@@ -107,6 +171,7 @@ export function Text({
         TYPOGRAPHY.textSize[size],
         TYPOGRAPHY.textWeight[weight],
         TYPOGRAPHY.colorVariant[resolvedColor],
+        ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
         className,
       ]
         .filter(Boolean)
@@ -202,6 +267,13 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   color?: ColorVariant;
   size?: "xs" | "sm" | "base" | "lg" | "xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
+  transform?: TextTransform;
+  truncate?: TextTruncate;
+  numeric?: boolean;
+  italic?: boolean;
+  family?: FontFamily;
+  align?: TextAlign;
+  gradient?: TextGradient;
   children?: React.ReactNode;
 }
 
@@ -210,6 +282,13 @@ export function Span({
   color,
   size,
   weight,
+  transform,
+  truncate,
+  numeric,
+  italic,
+  family,
+  align,
+  gradient,
   className = "",
   children,
   ...props
@@ -220,6 +299,7 @@ export function Span({
     size ? TYPOGRAPHY.textSize[size] : "",
     weight ? TYPOGRAPHY.textWeight[weight] : "",
     TYPOGRAPHY.colorVariant[resolvedColor],
+    ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
     className,
   ]
     .filter(Boolean)

@@ -88,6 +88,19 @@
 .appkit-gap--xl { gap: 2rem; }
 .appkit-gap--2xl { gap: 3rem; }
 
+/* Catalogue gap aliases — used by the variant API.
+   `dense`/`comfortable`/`loose` are the canonical token names the audit
+   exposes; `section` and `hero` add responsive vertical spacing. */
+.appkit-gap--dense { gap: 0.5rem; }
+.appkit-gap--comfortable { gap: 0.75rem; }
+.appkit-gap--loose { gap: 1rem; }
+.appkit-gap--section { gap: 1.5rem; }
+.appkit-gap--hero { gap: 2.5rem; }
+@media (min-width: 640px) {
+  .appkit-gap--section { gap: 2rem; }
+  .appkit-gap--hero { gap: 3rem; }
+}
+
 .appkit-grid--1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--2 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--3 { grid-template-columns: repeat(1, minmax(0, 1fr)); }

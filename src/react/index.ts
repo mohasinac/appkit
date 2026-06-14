@@ -27,9 +27,8 @@ export type {
   UsePullToRefreshReturn,
 } from "./hooks/usePullToRefresh";
 
-// Contexts
-export { ThemeProvider, useTheme } from "./contexts/ThemeContext";
-export type { ThemeMode } from "./contexts/ThemeContext";
+// Contexts — ThemeProvider/useTheme/ThemeMode moved to "@mohasinac/appkit/client"
+// (registry-aware ThemeProvider lives in _internal/client/theme).
 export {
   SessionProvider,
   useSession,

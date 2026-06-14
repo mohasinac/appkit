@@ -307,7 +307,7 @@ export function TitleBarLayout({
               aria-label={brandName}
               className="flex items-center transition-opacity hover:opacity-80"
             >
-              <SiteLogo title={brandName} className="h-7 md:h-9 lg:h-10" />
+              <SiteLogo title={brandName} size="md" />
             </Link>
           </Row>
 
@@ -320,7 +320,7 @@ export function TitleBarLayout({
                 aria-label={brandName}
                 className="flex items-center transition-opacity hover:opacity-80"
               >
-                <SiteLogo src={siteLogoUrl} title={brandName} className="h-7 md:h-9 lg:h-10" />
+                <SiteLogo src={siteLogoUrl} title={brandName} size="md" />
               </Link>
             </Div>
           ) : (

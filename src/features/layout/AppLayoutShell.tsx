@@ -26,7 +26,7 @@ const ROLE_DOT_COLORS: Record<string, string> = {
   seller:    "#0d9488", // audit-hex-tokens-ok: role indicator (teal-600)
   employee:  "#f59e0b", // audit-hex-tokens-ok: role indicator (amber-500)
 };
-import { useTheme } from "../../react";
+import { useTheme } from "../../_internal/client/theme";
 import { useAuth } from "../../react/contexts/SessionContext";
 import { isBuyerUser } from "../auth/role-predicates";
 import { NavbarWithSettings } from "./NavbarWithSettings";

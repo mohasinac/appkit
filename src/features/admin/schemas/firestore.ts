@@ -378,6 +378,38 @@ export function meetsMinPriority(
   return PRIORITY_ORDER[priority] >= PRIORITY_ORDER[minPriority];
 }
 
+/**
+ * Theme-system configuration stored on siteSettings.theme.
+ *
+ * Two built-in themes ship with appkit (`default-light`, `default-dark`) and
+ * cannot be deleted. Admin can author additional themes through the Site
+ * Settings → Themes editor; each declares its mode (`light` | `dark`), an
+ * override map for CSS variables, and a complete gradient palette.
+ *
+ * `defaultLightThemeId` and `defaultDarkThemeId` decide which record is
+ * applied when the user's mode preference resolves to that mode.
+ */
+export interface SiteSettingsThemeRecord {
+  id: string;
+  name: string;
+  mode: "light" | "dark";
+  /** `true` for the two seeded defaults; admin UI surfaces them as read-only. */
+  builtIn?: boolean;
+  /** CSS variable overrides, keyed without the leading `--`. */
+  tokens: Record<string, string>;
+  /** Full gradient palette; values are complete CSS gradient strings. */
+  gradients: Record<string, string>;
+}
+
+export interface SiteSettingsTheme {
+  /** All available theme records — built-ins + admin-created. */
+  themes?: SiteSettingsThemeRecord[];
+  /** Theme id applied when the user's resolved mode is `"light"`. */
+  defaultLightThemeId?: string;
+  /** Theme id applied when the user's resolved mode is `"dark"`. */
+  defaultDarkThemeId?: string;
+}
+
 export interface SiteSettingsDocument {
   id: "global";
   siteName: string;
@@ -574,16 +606,7 @@ export interface SiteSettingsDocument {
    * Keys map to --appkit-color-* variables (e.g. primary → --appkit-color-primary).
    * When absent, the compiled token defaults from dist/tokens.css apply.
    */
-  theme?: {
-    /** Light-mode brand colour overrides (default / all modes when dark variants absent) */
-    primary?: string;
-    secondary?: string;
-    accent?: string;
-    /** Dark-mode brand colour overrides — applied under .dark selector */
-    primaryDark?: string;
-    secondaryDark?: string;
-    accentDark?: string;
-  };
+  theme?: SiteSettingsTheme;
   featuredResults?: FeaturedResult[];
   /**
    * Per-action runtime enable/disable overrides.
@@ -625,10 +648,23 @@ export interface FeatureFlagMeta {
 export const SITE_SETTINGS_COLLECTION = "siteSettings" as const;
 export const SITE_SETTINGS_INDEXED_FIELDS = [] as const;
 
+/**
+ * Default `theme` block — empty arrays mean "fall back to the two built-in
+ * theme records baked into appkit (`default-light`, `default-dark`)".
+ * Admin can populate `themes[]` through the Site Settings → Themes editor
+ * and switch the active default with `defaultLightThemeId` / `defaultDarkThemeId`.
+ */
+export const DEFAULT_SITE_SETTINGS_THEME: SiteSettingsTheme = {
+  themes: [],
+  defaultLightThemeId: "default-light",
+  defaultDarkThemeId: "default-dark",
+};
+
 export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   id: "global",
   siteName: "My Store",
   motto: "Your Marketplace, Your Rules",
+  theme: DEFAULT_SITE_SETTINGS_THEME,
   payment: {
     razorpayEnabled: true,
     upiManualEnabled: true,

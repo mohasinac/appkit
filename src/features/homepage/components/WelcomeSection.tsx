@@ -193,7 +193,7 @@ export function WelcomeSection({
               <Row centered className={`absolute inset-0 ${flex.center} px-10`}>
                 <SiteLogo
                   title={brandLogoText || "LetItRip.in"}
-                  className="h-24 xl:h-32 2xl:h-40 max-w-full"
+                  size="hero"
                 />
               </Row>
             </Div>

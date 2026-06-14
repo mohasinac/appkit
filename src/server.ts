@@ -840,6 +840,34 @@ export { sendCheckoutConsentOtp } from "./features/checkout/server";
 export { verifyCheckoutConsentOtp } from "./features/checkout/server";
 // grantAdminCheckoutBypass - Admin bypass that skips OTP + payment for admin-placed orders.
 export { grantAdminCheckoutBypass } from "./features/checkout/server";
+// [SERVER-ONLY] Email primitives — table-based, inline-styled components
+// that render email-client-compatible HTML via renderToStaticMarkup. Use
+// these instead of authoring raw <table>/<tr>/<td> in email templates.
+export {
+  EmailButton,
+  EmailColumn,
+  EmailContainer,
+  EmailDivider,
+  EmailDoc,
+  EmailFooter,
+  EmailHeader,
+  EmailImage,
+  EmailLink,
+  EmailRow,
+} from "./features/email";
+export type {
+  EmailButtonProps,
+  EmailColumnProps,
+  EmailContainerProps,
+  EmailDividerProps,
+  EmailDocProps,
+  EmailFooterProps,
+  EmailHeaderProps,
+  EmailImageProps,
+  EmailLinkProps,
+  EmailRowProps,
+  EmailTone,
+} from "./features/email";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendContactEmail - Shared export for send contact email.
 export { sendContactEmail } from "./features/contact/server";

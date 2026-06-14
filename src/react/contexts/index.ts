@@ -1,6 +1,5 @@
-export { ThemeProvider, useTheme } from "./ThemeContext";
-export type { ThemeMode } from "./ThemeContext";
-
+// ThemeProvider/useTheme/ThemeMode moved to "@mohasinac/appkit/client"
+// (registry-aware ThemeProvider lives in _internal/client/theme).
 export { SessionProvider, useSession, useAuth } from "./SessionContext";
 export type {
   SessionUser,

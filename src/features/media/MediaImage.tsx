@@ -64,6 +64,38 @@ export interface MediaImageProps {
    * Use for hover animations, e.g. `group-hover:scale-110 transition-transform duration-300`.
    */
   className?: string;
+  /**
+   * Art-directed responsive sources (renders a `<picture>` instead of a bare
+   * `<img>`). Each entry becomes a `<source>` element. The primary `src`
+   * remains the fallback. Use this for cases where the image content itself
+   * varies by viewport (mobile crop vs desktop crop), not just resolution.
+   *
+   * Internal slugs in `srcSet` flow through the media proxy just like `src`.
+   */
+  sources?: Array<{
+    /** Comma-separated `srcset` value (slugs or absolute URLs). */
+    srcSet: string;
+    /** MIME type hint, e.g. `"image/webp"`. */
+    type?: string;
+    /** `media` query hint, e.g. `"(max-width: 640px)"`. */
+    media?: string;
+  }>;
+}
+
+/** Resolve every URL in a comma-separated srcset string through the media proxy. */
+function resolveSrcSet(input: string): string {
+  return input
+    .split(",")
+    .map((entry) => {
+      const trimmed = entry.trim();
+      if (!trimmed) return "";
+      // Each entry is `<url> <descriptor>?` — split on whitespace.
+      const [url, ...descriptors] = trimmed.split(/\s+/);
+      const resolved = resolveMediaUrl(url) ?? url;
+      return descriptors.length ? `${resolved} ${descriptors.join(" ")}` : resolved;
+    })
+    .filter(Boolean)
+    .join(", ");
 }
 
 export function MediaImage({
@@ -75,6 +107,7 @@ export function MediaImage({
   objectFit = "cover",
   fallback,
   className,
+  sources,
 }: MediaImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -98,6 +131,47 @@ export function MediaImage({
     resolvedSrc.toLowerCase().endsWith(".svg") ||
     resolvedSrc.includes("image/svg") ||
     /[./]svg(\?|$)/i.test(resolvedSrc);
+
+  // Art-directed `<picture>` path — bypasses Next.js `<Image>` because the
+  // browser must pick the matching `<source>` itself. Loading + decoding hints
+  // come from the consumer's preset.
+  if (sources && sources.length > 0) {
+    return (
+      <Div
+        className={`relative w-full h-full overflow-hidden${className ? ` ${className}` : ""}`}
+      >
+        {!isLoaded && (
+          <Div
+            className="absolute inset-0 bg-zinc-200 dark:bg-slate-700 animate-pulse"
+            aria-hidden="true"
+          />
+        )}
+        <picture>
+          {sources.map((source, index) => (
+            <source
+              key={`${source.media ?? ""}-${source.type ?? ""}-${index}`}
+              srcSet={resolveSrcSet(source.srcSet)}
+              type={source.type}
+              media={source.media}
+            />
+          ))}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={resolvedSrc}
+            alt={alt}
+            loading={loading ?? (priority ? "eager" : "lazy")}
+            decoding="async"
+            // audit-variant-ok: art-directed <picture> branch — MediaImage is the
+            // catalogued primitive for media (variant catalogue allows the inner
+            // <img> here). Object-fit + className come from typed props.
+            className={`absolute inset-0 w-full h-full ${fitClass}`}
+            onLoad={() => setIsLoaded(true)}
+            onError={() => setHasError(true)}
+          />
+        </picture>
+      </Div>
+    );
+  }
 
   return (
     <Div

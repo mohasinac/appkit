@@ -245,6 +245,28 @@
   --appkit-color-focus-ring:       #3570fc;    /* primary-500 = cobalt blue */
 }
 
+/* --- Gradients — default-light defaults (overridden at runtime by ThemeProvider) - */
+:root {
+  --appkit-gradient-brand:            linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
+  --appkit-gradient-brand-tri:        linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary), var(--appkit-color-accent));
+  --appkit-gradient-accent:           linear-gradient(to right, var(--appkit-color-cobalt-500), var(--appkit-color-secondary-500));
+  --appkit-gradient-accent-divider:   linear-gradient(to right, transparent, var(--appkit-color-primary), transparent);
+  --appkit-gradient-page-header:      linear-gradient(to bottom right, var(--appkit-color-primary-50), transparent 60%, transparent);
+  --appkit-gradient-section-warm:     linear-gradient(to bottom right, var(--appkit-color-warning-surface), var(--appkit-color-surface));
+  --appkit-gradient-section-cool:     linear-gradient(to bottom right, var(--appkit-color-primary-50), var(--appkit-color-info-surface));
+  --appkit-gradient-section-mesh:     radial-gradient(ellipse at top, var(--appkit-color-primary-50), var(--appkit-color-surface), var(--appkit-color-secondary-50));
+  --appkit-gradient-accent-banner:    linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
+  --appkit-gradient-promotion:        linear-gradient(to bottom right, var(--appkit-color-error), var(--appkit-color-primary), var(--appkit-color-warning));
+  --appkit-gradient-spotlight:        linear-gradient(to bottom right, var(--appkit-color-info-surface), var(--appkit-color-bg), var(--appkit-color-info-surface));
+  --appkit-gradient-whatsapp-card:    linear-gradient(to bottom right, var(--appkit-color-success), var(--appkit-color-success));
+  --appkit-gradient-glass:            linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent));
+  --appkit-gradient-card-indigo:      linear-gradient(to bottom right, var(--appkit-color-primary-50), var(--appkit-color-surface), var(--appkit-color-surface));
+  --appkit-gradient-card-teal:        linear-gradient(to bottom right, var(--appkit-color-secondary-50), var(--appkit-color-surface), var(--appkit-color-surface));
+  --appkit-gradient-card-amber:       linear-gradient(to bottom right, var(--appkit-color-warning-surface), var(--appkit-color-surface), var(--appkit-color-surface));
+  --appkit-gradient-card-rose:        linear-gradient(to bottom right, var(--appkit-color-error-surface), var(--appkit-color-surface), var(--appkit-color-surface));
+  --appkit-gradient-logo:             linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-primary-500) 55%, var(--appkit-color-secondary-400) 100%);
+}
+
 /* --- Theme — Dark ([data-theme="dark"]) ----------------------------------- */
 /* Dark mode: both primary & secondary become Hot Pink (Beyblade 2 dominant colour) */
 [data-theme="dark"] {
@@ -300,6 +322,19 @@
   --appkit-color-focus-ring:       #f063b9;    /* primary-400 in dark = hot pink */
   --appkit-shadow-glow:            0 0 0 1px rgba(233,30,140,0.12), 0 4px 16px -4px rgba(233,30,140,0.22);
   --appkit-shadow-glow-pink:       0 0 0 1px rgba(233,30,140,0.14), 0 4px 20px -4px rgba(233,30,140,0.28);
+
+  /* Dark-mode gradient overrides */
+  --appkit-gradient-brand:           linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-primary-400));
+  --appkit-gradient-brand-tri:       linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary), var(--appkit-color-info));
+  --appkit-gradient-accent:          linear-gradient(to right, var(--appkit-color-info), var(--appkit-color-primary));
+  --appkit-gradient-accent-divider:  linear-gradient(to right, transparent, var(--appkit-color-primary), transparent);
+  --appkit-gradient-page-header:     linear-gradient(to bottom right, rgba(233,30,140,0.10), transparent 60%, transparent);
+  --appkit-gradient-section-cool:    linear-gradient(to bottom right, rgba(56,189,248,0.10), transparent);
+  --appkit-gradient-section-mesh:    radial-gradient(ellipse at top, rgba(233,30,140,0.10), var(--appkit-color-surface), rgba(56,189,248,0.08));
+  --appkit-gradient-accent-banner:   linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-info));
+  --appkit-gradient-spotlight:       linear-gradient(to bottom right, rgba(56,189,248,0.10), var(--appkit-color-bg), rgba(56,189,248,0.10));
+  --appkit-gradient-card-indigo:     linear-gradient(to bottom right, rgba(233,30,140,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
+  --appkit-gradient-card-teal:       linear-gradient(to bottom right, rgba(56,189,248,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
 }
 
 /* --- Theme — Cobalt Night ([data-theme="cobalt-night"]) ------------------- */
