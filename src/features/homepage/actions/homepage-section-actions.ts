@@ -17,13 +17,13 @@ export const createSectionSchema = z.object({
   type: z.string().min(1),
   enabled: z.boolean().default(true),
   order: z.number().int().default(0),
-  config: z.record(z.string(), z.unknown()).optional(),
+  config: z.record(z.string(), z.unknown()).optional(), // audit-z-any-ok: section config validated per-type by adminSectionsBuildParse (W5 row 1)
 });
 
 export const updateSectionSchema = z.object({
   order: z.number().int().optional(),
   enabled: z.boolean().optional(),
-  config: z.record(z.string(), z.unknown()).optional(),
+  config: z.record(z.string(), z.unknown()).optional(), // audit-z-any-ok: section config validated per-type by adminSectionsBuildParse (W5 row 1)
 });
 
 export type CreateHomepageSectionInput = z.infer<typeof createSectionSchema>;

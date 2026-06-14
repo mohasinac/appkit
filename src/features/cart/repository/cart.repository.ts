@@ -4,6 +4,7 @@ import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError, NotFoundError, ValidationError } from "../../../errors";
 import { CART_FIELDS } from "../../../constants/field-names";
 
+import { normalizeError } from "../../../errors/normalize";
 const ERR_CART_ITEM_NOT_FOUND = "Cart item not found";
 const ERR_CART_ITEM_LOCKED = "This item requires payment and cannot be removed or modified.";
 
@@ -87,6 +88,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
 
       return cartData;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to create cart", error);
     }
   }

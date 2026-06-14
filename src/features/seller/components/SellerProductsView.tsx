@@ -17,6 +17,7 @@ import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import {
+import { normalizeError } from "../../../errors/normalize";
   toRecordArray,
   toRelativeDate,
   toStringValue,
@@ -151,7 +152,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     render: (row) => (
       <Div className="space-y-1">
         <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
-        <Row className="gap-2">
+        <Row gap="sm">
           <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>
             {row.listingKind}
           </Badge>
@@ -424,6 +425,7 @@ export function SellerProductsView({
       showToast("Location updated.", "success");
       setSetLocationOpen(false);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
     }
   }, [selection.selectedIds, showToast]);

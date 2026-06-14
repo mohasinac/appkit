@@ -5,6 +5,7 @@ import { StackedViewShell } from "../../../ui";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import { StepDef, StepForm } from "../../shell";
 
+import { normalizeError } from "../../../errors/normalize";
 type ShippingMethod = "custom" | "shiprocket";
 
 interface ShippingDraft {
@@ -119,6 +120,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
       const cfg: ShippingConfig = json?.data?.shippingConfig ?? { method: draft.method, isConfigured: false };
       setCurrent(cfg);
     } catch (err) {
+      void normalizeError(err);
       setError((err as Error).message);
     } finally {
       setSaving(false);

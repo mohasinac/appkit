@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Alert,
   Badge,
   BulkActionBar,
@@ -178,6 +179,7 @@ export function SellerReviewsView({
       setReviews(json?.data?.reviews ?? []);
       setMeta(json?.data?.meta ?? null);
     } catch (err) {
+      void normalizeError(err);
       setError((err as Error).message);
     } finally {
       setLoading(false);
@@ -208,6 +210,7 @@ export function SellerReviewsView({
       setReplyTarget(null);
       fetchReviews();
     } catch (err) {
+      void normalizeError(err);
       setReplyError((err as Error).message);
     } finally {
       setReplySaving(false);
@@ -423,7 +426,7 @@ export function SellerReviewsView({
         onClose={() => setBulkReplyOpen(false)}
         title={`Bulk reply to ${selectedIds.size} review${selectedIds.size === 1 ? "" : "s"}`}
         actions={
-          <Row className="gap-2">
+          <Row gap="sm">
             <Button variant="ghost" onClick={() => setBulkReplyOpen(false)} disabled={bulkSaving}>Cancel</Button>
             <Button variant="primary" onClick={() => void submitBulkReply()} disabled={!bulkReplyText.trim() || bulkSaving} isLoading={bulkSaving}>
               Send reply
@@ -451,7 +454,7 @@ export function SellerReviewsView({
         onClose={() => setContestTarget(null)}
         title="Contest this review"
         actions={
-          <Row className="gap-2">
+          <Row gap="sm">
             <Button variant="ghost" onClick={() => setContestTarget(null)}>Cancel</Button>
             <Button variant="primary" onClick={() => void submitContest()} disabled={!contestReason.trim()}>
               Submit
@@ -478,7 +481,7 @@ export function SellerReviewsView({
         onClose={() => setFeedbackTarget(null)}
         title="Send feedback to buyer"
         actions={
-          <Row className="gap-2">
+          <Row gap="sm">
             <Button variant="ghost" onClick={() => setFeedbackTarget(null)}>Cancel</Button>
             <Button variant="primary" onClick={() => void submitFeedback()} disabled={!feedbackText.trim()}>
               Send

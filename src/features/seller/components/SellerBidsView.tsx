@@ -13,6 +13,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { SELLER_BID_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import {
+import { normalizeError } from "../../../errors/normalize";
   toRecordArray,
   toRelativeDate,
   toRupees,
@@ -235,6 +236,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       }
       selection.clearSelection();
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to cancel bids.", "error");
     }
   }, [selection, showToast]);

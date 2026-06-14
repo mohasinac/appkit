@@ -75,6 +75,7 @@ export function VideoThumbnailSelector({
       onSelect(url);
       onClose();
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : t("thumbnailError"));
     } finally {
       setIsCapturing(false);
@@ -109,7 +110,7 @@ export function VideoThumbnailSelector({
 
         {error && <Alert variant="error">{error}</Alert>}
 
-        <Row justify="end" className="gap-2">
+        <Row justify="end" gap="sm">
           <Button
             type="button"
             variant="outline"

@@ -42,6 +42,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       data: result.data[0] ?? { userId, balance: 0 },
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

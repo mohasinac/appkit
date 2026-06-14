@@ -2,6 +2,7 @@ import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import { BaseRepository } from "../../../providers/db-firebase";
 import {
+import { normalizeError } from "../../../errors/normalize";
   TOKEN_PII_FIELDS,
   TOKEN_PII_INDEX_MAP,
   addPiiIndices,
@@ -91,6 +92,7 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
 
       return snapshot.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to delete expired tokens", error);
     }
   }
@@ -117,6 +119,7 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to delete tokens for user: ${userId}`,
         error,
@@ -190,6 +193,7 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
 
       return this.findByIdOrFail(tokenId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to mark token as used: ${tokenId}`,
         error,
@@ -210,6 +214,7 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
         this.mapDoc<PasswordResetTokenDocument>(doc),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find unused tokens for user: ${userId}`,
         error,
@@ -229,6 +234,7 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
 
       return snapshot.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to delete expired tokens", error);
     }
   }
@@ -255,6 +261,7 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to delete tokens for user: ${userId}`,
         error,

@@ -4,6 +4,7 @@ import React from "react";
 import { Plus } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Button,
   Div,
   Heading,
@@ -91,6 +92,7 @@ export function SellerFeaturesView() {
       showToast(nextActive ? TOAST.ENABLED : TOAST.DISABLED, "success");
       invalidate();
     } catch (err) {
+      void normalizeError(err);
       showToast(
         (err as Error)?.message ??
           ERROR_MESSAGES.PRODUCT_FEATURES.UPDATE_FAILED,

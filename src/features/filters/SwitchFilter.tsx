@@ -46,7 +46,7 @@ export function SwitchFilter({
         className,
       )}
     >
-      <Row className="gap-2">
+      <Row gap="sm">
         <Button
           type="button"
           id={`sf-${title}`}

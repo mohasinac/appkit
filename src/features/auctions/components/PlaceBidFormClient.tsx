@@ -9,6 +9,7 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
 import { placeBidSchema } from "../schemas/bid-input";
 
+import { normalizeError } from "../../../errors/normalize";
 const __P = {
   p5: "p-5",
 } as const;
@@ -87,6 +88,7 @@ export function PlaceBidFormClient({
       setBidAmount(String(amount + minBidIncrement));
       setStepMul(1);
     } catch (err: unknown) {
+      void normalizeError(err);
       if (isAuthError(err)) {
         setShowLoginModal(true);
       } else {
@@ -122,6 +124,7 @@ export function PlaceBidFormClient({
         }
         setSuccess(true);
       } catch (err: unknown) {
+        void normalizeError(err);
         if (isAuthError(err)) setShowLoginModal(true);
       }
     });

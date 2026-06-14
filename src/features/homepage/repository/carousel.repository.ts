@@ -5,6 +5,7 @@
  */
 
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
@@ -102,6 +103,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
         this.mapDoc<CarouselSlideDocument>(doc),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve active slides: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -125,6 +127,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
         this.mapDoc<CarouselSlideDocument>(doc),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve inactive slides: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -149,6 +152,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
         this.mapDoc<CarouselSlideDocument>(doc),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve slides by creator: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -180,6 +184,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
 
       return await this.findByIdOrFail(slideId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to activate slide: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -201,6 +206,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
 
       return await this.findByIdOrFail(slideId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to deactivate slide: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -230,6 +236,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to reorder slides: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -264,6 +271,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to swap slides: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -281,6 +289,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
         this.db.collection(this.collection).where(CAROUSEL_FIELDS.ACTIVE, "==", true),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to count active slides: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -314,6 +323,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
           "stats.lastViewed": new Date(),
         });
     } catch (_e) {
+      void normalizeError(_e);
       // Swallow errors — analytics failures must not break the carousel response
     }
   }

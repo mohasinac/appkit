@@ -11,6 +11,7 @@ import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddress
 import type { MediaField } from "../../media/types";
 import { QuickProductForm } from "./QuickProductForm";
 
+import { normalizeError } from "../../../errors/normalize";
 export type ProductListingMode =
   | "standard"
   | "auction"
@@ -989,6 +990,7 @@ export function SellerProductShell({
       markClean();
       showToast("Saved.", "success");
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to save.", "error");
     }
   }, [draft, onSave, markClean, showToast]);
@@ -999,6 +1001,7 @@ export function SellerProductShell({
       markClean();
       showToast("Published.", "success");
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to publish.", "error");
     }
   }, [draft, onPublish, markClean, showToast]);
@@ -1115,6 +1118,7 @@ export function SellerProductShell({
       try {
         await handlePublish();
       } catch (err) {
+        void normalizeError(err);
         showToast(err instanceof Error ? err.message : "Something went wrong.", "error");
       }
     }

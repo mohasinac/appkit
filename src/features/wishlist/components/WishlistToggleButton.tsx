@@ -37,6 +37,7 @@ export function WishlistToggleButton({
     try {
       await onToggle(e);
     } catch (err) {
+      void normalizeError(err);
       if (isAuthError(err)) {
         setShowLoginModal(true);
       }

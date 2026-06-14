@@ -24,6 +24,7 @@ import { getProviders } from "../../../contracts";
 import { SearchRepository } from "../repository/search.repository";
 import type { SearchProductItem } from "../types/index";
 import {
+import { normalizeError } from "../../../errors/normalize";
   isListingTypeEnabled,
   enabledListingTypes,
 } from "../../../_internal/shared/listing-types/feature-flags";
@@ -148,6 +149,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       },
     });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-search] GET /api/search failed", error);
     return NextResponse.json(
       { success: false, error: "Search failed" },

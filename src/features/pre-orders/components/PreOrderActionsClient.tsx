@@ -39,6 +39,7 @@ export function PreOrderActionsClient({
         await onReserveNow(productId);
         setSuccess(true);
       } catch (err: unknown) {
+        void normalizeError(err);
         if (isAuthError(err)) {
           setShowLoginModal(true);
         } else {

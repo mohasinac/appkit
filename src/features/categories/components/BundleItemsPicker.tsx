@@ -203,7 +203,7 @@ export function BundleItemsPicker({
 
   return (
     <Stack gap="md">
-      <Row gap="sm" align="center" justify="between" className="flex-wrap">
+      <Row gap="sm" align="center" justify="between" wrap>
         <Text size="sm" weight="semibold">
           {BUNDLE_COPY.picker.title}
         </Text>

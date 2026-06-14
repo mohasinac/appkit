@@ -14,6 +14,7 @@ import { getProviders } from "../../../contracts";
 import { parseListingParams } from "../../../utils/listing-params";
 import type { StoreListItem, StoreListResponse } from "../types/index";
 
+import { normalizeError } from "../../../errors/normalize";
 type StoreListEntity = StoreListItem & {
   stats?: {
     totalProducts?: number;
@@ -126,6 +127,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     return NextResponse.json({ success: true, data: body });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-stores] GET /api/stores failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch stores" },

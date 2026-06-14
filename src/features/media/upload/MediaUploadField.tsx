@@ -17,6 +17,7 @@ import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
+import { normalizeError } from "../../../errors/normalize";
 const __P = {
   p3: "p-3",
 } as const;
@@ -522,6 +523,7 @@ export function MediaUploadField({
         if (result) afterUpload(result.url, result.type);
       }
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setIsLoading(false);
@@ -561,6 +563,7 @@ export function MediaUploadField({
       stageUrl(url);
       afterUpload(url, blob.type);
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setIsLoading(false);
@@ -633,7 +636,7 @@ export function MediaUploadField({
       {!disabled && !isLoading && (!hasAlternateSources || sourceTab === "upload") && (
         <>
           {captureSource === "both" && isCameraSupported && (
-            <Row className="gap-2">
+            <Row gap="sm">
               <Button
                 type="button"
                 variant={inputMode === "file" ? "primary" : "outline"}
@@ -687,7 +690,7 @@ export function MediaUploadField({
       )}
 
       {isLoading && (
-        <Row className="gap-2">
+        <Row gap="sm">
           <Spinner size="sm" />
           <Text size="sm" variant="secondary">
             {tUpload("uploading")}

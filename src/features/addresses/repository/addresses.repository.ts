@@ -12,6 +12,7 @@
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
@@ -86,6 +87,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
         this.mapDoc<AddressDocument>(doc),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to list addresses for ${ownerType}:${ownerId}`,
         error,
@@ -106,6 +108,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<AddressDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to list addresses by ownerType=${ownerType}`,
         error,
@@ -124,6 +127,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
           .where(ADDRESS_FIELDS.OWNER_ID, "==", ownerId),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to count addresses for ${ownerType}:${ownerId}`,
         error,
@@ -176,6 +180,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
         null,
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to create address for ${ownerType}:${ownerId}`,
         error,
@@ -251,6 +256,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
 
       return snapshot.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to delete all addresses for ${ownerType}:${ownerId}`,
         error,
@@ -280,6 +286,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
       });
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to clear default flag for ${ownerType}:${ownerId}`,
         error,

@@ -55,7 +55,7 @@ export function FAQCategorySidebar({
         }`}
       >
         <Row justify="between">
-          <Row className="gap-3">
+          <Row gap="3">
             <Span className="text-2xl">FAQ</Span>
             <Span size="sm" weight="medium">
               {labels?.allFaqs ?? "All FAQs"}
@@ -84,7 +84,7 @@ export function FAQCategorySidebar({
               }`}
             >
               <Row justify="between" className="mb-1">
-                <Row className="gap-3">
+                <Row gap="3">
                   {category.icon ? (
                     <Span className="text-2xl">{category.icon}</Span>
                   ) : null}

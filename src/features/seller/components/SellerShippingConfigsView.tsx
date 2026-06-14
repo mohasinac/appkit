@@ -6,6 +6,7 @@ import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Button,
   ConfirmDeleteModal,
   DataTable,
@@ -183,6 +184,7 @@ export function SellerShippingConfigsView({
       refetch?.();
       showToast("Default shipping config updated.", "success");
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to update default.", "error");
     } finally {
       setSettingDefaultId(null);

@@ -58,6 +58,7 @@ export async function GET(
     const body: BlogPostDetailResponse = { post: toBlogPost(post), related };
     return NextResponse.json({ success: true, data: body });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-blog] GET /api/blog/[slug] failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch blog post" },

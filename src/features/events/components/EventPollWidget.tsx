@@ -71,6 +71,7 @@ export function EventPollWidget({
       }
       setIsSubmitted(true);
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setIsLoading(false);

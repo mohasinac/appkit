@@ -5,6 +5,7 @@ import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Span, Text
 import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
+import { normalizeError } from "../../../errors/normalize";
 const CLS_WHEEL = "relative mx-auto aspect-square w-64 overflow-hidden rounded-full border-4 border-warning bg-gradient-to-br from-warning via-rose-100 to-violet-100 dark:from-warning/40 dark:via-rose-900/40 dark:to-violet-900/40";
 const CLS_PRIZE_BOX = "rounded-xl border border-success bg-success-surface dark:border-success p-4 text-center";
 const CLS_PRIZE_TITLE = "mt-1 text-lg font-bold text-success dark:text-success";
@@ -103,6 +104,7 @@ export function SpinWheelView({
         }
       }, ANIMATION_MS);
     } catch (err) {
+      void normalizeError(err);
       setSpinning(false);
       if (isAuthError(err)) {
         setShowLoginModal(true);

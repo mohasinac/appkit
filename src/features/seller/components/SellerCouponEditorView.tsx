@@ -6,6 +6,7 @@ import type { SelectOption } from "../../../ui";
 import { ProductInlineSelect } from "./ProductInlineSelect";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 
+import { normalizeError } from "../../../errors/normalize";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -88,6 +89,7 @@ export function SellerCouponEditorView({
     try {
       await onSave(draft, couponId);
     } catch (err) {
+      void normalizeError(err);
       setError((err as Error).message ?? "Failed to save coupon");
     } finally {
       setSaving(false);

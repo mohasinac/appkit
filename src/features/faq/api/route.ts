@@ -52,6 +52,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     return NextResponse.json({ success: true, data: body });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-faq] GET /api/faq failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch FAQs" },

@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Alert,
   Button,
   Div,
@@ -87,6 +88,7 @@ export function SellerGoogleReviewsView({
       }
       showToast("Google Reviews settings saved.", "success");
     } catch (err) {
+      void normalizeError(err);
       setSaveMessage({ text: "Save failed. Please try again.", ok: false });
       showToast(err instanceof Error ? err.message : "Failed to save settings.", "error");
     } finally {
@@ -109,6 +111,7 @@ export function SellerGoogleReviewsView({
       }
       showToast("Reviews synced.", "success");
     } catch (err) {
+      void normalizeError(err);
       setSaveMessage({ text: "Sync failed. Please try again.", ok: false });
       showToast(err instanceof Error ? err.message : "Failed to sync reviews.", "error");
     } finally {

@@ -85,7 +85,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               </Div>
               <Div className={`${__P.p3} space-y-1`}>
                 <Text className="font-medium text-sm line-clamp-1">{row.primary}</Text>
-                <Row className="gap-2">
+                <Row gap="sm">
                   <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
                   <Text className="text-xs text-[var(--appkit-color-text-muted)] line-clamp-1">{row.secondary}</Text>
                 </Row>
@@ -116,7 +116,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
             </Div>
             <a href={href} className="flex-1 min-w-0">
               <Text className="font-medium text-sm line-clamp-1">{row.primary}</Text>
-              <Row className="gap-2">
+              <Row gap="sm">
                 <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
                 <Text className="text-xs text-[var(--appkit-color-text-muted)] line-clamp-1">{row.secondary}</Text>
               </Row>

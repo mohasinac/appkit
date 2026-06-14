@@ -49,7 +49,7 @@ export function FeaturedBundlesSection({
   return (
     <Section className={`py-10 ${className}`}>
       <Stack gap="md">
-        <Row gap="sm" align="center" justify="between" className="flex-wrap">
+        <Row gap="sm" align="center" justify="between" wrap>
           <Stack gap="xs">
             <Heading
               level={2}

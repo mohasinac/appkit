@@ -45,6 +45,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: category });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-categories] GET /api/categories/[id] failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch category" },

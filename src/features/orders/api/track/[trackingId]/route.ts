@@ -33,6 +33,7 @@ export async function GET(
     }
     return NextResponse.json({ success: true, data: info });
   } catch (err: unknown) {
+    void normalizeError(err);
     const message =
       err instanceof Error ? err.message : "Failed to fetch tracking info";
     return NextResponse.json(

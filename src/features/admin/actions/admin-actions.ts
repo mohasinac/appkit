@@ -13,6 +13,7 @@ import { userRepository } from "../../auth/repository/user.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
 import {
+import { normalizeError } from "../../../errors/normalize";
   finalizeStagedMediaUrl,
   finalizeStagedMediaField,
   finalizeStagedMediaArray,
@@ -164,6 +165,7 @@ export async function adminUpdateUser(
       const providers = getProviders();
       await providers.auth.updateUser(uid, { role: input.role });
     } catch (err) {
+      void normalizeError(err);
       serverLogger.warn("adminUpdateUser: custom claims sync failed", { uid, err });
     }
   }

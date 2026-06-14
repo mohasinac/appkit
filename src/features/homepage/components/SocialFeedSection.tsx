@@ -2,6 +2,7 @@ import { Div, Heading, Section, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { SocialPostCard } from "./SocialPostCard";
 import {
+import { normalizeError } from "../../../errors/normalize";
   fetchInstagramPosts,
   fetchFacebookPosts,
   fetchTikTokPosts,
@@ -107,6 +108,7 @@ async function loadPosts(config: SocialFeedSectionConfig): Promise<{ posts: Soci
         return { posts: [], error: "Unsupported platform." };
     }
   } catch (err) {
+    void normalizeError(err);
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`[SocialFeedSection] ${platform} fetch failed:`, message);
     return { posts: [], error: `Could not load ${PLATFORM_LABELS[platform]} posts right now.` };

@@ -22,6 +22,7 @@ import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
+import { normalizeError } from "../../../errors/normalize";
 const __P = {
   p4: "p-4",
 } as const;
@@ -173,6 +174,7 @@ export function PrizeRevealModal({
         response = result.response ?? {};
       }
     } catch (err) {
+      void normalizeError(err);
       if (isAuthError(err)) {
         setPhase("idle");
         setShowLoginModal(true);

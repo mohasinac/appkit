@@ -71,6 +71,7 @@ export function useConversation(conversationId: string | null): UseConversationR
     try {
       setConversation(await fetchDetail(conversationId));
     } catch (e) {
+      void normalizeError(e);
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
       setIsLoading(false);

@@ -5,6 +5,7 @@ import { useMediaUpload } from "./hooks/useMedia";
 import { ImageCropModal, type ImageCropData } from "./modals/ImageCropModal";
 import { AvatarDisplay } from "../../ui/components/AvatarDisplay";
 
+import { normalizeError } from "../../errors/normalize";
 export interface AvatarUploadProps {
   currentPhotoURL?: string | null;
   currentCropData?: ImageCropData | null;
@@ -130,6 +131,7 @@ export function AvatarUpload({
       showToast("Avatar uploaded", "success");
       onSaveComplete?.();
     } catch (error) {
+      void normalizeError(error);
       const message = error instanceof Error ? error.message : "Upload failed";
       onUploadError?.(message);
       showToast(message, "error");
@@ -160,6 +162,7 @@ export function AvatarUpload({
       setPendingUploadFile(null);
       onSaveComplete?.();
     } catch (error) {
+      void normalizeError(error);
       const message =
         error instanceof Error ? error.message : "Failed to remove photo";
       onUploadError?.(message);

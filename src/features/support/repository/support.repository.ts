@@ -51,6 +51,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
       };
       return this.create(data as unknown as SupportTicketDocument);
     } catch (err) {
+      void normalizeError(err);
       throw new DatabaseError("Failed to create support ticket", err);
     }
   }
@@ -149,6 +150,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
       if (newStatus) updateData.status = newStatus;
       await ref.update(updateData);
     } catch (err) {
+      void normalizeError(err);
       throw new DatabaseError("Failed to add message to ticket", err);
     }
   }

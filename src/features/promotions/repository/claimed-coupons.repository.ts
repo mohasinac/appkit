@@ -67,6 +67,7 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
 
       return doc;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to claim coupon", error);
     }
   }
@@ -101,6 +102,7 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
       }
       return rows;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to list claimed coupons", error);
     }
   }
@@ -118,6 +120,7 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
           updatedAt: new Date(),
         });
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to mark coupon used", error);
     }
   }
@@ -135,6 +138,7 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
           updatedAt: new Date(),
         });
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to remove claimed coupon", error);
     }
   }

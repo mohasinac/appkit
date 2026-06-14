@@ -17,6 +17,7 @@ import { storeRepository } from "../../stores/repository/store.repository";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { maskPublicBid } from "../../../security";
 import {
+import { normalizeError } from "../../../errors/normalize";
   ERROR_MESSAGES,
   AuthorizationError,
   ValidationError,
@@ -179,6 +180,7 @@ export async function placeBid(
       updatedAt: Date.now(),
     });
   } catch (rtdbErr) {
+    void normalizeError(rtdbErr);
     serverLogger.warn("placeBid: RTDB write failed", {
       error: rtdbErr,
       productId,

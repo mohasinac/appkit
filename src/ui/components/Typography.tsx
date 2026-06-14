@@ -81,6 +81,10 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   variant?: "primary" | "secondary" | "muted" | "none";
   color?: ColorVariant;
+  /** Optional size override — defaults to the level's heading size. */
+  size?: "xs" | "sm" | "base" | "lg" | "xl";
+  /** Optional weight override — defaults to the level's heading weight. */
+  weight?: "normal" | "medium" | "semibold" | "bold";
   transform?: TextTransform;
   truncate?: TextTruncate;
   numeric?: boolean;
@@ -95,6 +99,8 @@ export function Heading({
   level = 1,
   variant = "primary",
   color,
+  size,
+  weight,
   transform,
   truncate,
   numeric,
@@ -115,6 +121,8 @@ export function Heading({
         "appkit-heading",
         TYPOGRAPHY.headingLevel[level],
         TYPOGRAPHY.colorVariant[resolvedColor],
+        size ? TYPOGRAPHY.textSize[size] : "",
+        weight ? TYPOGRAPHY.textWeight[weight] : "",
         ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
         className,
       ]

@@ -23,6 +23,7 @@ import { sanitizeProductForPublic } from "../../utils/sanitize";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { isAdminUser, isModeratorUser } from "../../../auth/role-predicates";
 
+import { normalizeError } from "../../../../errors/normalize";
 const ERR_DB_NOT_REGISTERED = "Database provider not registered";
 const ERR_PRODUCT_NOT_FOUND = "Product not found";
 
@@ -66,7 +67,7 @@ const productUpdateSchema = z
       ])
       .optional(),
     mainImage: z.string().optional(),
-    images: z.array(z.any()).optional(),
+    images: z.array(z.any()).optional(), // audit-z-any-ok: extending-apps pass MediaField | string | their own image shape
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
@@ -116,6 +117,7 @@ export async function GET(
     );
     return NextResponse.json({ success: true, data: sanitized });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-products] GET /api/products/[id] failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch product" },

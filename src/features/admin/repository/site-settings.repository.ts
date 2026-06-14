@@ -5,6 +5,7 @@
  */
 
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
@@ -87,6 +88,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
       });
       return mapped;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve site settings: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -152,6 +154,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
       });
       return latest;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to update site settings: ${error instanceof Error ? error.message : "Unknown error"}`,
       );

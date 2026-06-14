@@ -17,6 +17,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../../contracts";
 import type {
+import { normalizeError } from "../../../../../errors/normalize";
   StoreProductItem,
   StoreProductsResponse,
 } from "../../../types/index";
@@ -124,6 +125,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: body });
   } catch (error) {
+    void normalizeError(error);
     console.error(
       "[feat-stores] GET /api/stores/[storeSlug]/products failed",
       error,

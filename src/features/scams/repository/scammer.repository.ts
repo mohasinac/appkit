@@ -68,6 +68,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
       if (snap.empty) return null;
       return this.mapDoc<ScammerDocument>(snap.docs[0]);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to find scammer by seoSlug: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
@@ -100,6 +101,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
       await this.getCollection().doc(id).set(data);
       return { ...data, id } as ScammerDocument;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to create scammer profile: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
@@ -109,6 +111,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
       const data = prepareForFirestore({ ...input, updatedAt: new Date() });
       await this.getCollection().doc(id).update(data);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to update scammer profile: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
@@ -138,6 +141,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
         .get();
       return snap.docs.map((d) => this.mapDoc<ScammerDocument>(d));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to search scammer by ${field}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }

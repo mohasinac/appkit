@@ -13,6 +13,7 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
 import type { EventItem, EventListResponse } from "../types/index";
 
+import { normalizeError } from "../../../errors/normalize";
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);
 }
@@ -101,6 +102,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     return NextResponse.json({ success: true, data: body });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-events] GET /api/events failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch events" },

@@ -15,6 +15,7 @@ import { createRouteHandler } from "../../../../next";
 import type { CarouselSlide } from "../../types/index";
 
 /** Read `__session` cookie from request headers (HTTP cookie string). */
+import { normalizeError } from "../../../../errors/normalize";
 function getSessionCookie(request: Request): string | null {
   const cookieHeader = request.headers.get("cookie") ?? "";
   const match = cookieHeader.match(/(?:^|;\s*)__session=([^;]+)/);
@@ -92,6 +93,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
     return response;
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-homepage] GET /api/carousel failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch carousel slides" },

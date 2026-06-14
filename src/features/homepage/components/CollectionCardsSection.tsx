@@ -76,7 +76,7 @@ export async function CollectionCardsSection({
           </Stack>
 
           {showTabs ? (
-            <Row gap="sm" className="flex-wrap">
+            <Row gap="sm" wrap>
               {collections.slice(0, 3).map((entry, idx) => (
                 <Text
                   key={`${entry.type}-${idx}`}

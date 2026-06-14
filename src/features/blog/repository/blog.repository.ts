@@ -36,6 +36,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
       const doc = snapshot.docs[0];
       return this.mapDoc<BlogPostDocument>(doc);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find blog post by slug: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -57,6 +58,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
 
       return { id, ...data } as BlogPostDocument;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to create blog post: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -74,6 +76,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
       const doc = await this.findByIdOrFail(id);
       return doc;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to update blog post: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -84,6 +87,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     try {
       await this.db.collection(this.collection).doc(id).delete();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to delete blog post: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -120,6 +124,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
         .filter((post) => post.id !== excludeId)
         .slice(0, limit);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find related posts: ${error instanceof Error ? error.message : "Unknown error"}`,
       );

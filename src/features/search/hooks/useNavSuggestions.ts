@@ -60,6 +60,7 @@ export function useNavSuggestions(
         const items = body.data?.suggestions ?? body.suggestions ?? [];
         setSuggestions(items);
       } catch (err) {
+        void normalizeError(err);
         if ((err as Error).name !== "AbortError") {
           setSuggestions([]);
         }

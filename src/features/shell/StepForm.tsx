@@ -5,6 +5,7 @@ import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
 import { Div, Span, Text, useToast } from "../../ui";
 
+import { normalizeError } from "../../errors/normalize";
 export interface StepDef<T extends object = Record<string, unknown>> {
   label: string;
   render: (props: { values: T; onChange: (partial: Partial<T>) => void; errors: Record<string, string> }) => ReactNode;
@@ -202,6 +203,7 @@ export function StepForm<T extends object = Record<string, unknown>>({
       try {
         await onComplete();
       } catch (err) {
+        void normalizeError(err);
         showToast(err instanceof Error ? err.message : "Something went wrong.", "error");
       }
     }

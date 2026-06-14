@@ -5,6 +5,7 @@ import { Button, Div, Input, LoginRequiredModal, Modal, Span, Stack, Text } from
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 
+import { normalizeError } from "../../../errors/normalize";
 export interface MakeOfferButtonProps {
   productId: string;
   listedPrice: number;
@@ -91,6 +92,7 @@ export function MakeOfferButton({
         await onMakeOffer(productId, offerAmount, buyerNote || undefined);
         setState("success");
       } catch (err: unknown) {
+        void normalizeError(err);
         handleOfferError(err);
       }
     });

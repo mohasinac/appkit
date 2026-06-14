@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Button,
   ConfirmDeleteModal,
   Div,
@@ -120,6 +121,7 @@ export function GroupSettingsPanel({
       showToast("Group started. You are now the parent listing.", "success");
       onGroupChanged();
     } catch (e: unknown) {
+      void normalizeError(e);
       showToast((e as Error)?.message ?? "Failed to start group.", "error");
     } finally {
       setLoading(false);
@@ -133,6 +135,7 @@ export function GroupSettingsPanel({
       showToast("Group title saved.", "success");
       onGroupChanged();
     } catch (e: unknown) {
+      void normalizeError(e);
       showToast((e as Error)?.message ?? "Failed to save title.", "error");
     } finally {
       setLoading(false);
@@ -151,6 +154,7 @@ export function GroupSettingsPanel({
           showToast("Group dissolved.", "success");
           onGroupChanged();
         } catch (e: unknown) {
+          void normalizeError(e);
           showToast((e as Error)?.message ?? "Failed to dissolve group.", "error");
         } finally {
           setLoading(false);
@@ -172,6 +176,7 @@ export function GroupSettingsPanel({
           setChildren((prev) => prev?.filter((c) => c.id !== childId) ?? null);
           onGroupChanged();
         } catch (e: unknown) {
+          void normalizeError(e);
           showToast((e as Error)?.message ?? "Failed to unlink.", "error");
         } finally {
           setLoading(false);
@@ -200,6 +205,7 @@ export function GroupSettingsPanel({
       loadChildren();
       onGroupChanged();
     } catch (e: unknown) {
+      void normalizeError(e);
       showToast((e as Error)?.message ?? "Failed to create child.", "error");
     } finally {
       setLoading(false);
@@ -220,6 +226,7 @@ export function GroupSettingsPanel({
           await apiClient.post(childrenEndpoint, { mode: "link", childId, parentId: productId });
           succeeded++;
         } catch (e: unknown) {
+          void normalizeError(e);
           failures.push((e as Error)?.message ?? "Failed to link listing.");
         }
       }
@@ -253,6 +260,7 @@ export function GroupSettingsPanel({
           showToast("Left the group.", "success");
           onGroupChanged();
         } catch (e: unknown) {
+          void normalizeError(e);
           showToast((e as Error)?.message ?? "Failed to leave group.", "error");
         } finally {
           setLoading(false);
@@ -363,7 +371,7 @@ export function GroupSettingsPanel({
                 )}
               </Div>
 
-              <Row gap="sm" className="flex-wrap">
+              <Row gap="sm" wrap>
                 <Button
                   type="button"
                   variant="secondary"

@@ -21,6 +21,7 @@ export async function pingConversationRtdb(
     const now = Date.now();
     await Promise.all(paths.filter(Boolean).map((p) => db.ref(p).set(now)));
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("conversations: RTDB ping failed", {
       paths,
       error: err instanceof Error ? err.message : String(err),

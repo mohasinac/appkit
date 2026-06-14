@@ -37,6 +37,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       data: updated,
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

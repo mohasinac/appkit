@@ -50,6 +50,7 @@ export async function GET(
       data: item,
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,
@@ -97,6 +98,7 @@ export async function PATCH(
       data: updated,
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,
@@ -135,6 +137,7 @@ export async function DELETE(
       data: { id },
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

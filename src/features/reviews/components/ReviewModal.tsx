@@ -51,7 +51,7 @@ export function ViewReviewModal({
     <Modal isOpen={isOpen} onClose={onClose} title="Review Details">
       <Div className="space-y-4">
         {/* Author + rating */}
-        <Row className="gap-3">
+        <Row gap="3">
           {review.userAvatar ? (
             <Div
               role="img"
@@ -66,7 +66,7 @@ export function ViewReviewModal({
             </Div>
           )}
           <Div>
-            <Row className="gap-2">
+            <Row gap="sm">
               <Text className="font-medium text-neutral-900 dark:text-white">
                 {displayName}
               </Text>

@@ -1,6 +1,7 @@
 import { getProviders } from "../../contracts";
 import { serverLogger } from "../../monitoring";
 import {
+import { normalizeError } from "../../errors/normalize";
   currentYear,
   formatCurrency,
   formatDateTime,
@@ -254,6 +255,7 @@ export async function sendOrderConfirmationEmail(
 
     return { success: true, data };
   } catch (error) {
+    void normalizeError(error);
     serverLogger.error("Error sending order confirmation email", { error });
     return { success: false };
   }
@@ -306,6 +308,7 @@ export async function sendContactEmail(params: {
 
     return { success: true, data };
   } catch (error) {
+    void normalizeError(error);
     serverLogger.error("Error sending contact email", { error });
     return { success: false };
   }
@@ -373,6 +376,7 @@ export async function sendDigitalCodeClaimedEmail(params: {
     }
     return { success: true };
   } catch (error) {
+    void normalizeError(error);
     serverLogger.error("Error sending digital code claimed email", { error });
     return { success: false };
   }
@@ -462,6 +466,7 @@ export async function sendSiteSettingsChangedEmail(params: {
 
     return { success: true, data };
   } catch (error) {
+    void normalizeError(error);
     serverLogger.error("Error sending settings change notification email", {
       error,
     });

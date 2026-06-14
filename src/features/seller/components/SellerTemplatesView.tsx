@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import {
+import { normalizeError } from "../../../errors/normalize";
   BulkActionBar,
   Button,
   ConfirmDeleteModal,
@@ -285,6 +286,7 @@ export function SellerTemplatesView({
       refetch?.();
       showToast("Template saved.", "success");
     } catch (err) {
+      void normalizeError(err);
       setSavingError("Failed to save template. Please try again.");
       showToast(err instanceof Error ? err.message : "Failed to save template.", "error");
     } finally {
@@ -320,6 +322,7 @@ export function SellerTemplatesView({
       refetch?.();
       showToast("Template duplicated.", "success");
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to duplicate template.", "error");
     } finally {
       setDuplicatingId(null);

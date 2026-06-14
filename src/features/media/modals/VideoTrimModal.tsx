@@ -11,6 +11,7 @@ import { Alert, Button, Div, Modal, Row, Span, Stack, Text } from "../../../ui";
 import { MediaSlider } from "../components/MediaSlider";
 import { useMediaTrim } from "../hooks/useMedia";
 
+import { normalizeError } from "../../../errors/normalize";
 export interface VideoTrimModalProps {
   isOpen: boolean;
   /** Already-uploaded video URL on an approved CDN/Storage domain. */
@@ -84,6 +85,7 @@ export function VideoTrimModal({
       onSave(result.url);
       onClose();
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : t("trimError"));
     }
   };
@@ -172,7 +174,7 @@ export function VideoTrimModal({
 
         {error && <Alert variant="error">{error}</Alert>}
 
-        <Row justify="end" className="gap-2">
+        <Row justify="end" gap="sm">
           <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isPending}>
             {t("trimSkip")}
           </Button>

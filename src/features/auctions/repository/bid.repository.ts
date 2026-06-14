@@ -5,6 +5,7 @@
  */
 
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
@@ -215,6 +216,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
       const doc = snapshot.docs[0];
       return this.mapDoc<BidDocument>(doc);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find winning bid for product: ${productId}`,
         error,
@@ -243,6 +245,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
       const bid = doc.data() as BidDocument;
       return bid.bidAmount;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find highest bid for product: ${productId}`,
         error,
@@ -263,6 +266,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<BidDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find bids for product: ${productId}`,
         error,
@@ -328,6 +332,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to set winning bid: ${bidId}`, error);
     }
   }
@@ -354,6 +359,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to end auction for product: ${productId}`,
         error,
@@ -383,6 +389,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to cancel bids for product: ${productId}`,
         error,
@@ -399,6 +406,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
         this.db.collection(this.collection).where(BID_FIELDS.PRODUCT_ID, "==", productId),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to count bids for product: ${productId}`,
         error,
@@ -415,6 +423,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
         this.db.collection(this.collection).where(BID_FIELDS.USER_ID, "==", userId),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to count bids for user: ${userId}`,
         error,
@@ -446,6 +455,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
       return this.mapDoc<BidDocument>(snapshot.docs[0]);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find bid for productId=${productId}, userId=${userId}`,
         error,

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Alert,
   Badge,
   Button,
@@ -84,6 +85,7 @@ export function SellerPayoutRequestView({
       setNotes("");
       onRequested?.();
     } catch (err) {
+      void normalizeError(err);
       setSubmitError((err as Error).message);
     } finally {
       setSubmitting(false);

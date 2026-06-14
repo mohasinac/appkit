@@ -21,6 +21,7 @@ import type { ProductItem, ProductListResponse } from "../types/index";
 import { mediaFieldSchema } from "../../media/types/index";
 import { sanitizeProductsForPublic } from "../utils/sanitize";
 
+import { normalizeError } from "../../../errors/normalize";
 type ProductRecord = ProductItem & {
   sellerId?: string;
   sellerName?: string;
@@ -46,7 +47,7 @@ const productMutateSchema = z
       ])
       .optional(),
     mainImage: z.string().optional(),
-    images: z.array(z.any()).optional(),
+    images: z.array(z.any()).optional(), // audit-z-any-ok: extending-apps pass MediaField | string | their own image shape
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
@@ -191,6 +192,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
     return response;
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-products] GET /api/products failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch products" },

@@ -18,6 +18,7 @@ import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
 import {
+import { normalizeError } from "../../../errors/normalize";
   toRecordArray,
   toRelativeDate,
   toRupees,
@@ -167,6 +168,7 @@ function OrderDetailDrawer({
       setOrder((updated?.data ?? updated) as OrderDetail);
       setNewStatus("");
     } catch (err) {
+      void normalizeError(err);
       setSaveError((err as Error).message);
     } finally {
       setSaving(false);
@@ -501,6 +503,7 @@ export function SellerOrdersView({
       showToast("Location updated.", "success");
       setSetLocationOpen(false);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
     }
   }, [selection.selectedIds, showToast]);
@@ -521,6 +524,7 @@ export function SellerOrdersView({
       showToast("Payout requested.", "success");
       selection.clearSelection();
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to request payout.", "error");
     }
   }, [selection, showToast]);

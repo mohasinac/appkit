@@ -67,6 +67,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         onUpdate(offer.id, patch);
         setConfirming(null);
       } catch (err: unknown) {
+        void normalizeError(err);
         if (isAuthError(err)) {
           onNeedsLogin();
         } else {
@@ -206,6 +207,7 @@ export function UserOffersPanel({
       const items = Array.isArray(json) ? json : ((json as { items?: OfferDocument[] }).items ?? []);
       setOffers(items);
     } catch (err) {
+      void normalizeError(err);
       setFetchError(err instanceof Error ? err.message : "Failed to load offers.");
     } finally {
       setLoading(false);

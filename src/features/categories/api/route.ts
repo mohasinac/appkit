@@ -19,6 +19,7 @@ import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next";
 import type { CategoryItem } from "../types/index";
 
+import { normalizeError } from "../../../errors/normalize";
 const CACHE_CONTROL_PUBLIC = "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400";
 
 // --- Tree node (CategoryItem extended with nested children) -------------------
@@ -199,6 +200,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
     return res;
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-categories] GET /api/categories failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch categories" },

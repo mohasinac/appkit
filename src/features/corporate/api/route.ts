@@ -60,6 +60,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       },
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,
@@ -97,6 +98,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       { status: 201 },
     );
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

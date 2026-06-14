@@ -95,7 +95,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
   return (
     <Stack gap="md">
       <Div>
-        <Row gap="xs" className="mb-2 flex-wrap">
+        <Row gap="xs" wrap className="mb-2">
           <Span size="xs" weight="semibold" className={CLS_LIVE_BADGE}>🏷️ Live Auction</Span>
           {isEnded ? (
             <Span size="xs" weight="medium" className="inline-block rounded-full bg-error-surface px-2.5 py-0.5 text-error">Ended</Span>

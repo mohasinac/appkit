@@ -37,6 +37,7 @@ export class CarouselsRepository extends BaseRepository<CarouselDocument> {
         .get();
       return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as CarouselDocument);
     } catch (err) {
+      void normalizeError(err);
       throw new DatabaseError("Failed to list carousels", err);
     }
   }
@@ -102,6 +103,7 @@ export class CarouselsRepository extends BaseRepository<CarouselDocument> {
         tx.update(ref, prepareForFirestore({ slideIds: updatedIds }));
       });
     } catch (err) {
+      void normalizeError(err);
       throw new DatabaseError("Failed to remove slide from carousel", err);
     }
   }
@@ -120,6 +122,7 @@ export class CarouselsRepository extends BaseRepository<CarouselDocument> {
         .doc(carouselId)
         .update(prepareForFirestore({ slideIds: orderedSlideIds }));
     } catch (err) {
+      void normalizeError(err);
       throw new DatabaseError("Failed to reorder slides", err);
     }
   }
@@ -153,6 +156,7 @@ export class CarouselsRepository extends BaseRepository<CarouselDocument> {
 
       return { carousel, slides };
     } catch (err) {
+      void normalizeError(err);
       throw new DatabaseError("Failed to get carousel with slides", err);
     }
   }

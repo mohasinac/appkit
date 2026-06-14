@@ -182,7 +182,7 @@ export function ImageCropModal({
               {Math.round(zoom * 100)}%
             </Text>
           </Row>
-          <Row className="gap-3">
+          <Row gap="3">
             <Button
               type="button"
               variant="ghost"

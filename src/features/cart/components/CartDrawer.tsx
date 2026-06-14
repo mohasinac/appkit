@@ -77,7 +77,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             )}
           </Text>
           {onQtyChange && !isOutOfStock && (
-            <Row className="gap-2">
+            <Row gap="sm">
               <Button
                 onClick={() => onQtyChange(item.id, item.quantity - 1)}
                 disabled={item.quantity <= 1}

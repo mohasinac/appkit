@@ -42,6 +42,7 @@ export function useConversations(userId: string | null | undefined): UseConversa
     try {
       setConversations(await fetchList());
     } catch (e) {
+      void normalizeError(e);
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
       setIsLoading(false);

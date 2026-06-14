@@ -33,6 +33,7 @@ export function PhysicalLocationModal({ count, onSave, onClose }: PhysicalLocati
       await onSave({ zone: zone.trim(), shelf: shelf.trim(), bin: bin.trim() });
       onClose();
     } catch (e) {
+      void normalizeError(e);
       setError(e instanceof Error ? e.message : "Failed to save location");
     } finally {
       setSaving(false);

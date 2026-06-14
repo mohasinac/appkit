@@ -65,6 +65,7 @@ class EventRepository extends BaseRepository<EventDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<EventDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to list active events", error);
     }
   }
@@ -88,6 +89,7 @@ class EventRepository extends BaseRepository<EventDocument> {
 
       return this.mapDoc<EventDocument>(created);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to create event", error);
     }
   }
@@ -110,6 +112,7 @@ class EventRepository extends BaseRepository<EventDocument> {
 
       return updated;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to update event ${id}`, error);
     }
   }
@@ -129,6 +132,7 @@ class EventRepository extends BaseRepository<EventDocument> {
           [EVENT_FIELDS.STATS.TOTAL_ENTRIES]: increment(1),
         });
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to increment totalEntries for event ${id}`,
         error,
@@ -144,6 +148,7 @@ class EventRepository extends BaseRepository<EventDocument> {
           [EVENT_FIELDS.STATS.APPROVED_ENTRIES]: increment(1),
         });
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to increment approvedEntries for event ${id}`,
         error,
@@ -159,6 +164,7 @@ class EventRepository extends BaseRepository<EventDocument> {
           [EVENT_FIELDS.STATS.FLAGGED_ENTRIES]: increment(1),
         });
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to increment flaggedEntries for event ${id}`,
         error,

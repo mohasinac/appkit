@@ -6,6 +6,7 @@ import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../schemas";
 
+import { normalizeError } from "../../../errors/normalize";
 export type SellerOfferAction =
   | { action: "accept"; offerId: string; sellerNote?: string }
   | { action: "decline"; offerId: string; sellerNote?: string }
@@ -102,6 +103,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
         });
         setUiState("idle");
       } catch (err: unknown) {
+        void normalizeError(err);
         if (isAuthError(err)) {
           onNeedsLogin();
         } else {
@@ -276,6 +278,7 @@ export function SellerOffersPanel({
       const json = (await res.json()) as { items?: OfferRow[]; offers?: OfferRow[] };
       setOffers(json.items ?? json.offers ?? []);
     } catch (err) {
+      void normalizeError(err);
       setFetchError(err instanceof Error ? err.message : "Failed to load offers.");
     } finally {
       setLoading(false);

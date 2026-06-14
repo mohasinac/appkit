@@ -115,7 +115,7 @@ export function AdminTrustGuideView() {
         <Section key={title} className="rounded-2xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden">
           <Div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-2,var(--appkit-color-border))]/20">
             <Icon className="w-5 h-5 text-[var(--appkit-color-primary)]" />
-            <Heading level={2} className="text-base font-semibold text-[var(--appkit-color-text)]">{title}</Heading>
+            <Heading level={2} size="base" weight="semibold">{title}</Heading>
           </Div>
           <Div className="px-6 py-5">{content}</Div>
         </Section>

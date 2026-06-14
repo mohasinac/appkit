@@ -63,6 +63,7 @@ export function SellerCouponsView({
         await onToggle(id, currentlyActive);
         showToast("Coupon updated.", "success");
       } catch (err) {
+        void normalizeError(err);
         showToast(err instanceof Error ? err.message : "Failed to update coupon.", "error");
       } finally {
         setTogglingId(null);

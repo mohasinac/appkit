@@ -235,7 +235,7 @@ export async function PrizeDrawDetailPageView({
           renderInfo={() => (
             <Stack gap="md">
               <Div>
-                <Row gap="xs" className="mb-2 flex-wrap">
+                <Row gap="xs" wrap className="mb-2">
                   <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>
                     Prize Draw
                   </Span>

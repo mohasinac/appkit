@@ -2,6 +2,7 @@ import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,
@@ -161,6 +162,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
       const snapshot = await query.get();
       return snapshot.docs.map((doc) => this.mapDoc<UserDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to fetch verified users", error);
     }
   }
@@ -176,6 +178,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
       const snapshot = await query.get();
       return snapshot.docs.map((doc) => this.mapDoc<UserDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to fetch active users", error);
     }
   }
@@ -252,6 +255,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
         this.getCollection().where(USER_FIELDS.ROLE, "==", role),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to count users by role: ${role}`, error);
     }
   }
@@ -262,6 +266,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
         this.getCollection().where(USER_FIELDS.DISABLED, "==", false),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to count active users", error);
     }
   }
@@ -272,6 +277,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
         this.getCollection().where(USER_FIELDS.DISABLED, "==", true),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to count disabled users", error);
     }
   }
@@ -282,6 +288,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
         this.getCollection().where(USER_FIELDS.CREATED_AT, ">=", since),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to count new users", error);
     }
   }
@@ -305,6 +312,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
         });
       });
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to update login metadata", error);
     }
   }

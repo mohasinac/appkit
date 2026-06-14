@@ -121,7 +121,7 @@ function PreOrderInfoSection({
     <Stack gap="md">
       {/* Pre-order badge + production status + title */}
       <Div>
-        <Row gap="xs" className="mb-2 flex-wrap">
+        <Row gap="xs" wrap className="mb-2">
           <Span size="xs" weight="semibold" className={CLS_PREORDER_BADGE}>
             Pre-Order
           </Span>

@@ -13,6 +13,7 @@ import { ACTION_ID } from "../constants/action-defs";
 import { useBottomActions } from "../../layout/hooks/useBottomActions";
 import { formatCurrency } from "../../../utils/number.formatter";
 
+import { normalizeError } from "../../../errors/normalize";
 export interface ProductDetailActionsProps {
   productId: string;
   productSlug: string;
@@ -106,6 +107,7 @@ export function ProductDetailActions({
       setWishlisted(true);
       showToast("Saved to wishlist", "success");
     } catch (err) {
+      void normalizeError(err);
       const msg = (err as Error)?.message ?? "Could not save to wishlist";
       showToast(msg, "error");
     } finally {

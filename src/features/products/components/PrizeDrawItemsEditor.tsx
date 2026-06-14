@@ -262,7 +262,7 @@ export function PrizeDrawItemsEditor({
                   <Text className="text-sm font-medium">
                     Images ({(it.images ?? []).length}/{MAX_IMAGES_PER_ITEM})
                   </Text>
-                  <Row gap="sm" className="flex-wrap">
+                  <Row gap="sm" wrap>
                     {Array.from({ length: MAX_IMAGES_PER_ITEM }).map((_, slot) => {
                       const existing = (it.images ?? [])[slot];
                       return (

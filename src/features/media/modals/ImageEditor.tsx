@@ -12,6 +12,7 @@ import { Cropper, CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { Button, Div, Modal, Row, Text, useToast } from "../../../ui";
 
+import { normalizeError } from "../../../errors/normalize";
 export interface ImageEditorProps {
   isOpen: boolean;
   imageUrl: string;
@@ -88,6 +89,7 @@ export function ImageEditor({
       const file = new File([blob], `cropped.${ext}`, { type: outputFormat });
       onSave(file);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to save image.", "error");
     } finally {
       setSaving(false);

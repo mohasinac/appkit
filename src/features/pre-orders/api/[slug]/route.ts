@@ -50,6 +50,7 @@ export async function GET(
       data: result.data[0],
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

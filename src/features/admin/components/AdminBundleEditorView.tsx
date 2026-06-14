@@ -16,6 +16,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Button,
   Checkbox,
   ConfirmDeleteModal,
@@ -250,6 +251,7 @@ export function AdminBundleEditorView({
         if (newId) onSaved?.(newId);
       }
     } catch (err) {
+      void normalizeError(err);
       const msg = err instanceof Error ? err.message : BUNDLE_COPY.adminEditor.errors.saveFailed;
       setApiError(msg);
       showToast(msg, "error");
@@ -272,6 +274,7 @@ export function AdminBundleEditorView({
       setDeleteConfirmOpen(false);
       onDeleted?.();
     } catch (err) {
+      void normalizeError(err);
       const msg = err instanceof Error ? err.message : BUNDLE_COPY.adminEditor.errors.deleteFailed;
       setApiError(msg);
       showToast(msg, "error");
@@ -295,7 +298,7 @@ export function AdminBundleEditorView({
       <Section className="py-10">
         <Container size="lg">
           <Stack gap="lg">
-            <Row gap="sm" align="center" justify="between" className="flex-wrap">
+            <Row gap="sm" align="center" justify="between" wrap>
               <Heading
                 level={1}
                 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"

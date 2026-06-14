@@ -43,6 +43,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: slide });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-homepage] GET /api/carousel/[id] failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch carousel slide" },

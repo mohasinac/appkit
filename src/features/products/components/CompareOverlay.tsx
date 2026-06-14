@@ -347,7 +347,7 @@ export function CompareOverlay({
     // audit-inline-style-ok: pass-through style prop
     <Div className={OVERLAY_CLASS} style={OVERLAY_STYLE} role="dialog" aria-modal="true" aria-label={labels.title}>
       <Row justify="between" align="center" className={HEADER_CLASS}>
-        <Heading level={2} className="text-base font-semibold">
+        <Heading level={2} size="base" weight="semibold">
           {labels.title}
         </Heading>
         <button

@@ -80,7 +80,7 @@ export function SellerProductsFilterDrawer({
       </Div>
       <Div className="space-y-1.5">
         <Text className={FILTER_LABEL_CLS}>Price (₹ Rupees)</Text>
-        <Row className="gap-2">
+        <Row gap="sm">
           <input
             type="number"
             min={0}

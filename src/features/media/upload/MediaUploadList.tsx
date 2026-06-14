@@ -5,6 +5,7 @@ import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
+import { normalizeError } from "../../../errors/normalize";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -139,6 +140,7 @@ export function MediaUploadList({
 
       onChange([...value, ...uploaded]);
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setIsLoading(false);

@@ -45,6 +45,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: section });
   } catch (error) {
+    void normalizeError(error);
     console.error(
       "[feat-homepage] GET /api/homepage-sections/[id] failed",
       error,

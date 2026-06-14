@@ -11,6 +11,7 @@ import { useState, useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
 import {
+import { normalizeError } from "../../../errors/normalize";
   Alert,
   Button,
   Div,
@@ -112,6 +113,7 @@ export function ImageUpload({
       onChange?.(url);
       if (cropData) onCropDataChange?.(cropData);
     } catch (err) {
+      void normalizeError(err);
       const message = err instanceof Error ? err.message : "Upload failed";
       setError(message);
       setPreview(currentImage || "");
@@ -281,7 +283,7 @@ export function ImageUpload({
 
             {!showCamera && (
               <Div className="space-y-2">
-                <Row gap="sm" className="flex-wrap">
+                <Row gap="sm" wrap>
                   {showFileInput && (
                     <Button
                       type="button"
@@ -360,7 +362,7 @@ export function ImageUpload({
       {error && <Alert variant="error">{error}</Alert>}
 
       {uploading && (
-        <Row className="gap-2">
+        <Row gap="sm">
           <Spinner size="sm" />
           <Text size="sm" variant="secondary">
             {tUpload("uploadingProgress", { progress })}

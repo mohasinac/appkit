@@ -212,7 +212,7 @@ export const orderSchema = z.object({
   userId: z.string(),
   items: z.array(orderItemSchema),
   // address shape is intentionally open to allow extending apps
-  address: z.record(z.string(), z.unknown()),
+  address: z.record(z.string(), z.unknown()), // audit-z-any-ok: extending-apps extend this with their own address schema
   orderStatus: orderStatusSchema,
   paymentStatus: z.string(),
   paymentGateway: z.string().optional(),

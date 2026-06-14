@@ -5,6 +5,7 @@
  */
 
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
@@ -88,6 +89,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       const doc = snapshot.docs[0];
       return this.mapDoc<CouponDocument>(doc);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve coupon by code: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -115,6 +117,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         .map((doc) => this.mapDoc<CouponDocument>(doc))
         .filter((coupon) => isCouponValid(coupon)); // still checks startDate + usage
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve active coupons: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -137,6 +140,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve coupons by type: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -159,6 +163,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve coupons by creator: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -187,6 +192,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve expiring coupons: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -314,6 +320,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to apply coupon: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -364,6 +371,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponUsageDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve coupon history: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -385,6 +393,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       return await this.findByIdOrFail(couponId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to deactivate coupon: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -406,6 +415,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       return await this.findByIdOrFail(couponId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to reactivate coupon: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -431,6 +441,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve store coupons: ${error instanceof Error ? error.message : "Unknown error"}`,
       );

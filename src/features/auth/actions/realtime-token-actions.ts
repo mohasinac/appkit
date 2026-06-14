@@ -25,6 +25,7 @@ export async function issueRealtimeToken(
     const userChatIds = await chatRepository.getChatIdsForUser(userId);
     chatIds = Object.fromEntries(userChatIds.map((id) => [id, true]));
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("Could not resolve chatIds for realtime token", { userId, err });
   }
 
@@ -41,6 +42,7 @@ export async function issueRealtimeToken(
       }
     }
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("Could not resolve conversationIds for realtime token", { userId, err });
   }
 

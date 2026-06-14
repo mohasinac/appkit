@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import {
+import { normalizeError } from "../../../errors/normalize";
   getDefaultCurrencySymbol,
   getDefaultLocale,
 } from "../../../core/baseline-resolver";
@@ -227,6 +228,7 @@ export async function syncProductsToCatalog(
         result.errors.push(json.error?.message ?? `Batch ${i / BATCH_SIZE + 1} failed`);
       }
     } catch (err) {
+      void normalizeError(err);
       result.failureCount += batch.length;
       result.errors.push(String(err));
     }

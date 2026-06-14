@@ -20,6 +20,7 @@ import { getProviders } from "../../../../contracts";
 import type { EventItem, EventEntryItem } from "../../types/index";
 import { EVENT_FIELDS } from "../../schemas";
 
+import { normalizeError } from "../../../../errors/normalize";
 type RouteContext = { params: Promise<{ id: string }> };
 
 // --- GET /api/events/[id] -----------------------------------------------------
@@ -119,6 +120,7 @@ export async function GET(
       data: { ...publicEvent, pollResults, leaderboard },
     });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-events] GET /api/events/[id] failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch event" },

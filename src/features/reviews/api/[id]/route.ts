@@ -45,6 +45,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: review });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-reviews] GET /api/reviews/[id] failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch review" },

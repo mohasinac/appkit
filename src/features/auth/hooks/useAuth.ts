@@ -9,6 +9,7 @@ import type { AuthUser } from "../types";
 import { useAuthEvent } from "./useAuthEvent";
 import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
 import {
+import { normalizeError } from "../../../errors/normalize";
   AUTH_ENDPOINTS,
   ACCOUNT_ENDPOINTS,
 } from "../../../constants/api-endpoints";
@@ -227,6 +228,7 @@ export function useGoogleLogin(options?: {
         authEvent.subscribe(eventId, customToken);
       }
     } catch (err) {
+      void normalizeError(err);
       popup.close();
       setPopupPending(false);
       onErrorRef.current?.(

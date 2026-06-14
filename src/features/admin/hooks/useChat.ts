@@ -3,6 +3,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
+import { normalizeError } from "../../../errors/normalize";
   getClientRealtimeProvider,
   type IClientRealtimeProvider,
   type Unsubscribe,
@@ -97,6 +98,7 @@ export function useChat(
         },
       );
     } catch (err) {
+      void normalizeError(err);
       logger.error("Failed to authenticate for chat RTDB", err);
       setError("Failed to connect to chat.");
       setIsLoading(false);

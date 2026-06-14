@@ -73,6 +73,7 @@ export function RefundRequestView({
     try {
       await onSubmitRequest(reason.trim());
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : REFUND_COPY.request.errorFallback);
     }
   };

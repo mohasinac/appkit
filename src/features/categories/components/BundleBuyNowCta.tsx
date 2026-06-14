@@ -39,6 +39,7 @@ export function BundleBuyNowCta({
     try {
       await onBuyNow({ bundleSlug });
     } catch (err) {
+      void normalizeError(err);
       if (isAuthError(err)) {
         setShowLoginModal(true);
       } else {

@@ -1,6 +1,7 @@
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import type {
+import { normalizeError } from "../../../errors/normalize";
   FirebaseSieveFields,
   FirebaseSieveResult,
   SieveModel,
@@ -99,6 +100,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
 
       return !snapshot.empty;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to check user entry for event ${eventId}`,
         error,
@@ -115,6 +117,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
 
       return snapshot.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to count user entries for event ${eventId}`,
         error,
@@ -169,6 +172,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
           entryCount: data.entryCount,
         }));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to get leaderboard for event ${eventId}`,
         error,
@@ -198,6 +202,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
 
       return { id: ref.id, ...created.data() } as EventEntryDocument;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to create event entry", error);
     }
   }
@@ -227,6 +232,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
 
       return this.findByIdOrFail(id);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to review event entry ${id}`, error);
     }
   }

@@ -27,6 +27,7 @@ import { CONVERSATION_FIELDS, STORE_FIELDS } from "../../../constants/field-name
 import type { ChatRoomCreateInput, ChatRoomDocument } from "../schemas";
 import { CHAT_ROOM_COLLECTION } from "../schemas";
 import {
+import { normalizeError } from "../../../errors/normalize";
   encryptPiiFields,
   decryptPiiFields,
   CHAT_PII_FIELDS,
@@ -118,6 +119,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
       });
       return Array.from(ids);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to get chatIds for user: ${userId}`,
         error,
@@ -169,6 +171,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
 
       return rooms;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to list rooms for user: ${userId}`,
         error,
@@ -192,6 +195,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
           }),
         );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to update last message for room: ${chatId}`,
         error,
@@ -243,6 +247,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
       );
       return "hidden";
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to soft-delete room ${chatId} for user ${uid}`,
         error,
@@ -270,6 +275,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
         // Non-fatal
       }
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to admin-delete group room ${chatId}`,
         error,

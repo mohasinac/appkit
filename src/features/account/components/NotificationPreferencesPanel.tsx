@@ -6,6 +6,7 @@ import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { NotificationPreferences, NotificationChannelPrefs, NotificationTypePrefs } from "../types";
 import type { NotificationChannelConfig } from "../../admin/schemas/firestore";
 
+import { normalizeError } from "../../../errors/normalize";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -156,6 +157,7 @@ export function NotificationPreferencesPanel({
       showToast("Preferences saved.", "success");
       onSave?.(prefs);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to save preferences.", "error");
     } finally {
       setSaving(false);

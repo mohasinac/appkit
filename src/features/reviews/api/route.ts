@@ -22,6 +22,7 @@ import { createRouteHandler } from "../../../next";
 import type { Review, ReviewListResponse } from "../types/index";
 import { ReviewStatusValues } from "../schemas";
 
+import { normalizeError } from "../../../errors/normalize";
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);
 }
@@ -160,6 +161,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
     return response;
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-reviews] GET /api/reviews failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch reviews" },

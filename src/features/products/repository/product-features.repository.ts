@@ -1,6 +1,7 @@
 import { DatabaseError, ValidationError } from "../../../errors";
 import { ERROR_MESSAGES } from "../../../errors/messages";
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   prepareForFirestore,
   type FirebaseSieveResult,
@@ -83,6 +84,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
       docs.sort((a, b) => a.displayOrder - b.displayOrder);
       return docs;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         failureMessage(ERROR_MESSAGES.PRODUCT_FEATURES.FETCH_FAILED, error),
       );
@@ -191,6 +193,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
         .get();
       return snap.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         failureMessage("Failed to count store features", error),
       );

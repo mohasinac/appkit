@@ -1,6 +1,7 @@
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { DatabaseError, NotFoundError } from "../../../errors";
 import type {
+import { normalizeError } from "../../../errors/normalize";
   FirebaseSieveResult,
   SieveModel,
 } from "../../../providers/db-firebase";
@@ -233,6 +234,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
 
       return snapshot.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to delete orders for user: ${userId}`,
         error,

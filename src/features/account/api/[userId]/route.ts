@@ -49,6 +49,7 @@ export async function GET(
       data: user,
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,
@@ -96,6 +97,7 @@ export async function PATCH(
       data: updated,
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

@@ -1,4 +1,5 @@
 import {
+import { normalizeError } from "../../../errors/normalize";
   increment,
   arrayUnion,
   arrayRemove,
@@ -139,6 +140,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       return this.findByIdOrFail(newCategoryId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to create category: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -157,6 +159,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       return this.mapDoc<CategoryDocument>(snapshot.docs[0]);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve category by slug: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -176,6 +179,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         .map((doc) => this.mapDoc<CategoryDocument>(doc))
         .filter((category) => !category.isBrand);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve root categories: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -193,6 +197,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<CategoryDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve leaf categories: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -212,6 +217,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         .map((doc) => this.mapDoc<CategoryDocument>(doc))
         .filter((category) => !category.isBrand);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve categories by tier: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -229,6 +235,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<CategoryDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve categories by rootId: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -251,6 +258,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
             category.parentIds[category.parentIds.length - 1] === parentId,
         );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve children categories: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -270,6 +278,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         .map((doc) => this.mapDoc<CategoryDocument>(doc))
         .filter((category) => !category.isBrand);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve featured categories: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -290,6 +299,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       );
       return limit > 0 ? brands.slice(0, limit) : brands;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve brand categories: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -338,6 +348,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to update category metrics: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -410,6 +421,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       return this.findByIdOrFail(categoryId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to move category: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -435,6 +447,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       return buildCategoryTree(categories, rootId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to build category tree: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -461,6 +474,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       return this.findByIdOrFail(categoryId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to toggle featured status: ${error instanceof Error ? error.message : "Unknown error"}`,
       );

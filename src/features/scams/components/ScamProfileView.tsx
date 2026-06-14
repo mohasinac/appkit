@@ -161,7 +161,7 @@ function ScammerIncidentsSection({ incidents }: { incidents: ScammerIncidentDocu
   return (
     <Stack gap="sm">
       <Row justify="between" align="center">
-        <Heading level={2} className="text-base font-semibold">
+        <Heading level={2} size="base" weight="semibold">
           Additional Incidents{incidents.length > 0 && ` (${incidents.length})`}
         </Heading>
       </Row>
@@ -227,7 +227,7 @@ function ScammerCommentsSection({
   return (
     <Stack gap="sm">
       <Row justify="between" align="center">
-        <Heading level={2} className="text-base font-semibold">
+        <Heading level={2} size="base" weight="semibold">
           Community Discussion{comments.length > 0 && ` (${comments.length})`}
         </Heading>
         {isAuthenticated ? (
@@ -420,7 +420,7 @@ export function ScamProfileView({
 
               {(scammer.phones.length > 0 || scammer.upiIds.length > 0 || scammer.emails.length > 0) && (
                 <Stack gap="sm">
-                  <Heading level={2} className="text-base font-semibold">Contact Identifiers</Heading>
+                  <Heading level={2} size="base" weight="semibold">Contact Identifiers</Heading>
                   <Grid cols={2} gap="sm">
                     {scammer.phones.map((p) => (
                       <IdentityChip key={p} label="Phone" value={p} icon={<Phone className="h-4 w-4" />} />
@@ -437,7 +437,7 @@ export function ScamProfileView({
 
               {scammer.socialMedia.length > 0 && (
                 <Stack gap="sm">
-                  <Heading level={2} className="text-base font-semibold">Social Media Profiles</Heading>
+                  <Heading level={2} size="base" weight="semibold">Social Media Profiles</Heading>
                   <Stack gap="xs">
                     {scammer.socialMedia.map((sm, i) => (
                       <Row key={i} gap="sm" align="center">
@@ -461,13 +461,13 @@ export function ScamProfileView({
 
               {scammer.itemInvolved && (
                 <Stack gap="xs">
-                  <Heading level={2} className="text-base font-semibold">Item Involved</Heading>
+                  <Heading level={2} size="base" weight="semibold">Item Involved</Heading>
                   <Text variant="secondary" className="text-sm">{scammer.itemInvolved}</Text>
                 </Stack>
               )}
 
               <Stack gap="sm">
-                <Heading level={2} className="text-base font-semibold">What Happened</Heading>
+                <Heading level={2} size="base" weight="semibold">What Happened</Heading>
                 <Card variant="flat" padding="md">
                   <Text className="text-sm leading-relaxed">{scammer.description}</Text>
                 </Card>
@@ -475,7 +475,7 @@ export function ScamProfileView({
 
               {scamTypeDef && scamTypeDef.howToAvoid.length > 0 && (
                 <Stack gap="sm">
-                  <Heading level={2} className="text-base font-semibold">How to Avoid This Scam</Heading>
+                  <Heading level={2} size="base" weight="semibold">How to Avoid This Scam</Heading>
                   <Card variant="flat" padding="md">
                     <Stack gap="xs" as="ol">
                       {scamTypeDef.howToAvoid.map((tip, i) => (
@@ -493,7 +493,7 @@ export function ScamProfileView({
 
               {scammer.evidence.length > 0 && (
                 <Stack gap="sm">
-                  <Heading level={2} className="text-base font-semibold">Evidence</Heading>
+                  <Heading level={2} size="base" weight="semibold">Evidence</Heading>
                   <Row gap="sm" wrap>
                     {scammer.evidence.map((url, i) => (
                       <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block h-32 w-32 rounded-lg overflow-hidden border shadow-sm hover:opacity-90">
@@ -509,7 +509,7 @@ export function ScamProfileView({
 
               {relatedScammers.length > 0 && (
                 <Stack gap="sm">
-                  <Heading level={2} className="text-base font-semibold">Related Profiles</Heading>
+                  <Heading level={2} size="base" weight="semibold">Related Profiles</Heading>
                   <Stack gap="sm">
                     {relatedScammers.map((rel) => (
                       <Link key={rel.id} href={String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id))} className="block">

@@ -3,6 +3,7 @@ import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   prepareForFirestore,
   type FirebaseSieveResult,
@@ -435,6 +436,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
       return snapshot.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to delete products for store: ${storeId}`,
         error,

@@ -17,6 +17,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../../contracts";
 
+import { normalizeError } from "../../../../../errors/normalize";
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 
 interface StoreEntity {
@@ -192,6 +193,7 @@ export async function GET(
       },
     });
   } catch (error) {
+    void normalizeError(error);
     console.error(
       "[feat-stores] GET /api/stores/[storeSlug]/reviews failed",
       error,

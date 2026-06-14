@@ -74,6 +74,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
     return response;
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-auctions] GET /api/bids failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch bids" },

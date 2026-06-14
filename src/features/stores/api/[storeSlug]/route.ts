@@ -16,6 +16,7 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import type { StoreDetail } from "../../types/index";
 
+import { normalizeError } from "../../../../errors/normalize";
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 
 interface StoreEntity {
@@ -111,6 +112,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: store });
   } catch (error) {
+    void normalizeError(error);
     console.error("[feat-stores] GET /api/stores/[storeSlug] failed", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch store" },

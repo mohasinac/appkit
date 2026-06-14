@@ -9,6 +9,7 @@ import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/const
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 
+import { normalizeError } from "../../../errors/normalize";
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
@@ -235,6 +236,7 @@ export function SellerAddressesView({
       closeDrawer();
       await load();
     } catch (err) {
+      void normalizeError(err);
       setSaveError(err instanceof Error ? err.message : "Failed to save address");
     } finally {
       setSaving(false);

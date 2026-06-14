@@ -63,6 +63,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       },
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

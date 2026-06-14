@@ -57,6 +57,7 @@ export function FAQHelpfulButtons({
         setUserVote("not-helpful");
       }
     } catch (error) {
+      void normalizeError(error);
       onVoteError?.(labels?.voteFailed ?? "Failed to record feedback", error);
     } finally {
       setIsPending(false);

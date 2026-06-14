@@ -1,6 +1,7 @@
 "use client"
 import { useCallback, useRef, useState } from "react";
 import type {
+import { normalizeError } from "../../../errors/normalize";
   IClientPaymentGateway,
   GatewayPaymentResponse,
   OpenGatewayOptions,
@@ -143,6 +144,7 @@ async function openGatewayStep(
     });
     return { response, cancelled: false, error: null };
   } catch (err) {
+    void normalizeError(err);
     if (err instanceof Error && err.message.toLowerCase().includes("cancel")) {
       return { response: null, cancelled: true, error: null };
     }
@@ -223,6 +225,7 @@ export function usePaymentCheckout(
         setState((s) => ({ ...s, step: "idle" }));
         return true;
       } catch (err) {
+        void normalizeError(err);
         setError(
           err instanceof Error ? err : new Error("Preflight check failed"),
         );
@@ -257,6 +260,7 @@ export function usePaymentCheckout(
         onSuccess?.(result);
         return result;
       } catch (err) {
+        void normalizeError(err);
         setError(
           err instanceof Error ? err : new Error("Order placement failed"),
         );
@@ -286,6 +290,7 @@ export function usePaymentCheckout(
           currency: params.currency,
         });
       } catch (err) {
+        void normalizeError(err);
         setError(
           err instanceof Error
             ? err
@@ -333,6 +338,7 @@ export function usePaymentCheckout(
         onSuccess?.(result);
         return result;
       } catch (err) {
+        void normalizeError(err);
         setError(
           err instanceof Error ? err : new Error("Payment verification failed"),
         );

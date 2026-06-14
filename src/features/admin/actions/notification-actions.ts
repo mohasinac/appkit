@@ -8,6 +8,7 @@ import { decryptPii } from "../../../security/index";
 import type { NotificationDocument, NotificationCreateInput } from "../schemas";
 import type { NotificationTypePrefs } from "../../account/types";
 import {
+import { normalizeError } from "../../../errors/normalize";
   DEFAULT_NOTIFICATION_CHANNELS,
   meetsMinPriority,
 } from "../schemas/firestore";
@@ -81,6 +82,7 @@ export async function sendNotification(
   try {
     settings = await siteSettingsRepository.getSingleton();
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sendNotification: could not load siteSettings — skipping external channels", { err });
     return { notification, email: "skipped", whatsapp: "skipped" };
   }
@@ -155,6 +157,7 @@ export async function sendNotification(
         });
         emailStatus = "sent";
       } catch (err) {
+        void normalizeError(err);
         serverLogger.error("sendNotification: email dispatch failed", { userId: input.userId, err });
         emailStatus = "failed";
       }
@@ -182,6 +185,7 @@ export async function sendNotification(
         });
         whatsappStatus = ok ? "sent" : "failed";
       } catch (err) {
+        void normalizeError(err);
         serverLogger.error("sendNotification: WhatsApp dispatch failed", { userId: input.userId, err });
         whatsappStatus = "failed";
       }

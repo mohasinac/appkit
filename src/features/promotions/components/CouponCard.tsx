@@ -254,7 +254,7 @@ export function CouponCard({
 
       {/* Status + scope pills (CRUD context) */}
       {(hasAdminActions || n.scope) && (
-        <Row gap="xs" className="mb-2 flex-wrap">
+        <Row gap="xs" wrap className="mb-2">
           <Span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
               n.isActive

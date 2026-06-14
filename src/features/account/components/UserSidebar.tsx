@@ -190,7 +190,7 @@ function DrawerPanel({
         className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
       >
         <Div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-          <Span size="xs" weight="semibold" className="uppercase tracking-widest text-zinc-400 dark:text-zinc-400">{title}</Span>
+          <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
           <button
             type="button"
             onClick={onClose}
@@ -250,7 +250,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           {/* Nav panel */}
           <Div surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden} shadow-xl`}>
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-              <Span size="xs" weight="semibold" className="uppercase tracking-widest text-zinc-400 dark:text-zinc-400">My Account</Span>
+              <Span size="xs" weight="semibold" transform="uppercase" color="muted">My Account</Span>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>
               <DrawerContent groups={groups} items={items} activeHref={pathname} />

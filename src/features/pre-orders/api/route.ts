@@ -59,6 +59,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       },
     });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,
@@ -86,6 +87,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     } as Omit<Record<string, unknown>, "id" | "createdAt" | "updatedAt">);
     return NextResponse.json({ success: true, data: created }, { status: 201 });
   } catch (error) {
+    void normalizeError(error);
     return NextResponse.json(
       {
         success: false,

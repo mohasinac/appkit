@@ -75,6 +75,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
         this.mapDoc<HomepageSectionDocument>(doc),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve enabled sections: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -93,6 +94,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
         this.mapDoc<HomepageSectionDocument>(doc),
       );
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve disabled sections: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -114,6 +116,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
       const doc = snapshot.docs[0];
       return this.mapDoc<HomepageSectionDocument>(doc);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to retrieve section by type: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -129,6 +132,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
       return await this.findByIdOrFail(sectionId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to enable section: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -144,6 +148,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
       return await this.findByIdOrFail(sectionId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to disable section: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -161,6 +166,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
       return await this.findByIdOrFail(sectionId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to toggle section: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -184,6 +190,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to reorder sections: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -202,6 +209,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
       return await this.findByIdOrFail(sectionId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to update section config: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -226,6 +234,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
       await batch.commit();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to batch toggle sections: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -244,6 +253,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
       return await this.findByIdOrFail(sectionId);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to reset section: ${error instanceof Error ? error.message : "Unknown error"}`,
       );

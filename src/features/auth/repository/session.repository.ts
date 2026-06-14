@@ -2,6 +2,7 @@ import type { DocumentReference } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
+import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
@@ -145,6 +146,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<SessionDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find active sessions for user: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -164,6 +166,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<SessionDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to find all sessions for user: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -193,6 +196,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
 
       return snapshot.docs.map((doc) => this.mapDoc<SessionDocument>(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to get all active sessions: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -215,6 +219,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
 
       return count;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to cleanup expired sessions: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
@@ -259,6 +264,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
         recentActivity,
       };
     } catch (error) {
+      void normalizeError(error);
       serverLogger.error("Error getting session stats", { error });
       return {
         totalActive: 0,
@@ -342,6 +348,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
         },
       };
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to fetch admin sessions: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
