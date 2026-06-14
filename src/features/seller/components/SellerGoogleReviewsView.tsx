@@ -1,5 +1,5 @@
-import { normalizeError } from "../../../errors/normalize";
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import React, { useCallback, useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";

@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UseCameraOptions {
@@ -99,6 +100,7 @@ export function useCamera(): UseCameraReturn {
           videoRef.current.srcObject = mediaStream;
         }
       } catch (err) {
+        void normalizeError(err);
         const message =
           err instanceof DOMException && err.name === "NotAllowedError"
             ? "Camera permission denied. Please allow access in your browser settings."

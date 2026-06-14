@@ -1,3 +1,4 @@
+import { normalizeError } from "../../errors/normalize";
 /**
  * Server-side Firebase Auth helper functions.
  *
@@ -40,6 +41,7 @@ export async function verifyIdToken(
       phoneNumber: (decoded.phone_number as string | undefined) ?? null,
     };
   } catch (err) {
+    void normalizeError(err);
     if (!EXPECTED_AUTH_CODES.has((err as { code?: string }).code ?? "")) {
       console.error(
         "[@mohasinac/auth-firebase] Token verification failed:",
@@ -66,6 +68,7 @@ export async function verifySessionCookie(
       phoneNumber: (decoded.phone_number as string | undefined) ?? null,
     };
   } catch (err) {
+    void normalizeError(err);
     if (!EXPECTED_AUTH_CODES.has((err as { code?: string }).code ?? "")) {
       console.error(
         "[@mohasinac/auth-firebase] Session cookie verification failed:",

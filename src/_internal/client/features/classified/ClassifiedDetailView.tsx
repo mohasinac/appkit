@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../../errors/normalize";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -76,6 +77,7 @@ export function ClassifiedDetailView({
         setConversation(result as typeof conversation);
       }
     } catch (e) {
+      void normalizeError(e);
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
       setPending(false);

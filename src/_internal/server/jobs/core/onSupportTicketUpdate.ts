@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 
@@ -56,6 +57,7 @@ export async function handleSupportTicketUpdate(
       relatedType: "support_ticket",
     });
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("Failed to notify user of ticket status change (non-fatal)", err, { ticketId, userId, nextStatus });
   }
 

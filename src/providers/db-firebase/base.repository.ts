@@ -1,3 +1,4 @@
+import { normalizeError } from "../../errors/normalize";
 import type {
   CollectionReference,
   DocumentData,
@@ -52,6 +53,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
       return this.mapDoc(doc);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to find document by ID: ${id}`, error);
     }
   }
@@ -74,6 +76,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
       return snapshot.docs.map((doc) => this.mapDoc(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to find documents by ${field}`, error);
     }
   }
@@ -91,6 +94,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
       return this.mapDoc(snapshot.docs[0]);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to find document by ${field}`, error);
     }
   }
@@ -106,6 +110,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       const snapshot = await query.get();
       return snapshot.docs.map((doc) => this.mapDoc(doc));
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to fetch all documents", error);
     }
   }
@@ -122,6 +127,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       const doc = await docRef.get();
       return this.mapDoc(doc);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to create document", error);
     }
   }
@@ -146,6 +152,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       const doc = await this.getCollection().doc(id).get();
       return this.mapDoc(doc);
     } catch (error: any) {
+      void normalizeError(error);
       serverLogger.error(`Failed to create document with ID: ${id}`, {
         collection: this.collection,
         error: error.message,
@@ -169,6 +176,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
       return this.findByIdOrFail(id);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to update document: ${id}`, error);
     }
   }
@@ -177,6 +185,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     try {
       await this.getCollection().doc(id).delete();
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(`Failed to delete document: ${id}`, error);
     }
   }
@@ -186,6 +195,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       const doc = await this.getCollection().doc(id).get();
       return doc.exists;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         `Failed to check document existence: ${id}`,
         error,
@@ -198,6 +208,7 @@ export abstract class BaseRepository<T extends DocumentData> {
       const snapshot = await this.getCollection().get();
       return snapshot.size;
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError("Failed to count documents", error);
     }
   }

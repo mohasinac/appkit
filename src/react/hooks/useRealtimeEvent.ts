@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   getClientRealtimeProvider,
@@ -137,6 +138,7 @@ export function useRealtimeEvent<TData = undefined>(
         try {
           await provider.signInWithToken(customToken);
         } catch (authErr) {
+          void normalizeError(authErr);
           onLogError?.(
             `useRealtimeEvent[${type}]: custom token sign-in failed`,
             authErr,

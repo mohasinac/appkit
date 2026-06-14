@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 /**
  * Core: maintain DFS `position` + `subtreeSize` on every category write.
  * CREATE → insert into parent's subtree + shift later siblings;
@@ -151,6 +152,7 @@ export async function handleCategoryWrite(
       }
     }
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("Position update failed (non-fatal — will heal on next reconcile)", err, {
       categoryId,
     });

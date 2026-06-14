@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 
@@ -33,6 +34,7 @@ export async function handleSupportTicketCreate(
       relatedType: "support_ticket",
     });
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("Failed to send ticket confirmation notification (non-fatal)", err, { ticketId, userId });
   }
 

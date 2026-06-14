@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 /**
  * Checkout server actions (appkit).
  *
@@ -301,11 +302,13 @@ async function flushCouponUsageAccumulator(
               .catch(() => { /* no claim row — coupon never went through the wallet */ });
           }
         } catch (err) {
+          void normalizeError(err);
           serverLogger.warn("Failed to update claimed-coupon status", { err });
         }
       }),
     );
   } catch (err) {
+    void normalizeError(err);
     serverLogger.error("Failed to record coupon usage:", err);
   }
 }
@@ -586,6 +589,7 @@ export async function createCheckoutOrderAction(
       return { available: availableItems, unavailable: unavailableItems, emailOtpUsed };
     });
   } catch (err: unknown) {
+    void normalizeError(err);
     const reason =
       (err as { _failReason?: string })?._failReason === "consent_expired"
         ? "consent_expired"

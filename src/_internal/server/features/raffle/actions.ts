@@ -1,3 +1,4 @@
+"use server";
 /**
  * SB9-H — server actions for triggering an event raffle / assigning a spin
  * prize from a Next.js API route. Builds an ad-hoc JobContext around
@@ -6,7 +7,6 @@
  * size).
  */
 
-"use server";
 
 import { getAdminDb } from "../../../../providers/db-firebase/admin";
 import {

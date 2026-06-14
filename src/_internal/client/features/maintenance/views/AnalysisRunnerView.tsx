@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../../../errors/normalize";
 
 import * as React from "react";
 import { Div, Heading, Section, Span, Text } from "@mohasinac/appkit";
@@ -30,6 +31,7 @@ export function AnalysisRunnerView(): React.JSX.Element {
       }
       setReport(body.data);
     } catch (err) {
+      void normalizeError(err);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setRunning(false);

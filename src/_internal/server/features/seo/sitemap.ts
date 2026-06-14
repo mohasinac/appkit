@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import type { MetadataRoute } from "next";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { ROUTES } from "../../../../next/routing/route-map";
@@ -82,6 +83,7 @@ async function fetchProductUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
       };
     });
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sitemap: failed to fetch product URLs", { error: err });
     return [];
   }
@@ -108,6 +110,7 @@ async function fetchAuctionUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
       };
     });
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sitemap: failed to fetch auction URLs", { error: err });
     return [];
   }
@@ -132,6 +135,7 @@ async function fetchEventUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
       };
     });
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sitemap: failed to fetch event URLs", { error: err });
     return [];
   }
@@ -157,6 +161,7 @@ async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap
       };
     });
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sitemap: failed to fetch category URLs", { error: err });
     return [];
   }
@@ -186,6 +191,7 @@ async function fetchBlogPostUrls(baseUrl: string): Promise<MetadataRoute.Sitemap
       };
     });
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sitemap: failed to fetch blog post URLs", { error: err });
     return [];
   }
@@ -212,6 +218,7 @@ async function fetchStoreUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
       };
     });
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sitemap: failed to fetch store URLs", { error: err });
     return [];
   }
@@ -237,6 +244,7 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
       };
     });
   } catch (err) {
+    void normalizeError(err);
     serverLogger.warn("sitemap: failed to fetch scammer URLs", { error: err });
     return [];
   }

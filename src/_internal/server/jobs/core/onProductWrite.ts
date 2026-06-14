@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 /**
  * Core: keep category metrics + store stats in sync when a product document
  * is written. Only published products count.
@@ -123,6 +124,7 @@ export async function handleProductWrite(
       isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx,
     });
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("Counter update failed (non-fatal)", err, { productId });
   }
 }

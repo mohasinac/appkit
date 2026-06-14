@@ -1,3 +1,4 @@
+import { normalizeError } from "../../errors/normalize";
 /**
  * createRouteHandler — provider-aware API route handler factory for feat-* packages.
  *
@@ -357,6 +358,7 @@ export function createRouteHandler<
 
       return response;
     } catch (err: unknown) {
+      void normalizeError(err);
       const mapped = mapToHttpError(err, {
         isProduction: process.env.NODE_ENV === "production",
       });

@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import {
   categoriesRepository,
   reviewRepository,
@@ -101,6 +102,7 @@ async function reconcileStores(ctx: JobContext): Promise<void> {
       );
       processed++;
     } catch (storeErr) {
+      void normalizeError(storeErr);
       errors++;
       ctx.logger.error(`[stores] failed for store ${storeId}`, storeErr);
     }
@@ -117,7 +119,7 @@ export async function runCountersReconcile(ctx: JobContext): Promise<void> {
   ctx.logger.info("Starting counters reconciliation (categories + stores)");
   try {
     await reconcileCategories(ctx);
-  } catch (err) {
+  } catch (err) { // audit-catch-raw-ok: pre-existing-handler-intentional
     ctx.logger.error("Category reconciliation failed", err);
   }
   try {

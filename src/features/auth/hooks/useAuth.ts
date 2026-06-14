@@ -1,5 +1,5 @@
-import { normalizeError } from "../../../errors/normalize";
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getClientAuthProvider } from "../../../contracts/client-auth";

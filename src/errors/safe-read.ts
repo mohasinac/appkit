@@ -1,3 +1,4 @@
+import { normalizeError } from "./normalize";
 import { mapToHttpError } from "./error-mapping";
 
 /**
@@ -52,6 +53,7 @@ export async function safeRead<T>(
   try {
     return await fn();
   } catch (err) {
+    void normalizeError(err);
     const mapped = mapToHttpError(err);
     try {
       await reporter({

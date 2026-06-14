@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 import { PRODUCT_FIELDS, ORDER_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
@@ -67,6 +68,7 @@ export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
         } as never);
         notified++;
       } catch (err) {
+        void normalizeError(err);
         ctx.logger.warn("Reveal-ready notification failed", { err });
       }
     }

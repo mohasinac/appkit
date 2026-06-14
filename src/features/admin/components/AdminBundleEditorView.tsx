@@ -1,5 +1,5 @@
-import { normalizeError } from "../../../errors/normalize";
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 /**
  * AdminBundleEditorView — S-SBUNI-4 2026-05-13.

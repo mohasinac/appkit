@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../../errors/normalize";
 
 import React, { useState } from "react";
 import { Button, Div, Span, Stack, Text } from "../../../../ui";
@@ -38,6 +39,7 @@ export function CodeRevealPanel({
       const data = await fetchCode(orderId);
       setRevealed(data);
     } catch (e) {
+      void normalizeError(e);
       setError(e instanceof Error ? e.message : "Could not retrieve code");
     } finally {
       setPending(false);

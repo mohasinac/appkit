@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { getAdminRealtimeDb } from "../../../../providers/db-firebase";
 import { decryptPii } from "../../../../security/index";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
@@ -112,6 +113,7 @@ export async function handleOrderStatusChange(
         read: false,
       });
     } catch (rtdbError) {
+      void normalizeError(rtdbError);
       ctx.logger.error("Realtime DB push failed (non-fatal)", rtdbError);
     }
 

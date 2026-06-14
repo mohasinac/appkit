@@ -98,6 +98,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
     try {
       await this.update(sessionId, updateData);
     } catch (err: unknown) {
+      void normalizeError(err);
       // The session doc may have been revoked/expired/wiped while the client
       // still holds the cookie. Firestore Admin throws `5 NOT_FOUND` in that
       // case — swallow it so the activity ping is best-effort, not a 500.

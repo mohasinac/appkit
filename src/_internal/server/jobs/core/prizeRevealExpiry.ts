@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 import { ORDER_FIELDS, PRODUCT_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
@@ -56,6 +57,7 @@ export async function runPrizeRevealExpiry(ctx: JobContext): Promise<void> {
           actionUrl: `/user/orders/view/${doc.id}`,
         } as never);
       } catch (err) {
+        void normalizeError(err);
         ctx.logger.warn("Reveal-expired notification failed", { err });
       }
     }

@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 import { useCallback, useState } from "react";
 
 export interface InlineEditOptions<TValue> {
@@ -33,6 +34,7 @@ export function useInlineToggle({
     try {
       await save(rowId, field, next);
     } catch (err) {
+      void normalizeError(err);
       setValue(previous);
       onError?.(err, previous);
     } finally {
@@ -88,6 +90,7 @@ export function useInlineTextEdit({
     try {
       await save(rowId, field, draft);
     } catch (err) {
+      void normalizeError(err);
       setValue(previous);
       setDraft(previous);
       onError?.(err, previous);

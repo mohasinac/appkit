@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 import { ORDER_FIELDS, PRODUCT_FIELDS } from "../../../../constants/field-names";
@@ -46,6 +47,7 @@ export async function runPrizeRevealReminder(ctx: JobContext): Promise<void> {
       } as never);
       notified++;
     } catch (err) {
+      void normalizeError(err);
       ctx.logger.warn("Reveal reminder notification failed", { err });
     }
   }

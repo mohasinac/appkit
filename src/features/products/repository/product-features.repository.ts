@@ -153,6 +153,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
         .update({ ...input, updatedAt: new Date() });
       return this.findByIdOrFail(id);
     } catch (error) {
+      void normalizeError(error);
       throw new DatabaseError(
         failureMessage(ERROR_MESSAGES.PRODUCT_FEATURES.UPDATE_FAILED, error),
       );

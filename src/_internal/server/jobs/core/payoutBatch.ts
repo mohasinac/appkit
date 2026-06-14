@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 /**
  * Core: dispatch pending payouts via Razorpay Payouts API.
  *
@@ -83,6 +84,7 @@ async function dispatch(ctx: JobContext, entry: { ref: DocumentReference; data: 
     await payoutRepository.recordSuccess(ref, result.id, result.status);
     ctx.logger.info(`Payout ${payout.id} dispatched`, { razorpayId: result.id, razorpayStatus: result.status });
   } catch (error) {
+    void normalizeError(error);
     const failureCount = ((payout as PayoutRow & { failureCount?: number }).failureCount ?? 0) + 1;
     const isFinal = failureCount >= MAX_FAILURES;
     const reason = error instanceof Error ? error.message : String(error);

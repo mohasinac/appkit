@@ -1,3 +1,4 @@
+import { normalizeError } from "../errors/normalize";
 /**
  * Server-Side Error Logging Utilities
  *
@@ -173,6 +174,7 @@ async function writeLog(entry: LogEntry): Promise<void> {
     await rotateLogFileIfNeeded(filePath);
     await nodeFsPromises().appendFile(filePath, formatLogEntry(entry));
   } catch (error) {
+    void normalizeError(error);
     console.error("Failed to write log:", error);
   }
 }

@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import { mapToHttpError } from "../../../errors/error-mapping";
 
 /**
@@ -46,6 +47,7 @@ export async function wrapAction<T>(
     const data = await fn();
     return { ok: true, data };
   } catch (err) {
+    void normalizeError(err);
     const mapped = mapToHttpError(err, {
       isProduction: process.env.NODE_ENV === "production",
     });

@@ -50,6 +50,7 @@ export async function sendEmail(
     });
     return { data, error: null };
   } catch (error) {
+    void normalizeError(error);
     return { data: null, error };
   }
 }

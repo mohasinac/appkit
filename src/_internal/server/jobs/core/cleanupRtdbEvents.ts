@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { getAdminAuth, getAdminRealtimeDb } from "../../../../providers/db-firebase";
 import type { JobContext } from "../runtime/types";
 
@@ -28,6 +29,7 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
       }
     }
   } catch (authErr) {
+    void normalizeError(authErr);
     ctx.logger.error("Auth events cleanup failed (non-fatal)", authErr);
   }
 
@@ -46,6 +48,7 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
       }
     }
   } catch (payErr) {
+    void normalizeError(payErr);
     ctx.logger.error("Payment events cleanup failed (non-fatal)", payErr);
   }
 

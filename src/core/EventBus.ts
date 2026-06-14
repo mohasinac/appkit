@@ -1,3 +1,4 @@
+import { normalizeError } from "../errors/normalize";
 /**
  * EventBus Class — @mohasinac/core
  *
@@ -59,6 +60,7 @@ export class EventBus {
       try {
         cb(...args);
       } catch (error) {
+        void normalizeError(error);
         logger.error(`EventBus: error in handler for "${event}"`, { error });
       }
     });

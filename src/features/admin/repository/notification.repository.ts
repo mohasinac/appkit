@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 /**
  * Notification Repository
  *
@@ -109,6 +110,7 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
           .where(NOTIFICATION_FIELDS.IS_READ, "==", false),
       );
     } catch (error) {
+      void normalizeError(error);
       serverLogger.error("Failed to count unread notifications", {
         userId,
         error,

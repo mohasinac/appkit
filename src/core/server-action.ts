@@ -1,3 +1,4 @@
+import { normalizeError } from "../errors/normalize";
 /**
  * createServerAction — @mohasinac/appkit/core
  *
@@ -155,6 +156,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
       await _globalMiddleware.beforeAction?.(ctx as ActionMiddlewareContext);
       await options.beforeAction?.(ctx);
     } catch (err) {
+      void normalizeError(err);
       logger.error(
         `[createServerAction] beforeAction error in "${actionName}"`,
         { err },
@@ -167,6 +169,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
       const data = await options.handler({ input });
       result = { ok: true, data };
     } catch (err) {
+      void normalizeError(err);
       const message =
         err instanceof Error ? err.message : "An unexpected error occurred";
       logger.error(`[createServerAction] handler error in "${actionName}"`, {
@@ -183,6 +186,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
         result: result as ActionResult<unknown>,
       });
     } catch (err) {
+      void normalizeError(err);
       logger.error(
         `[createServerAction] afterAction error in "${actionName}"`,
         { err },
@@ -196,6 +200,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
         try {
           emitMutation(eventName, { actionName, data: result.data });
         } catch (err) {
+          void normalizeError(err);
           logger.error(
             `[createServerAction] emitMutation error for "${eventName}"`,
             { err },

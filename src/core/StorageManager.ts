@@ -1,3 +1,4 @@
+import { normalizeError } from "../errors/normalize";
 /**
  * StorageManager Class — @mohasinac/core
  *
@@ -59,6 +60,7 @@ export class StorageManager {
       storage.setItem(this.generateKey(key), JSON.stringify(value));
       return true;
     } catch (error) {
+      void normalizeError(error);
       sLogger.error("StorageManager.set error", { error });
       return false;
     }
@@ -72,6 +74,7 @@ export class StorageManager {
       if (item === null) return null;
       return JSON.parse(item) as T;
     } catch (error) {
+      void normalizeError(error);
       sLogger.error("StorageManager.get error", { error });
       return null;
     }
@@ -84,6 +87,7 @@ export class StorageManager {
       storage.removeItem(this.generateKey(key));
       return true;
     } catch (error) {
+      void normalizeError(error);
       sLogger.error("StorageManager.remove error", { error });
       return false;
     }
@@ -99,6 +103,7 @@ export class StorageManager {
       });
       return true;
     } catch (error) {
+      void normalizeError(error);
       sLogger.error("StorageManager.clear error", { error });
       return false;
     }

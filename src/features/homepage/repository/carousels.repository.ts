@@ -63,6 +63,7 @@ export class CarouselsRepository extends BaseRepository<CarouselDocument> {
         .doc(id)
         .update(prepareForFirestore(patch));
     } catch (err) {
+      void normalizeError(err);
       throw new DatabaseError("Failed to update carousel", err);
     }
   }

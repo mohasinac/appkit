@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -101,6 +102,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       try {
         await apiClient.patch(ADMIN_ENDPOINTS.PRODUCT_BY_ID(id), { [field]: value });
       } catch (err) {
+        void normalizeError(err);
         setOverrides((o) => ({ ...o, [id]: { ...o[id], [field]: prev } }));
         showToast((err as Error)?.message ?? "Failed to update product.", "error");
       }

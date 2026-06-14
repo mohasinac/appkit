@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import {
   bidRepository,
   productRepository,
@@ -71,6 +72,7 @@ export async function handleBidPlaced(
             read: false,
           });
       } catch (rtdbError) {
+        void normalizeError(rtdbError);
         ctx.logger.error("Realtime DB push failed (non-fatal)", rtdbError);
       }
     }

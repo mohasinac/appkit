@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient, type ApiClientError } from "../../../http";
@@ -52,6 +53,7 @@ export function useAddToCart(options?: UseAddToCartOptions) {
       try {
         return await serverMutation.mutateAsync(data);
       } catch (err) {
+        void normalizeError(err);
         const apiErr = err as ApiClientError;
         if (apiErr?.status === 401 || apiErr?.status === 403) {
           addToGuestCart(data.productId, data.quantity, {

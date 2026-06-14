@@ -1,3 +1,4 @@
+import { normalizeError } from "../../errors/normalize";
 // appkit/src/next/middleware/chain.ts
 import type { NextRequest, NextResponse as NR } from "next/server";
 import { NextResponse } from "next/server";
@@ -107,6 +108,7 @@ export function createApiMiddleware<
         try {
           return await routeFn({} as TInput, ctx, request);
         } catch (err) {
+          void normalizeError(err);
           const message =
             err instanceof Error ? err.message : "Internal server error";
           return NextResponse.json({ error: message }, { status: 500 });

@@ -1,5 +1,5 @@
-import { normalizeError } from "../../../errors/normalize";
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 /**
  * ImageUpload — canonical image upload component for @mohasinac/feat-media.
  *

@@ -1,3 +1,4 @@
+import { normalizeError } from "../errors/normalize";
 import {
   getAnalytics,
   isSupported,
@@ -46,6 +47,7 @@ export async function initializeAnalytics(params: {
     if (!supported) return;
     analytics = getAnalytics(params.app as never);
   } catch (error) {
+    void normalizeError(error);
     analytics = null;
     logger.warn("Firebase Analytics disabled", { error });
   }
@@ -60,6 +62,7 @@ export const trackEvent = (
   try {
     logEvent(analytics, eventName, eventParams);
   } catch (error) {
+    void normalizeError(error);
     logger.error(`Failed to log event ${eventName}`, { error });
   }
 };
@@ -70,6 +73,7 @@ export const setAnalyticsUserId = (userId: string | null): void => {
   try {
     setUserId(analytics, userId);
   } catch (error) {
+    void normalizeError(error);
     logger.error("Failed to set user ID", { error });
   }
 };
@@ -82,6 +86,7 @@ export const setAnalyticsUserProperties = (
   try {
     setUserProperties(analytics, properties);
   } catch (error) {
+    void normalizeError(error);
     logger.error("Failed to set user properties", { error });
   }
 };

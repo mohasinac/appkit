@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../errors/normalize";
 import React, {
   createContext,
   useContext,
@@ -249,6 +250,7 @@ export function SessionProvider({
         const data = await apiClient.get<Partial<SessionUser>>(ep.userProfile);
         return buildSessionUser(authUser, data);
       } catch (error) {
+        void normalizeError(error);
         logger.error("Failed to fetch user profile", { error });
         return {
           uid: authUser.uid,
@@ -315,6 +317,7 @@ export function SessionProvider({
         sessionId: currentSessionId,
       });
     } catch (error) {
+      void normalizeError(error);
       logger.debug("Session activity update failed", { error });
     }
   }, [user, ep.sessionActivity]);
@@ -351,6 +354,7 @@ export function SessionProvider({
       }>(ep.sessionValidate, {});
       if (data.valid && data.sessionId) setSessionId(data.sessionId);
     } catch (error) {
+      void normalizeError(error);
       await signOutRef.current?.();
       logger.error("Session validation failed", { error });
     }
@@ -412,6 +416,7 @@ export function SessionProvider({
         if (version !== getVersion()) return;
         if (data?.sessionId) setSessionId(data.sessionId);
       } catch (error) {
+        void normalizeError(error);
         logger.error("Session creation failed", { error });
       }
     }

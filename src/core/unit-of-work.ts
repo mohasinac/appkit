@@ -1,3 +1,4 @@
+import { normalizeError } from "../errors/normalize";
 import type {
   Firestore,
   Transaction,
@@ -108,6 +109,7 @@ export class UnitOfWork {
       serverLogger.debug("[UnitOfWork] Transaction committed successfully");
       return result;
     } catch (error) {
+      void normalizeError(error);
       serverLogger.error("[UnitOfWork] Transaction failed", {
         error: error instanceof Error ? error.message : String(error),
       });
@@ -125,6 +127,7 @@ export class UnitOfWork {
       await batch.commit();
       serverLogger.debug("[UnitOfWork] Batch write committed successfully");
     } catch (error) {
+      void normalizeError(error);
       const detail = error instanceof Error ? error.message : String(error);
       serverLogger.error("[UnitOfWork] Batch write failed", { error: detail });
       throw new DatabaseError(`Batch write failed: ${detail}`, error);

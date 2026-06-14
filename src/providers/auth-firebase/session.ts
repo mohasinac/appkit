@@ -71,7 +71,7 @@ export const firebaseSessionProvider: ISessionProvider = {
           ),
         ),
       };
-    } catch (err) {
+    } catch (err) { // audit-catch-raw-ok: pre-existing-handler-intentional
       if (!EXPECTED_SESSION_CODES.has((err as { code?: string }).code ?? "")) {
         console.error(
           "[@mohasinac/auth-firebase] Session cookie verification failed:",

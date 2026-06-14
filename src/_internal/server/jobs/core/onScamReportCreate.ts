@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { userRepository } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { SCAM_TYPE_LABELS } from "../../../../features/scams/constants/scam-types";
@@ -39,6 +40,7 @@ export async function handleScamReportCreate(
         userPhone: reporter?.phoneNumber ?? undefined,
       });
     } catch (err) {
+      void normalizeError(err);
       ctx.logger.error("Failed to notify reporter (non-fatal)", err, { scammerId, reportedBy });
     }
   }
@@ -73,6 +75,7 @@ export async function handleScamReportCreate(
       ),
     );
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("Failed to query employees for scam notification (non-fatal)", err, { scammerId });
   }
 

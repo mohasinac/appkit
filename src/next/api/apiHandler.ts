@@ -1,3 +1,4 @@
+import { normalizeError } from "../../errors/normalize";
 interface SafeParseSchema<TInput> {
   safeParse: (input: unknown) =>
     | { success: true; data: TInput }
@@ -239,6 +240,7 @@ export function createApiHandlerFactory<TRole, TRateLimitConfig, TUser>(
 
         return response;
       } catch (error) {
+        void normalizeError(error);
         deps.logTiming({
           method: request.method,
           path: new URL(request.url).pathname,

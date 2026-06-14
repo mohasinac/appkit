@@ -40,7 +40,8 @@ const EXCLUDED_DIRS = new Set([
   "node_modules", "dist", ".next", "out", "__tests__", "__mocks__",
 ]);
 
-const STRICT = process.env.MIGRATE === "strict";
+// W8 — flipped to strict-zero default after the migration backlog drained.
+const STRICT = process.env.MIGRATE !== "report";
 
 function* walk(root) {
   let entries;

@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 
 import { useState, useCallback } from "react";
 import { useToast } from "../../ui";
@@ -40,6 +41,7 @@ export function useEntityDelete(opts: UseEntityDeleteOptions): UseEntityDeleteRe
         if (opts.successMessage) showToast(opts.successMessage, "success");
         opts.onSuccess?.(id);
       } catch (err) {
+        void normalizeError(err);
         const msg = opts.errorMessage ?? (err instanceof Error ? err.message : "Delete failed.");
         showToast(msg, "error");
         opts.onError?.(id, err);

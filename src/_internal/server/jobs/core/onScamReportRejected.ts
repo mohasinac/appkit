@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { userRepository } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
@@ -39,6 +40,7 @@ export async function handleScamReportRejected(
       userPhone: reporter?.phoneNumber ?? undefined,
     });
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("Failed to notify reporter of rejection (non-fatal)", err, { scammerId, reportedBy });
   }
 

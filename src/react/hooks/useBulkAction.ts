@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../errors/normalize";
 import { useState, useCallback, useRef } from "react";
 
 // ---------------------------------------------------------------------------
@@ -110,6 +111,7 @@ export function useBulkAction<
       setResult(res);
       await optionsRef.current.onSuccess?.(res, payload);
     } catch (err) {
+      void normalizeError(err);
       const error =
         err instanceof Error
           ? err

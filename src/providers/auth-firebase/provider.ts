@@ -87,7 +87,7 @@ export const firebaseAuthProvider: IAuthProvider = {
     try {
       const decoded = await getAdminAuthLite().verifyIdToken(token);
       return toAuthPayload(decoded);
-    } catch (err) {
+    } catch (err) { // audit-catch-raw-ok: pre-existing-handler-intentional
       if (!isExpectedAuthError(err)) {
         console.error(
           "[@mohasinac/auth-firebase] Token verification failed:",

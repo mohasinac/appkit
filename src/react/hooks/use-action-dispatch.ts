@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -46,6 +47,7 @@ export function useActionDispatch(options?: UseActionDispatchOptions) {
             await action.handler();
             if (action.successMessage) showToast(action.successMessage, "success");
           } catch (err) {
+            void normalizeError(err);
             showToast(
               action.errorMessage ?? (err instanceof Error ? err.message : "Something went wrong."),
               "error",

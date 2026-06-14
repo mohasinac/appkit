@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { storeRepository, userRepository } from "../../../../repositories";
 import { decryptPii } from "../../../../security/index";
 import {
@@ -49,6 +50,7 @@ async function sendAnnouncement(
       ctx.logger.error(`Announcement delivery failed for ${label} (non-fatal)`, null, { orderId });
     }
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error(`Announcement send threw for ${label} (non-fatal)`, err, { orderId });
   }
 }
@@ -72,6 +74,7 @@ async function notifyStoreOwner(
       await sendAnnouncement(ctx, ownerPhone, message, phoneNumberId, accessToken, "store-owner", orderId);
     }
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("Store owner lookup failed (non-fatal)", err, { orderId, storeId });
   }
 }

@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 /**
  * Core: media tmp cleanup.
  *
@@ -60,6 +61,7 @@ export async function runMediaTmpCleanup(ctx: JobContext): Promise<void> {
         await file.delete();
         deleted++;
       } catch (fileError: unknown) {
+        void normalizeError(fileError);
         errors++;
         const code = (fileError as { code?: number } | null)?.code;
         if (code === 404) {

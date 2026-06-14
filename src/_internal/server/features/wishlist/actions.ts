@@ -1,4 +1,5 @@
 "use server";
+import { normalizeError } from "../../../../errors/normalize";
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
@@ -59,6 +60,7 @@ export async function mergeGuestWishlistAction(
           });
           merged.push(item.productId);
         } catch (err) {
+          void normalizeError(err);
           if (err instanceof WishlistFullError) break;
         }
       }

@@ -1,5 +1,5 @@
-import { normalizeError } from "../../../errors/normalize";
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useRef, useState } from "react";
 import type {
   IClientPaymentGateway,

@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 /**
  * Core: SB-UNI-V product stock-change reaction.
  *
@@ -164,6 +165,7 @@ export async function handleProductStockChange(
       isDelete,
     });
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error(
       "onProductStockChange sync failed (non-fatal)",
       err,

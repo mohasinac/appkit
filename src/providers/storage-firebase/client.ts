@@ -1,3 +1,4 @@
+import { normalizeError } from "../../errors/normalize";
 /**
  * Firebase Client Storage Helpers
  *
@@ -98,6 +99,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
       const url = await getDownloadURL(uploadResult.ref);
       return { url, ref: uploadResult.ref, uploadResult };
     } catch (error: unknown) {
+      void normalizeError(error);
       const msg =
         error instanceof Error ? error.message : "Failed to upload file";
       throw new DatabaseError(msg, {
@@ -160,6 +162,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
     try {
       return await getDownloadURL(ref(storage, path));
     } catch (error: unknown) {
+      void normalizeError(error);
       const msg =
         error instanceof Error ? error.message : "Failed to get file URL";
       throw new DatabaseError(msg, { path });
@@ -170,6 +173,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
     try {
       await deleteObject(ref(storage, path));
     } catch (error: unknown) {
+      void normalizeError(error);
       const msg =
         error instanceof Error ? error.message : "Failed to delete file";
       throw new DatabaseError(msg, { path });
@@ -185,6 +189,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
       const result = await listAll(ref(storage, folderPath));
       return result.items;
     } catch (error: unknown) {
+      void normalizeError(error);
       const msg =
         error instanceof Error ? error.message : "Failed to list files";
       throw new DatabaseError(msg, { folderPath });

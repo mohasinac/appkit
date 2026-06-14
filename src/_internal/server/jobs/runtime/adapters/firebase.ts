@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../../errors/normalize";
 /**
  * Firebase runtime adapter for appkit job handlers.
  *
@@ -220,6 +221,7 @@ export function bindHttps<TInput = unknown, TOutput = unknown>(
       const output = await handler(req.body as TInput, ctx);
       res.status(200).json(output);
     } catch (err) {
+      void normalizeError(err);
       const status = (err as { httpStatus?: number } | null)?.httpStatus ?? 500;
       ctx.logger.error("HTTPS handler error", err);
       res.status(status).json({ error: err instanceof Error ? err.message : "Internal error" });

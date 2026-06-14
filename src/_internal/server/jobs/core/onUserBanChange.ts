@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
 
 interface BanHistoryEntry {
@@ -89,6 +90,7 @@ export async function handleUserBanChange(
     await batch.commit();
     ctx.logger.info("onUserBanChange: ban history entries written", { uid, count: entries.length });
   } catch (err) {
+    void normalizeError(err);
     ctx.logger.error("onUserBanChange: failed to write ban history (non-fatal)", err, { uid });
   }
 }

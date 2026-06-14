@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../errors/normalize";
 import { offerRepository } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
@@ -34,6 +35,7 @@ export async function runOfferExpiry(ctx: JobContext): Promise<void> {
         relatedType: "offer",
       });
     } catch (err) {
+      void normalizeError(err);
       ctx.logger.warn(`Failed to process expiry for offer ${offer.id}`, {
         error: err instanceof Error ? err.message : String(err),
       });
