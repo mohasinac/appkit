@@ -45,7 +45,16 @@ export interface PagedResult<T> {
 export interface IReadRepository<T> {
   findById(id: string): Promise<T | null>;
   findAll(query?: SieveQuery): Promise<PagedResult<T>>;
-  findWhere(field: keyof T, op: WhereOp, value: unknown): Promise<T[]>;
+  /**
+   * W6 — `value` is typed from the document shape: for scalar ops the value
+   * matches `T[K]`; for `in` / `not-in` / `array-contains-any` it accepts a
+   * `readonly T[K][]`. Callers no longer need to cast through unknown.
+   */
+  findWhere<K extends keyof T>(
+    field: K,
+    op: WhereOp,
+    value: T[K] | readonly T[K][],
+  ): Promise<T[]>;
 }
 
 // --- Write contract --------------------------------------------------------
@@ -69,9 +78,12 @@ export interface IRepository<T>
  */
 export interface IRealtimeRepository<T> extends IRepository<T> {
   subscribe(id: string, cb: (data: T | null) => void): () => void;
-  subscribeWhere(
-    field: keyof T,
-    value: unknown,
+  /**
+   * W6 — `value` is typed against the document shape; see `findWhere`.
+   */
+  subscribeWhere<K extends keyof T>(
+    field: K,
+    value: T[K] | readonly T[K][],
     cb: (items: T[]) => void,
   ): () => void;
 }
