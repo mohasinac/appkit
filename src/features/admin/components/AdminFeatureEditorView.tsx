@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Button,
   ConfirmDeleteModal,
@@ -181,7 +182,7 @@ export function AdminFeatureEditorView({
     });
   };
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: AdminFeaturePayload = {
         label,
@@ -220,7 +221,7 @@ export function AdminFeatureEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () => apiClient.delete(byIdEndpoint(featureId!)),
     onSuccess: () => {
       showToast(TOAST.DELETED, "success");

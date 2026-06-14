@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -40,7 +41,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const verifyStore = useMutation({
+  const verifyStore = useApiMutation({
     mutationFn: (storeId: string) =>
       apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { isVerified: true }),
     onSuccess: () => {
@@ -52,7 +53,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
     },
   });
 
-  const suspendStore = useMutation({
+  const suspendStore = useApiMutation({
     mutationFn: (storeId: string) =>
       apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { storeStatus: "suspended" }),
     onSuccess: () => {

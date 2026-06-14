@@ -1,0 +1,111 @@
+"use client";
+
+import * as React from "react";
+import { Div, Heading, Section, Span, Text } from "@mohasinac/appkit";
+import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";
+
+export interface MaintenanceDashboardViewProps {
+  counts: MaintenanceDashboardCounts;
+  basePath: string;
+}
+
+const card: React.CSSProperties = {
+  padding: "1rem 1.25rem",
+  border: "1px solid var(--appkit-color-border)",
+  borderRadius: 8,
+  background: "var(--appkit-color-surface)",
+};
+
+export function MaintenanceDashboardView({
+  counts,
+  basePath,
+}: MaintenanceDashboardViewProps): React.JSX.Element {
+  return (
+    <Div style={{ padding: "1.5rem", maxWidth: "1200px", margin: "0 auto" }}>
+      <Heading level={1} style={{ fontSize: "1.5rem", fontWeight: 600 }}>Maintenance</Heading>
+      <Text as="p" style={{ color: "var(--appkit-color-text-muted)", marginBottom: "1.25rem" }}>
+        Errors and failures across the platform — server, client, and Cloud Functions.
+      </Text>
+
+      <Div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "0.75rem", marginBottom: "1.5rem" }}>
+        <Div style={card}>
+          <Div style={{ fontSize: "0.78rem", color: "var(--appkit-color-text-muted)" }}>Last 24 hours</Div>
+          <Div style={{ fontSize: "1.75rem", fontWeight: 700 }}>{counts.last24h}</Div>
+        </Div>
+        <Div style={card}>
+          <Div style={{ fontSize: "0.78rem", color: "var(--appkit-color-text-muted)" }}>Last 7 days</Div>
+          <Div style={{ fontSize: "1.75rem", fontWeight: 700 }}>{counts.last7d}</Div>
+        </Div>
+        <Div style={card}>
+          <Div style={{ fontSize: "0.78rem", color: "var(--appkit-color-text-muted)" }}>Last 30 days</Div>
+          <Div style={{ fontSize: "1.75rem", fontWeight: 700 }}>{counts.last30d}</Div>
+        </Div>
+        <Div style={card}>
+          <Div style={{ fontSize: "0.78rem", color: "var(--appkit-color-text-muted)" }}>Server (Vercel)</Div>
+          <Div style={{ fontSize: "1.5rem", fontWeight: 700 }}>{counts.bySource.vercel}</Div>
+        </Div>
+        <Div style={card}>
+          <Div style={{ fontSize: "0.78rem", color: "var(--appkit-color-text-muted)" }}>Client</Div>
+          <Div style={{ fontSize: "1.5rem", fontWeight: 700 }}>{counts.bySource.client}</Div>
+        </Div>
+        <Div style={card}>
+          <Div style={{ fontSize: "0.78rem", color: "var(--appkit-color-text-muted)" }}>Cloud Functions</Div>
+          <Div style={{ fontSize: "1.5rem", fontWeight: 700 }}>{counts.bySource.function}</Div>
+        </Div>
+      </Div>
+
+      <Section style={{ marginBottom: "1.5rem" }}>
+        <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600 }}>Top codes (30d)</Heading>
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {counts.topCodes.length === 0 ? <li style={{ color: "var(--appkit-color-text-muted)" }}>No errors recorded.</li> :
+            counts.topCodes.map((c) => (
+              <li key={c.code} style={{ display: "flex", justifyContent: "space-between", padding: "0.25rem 0", borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
+                <Span style={{ fontFamily: "monospace" }}>{c.code}</Span>
+                <Span>{c.count}</Span>
+              </li>
+            ))}
+        </ul>
+      </Section>
+
+      <Section style={{ marginBottom: "1.5rem" }}>
+        <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600 }}>Top routes (30d)</Heading>
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {counts.topRoutes.length === 0 ? <li style={{ color: "var(--appkit-color-text-muted)" }}>No errors recorded.</li> :
+            counts.topRoutes.map((r) => (
+              <li key={`${r.source}:${r.route}`} style={{ display: "flex", justifyContent: "space-between", padding: "0.25rem 0", borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
+                <Span style={{ fontFamily: "monospace" }}>[{r.source}] {r.route}</Span>
+                <Span>{r.count}</Span>
+              </li>
+            ))}
+        </ul>
+      </Section>
+
+      <nav style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem" }}>
+        <a href={`${basePath}/server-errors`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+          <Span weight="bold">Server errors</Span>
+          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Vercel function failures</Div>
+        </a>
+        <a href={`${basePath}/client-errors`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+          <Span weight="bold">Client errors</Span>
+          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>window.onerror + unhandledrejection + boundaries</Div>
+        </a>
+        <a href={`${basePath}/function-errors`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+          <Span weight="bold">Function errors</Span>
+          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Cloud Functions handler exceptions</Div>
+        </a>
+        <a href={`${basePath}/cloud-logs`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+          <Span weight="bold">Cloud Logging</Span>
+          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Live stream from Cloud Logging API</Div>
+        </a>
+        <a href={`${basePath}/payment-rollbacks`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+          <Span weight="bold">Payment rollbacks</Span>
+          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Razorpay refund + upstream-unavailable rows</Div>
+        </a>
+        <a href={`${basePath}/analysis`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+          <Span weight="bold">Analysis</Span>
+          <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Run the maintenance analyzer + recommendations</Div>
+        </a>
+      </nav>
+    </Div>
+  );
+}

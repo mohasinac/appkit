@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
   Button,
@@ -190,7 +191,7 @@ export function AdminFeatureFlagsView({
       categoryTypes: { ...(prev.categoryTypes as Record<string, boolean> ?? {}), [key]: val },
     }));
 
-  const saveFlags = useMutation({
+  const saveFlags = useApiMutation({
     mutationFn: async () => {
       await apiClient.put(ADMIN_ENDPOINTS.FEATURE_FLAGS, { flags, rollouts });
     },

@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Div,
@@ -124,7 +125,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: ["user", "support-tickets"] });
 
-  const createMutation = useMutation({
+  const createMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.post(SUPPORT_ENDPOINTS.TICKETS, {
         subject: newSubject.trim(),
@@ -147,7 +148,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
     },
   });
 
-  const replyMutation = useMutation({
+  const replyMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.post(
         SUPPORT_ENDPOINTS.TICKET_MESSAGES(selectedTicket!.id),

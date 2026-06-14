@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation } from "@tanstack/react-query";
+
 import { Button, Div, Form, Input, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -21,7 +22,7 @@ export function CategoryQuickCreateForm({ onSaved, onCancel }: CategoryQuickCrea
   const [isActive, setIsActive] = React.useState(true);
   const { showToast } = useToast();
 
-  const mutation = useMutation({
+  const mutation = useApiMutation({
     mutationFn: async () =>
       apiClient.post(ADMIN_ENDPOINTS.CATEGORIES, {
         name,

@@ -1,6 +1,7 @@
 "use client"
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   getClientRealtimeProvider,
   type IClientRealtimeProvider,
@@ -137,7 +138,7 @@ export function useChatRooms() {
 }
 
 export function useCreateChatRoom() {
-  return useMutation({
+  return useApiMutation({
     mutationFn: (data: { orderId: string; ownerId: string }) =>
       apiClient
         .post<{ room: unknown }>(CHAT_ENDPOINTS.LIST, data)
@@ -146,7 +147,7 @@ export function useCreateChatRoom() {
 }
 
 export function useDeleteChatRoom() {
-  return useMutation({
+  return useApiMutation({
     mutationFn: (chatId: string) =>
       apiClient.delete(CHAT_ENDPOINTS.BY_ID(chatId)),
   });

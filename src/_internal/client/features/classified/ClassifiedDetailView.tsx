@@ -64,8 +64,17 @@ export function ClassifiedDetailView({
     setPending(true);
     setError(null);
     try {
-      const conv = await onContactSeller({ productId: product!.id });
-      setConversation(conv);
+      const result = await onContactSeller({ productId: product!.id });
+      // ActionResult envelope — unwrap or surface
+      if (result && typeof result === "object" && "ok" in result) {
+        if (result.ok) {
+          setConversation((result as { ok: true; data: typeof conversation }).data);
+        } else {
+          setError((result as { ok: false; error: string }).error);
+        }
+      } else {
+        setConversation(result as typeof conversation);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {

@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
   Button,
@@ -50,7 +51,7 @@ export function AdminSiteView({
     setAnnouncementMessage(data.announcementBar?.message ?? "");
   }, [data]);
 
-  const saveAnnouncement = useMutation({
+  const saveAnnouncement = useApiMutation({
     mutationFn: async () => {
       await apiClient.patch(SITE_SETTINGS_ENDPOINTS.GET, {
         announcementBar: {

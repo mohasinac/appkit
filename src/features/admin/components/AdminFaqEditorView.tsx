@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
@@ -118,7 +119,7 @@ export function AdminFaqEditorView({
   };
 
   // --- save ---
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: Record<string, unknown> = {
         question,
@@ -149,7 +150,7 @@ export function AdminFaqEditorView({
   });
 
   // --- delete ---
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.FAQ_BY_ID(faqId!)),
     onSuccess: () => {
       showToast("FAQ deleted.", "success");

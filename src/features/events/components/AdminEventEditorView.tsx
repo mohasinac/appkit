@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Alert,
   Button,
@@ -418,7 +419,7 @@ export function AdminEventEditorView({
   }, [eventQuery.data]);
 
   // --- save ---
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: Record<string, unknown> = {
         type: draft.type,
@@ -451,7 +452,7 @@ export function AdminEventEditorView({
   });
 
   // --- raffle trigger ---
-  const triggerRaffleMutation = useMutation({
+  const triggerRaffleMutation = useApiMutation({
     mutationFn: async () => {
       if (!eventId) throw new Error("Save the event before triggering");
       return apiClient.post<{ data: { raffleWinnerDisplayName?: string; raffleEntryCount?: number } }>(

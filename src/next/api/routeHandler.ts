@@ -1,9 +1,21 @@
 /**
  * createRouteHandler — provider-aware API route handler factory for feat-* packages.
  *
- * Works like letitrip.in's local `createApiHandler` but uses `getProviders().session`
- * for auth instead of a hardwired Firebase Admin call. This makes it portable across
- * all consumer projects that register an `ISessionProvider`.
+ * Owns:
+ *  - Auth (session cookie verify via the registered ISessionProvider).
+ *  - Role + permission gates (admin bypass; employee fine-grained via rbac provider).
+ *  - Body parsing (strict JSON; Zod safe-parse when schema is provided).
+ *  - Default public Cache-Control on unauthenticated GET success responses.
+ *  - The uniform error envelope `{ ok, code, error, issues?, requestId }`.
+ *  - Persisted server-error log (writes 5xx + selected 4xx to `serverErrors`).
+ *
+ * Body parsing rules (workstream 1):
+ *  - With `schema`: body is parsed and safe-parsed once; failure → 400 VALIDATION_FAILED.
+ *  - Without `schema`, default behavior is "no body expected". Set `bodyOptional: true`
+ *    to opt into accepting an empty body for PATCH/DELETE without content. Use
+ *    `bodyRequired: true` to demand a body (raw JSON parse error → 400).
+ *  - The `.catch(() => ({}))` pattern in callers is BANNED. The wrapper handles
+ *    parse errors uniformly so callers receive a parsed value or never reach the handler.
  *
  * @example
  * ```ts
@@ -19,6 +31,8 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../contracts";
 import { isAdminUser } from "../../features/auth/role-predicates";
+import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
+import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
 
 /** Minimal schema interface compatible with Zod v3 and v4. */
 interface ParseableSchema<TOutput> {
@@ -41,33 +55,24 @@ interface RouteHandlerOptions<
   TInput = unknown,
   TParams = Record<string, string>,
 > {
-  /** Require a valid session cookie. Implied when `roles` is set. */
   auth?: boolean;
-  /**
-   * Read the session cookie if present and attach the user, but do not
-   * require authentication. Useful for routes that serve both anonymous
-   * and authenticated callers (e.g. public event participation).
-   */
   authOptional?: boolean;
-  /**
-   * If provided, the verified user's `role` must be in this list.
-   * Implies `auth: true`.
-   */
   roles?: readonly string[];
-  /**
-   * Fine-grained permission required for this route.
-   * When set: also allows `"employee"` role through the role check, then
-   * verifies the permission via the registered `rbac` provider.
-   * Admin role always bypasses. Requires `rbac` provider to be registered.
-   * Implies `auth: true`.
-   */
   permission?: string;
-  /** Zod schema to validate + parse the JSON request body. */
   schema?: ParseableSchema<TInput>;
   /**
-   * Response cache policy for unauthenticated GET routes.
-   * Use `false` to disable default public cache headers.
+   * When `true`, the wrapper allows requests with no body or empty/malformed body
+   * to reach the handler (body will be `undefined`). Only valid when `schema` is
+   * not set. The default is "no body parsing attempted" — handlers that need a body
+   * MUST use `schema`. This option exists for genuine no-content PATCH/DELETE routes.
    */
+  bodyOptional?: boolean;
+  /**
+   * When `true`, requires a parseable JSON body even without a schema. Raw JSON
+   * parse failure → 400 VALIDATION_FAILED. Mutually exclusive with `bodyOptional`.
+   * Useful for routes that accept arbitrary JSON forwarded to a downstream service.
+   */
+  bodyRequired?: boolean;
   cache?:
     | false
     | {
@@ -75,12 +80,12 @@ interface RouteHandlerOptions<
         sMaxAge?: number;
         staleWhileRevalidate?: number;
       };
-  /** Route handler. `user` is present when `auth: true`. */
   handler: (ctx: {
     request: Request;
     user?: RouteUser;
     body?: TInput;
     params?: TParams;
+    requestId: string;
   }) => Promise<Response>;
 }
 
@@ -95,17 +100,12 @@ function buildPublicCacheControl(policy?: {
   return `public, max-age=${maxAge}, s-maxage=${sMaxAge}, stale-while-revalidate=${staleWhileRevalidate}`;
 }
 
-/** Read the `__session` HTTP-only cookie from request headers. */
 function readSessionCookie(request: Request): string | null {
   const cookieHeader = request.headers.get("cookie") ?? "";
   const match = cookieHeader.match(/(?:^|;\s*)__session=([^;]+)/);
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-/**
- * Verify the session cookie using `getProviders().session`.
- * Returns a `RouteUser` on success, or throws for invalid credentials.
- */
 async function verifySession(request: Request): Promise<RouteUser> {
   const { session } = getProviders();
   if (!session) {
@@ -133,20 +133,83 @@ async function verifySession(request: Request): Promise<RouteUser> {
   }
 }
 
+/** RFC4122-ish v4 ID without taking a dep on the runtime crypto module. */
+function generateRequestId(): string {
+  if (typeof globalThis.crypto?.randomUUID === "function") {
+    return globalThis.crypto.randomUUID();
+  }
+  // Fallback for older runtimes — short random hex
+  return `req_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+}
+
+/** Persisted-log codes that warrant a serverErrors row even when status < 500. */
+const LOG_AS_INCIDENT_CODES = new Set<string>([
+  HTTP_ERROR_CODES.INTERNAL,
+  HTTP_ERROR_CODES.UPSTREAM_UNAVAILABLE,
+  HTTP_ERROR_CODES.CONCURRENT_MODIFICATION,
+  HTTP_ERROR_CODES.PRECONDITION_FAILED,
+  HTTP_ERROR_CODES.UNAVAILABLE,
+  HTTP_ERROR_CODES.PAYMENT_ROLLBACK_ATTEMPTED,
+  HTTP_ERROR_CODES.PAYMENT_ROLLBACK_FAILED,
+]);
+
+function shouldPersist(status: number, code: string): boolean {
+  if (status >= 500) return true;
+  return LOG_AS_INCIDENT_CODES.has(code);
+}
+
 /**
- * Create a typed Next.js App Router handler with built-in auth + Zod validation.
+ * Emit a uniform error envelope. Currently emits BOTH `ok` (new canonical) and
+ * `success` (deprecated, kept until the 211-fetch sweep finishes) so consumers
+ * that still read `body.success` don't break mid-migration. The
+ * audit-server-action-envelope.mjs script in workstream 6 will fail CI as
+ * soon as every consumer is updated, after which `success` is removed from
+ * this helper and the audit re-runs to enforce the cleanup.
  */
+function errorJson(
+  status: number,
+  code: string,
+  message: string,
+  requestId: string,
+  issues?: unknown[],
+): Response {
+  return NextResponse.json(
+    {
+      ok: false,
+      success: false, // deprecated — for compat during the migration sweep
+      code,
+      error: message,
+      ...(issues ? { issues } : {}),
+      requestId,
+    },
+    { status, headers: { "X-Request-Id": requestId } },
+  );
+}
+
 export function createRouteHandler<
   TInput = unknown,
   TParams = Record<string, string>,
 >(options: RouteHandlerOptions<TInput, TParams>) {
+  if (options.bodyOptional && options.bodyRequired) {
+    throw new Error(
+      "createRouteHandler: bodyOptional and bodyRequired are mutually exclusive",
+    );
+  }
+  if (options.schema && options.bodyOptional) {
+    throw new Error(
+      "createRouteHandler: bodyOptional is invalid when schema is set (schema is always required)",
+    );
+  }
+
   return async (
     request: Request,
     context: { params: Promise<TParams> },
   ): Promise<Response> => {
+    const requestId = generateRequestId();
+    let user: RouteUser | undefined;
+
     try {
       // -- Auth --------------------------------------------------------------
-      let user: RouteUser | undefined;
       const needsAuth =
         options.auth ||
         (options.roles && options.roles.length > 0) ||
@@ -158,11 +221,11 @@ export function createRouteHandler<
         try {
           user = await verifySession(request);
         } catch {
-          // No valid session — continue as anonymous
+          // anonymous
         }
       }
 
-      // Role check — when `permission` is set, also allow "employee" through
+      // -- Role check --------------------------------------------------------
       const effectiveRoles = options.roles
         ? options.permission
           ? [...new Set([...options.roles, "employee"])]
@@ -173,10 +236,7 @@ export function createRouteHandler<
 
       if (effectiveRoles.length > 0) {
         if (!user || !effectiveRoles.includes(user.role ?? "")) {
-          return NextResponse.json(
-            { success: false, error: "Insufficient permissions" },
-            { status: 403 },
-          );
+          return errorJson(403, HTTP_ERROR_CODES.FORBIDDEN, "Insufficient permissions", requestId);
         }
       }
 
@@ -184,47 +244,51 @@ export function createRouteHandler<
       if (options.permission && user && !isAdminUser(user)) {
         const { rbac } = getProviders();
         if (!rbac) {
-          return NextResponse.json(
-            { success: false, error: "RBAC provider not configured" },
-            { status: 503 },
-          );
+          return errorJson(503, HTTP_ERROR_CODES.UNAVAILABLE, "RBAC provider not configured", requestId);
         }
         const perms = await rbac.getPermissions(user.uid);
         if (!perms.includes(options.permission)) {
-          return NextResponse.json(
-            { success: false, error: "Insufficient permissions" },
-            { status: 403 },
-          );
+          return errorJson(403, HTTP_ERROR_CODES.PERMISSION_DENIED, "Insufficient permissions", requestId);
         }
       }
 
-      // -- Body validation ---------------------------------------------------
+      // -- Body parsing ------------------------------------------------------
       let body: TInput | undefined;
       if (options.schema) {
         let raw: unknown;
         try {
           raw = await request.json();
         } catch {
-          return NextResponse.json(
-            { success: false, error: "Invalid JSON body" },
-            { status: 400 },
-          );
+          return errorJson(400, HTTP_ERROR_CODES.VALIDATION_FAILED, "Invalid JSON body", requestId);
         }
         const result = options.schema.safeParse(raw);
         if (!result.success) {
-          return NextResponse.json(
-            {
-              success: false,
-              error: "Validation failed",
-              issues: result.error.issues ?? [],
-            },
-            { status: 400 },
+          return errorJson(
+            400,
+            HTTP_ERROR_CODES.VALIDATION_FAILED,
+            "Validation failed",
+            requestId,
+            result.error.issues ?? [],
           );
         }
         body = result.data;
+      } else if (options.bodyRequired) {
+        try {
+          body = (await request.json()) as TInput;
+        } catch {
+          return errorJson(400, HTTP_ERROR_CODES.VALIDATION_FAILED, "Invalid JSON body", requestId);
+        }
+      } else if (options.bodyOptional) {
+        // Best-effort parse; tolerate empty/malformed body.
+        try {
+          const text = await request.text();
+          body = text ? (JSON.parse(text) as TInput) : undefined;
+        } catch {
+          body = undefined;
+        }
       }
 
-      // -- Params ------------------------------------------------------------
+      // -- Params + handler --------------------------------------------------
       const params = context?.params ? await context.params : undefined;
 
       const response = await options.handler({
@@ -232,10 +296,16 @@ export function createRouteHandler<
         user,
         body,
         params: params as TParams | undefined,
+        requestId,
       });
 
+      // Always tag the response with the request id for traceability.
+      response.headers.set("X-Request-Id", requestId);
+
+      // -- Default public cache (unauth GET success) -------------------------
       const hasCredentialHeaders =
-        !!request.headers.get("authorization") || !!request.headers.get("cookie");
+        !!request.headers.get("authorization") ||
+        !!request.headers.get("cookie");
       const canApplyDefaultPublicCache =
         request.method === "GET" &&
         !needsAuth &&
@@ -246,30 +316,52 @@ export function createRouteHandler<
         !response.headers.has("Cache-Control");
 
       if (canApplyDefaultPublicCache) {
-        const policy = typeof options.cache === "object" ? options.cache : undefined;
-        response.headers.set("Cache-Control", buildPublicCacheControl(policy));
+        const policy =
+          typeof options.cache === "object" ? options.cache : undefined;
+        response.headers.set(
+          "Cache-Control",
+          buildPublicCacheControl(policy),
+        );
       }
 
       return response;
     } catch (err: unknown) {
-      const e = err as { status?: unknown; statusCode?: unknown };
-      const status =
-        typeof e?.statusCode === "number"
-          ? (e.statusCode as number)
-          : typeof e?.status === "number"
-            ? (e.status as number)
-            : 500;
-      const message =
-        err instanceof Error ? err.message : "Internal server error";
+      const mapped = mapToHttpError(err, {
+        isProduction: process.env.NODE_ENV === "production",
+      });
 
-      // 401/403 are expected for protected routes and should not be error-noisy.
-      if (status >= 500) {
-        console.error(`[createRouteHandler] ${request.method} failed`, err);
-      } else if (status >= 400 && status !== 401 && status !== 403) {
-        console.warn(`[createRouteHandler] ${request.method} failed (${status})`, err);
+      // -- Persisted log (5xx + selected 4xx) --------------------------------
+      if (shouldPersist(mapped.status, mapped.code)) {
+        void serverErrorsRepository().record({
+          source: "vercel",
+          route: new URL(request.url).pathname,
+          method: request.method,
+          ...(user?.uid ? { userId: user.uid } : {}),
+          code: mapped.code,
+          message: mapped.message,
+          stack: err instanceof Error ? err.stack : undefined,
+          requestId,
+          userAgent: request.headers.get("user-agent") ?? undefined,
+        });
       }
 
-      return NextResponse.json({ success: false, error: message }, { status });
+      // -- console-side surface ---------------------------------------------
+      if (mapped.status >= 500) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `[createRouteHandler] ${request.method} ${new URL(request.url).pathname} failed [${requestId}]`,
+          err,
+        );
+      } else if (mapped.status >= 400 && mapped.status !== 401 && mapped.status !== 403) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[createRouteHandler] ${request.method} ${new URL(request.url).pathname} failed (${mapped.status}) [${requestId}]`,
+          mapped.code,
+          mapped.message,
+        );
+      }
+
+      return errorJson(mapped.status, mapped.code, mapped.message, requestId, mapped.issues);
     }
   };
 }

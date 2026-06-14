@@ -1,4 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
+import { useApiMutation } from "@mohasinac/appkit/client";
+
 import { apiClient } from "../../../http";
 
 export type CopilotFeedback = "positive" | "negative";
@@ -17,7 +18,7 @@ export interface UseCopilotFeedbackOptions {
 export function useCopilotFeedback({
   feedbackEndpoint,
 }: UseCopilotFeedbackOptions) {
-  return useMutation({
+  return useApiMutation({
     mutationFn: async ({
       logId,
       feedback,

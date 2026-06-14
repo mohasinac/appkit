@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Div,
@@ -140,7 +141,7 @@ export function AdminSupportTicketDetailView({
     return out;
   }, [parties]);
 
-  const updateMutation = useMutation({
+  const updateMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
         status,
@@ -160,7 +161,7 @@ export function AdminSupportTicketDetailView({
     },
   });
 
-  const replyMutation = useMutation({
+  const replyMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.post(
         `/api/support/tickets/${ticketId!}/messages`,
@@ -185,7 +186,7 @@ export function AdminSupportTicketDetailView({
   const linkedStoreId = parties.storeId?.trim();
   const isStoreChangeRequest = category === "store_change_request";
 
-  const applyStoreChange = useMutation({
+  const applyStoreChange = useApiMutation({
     mutationFn: async () => {
       if (!linkedStoreId) throw new Error("No linked store on this ticket.");
       await apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(linkedStoreId), {
@@ -219,7 +220,7 @@ export function AdminSupportTicketDetailView({
   const isOrderModificationRequest =
     category === "order_modification_request" || category === "order_issue";
 
-  const loadOrderItems = useMutation({
+  const loadOrderItems = useApiMutation({
     mutationFn: async () => {
       if (!linkedOrderId) throw new Error("No linked order on this ticket.");
       const res = await apiClient.get<{
@@ -246,7 +247,7 @@ export function AdminSupportTicketDetailView({
   const linkedUserId = parties.userId?.trim();
   const isUnbanRequest = category === "unban_request";
 
-  const liftHardBan = useMutation({
+  const liftHardBan = useApiMutation({
     mutationFn: async () => {
       if (!linkedUserId) throw new Error("No linked user on this ticket.");
       await apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(linkedUserId), {});
@@ -268,7 +269,7 @@ export function AdminSupportTicketDetailView({
     },
   });
 
-  const liftSoftBanTickets = useMutation({
+  const liftSoftBanTickets = useApiMutation({
     mutationFn: async () => {
       if (!linkedUserId) throw new Error("No linked user on this ticket.");
       await apiClient.delete(
@@ -292,7 +293,7 @@ export function AdminSupportTicketDetailView({
     },
   });
 
-  const applyOrderItems = useMutation({
+  const applyOrderItems = useApiMutation({
     mutationFn: async () => {
       if (!linkedOrderId) throw new Error("No linked order on this ticket.");
       // Recalculate totalPrice per line from quantity × unitPrice so qty edits

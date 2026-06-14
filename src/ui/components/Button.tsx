@@ -4,6 +4,8 @@ import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
 import { Loader2 } from "lucide-react";
 import type { ActionDef } from "../../_internal/shared/actions/action-registry";
+import { surfaceError } from "../../client/api/surface-error";
+import { useToastSafe } from "./Toast";
 
 function spawnRipple(host: HTMLElement, clientX: number, clientY: number) {
   const rect = host.getBoundingClientRect();
@@ -93,6 +95,42 @@ export function Button({
   );
 
   const userOnClick = props.onClick;
+  const toast = useToastSafe();
+
+  // Wrap the user's onClick so async rejections never escape silently. Errors
+  // route through surfaceError (toast / inline / report). Sync errors re-throw
+  // so framework error boundaries still see them; only Promise rejections are
+  // intercepted (we can't await sync handlers from inside React's event path).
+  const wrapAsync = useCallback(
+    (fn: ((e: React.MouseEvent<HTMLButtonElement>) => unknown) | undefined) =>
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (!fn) return;
+        let returned: unknown;
+        try {
+          returned = fn(event);
+        } catch (err) {
+          // Sync throw: route through surfaceError if possible, else re-throw
+          if (toast) {
+            surfaceError(err, { showToast: toast.showToast });
+            return;
+          }
+          throw err;
+        }
+        if (returned && typeof (returned as Promise<unknown>).then === "function") {
+          (returned as Promise<unknown>).catch((err: unknown) => {
+            if (toast) {
+              surfaceError(err, { showToast: toast.showToast });
+              return;
+            }
+            // No toast provider mounted — let the error bubble.
+            // eslint-disable-next-line no-console
+            console.error("[Button] unhandled async onClick rejection", err);
+          });
+        }
+      },
+    [toast],
+  );
+
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       if (!disabled && !isLoading) {
@@ -103,17 +141,17 @@ export function Button({
         setConfirmOpen(true);
         return;
       }
-      userOnClick?.(event);
+      wrapAsync(userOnClick)(event);
     },
-    [disabled, isLoading, action, userOnClick],
+    [disabled, isLoading, action, userOnClick, wrapAsync],
   );
 
   const handleConfirm = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setConfirmOpen(false);
-      userOnClick?.(event);
+      wrapAsync(userOnClick)(event);
     },
-    [userOnClick],
+    [userOnClick, wrapAsync],
   );
 
   if (asChild && React.isValidElement(resolvedChildren)) {

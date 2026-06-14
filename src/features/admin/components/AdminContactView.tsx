@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -54,7 +55,7 @@ export function AdminContactView({
   const [selectedRow, setSelectedRow] = useState<ContactRow | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const actionMutation = useMutation({
+  const actionMutation = useApiMutation({
     mutationFn: async ({ id, action }: { id: string; action: "read" | "resolved" }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.CONTACT_SUBMISSION_BY_ID(id), { action });
     },
@@ -67,7 +68,7 @@ export function AdminContactView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.CONTACT_SUBMISSION_BY_ID(id));
     },

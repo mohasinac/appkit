@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FilterChipGroup, Label, ListingLayout, Modal, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -46,7 +47,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
   const [replyTarget, setReplyTarget] = useState<ReviewRow | null>(null);
   const [replyText, setReplyText] = useState("");
 
-  const patchMutation = useMutation({
+  const patchMutation = useApiMutation({
     mutationFn: async ({ id, payload }: { id: string; payload: Record<string, unknown> }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.REVIEW_BY_ID(id), payload);
     },
@@ -59,7 +60,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
     },
   });
 
-  const replyMutation = useMutation({
+  const replyMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.REVIEW_BY_ID(replyTarget!.id), { adminReply: replyText });
     },

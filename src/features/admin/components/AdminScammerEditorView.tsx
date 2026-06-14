@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Code,
@@ -80,7 +81,7 @@ export function AdminScammerEditorView({
     }
   }, [open, currentStatus, verificationNote]);
 
-  const updateMutation = useMutation({
+  const updateMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.SCAMMER_BY_ID(scammerId!), {
         status,
@@ -97,7 +98,7 @@ export function AdminScammerEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.delete(ADMIN_ENDPOINTS.SCAMMER_BY_ID(scammerId!));
     },

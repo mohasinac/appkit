@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -310,7 +311,7 @@ export function AdminUserEditorView({
 
   // --- Mutations ------------------------------------------------------------
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       // ST-2 — build publicProfile partial only when something changed; keeps
       // the PATCH payload minimal and avoids overwriting unrelated subkeys.
@@ -345,7 +346,7 @@ export function AdminUserEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.delete(ADMIN_ENDPOINTS.USER_BY_ID(userId!));
     },
@@ -360,7 +361,7 @@ export function AdminUserEditorView({
     },
   });
 
-  const hardBanMutation = useMutation({
+  const hardBanMutation = useApiMutation({
     mutationFn: async (reason: string) => {
       await apiClient.post(ADMIN_ENDPOINTS.USER_HARD_BAN(userId!), { reason });
     },
@@ -376,7 +377,7 @@ export function AdminUserEditorView({
     },
   });
 
-  const unbanMutation = useMutation({
+  const unbanMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(userId!), {});
     },
@@ -390,7 +391,7 @@ export function AdminUserEditorView({
     },
   });
 
-  const softBanMutation = useMutation({
+  const softBanMutation = useApiMutation({
     mutationFn: async (payload: { action: string; reason: string; expiresAt?: string }) => {
       await apiClient.post(ADMIN_ENDPOINTS.USER_SOFT_BAN(userId!), payload);
     },
@@ -407,7 +408,7 @@ export function AdminUserEditorView({
     },
   });
 
-  const liftSoftBanMutation = useMutation({
+  const liftSoftBanMutation = useApiMutation({
     mutationFn: async (action: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.USER_SOFT_BAN_LIFT(userId!, action));
     },

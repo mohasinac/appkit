@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useApiMutation } from "@mohasinac/appkit/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -42,7 +43,7 @@ export function useUpdateCurrentProfile(options?: {
   const queryClient = useQueryClient();
   const endpoint = options?.endpoint ?? ACCOUNT_ENDPOINTS.PROFILE;
 
-  return useMutation({
+  return useApiMutation({
     mutationFn: (data: UpdateCurrentProfileInput) =>
       apiClient.patch(endpoint, data),
     onSuccess: async (data) => {

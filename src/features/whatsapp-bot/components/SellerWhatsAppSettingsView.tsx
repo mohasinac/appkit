@@ -1,5 +1,6 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 
 const __P = {
@@ -11,7 +12,7 @@ const __O = {
 } as const;
 
 const CLS_SECTION_CARD = "border border-zinc-200 dark:border-zinc-700 rounded-xl p-5";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { WHATSAPP_SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -166,7 +167,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   }, [cfg]);
 
   // Save mutation
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: Record<string, unknown> = {
         catalogSyncEnabled: syncEnabled,
@@ -189,7 +190,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   });
 
   // Catalog sync mutation (push: site → WhatsApp)
-  const syncMutation = useMutation({
+  const syncMutation = useApiMutation({
     mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_SYNC, {}),
     onSuccess: (res: unknown) => {
       const r = (res as any) ?? {};
@@ -206,7 +207,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   });
 
   // Catalog import mutation (pull: WhatsApp → site)
-  const importMutation = useMutation({
+  const importMutation = useApiMutation({
     mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_IMPORT, {}),
     onSuccess: (res: unknown) => {
       const r = (res as any) ?? {};

@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   FilterChipGroup,
@@ -51,7 +52,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const markPaid = useMutation({
+  const markPaid = useApiMutation({
     mutationFn: () => {
       if (!selectedPayoutId) throw new Error("No payout selected");
       return apiClient.patch(ADMIN_ENDPOINTS.PAYOUT_BY_ID(selectedPayoutId), {

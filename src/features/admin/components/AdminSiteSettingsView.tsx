@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Div, Form, FormActions, Grid, Input, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
 import type { SelectOption } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
@@ -349,7 +350,7 @@ export function AdminSiteSettingsView({
   }, [data]);
 
   function useSave(group: string, payload: () => Record<string, unknown>) {
-    return useMutation({
+    return useApiMutation({
       mutationFn: async () => {
         await apiClient.put(ADMIN_ENDPOINTS.ADMIN_SITE, payload());
       },

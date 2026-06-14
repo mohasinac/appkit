@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, Div, Form, FormActions, Label, Select, SideDrawer, Span, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -195,7 +196,7 @@ export function AdminEmployeeEditorView({
     });
   };
 
-  const inviteMutation = useMutation({
+  const inviteMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.post(ADMIN_ENDPOINTS.TEAM, {
         email: email.trim(),
@@ -213,7 +214,7 @@ export function AdminEmployeeEditorView({
     },
   });
 
-  const updateMutation = useMutation({
+  const updateMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.put(ADMIN_ENDPOINTS.TEAM_MEMBER(userId!), {
         permissionGroup: group,
@@ -230,7 +231,7 @@ export function AdminEmployeeEditorView({
     },
   });
 
-  const revokeMutation = useMutation({
+  const revokeMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.delete(ADMIN_ENDPOINTS.TEAM_MEMBER(userId!));
     },

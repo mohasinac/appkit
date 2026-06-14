@@ -2,6 +2,67 @@
 // isAuthError - Pure util — detects auth errors from caught exceptions (usable in server actions).
 export { isAuthError } from "./utils/auth-error";
 
+// [SERVER-ONLY] safeRead — wraps optional reads whose failure must not break a page.
+// Persists DEGRADED_READ rows via the installed reporter; returns typed fallback on error.
+export {
+  safeRead,
+  installDegradedReadReporter,
+} from "./errors/safe-read";
+export type { DegradedReadReport } from "./errors/safe-read";
+
+// [SERVER-ONLY] serverErrorsRepository — Firestore-backed persistent log for 5xx + selected 4xx.
+// Used by routeHandler, wrapJobHandler (workstream 14), and the safeRead reporter.
+export {
+  ServerErrorsRepository,
+  serverErrorsRepository,
+} from "./features/server-errors/repository/server-errors.repository";
+export {
+  SERVER_ERRORS_COLLECTION,
+  SERVER_ERROR_FIELDS,
+  SERVER_ERROR_STACK_MAX_BYTES,
+  SERVER_ERROR_RETENTION_DAYS,
+} from "./features/server-errors/schemas/firestore";
+export type {
+  ServerErrorDocument,
+  ServerErrorSource,
+} from "./features/server-errors/schemas/firestore";
+
+// [SERVER-ONLY] ActionResult envelope + wrapAction helper for "use server" functions.
+// Mirrors the routeHandler envelope so client wrappers consume both surfaces uniformly.
+export {
+  wrapAction,
+  isOk,
+  unwrap,
+} from "./_internal/shared/types/action-result";
+export type { ActionResult } from "./_internal/shared/types/action-result";
+
+// [SERVER-ONLY] Cloud Function handler wrappers — persist exceptions to
+// serverErrors (source: "function") before re-throwing so retry semantics
+// are preserved. Apply at the consumer's runtime adapter boundary.
+export {
+  wrapJobHandler,
+  wrapScheduleHandler,
+  wrapTriggerHandler,
+  wrapCallableHandler,
+} from "./_internal/server/jobs/core/wrapJobHandler";
+
+// [SERVER-ONLY] Log analysis — shared by CLI (`scripts/analyze-logs.mjs`) and
+// the `/admin/maintenance/analysis` admin route.
+export { analyzeLogs } from "./_internal/server/features/maintenance/analyze";
+export type {
+  AnalyzeOptions,
+  AnalyzeReport,
+} from "./_internal/server/features/maintenance/analyze";
+
+// [SERVER-ONLY] Maintenance data loaders for /admin/maintenance/* server components.
+export {
+  listServerErrors,
+  getServerErrorById,
+  findRelatedClientErrors,
+  getMaintenanceDashboardCounts,
+} from "./_internal/server/features/maintenance/data";
+export type { MaintenanceDashboardCounts } from "./_internal/server/features/maintenance/data";
+
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ADDRESS_FIXTURES - Constant used across modules.
 export { ADDRESS_FIXTURES } from "./seed/index";

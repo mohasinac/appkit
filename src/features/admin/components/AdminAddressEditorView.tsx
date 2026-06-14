@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Button,
   Card,
@@ -116,7 +117,7 @@ export function AdminAddressEditorView({
     },
   });
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: AddressPayload = {
         ...form,
@@ -138,7 +139,7 @@ export function AdminAddressEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.ADDRESS_BY_ID(addressId!)),
     onSuccess: () => {
       showToast("Address deleted.", "success");

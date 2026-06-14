@@ -283,23 +283,31 @@ async function flushCouponUsageAccumulator(
   uid: string,
 ): Promise<void> {
   if (accumulator.size === 0) return;
-  Promise.all(
-    [...accumulator.values()].map(async ({ couponId, code, orderIds: ids, totalDiscount }) => {
-      await couponsRepository.applyCoupon(couponId, code, uid, ids, totalDiscount);
-      try {
-        const coupon = await couponsRepository.findById(couponId);
-        const perUserLimit = coupon?.usage?.perUserLimit ?? 1;
-        const newCount = await couponsRepository.getUserCouponUsageCount(uid, couponId);
-        if (newCount >= perUserLimit) {
-          await claimedCouponsRepository
-            .markUsed(uid, code, ids[0] ?? "")
-            .catch(() => { /* no claim row — coupon never went through the wallet */ });
+  // W4 FIX: was a fire-and-forget `Promise.all(...).catch(...)` — the Vercel
+  // lambda could terminate before these writes committed and coupon usage was
+  // silently lost. The await below ensures every batch.commit() lands before
+  // the caller resolves.
+  try {
+    await Promise.all(
+      [...accumulator.values()].map(async ({ couponId, code, orderIds: ids, totalDiscount }) => {
+        await couponsRepository.applyCoupon(couponId, code, uid, ids, totalDiscount);
+        try {
+          const coupon = await couponsRepository.findById(couponId);
+          const perUserLimit = coupon?.usage?.perUserLimit ?? 1;
+          const newCount = await couponsRepository.getUserCouponUsageCount(uid, couponId);
+          if (newCount >= perUserLimit) {
+            await claimedCouponsRepository
+              .markUsed(uid, code, ids[0] ?? "")
+              .catch(() => { /* no claim row — coupon never went through the wallet */ });
+          }
+        } catch (err) {
+          serverLogger.warn("Failed to update claimed-coupon status", { err });
         }
-      } catch (err) {
-        serverLogger.warn("Failed to update claimed-coupon status", { err });
-      }
-    }),
-  ).catch((err: unknown) => serverLogger.error("Failed to record coupon usage:", err));
+      }),
+    );
+  } catch (err) {
+    serverLogger.error("Failed to record coupon usage:", err);
+  }
 }
 
 function grantConsentOtpBypassCredit(

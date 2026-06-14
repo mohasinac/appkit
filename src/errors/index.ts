@@ -12,5 +12,24 @@ export { AuthenticationError } from "./authentication-error";
 export { AuthorizationError } from "./authorization-error";
 export { NotFoundError } from "./not-found-error";
 export { DatabaseError } from "./database-error";
+export { RazorpayUnreachableError } from "./razorpay-unreachable";
 // error-handler uses `next/server` — only import in server/API-route contexts
 export { handleApiError, logError, isAppError } from "./error-handler";
+// Code→HTTP mapper (server) — and the i18n / inline-field map (client-safe)
+export {
+  mapToHttpError,
+  HTTP_ERROR_CODES,
+  type MappedError,
+  type HttpErrorCode,
+} from "./error-mapping";
+export {
+  ERROR_DISPLAY_MAP,
+  getErrorDisplay,
+  type ErrorDisplayEntry,
+} from "./error-display-map";
+// safeRead is server-only (uses the persisted log reporter)
+export {
+  safeRead,
+  installDegradedReadReporter,
+  type DegradedReadReport,
+} from "./safe-read";

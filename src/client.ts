@@ -2,6 +2,55 @@
 
 // Client-only public exports
 
+// [CLIENT-SAFE] Error code map + display lookup — pure constants, no server deps.
+// Used by useApiMutation / useApiQuery / Button surface-error to route ApiError → toast or inline field error.
+export { HTTP_ERROR_CODES, mapToHttpError } from "./errors/error-mapping";
+export type { HttpErrorCode, MappedError } from "./errors/error-mapping";
+export { ERROR_DISPLAY_MAP, getErrorDisplay } from "./errors/error-display-map";
+export type { ErrorDisplayEntry } from "./errors/error-display-map";
+export { RazorpayUnreachableError } from "./errors/razorpay-unreachable";
+
+// [CLIENT-SAFE] ActionResult envelope type — for typing server-action call sites.
+// Re-exported from the public utils barrel to keep the _internal/ boundary
+// audit clean. Same symbols, no behavioral change.
+export type { ActionResult } from "./utils/action-result";
+export { isOk, unwrap } from "./utils/action-result";
+
+// [CLIENT-SAFE] Client error class + surface-error router + reporter primitives.
+// Used by useApiMutation / useApiQuery and Button's async-onclick catch.
+export { ApiError, isApiError } from "./client/api/ApiError";
+export { surfaceError } from "./client/api/surface-error";
+export type { SurfaceErrorOptions } from "./client/api/surface-error";
+export {
+  reportClientError,
+} from "./client/observability/reportClientError";
+export type { ClientErrorPayload } from "./client/observability/reportClientError";
+export {
+  installClientErrorReporter,
+  useClientErrorReporter,
+} from "./client/observability/installClientErrorReporter";
+
+// [CLIENT-SAFE] React Query wrappers — auto-toast / auto-inline-field-error
+// on failure, optional `loadingMessage` for long ops.
+export { useApiMutation } from "./client/api/useApiMutation";
+export type { UseApiMutationOptions } from "./client/api/useApiMutation";
+export { useApiQuery } from "./client/api/useApiQuery";
+export type { UseApiQueryOptions } from "./client/api/useApiQuery";
+
+// [CLIENT-ONLY] Maintenance UI — listing + detail + dashboard + analysis runner.
+// Consumed by the /admin/maintenance/* page shims.
+export {
+  ServerErrorsListView,
+  ServerErrorDetailView,
+  MaintenanceDashboardView,
+  AnalysisRunnerView,
+} from "./_internal/client/features/maintenance";
+export type {
+  ServerErrorsListViewProps,
+  ServerErrorDetailViewProps,
+  MaintenanceDashboardViewProps,
+} from "./_internal/client/features/maintenance";
+
 // Provider registration — pure contract modules with zero server dependencies.
 // Exported here so consumers can import registration functions from
 // @mohasinac/appkit/client without pulling in firebase-admin or other server code.

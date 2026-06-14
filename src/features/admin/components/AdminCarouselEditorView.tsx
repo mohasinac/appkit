@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import {
   Alert,
@@ -466,7 +467,7 @@ export function AdminCarouselEditorView({
     };
   };
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload = buildPayload();
       if (isEdit) return apiClient.put(ADMIN_ENDPOINTS.CAROUSEL_BY_ID(slideId!), payload);
@@ -484,7 +485,7 @@ export function AdminCarouselEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.CAROUSEL_BY_ID(slideId!)),
     onSuccess: () => {
       setSuccessMsg("Slide deleted.");

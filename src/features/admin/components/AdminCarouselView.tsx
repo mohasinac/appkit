@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Span, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
@@ -99,7 +100,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     setLocalRows(fetchedRows as CarouselRow[]);
   }, [fetchedRows]);
 
-  const reorderMutation = useMutation({
+  const reorderMutation = useApiMutation({
     mutationFn: (ids: string[]) =>
       apiClient.post(ADMIN_ENDPOINTS.CAROUSEL_REORDER, { slideIds: ids }),
     onSuccess: () => {
@@ -107,7 +108,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: (id: string) => apiClient.delete(ADMIN_ENDPOINTS.CAROUSEL_BY_ID(id)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "carousel", "listing"] });

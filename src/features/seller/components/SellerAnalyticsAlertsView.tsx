@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
   Badge,
@@ -175,7 +176,7 @@ export function SellerAnalyticsAlertsView({
 
   const alerts = data ?? [];
 
-  const createMutation = useMutation({
+  const createMutation = useApiMutation({
     mutationFn: async () => {
       const payload = {
         label: draft.label,
@@ -198,7 +199,7 @@ export function SellerAnalyticsAlertsView({
     onError: () => showToast("Failed to create alert", "error"),
   });
 
-  const toggleMutation = useMutation({
+  const toggleMutation = useApiMutation({
     mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) =>
       apiClient.patch(SELLER_ENDPOINTS.ANALYTICS_ALERT_BY_ID(id), { isActive }),
     onSuccess: () => {
@@ -207,7 +208,7 @@ export function SellerAnalyticsAlertsView({
     onError: () => showToast("Failed to update alert", "error"),
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: async (id: string) =>
       apiClient.delete(SELLER_ENDPOINTS.ANALYTICS_ALERT_BY_ID(id)),
     onSuccess: () => {

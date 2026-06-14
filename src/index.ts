@@ -889,6 +889,24 @@ export { logError } from "./errors/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ErrorCode - Type contract for error code.
 export type { ErrorCode } from "./errors/index";
+// [UTIL]-Pure utility — no framework or runtime dependency; safe to import from any environment.
+// RazorpayUnreachableError - Thrown when Razorpay API exhausts retries.
+export { RazorpayUnreachableError } from "./errors/index";
+// [UTIL]-Pure utility — server boundary code/HTTP mapper for any thrown value.
+// mapToHttpError - Map any thrown value to { status, code, message, issues? }.
+export { mapToHttpError, HTTP_ERROR_CODES } from "./errors/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+export type { MappedError, HttpErrorCode } from "./errors/index";
+// [UTIL]-Pure utility — client-safe lookup of inline-field + i18n key per error code.
+// ERROR_DISPLAY_MAP - CLAUDE.md Rule #9 source-of-truth for client error rendering.
+export { ERROR_DISPLAY_MAP, getErrorDisplay } from "./errors/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+export type { ErrorDisplayEntry } from "./errors/index";
+
+// [SERVER-ONLY] parseJsonBody — strict JSON request-body parser for API routes.
+// Replaces the silent `request.json().catch(() => ({}))` anti-pattern. Throws
+// ValidationError on malformed JSON → routeHandler wrapper maps to 400.
+export { parseJsonBody } from "./next/api/parseJsonBody";
 
 // ./seo/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.

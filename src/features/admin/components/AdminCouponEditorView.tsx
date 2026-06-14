@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import {
   Button,
@@ -288,7 +289,7 @@ export function AdminCouponEditorView({
   };
 
   // --- save ---
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: CouponPayload = {
         name,
@@ -343,7 +344,7 @@ export function AdminCouponEditorView({
   });
 
   // --- delete ---
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () =>
       apiClient.delete(ADMIN_ENDPOINTS.COUPON_BY_ID(couponId!)),
     onSuccess: () => {

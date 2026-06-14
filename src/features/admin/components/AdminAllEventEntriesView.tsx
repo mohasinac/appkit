@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -38,7 +39,7 @@ export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEn
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const updateMutation = useMutation({
+  const updateMutation = useApiMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ADMIN_EVENT_ENTRY_BY_ID(id), { status });
     },

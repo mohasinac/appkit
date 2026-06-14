@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -46,7 +47,7 @@ export function AdminNewsletterView({
   const [unsubscribeOpen, setUnsubscribeOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<NewsletterRow | null>(null);
 
-  const unsubscribeMutation = useMutation({
+  const unsubscribeMutation = useApiMutation({
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.NEWSLETTER_BY_ID(id));
     },

@@ -163,7 +163,18 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
         label: input.label,
       });
 
-      return { id: docRef.id, ...addressData };
+      // W4 FIX: previously returned the in-memory plaintext shape while having
+      // persisted the encrypted shape. Subsequent GETs decrypted via mapDoc and
+      // produced different field values than what this method returned. Re-fetch
+      // so the returned object matches what a future GET would see.
+      const refetched = await this.findById(docRef.id);
+      if (refetched) return refetched;
+      // Defensive fallback — the doc was just written; if it can't be re-read,
+      // surface that as a database error rather than silently returning plaintext.
+      throw new DatabaseError(
+        `Address ${docRef.id} not readable immediately after create`,
+        null,
+      );
     } catch (error) {
       throw new DatabaseError(
         `Failed to create address for ${ownerType}:${ownerId}`,

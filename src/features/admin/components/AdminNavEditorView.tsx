@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation } from "@tanstack/react-query";
+
 import {
   Button,
   Form,
@@ -90,7 +91,7 @@ export function AdminNavEditorView({
 
   const { showToast } = useToast();
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload = {
         label,

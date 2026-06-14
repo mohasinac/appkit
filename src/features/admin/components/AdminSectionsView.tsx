@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 import {
@@ -319,7 +320,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     setReorderUndoStack([]);
   }, [sections]);
 
-  const saveSection = useMutation({
+  const saveSection = useApiMutation({
     mutationFn: async () => {
       let parsedConfig: Record<string, unknown>;
       try {
@@ -362,7 +363,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     },
   });
 
-  const resetSeed = useMutation({
+  const resetSeed = useApiMutation({
     mutationFn: () =>
       apiClient.post(DEMO_ENDPOINTS.SEED, {
         action: "load",
@@ -378,7 +379,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     },
   });
 
-  const reorderSections = useMutation({
+  const reorderSections = useApiMutation({
     mutationFn: async () => {
       await Promise.all(
         reorderDraft.map((item) =>

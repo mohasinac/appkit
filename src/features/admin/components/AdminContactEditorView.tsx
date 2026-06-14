@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Badge,
   Button,
@@ -47,7 +48,7 @@ export function AdminContactEditorView({
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const actionMutation = useMutation({
+  const actionMutation = useApiMutation({
     mutationFn: async (action: "read" | "resolved") => {
       await apiClient.patch(ADMIN_ENDPOINTS.CONTACT_SUBMISSION_BY_ID(submissionId!), { action });
     },

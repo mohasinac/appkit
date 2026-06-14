@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Div,
@@ -119,7 +120,7 @@ export function AdminStoreEditorView({
     }
   }, [open, currentStatus, currentIsVerified, currentCapabilities]);
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId!), {
         storeStatus,

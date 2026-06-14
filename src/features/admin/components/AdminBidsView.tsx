@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -41,7 +42,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
   const [cancelOpen, setCancelOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<BidRow | null>(null);
 
-  const cancelMutation = useMutation({
+  const cancelMutation = useApiMutation({
     mutationFn: async (bidId: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.BID_BY_ID(bidId), { status: "cancelled" });
     },

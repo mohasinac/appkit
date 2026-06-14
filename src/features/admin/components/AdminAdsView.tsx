@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Div, Input, Label, Select, StackedViewShell, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -246,7 +247,7 @@ export function AdminAdsView({
     staleTime: 10_000,
   });
 
-  const statusMutation = useMutation({
+  const statusMutation = useApiMutation({
     mutationFn: async ({ id, nextStatus }: { id: string; nextStatus: AdminAdStatus }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.AD_BY_ID(id), { status: nextStatus });
     },
@@ -260,7 +261,7 @@ export function AdminAdsView({
     setConsentRequired(Boolean(adsQuery.data.consentRequired));
   }, [adsQuery.data]);
 
-  const settingsMutation = useMutation({
+  const settingsMutation = useApiMutation({
     mutationFn: async (payload: AdsConfigPatchPayload) => {
       await apiClient.patch(endpoint, payload);
     },

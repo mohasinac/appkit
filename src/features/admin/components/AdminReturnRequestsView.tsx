@@ -1,8 +1,9 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -40,7 +41,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ReturnRow | null>(null);
 
-  const approveMutation = useMutation({
+  const approveMutation = useApiMutation({
     mutationFn: async (orderId: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "refunded" });
     },
@@ -56,7 +57,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
     },
   });
 
-  const rejectMutation = useMutation({
+  const rejectMutation = useApiMutation({
     mutationFn: async (orderId: string) => {
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "delivered" });
     },

@@ -1,5 +1,6 @@
 "use server";
 
+import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { categoriesRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { brandInputSchema, brandUpdateSchema, type BrandInput, type BrandUpdate } from "../../../shared/features/brands/schema";
@@ -31,65 +32,73 @@ function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
   return out;
 }
 
-export async function createBrandAction(input: unknown) {
-  await requireRoleUser("admin");
-  const parsed = brandInputSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
-  await assertBrandSlugUnique(parsed.data.slug);
-  const fields = brandInputToCategoryFields(parsed.data);
-  return categoriesRepository.createWithId(parsed.data.slug, {
-    id: parsed.data.slug,
-    name: parsed.data.name,
-    slug: parsed.data.slug,
-    categoryType: "brand",
-    rootId: parsed.data.slug,
-    parentIds: [],
-    childrenIds: [],
-    tier: 0,
-    path: parsed.data.slug,
-    position: 0,
-    subtreeSize: 1,
-    order: parsed.data.displayOrder,
-    isLeaf: true,
-    isFeatured: false,
-    isBrand: true,
-    isActive: parsed.data.isActive,
-    isSearchable: true,
-    metrics: {
-      productCount: 0,
-      productIds: [],
-      auctionCount: 0,
-      auctionIds: [],
-      totalProductCount: 0,
-      totalAuctionCount: 0,
-      totalItemCount: 0,
-      lastUpdated: new Date(),
-    },
-    seo: { title: parsed.data.name, description: parsed.data.description ?? "", keywords: [parsed.data.name] },
-    ancestors: [],
-    createdBy: "admin",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    ...fields,
-  } as Parameters<typeof categoriesRepository.createWithId>[1]);
+export async function createBrandAction(input: unknown): Promise<ActionResult<unknown>> {
+  return wrapAction(async () => {
+    await requireRoleUser("admin");
+      const parsed = brandInputSchema.safeParse(input);
+      if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
+      await assertBrandSlugUnique(parsed.data.slug);
+      const fields = brandInputToCategoryFields(parsed.data);
+      return categoriesRepository.createWithId(parsed.data.slug, {
+        id: parsed.data.slug,
+        name: parsed.data.name,
+        slug: parsed.data.slug,
+        categoryType: "brand",
+        rootId: parsed.data.slug,
+        parentIds: [],
+        childrenIds: [],
+        tier: 0,
+        path: parsed.data.slug,
+        position: 0,
+        subtreeSize: 1,
+        order: parsed.data.displayOrder,
+        isLeaf: true,
+        isFeatured: false,
+        isBrand: true,
+        isActive: parsed.data.isActive,
+        isSearchable: true,
+        metrics: {
+          productCount: 0,
+          productIds: [],
+          auctionCount: 0,
+          auctionIds: [],
+          totalProductCount: 0,
+          totalAuctionCount: 0,
+          totalItemCount: 0,
+          lastUpdated: new Date(),
+        },
+        seo: { title: parsed.data.name, description: parsed.data.description ?? "", keywords: [parsed.data.name] },
+        ancestors: [],
+        createdBy: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...fields,
+      } as Parameters<typeof categoriesRepository.createWithId>[1]);
+  });
 }
 
-export async function updateBrandAction(brandId: string, input: unknown) {
-  await requireRoleUser("admin");
-  await assertBrandExists(brandId);
-  const parsed = brandUpdateSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
-  return categoriesRepository.update(brandId, brandInputToCategoryFields(parsed.data));
+export async function updateBrandAction(brandId: string, input: unknown): Promise<ActionResult<unknown>> {
+  return wrapAction(async () => {
+    await requireRoleUser("admin");
+      await assertBrandExists(brandId);
+      const parsed = brandUpdateSchema.safeParse(input);
+      if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
+      return categoriesRepository.update(brandId, brandInputToCategoryFields(parsed.data));
+  });
 }
 
-export async function deleteBrandAction(brandId: string) {
-  await requireRoleUser("admin");
-  await assertBrandExists(brandId);
-  return categoriesRepository.delete(brandId);
+export async function deleteBrandAction(brandId: string): Promise<ActionResult<unknown>> {
+  return wrapAction(async () => {
+    await requireRoleUser("admin");
+      await assertBrandExists(brandId);
+      return categoriesRepository.delete(brandId);
+  });
 }
 
-export async function toggleBrandActiveAction(brandId: string, isActive: boolean) {
-  await requireRoleUser("admin");
-  await assertBrandExists(brandId);
-  return categoriesRepository.update(brandId, { isActive });
+export async function toggleBrandActiveAction(brandId: string, isActive: boolean): Promise<ActionResult<unknown>> {
+  return wrapAction(async () => {
+    await requireRoleUser("admin");
+      await assertBrandExists(brandId);
+      return categoriesRepository.update(brandId, { isActive });
+  });
 }

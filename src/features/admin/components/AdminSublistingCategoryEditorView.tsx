@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import {
   Button,
@@ -72,7 +73,7 @@ export function AdminSublistingCategoryEditorView({
     setCoverImage(cat.coverImage ?? "");
   }, [categoryQuery.data]);
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: CategoryPayload = {
         name,
@@ -95,7 +96,7 @@ export function AdminSublistingCategoryEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () =>
       apiClient.delete(ADMIN_ENDPOINTS.SUBLISTING_CATEGORY_BY_ID(categoryId!)),
     onSuccess: () => {

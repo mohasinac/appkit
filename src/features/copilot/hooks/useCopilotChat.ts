@@ -1,6 +1,7 @@
 "use client"
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { useState, useCallback } from "react";
-import { useMutation } from "@tanstack/react-query";
+
 import { apiClient } from "../../../http";
 import { COPILOT_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -37,7 +38,7 @@ export function useCopilotChat(options?: UseCopilotChatOptions) {
     () => options?.initialConversationId ?? generateConversationId(),
   );
 
-  const mutation = useMutation({
+  const mutation = useApiMutation({
     mutationFn: async (prompt: string) => {
       const res = await apiClient.post<{
         success: boolean;

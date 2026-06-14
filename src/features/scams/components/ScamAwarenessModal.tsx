@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Shield, IndianRupee, UserX, CreditCard, Package, UserCheck, ShieldAlert, Truck } from "lucide-react";
 import { Div, Modal, Stack, Row, Heading, Text, Checkbox } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -28,7 +29,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
   const [checked, setChecked] = useState(false);
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const mutation = useApiMutation({
     mutationFn: () =>
       apiClient.patch(ACCOUNT_ENDPOINTS.PROFILE, { acknowledgeScamAwareness: true }),
     onSuccess: () => {

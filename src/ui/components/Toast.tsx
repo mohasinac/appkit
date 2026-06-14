@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import { Text } from "./Typography";
 import { SPRING_SNAPPY } from "../../tokens/motion";
 
-export type ToastVariant = "success" | "error" | "warning" | "info";
+export type ToastVariant = "success" | "error" | "warning" | "info" | "loading";
 export type ToastPosition =
   | "top-right"
   | "top-left"
@@ -23,13 +23,25 @@ interface ToastItem {
 }
 
 interface ToastContextValue {
+  /**
+   * Show a toast. Returns the `dismissId` so long-running ops can later finalize
+   * via `updateToast(id, "success" | "error", finalMessage)`. For the "loading"
+   * variant pass `duration: 0` to keep it pinned until finalized.
+   */
   showToast: (
     message: string,
     variant?: ToastVariant,
     duration?: number,
     action?: { label: string; onClick: () => void },
-  ) => void;
+  ) => string;
   hideToast: (id: string) => void;
+  /** Replace an existing toast's variant + message (used to finalize loading toasts). */
+  updateToast: (
+    id: string,
+    variant: ToastVariant,
+    message?: string,
+    duration?: number,
+  ) => void;
 }
 
 const ToastContext = React.createContext<ToastContextValue | undefined>(
@@ -46,6 +58,15 @@ export function useToast() {
     throw new Error("useToast must be used within ToastProvider");
   }
   return context;
+}
+
+/**
+ * Like `useToast` but returns `undefined` when no `ToastProvider` is mounted
+ * instead of throwing. Use in primitives (e.g. `Button`) that must be safe to
+ * render outside a toast context.
+ */
+export function useToastSafe(): ToastContextValue | undefined {
+  return React.useContext(ToastContext);
 }
 
 export interface ToastProviderProps {
@@ -69,6 +90,7 @@ const UI_TOAST = {
     error: "appkit-toast--error",
     warning: "appkit-toast--warning",
     info: "appkit-toast--info",
+    loading: "appkit-toast--info",
   },
   icon: "appkit-toast__icon",
 } as const;
@@ -84,18 +106,38 @@ export function ToastProvider({
   }, []);
 
   const showToast = React.useCallback(
-    (message: string, variant: ToastVariant = "info", duration = 5000, action?: { label: string; onClick: () => void }) => {
+    (message: string, variant: ToastVariant = "info", duration?: number, action?: { label: string; onClick: () => void }): string => {
       const id = buildToastId();
-      setToasts((current) => [...current, { id, message, variant, duration, action }]);
-      if (duration > 0) {
-        window.setTimeout(() => hideToast(id), duration);
+      // Loading toasts default to pinned (duration: 0) so the caller can finalize.
+      const effectiveDuration = duration ?? (variant === "loading" ? 0 : 5000);
+      setToasts((current) => [...current, { id, message, variant, duration: effectiveDuration, action }]);
+      if (effectiveDuration > 0) {
+        window.setTimeout(() => hideToast(id), effectiveDuration);
+      }
+      return id;
+    },
+    [hideToast],
+  );
+
+  const updateToast = React.useCallback(
+    (id: string, variant: ToastVariant, message?: string, duration?: number) => {
+      const effectiveDuration = duration ?? (variant === "loading" ? 0 : 5000);
+      setToasts((current) =>
+        current.map((t) =>
+          t.id === id
+            ? { ...t, variant, message: message ?? t.message, duration: effectiveDuration }
+            : t,
+        ),
+      );
+      if (effectiveDuration > 0) {
+        window.setTimeout(() => hideToast(id), effectiveDuration);
       }
     },
     [hideToast],
   );
 
   return (
-    <ToastContext.Provider value={{ showToast, hideToast }}>
+    <ToastContext.Provider value={{ showToast, hideToast, updateToast }}>
       {children}
       <div
         aria-live="polite"
@@ -128,6 +170,14 @@ function ToastRow({
     error: <span aria-hidden="true">!</span>,
     warning: <span aria-hidden="true">!</span>,
     info: <span aria-hidden="true">i</span>,
+    loading: (
+      <span
+        aria-hidden="true"
+        className="inline-block animate-spin"
+        // audit-inline-style-ok: built-in CSS spinner geometry, no Tailwind class produces the equivalent border-right-transparent ring without extra config.
+        style={{ width: "1em", height: "1em", border: "2px solid currentColor", borderRightColor: "transparent", borderRadius: "9999px" }}
+      />
+    ),
   };
 
   return (

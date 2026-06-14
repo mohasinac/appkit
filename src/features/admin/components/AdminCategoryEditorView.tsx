@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button, Card, CardBody, ConfirmDeleteModal, Div, Form, PaginatedSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
@@ -113,7 +114,7 @@ export function AdminCategoryEditorView({
     if (!slugManual) setSlug(toCategorySlug(value));
   };
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: CategoryPayload = {
         name,
@@ -139,7 +140,7 @@ export function AdminCategoryEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.CATEGORY_BY_ID(categoryId!)),
     onSuccess: () => {
       showToast("Category deleted.", "success");

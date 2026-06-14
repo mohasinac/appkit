@@ -1,5 +1,6 @@
 "use server";
 
+import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 /**
  * applyRefundDeductionAction — deduct a refund from a seller's pending payout.
  *
@@ -34,30 +35,32 @@ export type ApplyRefundDeductionResult =
 
 export async function applyRefundDeductionAction(
   input: ApplyRefundDeductionInput,
-): Promise<ApplyRefundDeductionResult> {
-  if (input.refundedAmountInPaise <= 0) {
-    throw new ValidationError("Refund amount must be positive");
-  }
-
-  const feeRate = input.platformFeeRate ?? 0.05;
-  const deductedAmount = Math.round(input.refundedAmountInPaise * (1 - feeRate));
-
-  const pending = await payoutRepository.findPendingByStore(input.storeId);
-  if (!pending) {
-    return { applied: false, reason: "no_pending_payout" };
-  }
-
-  if (!pending.orderIds.includes(input.orderId)) {
-    return { applied: false, reason: "order_not_in_payout" };
-  }
-
-  const updated = await payoutRepository.applyRefundDeduction(pending.id, {
-    orderId: input.orderId,
-    refundId: input.refundId,
-    refundedAmount: input.refundedAmountInPaise,
-    deductedAmount,
-    reason: input.reason,
+): Promise<ActionResult<ApplyRefundDeductionResult>> {
+  return wrapAction(async () => {
+    if (input.refundedAmountInPaise <= 0) {
+        throw new ValidationError("Refund amount must be positive");
+      }
+    
+      const feeRate = input.platformFeeRate ?? 0.05;
+      const deductedAmount = Math.round(input.refundedAmountInPaise * (1 - feeRate));
+    
+      const pending = await payoutRepository.findPendingByStore(input.storeId);
+      if (!pending) {
+        return { applied: false, reason: "no_pending_payout" };
+      }
+    
+      if (!pending.orderIds.includes(input.orderId)) {
+        return { applied: false, reason: "order_not_in_payout" };
+      }
+    
+      const updated = await payoutRepository.applyRefundDeduction(pending.id, {
+        orderId: input.orderId,
+        refundId: input.refundId,
+        refundedAmount: input.refundedAmountInPaise,
+        deductedAmount,
+        reason: input.reason,
+      });
+    
+      return { applied: true, payoutId: updated.id, netAmount: updated.netAmount ?? updated.amount };
   });
-
-  return { applied: true, payoutId: updated.id, netAmount: updated.netAmount ?? updated.amount };
 }

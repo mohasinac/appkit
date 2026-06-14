@@ -1,9 +1,10 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   FilterChipGroup,
@@ -57,7 +58,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const [banTargetId, setBanTargetId] = useState<string | null>(null);
   const [banReason, setBanReason] = useState("");
 
-  const banUser = useMutation({
+  const banUser = useApiMutation({
     mutationFn: () => {
       if (!banTargetId) throw new Error("No user selected");
       return apiClient.post(ADMIN_ENDPOINTS.USER_HARD_BAN(banTargetId), { reason: banReason.trim() });
@@ -74,7 +75,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
     },
   });
 
-  const unbanUser = useMutation({
+  const unbanUser = useApiMutation({
     mutationFn: (uid: string) => apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(uid), {}),
     onSuccess: () => {
       toast.showToast("Ban lifted.", "success");

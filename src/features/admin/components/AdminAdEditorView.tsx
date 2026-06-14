@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Alert,
   Button,
@@ -204,7 +205,7 @@ export function AdminAdEditorView({
     setThirdPartyUrl(item.creative?.thirdPartyUrl || "");
   }, [adQuery.data]);
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload: AdPayload = {
         name,

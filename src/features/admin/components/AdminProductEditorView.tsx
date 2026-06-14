@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Button,
   Card,
@@ -179,7 +180,7 @@ export function AdminProductEditorView({
     }));
   };
 
-  const saveMutation = useMutation({
+  const saveMutation = useApiMutation({
     mutationFn: async () => {
       const payload = applyMode(product, mode);
       if (isEdit) {
@@ -200,7 +201,7 @@ export function AdminProductEditorView({
     },
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.PRODUCT_BY_ID(productId!)),
     onSuccess: () => {
       showToast("Product deleted.", "success");

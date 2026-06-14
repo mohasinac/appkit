@@ -128,7 +128,16 @@ export type Permission =
   | "admin:feature-flags:write"
   | "admin:copilot:view"
   | "admin:team:read"
-  | "admin:team:write";
+  | "admin:team:write"
+
+  // Maintenance & Observability (workstream 10) — gates the admin/maintenance/* pages.
+  | "admin:maintenance:view-server-errors"
+  | "admin:maintenance:view-client-errors"
+  | "admin:maintenance:view-function-errors"
+  | "admin:maintenance:view-cloud-logs"
+  | "admin:maintenance:view-payment-rollbacks"
+  | "admin:maintenance:run-analysis"
+  | "admin:maintenance:purge-errors";
 
 // ============================================================================
 // BANNED ACTION TYPE
@@ -176,6 +185,7 @@ export type EmployeeGroup =
   | "trust_and_safety"
   | "auction_monitor"
   | "scam_moderator"
+  | "maintenance_employee"
   | "custom";
 
 // ============================================================================
@@ -428,6 +438,16 @@ export const PERMISSION_GROUPS: Record<
     "admin:media:read",
     "admin:media:write",
   ],
+
+  maintenance_employee: [
+    "admin:dashboard:view",
+    "admin:maintenance:view-server-errors",
+    "admin:maintenance:view-client-errors",
+    "admin:maintenance:view-function-errors",
+    "admin:maintenance:view-cloud-logs",
+    "admin:maintenance:view-payment-rollbacks",
+    "admin:maintenance:run-analysis",
+  ],
 } as const;
 
 // ============================================================================
@@ -479,6 +499,14 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/feature-flags": "admin:feature-flags:read",
   "/admin/copilot": "admin:copilot:view",
   "/admin/team": "admin:team:read",
+  // Maintenance & Observability (workstream 10)
+  "/admin/maintenance": "admin:maintenance:view-server-errors",
+  "/admin/maintenance/server-errors": "admin:maintenance:view-server-errors",
+  "/admin/maintenance/client-errors": "admin:maintenance:view-client-errors",
+  "/admin/maintenance/function-errors": "admin:maintenance:view-function-errors",
+  "/admin/maintenance/cloud-logs": "admin:maintenance:view-cloud-logs",
+  "/admin/maintenance/payment-rollbacks": "admin:maintenance:view-payment-rollbacks",
+  "/admin/maintenance/analysis": "admin:maintenance:run-analysis",
 };
 
 // ============================================================================

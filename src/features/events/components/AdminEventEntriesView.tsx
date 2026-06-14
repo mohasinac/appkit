@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Alert,
   Button,
@@ -126,7 +127,7 @@ export function AdminEventEntriesView({
   const [expandedEntryId, setExpandedEntryId] = React.useState<string | null>(null);
   const [pointsInputs, setPointsInputs] = React.useState<Record<string, string>>({});
 
-  const reviewMutation = useMutation({
+  const reviewMutation = useApiMutation({
     mutationFn: async ({
       entryId,
       status,
@@ -150,7 +151,7 @@ export function AdminEventEntriesView({
     },
   });
 
-  const pointsMutation = useMutation({
+  const pointsMutation = useApiMutation({
     mutationFn: async ({ entryId, points, currentStatus }: { entryId: string; points: number; currentStatus: string }) => {
       if (!eventId) throw new Error("eventId is required");
       const endpoint =

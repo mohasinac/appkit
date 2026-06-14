@@ -1,7 +1,8 @@
 "use client";
 
+import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, ConfirmDeleteModal, Div, RowActionMenu, Span, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -86,7 +87,7 @@ export function AdminNavigationView({
   const items: NavItemData[] = data?.items ?? [];
   const sorted = [...items].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
-  const visibilityMutation = useMutation({
+  const visibilityMutation = useApiMutation({
     mutationFn: async ({ id, isVisible }: { id: string; isVisible: boolean }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.NAVIGATION_BY_ID(id), { isVisible });
     },
@@ -96,7 +97,7 @@ export function AdminNavigationView({
     onError: () => showToast("Failed to update visibility.", "error"),
   });
 
-  const reorderMutation = useMutation({
+  const reorderMutation = useApiMutation({
     mutationFn: async ({ id, newOrder }: { id: string; newOrder: number }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.NAVIGATION_BY_ID(id), { order: newOrder });
     },
@@ -106,7 +107,7 @@ export function AdminNavigationView({
     onError: () => showToast("Failed to reorder.", "error"),
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useApiMutation({
     mutationFn: async (id: string) => {
       await apiClient.delete(ADMIN_ENDPOINTS.NAVIGATION_BY_ID(id));
     },
