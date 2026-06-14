@@ -852,7 +852,7 @@ export async function ProductDetailPageView({
               }
               specsContent={
                 allSpecs.length > 0 ? (
-                  <Dl className="divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden text-sm">
+                  <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden">
                     {allSpecs.map((s, i) => (
                       <Div
                         key={i}

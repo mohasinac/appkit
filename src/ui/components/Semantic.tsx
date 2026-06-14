@@ -522,12 +522,23 @@ type DlVariant = "stacked" | "inline";
 
 export interface DlProps extends React.HTMLAttributes<HTMLDListElement>, SurfaceProps {
   variant?: DlVariant;
+  /**
+   * Render a themed top-border between adjacent dt/dd term pairs — replaces
+   * the consumer `divide-y divide-zinc-100 dark:divide-zinc-800` className
+   * pattern. Tokens flow through `var(--appkit-color-border)`.
+   */
+  divide?: boolean | "default" | "subtle";
   children: React.ReactNode;
 }
 
-export function Dl({ variant = "stacked", className = "", surface, padding, rounded, border, shadow, children, ...props }: DlProps) {
+export function Dl({ variant = "stacked", divide, className = "", surface, padding, rounded, border, shadow, children, ...props }: DlProps) {
+  const divideCls = divide
+    ? divide === "subtle"
+      ? "appkit-stack--divide-subtle"
+      : "appkit-stack--divide"
+    : "";
   return (
-    <dl className={["appkit-dl", variant === "inline" ? "appkit-dl--inline" : "appkit-dl--stacked", buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <dl className={["appkit-dl", variant === "inline" ? "appkit-dl--inline" : "appkit-dl--stacked", divideCls, buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </dl>
   );
