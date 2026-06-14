@@ -205,6 +205,108 @@ export { EmptyState } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // EmptyStateProps - Type contract for empty state props.
 export type { EmptyStateProps } from "./ui/index";
+// FallbackShell — primitive used by ErrorBoundary / global-error route.
+// Inlines critical CSS so it renders before/without Tailwind.
+export { FallbackShell } from "./ui/components/FallbackShell";
+export type {
+  FallbackShellProps,
+  FallbackShellTone,
+} from "./ui/components/FallbackShell";
+// HotspotMarker — primitive for dynamically positioned overlay markers
+// (campaign image pins, character hotspots). Owns the inline left/top style
+// so consumer code never authors `style={{ left, top }}` manually.
+export { HotspotMarker } from "./ui/components/HotspotMarker";
+export type {
+  HotspotMarkerProps,
+  HotspotMarkerShape,
+  HotspotMarkerSize,
+  HotspotMarkerTone,
+} from "./ui/components/HotspotMarker";
+// Anchor — primitive for external links / `mailto:` / `tel:`. Internal Next.js
+// routes use `<TextLink>` instead. Tone + underline are typed enums.
+export { Anchor } from "./ui/components/Anchor";
+export type {
+  AnchorProps,
+  AnchorTone,
+  AnchorUnderline,
+} from "./ui/components/Anchor";
+// Iframe — primitive for embedded third-party documents (YouTube, Maps).
+// Aspect + rounded + sandbox come from typed enums; consumer code never
+// authors a raw <iframe>.
+export { Iframe } from "./ui/components/Iframe";
+export type {
+  IframeAspect,
+  IframeProps,
+  IframeRounded,
+} from "./ui/components/Iframe";
+// HorizontalRule — primitive for <hr>. `tone="accent"` consumes
+// --appkit-gradient-accent-divider so dividers follow the active theme.
+export { HorizontalRule } from "./ui/components/HorizontalRule";
+export type {
+  HorizontalRuleProps,
+  HorizontalRuleSpacing,
+  HorizontalRuleTone,
+} from "./ui/components/HorizontalRule";
+// Kbd — primitive for <kbd> (keyboard key affordance).
+export { Kbd } from "./ui/components/Kbd";
+export type { KbdProps, KbdSize, KbdTone } from "./ui/components/Kbd";
+// Quote — primitive for inline <q> + multi-line <blockquote> (via `block`).
+export { Quote } from "./ui/components/Quote";
+export type { QuoteProps, QuoteTone } from "./ui/components/Quote";
+// IconBox — square-icon container (catalogue replacement for the recurrent
+// `flex-shrink-0 w-N h-N rounded-X flex items-center justify-center` pattern).
+export { IconBox } from "./ui/components/IconBox";
+export type {
+  IconBoxProps,
+  IconBoxRounded,
+  IconBoxSize,
+  IconBoxTone,
+} from "./ui/components/IconBox";
+// StickyToolbar — sticky translucent bar under the AppLayoutShell header.
+// Sources its offset from --header-height; consumer code never authors
+// the offset manually.
+export { StickyToolbar } from "./ui/components/StickyToolbar";
+export type {
+  StickyToolbarOffset,
+  StickyToolbarPadding,
+  StickyToolbarProps,
+  StickyToolbarTone,
+} from "./ui/components/StickyToolbar";
+// Fieldset + Legend — primitives for grouped form controls.
+export { Fieldset, Legend } from "./ui/components/Fieldset";
+export type {
+  FieldsetPadding,
+  FieldsetProps,
+  FieldsetTone,
+  LegendProps,
+} from "./ui/components/Fieldset";
+// Details + Summary — primitives for native <details> disclosure widget.
+export { Details, Summary } from "./ui/components/Details";
+export type {
+  DetailsPadding,
+  DetailsProps,
+  DetailsTone,
+  SummaryProps,
+} from "./ui/components/Details";
+// Dialog — primitive for native <dialog> (top-layer rendering + focus trap).
+// Distinct from <Modal> (portal + AnimatePresence).
+export { Dialog } from "./ui/components/Dialog";
+export type { DialogPadding, DialogProps } from "./ui/components/Dialog";
+// Show + Hide — primitives for breakpoint-conditional render. Hydration-safe
+// (server renders both trees; CSS hides the inactive branch).
+export { Hide, Show } from "./ui/components/Responsive";
+export type {
+  Breakpoint,
+  HideProps,
+  ShowProps,
+} from "./ui/components/Responsive";
+// MediaAudio — primitive for `<audio>`. Routes through the media proxy for
+// both internal slugs and external (HMAC-signed) URLs.
+export { MediaAudio } from "./features/media/MediaAudio";
+export type {
+  MediaAudioControls,
+  MediaAudioProps,
+} from "./features/media/MediaAudio";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // FilterDrawerProps - Type contract for filter drawer props.
 export type { FilterDrawerProps } from "./ui/index";
@@ -8892,7 +8994,7 @@ export {
 // Missing React hooks and providers
 export {
   useMediaQuery, useBreakpoint, useClickOutside, useKeyPress, useLongPress,
-  useGesture, useSwipe, ThemeProvider, useTheme, useSession, useAuth, useCountdown,
+  useGesture, useSwipe, useSession, useAuth, useCountdown,
   useCamera, useBulkSelection, useUrlTable, usePendingFilters, usePendingTable,
   useUnsavedChanges, UNSAVED_CHANGES_EVENT, useBulkAction, useEntityDelete, useContainerGrid,
   useMessage, useVisibleItems, useModalStack, RTDBPayloadStatus,
@@ -8926,6 +9028,16 @@ export { useLogout } from "./features/auth/index";
 
 // Missing UI semantic wrappers and typography
 export { Text, Label, Span } from "./ui/index";
+// Variant catalogue type exports for Typography shaping modifiers (transform,
+// truncate, numeric, italic, family, align, gradient).
+export type {
+  ColorVariant,
+  FontFamily,
+  TextAlign,
+  TextGradient,
+  TextTransform,
+  TextTruncate,
+} from "./ui/components/Typography";
 export { Input } from "./ui/index";
 export { Section, Main, Nav, Ul, Li } from "./ui/index";
 
@@ -9391,6 +9503,13 @@ export { buildSearchTokens, tokenizeQuery } from "./utils/search-tokens";
 export { ActionPermissionsManager } from "./features/site-settings/components/ActionPermissionsManager";
 export type { ActionPermissionsManagerProps } from "./features/site-settings/components/ActionPermissionsManager";
 export { NavPermissionsManager } from "./features/site-settings/components/NavPermissionsManager";
+// ThemeManagerView — Site Settings → Themes tab UI. Manages
+// siteSettings.theme.themes[] + defaultLightThemeId + defaultDarkThemeId.
+export { ThemeManagerView } from "./features/site-settings/components/ThemeManagerView";
+export type {
+  ThemeManagerValue,
+  ThemeManagerViewProps,
+} from "./features/site-settings/components/ThemeManagerView";
 export type { NavPermissionsManagerProps, NavGroup as NavPermissionsGroup, NavItem as NavPermissionsItem } from "./features/site-settings/components/NavPermissionsManager";
 
 // ── Classified listing feature ─────────────────────────────────────────────────
@@ -9435,3 +9554,34 @@ export type { SellerDigitalCodesViewProps } from "./features/seller/components/S
 export { SellerLiveView } from "./features/seller/components/SellerLiveView";
 export type { SellerLiveViewProps } from "./features/seller/components/SellerLiveView";
 
+
+// ── Central schema registry (W1) ──────────────────────────────────────────────
+// SCHEMAS is the single source of truth for every Zod schema at a system
+// boundary (Firestore docs, API routes, forms, sieve, webhooks, RTDB, storage).
+// Per-feature `schemas/index.ts` files register into the relevant bucket.
+// Pure Zod, isomorphic — safe on both client and server.
+export {
+  SCHEMAS,
+  lookupApiSchema,
+  lookupFirestoreSchema,
+} from "./schemas/index";
+export type {
+  ApiRouteKey,
+  ApiRouteSchema,
+  HttpVerb,
+  JsonArray,
+  JsonObject,
+  JsonPrimitive,
+  JsonValue,
+  RegisteredApiRouteKey,
+  RegisteredFirestoreCollection,
+  RegisteredFormId,
+  RegisteredRtdbChannel,
+  RegisteredSieveCollection,
+  RegisteredStorageOp,
+  RegisteredWebhookProvider,
+  RegistryEntry,
+  SchemaRegistry,
+  SchemasShape,
+  WebhookSchemaBucket,
+} from "./schemas/index";

@@ -74,6 +74,34 @@ export {
   type AuthUnsubscribe,
 } from "./contracts/client-session";
 
+// [CLIENT-ONLY] ThemeProvider — applies a theme record to `<html>` via
+// `data-theme` + inline CSS-variable writes. Tracks `prefers-color-scheme`
+// when the user picks `"auto"` mode. Built-in themes ship via `./tokens/themes`.
+// Re-exported through the public `./theme` barrel to keep audit-appkit-reexports
+// clean (no `_internal/` symbols may surface through public barrels).
+export { ThemeProvider, useTheme, buildThemeRegistry } from "./theme";
+export type {
+  ModePreference,
+  SiteSettingsThemeInput,
+  ThemeContextValue,
+  ThemeProviderProps,
+  ThemeRegistry,
+} from "./theme";
+export {
+  BUILT_IN_THEMES,
+  DEFAULT_DARK_THEME,
+  DEFAULT_LIGHT_THEME,
+  REQUIRED_GRADIENT_KEYS,
+  REQUIRED_THEME_TOKENS,
+  getDefaultBuiltInTheme,
+} from "./tokens/themes";
+export type {
+  GradientKey,
+  RequiredThemeToken,
+  ThemeMode,
+  ThemeRecord,
+} from "./tokens/themes";
+
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // ConfirmDeleteModal - Component for confirm delete modal.
 export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
@@ -158,9 +186,7 @@ export type {
   UseInfiniteScrollOptions,
   UseInfiniteScrollResult,
 } from "./react/hooks/useInfiniteScroll";
-// [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
-// useTheme - React hook for use theme.
-export { useTheme } from "./react/contexts/ThemeContext";
+// useTheme — exported above alongside the registry-aware ThemeProvider.
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useUnsavedChanges - React hook for use unsaved changes.
 export { useUnsavedChanges } from "./react/hooks/useUnsavedChanges";
@@ -207,7 +233,7 @@ export { useMediaUpload } from "./features/media/index";
 // Client-side context providers
 export { SessionProvider, useSession } from "./react/contexts/SessionContext";
 export type { SessionProviderProps } from "./react/contexts/SessionContext";
-export { ThemeProvider } from "./react/contexts/ThemeContext";
+// ThemeProvider — exported above alongside the registry-aware variant.
 export { useUrlTable } from "./react/hooks/useUrlTable";
 export type { UseUrlTableOptions } from "./react/hooks/useUrlTable";
 export { useBulkSelection } from "./react/hooks/useBulkSelection";
@@ -665,3 +691,31 @@ export { SellerDigitalCodesView } from "./features/seller/components/SellerDigit
 export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
 export { SellerLiveView } from "./features/seller/components/SellerLiveView";
 export type { SellerLiveViewProps } from "./features/seller/components/SellerLiveView";
+// ── Central schema registry (W1) ──────────────────────────────────────────────
+// Pure Zod, isomorphic — re-exported here so client code can resolve schemas
+// without pulling in the full server barrel.
+export {
+  SCHEMAS,
+  lookupApiSchema,
+  lookupFirestoreSchema,
+} from "./schemas/index";
+export type {
+  ApiRouteKey,
+  ApiRouteSchema,
+  HttpVerb,
+  JsonArray,
+  JsonObject,
+  JsonPrimitive,
+  JsonValue,
+  RegisteredApiRouteKey,
+  RegisteredFirestoreCollection,
+  RegisteredFormId,
+  RegisteredRtdbChannel,
+  RegisteredSieveCollection,
+  RegisteredStorageOp,
+  RegisteredWebhookProvider,
+  RegistryEntry,
+  SchemaRegistry,
+  SchemasShape,
+  WebhookSchemaBucket,
+} from "./schemas/index";
