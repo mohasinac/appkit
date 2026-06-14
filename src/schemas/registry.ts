@@ -137,11 +137,28 @@ const sieve = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Webhook envelope schemas — populated by W7. Each provider registers a bucket
-// of `eventName` → `z.discriminatedUnion` envelope.
+// Webhook envelope schemas — W7 cohort. Each provider registers a bucket
+// of `eventName` → schema. The Razorpay envelope is a discriminated union
+// keyed on the `event` discriminator.
 // ---------------------------------------------------------------------------
+import { razorpayWebhookEnvelopeSchema } from "./webhooks/razorpay";
+import { shiprocketTrackingUpdateSchema } from "./webhooks/shiprocket";
+import {
+  googleSignInWithIdpResponseSchema,
+  googleTokenInfoSchema,
+} from "./webhooks/google-oauth";
+
 const webhook = {
-  // Populated in W7. Buckets: razorpay, shiprocket, googleOauth, etc.
+  razorpay: {
+    envelope: razorpayWebhookEnvelopeSchema,
+  },
+  shiprocket: {
+    trackingUpdate: shiprocketTrackingUpdateSchema,
+  },
+  googleOauth: {
+    signInWithIdp: googleSignInWithIdpResponseSchema,
+    tokenInfo: googleTokenInfoSchema,
+  },
 } as const;
 
 // ---------------------------------------------------------------------------
