@@ -1,7 +1,7 @@
+import { normalizeError } from "../../../errors/normalize";
 import { DatabaseError, ValidationError } from "../../../errors";
 import { ERROR_MESSAGES } from "../../../errors/messages";
 import {
-import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   prepareForFirestore,
   type FirebaseSieveResult,

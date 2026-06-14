@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../../../errors/normalize";
 /**
  * feat-stores — store auctions (GET /api/stores/[storeSlug]/auctions)
  *
@@ -17,7 +18,6 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../../contracts";
 import type {
-import { normalizeError } from "../../../../../errors/normalize";
   StoreAuctionItem,
   StoreProductsResponse,
 } from "../../../types/index";

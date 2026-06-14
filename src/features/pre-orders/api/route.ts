@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
 import { parseListingParams } from "../../../utils/listing-params";
+import { normalizeError } from "../../../errors/normalize";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 20;

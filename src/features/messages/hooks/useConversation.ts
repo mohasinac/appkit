@@ -15,6 +15,7 @@ import {
   conversationPingPath,
   userConversationsPingPath,
 } from "../realtime";
+import { normalizeError } from "../../../errors/normalize";
 import type { ConversationDocument } from "../schemas/firestore";
 
 /**

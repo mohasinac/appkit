@@ -1,8 +1,8 @@
+import { normalizeError } from "../../../errors/normalize";
 import { Div, Heading, Section, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { SocialPostCard } from "./SocialPostCard";
 import {
-import { normalizeError } from "../../../errors/normalize";
   fetchInstagramPosts,
   fetchFacebookPosts,
   fetchTikTokPosts,

@@ -10,6 +10,7 @@ import { chatRepository } from "../../admin/repository/chat.repository";
 import { conversationsRepository } from "../../messages/repository/conversations.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { serverLogger } from "../../../monitoring/index";
+import { normalizeError } from "../../../errors/normalize";
 
 export interface RealtimeTokenResult {
   customToken: string;

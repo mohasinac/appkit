@@ -1,8 +1,8 @@
+import { normalizeError } from "../../../errors/normalize";
 "use client";
 
 import React, { useState } from "react";
 import {
-import { normalizeError } from "../../../errors/normalize";
   Button,
   ConfirmDeleteModal,
   Div,

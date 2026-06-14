@@ -14,6 +14,7 @@ import { z } from "zod";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { Review } from "../../types/index";
+import { normalizeError } from "../../../../errors/normalize";
 
 const ERR_REVIEW_NOT_FOUND = "Review not found";
 

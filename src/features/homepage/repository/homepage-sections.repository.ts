@@ -13,6 +13,7 @@ import {
   type FirebaseSieveResult,
   type SieveModel,
 } from "../../../providers/db-firebase";
+import { normalizeError } from "../../../errors/normalize";
 import {
   HOMEPAGE_SECTIONS_COLLECTION,
   type HomepageSectionCreateInput,

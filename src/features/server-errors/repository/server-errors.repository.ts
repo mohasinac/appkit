@@ -7,6 +7,7 @@ import {
   type ServerErrorDocument,
   type ServerErrorSource,
 } from "../schemas/firestore";
+import { normalizeError } from "../../../errors/normalize";
 
 /** Truncate a stack to the documented byte budget — never persist > 4 KB. */
 function truncateStack(stack?: string): string | undefined {

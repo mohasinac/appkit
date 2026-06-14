@@ -10,6 +10,7 @@ import {
   BaseRepository,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
+import { normalizeError } from "../../../errors/normalize";
 import {
   CAROUSELS_COLLECTION,
   MAX_SLIDES_PER_CAROUSEL,

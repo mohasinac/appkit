@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 "use client";
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
@@ -18,7 +19,6 @@ import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
 import {
-import { normalizeError } from "../../../errors/normalize";
   toRecordArray,
   toRelativeDate,
   toRupees,

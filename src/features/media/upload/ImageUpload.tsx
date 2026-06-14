@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 "use client"
 /**
  * ImageUpload — canonical image upload component for @mohasinac/feat-media.
@@ -11,7 +12,6 @@ import { useState, useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
 import {
-import { normalizeError } from "../../../errors/normalize";
   Alert,
   Button,
   Div,

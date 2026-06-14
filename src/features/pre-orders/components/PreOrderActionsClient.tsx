@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import { Button, Div, LoginRequiredModal, Span, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { normalizeError } from "../../../errors/normalize";
 
 export interface PreOrderActionsClientProps {
   productId: string;

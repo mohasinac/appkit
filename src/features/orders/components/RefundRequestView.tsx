@@ -17,6 +17,7 @@ import { Button, Checkbox, Div, Span, Stack, Text, Textarea } from "../../../ui"
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { OrderDocument } from "../schemas";
+import { normalizeError } from "../../../errors/normalize";
 
 export interface RefundRequestViewProps {
   order: Pick<OrderDocument, "id" | "totalPrice" | "currency" | "isNonRefundable" | "refunds" | "contestable">;

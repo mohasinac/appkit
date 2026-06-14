@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 /**
  * Coupons Repository
  *
@@ -5,7 +6,6 @@
  */
 
 import {
-import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   prepareForFirestore,
 } from "../../../providers/db-firebase";

@@ -1,7 +1,7 @@
+import { normalizeError } from "../../errors/normalize";
 import { getProviders } from "../../contracts";
 import { serverLogger } from "../../monitoring";
 import {
-import { normalizeError } from "../../errors/normalize";
   currentYear,
   formatCurrency,
   formatDateTime,

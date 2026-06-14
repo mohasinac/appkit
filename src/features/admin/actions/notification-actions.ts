@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import { notificationRepository } from "../repository/notification.repository";
 import { siteSettingsRepository } from "../repository/site-settings.repository";
 import { userRepository } from "../../auth/repository/user.repository";
@@ -8,7 +9,6 @@ import { decryptPii } from "../../../security/index";
 import type { NotificationDocument, NotificationCreateInput } from "../schemas";
 import type { NotificationTypePrefs } from "../../account/types";
 import {
-import { normalizeError } from "../../../errors/normalize";
   DEFAULT_NOTIFICATION_CHANNELS,
   meetsMinPriority,
 } from "../schemas/firestore";

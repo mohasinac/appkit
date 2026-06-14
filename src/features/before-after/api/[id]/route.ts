@@ -11,6 +11,7 @@
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
+import { normalizeError } from "../../../../errors/normalize";
 
 const ERR_DB_NOT_CONFIGURED = "DB not configured";
 const ERR_INTERNAL_SERVER_ERROR = "Internal server error";

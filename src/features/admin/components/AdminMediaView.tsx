@@ -11,6 +11,7 @@ import {
   Text,
   useToast,
 } from "../../../ui";
+import { normalizeError } from "../../../errors/normalize";
 import type { StackedViewShellProps } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {

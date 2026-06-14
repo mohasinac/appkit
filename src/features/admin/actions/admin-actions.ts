@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 /**
  * Admin Domain Mutations (appkit)
  *
@@ -13,7 +14,6 @@ import { userRepository } from "../../auth/repository/user.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
 import {
-import { normalizeError } from "../../../errors/normalize";
   finalizeStagedMediaUrl,
   finalizeStagedMediaField,
   finalizeStagedMediaArray,

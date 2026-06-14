@@ -14,6 +14,7 @@ import { z } from "zod";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { CategoryItem } from "../../types/index";
+import { normalizeError } from "../../../../errors/normalize";
 
 const ERR_CATEGORY_NOT_FOUND = "Category not found";
 

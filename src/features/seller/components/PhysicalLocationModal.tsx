@@ -6,6 +6,7 @@ import { Button } from "../../../ui/components/Button";
 import { Row } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Text } from "../../../ui/components/Typography";
+import { normalizeError } from "../../../errors/normalize";
 
 export interface PhysicalLocation {
   zone: string;

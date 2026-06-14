@@ -5,6 +5,7 @@ import {
   type FirebaseSieveResult,
   type SieveModel,
 } from "../../../providers/db-firebase";
+import { normalizeError } from "../../../errors/normalize";
 import { increment } from "../../../contracts/field-ops";
 import {
   SCAMMER_COLLECTION,

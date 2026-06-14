@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 /**
  * Bid Domain Actions (appkit/features/auctions)
  *
@@ -17,7 +18,6 @@ import { storeRepository } from "../../stores/repository/store.repository";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { maskPublicBid } from "../../../security";
 import {
-import { normalizeError } from "../../../errors/normalize";
   ERROR_MESSAGES,
   AuthorizationError,
   ValidationError,

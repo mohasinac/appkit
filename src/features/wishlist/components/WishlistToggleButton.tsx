@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { MouseEvent } from "react";
 import { Button, LoginRequiredModal } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
+import { normalizeError } from "../../../errors/normalize";
 
 interface WishlistToggleButtonProps {
   inWishlist: boolean;

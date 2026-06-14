@@ -13,6 +13,7 @@ import { NextResponse } from "next/server.js";
 import { blogRepository } from "../../repository/blog.repository";
 import type { BlogPostDocument } from "../../schemas";
 import type { BlogPost } from "../../types/index";
+import { normalizeError } from "../../../../errors/normalize";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 

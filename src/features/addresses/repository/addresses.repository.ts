@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 /**
  * AddressesRepository — SB-UNI-A 2026-05-13
  *
@@ -12,7 +13,6 @@
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
-import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   getFirestoreCount,
   prepareForFirestore,

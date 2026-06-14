@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 "use client";
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
@@ -17,7 +18,6 @@ import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import {
-import { normalizeError } from "../../../errors/normalize";
   toRecordArray,
   toRelativeDate,
   toStringValue,

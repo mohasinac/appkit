@@ -6,6 +6,7 @@ import type {
   FirebaseSieveResult,
   SieveModel,
 } from "../../../providers/db-firebase";
+import { normalizeError } from "../../../errors/normalize";
 import {
   BaseRepository,
   prepareForFirestore,

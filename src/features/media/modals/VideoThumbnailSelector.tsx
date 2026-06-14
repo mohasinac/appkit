@@ -18,6 +18,7 @@ import {
   Spinner,
   Text,
 } from "../../../ui";
+import { normalizeError } from "../../../errors/normalize";
 
 const __O = {
   hidden: "overflow-hidden",

@@ -1,8 +1,8 @@
+import { normalizeError } from "../../../errors/normalize";
 import type { DocumentReference } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
-import { normalizeError } from "../../../errors/normalize";
   BaseRepository,
   type FirebaseSieveFields,
   type FirebaseSieveResult,

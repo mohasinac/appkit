@@ -1,7 +1,7 @@
+import { normalizeError } from "../../../errors/normalize";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import type {
-import { normalizeError } from "../../../errors/normalize";
   FirebaseSieveFields,
   FirebaseSieveResult,
   SieveModel,

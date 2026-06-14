@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 /**
  * Chat Repository
  *
@@ -27,7 +28,6 @@ import { CONVERSATION_FIELDS, STORE_FIELDS } from "../../../constants/field-name
 import type { ChatRoomCreateInput, ChatRoomDocument } from "../schemas";
 import { CHAT_ROOM_COLLECTION } from "../schemas";
 import {
-import { normalizeError } from "../../../errors/normalize";
   encryptPiiFields,
   decryptPiiFields,
   CHAT_PII_FIELDS,

@@ -1,3 +1,4 @@
+import { normalizeError } from "./errors/normalize";
 // Single unified barrel
 // Runtime tags: [CLIENT-SSR] [CLIENT-ONLY] [SERVER-ONLY] [DB] [UTIL] [TYPE] [SCHEMA] [CONFIG]
 

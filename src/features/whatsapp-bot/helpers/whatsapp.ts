@@ -1,6 +1,6 @@
+import { normalizeError } from "../../../errors/normalize";
 import { createHmac, timingSafeEqual } from "crypto";
 import {
-import { normalizeError } from "../../../errors/normalize";
   getDefaultCurrencySymbol,
   getDefaultLocale,
 } from "../../../core/baseline-resolver";

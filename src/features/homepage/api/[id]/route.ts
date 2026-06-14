@@ -14,6 +14,7 @@ import { z } from "zod";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { HomepageSection } from "../../types/index";
+import { normalizeError } from "../../../../errors/normalize";
 
 const ERR_SECTION_NOT_FOUND = "Section not found";
 

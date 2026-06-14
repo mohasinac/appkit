@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 "use client"
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -9,7 +10,6 @@ import type { AuthUser } from "../types";
 import { useAuthEvent } from "./useAuthEvent";
 import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
 import {
-import { normalizeError } from "../../../errors/normalize";
   AUTH_ENDPOINTS,
   ACCOUNT_ENDPOINTS,
 } from "../../../constants/api-endpoints";

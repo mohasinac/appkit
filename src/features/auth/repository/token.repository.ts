@@ -1,8 +1,8 @@
+import { normalizeError } from "../../../errors/normalize";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import { BaseRepository } from "../../../providers/db-firebase";
 import {
-import { normalizeError } from "../../../errors/normalize";
   TOKEN_PII_FIELDS,
   TOKEN_PII_INDEX_MAP,
   addPiiIndices,

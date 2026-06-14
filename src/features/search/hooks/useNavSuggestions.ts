@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { normalizeError } from "../../../errors/normalize";
 
 export interface NavSuggestionRecord {
   objectID: string;

@@ -14,6 +14,7 @@ import { z } from "zod";
 import { getProviders } from "../../../../../contracts";
 import { createRouteHandler } from "../../../../../next";
 import type { CarouselSlide } from "../../../types/index";
+import { normalizeError } from "../../../../../errors/normalize";
 
 // ---- GET /api/carousel/[id] --------------------------------------------------
 

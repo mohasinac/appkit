@@ -11,6 +11,7 @@ import {
   buildConversationPingPaths,
   type ConversationPingTargets,
 } from "../realtime";
+import { normalizeError } from "../../../errors/normalize";
 
 export async function pingConversationRtdb(
   targets: ConversationPingTargets,

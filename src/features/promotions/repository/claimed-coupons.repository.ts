@@ -10,6 +10,7 @@ import {
   BaseRepository,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
+import { normalizeError } from "../../../errors/normalize";
 import {
   CLAIMED_COUPONS_COLLECTION,
   type ClaimedCouponDocument,

@@ -5,6 +5,7 @@ import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
 import { Div, LoginRequiredModal, Span, Text } from "../../../ui";
+import { normalizeError } from "../../../errors/normalize";
 
 const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-6 py-8 text-center space-y-2";
 

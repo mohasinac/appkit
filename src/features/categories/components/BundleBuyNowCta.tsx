@@ -13,6 +13,7 @@ import { Button, LoginRequiredModal, Stack, Text } from "../../../ui";
 import { useToast } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
+import { normalizeError } from "../../../errors/normalize";
 
 export interface BundleBuyNowCtaProps {
   bundleSlug: string;

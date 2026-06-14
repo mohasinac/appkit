@@ -10,6 +10,7 @@
  */
 import { NextResponse } from "next/server.js";
 import { getTrackingInfo } from "../../../actions/order-actions";
+import { normalizeError } from "../../../../../errors/normalize";
 
 export async function GET(
   _request: Request,

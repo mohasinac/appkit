@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 "use client";
 
 import { sortBy } from "@mohasinac/appkit";
@@ -6,7 +7,6 @@ import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import {
-import { normalizeError } from "../../../errors/normalize";
   Button,
   ConfirmDeleteModal,
   DataTable,

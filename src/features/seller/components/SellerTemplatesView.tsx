@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 "use client";
 
 import { sortBy } from "@mohasinac/appkit";
@@ -7,7 +8,6 @@ import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import {
-import { normalizeError } from "../../../errors/normalize";
   BulkActionBar,
   Button,
   ConfirmDeleteModal,

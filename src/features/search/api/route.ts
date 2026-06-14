@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 /**
  * feat-search — Next.js App Router API handler (GET /api/search)
  *
@@ -24,7 +25,6 @@ import { getProviders } from "../../../contracts";
 import { SearchRepository } from "../repository/search.repository";
 import type { SearchProductItem } from "../types/index";
 import {
-import { normalizeError } from "../../../errors/normalize";
   isListingTypeEnabled,
   enabledListingTypes,
 } from "../../../_internal/shared/listing-types/feature-flags";

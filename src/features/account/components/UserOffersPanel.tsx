@@ -5,6 +5,7 @@ import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Spinner, Text }
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../../seller/schemas";
+import { normalizeError } from "../../../errors/normalize";
 
 const CLS_COUNTER_AMOUNT = "text-sm font-semibold text-info dark:text-info";
 

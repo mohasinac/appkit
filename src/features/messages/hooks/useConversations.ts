@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getClientRealtimeProvider } from "../../../contracts/client-realtime";
 import { userConversationsPingPath } from "../realtime";
 import type { ConversationDocument } from "../schemas/firestore";
+import { normalizeError } from "../../../errors/normalize";
 
 const LIST_ENDPOINT = "/api/user/conversations";
 

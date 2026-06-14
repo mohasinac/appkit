@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react";
 import { Button, Div, Span, Text } from "../../../ui";
+import { normalizeError } from "../../../errors/normalize";
 
 const __P = {
   p6: "p-6",

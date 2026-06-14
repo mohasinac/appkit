@@ -11,6 +11,7 @@
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
+import { normalizeError } from "../../../../errors/normalize";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
