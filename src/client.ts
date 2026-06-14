@@ -719,3 +719,30 @@ export type {
   SchemasShape,
   WebhookSchemaBucket,
 } from "./schemas/index";
+
+// ── W3 catch-clause normalizer ──────────────────────────────────────────────
+export {
+  normalizeError,
+  getErrorMessage,
+  isApiNormalized,
+  isAppNormalized,
+  isFirebaseAuthNormalized,
+  isFirebaseFirestoreNormalized,
+  isFirebaseStorageNormalized,
+  isNativeNormalized,
+  isNetworkNormalized,
+  isUnknownNormalized,
+  isZodNormalized,
+} from "./errors/normalize";
+export type {
+  NormalizedError,
+  NormalizedApiError,
+  NormalizedAppError,
+  NormalizedFirebaseAuthError,
+  NormalizedFirebaseFirestoreError,
+  NormalizedFirebaseStorageError,
+  NormalizedNativeError,
+  NormalizedNetworkError,
+  NormalizedUnknownThrownValue,
+  NormalizedZodError,
+} from "./errors/normalize";

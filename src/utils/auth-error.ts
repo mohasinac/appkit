@@ -1,21 +1,6 @@
-/**
- * Detects auth/authorization errors thrown by server actions or fetch responses.
- *
- * Pass the caught error (and optionally the HTTP status code for fetch-based
- * callers) to determine whether the caller should prompt the user to log in
- * rather than displaying a generic error message.
- */
-export function isAuthError(err: unknown, httpStatus?: number): boolean {
-  if (httpStatus === 401 || httpStatus === 403) return true;
-  const msg = (err instanceof Error ? err.message : String(err)).toLowerCase();
-  return (
-    msg.includes("unauthorized") ||
-    msg.includes("not authenticated") ||
-    msg.includes("unauthenticated") ||
-    msg.includes("authentication required") ||
-    msg.includes("invalid or expired session") ||
-    msg.includes("sign in to") ||
-    msg === "error 401" ||
-    msg === "error 403"
-  );
-}
+// W3 — `isAuthError` was folded into the central catch-clause normalizer at
+// `../errors/normalize.ts`. This file is a thin re-export shim so existing
+// consumers (17 imports across the monorepo) continue to compile while
+// migrating to `import { isAuthError } from "@mohasinac/appkit"`.
+
+export { isAuthError } from "../errors/normalize";

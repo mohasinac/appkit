@@ -33,3 +33,34 @@ export {
   installDegradedReadReporter,
   type DegradedReadReport,
 } from "./safe-read";
+
+// W3 — catch-clause normalizer. Every catch (e: unknown) funnels through
+// normalizeError(e) which returns a NormalizedError discriminated union.
+// `isAuthError` here replaces the legacy keyword matcher at
+// `appkit/src/utils/auth-error.ts` (now a thin re-export shim).
+export {
+  normalizeError,
+  getErrorMessage,
+  isAuthError,
+  isApiNormalized,
+  isAppNormalized,
+  isFirebaseAuthNormalized,
+  isFirebaseFirestoreNormalized,
+  isFirebaseStorageNormalized,
+  isNativeNormalized,
+  isNetworkNormalized,
+  isUnknownNormalized,
+  isZodNormalized,
+} from "./normalize";
+export type {
+  NormalizedError,
+  NormalizedApiError,
+  NormalizedAppError,
+  NormalizedFirebaseAuthError,
+  NormalizedFirebaseFirestoreError,
+  NormalizedFirebaseStorageError,
+  NormalizedNativeError,
+  NormalizedNetworkError,
+  NormalizedUnknownThrownValue,
+  NormalizedZodError,
+} from "./normalize";
