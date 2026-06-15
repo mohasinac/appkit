@@ -114,7 +114,7 @@ export function ImageEditor({
         </Div>
 
         {/* Toolbar */}
-        <Row gap="sm" justify="center" className="flex-wrap">
+        <Row gap="sm" justify="center" wrap>
           <Button
             type="button"
             variant="outline"
@@ -176,7 +176,7 @@ export function ImageEditor({
 
         {/* Aspect ratio presets */}
         {!aspectRatio && (
-          <Row gap="sm" justify="center" className="flex-wrap">
+          <Row gap="sm" justify="center" wrap>
             {[
               { label: "Free", ratio: undefined },
               { label: "1:1", ratio: 1 },

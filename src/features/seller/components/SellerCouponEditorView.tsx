@@ -108,7 +108,7 @@ export function SellerCouponEditorView({
           aria-hidden="true"
         />
         <Div className="border-b border-[var(--appkit-color-border)] px-6 py-5">
-          <Row justify="between" className="gap-3">
+          <Row justify="between" gap="3">
             <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
               {isEdit ? "Edit Coupon" : "Create Coupon"}
             </Heading>
@@ -318,7 +318,7 @@ export function SellerCouponEditorView({
 
         {/* Footer actions */}
         <Div className="border-t border-[var(--appkit-color-border)] px-6 py-4">
-          <Row justify="end" className="gap-3">
+          <Row justify="end" gap="3">
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>
                 Cancel

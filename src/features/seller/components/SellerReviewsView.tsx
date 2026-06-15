@@ -295,7 +295,7 @@ export function SellerReviewsView({
                   className="p-4 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]"
                 >
                   <Div className="flex items-start justify-between gap-3 flex-wrap">
-                    <Row align="start" className="gap-3 flex-1 min-w-0">
+                    <Row align="start" className="flex-1 min-w-0" gap="3">
                       <Checkbox
                         checked={selectedIds.has(review.id)}
                         onChange={() => toggleSelected(review.id)}
@@ -331,7 +331,7 @@ export function SellerReviewsView({
                     </Row>
 
                     {/* Actions */}
-                    <Row className="gap-2 flex-shrink-0">
+                    <Row className="flex-shrink-0" gap="sm">
                       <Button variant="outline" size="sm" onClick={() => openReply(review)}>
                         {review.sellerReply ? "Edit Reply" : ACTIONS.STORE["reply-review"].label}
                       </Button>

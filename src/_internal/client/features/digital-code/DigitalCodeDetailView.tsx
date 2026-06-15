@@ -78,7 +78,7 @@ export function DigitalCodeDetailView({
 
           {/* Info */}
           <Stack gap="sm">
-            <Row className="flex-wrap gap-2">
+            <Row gap="sm" wrap>
               <Badge variant="secondary">Digital Code</Badge>
               {codesLeft > 0 ? (
                 <Badge variant="active">{codesLeft} available</Badge>

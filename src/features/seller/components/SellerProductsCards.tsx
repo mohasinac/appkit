@@ -121,7 +121,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
                 <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
               </Row>
             </a>
-            <Row className="gap-1 flex-shrink-0">
+            <Row className="flex-shrink-0" gap="xs">
               <Button variant="ghost" size="sm" onClick={() => onEdit(row)} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
               <Button variant="ghost" size="sm" onClick={() => onDuplicate(row)} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>
               {onDelete && (

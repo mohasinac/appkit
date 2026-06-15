@@ -90,7 +90,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       )}
       <Row wrap gap="3" className="mt-4">
         {order.items.slice(0, 3).map((item, i) => (
-          <Row key={i} className="gap-2">
+          <Row key={i} gap="sm">
             {item.image && (
               <Div
                 role="img"

@@ -315,7 +315,7 @@ export function GroupSettingsPanel({
           {/* State 2: Is parent */}
           {isGroupParent && groupId && (
             <Stack gap="md">
-              <Row align="start" gap="sm" className="flex-wrap">
+              <Row align="start" gap="sm" wrap>
                 <Div className="flex-1 min-w-[200px]">
                   <FormField
                     name="groupTitle"

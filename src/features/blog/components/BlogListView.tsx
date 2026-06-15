@@ -75,7 +75,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
         )}
       </Div>
       <Div className={`flex flex-1 flex-col ${__P.p5}`}>
-        <Row className="mb-2 gap-2 flex-wrap">
+        <Row className="mb-2" gap="sm" wrap>
           <Span size="xs" weight="medium" className="rounded-full bg-primary/10 px-2 py-0.5 text-primary" transform="capitalize">
             {post.category}
           </Span>
@@ -101,7 +101,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             {post.excerpt}
           </Text>
         )}
-        <Row className="mt-auto pt-3 gap-3">
+        <Row className="mt-auto pt-3" gap="3">
           {post.authorAvatar ? (
             <Div
               role="img"

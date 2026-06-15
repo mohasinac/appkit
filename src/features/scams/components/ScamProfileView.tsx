@@ -105,7 +105,7 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
   return (
     <Card variant="elevated" padding="lg">
       <Stack gap="md">
-        <Row justify="between" gap="md" align="start" className="flex-wrap">
+        <Row justify="between" gap="md" align="start" wrap>
           <Stack gap="xs">
             <Heading level={1} className="text-2xl" weight="bold">
               {scammer.displayNames[0]}
@@ -176,7 +176,7 @@ function ScammerIncidentsSection({ incidents }: { incidents: ScammerIncidentDocu
           {incidents.map((inc) => (
             <Card key={inc.id} variant="outlined" padding="md">
               <Stack gap="xs">
-                <Row justify="between" align="start" gap="sm" className="flex-wrap">
+                <Row justify="between" align="start" gap="sm" wrap>
                   <Row gap="xs" wrap>
                     <Badge variant="warning">
                       {SCAM_TYPE_LABELS[inc.scamType] ?? inc.scamType}

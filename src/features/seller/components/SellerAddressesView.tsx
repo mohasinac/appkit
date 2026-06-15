@@ -348,7 +348,7 @@ export function SellerAddressesView({
                         <Td className="px-3 py-2">{addr.city}, {addr.state}</Td>
                         <Td className="px-3 py-2 tabular-nums">{addr.phone}</Td>
                         <Td className="px-3 py-2 text-right">
-                          <Row justify="end" className="gap-1">
+                          <Row justify="end" gap="xs">
                             <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
                             <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
                           </Row>

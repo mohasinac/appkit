@@ -72,7 +72,7 @@ export function LiveItemDetailView({
 
           {/* Info */}
           <Stack gap="sm">
-            <Row className="flex-wrap gap-2">
+            <Row gap="sm" wrap>
               <Badge variant="secondary">Live Item</Badge>
               {meta?.vendorVerified && (
                 <Badge variant="active">Verified Seller</Badge>

@@ -91,7 +91,7 @@ function AlertCard({
   return (
     <Div surface="card" padding="sm" className="flex items-start justify-between gap-4">
       <Div className="flex-1 min-w-0">
-        <Row className="gap-2 mb-1 flex-wrap">
+        <Row className="mb-1" gap="sm" wrap>
           <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">{alert.label}</Text>
           <Badge variant={alert.isActive ? "success" : "default"}>
             {alert.isActive ? "Active" : "Paused"}
@@ -100,7 +100,7 @@ function AlertCard({
         <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">
           {metricLabel} {opLabel} {alert.threshold} · {windowLabel}
         </Text>
-        <Row className="gap-1 flex-wrap">
+        <Row gap="xs" wrap>
           {alert.notifyChannels.map((ch) => (
             <Badge key={ch} variant={OPERATOR_BADGE[alert.operator] ?? "default"}>
               {ch}
@@ -288,7 +288,7 @@ export function SellerAnalyticsAlertsView({
               <Text className="text-zinc-700 dark:text-zinc-300 mb-2" size="xs" weight="medium">
                 Notify via
               </Text>
-              <Row className="gap-2 flex-wrap">
+              <Row gap="sm" wrap>
                 {CHANNEL_OPTIONS.map((ch) => (
                   <button
                     key={ch.value}

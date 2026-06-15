@@ -101,7 +101,7 @@ export function ClassifiedDetailView({
 
           {/* Info */}
           <Stack gap="sm">
-            <Row className="flex-wrap gap-2">
+            <Row gap="sm" wrap>
               <Badge variant="secondary">Classified</Badge>
               {meta?.negotiable && <Badge variant="secondary">Negotiable</Badge>}
               {meta?.acceptsShipping && <Badge variant="secondary">Shipping available</Badge>}

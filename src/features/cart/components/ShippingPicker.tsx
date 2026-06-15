@@ -84,7 +84,7 @@ export function ShippingPicker({
             role="radio"
             className="w-full justify-start text-left"
           >
-            <Row gap="sm" className="w-full flex-wrap" align="center">
+            <Row gap="sm" className="w-full" wrap align="center">
               <Div className="flex-1">
                 <Text size="sm" weight={selected ? "semibold" : "normal"}>
                   {p.label}

@@ -249,13 +249,13 @@ export function MarketplacePreorderCard({
                 className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500 dark:text-zinc-400`}
               />
             ) : null}
-            <Row justify="between" className="mt-1 gap-2">
+            <Row justify="between" className="mt-1" gap="sm">
               <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
                 {formatCurrency(product.price, getDefaultCurrency())}
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}
             </Row>
-            <Row justify="between" className="mt-2 gap-2">
+            <Row justify="between" className="mt-2" gap="sm">
               <Button type="button" variant="primary" size="sm" className="flex-1 text-xs" onClick={handleNavigate}>
                 {mergedLabels.reserveNow}
               </Button>

@@ -165,7 +165,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
         <Container size="xl">
           <Stack gap="xl">
             {/* Page header */}
-            <Row justify="between" gap="md" align="end" className="flex-wrap">
+            <Row justify="between" gap="md" align="end" wrap>
               <Stack gap="xs">
                 <Heading level={1} className="text-3xl" weight="semibold">
                   Scam Registry
@@ -278,7 +278,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <Row justify="center" gap="sm" className="flex-wrap">
+              <Row justify="center" gap="sm" wrap>
                 {result.page > 1 && (
                   <Link href={buildHref({ page: String(result.page - 1) })} className="appkit-button appkit-button--outline appkit-button--sm">← Prev</Link>
                 )}

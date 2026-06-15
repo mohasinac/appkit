@@ -65,7 +65,7 @@ type BlogPostViewLabels = BlogPostViewProps["labels"] & object;
 function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostViewLabels) {
   return (
     <Div className="mb-8">
-      <Row className="gap-2 mb-4">
+      <Row className="mb-4" gap="sm">
         <Span size="xs" weight="medium" className={`inline-block px-2 py-0.5 rounded-full capitalize ${CATEGORY_BADGE[post.category] ?? ""}`}>{post.category}</Span>
         {post.isFeatured && <Span size="xs" weight="medium" className={CLS_FEATURED_BADGE}>{labels?.featured ?? "Featured"}</Span>}
       </Row>

@@ -109,7 +109,7 @@ export function NonRefundableConsentModal({
         </>
       }
     >
-      <Stack className="gap-3">
+      <Stack gap="3">
         {itemTitle && (
           <Text weight="semibold">{itemTitle}</Text>
         )}

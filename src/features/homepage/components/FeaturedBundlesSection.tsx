@@ -120,7 +120,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
           )}
         </Div>
         <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>
-        <Row gap="sm" align="center" className="mt-1 flex-wrap">
+        <Row gap="sm" align="center" className="mt-1" wrap>
           <Text size="sm" weight="bold">
             {bundle.bundlePriceInPaise
               ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")

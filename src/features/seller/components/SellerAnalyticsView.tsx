@@ -31,7 +31,7 @@ function DefaultDateRange({
   labels: { dateFrom?: string; dateTo?: string };
 }) {
   return (
-    <Row gap="md" align="center" wrap className="flex-wrap">
+    <Row gap="md" align="center" wrap>
       <Label className="flex items-center gap-2 text-sm text-[var(--appkit-color-text-muted)]">
         <Text size="sm" variant="secondary">{labels.dateFrom ?? "From"}</Text>
         <input

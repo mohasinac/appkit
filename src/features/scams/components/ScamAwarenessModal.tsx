@@ -91,7 +91,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
         </Div>
 
         {/* Links */}
-        <Row gap="md" className="flex-wrap text-sm">
+        <Row gap="md" className="text-sm" wrap>
           <a
             href={String(ROUTES.PUBLIC.SCAM_TYPES)}
             target="_blank"

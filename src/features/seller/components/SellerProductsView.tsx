@@ -107,7 +107,7 @@ function TypeDropdown({
     flags.live && { value: "live", label: "Live" },
   ].filter(Boolean) as { value: ListingKind; label: string }[];
   return (
-    <Row className="gap-2 px-3 lg:px-4 py-2 border-b border-[var(--appkit-color-border)]">
+    <Row className="px-3 lg:px-4 py-2 border-b border-[var(--appkit-color-border)]" gap="sm">
       <Text className="tracking-wide text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
         Listing type
       </Text>
@@ -537,7 +537,7 @@ export function SellerProductsView({
             renderRowActions={(row) => {
               const isPublished = (statusOverrides.get(row.id) ?? row.status) === "published";
   return (
-                <Row className="gap-1">
+                <Row gap="xs">
                   <Button
                     variant="ghost"
                     size="sm"

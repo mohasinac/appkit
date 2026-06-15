@@ -76,7 +76,7 @@ export function ViewReviewModal({
                 </Text>
               )}
             </Row>
-            <Row className="gap-2 mt-0.5">
+            <Row className="mt-0.5" gap="sm">
               <StarRating value={review.rating} size="sm" readOnly />
               {date && (
                 <Text className="text-zinc-400 dark:text-zinc-400" size="xs">

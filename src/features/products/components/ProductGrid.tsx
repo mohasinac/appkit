@@ -268,7 +268,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           const visible = categories.slice(0, MAX_CHIPS);
           const overflow = Math.max(0, categories.length - MAX_CHIPS);
           return (
-            <Row className="mt-1 gap-1 flex-wrap">
+            <Row className="mt-1" gap="xs" wrap>
               {visible.map((name) => (
                 <Span
                   key={name}
@@ -311,7 +311,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         })()}
 
         {product.rating !== undefined && (
-          <Row className="mt-1 gap-1">
+          <Row className="mt-1" gap="xs">
             <Span className={CLS_STAR}>★</Span>
             <Span className="text-[11px] text-zinc-500 dark:text-zinc-400">
               {product.rating.toFixed(1)}
@@ -322,7 +322,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
         {/* Price row */}
         <Div className="mt-auto pt-2">
-          <Row align="baseline" className="gap-2">
+          <Row align="baseline" gap="sm">
             <Span size="base" weight="bold" className="text-primary dark:text-primary-400">
               {formatCurrency(product.price, getDefaultCurrency())}
             </Span>

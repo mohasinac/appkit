@@ -101,7 +101,7 @@ export function BlogFeaturedCard({
         {/* Content */}
         <Div className={`flex flex-1 flex-col ${__P.p4}`}>
           {/* Category + featured badges */}
-          <Row className="gap-1.5 mb-2 flex-wrap">
+          <Row className="gap-1.5 mb-2" wrap>
             <Span
               size="xs" weight="medium"
               className={`inline-block px-2 py-0.5 rounded-full capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
@@ -133,7 +133,7 @@ export function BlogFeaturedCard({
           )}
 
           {/* Footer — pushed to bottom */}
-          <Row className="mt-auto gap-3 text-xs text-zinc-400 dark:text-zinc-400 flex-wrap">
+          <Row className="mt-auto text-xs text-zinc-400 dark:text-zinc-400" gap="3" wrap>
             {post.authorName && (
               <Span>{safeDisplayName(post.authorName, "Author")}</Span>
             )}
