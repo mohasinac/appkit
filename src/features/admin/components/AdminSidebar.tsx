@@ -136,7 +136,7 @@ function DrawerPanel({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 shadow-2xl"
+        className="fixed top-0 right-0 z-50 h-full w-64 border-l border-zinc-200 dark:border-slate-700 shadow-2xl" surface="default"
       >
         <Row className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>

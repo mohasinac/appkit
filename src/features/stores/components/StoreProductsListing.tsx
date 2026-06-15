@@ -162,11 +162,11 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
                 key={i}
                 className="border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse" rounded="xl"
               >
-                <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-square dark:bg-slate-700" surface="subtle" />
                 <Div className={`${__P.p3} space-y-2`}>
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-3/4" rounded="default" />
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/2" rounded="default" />
-                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-1/3" rounded="default" />
+                  <Div className="h-3 dark:bg-slate-700 w-3/4" surface="subtle" rounded="default" />
+                  <Div className="h-3 dark:bg-slate-700 w-1/2" surface="subtle" rounded="default" />
+                  <Div className="h-4 dark:bg-slate-700 w-1/3" surface="subtle" rounded="default" />
                 </Div>
               </Div>
             ))}

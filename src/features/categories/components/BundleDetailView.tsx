@@ -125,7 +125,7 @@ export function BundleDetailView({
                   />
                 ) : (
                   <Div
-                    className="border border-dashed border-zinc-300 bg-zinc-50 text-sm dark:bg-zinc-900" rounded="xl" padding="md"
+                    className="border border-dashed border-zinc-300 text-sm" surface="muted" rounded="xl" padding="md"
                     aria-live="polite"
                   >
                     <Text weight="semibold" className="mb-1 block">

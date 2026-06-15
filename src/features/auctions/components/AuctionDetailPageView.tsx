@@ -130,7 +130,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       )}
       {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
       {!productFeatures && features.length > 0 && (
-        <Div className="border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4" padding="y-sm" rounded="xl">
+        <Div className="border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 px-4" surface="muted" padding="y-sm" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">About this item</Text>
           <Ul className="space-y-1.5">
             {features.map((f, i) => <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
@@ -463,7 +463,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     {specs.map((s, i) => (
                       <Div
                         key={i}
-                        className="flex gap-4 px-4 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50" padding="y-sm"
+                        className="flex gap-4 px-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="y-sm"
                       >
                         <Dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
                           {s.name}

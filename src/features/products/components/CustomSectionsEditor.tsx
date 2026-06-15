@@ -44,7 +44,7 @@ export function CustomSectionsEditor({
       {sections.map((section, i) => (
         <Div
           key={section.id}
-          className="bg-zinc-50 dark:bg-zinc-900/40 space-y-3" rounded="xl" padding="md" border="default"
+          className="dark:bg-zinc-900/40 space-y-3" surface="muted" rounded="xl" padding="md" border="default"
         >
           <Row align="center" justify="between" gap="sm">
             <Heading

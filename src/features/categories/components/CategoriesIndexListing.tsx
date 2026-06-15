@@ -35,10 +35,10 @@ function renderCategoryGrid(props: {
       <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
           <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
-            <Div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
+            <Div className="aspect-[4/3] dark:bg-slate-700" surface="subtle" />
             <Div className={`${__P.p3}.5 space-y-2`}>
-              <Div className="h-3.5 bg-zinc-200 dark:bg-slate-700 w-3/4" rounded="default" />
-              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-full" rounded="default" />
+              <Div className="h-3.5 dark:bg-slate-700 w-3/4" surface="subtle" rounded="default" />
+              <Div className="h-3 dark:bg-slate-700 w-full" surface="subtle" rounded="default" />
             </Div>
           </Div>
         ))}

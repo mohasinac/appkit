@@ -261,7 +261,7 @@ export function MediaPickerModal({
                     aria-pressed={isSelected}
                   >
                     <Row
-                      className="aspect-square bg-zinc-100 dark:bg-slate-800 w-full" align="center" justify="center"
+                      className="aspect-square w-full" surface="subtle" align="center" justify="center"
                     >
                       {isImage ? (
                         // eslint-disable-next-line @next/next/no-img-element

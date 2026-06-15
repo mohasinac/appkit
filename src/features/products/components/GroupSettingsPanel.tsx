@@ -352,7 +352,7 @@ export function GroupSettingsPanel({
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={child.images[0]} alt={child.title} className="w-8 h-8 rounded-full object-cover border border-zinc-200 dark:border-zinc-700" />
                         ) : (
-                          <Div className="w-8 h-8 bg-zinc-100 dark:bg-zinc-800" rounded="full" />
+                          <Div className="w-8 h-8" surface="subtle" rounded="full" />
                         )}
                         <Text className="flex-1 truncate" color="primary" size="sm">{child.title}</Text>
                         <Button

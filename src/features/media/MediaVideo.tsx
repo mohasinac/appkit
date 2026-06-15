@@ -68,7 +68,7 @@ export function MediaVideo({
   if (!resolvedSrc) {
     return (
       <Row
-        className="absolute inset-0 bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl" align="center" justify="center"
+        className="absolute inset-0 text-zinc-400 text-4xl" surface="subtle" align="center" justify="center"
         role="img"
         aria-label={alt}
       >

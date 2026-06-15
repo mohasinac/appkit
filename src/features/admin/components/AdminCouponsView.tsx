@@ -147,9 +147,9 @@ export function AdminCouponsView({
               key={i}
               className="border-2 border-zinc-100 dark:border-slate-700 animate-pulse space-y-3" rounded="xl" padding="md"
             >
-              <Div className="h-6 bg-zinc-200 dark:bg-slate-700 w-2/3" rounded="default" />
-              <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-full" rounded="default" />
-              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/2" rounded="default" />
+              <Div className="h-6 dark:bg-slate-700 w-2/3" surface="subtle" rounded="default" />
+              <Div className="h-4 dark:bg-slate-700 w-full" surface="subtle" rounded="default" />
+              <Div className="h-3 dark:bg-slate-700 w-1/2" surface="subtle" rounded="default" />
             </Div>
           ))}
         </Div>

@@ -171,9 +171,7 @@ export function MediaUploadList({
         <Div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {value.map((item, index) => (
             <Div
-              key={`${item.url}-${index}`}
-              className="bg-zinc-50 dark:bg-zinc-900" rounded="lg" padding="sm" border="default"
-            >
+              key={`${item.url}-${index}`} rounded="lg" padding="sm" border="default" surface="muted">
               {item.type === "video" ? (
                 <Div className={`relative aspect-square max-h-24 ${__O.hidden} rounded-lg`}>
                   <MediaVideo

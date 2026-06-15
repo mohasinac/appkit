@@ -60,7 +60,7 @@ export function EventOfferCard({
           ) : null}
         </Stack>
 
-        <Row className="bg-zinc-50 dark:bg-zinc-900 px-4" padding="y-sm" align="center" gap="3" rounded="lg">
+        <Row className="px-4" surface="muted" padding="y-sm" align="center" gap="3" rounded="lg">
           <code className="flex-1 font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
             {couponCode}
           </code>

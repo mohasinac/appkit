@@ -41,23 +41,23 @@ function SkeletonCard({ view }: { view: "grid" | "list" }) {
   if (view === "list") {
     return (
       <Row gap="sm" className="px-4 animate-pulse" padding="y-sm">
-        <Div className="h-4 w-4 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="default" />
+        <Div className="h-4 w-4 dark:bg-slate-700 shrink-0" surface="subtle" rounded="default" />
         <Stack gap="xs" className="flex-1">
-          <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-2/3" rounded="default" />
-          <Div className="h-2.5 bg-zinc-200 dark:bg-slate-700 w-1/3" rounded="default" />
+          <Div className="h-3 dark:bg-slate-700 w-2/3" surface="subtle" rounded="default" />
+          <Div className="h-2.5 dark:bg-slate-700 w-1/3" surface="subtle" rounded="default" />
         </Stack>
-        <Div className="h-5 w-16 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="full" />
-        <Div className="h-3 w-20 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="default" />
+        <Div className="h-5 w-16 dark:bg-slate-700 shrink-0" surface="subtle" rounded="full" />
+        <Div className="h-3 w-20 dark:bg-slate-700 shrink-0" surface="subtle" rounded="default" />
       </Row>
     );
   }
   return (
     <Div rounded="xl" border="subtle" className={`${__O.hidden} animate-pulse`}>
       <Stack gap="xs" padding="md">
-        <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-3/4" rounded="default" />
-        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/2" rounded="default" />
-        <Div className="h-5 bg-zinc-200 dark:bg-slate-700 w-20 mt-1" rounded="full" />
-        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/3" rounded="default" />
+        <Div className="h-4 dark:bg-slate-700 w-3/4" surface="subtle" rounded="default" />
+        <Div className="h-3 dark:bg-slate-700 w-1/2" surface="subtle" rounded="default" />
+        <Div className="h-5 dark:bg-slate-700 w-20 mt-1" surface="subtle" rounded="full" />
+        <Div className="h-3 dark:bg-slate-700 w-1/3" surface="subtle" rounded="default" />
       </Stack>
     </Div>
   );

@@ -38,13 +38,13 @@ export function EventsListView<T extends EventItem = EventItem>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden bg-zinc-100 dark:bg-zinc-800" rounded="xl" border="default"
+            className="animate-pulse overflow-hidden" surface="subtle" rounded="xl" border="default"
           >
-            <Div className="aspect-video bg-zinc-200 dark:bg-zinc-700" />
+            <Div className="aspect-video dark:bg-zinc-700" surface="subtle" />
             <Div className={`space-y-2 ${__P.p4}`}>
-              <Div className="h-4 w-16 bg-zinc-200 dark:bg-zinc-700" rounded="default" />
-              <Div className="h-5 w-full bg-zinc-200 dark:bg-zinc-700" rounded="default" />
-              <Div className="h-4 w-3/4 bg-zinc-200 dark:bg-zinc-700" rounded="default" />
+              <Div className="h-4 w-16 dark:bg-zinc-700" surface="subtle" rounded="default" />
+              <Div className="h-5 w-full dark:bg-zinc-700" surface="subtle" rounded="default" />
+              <Div className="h-4 w-3/4 dark:bg-zinc-700" surface="subtle" rounded="default" />
             </Div>
           </Div>
         ))}

@@ -143,7 +143,7 @@ export function FilterFacetSection({
         </Button>
 
         {dropdownOpen && (
-          <Div className="absolute left-0 top-full z-[var(--appkit-z-dropdown,50)] mt-1 min-w-[180px] max-w-[260px] bg-white dark:bg-slate-900" rounded="xl" shadow="lg" border="default">
+          <Div className="absolute left-0 top-full z-[var(--appkit-z-dropdown,50)] mt-1 min-w-[180px] max-w-[260px]" surface="default" rounded="xl" shadow="lg" border="default">
             {searchable && (
               <Div className="border-b border-zinc-100 dark:border-slate-800" padding="xs">
                 <Input

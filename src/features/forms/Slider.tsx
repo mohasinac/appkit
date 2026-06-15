@@ -71,7 +71,7 @@ export function Slider({
       <Row className="relative h-5">
         {/* Track background */}
         <Row className="absolute inset-y-0 w-full" align="center">
-          <Div className="w-full h-1.5 bg-zinc-200 dark:bg-slate-700" rounded="full">
+          <Div className="w-full h-1.5 dark:bg-slate-700" surface="subtle" rounded="full">
             <Div
               className="h-full bg-primary-500 dark:bg-secondary-500 transition-all" rounded="full"
               // audit-inline-style-ok: computed percentage

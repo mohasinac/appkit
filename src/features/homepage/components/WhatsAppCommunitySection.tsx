@@ -41,7 +41,7 @@ export function WhatsAppCommunitySection({
     return (
       <Section className={`py-16 px-4 sm:px-8 ${themed.bgSecondary} ${className}`}>
         <Div className="w-full max-w-7xl mx-auto">
-          <Div className="h-72 bg-zinc-200 dark:bg-slate-700 animate-pulse" rounded="2xl" />
+          <Div className="h-72 dark:bg-slate-700 animate-pulse" surface="subtle" rounded="2xl" />
         </Div>
       </Section>
     );

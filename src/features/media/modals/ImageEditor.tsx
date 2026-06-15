@@ -104,7 +104,7 @@ export function ImageEditor({
         </Text>
 
         {/* Cropper */}
-        <Div className="relative w-full max-h-[400px] overflow-hidden bg-zinc-100 dark:bg-slate-800" rounded="lg">
+        <Div className="relative w-full max-h-[400px] overflow-hidden" surface="subtle" rounded="lg">
           <Cropper
             ref={cropperRef}
             src={imageUrl}

@@ -199,7 +199,7 @@ export function ShopByCategorySection({
         {isLoading ? (
           <Div className={`flex gap-3 ${__O.hidden} px-1`}>
             {Array.from({ length: 6 }).map((_, i) => (
-              <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse bg-zinc-200 dark:bg-slate-700" rounded="xl" />
+              <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse dark:bg-slate-700" surface="subtle" rounded="xl" />
             ))}
           </Div>
         ) : (

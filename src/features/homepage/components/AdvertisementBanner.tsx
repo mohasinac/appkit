@@ -56,7 +56,7 @@ export function AdvertisementBanner({
     return (
       <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
-          <Div className="h-72 bg-zinc-200 dark:bg-slate-700 animate-pulse" rounded="2xl" />
+          <Div className="h-72 dark:bg-slate-700 animate-pulse" surface="subtle" rounded="2xl" />
         </Div>
       </Section>
     );
