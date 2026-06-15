@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Details, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, Summary, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -117,13 +117,13 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           if (domainPerms.length === 0) return null;
           const checked = domainPerms.filter((p) => permissions.has(p)).length;
           return (
-            <details key={domain.prefix} className="group">
-              <summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
+            <Details key={domain.prefix} className="group">
+              <Summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
                 <Span size="xs">{domain.label}</Span>
                 <Span size="xs" weight="normal" className="normal-case" color="faint">
                   {checked}/{domainPerms.length}
                 </Span>
-              </summary>
+              </Summary>
               <Div className="grid grid-cols-2 gap-x-2 gap-y-1.5 py-2.5" surface="muted" padding="x-sm">
                 {domainPerms.map((perm) => (
                   <label
@@ -140,7 +140,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
                   </label>
                 ))}
               </Div>
-            </details>
+            </Details>
           );
         })}
       </Div>

@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { Button, Div, Heading, Input, Label, Li, Row, Span, Stack, Text, Textarea, Ul } from "../../../ui";
+import { Button, Details, Div, Heading, Input, Label, Li, Row, Span, Stack, Summary, Text, Textarea, Ul } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 
 type WizardStep = "image" | "place" | "details" | "review";
@@ -917,13 +917,13 @@ export function CharacterHotspotForm({
           )}
 
           {/* Image settings */}
-          <details
+          <Details
             className="rounded-lg border p-3"
             style={{ borderColor: "var(--border-ink)" }}
           >
-            <summary className="cursor-pointer text-sm font-medium">
+            <Summary className="cursor-pointer text-sm font-medium">
               Image Settings
-            </summary>
+            </Summary>
             <Stack className="mt-3" gap="3">
               <Label
                 className="inline-flex cursor-pointer items-center gap-2 rounded border-2 border-dashed px-3 py-1.5 transition-colors hover:opacity-80" size="sm" weight="medium"
@@ -962,7 +962,7 @@ export function CharacterHotspotForm({
                 Active (show on homepage)
               </Label>
             </Stack>
-          </details>
+          </Details>
 
           <Row
             justify="between"

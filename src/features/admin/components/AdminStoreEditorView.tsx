@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, StackedViewShell, Toggle, useToast } from "../../../ui";
+import { Button, Details, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, StackedViewShell, Summary, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { StoreCapability } from "../../auth/permissions/constants";
@@ -184,13 +184,13 @@ export function AdminStoreEditorView({
         {CAPABILITY_GROUPS.map((group) => {
           const checked = group.caps.filter((c) => capabilities.has(c.key)).length;
           return (
-            <details key={group.label} className="group">
-              <summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
+            <Details key={group.label} className="group">
+              <Summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
                 <Span size="xs">{group.label}</Span>
                 <Span size="xs" weight="normal" className="normal-case" color="faint">
                   {checked}/{group.caps.length}
                 </Span>
-              </summary>
+              </Summary>
               <Div className="grid grid-cols-2 gap-x-2 gap-y-1.5 py-2.5" surface="muted" padding="x-sm">
                 {group.caps.map((cap) => (
                   <label
@@ -207,7 +207,7 @@ export function AdminStoreEditorView({
                   </label>
                 ))}
               </Div>
-            </details>
+            </Details>
           );
         })}
       </Div>

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 /** Details + Summary — primitive for native `<details>` disclosure widget. */
 export type DetailsTone = "default" | "muted" | "card";
@@ -17,10 +17,18 @@ export interface DetailsProps {
   padding?: DetailsPadding;
   /** Auto-collapse other `<Details>` with the same `name` (browser-handled). */
   name?: string;
+  /**
+   * Escape hatch for state-related classNames like `group` that drive
+   * sibling `group-open:` animations. Variant slots (tone/padding) own
+   * the visual styling; this is for behaviour-coupled utility classes.
+   */
+  className?: string;
+  style?: CSSProperties;
 }
 
 export interface SummaryProps {
   children: ReactNode;
+  className?: string;
 }
 
 const TONE_CLS: Record<DetailsTone, string> = {
@@ -45,6 +53,8 @@ export function Details({
   tone = "default",
   padding = "md",
   name,
+  className,
+  style,
 }: DetailsProps) {
   return (
     <details
@@ -54,18 +64,19 @@ export function Details({
       }}
       name={name}
       // audit-variant-ok: Details is the catalogued primitive for <details>.
-      className={`${TONE_CLS[tone]} ${PADDING_CLS[padding]}`.trim()}
+      className={`${TONE_CLS[tone]} ${PADDING_CLS[padding]}${className ? ` ${className}` : ""}`.trim()}
+      style={style}
     >
       {children}
     </details>
   );
 }
 
-export function Summary({ children }: SummaryProps) {
+export function Summary({ children, className }: SummaryProps) {
   return (
     <summary
       // audit-variant-ok: Summary is the catalogued primitive for <summary>.
-      className="cursor-pointer select-none font-medium text-[var(--appkit-color-text)] list-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-focus-ring)] rounded"
+      className={`cursor-pointer select-none font-medium text-[var(--appkit-color-text)] list-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-focus-ring)] rounded${className ? ` ${className}` : ""}`}
     >
       {children}
     </summary>

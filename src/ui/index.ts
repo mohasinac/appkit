@@ -566,3 +566,9 @@ export {
   SPRING_GENTLE,
   EASE_OUT,
 } from "../tokens/motion";
+
+// --- W-E primitives (Details/Summary/HorizontalRule) -------------------------
+export { Details, Summary } from "./components/Details";
+export type { DetailsProps, SummaryProps } from "./components/Details";
+export { HorizontalRule } from "./components/HorizontalRule";
+export type { HorizontalRuleProps } from "./components/HorizontalRule";

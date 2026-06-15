@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Code, Div, FormActions, Label, Row, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
+import { Button, Code, Div, FormActions, HorizontalRule, Label, Row, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -200,7 +200,7 @@ export function AdminScammerEditorView({
           </Span>
         </Div>
 
-        <hr className="border-zinc-200 dark:border-zinc-700" />
+        <HorizontalRule tone="subtle" spacing="comfortable" />
 
         {/* Status change */}
         <Select

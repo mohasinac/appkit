@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Text, Section, Stack, RichTextRenderer } from "../../../ui";
+import { Details, Div, Heading, Section, Stack, Summary, Text, RichTextRenderer } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
 
@@ -112,23 +112,23 @@ export async function FAQPageView({
             ) : (
               <Stack gap="sm" className="space-y-3">
                 {visibleItems.map((item, i) => (
-                  <details
+                  <Details
                     key={i}
                     className={`group rounded-xl border ${themed.border} ${themed.bgPrimary} overflow-hidden`}
                   >
-                    <summary
+                    <Summary
                       className={`flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none font-medium text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors`}
                     >
                       <span>{item.question}</span>
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
-                    </summary>
+                    </Summary>
                     <Div className="px-5 pb-5 pt-1">
                       <RichTextRenderer
                         html={item.answer}
                         proseClass="prose prose-sm max-w-none dark:prose-invert"
                       />
                     </Div>
-                  </details>
+                  </Details>
                 ))}
               </Stack>
             )}

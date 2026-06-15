@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Div, FormActions, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -413,7 +413,7 @@ export function AdminSupportTicketDetailView({
           </Button>
         </Stack>
 
-        <hr className="border-zinc-200 dark:border-zinc-700" />
+        <HorizontalRule tone="subtle" spacing="comfortable" />
 
         {/* Status + Priority */}
         <Select
