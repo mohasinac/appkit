@@ -156,7 +156,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
 
   return (
     <>
-      <Div className={`bg-zinc-50/60 dark:bg-zinc-800/40 ${__O.hidden}`} rounded="xl" border="default">
+      <Div className={`${__O.hidden}`} surface="muted" rounded="xl" border="default">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}

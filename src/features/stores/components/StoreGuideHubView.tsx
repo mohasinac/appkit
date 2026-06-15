@@ -129,7 +129,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           }}
         >
           <Row className="mb-3" align="center" gap="3">
-            <Row className="flex-shrink-0 w-10 h-10 bg-white/20" align="center" justify="center" rounded="xl">
+            <Row className="flex-shrink-0 w-10 h-10" surface="default" align="center" justify="center" rounded="xl">
               <BookOpen className="w-5 h-5 text-white" />
             </Row>
             <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">

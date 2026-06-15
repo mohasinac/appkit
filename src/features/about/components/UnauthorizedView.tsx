@@ -39,7 +39,7 @@ export async function UnauthorizedView({
         className={`${heroBannerClass} text-white min-h-[60vh] flex flex-col items-center justify-center py-20 text-center`}
       >
         <Div className={`${page.container.sm}`}>
-          <Div className={`w-20 h-20 bg-white/20 ${flex.center} mx-auto mb-6`} rounded="2xl">
+          <Div className={`w-20 h-20 ${flex.center} mx-auto mb-6`} surface="default" rounded="2xl">
             <ShieldAlert className="w-10 h-10 text-white" />
           </Div>
           <Heading

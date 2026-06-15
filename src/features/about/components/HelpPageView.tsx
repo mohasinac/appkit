@@ -114,7 +114,7 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: Topi
       <Div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {topics.map(({ icon: Icon, title, desc, href, color, iconColor }) => (
           <TextLink key={href} href={href} className={`group rounded-xl border p-5 transition-shadow hover:shadow-md ${color} no-underline`}>
-            <Div className={`w-10 h-10 bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} rounded="lg">
+            <Div className={`w-10 h-10 dark:bg-white/10 ${flex.center} mb-3`} surface="default" rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Div className={`${flex.row} justify-between items-start`}>

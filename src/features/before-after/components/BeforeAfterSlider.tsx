@@ -66,8 +66,8 @@ export function BeforeAfterSlider({
         className="absolute inset-y-0 w-1 -translate-x-1/2 cursor-ew-resize justify-center" align="center"
         style={{ left: `${position}%` }}
       >
-        <Div className="h-full w-0.5 bg-white/80 shadow" />
-        <Div className="absolute h-8 w-8 border-2 border-white bg-white/80" rounded="full" shadow="md" />
+        <Div className="h-full w-0.5 shadow" surface="default" />
+        <Div className="absolute h-8 w-8 border-2 border-white" surface="default" rounded="full" shadow="md" />
       </Stack>
 
       {/* Labels */}

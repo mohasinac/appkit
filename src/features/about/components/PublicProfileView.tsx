@@ -168,7 +168,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
     <Section className={`${heroBannerClass} text-white md:py-14`} padding="y-2xl">
       <Div className={`${page.container.md}`}>
         <Stack className="flex-wrap sm:flex-row sm:items-end" align="center" gap="md">
-          <Div className={`w-20 h-20 bg-white/20 ${flex.center} flex-shrink-0 ${__O.hidden}`} rounded="full">
+          <Div className={`w-20 h-20 ${flex.center} flex-shrink-0 ${__O.hidden}`} surface="default" rounded="full">
             {photoURL ? <MediaImage src={photoURL} alt={displayName} size="avatar" fallback="👤" /> : <User className="w-10 h-10 text-white/60" />}
           </Div>
           <Stack gap="xs" className="text-center sm:text-left">

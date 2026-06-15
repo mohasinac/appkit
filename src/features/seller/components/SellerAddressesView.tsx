@@ -261,7 +261,7 @@ export function SellerAddressesView({
       {/* Header */}
       <Row
         justify="between"
-        className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4" padding="y-sm"
+        className="sticky z-10 backdrop-blur-sm border-b border-zinc-200 px-4" surface="default" padding="y-sm"
         // audit-inline-style-ok: dynamic CSS
         style={{ top: "var(--header-height, 0px)" }}
       >

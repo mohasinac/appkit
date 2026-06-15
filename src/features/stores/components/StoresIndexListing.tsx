@@ -197,7 +197,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 py-1.5" padding="x-sm" justify="center">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b border-zinc-200 py-1.5" surface="default" padding="x-sm" justify="center">
           <Pagination
             currentPage={table.getNumber("page", 1)}
             totalPages={totalPages}

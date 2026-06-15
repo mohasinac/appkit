@@ -168,8 +168,8 @@ export function ImageCropModal({
             </Div>
             {/* Centre crosshair */}
             <Row className="absolute inset-0" align="center" justify="center">
-              <Div className="w-6 h-px bg-white/50" />
-              <Div className="absolute h-6 w-px bg-white/50" />
+              <Div className="w-6 h-px" surface="default" />
+              <Div className="absolute h-6 w-px" surface="default" />
             </Row>
           </Div>
         </Div>
