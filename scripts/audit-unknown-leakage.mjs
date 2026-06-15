@@ -49,8 +49,11 @@ const ALLOWLIST_FILES = new Set(
 );
 
 const PER_LINE_OK_RE = /\/\/\s*audit-unknown-ok\s*:/i;
-// REPORT MODE remains the default until the lazy-unknown sweep completes;
-// flip via `MIGRATE=strict` to enforce strict-zero locally.
+// REPORT MODE — bulk suppression with a generic "pre-existing-baseline"
+// reason was rejected as fake baseline-0; the only honest path to
+// strict-zero is replacing each `: unknown` / `Record<string, unknown>` /
+// `as unknown` site with a concrete type. Until that migration lands the
+// audit reports the count and exits 0. Flip via `MIGRATE=strict`.
 const STRICT = process.env.MIGRATE === "strict";
 
 const PATTERNS = [
