@@ -137,7 +137,7 @@ export function FooterLayout({
 
             {/* Newsletter slot */}
             {newsletterEnabled && newsletterSlot && (
-              <Div className="pt-2">{newsletterSlot}</Div>
+              <Div padding="t-xs">{newsletterSlot}</Div>
             )}
           </Stack>
 
@@ -203,7 +203,7 @@ export function FooterLayout({
         </Div>
 
         {/* Bottom bar */}
-        <Stack className="mt-10 pt-6 border-t border-zinc-200 dark:border-slate-800 sm:flex-row justify-between text-xs text-zinc-600 dark:text-zinc-400" align="center" gap="3">
+        <Stack className="mt-10 border-t border-zinc-200 dark:border-slate-800 sm:flex-row justify-between text-xs text-zinc-600 dark:text-zinc-400" padding="t-lg" align="center" gap="3">
           <Text size="xs" color="muted">
             {copyrightText}
           </Text>

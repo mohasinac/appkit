@@ -205,7 +205,7 @@ export function SellerGoogleReviewsView({
         )}
 
         {/* Actions */}
-        <Row className="border-t border-[var(--appkit-color-border)] pt-4" align="center" justify="between" gap="3">
+        <Row className="border-t border-[var(--appkit-color-border)]" padding="t-md" align="center" justify="between" gap="3">
           <Button
             variant="outline"
             size="sm"

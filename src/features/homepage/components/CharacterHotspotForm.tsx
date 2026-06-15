@@ -332,7 +332,7 @@ export function CharacterHotspotForm({
           <Row
             justify="end"
             gap="sm"
-            className="border-t pt-4"
+            className="border-t" padding="t-md"
             style={{ borderColor: "var(--border-ink)" }}
           >
             {(initial?.pins?.length ?? 0) > 0 && (
@@ -540,7 +540,7 @@ export function CharacterHotspotForm({
 
           <Row
             justify="between"
-            className="border-t pt-4"
+            className="border-t" padding="t-md"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Button
@@ -740,7 +740,7 @@ export function CharacterHotspotForm({
 
           <Row
             justify="between"
-            className="border-t pt-4"
+            className="border-t" padding="t-md"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Button
@@ -966,7 +966,7 @@ export function CharacterHotspotForm({
 
           <Row
             justify="between"
-            className="border-t pt-4"
+            className="border-t" padding="t-md"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Button

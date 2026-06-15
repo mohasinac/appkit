@@ -526,11 +526,11 @@ function MobileHotspotSheet({
           animation: "fadeInUp 0.22s ease both",
         }}
       >
-        <Row className="pt-3 pb-1" justify="center">
+        <Row className="pb-1" padding="t-sm" justify="center">
           <Div style={{ width: 40, height: 4, borderRadius: 2, background: "#D1D5DB" }} />
         </Row>
         <Div style={{ height: 4, background: active.accent }} />
-        <Div className="px-5 pt-4 pb-10">
+        <Div className="px-5 pb-10" padding="t-md">
           <Text
             className="text-[10px] uppercase tracking-[0.18em] mb-1" weight="bold"
             style={{ color: active.accent === "#FFE500" ? "#b08800" : active.accent }}

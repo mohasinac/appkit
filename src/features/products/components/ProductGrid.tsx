@@ -321,7 +321,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
 
         {/* Price row */}
-        <Div className="mt-auto pt-2">
+        <Div className="mt-auto" padding="t-xs">
           <Row align="baseline" gap="sm">
             <Span size="base" weight="bold" className="text-primary dark:text-primary-400">
               {formatCurrency(product.price, getDefaultCurrency())}

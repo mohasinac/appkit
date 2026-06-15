@@ -122,7 +122,7 @@ export function ViewReviewModal({
           </Text>
         )}
 
-        <Row className="pt-2" justify="end">
+        <Row justify="end" padding="t-xs">
           <Button variant="ghost" onClick={onClose}>
             Close
           </Button>

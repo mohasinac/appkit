@@ -98,7 +98,7 @@ export function PreOrderActionsClient({
       </Stack>
 
       {tags.length > 0 && (
-        <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+        <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
           <Div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted">
@@ -109,7 +109,7 @@ export function PreOrderActionsClient({
         </Div>
       )}
 
-      <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+      <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
         <Row className="text-center" justify="center" gap="md" wrap>
           {[
             { icon: "🔒", label: "Secure\nPayment" },

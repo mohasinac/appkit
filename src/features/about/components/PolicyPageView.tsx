@@ -67,7 +67,7 @@ export async function PolicyPageView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Hero */}
       <Section
-        className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
+        className={`${heroBannerClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl"
       >
         <Div className={`${page.container.sm}`}>
           <Heading level={1} variant="none" className="mb-3 text-white">
@@ -116,7 +116,7 @@ export async function PolicyPageView({
 
         {/* Related policies footer */}
         {relatedLinks.length > 0 && (
-          <Div className={`mt-14 pt-8 border-t ${themed.border}`}>
+          <Div className={`mt-14 border-t ${themed.border}`} padding="t-xl">
             <Heading
               level={3}
               className="mb-3 uppercase tracking-wide" color="muted" size="sm" weight="semibold"

@@ -61,7 +61,7 @@ export function LiveItemFilters({
         />
       ) : null}
 
-      <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
+      <Div className="border-t border-[var(--appkit-color-border)] mt-4" padding="t-md">
         <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           Species / Animal
         </Label>
@@ -74,7 +74,7 @@ export function LiveItemFilters({
         />
       </Div>
 
-      <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
+      <Div className="border-t border-[var(--appkit-color-border)] mt-4" padding="t-md">
         <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           Jurisdiction (state/UT)
         </Label>

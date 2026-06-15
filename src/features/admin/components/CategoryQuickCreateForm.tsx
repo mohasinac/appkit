@@ -62,7 +62,7 @@ export function CategoryQuickCreateForm({ onSaved, onCancel }: CategoryQuickCrea
         placeholder="Optional brief description"
       />
       <Toggle label="Active" checked={isActive} onChange={setIsActive} />
-      <Div className="flex gap-3 pt-2">
+      <Div className="flex gap-3" padding="t-xs">
         <Button type="submit" isLoading={mutation.isPending} disabled={!name || mutation.isPending}>
           Create category
         </Button>

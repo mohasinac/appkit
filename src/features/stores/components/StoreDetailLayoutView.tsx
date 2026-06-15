@@ -132,7 +132,7 @@ export async function StoreDetailLayoutView({
       <StoreHeader store={store as unknown as StoreDetail} />
       <Container size="xl" className="mt-6">
         <StoreNavTabs tabs={tabs} activeValue={activeTab} />
-        <Section className="pt-6">{children}</Section>
+        <Section padding="t-lg">{children}</Section>
       </Container>
     </Main>
   );

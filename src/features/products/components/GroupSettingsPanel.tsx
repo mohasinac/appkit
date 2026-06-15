@@ -326,7 +326,7 @@ export function GroupSettingsPanel({
                     placeholder="e.g. Human Toy Complete Set"
                   />
                 </Div>
-                <Div className="pt-6">
+                <Div padding="t-lg">
                   <Button type="button" variant="secondary" size="sm" onClick={saveTitle} isLoading={loading}>
                     Save title
                   </Button>

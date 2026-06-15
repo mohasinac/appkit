@@ -162,7 +162,7 @@ export function SearchResultsSection({
             onPageChange,
           })
         ) : (
-          <Row className="pt-4" align="center" justify="center" gap="sm">
+          <Row align="center" justify="center" gap="sm" padding="t-md">
             <Button
               type="button"
               variant="outline"

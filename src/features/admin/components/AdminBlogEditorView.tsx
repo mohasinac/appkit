@@ -369,7 +369,7 @@ export function AdminBlogEditorView({
             onChange={(checked) => onChange({ isFeatured: checked })}
           />
           {isEdit && (
-            <Div className="pt-4 border-t border-[var(--appkit-color-border)]">
+            <Div className="border-t border-[var(--appkit-color-border)]" padding="t-md">
               <Button
                 type="button"
                 variant="danger"

@@ -114,7 +114,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           </Span>
         )}
       </Row>
-        <Row justify="between" className="mt-4 border-t border-neutral-100 pt-3">
+        <Row justify="between" className="mt-4 border-t border-neutral-100" padding="t-sm">
           <Span size="sm" className="text-neutral-500">
           {order.currency ?? ""} Total
         </Span>

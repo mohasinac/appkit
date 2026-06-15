@@ -198,7 +198,7 @@ export function ImageEditor({
         )}
 
         {/* Actions */}
-        <Div className="flex gap-2 pt-2">
+        <Div className="flex gap-2" padding="t-xs">
           <Button
             onClick={handleSave}
             variant="primary"

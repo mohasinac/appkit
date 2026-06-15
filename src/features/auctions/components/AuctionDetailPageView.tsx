@@ -384,7 +384,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   )}
                 </Stack>
                 {tags.length > 0 && (
-                  <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                  <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
                     <Row wrap gap="xs">
                       {tags.map((tag) => (
                         <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted">

@@ -514,7 +514,7 @@ function SidebarContent({
       ))}
 
       {(sidebarLocaleSlot || showThemeToggleInSidebar || (isAuthenticated && onLogout)) && (
-        <Stack className="border-t border-zinc-200 pt-4 dark:border-slate-800" gap="3">
+        <Stack className="border-t border-zinc-200 dark:border-slate-800" padding="t-md" gap="3">
           {sidebarLocaleSlot}
           {showThemeToggleInSidebar && (
             <button

@@ -91,7 +91,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
             winner, surface a one-click Claim button that auto-claims into the
             wallet + deep-links to the cart. */}
         {currentUserIsWinner && event.rafflePrizeCouponCode ? (
-          <Div className="pt-2">
+          <Div padding="t-xs">
             <ClaimCouponButton
               couponCode={event.rafflePrizeCouponCode}
               source="raffle"
@@ -100,7 +100,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           </Div>
         ) : null}
 
-        <Div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-sm text-zinc-600 dark:text-zinc-300">
+        <Div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-zinc-600 dark:text-zinc-300" padding="t-xs">
           {typeof event.raffleEntryCount === "number" ? (
             <Span>
               {l.poolLabel}:{" "}

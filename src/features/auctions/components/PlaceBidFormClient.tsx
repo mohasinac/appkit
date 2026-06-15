@@ -260,7 +260,7 @@ export function PlaceBidFormClient({
 
       {/* Tags */}
       {tags.length > 0 && (
-        <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+        <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
           <Row wrap gap="xs">
             {tags.map((tag) => (
               <Span

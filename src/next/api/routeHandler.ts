@@ -173,6 +173,19 @@ function shouldPersist(status: number, code: string): boolean {
 }
 
 /**
+ * Resolve a registered ApiRouteKey to the body schema entry in SCHEMAS.api.
+ * Returns null when the key isn't registered or the registered entry has no
+ * `body` schema. Keeps the createRouteHandler body parsing branch flat.
+ */
+function resolveRegisteredBodySchema<T>(
+  key: RegisteredApiRouteKey,
+): ParseableSchema<T> | null {
+  const entry = SCHEMAS.api[key];
+  if (!entry || !("body" in entry) || !entry.body) return null;
+  return entry.body as unknown as ParseableSchema<T>;
+}
+
+/**
  * Emit a uniform error envelope. Currently emits BOTH `ok` (new canonical) and
  * `success` (deprecated, kept until the 211-fetch sweep finishes) so consumers
  * that still read `body.success` don't break mid-migration. The
@@ -270,12 +283,14 @@ export function createRouteHandler<
       let body: TInput | undefined;
       if (options.schema) {
         // Resolve the schema — either a direct ParseableSchema or a
-        // registry key string. Keys resolve against SCHEMAS.api[key].body.
+        // registry key string. Keys resolve against SCHEMAS.api[key].body
+        // via `resolveRegisteredBodySchema` above.
         let resolvedSchema: ParseableSchema<TInput>;
         if (typeof options.schema === "string") {
-          const key = options.schema as RegisteredApiRouteKey;
-          const entry = SCHEMAS.api[key];
-          if (!entry || !("body" in entry) || !entry.body) {
+          const fromRegistry = resolveRegisteredBodySchema<TInput>(
+            options.schema as RegisteredApiRouteKey,
+          );
+          if (!fromRegistry) {
             return errorJson(
               500,
               HTTP_ERROR_CODES.INTERNAL,
@@ -283,7 +298,7 @@ export function createRouteHandler<
               requestId,
             );
           }
-          resolvedSchema = entry.body as unknown as ParseableSchema<TInput>;
+          resolvedSchema = fromRegistry;
         } else {
           resolvedSchema = options.schema;
         }

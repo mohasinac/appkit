@@ -220,7 +220,7 @@ export type StoreSettingsGuideViewProps = Record<string, never>;
 
 export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
   return (
-    <Stack className="pb-10" gap="lg">
+    <Stack gap="lg" padding="b-2xl">
       {/* Back nav */}
       <a
         href={String(ROUTES.STORE.GUIDE)}

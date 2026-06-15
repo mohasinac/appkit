@@ -171,7 +171,7 @@ export function QuickProductForm({
         hint="How many units are available"
       />
 
-      <Stack className="pt-2" gap="3">
+      <Stack gap="3" padding="t-xs">
         <Div className="flex gap-3">
           <Button
             variant="primary"

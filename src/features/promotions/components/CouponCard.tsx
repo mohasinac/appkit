@@ -331,7 +331,7 @@ export function CouponCard({
 
       {/* Admin / seller CRUD action bar */}
       {hasAdminActions && (
-        <Row gap="xs" justify="end" className="mt-auto pt-3">
+        <Row gap="xs" justify="end" className="mt-auto" padding="t-sm">
           {onEdit && (
             <button
               type="button"

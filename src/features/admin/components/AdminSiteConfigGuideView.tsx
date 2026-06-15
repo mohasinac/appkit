@@ -22,7 +22,7 @@ export function AdminSiteConfigGuideView() {
   ];
 
   return (
-    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
+    <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>

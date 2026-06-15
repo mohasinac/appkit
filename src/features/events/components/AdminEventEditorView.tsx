@@ -722,10 +722,10 @@ export function AdminEventEditorView({
                         <Div className="col-span-2">
                           <Input label="Weight" type="number" value={String(p.weight)} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, weight: Number(e.target.value) || 0 } : sp) })} />
                         </Div>
-                        <Row centered className="col-span-1 pb-2">
+                        <Row centered className="col-span-1" padding="b-xs">
                           <Toggle checked={p.isActive} onChange={(v) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, isActive: v } : sp) })} label="" />
                         </Row>
-                        <Row centered className="col-span-1 pb-2">
+                        <Row centered className="col-span-1" padding="b-xs">
                           <Button variant="ghost" type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className={CLS_REMOVE_BTN_LG} aria-label="Remove prize">×</Button>
                         </Row>
                       </Grid>

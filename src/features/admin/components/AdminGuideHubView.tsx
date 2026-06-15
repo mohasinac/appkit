@@ -107,7 +107,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
   const hasAny = visibleCards.length > 0;
 
   return (
-    <Stack className="pb-10" gap="xl">
+    <Stack gap="xl" padding="b-2xl">
       {/* Welcome banner */}
       <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div

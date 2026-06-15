@@ -62,6 +62,20 @@ export const PADDING_MAP = {
   "x-md": "px-4",
   "x-lg": "px-6",
   "x-xl": "px-8",
+  // Top-only and bottom-only side presets.
+  "t-xs": "pt-2",
+  "t-sm": "pt-3",
+  "t-md": "pt-4",
+  "t-lg": "pt-6",
+  "t-xl": "pt-8",
+  "b-xs": "pb-2",
+  "b-sm": "pb-3",
+  "b-md": "pb-4",
+  "b-lg": "pb-6",
+  "b-xl": "pb-8",
+  "b-2xl": "pb-10",
+  // Fill-in vertical sizes.
+  "y-2-5xl": "py-14",
 } as const;
 
 export type PaddingKey = keyof typeof PADDING_MAP;

@@ -45,7 +45,7 @@ export function AdminStatCard({
         aria-hidden="true"
       />
 
-      <Row className="px-5 pb-5 pt-6" align="start" justify="between" gap="3">
+      <Row className="px-5 pb-5" padding="t-lg" align="start" justify="between" gap="3">
         <Div className="min-w-0 flex-1">
           <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)]" weight="semibold" transform="uppercase">
             {label}

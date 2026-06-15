@@ -109,7 +109,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
   return (
     <>
       {/* ── Hero: rating + title ──────────────────────────────────────────── */}
-      <Div surface="default" className="border-b border-neutral-200 pb-8 pt-10">
+      <Div surface="default" className="border-b border-neutral-200 pt-10" padding="b-xl">
         <Div className="mx-auto max-w-3xl" padding="x-md">
           {/* Star rating — large */}
           <Row gap="sm" className="mb-4">

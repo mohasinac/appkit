@@ -118,7 +118,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
   const completedCount = steps.filter((s) => s.done).length;
 
   return (
-    <Stack className="pb-10" gap="xl">
+    <Stack gap="xl" padding="b-2xl">
       {/* Welcome banner */}
       <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div
@@ -191,7 +191,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           </Heading>
           <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="xl">
             {/* Progress bar */}
-            <Div className="px-5 pt-5 pb-4 border-b border-[var(--appkit-color-border)]">
+            <Div className="px-5 pt-5 border-b border-[var(--appkit-color-border)]" padding="b-md">
               <Row className="mb-2" align="center" justify="between">
                 <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
                   {completedCount} of {steps.length} complete

@@ -35,7 +35,7 @@ export function ChatWindow({
     <Div className={className}>
       <Row
         justify="between"
-        className="pb-3 border-b border-neutral-200 dark:border-neutral-700 mb-3"
+        className="border-b border-neutral-200 dark:border-neutral-700 mb-3" padding="b-sm"
       >
         <Row className={THEME_CONSTANTS.spacing.gap.xs}>
           {labels.title && <Heading level={4}>{labels.title}</Heading>}

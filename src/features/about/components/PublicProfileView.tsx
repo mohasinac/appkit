@@ -124,7 +124,7 @@ export async function PublicProfileView({
         {renderProfileListingsSection(t, themed, products, storeSlug ?? null)}
         {renderAuthoredReviewsSection(t, themed, reviewsAuthored, displayName)}
         {isSeller && storeSlug && renderProfileReviewsSection(t, themed, reviewsReceived, storeSlug)}
-        <Row justify="center" className="pt-2">
+        <Row justify="center" padding="t-xs">
           <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
             ← {t("backHome")}
           </Link>

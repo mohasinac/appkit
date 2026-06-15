@@ -53,7 +53,7 @@ export async function TrackOrderView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Header */}
       <Section
-        className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
+        className={`${heroBannerClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl"
       >
         <Div className={`${page.container.sm} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">
@@ -65,7 +65,7 @@ export async function TrackOrderView({
         </Div>
       </Section>
 
-      <Div className={`${page.container.md} py-14 md:py-16 space-y-14 md:space-y-16`}>
+      <Div className={`${page.container.md} md:py-16 space-y-14 md:space-y-16`} padding="y-2-5xl">
         {/* Sign-in prompt */}
         <Section
           className={`${themed.bgSecondary} border ${themed.border} text-center`} rounded="2xl" padding="xl"

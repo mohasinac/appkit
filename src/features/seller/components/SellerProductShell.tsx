@@ -1200,7 +1200,7 @@ export function SellerProductShell({
                 mandatory fields. The product persists with status:"draft" and
                 can be resumed later from /store/products. */}
             {currentStep === 0 && (
-              <Div className="px-5 pb-3">
+              <Div className="px-5" padding="b-sm">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -1318,7 +1318,7 @@ export function SellerProductShell({
           <Heading level={3} className="mb-4">Publish</Heading>
           <StepPublish values={draft} onChange={update} />
           {onSaveAsTemplate && (
-            <Div className="mt-4 border-t border-[var(--appkit-color-border)] pt-4">
+            <Div className="mt-4 border-t border-[var(--appkit-color-border)]" padding="t-md">
               <Button
                 type="button"
                 variant="outline"

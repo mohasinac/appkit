@@ -53,7 +53,7 @@ export function PromotionsHero({
   heroBannerClass = "bg-gradient-to-br from-rose-500 to-orange-500",
 }: PromotionsHeroProps) {
   return (
-    <Div className={`${heroBannerClass} text-white py-14`}>
+    <Div className={`${heroBannerClass} text-white`} padding="y-2-5xl">
       <Div className="max-w-5xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
         <Text className="text-white mb-2 tracking-widest" size="sm" weight="medium" transform="uppercase">
           🎉 {labels.exclusiveOffersBadge}
