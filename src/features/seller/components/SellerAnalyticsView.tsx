@@ -32,7 +32,7 @@ function DefaultDateRange({
 }) {
   return (
     <Row gap="md" align="center" wrap>
-      <Label className="flex items-center gap-2 text-sm text-[var(--appkit-color-text-muted)]">
+      <Label className="flex items-center gap-2 text-[var(--appkit-color-text-muted)]" size="sm">
         <Text size="sm" variant="secondary">{labels.dateFrom ?? "From"}</Text>
         <input
           type="date"
@@ -41,7 +41,7 @@ function DefaultDateRange({
           className="appkit-input text-sm py-1.5 px-3"
         />
       </Label>
-      <Label className="flex items-center gap-2 text-sm text-[var(--appkit-color-text-muted)]">
+      <Label className="flex items-center gap-2 text-[var(--appkit-color-text-muted)]" size="sm">
         <Text size="sm" variant="secondary">{labels.dateTo ?? "To"}</Text>
         <input
           type="date"

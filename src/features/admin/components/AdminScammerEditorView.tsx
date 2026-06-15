@@ -212,7 +212,7 @@ export function AdminScammerEditorView({
 
         {/* Verification note */}
         <Stack gap="xs">
-          <Label className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <Label className="uppercase tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">
             Verification note (internal)
           </Label>
           <textarea

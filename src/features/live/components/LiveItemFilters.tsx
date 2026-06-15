@@ -62,7 +62,7 @@ export function LiveItemFilters({
       ) : null}
 
       <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
-        <Label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
+        <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           Species / Animal
         </Label>
         <input
@@ -75,7 +75,7 @@ export function LiveItemFilters({
       </Div>
 
       <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
-        <Label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
+        <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           Jurisdiction (state/UT)
         </Label>
         <input

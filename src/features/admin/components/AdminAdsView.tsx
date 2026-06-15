@@ -123,7 +123,7 @@ function AdsSettingsPanel({
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
       <Row align="center" justify="between" gap="3">
-        <Label className="flex items-center gap-2 text-sm">
+        <Label className="flex items-center gap-2" size="sm">
           <input
             type="checkbox"
             checked={consentRequired}

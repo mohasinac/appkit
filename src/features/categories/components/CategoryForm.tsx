@@ -126,7 +126,7 @@ export function CategoryForm({
 
       {category.display?.coverImage && isReadonly && (
         <Div>
-          <Label className="block text-sm font-medium mb-2">
+          <Label className="block mb-2" size="sm" weight="medium">
             {L.categoryImage}
           </Label>
           <Div className={`relative h-32 w-40 ${__O.hidden} rounded`}>

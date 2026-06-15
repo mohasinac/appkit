@@ -200,18 +200,40 @@ export function Text({
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
+  /** Optional size override — defaults to `sm` (the existing label sizing). */
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  /** Optional weight override — defaults to the label's medium weight. */
+  weight?: "light" | "normal" | "medium" | "semibold" | "bold";
+  color?: ColorVariant;
+  transform?: TextTransform;
+  align?: TextAlign;
   children: React.ReactNode;
 }
 
 export function Label({
   required,
+  size,
+  weight,
+  color,
+  transform,
+  align,
   className = "",
   children,
   ...props
 }: LabelProps) {
   return (
     <label
-      className={["appkit-label", className].filter(Boolean).join(" ")}
+      className={[
+        "appkit-label",
+        size ? TYPOGRAPHY.textSize[size] : "",
+        weight ? TYPOGRAPHY.textWeight[weight] : "",
+        color ? TYPOGRAPHY.colorVariant[color] : "",
+        transform && transform !== "none" ? `appkit-text--transform-${transform}` : "",
+        align ? `appkit-text--align-${align}` : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       {...props}
     >
       {children}

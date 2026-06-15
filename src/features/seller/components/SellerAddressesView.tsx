@@ -21,7 +21,7 @@ const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <Stack gap="xs">
-      <Label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">{label}</Label>
+      <Label className="block text-zinc-700 dark:text-zinc-300" size="xs" weight="medium">{label}</Label>
       {children}
       {hint && <Text size="xs" color="muted">{hint}</Text>}
     </Stack>

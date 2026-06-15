@@ -460,7 +460,7 @@ export function SellerTemplatesView({
       >
         <Div className={`space-y-4 ${__P.p4}`}>
           <Div>
-            <Label className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Label className="mb-1.5 block text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
               Condition
             </Label>
             <Select

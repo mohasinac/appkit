@@ -304,7 +304,7 @@ export function CharacterHotspotForm({
           )}
 
           <Stack gap="xs">
-            <Label className="text-sm font-bold">Image Alt Text</Label>
+            <Label size="sm" weight="bold">Image Alt Text</Label>
             <Input
               type="text"
               value={imageAlt}
@@ -319,7 +319,7 @@ export function CharacterHotspotForm({
             />
           </Stack>
 
-          <Label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
+          <Label className="inline-flex cursor-pointer items-center gap-2" size="sm" weight="medium">
             <Input
               type="checkbox"
               checked={active}
@@ -508,7 +508,7 @@ export function CharacterHotspotForm({
               ] as const
             ).map(({ label, field, value, onChange }) => (
               <Stack key={field} gap="xs">
-                <Label className="text-sm font-bold">{label}</Label>
+                <Label size="sm" weight="bold">{label}</Label>
                 <Input
                   type="number"
                   min={1}
@@ -624,7 +624,7 @@ export function CharacterHotspotForm({
               ] as const
             ).map(({ label, value, onChange, placeholder }) => (
               <Stack key={label} gap="xs">
-                <Label className="text-sm font-bold">{label}</Label>
+                <Label size="sm" weight="bold">{label}</Label>
                 <Input
                   type="text"
                   value={value}
@@ -644,7 +644,7 @@ export function CharacterHotspotForm({
           </Div>
 
           <Stack gap="xs">
-            <Label className="text-sm font-bold">Description *</Label>
+            <Label size="sm" weight="bold">Description *</Label>
             <Textarea
               rows={3}
               value={draftDescription}
@@ -660,7 +660,7 @@ export function CharacterHotspotForm({
           </Stack>
 
           <Stack gap="xs">
-            <Label className="text-sm font-bold">Link (href) *</Label>
+            <Label size="sm" weight="bold">Link (href) *</Label>
             <Input
               type="text"
               value={draftHref}
@@ -693,7 +693,7 @@ export function CharacterHotspotForm({
               ] as const
             ).map(({ label, value, onChange, placeholder }) => (
               <Stack key={label} gap="xs">
-                <Label className="text-sm font-bold">{label}</Label>
+                <Label size="sm" weight="bold">{label}</Label>
                 <Input
                   type="text"
                   value={value}
@@ -714,7 +714,7 @@ export function CharacterHotspotForm({
 
           <Row align="end" gap="sm">
             <Stack className="flex-1" gap="xs">
-              <Label className="text-sm font-bold">Accent Colour (hex)</Label>
+              <Label size="sm" weight="bold">Accent Colour (hex)</Label>
               <Input
                 type="text"
                 value={draftAccent}
@@ -926,7 +926,7 @@ export function CharacterHotspotForm({
             </summary>
             <Stack className="mt-3" gap="3">
               <Label
-                className="inline-flex cursor-pointer items-center gap-2 rounded border-2 border-dashed px-3 py-1.5 text-sm font-medium transition-colors hover:opacity-80"
+                className="inline-flex cursor-pointer items-center gap-2 rounded border-2 border-dashed px-3 py-1.5 transition-colors hover:opacity-80" size="sm" weight="medium"
                 style={{ borderColor: "var(--border-ink)" }}
               >
                 {uploading ? "Uploading…" : "Replace Image"}
@@ -939,7 +939,7 @@ export function CharacterHotspotForm({
                 />
               </Label>
               <Stack gap="xs">
-                <Label className="text-sm font-bold">Image Alt Text</Label>
+                <Label size="sm" weight="bold">Image Alt Text</Label>
                 <Input
                   type="text"
                   value={imageAlt}
@@ -952,7 +952,7 @@ export function CharacterHotspotForm({
                   }}
                 />
               </Stack>
-              <Label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
+              <Label className="inline-flex cursor-pointer items-center gap-2" size="sm" weight="medium">
                 <Input
                   type="checkbox"
                   checked={active}

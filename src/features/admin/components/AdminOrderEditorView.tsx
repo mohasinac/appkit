@@ -124,7 +124,7 @@ export function AdminOrderEditorView({
         />
 
         <Stack gap="xs">
-          <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <Label className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
             Internal note (optional)
           </Label>
           <textarea

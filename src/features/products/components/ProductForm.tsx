@@ -256,7 +256,7 @@ export function ProductForm({
         {/* Mode selector */}
         <Div className="flex gap-3 flex-wrap">
           {(["single", "unbranded", "mixed"] as const).map((mode) => (
-            <Label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none text-sm text-zinc-700 dark:text-zinc-300">
+            <Label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none text-zinc-700 dark:text-zinc-300" size="sm">
               <input
                 type="radio"
                 name="brandMode"

@@ -212,7 +212,7 @@ export function ImageUpload({
   return (
     <Stack gap="3">
       {label && (
-        <Label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        <Label className="block text-zinc-600 dark:text-zinc-400" size="sm" weight="medium">
           {label}
         </Label>
       )}

@@ -58,7 +58,7 @@ export function ClassifiedFilters({
       ) : null}
 
       <Div className="border-t border-[var(--appkit-color-border)] pt-4 mt-4">
-        <Label className="block text-sm font-medium text-[var(--appkit-color-text)] mb-2">
+        <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           City / Area
         </Label>
         <input
