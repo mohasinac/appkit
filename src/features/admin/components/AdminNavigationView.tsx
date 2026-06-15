@@ -48,11 +48,11 @@ function NavItemRow({
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
       </Div>
       <Div className="flex-1 min-w-0">
-        <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-100 truncate">
-          {item.parentId ? <Span className="text-zinc-400 mr-1">↳</Span> : null}
+        <Text className="text-zinc-800 dark:text-zinc-100 truncate" size="sm" weight="medium">
+          {item.parentId ? <Span className="mr-1" color="faint">↳</Span> : null}
           {item.label}
         </Text>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{item.href}</Text>
+        <Text className="text-zinc-500 dark:text-zinc-400 truncate" size="xs">{item.href}</Text>
       </Div>
       <Toggle checked={item.isVisible ?? true} onChange={(val) => onVisibilityChange(item.id!, val)} label="" />
       <RowActionMenu actions={[
@@ -155,7 +155,7 @@ export function AdminNavigationView({
             </Alert>
           ) : null,
           <Div key="header" className="flex items-center justify-between mb-4">
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
               {sorted.length} nav item{sorted.length !== 1 ? "s" : ""}
             </Text>
             <Button
@@ -168,7 +168,7 @@ export function AdminNavigationView({
             </Button>
           </Div>,
           sorted.length === 0 && !isLoading ? (
-            <Text key="empty" className="text-sm text-zinc-400 dark:text-zinc-400 py-8 text-center">
+            <Text key="empty" className="text-zinc-400 dark:text-zinc-400 py-8" size="sm" align="center">
               No nav items yet. Click "New item" to add one.
             </Text>
           ) : null,

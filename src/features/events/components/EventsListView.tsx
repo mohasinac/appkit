@@ -57,7 +57,7 @@ export function EventsListView<T extends EventItem = EventItem>({
       return <>{slots.renderEmptyState() as React.ReactNode}</>;
     }
     return (
-      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+      <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

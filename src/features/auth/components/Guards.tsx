@@ -215,7 +215,7 @@ export function ProtectedRoute({
       return (
         <Div className="flex min-h-[50vh] items-center justify-center bg-neutral-50 dark:bg-neutral-900">
           <Div className="text-center">
-            <Heading level={1} className="mb-2 text-2xl font-bold">
+            <Heading level={1} className="mb-2 text-2xl" weight="bold">
               {uiLabels.accessDenied}
             </Heading>
             <Text className="mb-6 text-neutral-600 dark:text-neutral-400">

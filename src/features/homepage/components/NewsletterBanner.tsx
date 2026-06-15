@@ -80,7 +80,7 @@ export function NewsletterBanner({
       <Div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 rounded-full border border-dashed border-white/[0.08]" />
 
       <Div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
-        <Span size="xs" weight="semibold" className="mb-4 inline-flex rounded-full border border-white/20 px-3 py-1 uppercase tracking-widest text-white/70">
+        <Span size="xs" weight="semibold" className="mb-4 inline-flex rounded-full border border-white/20 px-3 py-1 tracking-widest text-white/70" transform="uppercase">
           {eyebrow}
         </Span>
         <Heading
@@ -92,7 +92,7 @@ export function NewsletterBanner({
         <Text className="mt-4 text-white/60">{subheading}</Text>
 
         {success ? (
-          <Text className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6 py-4 text-sm font-semibold text-white">
+          <Text className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6 py-4 text-white" size="sm" weight="semibold">
             {successMessage}
           </Text>
         ) : (
@@ -126,7 +126,7 @@ export function NewsletterBanner({
           <Text className={CLS_ERROR_TEXT}>{errorMessage}</Text>
         )}
 
-        <Text className="mt-4 text-xs text-white/40">
+        <Text className="mt-4 text-white/40" size="xs">
           No spam, ever. Unsubscribe anytime.
         </Text>
       </Div>

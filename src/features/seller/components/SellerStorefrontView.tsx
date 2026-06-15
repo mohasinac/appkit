@@ -261,7 +261,7 @@ export function SellerStorefrontView({
             disabled={busy}
           />
           {values.isPublic === false && (
-            <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+            <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
               Your store is hidden. Existing orders are unaffected.
             </Text>
           )}

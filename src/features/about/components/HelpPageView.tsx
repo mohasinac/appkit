@@ -110,7 +110,7 @@ type TopicItem = { icon: any; title: string; desc: string; href: string; color: 
 function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: TopicItem[]) {
   return (
     <Section>
-      <Heading level={2} className="mb-6 text-center">{t("browseTopics")}</Heading>
+      <Heading level={2} className="mb-6" align="center">{t("browseTopics")}</Heading>
       <Div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {topics.map(({ icon: Icon, title, desc, href, color, iconColor }) => (
           <TextLink key={href} href={href} className={`group rounded-xl border p-5 transition-shadow hover:shadow-md ${color} no-underline`}>
@@ -119,8 +119,8 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: Topi
             </Div>
             <Div className={`${flex.row} justify-between items-start`}>
               <Div>
-                <Text className="font-semibold mb-1">{title}</Text>
-                <Text variant="secondary" className="text-sm leading-relaxed">{desc}</Text>
+                <Text className="mb-1" weight="semibold">{title}</Text>
+                <Text variant="secondary" className="leading-relaxed" size="sm">{desc}</Text>
               </Div>
               <ChevronRight className="w-4 h-4 mt-1 flex-shrink-0 opacity-40 group-hover:opacity-80 transition-opacity" />
             </Div>
@@ -146,8 +146,8 @@ function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
     <Section className={`rounded-2xl ${__P.p6} border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}>
       <Div className="flex-1">
-        <Heading level={3} className="mb-1 text-base">{t("trackOrderTitle")}</Heading>
-        <Text variant="secondary" className="text-sm">{t("trackOrderText")}</Text>
+        <Heading level={3} className="mb-1" size="base">{t("trackOrderTitle")}</Heading>
+        <Text variant="secondary" size="sm">{t("trackOrderText")}</Text>
       </Div>
       <TextLink href={String(ROUTES.PUBLIC.TRACK_ORDER)} className="flex-shrink-0">{t("trackOrderCta")}</TextLink>
     </Section>

@@ -227,7 +227,7 @@ export function PrizeRevealModal({
             <Heading level={3} className="mb-1">
               Pool exhausted — you've been refunded
             </Heading>
-            <Text className="text-sm">
+            <Text size="sm">
               Every prize in this draw was already claimed by the time your
               entry rolled. Your order has been marked refunded automatically.
             </Text>
@@ -236,8 +236,8 @@ export function PrizeRevealModal({
 
         {phase === "error" ? (
           <Div className="rounded border border-error/40 bg-error-surface px-4 py-3 text-error">
-            <Text className="text-sm font-semibold">Something went wrong</Text>
-            <Text className="text-sm">{errorMessage}</Text>
+            <Text size="sm" weight="semibold">Something went wrong</Text>
+            <Text size="sm">{errorMessage}</Text>
           </Div>
         ) : null}
 
@@ -260,8 +260,8 @@ export function PrizeRevealModal({
 
         {phase === "revealing" ? (
           <Div className={`rounded bg-[var(--appkit-color-surface-muted)] ${__P.p4} text-center`}>
-            <Text className="text-lg font-semibold">Rolling…</Text>
-            <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+            <Text size="lg" weight="semibold">Rolling…</Text>
+            <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
               The winner was locked by the server before this animation started.
               Hang tight — we're just making it look pretty.
             </Text>
@@ -270,7 +270,7 @@ export function PrizeRevealModal({
 
         {phase === "won" && winner ? (
           <Div className={`rounded-lg border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center`}>
-            <Text className="text-xs uppercase tracking-wider text-[var(--appkit-color-text-muted)]">
+            <Text className="tracking-wider text-[var(--appkit-color-text-muted)]" size="xs" transform="uppercase">
               You won
             </Text>
             <Heading level={2} className="my-2">
@@ -285,7 +285,7 @@ export function PrizeRevealModal({
               />
             ) : null}
             {winner.estimatedValue != null ? (
-              <Text className="mt-2 text-sm text-[var(--appkit-color-text-muted)]">
+              <Text className="mt-2 text-[var(--appkit-color-text-muted)]" size="sm">
                 Estimated value: ₹
                 {(winner.estimatedValue / 100).toLocaleString("en-IN")}
               </Text>

@@ -95,10 +95,10 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
       ) : null}
       <Div className="flex-1 min-w-0">
         {creative.title ? (
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{creative.title}</Text>
+          <Text className="text-zinc-900 dark:text-zinc-100 truncate" size="sm" weight="semibold">{creative.title}</Text>
         ) : null}
         {creative.body ? (
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{creative.body}</Text>
+          <Text className="text-zinc-500 dark:text-zinc-400 truncate" size="xs">{creative.body}</Text>
         ) : null}
       </Div>
       {creative.ctaLabel ? (

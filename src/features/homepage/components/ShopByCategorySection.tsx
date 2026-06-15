@@ -81,10 +81,10 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-800 dark:text-zinc-200`}>
           {category.name}
         </Text>
-        <Text className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+        <Text className="mt-1 text-zinc-500 dark:text-zinc-400" size="xs">
           {productCount.toLocaleString()} items
         </Text>
-        <Text className="mt-auto pt-3 text-xs font-medium text-primary dark:text-primary-400">
+        <Text className="mt-auto pt-3 text-primary dark:text-primary-400" size="xs" weight="medium">
           Browse category →
         </Text>
       </Div>
@@ -171,7 +171,7 @@ export function ShopByCategorySection({
             {title}
           </Heading>
           {subtitle && (
-            <Text variant="secondary" className="mt-1 text-sm">
+            <Text variant="secondary" className="mt-1" size="sm">
               {subtitle}
             </Text>
           )}

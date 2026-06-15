@@ -60,7 +60,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
             : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm"
         }`}
       >
-        <Text className="whitespace-pre-wrap text-sm leading-relaxed">{msg.content}</Text>
+        <Text className="whitespace-pre-wrap leading-relaxed" size="sm">{msg.content}</Text>
         {msg.durationMs ? (
           <Span size="xs" className="mt-1 block opacity-60">{(msg.durationMs / 1000).toFixed(1)}s</Span>
         ) : null}
@@ -80,15 +80,15 @@ function renderCopilotChatPanel(props: {
   return (
     <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
       <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
-        <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
+        <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
       </Div>
       <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
         {messages.length === 0 ? (
           <Div className="flex flex-col items-center justify-center h-full text-center">
-            <Text className="font-medium">{labels?.noMessages ?? "No messages yet"}</Text>
-            <Text variant="secondary" className="text-sm mt-1">{labels?.noMessagesDesc ?? "Ask anything to get started"}</Text>
+            <Text weight="medium">{labels?.noMessages ?? "No messages yet"}</Text>
+            <Text variant="secondary" className="mt-1" size="sm">{labels?.noMessagesDesc ?? "Ask anything to get started"}</Text>
           </Div>
         ) : null}
         {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
@@ -124,7 +124,7 @@ function renderCopilotHistoryPanel(props: {
   const { historyQuery, conversationInput, setConversationInput, loadConversation, labels } = props;
   return (
     <Div surface="card" padding="sm" className="space-y-3">
-      <Heading level={3} className="text-sm font-semibold">{labels?.historyTitle ?? "Conversation History"}</Heading>
+      <Heading level={3} size="sm" weight="semibold">{labels?.historyTitle ?? "Conversation History"}</Heading>
       {/* audit-raw-form-input-ok: conversation-id loader — single field, no validation */}
       <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); if (!conversationInput.trim()) return; loadConversation(conversationInput.trim()); }}>
         <Input label={labels?.conversationId ?? LBL_CONVERSATION_ID} value={conversationInput} onChange={(e) => setConversationInput(e.target.value)} placeholder="conv_..." />
@@ -136,13 +136,13 @@ function renderCopilotHistoryPanel(props: {
       <Div className={`max-h-72 ${__O.yAuto} space-y-2`}>
         {(historyQuery.data?.messages ?? []).map((log, index) => (
           <Div key={`${log.createdAt}-${index}`} className="rounded-lg border border-neutral-200 dark:border-slate-700 p-2">
-            <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">{new Date(log.createdAt).toLocaleString()}</Text>
+            <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
             <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3}`}>Q: {log.prompt}</Text>
             <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3} text-neutral-600 dark:text-zinc-300`}>A: {log.response}</Text>
           </Div>
         ))}
         {!historyQuery.isLoading && (historyQuery.data?.messages?.length ?? 0) === 0 ? (
-          <Text variant="secondary" className="text-sm">No server history found for this conversation yet.</Text>
+          <Text variant="secondary" size="sm">No server history found for this conversation yet.</Text>
         ) : null}
       </Div>
     </Div>
@@ -210,7 +210,7 @@ export function AdminCopilotView({
         <Div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
           <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
             <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
-              <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
+              <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
               </Text>
             </Div>
@@ -218,8 +218,8 @@ export function AdminCopilotView({
             <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
               {messages.length === 0 ? (
                 <Div className="flex flex-col items-center justify-center h-full text-center">
-                  <Text className="font-medium">{labels.noMessages ?? "No messages yet"}</Text>
-                  <Text variant="secondary" className="text-sm mt-1">
+                  <Text weight="medium">{labels.noMessages ?? "No messages yet"}</Text>
+                  <Text variant="secondary" className="mt-1" size="sm">
                     {labels.noMessagesDesc ?? "Ask anything to get started"}
                   </Text>
                 </Div>
@@ -267,7 +267,7 @@ export function AdminCopilotView({
           </Div>
 
           <Div surface="card" padding="sm" className="space-y-3">
-            <Heading level={3} className="text-sm font-semibold">
+            <Heading level={3} size="sm" weight="semibold">
               {labels.historyTitle ?? "Conversation History"}
             </Heading>
             <form
@@ -301,7 +301,7 @@ export function AdminCopilotView({
                   key={`${log.createdAt}-${index}`}
                   className="rounded-lg border border-neutral-200 dark:border-slate-700 p-2"
                 >
-                  <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
+                  <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
                     {new Date(log.createdAt).toLocaleString()}
                   </Text>
                   <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3}`}>Q: {log.prompt}</Text>
@@ -311,7 +311,7 @@ export function AdminCopilotView({
                 </Div>
               ))}
               {!historyQuery.isLoading && (historyQuery.data?.messages?.length ?? 0) === 0 ? (
-                <Text variant="secondary" className="text-sm">
+                <Text variant="secondary" size="sm">
                   No server history found for this conversation yet.
                 </Text>
               ) : null}

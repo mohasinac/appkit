@@ -41,7 +41,7 @@ export function FAQCategorySidebar({
 
   return (
     <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
-      <Heading level={2} className="mb-6 text-lg font-semibold">
+      <Heading level={2} className="mb-6" size="lg" weight="semibold">
         {labels?.title ?? "Categories"}
       </Heading>
 
@@ -95,7 +95,7 @@ export function FAQCategorySidebar({
                 </Span>
               </Row>
               {isSelected && category.description ? (
-                <Text className="ml-11 text-xs text-zinc-500 dark:text-zinc-400">
+                <Text className="ml-11 text-zinc-500 dark:text-zinc-400" size="xs">
                   {category.description}
                 </Text>
               ) : null}
@@ -106,7 +106,7 @@ export function FAQCategorySidebar({
 
       {contactHref ? (
         <Div className="border-t border-zinc-200 pt-6 dark:border-slate-700">
-          <Text className="mb-3 text-sm text-zinc-600 dark:text-zinc-300">
+          <Text className="mb-3 text-zinc-600 dark:text-zinc-300" size="sm">
             {labels?.stillHaveQuestions ?? "Still have questions?"}
           </Text>
           <TextLink

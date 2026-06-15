@@ -41,7 +41,7 @@ export function VerifyEmailView({
         {status === "loading" && (
           <>
             <Div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-6" />
-            <Heading level={2} className="text-xl font-semibold mb-2">
+            <Heading level={2} className="mb-2" size="xl" weight="semibold">
               {labels.loadingTitle ?? "Verifying your email…"}
             </Heading>
             <Text color="muted">
@@ -68,7 +68,7 @@ export function VerifyEmailView({
                 />
               </svg>
             </Div>
-            <Heading level={2} className="text-xl font-semibold mb-2">
+            <Heading level={2} className="mb-2" size="xl" weight="semibold">
               {labels.successTitle ?? "Email verified!"}
             </Heading>
             <Text className="text-zinc-500 dark:text-zinc-400 mb-6">
@@ -97,7 +97,7 @@ export function VerifyEmailView({
                 />
               </svg>
             </Div>
-            <Heading level={2} className="text-xl font-semibold mb-2">
+            <Heading level={2} className="mb-2" size="xl" weight="semibold">
               {labels.errorTitle ?? "Verification failed"}
             </Heading>
             <Text className="text-zinc-500 dark:text-zinc-400 mb-2">

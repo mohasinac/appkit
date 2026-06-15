@@ -13,7 +13,7 @@ export function CategoryStoresListing({ stores }: CategoryStoresListingProps) {
   if (stores.length === 0) {
     return (
       <Div className="flex flex-col items-center justify-center py-16 text-center">
-        <Text className="text-zinc-500 dark:text-zinc-400 text-sm">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
           No stores found in this category.
         </Text>
       </Div>

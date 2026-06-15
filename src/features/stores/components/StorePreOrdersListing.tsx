@@ -137,7 +137,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
             ))}
           </Div>
         ) : preOrders.length === 0 ? (
-          <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
             This store has no pre-orders yet.
           </Text>
         ) : view === "list" ? (

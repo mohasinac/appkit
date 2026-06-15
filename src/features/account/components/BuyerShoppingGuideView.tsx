@@ -19,7 +19,7 @@ const SECTIONS: ShoppingSection[] = [
         <Text className={`${GC.textMuted} mb-3`}>
           Use the search bar at the top of any page to find items by keyword — e.g. &quot;Charizard Base Set&quot;, &quot;Hot Wheels Redline&quot;, or &quot;Beyblade Burst&quot;. Combine keywords for best results.
         </Text>
-        <Text className="text-sm font-semibold text-[var(--appkit-color-text)] mb-2">Available filters:</Text>
+        <Text className="text-[var(--appkit-color-text)] mb-2" size="sm" weight="semibold">Available filters:</Text>
         <ul className={GC.listDiscMuted}>
           <li><Span weight="bold">Category</Span> — Trading Cards, Action Figures, Diecast, Spinning Tops, Model Kits, Vintage &amp; Rare</li>
           <li><Span weight="bold">Brand</Span> — Pokémon Company, Bandai, Hot Wheels, Hasbro, Funko, and more</li>
@@ -74,7 +74,7 @@ const SECTIONS: ShoppingSection[] = [
         <Text className={`${GC.textMuted} mb-3`}>
           Enter your coupon code at step 2 of checkout (Order Summary). The discount is applied immediately and shown in the total.
         </Text>
-        <Text className="text-sm font-semibold text-[var(--appkit-color-text)] mb-2">Why a coupon might not apply:</Text>
+        <Text className="text-[var(--appkit-color-text)] mb-2" size="sm" weight="semibold">Why a coupon might not apply:</Text>
         <ul className={GC.listDiscMuted}>
           <li>Your order total is below the coupon&apos;s minimum purchase amount</li>
           <li>The coupon has expired or hasn&apos;t started yet</li>
@@ -122,9 +122,9 @@ export function BuyerShoppingGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: GC.pageHeaderGradient }}>
             <ShoppingBag className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Buyer Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Buyer Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">
           Shopping &amp; Checkout
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">

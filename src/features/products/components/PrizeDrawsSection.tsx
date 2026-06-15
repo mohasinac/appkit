@@ -56,7 +56,7 @@ export async function PrizeDrawsSection({
               {title}
             </Heading>
             {subtitle ? (
-              <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
                 {subtitle}
               </Text>
             ) : null}
@@ -68,7 +68,7 @@ export async function PrizeDrawsSection({
               gap="sm"
               className="rounded-2xl border border-dashed border-zinc-300 px-6 py-12 text-center dark:border-slate-700"
             >
-              <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
                 No active prize draws — new draws are announced regularly.
               </Text>
               <Link

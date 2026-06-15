@@ -283,7 +283,7 @@ export function GroupSettingsPanel({
         className="w-full flex items-center justify-between py-2 text-left group"
         aria-expanded={open}
       >
-        <Heading level={3} className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        <Heading level={3} className="text-zinc-700 dark:text-zinc-300" size="sm" weight="semibold">
           Group Settings
         </Heading>
         <Span size="xs" className="text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
@@ -296,7 +296,7 @@ export function GroupSettingsPanel({
           {/* State 1: Not in a group */}
           {!groupId && !groupParentSlug && (
             <Stack gap="xs">
-              <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
                 Group related listings together — e.g. a set, bundle, or multi-part item.
                 Parts can be sold individually but shown together.
               </Text>
@@ -334,17 +334,17 @@ export function GroupSettingsPanel({
               </Row>
 
               <Div>
-                <Text className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mb-2">
+                <Text className="text-zinc-600 dark:text-zinc-400 mb-2" size="xs" weight="semibold">
                   Members ({childSlugsCount + 1} — including this listing)
                 </Text>
                 {loading && !children ? (
-                  <Text className="text-xs text-zinc-400 dark:text-zinc-400">Loading…{/* audit-spinner-defaults-ok — single-line inline panel section, skeleton would over-claim space */}</Text>
+                  <Text className="text-zinc-400 dark:text-zinc-400" size="xs">Loading…{/* audit-spinner-defaults-ok — single-line inline panel section, skeleton would over-claim space */}</Text>
                 ) : (
                   <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}
                     <Row align="center" gap="sm" className="py-2">
                       <Span weight="semibold" className="rounded bg-[var(--appkit-color-primary)]/10 text-[var(--appkit-color-primary)] text-[10px] px-1.5 py-0.5">Parent</Span>
-                      <Text className="text-sm text-zinc-800 dark:text-zinc-200 flex-1">{productSlug}</Text>
+                      <Text className="text-zinc-800 dark:text-zinc-200 flex-1" size="sm">{productSlug}</Text>
                     </Row>
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (
                       <Row key={child.id} align="center" gap="sm" className="py-2">
@@ -354,7 +354,7 @@ export function GroupSettingsPanel({
                         ) : (
                           <Div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800" />
                         )}
-                        <Text className="text-sm text-zinc-800 dark:text-zinc-200 flex-1 truncate">{child.title}</Text>
+                        <Text className="text-zinc-800 dark:text-zinc-200 flex-1 truncate" size="sm">{child.title}</Text>
                         <Button
                           type="button"
                           variant="ghost"
@@ -397,13 +397,13 @@ export function GroupSettingsPanel({
           {/* State 3: Is child */}
           {!isGroupParent && groupParentSlug && (
             <Stack gap="xs">
-              <Text className="text-sm text-zinc-600 dark:text-zinc-400">
+              <Text className="text-zinc-600 dark:text-zinc-400" size="sm">
                 Part of:{" "}
                 <Span weight="medium" className="text-zinc-800 dark:text-zinc-200">
                   {groupTitle ?? groupParentSlug}
                 </Span>
               </Text>
-              <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
                 Parent listing: <code className="font-mono">{groupParentSlug}</code>
               </Text>
               <Button
@@ -527,7 +527,7 @@ function AddChildContent({
               onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
               options={CONDITION_OPTIONS}
             />
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400/80">
+            <Text className="text-zinc-400 dark:text-zinc-400/80" size="xs">
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.
             </Text>
@@ -538,7 +538,7 @@ function AddChildContent({
         </TabsContent>
         <TabsContent value="link">
           <Stack gap="sm" className="mt-4">
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
               Search your existing products or pre-orders. Auctions cannot be linked. Select multiple to bulk-link.
             </Text>
             <ProductInlineSelect

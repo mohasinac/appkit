@@ -105,7 +105,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                 >
                   {p.title}
                 </Link>
-                <Text className="mt-0.5 text-xs text-[var(--appkit-color-text-muted)]">
+                <Text className="mt-0.5 text-[var(--appkit-color-text-muted)]" size="xs">
                   {formatCurrency((p.price ?? 0) / 100, p.currency ?? "INR")}
                 </Text>
               </Div>

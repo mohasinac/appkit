@@ -218,12 +218,12 @@ function CarouselCardRenderer({
           className={`${position.fill} flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2 md:p-6 ${textAlignClass}`}
         >
           {card.content?.eyebrow && (
-            <Text className="text-[10px] md:text-xs !text-white/70 mb-0.5 uppercase tracking-wider drop-shadow-sm">
+            <Text className="text-[10px] md:text-xs !text-white/70 mb-0.5 tracking-wider drop-shadow-sm" transform="uppercase">
               {card.content.eyebrow}
             </Text>
           )}
           {card.content?.subtitle && (
-            <Text className="hidden md:block text-xs md:text-sm !text-white/90 mb-0.5 md:mb-2 drop-shadow-sm">
+            <Text className="hidden md:block md:text-sm !text-white/90 mb-0.5 md:mb-2 drop-shadow-sm" size="xs">
               {card.content.subtitle}
             </Text>
           )}
@@ -350,8 +350,8 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   if (!slides || slides.length === 0) {
     return (
       <Div className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-gradient-to-br from-primary/10 to-secondary/10 ${flex.center} flex-col gap-4`}>
-        <Heading level={2} className="text-2xl font-bold text-primary">Coming Soon</Heading>
-        <Text variant="secondary" className="text-center max-w-md px-4">
+        <Heading level={2} className="text-2xl text-primary" weight="bold">Coming Soon</Heading>
+        <Text variant="secondary" className="max-w-md px-4" align="center">
           Amazing deals are on their way. Stay tuned!
         </Text>
       </Div>
@@ -406,7 +406,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 {slide.overlay && (
                   <Div className={`${position.fill} ${flex.center} flex-col text-center px-6 md:px-16 lg:px-32`}>
                     {slide.overlay.subtitle && (
-                      <Text className="stagger-1 text-xs md:text-sm !text-white/80 mb-1 md:mb-2 drop-shadow-sm uppercase tracking-widest">
+                      <Text className="stagger-1 md:text-sm !text-white/80 mb-1 md:mb-2 drop-shadow-sm tracking-widest" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}
                       </Text>
                     )}
@@ -419,7 +419,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                       </Heading>
                     )}
                     {slide.overlay.description && (
-                      <Text className="stagger-3 text-sm md:text-lg lg:text-xl !text-white/90 mb-4 md:mb-8 drop-shadow-sm max-w-2xl mx-auto">
+                      <Text className="stagger-3 md:text-lg lg:text-xl !text-white/90 mb-4 md:mb-8 drop-shadow-sm max-w-2xl mx-auto" size="sm">
                         {slide.overlay.description}
                       </Text>
                     )}

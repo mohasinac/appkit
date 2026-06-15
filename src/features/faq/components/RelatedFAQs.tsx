@@ -20,7 +20,7 @@ export function RelatedFAQs({
 
   return (
     <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
-      <Heading level={3} className="mb-4 text-lg font-semibold">
+      <Heading level={3} className="mb-4" size="lg" weight="semibold">
         {labels?.title ?? "Related Questions"}
       </Heading>
 
@@ -46,7 +46,7 @@ export function RelatedFAQs({
                 />
               </svg>
 
-              <Text className="text-sm text-zinc-800 transition-colors group-hover:text-primary dark:text-zinc-100">
+              <Text className="text-zinc-800 transition-colors group-hover:text-primary dark:text-zinc-100" size="sm">
                 {faq.question}
               </Text>
 

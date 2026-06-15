@@ -11,9 +11,9 @@ export function AdminUsersGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <Users className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Users &amp; Accounts</Heading>
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">Users &amp; Accounts</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Managing users, roles, sessions, and employee accounts on LetItRip.</Text>
       </Section>
 
@@ -63,7 +63,7 @@ export function AdminUsersGuideView() {
           Icon: Edit, title: "Editing a User",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">The AdminUserEditorView opens in a side drawer. Fields:</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">The AdminUserEditorView opens in a side drawer. Fields:</Text>
               <ul className={GC.listMuted}>
                 <li><Span weight="bold">role Select</Span> — changing to <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</code> bypasses all RBAC checks. Only do this with explicit senior approval.</li>
                 <li><Span weight="bold">emailVerified toggle</Span> — manually mark an email as verified (e.g. after manual ID check).</li>

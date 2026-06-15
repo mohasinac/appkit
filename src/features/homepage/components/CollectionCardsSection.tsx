@@ -69,7 +69,7 @@ export async function CollectionCardsSection({
               {title}
             </Heading>
             {subtitle ? (
-              <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
                 {subtitle}
               </Text>
             ) : null}
@@ -93,7 +93,7 @@ export async function CollectionCardsSection({
             gap="sm"
             className="rounded-2xl border border-dashed border-zinc-300 px-6 py-12 text-center dark:border-slate-700"
           >
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
               Mixed collection rendering ({collections.length}/3 collection
               {collections.length === 1 ? "" : "s"}, up to {maxItems} items,
               {" "}{itemsPerRow} per row) — data wiring lands with the bundle/raffle

@@ -82,10 +82,10 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
     <Div surface="card" padding="sm" className="space-y-3">
       <Div className="flex items-start justify-between gap-2 flex-wrap">
         <Div className="min-w-0">
-          <Text className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 truncate">
+          <Text className="text-zinc-900 dark:text-zinc-100 truncate" size="sm" weight="semibold">
             {offer.productTitle ?? "Unknown Product"}
           </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+          <Text className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs">
             {relativeTime(offer.createdAt)}
           </Text>
         </Div>
@@ -96,29 +96,29 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
 
       <Div className="flex gap-4 flex-wrap">
         <Div>
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Listed</Text>
-          <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{formatRupees(offer.listedPrice)}</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Listed</Text>
+          <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">{formatRupees(offer.listedPrice)}</Text>
         </Div>
         <Div>
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Your Offer</Text>
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{formatRupees(offer.offerAmount)}</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Your Offer</Text>
+          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">{formatRupees(offer.offerAmount)}</Text>
         </Div>
         {offer.counterAmount != null && (
           <Div>
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Seller Counter</Text>
+            <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Seller Counter</Text>
             <Text className={CLS_COUNTER_AMOUNT}>{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
         {offer.lockedPrice != null && (
           <Div>
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Agreed Price</Text>
-            <Text className="text-sm font-semibold text-success">{formatRupees(offer.lockedPrice)}</Text>
+            <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Agreed Price</Text>
+            <Text className="text-success" size="sm" weight="semibold">{formatRupees(offer.lockedPrice)}</Text>
           </Div>
         )}
       </Div>
 
       {offer.sellerNote && (
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 italic">
+        <Text className="text-zinc-500 dark:text-zinc-400 italic" size="xs">
           Seller note: "{offer.sellerNote}"
         </Text>
       )}
@@ -126,7 +126,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
       {/* Counter received — accept or withdraw */}
       {offer.status === "countered" && (
         <Div className="space-y-2">
-          <Text className="text-xs text-info font-medium">
+          <Text className="text-info" size="xs" weight="medium">
             Seller countered at {formatRupees(offer.counterAmount)}. Accept or withdraw your offer.
           </Text>
           <Div className="flex gap-2 flex-wrap">
@@ -177,7 +177,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         </Div>
       )}
 
-      {error && <Alert variant="error"><Text className="text-xs">{error}</Text></Alert>}
+      {error && <Alert variant="error"><Text size="xs">{error}</Text></Alert>}
     </Div>
   );
 }
@@ -229,7 +229,7 @@ export function UserOffersPanel({
         message="You need to be signed in to manage your offers. Please log in or create an account to continue."
       />
       <Div className="flex items-center justify-between">
-        <Heading level={2} className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+        <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="lg" weight="semibold">
           My Offers
         </Heading>
         <Button size="sm" variant="ghost" onClick={loadOffers} disabled={loading}
@@ -238,7 +238,7 @@ export function UserOffersPanel({
         </Button>
       </Div>
 
-      {fetchError && <Alert variant="error"><Text className="text-sm">{fetchError}</Text></Alert>}
+      {fetchError && <Alert variant="error"><Text size="sm">{fetchError}</Text></Alert>}
 
       {loading && (
         <Div className="flex justify-center py-12">
@@ -248,7 +248,7 @@ export function UserOffersPanel({
 
       {!loading && offers.length === 0 && (
         <Div className="text-center py-12">
-          <Text className="text-zinc-400 dark:text-zinc-400 text-sm">No offers yet</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400" size="sm">No offers yet</Text>
         </Div>
       )}
 

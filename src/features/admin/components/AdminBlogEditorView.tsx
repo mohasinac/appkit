@@ -263,7 +263,7 @@ export function AdminBlogEditorView({
             placeholder="Short summary shown in listings and cards"
           />
           <Div className="space-y-1">
-            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
               Content
             </Text>
             <RichTextEditor
@@ -323,8 +323,8 @@ export function AdminBlogEditorView({
                 onValueChange={(v) => onChange({ category: v as BlogPostCategory })}
               />
               <Div>
-                <Text className="text-sm font-medium mb-1.5">Estimated Read Time</Text>
-                <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+                <Text className="mb-1.5" size="sm" weight="medium">Estimated Read Time</Text>
+                <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                   ~{readTime} min (auto-calculated from content)
                 </Text>
               </Div>
@@ -446,10 +446,10 @@ export function AdminBlogEditorView({
       {draft.coverImage ? (
         <img src={draft.coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
       ) : null}
-      <Heading level={1} className="text-2xl font-bold mb-1">
+      <Heading level={1} className="text-2xl mb-1" weight="bold">
         {draft.title || "Untitled post"}
       </Heading>
-      <Text className="text-xs text-[var(--appkit-color-text-muted)] mb-4">
+      <Text className="text-[var(--appkit-color-text-muted)] mb-4" size="xs">
         {draft.authorName || "Anonymous"}
         {draft.category ? ` · ${draft.category}` : ""}
       </Text>

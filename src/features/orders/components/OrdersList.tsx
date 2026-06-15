@@ -62,11 +62,11 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
     >
       <Row wrap align="start" justify="between" gap="3">
         <Div>
-          <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+          <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
             Order #{order.id.slice(-8).toUpperCase()}
           </Text>
           {date && (
-            <Text className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-400">{date}</Text>
+            <Text className="mt-0.5 text-zinc-400 dark:text-zinc-400" size="xs">{date}</Text>
           )}
         </Div>
         <Span
@@ -104,7 +104,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               <Text className={`text-sm font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp1}`}>
                 {item.title}
               </Text>
-              <Text className="text-xs text-zinc-400 dark:text-zinc-400">×{item.quantity}</Text>
+              <Text className="text-zinc-400 dark:text-zinc-400" size="xs">×{item.quantity}</Text>
             </Div>
           </Row>
         ))}
@@ -172,7 +172,7 @@ export function OrdersList({
 
   if (orders.length === 0) {
     return (
-      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+      <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

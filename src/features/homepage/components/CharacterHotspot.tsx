@@ -478,7 +478,7 @@ function HotspotPin({
             >
               {hotspot.name}
             </Heading>
-            <Text className="text-xs leading-relaxed mb-4" style={{ color: "#374151" }}>
+            <Text className="leading-relaxed mb-4" size="xs" style={{ color: "#374151" }}>
               {hotspot.description}
             </Text>
             <Link
@@ -544,7 +544,7 @@ function MobileHotspotSheet({
           >
             {active.name}
           </Heading>
-          <Text className="text-sm leading-relaxed mb-5" style={{ color: "#374151" }}>
+          <Text className="leading-relaxed mb-5" size="sm" style={{ color: "#374151" }}>
             {active.description}
           </Text>
           <Div className="flex gap-3">

@@ -95,7 +95,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
 
   return (
     <Div className={`space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
-      <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+      <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
         Browse existing media
       </Text>
       <Div className="flex flex-wrap items-center gap-2">
@@ -137,7 +137,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                     loading="lazy"
                   />
                 ) : (
-                  <Text className="px-2 text-center break-all">
+                  <Text className="px-2 break-all" align="center">
                     {f.contentType ?? "file"}
                   </Text>
                 )}
@@ -159,13 +159,13 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           );
         })}
         {filtered.length === 0 && !isLoading && (
-          <Text className="col-span-full py-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="col-span-full py-6 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
             No files found.
           </Text>
         )}
       </Div>
       <Div className="flex items-center justify-between">
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
           {filtered.length} file(s){nextPageToken ? " · more available" : ""}
         </Text>
         {nextPageToken && (
@@ -210,7 +210,7 @@ function MediaUploaderPanel({
     <Div
       className="space-y-5 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
     >
-      <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+      <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
         Upload & Copy URL
       </Text>
       <MediaUploadField
@@ -224,7 +224,7 @@ function MediaUploaderPanel({
       />
       {heroAssetUrl && (
         <Div className="flex items-center gap-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-2">
-          <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+          <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
             {heroAssetUrl}
           </Text>
           <Button
@@ -248,7 +248,7 @@ function MediaUploaderPanel({
       />
       {galleryAssets.length > 0 && (
         <Div className="flex flex-col gap-1">
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs" weight="medium">
             Gallery URLs
           </Text>
           {galleryAssets.map((asset, i) => (
@@ -256,7 +256,7 @@ function MediaUploaderPanel({
               key={i}
               className="flex items-center gap-2 rounded bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-1"
             >
-              <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+              <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
                 {asset.url}
               </Text>
               <Button
@@ -287,7 +287,7 @@ function MediaUploaderPanel({
         >
           {isCleanupPending ? "Discarding…" : ACTIONS.MEDIA["discard-staged"].label}
         </Button>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
           {stagedUrls.length} staged upload(s)
         </Text>
       </Div>

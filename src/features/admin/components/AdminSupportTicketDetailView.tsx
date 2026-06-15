@@ -366,10 +366,10 @@ export function AdminSupportTicketDetailView({
         {/* Description */}
         {description && (
           <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
-            <Text className="mb-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+            <Text className="mb-1 text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
               Description
             </Text>
-            <Text className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
+            <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200" size="sm">
               {description}
             </Text>
           </Div>
@@ -378,7 +378,7 @@ export function AdminSupportTicketDetailView({
         {/* Message thread */}
         {messages.length > 0 && (
           <Div className="space-y-2">
-            <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+            <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
               Messages ({messages.length})
             </Text>
             <Div className={`space-y-2 max-h-64 ${__O.yAuto}`}>
@@ -465,10 +465,10 @@ export function AdminSupportTicketDetailView({
           padding="sm"
           className="flex flex-col gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700"
         >
-          <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+          <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
             Linked parties
           </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
             Tag the buyer / store / order / product / bid this ticket concerns.
           </Text>
           {([
@@ -582,12 +582,12 @@ function OrderItemsPanel(props: {
       padding="sm"
       className="flex flex-col gap-2 rounded-lg border border-info/40 bg-info-surface/40"
     >
-      <Text className="text-xs font-semibold text-info uppercase tracking-wide">
+      <Text className="text-info tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Modify order items
       </Text>
       {linkedOrderId ? (
         <>
-          <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+          <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
             Editing order: <code className="font-mono">{linkedOrderId}</code>
           </Text>
           {!orderItemsOpen ? (
@@ -604,7 +604,7 @@ function OrderItemsPanel(props: {
           ) : (
             <>
               {orderItems.length === 0 ? (
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
                   Order has no items.
                 </Text>
               ) : (
@@ -615,7 +615,7 @@ function OrderItemsPanel(props: {
                       className="flex items-center gap-2 rounded border border-zinc-200 dark:border-zinc-700 px-2 py-1"
                     >
                       <Div className="flex-1 min-w-0">
-                        <Text className="text-xs font-medium truncate">
+                        <Text className="truncate" size="xs" weight="medium">
                           {it.productTitle}
                         </Text>
                         <Text size="xs" color="muted">
@@ -657,7 +657,7 @@ function OrderItemsPanel(props: {
           )}
         </>
       ) : (
-        <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+        <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
           Set the{" "}
           <Text as="span" weight="semibold">
             Order ID
@@ -695,12 +695,12 @@ function StoreChangePanel(props: {
       padding="sm"
       className="flex flex-col gap-2 rounded-lg border border-warning/40 bg-warning-surface/40"
     >
-      <Text className="text-xs font-semibold text-warning uppercase tracking-wide">
+      <Text className="text-warning tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Apply store change
       </Text>
       {linkedStoreId ? (
         <>
-          <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+          <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
             Editing store: <code className="font-mono">{linkedStoreId}</code>
           </Text>
           <Select
@@ -736,7 +736,7 @@ function StoreChangePanel(props: {
           </Button>
         </>
       ) : (
-        <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+        <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
           Set the{" "}
           <Text as="span" weight="semibold">
             Store slug
@@ -761,12 +761,12 @@ function UnbanRequestPanel(props: {
       padding="sm"
       className="flex flex-col gap-2 rounded-lg border border-error/40 bg-error-surface/40"
     >
-      <Text className="text-xs font-semibold text-error uppercase tracking-wide">
+      <Text className="text-error tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Lift account ban
       </Text>
       {linkedUserId ? (
         <>
-          <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+          <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
             Appellant: <code className="font-mono">{linkedUserId}</code>
           </Text>
           <Text size="xs" color="muted">
@@ -796,7 +796,7 @@ function UnbanRequestPanel(props: {
           </Row>
         </>
       ) : (
-        <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+        <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
           Set the{" "}
           <Text as="span" weight="semibold">
             User slug

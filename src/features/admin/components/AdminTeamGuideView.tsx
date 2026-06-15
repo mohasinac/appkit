@@ -21,9 +21,9 @@ export function AdminTeamGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <Users className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Team &amp; Permissions</Heading>
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">Team &amp; Permissions</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">How roles, permissions, and employee accounts work on LetItRip.</Text>
       </Section>
 
@@ -32,10 +32,10 @@ export function AdminTeamGuideView() {
           Icon: Shield, title: "Role vs Permission: Key Difference",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
                 <Span weight="bold">Role</Span> (<code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.role</code>) is a coarse-grained classification: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">seller</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">moderator</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">employee</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</code>.
               </Text>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
                 <Span weight="bold">Permissions</Span> (<code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.permissions[]</code>) are fine-grained capabilities: e.g. <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:orders:read</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:products:write</code>.
               </Text>
               <Alert variant="info">
@@ -48,11 +48,11 @@ export function AdminTeamGuideView() {
           Icon: Users, title: "Permission Groups",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">Permission groups are predefined bundles. Assign a group to an employee to give them a coherent set of access rights:</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Permission groups are predefined bundles. Assign a group to an employee to give them a coherent set of access rights:</Text>
               <Div className="space-y-2">
                 {PERMISSION_GROUPS.map(({ name, desc }) => (
                   <Div key={name} className="flex gap-3 text-sm">
-                    <Text className="flex-shrink-0 font-mono text-xs font-semibold text-[var(--appkit-color-primary)] w-40">{name}</Text>
+                    <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{name}</Text>
                     <Text className="text-[var(--appkit-color-text-muted)]">{desc}</Text>
                   </Div>
                 ))}
@@ -75,8 +75,8 @@ export function AdminTeamGuideView() {
           Icon: Shield, title: "The 85+ Permission System",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">Permissions follow the pattern <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:&#123;resource&#125;:&#123;action&#125;</code>. Actions: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">read</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">delete</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">view</code>.</Text>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Permissions follow the pattern <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:&#123;resource&#125;:&#123;action&#125;</code>. Actions: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">read</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">delete</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">view</code>.</Text>
+              <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                 The full permission list is defined in <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">appkit/src/features/auth/schemas/firestore.ts</code>. Custom roles (specific permission combinations) can be created at <Span weight="bold">Admin → Custom Roles</Span> — use these when a predefined group is too broad or too narrow for a hire.
               </Text>
             </>

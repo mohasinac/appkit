@@ -84,7 +84,7 @@ export function StoreHeader({
               )}
             </Div>
             <Row className="gap-3 text-xs text-gray-500 dark:text-zinc-400 mb-0.5">
-              {(store as any).category && <Span className="capitalize">{(store as any).category}</Span>}
+              {(store as any).category && <Span transform="capitalize">{(store as any).category}</Span>}
               {store.totalProducts != null && store.totalProducts > 0 && (
                 <Span>{store.totalProducts} {labels.products ?? "products"}</Span>
               )}

@@ -121,14 +121,14 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
             <Div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </Div>
-            <Text className="text-sm font-semibold text-white/80 uppercase tracking-widest">
+            <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">
               Admin &amp; Employee Guide
             </Text>
           </Div>
-          <Heading level={1} className="text-2xl md:text-3xl font-bold text-white mb-2">
+          <Heading level={1} className="text-2xl md:text-3xl text-white mb-2" weight="bold">
             LetItRip Internal Guide
           </Heading>
-          <Text className="text-white/80 text-base">
+          <Text className="text-white/80" size="base">
             Everything you need to operate and manage LetItRip — India&apos;s largest collectibles marketplace.
           </Text>
         </Div>
@@ -149,7 +149,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
       {/* Guide cards */}
       {hasAny && (
         <Section>
-          <Heading level={2} className="text-lg font-semibold text-[var(--appkit-color-text)] mb-4">
+          <Heading level={2} className="text-[var(--appkit-color-text)] mb-4" size="lg" weight="semibold">
             Guides
           </Heading>
           <Div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -169,14 +169,14 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
                   >
                     <Icon className="w-4 h-4 text-white" />
                   </Div>
-                  <Text className="font-semibold text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors">
+                  <Text className="text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors" weight="semibold">
                     {title}
                   </Text>
                 </Div>
-                <Text className="text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
+                <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">
                   {description}
                 </Text>
-                <Text className="text-xs font-medium text-[var(--appkit-color-primary)] mt-auto">
+                <Text className="text-[var(--appkit-color-primary)] mt-auto" size="xs" weight="medium">
                   Read guide →
                 </Text>
               </a>

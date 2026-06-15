@@ -276,7 +276,7 @@ export function CouponsIndexListing({
 
         {!isLoading && total > 0 && (
           <Div className="mt-4 text-center">
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400">{total} coupon{total !== 1 ? "s" : ""} available</Text>
+            <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{total} coupon{total !== 1 ? "s" : ""} available</Text>
           </Div>
         )}
       </Div>
@@ -285,7 +285,7 @@ export function CouponsIndexListing({
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearPending} activeCount={activeFilterCount}>
         {/* Coupon type */}
         <>
-          <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
+          <Heading level={6} className="tracking-wider text-zinc-500 dark:text-zinc-400 mb-3" size="xs" weight="semibold" transform="uppercase">
             Discount Type
           </Heading>
           <Stack gap="xs">
@@ -316,7 +316,7 @@ export function CouponsIndexListing({
 
         {/* Date range */}
         <>
-          <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
+          <Heading level={6} className="tracking-wider text-zinc-500 dark:text-zinc-400 mb-3" size="xs" weight="semibold" transform="uppercase">
             Valid Date Range
           </Heading>
           <Stack gap="sm">

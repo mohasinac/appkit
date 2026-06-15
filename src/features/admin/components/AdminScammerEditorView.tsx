@@ -140,7 +140,7 @@ export function AdminScammerEditorView({
         {/* Names */}
         {displayNames.length > 0 && (
           <Div>
-            <Text className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <Text className="mb-1 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
               Names / Aliases
             </Text>
             <Div className="flex flex-wrap gap-1">
@@ -197,7 +197,7 @@ export function AdminScammerEditorView({
             <Text className={CLS_SECTION_LABEL}>
               Description
             </Text>
-            <Text className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
+            <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200" size="sm">
               {description}
             </Text>
           </Div>

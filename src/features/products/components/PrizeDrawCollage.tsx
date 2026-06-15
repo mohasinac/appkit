@@ -85,7 +85,7 @@ export function PrizeDrawCollage({
   if (!items.length) {
     return (
       <Div className={`rounded border border-dashed border-[var(--appkit-color-border)] ${__P.p6} text-center`}>
-        <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+        <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
           No prizes configured yet.
         </Text>
       </Div>
@@ -125,7 +125,7 @@ export function PrizeDrawCollage({
                   />
                 ) : (
                   <Div className="absolute inset-0 flex items-center justify-center bg-[var(--appkit-color-surface-muted)]">
-                    <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+                    <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                       No image
                     </Text>
                   </Div>
@@ -151,11 +151,11 @@ export function PrizeDrawCollage({
               </Div>
 
               <Div className="p-2">
-                <Text className="line-clamp-2 text-sm font-medium">
+                <Text className="line-clamp-2" size="sm" weight="medium">
                   {it.title || `Prize #${it.itemNumber}`}
                 </Text>
                 {it.estimatedValue != null ? (
-                  <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+                  <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                     est. ₹{(it.estimatedValue / 100).toLocaleString("en-IN")}
                   </Text>
                 ) : null}

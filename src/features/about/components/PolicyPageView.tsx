@@ -73,7 +73,7 @@ export async function PolicyPageView({
           <Heading level={1} variant="none" className="mb-3 text-white">
             {t("title")}
           </Heading>
-          <Text variant="none" className="text-white/80 text-sm">
+          <Text variant="none" className="text-white/80" size="sm">
             {t("lastUpdated")}
           </Text>
         </Div>
@@ -90,7 +90,7 @@ export async function PolicyPageView({
           <>
             {/* Intro */}
             {t("intro") && (
-              <Text variant="secondary" className="mb-10 text-base leading-relaxed">
+              <Text variant="secondary" className="mb-10 leading-relaxed" size="base">
                 {t("intro")}
               </Text>
             )}

@@ -99,7 +99,7 @@ export function VideoTrimModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("trimTitle")} size="lg">
       <Stack gap="md">
-        <Text variant="secondary" className="text-xs">
+        <Text variant="secondary" size="xs">
           {t("trimInstruction")}
         </Text>
 

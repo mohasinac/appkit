@@ -449,7 +449,7 @@ export async function ProductDetailPageView({
                 {subcategory && (
                   <>
                     <Span aria-hidden>/</Span>
-                    <Span className="capitalize">{subcategory}</Span>
+                    <Span transform="capitalize">{subcategory}</Span>
                   </>
                 )}
               </Nav>
@@ -464,7 +464,7 @@ export async function ProductDetailPageView({
               {/* Title + condition badge */}
               <Div>
                 {condition && (
-                  <Span size="xs" weight="medium" className="mb-2 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 capitalize text-zinc-600 dark:text-zinc-300">
+                  <Span size="xs" weight="medium" className="mb-2 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-zinc-600 dark:text-zinc-300" transform="capitalize">
                     {condition === "new"
                       ? "Brand New"
                       : condition === "like_new"
@@ -533,7 +533,7 @@ export async function ProductDetailPageView({
                     </Link>
                   ))}
                   {subcategory && (
-                    <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400 capitalize">
+                    <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400" transform="capitalize">
                       {subcategory}
                     </Span>
                   )}
@@ -605,7 +605,7 @@ export async function ProductDetailPageView({
               {/* Highlights (legacy text fallback) — suppressed when productFeatures is provided */}
               {!productFeatures && features.length > 0 && (
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
-                  <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <Text className="mb-2 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
                     About this product
                   </Text>
                   <Ul className="space-y-1.5">
@@ -633,10 +633,10 @@ export async function ProductDetailPageView({
                 <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
                   <Row justify="between" align="center">
                     <Div>
-                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">
+                      <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">
                         Sold by
                       </Text>
-                      <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+                      <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
                         {safeSeller}
                       </Text>
                       {typeof p.storeRating === "number" && p.storeRating > 0 && (
@@ -670,7 +670,7 @@ export async function ProductDetailPageView({
               {formattedPrice && (
                 <Div>
                   <Row align="baseline" gap="sm" wrap>
-                    <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                    <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
                       {formattedPrice}
                     </Text>
                     {formattedOriginal && discount && (
@@ -685,7 +685,7 @@ export async function ProductDetailPageView({
                     )}
                   </Row>
                   {inStock && effectiveStock !== null && effectiveStock <= 10 && (
-                    <Text className="mt-1 text-xs text-warning">
+                    <Text className="mt-1 text-warning" size="xs">
                       Only {effectiveStock} left — order soon!
                     </Text>
                   )}
@@ -753,27 +753,27 @@ export async function ProductDetailPageView({
                     <Row align="start" gap="sm">
                       <Span className={CLS_FREE_SHIPPING_ICON}>🚚</Span>
                       <Div>
-                        <Text className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                        <Text className="text-zinc-700 dark:text-zinc-300" size="xs" weight="medium">
                           Free Delivery
                         </Text>
                         {shippingInfo && (
-                          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{shippingInfo}</Text>
+                          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{shippingInfo}</Text>
                         )}
                       </Div>
                     </Row>
                   )}
                   {!freeShipping && shippingInfo && (
                     <Row align="start" gap="sm">
-                      <Span className="mt-0.5 flex-shrink-0 text-zinc-400">📦</Span>
-                      <Text className="text-xs text-zinc-600 dark:text-zinc-400">
+                      <Span className="mt-0.5 flex-shrink-0" color="faint">📦</Span>
+                      <Text className="text-zinc-600 dark:text-zinc-400" size="xs">
                         {shippingInfo}
                       </Text>
                     </Row>
                   )}
                   {returnPolicy && (
                     <Row align="start" gap="sm">
-                      <Span className="mt-0.5 flex-shrink-0 text-zinc-400">↺</Span>
-                      <Text className="text-xs text-zinc-600 dark:text-zinc-400">
+                      <Span className="mt-0.5 flex-shrink-0" color="faint">↺</Span>
+                      <Text className="text-zinc-600 dark:text-zinc-400" size="xs">
                         {returnPolicy}
                       </Text>
                     </Row>
@@ -784,7 +784,7 @@ export async function ProductDetailPageView({
               {/* Tags */}
               {tags.length > 0 && (
                 <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-                  <Text className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                  <Text className="mb-2 text-zinc-500 dark:text-zinc-400" size="xs" weight="medium">
                     Tags
                   </Text>
                   <Row wrap gap="xs">
@@ -927,7 +927,7 @@ export async function ProductDetailPageView({
                             <Text className={CLS_BUNDLE_LABEL}>
                               Included in bundle
                             </Text>
-                            <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 truncate">
+                            <Text className="text-zinc-800 dark:text-zinc-100 truncate" size="sm" weight="semibold">
                               {b.title}
                             </Text>
                           </Div>

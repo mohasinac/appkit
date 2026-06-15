@@ -54,7 +54,7 @@ export function NavPermissionsManager({
     <Stack gap="lg">
       {navGroups.map((group) => (
         <Div key={group.groupLabel}>
-          <Text className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <Text className="mb-3 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
             {group.groupLabel}
           </Text>
           <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
@@ -81,9 +81,9 @@ export function NavPermissionsManager({
                     >
                       <Td className="px-4 py-3">
                         <Div>
-                          <Text className="font-medium text-zinc-900 dark:text-zinc-100">{item.label}</Text>
+                          <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{item.label}</Text>
                           {item.id && (
-                            <Text className="text-xs text-zinc-400 dark:text-zinc-400">{item.id}</Text>
+                            <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{item.id}</Text>
                           )}
                         </Div>
                       </Td>
@@ -96,7 +96,7 @@ export function NavPermissionsManager({
                             {item.requiredPermission}
                           </code>
                         ) : (
-                          <Text className="text-xs text-zinc-400">—</Text>
+                          <Text size="xs" color="faint">—</Text>
                         )}
                       </Td>
                       <Td className="px-4 py-3 text-right">
@@ -107,7 +107,7 @@ export function NavPermissionsManager({
                             aria-label={`Toggle ${item.label}`}
                           />
                         ) : (
-                          <Text className="text-xs text-zinc-400 italic">Legacy — always visible</Text>
+                          <Text className="italic" size="xs" color="faint">Legacy — always visible</Text>
                         )}
                       </Td>
                     </Tr>

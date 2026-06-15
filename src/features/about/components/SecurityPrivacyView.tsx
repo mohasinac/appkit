@@ -181,7 +181,7 @@ export async function SecurityPrivacyView({
         <Section>
           <FlowDiagram title={`🛡️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-        <Text variant="secondary" className="text-center text-sm">{t("lastUpdated")}</Text>
+        <Text variant="secondary" size="sm" align="center">{t("lastUpdated")}</Text>
         {renderSecurityCtaSection(t, themed, flex)}
       </Div>
     </Div>
@@ -201,8 +201,8 @@ function renderSecurityCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], card
             <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
-            <Text className="font-semibold mb-1">{title}</Text>
-            <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
+            <Text className="mb-1" weight="semibold">{title}</Text>
+            <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
           </Div>
         ))}
       </Div>

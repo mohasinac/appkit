@@ -57,8 +57,8 @@ function SecurityCard({
           </span>
         </Div>
       )}
-      <Text className="font-semibold mb-1">{item.title}</Text>
-      <Text variant="secondary" className="text-sm leading-relaxed">
+      <Text className="mb-1" weight="semibold">{item.title}</Text>
+      <Text variant="secondary" className="leading-relaxed" size="sm">
         {item.description}
       </Text>
     </div>
@@ -105,7 +105,7 @@ export function SecurityHighlightsSection({
         {/* Header */}
         <Div className="text-center mb-10">
           {pillLabel && (
-            <Span size="xs" weight="medium" className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm">
+            <Span size="xs" weight="medium" className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" transform="uppercase">
               {pillLabel}
             </Span>
           )}

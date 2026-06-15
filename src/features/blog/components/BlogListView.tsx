@@ -76,7 +76,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       </Div>
       <Div className={`flex flex-1 flex-col ${__P.p5}`}>
         <Row className="mb-2 gap-2 flex-wrap">
-          <Span size="xs" weight="medium" className="rounded-full bg-primary/10 px-2 py-0.5 capitalize text-primary">
+          <Span size="xs" weight="medium" className="rounded-full bg-primary/10 px-2 py-0.5 text-primary" transform="capitalize">
             {post.category}
           </Span>
           {post.isFeatured && (
@@ -115,7 +115,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
               {post.authorName.charAt(0).toUpperCase()}
             </Div>
           ) : null}
-          <Text className="text-xs text-neutral-500 dark:text-zinc-400 min-w-0">
+          <Text className="text-neutral-500 dark:text-zinc-400 min-w-0" size="xs">
             {post.authorName && (
               <Span weight="medium" className="text-neutral-700 dark:text-zinc-300">
                 {safeDisplayName(post.authorName, "Author")}
@@ -225,7 +225,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
       return <>{slots.renderEmptyState() as React.ReactNode}</>;
     }
     return (
-      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+      <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

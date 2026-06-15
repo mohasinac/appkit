@@ -27,7 +27,7 @@ export function ChatList({
   return (
     <Div className={className}>
       {labels.title && (
-        <Heading level={4} className="mb-3 font-semibold">
+        <Heading level={4} className="mb-3" weight="semibold">
           {labels.title}
         </Heading>
       )}

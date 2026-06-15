@@ -50,7 +50,7 @@ export function CartView({
   return (
     <Div className={className}>
       {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-6">{labels.title}</Heading>
+        <Heading level={1} className="text-2xl mb-6" weight="bold">{labels.title}</Heading>
       )}
       <Div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
         <Div className="flex-1">

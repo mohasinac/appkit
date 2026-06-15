@@ -156,7 +156,7 @@ export function MarketplaceBundleCard({
             </Div>
           ) : (
             <Div className="absolute inset-0 flex items-center justify-center bg-[var(--appkit-color-surface-muted)]">
-              <Text className="text-xs text-[var(--appkit-color-text-muted)]">No image</Text>
+              <Text className="text-[var(--appkit-color-text-muted)]" size="xs">No image</Text>
             </Div>
           )}
         </TextLink>
@@ -178,7 +178,7 @@ export function MarketplaceBundleCard({
 
         {stock === "out_of_stock" && (
           <Div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 uppercase tracking-wider text-white">
+            <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 tracking-wider text-white" transform="uppercase">
               {mergedLabels.outOfStockBadge}
             </Span>
           </Div>
@@ -209,12 +209,12 @@ export function MarketplaceBundleCard({
           </Text>
         </TextLink>
         <Row justify="between" className="mt-1 gap-2">
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
             {price
               ? formatCurrency(price / 100, getDefaultCurrency())
               : "—"}
           </Text>
-          <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
             {mergedLabels.itemsLabel(memberCount)}
           </Text>
         </Row>

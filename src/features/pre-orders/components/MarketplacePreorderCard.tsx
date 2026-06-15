@@ -219,7 +219,7 @@ export function MarketplacePreorderCard({
               )}
             </Div>
             <Div className="flex items-center gap-2 flex-wrap">
-              <Text className="text-sm font-bold text-primary">
+              <Text className="text-primary" size="sm" weight="bold">
                 {formatCurrency(product.price, getDefaultCurrency())}
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}
@@ -250,7 +250,7 @@ export function MarketplacePreorderCard({
               />
             ) : null}
             <Row justify="between" className="mt-1 gap-2">
-              <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
                 {formatCurrency(product.price, getDefaultCurrency())}
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}

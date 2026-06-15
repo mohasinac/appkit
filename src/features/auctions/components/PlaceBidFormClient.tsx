@@ -135,8 +135,8 @@ export function PlaceBidFormClient({
       {/* Current / starting bid summary */}
       <Div className="space-y-1">
         <Row justify="between" align="center">
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">Current bid</Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">Starting bid</Text>
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Current bid</Text>
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Starting bid</Text>
         </Row>
         <Row justify="between" align="baseline">
           <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
@@ -146,7 +146,7 @@ export function PlaceBidFormClient({
             {formatCurrency(startingBid, currency)}
           </Span>
         </Row>
-        <Text className="text-xs text-zinc-400 dark:text-zinc-400">
+        <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
           {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment{" "}
           {formatCurrency(minBidIncrement, currency)}
         </Text>
@@ -218,7 +218,7 @@ export function PlaceBidFormClient({
             )}
 
             {success && (
-              <Text className="text-xs text-success">
+              <Text className="text-success" size="xs">
                 ✓ Bid placed successfully!
               </Text>
             )}

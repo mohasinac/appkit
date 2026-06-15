@@ -48,7 +48,7 @@ export function AdminStatCard({
 
       <Div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
         <Div className="min-w-0 flex-1">
-          <Text className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)]" weight="semibold" transform="uppercase">
             {label}
           </Text>
           <Heading
@@ -58,7 +58,7 @@ export function AdminStatCard({
             {value}
           </Heading>
           {sub && (
-            <Text className="mt-1.5 text-xs text-[var(--appkit-color-text-muted)]">{sub}</Text>
+            <Text className="mt-1.5 text-[var(--appkit-color-text-muted)]" size="xs">{sub}</Text>
           )}
         </Div>
 

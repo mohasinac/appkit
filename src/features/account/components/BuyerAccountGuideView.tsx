@@ -21,7 +21,7 @@ const SECTIONS: AccountSection[] = [
         <Text className={GC.textMuted}>Update your profile at <Span weight="bold">My Account → My Profile</Span>. Your <Span weight="bold">display name</Span> is shown to sellers on order summaries.</Text>
         <Div className="grid sm:grid-cols-2 gap-4 text-sm">
           <Div>
-            <Text className="font-semibold text-[var(--appkit-color-text)] mb-1">Visible to others:</Text>
+            <Text className="text-[var(--appkit-color-text)] mb-1" weight="semibold">Visible to others:</Text>
             <ul className={GC.listDiscMuted}>
               <li>Display name</li>
               <li>Avatar / profile photo</li>
@@ -30,7 +30,7 @@ const SECTIONS: AccountSection[] = [
             </ul>
           </Div>
           <Div>
-            <Text className="font-semibold text-[var(--appkit-color-text)] mb-1">Only you can see:</Text>
+            <Text className="text-[var(--appkit-color-text)] mb-1" weight="semibold">Only you can see:</Text>
             <ul className={GC.listDiscMuted}>
               <li>Email address</li>
               <li>Phone number</li>
@@ -118,12 +118,12 @@ const SECTIONS: AccountSection[] = [
     content: (
       <Div className="grid sm:grid-cols-2 gap-6 text-sm">
         <Div>
-          <Text className="font-semibold text-[var(--appkit-color-text)] mb-2">Report a seller (scam, fake item, harassment)</Text>
+          <Text className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Report a seller (scam, fake item, harassment)</Text>
           <Text className={`${GC.textMuted} mb-2`}>Use the Scam Registry report form. Our Trust &amp; Safety team reviews within 48 hours.</Text>
           <a href={String(ROUTES.PUBLIC.SCAMS)} className="text-[var(--appkit-color-primary)] text-sm font-medium underline hover:no-underline">Go to Scam Registry →</a>
         </Div>
         <Div>
-          <Text className="font-semibold text-[var(--appkit-color-text)] mb-2">Open a support ticket (order dispute, billing, account)</Text>
+          <Text className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Open a support ticket (order dispute, billing, account)</Text>
           <Text className={`${GC.textMuted} mb-2`}>Go to My Account → Support Tickets. Choose the right category for a faster response.</Text>
           <a href={String(ROUTES.USER.SUPPORT)} className="text-[var(--appkit-color-primary)] text-sm font-medium underline hover:no-underline">Open Support Ticket →</a>
         </Div>
@@ -142,9 +142,9 @@ export function BuyerAccountGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: GC.pageHeaderGradient }}>
             <UserCheck className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Buyer Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Buyer Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">
           Account &amp; Safety
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">

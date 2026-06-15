@@ -96,8 +96,8 @@ function AdsSettingsPanel({
 }: AdsSettingsPanelProps) {
   return (
     <Div className={`rounded-lg border border-neutral-200 dark:border-slate-700 ${__P.p3} space-y-3`}>
-      <Text className="text-sm font-semibold">Provider and publish settings</Text>
-      <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+      <Text size="sm" weight="semibold">Provider and publish settings</Text>
+      <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
         Save provider credentials here before publishing AdSense or third-party inventory.
       </Text>
       {serverCredentialIssues.length > 0 ? (
@@ -119,7 +119,7 @@ function AdsSettingsPanel({
           placeholder={providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
         />
       </Div>
-      <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+      <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
       <Div className="flex items-center justify-between gap-3">
@@ -283,22 +283,22 @@ export function AdminAdsView({
       header: "Ad",
       render: (row) => (
         <Div>
-          <Text className="font-medium">{row.name}</Text>
-          <Text className="text-xs text-neutral-500 dark:text-zinc-400">{row.id}</Text>
+          <Text weight="medium">{row.name}</Text>
+          <Text className="text-neutral-500 dark:text-zinc-400" size="xs">{row.id}</Text>
         </Div>
       ),
     },
     {
       key: "provider",
       header: "Provider",
-      render: (row) => <Text className="text-xs uppercase tracking-wide">{row.provider}</Text>,
+      render: (row) => <Text className="tracking-wide" size="xs" transform="uppercase">{row.provider}</Text>,
     },
     {
       key: "status",
       header: "Status",
       render: (row) => (
         <Div>
-          <Text className="text-xs uppercase tracking-wide">{row.status}</Text>
+          <Text className="tracking-wide" size="xs" transform="uppercase">{row.status}</Text>
           {row.publishReady === false ? (
             <Text className="text-[11px] text-error">Publish blocked</Text>
           ) : null}
@@ -309,7 +309,7 @@ export function AdminAdsView({
       key: "placementIds",
       header: "Placements",
       render: (row) => (
-        <Text className="text-xs text-neutral-500 dark:text-zinc-400">{row.placementIds.join(", ")}</Text>
+        <Text className="text-neutral-500 dark:text-zinc-400" size="xs">{row.placementIds.join(", ")}</Text>
       ),
     },
     {

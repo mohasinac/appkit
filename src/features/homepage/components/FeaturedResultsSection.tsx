@@ -69,7 +69,7 @@ export function FeaturedResultsSection({
         </Div>
 
         {subtitle && (
-          <Text className="mx-auto mt-4 max-w-md text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="mx-auto mt-4 max-w-md text-zinc-500 dark:text-zinc-400" size="sm">
             {subtitle}
           </Text>
         )}

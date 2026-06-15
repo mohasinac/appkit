@@ -212,9 +212,9 @@ export function FormShell({
 
           <Div className="flex-1 min-w-0">
             {breadcrumb && (
-              <Text className="text-xs text-[var(--appkit-color-text-muted)] truncate mb-0.5">{breadcrumb}</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] truncate mb-0.5" size="xs">{breadcrumb}</Text>
             )}
-            <Text className="text-sm font-semibold text-[var(--appkit-color-text)] truncate">
+            <Text className="text-[var(--appkit-color-text)] truncate" size="sm" weight="semibold">
               {previewMode ? `Preview — ${title}` : title}
             </Text>
           </Div>
@@ -392,8 +392,8 @@ export function FormShell({
                 <AlertTriangle className="w-5 h-5 text-[var(--appkit-color-warning)]" />
               </Span>
               <Stack gap="xs">
-                <Text className="font-semibold text-[var(--appkit-color-text)]">Unsaved changes</Text>
-                <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+                <Text className="text-[var(--appkit-color-text)]" weight="semibold">Unsaved changes</Text>
+                <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                   You have unsaved changes. Leave without saving?
                 </Text>
               </Stack>

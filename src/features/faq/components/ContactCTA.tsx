@@ -52,7 +52,7 @@ export function ContactCTA({
         </Div>
       </Div>
 
-      <Heading level={2} className="mb-3 text-2xl font-semibold">
+      <Heading level={2} className="mb-3 text-2xl" weight="semibold">
         {labels?.title ?? "Need More Help?"}
       </Heading>
 
@@ -69,7 +69,7 @@ export function ContactCTA({
           <Text className={CLS_CONTACT_LABEL}>
             {labels?.emailUs ?? "Email Us"}
           </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
             {email}
           </Text>
         </TextLink>
@@ -82,7 +82,7 @@ export function ContactCTA({
           <Text className={CLS_CONTACT_LABEL}>
             {labels?.callUs ?? "Call Us"}
           </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
             {phone}
           </Text>
         </TextLink>
@@ -94,7 +94,7 @@ export function ContactCTA({
           <Text className={CLS_CONTACT_LABEL}>
             {labels?.contactForm ?? "Contact Form"}
           </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
             {labels?.submitRequest ?? "Submit a request"}
           </Text>
         </TextLink>

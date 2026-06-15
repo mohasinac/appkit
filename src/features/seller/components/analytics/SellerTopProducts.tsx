@@ -31,7 +31,7 @@ export function SellerTopProducts({
       className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 ${className}`}
     >
       {labels.title && (
-        <Heading level={3} className="text-base font-semibold mb-4">
+        <Heading level={3} className="mb-4" size="base" weight="semibold">
           {labels.title}
         </Heading>
       )}
@@ -44,8 +44,8 @@ export function SellerTopProducts({
                 {index + 1}.
               </Span>
               <Div className="flex-1 min-w-0">
-                <Text className="text-sm font-medium truncate">{product.title}</Text>
-                <Text className="text-xs text-neutral-500 dark:text-neutral-400">
+                <Text className="truncate" size="sm" weight="medium">{product.title}</Text>
+                <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
                   {product.orders} {labels.ordersLabel ?? "orders"}
                 </Text>
               </Div>
@@ -60,9 +60,9 @@ export function SellerTopProducts({
         </Div>
       ) : (
         <Div className="text-center py-8">
-          <Text className="text-sm font-medium">{labels.noData ?? "No data available"}</Text>
+          <Text size="sm" weight="medium">{labels.noData ?? "No data available"}</Text>
           {labels.noDataDescription && (
-            <Text className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+            <Text className="text-neutral-500 dark:text-neutral-400 mt-1" size="xs">
               {labels.noDataDescription}
             </Text>
           )}

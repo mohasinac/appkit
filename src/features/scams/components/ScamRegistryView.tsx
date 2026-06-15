@@ -58,9 +58,9 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
         <Stack gap="sm">
           <Row justify="between" gap="sm" align="start">
             <Stack gap="xs" className="min-w-0">
-              <Text className="truncate font-semibold">{name}</Text>
+              <Text className="truncate" weight="semibold">{name}</Text>
               {aliases.length > 0 && (
-                <Text variant="secondary" className="text-xs">
+                <Text variant="secondary" size="xs">
                   Also known as: {aliases.join(", ")}
                 </Text>
               )}
@@ -80,24 +80,24 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
           {/* Contact identifiers rendered as plaintext for SEO */}
           <Stack gap="xs">
             {scammer.phones.slice(0, 2).map((p) => (
-              <Text key={p} variant="secondary" className="flex items-center gap-1 text-xs">
+              <Text key={p} variant="secondary" className="flex items-center gap-1" size="xs">
                 <Phone className={CLS_ICON_SM} /> {p}
               </Text>
             ))}
             {scammer.upiIds.slice(0, 1).map((u) => (
-              <Text key={u} variant="secondary" className="flex items-center gap-1 text-xs">
+              <Text key={u} variant="secondary" className="flex items-center gap-1" size="xs">
                 <Wallet className={CLS_ICON_SM} /> {u}
               </Text>
             ))}
             {scammer.emails.slice(0, 1).map((e) => (
-              <Text key={e} variant="secondary" className="flex items-center gap-1 text-xs">
+              <Text key={e} variant="secondary" className="flex items-center gap-1" size="xs">
                 <Mail className={CLS_ICON_SM} /> {e}
               </Text>
             ))}
           </Stack>
 
           <Row justify="between" gap="sm">
-            <Text variant="secondary" className="text-xs">
+            <Text variant="secondary" size="xs">
               {scammer.incidentCount > 0
                 ? `${scammer.incidentCount + 1} victims reported`
                 : "1 victim reported"}
@@ -167,10 +167,10 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
             {/* Page header */}
             <Row justify="between" gap="md" align="end" className="flex-wrap">
               <Stack gap="xs">
-                <Heading level={1} className="text-3xl font-semibold">
+                <Heading level={1} className="text-3xl" weight="semibold">
                   Scam Registry
                 </Heading>
-                <Text variant="secondary" className="text-sm">
+                <Text variant="secondary" size="sm">
                   Verified scammers active in India&apos;s collectibles community. Search by name,
                   phone, or UPI.
                 </Text>
@@ -234,7 +234,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
             {/* Active filter chip */}
             {scamType && SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS] && (
               <Row gap="sm" align="center">
-                <Text variant="secondary" className="text-xs">Filtering by:</Text>
+                <Text variant="secondary" size="xs">Filtering by:</Text>
                 <Link
                   href={buildHref({ scamType: "" })}
                   className={CLS_PILL_LINK}
@@ -262,7 +262,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
               />
             ) : (
               <Stack gap="md">
-                <Text variant="secondary" className="text-sm">
+                <Text variant="secondary" size="sm">
                   {result.total} verified profile{result.total !== 1 ? "s" : ""}
                   {scamType && SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS]
                     ? ` · ${SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS]}`

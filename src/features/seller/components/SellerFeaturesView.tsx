@@ -111,7 +111,7 @@ export function SellerFeaturesView() {
           >
             Custom feature badges
           </Heading>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+          <Text className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs">
             {features.length} of {limit} used. Platform features are always
             available on top of your custom ones.
           </Text>

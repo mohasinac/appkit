@@ -87,7 +87,7 @@ export function AdvertisementBanner({
                   aria-hidden
                 />
                 {tagLabel && (
-                  <Span size="xs" weight="semibold" className="inline-flex items-center gap-1.5 self-start bg-white/10 text-white/80 uppercase tracking-widest px-3 py-1 rounded-full mb-5 backdrop-blur-sm">
+                  <Span size="xs" weight="semibold" className="inline-flex items-center gap-1.5 self-start bg-white/10 text-white/80 tracking-widest px-3 py-1 rounded-full mb-5 backdrop-blur-sm" transform="uppercase">
                     <Sparkles className="w-3.5 h-3.5" />
                     {tagLabel}
                   </Span>
@@ -182,7 +182,7 @@ export function AdvertisementBanner({
           ) : (
             <Div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 text-center">
               {tagLabel && (
-                <Span size="xs" weight="semibold" className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 uppercase tracking-widest px-4 py-1.5 rounded-full mb-5 backdrop-blur-sm shadow-sm">
+                <Span size="xs" weight="semibold" className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 tracking-widest px-4 py-1.5 rounded-full mb-5 backdrop-blur-sm shadow-sm" transform="uppercase">
                   <Sparkles className="w-3.5 h-3.5" />
                   {tagLabel}
                 </Span>

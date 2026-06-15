@@ -757,7 +757,7 @@ export function Search({
                           className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
                         >
                           <Icon className={CLS_ICON_ROW} />
-                          <Text size="sm" className="font-medium">
+                          <Text size="sm" weight="medium">
                             {link.label}
                           </Text>
                         </Button>
@@ -813,7 +813,7 @@ export function Search({
                       d={SVG_PATH_SEARCH}
                     />
                   </svg>
-                  <Text size="sm" className="font-medium">
+                  <Text size="sm" weight="medium">
                     {labels.browseProducts(query)}
                   </Text>
                 </Button>

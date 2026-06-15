@@ -113,7 +113,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       {/* Caption hover overlay */}
       {showCaption && post.caption && (
         <Div className={`absolute inset-0 flex flex-col justify-end bg-black/60 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
-          <Text className="line-clamp-2 text-xs text-white">{post.caption}</Text>
+          <Text className="line-clamp-2 text-white" size="xs">{post.caption}</Text>
         </Div>
       )}
     </a>
@@ -153,7 +153,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
         />
       ) : (
         <Div className="flex h-full w-full items-center justify-center bg-zinc-200 dark:bg-zinc-700">
-          <Span size="sm" className="text-zinc-400">No preview</Span>
+          <Span size="sm" color="faint">No preview</Span>
         </Div>
       )}
 
@@ -189,7 +189,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       {/* Hover overlay — caption + stats */}
       <Div className={`pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
         {showCaption && post.caption && (
-          <Text className="mb-2 line-clamp-3 text-xs text-white">{post.caption}</Text>
+          <Text className="mb-2 line-clamp-3 text-white" size="xs">{post.caption}</Text>
         )}
         {showStats && (
           <Div className="flex items-center gap-3 text-xs text-white/80">

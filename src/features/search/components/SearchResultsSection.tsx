@@ -104,11 +104,11 @@ export function SearchResultsSection({
         <Span className="text-5xl" aria-hidden="true">
           🔍
         </Span>
-        <Text className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+        <Text className="text-zinc-800 dark:text-zinc-100" size="lg" weight="semibold">
           {L.noResultsTitle}
         </Text>
         {urlQ && L.noResultsSubtitle && (
-          <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
             {L.noResultsSubtitle}
           </Text>
         )}
@@ -128,7 +128,7 @@ export function SearchResultsSection({
         })
       ) : (
         <Row justify="between">
-          <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
             {L.showing(products.length, total)}
           </Text>
           {sortOptions.length > 0 && (

@@ -110,10 +110,10 @@ export async function FAQPageView({
                 className={`text-center py-16 rounded-2xl border ${themed.border} ${themed.bgSecondary}`}
               >
                 <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-zinc-600" />
-                <Heading level={3} className="mb-2 text-base">
+                <Heading level={3} className="mb-2" size="base">
                   {t("emptyTitle")}
                 </Heading>
-                <Text variant="secondary" className="text-sm">
+                <Text variant="secondary" size="sm">
                   {t("emptyText")}
                 </Text>
               </Section>
@@ -145,10 +145,10 @@ export async function FAQPageView({
             <Section
               className={`mt-10 rounded-2xl p-6 text-center border ${themed.border} ${themed.bgSecondary}`}
             >
-              <Heading level={3} className="mb-2 text-base">
+              <Heading level={3} className="mb-2" size="base">
                 {t("stillNeedHelpTitle")}
               </Heading>
-              <Text variant="secondary" className="text-sm mb-4">
+              <Text variant="secondary" className="mb-4" size="sm">
                 {t("stillNeedHelpText")}
               </Text>
               <Div className={`${flex.center} gap-4 flex-wrap`}>

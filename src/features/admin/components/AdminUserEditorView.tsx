@@ -462,7 +462,7 @@ export function AdminUserEditorView({
 
   const renderProfileSection = () => (
     <Stack as="section" gap="sm" className="border-t border-zinc-200 pt-3 dark:border-zinc-700">
-      <Heading level={3} className="mb-1 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+      <Heading level={3} className="mb-1 text-zinc-700 dark:text-zinc-300" size="sm" weight="semibold">
         Profile details
       </Heading>
       <Input
@@ -563,7 +563,7 @@ export function AdminUserEditorView({
 
   const renderModerationSection = () => (
     <Stack as="section" gap="sm" className="border-t border-zinc-200 pt-4 dark:border-zinc-700">
-      <Heading level={3} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+      <Heading level={3} className="mb-3 text-zinc-700 dark:text-zinc-300" size="sm" weight="semibold">
         Moderation
       </Heading>
 

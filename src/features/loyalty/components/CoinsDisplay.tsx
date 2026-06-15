@@ -31,7 +31,7 @@ export function CoinsDisplay({ coins, label = "HC Coins" }: CoinsDisplayProps) {
       <Text className={CLS_COIN_TOTAL}>
         {coins.toLocaleString()}
       </Text>
-      <Text className="text-sm text-gray-500">{label}</Text>
+      <Text className="text-gray-500" size="sm">{label}</Text>
     </Div>
   );
 }

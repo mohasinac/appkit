@@ -63,7 +63,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
       }
     >
       <Stack gap="md">
-        <Text variant="secondary" className="text-sm">
+        <Text variant="secondary" size="sm">
           LetItRip connects you with verified sellers, but collectibles markets attract scams.
           Take 60 seconds to learn the most common patterns — it could save your money.
         </Text>
@@ -79,10 +79,10 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
                 {CATEGORY_ICONS[cat.id] ?? <Shield className="h-4 w-4" />}
               </span>
               <Stack gap="none">
-                <Text weight="semibold" className="text-sm">
+                <Text weight="semibold" size="sm">
                   {cat.label}
                 </Text>
-                <Text variant="secondary" className="text-xs leading-relaxed">
+                <Text variant="secondary" className="leading-relaxed" size="xs">
                   {cat.description}
                 </Text>
               </Stack>
@@ -111,7 +111,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
         </Row>
 
         {mutation.isError && (
-          <Text variant="error" className="text-sm">
+          <Text variant="error" size="sm">
             Something went wrong — please try again.
           </Text>
         )}

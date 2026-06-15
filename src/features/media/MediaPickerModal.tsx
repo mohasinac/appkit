@@ -277,19 +277,19 @@ export function MediaPickerModal({
                         </Text>
                       )}
                     </Div>
-                    <Text className="block truncate p-1.5 text-xs font-mono">
+                    <Text className="block truncate p-1.5 font-mono" size="xs">
                       {f.name.split("/").pop()}
                     </Text>
                   </Button>
                 );
               })}
               {existingLoading && (
-                <Text className="col-span-full py-6 text-center" color="muted">
+                <Text className="col-span-full py-6" align="center" color="muted">
                   Loading…
                 </Text>
               )}
               {!existingLoading && filteredExisting.length === 0 && (
-                <Text className="col-span-full py-6 text-center" color="muted">
+                <Text className="col-span-full py-6" align="center" color="muted">
                   No files match.
                 </Text>
               )}

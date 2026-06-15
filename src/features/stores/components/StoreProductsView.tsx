@@ -62,7 +62,7 @@ export function StoreProductsView({
         className="space-y-4"
         renderHeader={() =>
           labels.title ? (
-            <Heading level={2} className="mb-1 text-xl font-semibold">
+            <Heading level={2} className="mb-1" size="xl" weight="semibold">
               {labels.title}
             </Heading>
           ) : null

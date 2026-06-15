@@ -72,10 +72,10 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
       {/* Page header */}
       <Section className="pt-8 pb-4 border-b border-zinc-100 dark:border-slate-800">
         <Container size="xl">
-          <Heading level={1} className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+          <Heading level={1} className="text-3xl text-zinc-900 dark:text-zinc-100" weight="bold">
             Products
           </Heading>
-          <Text className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="mt-1 text-zinc-500 dark:text-zinc-400" size="sm">
             Discover amazing products and deals
           </Text>
           <Div className="mt-3">

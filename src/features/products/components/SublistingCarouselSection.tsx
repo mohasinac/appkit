@@ -87,10 +87,10 @@ function ListingThumb({
           </Div>
         )}
       </div>
-      <Text className="text-[10px] text-center text-zinc-600 dark:text-zinc-400 leading-tight line-clamp-2 w-full">
+      <Text className="text-[10px] text-zinc-600 dark:text-zinc-400 leading-tight line-clamp-2 w-full" align="center">
         {listing.title}
       </Text>
-      <Text className="text-[10px] font-semibold text-zinc-800 dark:text-zinc-200">
+      <Text className="text-[10px] text-zinc-800 dark:text-zinc-200" weight="semibold">
         {price}
       </Text>
     </Link>
@@ -136,7 +136,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
           <Span size="xs" className="text-zinc-400 dark:text-zinc-400 mr-1">
             {open ? "â–¼" : "â–¶"}
           </Span>
-          <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+          <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="medium">
             More listings like this:{" "}
             <Span className="text-[var(--appkit-color-primary)]">{label}</Span>
           </Text>

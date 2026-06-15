@@ -186,7 +186,7 @@ export function AvatarUpload({
           </Div>
 
           <Div className="flex-1 space-y-3">
-            <Text variant="secondary" className="text-xs">
+            <Text variant="secondary" size="xs">
               JPG, PNG, WEBP or GIF up to 10MB.
             </Text>
 
@@ -201,7 +201,7 @@ export function AvatarUpload({
 
             {hasPending && !isUploading ? (
               <Div className="space-y-2">
-                <Text variant="secondary" className="text-xs text-primary">
+                <Text variant="secondary" className="text-primary" size="xs">
                   {t.readyToSave}
                 </Text>
                 <Div className="flex gap-3">

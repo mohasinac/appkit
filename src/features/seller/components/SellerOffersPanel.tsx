@@ -134,10 +134,10 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {/* Header row */}
       <Div className="flex items-start justify-between gap-2 flex-wrap">
         <Div className="min-w-0">
-          <Text className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 truncate">
+          <Text className="text-zinc-900 dark:text-zinc-100 truncate" size="sm" weight="semibold">
             {offer.productTitle ?? "Unknown Product"}
           </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+          <Text className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs">
             {relativeTime(offer.createdAt)} · {isPendingOffer ? expiresIn(offer.expiresAt) : ""}
           </Text>
         </Div>
@@ -149,23 +149,23 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {/* Amounts */}
       <Div className="flex gap-4 flex-wrap">
         <Div>
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Listed</Text>
-          <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{formatRupees(offer.listedPrice)}</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Listed</Text>
+          <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">{formatRupees(offer.listedPrice)}</Text>
         </Div>
         <Div>
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Offered</Text>
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{formatRupees(offer.offerAmount)}</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Offered</Text>
+          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">{formatRupees(offer.offerAmount)}</Text>
         </Div>
         {offer.counterAmount != null && (
           <Div>
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Your Counter</Text>
-            <Text className="text-sm font-medium text-info">{formatRupees(offer.counterAmount)}</Text>
+            <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Your Counter</Text>
+            <Text className="text-info" size="sm" weight="medium">{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
       </Div>
 
       {offer.buyerNote && (
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 italic">
+        <Text className="text-zinc-500 dark:text-zinc-400 italic" size="xs">
           "{offer.buyerNote}"
         </Text>
       )}
@@ -221,7 +221,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {/* Counter form */}
       {uiState === "countering" && (
         <Div className="space-y-2">
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
             Suggest a price between the buyer's offer ({formatRupees(offer.offerAmount)}) and your listed price ({formatRupees(offer.listedPrice)}).
           </Text>
           <Input
@@ -246,7 +246,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
         </Div>
       )}
 
-      {error && <Alert variant="error"><Text className="text-xs">{error}</Text></Alert>}
+      {error && <Alert variant="error"><Text size="xs">{error}</Text></Alert>}
     </Div>
   );
 }
@@ -311,11 +311,11 @@ export function SellerOffersPanel({
       />
       <Div className="flex items-center justify-between flex-wrap gap-2">
         <Div>
-          <Heading level={2} className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+          <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="lg" weight="semibold">
             Offers Received
           </Heading>
           {pending > 0 && (
-            <Text className="text-xs text-warning mt-0.5">
+            <Text className="text-warning mt-0.5" size="xs">
               {pending} pending offer{pending > 1 ? "s" : ""} awaiting your response
             </Text>
           )}
@@ -341,7 +341,7 @@ export function SellerOffersPanel({
         ))}
       </Div>
 
-      {fetchError && <Alert variant="error"><Text className="text-sm">{fetchError}</Text></Alert>}
+      {fetchError && <Alert variant="error"><Text size="sm">{fetchError}</Text></Alert>}
 
       {loading && (
         <Div className="flex justify-center py-12">
@@ -351,7 +351,7 @@ export function SellerOffersPanel({
 
       {!loading && offers.length === 0 && (
         <Div className="text-center py-12">
-          <Text className="text-zinc-400 dark:text-zinc-400 text-sm">No offers found</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400" size="sm">No offers found</Text>
         </Div>
       )}
 

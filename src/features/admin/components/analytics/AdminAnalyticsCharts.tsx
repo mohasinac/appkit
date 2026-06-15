@@ -75,7 +75,7 @@ function ChartCard({
       />
       <Div className={`${__P.p4} sm:${__P.p6} pt-5 sm:pt-7`}>
         {title && (
-          <Heading level={3} className="text-sm font-semibold text-[var(--appkit-color-text)] mb-4">
+          <Heading level={3} className="text-[var(--appkit-color-text)] mb-4" size="sm" weight="semibold">
             {title}
           </Heading>
         )}

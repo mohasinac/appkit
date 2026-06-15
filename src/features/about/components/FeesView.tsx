@@ -134,7 +134,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
       <Heading level={2} className="mb-3">{t("payoutExampleTitle")}</Heading>
       <Text variant="secondary" className="mb-6">{t("payoutExampleSubtitle")}</Text>
       <Div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} ${__P.p5} max-w-sm`}>
-        <Heading level={3} className="text-base mb-4">{t("payoutExampleProduct")}</Heading>
+        <Heading level={3} className="mb-4" size="base">{t("payoutExampleProduct")}</Heading>
         <Div className="space-y-2">
           {rows.map((row, i) => (
             <Div key={i} className={`flex justify-between text-sm ${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2 font-bold" : ""}`}>
@@ -151,7 +151,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
 function renderDisclaimerSection(t: TranslateFn, themed: ThemedTokens) {
   return (
     <Section className={`rounded-xl border ${themed.border} ${__P.p5} ${themed.bgSecondary}`}>
-      <Heading level={3} className="text-base mb-2">{t("disclaimerTitle")}</Heading>
+      <Heading level={3} className="mb-2" size="base">{t("disclaimerTitle")}</Heading>
       <Caption className="leading-relaxed">{t("disclaimerText")}</Caption>
     </Section>
   );

@@ -47,7 +47,7 @@ function renderCategoryGrid(props: {
   }
   if (categories.length === 0) {
     return (
-      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+      <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
         {activeSearch ? `No ${isBrandView ? "brands" : "categories"} matching "${activeSearch}"` : isBrandView ? "No brands found" : "No categories found"}
       </Text>
     );

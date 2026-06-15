@@ -103,15 +103,15 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
             <Span size="xs" weight="medium" className="inline-block rounded-full bg-success-surface px-2.5 py-0.5 text-success">Active</Span>
           )}
         </Row>
-        <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">{title}</Heading>
+        <Heading level={1} className="leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl" size="xl" weight="bold">{title}</Heading>
       </Div>
       <Div>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-0.5">Current bid</Text>
+        <Text className="text-zinc-500 dark:text-zinc-400 mb-0.5" size="xs">Current bid</Text>
         <Row align="center" gap="sm" wrap>
           <Span weight="bold" className="text-2xl text-primary-600 dark:text-primary-400">{formatCurrency(currentBid, currency)}</Span>
           <Span size="sm" weight="medium" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-zinc-600 dark:text-zinc-300">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
         </Row>
-        {endDate && <Text className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">{isEnded ? "Ended" : "Ends"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
+        {endDate && <Text className="mt-1.5 text-zinc-500 dark:text-zinc-400" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
         <Row align="center" gap="sm" className="rounded-lg border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3 py-2">
@@ -131,7 +131,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
       {!productFeatures && features.length > 0 && (
         <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
-          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">About this item</Text>
+          <Text className="mb-2 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">About this item</Text>
           <Ul className="space-y-1.5">
             {features.map((f, i) => <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
           </Ul>
@@ -142,8 +142,8 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
           <Row justify="between" align="center">
             <Div>
-              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">Listed by</Text>
-              <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{safeSeller}</Text>
+              <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">Listed by</Text>
+              <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">{safeSeller}</Text>
             </Div>
             {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
           </Row>
@@ -158,12 +158,12 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
   const avg = storeReviews.reduce((s, r) => s + r.rating, 0) / storeReviews.length;
   return (
     <Section className="mt-10">
-      <Heading level={2} className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-50">Store Reviews</Heading>
+      <Heading level={2} className="mb-2 text-zinc-900 dark:text-zinc-50" size="xl" weight="semibold">Store Reviews</Heading>
       <Div className="mb-4 flex items-center gap-3">
         <Span weight="bold" className="text-3xl text-zinc-900 dark:text-zinc-50">{avg.toFixed(1)}</Span>
         <Div>
           <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
         </Div>
       </Div>
       <Stack gap="sm">
@@ -175,9 +175,9 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
                 <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} size="xs" className={star <= review.rating ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
               </Row>
             </Row>
-            {review.title && <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{review.title}</Text>}
-            <Text className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{review.comment}</Text>
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400">{review.productTitle}</Text>
+            {review.title && <Text className="text-zinc-800 dark:text-zinc-100" size="sm" weight="semibold">{review.title}</Text>}
+            <Text className="text-zinc-600 dark:text-zinc-400 leading-relaxed" size="sm">{review.comment}</Text>
+            <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{review.productTitle}</Text>
           </Div>
         ))}
       </Stack>
@@ -204,7 +204,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
         <Section className="py-20">
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
-              <Heading level={1} className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+              <Heading level={1} className="text-2xl text-zinc-900 dark:text-zinc-50" weight="semibold">
                 Auction Not Found
               </Heading>
               <Text color="muted">
@@ -362,7 +362,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
               <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
                 <Div className="space-y-1">
-                  <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
                     Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
                   </Text>
                 </Div>

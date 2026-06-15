@@ -90,7 +90,7 @@ export function WelcomeSection({
             {/* Pill badge */}
             {pillLabel && (
               <Div>
-                <Span size="xs" weight="medium" className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm">
+                <Span size="xs" weight="medium" className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" transform="uppercase">
                   <Span
                     className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
                     aria-hidden="true"

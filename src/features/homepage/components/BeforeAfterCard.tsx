@@ -147,7 +147,7 @@ export function BeforeAfterCard({
 
       {/* Caption */}
       <Div className={`${__P.p4}`}>
-        <Text className="text-foreground text-sm font-medium">
+        <Text className="text-foreground" size="sm" weight="medium">
           {item.caption}
         </Text>
       </Div>

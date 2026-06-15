@@ -57,7 +57,7 @@ export function ResetPasswordView({
             {labels.title ?? "Reset Password"}
           </Heading>
           {labels.description && (
-            <Text className="mt-2 text-sm text-neutral-600 dark:text-zinc-400">
+            <Text className="mt-2 text-neutral-600 dark:text-zinc-400" size="sm">
               {labels.description}
             </Text>
           )}

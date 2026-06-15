@@ -64,7 +64,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     header: "Name",
     render: (row) => (
       <Div>
-        <Text className="text-sm font-medium">{row.label}</Text>
+        <Text size="sm" weight="medium">{row.label}</Text>
         {row.isDefault && (
           <Span size="xs" weight="medium" className="mt-0.5 inline-flex items-center rounded-full px-1.5 py-px bg-success-surface text-success">
             Default
@@ -77,7 +77,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "method",
     header: "Method",
     render: (row) => (
-      <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
+      <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" transform="capitalize">
         {row.method.replace(/_/g, " ")}
       </Span>
     ),
@@ -86,7 +86,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "estimatedDays",
     header: "Est. Days",
     render: (row) => (
-      <Text className="text-sm tabular-nums">
+      <Text className="tabular-nums" size="sm">
         {row.estimatedDays !== null ? `${row.estimatedDays}d` : "—"}
       </Text>
     ),

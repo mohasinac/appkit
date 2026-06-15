@@ -40,7 +40,7 @@ export function NotFoundView({
 }: NotFoundViewProps) {
   return (
     <Div className="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
-      <Heading level={1} variant="primary" className="text-7xl font-bold mb-2">
+      <Heading level={1} variant="primary" className="text-7xl mb-2" weight="bold">
         404
       </Heading>
       <Heading level={2} className="mb-3">

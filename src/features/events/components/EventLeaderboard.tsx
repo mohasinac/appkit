@@ -42,7 +42,7 @@ export function EventLeaderboard({
   if (isEmpty) {
     if (renderEmpty) return <>{renderEmpty()}</>;
     return (
-      <Text variant="secondary" size="sm" className="text-center py-4">
+      <Text variant="secondary" size="sm" className="py-4" align="center">
         {labels.noEntries ?? "No entries yet."}
       </Text>
     );

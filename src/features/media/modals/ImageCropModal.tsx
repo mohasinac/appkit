@@ -125,7 +125,7 @@ export function ImageCropModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("cropTitle")} size="lg">
       <Div className="space-y-3">
-        <Text variant="secondary" className="text-xs">
+        <Text variant="secondary" size="xs">
           {t("cropInstruction")}
         </Text>
 
@@ -177,8 +177,8 @@ export function ImageCropModal({
         {/* Zoom control */}
         <Div className="space-y-1">
           <Row justify="between">
-            <Text className="text-xs font-medium">{t("cropZoom")}</Text>
-            <Text className="text-xs text-zinc-500 dark:text-slate-400">
+            <Text size="xs" weight="medium">{t("cropZoom")}</Text>
+            <Text className="text-zinc-500 dark:text-slate-400" size="xs">
               {Math.round(zoom * 100)}%
             </Text>
           </Row>

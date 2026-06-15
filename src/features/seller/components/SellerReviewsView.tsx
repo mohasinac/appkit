@@ -255,7 +255,7 @@ export function SellerReviewsView({
               ]}
             />
             {meta && (
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] ml-auto">
+              <Text className="text-[var(--appkit-color-text-muted)] ml-auto" size="sm">
                 {meta.total} review{meta.total !== 1 ? "s" : ""}
               </Text>
             )}
@@ -303,10 +303,10 @@ export function SellerReviewsView({
                       />
                       <Div className="flex-1 min-w-0">
                         {/* Product + reviewer */}
-                        <Text className="font-medium truncate">{review.productTitle}</Text>
+                        <Text className="truncate" weight="medium">{review.productTitle}</Text>
                         <Div className="flex items-center gap-2 mt-1 flex-wrap">
                           <Stars rating={review.rating} />
-                          <Text className="text-sm text-[var(--appkit-color-text-muted)]">by {review.userName}</Text>
+                          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">by {review.userName}</Text>
                           {review.verified && <Badge variant="success">Verified</Badge>}
                           {statusBadge(review.status)}
                           <Badge variant={review.sellerReply ? "success" : "warning"}>
@@ -315,16 +315,16 @@ export function SellerReviewsView({
                         </Div>
 
                         {/* Review content */}
-                        {review.title && <Text className="mt-2 font-medium">{review.title}</Text>}
-                        <Text className="mt-1 text-sm text-[var(--appkit-color-text-secondary)] line-clamp-3">
+                        {review.title && <Text className="mt-2" weight="medium">{review.title}</Text>}
+                        <Text className="mt-1 text-[var(--appkit-color-text-secondary)] line-clamp-3" size="sm">
                           {review.comment}
                         </Text>
 
                         {/* Existing reply */}
                         {review.sellerReply && (
                           <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
-                            <Text className="text-xs text-[var(--appkit-color-text-muted)]">Store reply:</Text>
-                            <Text className="text-sm">{review.sellerReply}</Text>
+                            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">Store reply:</Text>
+                            <Text size="sm">{review.sellerReply}</Text>
                           </Div>
                         )}
                       </Div>
@@ -359,7 +359,7 @@ export function SellerReviewsView({
               >
                 Previous
               </Button>
-              <Text className="text-sm">
+              <Text size="sm">
                 Page {meta.page} of {meta.totalPages}
               </Text>
               <Button
@@ -386,12 +386,12 @@ export function SellerReviewsView({
           {replyTarget && (
             <Div className={`${__P.p3} rounded bg-[var(--appkit-color-surface-muted)]`}>
               <Stars rating={replyTarget.rating} />
-              <Text className="text-sm mt-1">{replyTarget.comment}</Text>
+              <Text className="mt-1" size="sm">{replyTarget.comment}</Text>
             </Div>
           )}
           {replyError && <Alert variant="error">{replyError}</Alert>}
           <Div>
-            <Text className="text-sm font-medium mb-1.5">Store reply</Text>
+            <Text className="mb-1.5" size="sm" weight="medium">Store reply</Text>
             <textarea
               className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
               rows={5}
@@ -400,7 +400,7 @@ export function SellerReviewsView({
               maxLength={1000}
               placeholder="Write your response to this review…"
             />
-            <Text className="text-xs text-[var(--appkit-color-text-muted)] text-right mt-1">
+            <Text className="text-[var(--appkit-color-text-muted)] mt-1" size="xs" align="end">
               {replyText.length}/1000
             </Text>
           </Div>
@@ -435,7 +435,7 @@ export function SellerReviewsView({
         }
       >
         <Stack gap="md" className="p-1">
-          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             The same reply will be posted on all selected reviews.
           </Text>
           <Textarea
@@ -463,7 +463,7 @@ export function SellerReviewsView({
         }
       >
         <Stack gap="md" className="p-1">
-          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Flag this review for admin investigation. Provide a clear reason — fake, abusive, off-topic, etc.
           </Text>
           <Textarea
@@ -490,7 +490,7 @@ export function SellerReviewsView({
         }
       >
         <Stack gap="md" className="p-1">
-          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Private message sent to the buyer's notification inbox. Does not appear on the public review.
           </Text>
           <Textarea

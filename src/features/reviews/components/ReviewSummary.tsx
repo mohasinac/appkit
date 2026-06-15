@@ -54,7 +54,7 @@ export function ReviewSummary({
           const pct = totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0;
           return (
             <Div key={star} className="flex items-center gap-2">
-              <Span size="xs" weight="medium" className="w-4 text-right text-neutral-600 dark:text-zinc-400 tabular-nums">
+              <Span size="xs" weight="medium" className="w-4 text-neutral-600 dark:text-zinc-400 tabular-nums" align="end">
                 {star}
               </Span>
               <Span size="xs" className={CLS_STAR}>★</Span>
@@ -72,7 +72,7 @@ export function ReviewSummary({
                   style={{ width: `${pct}%` }}
                 />
               </Div>
-              <Span size="xs" className="w-8 text-right text-zinc-400 dark:text-zinc-400 tabular-nums">
+              <Span size="xs" className="w-8 text-zinc-400 dark:text-zinc-400 tabular-nums" align="end">
                 {pct}%
               </Span>
             </Div>

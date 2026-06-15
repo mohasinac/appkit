@@ -31,7 +31,7 @@ export function ContactPageView() {
       <Section className="py-10">
         <Container size="xl" className="space-y-8">
           <Stack gap="3">
-            <Heading level={1} className="text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
+            <Heading level={1} className="text-3xl text-zinc-900 dark:text-zinc-50" weight="semibold">
               Contact Us
             </Heading>
             <Text color="muted">

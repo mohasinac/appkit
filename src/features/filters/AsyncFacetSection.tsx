@@ -203,13 +203,13 @@ export function AsyncFacetSection({
           })}
 
           {options.length === 0 && !loading && (
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400 py-1">
+            <Text className="text-zinc-400 dark:text-zinc-400 py-1" size="xs">
               No results
             </Text>
           )}
 
           {loading && (
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400 py-1 animate-pulse">
+            <Text className="text-zinc-400 dark:text-zinc-400 py-1 animate-pulse" size="xs">
               Loading…{/* audit-spinner-defaults-ok — inline facet-loader; structural skeleton would mis-fit a single-line dropdown row */}
             </Text>
           )}

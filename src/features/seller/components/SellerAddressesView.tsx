@@ -140,10 +140,10 @@ function AddressCard({
           </button>
         </Row>
       </Row>
-      <Text className="text-sm text-zinc-700 dark:text-zinc-300">
+      <Text className="text-zinc-700 dark:text-zinc-300" size="sm">
         {address.fullName} · {address.phone}
       </Text>
-      <Text className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+      <Text className="text-zinc-500 dark:text-zinc-400 leading-relaxed" size="xs">
         {address.addressLine1}
         {address.addressLine2 ? `, ${address.addressLine2}` : ""}
         {address.landmark ? ` (near ${address.landmark})` : ""}<br />
@@ -266,7 +266,7 @@ export function SellerAddressesView({
         style={{ top: "var(--header-height, 0px)" }}
       >
         <Stack gap="none">
-          <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Pickup Addresses</Heading>
+          <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">Pickup Addresses</Heading>
           <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>
         </Stack>
         <Button size="sm" onClick={openAdd} className="flex items-center gap-1.5">
@@ -289,7 +289,7 @@ export function SellerAddressesView({
         ) : addresses.length === 0 ? (
           <Div className="rounded-xl border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16 flex flex-col items-center gap-3">
             <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">No pickup addresses yet</Text>
+            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>
               Add your first address
             </Button>

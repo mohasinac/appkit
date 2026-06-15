@@ -25,7 +25,7 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
         className="w-full flex items-center justify-between px-4 py-3 bg-zinc-50 dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors"
         aria-expanded={open}
       >
-        <Span size="sm" weight="semibold" className="uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <Span size="sm" weight="semibold" className="tracking-wide text-zinc-500 dark:text-zinc-400" transform="uppercase">
           Bid History
           {bids.length > 0 && (
             <Span size="xs" weight="medium" className="ml-2 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5 text-zinc-600 dark:text-zinc-300 normal-case tracking-normal">

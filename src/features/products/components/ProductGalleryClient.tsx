@@ -97,7 +97,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
       {/* Image counter */}
       {images.length > 1 && (
-        <Text className="text-center text-xs text-zinc-400 dark:text-zinc-400">
+        <Text className="text-zinc-400 dark:text-zinc-400" size="xs" align="center">
           {activeIndex + 1} / {images.length}
         </Text>
       )}

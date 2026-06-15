@@ -60,7 +60,7 @@ function TrustFeatureCard({
       >
         {item.title}
       </Heading>
-      <Text className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+      <Text className="leading-relaxed text-zinc-500 dark:text-zinc-400" size="xs">
         {item.description}
       </Text>
     </div>
@@ -82,7 +82,7 @@ function TrustStripItem({ item }: { item: TrustFeatureItem }) {
           ✓
         </Span>
       )}
-      <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 whitespace-nowrap">
+      <Text className="text-zinc-700 dark:text-zinc-300 whitespace-nowrap" size="sm" weight="medium">
         {item.title}
       </Text>
     </Div>

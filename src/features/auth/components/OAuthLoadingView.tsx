@@ -5,10 +5,10 @@ export function OAuthLoadingView() {
     <Div className="flex items-center justify-center min-h-[60vh] px-4">
       <Div className="max-w-sm w-full text-center">
         <Div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-6" />
-        <Heading level={2} className="text-xl font-semibold mb-2">
+        <Heading level={2} className="mb-2" size="xl" weight="semibold">
           Signing you in…
         </Heading>
-        <Text variant="secondary" className="text-sm">
+        <Text variant="secondary" size="sm">
           Please wait while we complete your sign-in.
         </Text>
       </Div>

@@ -62,9 +62,9 @@ export function PrizeDrawEntryActions({
 
   return (
     <Stack gap="md">
-      <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
         {formatCurrency(pricePerEntry, currency)}
-        <Text as="span" className="ml-1 text-xs font-normal text-[var(--appkit-color-text-muted)]">
+        <Text as="span" className="ml-1 text-[var(--appkit-color-text-muted)]" size="xs" weight="normal">
           per entry
         </Text>
       </Text>
@@ -91,7 +91,7 @@ export function PrizeDrawEntryActions({
         </a>
       ) : null}
 
-      <Text className="text-center text-xs text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="xs" align="center">
         Winners chosen by Node.js crypto.randomInt — fully auditable. Entries are
         locked once paid; refunds only if the prize pool is exhausted.
       </Text>

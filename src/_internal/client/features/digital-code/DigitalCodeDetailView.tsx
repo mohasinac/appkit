@@ -86,10 +86,10 @@ export function DigitalCodeDetailView({
                 <Badge variant="danger">Sold out</Badge>
               )}
             </Row>
-            <Heading level={1} className="text-2xl font-bold">
+            <Heading level={1} className="text-2xl" weight="bold">
               {product.title}
             </Heading>
-            <Text className="text-2xl font-semibold text-primary">{price}</Text>
+            <Text className="text-2xl text-primary" weight="semibold">{price}</Text>
             <Text className="text-muted-foreground">{product.description}</Text>
           </Stack>
 
@@ -102,11 +102,11 @@ export function DigitalCodeDetailView({
             />
           ) : (
             <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
-              <Text className="text-sm text-muted-foreground">
+              <Text className="text-muted-foreground" size="sm">
                 After purchase, return to your order to reveal the code instantly.
               </Text>
               {meta?.redemptionInstructions && (
-                <Text className="mt-2 text-sm">{meta.redemptionInstructions}</Text>
+                <Text className="mt-2" size="sm">{meta.redemptionInstructions}</Text>
               )}
             </Div>
           )}

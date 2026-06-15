@@ -28,9 +28,9 @@ export function AdminSiteConfigGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <Settings className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Site Configuration</Heading>
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">Site Configuration</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">All site settings are stored in a single Firestore document at <code className="text-xs">site_settings/global</code>. Changes take effect on the next page render (ISR or cache revalidation).</Text>
       </Section>
 
@@ -42,7 +42,7 @@ export function AdminSiteConfigGuideView() {
         <Div className="px-6 py-5 space-y-4">
           {SETTING_GROUPS.map(({ name, desc }) => (
             <Div key={name} className="flex gap-3 text-sm">
-              <Text className="flex-shrink-0 font-mono font-semibold text-[var(--appkit-color-primary)] w-40 text-xs">{name}</Text>
+              <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{name}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{desc}</Text>
             </Div>
           ))}
@@ -67,13 +67,13 @@ export function AdminSiteConfigGuideView() {
           <Heading level={2} className={GC.sectionTitle}>Feature Flags</Heading>
         </Div>
         <Div className="px-6 py-5 space-y-3">
-          <Text className="text-sm text-[var(--appkit-color-text-muted)]">Feature flags are boolean toggles under <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings</code>. They control platform-wide features without a code deploy:</Text>
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings</code>. They control platform-wide features without a code deploy:</Text>
           <ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
             <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enableAuctions</code> — globally enable/disable all auction listings.</li>
             <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enablePreOrders</code> — globally enable/disable pre-order creation.</li>
             <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">maintenanceMode</code> — shows a maintenance banner and blocks non-admin access.</li>
           </ul>
-          <Text className="text-sm text-[var(--appkit-color-text-muted)]">Flags are evaluated per-request via ISR cache — a change may take up to the revalidation interval (3600s default) to propagate to all pages.</Text>
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Flags are evaluated per-request via ISR cache — a change may take up to the revalidation interval (3600s default) to propagate to all pages.</Text>
         </Div>
       </Section>
     </Div>

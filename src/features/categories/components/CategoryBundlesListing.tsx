@@ -147,7 +147,7 @@ export function CategoryBundlesListing({
 
       <Div className="py-6">
         {pageItems.length === 0 ? (
-          <Text className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="py-16 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.
           </Text>
         ) : (

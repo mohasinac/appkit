@@ -29,7 +29,7 @@ export function AdminTopProductsTable({
       className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 ${className}`}
     >
       {labels.title && (
-        <Heading level={3} className="text-base font-semibold mb-4">
+        <Heading level={3} className="mb-4" size="base" weight="semibold">
           {labels.title}
         </Heading>
       )}
@@ -40,13 +40,13 @@ export function AdminTopProductsTable({
             className="flex items-center justify-between py-3 border-b last:border-b-0 border-neutral-100 dark:border-neutral-800"
           >
             <Div className="flex-1 min-w-0">
-              <Text className="font-medium truncate">{product.title}</Text>
-              <Text className="text-sm text-neutral-500 dark:text-zinc-400">
+              <Text className="truncate" weight="medium">{product.title}</Text>
+              <Text className="text-neutral-500 dark:text-zinc-400" size="sm">
                 {product.orders} {labels.orders ?? "orders"}
               </Text>
             </Div>
             <Div className="text-right ml-4">
-              <Text className="font-semibold">
+              <Text weight="semibold">
                 {formatRevenue(product.revenue)}
               </Text>
               {renderProductLink?.(product)}

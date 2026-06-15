@@ -193,7 +193,7 @@ export function QuickFormDrawer({
       >
         {/* Header */}
         <Div className="flex-shrink-0 flex items-center gap-3 px-4 py-4 border-b border-[var(--appkit-color-border)]">
-          <Text className="flex-1 text-base font-semibold text-[var(--appkit-color-text)]">{title}</Text>
+          <Text className="flex-1 text-[var(--appkit-color-text)]" size="base" weight="semibold">{title}</Text>
           <button
             type="button"
             onClick={handleClose}
@@ -221,7 +221,7 @@ export function QuickFormDrawer({
                     label={field.label}
                   />
                   {field.helperText && (
-                    <Text className="text-xs text-[var(--appkit-color-text-muted)]">{field.helperText}</Text>
+                    <Text className="text-[var(--appkit-color-text-muted)]" size="xs">{field.helperText}</Text>
                   )}
                 </Div>
               );
@@ -248,7 +248,7 @@ export function QuickFormDrawer({
                   error={errors[field.name]}
                 />
                 {field.helperText && !errors[field.name] && (
-                  <Text className="mt-1 text-xs text-[var(--appkit-color-text-muted)]">
+                  <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="xs">
                     {field.helperText}
                   </Text>
                 )}

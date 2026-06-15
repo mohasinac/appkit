@@ -78,7 +78,7 @@ export function AdminContactEditorView({
       <Div className={`flex flex-col gap-5 ${__P.p4}`}>
         {/* Status badge */}
         <Div className="flex items-center gap-2">
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">Status:</Text>
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Status:</Text>
           <span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
               statusColor[currentStatus ?? "new"] ?? statusColor.new
@@ -90,24 +90,24 @@ export function AdminContactEditorView({
 
         {/* From */}
         <Div className="flex flex-col gap-1">
-          <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+          <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="medium" transform="uppercase">
             From
           </Text>
-          <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
             {name ?? "Unknown"}
           </Text>
           {email && (
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">{email}</Text>
+            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">{email}</Text>
           )}
         </Div>
 
         {/* Message */}
         <Div className="flex flex-col gap-1">
-          <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+          <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="medium" transform="uppercase">
             Message
           </Text>
           <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 ${__P.p3} max-h-64 ${__O.yAuto}`}>
-            <Text className="text-sm text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap leading-relaxed">
+            <Text className="text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap leading-relaxed" size="sm">
               {message ?? "No message body."}
             </Text>
           </Div>

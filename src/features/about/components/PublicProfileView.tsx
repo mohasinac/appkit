@@ -176,7 +176,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
               <Heading level={1} variant="none" className="text-white mb-0">{displayName}</Heading>
               {isSeller && <Span size="xs" weight="semibold" className="rounded-full bg-white/20 px-2.5 py-0.5 text-white/90">{t("roleSeller")}</Span>}
             </Div>
-            <Text variant="none" className="text-white/60 text-sm">{memberSince}</Text>
+            <Text variant="none" className="text-white/60" size="sm">{memberSince}</Text>
           </Stack>
           {isSeller && storeSlug && (
             <Div className="sm:ml-auto">
@@ -199,8 +199,8 @@ function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statIte
       {statItems.map(({ icon: Icon, label, value }) => (
         <Div key={label} rounded="xl" className={`border ${themed.border} ${themed.bgPrimary} ${__P.p4} text-center`}>
           <Row centered className={`${flex.center} mb-1`}><Icon className="w-4 h-4 text-neutral-400" /></Row>
-          <Text className="text-lg font-bold">{value}</Text>
-          <Text variant="secondary" className="text-xs">{label}</Text>
+          <Text size="lg" weight="bold">{value}</Text>
+          <Text variant="secondary" size="xs">{label}</Text>
         </Div>
       ))}
     </Grid>
@@ -212,7 +212,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
   return (
     <Section>
       <Stack gap="sm" className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} ${__P.p6}`}>
-        {pub.bio && <Text className="text-sm leading-relaxed text-neutral-700 dark:text-zinc-300">{pub.bio}</Text>}
+        {pub.bio && <Text className="leading-relaxed text-neutral-700 dark:text-zinc-300" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
           {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
           {pub.website && <a href={pub.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-primary hover:underline"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></a>}
@@ -228,7 +228,7 @@ function renderStoreDescriptionSection(themed: ProfileThemed, isSeller: boolean,
     <Section>
       <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} ${__P.p6}`}>
         <Heading level={3} className="mb-2">{storeName}</Heading>
-        <Text variant="secondary" className="text-sm leading-relaxed">{storeDescription}</Text>
+        <Text variant="secondary" className="leading-relaxed" size="sm">{storeDescription}</Text>
         <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">{t("visitStore")} →</Link>
       </Div>
     </Section>
@@ -242,7 +242,7 @@ function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, produc
       {products.length === 0 ? (
         <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
           <ShoppingBag className={CLS_EMPTY_ICON} />
-          <Text variant="secondary" className="text-sm">{t("noListings")}</Text>
+          <Text variant="secondary" size="sm">{t("noListings")}</Text>
         </Div>
       ) : (
         <Grid gap="md" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
@@ -265,7 +265,7 @@ function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews
       {reviews.length === 0 ? (
         <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
           <Star className={CLS_EMPTY_ICON} />
-          <Text variant="secondary" className="text-sm">{t("noReviewsReceived")}</Text>
+          <Text variant="secondary" size="sm">{t("noReviewsReceived")}</Text>
         </Div>
       ) : (
         <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
@@ -288,7 +288,7 @@ function renderAuthoredReviewsSection(t: ProfileT, themed: ProfileThemed, review
       {reviews.length === 0 ? (
         <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
           <Star className={CLS_EMPTY_ICON} />
-          <Text variant="secondary" className="text-sm">{t("noReviewsAuthored", { name: displayName })}</Text>
+          <Text variant="secondary" size="sm">{t("noReviewsAuthored", { name: displayName })}</Text>
         </Div>
       ) : (
         <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">

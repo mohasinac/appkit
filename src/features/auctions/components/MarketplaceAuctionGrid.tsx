@@ -137,10 +137,10 @@ export function MarketplaceAuctionGrid({
         className="justify-center py-24 text-center"
       >
         {emptyIcon ?? <Gavel className="h-16 w-16" />}
-        <Text className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
+        <Text className="text-zinc-900 dark:text-zinc-50" size="xl" weight="medium">
           {mergedLabels.emptyTitle}
         </Text>
-        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
           {mergedLabels.emptyDescription}
         </Text>
       </Stack>

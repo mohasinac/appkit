@@ -225,7 +225,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
             ))}
           </Div>
         ) : stores.length === 0 ? (
-          <Text className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="py-16 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
             No stores found.
           </Text>
         ) : view === "list" ? (

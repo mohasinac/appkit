@@ -56,21 +56,21 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Text>
           )}
           {isOutOfStock && (
-            <Span weight="semibold" className="flex-shrink-0 rounded bg-error-surface px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-error">
+            <Span weight="semibold" className="flex-shrink-0 rounded bg-error-surface px-1.5 py-0.5 text-[10px] tracking-wide text-error" transform="uppercase">
               Out of Stock
             </Span>
           )}
         </Div>
         {item.meta.attributes &&
           Object.keys(item.meta.attributes).length > 0 && (
-            <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+            <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
               {Object.entries(item.meta.attributes)
                 .map(([k, v]) => `${k}: ${v}`)
                 .join(", ")}
             </Text>
           )}
         <Row justify="between">
-          <Text className="font-semibold text-neutral-900 dark:text-zinc-100">
+          <Text className="text-neutral-900 dark:text-zinc-100" weight="semibold">
             {formatCurrency(
               item.meta.price * item.quantity,
               item.meta.currency,
@@ -87,7 +87,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               >
                 −
               </Button>
-              <Span size="sm" className="min-w-[1.5rem] text-center">
+              <Span size="sm" className="min-w-[1.5rem]" align="center">
                 {item.quantity}
               </Span>
               <Button
@@ -162,7 +162,7 @@ export function CartDrawer({
       />
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white dark:bg-slate-900 shadow-xl">
         <Row justify="between" className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p4}`}>
-          <Heading level={2} className="text-lg font-semibold">
+          <Heading level={2} size="lg" weight="semibold">
             {labels.title ?? "Cart"}
           </Heading>
           <Button
@@ -181,7 +181,7 @@ export function CartDrawer({
               <Div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 dark:border-slate-600 border-t-neutral-800 dark:border-t-zinc-200" />
             </Div>
           ) : items.length === 0 ? (
-            <Text className="py-12 text-center text-sm text-neutral-500 dark:text-zinc-400">
+            <Text className="py-12 text-neutral-500 dark:text-zinc-400" size="sm" align="center">
               {labels.empty ?? "Your cart is empty"}
             </Text>
           ) : (

@@ -267,10 +267,10 @@ export function CharacterHotspotForm({
             background: "var(--surface-elevated)",
           }}
         >
-          <Heading level={2} className="text-lg font-bold">
+          <Heading level={2} size="lg" weight="bold">
             Upload Background Image
           </Heading>
-          <Text className="text-sm" style={{ color: "var(--color-muted)" }}>
+          <Text style={{ color: "var(--color-muted)" }} size="sm">
             Choose a wide panoramic image that shows all the characters. You
             will place pins on it in the next step.
           </Text>
@@ -387,10 +387,10 @@ export function CharacterHotspotForm({
             background: "var(--surface-elevated)",
           }}
         >
-          <Heading level={2} className="text-lg font-bold">
+          <Heading level={2} size="lg" weight="bold">
             Place a Pin
           </Heading>
-          <Text className="text-sm" style={{ color: "var(--color-muted)" }}>
+          <Text style={{ color: "var(--color-muted)" }} size="sm">
             <Span weight="bold">Click anywhere on the image</Span> to drop a pin, or enter
             exact coordinates below.
           </Text>
@@ -544,7 +544,7 @@ export function CharacterHotspotForm({
           </Div>
 
           {pins.length > 0 && (
-            <Text className="text-xs" style={{ color: "var(--color-muted)" }}>
+            <Text style={{ color: "var(--color-muted)" }} size="xs">
               {pins.length} pin{pins.length !== 1 ? "s" : ""} already placed on
               this image.
             </Text>
@@ -607,10 +607,10 @@ export function CharacterHotspotForm({
             background: "var(--surface-elevated)",
           }}
         >
-          <Heading level={2} className="text-lg font-bold">
+          <Heading level={2} size="lg" weight="bold">
             Pin Details
           </Heading>
-          <Text className="text-sm" style={{ color: "var(--color-muted)" }}>
+          <Text style={{ color: "var(--color-muted)" }} size="sm">
             Fill in the details for the pin at{" "}
             <Span weight="bold">
               {draftPos?.xPct}%, {draftPos?.yPct}%
@@ -813,7 +813,7 @@ export function CharacterHotspotForm({
           }}
         >
           <Row justify="between">
-            <Heading level={2} className="text-lg font-bold">
+            <Heading level={2} size="lg" weight="bold">
               Review &amp; Save
             </Heading>
             <Span
@@ -887,7 +887,7 @@ export function CharacterHotspotForm({
                       {i + 1}
                     </Span>
                     <Div className="min-w-0 flex-1">
-                      <Text className="truncate text-sm font-bold">
+                      <Text className="truncate" size="sm" weight="bold">
                         {pin.name || (
                           <Span
                             className="italic"

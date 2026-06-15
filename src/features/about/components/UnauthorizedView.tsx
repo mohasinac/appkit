@@ -80,10 +80,10 @@ export async function UnauthorizedView({
         <Section
           className={`rounded-2xl p-6 text-center border ${themed.border} ${themed.bgSecondary}`}
         >
-          <Heading level={2} className="mb-2 text-base">
+          <Heading level={2} className="mb-2" size="base">
             {t("helpTitle")}
           </Heading>
-          <Text variant="secondary" className="text-sm mb-3">
+          <Text variant="secondary" className="mb-3" size="sm">
             {t("helpText")}
           </Text>
           <Stack gap="sm" className="flex-row flex-wrap justify-center gap-4">

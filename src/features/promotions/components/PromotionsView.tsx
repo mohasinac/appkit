@@ -55,13 +55,13 @@ export function PromotionsHero({
   return (
     <Div className={`${heroBannerClass} text-white py-14`}>
       <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <Text className="text-white font-medium mb-2 uppercase tracking-widest text-sm">
+        <Text className="text-white mb-2 tracking-widest" size="sm" weight="medium" transform="uppercase">
           🎉 {labels.exclusiveOffersBadge}
         </Text>
         <Heading level={1} variant="none" className="text-white mb-4">
           {labels.title}
         </Heading>
-        <Text variant="none" className="text-lg text-white/90 max-w-2xl mx-auto">
+        <Text variant="none" className="text-white/90 max-w-2xl mx-auto" size="lg">
           {labels.subtitle}
         </Text>
       </Div>

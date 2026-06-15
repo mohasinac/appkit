@@ -55,7 +55,7 @@ export async function EventRafflesSection({
               {title}
             </Heading>
             {subtitle ? (
-              <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
                 {subtitle}
               </Text>
             ) : null}
@@ -67,7 +67,7 @@ export async function EventRafflesSection({
               gap="sm"
               className="rounded-2xl border border-dashed border-zinc-300 px-6 py-12 text-center dark:border-slate-700"
             >
-              <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
                 No upcoming raffles — keep an eye on the events page.
               </Text>
               <Link

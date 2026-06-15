@@ -227,8 +227,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     return (
       <Div className="max-w-xl mx-auto py-8 px-4">
         <Alert variant="warning">
-          <Text className="font-medium">WhatsApp catalog sync is not enabled for your store.</Text>
-          <Text className="text-sm mt-1">
+          <Text weight="medium">WhatsApp catalog sync is not enabled for your store.</Text>
+          <Text className="mt-1" size="sm">
             Contact LetItRip support to request access to the WhatsApp Business integration.
           </Text>
         </Alert>
@@ -241,7 +241,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 1: Step-by-step setup guide ─────────────────────────── */}
       <Section>
-        <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-4" size="base" weight="semibold">
           How to connect your WhatsApp Business account
         </Heading>
         <Stack gap="sm">
@@ -264,8 +264,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   {done ? "✓" : step.n}
                 </Div>
                 <Div>
-                  <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{step.title}</Text>
-                  <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{step.body}</Text>
+                  <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">{step.title}</Text>
+                  <Text className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs">{step.body}</Text>
                 </Div>
               </Row>
             );
@@ -276,7 +276,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
       {/* ── Section 2: Connection form ──────────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
         <Row justify="between" align="center" className="mb-4">
-          <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Connection</Heading>
+          <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">Connection</Heading>
           {isLoading ? null : cfg?.connected ? (
             <Badge variant="success">Connected</Badge>
           ) : (
@@ -329,12 +329,12 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 3: Catalog sync ─────────────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
-        <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Catalog Sync</Heading>
+        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-4" size="sm" weight="semibold">Catalog Sync</Heading>
 
         <Row justify="between" align="center" className="mb-4">
           <Div>
-            <Text className="text-sm text-zinc-700 dark:text-zinc-300">Enable catalog sync</Text>
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            <Text className="text-zinc-700 dark:text-zinc-300" size="sm">Enable catalog sync</Text>
+            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
               When enabled, your published standard products can be synced to WhatsApp.
             </Text>
           </Div>
@@ -357,7 +357,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           </Row>
         )}
 
-        <Text className="text-xs text-zinc-400 dark:text-zinc-400 mb-3">
+        <Text className="text-zinc-400 dark:text-zinc-400 mb-3" size="xs">
           Only published standard products are synced. Auctions and pre-orders are excluded.
           Batches of up to 50 products per call.
         </Text>
@@ -381,7 +381,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           </Button>
         </Div>
 
-        <Text className="text-xs text-zinc-400 dark:text-zinc-400 mt-3">
+        <Text className="text-zinc-400 dark:text-zinc-400 mt-3" size="xs">
           <Span weight="bold">Push</Span> sends your published standard products to WhatsApp.{" "}
           <Span weight="bold">Import</Span> creates draft products from your WhatsApp catalog.
           Products are matched by slug in the description field.
@@ -390,10 +390,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 4: Announcement preview ─────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
-        <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-2" size="sm" weight="semibold">
           Purchase Announcement Preview
         </Heading>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+        <Text className="text-zinc-500 dark:text-zinc-400 mb-3" size="xs">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
         </Text>
         <Div className="bg-zinc-50 dark:bg-zinc-800/60 rounded-lg px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono">
@@ -409,10 +409,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 5: Catalog preview ───────────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
-        <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-2" size="sm" weight="semibold">
           Catalog Preview
         </Heading>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">
+        <Text className="text-zinc-500 dark:text-zinc-400 mb-4" size="xs">
           This is how your products appear in the WhatsApp Catalog when a buyer taps "View Catalog" in the chat. Only published standard products are included.
         </Text>
 
@@ -420,10 +420,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         <Div className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`}>
           <Row gap="sm" align="center" className="mb-3">
             <Div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
-              <Text className="text-white text-xs font-bold">W</Text>
+              <Text className="text-white" size="xs" weight="bold">W</Text>
             </Div>
             <Div>
-              <Text className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+              <Text className="text-zinc-900 dark:text-zinc-100" size="xs" weight="semibold">
                 {cfg?.connected ? "Your Store" : "Store Name"}
               </Text>
               <Text className="text-[10px] text-zinc-500 dark:text-zinc-400">WhatsApp Business</Text>
@@ -437,10 +437,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   <Text className="text-2xl">{item.emoji}</Text>
                 </Div>
                 <Div className="p-2">
-                  <Text className="text-xs font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight">
+                  <Text className="text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight" size="xs" weight="medium">
                     {item.name}
                   </Text>
-                  <Text className="text-xs text-[#25D366] font-semibold mt-0.5">
+                  <Text className="text-[#25D366] mt-0.5" size="xs" weight="semibold">
                     {item.price}
                   </Text>
                 </Div>
@@ -458,7 +458,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Div>
 
         {!cfg?.connected && (
-          <Text className="text-xs text-warning mt-2">
+          <Text className="text-warning mt-2" size="xs">
             Connect your WhatsApp Business account above to enable the catalog.
           </Text>
         )}

@@ -135,7 +135,7 @@ export function PrizeDrawItemsEditor({
           + Add prize ({items.length}/{MAX_ITEMS})
         </Button>
       </Row>
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         Add between {MIN_ITEMS} and {MAX_ITEMS} prizes. Each entry will reveal
         exactly one of these. Items marked won during a prior reveal cannot be
         edited or removed.
@@ -259,7 +259,7 @@ export function PrizeDrawItemsEditor({
 
                 {/* Image slots (min 1, max 2) */}
                 <Stack gap="xs">
-                  <Text className="text-sm font-medium">
+                  <Text size="sm" weight="medium">
                     Images ({(it.images ?? []).length}/{MAX_IMAGES_PER_ITEM})
                   </Text>
                   <Row gap="sm" wrap>
@@ -294,7 +294,7 @@ export function PrizeDrawItemsEditor({
                 {/* Optional video */}
                 {onUploadVideo ? (
                   <Stack gap="xs">
-                    <Text className="text-sm font-medium">Video (optional)</Text>
+                    <Text size="sm" weight="medium">Video (optional)</Text>
                     <input
                       type="file"
                       accept="video/*"
@@ -302,7 +302,7 @@ export function PrizeDrawItemsEditor({
                       onChange={(e) => handleVideoFileChange(e, index, it.itemNumber)}
                     />
                     {it.video?.url ? (
-                      <Text className="text-xs text-[var(--appkit-color-text-muted)] truncate">
+                      <Text className="text-[var(--appkit-color-text-muted)] truncate" size="xs">
                         Current: {it.video.url}
                       </Text>
                     ) : null}

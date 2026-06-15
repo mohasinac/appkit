@@ -111,7 +111,7 @@ export function NonRefundableConsentModal({
     >
       <Stack className="gap-3">
         {itemTitle && (
-          <Text className="font-semibold">{itemTitle}</Text>
+          <Text weight="semibold">{itemTitle}</Text>
         )}
         {priceLabel && (
           <Text className="text-[var(--appkit-color-text-muted)]">

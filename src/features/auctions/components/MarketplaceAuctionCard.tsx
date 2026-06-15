@@ -210,7 +210,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
         ) : null}
       </Div>
       <Div className="flex items-center gap-2 flex-wrap">
-        <Text className="text-sm font-bold text-primary">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
+        <Text className="text-primary" size="sm" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
         <Div className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${countdownClass}`}>
           <Clock className="h-2.5 w-2.5" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
@@ -245,7 +245,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
         <Caption>
           {isEnded && hasCurrentBid ? mergedLabels.winningBid : hasCurrentBid ? mergedLabels.currentBid : mergedLabels.startingBid}
         </Caption>
-        <Text className="text-base font-bold leading-none text-primary">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
+        <Text className="leading-none text-primary" size="base" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
         {isEnded && product.winnerDisplayName && (
           <Caption className="mt-0.5 text-zinc-500 dark:text-zinc-400">{mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}</Caption>
         )}

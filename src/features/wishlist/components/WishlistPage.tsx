@@ -44,7 +44,7 @@ export function WishlistCard({
           {item.productTitle}
         </Text>
         {item.productPrice !== undefined && (
-            <Text className="text-sm font-semibold text-neutral-900 dark:text-zinc-100">
+            <Text className="text-neutral-900 dark:text-zinc-100" size="sm" weight="semibold">
             {formatCurrency(item.productPrice, item.productCurrency)}
           </Text>
         )}
@@ -101,7 +101,7 @@ export function WishlistPage({
 
   if (items.length === 0) {
     return (
-      <Text className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
+      <Text className="py-16 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

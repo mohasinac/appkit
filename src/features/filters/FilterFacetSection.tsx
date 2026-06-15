@@ -184,7 +184,7 @@ export function FilterFacetSection({
                 );
               })}
               {filtered.length === 0 && (
-                <Text className="px-3 py-2 text-xs text-zinc-400 dark:text-zinc-400">No results</Text>
+                <Text className="px-3 py-2 text-zinc-400 dark:text-zinc-400" size="xs">No results</Text>
               )}
             </Div>
             {hasValue && (
@@ -357,7 +357,7 @@ export function FilterFacetSection({
             );
           })}
           {filtered.length === 0 && (
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400 py-1">
+            <Text className="text-zinc-400 dark:text-zinc-400 py-1" size="xs">
               No results
             </Text>
           )}

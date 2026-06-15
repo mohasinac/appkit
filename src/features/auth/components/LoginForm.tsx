@@ -64,7 +64,7 @@ export function LoginForm({
             {labels.title ?? "Sign In"}
           </Heading>
           {(labels.subtitle || renderCreateAccountLink) && (
-            <Text className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <Text className="mt-2 text-zinc-600 dark:text-zinc-400" size="sm">
               {labels.subtitle ?? "Or"} {renderCreateAccountLink?.()}
             </Text>
           )}

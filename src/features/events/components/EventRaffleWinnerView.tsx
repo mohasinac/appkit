@@ -83,7 +83,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
             <Text className={CLS_LABEL}>
               {l.prizeLabel}
             </Text>
-            <Text className="mt-1 text-base text-zinc-800 dark:text-zinc-100">
+            <Text className="mt-1 text-zinc-800 dark:text-zinc-100" size="base">
               {event.rafflePrize}
             </Text>
           </Div>
@@ -121,7 +121,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
 
       {event.raffleGithubFunctionUrl ? (
         <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 ${__P.p4} text-sm`}>
-          <Text className="font-medium text-zinc-700 dark:text-zinc-200">
+          <Text className="text-zinc-700 dark:text-zinc-200" weight="medium">
             {l.fairnessLabel}
           </Text>
           <TextLink

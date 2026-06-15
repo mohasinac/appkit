@@ -64,18 +64,18 @@ export function AddressCard({
         </Span>
       )}
       {address.label && (
-        <Text className="mb-1 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-zinc-400">
+        <Text className="mb-1 tracking-wide text-neutral-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
           {address.label}
         </Text>
       )}
-      <Text className="text-sm text-neutral-900 dark:text-zinc-100">{line1}</Text>
-      {line2 && <Text className="text-sm text-neutral-900 dark:text-zinc-100">{line2}</Text>}
-      <Text className="text-sm text-neutral-900 dark:text-zinc-100">
+      <Text className="text-neutral-900 dark:text-zinc-100" size="sm">{line1}</Text>
+      {line2 && <Text className="text-neutral-900 dark:text-zinc-100" size="sm">{line2}</Text>}
+      <Text className="text-neutral-900 dark:text-zinc-100" size="sm">
         {address.city}, {address.state} {address.postalCode}
       </Text>
-      <Text className="text-sm text-neutral-900 dark:text-zinc-100">{address.country}</Text>
+      <Text className="text-neutral-900 dark:text-zinc-100" size="sm">{address.country}</Text>
       {address.phone && (
-        <Text className="mt-1 text-sm text-neutral-500 dark:text-zinc-400">{address.phone}</Text>
+        <Text className="mt-1 text-neutral-500 dark:text-zinc-400" size="sm">{address.phone}</Text>
       )}
       <Div className={`mt-3 flex ${THEME_CONSTANTS.spacing.gap.xs}`}>
         {onEdit && (
@@ -125,7 +125,7 @@ export function AddressBook({
   return (
     <Div className="space-y-4">
       {addresses.length === 0 && (
-        <Text className="text-sm text-neutral-500 dark:text-zinc-400">{emptyLabel}</Text>
+        <Text className="text-neutral-500 dark:text-zinc-400" size="sm">{emptyLabel}</Text>
       )}
       <Div className={`grid ${THEME_CONSTANTS.spacing.gap.md} sm:grid-cols-2`}>
         {addresses.map((addr) => (

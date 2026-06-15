@@ -20,7 +20,7 @@ export function SublistingCategorySelect({
 }: Props) {
   return (
     <Stack gap="xs">
-      <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+      <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
         Sub-listing category
       </Text>
       <SublistingInlineSelect
@@ -30,7 +30,7 @@ export function SublistingCategorySelect({
         allowCreate={allowCreate}
         placeholder="— None —"
       />
-      <Text className="text-xs text-zinc-400 dark:text-zinc-400">
+      <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
         Groups this listing with others for the same collectible (e.g. &ldquo;Base Set Charizard 108/120&rdquo;).
       </Text>
     </Stack>

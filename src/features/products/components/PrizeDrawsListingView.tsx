@@ -65,7 +65,7 @@ export async function PrizeDrawsListingView({
           >
             Prize Draws
           </Heading>
-          <Text className="mb-6 text-sm text-[var(--appkit-color-text-muted)]">
+          <Text className="mb-6 text-[var(--appkit-color-text-muted)]" size="sm">
             Fair-RNG draws for sealed Pokémon, Hot Wheels Super Treasure Hunts,
             Gundam kits and more. Every winner picked by crypto.randomInt —
             proof on GitHub.

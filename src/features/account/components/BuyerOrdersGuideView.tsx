@@ -31,7 +31,7 @@ const SECTIONS: OrderSection[] = [
         <Div className="space-y-2">
           {ORDER_STATUSES.map(({ status, desc }) => (
             <Div key={status} className="flex gap-3">
-              <Text className="flex-shrink-0 font-mono font-semibold text-[var(--appkit-color-primary)] w-36 text-xs">{status}</Text>
+              <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-36" size="xs" weight="semibold">{status}</Text>
               <Text className={GC.textMuted}>{desc}</Text>
             </Div>
           ))}
@@ -65,7 +65,7 @@ const SECTIONS: OrderSection[] = [
     content: (
       <Div className="space-y-3">
         <Text className={GC.textMuted}>Platform-wide return window: <Span weight="bold">7 days from DELIVERED date</Span>. Some stores offer 30-day windows — shown on the product page.</Text>
-        <Text className="text-sm font-semibold text-[var(--appkit-color-text)]">Non-returnable items:</Text>
+        <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">Non-returnable items:</Text>
         <ul className={GC.listDiscMuted}>
           <li>Opened card packs (Pokémon, Yu-Gi-Oh!, etc.)</li>
           <li>Cracked or opened graded card slabs without documented photographic evidence of a defect</li>
@@ -92,13 +92,13 @@ const SECTIONS: OrderSection[] = [
     Icon: Headphones, title: "Opening a Support Ticket",
     content: (
       <Div className="space-y-3">
-        <Text className="text-sm font-semibold text-[var(--appkit-color-text)]">When to use a support ticket:</Text>
+        <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">When to use a support ticket:</Text>
         <ul className={GC.listDiscMuted}>
           <li>Seller is unresponsive to your return request for more than 3 days</li>
           <li>Tracking has not updated in 7+ days</li>
           <li>Item is significantly not as described</li>
         </ul>
-        <Text className="text-sm font-semibold text-[var(--appkit-color-text)]">What to include:</Text>
+        <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">What to include:</Text>
         <ul className={GC.listDiscMuted}>
           <li>Your order ID (e.g. <code className={GC.code}>order-2-20260508-a1b2c3</code>)</li>
           <li>Photos of the item and packaging</li>
@@ -132,9 +132,9 @@ export function BuyerOrdersGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: GC.pageHeaderGradient }}>
             <PackageCheck className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Buyer Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Buyer Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">
           Orders, Returns &amp; Support
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">

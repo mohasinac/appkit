@@ -45,8 +45,8 @@ function ToggleRow({
   return (
     <Row align="center" justify="between" gap="md" className="py-3 border-b last:border-0 border-[var(--appkit-color-border)]">
       <Div className="min-w-0">
-        <Text className="text-sm font-medium text-[var(--appkit-color-text)]">{label}</Text>
-        <Text variant="secondary" className="text-xs mt-0.5">{description}</Text>
+        <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">{label}</Text>
+        <Text variant="secondary" className="mt-0.5" size="xs">{description}</Text>
       </Div>
       <button
         type="button"
@@ -80,7 +80,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
   return (
     <Div className={`rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`}>
       <Div className="px-4 py-3 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-alt,var(--appkit-color-surface))]">
-        <Text className="text-xs font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
+        <Text className="tracking-widest text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
           {title}
         </Text>
       </Div>
@@ -167,7 +167,7 @@ export function NotificationPreferencesPanel({
   if (loading) {
     return (
       <Div className="py-8 text-center">
-        <Text variant="secondary" className="text-sm">Loading preferences…</Text>
+        <Text variant="secondary" size="sm">Loading preferences…</Text>
       </Div>
     );
   }
@@ -184,8 +184,8 @@ export function NotificationPreferencesPanel({
       <SectionCard title="In-app notifications">
         <Row align="center" justify="between" gap="md" className="py-3">
           <Div>
-            <Text className="text-sm font-medium text-[var(--appkit-color-text)]">In-app notifications</Text>
-            <Text variant="secondary" className="text-xs mt-0.5">
+            <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">In-app notifications</Text>
+            <Text variant="secondary" className="mt-0.5" size="xs">
               Always on — displayed in the notification bell and inbox
             </Text>
           </Div>
@@ -240,7 +240,7 @@ export function NotificationPreferencesPanel({
 
       <Row justify="end" gap="sm">
         {saved && (
-          <Text className="text-sm text-[var(--appkit-color-success)] self-center">
+          <Text className="text-[var(--appkit-color-success)] self-center" size="sm">
             Preferences saved ✓
           </Text>
         )}

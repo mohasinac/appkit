@@ -109,7 +109,7 @@ export function SellerCouponEditorView({
         />
         <Div className="border-b border-[var(--appkit-color-border)] px-6 py-5">
           <Row justify="between" className="gap-3">
-            <Heading level={2} className="text-lg font-semibold text-[var(--appkit-color-text)]">
+            <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
               {isEdit ? "Edit Coupon" : "Create Coupon"}
             </Heading>
             {isEdit && (
@@ -305,7 +305,7 @@ export function SellerCouponEditorView({
                 className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
               />
               <Div className="flex-1 min-w-0">
-                <Text size="sm" className="font-medium text-[var(--appkit-color-text-primary)]">
+                <Text size="sm" className="text-[var(--appkit-color-text-primary)]" weight="medium">
                   Active
                 </Text>
                 <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">

@@ -41,7 +41,7 @@ export function ContactInfoSidebar({
             <Div key={item.label} className="flex items-start gap-3">
               <Span size="xl" className="flex-shrink-0 mt-0.5">{item.icon}</Span>
               <Div>
-                <Text className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wide mb-0.5">
+                <Text className="text-neutral-500 dark:text-neutral-400 tracking-wide mb-0.5" size="xs" weight="medium" transform="uppercase">
                   {item.label}
                 </Text>
                 {item.href ? (
@@ -52,7 +52,7 @@ export function ContactInfoSidebar({
                     {item.value}
                   </a>
                 ) : (
-                  <Text className="text-sm">{item.value}</Text>
+                  <Text size="sm">{item.value}</Text>
                 )}
               </Div>
             </Div>
@@ -64,18 +64,18 @@ export function ContactInfoSidebar({
         <Stack gap="sm" className={`rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800/60 ${__P.p4}`}>
           {labels.businessHoursLabel && labels.businessHoursValue && (
             <Div>
-              <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+              <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
                 {labels.businessHoursLabel}
               </Text>
-              <Text className="text-sm mt-0.5">{labels.businessHoursValue}</Text>
+              <Text className="mt-0.5" size="sm">{labels.businessHoursValue}</Text>
             </Div>
           )}
           {labels.responseTimeLabel && labels.responseTimeValue && (
             <Div>
-              <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+              <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
                 {labels.responseTimeLabel}
               </Text>
-              <Text className="text-sm mt-0.5">{labels.responseTimeValue}</Text>
+              <Text className="mt-0.5" size="sm">{labels.responseTimeValue}</Text>
             </Div>
           )}
         </Stack>

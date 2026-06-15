@@ -76,7 +76,7 @@ export function AdminAnalyticsView({
       {renderHeader ? (
         renderHeader()
       ) : labels.title ? (
-        <Heading level={1} className="text-2xl font-bold mb-6">
+        <Heading level={1} className="text-2xl mb-6" weight="bold">
           {labels.title}
         </Heading>
       ) : null}

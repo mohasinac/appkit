@@ -208,15 +208,15 @@ function OrderDetailDrawer({
             {/* Items */}
             {(order.items ?? []).length > 0 && (
               <Div>
-                <Text size="sm" className="font-semibold text-[var(--appkit-color-text-primary)] mb-2">Items</Text>
+                <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
                 <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 rounded-lg border border-[var(--appkit-color-border)] dark:border-slate-700">
                   {(order.items ?? []).map((item, i) => (
                     <Div key={i} className="flex items-center justify-between px-3 py-2.5 gap-3">
                       <Div className="min-w-0">
-                        <Text size="sm" className="font-medium truncate">{item.title ?? item.productId ?? "Item"}</Text>
+                        <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
                         <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
                       </Div>
-                      <Text size="sm" className="shrink-0 font-medium">{toRupees(item.price ?? 0)}</Text>
+                      <Text size="sm" className="shrink-0" weight="medium">{toRupees(item.price ?? 0)}</Text>
                     </Div>
                   ))}
                 </Div>
@@ -225,14 +225,14 @@ function OrderDetailDrawer({
 
             {/* Total */}
             <Div className="flex items-center justify-between rounded-lg bg-zinc-50 dark:bg-slate-800/60 px-4 py-3">
-              <Text size="sm" className="font-semibold">Total</Text>
-              <Text size="sm" className="font-bold text-[var(--appkit-color-primary)]">{toRupees(order.totalAmount ?? 0)}</Text>
+              <Text size="sm" weight="semibold">Total</Text>
+              <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toRupees(order.totalAmount ?? 0)}</Text>
             </Div>
 
             {/* Shipping address */}
             {addrLine && (
               <Div>
-                <Text size="sm" className="font-semibold mb-1">Shipping address</Text>
+                <Text size="sm" className="mb-1" weight="semibold">Shipping address</Text>
                 <Text size="sm" className="text-[var(--appkit-color-text-secondary)]">
                   {[String(addr.fullName ?? ""), addrLine].filter(Boolean).join(" · ")}
                 </Text>
@@ -242,14 +242,14 @@ function OrderDetailDrawer({
             {/* Payment */}
             {order.paymentMethod && (
               <Div>
-                <Text size="sm" className="font-semibold mb-1">Payment</Text>
-                <Text size="sm" className="text-[var(--appkit-color-text-secondary)] capitalize">{order.paymentMethod}</Text>
+                <Text size="sm" className="mb-1" weight="semibold">Payment</Text>
+                <Text size="sm" className="text-[var(--appkit-color-text-secondary)]" transform="capitalize">{order.paymentMethod}</Text>
               </Div>
             )}
 
             {/* Update section */}
             <Div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 pt-4 space-y-3">
-              <Heading level={4} className="text-sm font-semibold">Update order</Heading>
+              <Heading level={4} size="sm" weight="semibold">Update order</Heading>
               <Select label="New status" value={newStatus} options={UPDATE_STATUS_OPTIONS} onChange={(e) => setNewStatus(e.target.value)} />
               <Input label="Tracking number" value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. 12345678901234" />
               <Input label="Carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="e.g. Delhivery, Bluedart" />
@@ -370,8 +370,8 @@ export function SellerOrdersView({
       header: "Order",
       render: (row) => (
         <Div className="space-y-0.5 min-w-0">
-          <Text className="font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
+          <Text className="font-mono text-zinc-900 dark:text-zinc-100 truncate" size="xs" weight="semibold">{row.primary}</Text>
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
         </Div>
       ),
     },

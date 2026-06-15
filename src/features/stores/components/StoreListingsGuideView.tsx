@@ -17,7 +17,7 @@ function GuideSection({
 }) {
   return (
     <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
-      <Heading level={2} className="mb-4 text-lg font-semibold text-[var(--appkit-color-text)]">
+      <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
       {children}
@@ -145,7 +145,7 @@ function StandardWalkthrough() {
     <Div className="space-y-5">
       {STANDARD_STEPS.map(({ step, items }) => (
         <Div key={step}>
-          <Text className="mb-2 font-semibold text-[var(--appkit-color-text)]">{step}</Text>
+          <Text className="mb-2 text-[var(--appkit-color-text)]" weight="semibold">{step}</Text>
           <ul className="space-y-1.5 pl-5">
             {items.map((item) => (
               <li key={item} className="list-disc text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
@@ -283,12 +283,12 @@ function StatusLifecycle() {
       <Div className="space-y-2">
         {STATUS_NOTES.map(({ status, note }) => (
           <Div key={status} className="flex gap-3 text-sm">
-            <Text className="shrink-0 font-mono font-semibold text-[var(--appkit-color-text)] w-24">{status}</Text>
+            <Text className="shrink-0 font-mono text-[var(--appkit-color-text)] w-24" weight="semibold">{status}</Text>
             <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
           </Div>
         ))}
       </Div>
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         Live auctions with at least one bid cannot be taken to ARCHIVED until the auction ends.
       </Text>
     </Div>
@@ -311,7 +311,7 @@ function MediaGuide() {
     <Div className="space-y-3">
       {MEDIA_TIPS.map(({ label, detail }) => (
         <Div key={label} className="flex gap-3 text-sm">
-          <Text className="shrink-0 w-28 font-semibold text-[var(--appkit-color-text)]">{label}</Text>
+          <Text className="shrink-0 w-28 text-[var(--appkit-color-text)]" weight="semibold">{label}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{detail}</Text>
         </Div>
       ))}
@@ -362,10 +362,10 @@ export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
 
       {/* Page title */}
       <Div>
-        <Heading level={1} className="text-2xl font-bold text-[var(--appkit-color-text)]">
+        <Heading level={1} className="text-2xl text-[var(--appkit-color-text)]" weight="bold">
           Listings Guide
         </Heading>
-        <Text className="mt-1 text-sm text-[var(--appkit-color-text-muted)]">
+        <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
           Products, auctions, and pre-orders — create and manage your listings.
         </Text>
       </Div>

@@ -18,7 +18,7 @@ function GuideSection({
 }) {
   return (
     <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
-      <Heading level={2} className="mb-4 text-lg font-semibold text-[var(--appkit-color-text)]">
+      <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
       {children}
@@ -89,7 +89,7 @@ function CapabilityTable() {
     <Div className="space-y-6">
       {CAPABILITY_GROUPS.map(({ group, items }) => (
         <Div key={group}>
-          <Text className="text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)] mb-2">{group}</Text>
+          <Text className="tracking-wide text-[var(--appkit-color-text-muted)] mb-2" size="xs" weight="semibold" transform="uppercase">{group}</Text>
           <Div className="overflow-x-auto -mx-6">
             <table className="min-w-full text-sm">
               <thead>
@@ -163,13 +163,13 @@ function LockedFeatureGuide() {
       {LOCKED_FEATURES.map(({ cap, missing, howToUnlock, contractRequired }) => (
         <Div key={cap} className="rounded-lg border border-[var(--appkit-color-border)] p-4 space-y-2">
           <Div className="flex items-center gap-2">
-            <Text className="font-mono text-sm font-semibold text-[var(--appkit-color-text)]">{cap}</Text>
+            <Text className="font-mono text-[var(--appkit-color-text)]" size="sm" weight="semibold">{cap}</Text>
             {contractRequired && (
               <span className="inline-block rounded-full bg-[var(--appkit-color-warning)]/10 text-[var(--appkit-color-warning)] text-xs px-2 py-0.5 font-medium">Requires agreement</span>
             )}
           </Div>
           <Div>
-            <Text className="text-xs font-semibold text-[var(--appkit-color-text-muted)] mb-1">What you are missing:</Text>
+            <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">What you are missing:</Text>
             <ul className="pl-4 space-y-0.5">
               {missing.map((item) => (
                 <li key={item} className={`text-sm text-[var(--appkit-color-text-muted)] ${LIST_DISC}`}>{item}</li>
@@ -177,8 +177,8 @@ function LockedFeatureGuide() {
             </ul>
           </Div>
           <Div>
-            <Text className="text-xs font-semibold text-[var(--appkit-color-text-muted)] mb-1">How to unlock:</Text>
-            <Text className="text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">{howToUnlock}</Text>
+            <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">How to unlock:</Text>
+            <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">{howToUnlock}</Text>
           </Div>
         </Div>
       ))}
@@ -257,10 +257,10 @@ export function StoreCapabilitiesGuideView(_props: StoreCapabilitiesGuideViewPro
 
       {/* Page title */}
       <Div>
-        <Heading level={1} className="text-2xl font-bold text-[var(--appkit-color-text)]">
+        <Heading level={1} className="text-2xl text-[var(--appkit-color-text)]" weight="bold">
           Capabilities Guide
         </Heading>
-        <Text className="mt-1 text-sm text-[var(--appkit-color-text-muted)]">
+        <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
           Per-store feature flags — what they unlock, defaults, and how to request access.
         </Text>
       </Div>

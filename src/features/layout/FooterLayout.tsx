@@ -120,10 +120,10 @@ export function FooterLayout({
         <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
           <Div className="lg:col-span-2 space-y-4">
-            <Heading level={5} className="text-zinc-900 dark:text-zinc-50 font-bold text-xl">
+            <Heading level={5} className="text-zinc-900 dark:text-zinc-50" size="xl" weight="bold">
               {brandName}
             </Heading>
-            <Text className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm">
+            <Text className="text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm" size="sm">
               {brandDescription}
             </Text>
 
@@ -192,7 +192,7 @@ export function FooterLayout({
 
                 {/* Desktop column */}
                 <Div className="hidden lg:block">
-                  <Text className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
+                  <Text className="tracking-wider text-zinc-500 dark:text-zinc-400 mb-3" size="xs" weight="semibold" transform="uppercase">
                     {group.heading}
                   </Text>
                   <Ul className="space-y-2.5">
@@ -215,7 +215,7 @@ export function FooterLayout({
 
         {/* Bottom bar */}
         <Div className="mt-10 pt-6 border-t border-zinc-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600 dark:text-zinc-400">
-          <Text className="text-xs text-zinc-600 dark:text-zinc-400">
+          <Text className="text-zinc-600 dark:text-zinc-400" size="xs">
             {copyrightText}
           </Text>
           {bottomLinks.length > 0 && (
@@ -235,7 +235,7 @@ export function FooterLayout({
             </nav>
           )}
           {madeInText && (
-            <Text className="text-xs text-zinc-600 dark:text-zinc-400">
+            <Text className="text-zinc-600 dark:text-zinc-400" size="xs">
               {madeInText}
             </Text>
           )}

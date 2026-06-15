@@ -11,9 +11,9 @@ export function AdminContentGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <FileText className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Content &amp; Marketing</Heading>
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">Content &amp; Marketing</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Blog posts, events, FAQs, carousel, homepage sections, ads, and newsletter on LetItRip.</Text>
       </Section>
 
@@ -87,7 +87,7 @@ export function AdminContentGuideView() {
           Icon: Mail, title: "Newsletter",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">Subscribers are stored in the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">newsletter</code> collection. The admin panel supports subscriber export and campaign send.</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Subscribers are stored in the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">newsletter</code> collection. The admin panel supports subscriber export and campaign send.</Text>
               <Alert variant="warning">
                 Legal obligation: every email sent must include a working unsubscribe link. Under the Indian IT Act and CAN-SPAM, unsubscribe requests must be honoured within 10 business days. Never send to unsubscribed addresses. All newsletter exports are de-identified by default.
               </Alert>

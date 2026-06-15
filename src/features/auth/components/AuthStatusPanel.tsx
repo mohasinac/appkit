@@ -52,11 +52,11 @@ export function AuthStatusPanel({
         </svg>
       </Div>
 
-      <Heading level={2} className="mb-2 text-xl font-semibold">
+      <Heading level={2} className="mb-2" size="xl" weight="semibold">
         {title}
       </Heading>
       {message ? (
-        <Text className="mb-6 text-sm text-zinc-600 dark:text-zinc-400">
+        <Text className="mb-6 text-zinc-600 dark:text-zinc-400" size="sm">
           {message}
         </Text>
       ) : null}

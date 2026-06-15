@@ -49,7 +49,7 @@ export async function BundlesListView({
           >
             Collectible Bundles
           </Heading>
-          <Text className="mb-6 text-sm text-[var(--appkit-color-text-muted)]">
+          <Text className="mb-6 text-[var(--appkit-color-text-muted)]" size="sm">
             Curated multi-product bundles — Pokémon starter sets, Beyblade
             tournament packs, Hot Wheels collector boxes and more. One price,
             one checkout, one shipment.

@@ -290,7 +290,7 @@ export function AdminEmployeeEditorView({
               onChange={(e) => applyGroupPreset(e.target.value)}
               options={GROUP_OPTIONS}
             />
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
               Selecting a group auto-fills the permissions below. You can still
               customise individual permissions.
             </Text>

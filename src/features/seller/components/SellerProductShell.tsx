@@ -201,7 +201,7 @@ function StepBasic({
       <FormGroup columns={2}>
         {renderCategorySelector ? (
           <>
-            <Text className="text-sm font-medium text-[var(--appkit-color-text)] mb-1">Category</Text>
+            <Text className="text-[var(--appkit-color-text)] mb-1" size="sm" weight="medium">Category</Text>
             {renderCategorySelector({ value: values.category ?? "", onChange: (v) => onChange({ category: v }) })}
           </>
         ) : (
@@ -225,7 +225,7 @@ function StepBasic({
       </FormGroup>
       {renderBrandSelector ? (
         <>
-          <Text className="text-sm font-medium text-[var(--appkit-color-text)] mb-1">Brand</Text>
+          <Text className="text-[var(--appkit-color-text)] mb-1" size="sm" weight="medium">Brand</Text>
           {renderBrandSelector({ value: values.brand ?? "", onChange: (v) => onChange({ brand: v }) })}
         </>
       ) : (
@@ -816,7 +816,7 @@ function StepShipping({
       />
       {renderAddressSelector ? (
         <>
-          <Text className="text-sm font-medium text-[var(--appkit-color-text)] mb-1">
+          <Text className="text-[var(--appkit-color-text)] mb-1" size="sm" weight="medium">
             Pickup Address (optional)
           </Text>
           {renderAddressSelector({
@@ -1212,7 +1212,7 @@ export function SellerProductShell({
               </Div>
             )}
             {stepError && (
-              <Text className="px-5 pb-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
+              <Text className="px-5 pb-3 text-[var(--appkit-color-error)]" size="sm">{stepError}</Text>
             )}
           </Div>
         )}
@@ -1327,7 +1327,7 @@ export function SellerProductShell({
               >
                 Save as Template
               </Button>
-              <Text className="mt-1 text-xs text-[var(--appkit-color-secondary-text)]">
+              <Text className="mt-1 text-[var(--appkit-color-secondary-text)]" size="xs">
                 Save these settings as a reusable template for future listings.
               </Text>
             </Div>

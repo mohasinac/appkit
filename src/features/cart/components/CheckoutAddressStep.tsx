@@ -38,7 +38,7 @@ export function CheckoutAddressStep<TAddress>({
   return (
     <Div className={className}>
       {labels.title && (
-        <Heading level={2} className="text-lg mb-4">
+        <Heading level={2} className="mb-4" size="lg">
           {labels.title}
         </Heading>
       )}

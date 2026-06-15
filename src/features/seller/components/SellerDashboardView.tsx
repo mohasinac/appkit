@@ -31,10 +31,10 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
             </>
           ) : (
             <>
-              <Text size="xs" variant="secondary" className="uppercase tracking-widest font-semibold">
+              <Text size="xs" variant="secondary" className="tracking-widest" weight="semibold" transform="uppercase">
                 Stat {i}
               </Text>
-              <Text size="xl" className="mt-2 font-bold tabular-nums">—</Text>
+              <Text size="xl" className="mt-2 tabular-nums" weight="bold">—</Text>
             </>
           )}
         </Div>

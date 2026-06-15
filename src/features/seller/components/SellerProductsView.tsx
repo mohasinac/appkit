@@ -108,7 +108,7 @@ function TypeDropdown({
   ].filter(Boolean) as { value: ListingKind; label: string }[];
   return (
     <Row className="gap-2 px-3 lg:px-4 py-2 border-b border-[var(--appkit-color-border)]">
-      <Text className="text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+      <Text className="tracking-wide text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
         Listing type
       </Text>
       <select
@@ -151,7 +151,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     header: "Product",
     render: (row) => (
       <Div className="space-y-1">
-        <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
+        <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="medium">{row.primary}</Text>
         <Row gap="sm">
           <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>
             {row.listingKind}

@@ -18,7 +18,7 @@ function GuideSection({
 }) {
   return (
     <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
-      <Heading level={2} className="mb-4 text-lg font-semibold text-[var(--appkit-color-text)]">
+      <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
       {children}
@@ -84,10 +84,10 @@ function OrderLifecycle() {
         {STATUS_ROWS.map(({ status, meaning, action }) => (
           <Div key={status} className="rounded-lg border border-[var(--appkit-color-border)] p-3 text-sm">
             <Div className="flex items-center gap-2 mb-1">
-              <Text className="font-mono font-semibold text-[var(--appkit-color-text)] w-28 shrink-0">{status}</Text>
+              <Text className="font-mono text-[var(--appkit-color-text)] w-28 shrink-0" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{meaning}</Text>
             </Div>
-            <Text className="pl-30 text-[var(--appkit-color-text-muted)] italic text-xs">
+            <Text className="pl-30 text-[var(--appkit-color-text-muted)] italic" size="xs">
               → {action}
             </Text>
           </Div>
@@ -136,7 +136,7 @@ const CARRIERS = [
 function CarriersSection() {
   return (
     <Div className="space-y-3">
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         Any carrier is accepted — enter the tracking number manually in the order detail.
         Buyers receive the tracking number as entered; they look it up on the carrier's website.
       </Text>
@@ -310,7 +310,7 @@ function CommonFAQs() {
     <Div className="space-y-3">
       {FAQS.map(({ q, a }) => (
         <Accordion key={q} title={q}>
-          <Text className="text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">{a}</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">{a}</Text>
         </Accordion>
       ))}
     </Div>
@@ -335,10 +335,10 @@ export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
 
       {/* Page title */}
       <Div>
-        <Heading level={1} className="text-2xl font-bold text-[var(--appkit-color-text)]">
+        <Heading level={1} className="text-2xl text-[var(--appkit-color-text)]" weight="bold">
           Orders & Fulfilment Guide
         </Heading>
-        <Text className="mt-1 text-sm text-[var(--appkit-color-text-muted)]">
+        <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
           Processing orders, shipping, cancellations, returns, and auction orders.
         </Text>
       </Div>

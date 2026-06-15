@@ -11,9 +11,9 @@ export function AdminAnalyticsGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <BarChart2 className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Analytics</Heading>
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">Analytics</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Revenue, order funnel, product performance, and store metrics on LetItRip.</Text>
       </Section>
 
@@ -53,7 +53,7 @@ export function AdminAnalyticsGuideView() {
           title: "Store-Level Metrics",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">Filter analytics by store to see individual seller performance. Available metrics:</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Filter analytics by store to see individual seller performance. Available metrics:</Text>
               <ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
                 <li>Total orders and completion rate</li>
                 <li>Average order value</li>

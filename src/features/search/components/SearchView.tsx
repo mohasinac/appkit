@@ -53,7 +53,7 @@ export function SearchView({
         {/* Query heading */}
         {hasQuery && (
           <Div>
-            <Heading level={1} className="text-xl font-semibold">
+            <Heading level={1} size="xl" weight="semibold">
               {labels.resultsCount
                 ? labels.resultsCount(total, query!)
                 : `${total} results for "${query}"`}

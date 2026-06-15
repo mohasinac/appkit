@@ -209,7 +209,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <FieldRow label={labels.field.price}>
-        <Text className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+        <Text className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">
           {priceLabel(item)}
         </Text>
       </FieldRow>
@@ -233,7 +233,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <FieldRow label={labels.field.store}>
-        <Text className="text-sm text-zinc-700 dark:text-zinc-300">
+        <Text className="text-zinc-700 dark:text-zinc-300" size="sm">
           {item.storeName ?? "â€”"}
         </Text>
       </FieldRow>
@@ -362,11 +362,11 @@ export function CompareOverlay({
 
       <Div className={`flex-1 ${__O.auto} ${__P.p4}`}>
         {isLoading ? (
-          <Text variant="secondary" className="text-center py-12">
+          <Text variant="secondary" className="py-12" align="center">
             Loadingâ€¦
           </Text>
         ) : trimmed.length === 0 ? (
-          <Text variant="secondary" className="text-center py-12">
+          <Text variant="secondary" className="py-12" align="center">
             {labels.empty}
           </Text>
         ) : (

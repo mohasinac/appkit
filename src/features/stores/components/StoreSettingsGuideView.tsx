@@ -18,7 +18,7 @@ function GuideSection({
 }) {
   return (
     <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
-      <Heading level={2} className="mb-4 text-lg font-semibold text-[var(--appkit-color-text)]">
+      <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
       {children}
@@ -206,7 +206,7 @@ function VisibilityStatesSection() {
     <Div className="space-y-3">
       {STATES.map(({ state, note }) => (
         <Div key={state} className="flex gap-3 text-sm">
-          <Text className="shrink-0 w-32 font-semibold text-[var(--appkit-color-text)]">{state}</Text>
+          <Text className="shrink-0 w-32 text-[var(--appkit-color-text)]" weight="semibold">{state}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{note}</Text>
         </Div>
       ))}
@@ -232,10 +232,10 @@ export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
 
       {/* Page title */}
       <Div>
-        <Heading level={1} className="text-2xl font-bold text-[var(--appkit-color-text)]">
+        <Heading level={1} className="text-2xl text-[var(--appkit-color-text)]" weight="bold">
           Settings Guide
         </Heading>
-        <Text className="mt-1 text-sm text-[var(--appkit-color-text-muted)]">
+        <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
           Store profile, shipping, returns, vacation mode, WhatsApp, and visibility.
         </Text>
       </Div>

@@ -311,10 +311,10 @@ function SidebarUserHeader({
           )}
         </Div>
         <Div className="flex-1 min-w-0">
-          <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+          <Text className="text-zinc-900 dark:text-zinc-100 truncate" size="sm" weight="medium">
             {user.displayName || "User"}
           </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
+          <Text className="text-zinc-500 dark:text-zinc-400 truncate" size="xs">
             {user.email || ""}
           </Text>
         </Div>
@@ -474,25 +474,25 @@ function SidebarContent({
         <Div className="grid grid-cols-2 gap-2">
           {user.stats.totalOrders != null && (
             <Div className={CLS_STAT_BOX}>
-              <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">{user.stats.totalOrders}</Text>
+              <Text className="text-zinc-900 dark:text-zinc-100 leading-none" size="lg" weight="bold">{user.stats.totalOrders}</Text>
               <Text className={CLS_STAT_LABEL}>Orders</Text>
             </Div>
           )}
           {user.stats.reviewsCount != null && (
             <Div className={CLS_STAT_BOX}>
-              <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">{user.stats.reviewsCount}</Text>
+              <Text className="text-zinc-900 dark:text-zinc-100 leading-none" size="lg" weight="bold">{user.stats.reviewsCount}</Text>
               <Text className={CLS_STAT_LABEL}>Reviews</Text>
             </Div>
           )}
           {user.stats.auctionsWon != null && (
             <Div className={CLS_STAT_BOX}>
-              <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">{user.stats.auctionsWon}</Text>
+              <Text className="text-zinc-900 dark:text-zinc-100 leading-none" size="lg" weight="bold">{user.stats.auctionsWon}</Text>
               <Text className={CLS_STAT_LABEL}>Auctions Won</Text>
             </Div>
           )}
           {user.stats.itemsSold != null && (
             <Div className={CLS_STAT_BOX}>
-              <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">{user.stats.itemsSold}</Text>
+              <Text className="text-zinc-900 dark:text-zinc-100 leading-none" size="lg" weight="bold">{user.stats.itemsSold}</Text>
               <Text className={CLS_STAT_LABEL}>Items Sold</Text>
             </Div>
           )}

@@ -157,7 +157,7 @@ export function SpinWheelView({
 
       {wonPrize ? (
         <Div className={CLS_PRIZE_BOX}>
-          <Text className="text-sm uppercase tracking-wide text-success">
+          <Text className="tracking-wide text-success" size="sm" transform="uppercase">
             {l.wonHeadline}
           </Text>
           <Text className={CLS_PRIZE_TITLE}>
@@ -199,11 +199,11 @@ export function SpinWheelView({
       </Div>
 
       {alreadyUsed ? (
-        <Text className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="sm" align="center">
           {l.alreadySpun}
         </Text>
       ) : !inWindow ? (
-        <Text className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="sm" align="center">
           {l.outsideWindow}
         </Text>
       ) : null}

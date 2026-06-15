@@ -81,17 +81,17 @@ export function LiveItemDetailView({
                 <Badge variant="warning">CITES: {meta.cites}</Badge>
               )}
             </Row>
-            <Heading level={1} className="text-2xl font-bold">
+            <Heading level={1} className="text-2xl" weight="bold">
               {product.title}
             </Heading>
             {meta?.species && (
-              <Text className="text-sm italic text-muted-foreground">
+              <Text className="italic text-muted-foreground" size="sm">
                 {meta.species}
                 {meta.sex && meta.sex !== "n/a" && ` · ${meta.sex}`}
                 {meta.ageMonths !== undefined && ` · ${meta.ageMonths}mo`}
               </Text>
             )}
-            <Text className="text-2xl font-semibold text-primary">{price}</Text>
+            <Text className="text-2xl text-primary" weight="semibold">{price}</Text>
             <Text className="text-muted-foreground">{product.description}</Text>
           </Stack>
 
@@ -110,7 +110,7 @@ export function LiveItemDetailView({
           {/* Transport */}
           {transport && (
             <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4} text-sm`}>
-              <Text className="font-medium">Transport</Text>
+              <Text weight="medium">Transport</Text>
               <Text className="text-muted-foreground">
                 Method: {transport.method}
                 {transport.handlingFeeInPaise !== undefined &&
@@ -123,7 +123,7 @@ export function LiveItemDetailView({
           {/* Care info */}
           {meta?.careInfo && (
             <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4} text-sm`}>
-              <Text className="font-medium">Care information</Text>
+              <Text weight="medium">Care information</Text>
               <Text className="mt-1 text-muted-foreground">{meta.careInfo}</Text>
             </Div>
           )}

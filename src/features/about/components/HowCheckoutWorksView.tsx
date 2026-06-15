@@ -126,14 +126,14 @@ type CheckoutStep = { number: number; icon: string; title: string; text: string 
 function renderCheckoutStepsSection(t: CheckoutT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"], steps: CheckoutStep[]) {
   return (
     <Section>
-      <Heading level={2} className="mb-8 text-center">{t("stepsTitle")}</Heading>
+      <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
       <Stack gap="5">
         {steps.map(({ number, icon, title, text }) => (
           <Div key={number} className={`flex items-start gap-4 ${__P.p5} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
             <Div>
-              <Text className="font-semibold mb-0.5">{number}. {title}</Text>
-              <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
+              <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
+              <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
             </Div>
           </Div>
         ))}
@@ -145,16 +145,16 @@ function renderCheckoutStepsSection(t: CheckoutT, themed: (typeof THEME_CONSTANT
 function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS)["flex"], methods: CheckoutMethod[]) {
   return (
     <Section>
-      <Heading level={2} className="mb-3 text-center">{t("paymentMethodsTitle")}</Heading>
-      <Text variant="secondary" className="text-center mb-8 max-w-xl mx-auto">{t("paymentMethodsSubtitle")}</Text>
+      <Heading level={2} className="mb-3" align="center">{t("paymentMethodsTitle")}</Heading>
+      <Text variant="secondary" className="mb-8 max-w-xl mx-auto" align="center">{t("paymentMethodsSubtitle")}</Text>
       <Div className="grid gap-5 md:grid-cols-3">
         {methods.map(({ icon: Icon, title, text, color, iconColor }) => (
           <Div key={title} className={`rounded-xl border ${__P.p5} ${color}`}>
             <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
-            <Text className="font-semibold mb-1">{title}</Text>
-            <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
+            <Text className="mb-1" weight="semibold">{title}</Text>
+            <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
           </Div>
         ))}
       </Div>

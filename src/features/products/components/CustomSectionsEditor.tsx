@@ -88,7 +88,7 @@ export function CustomSectionsEditor({
               className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400"
             >
               Body text{" "}
-              <Span weight="normal" className="text-zinc-400">(optional)</Span>
+              <Span weight="normal" color="faint">(optional)</Span>
             </label>
             <textarea
               id={`${baseId}-text-${i}`}
@@ -103,9 +103,9 @@ export function CustomSectionsEditor({
 
           {/* Custom fields within section */}
           <Div>
-            <Text className="mb-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+            <Text className="mb-2 text-zinc-600 dark:text-zinc-400" size="xs" weight="medium">
               Fields{" "}
-              <Span weight="normal" className="text-zinc-400">(optional)</Span>
+              <Span weight="normal" color="faint">(optional)</Span>
             </Text>
             <CustomFieldsEditor
               fields={section.fields ?? []}
@@ -127,7 +127,7 @@ export function CustomSectionsEditor({
         >
           + Add section
         </Button>
-        <Text className="text-xs text-zinc-400 dark:text-zinc-400">
+        <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
           {sections.length} / {MAX_CUSTOM_SECTIONS} sections
         </Text>
       </Div>

@@ -11,9 +11,9 @@ export function AdminOrdersGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <ShoppingBag className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Orders &amp; Finance</Heading>
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">Orders &amp; Finance</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Order statuses, payouts, disputes, returns, and commission math on LetItRip.</Text>
       </Section>
 
@@ -32,11 +32,11 @@ export function AdminOrdersGuideView() {
                 ["CANCELLED", "Cancelled before shipping. Payment returned."],
               ].map(([status, note]) => (
                 <Div key={status} className="flex gap-3">
-                  <Text className="flex-shrink-0 font-mono font-semibold text-[var(--appkit-color-primary)] w-40 text-xs">{status}</Text>
+                  <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{status}</Text>
                   <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
                 </Div>
               ))}
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] pt-2">Admin-only transitions: force-cancel (any status before DELIVERED), force-refund (post-DELIVERED dispute).</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] pt-2" size="sm">Admin-only transitions: force-cancel (any status before DELIVERED), force-refund (post-DELIVERED dispute).</Text>
             </Div>
           ),
         },
@@ -44,10 +44,10 @@ export function AdminOrdersGuideView() {
           Icon: Hash, title: "Order ID Format",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
                 Format: <code className="text-xs bg-[var(--appkit-color-border)] px-1 py-0.5 rounded">order-&#123;itemCount&#125;-&#123;YYYYMMDD&#125;-&#123;rand6&#125;</code>
               </Text>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+              <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                 The item count in the ID enables quick triage — a <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">order-8-...</code> is a large multi-item order that needs more careful handling than a <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">order-1-...</code>. Search by order ID in the admin panel using the full ID string.
               </Text>
             </>

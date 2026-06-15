@@ -129,7 +129,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
         )}
 
         {(review.helpfulCount ?? 0) > 0 && (
-          <Text className="mt-3 text-xs text-zinc-400 dark:text-zinc-400">
+          <Text className="mt-3 text-zinc-400 dark:text-zinc-400" size="xs">
             {review.helpfulCount} found this helpful
           </Text>
         )}
@@ -222,7 +222,7 @@ export function ReviewsList({
 
   if (reviews.length === 0) {
     return (
-      <Text className="py-12 text-center text-sm text-neutral-500 dark:text-zinc-500">
+      <Text className="py-12 text-neutral-500 dark:text-zinc-500" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

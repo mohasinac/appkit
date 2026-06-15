@@ -29,7 +29,7 @@ export function CartSummary({
   return (
     <Div className={`space-y-4 ${className}`}>
       {labels.title && (
-        <Heading level={2} className="text-base font-bold" variant="none">
+        <Heading level={2} variant="none" size="base" weight="bold">
           {labels.title}
         </Heading>
       )}

@@ -124,7 +124,7 @@ function ZonePicker({
   const zones = [1, 2, 3, 4, 5, 6] as const;
   return (
     <Div>
-      <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">Zone (row × col grid)</Text>
+      <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">Zone (row × col grid)</Text>
       <div
         className="grid gap-1"
         // audit-inline-style-ok: dynamic CSS
@@ -151,7 +151,7 @@ function ZonePicker({
           );
         })}
       </div>
-      <Text className="text-[10px] text-zinc-400 mt-1">Row 1 = zones 1–3 · Row 2 = zones 4–6</Text>
+      <Text className="text-[10px] mt-1" color="faint">Row 1 = zones 1–3 · Row 2 = zones 4–6</Text>
     </Div>
   );
 }
@@ -208,7 +208,7 @@ function BackgroundEditor({
             />
             {value.dimOverlay?.enabled && (
               <Div>
-                <Text className="text-sm font-medium mb-1">Opacity ({value.dimOverlay.opacity}%)</Text>
+                <Text className="mb-1" size="sm" weight="medium">Opacity ({value.dimOverlay.opacity}%)</Text>
                 <input
                   type="range"
                   min={0}
@@ -288,7 +288,7 @@ function CardEditor({
   return (
     <Div className={CLS_PANEL}>
       <Row className={CLS_ROW_BETWEEN}>
-        <Heading level={4} className="text-sm font-semibold">Card {index + 1}</Heading>
+        <Heading level={4} size="sm" weight="semibold">Card {index + 1}</Heading>
         <Button type="button" variant="ghost" size="sm" onClick={onRemove}>Remove</Button>
       </Row>
 
@@ -310,7 +310,7 @@ function CardEditor({
       />
 
       <Div>
-        <Text className="text-sm font-medium mb-2">Background</Text>
+        <Text className="mb-2" size="sm" weight="medium">Background</Text>
         <BackgroundEditor
           value={card.background}
           onChange={(bg) => set({ background: bg })}
@@ -319,7 +319,7 @@ function CardEditor({
       </Div>
 
       <Div className="space-y-2">
-        <Text className="text-sm font-medium">Content</Text>
+        <Text size="sm" weight="medium">Content</Text>
         <Input label="Eyebrow" value={card.content?.eyebrow ?? ""} onChange={(e) => setContent({ eyebrow: e.target.value || undefined })} placeholder="New · Limited · Featured" />
         <Input label="Title" value={card.content?.title ?? ""} onChange={(e) => setContent({ title: e.target.value })} />
         <Input label="Subtitle" value={card.content?.subtitle ?? ""} onChange={(e) => setContent({ subtitle: e.target.value || undefined })} />
@@ -331,7 +331,7 @@ function CardEditor({
 
       <Div className="space-y-2">
         <Row className={CLS_ROW_BETWEEN}>
-          <Text className="text-sm font-medium">Buttons (max 3)</Text>
+          <Text size="sm" weight="medium">Buttons (max 3)</Text>
           {buttons.length < 3 && (
             <Button type="button" variant="outline" size="sm" onClick={() => set({ buttons: [...buttons, makeButton()] })}>
               + Add button
@@ -341,7 +341,7 @@ function CardEditor({
         {buttons.map((btn, bi) => (
           <Div key={btn.id ?? bi} className={`rounded-lg border border-zinc-200 dark:border-zinc-800 ${__P.p3} space-y-2`}>
             <Row className={CLS_ROW_BETWEEN}>
-              <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Button {bi + 1}</Text>
+              <Text className="text-zinc-500 dark:text-zinc-400" size="xs" weight="medium">Button {bi + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => set({ buttons: buttons.filter((_, i) => i !== bi) })}>✕</Button>
             </Row>
             <Input label="Label" value={btn.text} onChange={(e) => { const next = [...buttons]; next[bi] = { ...btn, text: e.target.value }; set({ buttons: next }); }} />
@@ -353,7 +353,7 @@ function CardEditor({
       </Div>
 
       <Div className="space-y-2">
-        <Text className="text-sm font-medium">Hover effect</Text>
+        <Text size="sm" weight="medium">Hover effect</Text>
         <Select
           label="Effect"
           value={card.hover?.effect ?? "none"}
@@ -549,12 +549,12 @@ export function AdminCarouselEditorView({
           {/* ── 3. Overlay text (optional) ───────────────────────────────── */}
           <Div className={CLS_PANEL}>
             <Heading level={3} className={CLS_SECTION_HEADING}>Overlay text (optional)</Heading>
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">Centred text layered over the background. Leave blank to use cards only.</Text>
+            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Centred text layered over the background. Leave blank to use cards only.</Text>
             <Input label="Heading" value={overlayTitle} onChange={(e) => setOverlayTitle(e.target.value)} placeholder="India's #1 Collectibles Marketplace" />
             <Input label="Subtitle" value={overlaySubtitle} onChange={(e) => setOverlaySubtitle(e.target.value)} placeholder="Pokémon TCG · Hot Wheels · Beyblade X" />
             <Input label="Description" value={overlayDesc} onChange={(e) => setOverlayDesc(e.target.value)} placeholder="One sentence description..." />
             <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-800 ${__P.p3} space-y-2`}>
-              <Text className="text-sm font-medium">CTA button</Text>
+              <Text size="sm" weight="medium">CTA button</Text>
               <Input label="Button text" value={overlayBtnText} onChange={(e) => setOverlayBtnText(e.target.value)} placeholder="Shop Now" />
               <Input label="Button link" value={overlayBtnLink} onChange={(e) => setOverlayBtnLink(e.target.value)} placeholder="/products" />
               <Select
@@ -587,7 +587,7 @@ export function AdminCarouselEditorView({
               )}
             </Row>
             {cards.length === 0 && (
-              <Text className="text-sm text-zinc-400">No cards — the overlay text covers the whole slide.</Text>
+              <Text size="sm" color="faint">No cards — the overlay text covers the whole slide.</Text>
             )}
             {cards.map((card, i) => (
               <CardEditor

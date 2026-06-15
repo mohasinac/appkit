@@ -84,7 +84,7 @@ export function QuickProductForm({
   return (
     <Stack gap="lg" className={`${__P.p5}`}>
       <Div>
-        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
           Quick add — fill the essentials and publish. You can add more details later.
         </Text>
       </Div>
@@ -108,13 +108,13 @@ export function QuickProductForm({
 
       {renderCategorySelector ? (
         <Div>
-          <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Category</Text>
+          <Text className="text-zinc-700 dark:text-zinc-300 mb-1" size="sm" weight="medium">Category</Text>
           {renderCategorySelector({
             value: values.category ?? "",
             onChange: (v) => onChange({ category: v }),
           })}
           {touched && errors.category && (
-            <Text className="text-xs text-[var(--appkit-color-error)] mt-1">{errors.category}</Text>
+            <Text className="text-[var(--appkit-color-error)] mt-1" size="xs">{errors.category}</Text>
           )}
         </Div>
       ) : (

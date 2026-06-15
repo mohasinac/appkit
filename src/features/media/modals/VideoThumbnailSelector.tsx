@@ -91,7 +91,7 @@ export function VideoThumbnailSelector({
       size="lg"
     >
       <Div className="space-y-4">
-        <Text variant="secondary" className="text-xs">
+        <Text variant="secondary" size="xs">
           {t("thumbnailInstruction")}
         </Text>
 

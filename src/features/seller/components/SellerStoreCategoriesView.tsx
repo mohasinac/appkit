@@ -68,15 +68,15 @@ const COLUMNS: DataTableColumn<CategoryRow>[] = [
     header: "Label",
     render: (row) => (
       <Div>
-        <Text className="text-sm font-medium">{row.label}</Text>
-        <Text className="text-xs text-[var(--appkit-color-text-muted)]">/{row.slug}</Text>
+        <Text size="sm" weight="medium">{row.label}</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]" size="xs">/{row.slug}</Text>
       </Div>
     ),
   },
   {
     key: "productCount",
     header: "Products",
-    render: (row) => <Text className="text-sm tabular-nums">{row.productCount}</Text>,
+    render: (row) => <Text className="tabular-nums" size="sm">{row.productCount}</Text>,
   },
   {
     key: "isActive",

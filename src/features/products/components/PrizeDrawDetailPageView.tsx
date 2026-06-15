@@ -268,29 +268,29 @@ export async function PrizeDrawDetailPageView({
               <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p4}`}>
                 <Stack gap="sm">
                   <Row justify="between" align="center">
-                    <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+                    <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                       Entries
                     </Text>
-                    <Text className="text-sm font-semibold">
+                    <Text size="sm" weight="semibold">
                       {current} / {max} ({remaining} left)
                     </Text>
                   </Row>
                   {revealStart && (
                     <Row justify="between" align="center">
-                      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+                      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                         Reveal window opens
                       </Text>
-                      <Text className="text-sm font-medium">
+                      <Text size="sm" weight="medium">
                         {revealStart.toLocaleString()}
                       </Text>
                     </Row>
                   )}
                   {revealEnd && (
                     <Row justify="between" align="center">
-                      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+                      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                         Reveal window closes
                       </Text>
-                      <Text className="text-sm font-medium">
+                      <Text size="sm" weight="medium">
                         {revealEnd.toLocaleString()}
                       </Text>
                     </Row>
@@ -310,10 +310,10 @@ export async function PrizeDrawDetailPageView({
                 <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
                   <Row justify="between" align="center">
                     <Div>
-                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">
+                      <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">
                         Sold by
                       </Text>
-                      <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+                      <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
                         {safeSeller}
                       </Text>
                     </Div>

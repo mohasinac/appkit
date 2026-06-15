@@ -54,11 +54,11 @@ export function PreOrderActionsClient({
     <Div className="space-y-4">
       {price !== null && (
         <Div>
-          <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
             {formatCurrency(price, currency)}
           </Text>
           {depositAmount !== null && (
-            <Text className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <Text className="mt-0.5 text-zinc-500 dark:text-zinc-400" size="xs">
               Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
             </Text>
           )}
@@ -66,10 +66,10 @@ export function PreOrderActionsClient({
       )}
 
       {error && (
-        <Text className="text-xs text-error">{error}</Text>
+        <Text className="text-error" size="xs">{error}</Text>
       )}
       {success && (
-        <Text className="text-xs text-success">
+        <Text className="text-success" size="xs">
           ✓ Reserved! Redirecting to checkout…
         </Text>
       )}
@@ -91,7 +91,7 @@ export function PreOrderActionsClient({
           {isPending ? "Processing…" : "Reserve Now"}
         </Button>
         {isCancellable && (
-          <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs" align="center">
             ✓ Free cancellation before production
           </Text>
         )}

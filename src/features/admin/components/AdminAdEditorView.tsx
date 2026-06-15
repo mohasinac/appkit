@@ -440,7 +440,7 @@ export function AdminAdEditorView({
           />
 
           <Div className="space-y-2">
-            <Text className="text-sm font-medium">Placements</Text>
+            <Text size="sm" weight="medium">Placements</Text>
             <Div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {placements.map((placement) => (
                 <label
@@ -462,12 +462,12 @@ export function AdminAdEditorView({
           {creativeSection}
 
           <Div className={`rounded-lg border border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
-            <Text className="text-sm font-medium mb-1">Preview</Text>
-            <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+            <Text className="mb-1" size="sm" weight="medium">Preview</Text>
+            <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
               {title || name || "Untitled ad"}
             </Text>
-            {body ? <Text className="text-sm mt-1">{body}</Text> : null}
-            {ctaLabel ? <Text className="text-xs mt-1">CTA: {ctaLabel} ({ctaHref || "#"})</Text> : null}
+            {body ? <Text className="mt-1" size="sm">{body}</Text> : null}
+            {ctaLabel ? <Text className="mt-1" size="xs">CTA: {ctaLabel} ({ctaHref || "#"})</Text> : null}
           </Div>
 
           {publishHardeningRequired && publishIssues.length > 0 ? (

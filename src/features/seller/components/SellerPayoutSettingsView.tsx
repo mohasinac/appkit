@@ -190,8 +190,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   disabled={busy}
                 />
                 <Div>
-                  <Text className="font-medium">{label}</Text>
-                  <Text className="text-sm text-[var(--appkit-color-text-muted)]">{desc}</Text>
+                  <Text weight="medium">{label}</Text>
+                  <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{desc}</Text>
                 </Div>
               </label>
             ))}
@@ -251,7 +251,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   disabled={busy}
                 />
                 <Div>
-                  <Text className="text-sm font-medium mb-1.5">Account Type</Text>
+                  <Text className="mb-1.5" size="sm" weight="medium">Account Type</Text>
                   <Stack gap="xs" className="flex-row">
                     {(["savings", "current"] as const).map((t) => (
                       <label key={t} className="flex items-center gap-2 cursor-pointer">
@@ -264,7 +264,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                           className="accent-[var(--appkit-color-primary)]"
                           disabled={busy}
                         />
-                        <Text className="capitalize text-sm">{t}</Text>
+                        <Text size="sm" transform="capitalize">{t}</Text>
                       </label>
                     ))}
                   </Stack>
@@ -280,7 +280,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Tax Information</Heading>
-          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Optional — required only for GST invoice generation and TDS compliance.
           </Text>
           <FormField
@@ -337,8 +337,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
             disabled={busy}
           />
           <Div className={`${__P.p3} rounded-lg bg-[var(--appkit-color-surface-alt)] border border-[var(--appkit-color-border)]`}>
-            <Text className="text-sm font-medium mb-1">Payout Schedule</Text>
-            <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+            <Text className="mb-1" size="sm" weight="medium">Payout Schedule</Text>
+            <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
               Auto-payouts run every Monday for the previous week&apos;s settled orders. Manual payouts can be requested from the Payouts page at any time.
             </Text>
           </Div>

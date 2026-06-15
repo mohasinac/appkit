@@ -130,7 +130,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           </Row>
 
           {review.title && (
-            <Heading level={1} className="text-2xl font-bold text-neutral-900 dark:text-white mb-4 leading-snug">
+            <Heading level={1} className="text-2xl text-neutral-900 dark:text-white mb-4 leading-snug" weight="bold">
               {review.title}
             </Heading>
           )}
@@ -188,7 +188,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         {/* Image grid with lightbox trigger */}
         {images.length > 0 && (
           <Section>
-            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-3">
+            <Heading level={2} className="tracking-wide text-zinc-400 dark:text-zinc-400 mb-3" size="sm" weight="semibold" transform="uppercase">
               Photos ({images.length})
             </Heading>
             <Grid gap="xs" className="grid-cols-3 sm:grid-cols-4">
@@ -217,7 +217,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         {/* Video player */}
         {review.video && (
           <Section>
-            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-3">
+            <Heading level={2} className="tracking-wide text-zinc-400 dark:text-zinc-400 mb-3" size="sm" weight="semibold" transform="uppercase">
               Video
             </Heading>
             <Div className={`${__O.hidden} rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video`}>

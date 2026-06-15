@@ -154,10 +154,10 @@ export function AdminCategoryEditorView({
 
   const actionSidebar = (
     <Card variant="outlined" padding="md" className="space-y-3">
-      <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+      <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
         Status
       </Text>
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         {isEdit ? (isActive ? "Active" : "Inactive") : "New"}
       </Text>
       <Button
@@ -198,7 +198,7 @@ export function AdminCategoryEditorView({
     >
       {/* ── Identity ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
           Identity
         </Text>
         <Div className="space-y-4">
@@ -229,7 +229,7 @@ export function AdminCategoryEditorView({
             placeholder="Brief description of the category"
           />
           <Div className="flex flex-col gap-1">
-            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
               Parent category
             </Text>
             <PaginatedSelect
@@ -248,7 +248,7 @@ export function AdminCategoryEditorView({
                 />
               )}
             />
-            <Text className="text-xs text-neutral-500 dark:text-neutral-400">
+            <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
               Leave empty to create a root category.
             </Text>
           </Div>
@@ -257,7 +257,7 @@ export function AdminCategoryEditorView({
 
       {/* ── Display ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
           Display
         </Text>
         <Div className="space-y-4">

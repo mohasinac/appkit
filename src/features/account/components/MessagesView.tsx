@@ -34,7 +34,7 @@ export function MessagesView({
       {/* Room list — hidden on mobile when a chat is open */}
       <Div className={chatId ? "hidden md:block" : "block"}>
         {labels.title && (
-          <Heading level={3} className="mb-3 font-semibold">
+          <Heading level={3} className="mb-3" weight="semibold">
             {labels.title}
           </Heading>
         )}

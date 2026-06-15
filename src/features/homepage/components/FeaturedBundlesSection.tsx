@@ -119,7 +119,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
             </Div>
           )}
         </Div>
-        <Text className="line-clamp-2 text-sm font-semibold">{bundle.name}</Text>
+        <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>
         <Row gap="sm" align="center" className="mt-1 flex-wrap">
           <Text size="sm" weight="bold">
             {bundle.bundlePriceInPaise

@@ -254,7 +254,7 @@ export default function BottomActions() {
       {/* -- Info label row (page mode only) --------------------------------- */}
       {infoLabel && !isBulkMode && (
         <Div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80">
-          <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 leading-5 truncate">
+          <Text className="text-zinc-500 dark:text-zinc-400 leading-5 truncate" size="xs" weight="semibold">
             {infoLabel}
           </Text>
         </Div>
@@ -307,7 +307,7 @@ export default function BottomActions() {
                     {selectedAction.icon}
                   </Span>
                 )}
-                <Span className="flex-1 truncate text-left leading-none">
+                <Span className="flex-1 truncate leading-none" align="start">
                   {selectedAction?.label ?? "Bulk actions"}
                 </Span>
                 {pickerOpen ? (

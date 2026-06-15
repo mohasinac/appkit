@@ -81,10 +81,10 @@ function IdentityChip({
           {icon}
         </span>
         <Stack gap="none">
-          <Text className="text-[11px] font-medium uppercase tracking-wide" variant="secondary">
+          <Text className="text-[11px] tracking-wide" weight="medium" transform="uppercase" variant="secondary">
             {label}
           </Text>
-          <Text className="truncate text-sm font-medium">{value}</Text>
+          <Text className="truncate" size="sm" weight="medium">{value}</Text>
         </Stack>
       </Row>
     </Card>
@@ -107,11 +107,11 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
       <Stack gap="md">
         <Row justify="between" gap="md" align="start" className="flex-wrap">
           <Stack gap="xs">
-            <Heading level={1} className="text-2xl font-bold">
+            <Heading level={1} className="text-2xl" weight="bold">
               {scammer.displayNames[0]}
             </Heading>
             {scammer.displayNames.length > 1 && (
-              <Text variant="secondary" className="text-sm">
+              <Text variant="secondary" size="sm">
                 Also known as: {scammer.displayNames.slice(1).join(", ")}
               </Text>
             )}
@@ -134,20 +134,20 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
         </Row>
 
         <Row gap="md" wrap>
-          <Text variant="secondary" className="flex items-center gap-1.5 text-sm">
+          <Text variant="secondary" className="flex items-center gap-1.5" size="sm">
             <Eye className="h-4 w-4" />
             {scammer.views} views
           </Text>
-          <Text variant="secondary" className="flex items-center gap-1.5 text-sm">
+          <Text variant="secondary" className="flex items-center gap-1.5" size="sm">
             <Users className="h-4 w-4" />
             {scammer.incidentCount + 1} victim{scammer.incidentCount !== 0 ? "s" : ""} reported
           </Text>
-          <Text variant="secondary" className="flex items-center gap-1.5 text-sm">
+          <Text variant="secondary" className="flex items-center gap-1.5" size="sm">
             <Calendar className="h-4 w-4" />
             Reported {formatDate(scammer.createdAt)}
           </Text>
           {scammer.amountLost ? (
-            <Text className="text-sm font-medium text-[color:var(--appkit-color-danger,theme(colors.red.600))]">
+            <Text className="text-[color:var(--appkit-color-danger,theme(colors.red.600))]" size="sm" weight="medium">
               {formatPaise(scammer.amountLost)} lost (primary incident)
             </Text>
           ) : null}
@@ -185,24 +185,24 @@ function ScammerIncidentsSection({ incidents }: { incidents: ScammerIncidentDocu
                       via {SCAM_PLATFORM_LABELS[inc.scamPlatform] ?? inc.scamPlatform}
                     </Badge>
                   </Row>
-                  <Text variant="secondary" className="text-xs">
+                  <Text variant="secondary" size="xs">
                     {formatDate(inc.createdAt)}
                   </Text>
                 </Row>
                 {inc.itemInvolved && (
-                  <Text variant="secondary" className="text-xs">Item: {inc.itemInvolved}</Text>
+                  <Text variant="secondary" size="xs">Item: {inc.itemInvolved}</Text>
                 )}
                 {inc.amountLost ? (
-                  <Text className="text-xs font-medium text-[color:var(--appkit-color-danger,theme(colors.red.600))]">
+                  <Text className="text-[color:var(--appkit-color-danger,theme(colors.red.600))]" size="xs" weight="medium">
                     {formatPaise(inc.amountLost)} lost
                   </Text>
                 ) : null}
-                <Text variant="secondary" className="text-sm leading-relaxed">
+                <Text variant="secondary" className="leading-relaxed" size="sm">
                   {inc.description.length > 200
                     ? `${inc.description.slice(0, 200).trimEnd()}…`
                     : inc.description}
                 </Text>
-                <Text variant="secondary" className="text-xs">
+                <Text variant="secondary" size="xs">
                   Reported by: {inc.reportedByAnon ? "Anonymous" : "Verified victim"}
                 </Text>
               </Stack>
@@ -259,7 +259,7 @@ function ScammerCommentsSection({
               <Stack gap="xs">
                 <Row justify="between" align="center" gap="sm">
                   <Row gap="xs" align="center">
-                    <Text className="text-sm font-medium">{c.authorDisplayName}</Text>
+                    <Text size="sm" weight="medium">{c.authorDisplayName}</Text>
                     {c.authorRole !== "user" && (
                       <Badge variant="default" className="text-[10px]">{c.authorRole}</Badge>
                     )}
@@ -270,9 +270,9 @@ function ScammerCommentsSection({
                       <Badge variant="success" className="text-[10px]">Verified Victim</Badge>
                     )}
                   </Row>
-                  <Text variant="secondary" className="text-xs">{formatDate(c.createdAt)}</Text>
+                  <Text variant="secondary" size="xs">{formatDate(c.createdAt)}</Text>
                 </Row>
-                <Text variant="secondary" className="text-sm leading-relaxed">{c.body}</Text>
+                <Text variant="secondary" className="leading-relaxed" size="sm">{c.body}</Text>
               </Stack>
             </Card>
           ))}
@@ -297,7 +297,7 @@ function ScammerActionsColumn({
     <Stack gap="md">
       <Card variant="elevated" padding="md">
         <CardHeader>
-          <Heading level={3} className="text-sm font-semibold uppercase tracking-wide">Actions</Heading>
+          <Heading level={3} className="tracking-wide" size="sm" weight="semibold" transform="uppercase">Actions</Heading>
         </CardHeader>
         <CardBody>
           <Stack gap="sm">
@@ -337,7 +337,7 @@ function ScammerActionsColumn({
               </Link>
             )}
 
-            <Text variant="secondary" className="text-xs">
+            <Text variant="secondary" size="xs">
               All contest submissions are reviewed by our moderation team before any changes are made.
             </Text>
           </Stack>
@@ -346,14 +346,14 @@ function ScammerActionsColumn({
 
       <Card variant="outlined" padding="md">
         <CardHeader>
-          <Heading level={3} className="text-sm font-semibold uppercase tracking-wide">Contest Options</Heading>
+          <Heading level={3} className="tracking-wide" size="sm" weight="semibold" transform="uppercase">Contest Options</Heading>
         </CardHeader>
         <CardBody>
           <Stack gap="xs" as="ul">
             {Object.entries(CONTEST_TYPE_LABELS).map(([, label]) => (
               <Row key={label} gap="sm" align="start" as="li">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--appkit-color-border,theme(colors.zinc.300))]" />
-                <Text variant="secondary" className="text-xs">{label}</Text>
+                <Text variant="secondary" size="xs">{label}</Text>
               </Row>
             ))}
           </Stack>
@@ -364,7 +364,7 @@ function ScammerActionsColumn({
         <Alert variant="success" compact>
           <Row gap="xs" align="center">
             <Shield className="h-3.5 w-3.5 shrink-0" />
-            <Text className="text-xs font-medium">
+            <Text size="xs" weight="medium">
               Verified by LetItRip moderation on {formatDate(scammer.verifiedAt)}
             </Text>
           </Row>
@@ -442,7 +442,7 @@ export function ScamProfileView({
                     {scammer.socialMedia.map((sm, i) => (
                       <Row key={i} gap="sm" align="center">
                         <ExternalLink className="h-4 w-4 shrink-0 text-[color:var(--appkit-color-text-muted,theme(colors.zinc.400))]" />
-                        <Text className="text-sm font-medium">
+                        <Text size="sm" weight="medium">
                           {SOCIAL_PLATFORM_LABELS[sm.platform] ?? sm.platform}:
                         </Text>
                         {sm.url ? (
@@ -451,7 +451,7 @@ export function ScamProfileView({
                             {sm.handle}
                           </a>
                         ) : (
-                          <Text variant="secondary" className="text-sm">{sm.handle}</Text>
+                          <Text variant="secondary" size="sm">{sm.handle}</Text>
                         )}
                       </Row>
                     ))}
@@ -462,14 +462,14 @@ export function ScamProfileView({
               {scammer.itemInvolved && (
                 <Stack gap="xs">
                   <Heading level={2} size="base" weight="semibold">Item Involved</Heading>
-                  <Text variant="secondary" className="text-sm">{scammer.itemInvolved}</Text>
+                  <Text variant="secondary" size="sm">{scammer.itemInvolved}</Text>
                 </Stack>
               )}
 
               <Stack gap="sm">
                 <Heading level={2} size="base" weight="semibold">What Happened</Heading>
                 <Card variant="flat" padding="md">
-                  <Text className="text-sm leading-relaxed">{scammer.description}</Text>
+                  <Text className="leading-relaxed" size="sm">{scammer.description}</Text>
                 </Card>
               </Stack>
 
@@ -483,7 +483,7 @@ export function ScamProfileView({
                           <Span size="xs" weight="bold" className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--appkit-color-success,theme(colors.green.600))]/10 text-[color:var(--appkit-color-success,theme(colors.green.700))]">
                             {i + 1}
                           </Span>
-                          <Text variant="secondary" className="text-sm leading-relaxed">{tip}</Text>
+                          <Text variant="secondary" className="leading-relaxed" size="sm">{tip}</Text>
                         </Row>
                       ))}
                     </Stack>
@@ -516,8 +516,8 @@ export function ScamProfileView({
                         <Card variant="outlined" padding="sm" className="hover:opacity-80 transition-opacity">
                           <Row gap="sm" align="center" justify="between">
                             <Stack gap="none">
-                              <Text className="text-sm font-medium">{rel.displayNames[0]}</Text>
-                              <Text variant="secondary" className="text-xs">
+                              <Text size="sm" weight="medium">{rel.displayNames[0]}</Text>
+                              <Text variant="secondary" size="xs">
                                 {SCAM_TYPE_LABELS[rel.scamType] ?? rel.scamType}
                               </Text>
                             </Stack>

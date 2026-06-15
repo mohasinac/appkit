@@ -265,7 +265,7 @@ export function CouponCard({
             {n.isActive ? labels.active : labels.inactive}
           </Span>
           {n.scope && (
-            <Span weight="semibold" className="inline-flex items-center rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] uppercase tracking-wide text-zinc-700 dark:bg-zinc-700/60 dark:text-zinc-200">
+            <Span weight="semibold" className="inline-flex items-center rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] tracking-wide text-zinc-700 dark:bg-zinc-700/60 dark:text-zinc-200" transform="uppercase">
               {n.scope}
             </Span>
           )}
@@ -278,19 +278,19 @@ export function CouponCard({
           {discountLabel}
         </Text>
         {n.name && (
-          <Text className="text-sm mt-0.5 font-medium opacity-80">{n.name}</Text>
+          <Text className="mt-0.5 opacity-80" size="sm" weight="medium">{n.name}</Text>
         )}
       </Div>
 
       {n.description && (
-        <Text className="text-xs opacity-60 mb-3">{n.description}</Text>
+        <Text className="opacity-60 mb-3" size="xs">{n.description}</Text>
       )}
 
       {/* Copy code block + Claim CTA (public surfaces). On admin/CRUD surfaces
           the Claim button is hidden via `hideClaim` since admins aren't
           redeeming the coupons they're managing. */}
       <Div className={`flex items-center gap-2 rounded-lg border border-dashed px-3 py-2 ${colors.code}`}>
-        <Span size="sm" weight="bold" className="flex-1 font-mono tracking-widest uppercase select-all">
+        <Span size="sm" weight="bold" className="flex-1 font-mono tracking-widest select-all" transform="uppercase">
           {n.code || "—"}
         </Span>
         {n.code && (

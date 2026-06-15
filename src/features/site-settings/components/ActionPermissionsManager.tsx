@@ -117,7 +117,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
           onChange={(e) => setSearch(e.target.value)}
           className="h-9 max-w-sm text-sm"
         />
-        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
           {filteredActions.length} action{filteredActions.length !== 1 ? "s" : ""}
         </Text>
       </Div>
@@ -149,8 +149,8 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                 >
                   <Td className="px-4 py-3">
                     <Div>
-                      <Text className="font-medium text-zinc-900 dark:text-zinc-100">{meta.label}</Text>
-                      <Text className="text-xs text-zinc-400 dark:text-zinc-400">{id}</Text>
+                      <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{meta.label}</Text>
+                      <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{id}</Text>
                     </Div>
                   </Td>
                   <Td className="px-4 py-3">
@@ -164,7 +164,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                         Auth required
                       </Span>
                     ) : (
-                      <Text className="text-xs text-zinc-400">—</Text>
+                      <Text size="xs" color="faint">—</Text>
                     )}
                   </Td>
                   <Td className="px-4 py-3">
@@ -173,7 +173,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                         {meta.requiredPermission}
                       </code>
                     ) : (
-                      <Text className="text-xs text-zinc-400">—</Text>
+                      <Text size="xs" color="faint">—</Text>
                     )}
                   </Td>
                   <Td className="px-4 py-3 text-right">

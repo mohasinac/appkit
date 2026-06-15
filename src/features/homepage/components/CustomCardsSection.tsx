@@ -81,15 +81,15 @@ function CardItem({ card }: { card: CustomCardsCard }) {
 
       <Div className={`flex flex-col gap-2 ${__P.p4} flex-1`}>
         {card.eyebrow && (
-          <Text className="text-xs font-semibold uppercase tracking-widest opacity-70">
+          <Text className="tracking-widest opacity-70" size="xs" weight="semibold" transform="uppercase">
             {card.eyebrow}
           </Text>
         )}
         {card.title && (
-          <Text className="text-base font-bold leading-snug">{card.title}</Text>
+          <Text className="leading-snug" size="base" weight="bold">{card.title}</Text>
         )}
         {card.body && (
-          <Text className="text-sm opacity-80 leading-relaxed flex-1">{card.body}</Text>
+          <Text className="opacity-80 leading-relaxed flex-1" size="sm">{card.body}</Text>
         )}
 
         {card.buttons && card.buttons.length > 0 && (

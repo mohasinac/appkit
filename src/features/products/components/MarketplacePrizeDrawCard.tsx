@@ -183,7 +183,7 @@ export function MarketplacePrizeDrawCard({
             </Div>
           ) : (
             <Div className="absolute inset-0 flex items-center justify-center bg-[var(--appkit-color-surface-muted)]">
-              <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+              <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                 No prizes
               </Text>
             </Div>
@@ -205,7 +205,7 @@ export function MarketplacePrizeDrawCard({
 
         {status === "closed" ? (
           <Div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 uppercase tracking-wider text-white">
+            <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 tracking-wider text-white" transform="uppercase">
               {mergedLabels.closedBadge}
             </Span>
           </Div>
@@ -236,20 +236,20 @@ export function MarketplacePrizeDrawCard({
           </Text>
         </TextLink>
         <Row justify="between" className="mt-1 gap-2">
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
             {formatCurrency(pricePerEntry, getDefaultCurrency())}{" "}
             <Span size="xs" weight="normal" className="text-[var(--appkit-color-text-muted)]">
               {mergedLabels.pricePerEntryLabel}
             </Span>
           </Text>
           {max > 0 ? (
-            <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
               {mergedLabels.entriesRemainingLabel(remaining, max)}
             </Text>
           ) : null}
         </Row>
         {countdown ? (
-          <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
             {status === "pending" ? "Opens in" : "Closes in"} {countdown}
           </Text>
         ) : null}

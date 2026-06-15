@@ -106,14 +106,14 @@ export function ClassifiedDetailView({
               {meta?.negotiable && <Badge variant="secondary">Negotiable</Badge>}
               {meta?.acceptsShipping && <Badge variant="secondary">Shipping available</Badge>}
             </Row>
-            <Heading level={1} className="text-2xl font-bold">
+            <Heading level={1} className="text-2xl" weight="bold">
               {product.title}
             </Heading>
-            <Text className="text-2xl font-semibold text-primary">
+            <Text className="text-2xl text-primary" weight="semibold">
               {price}
             </Text>
             {location && (
-              <Text className="text-sm text-muted-foreground">{location}</Text>
+              <Text className="text-muted-foreground" size="sm">{location}</Text>
             )}
             <Text className="text-muted-foreground">{product.description}</Text>
           </Stack>
@@ -121,7 +121,7 @@ export function ClassifiedDetailView({
           {/* Contact Seller CTA */}
           {conversation ? (
             <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
-              <Text className="mb-2 font-medium">Conversation started!</Text>
+              <Text className="mb-2" weight="medium">Conversation started!</Text>
               <Link
                 href={ROUTES.USER.MESSAGES}
                 className="text-primary underline underline-offset-2"
@@ -132,7 +132,7 @@ export function ClassifiedDetailView({
           ) : (
             <Stack gap="sm">
               {error && (
-                <Text className="text-sm text-destructive">{error}</Text>
+                <Text className="text-destructive" size="sm">{error}</Text>
               )}
               <Button
                 type="button"

@@ -34,13 +34,13 @@ interface ProductsResponse {
 }
 
 const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
-  { key: "title", header: "Listing", render: (row) => <Text className="text-sm font-medium">{row.title}</Text> },
-  { key: "price", header: "Price", render: (row) => <Text className="text-sm tabular-nums">{row.price}</Text> },
+  { key: "title", header: "Listing", render: (row) => <Text size="sm" weight="medium">{row.title}</Text> },
+  { key: "price", header: "Price", render: (row) => <Text className="tabular-nums" size="sm">{row.price}</Text> },
   {
     key: "city",
     header: "Location",
     render: (row) => (
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">{row.city || "—"}</Text>
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{row.city || "—"}</Text>
     ),
   },
   {
@@ -77,7 +77,7 @@ const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
     key: "createdAt",
     header: "Created",
     render: (row) => (
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">{row.createdAt}</Text>
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{row.createdAt}</Text>
     ),
   },
 ];

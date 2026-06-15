@@ -107,7 +107,7 @@ export function HowItWorksInfoView({
                   <Span className={textClass}>{number}</Span>
                 </Div>
                 <Div>
-                  <Heading level={3} className="font-semibold mb-1">
+                  <Heading level={3} className="mb-1" weight="semibold">
                     {icon} {stepTitle}
                   </Heading>
                   <Text
@@ -137,7 +137,7 @@ export function HowItWorksInfoView({
                   key={dt}
                   className={`${themed.bgSecondary} border ${themed.border} rounded-xl p-5`}
                 >
-                  <Heading level={3} className="font-semibold mb-2">
+                  <Heading level={3} className="mb-2" weight="semibold">
                     {dt}
                   </Heading>
                   <Text

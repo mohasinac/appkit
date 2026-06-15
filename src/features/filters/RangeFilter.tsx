@@ -236,7 +236,7 @@ export function RangeFilter({
           <Div className="flex items-end gap-2">
             <Div className="flex-1 min-w-0">
               {minLabel && (
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+                <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">
                   {minLabel}
                 </Text>
               )}
@@ -264,7 +264,7 @@ export function RangeFilter({
 
             <Div className="flex-1 min-w-0">
               {maxLabel && (
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+                <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">
                   {maxLabel}
                 </Text>
               )}

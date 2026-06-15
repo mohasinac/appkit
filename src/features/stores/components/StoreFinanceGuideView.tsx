@@ -19,7 +19,7 @@ function GuideSection({
 }) {
   return (
     <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
-      <Heading level={2} className="mb-4 text-lg font-semibold text-[var(--appkit-color-text)]">
+      <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
       {children}
@@ -53,12 +53,12 @@ function CommissionSection() {
             Payment processing (Razorpay ~2%): − ₹20.00
           </Text>
           <Div className="border-t border-[var(--appkit-color-border)] pt-1">
-            <Text className="font-mono text-xs font-semibold text-[var(--appkit-color-text)]">
+            <Text className="font-mono text-[var(--appkit-color-text)]" size="xs" weight="semibold">
               Seller receives: ≈ ₹930.00
             </Text>
           </Div>
         </Div>
-        <Text className="text-xs text-[var(--appkit-color-text-muted)] mt-2">
+        <Text className="text-[var(--appkit-color-text-muted)] mt-2" size="xs">
           Exact amounts depend on the current platform fee configured in Site Settings.
           Razorpay charges vary by payment method (UPI is lowest).
         </Text>
@@ -96,7 +96,7 @@ function PayoutCycleSection() {
         <Div className="space-y-2">
           {PAYOUT_STATUSES.map(({ status, note }) => (
             <Div key={status} className="flex gap-3">
-              <Text className="shrink-0 font-mono font-semibold text-[var(--appkit-color-text)] w-24">{status}</Text>
+              <Text className="shrink-0 font-mono text-[var(--appkit-color-text)] w-24" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
             </Div>
           ))}
@@ -183,8 +183,8 @@ function CouponsSection() {
         <Div className="space-y-3">
           {COUPON_FIELDS.map(({ field, detail }) => (
             <Div key={field} className="flex gap-3">
-              <Text className="shrink-0 w-32 font-semibold text-[var(--appkit-color-text)] text-sm">{field}</Text>
-              <Text className="text-[var(--appkit-color-text-muted)] text-sm leading-relaxed">{detail}</Text>
+              <Text className="shrink-0 w-32 text-[var(--appkit-color-text)]" size="sm" weight="semibold">{field}</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">{detail}</Text>
             </Div>
           ))}
         </Div>
@@ -261,10 +261,10 @@ export function StoreFinanceGuideView(_props: StoreFinanceGuideViewProps) {
 
       {/* Page title */}
       <Div>
-        <Heading level={1} className="text-2xl font-bold text-[var(--appkit-color-text)]">
+        <Heading level={1} className="text-2xl text-[var(--appkit-color-text)]" weight="bold">
           Finance Guide
         </Heading>
-        <Text className="mt-1 text-sm text-[var(--appkit-color-text-muted)]">
+        <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
           Payouts, commissions, coupons, and promoted listings.
         </Text>
       </Div>

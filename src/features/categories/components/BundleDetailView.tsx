@@ -110,7 +110,7 @@ export function BundleDetailView({
 
                 {bundle.description && (
                   <Stack gap="xs">
-                    <Heading level={2} className="text-sm font-semibold text-[var(--appkit-color-text-muted)]">
+                    <Heading level={2} className="text-[var(--appkit-color-text-muted)]" size="sm" weight="semibold">
                       {BUNDLE_COPY.detailDescriptionHeading}
                     </Heading>
                     <Text className="whitespace-pre-line">
@@ -155,7 +155,7 @@ export function BundleDetailView({
                 <Ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {members.map((p, i) => (
                     <Li key={p.id} className="flex items-center gap-2 rounded-lg border border-zinc-100 dark:border-zinc-800 px-3 py-2 text-sm">
-                      <Span size="xs" weight="semibold" className="text-zinc-400 w-5">#{i + 1}</Span>
+                      <Span size="xs" weight="semibold" className="w-5" color="faint">#{i + 1}</Span>
                       <Link
                         href={String(ROUTES.PUBLIC.PRODUCT_DETAIL?.(p.slug ?? p.id) ?? "#")}
                         className="flex-1 truncate font-medium hover:underline hover:text-primary"

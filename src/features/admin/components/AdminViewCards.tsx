@@ -117,7 +117,7 @@ function AdminCardItem({
           </Row>
         )}
         <StatusBadge status={row.status} />
-        <Span size="xs" color="muted" className="hidden sm:block shrink-0 w-24 text-right">{row.updatedAt}</Span>
+        <Span size="xs" color="muted" className="hidden sm:block shrink-0 w-24" align="end">{row.updatedAt}</Span>
       </Row>
     );
   }
@@ -198,7 +198,7 @@ export function AdminViewCards({
 
   if (rows.length === 0) {
     return (
-      <Text size="sm" color="muted" className="py-12 text-center">{emptyLabel}</Text>
+      <Text size="sm" color="muted" className="py-12" align="center">{emptyLabel}</Text>
     );
   }
 

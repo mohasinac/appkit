@@ -94,7 +94,7 @@ export async function TrackOrderView({
 
         {/* How it works */}
         <Section>
-          <Heading level={2} className="text-center mb-10">
+          <Heading level={2} className="mb-10" align="center">
             {t("howItWorksTitle")}
           </Heading>
           <Grid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4" gap="lg">

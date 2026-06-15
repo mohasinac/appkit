@@ -163,8 +163,8 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
                   disabled={busy}
                 />
                 <Div>
-                  <Text className="font-medium">{m === "custom" ? "Custom / Manual" : "Shiprocket"}</Text>
-                  <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+                  <Text weight="medium">{m === "custom" ? "Custom / Manual" : "Shiprocket"}</Text>
+                  <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                     {m === "custom"
                       ? "Set a fixed shipping fee and carrier name for all orders."
                       : "Automated shipping via Shiprocket — connect your account for label generation and tracking."}
@@ -240,7 +240,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
             label="Pickup Address"
             disabled={busy}
           />
-          <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
             Registering a pickup address sends an OTP to your phone for verification.
           </Text>
         </Stack>

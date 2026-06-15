@@ -233,7 +233,7 @@ export function StepForm<T extends object = Record<string, unknown>>({
       </Div>
 
       {!hideActions && stepError && (
-        <Text className="mt-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
+        <Text className="mt-3 text-[var(--appkit-color-error)]" size="sm">{stepError}</Text>
       )}
 
       {!hideActions && (

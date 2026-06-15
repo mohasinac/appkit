@@ -11,9 +11,9 @@ export function AdminStoresGuideView() {
           <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <Store className="w-5 h-5 text-white" />
           </Div>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Stores &amp; Sellers</Heading>
+        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">Stores &amp; Sellers</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Store lifecycle, identity architecture, capabilities, and suspension on LetItRip.</Text>
       </Section>
 
@@ -59,7 +59,7 @@ export function AdminStoresGuideView() {
           Icon: Shield, title: "Capabilities Management",
           content: (
             <>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">Capabilities are admin-granted feature flags on a store. The Capabilities section in AdminStoreEditorView shows all 18 flags with toggles.</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Capabilities are admin-granted feature flags on a store. The Capabilities section in AdminStoreEditorView shows all 18 flags with toggles.</Text>
               <Alert variant="warning">
                 These capabilities require documented contractual approval before granting: <Span weight="bold">lower_commission_rate</Span> (commission rate change agreement), <Span weight="bold">extended_return_window</Span> (operational review), <Span weight="bold">api_access</Span> (technical integration agreement). Do not toggle these without a senior admin sign-off on file.
               </Alert>

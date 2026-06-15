@@ -62,7 +62,7 @@ export function SellerRevenueChart({
       className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 ${className}`}
     >
       {labels.title && (
-        <Heading level={3} className="text-base font-semibold mb-4">
+        <Heading level={3} className="mb-4" size="base" weight="semibold">
           {labels.title}
         </Heading>
       )}
@@ -97,7 +97,7 @@ export function SellerRevenueChart({
           </ResponsiveContainer>
         </Div>
       ) : (
-        <Text className="text-sm text-neutral-600 dark:text-neutral-400 text-center py-8">
+        <Text className="text-neutral-600 dark:text-neutral-400 py-8" size="sm" align="center">
           {labels.noData ?? "No data available"}
         </Text>
       )}

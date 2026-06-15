@@ -216,10 +216,10 @@ export function AdminProductEditorView({
 
   const actionSidebar = (
     <Card variant="outlined" padding="md" className="space-y-3">
-      <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+      <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
         Status
       </Text>
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         {isEdit ? product.status ?? "—" : "New"}
       </Text>
       <Button
@@ -257,7 +257,7 @@ export function AdminProductEditorView({
     >
       {/* ── Listing type ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
           Listing Type
         </Text>
         <Tabs value={mode} onChange={handleModeChange}>
@@ -280,12 +280,12 @@ export function AdminProductEditorView({
 
       {/* ── Classification (store + category + brand) ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
           Classification
         </Text>
         <Div className="space-y-4">
           <Stack gap="xs">
-            <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
               Store
             </Text>
             <PaginatedSelect
@@ -332,7 +332,7 @@ export function AdminProductEditorView({
             )}
             renderCategorySelector={({ label, value, onChange, disabled }) => (
               <Stack gap="xs">
-                <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
                   {label}
                 </Text>
                 <PaginatedSelect
@@ -356,7 +356,7 @@ export function AdminProductEditorView({
             )}
             renderBrandSelector={(args: BrandSelectorRenderArgs) => (
               <Stack gap="xs">
-                <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
                   {args.label}
                 </Text>
                 <PaginatedSelect

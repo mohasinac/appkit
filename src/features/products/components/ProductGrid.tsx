@@ -778,7 +778,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       {resolvedHeader}
       {isEmpty
         ? (resolvedEmpty ?? (
-            <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
               {emptyLabel}
             </Text>
           ))

@@ -94,13 +94,13 @@ const COLUMNS: DataTableColumn<TemplateRow>[] = [
   {
     key: "name",
     header: "Name",
-    render: (row) => <Text className="text-sm font-medium">{row.name}</Text>,
+    render: (row) => <Text size="sm" weight="medium">{row.name}</Text>,
   },
   {
     key: "category",
     header: "Category",
     render: (row) => (
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         {row.category || "—"}
       </Text>
     ),
@@ -109,7 +109,7 @@ const COLUMNS: DataTableColumn<TemplateRow>[] = [
     key: "brand",
     header: "Brand",
     render: (row) => (
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         {row.brand || "—"}
       </Text>
     ),
@@ -119,11 +119,11 @@ const COLUMNS: DataTableColumn<TemplateRow>[] = [
     header: "Condition",
     render: (row) =>
       row.condition ? (
-        <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400 capitalize">
+        <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" transform="capitalize">
           {row.condition.replace(/_/g, " ")}
         </Span>
       ) : (
-        <Text className="text-sm text-[var(--appkit-color-text-muted)]">—</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]" size="sm">—</Text>
       ),
   },
 ];

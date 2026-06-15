@@ -145,7 +145,7 @@ export function SellerGoogleReviewsView({
         {/* Settings */}
         <Section>
           <Heading level={3} className="mb-1">Google Business Settings</Heading>
-          <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-4">
+          <Text className="text-[var(--appkit-color-text-muted)] mb-4" size="sm">
             Connect your Google Business profile to sync reviews to your storefront.
           </Text>
           <Stack gap="md">
@@ -181,29 +181,29 @@ export function SellerGoogleReviewsView({
             <Div className="flex flex-wrap gap-6">
               {draft.averageRating !== undefined && (
                 <Div>
-                  <Text className="text-xs text-[var(--appkit-color-text-muted)] uppercase tracking-wide">
+                  <Text className="text-[var(--appkit-color-text-muted)] tracking-wide" size="xs" transform="uppercase">
                     Avg rating
                   </Text>
-                  <Text className="text-2xl font-bold tabular-nums">
+                  <Text className="text-2xl tabular-nums" weight="bold">
                     {draft.averageRating.toFixed(1)}
                   </Text>
                 </Div>
               )}
               {draft.totalReviews !== undefined && (
                 <Div>
-                  <Text className="text-xs text-[var(--appkit-color-text-muted)] uppercase tracking-wide">
+                  <Text className="text-[var(--appkit-color-text-muted)] tracking-wide" size="xs" transform="uppercase">
                     Total reviews
                   </Text>
-                  <Text className="text-2xl font-bold tabular-nums">
+                  <Text className="text-2xl tabular-nums" weight="bold">
                     {draft.totalReviews}
                   </Text>
                 </Div>
               )}
               <Div>
-                <Text className="text-xs text-[var(--appkit-color-text-muted)] uppercase tracking-wide">
+                <Text className="text-[var(--appkit-color-text-muted)] tracking-wide" size="xs" transform="uppercase">
                   Last synced
                 </Text>
-                <Text className="text-sm">{formattedLastSync}</Text>
+                <Text size="sm">{formattedLastSync}</Text>
               </Div>
             </Div>
           </Section>

@@ -100,9 +100,9 @@ function ReviewCard({
           </Div>
         )}
         <Div className="min-w-0">
-          <Text className="text-sm font-semibold truncate">{review.authorName}</Text>
+          <Text className="truncate" size="sm" weight="semibold">{review.authorName}</Text>
           {dateStr && (
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">{dateStr}</Text>
+            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{dateStr}</Text>
           )}
         </Div>
       </Div>
@@ -110,7 +110,7 @@ function ReviewCard({
       {showRating && <StarRating rating={review.rating} />}
 
       {review.text && (
-        <Text className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 line-clamp-4">
+        <Text className="leading-relaxed text-zinc-700 dark:text-zinc-300 line-clamp-4" size="sm">
           {review.text}
         </Text>
       )}

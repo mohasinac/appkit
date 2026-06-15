@@ -263,7 +263,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
 
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
           <Div className="space-y-2">
-            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</Text>
+            <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Status</Text>
             <Div className="flex flex-wrap gap-2">
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
                 <Button key={opt.label} variant="ghost" type="button"

@@ -67,7 +67,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     header: "Prize Draw",
     render: (row) => (
       <Div className="space-y-1">
-        <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
+        <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="medium">{row.primary}</Text>
         <Span size="xs" color="muted">{row.secondary}</Span>
       </Div>
     ),

@@ -129,7 +129,7 @@ export function ProductFeaturesSelector({
           aria-label={f.label}
         />
         <Div className="flex-1">
-          <Text as="span" className="block font-medium text-zinc-900 dark:text-zinc-100">
+          <Text as="span" className="block text-zinc-900 dark:text-zinc-100" weight="medium">
             {f.label}
           </Text>
           {f.description && (
@@ -160,7 +160,7 @@ export function ProductFeaturesSelector({
         >
           Feature badges
         </Heading>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
           Selected: {value.length} of {MAX_FEATURES_PER_PRODUCT}. Badges appear
           on product cards and detail pages.
         </Text>

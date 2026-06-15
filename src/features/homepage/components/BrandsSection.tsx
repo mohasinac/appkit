@@ -81,7 +81,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
           {initial}
         </Div>
       )}
-      <Text className="w-full truncate text-center text-xs font-medium text-zinc-700 dark:text-zinc-300">
+      <Text className="w-full truncate text-zinc-700 dark:text-zinc-300" size="xs" weight="medium" align="center">
         {brand.name}
       </Text>
     </Link>
@@ -122,7 +122,7 @@ export function BrandsSection({
               {title}
             </Heading>
             {subtitle && (
-              <Text variant="secondary" className="mt-1 text-sm">
+              <Text variant="secondary" className="mt-1" size="sm">
                 {subtitle}
               </Text>
             )}

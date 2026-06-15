@@ -41,7 +41,7 @@ export function RelatedProducts({
       {renderTitle ? (
         renderTitle()
       ) : labels.title ? (
-        <Heading level={2} className="text-xl font-bold" variant="none">
+        <Heading level={2} variant="none" size="xl" weight="bold">
           {labels.title}
         </Heading>
       ) : null}

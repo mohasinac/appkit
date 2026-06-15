@@ -30,7 +30,7 @@ const STATE_OPTIONS = INDIAN_STATES.map((s) => ({ value: s, label: s }));
 // ── Section heading helper ─────────────────────────────────────────────────────
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+    <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
       {children}
     </Text>
   );
@@ -219,7 +219,7 @@ export function AdminAddressEditorView({
                   }}
                   className="accent-[var(--appkit-color-primary)]"
                 />
-                <Span size="sm" className="capitalize text-[var(--appkit-color-text)]">
+                <Span size="sm" className="text-[var(--appkit-color-text)]" transform="capitalize">
                   {type}
                 </Span>
               </label>

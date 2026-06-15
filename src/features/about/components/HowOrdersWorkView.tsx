@@ -200,7 +200,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
               <Span size="xl">{icon}</Span>
               <Span size="xs" weight="semibold" className={`px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
             </Row>
-            <Text variant="secondary" className="text-sm leading-relaxed">{desc}</Text>
+            <Text variant="secondary" className="leading-relaxed" size="sm">{desc}</Text>
           </Div>
         ))}
       </Div>
@@ -217,8 +217,8 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
             <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
-            <Text className="font-semibold mb-1">{title}</Text>
-            <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
+            <Text className="mb-1" weight="semibold">{title}</Text>
+            <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
           </Div>
         ))}
       </Div>

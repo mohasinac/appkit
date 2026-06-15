@@ -119,7 +119,7 @@ export function SellerCouponsView({
       : undefined,
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <Div className="space-y-2">
-        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
           Status
         </Text>
         <Div className="flex flex-wrap gap-2">

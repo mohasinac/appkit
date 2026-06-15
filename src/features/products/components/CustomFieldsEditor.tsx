@@ -129,7 +129,7 @@ export function CustomFieldsEditor({
           + Add field
         </Button>
         {fields.length > 0 && (
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400">
+          <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
             {fields.length} / {MAX_CUSTOM_FIELDS}
           </Text>
         )}

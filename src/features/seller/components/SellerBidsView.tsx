@@ -159,8 +159,8 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       header: "Auction",
       render: (row) => (
         <Div className="space-y-0.5">
-          <Text className="font-medium text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1">{row.productTitle}</Text>
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400 font-mono">{row.productId}</Text>
+          <Text className="text-zinc-900 dark:text-zinc-100 line-clamp-1" size="sm" weight="medium">{row.productTitle}</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400 font-mono" size="xs">{row.productId}</Text>
         </Div>
       ),
     },
@@ -304,7 +304,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         ) : (
           <Div className="space-y-3">
             {groupedRows.length === 0 && !isLoading && (
-              <Text className="text-sm text-zinc-500 dark:text-zinc-400">No bids found for your auctions.</Text>
+              <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No bids found for your auctions.</Text>
             )}
             {groupedRows.map((group) => {
               const collapsed = collapsedGroups.has(group.id);

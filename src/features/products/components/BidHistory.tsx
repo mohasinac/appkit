@@ -81,7 +81,7 @@ export function BidHistory({
   return (
     <Div className={className}>
       {labels.title && (
-        <Heading level={3} className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <Heading level={3} className="mb-3 tracking-wide text-zinc-500 dark:text-zinc-400" size="sm" weight="semibold" transform="uppercase">
           {labels.title}
         </Heading>
       )}

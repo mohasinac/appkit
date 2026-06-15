@@ -136,7 +136,7 @@ function PreOrderInfoSection({
             </Span>
           )}
         </Row>
-        <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+        <Heading level={1} className="leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl" size="xl" weight="bold">
           {title}
         </Heading>
       </Div>
@@ -210,7 +210,7 @@ function PreOrderInfoSection({
 
       {!productFeatures && features.length > 0 && (
         <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
-          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <Text className="mb-2 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
             About this product
           </Text>
           <Ul className="space-y-1.5">
@@ -236,10 +236,10 @@ function PreOrderInfoSection({
         <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
           <Row justify="between" align="center">
             <Div>
-              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">
+              <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">
                 Sold by
               </Text>
-              <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+              <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
                 {safeSeller}
               </Text>
             </Div>
@@ -290,7 +290,7 @@ function PreOrderBuyBarPanel({
       {reserveTarget > 0 && (
         <Div className="space-y-2">
           <Row justify="between" align="center">
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
               {reservedCount} of {reserveTarget} reserved
             </Text>
             <Span size="xs" weight="semibold" className="text-primary-600 dark:text-primary-400">
@@ -322,11 +322,11 @@ function PreOrderBuyBarPanel({
         <>
           {price !== null && (
             <Div>
-              <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+              <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
                 {formatCurrency(price, currency)}
               </Text>
               {depositAmount !== null && (
-                <Text className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <Text className="mt-0.5 text-zinc-500 dark:text-zinc-400" size="xs">
                   Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
                 </Text>
               )}
@@ -337,7 +337,7 @@ function PreOrderBuyBarPanel({
               Reserve Now
             </Button>
             {isCancellable && (
-              <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+              <Text className="text-zinc-500 dark:text-zinc-400" size="xs" align="center">
                 ✓ Free cancellation before production
               </Text>
             )}
@@ -384,7 +384,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
         <Section className="py-20">
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
-              <Heading level={1} className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+              <Heading level={1} className="text-2xl text-zinc-900 dark:text-zinc-50" weight="semibold">
                 Pre-Order Not Found
               </Heading>
               <Text color="muted">

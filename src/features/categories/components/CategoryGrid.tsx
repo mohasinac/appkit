@@ -77,7 +77,7 @@ export function CategoryCard({
           </Text>
         )}
         <Div className="mt-2 flex items-center justify-between gap-2">
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400">
+          <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
             {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
           </Text>
           <Span size="xs" weight="medium" className="inline-flex items-center gap-1 rounded-md border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 text-zinc-600 dark:text-zinc-300 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors">
@@ -134,7 +134,7 @@ export function CategoryGrid({
 }: CategoryGridProps) {
   if (categories.length === 0) {
     return (
-      <Text className="py-12 text-center text-sm text-neutral-500 dark:text-zinc-500">
+      <Text className="py-12 text-neutral-500 dark:text-zinc-500" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

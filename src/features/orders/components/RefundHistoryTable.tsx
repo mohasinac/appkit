@@ -102,7 +102,7 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
 
       {events.length > 0 && (
         <Div className={`${__P.p4}`}>
-          <Heading level={4} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+          <Heading level={4} className="mb-3 text-zinc-700 dark:text-zinc-300" size="sm" weight="semibold">
             {REFUND_COPY.history.heading}
           </Heading>
           <Stack gap="none">

@@ -56,7 +56,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
   return (
     <Div className={view === "grid" ? CARD_GRID_CLS : CARD_LIST_CLS}>
       {rows.length === 0 && !isLoading && (
-        <Text className="text-sm text-[var(--appkit-color-text-muted)] col-span-full">
+        <Text className="text-[var(--appkit-color-text-muted)] col-span-full" size="sm">
           {listingKind !== "all" ? `No ${listingKind} listings found` : "No products listed yet"}
         </Text>
       )}
@@ -84,10 +84,10 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
                 <MediaImage src={row.imageUrl} alt={row.primary} size="card" />
               </Div>
               <Div className={`${__P.p3} space-y-1`}>
-                <Text className="font-medium text-sm line-clamp-1">{row.primary}</Text>
+                <Text className="line-clamp-1" size="sm" weight="medium">{row.primary}</Text>
                 <Row gap="sm">
                   <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
-                  <Text className="text-xs text-[var(--appkit-color-text-muted)] line-clamp-1">{row.secondary}</Text>
+                  <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
                 </Row>
               </Div>
             </a>
@@ -115,10 +115,10 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               <MediaImage src={row.imageUrl} alt={row.primary} size="thumbnail" />
             </Div>
             <a href={href} className="flex-1 min-w-0">
-              <Text className="font-medium text-sm line-clamp-1">{row.primary}</Text>
+              <Text className="line-clamp-1" size="sm" weight="medium">{row.primary}</Text>
               <Row gap="sm">
                 <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
-                <Text className="text-xs text-[var(--appkit-color-text-muted)] line-clamp-1">{row.secondary}</Text>
+                <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
               </Row>
             </a>
             <Row className="gap-1 flex-shrink-0">

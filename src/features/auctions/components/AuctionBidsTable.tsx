@@ -91,7 +91,7 @@ function AuctionRow({
           size={16}
         />
         <Div className="flex-1 min-w-0">
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text)] line-clamp-1">
+          <Text className="text-[var(--appkit-color-text)] line-clamp-1" size="sm" weight="semibold">
             {auction.productTitle}
           </Text>
         </Div>
@@ -99,10 +99,10 @@ function AuctionRow({
           {isWinning && (
             <Badge variant="active">Winning</Badge>
           )}
-          <Text variant="secondary" className="text-xs">
+          <Text variant="secondary" size="xs">
             {auction.bids.length} bid{auction.bids.length !== 1 ? "s" : ""}
           </Text>
-          <Text className="text-sm font-semibold text-[var(--appkit-color-text)]">
+          <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">
             {paise(highest)}
           </Text>
         </Row>
@@ -128,17 +128,17 @@ function AuctionRow({
               style={{ gridTemplateColumns: portal === "buyer" ? "1fr auto auto" : "1fr 1fr auto auto" }}
             >
               {portal !== "buyer" && (
-                <Text className="text-sm text-[var(--appkit-color-text)] truncate pr-3">
+                <Text className="text-[var(--appkit-color-text)] truncate pr-3" size="sm">
                   {bid.userName || bid.userId}
                 </Text>
               )}
-              <Text className="text-sm font-medium text-[var(--appkit-color-text)]">
+              <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
                 {paise(bid.bidAmount)}
               </Text>
               <Badge variant={STATUS_VARIANT[bid.status] ?? "pending"} className="capitalize">
                 {bid.status}
               </Badge>
-              <Text variant="secondary" className="text-xs text-right">
+              <Text variant="secondary" size="xs" align="end">
                 {relDate(bid.bidDate)}
               </Text>
             </div>

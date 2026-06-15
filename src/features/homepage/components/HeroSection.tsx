@@ -32,7 +32,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
           </Heading>
         )}
         {content?.subtitle && (
-          <Text className="mx-auto mt-4 max-w-2xl text-lg opacity-90">
+          <Text className="mx-auto mt-4 max-w-2xl opacity-90" size="lg">
             {content.subtitle}
           </Text>
         )}

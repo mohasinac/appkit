@@ -92,12 +92,12 @@ function AlertCard({
     <Div surface="card" padding="sm" className="flex items-start justify-between gap-4">
       <Div className="flex-1 min-w-0">
         <Row className="gap-2 mb-1 flex-wrap">
-          <Text className="font-medium text-zinc-900 dark:text-zinc-100 text-sm">{alert.label}</Text>
+          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">{alert.label}</Text>
           <Badge variant={alert.isActive ? "success" : "default"}>
             {alert.isActive ? "Active" : "Paused"}
           </Badge>
         </Row>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+        <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">
           {metricLabel} {opLabel} {alert.threshold} · {windowLabel}
         </Text>
         <Row className="gap-1 flex-wrap">
@@ -108,7 +108,7 @@ function AlertCard({
           ))}
         </Row>
         {alert.lastTriggeredAt && (
-          <Text className="text-xs text-zinc-400 dark:text-zinc-400 mt-1">
+          <Text className="text-zinc-400 dark:text-zinc-400 mt-1" size="xs">
             Last triggered: {new Date(alert.lastTriggeredAt).toLocaleString("en-IN")}
           </Text>
         )}
@@ -230,7 +230,7 @@ export function SellerAnalyticsAlertsView({
   return (
     <Div className="space-y-6">
       <Row justify="between">
-        <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+        <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">
           {labels.title ?? "Analytics Alerts"}
         </Heading>
         <Button size="sm" onClick={() => setShowForm((v) => !v)}>
@@ -238,13 +238,13 @@ export function SellerAnalyticsAlertsView({
         </Button>
       </Row>
 
-      <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+      <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
         Get notified when a key metric crosses a threshold. Alerts check the metric over the selected window and fire through your chosen channels.
       </Text>
 
       {showForm && (
         <Section className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__P.p5} space-y-4`}>
-          <Heading level={3} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <Heading level={3} className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
             Create Alert
           </Heading>
           <Form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(); }}>
@@ -285,7 +285,7 @@ export function SellerAnalyticsAlertsView({
             </Div>
 
             <Div className="mt-3">
-              <Text className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+              <Text className="text-zinc-700 dark:text-zinc-300 mb-2" size="xs" weight="medium">
                 Notify via
               </Text>
               <Row className="gap-2 flex-wrap">

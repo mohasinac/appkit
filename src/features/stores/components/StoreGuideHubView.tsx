@@ -132,14 +132,14 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
             <Div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </Div>
-            <Text className="text-sm font-semibold text-white/80 uppercase tracking-widest">
+            <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">
               Seller Guide
             </Text>
           </Div>
-          <Heading level={1} className="text-2xl md:text-3xl font-bold text-white mb-2">
+          <Heading level={1} className="text-2xl md:text-3xl text-white mb-2" weight="bold">
             {storeName}
           </Heading>
-          <Text className="text-white/80 text-base">
+          <Text className="text-white/80" size="base">
             Everything you need to know about selling on LetItRip.
           </Text>
         </Div>
@@ -149,7 +149,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
       <Div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Guide cards — 2/3 width on lg */}
         <Div className="lg:col-span-2 space-y-4">
-          <Heading level={2} className="text-lg font-semibold text-[var(--appkit-color-text)]">
+          <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Guides
           </Heading>
           <Div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -169,14 +169,14 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   >
                     <Icon className="w-4 h-4 text-white" />
                   </Div>
-                  <Text className="font-semibold text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors">
+                  <Text className="text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors" weight="semibold">
                     {title}
                   </Text>
                 </Div>
-                <Text className="text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
+                <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">
                   {description}
                 </Text>
-                <Text className="text-xs font-medium text-[var(--appkit-color-primary)] mt-auto">
+                <Text className="text-[var(--appkit-color-primary)] mt-auto" size="xs" weight="medium">
                   Read guide →
                 </Text>
               </a>
@@ -186,17 +186,17 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
 
         {/* Getting started checklist — 1/3 width on lg */}
         <Div className="space-y-4">
-          <Heading level={2} className="text-lg font-semibold text-[var(--appkit-color-text)]">
+          <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Getting started
           </Heading>
           <Div className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden">
             {/* Progress bar */}
             <Div className="px-5 pt-5 pb-4 border-b border-[var(--appkit-color-border)]">
               <Div className="flex items-center justify-between mb-2">
-                <Text className="text-sm font-medium text-[var(--appkit-color-text)]">
+                <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
                   {completedCount} of {steps.length} complete
                 </Text>
-                <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+                <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                   {Math.round((completedCount / steps.length) * 100)}%
                 </Text>
               </Div>

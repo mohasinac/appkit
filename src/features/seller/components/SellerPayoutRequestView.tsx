@@ -102,11 +102,11 @@ export function SellerPayoutRequestView({
       <Div className={`${__P.p4} rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]`}>
         <Div className="flex flex-wrap items-center justify-between gap-3">
           <Div>
-            <Text className="text-sm text-[var(--appkit-color-text-muted)]">Available for Payout</Text>
-            <Text className="text-2xl font-bold text-[var(--appkit-color-primary)]">
+            <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Available for Payout</Text>
+            <Text className="text-2xl text-[var(--appkit-color-primary)]" weight="bold">
               {rupees(summary.availableEarnings)}
             </Text>
-            <Text className="text-xs text-[var(--appkit-color-text-muted)] mt-0.5">
+            <Text className="text-[var(--appkit-color-text-muted)] mt-0.5" size="xs">
               {summary.eligibleOrderCount} eligible order{summary.eligibleOrderCount !== 1 ? "s" : ""}
             </Text>
           </Div>
@@ -114,7 +114,7 @@ export function SellerPayoutRequestView({
             {summary.hasPendingPayout && <Badge variant="warning">Payout in progress</Badge>}
             {submitted && <Badge variant="success">Payout requested!</Badge>}
             {!payoutDetails?.isConfigured && (
-              <Text className="text-sm text-[var(--appkit-color-warning)]">
+              <Text className="text-[var(--appkit-color-warning)]" size="sm">
                 Set up payout details first
               </Text>
             )}
@@ -136,9 +136,9 @@ export function SellerPayoutRequestView({
       >
         <Stack gap="md" className={`${__P.p4}`}>
           <Div className={`${__P.p3} rounded bg-[var(--appkit-color-surface-muted)]`}>
-            <Text className="text-sm text-[var(--appkit-color-text-muted)]">Amount to be paid</Text>
-            <Text className="text-xl font-bold">{rupees(summary?.availableEarnings ?? 0)}</Text>
-            <Text className="text-xs text-[var(--appkit-color-text-muted)]">
+            <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Amount to be paid</Text>
+            <Text size="xl" weight="bold">{rupees(summary?.availableEarnings ?? 0)}</Text>
+            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
               Via {payoutDetails?.method === "upi"
                 ? `UPI — ${payoutDetails.upiId}`
                 : `Bank — ${payoutDetails?.bankAccount?.bankName ?? ""} ••••${payoutDetails?.bankAccount?.accountNumberMasked?.slice(-4) ?? "••••"}`}
@@ -148,7 +148,7 @@ export function SellerPayoutRequestView({
           {submitError && <Alert variant="error">{submitError}</Alert>}
 
           <Div>
-            <Text className="text-sm font-medium mb-1.5">Notes (optional)</Text>
+            <Text className="mb-1.5" size="sm" weight="medium">Notes (optional)</Text>
             <textarea
               className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
               rows={3}

@@ -47,7 +47,7 @@ export function StoreAboutView({
       {/* Bio */}
       {store.bio && (
         <Div>
-          <Heading level={2} className="text-lg font-semibold mb-2">
+          <Heading level={2} className="mb-2" size="lg" weight="semibold">
             {labels.aboutTitle ?? "About"}
           </Heading>
           <RichText html={normalizeRichTextHtml(store.bio)} />
@@ -98,7 +98,7 @@ export function StoreAboutView({
       {/* Return policy */}
       {store.returnPolicy && (
         <Div>
-          <Heading level={3} className="text-base font-semibold mb-2">
+          <Heading level={3} className="mb-2" size="base" weight="semibold">
             {labels.returnPolicyLabel ?? "Return Policy"}
           </Heading>
           <RichText html={normalizeRichTextHtml(store.returnPolicy)} />
@@ -108,7 +108,7 @@ export function StoreAboutView({
       {/* Shipping policy */}
       {store.shippingPolicy && (
         <Div>
-          <Heading level={3} className="text-base font-semibold mb-2">
+          <Heading level={3} className="mb-2" size="base" weight="semibold">
             {labels.shippingPolicyLabel ?? "Shipping Policy"}
           </Heading>
           <RichText html={normalizeRichTextHtml(store.shippingPolicy)} />

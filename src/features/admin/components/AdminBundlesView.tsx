@@ -49,8 +49,8 @@ const COLUMNS: AdminTableColumn<BundleRow>[] = [
     header: "Name",
     render: (row) => (
       <Stack gap="xs">
-        <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
+        <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{row.primary}</Text>
+        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{row.secondary}</Text>
       </Stack>
     ),
   },
@@ -206,7 +206,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
         <Div className="space-y-2">
-          <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+          <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
             Status
           </Text>
           <Div className="flex flex-wrap gap-2">
@@ -231,7 +231,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
           </Div>
         </Div>
         <Div className="space-y-2">
-          <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+          <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
             Stock
           </Text>
           <Div className="flex flex-wrap gap-2">

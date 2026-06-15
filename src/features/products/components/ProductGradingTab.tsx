@@ -38,17 +38,17 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
     <Stack gap="lg">
       <Div className="flex items-center gap-4">
         <Div className="flex flex-col items-center justify-center rounded-2xl border-2 border-[var(--appkit-color-primary)] px-6 py-4 min-w-[120px]">
-          <Text className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="bold" transform="uppercase">
             {grading.service}
           </Text>
           <Text className="text-4xl font-extrabold">{grading.grade}</Text>
         </Div>
         <Stack gap="xs" className="flex-1">
-          <Heading level={3} className="text-base font-semibold">
+          <Heading level={3} size="base" weight="semibold">
             Graded by {grading.service}
           </Heading>
           {grading.certNumber ? (
-            <Text className="text-sm text-zinc-600 dark:text-zinc-400">
+            <Text className="text-zinc-600 dark:text-zinc-400" size="sm">
               Cert #{grading.certNumber}
               {lookupUrl ? (
                 <>
@@ -76,7 +76,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
 
       {grading.attributes && Object.keys(grading.attributes).length > 0 ? (
         <Stack gap="sm">
-          <Heading level={3} className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <Heading level={3} className="tracking-wide text-zinc-500 dark:text-zinc-400" size="sm" weight="semibold" transform="uppercase">
             Subgrades & attributes
           </Heading>
           <Div className="flex flex-wrap gap-2">

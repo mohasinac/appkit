@@ -117,7 +117,7 @@ function FormFieldBuilder({ fields, setFields }: FormFieldBuilderProps) {
 
   return (
     <Stack gap="sm">
-      <Text size="xs" weight="medium" color="muted" className="uppercase tracking-wide">Form fields</Text>
+      <Text size="xs" weight="medium" color="muted" className="tracking-wide" transform="uppercase">Form fields</Text>
       {fields.length === 0 && (
         <Text size="xs" color="muted">No fields yet. Add fields to collect responses from participants.</Text>
       )}

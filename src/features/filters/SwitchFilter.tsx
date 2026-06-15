@@ -56,7 +56,7 @@ export function SwitchFilter({
           className="flex flex-1 items-center justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+          <Text className="text-zinc-900 dark:text-zinc-50" size="sm" weight="semibold">
             {title}
           </Text>
           <svg

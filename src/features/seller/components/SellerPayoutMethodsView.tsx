@@ -231,7 +231,7 @@ export function SellerPayoutMethodsView({
                   <Div className="flex items-start gap-3 min-w-0">
                     <Div className="min-w-0 flex-1">
                       <Div className="flex items-center gap-2 flex-wrap">
-                        <Text className="text-sm font-medium">{row.label}</Text>
+                        <Text size="sm" weight="medium">{row.label}</Text>
                         <TypeBadge type={row.type} />
                         {row.isDefault && (
                           <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-success-surface text-success">
@@ -248,7 +248,7 @@ export function SellerPayoutMethodsView({
                           {row.isActive ? "Active" : "Inactive"}
                         </span>
                       </Div>
-                      <Text className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
+                      <Text className="mt-1 text-zinc-500 dark:text-zinc-400 font-mono" size="xs">
                         {row.maskedIdentifier}
                       </Text>
                     </Div>

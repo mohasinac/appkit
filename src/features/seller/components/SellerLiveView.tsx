@@ -40,19 +40,19 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
     header: "Item",
     render: (row) => (
       <Div>
-        <Text className="text-sm font-medium">{row.title}</Text>
+        <Text size="sm" weight="medium">{row.title}</Text>
         {row.species && (
-          <Text className="text-xs text-[var(--appkit-color-text-muted)] italic">{row.species}</Text>
+          <Text className="text-[var(--appkit-color-text-muted)] italic" size="xs">{row.species}</Text>
         )}
       </Div>
     ),
   },
-  { key: "price", header: "Price", render: (row) => <Text className="text-sm tabular-nums">{row.price}</Text> },
+  { key: "price", header: "Price", render: (row) => <Text className="tabular-nums" size="sm">{row.price}</Text> },
   {
     key: "ageMonths",
     header: "Age",
     render: (row) => (
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         {row.ageMonths !== null ? `${row.ageMonths}mo` : "—"}
       </Text>
     ),
@@ -91,7 +91,7 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
     key: "createdAt",
     header: "Listed",
     render: (row) => (
-      <Text className="text-sm text-[var(--appkit-color-text-muted)]">{row.createdAt}</Text>
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{row.createdAt}</Text>
     ),
   },
 ];

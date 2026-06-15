@@ -86,7 +86,7 @@ function AccordionSection({ title, defaultOpen = true, children }: AccordionSect
         className="w-full flex items-center justify-between px-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 text-left"
         aria-expanded={open}
       >
-        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
           {title}
         </Text>
         <svg
@@ -120,11 +120,11 @@ function FlagRow({ label, desc, checked, onChange, rollout, onRolloutChange, sho
     <Div surface="default" padding="inline" className="flex items-center justify-between gap-4">
       <Div className="flex-1 min-w-0">
         <Toggle checked={checked} onChange={onChange} label={label} />
-        <Text className="mt-0.5 ml-10 text-xs text-zinc-400 dark:text-zinc-400 truncate">{desc}</Text>
+        <Text className="mt-0.5 ml-10 text-zinc-400 dark:text-zinc-400 truncate" size="xs">{desc}</Text>
       </Div>
       {showRollout && (
         <Div className="flex flex-col gap-1 w-28 shrink-0">
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">Rollout %</Text>
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Rollout %</Text>
           <Input
             type="number"
             min={0}

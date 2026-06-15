@@ -43,14 +43,14 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
       <Div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
         {/* Text block */}
         <Div className={`min-w-0 flex-1 ${__O.hidden}`}>
-          <Text className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)] truncate">
+          <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)] truncate" weight="semibold" transform="uppercase">
             {label}
           </Text>
-          <Text className="mt-2 text-xl font-bold text-[var(--appkit-color-text)] tabular-nums leading-tight break-words">
+          <Text className="mt-2 text-[var(--appkit-color-text)] tabular-nums leading-tight break-words" size="xl" weight="bold">
             {value}
           </Text>
           {sub && (
-            <Text className="mt-1.5 text-xs text-[var(--appkit-color-text-muted)]">{sub}</Text>
+            <Text className="mt-1.5 text-[var(--appkit-color-text-muted)]" size="xs">{sub}</Text>
           )}
         </Div>
 

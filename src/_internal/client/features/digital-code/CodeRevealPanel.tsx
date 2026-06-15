@@ -56,10 +56,10 @@ export function CodeRevealPanel({
   return (
     <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
       <Stack gap="sm">
-        <Text className="font-medium">Your Digital Code</Text>
+        <Text weight="medium">Your Digital Code</Text>
         {!revealed ? (
           <Stack gap="sm">
-            {error && <Text className="text-sm text-destructive">{error}</Text>}
+            {error && <Text className="text-destructive" size="sm">{error}</Text>}
             <Button
               type="button"
               variant="primary"
@@ -87,7 +87,7 @@ export function CodeRevealPanel({
               </Button>
             </Div>
             {redemptionInstructions && (
-              <Text className="text-sm text-muted-foreground">
+              <Text className="text-muted-foreground" size="sm">
                 {redemptionInstructions}
               </Text>
             )}

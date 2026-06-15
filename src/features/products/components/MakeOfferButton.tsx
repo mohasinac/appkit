@@ -102,10 +102,10 @@ export function MakeOfferButton({
     return (
       <Div className={`${CLS_SUCCESS_BOX} ${className}`}>
         <Span size="lg">🎉</Span>
-        <Text className="text-sm font-medium text-success">
+        <Text className="text-success" size="sm" weight="medium">
           Offer sent!
         </Text>
-        <Text className="text-xs text-success">
+        <Text className="text-success" size="xs">
           The seller will review your offer and respond shortly.
         </Text>
       </Div>
@@ -165,11 +165,11 @@ export function MakeOfferButton({
         }
       >
         <Stack gap="md">
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
             Listed at {fmt(listedPrice)} · Minimum offer: {fmt(minOffer)}
           </Text>
           <Div className="space-y-1">
-            <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Your offer amount</Text>
+            <Text className="text-zinc-600 dark:text-zinc-400" size="xs" weight="medium">Your offer amount</Text>
             <Input
               type="number"
               value={String(offerAmount)}
@@ -179,12 +179,12 @@ export function MakeOfferButton({
               step={1}
               aria-label="Offer amount"
             />
-            <Text className="text-xs text-zinc-400 dark:text-zinc-400">
+            <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
               Must be between {fmt(minOffer)} and {fmt(listedPrice - 1)}
             </Text>
           </Div>
           <Div className="space-y-1">
-            <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Note to seller (optional)</Text>
+            <Text className="text-zinc-600 dark:text-zinc-400" size="xs" weight="medium">Note to seller (optional)</Text>
             <Input
               type="text"
               value={buyerNote}
@@ -194,11 +194,11 @@ export function MakeOfferButton({
               aria-label="Note to seller"
             />
           </Div>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
             The seller will accept, decline, or suggest a counter price.
           </Text>
           {state === "error" && (
-            <Text className="text-xs text-error">{errorMsg}</Text>
+            <Text className="text-error" size="xs">{errorMsg}</Text>
           )}
         </Stack>
       </Modal>
