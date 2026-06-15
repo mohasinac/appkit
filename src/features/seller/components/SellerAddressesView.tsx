@@ -377,7 +377,7 @@ export function SellerAddressesView({
           </Row>
         }
       >
-        <Stack gap="md" className="py-1">
+        <Stack gap="md" padding="y-2xs">
           {saveError && (
             <Div className="border border-error/20 bg-error-surface px-3 text-sm text-error" padding="y-xs" rounded="lg">
               {saveError}

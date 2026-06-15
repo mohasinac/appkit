@@ -155,7 +155,7 @@ export function FilterFacetSection({
                 />
               </Div>
             )}
-            <Div className={`max-h-56 ${__O.yAuto} py-1`}>
+            <Div className={`max-h-56 ${__O.yAuto}`} padding="y-2xs">
               {filtered.map((option) => {
                 const isSelected = selected.includes(option.value);
                 return (
@@ -318,7 +318,7 @@ export function FilterFacetSection({
               <Row
                 key={option.value}
                 gap="2.5"
-                className="py-1 cursor-pointer group"
+                className="cursor-pointer group" padding="y-2xs"
               >
                 {selectionMode === "single" ? (
                   <input

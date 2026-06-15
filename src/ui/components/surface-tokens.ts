@@ -47,6 +47,7 @@ export const PADDING_MAP = {
   inlineLg: "px-6 py-4",
   // Vertical-only presets — the variant-catalogue codemod migrates raw
   // `py-N` / `py-N md:py-M` className tokens into these names.
+  "y-2xs": "py-1",
   "y-xs": "py-2",
   "y-sm": "py-3",
   "y-md": "py-4",

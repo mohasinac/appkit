@@ -182,7 +182,7 @@ export function AsyncFacetSection({
           {options.map((opt) => {
             const isSelected = selected.includes(opt.value);
             return (
-              <Row key={opt.value} gap="2.5" className="py-1 cursor-pointer group">
+              <Row key={opt.value} gap="2.5" className="cursor-pointer group" padding="y-2xs">
                 <input
                   type={selectionMode === "single" ? "radio" : "checkbox"}
                   checked={isSelected}
