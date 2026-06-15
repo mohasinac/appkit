@@ -119,7 +119,7 @@ const COLUMNS: DataTableColumn<TemplateRow>[] = [
     header: "Condition",
     render: (row) =>
       row.condition ? (
-        <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 dark:bg-slate-800" color="muted" transform="capitalize">
+        <Span size="xs" weight="medium" className="inline-flex items-center py-0.5" rounded="full" padding="x-xs" surface="subtle" color="muted" transform="capitalize">
           {row.condition.replace(/_/g, " ")}
         </Span>
       ) : (

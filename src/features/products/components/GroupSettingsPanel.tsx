@@ -343,7 +343,7 @@ export function GroupSettingsPanel({
                   <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}
                     <Row align="center" gap="sm" padding="y-xs">
-                      <Span weight="semibold" className="rounded bg-[var(--appkit-color-primary)]/10 text-[var(--appkit-color-primary)] text-[10px] px-1.5 py-0.5">Parent</Span>
+                      <Span weight="semibold" className="bg-[var(--appkit-color-primary)]/10 text-[var(--appkit-color-primary)] text-[10px] px-1.5 py-0.5" rounded="default">Parent</Span>
                       <Text className="flex-1" color="primary" size="sm">{productSlug}</Text>
                     </Row>
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (

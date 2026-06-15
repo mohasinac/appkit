@@ -201,7 +201,7 @@ function renderTicketListArea(props: {
                   <Text className="truncate" color="primary" weight="medium">{ticket.subject}</Text>
                   <Text size="xs" color="muted">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
                 </Div>
-                <Span size="xs" weight="medium" className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</Span>
+                <Span size="xs" weight="medium" className={`shrink-0 inline-flex px-2.5 py-0.5 ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`} rounded="full">{ticket.status.replace(/_/g, " ")}</Span>
               </Row>
             </Button>
           </li>
@@ -261,9 +261,9 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
       {selectedTicket && (
         <Stack className={`${__P.p4}`} gap="md">
           <Div className="flex flex-wrap gap-2">
-            <Span size="xs" weight="medium" className={`inline-flex rounded-full px-2.5 py-1 ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`}>{selectedTicket.status.replace(/_/g, " ")}</Span>
-            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">{selectedTicket.category.replace(/_/g, " ")}</Span>
-            {selectedTicket.orderId && <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">Order: {selectedTicket.orderId}</Span>}
+            <Span size="xs" weight="medium" className={`inline-flex px-2.5 ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`} rounded="full" padding="y-2xs">{selectedTicket.status.replace(/_/g, " ")}</Span>
+            <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">{selectedTicket.category.replace(/_/g, " ")}</Span>
+            {selectedTicket.orderId && <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">Order: {selectedTicket.orderId}</Span>}
           </Div>
           {selectedTicket.description && (
             <Div className={`${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`} rounded="lg" surface="muted" border="default">

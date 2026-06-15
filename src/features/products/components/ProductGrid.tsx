@@ -163,7 +163,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Span>
               )}
               {typeBadge && (
-                <Span weight="bold" className={`rounded-full px-2 py-0.5 text-[10px] shadow-sm ${typeBadge.cls}`}>
+                <Span weight="bold" className={`py-0.5 text-[10px] shadow-sm ${typeBadge.cls}`} rounded="full" padding="x-xs">
                   {typeBadge.label}
                 </Span>
               )}
@@ -272,7 +272,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {visible.map((name) => (
                 <Span
                   key={name}
-                  className="inline-flex items-center gap-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] truncate max-w-[100px]" color="muted"
+                  className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] truncate max-w-[100px]" rounded="full" surface="subtle" color="muted"
                 >
                   <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
@@ -283,14 +283,14 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {overflow > 0 && (
                 <Span
                   weight="medium"
-                  className="inline-flex items-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px]" color="muted"
+                  className="inline-flex items-center px-1.5 py-0.5 text-[10px]" rounded="full" surface="subtle" color="muted"
                   title={categories.slice(MAX_CHIPS).join(", ")}
                 >
                   +{overflow}
                 </Span>
               )}
               {product.brand && (
-                <Span className="inline-flex items-center gap-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] truncate max-w-[90px]" color="muted">
+                <Span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] truncate max-w-[90px]" rounded="full" surface="subtle" color="muted">
                   <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                   </svg>

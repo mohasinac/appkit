@@ -90,14 +90,14 @@ export function WelcomeSection({
             {/* Pill badge */}
             {pillLabel && (
               <Div>
-                <Span size="xs" weight="medium" className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" transform="uppercase">
+                <Span size="xs" weight="medium" className="inline-flex items-center gap-2 border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
                   <Span
-                    className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
+                    className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
                     aria-hidden="true"
                   />
                   {pillLabel}
                   <Span
-                    className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
+                    className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
                     aria-hidden="true"
                   />
                 </Span>
@@ -175,7 +175,7 @@ export function WelcomeSection({
                   <Span
                     key={chip.key}
                     size="xs" weight="medium"
-                    className="inline-flex items-center gap-1.5 bg-zinc-100 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-full px-3.5 py-1.5" color="muted"
+                    className="inline-flex items-center gap-1.5 border border-zinc-200 dark:border-slate-700 px-3.5 py-1.5" rounded="full" surface="subtle" color="muted"
                   >
                     {chip.emoji} {chip.label}
                   </Span>

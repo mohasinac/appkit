@@ -485,7 +485,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             >
               {index === currentSlide && (
                 <Span
-                  className="absolute inset-y-0 left-0 bg-black/20 rounded-full animate-[progress-fill_4s_linear_forwards]"
+                  className="absolute inset-y-0 left-0 bg-black/20 animate-[progress-fill_4s_linear_forwards]" rounded="full"
                   aria-hidden="true"
                 />
               )}

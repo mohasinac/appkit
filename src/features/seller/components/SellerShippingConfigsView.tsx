@@ -66,7 +66,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
       <Div>
         <Text size="sm" weight="medium">{row.label}</Text>
         {row.isDefault && (
-          <Span size="xs" weight="medium" className="mt-0.5 inline-flex items-center rounded-full px-1.5 py-px bg-success-surface text-success">
+          <Span size="xs" weight="medium" className="mt-0.5 inline-flex items-center px-1.5 py-px bg-success-surface text-success" rounded="full">
             Default
           </Span>
         )}
@@ -77,7 +77,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "method",
     header: "Method",
     render: (row) => (
-      <Span size="xs" weight="medium" className="inline-flex items-center rounded-full px-2 py-0.5 bg-zinc-100 dark:bg-slate-800" color="muted" transform="capitalize">
+      <Span size="xs" weight="medium" className="inline-flex items-center py-0.5" rounded="full" padding="x-xs" surface="subtle" color="muted" transform="capitalize">
         {row.method.replace(/_/g, " ")}
       </Span>
     ),

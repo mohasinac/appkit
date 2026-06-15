@@ -243,7 +243,7 @@ export function FAQSection({
             >
               {viewMoreLabel}
               {hasMore && moreCount > 0 && (
-                <Span size="xs" className="bg-primary text-white px-2 py-0.5 rounded-full">
+                <Span size="xs" className="bg-primary text-white py-0.5" rounded="full" padding="x-xs">
                   +{moreCount}
                 </Span>
               )}

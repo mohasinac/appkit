@@ -257,7 +257,7 @@ function renderNotificationListContent(props: {
             <Row className={`${THEME_CONSTANTS.spacing.gap.xs}`} align="start" justify="between">
               <Text size="sm" className="leading-tight" color="primary" weight="medium">
                 {notification.title}
-                {!notification.isRead && <Span className="ml-1.5 inline-block w-2 h-2 rounded-full bg-primary flex-shrink-0 align-middle" />}
+                {!notification.isRead && <Span className="ml-1.5 inline-block w-2 h-2 bg-primary flex-shrink-0 align-middle" rounded="full" />}
               </Text>
               <Span size="xs" className="flex-shrink-0" color="muted">{formatRelativeTime(notification.createdAt)}</Span>
             </Row>

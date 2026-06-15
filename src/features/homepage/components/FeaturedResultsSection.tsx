@@ -45,7 +45,7 @@ export function FeaturedResultsSection({
         {pillLabel && (
           <Span className={pillCls}>
             <Span
-              className="inline-block h-1.5 w-1.5 rounded-full bg-primary-500"
+              className="inline-block h-1.5 w-1.5 bg-primary-500" rounded="full"
               aria-hidden="true"
             />
             {pillLabel}

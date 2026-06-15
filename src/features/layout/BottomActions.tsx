@@ -157,7 +157,7 @@ function PageActionsRow({
             {action.label && <Span className="truncate leading-none">{action.label}</Span>}
             {action.badge !== undefined && (
               <Span
-                className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] ${CLS_COUNT_BADGE} text-[10px] rounded-full ${FLEX_CENTER} px-1 pointer-events-none select-none`} weight="bold"
+                className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] ${CLS_COUNT_BADGE} text-[10px] ${FLEX_CENTER} px-1 pointer-events-none select-none`} rounded="full" weight="bold"
                 aria-hidden="true"
               >
                 {action.badge}

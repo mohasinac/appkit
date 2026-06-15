@@ -174,7 +174,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
           <Stack gap="xs" className="text-center sm:text-left">
             <Row className="sm:justify-start" justify="center" gap="xs" wrap>
               <Heading level={1} variant="none" className="text-white mb-0">{displayName}</Heading>
-              {isSeller && <Span size="xs" weight="semibold" className="rounded-full bg-white/20 px-2.5 py-0.5 text-white/90">{t("roleSeller")}</Span>}
+              {isSeller && <Span size="xs" weight="semibold" className="bg-white/20 px-2.5 py-0.5 text-white/90" rounded="full">{t("roleSeller")}</Span>}
             </Row>
             <Text variant="none" className="text-white/60" size="sm">{memberSince}</Text>
           </Stack>

@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Details, Div, Heading, Section, Stack, Summary, Text, RichTextRenderer } from "../../../ui";
+import { Aside, Details, Div, Heading, Nav, Section, Stack, Summary, Text, RichTextRenderer } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
 
@@ -60,14 +60,14 @@ export async function FAQPageView({
         <Stack className="md:flex-row" gap="xl">
           {/* Category sidebar */}
           {categories.length > 0 && (
-            <aside className="md:w-56 flex-shrink-0">
+            <Aside className="md:w-56 flex-shrink-0">
               <Heading
                 level={3}
                 className="uppercase tracking-wide mb-3" color="muted" size="sm" weight="semibold"
               >
                 {t("categoriesLabel")}
               </Heading>
-              <nav className="space-y-1">
+              <Nav aria-label="FAQ categories" className="space-y-1">
                 <TextLink
                   href={String(ROUTES.PUBLIC.FAQS)}
                   className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
@@ -91,8 +91,8 @@ export async function FAQPageView({
                     <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                   </TextLink>
                 ))}
-              </nav>
-            </aside>
+              </Nav>
+            </Aside>
           )}
 
           {/* FAQ items */}

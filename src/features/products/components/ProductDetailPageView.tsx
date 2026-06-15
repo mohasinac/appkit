@@ -462,7 +462,7 @@ export async function ProductDetailPageView({
               {/* Title + condition badge */}
               <Div>
                 {condition && (
-                  <Span size="xs" weight="medium" className="mb-2 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5" color="muted" transform="capitalize">
+                  <Span size="xs" weight="medium" className="mb-2 inline-block px-2.5 py-0.5" rounded="full" surface="subtle" color="muted" transform="capitalize">
                     {condition === "new"
                       ? "Brand New"
                       : condition === "like_new"
@@ -493,11 +493,7 @@ export async function ProductDetailPageView({
                   <Span
                     size="xs"
                     weight="medium"
-                    className={`ml-auto rounded-full px-2.5 py-0.5 ${
-                      inStock
-                        ? "bg-success-surface text-success"
-                        : "bg-error-surface text-error"
-                    }`}
+                    className={`ml-auto px-2.5 py-0.5 ${ inStock ? "bg-success-surface text-success" : "bg-error-surface text-error" }`} rounded="full"
                   >
                     {inStock ? "✓ In Stock" : "✗ Out of Stock"}
                     {inStock && effectiveStock !== null && effectiveStock <= 10
@@ -507,7 +503,7 @@ export async function ProductDetailPageView({
                 </Row>
               ) : (
                 <Span
-                  className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 ${ inStock ? CLS_STOCK_IN : CLS_STOCK_OUT }`} size="xs" weight="medium"
+                  className={`inline-flex w-fit items-center gap-1.5 py-1 ${ inStock ? CLS_STOCK_IN : CLS_STOCK_OUT }`} rounded="full" padding="x-sm" size="xs" weight="medium"
                 >
                   {inStock ? "✓ In Stock" : "✗ Out of Stock"}
                   {inStock && effectiveStock !== null && effectiveStock <= 10
@@ -529,7 +525,7 @@ export async function ProductDetailPageView({
                     </Link>
                   ))}
                   {subcategory && (
-                    <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted" transform="capitalize">
+                    <Span size="xs" weight="medium" className="inline-flex items-center border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted" transform="capitalize">
                       {subcategory}
                     </Span>
                   )}
@@ -542,7 +538,7 @@ export async function ProductDetailPageView({
                     </Link>
                   )}
                   {brand && !brandSlug && (
-                    <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted">
+                    <Span size="xs" weight="medium" className="inline-flex items-center border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
                       {brand}
                     </Span>
                   )}
@@ -787,7 +783,7 @@ export async function ProductDetailPageView({
                     {tags.map((tag) => (
                       <Span
                         key={tag}
-                        className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted" size="xs"
+                        className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted" size="xs"
                       >
                         {tag}
                       </Span>
@@ -871,7 +867,7 @@ export async function ProductDetailPageView({
                   <Ul className="space-y-2">
                     {ingredients.map((item, i) => (
                       <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-                        <Span className="mt-1 flex-shrink-0 h-1.5 w-1.5 rounded-full bg-primary-400" />
+                        <Span className="mt-1 flex-shrink-0 h-1.5 w-1.5 bg-primary-400" rounded="full" />
                         {item}
                       </Li>
                     ))}
@@ -883,7 +879,7 @@ export async function ProductDetailPageView({
                   <Ol className="space-y-3">
                     {howToUse.map((step, i) => (
                       <Li key={i} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
-                        <Span size="xs" weight="bold" className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300">
+                        <Span size="xs" weight="bold" className="flex-shrink-0 flex h-6 w-6 items-center justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" rounded="full">
                           {i + 1}
                         </Span>
                         {step}

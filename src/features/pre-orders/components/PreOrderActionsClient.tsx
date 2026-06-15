@@ -101,7 +101,7 @@ export function PreOrderActionsClient({
         <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
           <Div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
-              <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted">
+              <Span key={tag} size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">
                 {tag}
               </Span>
             ))}

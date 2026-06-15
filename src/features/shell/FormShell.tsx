@@ -388,7 +388,7 @@ export function FormShell({
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
           >
             <Row gap="sm" align="start" className="mb-4">
-              <Span className="flex-shrink-0 w-10 h-10 rounded-full bg-[var(--appkit-color-warning-surface)] flex items-center justify-center">
+              <Span className="flex-shrink-0 w-10 h-10 bg-[var(--appkit-color-warning-surface)] flex items-center justify-center" rounded="full">
                 <AlertTriangle className="w-5 h-5 text-[var(--appkit-color-warning)]" />
               </Span>
               <Stack gap="xs">

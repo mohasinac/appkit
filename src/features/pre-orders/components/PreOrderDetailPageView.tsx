@@ -126,7 +126,7 @@ function PreOrderInfoSection({
             Pre-Order
           </Span>
           {productionStatus && (
-            <Span size="xs" weight="medium" className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5" color="muted">
+            <Span size="xs" weight="medium" className="inline-block px-2.5 py-0.5" rounded="full" surface="subtle" color="muted">
               {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
             </Span>
           )}
@@ -184,7 +184,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {!category && categoryName && (
-            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted">
+            <Span size="xs" weight="medium" className="inline-flex items-center border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
               {categoryName}
             </Span>
           )}
@@ -197,7 +197,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {brand && !brandSlug && (
-            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted">
+            <Span size="xs" weight="medium" className="inline-flex items-center border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
               {brand}
             </Span>
           )}
@@ -346,7 +346,7 @@ function PreOrderBuyBarPanel({
             <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
               <Row wrap gap="xs">
                 {tags.map((tag) => (
-                  <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted">
+                  <Span key={tag} size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">
                     {tag}
                   </Span>
                 ))}

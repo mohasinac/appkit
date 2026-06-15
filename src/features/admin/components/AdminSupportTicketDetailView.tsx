@@ -330,17 +330,15 @@ export function AdminSupportTicketDetailView({
           <Span
             size="xs"
             weight="medium"
-            className={`inline-flex rounded-full px-2.5 py-1 ${
-              STATUS_COLOR[currentStatus ?? "open"] ?? STATUS_COLOR.open
-            }`}
+            className={`inline-flex px-2.5 ${ STATUS_COLOR[currentStatus ?? "open"] ?? STATUS_COLOR.open }`} rounded="full" padding="y-2xs"
           >
             {(currentStatus ?? "open").replace(/_/g, " ")}
           </Span>
-          <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">
+          <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">
             {category}
           </Span>
           {orderId && (
-            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">
+            <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">
               Order: {orderId}
             </Span>
           )}

@@ -256,12 +256,12 @@ export function CouponCard({
       {(hasAdminActions || n.scope) && (
         <Row gap="xs" wrap className="mb-2">
           <Span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide ${ n.isActive ? "bg-success-surface text-success" : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300" }`} weight="semibold"
+            className={`inline-flex items-center py-0.5 text-[10px] uppercase tracking-wide ${ n.isActive ? "bg-success-surface text-success" : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300" }`} rounded="full" padding="x-xs" weight="semibold"
           >
             {n.isActive ? labels.active : labels.inactive}
           </Span>
           {n.scope && (
-            <Span weight="semibold" className="inline-flex items-center rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] tracking-wide dark:bg-zinc-700/60" color="primary" transform="uppercase">
+            <Span weight="semibold" className="inline-flex items-center bg-zinc-200/70 py-0.5 text-[10px] tracking-wide dark:bg-zinc-700/60" rounded="full" padding="x-xs" color="primary" transform="uppercase">
               {n.scope}
             </Span>
           )}

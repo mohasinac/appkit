@@ -188,7 +188,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       key: "status",
       header: "Status",
       render: (row) => (
-        <Span size="xs" weight="medium" className={`inline-flex items-center rounded-full px-2 py-0.5 ${row.status === "Active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`}>
+        <Span size="xs" weight="medium" className={`inline-flex items-center py-0.5 ${row.status === "Active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`} rounded="full" padding="x-xs">
           {row.status}
         </Span>
       ),

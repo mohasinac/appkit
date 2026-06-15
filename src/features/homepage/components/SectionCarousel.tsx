@@ -197,12 +197,12 @@ export function SectionCarousel<T = unknown>({
             <Div className="mb-4">
               <Span className={pillClass}>
                 <Span
-                  className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
+                  className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
                   aria-hidden="true"
                 />
                 {pillLabel}
                 <Span
-                  className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
+                  className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
                   aria-hidden="true"
                 />
               </Span>

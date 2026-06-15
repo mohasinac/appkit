@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Div, Heading, Section, Span, Text } from "@mohasinac/appkit";
+import { Div, Heading, Nav, Section, Span, Text } from "@mohasinac/appkit";
 import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";
 
 export interface MaintenanceDashboardViewProps {
@@ -80,7 +80,7 @@ export function MaintenanceDashboardView({
         </ul>
       </Section>
 
-      <nav style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem" }}>
+      <Nav aria-label="Maintenance sections" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem" }}>
         <a href={`${basePath}/server-errors`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
           <Span weight="bold">Server errors</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Vercel function failures</Div>
@@ -105,7 +105,7 @@ export function MaintenanceDashboardView({
           <Span weight="bold">Analysis</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Run the maintenance analyzer + recommendations</Div>
         </a>
-      </nav>
+      </Nav>
     </Div>
   );
 }

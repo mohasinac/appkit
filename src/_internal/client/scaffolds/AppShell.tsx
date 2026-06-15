@@ -18,7 +18,7 @@
  */
 
 import * as React from "react";
-import { Div, Stack } from "../../../ui";
+import { Aside, BlockFooter, BlockHeader, Div, Main, Stack } from "../../../ui";
 export interface AppShellRenderContext {
   /** Current path (consumer-supplied; this scaffold is path-agnostic). */
   path?: string;
@@ -61,24 +61,24 @@ export function AppShell({
   return (
     <Stack className={`appkit-app-shell min-h-screen ${className ?? ""}`}>
       {header ? (
-        <header className="sticky top-0 z-30 w-full" data-appshell-slot="header">
+        <BlockHeader className="sticky top-0 z-30 w-full" data-appshell-slot="header">
           {header}
-        </header>
+        </BlockHeader>
       ) : null}
       <Div className="flex flex-1">
         {sidebar ? (
-          <aside className="hidden lg:block lg:w-64 lg:shrink-0" data-appshell-slot="sidebar">
+          <Aside className="hidden lg:block lg:w-64 lg:shrink-0" data-appshell-slot="sidebar">
             {sidebar}
-          </aside>
+          </Aside>
         ) : null}
-        <main className="min-w-0 flex-1" data-appshell-slot="main">
+        <Main className="min-w-0 flex-1" data-appshell-slot="main">
           {children}
-        </main>
+        </Main>
       </Div>
       {footer ? (
-        <footer className="w-full" data-appshell-slot="footer">
+        <BlockFooter className="w-full" data-appshell-slot="footer">
           {footer}
-        </footer>
+        </BlockFooter>
       ) : null}
     </Stack>
   );

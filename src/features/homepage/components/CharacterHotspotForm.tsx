@@ -446,7 +446,7 @@ export function CharacterHotspotForm({
                 }}
               >
                 <Span
-                  className="absolute animate-ping rounded-full"
+                  className="absolute animate-ping" rounded="full"
                   style={{
                     inset: -6,
                     background: "rgba(255,228,0,0.4)",
@@ -805,7 +805,7 @@ export function CharacterHotspotForm({
               Review &amp; Save
             </Heading>
             <Span
-              className="rounded-full px-3 py-1" size="sm" weight="bold"
+              className="py-1" rounded="full" padding="x-sm" size="sm" weight="bold"
               style={{ background: "var(--surface-warm)" }}
             >
               {pins.length} pin{pins.length !== 1 ? "s" : ""}
@@ -869,7 +869,7 @@ export function CharacterHotspotForm({
                 <Li key={pin.id} className="px-4 py-3">
                   <Row gap="sm">
                     <Span
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white" size="xs" weight="bold"
+                      className="flex h-6 w-6 shrink-0 items-center justify-center text-white" rounded="full" size="xs" weight="bold"
                       style={{ background: pin.accent || "#E8001C" }}
                     >
                       {i + 1}

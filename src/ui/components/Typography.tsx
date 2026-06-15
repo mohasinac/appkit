@@ -289,6 +289,39 @@ export function Caption({
  * <Span variant="error" weight="semibold">Required</Span>
  * ```
  */
+/** Inline-decorations allowed on Span (pill chips, code-like wraps, etc). */
+type SpanRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
+type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline";
+type SpanBg = "none" | "muted" | "subtle" | "default";
+
+const SPAN_ROUNDED_MAP: Record<SpanRounded, string> = {
+  none: "",
+  default: "rounded",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+  full: "rounded-full",
+};
+const SPAN_PADDING_MAP: Record<SpanPadding, string> = {
+  none: "",
+  "x-xs": "px-2",
+  "x-sm": "px-3",
+  "x-md": "px-4",
+  "y-2xs": "py-1",
+  "y-xs": "py-2",
+  "y-sm": "py-3",
+  "inline-sm": "px-2 py-0.5",
+  inline: "px-2 py-1",
+};
+const SPAN_BG_MAP: Record<SpanBg, string> = {
+  none: "",
+  muted: "bg-[var(--appkit-color-bg)]",
+  subtle: "bg-[var(--appkit-color-border-subtle)]",
+  default: "bg-[var(--appkit-color-surface)]",
+};
+
 interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Colour variant. "inherit" (default) applies no colour class. */
   variant?:
@@ -309,6 +342,10 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   family?: FontFamily;
   align?: TextAlign;
   gradient?: TextGradient;
+  /** Optional pill-like decoration. */
+  rounded?: SpanRounded;
+  padding?: SpanPadding;
+  surface?: SpanBg;
   children?: React.ReactNode;
 }
 
@@ -324,6 +361,9 @@ export function Span({
   family,
   align,
   gradient,
+  rounded,
+  padding,
+  surface,
   className = "",
   children,
   ...props
@@ -335,6 +375,9 @@ export function Span({
     weight ? TYPOGRAPHY.textWeight[weight] : "",
     TYPOGRAPHY.colorVariant[resolvedColor],
     ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
+    rounded ? SPAN_ROUNDED_MAP[rounded] : "",
+    padding ? SPAN_PADDING_MAP[padding] : "",
+    surface ? SPAN_BG_MAP[surface] : "",
     className,
   ]
     .filter(Boolean)

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
-import { Div, Row, Span, Stack, Text, useToast } from "../../ui";
+import { Div, Nav, Row, Span, Stack, Text, useToast } from "../../ui";
 import { normalizeError } from "../../errors/normalize";
 export interface StepDef<T extends object = Record<string, unknown>> {
   label: string;
@@ -95,7 +95,7 @@ export function StepIndicator({
   stepErrors?: boolean[];
 }) {
   return (
-    <nav aria-label="Form steps" className="flex items-center gap-0 mb-6 overflow-x-auto">
+    <Nav aria-label="Form steps" className="flex items-center gap-0 mb-6 overflow-x-auto">
       {steps.map((step, i) => {
         const isDone = i < currentStep;
         const isActive = i === currentStep;
@@ -152,7 +152,7 @@ export function StepIndicator({
           </Row>
         );
       })}
-    </nav>
+    </Nav>
   );
 }
 

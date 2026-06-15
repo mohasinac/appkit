@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { BlockFooter, Button, Div, Heading, Li, Row, Span, Stack, Text, Ul } from "../../ui";
+import { BlockFooter, Button, Div, Heading, Li, Nav, Row, Span, Stack, Text, Ul } from "../../ui";
 export interface FooterLinkGroup {
   heading: string;
   links: { label: string; href: string }[];
@@ -208,7 +208,7 @@ export function FooterLayout({
             {copyrightText}
           </Text>
           {bottomLinks.length > 0 && (
-            <nav aria-label="Site utilities">
+            <Nav aria-label="Site utilities">
               <Ul className="flex flex-wrap items-center gap-x-4 gap-y-1 justify-center">
                 {bottomLinks.map((link) => (
                   <Li key={link.href}>
@@ -221,7 +221,7 @@ export function FooterLayout({
                   </Li>
                 ))}
               </Ul>
-            </nav>
+            </Nav>
           )}
           {madeInText && (
             <Text size="xs" color="muted">

@@ -104,7 +104,7 @@ export function SecurityHighlightsSection({
         {/* Header */}
         <Div className="text-center mb-10">
           {pillLabel && (
-            <Span size="xs" weight="medium" className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" transform="uppercase">
+            <Span size="xs" weight="medium" className="inline-flex items-center gap-2 border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
               {pillLabel}
             </Span>
           )}

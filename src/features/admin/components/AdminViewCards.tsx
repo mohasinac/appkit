@@ -31,7 +31,7 @@ const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; co
 
 function StatusBadge({ status }: { status: string }) {
   return (
-    <Span size="xs" weight="medium" className="inline-flex rounded-full bg-primary-50 px-2 py-0.5 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300 truncate max-w-[120px]">
+    <Span size="xs" weight="medium" className="inline-flex bg-primary-50 py-0.5 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300 truncate max-w-[120px]" rounded="full" padding="x-xs">
       {status}
     </Span>
   );
@@ -112,7 +112,7 @@ function AdminCardItem({
         {flags.length > 0 && (
           <Row gap="xs" className="hidden sm:flex shrink-0">
             {flags.map(({ key, label, color }) => (
-              <Span key={key} weight="medium" className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] ${color}`}>{label}</Span>
+              <Span key={key} weight="medium" className={`inline-flex px-1.5 py-0.5 text-[10px] ${color}`} rounded="full">{label}</Span>
             ))}
           </Row>
         )}
@@ -151,7 +151,7 @@ function AdminCardItem({
           {flags.length > 0 && (
             <Row gap="xs" wrap>
               {flags.map(({ key, label, color }) => (
-                <Span key={key} weight="medium" className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] ${color}`}>{label}</Span>
+                <Span key={key} weight="medium" className={`inline-flex px-1.5 py-0.5 text-[10px] ${color}`} rounded="full">{label}</Span>
               ))}
             </Row>
           )}

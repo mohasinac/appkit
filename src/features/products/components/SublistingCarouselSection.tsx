@@ -140,7 +140,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
             More listings like this:{" "}
             <Span className="text-[var(--appkit-color-primary)]">{label}</Span>
           </Text>
-          <Span size="xs" className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5" color="muted">
+          <Span size="xs" className="ml-1 py-0.5" rounded="full" padding="x-xs" surface="subtle" color="muted">
             {listings.length}
           </Span>
         </Row>

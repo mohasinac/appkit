@@ -154,7 +154,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                     </Div>
                   </Td>
                   <Td className="px-4 py-3">
-                    <Span size="xs" weight="medium" className={`inline-block rounded-full px-2 py-0.5 ${categoryColor}`}>
+                    <Span size="xs" weight="medium" className={`inline-block py-0.5 ${categoryColor}`} rounded="full" padding="x-xs">
                       {category}
                     </Span>
                   </Td>

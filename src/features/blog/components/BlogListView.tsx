@@ -67,7 +67,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       </Div>
       <Stack className={`flex-1 ${__P.p5}`}>
         <Row className="mb-2" gap="sm" wrap>
-          <Span size="xs" weight="medium" className="rounded-full bg-primary/10 px-2 py-0.5 text-primary" transform="capitalize">
+          <Span size="xs" weight="medium" className="bg-primary/10 py-0.5 text-primary" rounded="full" padding="x-xs" transform="capitalize">
             {post.category}
           </Span>
           {post.isFeatured && (

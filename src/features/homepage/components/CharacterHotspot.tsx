@@ -305,7 +305,7 @@ function HotspotHeaderOverlay({
             >
               &amp; beyond — tap the{" "}
               <Span
-                className="inline-flex items-center justify-center rounded-full" weight="light"
+                className="inline-flex items-center justify-center" rounded="full" weight="light"
                 style={{
                   background: "rgba(255,255,255,0.92)",
                   color: "#111111",
@@ -411,7 +411,7 @@ function HotspotPin({
     >
       {!isActive && (
         <Span
-          className="absolute rounded-full animate-ping"
+          className="absolute animate-ping" rounded="full"
           style={{
             inset: -6,
             background: "rgba(255,255,255,0.2)",
@@ -694,7 +694,7 @@ function CharacterHotspotInner({
           ).map(({ label, color }) => (
             <Stack key={label} align="center">
               <Span
-                className="px-3 py-1 text-[10px] sm:text-xs font-black uppercase tracking-[0.18em] rounded-sm"
+                className="py-1 text-[10px] sm:text-xs font-black uppercase tracking-[0.18em]" rounded="sm" padding="x-sm"
                 style={{
                   background: color,
                   color: color === "#FFE500" ? "#0D0D0D" : "#FFFFFF",

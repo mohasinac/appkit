@@ -135,7 +135,7 @@ export function MarketplacePreorderCard({
         </TextLink>
 
         <Stack className="absolute right-2 top-2" align="end" gap="xs">
-          <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-cobalt px-2 py-0.5 text-white">
+          <Span size="xs" weight="medium" className="inline-flex items-center bg-cobalt py-0.5 text-white" rounded="full" padding="x-xs">
             {mergedLabels.preOrderBadge}
           </Span>
           {product.featured && (

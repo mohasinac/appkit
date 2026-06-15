@@ -102,7 +102,7 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
         ) : null}
       </Div>
       {creative.ctaLabel ? (
-        <Span size="xs" weight="semibold" className="flex-shrink-0 rounded-md bg-primary px-3 py-1.5 text-white">
+        <Span size="xs" weight="semibold" className="flex-shrink-0 bg-primary py-1.5 text-white" rounded="md" padding="x-sm">
           {creative.ctaLabel}
         </Span>
       ) : null}

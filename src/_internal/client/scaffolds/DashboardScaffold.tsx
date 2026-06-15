@@ -14,7 +14,7 @@
  */
 
 import * as React from "react";
-import { Div, Stack } from "../../../ui";
+import { Div, Main, Nav, Stack } from "../../../ui";
 export interface DashboardScaffoldRenderContext {
   /** Whether the off-canvas drawer is open. */
   drawerOpen: boolean;
@@ -77,9 +77,9 @@ export function DashboardScaffold({
             onClick={() => setDrawerOpen(false)}
             role="presentation"
           />
-          <nav className="relative h-full w-64 overflow-y-auto bg-[var(--appkit-color-surface)] shadow-xl">
+          <Nav aria-label="Dashboard sidebar" className="relative h-full w-64 overflow-y-auto bg-[var(--appkit-color-surface)] shadow-xl">
             {nav}
-          </nav>
+          </Nav>
         </div>
       ) : null}
 
@@ -98,17 +98,18 @@ export function DashboardScaffold({
           </div>
         )}
 
-        <main className="min-w-0 flex-1 pb-20 lg:pb-0" data-dashboard-slot="main">
+        <Main className="min-w-0 flex-1 pb-20 lg:pb-0" data-dashboard-slot="main">
           {children}
-        </main>
+        </Main>
 
         {bottomNav ? (
-          <nav
+          <Nav
+            aria-label="Bottom navigation"
             className="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] lg:hidden"
             data-dashboard-slot="bottom-nav"
           >
             {bottomNav}
-          </nav>
+          </Nav>
         ) : null}
       </Stack>
     </Div>

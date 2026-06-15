@@ -271,7 +271,7 @@ export function SellerCouponEditorView({
                     {draft.applicableCategories.map((cid) => (
                       <Span
                         key={cid}
-                        className="inline-flex items-center gap-1 rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-0.5 dark:border-zinc-600 dark:bg-zinc-800" color="primary" size="xs"
+                        className="inline-flex items-center gap-1 border border-zinc-300 px-2.5 py-0.5 dark:border-zinc-600" rounded="full" surface="muted" color="primary" size="xs"
                       >
                         {cid}
                         <button

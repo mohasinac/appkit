@@ -104,7 +104,7 @@ export function BlogFeaturedCard({
           <Row className="gap-1.5 mb-2" wrap>
             <Span
               size="xs" weight="medium"
-              className={`inline-block px-2 py-0.5 rounded-full capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+              className={`inline-block py-0.5 capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`} rounded="full" padding="x-xs"
             >
               {post.category}
             </Span>

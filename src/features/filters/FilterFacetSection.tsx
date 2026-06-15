@@ -284,13 +284,13 @@ export function FilterFacetSection({
             <Span
               key={label}
               size="xs"
-              className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-slate-700 border border-zinc-200 dark:border-slate-600" color="muted"
+              className="inline-flex items-center py-0.5 border border-zinc-200 dark:border-slate-600" rounded="full" padding="x-xs" surface="subtle" color="muted"
             >
               {label}
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span size="xs" className="inline-flex items-center px-2 py-0.5 rounded-full" color="faint">
+            <Span size="xs" className="inline-flex items-center py-0.5" rounded="full" padding="x-xs" color="faint">
               +{selected.length - 3} more
             </Span>
           )}
