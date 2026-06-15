@@ -10,6 +10,7 @@ import {
   Form,
   Grid,
   Input,
+  Label,
   Select,
   Stack,
   StackedViewShell,
@@ -320,7 +321,7 @@ export function AdminFeatureEditorView({
               const checked = productTypes.includes(opt.value);
               const pillClass = `${PILL_BASE_CLASS} ${checked ? PILL_CHECKED_CLASS : PILL_UNCHECKED_CLASS}`;
               return (
-                <label key={opt.value} className={pillClass}>
+                <Label key={opt.value} className={pillClass}>
                   <input
                     type="checkbox"
                     className="sr-only"
@@ -328,7 +329,7 @@ export function AdminFeatureEditorView({
                     onChange={() => toggleProductType(opt.value)}
                   />
                   {opt.label}
-                </label>
+                </Label>
               );
             })}
           </Div>

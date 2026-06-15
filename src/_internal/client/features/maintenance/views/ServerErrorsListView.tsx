@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Div, Heading, Span, Text } from "@mohasinac/appkit";
+import { Div, Heading, Label, Span, Text } from "@mohasinac/appkit";
 import type { ServerErrorDocument, ServerErrorSource } from "../../../../../features/server-errors/schemas/firestore";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";
@@ -64,7 +64,7 @@ export function ServerErrorsListView({
       ) : null}
 
       <Div style={{ display: "flex", gap: "0.75rem", marginBottom: "1rem", alignItems: "center" }}>
-        <label style={{ fontSize: "0.85rem" }}>
+        <Label style={{ fontSize: "0.85rem" }}>
           Code
           <input
             type="search"
@@ -73,8 +73,8 @@ export function ServerErrorsListView({
             placeholder="e.g. NOT_FOUND"
             style={{ marginLeft: "0.5rem", padding: "0.35rem 0.5rem", border: BORDER_STYLE, borderRadius: 4 }}
           />
-        </label>
-        <label style={{ fontSize: "0.85rem" }}>
+        </Label>
+        <Label style={{ fontSize: "0.85rem" }}>
           Route
           <input
             type="search"
@@ -83,7 +83,7 @@ export function ServerErrorsListView({
             placeholder="e.g. /api/orders"
             style={{ marginLeft: "0.5rem", padding: "0.35rem 0.5rem", border: BORDER_STYLE, borderRadius: 4 }}
           />
-        </label>
+        </Label>
         <Span style={{ marginLeft: "auto", fontSize: "0.85rem", color: "var(--appkit-color-text-muted)" }}>
           {filtered.length} of {rows.length} (source={source})
         </Span>

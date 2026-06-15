@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Div, FilterDrawer, Label, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
@@ -145,7 +145,7 @@ export function PrizeDrawsIndexListing({
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+          <Label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
             <Span size="xs" className="hidden sm:inline whitespace-nowrap" color="muted">
               Show closed
             </Span>
@@ -164,7 +164,7 @@ export function PrizeDrawsIndexListing({
                 }`}
               />
             </button>
-          </label>
+          </Label>
         }
       />
 

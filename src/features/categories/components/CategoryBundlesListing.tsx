@@ -11,7 +11,7 @@
 
 import { Row, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useMemo, useCallback, useState } from "react";
-import { Div, Span, Text } from "../../../ui";
+import { Div, Label, Span, Text } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import type { CategoryDocument } from "../schemas";
@@ -181,7 +181,7 @@ export function CategoryBundlesListing({
         hideTrigger
       >
         <Stack className={`${__P.p4}`} gap="md">
-          <label className="flex items-center justify-between gap-3 cursor-pointer">
+          <Label className="flex items-center justify-between gap-3 cursor-pointer">
             <Span size="sm" weight="medium" color="muted">Show out-of-stock bundles</Span>
             <button
               type="button"
@@ -198,7 +198,7 @@ export function CategoryBundlesListing({
                 }`}
               />
             </button>
-          </label>
+          </Label>
         </Stack>
       </FilterDrawer>
     </Div>

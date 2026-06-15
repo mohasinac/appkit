@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Div, Grid, Heading, Stack, Text } from "../../../ui";
+import { Div, Grid, Heading, Label, Stack, Text } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { PRODUCT_FEATURE_QUERY_STALE_MS } from "../constants/product-features.constants";
@@ -119,7 +119,7 @@ export function ProductFeaturesSelector({
     const checked = selectedSet.has(f.id);
     const cantSelect = !checked && atLimit;
     return (
-      <label key={f.id} className={rowClass(checked, cantSelect)}>
+      <Label key={f.id} className={rowClass(checked, cantSelect)}>
         <input
           type="checkbox"
           className="mt-0.5"
@@ -141,7 +141,7 @@ export function ProductFeaturesSelector({
             </Text>
           )}
         </Div>
-      </label>
+      </Label>
     );
   };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Div, Form, Heading, Input, Row, Select, Span, Stack, Text } from "../../../ui";
+import { Badge, Button, Div, Form, Heading, Input, Label, Row, Select, Span, Stack, Text } from "../../../ui";
 import type { SelectOption } from "../../../ui";
 import { ProductInlineSelect } from "./ProductInlineSelect";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
@@ -297,7 +297,7 @@ export function SellerCouponEditorView({
 
           {/* Active toggle */}
           <Row className="border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)] px-4" padding="y-sm" align="center" gap="3" rounded="lg">
-            <label className="flex items-center gap-3 cursor-pointer w-full">
+            <Label className="flex items-center gap-3 cursor-pointer w-full">
               <input
                 type="checkbox"
                 checked={draft.isActive}
@@ -312,7 +312,7 @@ export function SellerCouponEditorView({
                   Customers can apply this coupon at checkout
                 </Text>
               </Div>
-            </label>
+            </Label>
           </Row>
         </Stack>
 

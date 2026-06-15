@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Badge, Div, FormField, FormGroup, Heading, Row, Stack, Text, Toggle } from "../../../ui";
+import { Alert, Badge, Div, FormField, FormGroup, Heading, Label, Row, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { StepDef, StepForm } from "../../shell";
 
@@ -254,7 +254,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   <Text className="mb-1.5" size="sm" weight="medium">Account Type</Text>
                   <Stack gap="xs" className="flex-row">
                     {(["savings", "current"] as const).map((t) => (
-                      <label key={t} className="flex items-center gap-2 cursor-pointer">
+                      <Label key={t} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
                           name="accountType"
@@ -265,7 +265,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                           disabled={busy}
                         />
                         <Text size="sm" transform="capitalize">{t}</Text>
-                      </label>
+                      </Label>
                     ))}
                   </Stack>
                 </Div>
