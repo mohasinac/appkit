@@ -88,7 +88,7 @@ export function AdminStoresGuideView() {
         },
       ].map(({ Icon, title, content }) => (
         <Section key={title} className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="2xl">
-          <Row className="px-6 py-4 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-2,var(--appkit-color-border))]/20" align="center" gap="3">
+          <Row className="px-6 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-2,var(--appkit-color-border))]/20" padding="y-md" align="center" gap="3">
             <Icon className="w-5 h-5 text-[var(--appkit-color-primary)]" />
             <Heading level={2} size="base" weight="semibold">{title}</Heading>
           </Row>

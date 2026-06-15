@@ -177,7 +177,7 @@ export function CartDrawer({
         </Row>
         <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-3`}>
           {isLoading ? (
-            <Row className="py-12" justify="center">
+            <Row justify="center" padding="y-3xl">
               <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 dark:border-slate-600 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
             </Row>
           ) : items.length === 0 ? (

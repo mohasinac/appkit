@@ -34,7 +34,7 @@ export function EventParticipateView({
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
     return (
-      <Div className="max-w-xl mx-auto space-y-4 py-6">
+      <Div className="max-w-xl mx-auto space-y-4" padding="y-lg">
         <Skeleton variant="rectangular" height="32px" />
         <Skeleton variant="rectangular" height="80px" />
         <Skeleton variant="rectangular" height="48px" />

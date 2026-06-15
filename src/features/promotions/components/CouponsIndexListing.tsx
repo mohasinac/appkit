@@ -224,7 +224,7 @@ export function CouponsIndexListing({
       </Div>
 
       {/* ── Coupon grid ─────────────────────────────────────────────────── */}
-      <Div className="py-6 px-4">
+      <Div className="px-4" padding="y-lg">
         {isLoading ? (
           <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -242,7 +242,7 @@ export function CouponsIndexListing({
             ))}
           </Grid>
         ) : displayCoupons.length === 0 ? (
-          <Div className="py-16 text-center">
+          <Div className="text-center" padding="y-4xl">
             <Text className="text-zinc-400 dark:text-zinc-400">No coupons match your search.</Text>
           </Div>
         ) : (

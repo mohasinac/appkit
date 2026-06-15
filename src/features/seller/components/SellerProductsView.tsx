@@ -107,7 +107,7 @@ function TypeDropdown({
     flags.live && { value: "live", label: "Live" },
   ].filter(Boolean) as { value: ListingKind; label: string }[];
   return (
-    <Row className="px-3 lg:px-4 py-2 border-b border-[var(--appkit-color-border)]" gap="sm">
+    <Row className="px-3 lg:px-4 border-b border-[var(--appkit-color-border)]" padding="y-xs" gap="sm">
       <Text className="tracking-wide text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
         Listing type
       </Text>
@@ -484,7 +484,7 @@ export function SellerProductsView({
         )}
 
         {selection.selectedIds.length > 0 && (
-          <Div className="sticky z-20 px-3 lg:px-4 py-2 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]"
+          <Div className="sticky z-20 px-3 lg:px-4 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]" padding="y-xs"
             // audit-inline-style-ok: sticky header offset
             style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
             <BulkActionBar
@@ -495,7 +495,7 @@ export function SellerProductsView({
           </Div>
         )}
 
-        <Div className="py-4 px-3 lg:px-4">
+        <Div className="px-3 lg:px-4" padding="y-md">
           {errorMessage && (
             <Alert variant="error" className="mb-4">{errorMessage}</Alert>
           )}

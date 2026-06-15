@@ -273,7 +273,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       )}
 
       {selection.selectedIds.length > 0 && (
-        <Div className="sticky z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700"
+        <Div className="sticky z-20 px-3 sm:px-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700" padding="y-xs"
           // audit-inline-style-ok: sticky header offset
           style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
           <BulkActionBar
@@ -284,9 +284,9 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         </Div>
       )}
 
-      <Div className="py-4 px-3 sm:px-4">
+      <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
             {errorMessage}
           </Div>
         )}

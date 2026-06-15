@@ -154,7 +154,7 @@ export function AdminCouponsView({
           ))}
         </Div>
       ) : rows.length === 0 ? (
-        <Div className="py-16 text-center">
+        <Div className="text-center" padding="y-4xl">
           <Text className="text-zinc-400 dark:text-zinc-400">No coupons found</Text>
         </Div>
       ) : (

@@ -202,7 +202,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
       )}
 
       {/* ── Blog grid ──────────────────────────────────────────────────── */}
-      <Div className="py-6">{renderBlogGrid({ isLoading, posts, view })}</Div>
+      <Div padding="y-lg">{renderBlogGrid({ isLoading, posts, view })}</Div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {renderBlogFilterDrawer({ filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable })}

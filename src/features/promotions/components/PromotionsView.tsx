@@ -108,9 +108,9 @@ export function PromotionsView({
     <Div surface="default" className="min-h-screen">
       <PromotionsHero labels={labels} heroBannerClass={heroBannerClass} />
 
-      <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12" padding="y-3xl">
         {!hasContent && (
-          <Div className="text-center py-16">
+          <Div className="text-center" padding="y-4xl">
             <Heading level={2} className="mb-2">{labels.emptyDeals}</Heading>
             <Text variant="secondary">{labels.checkBack}</Text>
           </Div>

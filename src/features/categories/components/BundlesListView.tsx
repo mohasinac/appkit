@@ -41,7 +41,7 @@ export async function BundlesListView({
 
   return (
     <Main>
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="xl">
           <Heading
             level={1}

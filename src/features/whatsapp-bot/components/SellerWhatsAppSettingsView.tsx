@@ -225,7 +225,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
   if (!hasCapability) {
     return (
-      <Div className="max-w-xl mx-auto py-8 px-4">
+      <Div className="max-w-xl mx-auto px-4" padding="y-xl">
         <Alert variant="warning">
           <Text weight="medium">WhatsApp catalog sync is not enabled for your store.</Text>
           <Text className="mt-1" size="sm">
@@ -237,7 +237,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   }
 
   return (
-    <Stack gap="xl" className="max-w-2xl mx-auto py-6 px-4">
+    <Stack gap="xl" className="max-w-2xl mx-auto px-4" padding="y-lg">
 
       {/* ── Section 1: Step-by-step setup guide ─────────────────────────── */}
       <Section>
@@ -396,7 +396,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         <Text className="mb-3" color="muted" size="xs">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
         </Text>
-        <Div className="bg-zinc-50 dark:bg-zinc-800/60 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono" rounded="lg">
+        <Div className="bg-zinc-50 dark:bg-zinc-800/60 px-4 text-sm text-zinc-700 dark:text-zinc-200 font-mono" padding="y-sm" rounded="lg">
           {buildPurchaseAnnouncementMessage({
             buyerName: "Ravi K.",
             firstItemName: "Charizard PSA 9",

@@ -36,7 +36,7 @@ export function EventLeaderboard({
 }: EventLeaderboardProps) {
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
-    return <Row className="py-8" justify="center">Loading…</Row>;
+    return <Row justify="center" padding="y-xl">Loading…</Row>;
   }
 
   if (isEmpty) {

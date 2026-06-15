@@ -78,7 +78,7 @@ export function FooterLayout({
     >
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (
-              <Div className="border-b border-zinc-100 dark:border-slate-800 py-8">
+              <Div className="border-b border-zinc-100 dark:border-slate-800" padding="y-xl">
           <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
             <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
               {visibleTrustItems.map((item, i) => (
@@ -105,7 +105,7 @@ export function FooterLayout({
         </Div>
       )}
 
-      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] py-10 lg:py-14">
+      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] lg:py-14" padding="y-2xl">
         <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
           <Div className="lg:col-span-2 space-y-4">

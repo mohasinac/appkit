@@ -62,7 +62,7 @@ export function AnnouncementBar({ message, className = "", onDismiss }: Announce
   return (
     <Div className={`relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700 transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
       <Div className="container mx-auto max-w-[1920px] px-4 sm:px-6 lg:px-8">
-        <Row className="relative py-2 text-center text-sm font-medium text-white" align="center" justify="center">
+        <Row className="relative text-center text-sm font-medium text-white" padding="y-xs" align="center" justify="center">
           <span>{message}</span>
           <button
             type="button"

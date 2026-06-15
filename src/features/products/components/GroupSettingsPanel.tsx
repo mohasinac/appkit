@@ -342,12 +342,12 @@ export function GroupSettingsPanel({
                 ) : (
                   <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}
-                    <Row align="center" gap="sm" className="py-2">
+                    <Row align="center" gap="sm" padding="y-xs">
                       <Span weight="semibold" className="rounded bg-[var(--appkit-color-primary)]/10 text-[var(--appkit-color-primary)] text-[10px] px-1.5 py-0.5">Parent</Span>
                       <Text className="flex-1" color="primary" size="sm">{productSlug}</Text>
                     </Row>
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (
-                      <Row key={child.id} align="center" gap="sm" className="py-2">
+                      <Row key={child.id} align="center" gap="sm" padding="y-xs">
                         {child.images?.[0] ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={child.images[0]} alt={child.title} className="w-8 h-8 rounded-full object-cover border border-zinc-200 dark:border-zinc-700" />

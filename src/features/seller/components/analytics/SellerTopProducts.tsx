@@ -39,7 +39,7 @@ export function SellerTopProducts({
       {products.length > 0 ? (
         <Div className="divide-y divide-neutral-100 dark:divide-neutral-800">
           {products.map((product, index) => (
-            <Row key={product.productId} className="py-3" align="center" gap="md">
+            <Row key={product.productId} align="center" gap="md" padding="y-sm">
               <Span size="sm" weight="bold" className="w-6 text-neutral-500 dark:text-neutral-400">
                 {index + 1}.
               </Span>
@@ -59,7 +59,7 @@ export function SellerTopProducts({
           ))}
         </Div>
       ) : (
-        <Div className="text-center py-8">
+        <Div className="text-center" padding="y-xl">
           <Text size="sm" weight="medium">{labels.noData ?? "No data available"}</Text>
           {labels.noDataDescription && (
             <Text className="text-neutral-500 dark:text-neutral-400 mt-1" size="xs">

@@ -33,7 +33,7 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
       justify="between"
       align="start"
       gap="sm"
-      className="border-b border-zinc-100 py-3 last:border-0 dark:border-zinc-800"
+      className="border-b border-zinc-100 last:border-0 dark:border-zinc-800" padding="y-sm"
     >
       <Stack gap="xs" className="flex-1">
         <Row gap="sm" align="center">
@@ -90,7 +90,7 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
   return (
     <Div className={`rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 ${className}`}>
       {order.contestable === false && (
-        <Div className="rounded-t-xl bg-warning-surface px-4 py-3">
+        <Div className="rounded-t-xl bg-warning-surface px-4" padding="y-sm">
           <Row gap="sm" align="center">
             <WarningIcon />
             <Text size="sm" weight="semibold" className="text-warning">

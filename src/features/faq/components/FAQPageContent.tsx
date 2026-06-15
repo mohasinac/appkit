@@ -122,7 +122,7 @@ export function FAQPageContent({
   };
 
   return (
-    <Div className="py-12">
+    <Div padding="y-3xl">
       <Div className="mb-12 text-center">
         <Heading level={1} className="mb-4 sm:text-4xl" size="3xl" weight="bold">
           {labels.title}

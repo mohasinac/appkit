@@ -46,7 +46,7 @@ export function SearchView({
 
   return (
     <Main className={`min-h-screen ${className}`}>
-      <Div className="py-6 space-y-4">
+      <Div className="space-y-4" padding="y-lg">
         {/* Search input */}
         <Div>{renderSearchInput()}</Div>
 
@@ -62,7 +62,7 @@ export function SearchView({
         )}
 
         {!hasQuery && (
-          <Div className="py-16 text-center">
+          <Div className="text-center" padding="y-4xl">
             <Span className="mb-4 block" size="4xl">🔍</Span>
             <Heading level={2} className="mb-2">
               {labels.searchTitle ?? "Search"}

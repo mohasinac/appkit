@@ -28,7 +28,7 @@ async function submitContact(data: ContactSubmitInput): Promise<void> {
 export function ContactPageView() {
   return (
     <Main>
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="xl" className="space-y-8">
           <Stack gap="3">
             <Heading level={1} size="3xl" weight="semibold" color="primary">

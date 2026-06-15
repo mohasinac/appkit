@@ -67,7 +67,7 @@ export function WhatsAppCommunitySection({
             aria-hidden
           />
 
-          <Div className="relative z-10 px-6 py-10 sm:px-10 sm:py-12">
+          <Div className="relative z-10 px-6 sm:px-10 sm:py-12" padding="y-2xl">
 
             {/* Top row — WhatsApp icon + member pill */}
             <Div className={`${flex.between} flex-wrap gap-4 mb-8`}>

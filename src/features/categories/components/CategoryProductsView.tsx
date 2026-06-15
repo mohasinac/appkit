@@ -104,7 +104,7 @@ export function CategoryProductsView({
 
   return (
     <Div className={`min-h-screen ${className}`}>
-      <Div className="py-6 px-4 max-w-screen-xl mx-auto space-y-4">
+      <Div className="px-4 max-w-screen-xl mx-auto space-y-4" padding="y-lg">
         {/* Breadcrumbs */}
         {category && renderBreadcrumbs?.(category)}
 

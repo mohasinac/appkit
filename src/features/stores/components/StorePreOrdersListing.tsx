@@ -119,7 +119,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
         </Row>
       )}
 
-      <Div className="py-6">
+      <Div padding="y-lg">
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 8 }).map((_, i) => (

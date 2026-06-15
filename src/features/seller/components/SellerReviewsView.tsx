@@ -280,11 +280,11 @@ export function SellerReviewsView({
 
           {/* Review list */}
           {loading ? (
-            <Div className="py-8 text-center">
+            <Div className="text-center" padding="y-xl">
               <Text className="text-[var(--appkit-color-text-muted)]">Loading reviews…</Text>
             </Div>
           ) : reviews.length === 0 ? (
-            <Div className="py-12 text-center">
+            <Div className="text-center" padding="y-3xl">
               <Text className="text-[var(--appkit-color-text-muted)]">No reviews found.</Text>
             </Div>
           ) : (

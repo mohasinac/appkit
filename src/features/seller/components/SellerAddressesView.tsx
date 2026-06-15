@@ -261,7 +261,7 @@ export function SellerAddressesView({
       {/* Header */}
       <Row
         justify="between"
-        className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3"
+        className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4" padding="y-sm"
         // audit-inline-style-ok: dynamic CSS
         style={{ top: "var(--header-height, 0px)" }}
       >
@@ -275,19 +275,19 @@ export function SellerAddressesView({
         </Button>
       </Row>
 
-      <Div className="py-6 px-4 sm:px-6 max-w-2xl">
+      <Div className="px-4 sm:px-6 max-w-2xl" padding="y-lg">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
             {errorMessage}
           </Div>
         )}
 
         {isLoading ? (
-          <Row justify="center" className="py-16">
+          <Row justify="center" padding="y-4xl">
             <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
           </Row>
         ) : addresses.length === 0 ? (
-          <Stack className="border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16" align="center" gap="3" rounded="xl">
+          <Stack className="border-2 border-dashed border-zinc-200 dark:border-slate-700" padding="y-4xl" align="center" gap="3" rounded="xl">
             <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
             <Text size="sm" color="muted">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>
@@ -379,7 +379,7 @@ export function SellerAddressesView({
       >
         <Stack gap="md" className="py-1">
           {saveError && (
-            <Div className="border border-error/20 bg-error-surface px-3 py-2 text-sm text-error" rounded="lg">
+            <Div className="border border-error/20 bg-error-surface px-3 text-sm text-error" padding="y-xs" rounded="lg">
               {saveError}
             </Div>
           )}

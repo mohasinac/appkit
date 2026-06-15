@@ -24,7 +24,7 @@ export function PromoGrid({
 
   return (
     <Section
-      className="py-10 sm:py-16"
+      className="sm:py-16" padding="y-2xl"
       style={{
         background: "var(--dark-section-alt)",
         borderTop: "1px solid rgba(255,255,255,0.06)",

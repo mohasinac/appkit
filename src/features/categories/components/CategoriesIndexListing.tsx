@@ -266,7 +266,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
       )}
 
       {/* ── Category / brand grid ──────────────────────────────────────── */}
-      <Div className="py-6">{renderCategoryGrid({ isLoading, categories, view, activeSearch, activeTab, brandsOnly })}</Div>
+      <Div padding="y-lg">{renderCategoryGrid({ isLoading, categories, view, activeSearch, activeTab, brandsOnly })}</Div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {renderCategoryFilterDrawer({ filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable })}

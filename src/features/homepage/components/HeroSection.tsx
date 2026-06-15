@@ -22,7 +22,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
       }
     >
       <Div className="absolute inset-0 bg-black/40" />
-      <Div className="relative mx-auto max-w-7xl px-4 py-16 text-center text-white sm:px-6 lg:px-8">
+      <Div className="relative mx-auto max-w-7xl px-4 text-center text-white sm:px-6 lg:px-8" padding="y-4xl">
         {content?.title && (
           <Heading
             level={1}

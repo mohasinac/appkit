@@ -161,7 +161,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
         </Container>
       </Div>
 
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="xl">
           <Stack gap="xl">
             {/* Page header */}

@@ -313,7 +313,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
       )}
 
       {/* ── Product grid ───────────────────────────────────────────────── */}
-      <Div className="py-6">
+      <Div padding="y-lg">
         {isLoading ? (
           <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 10 }).map((_, i) => (

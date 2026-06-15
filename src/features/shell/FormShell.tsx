@@ -188,7 +188,7 @@ export function FormShell({
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
         {/* ── Top bar ─────────────────────────────────────── */}
-        <Row gap="sm" className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3">
+        <Row gap="sm" className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5" padding="y-sm">
           {previewMode ? (
             <button
               type="button"
@@ -306,11 +306,11 @@ export function FormShell({
           >
             {previewMode && previewSlot ? (
               <>
-                <Row gap="xs" className="sticky top-0 z-10 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 py-2 text-sm text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]">
+                <Row gap="xs" className="sticky top-0 z-10 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 text-sm text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]" padding="y-xs">
                   <Eye className="w-4 h-4 flex-shrink-0" />
                   <Span>Preview — not visible to buyers until published</Span>
                 </Row>
-                <Div className="py-4">
+                <Div padding="y-md">
                   {previewSlot()}
                 </Div>
               </>
@@ -318,7 +318,7 @@ export function FormShell({
               // S-STORE-3-D — desktop 60/40 split: form left, preview right.
               // Below `lg`, falls back to single-column form (preview-as-modal via existing toggle).
               <Div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:px-6 lg:py-6 lg:max-w-[1400px] lg:mx-auto">
-                <Div className="max-w-3xl mx-auto px-5 py-6 sm:px-6 lg:max-w-none lg:px-0 lg:py-0">
+                <Div className="max-w-3xl mx-auto px-5 sm:px-6 lg:max-w-none lg:px-0 lg:py-0" padding="y-lg">
                   {children}
                 </Div>
                 <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] ${__P.p4}`}>
@@ -330,7 +330,7 @@ export function FormShell({
                 </Div>
               </Div>
             ) : (
-              <Div className="max-w-3xl mx-auto px-5 py-6 sm:px-6">
+              <Div className="max-w-3xl mx-auto px-5 sm:px-6" padding="y-lg">
                 {children}
               </Div>
             )}
@@ -341,7 +341,7 @@ export function FormShell({
         {!previewMode && renderBottomBar ? (
           renderBottomBar()
         ) : !previewMode && (onSaveDraft || onPublish) ? (
-          <Row justify="between" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3">
+          <Row justify="between" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5" padding="y-sm">
             <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
               {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
             </Button>

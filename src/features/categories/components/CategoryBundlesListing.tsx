@@ -110,7 +110,7 @@ export function CategoryBundlesListing({
 
   if (filtered.length === 0 && !query && !showOutOfStock) {
     return (
-      <Div className="border-dashed py-16 text-center dark:border-zinc-700" rounded="2xl" border="default">
+      <Div className="border-dashed text-center dark:border-zinc-700" padding="y-4xl" rounded="2xl" border="default">
         <Text color="muted">
           No bundles available{brandName ? ` for ${brandName}` : ""} yet.
         </Text>
@@ -145,7 +145,7 @@ export function CategoryBundlesListing({
         </Row>
       )}
 
-      <Div className="py-6">
+      <Div padding="y-lg">
         {pageItems.length === 0 ? (
           <Text className="py-16" color="muted" size="sm" align="center">
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.

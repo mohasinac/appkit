@@ -139,7 +139,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
     <Div className="min-h-screen">
       {/* ── Rating summary ───────────────────────────────────────────────── */}
       {totalReviews > 0 && (
-        <Row align="center" gap="sm" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-700">
+        <Row align="center" gap="sm" className="px-4 border-b border-zinc-200 dark:border-slate-700" padding="y-sm">
           <Span weight="bold" size="2xl" color="primary">
             {averageRating.toFixed(1)}
           </Span>
@@ -176,7 +176,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
       )}
 
       {/* ── Reviews grid ───────────────────────────────────────────────── */}
-      <Div className="py-6 px-4">
+      <Div className="px-4" padding="y-lg">
         {isLoading ? (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (

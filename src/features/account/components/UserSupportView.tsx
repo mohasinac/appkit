@@ -157,7 +157,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
 
   return (
     <>
-      <Div className="mx-auto max-w-2xl px-4 py-6">
+      <Div className="mx-auto max-w-2xl px-4" padding="y-lg">
         <Row className="mb-4" align="center" justify="between">
           <Text size="xl" weight="semibold" color="primary">Support Tickets</Text>
           <Button type="button" variant="primary" size="sm" onClick={() => setNewTicketOpen(true)}>New ticket</Button>
@@ -183,12 +183,12 @@ function renderTicketListArea(props: {
         </Div>
       )}
       {error && (
-        <Div className="border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
+        <Div className="border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
           Failed to load support tickets.
         </Div>
       )}
       {!isLoading && tickets.length === 0 && (
-        <Div className="bg-zinc-50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/40" rounded="xl" border="default">
+        <Div className="bg-zinc-50 px-6 text-center dark:border-zinc-700 dark:bg-zinc-900/40" padding="y-2xl" rounded="xl" border="default">
           <Text size="sm" color="muted">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}

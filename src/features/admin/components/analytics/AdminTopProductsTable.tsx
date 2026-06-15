@@ -37,7 +37,7 @@ export function AdminTopProductsTable({
         {products.map((product) => (
           <Row
             key={product.productId}
-            className="py-3 border-b last:border-b-0 border-neutral-100 dark:border-neutral-800" align="center" justify="between"
+            className="border-b last:border-b-0 border-neutral-100 dark:border-neutral-800" padding="y-sm" align="center" justify="between"
           >
             <Div className="flex-1 min-w-0">
               <Text className="truncate" weight="medium">{product.title}</Text>

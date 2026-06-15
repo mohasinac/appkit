@@ -393,9 +393,9 @@ export function SellerTemplatesView({
         />
       )}
 
-      <Div className="py-4 px-3 sm:px-4">
+      <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
             {errorMessage}
           </Div>
         )}
@@ -409,7 +409,7 @@ export function SellerTemplatesView({
             ))}
           </Div>
         ) : pageRows.length === 0 ? (
-          <Div className="py-16 text-center">
+          <Div className="text-center" padding="y-4xl">
             <Text className="text-zinc-400 dark:text-zinc-400">
               {q || conditionFilter
                 ? "No templates match your search or filters"
@@ -491,7 +491,7 @@ export function SellerTemplatesView({
       >
         <Stack gap="md">
           {savingError && (
-            <Div className="border border-error/20 bg-error-surface px-3 py-2 text-sm text-error" rounded="lg">
+            <Div className="border border-error/20 bg-error-surface px-3 text-sm text-error" padding="y-xs" rounded="lg">
               {savingError}
             </Div>
           )}

@@ -208,7 +208,7 @@ function renderNotificationDropdown(props: {
   const { dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead, isLoading, notifications, notificationIcons, handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref, setIsOpen } = props;
   return (
     <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 ${__O.hidden} ${dropdownClassName}`}>
-      <Row justify="between" gap="none" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-800">
+      <Row justify="between" gap="none" className="px-4 border-b border-zinc-200 dark:border-slate-800" padding="y-sm">
         <Heading level={3} weight="semibold" color="primary">
           {labels.title}
           {unreadCount > 0 && <Span size="xs" weight="medium" className={CLS_UNREAD_PILL}>{unreadCount} {labels.unread}</Span>}
@@ -223,7 +223,7 @@ function renderNotificationDropdown(props: {
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
       </Div>
       {viewAllHref && (
-        <Div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800 text-center">
+        <Div className="px-4 border-t border-zinc-200 dark:border-slate-800 text-center" padding="y-sm">
           {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-sm text-primary hover:underline font-medium", children: labels.viewAll })}
         </Div>
       )}
@@ -238,9 +238,9 @@ function renderNotificationListContent(props: {
   renderActionLink: (p: NotificationBellRenderLinkProps) => React.ReactNode;
 }) {
   const { isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink } = props;
-  if (isLoading) return <Row className="py-10" align="center" justify="center"><Spinner size="md" /></Row>;
+  if (isLoading) return <Row align="center" justify="center" padding="y-2xl"><Spinner size="md" /></Row>;
   if (notifications.length === 0) return (
-    <Stack className="justify-center py-10 px-4 text-center" align="center">
+    <Stack className="justify-center px-4 text-center" padding="y-2xl" align="center">
       <svg className="w-12 h-12 text-zinc-300 dark:text-zinc-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>

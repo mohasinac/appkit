@@ -169,7 +169,7 @@ export function BlogPostView({
         </Div>
       )}
 
-      <Div className="max-w-3xl mx-auto px-4 py-12">
+      <Div className="max-w-3xl mx-auto px-4" padding="y-3xl">
         {renderBlogPostHeader(post, date, labels)}
 
         {/* Tags — each tag links to /blog?tags=<tag> for filtered listing */}

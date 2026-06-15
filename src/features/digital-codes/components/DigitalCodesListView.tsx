@@ -44,7 +44,7 @@ export async function DigitalCodesListView({ searchParams = {} }: DigitalCodesLi
 
   return (
     <Main>
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="xl">
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             Digital Codes

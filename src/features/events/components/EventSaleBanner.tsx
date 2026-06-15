@@ -50,7 +50,7 @@ export function EventSaleBanner({
           {subtitle ? <Text className="text-white/90" size="base">{subtitle}</Text> : null}
         </Stack>
         {couponCode ? (
-          <Div className="inline-flex items-center gap-3 bg-white/10 px-4 py-2 backdrop-blur" rounded="lg">
+          <Div className="inline-flex items-center gap-3 bg-white/10 px-4 backdrop-blur" padding="y-xs" rounded="lg">
             <Span size="xs" className="tracking-wide opacity-80" transform="uppercase">Code</Span>
             <Span size="lg" weight="bold" className="font-mono">{couponCode}</Span>
           </Div>

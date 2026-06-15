@@ -40,7 +40,7 @@ function StatusBadge({ status }: { status: string }) {
 function SkeletonCard({ view }: { view: "grid" | "list" }) {
   if (view === "list") {
     return (
-      <Row gap="sm" className="px-4 py-3 animate-pulse">
+      <Row gap="sm" className="px-4 animate-pulse" padding="y-sm">
         <Div className="h-4 w-4 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="default" />
         <Stack gap="xs" className="flex-1">
           <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-2/3" rounded="default" />

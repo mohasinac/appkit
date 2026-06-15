@@ -246,9 +246,9 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
         />
       )}
 
-      <Div className="py-4 px-3 sm:px-4">
+      <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
             {errorMessage}
           </Div>
         )}

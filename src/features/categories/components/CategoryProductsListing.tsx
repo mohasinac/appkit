@@ -202,7 +202,7 @@ export function CategoryProductsListing({
         </Row>
       )}
 
-      <Div className="py-6">
+      <Div padding="y-lg">
         {renderCategoryProductGrid({
           isLoading, products: products as any[], view,
            

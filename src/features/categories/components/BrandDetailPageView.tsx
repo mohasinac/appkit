@@ -205,7 +205,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
       </Section>
 
       {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}
-      <Section className="py-6">
+      <Section padding="y-lg">
         <Container size="xl">
           {brandName ? (
             <BrandDetailTabs

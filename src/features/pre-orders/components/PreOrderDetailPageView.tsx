@@ -209,7 +209,7 @@ function PreOrderInfoSection({
       )}
 
       {!productFeatures && features.length > 0 && (
-        <Div className="border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3" rounded="xl">
+        <Div className="border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4" padding="y-sm" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             About this product
           </Text>
@@ -499,7 +499,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
           storeName: typeof p.storeName === "string" ? p.storeName : undefined,
         }}
       />
-      <Container size="xl" className="px-4 py-6">
+      <Container size="xl" className="px-4" padding="y-lg">
         {/* Breadcrumb + share */}
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
@@ -584,7 +584,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
                     {specs.map((s, i) => (
                       <Div
                         key={i}
-                        className="flex gap-4 px-4 py-3 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50"
+                        className="flex gap-4 px-4 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50" padding="y-sm"
                       >
                         <Dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
                           {s.name}

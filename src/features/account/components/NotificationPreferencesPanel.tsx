@@ -43,7 +43,7 @@ function ToggleRow({
   disabled?: boolean;
 }) {
   return (
-    <Row align="center" justify="between" gap="md" className="py-3 border-b last:border-0 border-[var(--appkit-color-border)]">
+    <Row align="center" justify="between" gap="md" className="border-b last:border-0 border-[var(--appkit-color-border)]" padding="y-sm">
       <Div className="min-w-0">
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">{label}</Text>
         <Text variant="secondary" className="mt-0.5" size="xs">{description}</Text>
@@ -79,7 +79,7 @@ function ToggleRow({
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <Div className={`rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`}>
-      <Div className="px-4 py-3 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-alt,var(--appkit-color-surface))]">
+      <Div className="px-4 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-alt,var(--appkit-color-surface))]" padding="y-sm">
         <Text className="tracking-widest text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
           {title}
         </Text>
@@ -166,7 +166,7 @@ export function NotificationPreferencesPanel({
 
   if (loading) {
     return (
-      <Div className="py-8 text-center">
+      <Div className="text-center" padding="y-xl">
         <Text variant="secondary" size="sm">Loading preferences…</Text>
       </Div>
     );
@@ -182,7 +182,7 @@ export function NotificationPreferencesPanel({
     <Stack gap="lg">
       {/* In-app is always on */}
       <SectionCard title="In-app notifications">
-        <Row align="center" justify="between" gap="md" className="py-3">
+        <Row align="center" justify="between" gap="md" padding="y-sm">
           <Div>
             <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">In-app notifications</Text>
             <Text variant="secondary" className="mt-0.5" size="xs">

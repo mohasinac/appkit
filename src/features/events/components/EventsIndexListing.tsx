@@ -172,7 +172,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
       )}
 
       {/* ── Event grid ─────────────────────────────────────────────────── */}
-      <Div className="py-6">
+      <Div padding="y-lg">
         {isLoading ? (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (

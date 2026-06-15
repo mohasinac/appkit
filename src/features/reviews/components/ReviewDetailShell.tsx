@@ -172,7 +172,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
       </Div>
 
       {/* ── Main content ─────────────────────────────────────────────────────── */}
-      <Stack gap="xl" className="mx-auto max-w-3xl px-4 py-8">
+      <Stack gap="xl" className="mx-auto max-w-3xl px-4" padding="y-xl">
 
         {/* Rich text comment */}
         {review.comment && (
@@ -233,7 +233,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         )}
 
         {/* Helpful votes */}
-        <Section className="flex items-center gap-4 py-4 border-t border-neutral-100 dark:border-zinc-800">
+        <Section className="flex items-center gap-4 border-t border-neutral-100 dark:border-zinc-800" padding="y-md">
           <Div className="text-sm text-neutral-500 dark:text-zinc-400">
             {helpfulCount > 0 && (
               <Span>

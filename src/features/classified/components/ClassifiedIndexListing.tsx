@@ -179,7 +179,7 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
         </Row>
       )}
 
-      <Div className="py-6">
+      <Div padding="y-lg">
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (

@@ -181,13 +181,13 @@ function OrderDetailDrawer({
   return (
     <SideDrawer isOpen title={`Order ${order?.id ?? orderId}`} onClose={onClose}>
       {loading && (
-        <Row className="py-16" align="center" justify="center">
+        <Row align="center" justify="center" padding="y-4xl">
           <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
         </Row>
       )}
 
       {fetchError && (
-        <Div className="mx-4 mt-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="lg">
+        <Div className="mx-4 mt-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="lg">
           {fetchError}
         </Div>
       )}
@@ -224,7 +224,7 @@ function OrderDetailDrawer({
             )}
 
             {/* Total */}
-            <Row className="bg-zinc-50 dark:bg-slate-800/60 px-4 py-3" align="center" justify="between" rounded="lg">
+            <Row className="bg-zinc-50 dark:bg-slate-800/60 px-4" padding="y-sm" align="center" justify="between" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
               <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toRupees(order.totalAmount ?? 0)}</Text>
             </Row>
@@ -255,7 +255,7 @@ function OrderDetailDrawer({
               <Input label="Carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="e.g. Delhivery, Bluedart" />
               <Input label="Tracking URL (optional)" value={trackingUrl} onChange={(e) => setTrackingUrl(e.target.value)} placeholder="https://..." type="url" />
               {saveError && (
-                <Div className="border border-error/20 bg-error-surface px-3 py-2 text-xs text-error" rounded="lg">
+                <Div className="border border-error/20 bg-error-surface px-3 text-xs text-error" padding="y-xs" rounded="lg">
                   {saveError}
                 </Div>
               )}
@@ -567,7 +567,7 @@ export function SellerOrdersView({
       )}
 
       {selection.selectedIds.length > 0 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700">
+        <Div className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700" padding="y-xs">
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}
@@ -576,9 +576,9 @@ export function SellerOrdersView({
         </Div>
       )}
 
-      <Div className="py-4 px-3 sm:px-4">
+      <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
             {errorMessage}
           </Div>
         )}

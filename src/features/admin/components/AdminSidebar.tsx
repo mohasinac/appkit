@@ -229,7 +229,7 @@ export function AdminSidebar({
               {renderHeader ? renderHeader() : <Span size="xs" weight="semibold" transform="uppercase" color="muted">Admin Panel</Span>}
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
-            {renderFooter && <Div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800">{renderFooter()}</Div>}
+            {renderFooter && <Div className="px-4 border-t border-zinc-200 dark:border-slate-800" padding="y-sm">{renderFooter()}</Div>}
           </Div>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />

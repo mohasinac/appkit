@@ -72,7 +72,7 @@ export function BundleDetailView({
 
   return (
     <Main>
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="xl">
           <Stack gap="lg">
             <Row gap="lg" align="start" className="flex-col md:flex-row">

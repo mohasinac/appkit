@@ -303,7 +303,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
       )}
 
       {/* ── Pre-order grid ─────────────────────────────────────────────── */}
-      <Div className="py-6">
+      <Div padding="y-lg">
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (

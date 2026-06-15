@@ -26,7 +26,7 @@ export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPage
 
   return (
     <Main>
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="xl">
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             Stores

@@ -12,7 +12,7 @@ export interface CategoryStoresListingProps {
 export function CategoryStoresListing({ stores }: CategoryStoresListingProps) {
   if (stores.length === 0) {
     return (
-      <Stack className="justify-center py-16 text-center" align="center">
+      <Stack className="justify-center text-center" padding="y-4xl" align="center">
         <Text size="sm" color="muted">
           No stores found in this category.
         </Text>

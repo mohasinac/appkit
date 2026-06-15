@@ -285,7 +285,7 @@ export function AdminBundleEditorView({
 
   if (loading) {
     return (
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="lg">
           <Text>{BUNDLE_COPY.adminEditor.loading}</Text>
         </Container>
@@ -295,7 +295,7 @@ export function AdminBundleEditorView({
 
   return (
     <FormShellContext.Provider value={shellCtx}>
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="lg">
           <Stack gap="lg">
             <Row gap="sm" align="center" justify="between" wrap>

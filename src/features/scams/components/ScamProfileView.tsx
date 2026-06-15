@@ -400,7 +400,7 @@ export function ScamProfileView({
     <Main>
       {/* Breadcrumb strip */}
       <Div className="border-b appkit-breadcrumb-strip">
-        <Container size="xl" className="py-3">
+        <Container size="xl" padding="y-sm">
           <Breadcrumb
             items={[
               { label: "Home", href: "/" },
@@ -411,7 +411,7 @@ export function ScamProfileView({
         </Container>
       </Div>
 
-      <Section className="py-10">
+      <Section padding="y-2xl">
         <Container size="xl">
           <Grid cols="twoThird" gap="lg">
             {/* ── Left column — main profile ───────────────────────────────── */}

@@ -46,7 +46,7 @@ export function ClassifiedDetailView({
   if (isLoading || !product) {
     return (
       <Container>
-        <Div className="py-16 text-center">
+        <Div className="text-center" padding="y-4xl">
           <Text className="text-muted-foreground">
             {isLoading ? "Loading…" : "Classified listing not found."}
           </Text>
@@ -86,7 +86,7 @@ export function ClassifiedDetailView({
 
   return (
     <Container>
-      <Section className="py-8">
+      <Section padding="y-xl">
         <Stack gap="lg">
           {/* Gallery */}
           {product.images.length > 0 && (

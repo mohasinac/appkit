@@ -426,7 +426,7 @@ export function AdminUserEditorView({
 
   const renderInfoCard = () =>
     userId ? (
-      <Div surface="muted" rounded="lg" border="default" className="px-3 py-2 text-xs">
+      <Div surface="muted" rounded="lg" border="default" className="px-3 text-xs" padding="y-xs">
         <Stack gap="xs" className="text-zinc-700 dark:text-zinc-300">
           <Text size="xs">
             <Span weight="semibold">Owner ID (Firebase UID):</Span>{" "}

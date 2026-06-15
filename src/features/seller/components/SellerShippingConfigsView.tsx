@@ -228,9 +228,9 @@ export function SellerShippingConfigsView({
         }
       />
 
-      <Div className="py-4 px-3 sm:px-4">
+      <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
             {errorMessage}
           </Div>
         )}
@@ -244,7 +244,7 @@ export function SellerShippingConfigsView({
             ))}
           </Div>
         ) : rows.length === 0 ? (
-          <Div className="py-16 text-center">
+          <Div className="text-center" padding="y-4xl">
             <Text className="text-zinc-400 dark:text-zinc-400">
               No shipping configs yet — define your first shipping rule
             </Text>

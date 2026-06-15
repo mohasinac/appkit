@@ -40,7 +40,7 @@ function NavItemRow({
   onMoveUp, onMoveDown, onVisibilityChange, onEdit, onDelete,
 }: NavItemRowProps) {
   return (
-    <Row surface="default" className="px-4 py-3" align="center" gap="3">
+    <Row surface="default" className="px-4" padding="y-sm" align="center" gap="3">
       <Stack className="gap-0.5 shrink-0">
         <Button variant="ghost" type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>

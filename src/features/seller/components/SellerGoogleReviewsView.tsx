@@ -110,7 +110,7 @@ export function SellerGoogleReviewsView({
 
   if (loading) {
     return (
-      <Div className="space-y-4 py-6 px-4">
+      <Div className="space-y-4 px-4" padding="y-lg">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
@@ -129,7 +129,7 @@ export function SellerGoogleReviewsView({
     : "Never";
 
   return (
-    <Div className="py-4 px-3 sm:px-4 max-w-2xl">
+    <Div className="px-3 sm:px-4 max-w-2xl" padding="y-md">
       <Stack gap="lg">
         {/* Settings */}
         <Section>

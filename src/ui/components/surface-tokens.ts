@@ -45,6 +45,16 @@ export const PADDING_MAP = {
   inline: "px-4 py-3",
   inlineSm: "px-3 py-2",
   inlineLg: "px-6 py-4",
+  // Vertical-only presets — the variant-catalogue codemod migrates raw
+  // `py-N` / `py-N md:py-M` className tokens into these names.
+  "y-xs": "py-2",
+  "y-sm": "py-3",
+  "y-md": "py-4",
+  "y-lg": "py-6",
+  "y-xl": "py-8",
+  "y-2xl": "py-10",
+  "y-3xl": "py-12",
+  "y-4xl": "py-16",
 } as const;
 
 export type PaddingKey = keyof typeof PADDING_MAP;

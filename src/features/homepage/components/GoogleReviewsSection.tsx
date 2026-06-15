@@ -124,7 +124,7 @@ function ReviewCard({
 
 function NotConfiguredState() {
   return (
-    <Stack className="justify-center py-16 text-zinc-400 text-sm" align="center">
+    <Stack className="justify-center text-zinc-400 text-sm" padding="y-4xl" align="center">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="12" cy="12" r="10" />
         <path d="M12 8v4m0 4h.01" />
@@ -136,7 +136,7 @@ function NotConfiguredState() {
 
 function EmptyState() {
   return (
-    <Stack className="justify-center py-16 text-zinc-400 text-sm" align="center">
+    <Stack className="justify-center text-zinc-400 text-sm" padding="y-4xl" align="center">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
       </svg>

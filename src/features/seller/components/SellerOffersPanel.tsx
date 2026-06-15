@@ -344,13 +344,13 @@ export function SellerOffersPanel({
       {fetchError && <Alert variant="error"><Text size="sm">{fetchError}</Text></Alert>}
 
       {loading && (
-        <Row className="py-12" justify="center">
+        <Row justify="center" padding="y-3xl">
           <Spinner size="lg" />
         </Row>
       )}
 
       {!loading && offers.length === 0 && (
-        <Div className="text-center py-12">
+        <Div className="text-center" padding="y-3xl">
           <Text className="text-zinc-400 dark:text-zinc-400" size="sm">No offers found</Text>
         </Div>
       )}

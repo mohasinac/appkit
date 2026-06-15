@@ -105,7 +105,7 @@ export function WishlistView({
 
   return (
     <Div className={`min-h-screen ${className}`}>
-      <Div className="py-8 px-4 max-w-screen-xl mx-auto">
+      <Div className="px-4 max-w-screen-xl mx-auto" padding="y-xl">
         {/* Header */}
         <Heading level={1} className="mb-1" size="2xl" weight="bold">
           {labels.title ?? "My Wishlist"}
@@ -136,7 +136,7 @@ export function WishlistView({
         {activeTab === "products"
           ? renderProducts?.(displayedItems, isLoading)
           : (renderTabPlaceholder?.(activeTab) ?? (
-              <Div className="py-16 text-center">
+              <Div className="text-center" padding="y-4xl">
                 <Text variant="secondary">Coming soon</Text>
               </Div>
             ))}

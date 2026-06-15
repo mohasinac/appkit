@@ -81,7 +81,7 @@ export function AdvertisementBanner({
               </Div>
 
               {/* Right: content */}
-              <Stack className="relative justify-center px-8 py-10 md:px-12 md:py-14">
+              <Stack className="relative justify-center px-8 md:px-12 md:py-14" padding="y-2xl">
                 <Div
                   className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,_white_1px,_transparent_1px)] bg-[length:12px_12px]"
                   aria-hidden
@@ -159,7 +159,7 @@ export function AdvertisementBanner({
           {compact ? (
             <Row
               justify="between"
-              className="relative z-10 w-full px-6 py-4 gap-4 flex-wrap"
+              className="relative z-10 w-full px-6 gap-4 flex-wrap" padding="y-md"
             >
               <Span className="inline-flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-white/80" />
@@ -180,7 +180,7 @@ export function AdvertisementBanner({
               )}
             </Row>
           ) : (
-            <Div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 text-center">
+            <Div className="relative z-10 w-full max-w-4xl mx-auto px-6 md:py-16 text-center" padding="y-3xl">
               {tagLabel && (
                 <Span size="xs" weight="semibold" className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 tracking-widest px-4 py-1.5 rounded-full mb-5 backdrop-blur-sm shadow-sm" transform="uppercase">
                   <Sparkles className="w-3.5 h-3.5" />
