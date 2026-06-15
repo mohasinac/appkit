@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Badge, Div, FormField, Heading, Stack, Text } from "../../../ui";
+import { Alert, Badge, Div, FormField, Heading, Row, Stack, Text } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import { StepDef, StepForm } from "../../shell";
@@ -136,7 +136,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
         <Stack gap="md">
           <Heading level={3} className="mb-2">Shipping Method</Heading>
           {current && (
-            <Div className="flex items-center gap-2 mb-2">
+            <Row className="mb-2" align="center" gap="sm">
               <Badge variant={current.isConfigured ? "success" : "warning"}>
                 {current.isConfigured ? "Configured" : "Not configured"}
               </Badge>
@@ -145,7 +145,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
                   {current.isTokenValid ? "Shiprocket connected" : "Shiprocket token expired"}
                 </Badge>
               )}
-            </Div>
+            </Row>
           )}
           <Stack gap="sm">
             {(["custom", "shiprocket"] as const).map((m) => (

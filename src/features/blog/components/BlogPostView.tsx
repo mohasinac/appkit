@@ -119,9 +119,9 @@ export function BlogPostView({
   if (isLoading) {
     if (renderLoading) return <>{renderLoading()}</>;
     return (
-      <Div className="flex items-center justify-center min-h-screen">
+      <Row className="min-h-screen" align="center" justify="center">
         <Div className="animate-pulse text-neutral-400">Loading…</Div>
-      </Div>
+      </Row>
     );
   }
 

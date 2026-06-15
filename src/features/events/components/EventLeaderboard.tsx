@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span, Text } from "../../../ui";
+import { Div, Row, Span, Text } from "../../../ui";
 import type { LeaderboardEntry } from "../types";
 
 export interface EventLeaderboardProps {
@@ -36,7 +36,7 @@ export function EventLeaderboard({
 }: EventLeaderboardProps) {
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
-    return <Div className="flex justify-center py-8">Loading…</Div>;
+    return <Row className="py-8" justify="center">Loading…</Row>;
   }
 
   if (isEmpty) {

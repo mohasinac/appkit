@@ -2,8 +2,7 @@
 import { normalizeError } from "../../../../errors/normalize";
 
 import React, { useState } from "react";
-import { Button, Div, Span, Stack, Text } from "../../../../ui";
-
+import { Button, Div, Row, Span, Stack, Text } from "../../../../ui";
 const __P = {
   p4: "p-4",
 } as const;
@@ -74,7 +73,7 @@ export function CodeRevealPanel({
           </Stack>
         ) : (
           <Stack gap="sm">
-            <Div className="flex items-center gap-2 border border-border bg-background px-3 py-2 font-mono text-lg" rounded="md">
+            <Row className="border border-border bg-background px-3 py-2 font-mono text-lg" align="center" gap="sm" rounded="md">
               <Span className="flex-1 select-all">{revealed.code}</Span>
               <Button
                 type="button"
@@ -85,7 +84,7 @@ export function CodeRevealPanel({
               >
                 {copied ? "Copied!" : "Copy"}
               </Button>
-            </Div>
+            </Row>
             {redemptionInstructions && (
               <Text className="text-muted-foreground" size="sm">
                 {redemptionInstructions}

@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Eye, Printer, MapPin, Truck } from "lucide-react";
@@ -181,9 +181,9 @@ function OrderDetailDrawer({
   return (
     <SideDrawer isOpen title={`Order ${order?.id ?? orderId}`} onClose={onClose}>
       {loading && (
-        <Div className="flex items-center justify-center py-16">
+        <Row className="py-16" align="center" justify="center">
           <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
-        </Div>
+        </Row>
       )}
 
       {fetchError && (
@@ -196,14 +196,14 @@ function OrderDetailDrawer({
         <Stack gap="none" className="flex flex-col">
           <Div className={`flex-1 ${__O.yAuto} px-4 py-4 space-y-5`}>
             {/* Status row */}
-            <Div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>
                 {order.status ?? "Unknown"}
               </Badge>
               <Text size="sm" className="text-[var(--appkit-color-text-secondary)]">
                 {toRelativeDate(order.createdAt)}
               </Text>
-            </Div>
+            </Row>
 
             {/* Items */}
             {(order.items ?? []).length > 0 && (
@@ -211,23 +211,23 @@ function OrderDetailDrawer({
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
                 <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 border border-[var(--appkit-color-border)] dark:border-slate-700" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
-                    <Div key={i} className="flex items-center justify-between px-3 py-2.5 gap-3">
+                    <Row key={i} className="px-3 py-2.5" align="center" justify="between" gap="3">
                       <Div className="min-w-0">
                         <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
                         <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
                       </Div>
                       <Text size="sm" className="shrink-0" weight="medium">{toRupees(item.price ?? 0)}</Text>
-                    </Div>
+                    </Row>
                   ))}
                 </Div>
               </Div>
             )}
 
             {/* Total */}
-            <Div className="flex items-center justify-between bg-zinc-50 dark:bg-slate-800/60 px-4 py-3" rounded="lg">
+            <Row className="bg-zinc-50 dark:bg-slate-800/60 px-4 py-3" align="center" justify="between" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
               <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toRupees(order.totalAmount ?? 0)}</Text>
-            </Div>
+            </Row>
 
             {/* Shipping address */}
             {addrLine && (
@@ -263,10 +263,10 @@ function OrderDetailDrawer({
           </Div>
 
           {/* Footer */}
-          <Div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 px-4 py-3.5 flex items-center justify-end gap-3">
+          <Row className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 px-4 py-3.5" align="center" justify="end" gap="3">
             <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
             <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
-          </Div>
+          </Row>
         </Stack>
       )}
     </SideDrawer>
@@ -452,7 +452,7 @@ export function SellerOrdersView({
     (row: OrderRow) => {
       const isShippable = ["PENDING", "PROCESSING", "CONFIRMED"].includes(row.status?.toUpperCase() ?? "");
       return (
-        <Div className="flex items-center gap-1">
+        <Row align="center" gap="xs">
           {isShippable && (
             <Button
               variant="ghost"
@@ -473,7 +473,7 @@ export function SellerOrdersView({
           >
             <Eye className="h-4 w-4" />
           </Button>
-        </Div>
+        </Row>
       );
     },
     [handleQuickShip],
@@ -561,9 +561,9 @@ export function SellerOrdersView({
       />
 
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </Div>
+        </Row>
       )}
 
       {selection.selectedIds.length > 0 && (

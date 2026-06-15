@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, HorizontalScroller, Section, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Row, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
@@ -77,9 +77,9 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
           className="h-16 w-16 rounded object-contain"
         />
       ) : (
-        <Div className="flex h-16 w-16 items-center justify-center bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" rounded="lg">
+        <Row className="h-16 w-16 bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
           {initial}
-        </Div>
+        </Row>
       )}
       <Text className="w-full truncate text-zinc-700 dark:text-zinc-300" size="xs" weight="medium" align="center">
         {brand.name}
@@ -116,7 +116,7 @@ export function BrandsSection({
   return (
     <Section className={`py-12 px-4 ${themed.bgSecondary} ${className}`}>
       <Div className="mx-auto max-w-7xl">
-        <Div className="mb-6 flex items-center justify-between">
+        <Row className="mb-6" align="center" justify="between">
           <>
             <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>
               {title}
@@ -132,7 +132,7 @@ export function BrandsSection({
               {viewMoreLabel}
             </Link>
           )}
-        </Div>
+        </Row>
 
         {/* Filter chips */}
         {showFeaturedChip && !isLoading && (

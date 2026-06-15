@@ -1,8 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Grid, Heading, Section, Span, Text } from "../../../ui";
-
+import { Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 // --- Types -------------------------------------------------------------------
 
 export interface TrustFeatureItem {
@@ -41,7 +40,7 @@ function TrustFeatureCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="trustfeaturessection-div-373">
       {/* Icon box */}
-      <Div className="flex h-14 w-14 items-center justify-center bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30 flex-shrink-0" rounded="2xl">
+      <Row className="h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30 flex-shrink-0" align="center" justify="center" rounded="2xl">
         {item.renderIcon ? (
           item.renderIcon({ className: "w-7 h-7" })
         ) : (
@@ -52,7 +51,7 @@ function TrustFeatureCard({
             ✓
           </Span>
         )}
-      </Div>
+      </Row>
 
       <Heading
         level={3}

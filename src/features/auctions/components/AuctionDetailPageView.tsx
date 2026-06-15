@@ -159,13 +159,13 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
   return (
     <Section className="mt-10">
       <Heading level={2} className="mb-2 text-zinc-900 dark:text-zinc-50" size="xl" weight="semibold">Store Reviews</Heading>
-      <Div className="mb-4 flex items-center gap-3">
+      <Row className="mb-4" align="center" gap="3">
         <Span weight="bold" className="text-zinc-900 dark:text-zinc-50" size="3xl">{avg.toFixed(1)}</Span>
         <Div>
           <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
           <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
         </Div>
-      </Div>
+      </Row>
       <Stack gap="sm">
         {storeReviews.slice(0, 10).map((review) => (
           <Div key={review.id} surface="card" padding="sm" className="space-y-1.5">
@@ -304,7 +304,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
       />
       <Container size="xl" className="px-4 py-6">
         {/* Breadcrumb + share */}
-        <Div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+        <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
             <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
@@ -321,7 +321,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
           </Nav>
           <ShareButton title={title} />
-        </Div>
+        </Row>
 
         <AuctionDetailView
           renderGallery={() => (

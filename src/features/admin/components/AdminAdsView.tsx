@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Label, Select, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Input, Label, Row, Select, StackedViewShell, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -122,7 +122,7 @@ function AdsSettingsPanel({
       <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
-      <Div className="flex items-center justify-between gap-3">
+      <Row align="center" justify="between" gap="3">
         <Label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
@@ -139,7 +139,7 @@ function AdsSettingsPanel({
         >
           {settingsMutation.isPending ? "Saving..." : "Save settings"}
         </Button>
-      </Div>
+      </Row>
       {localCredentialIssues.length > 0 ? (
         <Alert variant="error" title="Fix settings before saving">
           {localCredentialIssues.join("; ")}
@@ -319,7 +319,7 @@ export function AdminAdsView({
         const nextStatus: AdminAdStatus = row.status === "active" ? "paused" : "active";
         const cannotPublish = nextStatus === "active" && row.publishReady === false;
         return (
-          <Div className="flex items-center gap-2">
+          <Row align="center" gap="sm">
             {renderEditLink ? renderEditLink(row) : (
               <a
                 className="inline-flex h-8 items-center rounded-md border border-neutral-200 px-3 text-xs dark:border-slate-700"
@@ -336,7 +336,7 @@ export function AdminAdsView({
             >
               {row.status === "active" ? "Pause" : "Publish"}
             </Button>
-          </Div>
+          </Row>
         );
       },
     },
@@ -385,7 +385,7 @@ export function AdminAdsView({
       {...rest}
       title={labels.title ?? "Ad Inventory"}
       sections={[
-        <Div className="flex items-center justify-between gap-3">
+        <Row align="center" justify="between" gap="3">
           <Text variant="secondary">Manage ad inventory, placement mapping, and publishing state.</Text>
           <a
             href={createHref}
@@ -393,7 +393,7 @@ export function AdminAdsView({
           >
             New ad
           </a>
-        </Div>,
+        </Row>,
         adsQuery.error ? (
           <Alert variant="error" title="Could not load ads">
             {adsQuery.error instanceof Error ? adsQuery.error.message : "Unknown error"}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { Div, Heading, Stack } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 
 /** Minimal shape of a per-store/per-type order group surfaced to the slot. */
@@ -52,7 +52,7 @@ export function CartView({
       {labels.title && (
         <Heading level={1} className="mb-6" size="2xl" weight="bold">{labels.title}</Heading>
       )}
-      <Div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+      <Stack className="lg:flex-row lg:gap-8" gap="lg">
         <Div className="flex-1">
           {renderGroups ? renderGroups(groups, isLoading) : renderItems(isLoading)}
           {!renderGroups && renderPromoCode?.()}
@@ -63,7 +63,7 @@ export function CartView({
           {renderSummary?.()}
           {renderCheckoutButton?.(() => {}, isLoading)}
         </Div>
-      </Div>
+      </Stack>
     </Div>
   );
 }

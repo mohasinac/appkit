@@ -18,6 +18,7 @@ import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
 
+import { Stack } from "@mohasinac/appkit";
 export interface UnauthorizedViewProps {
   /** Override the heading text. */
   heading?: string;
@@ -42,7 +43,7 @@ export function UnauthorizedView({
   homeHref = DEFAULT_ROUTE_MAP.HOME,
 }: UnauthorizedViewProps) {
   return (
-    <Div className="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
+    <Stack className="justify-center min-h-[60vh] px-8 text-center" align="center">
       <Heading level={1} variant="primary" className="text-7xl mb-2" weight="bold">
         401
       </Heading>
@@ -56,6 +57,6 @@ export function UnauthorizedView({
         <TextLink href={loginHref}>{loginLabel}</TextLink>
         <TextLink href={homeHref}>{homeLabel}</TextLink>
       </Row>
-    </Div>
+    </Stack>
   );
 }

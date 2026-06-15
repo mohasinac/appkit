@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Alert, Button, Div, Label, Spinner, Text } from "../../../ui";
+import { Alert, Button, Div, Label, Row, Spinner, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
@@ -232,12 +232,12 @@ export function MediaUploadList({
       )}
 
       {isLoading && (
-        <Div className="flex items-center gap-2">
+        <Row align="center" gap="sm">
           <Spinner size="sm" />
           <Text size="sm" variant="secondary">
             Uploading
           </Text>
-        </Div>
+        </Row>
       )}
 
       <input

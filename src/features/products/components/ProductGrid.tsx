@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
-import { BaseListingCard, Button, Div, Grid, Row, Span, Text } from "../../../ui";
+import { BaseListingCard, Button, Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { ViewMode } from "../../../ui";
@@ -137,9 +137,9 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             className="transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <Div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700">
+          <Row className="h-full w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" align="center" justify="center">
             <Span className="opacity-30" size="4xl">🛍️</Span>
-          </Div>
+          </Row>
         )}
 
         {/* Checkbox — always rendered; hidden until hover or selection active */}
@@ -558,7 +558,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Content */}
-      <Div className="flex flex-1 flex-col min-w-0 gap-0.5">
+      <Stack className="flex-1 min-w-0 gap-0.5">
         <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900 dark:text-zinc-100`}>
           {product.title}
         </Text>
@@ -567,7 +567,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             {[product.categoryName, product.brand].filter(Boolean).join(" · ")}
           </Span>
         )}
-        <Div className="flex items-center gap-2 flex-wrap mt-0.5">
+        <Row className="mt-0.5" align="center" gap="sm" wrap>
           <Span size="sm" weight="semibold" className="text-primary">
             {formatCurrency(product.price, getDefaultCurrency())}
           </Span>
@@ -605,8 +605,8 @@ function ProductListRow<T extends ProductItem = ProductItem>({
               </Span>
             );
           })()}
-        </Div>
-      </Div>
+        </Row>
+      </Stack>
 
       {/* Wishlist action */}
       {onAddToWishlist && (

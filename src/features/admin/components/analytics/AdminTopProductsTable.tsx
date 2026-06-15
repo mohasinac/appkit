@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Text } from "../../../../ui";
+import { Div, Heading, Row, Text } from "../../../../ui";
 import type { AnalyticsTopProduct } from "../../types";
 
 export interface AdminTopProductsTableLabels {
@@ -35,9 +35,9 @@ export function AdminTopProductsTable({
       )}
       <Div>
         {products.map((product) => (
-          <Div
+          <Row
             key={product.productId}
-            className="flex items-center justify-between py-3 border-b last:border-b-0 border-neutral-100 dark:border-neutral-800"
+            className="py-3 border-b last:border-b-0 border-neutral-100 dark:border-neutral-800" align="center" justify="between"
           >
             <Div className="flex-1 min-w-0">
               <Text className="truncate" weight="medium">{product.title}</Text>
@@ -51,7 +51,7 @@ export function AdminTopProductsTable({
               </Text>
               {renderProductLink?.(product)}
             </Div>
-          </Div>
+          </Row>
         ))}
       </Div>
     </Div>

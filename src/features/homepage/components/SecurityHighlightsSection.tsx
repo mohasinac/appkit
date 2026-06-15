@@ -1,8 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Grid, Heading, Section, Span, Text, TextLink } from "../../../ui";
-
+import { Div, Grid, Heading, Row, Section, Span, Text, TextLink } from "../../../ui";
 // --- Types -------------------------------------------------------------------
 
 export interface SecurityHighlightItem {
@@ -51,11 +50,11 @@ function SecurityCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="securityhighlightssection-div-357">
       {item.renderIcon && (
-        <Div className="w-10 h-10 bg-white/60 dark:bg-white/10 flex items-center justify-center mb-3" rounded="lg">
+        <Row className="w-10 h-10 bg-white/60 dark:bg-white/10 mb-3" align="center" justify="center" rounded="lg">
           <span className={iconColorClass} aria-hidden="true">
             {item.renderIcon({ className: "w-6 h-6" })}
           </span>
-        </Div>
+        </Row>
       )}
       <Text className="mb-1" weight="semibold">{item.title}</Text>
       <Text variant="secondary" className="leading-relaxed" size="sm">

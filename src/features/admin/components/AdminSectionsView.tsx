@@ -5,21 +5,7 @@ import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
-import {
-  Button,
-  Checkbox,
-  ConfirmDeleteModal,
-  Div,
-  Form,
-  FormActions,
-  Input,
-  Modal,
-  Select,
-  Stack,
-  Text,
-  Textarea,
-  useToast,
-} from "../../../ui";
+import { Button, Checkbox, ConfirmDeleteModal, Div, Form, FormActions, Input, Modal, Row, Select, Stack, Text, Textarea, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, DEMO_ENDPOINTS } from "../../../constants";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
@@ -1563,7 +1549,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Buttons (max 3)</Text>
           {bannerBuilder.buttons.map((btn, index) => (
             <Div key={`banner-btn-${index}`} className="space-y-2 dark:border-slate-700" rounded="md" padding="xs" border="default">
-              <Div className="flex items-center justify-between"><Text className="text-zinc-500 dark:text-zinc-400" size="xs">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Div>
+              <Row align="center" justify="between"><Text className="text-zinc-500 dark:text-zinc-400" size="xs">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Row>
               <Input label="Text" value={btn.text} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], text: e.target.value }; return { ...prev, buttons: next }; })} />
               <Input label="Link" value={btn.link} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], link: e.target.value }; return { ...prev, buttons: next }; })} />
               <Select label="Variant" value={btn.variant} onValueChange={(v) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], variant: v as "primary" | "secondary" | "outline" }; return { ...prev, buttons: next }; })} options={[{ label: "Primary", value: "primary" }, { label: "Secondary", value: "secondary" }, { label: "Outline", value: "outline" }]} />
@@ -1589,10 +1575,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Div className="space-y-2">
           <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Feature items</Text>
           {featuresBuilder.features.map((feature, index) => (
-            <Div key={`feat-${index}`} className="flex items-center gap-2">
+            <Row key={`feat-${index}`} align="center" gap="sm">
               <Input value={feature} onChange={(e) => setFeaturesBuilder((prev) => { const next = [...prev.features]; next[index] = e.target.value; return { ...prev, features: next }; })} className="flex-1" />
               <Button type="button" variant="ghost" size="sm" onClick={() => setFeaturesBuilder((prev) => ({ ...prev, features: prev.features.filter((_, i) => i !== index) }))}>✕</Button>
-            </Div>
+            </Row>
           ))}
           <Button type="button" variant="outline" size="sm" onClick={() => setFeaturesBuilder((prev) => ({ ...prev, features: [...prev.features, ""] }))}>+ Add feature</Button>
         </Div>
@@ -1642,10 +1628,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Div className="space-y-2">
           <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Benefits</Text>
           {whatsappBuilder.benefits.map((benefit, index) => (
-            <Div key={`wb-${index}`} className="flex items-center gap-2">
+            <Row key={`wb-${index}`} align="center" gap="sm">
               <Input value={benefit} onChange={(e) => setWhatsappBuilder((prev) => { const next = [...prev.benefits]; next[index] = e.target.value; return { ...prev, benefits: next }; })} className="flex-1" />
               <Button type="button" variant="ghost" size="sm" onClick={() => setWhatsappBuilder((prev) => ({ ...prev, benefits: prev.benefits.filter((_, i) => i !== index) }))}>✕</Button>
-            </Div>
+            </Row>
           ))}
           <Button type="button" variant="outline" size="sm" onClick={() => setWhatsappBuilder((prev) => ({ ...prev, benefits: [...prev.benefits, ""] }))}>+ Add benefit</Button>
         </Div>
@@ -1680,10 +1666,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         {trustIndicatorsBuilder.indicators.map((ind, index) => (
           <Div key={ind.id} className={`space-y-2 rounded-md border border-zinc-200 ${__P.p3} dark:border-slate-700`}>
-            <Div className="flex items-center justify-between">
+            <Row align="center" justify="between">
               <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Indicator {index + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
-            </Div>
+            </Row>
             <Input label="Icon (emoji or text)" value={ind.icon} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], icon: e.target.value }; return { ...prev, indicators: next }; })} />
             <Input label="Title" value={ind.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], title: e.target.value }; return { ...prev, indicators: next }; })} />
             <Input label="Description" value={ind.description} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], description: e.target.value }; return { ...prev, indicators: next }; })} />
@@ -1825,14 +1811,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           key={`custom-card-${index}`}
           className="space-y-3 dark:border-slate-700" rounded="md" padding="sm" border="default"
         >
-          <Div className="flex items-center justify-between">
+          <Row align="center" justify="between">
             <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
               Card {index + 1}
             </Text>
             <Button type="button" variant="outline" size="sm" onClick={() => removeCard(index)}>
               Remove
             </Button>
-          </Div>
+          </Row>
           <Input label="ID / slug" value={card.id} onChange={(e) => updateCard(index, { id: e.target.value })} placeholder="card-1" />
           <Input label="Image URL" value={card.image} onChange={(e) => updateCard(index, { image: e.target.value })} placeholder="https://..." />
           <Input label="Image alt text" value={card.imageAlt} onChange={(e) => updateCard(index, { imageAlt: e.target.value })} />
@@ -1926,14 +1912,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Div className="space-y-3">
-          <Div className="flex items-center justify-between">
+          <Row align="center" justify="between">
             <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
               Cards ({customCardsBuilder.cards.length})
             </Text>
             <Button type="button" variant="outline" size="sm" onClick={addCard}>
               Add card
             </Button>
-          </Div>
+          </Row>
 
           {customCardsBuilder.cards.map((card, index) => renderCardFields(card, index))}
 
@@ -2538,20 +2524,20 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   return (
     <>
       <Div className="py-4 px-3 sm:px-4">
-        <Div className="mb-4 flex items-center justify-between gap-3">
+        <Row className="mb-4" align="center" justify="between" gap="3">
           <Div>
             <Text className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">Homepage Sections</Text>
             <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Manage homepage sections and their display order</Text>
           </Div>
-          <Div className="flex items-center gap-2">
+          <Row align="center" gap="sm">
             <Button type="button" variant="outline" size="sm" onClick={() => setSeedResetOpen(true)}>
               Reset seed data
             </Button>
             <Button type="button" variant="primary" size="sm" onClick={() => setIsModalOpen(true)}>
               Manage Sections
             </Button>
-          </Div>
-        </Div>
+          </Row>
+        </Row>
         {errorMessage && (
           <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
             {errorMessage}
@@ -2561,11 +2547,11 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       </Div>
 
       <Div className={`mt-4 space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
-        <Div className="flex items-center justify-between gap-3">
+        <Row align="center" justify="between" gap="3">
           <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
             Reorder Sections
           </Text>
-          <Div className="flex items-center gap-2">
+          <Row align="center" gap="sm">
             <Button
               type="button"
               variant="outline"
@@ -2602,8 +2588,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             >
               {reorderSections.isPending ? "Saving order..." : "Save order"}
             </Button>
-          </Div>
-        </Div>
+          </Row>
+        </Row>
 
         {reorderDraft.length === 0 ? (
           <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No sections to reorder.</Text>

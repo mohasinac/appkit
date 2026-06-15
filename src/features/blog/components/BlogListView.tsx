@@ -69,9 +69,9 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             style={{ backgroundImage: `url(${coverImageUrl})` }}
           />
         ) : (
-          <Div className="h-full w-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-slate-800 dark:via-slate-700 dark:to-slate-900 flex items-center justify-center">
+          <Row className="h-full w-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-slate-800 dark:via-slate-700 dark:to-slate-900" align="center" justify="center">
             <Span className="opacity-30" size="4xl" aria-hidden="true">✍️</Span>
-          </Div>
+          </Row>
         )}
       </Div>
       <Div className={`flex flex-1 flex-col ${__P.p5}`}>
@@ -111,9 +111,9 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
               style={{ backgroundImage: `url(${post.authorAvatar})` }}
             />
           ) : post.authorName ? (
-            <Div className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-primary/10 text-xs font-bold text-primary" rounded="full">
+            <Row className="h-7 w-7 flex-shrink-0 bg-primary/10 text-xs font-bold text-primary" align="center" justify="center" rounded="full">
               {post.authorName.charAt(0).toUpperCase()}
-            </Div>
+            </Row>
           ) : null}
           <Text className="text-neutral-500 dark:text-zinc-400 min-w-0" size="xs">
             {post.authorName && (
@@ -257,13 +257,13 @@ export function BlogListView<T extends BlogPost = BlogPost>({
           totalPages,
         }) as React.ReactNode)
       ) : totalPages > 1 && onPageChange ? (
-        <Div className="flex justify-center">
+        <Row justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
-        </Div>
+        </Row>
       ) : null}
     </Div>
   );

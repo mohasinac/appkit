@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -223,7 +223,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
         title="Reply to review"
       >
         <Div className="space-y-4">
-          <Div className="flex flex-col gap-1">
+          <Stack gap="xs">
             <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Admin reply
             </Label>
@@ -234,8 +234,8 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
               placeholder="Write a public reply to this review…"
               className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
-          </Div>
-          <Div className="flex justify-end gap-2">
+          </Stack>
+          <Row justify="end" gap="sm">
             <Button
               variant="secondary"
               onClick={() => {
@@ -253,7 +253,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
             >
               Save reply
             </Button>
-          </Div>
+          </Row>
         </Div>
       </Modal>
     </>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Div, Heading, Stack, Text } from "../../../ui";
+import { Div, Heading, Row, Stack, Text } from "../../../ui";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -60,14 +60,14 @@ export function EventOfferCard({
           ) : null}
         </Stack>
 
-        <Div className="flex items-center gap-3 bg-zinc-50 dark:bg-zinc-900 px-4 py-3" rounded="lg">
+        <Row className="bg-zinc-50 dark:bg-zinc-900 px-4 py-3" align="center" gap="3" rounded="lg">
           <code className="flex-1 font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
             {couponCode}
           </code>
           <Button type="button" variant="outline" onClick={copyCode}>
             {copied ? "Copied!" : "Copy code"}
           </Button>
-        </Div>
+        </Row>
 
         <Div>
           <Link href={href}>

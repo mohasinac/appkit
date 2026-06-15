@@ -314,7 +314,7 @@ export function TitleBarLayout({
           {/* Centre: #2 — admin logo image (absolutely centred when present),
               or nav slot (desktop only) when no logo image is configured */}
           {siteLogoUrl ? (
-            <Div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
+            <Row className="absolute inset-y-0 left-1/2 -translate-x-1/2" align="center">
               <Link
                 href={logoHref}
                 aria-label={brandName}
@@ -322,7 +322,7 @@ export function TitleBarLayout({
               >
                 <SiteLogo src={siteLogoUrl} title={brandName} size="md" />
               </Link>
-            </Div>
+            </Row>
           ) : (
             navSlot && <Div className="hidden md:flex">{navSlot}</Div>
           )}

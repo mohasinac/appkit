@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Div, Form, FormActions, Label, Select, SideDrawer, Span, Text, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -104,7 +104,7 @@ interface PermissionDomainsPanelProps {
 
 function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPanelProps) {
   return (
-    <Div className="flex flex-col gap-2">
+    <Stack gap="sm">
       <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">
         Permissions
         <Span size="xs" weight="normal" className="ml-2 text-zinc-500 dark:text-zinc-400">
@@ -144,7 +144,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           );
         })}
       </Div>
-    </Div>
+    </Stack>
   );
 }
 
@@ -266,7 +266,7 @@ export function AdminEmployeeEditorView({
       >
         <Form onSubmit={handleSubmit} className="flex flex-col gap-5 p-4">
           {mode === "invite" && (
-            <Div className="flex flex-col gap-1.5">
+            <Stack className="gap-1.5">
               <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 Email address
               </Label>
@@ -278,10 +278,10 @@ export function AdminEmployeeEditorView({
                 placeholder="employee@example.com"
                 className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
               />
-            </Div>
+            </Stack>
           )}
 
-          <Div className="flex flex-col gap-1.5">
+          <Stack className="gap-1.5">
             <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Permission group
             </Label>
@@ -294,7 +294,7 @@ export function AdminEmployeeEditorView({
               Selecting a group auto-fills the permissions below. You can still
               customise individual permissions.
             </Text>
-          </Div>
+          </Stack>
 
           <PermissionDomainsPanel permissions={permissions} togglePerm={togglePerm} />
 

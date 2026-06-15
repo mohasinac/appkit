@@ -4,7 +4,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Button, Card, CardBody, ConfirmDeleteModal, Div, Form, PaginatedSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, Card, CardBody, ConfirmDeleteModal, Div, Form, Input, PaginatedSelect, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -228,7 +228,7 @@ export function AdminCategoryEditorView({
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Brief description of the category"
           />
-          <Div className="flex flex-col gap-1">
+          <Stack gap="xs">
             <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
               Parent category
             </Text>
@@ -251,7 +251,7 @@ export function AdminCategoryEditorView({
             <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
               Leave empty to create a root category.
             </Text>
-          </Div>
+          </Stack>
         </Div>
       </Card>
 

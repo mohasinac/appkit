@@ -1,8 +1,7 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { Div, Grid, Heading, Section, Text } from "../../../ui";
-
+import { Div, Grid, Heading, Row, Section, Text } from "../../../ui";
 // --- Types -------------------------------------------------------------------
 
 export interface StatItem {
@@ -42,9 +41,9 @@ function StatCard({
       style={{ transitionDelay: `${delay}ms` }}
     >
       {stat.renderIcon && (
-        <Div className="mb-4 flex h-14 w-14 items-center justify-center bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30" rounded="2xl">
+        <Row className="mb-4 h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30" align="center" justify="center" rounded="2xl">
           {stat.renderIcon({ className: "w-7 h-7" })}
-        </Div>
+        </Row>
       )}
 
       <Heading

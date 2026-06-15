@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { sortBy } from "@mohasinac/appkit";
+import { Row, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback, useMemo } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
@@ -376,13 +376,13 @@ export function SellerTemplatesView({
       />
 
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={safePage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       {selection.selectedCount > 0 && (
@@ -479,14 +479,14 @@ export function SellerTemplatesView({
         mode={drawerMode}
         isDirty={draft.name !== "" || draft.category !== "" || draft.brand !== ""}
         footer={
-          <Div className="flex items-center justify-end gap-2">
+          <Row align="center" justify="end" gap="sm">
             <Button size="sm" variant="ghost" onClick={closeDrawer} disabled={saving}>
               Cancel
             </Button>
             <Button size="sm" isLoading={saving} onClick={handleSave}>
               {drawerMode === "create" ? "Create Template" : "Save Changes"}
             </Button>
-          </Div>
+          </Row>
         }
       >
         <Stack gap="md">

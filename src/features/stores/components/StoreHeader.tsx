@@ -55,7 +55,7 @@ export function StoreHeader({
         </Div>
       )}
       <Div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <Div className="flex items-end gap-4">
+        <Row align="end" gap="md">
           {store.storeLogoURL ? (
             <Div
               role="img"
@@ -70,7 +70,7 @@ export function StoreHeader({
             </Div>
           )}
           <Div className="flex-1 min-w-0">
-            <Div className="flex flex-wrap items-center gap-2 mb-0.5">
+            <Row className="mb-0.5" align="center" gap="sm" wrap>
               <Heading
                 level={1}
                 className="text-gray-900 dark:text-zinc-100" size="xl" weight="bold"
@@ -82,7 +82,7 @@ export function StoreHeader({
                   ★ {store.averageRating.toFixed(1)}
                 </Span>
               )}
-            </Div>
+            </Row>
             <Row className="text-xs text-gray-500 dark:text-zinc-400 mb-0.5" gap="3">
               {(store as any).category && <Span transform="capitalize">{(store as any).category}</Span>}
               {store.totalProducts != null && store.totalProducts > 0 && (
@@ -117,7 +117,7 @@ export function StoreHeader({
               </Button>
             )}
           </Row>
-        </Div>
+        </Row>
 
         {store.isVacationMode && (
           <Text className={CLS_WARN_BANNER}>

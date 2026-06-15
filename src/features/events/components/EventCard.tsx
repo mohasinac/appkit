@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Article, BaseListingCard, Button, Div, Heading, RichText, Span, TextLink } from "../../../ui";
+import { Article, BaseListingCard, Button, Div, Heading, RichText, Row, Span, TextLink } from "../../../ui";
 import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
@@ -91,20 +91,20 @@ export function EventCard({
             />
           </Div>
         ) : (
-          <Div className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center">
+          <Row className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" align="center" justify="center">
             <Span className="opacity-40" size="5xl" aria-hidden="true">
               {TYPE_ICONS[event.type]}
             </Span>
-          </Div>
+          </Row>
         )}
       </Link>
       <Div className={`flex flex-1 flex-col ${__P.p4}`}>
-        <Div className="flex items-start justify-between gap-2 mb-2">
+        <Row className="mb-2" align="start" justify="between" gap="sm">
           <Span size="lg" aria-hidden="true">
             {TYPE_ICONS[event.type]}
           </Span>
           <EventStatusBadge status={event.status} />
-        </Div>
+        </Row>
         <Link href={detailHref} className="block">
           <Heading
             level={3}
@@ -119,13 +119,13 @@ export function EventCard({
           className={`mb-3 ${THEME_CONSTANTS.utilities.textClamp3} text-sm text-zinc-600 dark:text-zinc-400`}
         />
 
-        <Div className="mb-3 mt-auto flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+        <Row className="mb-3 mt-auto text-xs text-zinc-500 dark:text-zinc-400" align="center" justify="between">
           {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE &&
             daysLeft > 0 && <Span>⏱ {daysLeft}d remaining</Span>}
           <Span>
             👥 {event.stats.totalEntries} {labels.entries ?? "entries"}
           </Span>
-        </Div>
+        </Row>
 
         {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE && onParticipate ? (
           <Button

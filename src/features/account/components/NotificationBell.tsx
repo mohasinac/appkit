@@ -1,17 +1,6 @@
 "use client"
 import React, { useCallback, useRef, useState } from "react";
-import {
-  Button,
-  Heading,
-  Li,
-  Div,
-  Row,
-  Spinner,
-  Span,
-  Text,
-  TextLink,
-  Ul,
-} from "../../../ui";
+import { Button, Div, Heading, Li, Row, Span, Spinner, Stack, Text, TextLink, Ul } from "../../../ui";
 import { useClickOutside, useMessage } from "../../../react";
 import { formatRelativeTime } from "../../../utils";
 import { THEME_CONSTANTS } from "../../../tokens";
@@ -249,15 +238,15 @@ function renderNotificationListContent(props: {
   renderActionLink: (p: NotificationBellRenderLinkProps) => React.ReactNode;
 }) {
   const { isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink } = props;
-  if (isLoading) return <Div className="flex items-center justify-center py-10"><Spinner size="md" /></Div>;
+  if (isLoading) return <Row className="py-10" align="center" justify="center"><Spinner size="md" /></Row>;
   if (notifications.length === 0) return (
-    <Div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+    <Stack className="justify-center py-10 px-4 text-center" align="center">
       <svg className="w-12 h-12 text-zinc-300 dark:text-zinc-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
       <Text className="text-zinc-900 dark:text-white" weight="medium">{labels.empty}</Text>
       <Text size="sm" className="mt-1 text-zinc-500 dark:text-zinc-400">{labels.emptyDesc}</Text>
-    </Div>
+    </Stack>
   );
   return (
     <Ul>

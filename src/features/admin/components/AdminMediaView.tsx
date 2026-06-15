@@ -1,16 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Alert,
-  Button,
-  Div,
-  Input,
-  Select,
-  StackedViewShell,
-  Text,
-  useToast,
-} from "../../../ui";
+import { Alert, Button, Div, Input, Row, Select, Stack, StackedViewShell, Text, useToast } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 import type { StackedViewShellProps } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -98,7 +89,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
       <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
         Browse existing media
       </Text>
-      <Div className="flex flex-wrap items-center gap-2">
+      <Row align="center" gap="sm" wrap>
         <Select
           value={prefix}
           onChange={(e) => setPrefix(e.target.value)}
@@ -113,7 +104,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 min-w-[160px]"
         />
-      </Div>
+      </Row>
       {error && (
         <Alert variant="error" title="Load failed">
           {error}
@@ -127,7 +118,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
               key={f.name}
               className="group dark:border-slate-700 overflow-hidden bg-zinc-50 dark:bg-slate-800" rounded="lg" border="default"
             >
-              <Div className="aspect-square flex items-center justify-center bg-zinc-100 dark:bg-slate-700 text-xs text-zinc-500 dark:text-zinc-400">
+              <Row className="aspect-square bg-zinc-100 dark:bg-slate-700 text-xs text-zinc-500 dark:text-zinc-400" align="center" justify="center">
                 {isImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -141,7 +132,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                     {f.contentType ?? "file"}
                   </Text>
                 )}
-              </Div>
+              </Row>
               <Div className="p-1.5">
                 <Text className="truncate text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">
                   {f.name.split("/").pop()}
@@ -164,7 +155,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           </Text>
         )}
       </Div>
-      <Div className="flex items-center justify-between">
+      <Row align="center" justify="between">
         <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
           {filtered.length} file(s){nextPageToken ? " · more available" : ""}
         </Text>
@@ -178,7 +169,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
             {isLoading ? "Loading…" : "Load more"}
           </Button>
         )}
-      </Div>
+      </Row>
     </Div>
   );
 }
@@ -223,7 +214,7 @@ function MediaUploaderPanel({
         onStagedUrlsChange={setHeroStagedUrls}
       />
       {heroAssetUrl && (
-        <Div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-3 py-2" rounded="lg" border="default">
+        <Row className="bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-3 py-2" align="center" gap="sm" rounded="lg" border="default">
           <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
             {heroAssetUrl}
           </Text>
@@ -234,7 +225,7 @@ function MediaUploaderPanel({
           >
             {copiedUrl === heroAssetUrl ? "Copied!" : ACTIONS.MEDIA["copy-url"].label}
           </Button>
-        </Div>
+        </Row>
       )}
       <MediaUploadList
         label="Gallery assets"
@@ -247,14 +238,14 @@ function MediaUploaderPanel({
         maxItems={12}
       />
       {galleryAssets.length > 0 && (
-        <Div className="flex flex-col gap-1">
+        <Stack gap="xs">
           <Text className="text-zinc-500 dark:text-zinc-400" size="xs" weight="medium">
             Gallery URLs
           </Text>
           {galleryAssets.map((asset, i) => (
-            <Div
+            <Row
               key={i}
-              className="flex items-center gap-2 rounded bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-2 py-1" border="default"
+              className="rounded bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-2 py-1" align="center" gap="sm" border="default"
             >
               <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
                 {asset.url}
@@ -266,11 +257,11 @@ function MediaUploaderPanel({
               >
                 {copiedUrl === asset.url ? "Copied!" : "Copy"}
               </Button>
-            </Div>
+            </Row>
           ))}
-        </Div>
+        </Stack>
       )}
-      <Div className="flex flex-wrap items-center gap-2">
+      <Row align="center" gap="sm" wrap>
         <Button
           type="button"
           variant="outline"
@@ -290,7 +281,7 @@ function MediaUploaderPanel({
         <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
           {stagedUrls.length} staged upload(s)
         </Text>
-      </Div>
+      </Row>
     </Div>
   );
 }

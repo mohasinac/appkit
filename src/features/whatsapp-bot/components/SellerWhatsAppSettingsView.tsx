@@ -419,9 +419,9 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         {/* Simulated WhatsApp catalog tile grid */}
         <Div className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`}>
           <Row gap="sm" align="center" className="mb-3">
-            <Div className="w-8 h-8 bg-[#25D366] flex items-center justify-center" rounded="full">
+            <Row className="w-8 h-8 bg-[#25D366]" align="center" justify="center" rounded="full">
               <Text className="text-white" size="xs" weight="bold">W</Text>
-            </Div>
+            </Row>
             <Div>
               <Text className="text-zinc-900 dark:text-zinc-100" size="xs" weight="semibold">
                 {cfg?.connected ? "Your Store" : "Store Name"}
@@ -433,9 +433,9 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           <Div className="grid grid-cols-2 gap-2">
             {SAMPLE_CATALOG_ITEMS.map((item) => (
               <Div key={item.id} surface="card" className={`${__O.hidden}`}>
-                <Div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                <Row className="aspect-square bg-zinc-100 dark:bg-zinc-800" align="center" justify="center">
                   <Text size="2xl">{item.emoji}</Text>
-                </Div>
+                </Row>
                 <Div padding="xs">
                   <Text className="text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight" size="xs" weight="medium">
                     {item.name}

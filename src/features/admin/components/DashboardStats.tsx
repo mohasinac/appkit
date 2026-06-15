@@ -3,7 +3,7 @@
 import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
-import { Div, Grid, Text } from "../../../ui";
+import { Div, Grid, Row, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
@@ -40,7 +40,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         aria-hidden="true"
       />
 
-      <Div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
+      <Row className="px-5 pb-5 pt-6" align="start" justify="between" gap="3">
         {/* Text block */}
         <Div className={`min-w-0 flex-1 ${__O.hidden}`}>
           <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)] truncate" weight="semibold" transform="uppercase">
@@ -55,14 +55,14 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         </Div>
 
         {/* Icon pill */}
-        <Div
-          className="flex-shrink-0 w-10 h-10 flex items-center justify-center" rounded="lg"
+        <Row
+          className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="lg"
           // audit-inline-style-ok: runtime theme gradient
           style={{ background: gradient, opacity: 0.92 }}
         >
           <Icon className="w-5 h-5 text-white drop-shadow-sm" />
-        </Div>
-      </Div>
+        </Row>
+      </Row>
     </Div>
   );
 }
@@ -71,13 +71,13 @@ function SkeletonCard() {
   return (
     <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} ${__P.p5} animate-pulse`}>
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
-      <Div className="flex items-start justify-between gap-3 pt-1">
+      <Row className="pt-1" align="start" justify="between" gap="3">
         <Div className="flex-1 space-y-2">
           <Div className="h-2.5 w-20 rounded bg-[var(--appkit-color-border)]" />
           <Div className="h-7 w-24 rounded bg-[var(--appkit-color-border)]" />
         </Div>
         <Div className="w-10 h-10 bg-[var(--appkit-color-border)]" rounded="lg" />
-      </Div>
+      </Row>
     </Div>
   );
 }

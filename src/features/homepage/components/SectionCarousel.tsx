@@ -1,16 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import {
-  Button,
-  Div,
-  Heading,
-  HorizontalScroller,
-  Section,
-  Span,
-  Text,
-  TextLink,
-  type PerViewConfig,
-} from "../../../ui";
+import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Text, TextLink, type PerViewConfig } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 const __O = {
@@ -278,7 +268,7 @@ export function SectionCarousel<T = unknown>({
 
         {/* View More button */}
         {viewMoreHref && !isLoading && (
-          <Div className="mt-6 flex justify-center">
+          <Row className="mt-6" justify="center">
             <TextLink
               href={viewMoreHref}
               className={`inline-flex items-center gap-1.5 rounded-lg border px-6 py-2.5 text-sm font-medium transition-colors ${
@@ -289,7 +279,7 @@ export function SectionCarousel<T = unknown>({
             >
               {viewMoreLabel}
             </TextLink>
-          </Div>
+          </Row>
         )}
       </Div>
     </Section>

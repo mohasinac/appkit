@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { Columns, Heart, ShoppingCart } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Text, useToast } from "../../../ui";
+import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, Text, useToast } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -293,13 +293,13 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       {/* ── Pre-order grid ─────────────────────────────────────────────── */}
@@ -323,7 +323,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             No pre-orders found.
           </Text>
         ) : view === "list" ? (
-          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -337,7 +337,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 onSelect={(id) => selection.toggle(id)}
               />
             ))}
-          </Div>
+          </Stack>
         ) : (
           <Div className={gridClass}>
             {(preOrders as any[]).map((product) => (

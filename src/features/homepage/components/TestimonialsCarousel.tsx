@@ -1,4 +1,4 @@
-import { Div, Heading, Section, StarRating, Text } from "../../../ui";
+import { Div, Heading, Section, Stack, StarRating, Text } from "../../../ui";
 import type { Testimonial } from "../types";
 
 export interface TestimonialsCarouselProps {
@@ -29,8 +29,8 @@ export function TestimonialsCarousel({
         paddingBlock: "clamp(3rem, 6vh, 5rem)",
       }}
     >
-      <Div
-        className="mx-auto w-full max-w-7xl px-6 sm:px-8 flex flex-col"
+      <Stack
+        className="mx-auto w-full max-w-7xl px-6 sm:px-8"
         style={{ minHeight: 0 }}
       >
         {/* Heading */}
@@ -56,14 +56,14 @@ export function TestimonialsCarousel({
         </Div>
 
         {/* 2-row masonry grid — wraps into 2 rows, scrolls horizontally on overflow */}
-        <Div
-          className="flex flex-col flex-wrap gap-4 overflow-x-auto scrollbar-none"
+        <Stack
+          className="flex-wrap overflow-x-auto scrollbar-none" gap="md"
           style={{ maxHeight: "50svh", alignContent: "flex-start" }}
         >
           {testimonials.map((t) => (
-            <Div
+            <Stack
               key={t.id}
-              className="flex shrink-0 flex-col gap-3 p-5"
+              className="shrink-0 p-5" gap="3"
               style={{
                 width: "clamp(260px, 28vw, 360px)",
                 background: "var(--card-bg)",
@@ -87,10 +87,10 @@ export function TestimonialsCarousel({
               >
                 — {t.name}
               </Text>
-            </Div>
+            </Stack>
           ))}
-        </Div>
-      </Div>
+        </Stack>
+      </Stack>
     </Section>
   );
 }

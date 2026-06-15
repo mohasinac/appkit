@@ -60,7 +60,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
     >
       {/* Clicking the main body navigates to the review detail */}
       <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">
-        <Div className="flex items-start gap-3">
+        <Row align="start" gap="3">
           {review.userAvatar ? (
             <Div
               role="img"
@@ -70,9 +70,9 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
-            <Div className="flex h-9 w-9 flex-shrink-0 items-center justify-center bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300" rounded="full">
+            <Row className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300" align="center" justify="center" rounded="full">
               {initials}
-            </Div>
+            </Row>
           )}
           <Div className="flex-1 min-w-0">
             <Row wrap gap="sm">
@@ -94,7 +94,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               <StarRating value={review.rating} size="sm" readOnly />
             </Div>
           </Div>
-        </Div>
+        </Row>
 
         {review.title && (
           <Heading
@@ -137,7 +137,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
 
       {/* Footer links — rendered outside the review Link to avoid nested anchors */}
       {hasFooter && (
-        <Div className="mt-3 pt-3 border-t border-neutral-100 dark:border-zinc-800 flex flex-col gap-1.5">
+        <Stack className="mt-3 pt-3 border-t border-neutral-100 dark:border-zinc-800 gap-1.5">
           {showStoreLink && (
             <Link
               href={String(ROUTES.PUBLIC.STORE_DETAIL(review.storeSlug!))}
@@ -168,7 +168,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               <span className={THEME_CONSTANTS.utilities.textClamp1}>{displayName}</span>
             </Link>
           )}
-        </Div>
+        </Stack>
       )}
     </Div>
   );
@@ -236,13 +236,13 @@ export function ReviewsList({
         ))}
       </Stack>
       {totalPages > 1 && onPageChange && (
-        <Div className="flex justify-center">
+        <Row justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
-        </Div>
+        </Row>
       )}
     </Stack>
   );

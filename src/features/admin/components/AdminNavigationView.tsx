@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, ConfirmDeleteModal, Div, RowActionMenu, Span, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, ConfirmDeleteModal, Div, Row, RowActionMenu, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -40,13 +40,13 @@ function NavItemRow({
   onMoveUp, onMoveDown, onVisibilityChange, onEdit, onDelete,
 }: NavItemRowProps) {
   return (
-    <Div surface="default" className="flex items-center gap-3 px-4 py-3">
-      <Div className="flex flex-col gap-0.5 shrink-0">
+    <Row surface="default" className="px-4 py-3" align="center" gap="3">
+      <Stack className="gap-0.5 shrink-0">
         <Button variant="ghost" type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>
         <Button variant="ghost" type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
-      </Div>
+      </Stack>
       <Div className="flex-1 min-w-0">
         <Text className="text-zinc-800 dark:text-zinc-100 truncate" size="sm" weight="medium">
           {item.parentId ? <Span className="mr-1" color="faint">↳</Span> : null}
@@ -59,7 +59,7 @@ function NavItemRow({
         { label: ROW_ACTION_META[ROW_ACTION_ID.EDIT].label, onClick: () => onEdit(item) },
         { label: ROW_ACTION_META[ROW_ACTION_ID.DELETE].label, destructive: true, onClick: () => onDelete(item) },
       ]} />
-    </Div>
+    </Row>
   );
 }
 
@@ -154,7 +154,7 @@ export function AdminNavigationView({
               {error instanceof Error ? error.message : "Unknown error"}
             </Alert>
           ) : null,
-          <Div key="header" className="flex items-center justify-between mb-4">
+          <Row key="header" className="mb-4" align="center" justify="between">
             <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
               {sorted.length} nav item{sorted.length !== 1 ? "s" : ""}
             </Text>
@@ -166,7 +166,7 @@ export function AdminNavigationView({
             >
               + New item
             </Button>
-          </Div>,
+          </Row>,
           sorted.length === 0 && !isLoading ? (
             <Text key="empty" className="text-zinc-400 dark:text-zinc-400 py-8" size="sm" align="center">
               No nav items yet. Click "New item" to add one.

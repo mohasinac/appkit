@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBlogPosts } from "../hooks/useBlog";
-import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { BlogCard } from "./BlogListView";
 import { BlogFilters, BLOG_PUBLIC_SORT_OPTIONS } from "./BlogFilters";
@@ -46,9 +46,9 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   }
   if (view === "list") {
     return (
-      <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+      <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
         {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
-      </Div>
+      </Stack>
     );
   }
   return (
@@ -192,13 +192,13 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       {/* ── Blog grid ──────────────────────────────────────────────────── */}

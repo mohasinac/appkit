@@ -1,18 +1,18 @@
 import React from "react";
 import { ShoppingBag, Hash, Scale, Wallet, RotateCcw, DollarSign, Gavel } from "lucide-react";
-import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminOrdersGuideView() {
   return (
     <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
       <Section>
-        <Div className="flex items-center gap-3 mb-2">
-          <Div className="flex-shrink-0 w-10 h-10 flex items-center justify-center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
+        <Row className="mb-2" align="center" gap="3">
+          <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <ShoppingBag className="w-5 h-5 text-white" />
-          </Div>
+          </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
-        </Div>
+        </Row>
         <Heading level={1} className="md:text-3xl text-[var(--appkit-color-text)] mb-2" size="2xl" weight="bold">Orders &amp; Finance</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Order statuses, payouts, disputes, returns, and commission math on LetItRip.</Text>
       </Section>
@@ -106,10 +106,10 @@ export function AdminOrdersGuideView() {
         },
       ].map(({ Icon, title, content }) => (
         <Section key={title} className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="2xl">
-          <Div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-2,var(--appkit-color-border))]/20">
+          <Row className="px-6 py-4 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-2,var(--appkit-color-border))]/20" align="center" gap="3">
             <Icon className="w-5 h-5 text-[var(--appkit-color-primary)]" />
             <Heading level={2} size="base" weight="semibold">{title}</Heading>
-          </Div>
+          </Row>
           <Div className="px-6 py-5">{content}</Div>
         </Section>
       ))}

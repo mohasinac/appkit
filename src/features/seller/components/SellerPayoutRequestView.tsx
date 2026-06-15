@@ -1,16 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Button,
-  Div,
-  Modal,
-  Stack,
-  Text,
-} from "../../../ui";
-
+import { Alert, Badge, Button, Div, Modal, Row, Stack, Text } from "../../../ui";
 const __P = {
   p3: "p-3",
   p4: "p-4",
@@ -100,7 +91,7 @@ export function SellerPayoutRequestView({
   return (
     <>
       <Div className={`${__P.p4} rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]`}>
-        <Div className="flex flex-wrap items-center justify-between gap-3">
+        <Row align="center" justify="between" gap="3" wrap>
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Available for Payout</Text>
             <Text className="text-[var(--appkit-color-primary)]" size="2xl" weight="bold">
@@ -110,7 +101,7 @@ export function SellerPayoutRequestView({
               {summary.eligibleOrderCount} eligible order{summary.eligibleOrderCount !== 1 ? "s" : ""}
             </Text>
           </Div>
-          <Div className="flex items-center gap-2 flex-wrap">
+          <Row align="center" gap="sm" wrap>
             {summary.hasPendingPayout && <Badge variant="warning">Payout in progress</Badge>}
             {submitted && <Badge variant="success">Payout requested!</Badge>}
             {!payoutDetails?.isConfigured && (
@@ -125,8 +116,8 @@ export function SellerPayoutRequestView({
             >
               Request Payout
             </Button>
-          </Div>
-        </Div>
+          </Row>
+        </Row>
       </Div>
 
       <Modal
@@ -159,12 +150,12 @@ export function SellerPayoutRequestView({
             />
           </Div>
 
-          <Div className="flex gap-2 justify-end">
+          <Row justify="end" gap="sm">
             <Button variant="outline" onClick={() => setModalOpen(false)} disabled={submitting}>Cancel</Button>
             <Button variant="primary" onClick={handleRequest} disabled={submitting} isLoading={submitting}>
               Confirm Request
             </Button>
-          </Div>
+          </Row>
         </Stack>
       </Modal>
     </>

@@ -230,7 +230,7 @@ export function SellerReviewsView({
       <StackedViewShell portal="seller" title="Reviews" sections={[
         <Stack key="reviews" gap="lg">
           {/* Filters */}
-          <Div className="flex flex-wrap items-center gap-3">
+          <Row align="center" gap="3" wrap>
             <Select
               value={rating}
               onChange={(e) => { setRating(e.target.value); setPage(1); }}
@@ -259,7 +259,7 @@ export function SellerReviewsView({
                 {meta.total} review{meta.total !== 1 ? "s" : ""}
               </Text>
             )}
-          </Div>
+          </Row>
 
           {error && <Alert variant="error">{error}</Alert>}
 
@@ -294,7 +294,7 @@ export function SellerReviewsView({
                   key={review.id}
                   className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="lg" padding="md"
                 >
-                  <Div className="flex items-start justify-between gap-3 flex-wrap">
+                  <Row align="start" justify="between" gap="3" wrap>
                     <Row align="start" className="flex-1 min-w-0" gap="3">
                       <Checkbox
                         checked={selectedIds.has(review.id)}
@@ -304,7 +304,7 @@ export function SellerReviewsView({
                       <Div className="flex-1 min-w-0">
                         {/* Product + reviewer */}
                         <Text className="truncate" weight="medium">{review.productTitle}</Text>
-                        <Div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <Row className="mt-1" align="center" gap="sm" wrap>
                           <Stars rating={review.rating} />
                           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">by {review.userName}</Text>
                           {review.verified && <Badge variant="success">Verified</Badge>}
@@ -312,7 +312,7 @@ export function SellerReviewsView({
                           <Badge variant={review.sellerReply ? "success" : "warning"}>
                             {review.sellerReply ? "Store replied" : "Awaiting store reply"}
                           </Badge>
-                        </Div>
+                        </Row>
 
                         {/* Review content */}
                         {review.title && <Text className="mt-2" weight="medium">{review.title}</Text>}
@@ -342,7 +342,7 @@ export function SellerReviewsView({
                         {ACTIONS.STORE["buyer-feedback"].label}
                       </Button>
                     </Row>
-                  </Div>
+                  </Row>
                 </Div>
               ))}
             </Stack>
@@ -350,7 +350,7 @@ export function SellerReviewsView({
 
           {/* Pagination */}
           {meta && meta.totalPages > 1 && (
-            <Div className="flex items-center justify-center gap-2">
+            <Row align="center" justify="center" gap="sm">
               <Button
                 variant="outline"
                 size="sm"
@@ -370,7 +370,7 @@ export function SellerReviewsView({
               >
                 Next
               </Button>
-            </Div>
+            </Row>
           )}
         </Stack>,
       ]} />
@@ -404,7 +404,7 @@ export function SellerReviewsView({
               {replyText.length}/1000
             </Text>
           </Div>
-          <Div className="flex gap-2 justify-end">
+          <Row justify="end" gap="sm">
             <Button variant="outline" onClick={() => setReplyTarget(null)} disabled={replySaving}>
               Cancel
             </Button>
@@ -416,7 +416,7 @@ export function SellerReviewsView({
             >
               {replyTarget?.sellerReply ? "Update Reply" : "Post Reply"}
             </Button>
-          </Div>
+          </Row>
         </Stack>
       </SideDrawer>
 

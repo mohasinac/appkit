@@ -141,9 +141,9 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
           className="w-10 h-10 rounded-lg object-cover border border-[var(--appkit-color-border)]"
         />
       ) : (
-        <Div className="w-10 h-10 bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center" rounded="lg">
+        <Row className="w-10 h-10 bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)]" align="center" justify="center" rounded="lg">
           <Span size="xs" color="faint">–</Span>
-        </Div>
+        </Row>
       ),
   },
   {
@@ -470,8 +470,8 @@ export function SellerProductsView({
         <TypeDropdown active={listingKind} onChange={handleKindChange} />
 
         {totalPages > 1 && (
-          <Div
-            className="sticky z-10 flex justify-center bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-1.5"
+          <Row
+            className="sticky z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-1.5" justify="center"
             // audit-inline-style-ok: sticky header offset
             style={{ top: "calc(var(--header-height, 0px) + 44px)" }}
           >
@@ -480,7 +480,7 @@ export function SellerProductsView({
               totalPages={totalPages}
               onPageChange={(p) => table.setPage(p)}
             />
-          </Div>
+          </Row>
         )}
 
         {selection.selectedIds.length > 0 && (

@@ -260,8 +260,8 @@ export function MediaPickerModal({
                     ].join(" ")}
                     aria-pressed={isSelected}
                   >
-                    <Div
-                      className="aspect-square flex items-center justify-center bg-zinc-100 dark:bg-slate-800 w-full"
+                    <Row
+                      className="aspect-square bg-zinc-100 dark:bg-slate-800 w-full" align="center" justify="center"
                     >
                       {isImage ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -276,7 +276,7 @@ export function MediaPickerModal({
                           {f.contentType ?? "file"}
                         </Text>
                       )}
-                    </Div>
+                    </Row>
                     <Text className="block truncate p-1.5 font-mono" size="xs">
                       {f.name.split("/").pop()}
                     </Text>

@@ -163,11 +163,11 @@ export function PrizeDrawItemsEditor({
               }`}
             >
               {locked ? (
-                <Div className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 dark:bg-black/40 pointer-events-none" rounded="lg">
+                <Row className="absolute inset-0 z-10 bg-black/10 dark:bg-black/40 pointer-events-none" align="center" justify="center" rounded="lg">
                   <Text className={CLS_WON_BADGE}>
                     Won — locked
                   </Text>
-                </Div>
+                </Row>
               ) : null}
 
               <Row justify="between" align="center" className="mb-3">

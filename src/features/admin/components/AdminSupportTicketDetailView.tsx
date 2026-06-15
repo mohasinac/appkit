@@ -3,20 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Div,
-  FormActions,
-  Input,
-  Label,
-  Row,
-  Select,
-  SideDrawer,
-  Span,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, Div, FormActions, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -339,7 +326,7 @@ export function AdminSupportTicketDetailView({
     >
       <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         {/* Meta row */}
-        <Div className="flex flex-wrap items-center gap-2">
+        <Row align="center" gap="sm" wrap>
           <Span
             size="xs"
             weight="medium"
@@ -357,7 +344,7 @@ export function AdminSupportTicketDetailView({
               Order: {orderId}
             </Span>
           )}
-        </Div>
+        </Row>
 
         <Div className="text-sm text-zinc-500 dark:text-zinc-400">
           From: <Span weight="medium" className="text-zinc-700 dark:text-zinc-200">{userDisplayName}</Span>
@@ -391,14 +378,14 @@ export function AdminSupportTicketDetailView({
                       : "bg-info-surface border border-info dark:border-info"
                   }`}
                 >
-                  <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
+                  <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
                     <Span weight="medium" className="text-zinc-600 dark:text-zinc-300">
                       {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
                     </Span>
                     {msg.createdAt && (
                       <Span>{new Date(msg.createdAt).toLocaleString()}</Span>
                     )}
-                  </Div>
+                  </Row>
                   <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
                 </Div>
               ))}
@@ -407,7 +394,7 @@ export function AdminSupportTicketDetailView({
         )}
 
         {/* Reply box */}
-        <Div className="flex flex-col gap-1">
+        <Stack gap="xs">
           <Label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
             Reply to user
           </Label>
@@ -428,7 +415,7 @@ export function AdminSupportTicketDetailView({
           >
             Send reply
           </Button>
-        </Div>
+        </Stack>
 
         <hr className="border-zinc-200 dark:border-zinc-700" />
 
@@ -447,7 +434,7 @@ export function AdminSupportTicketDetailView({
         />
 
         {/* Internal notes */}
-        <Div className="flex flex-col gap-1">
+        <Stack gap="xs">
           <Label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
             Internal notes (staff only)
           </Label>
@@ -458,12 +445,12 @@ export function AdminSupportTicketDetailView({
             placeholder="Notes visible only to admins and employees…"
             className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
-        </Div>
+        </Stack>
 
         {/* ST-6 — Linked parties (admin-assigned subjects of this ticket) */}
-        <Div
+        <Stack
           padding="sm"
-          className="flex flex-col gap-2 dark:border-zinc-700" rounded="lg" border="default"
+          className="dark:border-zinc-700" gap="sm" rounded="lg" border="default"
         >
           <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
             Linked parties
@@ -489,7 +476,7 @@ export function AdminSupportTicketDetailView({
               placeholder={label}
             />
           ))}
-        </Div>
+        </Stack>
 
         {isOrderModificationRequest && (
           <OrderItemsPanel
@@ -578,9 +565,9 @@ function OrderItemsPanel(props: {
     );
   };
   return (
-    <Div
+    <Stack
       padding="sm"
-      className="flex flex-col gap-2 border border-info/40 bg-info-surface/40" rounded="lg"
+      className="border border-info/40 bg-info-surface/40" gap="sm" rounded="lg"
     >
       <Text className="text-info tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Modify order items
@@ -608,11 +595,11 @@ function OrderItemsPanel(props: {
                   Order has no items.
                 </Text>
               ) : (
-                <Div className="flex flex-col gap-2">
+                <Stack gap="sm">
                   {orderItems.map((it, idx) => (
-                    <Div
+                    <Row
                       key={`${it.productId}-${idx}`}
-                      className="flex items-center gap-2 rounded dark:border-zinc-700 px-2 py-1" border="default"
+                      className="rounded dark:border-zinc-700 px-2 py-1" align="center" gap="sm" border="default"
                     >
                       <Div className="flex-1 min-w-0">
                         <Text className="truncate" size="xs" weight="medium">
@@ -629,9 +616,9 @@ function OrderItemsPanel(props: {
                         onChange={(e) => updateQty(idx, e.target.value)}
                         className="w-16 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-xs"
                       />
-                    </Div>
+                    </Row>
                   ))}
-                </Div>
+                </Stack>
               )}
               <Row gap="sm">
                 <Button
@@ -665,7 +652,7 @@ function OrderItemsPanel(props: {
           field in the Linked parties panel above to enable this action.
         </Text>
       )}
-    </Div>
+    </Stack>
   );
 }
 
@@ -691,9 +678,9 @@ function StoreChangePanel(props: {
     applyStoreChange,
   } = props;
   return (
-    <Div
+    <Stack
       padding="sm"
-      className="flex flex-col gap-2 border border-warning/40 bg-warning-surface/40" rounded="lg"
+      className="border border-warning/40 bg-warning-surface/40" gap="sm" rounded="lg"
     >
       <Text className="text-warning tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Apply store change
@@ -744,7 +731,7 @@ function StoreChangePanel(props: {
           field in the Linked parties panel above to enable this action.
         </Text>
       )}
-    </Div>
+    </Stack>
   );
 }
 
@@ -757,9 +744,9 @@ function UnbanRequestPanel(props: {
 }) {
   const { linkedUserId, liftHardBan, liftSoftBanTickets } = props;
   return (
-    <Div
+    <Stack
       padding="sm"
-      className="flex flex-col gap-2 border border-error/40 bg-error-surface/40" rounded="lg"
+      className="border border-error/40 bg-error-surface/40" gap="sm" rounded="lg"
     >
       <Text className="text-error tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Lift account ban
@@ -804,6 +791,6 @@ function UnbanRequestPanel(props: {
           field in the Linked parties panel above to enable these actions.
         </Text>
       )}
-    </Div>
+    </Stack>
   );
 }

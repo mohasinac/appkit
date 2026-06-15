@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, HorizontalScroller, Section, Span, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Row, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
@@ -62,7 +62,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
       )}
 
       <Div className={`flex flex-1 flex-col ${__P.p3} text-left`}>
-        <Div className="mb-2 flex h-9 w-9 items-center justify-center bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" rounded="lg">
+        <Row className="mb-2 h-9 w-9 bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image
               src={iconSrc}
@@ -77,7 +77,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
           ) : (
             initial
           )}
-        </Div>
+        </Row>
         <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-800 dark:text-zinc-200`}>
           {category.name}
         </Text>

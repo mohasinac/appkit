@@ -5,18 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 // owns the singleton; nesting another would risk Turbopack chunk-splitting.
 // The actual 2.8.8 SSR crash was a peer-dep duplicate fixed by the
 // scripts/dedupe-peer-deps.mjs postinstall hook (see scripts/ and CLAUDE.md #19).
-import {
-  Main,
-  Div,
-  Text,
-  TextLink,
-  Ul,
-  Li,
-  AvatarDisplay,
-  BackgroundRenderer,
-  UnsavedChangesModal,
-} from "../../ui";
-
+import { AvatarDisplay, BackgroundRenderer, Div, Li, Main, Row, Stack, Text, TextLink, Ul, UnsavedChangesModal } from "../../ui";
 // Role indicator dots — distinct hues per role tier. Brand-decorative palette
 // kept inline so a future tokens.css "role" namespace can replace this in one
 // edit. The audit allows these as static role markers.
@@ -278,8 +267,8 @@ function SidebarUserHeader({
   onClose: () => void;
 }) {
   return (
-    <Div className="flex items-center justify-between gap-3">
-      <Div className="flex items-center gap-3 flex-1 min-w-0">
+    <Row align="center" justify="between" gap="3">
+      <Row className="flex-1 min-w-0" align="center" gap="3">
         <Div className="flex-shrink-0 relative">
           <AvatarDisplay
             cropData={
@@ -299,15 +288,15 @@ function SidebarUserHeader({
             email={user.email}
           />
           {user.role && !isBuyerUser(user) && (
-            <Div
-              className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-4 h-4 border-2 border-white dark:border-slate-900 text-white text-[9px] font-bold leading-none select-none" rounded="full"
+            <Row
+              className="absolute -bottom-0.5 -right-0.5 w-4 h-4 border-2 border-white dark:border-slate-900 text-white text-[9px] font-bold leading-none select-none" align="center" justify="center" rounded="full"
               // audit-inline-style-ok: runtime brand gradient
               style={{ background: ROLE_DOT_COLORS[user.role] ?? "var(--appkit-color-text-muted)" }}
               title={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               aria-label={user.role}
             >
               {user.role.charAt(0).toUpperCase()}
-            </Div>
+            </Row>
           )}
         </Div>
         <Div className="flex-1 min-w-0">
@@ -318,7 +307,7 @@ function SidebarUserHeader({
             {user.email || ""}
           </Text>
         </Div>
-      </Div>
+      </Row>
       <button
         type="button"
         aria-label="Close menu"
@@ -329,7 +318,7 @@ function SidebarUserHeader({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
-    </Div>
+    </Row>
   );
 }
 
@@ -342,7 +331,7 @@ function SidebarGuestHeader({
   onClose: () => void;
 }) {
   return (
-    <Div className="flex items-center justify-between">
+    <Row align="center" justify="between">
       <Div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{sidebarTitle}</Div>
       <button
         type="button"
@@ -354,7 +343,7 @@ function SidebarGuestHeader({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
-    </Div>
+    </Row>
   );
 }
 
@@ -690,7 +679,7 @@ export function AppLayoutShell({
 
   return (
     <>
-      <Div className="flex min-h-screen w-full flex-col overflow-x-clip transition-colors duration-300">
+      <Stack className="min-h-screen w-full overflow-x-clip transition-colors duration-300">
         <BackgroundRenderer
           mode={theme === "dark" ? "dark" : "light"}
           lightMode={normalizedLightBackground}
@@ -774,7 +763,7 @@ export function AppLayoutShell({
           onMoreToggle={hasDashboardNav ? toggleDashboardNav : handleTogglePublicSidebar}
         />
         <UnsavedChangesModal />
-      </Div>
+      </Stack>
     </>
   );
 }

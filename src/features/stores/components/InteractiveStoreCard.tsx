@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { StoreListItem } from "../types";
-import { BaseListingCard, Heading, Span, Row, RichText, Div } from "../../../ui";
+import { BaseListingCard, Div, Heading, RichText, Row, Span, Stack } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils";
@@ -85,9 +85,9 @@ export function InteractiveStoreCard({
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <Div className="absolute inset-0 flex items-center justify-center">
+            <Row className="absolute inset-0" align="center" justify="center">
               <Span className="opacity-20 select-none" size="5xl" aria-hidden="true">🏪</Span>
-            </Div>
+            </Row>
           )}
           {/* Dark gradient at bottom for logo legibility */}
           <Div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
@@ -101,13 +101,13 @@ export function InteractiveStoreCard({
         </Div>
 
         {/* ── Info section ────────────────────────────────────────────── */}
-        <Div className="flex flex-col flex-1 px-4 pb-4">
+        <Stack className="flex-1 px-4 pb-4">
           {/* Logo — overlaps banner bottom edge.
               Uses a native <img> with onError → state flip so a missing or
               broken storeLogoURL falls back to the initials circle below
               (matches the §5 plan fix: prevent the "tiny dot" artifact when
               MediaImage's generic emoji fallback gets clipped in a 40×40 box). */}
-          <Div className="-mt-5 mb-2 flex items-end justify-between">
+          <Row className="-mt-5 mb-2" align="end" justify="between">
             <Div className="flex-shrink-0">
               {hasLogo ? (
                 <img
@@ -118,12 +118,12 @@ export function InteractiveStoreCard({
                   loading="lazy"
                 />
               ) : (
-                <Div className="flex h-10 w-10 items-center justify-center border-2 border-white dark:border-zinc-800 bg-primary/10 dark:bg-primary/20 text-base font-bold text-primary" rounded="lg" shadow="md">
+                <Row className="h-10 w-10 border-2 border-white dark:border-zinc-800 bg-primary/10 dark:bg-primary/20 text-base font-bold text-primary" align="center" justify="center" rounded="lg" shadow="md">
                   {initial}
-                </Div>
+                </Row>
               )}
             </Div>
-          </Div>
+          </Row>
 
           {/* Store name */}
           <Heading
@@ -159,7 +159,7 @@ export function InteractiveStoreCard({
           </Row>
 
           {/* CTA */}
-          <Div className="mt-3 pt-2.5 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+          <Row className="mt-3 pt-2.5 border-t border-zinc-100 dark:border-zinc-800" align="center" justify="between">
             <Span size="xs" weight="semibold" className="text-primary group-hover:underline transition-colors">
               {labels.visitStore ?? "Visit store"} →
             </Span>
@@ -168,8 +168,8 @@ export function InteractiveStoreCard({
                 {store.totalReviews} {labels.reviews ?? "reviews"}
               </Span>
             )}
-          </Div>
-        </Div>
+          </Row>
+        </Stack>
       </Link>
     </Div>
   );

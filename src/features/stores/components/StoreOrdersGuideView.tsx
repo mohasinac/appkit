@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Accordion, Alert, Div, Heading, Section, Span, Text } from "../../../ui";
+import { Accordion, Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -83,10 +83,10 @@ function OrderLifecycle() {
       <Div className="space-y-2">
         {STATUS_ROWS.map(({ status, meaning, action }) => (
           <Div key={status} className="border border-[var(--appkit-color-border)] text-sm" rounded="lg" padding="sm">
-            <Div className="flex items-center gap-2 mb-1">
+            <Row className="mb-1" align="center" gap="sm">
               <Text className="font-mono text-[var(--appkit-color-text)] w-28 shrink-0" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{meaning}</Text>
-            </Div>
+            </Row>
             <Text className="pl-30 text-[var(--appkit-color-text-muted)] italic" size="xs">
               → {action}
             </Text>

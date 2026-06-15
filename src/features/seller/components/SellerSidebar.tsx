@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
+import { Div, Li, Nav, Row, Span, Stack, Text, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -190,13 +190,13 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
   return (
     <Div className="hidden md:block">
       <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
-      <Div
+      <Stack
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
+        className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 shadow-2xl"
       >
-        <Div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+        <Row className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
           <button
             type="button"
@@ -208,9 +208,9 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </Div>
+        </Row>
         <Div className={`flex-1 ${__O.yAuto}`}>{children}</Div>
-      </Div>
+      </Stack>
     </Div>
   );
 }
@@ -272,7 +272,7 @@ export function StoreSidebar({
           {/* Nav panel */}
           <Div surface="sidePanel" className={`flex-1 border-r border-zinc-200 dark:border-slate-700 flex flex-col ${__O.hidden} shadow-xl`}>
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-              <Div className="flex items-center gap-3 min-w-0">
+              <Row className="min-w-0" align="center" gap="3">
                 {storeLogoURL ? (
                   // audit-inline-style-ok: dynamic image URL
                   <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
@@ -282,7 +282,7 @@ export function StoreSidebar({
                   </Div>
                 )}
                 <Text className={CLS_STORE_NAME}>{storeName || panelTitle}</Text>
-              </Div>
+              </Row>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
           </Div>

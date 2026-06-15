@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Div, Heading, Stack, Text } from "../../../ui";
+import { Div, Heading, Row, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 import { MediaImage } from "../../media/MediaImage";
 import type { ProductGrading } from "../schemas/firestore";
@@ -36,13 +36,13 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
 
   return (
     <Stack gap="lg">
-      <Div className="flex items-center gap-4">
-        <Div className="flex flex-col items-center justify-center border-2 border-[var(--appkit-color-primary)] px-6 py-4 min-w-[120px]" rounded="2xl">
+      <Row align="center" gap="md">
+        <Stack className="justify-center border-2 border-[var(--appkit-color-primary)] px-6 py-4 min-w-[120px]" align="center" rounded="2xl">
           <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="bold" transform="uppercase">
             {grading.service}
           </Text>
           <Text className="font-extrabold" size="4xl">{grading.grade}</Text>
-        </Div>
+        </Stack>
         <Stack gap="xs" className="flex-1">
           <Heading level={3} size="base" weight="semibold">
             Graded by {grading.service}
@@ -66,7 +66,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
             </Text>
           ) : null}
         </Stack>
-      </Div>
+      </Row>
 
       {slabImageUrl ? (
         <Div className={`${__O.hidden} rounded-2xl border border-zinc-200 dark:border-zinc-700 aspect-[4/3] w-full`}>

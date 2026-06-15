@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, Span, Text } from "../../../ui";
+import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -148,12 +148,12 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
   const displayRows = (localRows.length > 0 ? localRows : fetchedRows as CarouselRow[]).map((row) => ({
     ...row,
     secondary: (
-      <Div className="flex items-center gap-3">
+      <Row align="center" gap="3">
         {row.thumbnailUrl && (
           <img src={row.thumbnailUrl} alt="" className="w-14 h-9 object-cover rounded flex-shrink-0 bg-zinc-200 dark:bg-zinc-800" />
         )}
         <Span size="sm" className="text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</Span>
-      </Div>
+      </Row>
     ) as unknown as string,
   }));
 
@@ -233,9 +233,9 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       />
 
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </Div>
+        </Row>
       )}
 
       {selection.selectedCount > 0 && bulkActions.length > 0 && (

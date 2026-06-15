@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Section, Text } from "../../../ui";
+import { Div, Row, Section, Stack, Text } from "../../../ui";
 import type { TrustBadge, TrustBadgeIconKey } from "../types";
 
 const BADGE_ICONS: Record<TrustBadgeIconKey, React.ReactNode> = {
@@ -118,12 +118,12 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
       <Div className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
         <Div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {items.map((badge) => (
-            <Div
+            <Stack
               key={badge.id}
-              className="flex flex-col items-center gap-2 text-center sm:flex-row sm:items-center sm:text-left sm:gap-4"
+              className="text-center sm:flex-row sm:items-center sm:text-left sm:gap-4" align="center" gap="sm"
             >
-              <Div
-                className="flex h-12 w-12 shrink-0 items-center justify-center" rounded="full"
+              <Row
+                className="h-12 w-12 shrink-0" align="center" justify="center" rounded="full"
                 style={{
                   background: "rgba(240,196,23,0.12)",
                   color: "var(--color-red)",
@@ -131,7 +131,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
                 }}
               >
                 {BADGE_ICONS[badge.iconKey]}
-              </Div>
+              </Row>
               <Div>
                 <Text
                   className="font-black uppercase tracking-wide" size="sm"
@@ -144,7 +144,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
                   {badge.sub}
                 </Text>
               </Div>
-            </Div>
+            </Stack>
           ))}
         </Div>
       </Div>

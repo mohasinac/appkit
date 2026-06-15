@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -162,12 +162,12 @@ function LockedFeatureGuide() {
     <Div className="space-y-4">
       {LOCKED_FEATURES.map(({ cap, missing, howToUnlock, contractRequired }) => (
         <Div key={cap} className="border border-[var(--appkit-color-border)] space-y-2" rounded="lg" padding="md">
-          <Div className="flex items-center gap-2">
+          <Row align="center" gap="sm">
             <Text className="font-mono text-[var(--appkit-color-text)]" size="sm" weight="semibold">{cap}</Text>
             {contractRequired && (
               <span className="inline-block rounded-full bg-[var(--appkit-color-warning)]/10 text-[var(--appkit-color-warning)] text-xs px-2 py-0.5 font-medium">Requires agreement</span>
             )}
-          </Div>
+          </Row>
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">What you are missing:</Text>
             <ul className="pl-4 space-y-0.5">

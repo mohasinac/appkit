@@ -1,8 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Div, Li, Nav, Span, Ul } from "../../ui";
-
+import { Div, Li, Nav, Row, Span, Ul } from "../../ui";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -127,7 +126,7 @@ export function NavbarLayout({
       aria-label={ariaLabel}
       className="hidden lg:block bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-slate-800"
     >
-      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] flex items-center h-10">
+      <Row className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] h-10" align="center">
         {/* Scrollable items area */}
         <Div className={`relative flex-1 ${__O.hidden}`}>
           {canScrollLeft && (
@@ -176,7 +175,7 @@ export function NavbarLayout({
         </Div>
 
         {rightSlot && <Div className="shrink-0 ml-2">{rightSlot}</Div>}
-      </Div>
+      </Row>
     </Nav>
   );
 }

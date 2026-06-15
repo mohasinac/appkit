@@ -3,14 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import {
-  Div,
-  Pagination,
-  useToast,
-  ListingToolbar,
-  FilterDrawer,
-  LoginRequiredModal,
-} from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, useToast } from "../../../ui";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
@@ -169,13 +162,13 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
       />
 
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       <Div className="py-6">

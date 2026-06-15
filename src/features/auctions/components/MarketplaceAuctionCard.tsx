@@ -199,7 +199,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
   const { product, auctionHref, displayBid, bidCount, isEnded, remaining, inWishlist, wishlistLoading, wishlistActions, countdownClass, mergedLabels, handleWishlist, handleNavigate } = props;
   return (
     <>
-      <Div className="flex items-start justify-between gap-2 min-w-0">
+      <Row className="min-w-0" align="start" justify="between" gap="sm">
         <TextLink href={auctionHref ?? "#"} className={`${THEME_CONSTANTS.utilities.textClamp2} flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary`}>
           {product.title}
         </TextLink>
@@ -208,15 +208,15 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
             <Heart className={`h-3.5 w-3.5 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
           </Button>
         ) : null}
-      </Div>
-      <Div className="flex items-center gap-2 flex-wrap">
+      </Row>
+      <Row align="center" gap="sm" wrap>
         <Text className="text-primary" size="sm" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
         <Div className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${countdownClass}`}>
           <Clock className="h-2.5 w-2.5" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
         </Div>
         {bidCount > 0 && <Caption className="text-[11px]">{mergedLabels.totalBids(bidCount)}</Caption>}
-      </Div>
+      </Row>
       {!isEnded && (
         <Button type="button" variant="warning" size="sm" className="self-start gap-1 px-2.5 text-xs mt-0.5" onClick={handleNavigate}>
           <Gavel className="h-3 w-3" />
@@ -231,7 +231,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
   const { product, auctionHref, displayBid, bidCount, hasCurrentBid, isEnded, remaining, resolvedBuyoutPrice, inWishlist, wishlistLoading, wishlistActions, countdownClass, mergedLabels, handleWishlist, handleNavigate } = props;
   return (
     <>
-      <Div className="flex items-start gap-2">
+      <Row align="start" gap="sm">
         <TextLink href={auctionHref ?? "#"} className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary">
           {product.title}
         </TextLink>
@@ -240,7 +240,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
             <Heart className={`h-4 w-4 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
           </Button>
         ) : null}
-      </Div>
+      </Row>
       <Div>
         <Caption>
           {isEnded && hasCurrentBid ? mergedLabels.winningBid : hasCurrentBid ? mergedLabels.currentBid : mergedLabels.startingBid}

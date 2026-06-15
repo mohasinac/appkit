@@ -153,13 +153,13 @@ export function OrdersList({
             key={i}
             className="animate-pulse border border-neutral-200 dark:border-slate-700 p-5" rounded="xl"
           >
-            <Div className="flex justify-between">
+            <Row justify="between">
               <Stack gap="xs">
                 <Div className="h-3 w-20 rounded bg-neutral-200 dark:bg-slate-700" />
                 <Div className="h-3 w-16 rounded bg-neutral-200 dark:bg-slate-700" />
               </Stack>
               <Div className="h-6 w-20 bg-neutral-200 dark:bg-slate-700" rounded="full" />
-            </Div>
+            </Row>
             <Div className="mt-4 flex gap-3">
               <Div className="h-10 w-10 bg-neutral-200 dark:bg-slate-700" rounded="lg" />
               <Div className="h-10 w-10 bg-neutral-200 dark:bg-slate-700" rounded="lg" />
@@ -186,13 +186,13 @@ export function OrdersList({
         ))}
       </Stack>
       {totalPages > 1 && onPageChange && (
-        <Div className="flex justify-center">
+        <Row justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
-        </Div>
+        </Row>
       )}
     </Stack>
   );

@@ -296,7 +296,7 @@ export function SellerCouponEditorView({
           </Div>
 
           {/* Active toggle */}
-          <Div className="flex items-center gap-3 border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)] px-4 py-3" rounded="lg">
+          <Row className="border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)] px-4 py-3" align="center" gap="3" rounded="lg">
             <label className="flex items-center gap-3 cursor-pointer w-full">
               <input
                 type="checkbox"
@@ -313,7 +313,7 @@ export function SellerCouponEditorView({
                 </Text>
               </Div>
             </label>
-          </Div>
+          </Row>
         </Stack>
 
         {/* Footer actions */}

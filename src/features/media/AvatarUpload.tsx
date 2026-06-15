@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Button, Div, Input, Progress, Text, useToast } from "../../ui";
+import { Alert, Button, Div, Input, Progress, Row, Text, useToast } from "../../ui";
 import { useMediaUpload } from "./hooks/useMedia";
 import { ImageCropModal, type ImageCropData } from "./modals/ImageCropModal";
 import { AvatarDisplay } from "../../ui/components/AvatarDisplay";
@@ -175,7 +175,7 @@ export function AvatarUpload({
   return (
     <>
       <Div className="space-y-4">
-        <Div className="flex items-start gap-6">
+        <Row align="start" gap="lg">
           <Div className="shrink-0">
             <AvatarDisplay
               cropData={hasPending ? pendingCropData : cropData}
@@ -252,7 +252,7 @@ export function AvatarUpload({
               aria-label={t.changePhoto}
             />
           </Div>
-        </Div>
+        </Row>
 
         {uploadApiError ? (
           <Alert variant="error">{uploadApiError.message}</Alert>

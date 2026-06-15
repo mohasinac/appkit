@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { AdminTableColumn } from "../types";
-import { BaseListingCard, Button, Div, Span, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { BaseListingCard, Button, Div, Row, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __O = {
@@ -236,7 +236,7 @@ export function DataTable<T extends { id: string }>({
         </Table>
       </Div>
       {totalPages > 1 && onPageChange && (
-        <Div className="flex items-center justify-end gap-2 border-t border-neutral-200 dark:border-slate-700 px-4 py-3">
+        <Row className="border-t border-neutral-200 dark:border-slate-700 px-4 py-3" align="center" justify="end" gap="sm">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <Button
               key={p}
@@ -248,7 +248,7 @@ export function DataTable<T extends { id: string }>({
               {p}
             </Button>
           ))}
-        </Div>
+        </Row>
       )}
     </Div>
   );

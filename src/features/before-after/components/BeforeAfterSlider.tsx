@@ -1,8 +1,7 @@
 "use client"
 import React, { useRef, useState } from "react";
 import type { BeforeAfterItem } from "../types";
-import { Div, Span } from "../../../ui";
-
+import { Div, Span, Stack } from "../../../ui";
 interface BeforeAfterSliderProps {
   item: BeforeAfterItem;
   className?: string;
@@ -63,13 +62,13 @@ export function BeforeAfterSlider({
       </Div>
 
       {/* Divider handle */}
-      <Div
-        className="absolute inset-y-0 flex w-1 -translate-x-1/2 cursor-ew-resize flex-col items-center justify-center"
+      <Stack
+        className="absolute inset-y-0 w-1 -translate-x-1/2 cursor-ew-resize justify-center" align="center"
         style={{ left: `${position}%` }}
       >
         <Div className="h-full w-0.5 bg-white/80 shadow" />
         <Div className="absolute h-8 w-8 border-2 border-white bg-white/80" rounded="full" shadow="md" />
-      </Div>
+      </Stack>
 
       {/* Labels */}
       <Span size="xs" weight="medium" className="absolute left-2 top-2 rounded bg-black/40 px-2 py-0.5 text-white">

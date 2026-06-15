@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState, useTransition } from "react";
-import { Alert, Badge, Button, Div, Heading, Input, LoginRequiredModal, Spinner, Text } from "../../../ui";
+import { Alert, Badge, Button, Div, Heading, Input, LoginRequiredModal, Row, Spinner, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../schemas";
@@ -132,7 +132,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
   return (
     <Div surface="card" padding="sm" className="space-y-3">
       {/* Header row */}
-      <Div className="flex items-start justify-between gap-2 flex-wrap">
+      <Row align="start" justify="between" gap="sm" wrap>
         <Div className="min-w-0">
           <Text className="text-zinc-900 dark:text-zinc-100 truncate" size="sm" weight="semibold">
             {offer.productTitle ?? "Unknown Product"}
@@ -144,7 +144,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
         <Badge variant={statusVariant(offer.status)} className="shrink-0 capitalize text-xs">
           {offer.status}
         </Badge>
-      </Div>
+      </Row>
 
       {/* Amounts */}
       <Div className="flex gap-4 flex-wrap">
@@ -309,7 +309,7 @@ export function SellerOffersPanel({
         onClose={() => setShowLoginModal(false)}
         message="You need to be signed in to manage offers. Please log in or create an account to continue."
       />
-      <Div className="flex items-center justify-between flex-wrap gap-2">
+      <Row align="center" justify="between" gap="sm" wrap>
         <Div>
           <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="lg" weight="semibold">
             Offers Received
@@ -324,7 +324,7 @@ export function SellerOffersPanel({
           className="border border-zinc-300 dark:border-zinc-600 text-xs">
           {loading ? "Refreshing…" : ACTIONS.STORE["refresh-offers"].label}
         </Button>
-      </Div>
+      </Row>
 
       {/* Filter tabs */}
       <Div className="flex gap-1 flex-wrap">
@@ -344,9 +344,9 @@ export function SellerOffersPanel({
       {fetchError && <Alert variant="error"><Text size="sm">{fetchError}</Text></Alert>}
 
       {loading && (
-        <Div className="flex justify-center py-12">
+        <Row className="py-12" justify="center">
           <Spinner size="lg" />
-        </Div>
+        </Row>
       )}
 
       {!loading && offers.length === 0 && (

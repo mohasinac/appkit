@@ -360,10 +360,10 @@ function PreOrderBuyBarPanel({
                 { icon: "📅", label: "Guaranteed\nDelivery" },
                 { icon: "↩", label: "Free\nCancellation" },
               ].map(({ icon, label }) => (
-                <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+                <Stack key={label} className="text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]" align="center" gap="xs">
                   <Span size="base">{icon}</Span>
                   <Span className="whitespace-pre-line leading-tight">{label}</Span>
-                </Div>
+                </Stack>
               ))}
             </Row>
           </Div>
@@ -501,7 +501,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
       />
       <Container size="xl" className="px-4 py-6">
         {/* Breadcrumb + share */}
-        <Div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+        <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
             <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
@@ -518,7 +518,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
             <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
           </Nav>
           <ShareButton title={title} />
-        </Div>
+        </Row>
 
         <PreOrderDetailView
           renderGallery={() => (

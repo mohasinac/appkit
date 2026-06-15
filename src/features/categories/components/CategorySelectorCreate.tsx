@@ -1,5 +1,5 @@
 "use client"
-import { Div, Select, Label, Button, SideDrawer } from "../../../ui";
+import { Button, Div, Label, Row, Select, SideDrawer } from "../../../ui";
 import { useState, useCallback } from "react";
 import { useCategories, useCreateCategory } from "../hooks/useCategorySelector";
 import { useMessage } from "../../../react";
@@ -114,7 +114,7 @@ export function CategorySelectorCreate({
     <>
       <Div>
         {label && <Label className="mb-1.5">{label}</Label>}
-        <Div className="flex gap-2 items-center">
+        <Row align="center" gap="sm">
           <Div className="flex-1">
             <Select
               value={value}
@@ -142,7 +142,7 @@ export function CategorySelectorCreate({
               {L.addCategory}
             </Button>
           )}
-        </Div>
+        </Row>
       </Div>
 
       <SideDrawer

@@ -21,6 +21,7 @@ import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
 
+import { Stack } from "@mohasinac/appkit";
 export interface NotFoundViewProps {
   /** Override the heading text. */
   heading?: string;
@@ -39,7 +40,7 @@ export function NotFoundView({
   homeHref = DEFAULT_ROUTE_MAP.HOME,
 }: NotFoundViewProps) {
   return (
-    <Div className="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
+    <Stack className="justify-center min-h-[60vh] px-8 text-center" align="center">
       <Heading level={1} variant="primary" className="text-7xl mb-2" weight="bold">
         404
       </Heading>
@@ -50,6 +51,6 @@ export function NotFoundView({
         {description}
       </Text>
       <TextLink href={homeHref}>{homeLabel}</TextLink>
-    </Div>
+    </Stack>
   );
 }

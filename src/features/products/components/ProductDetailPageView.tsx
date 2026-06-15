@@ -429,7 +429,7 @@ export async function ProductDetailPageView({
       <Container size="xl" className="px-4 py-6">
         <ProductDetailView
           renderBreadcrumb={() => (
-            <Div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+            <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
               <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
                 <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>
                   Home
@@ -454,7 +454,7 @@ export async function ProductDetailPageView({
                 )}
               </Nav>
               <ShareButton title={title || undefined} />
-            </Div>
+            </Row>
           )}
           renderGallery={() => (
             <ProductGalleryClient images={images} productName={title || undefined} />
@@ -808,10 +808,10 @@ export async function ProductDetailPageView({
                     { icon: "✓", label: "Verified\nSeller" },
                     { icon: "⭐", label: "Quality\nGuarantee" },
                   ].map(({ icon, label }) => (
-                    <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+                    <Stack key={label} className="text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]" align="center" gap="xs">
                       <Span size="base">{icon}</Span>
                       <Span className="whitespace-pre-line leading-tight">{label}</Span>
-                    </Div>
+                    </Stack>
                   ))}
                 </Row>
               </Div>
@@ -914,13 +914,13 @@ export async function ProductDetailPageView({
             bundleMemberships.length > 0
               ? () => (
                   <Div className={CLS_BUNDLE_BOX}>
-                    <Div className="flex items-center gap-2 mb-3">
+                    <Row className="mb-3" align="center" gap="sm">
                       <Span size="base" className={CLS_BUNDLE_ICON} aria-hidden="true">📦</Span>
                       <Text className={CLS_BUNDLE_TITLE}>
                         Part of {bundleMemberships.length === 1 ? "a bundle" : `${bundleMemberships.length} bundles`}
                       </Text>
-                    </Div>
-                    <Div className="flex flex-col gap-3">
+                    </Row>
+                    <Stack gap="3">
                       {bundleMemberships.map((b) => (
                         <Div key={b.id} className={CLS_BUNDLE_ROW}>
                           <Div className="min-w-0">
@@ -939,7 +939,7 @@ export async function ProductDetailPageView({
                           </Link>
                         </Div>
                       ))}
-                    </Div>
+                    </Stack>
                   </Div>
                 )
               : undefined

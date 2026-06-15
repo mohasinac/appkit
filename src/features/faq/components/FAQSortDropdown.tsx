@@ -1,5 +1,4 @@
-import { Div, Select, Span } from "../../../ui";
-
+import { Div, Row, Select, Span } from "../../../ui";
 export type FAQSortOption = "helpful" | "newest" | "alphabetical";
 
 interface FAQSortDropdownProps {
@@ -25,7 +24,7 @@ export function FAQSortDropdown({
   ];
 
   return (
-    <Div className="flex items-center gap-3">
+    <Row align="center" gap="3">
       <Span size="sm" className="text-zinc-600 dark:text-zinc-400">
         {labels?.label ?? "Sort"}
       </Span>
@@ -36,6 +35,6 @@ export function FAQSortDropdown({
           options={sortOptions}
         />
       </Div>
-    </Div>
+    </Row>
   );
 }

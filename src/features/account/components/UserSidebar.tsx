@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ConfirmDeleteModal, Div, Li, Nav, Span, Ul } from "../../../ui";
+import { ConfirmDeleteModal, Div, Li, Nav, Row, Span, Stack, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -183,13 +183,13 @@ function DrawerPanel({
       {/* Backdrop */}
       <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       {/* Panel — slides in from RIGHT */}
-      <Div
+      <Stack
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
+        className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 shadow-2xl"
       >
-        <Div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+        <Row className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
           <button
             type="button"
@@ -201,9 +201,9 @@ function DrawerPanel({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </Div>
+        </Row>
         <Div className={`flex-1 ${__O.yAuto}`}>{children}</Div>
-      </Div>
+      </Stack>
     </Div>
   );
 }

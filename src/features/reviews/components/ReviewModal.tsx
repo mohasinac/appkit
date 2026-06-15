@@ -61,9 +61,9 @@ export function ViewReviewModal({
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
-            <Div className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300" rounded="full">
+            <Row className="h-10 w-10 flex-shrink-0 bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300" align="center" justify="center" rounded="full">
               {displayName.charAt(0).toUpperCase()}
-            </Div>
+            </Row>
           )}
           <Div>
             <Row gap="sm">
@@ -131,11 +131,11 @@ export function ViewReviewModal({
           </Text>
         )}
 
-        <Div className="flex justify-end pt-2">
+        <Row className="pt-2" justify="end">
           <Button variant="ghost" onClick={onClose}>
             Close
           </Button>
-        </Div>
+        </Row>
       </Div>
     </Modal>
   );

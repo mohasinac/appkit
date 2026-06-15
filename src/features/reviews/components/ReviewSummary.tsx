@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span, Text } from "../../../ui";
+import { Div, Row, Span, Stack, Text } from "../../../ui";
 import { StarRating } from "../../../ui";
 
 const CLS_STAR = "text-warning";
@@ -36,7 +36,7 @@ export function ReviewSummary({
       className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8 ${className}`}
     >
       {/* Score block */}
-      <Div className="flex flex-col items-center gap-1 sm:items-start">
+      <Stack className="sm:items-start" align="center" gap="xs">
         <Span weight="bold" className="leading-none text-neutral-900 dark:text-white" size="5xl">
           {averageRating.toFixed(1)}
         </Span>
@@ -45,15 +45,15 @@ export function ReviewSummary({
           {totalReviews.toLocaleString()} review
           {totalReviews !== 1 ? "s" : ""}
         </Text>
-      </Div>
+      </Stack>
 
       {/* Breakdown bars */}
-      <Div className="flex flex-1 flex-col gap-2">
+      <Stack className="flex-1" gap="sm">
         {stars.map((star) => {
           const count = distribution[star] ?? 0;
           const pct = totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0;
           return (
-            <Div key={star} className="flex items-center gap-2">
+            <Row key={star} align="center" gap="sm">
               <Span size="xs" weight="medium" className="w-4 text-neutral-600 dark:text-zinc-400 tabular-nums" align="end">
                 {star}
               </Span>
@@ -75,10 +75,10 @@ export function ReviewSummary({
               <Span size="xs" className="w-8 text-zinc-400 dark:text-zinc-400 tabular-nums" align="end">
                 {pct}%
               </Span>
-            </Div>
+            </Row>
           );
         })}
-      </Div>
+      </Stack>
     </Div>
   );
 }

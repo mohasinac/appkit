@@ -89,7 +89,7 @@ function AlertCard({
   const windowLabel = WINDOW_OPTIONS.find((w) => w.value === String(alert.windowHours))?.label ?? `${alert.windowHours}h`;
 
   return (
-    <Div surface="card" padding="sm" className="flex items-start justify-between gap-4">
+    <Row surface="card" padding="sm" align="start" justify="between" gap="md">
       <Div className="flex-1 min-w-0">
         <Row className="mb-1" gap="sm" wrap>
           <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">{alert.label}</Text>
@@ -113,7 +113,7 @@ function AlertCard({
           </Text>
         )}
       </Div>
-      <Div className="flex items-center gap-2 shrink-0">
+      <Row className="shrink-0" align="center" gap="sm">
         <Toggle
           checked={alert.isActive}
           onChange={(v) => onToggle(alert.id, v)}
@@ -127,8 +127,8 @@ function AlertCard({
         >
           Delete
         </Button>
-      </Div>
-    </Div>
+      </Row>
+    </Row>
   );
 }
 

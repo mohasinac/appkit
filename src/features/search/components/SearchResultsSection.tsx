@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Div, Grid, Row, Select, Span, Text } from "../../../ui";
+import { Button, Div, Grid, Row, Select, Span, Stack, Text } from "../../../ui";
 import type { SearchProductItem } from "../types";
 
 export interface SearchResultsSectionProps {
@@ -100,7 +100,7 @@ export function SearchResultsSection({
     }
 
     return (
-      <Div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+      <Stack className="justify-center py-20 text-center" align="center" gap="3">
         <Span aria-hidden="true" size="5xl">
           🔍
         </Span>
@@ -112,7 +112,7 @@ export function SearchResultsSection({
             {L.noResultsSubtitle}
           </Text>
         )}
-      </Div>
+      </Stack>
     );
   }
 
@@ -162,7 +162,7 @@ export function SearchResultsSection({
             onPageChange,
           })
         ) : (
-          <Div className="flex items-center justify-center gap-2 pt-4">
+          <Row className="pt-4" align="center" justify="center" gap="sm">
             <Button
               type="button"
               variant="outline"
@@ -186,7 +186,7 @@ export function SearchResultsSection({
             >
               {L.nextPage}
             </Button>
-          </Div>
+          </Row>
         ))}
     </Div>
   );

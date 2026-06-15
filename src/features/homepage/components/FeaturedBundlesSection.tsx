@@ -114,9 +114,9 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
               loading="lazy"
             />
           ) : (
-            <Div className="flex h-full w-full items-center justify-center text-3xl">
+            <Row className="h-full w-full text-3xl" align="center" justify="center">
               {PLACEHOLDER_EMOJI}
-            </Div>
+            </Row>
           )}
         </Div>
         <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>

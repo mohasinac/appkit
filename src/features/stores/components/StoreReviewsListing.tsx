@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Span, Text } from "../../../ui";
+import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
 import { ReviewFilters, REVIEW_PUBLIC_SORT_OPTIONS } from "../../reviews/components/ReviewFilters";
 import { useStoreReviews } from "../hooks/useStores";
@@ -166,13 +166,13 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       {/* ── Reviews grid ───────────────────────────────────────────────── */}
@@ -194,12 +194,12 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
             No reviews found.
           </Text>
         ) : view === "list" ? (
-          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
             { }
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review as any} context="store" />
             ))}
-          </Div>
+          </Stack>
         ) : (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             { }

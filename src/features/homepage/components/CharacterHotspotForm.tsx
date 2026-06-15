@@ -1,19 +1,7 @@
 "use client"
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import {
-  Button,
-  Div,
-  Heading,
-  Input,
-  Label,
-  Li,
-  Row,
-  Span,
-  Text,
-  Textarea,
-  Ul,
-} from "../../../ui";
+import { Button, Div, Heading, Input, Label, Li, Row, Span, Stack, Text, Textarea, Ul } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 
 type WizardStep = "image" | "place" | "details" | "review";
@@ -199,10 +187,10 @@ export function CharacterHotspotForm({
       )}
 
       {/* Progress stepper */}
-      <Div className="flex items-start">
+      <Row align="start">
         {STEPS.map((s, i) => (
-          <Div key={s.key} className="flex flex-1 flex-col items-center">
-            <Div className="flex w-full items-center">
+          <Stack key={s.key} className="flex-1" align="center">
+            <Row className="w-full" align="center">
               {i > 0 && (
                 <Div
                   className="h-0.5 flex-1"
@@ -214,8 +202,8 @@ export function CharacterHotspotForm({
                   }}
                 />
               )}
-              <Div
-                className="flex h-8 w-8 shrink-0 items-center justify-center text-sm font-bold" rounded="full"
+              <Row
+                className="h-8 w-8 shrink-0 text-sm font-bold" align="center" justify="center" rounded="full"
                 style={{
                   background:
                     i < stepIndex
@@ -234,7 +222,7 @@ export function CharacterHotspotForm({
                 }}
               >
                 {i < stepIndex ? "✓" : i + 1}
-              </Div>
+              </Row>
               {i < STEPS.length - 1 && (
                 <Div
                   className="h-0.5 flex-1"
@@ -246,7 +234,7 @@ export function CharacterHotspotForm({
                   }}
                 />
               )}
-            </Div>
+            </Row>
             <Span
               weight="medium"
               className="mt-1 text-center text-[10px]"
@@ -254,9 +242,9 @@ export function CharacterHotspotForm({
             >
               {s.label}
             </Span>
-          </Div>
+          </Stack>
         ))}
-      </Div>
+      </Row>
 
       {/* -- Step 1: Upload Image -- */}
       {step === "image" && (
@@ -315,7 +303,7 @@ export function CharacterHotspotForm({
             </Div>
           )}
 
-          <Div className="flex flex-col gap-1">
+          <Stack gap="xs">
             <Label className="text-sm font-bold">Image Alt Text</Label>
             <Input
               type="text"
@@ -329,7 +317,7 @@ export function CharacterHotspotForm({
                 color: "var(--color-black)",
               }}
             />
-          </Div>
+          </Stack>
 
           <Label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
             <Input
@@ -424,8 +412,8 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <Div
-                  className="flex items-center justify-center text-xs font-bold text-white" rounded="full"
+                <Row
+                  className="text-xs font-bold text-white" align="center" justify="center" rounded="full"
                   style={{
                     width: 24,
                     height: 24,
@@ -435,7 +423,7 @@ export function CharacterHotspotForm({
                   }}
                 >
                   +
-                </Div>
+                </Row>
                 {pin.name && (
                   <Div
                     className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
@@ -465,8 +453,8 @@ export function CharacterHotspotForm({
                     pointerEvents: "none",
                   }}
                 />
-                <Div
-                  className="relative flex items-center justify-center font-bold" rounded="full"
+                <Row
+                  className="relative font-bold" align="center" justify="center" rounded="full"
                   style={{
                     width: 32,
                     height: 32,
@@ -478,7 +466,7 @@ export function CharacterHotspotForm({
                   }}
                 >
                   ★
-                </Div>
+                </Row>
                 <Div
                   className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-bold"
                   style={{
@@ -519,7 +507,7 @@ export function CharacterHotspotForm({
                 },
               ] as const
             ).map(({ label, field, value, onChange }) => (
-              <Div key={field} className="flex flex-col gap-1">
+              <Stack key={field} gap="xs">
                 <Label className="text-sm font-bold">{label}</Label>
                 <Input
                   type="number"
@@ -539,7 +527,7 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </Div>
+              </Stack>
             ))}
           </Div>
 
@@ -635,7 +623,7 @@ export function CharacterHotspotForm({
                 },
               ] as const
             ).map(({ label, value, onChange, placeholder }) => (
-              <Div key={label} className="flex flex-col gap-1">
+              <Stack key={label} gap="xs">
                 <Label className="text-sm font-bold">{label}</Label>
                 <Input
                   type="text"
@@ -651,11 +639,11 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </Div>
+              </Stack>
             ))}
           </Div>
 
-          <Div className="flex flex-col gap-1">
+          <Stack gap="xs">
             <Label className="text-sm font-bold">Description *</Label>
             <Textarea
               rows={3}
@@ -669,9 +657,9 @@ export function CharacterHotspotForm({
               }}
               placeholder="Short description shown in the popup…"
             />
-          </Div>
+          </Stack>
 
-          <Div className="flex flex-col gap-1">
+          <Stack gap="xs">
             <Label className="text-sm font-bold">Link (href) *</Label>
             <Input
               type="text"
@@ -685,7 +673,7 @@ export function CharacterHotspotForm({
                 color: "var(--color-black)",
               }}
             />
-          </Div>
+          </Stack>
 
           <Div className="grid grid-cols-2 gap-3">
             {(
@@ -704,7 +692,7 @@ export function CharacterHotspotForm({
                 },
               ] as const
             ).map(({ label, value, onChange, placeholder }) => (
-              <Div key={label} className="flex flex-col gap-1">
+              <Stack key={label} gap="xs">
                 <Label className="text-sm font-bold">{label}</Label>
                 <Input
                   type="text"
@@ -720,12 +708,12 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </Div>
+              </Stack>
             ))}
           </Div>
 
           <Row align="end" gap="sm">
-            <Div className="flex-1 flex flex-col gap-1">
+            <Stack className="flex-1" gap="xs">
               <Label className="text-sm font-bold">Accent Colour (hex)</Label>
               <Input
                 type="text"
@@ -739,7 +727,7 @@ export function CharacterHotspotForm({
                   color: "var(--color-black)",
                 }}
               />
-            </Div>
+            </Stack>
             <Input
               type="color"
               value={draftAccent}
@@ -847,8 +835,8 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <Div
-                  className="flex items-center justify-center text-xs font-bold text-white" rounded="full"
+                <Row
+                  className="text-xs font-bold text-white" align="center" justify="center" rounded="full"
                   style={{
                     width: 28,
                     height: 28,
@@ -858,7 +846,7 @@ export function CharacterHotspotForm({
                   }}
                 >
                   +
-                </Div>
+                </Row>
                 {pin.name && (
                   <Div
                     className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
@@ -950,7 +938,7 @@ export function CharacterHotspotForm({
                   disabled={uploading}
                 />
               </Label>
-              <Div className="flex flex-col gap-1">
+              <Stack gap="xs">
                 <Label className="text-sm font-bold">Image Alt Text</Label>
                 <Input
                   type="text"
@@ -963,7 +951,7 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </Div>
+              </Stack>
               <Label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
                 <Input
                   type="checkbox"

@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { Div } from "../../ui/components/Div";
 import { Heading, Text } from "../../ui/components/Typography";
 import { Button } from "../../ui/components/Button";
+import { Stack } from "@mohasinac/appkit";
 import {
   trackError,
   ErrorCategory,
@@ -52,9 +53,9 @@ export function ErrorView({
   }, [error]);
 
   return (
-    <Div
+    <Stack
       role="alert"
-      className="flex flex-col items-center justify-center min-h-[50vh] px-8 text-center"
+      className="justify-center min-h-[50vh] px-8 text-center" align="center"
     >
       <Heading level={2} className="mb-2">{heading}</Heading>
       <Text variant="secondary" className="mb-6">{description}</Text>
@@ -66,6 +67,6 @@ export function ErrorView({
       <Button type="button" variant="primary" onClick={reset}>
         {retryLabel}
       </Button>
-    </Div>
+    </Stack>
   );
 }

@@ -1,8 +1,7 @@
 "use client";
 
 import type { SocialPost, SocialPlatform } from "../schemas";
-import { Div, Span, Text } from "../../../ui";
-
+import { Div, Row, Span, Text } from "../../../ui";
 const __P = {
   p3: "p-3",
 } as const;
@@ -89,13 +88,13 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       />
 
       {/* Play button overlay */}
-      <Div className="absolute inset-0 flex items-center justify-center">
-        <Div className="flex h-14 w-14 items-center justify-center bg-[var(--appkit-color-youtube)] transition-transform duration-200 group-hover:scale-110" rounded="full" shadow="lg">
+      <Row className="absolute inset-0" align="center" justify="center">
+        <Row className="h-14 w-14 bg-[var(--appkit-color-youtube)] transition-transform duration-200 group-hover:scale-110" align="center" justify="center" rounded="full" shadow="lg">
           <svg className="ml-1 h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
           </svg>
-        </Div>
-      </Div>
+        </Row>
+      </Row>
 
       {/* YouTube branding top-right */}
       <Div className={`absolute right-2 top-2 flex items-center gap-1 rounded px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`}>
@@ -152,31 +151,31 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
           loading="lazy"
         />
       ) : (
-        <Div className="flex h-full w-full items-center justify-center bg-zinc-200 dark:bg-zinc-700">
+        <Row className="h-full w-full bg-zinc-200 dark:bg-zinc-700" align="center" justify="center">
           <Span size="sm" color="faint">No preview</Span>
-        </Div>
+        </Row>
       )}
 
       {/* Video play overlay */}
       {post.mediaType === "video" && (
-        <Div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <Div className="flex h-12 w-12 items-center justify-center bg-black/50 backdrop-blur-sm" rounded="full">
+        <Row className="pointer-events-none absolute inset-0" align="center" justify="center">
+          <Row className="h-12 w-12 bg-black/50 backdrop-blur-sm" align="center" justify="center" rounded="full">
             <svg className="ml-1 h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5v14l11-7z" />
             </svg>
-          </Div>
-        </Div>
+          </Row>
+        </Row>
       )}
 
       {/* Carousel indicator */}
       {post.mediaType === "carousel" && (
         <Div className="pointer-events-none absolute right-2 top-2">
-          <Div className="flex h-6 w-6 items-center justify-center rounded bg-black/50 backdrop-blur-sm">
+          <Row className="h-6 w-6 rounded bg-black/50 backdrop-blur-sm" align="center" justify="center">
             <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="2" y="3" width="15" height="15" rx="2" />
               <path d="M7 8h14M7 12h14M7 16h14" />
             </svg>
-          </Div>
+          </Row>
         </Div>
       )}
 
@@ -192,7 +191,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
           <Text className="mb-2 line-clamp-3 text-white" size="xs">{post.caption}</Text>
         )}
         {showStats && (
-          <Div className="flex items-center gap-3 text-xs text-white/80">
+          <Row className="text-xs text-white/80" align="center" gap="3">
             {post.stats.likes != null && (
               <span className="flex items-center gap-1">
                 <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">
@@ -217,7 +216,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
                 {formatCount(post.stats.comments)}
               </span>
             )}
-          </Div>
+          </Row>
         )}
       </Div>
     </a>

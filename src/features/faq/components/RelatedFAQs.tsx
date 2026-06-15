@@ -1,4 +1,4 @@
-import { Card, Div, Heading, Text, TextLink } from "../../../ui";
+import { Card, Div, Heading, Row, Text, TextLink } from "../../../ui";
 import type { FAQ } from "../types";
 
 interface RelatedFAQsProps {
@@ -31,7 +31,7 @@ export function RelatedFAQs({
             href={hrefForFaq ? hrefForFaq(faq) : `/faqs#${faq.id}`}
             className="group block rounded-lg bg-zinc-100 p-4 transition-colors hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600"
           >
-            <Div className="flex items-start gap-3">
+            <Row align="start" gap="3">
               <svg
                 className="mt-0.5 h-5 w-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400"
                 fill="none"
@@ -63,7 +63,7 @@ export function RelatedFAQs({
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-            </Div>
+            </Row>
           </TextLink>
         ))}
       </Div>

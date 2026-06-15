@@ -1,5 +1,5 @@
 "use client";
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import React, { useState, useCallback, useMemo } from "react";
 
 
@@ -197,13 +197,13 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={table.getNumber("page", 1)}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       {/* ── Store grid ─────────────────────────────────────────────────── */}
@@ -214,9 +214,9 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
                 <Div className={`${__P.p4} space-y-2.5`}>
-                  <Div className="flex items-center gap-2">
+                  <Row align="center" gap="sm">
                     <Div className="h-10 w-10 bg-zinc-200 dark:bg-slate-700" rounded="lg" />
-                  </Div>
+                  </Row>
                   <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
@@ -229,7 +229,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
             No stores found.
           </Text>
         ) : view === "list" ? (
-          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
             {stores.map((store) => {
               const storeKey = store.storeSlug ?? store.id;
               return (
@@ -243,7 +243,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
                 />
               );
             })}
-          </Div>
+          </Stack>
         ) : (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {stores.map((store) => {

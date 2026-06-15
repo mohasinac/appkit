@@ -9,15 +9,7 @@ import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-white";
-import {
-  BaseListingCard,
-  Button,
-  Div,
-  Row,
-  Span,
-  Text,
-  TextLink,
-} from "../../../ui";
+import { BaseListingCard, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 export type MarketplacePrizeDrawCardData = ProductItem;
@@ -182,15 +174,15 @@ export function MarketplacePrizeDrawCard({
               })}
             </Div>
           ) : (
-            <Div className="absolute inset-0 flex items-center justify-center bg-[var(--appkit-color-surface-muted)]">
+            <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]" align="center" justify="center">
               <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                 No prizes
               </Text>
-            </Div>
+            </Row>
           )}
         </TextLink>
 
-        <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
+        <Stack className="absolute right-2 top-2" align="end" gap="xs">
           <Span size="xs" weight="medium" className={CLS_PRIZE_PILL}>
             {mergedLabels.prizeDrawBadge}
           </Span>
@@ -201,14 +193,14 @@ export function MarketplacePrizeDrawCard({
           >
             {statusLabel(status, mergedLabels)}
           </Span>
-        </Div>
+        </Stack>
 
         {status === "closed" ? (
-          <Div className="absolute inset-0 flex items-center justify-center bg-black/40">
+          <Row className="absolute inset-0 bg-black/40" align="center" justify="center">
             <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 tracking-wider text-white" transform="uppercase">
               {mergedLabels.closedBadge}
             </Span>
-          </Div>
+          </Row>
         ) : null}
 
         {onSelect && (

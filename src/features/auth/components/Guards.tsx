@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useMemo } from "react";
-import { Div, Heading, Text, Button } from "../../../ui";
+import { Button, Div, Heading, Row, Text } from "../../../ui";
 import type { UserRole } from "../types";
 
 /**
@@ -200,9 +200,9 @@ export function ProtectedRoute({
       return <>{loadingComponent}</>;
     }
     return (
-      <Div className="flex min-h-[40vh] items-center justify-center">
+      <Row className="min-h-[40vh]" align="center" justify="center">
         <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 border-t-neutral-800" rounded="full" />
-      </Div>
+      </Row>
     );
   }
 
@@ -213,7 +213,7 @@ export function ProtectedRoute({
         return <>{unauthorizedComponent}</>;
       }
       return (
-        <Div className="flex min-h-[50vh] items-center justify-center bg-neutral-50 dark:bg-neutral-900">
+        <Row className="min-h-[50vh] bg-neutral-50 dark:bg-neutral-900" align="center" justify="center">
           <Div className="text-center">
             <Heading level={1} className="mb-2" size="2xl" weight="bold">
               {uiLabels.accessDenied}
@@ -228,7 +228,7 @@ export function ProtectedRoute({
               {uiLabels.goHome}
             </Button>
           </Div>
-        </Div>
+        </Row>
       );
     }
     return null;

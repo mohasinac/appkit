@@ -3,19 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Div,
-  Form,
-  FormActions,
-  Label,
-  Select,
-  SideDrawer,
-  Span,
-  StackedViewShell,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, StackedViewShell, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { StoreCapability } from "../../auth/permissions/constants";
@@ -151,7 +139,7 @@ export function AdminStoreEditorView({
   );
 
   const renderNotesSection = () => (
-    <Div className="flex flex-col gap-1">
+    <Stack gap="xs">
       <Label>Admin notes (optional)</Label>
       <textarea
         value={adminNotes}
@@ -160,7 +148,7 @@ export function AdminStoreEditorView({
         placeholder="e.g. Reason for suspension, approval notes…"
         className={TEXTAREA_CHROME}
       />
-    </Div>
+    </Stack>
   );
 
   const renderTogglesSection = () => (
@@ -172,7 +160,7 @@ export function AdminStoreEditorView({
 
   const renderSuspensionSection = () =>
     storeStatus === "suspended" ? (
-      <Div className="flex flex-col gap-1">
+      <Stack gap="xs">
         <Label>Suspension reason (optional)</Label>
         <textarea
           value={suspensionReason}
@@ -181,11 +169,11 @@ export function AdminStoreEditorView({
           placeholder="e.g. Policy violation, fraudulent activity…"
           className={TEXTAREA_CHROME}
         />
-      </Div>
+      </Stack>
     ) : null;
 
   const renderCapabilitiesSection = () => (
-    <Div className="flex flex-col gap-2">
+    <Stack gap="sm">
       <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">
         Capabilities
         <Span size="xs" weight="normal" className="ml-2 text-zinc-500 dark:text-zinc-400">
@@ -223,7 +211,7 @@ export function AdminStoreEditorView({
           );
         })}
       </Div>
-    </Div>
+    </Stack>
   );
 
   const renderActionsSection = () => (

@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useCallback } from "react";
-import { Button, Div, Heading, Span, Text, Textarea } from "../../../ui";
-
+import { Button, Div, Heading, Span, Stack, Text, Textarea } from "../../../ui";
 const CLS_FIELD_ERROR = "text-error";
 const CLS_ERROR_BANNER = "rounded-lg bg-error-surface dark:bg-error-surface border border-error dark:border-error px-4 py-3 text-sm text-error dark:text-error";
 
@@ -121,7 +120,7 @@ export function ContactForm({
     placeholder: string,
     multiline?: boolean,
   ) => (
-    <Div className="flex flex-col gap-1">
+    <Stack gap="xs">
       <label
         htmlFor={id}
         className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
@@ -148,7 +147,7 @@ export function ContactForm({
         />
       )}
       {errors[id] && <Span size="xs" className={CLS_FIELD_ERROR}>{errors[id]}</Span>}
-    </Div>
+    </Stack>
   );
 
   return (

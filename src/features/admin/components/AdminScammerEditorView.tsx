@@ -3,18 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Code,
-  Div,
-  FormActions,
-  Label,
-  Select,
-  SideDrawer,
-  Span,
-  Text,
-  useToast,
-} from "../../../ui";
+import { Button, Code, Div, FormActions, Label, Row, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -120,7 +109,7 @@ export function AdminScammerEditorView({
     >
       <Div className={`flex flex-col gap-4 ${__P.p4}`}>
         {/* Status badge */}
-        <Div className="flex items-center gap-2">
+        <Row align="center" gap="sm">
           <Span
             size="xs"
             weight="medium"
@@ -135,7 +124,7 @@ export function AdminScammerEditorView({
               {scamType.replace(/_/g, " ")}
             </Span>
           )}
-        </Div>
+        </Row>
 
         {/* Names */}
         {displayNames.length > 0 && (
@@ -222,7 +211,7 @@ export function AdminScammerEditorView({
         />
 
         {/* Verification note */}
-        <Div className="flex flex-col gap-1">
+        <Stack gap="xs">
           <Label className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             Verification note (internal)
           </Label>
@@ -233,7 +222,7 @@ export function AdminScammerEditorView({
             placeholder="e.g. Verified via 3 independent reports…"
             className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
-        </Div>
+        </Stack>
 
         <FormActions align="right">
           <Button

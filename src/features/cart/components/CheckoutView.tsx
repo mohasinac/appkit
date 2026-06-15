@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { Div, Heading, Stack } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 
 export interface CheckoutViewProps {
@@ -59,7 +59,7 @@ export function CheckoutView({
         </Heading>
       )}
       {renderStepIndicator?.(step, totalSteps, setStep)}
-      <Div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+      <Stack className="lg:flex-row lg:gap-8" gap="lg">
         <Div className="flex-1">
           {renderStep(step, setStep)}
           <AdSlot id="checkout-upsell" className="mt-6" />
@@ -67,7 +67,7 @@ export function CheckoutView({
         {renderOrderSummary && (
           <Div className="w-full lg:w-80">{renderOrderSummary()}</Div>
         )}
-      </Div>
+      </Stack>
     </Div>
   );
 }

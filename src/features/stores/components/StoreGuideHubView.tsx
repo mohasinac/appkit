@@ -10,7 +10,7 @@ import {
   Circle,
   BookOpen,
 } from "lucide-react";
-import { Div, Heading, Text, Section } from "../../../ui";
+import { Div, Heading, Row, Section, Text } from "../../../ui";
 import type { StoreDocument } from "../schemas";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -128,14 +128,14 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 60%,var(--appkit-color-secondary-400) 100%)",
           }}
         >
-          <Div className="flex items-center gap-3 mb-3">
-            <Div className="flex-shrink-0 w-10 h-10 bg-white/20 flex items-center justify-center" rounded="xl">
+          <Row className="mb-3" align="center" gap="3">
+            <Row className="flex-shrink-0 w-10 h-10 bg-white/20" align="center" justify="center" rounded="xl">
               <BookOpen className="w-5 h-5 text-white" />
-            </Div>
+            </Row>
             <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">
               Seller Guide
             </Text>
-          </Div>
+          </Row>
           <Heading level={1} className="md:text-3xl text-white mb-2" size="2xl" weight="bold">
             {storeName}
           </Heading>
@@ -159,20 +159,20 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                 href={href}
                 className="group flex flex-col gap-3 rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5 hover:border-[var(--appkit-color-primary)] hover:shadow-md transition-all"
               >
-                <Div className="flex items-center gap-3">
-                  <Div
-                    className="flex-shrink-0 w-9 h-9 flex items-center justify-center" rounded="lg"
+                <Row align="center" gap="3">
+                  <Row
+                    className="flex-shrink-0 w-9 h-9" align="center" justify="center" rounded="lg"
                     style={{
                       background:
                         "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",
                     }}
                   >
                     <Icon className="w-4 h-4 text-white" />
-                  </Div>
+                  </Row>
                   <Text className="text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors" weight="semibold">
                     {title}
                   </Text>
-                </Div>
+                </Row>
                 <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">
                   {description}
                 </Text>
@@ -192,14 +192,14 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="xl">
             {/* Progress bar */}
             <Div className="px-5 pt-5 pb-4 border-b border-[var(--appkit-color-border)]">
-              <Div className="flex items-center justify-between mb-2">
+              <Row className="mb-2" align="center" justify="between">
                 <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
                   {completedCount} of {steps.length} complete
                 </Text>
                 <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                   {Math.round((completedCount / steps.length) * 100)}%
                 </Text>
-              </Div>
+              </Row>
               <Div className="h-1.5 bg-[var(--appkit-color-border)]" rounded="full">
                 <Div
                   className="h-full transition-all" rounded="full"

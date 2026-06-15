@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { sortBy } from "@mohasinac/appkit";
+import { Row, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
@@ -227,10 +227,10 @@ export function SellerPayoutMethodsView({
                 key={row.id}
                 className="rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3"
               >
-                <Div className="flex items-start justify-between gap-4">
-                  <Div className="flex items-start gap-3 min-w-0">
+                <Row align="start" justify="between" gap="md">
+                  <Row className="min-w-0" align="start" gap="3">
                     <Div className="min-w-0 flex-1">
-                      <Div className="flex items-center gap-2 flex-wrap">
+                      <Row align="center" gap="sm" wrap>
                         <Text size="sm" weight="medium">{row.label}</Text>
                         <TypeBadge type={row.type} />
                         {row.isDefault && (
@@ -247,13 +247,13 @@ export function SellerPayoutMethodsView({
                         >
                           {row.isActive ? "Active" : "Inactive"}
                         </span>
-                      </Div>
+                      </Row>
                       <Text className="mt-1 text-zinc-500 dark:text-zinc-400 font-mono" size="xs">
                         {row.maskedIdentifier}
                       </Text>
                     </Div>
-                  </Div>
-                  <Div className="flex items-center gap-2 shrink-0">
+                  </Row>
+                  <Row className="shrink-0" align="center" gap="sm">
                     {!row.isDefault && (
                       <Button
                         size="sm"
@@ -279,8 +279,8 @@ export function SellerPayoutMethodsView({
                     >
                       Delete
                     </Button>
-                  </Div>
-                </Div>
+                  </Row>
+                </Row>
               </div>
             ))}
           </Div>

@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Badge, Div, FormField, FormGroup, Heading, Stack, Text, Toggle } from "../../../ui";
+import { Alert, Badge, Div, FormField, FormGroup, Heading, Row, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { StepDef, StepForm } from "../../shell";
 
@@ -158,11 +158,11 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Method</Heading>
           {current && (
-            <Div className="flex items-center gap-2 mb-2">
+            <Row className="mb-2" align="center" gap="sm">
               <Badge variant={current.isConfigured ? "success" : "warning"}>
                 {current.isConfigured ? "Payout configured" : "Not configured"}
               </Badge>
-            </Div>
+            </Row>
           )}
           {current?.isConfigured && (
             <Alert variant="info">

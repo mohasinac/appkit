@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Div, Input, Label, Row, Select, Span } from "../../../ui";
+import { Button, Div, Input, Label, Row, Select, Span, Stack } from "../../../ui";
 import type { SearchCategoryOption } from "../types";
 
 interface SearchFiltersRowProps {
@@ -50,7 +50,7 @@ export function SearchFiltersRow({
   return (
     <Row wrap gap="md" align="end">
       {/* Category filter */}
-      <Div className="flex flex-col gap-1">
+      <Stack gap="xs">
         <Label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {L.categoryFilter}
         </Label>
@@ -63,14 +63,14 @@ export function SearchFiltersRow({
           ]}
           className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
         />
-      </Div>
+      </Stack>
 
       {/* Price range */}
-      <Div className="flex flex-col gap-1">
+      <Stack gap="xs">
         <Label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {L.priceRange}
         </Label>
-        <Div className="flex items-center gap-2">
+        <Row align="center" gap="sm">
           <Input
             type="number"
             min={0}
@@ -97,8 +97,8 @@ export function SearchFiltersRow({
           >
             {L.apply}
           </Button>
-        </Div>
-      </Div>
+        </Row>
+      </Stack>
 
       {/* Clear filters */}
       {showClear && (

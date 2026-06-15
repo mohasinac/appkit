@@ -3,17 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  Div,
-  FormActions,
-  Select,
-  SideDrawer,
-  Span,
-  Text,
-  Ul,
-  useToast,
-} from "../../../ui";
+import { Button, Div, FormActions, Row, Select, SideDrawer, Span, Stack, Text, Ul, useToast } from "../../../ui";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { apiClient } from "../../../http";
@@ -168,10 +158,10 @@ export function UserSupportView(_props: UserSupportViewProps) {
   return (
     <>
       <Div className="mx-auto max-w-2xl px-4 py-6">
-        <Div className="mb-4 flex items-center justify-between">
+        <Row className="mb-4" align="center" justify="between">
           <Text className="text-zinc-900 dark:text-zinc-100" size="xl" weight="semibold">Support Tickets</Text>
           <Button type="button" variant="primary" size="sm" onClick={() => setNewTicketOpen(true)}>New ticket</Button>
-        </Div>
+        </Row>
         {renderTicketListArea({ isLoading, error, tickets, setSelectedTicket, setDetailOpen })}
       </Div>
       {renderNewTicketDrawer({ newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation })}
@@ -206,13 +196,13 @@ function renderTicketListArea(props: {
         {tickets.map((ticket) => (
           <li key={ticket.id}>
             <Button variant="ghost" type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
-              <Div className="flex items-start justify-between gap-2">
+              <Row align="start" justify="between" gap="sm">
                 <Div className="min-w-0 flex-1">
                   <Text className="text-zinc-900 dark:text-zinc-100 truncate" weight="medium">{ticket.subject}</Text>
                   <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
                 </Div>
                 <Span size="xs" weight="medium" className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</Span>
-              </Div>
+              </Row>
             </Button>
           </li>
         ))}
@@ -287,10 +277,10 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
               <Div className={`space-y-2 max-h-72 ${__O.yAuto}`}>
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <Div key={msg.id ?? i} className={`rounded-lg ${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`}>
-                    <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
+                    <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
                       <Span weight="medium" className="text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</Span>
                       {msg.createdAt && <Span>{new Date(msg.createdAt).toLocaleString()}</Span>}
-                    </Div>
+                    </Row>
                     <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
                   </Div>
                 ))}
@@ -298,7 +288,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
             </Div>
           )}
           {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (
-            <Div className="flex flex-col gap-2">
+            <Stack gap="sm">
               <FieldTextarea
                 name="reply"
                 label="Reply"
@@ -308,7 +298,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
                 placeholder="Add a message to your ticket…"
               />
               <Button type="button" variant="primary" size="sm" isLoading={replyMutation.isPending} disabled={!replyBody.trim() || replyMutation.isPending} onClick={() => replyMutation.mutate()}>Send reply</Button>
-            </Div>
+            </Stack>
           )}
         </Div>
       )}

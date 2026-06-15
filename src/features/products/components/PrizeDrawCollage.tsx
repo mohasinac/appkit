@@ -15,7 +15,7 @@
  * adds an emphasis ring to the cell that just won.
  */
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, Text } from "../../../ui";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
@@ -124,11 +124,11 @@ export function PrizeDrawCollage({
                     loading="lazy"
                   />
                 ) : (
-                  <Div className="absolute inset-0 flex items-center justify-center bg-[var(--appkit-color-surface-muted)]">
+                  <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]" align="center" justify="center">
                     <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
                       No image
                     </Text>
-                  </Div>
+                  </Row>
                 )}
 
                 <Div className="absolute left-2 top-2 rounded bg-black/70 px-1.5 py-0.5 text-xs font-semibold text-white">
@@ -141,11 +141,11 @@ export function PrizeDrawCollage({
                       aria-hidden
                       className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/30 to-black/60 mix-blend-multiply"
                     />
-                    <Div className="absolute inset-0 flex items-center justify-center">
+                    <Row className="absolute inset-0" align="center" justify="center">
                       <Text className={CLS_WON_STAMP}>
                         {wonLabel}
                       </Text>
-                    </Div>
+                    </Row>
                   </>
                 ) : null}
               </Div>

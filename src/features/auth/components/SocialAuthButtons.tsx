@@ -1,5 +1,4 @@
-import { Button, Div, Span } from "../../../ui";
-
+import { Button, Div, Row, Span } from "../../../ui";
 interface SocialAuthButtonsProps {
   onGoogle: () => void;
   disabled?: boolean;
@@ -16,12 +15,12 @@ export function SocialAuthButtons({
   return (
     <>
       <Div className="relative">
-        <Div className="absolute inset-0 flex items-center">
+        <Row className="absolute inset-0" align="center">
           <Div className="w-full border-t border-neutral-200 dark:border-slate-700" />
-        </Div>
-        <Div className="relative flex justify-center text-sm">
+        </Row>
+        <Row className="relative text-sm" justify="center">
           <Span className="px-2 bg-white dark:bg-slate-950 text-neutral-500 dark:text-slate-400">{dividerLabel}</Span>
-        </Div>
+        </Row>
       </Div>
 
       <Div className="grid grid-cols-1 gap-3">

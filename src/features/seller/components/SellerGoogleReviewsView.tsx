@@ -3,18 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 
 import React, { useCallback, useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
-import {
-  Alert,
-  Button,
-  Div,
-  FormField,
-  Heading,
-  Section,
-  Stack,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert, Button, Div, FormField, Heading, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
@@ -216,7 +205,7 @@ export function SellerGoogleReviewsView({
         )}
 
         {/* Actions */}
-        <Div className="flex items-center justify-between gap-3 border-t border-[var(--appkit-color-border)] pt-4">
+        <Row className="border-t border-[var(--appkit-color-border)] pt-4" align="center" justify="between" gap="3">
           <Button
             variant="outline"
             size="sm"
@@ -237,7 +226,7 @@ export function SellerGoogleReviewsView({
           >
             {ACTIONS.STORE["save-google-settings"].label}
           </Button>
-        </Div>
+        </Row>
       </Stack>
     </Div>
   );

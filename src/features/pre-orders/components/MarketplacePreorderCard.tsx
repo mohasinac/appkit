@@ -14,16 +14,7 @@ const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-sur
 const CLS_SALE_BADGE = "rounded-full bg-success-surface px-2 py-0.5 text-xs font-bold text-white";
 const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white";
 const CLS_LIMITED_BADGE = "rounded-full bg-info-surface px-2 py-0.5 text-xs font-bold text-white";
-import {
-  BaseListingCard,
-  Button,
-  Div,
-  RichText,
-  Row,
-  Span,
-  Text,
-  TextLink,
-} from "../../../ui";
+import { BaseListingCard, Button, Div, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { PreorderBadge } from "./PreorderCard";
@@ -143,7 +134,7 @@ export function MarketplacePreorderCard({
           />
         </TextLink>
 
-        <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
+        <Stack className="absolute right-2 top-2" align="end" gap="xs">
           <Span size="xs" weight="medium" className="inline-flex items-center rounded-full bg-cobalt px-2 py-0.5 text-white">
             {mergedLabels.preOrderBadge}
           </Span>
@@ -152,9 +143,9 @@ export function MarketplacePreorderCard({
               {mergedLabels.featuredBadge}
             </Span>
           )}
-        </Div>
+        </Stack>
 
-        <Div className="absolute left-2 top-2 flex flex-col gap-1 pointer-events-none">
+        <Stack className="absolute left-2 top-2 pointer-events-none" gap="xs">
           {product.partOfBundleIds && product.partOfBundleIds.length > 0 && (
             <Span
               className={CLS_SALE_BADGE}
@@ -179,7 +170,7 @@ export function MarketplacePreorderCard({
               Has Variants
             </Span>
           )}
-        </Div>
+        </Stack>
 
         {onSelect && (
           <BaseListingCard.Checkbox
@@ -199,7 +190,7 @@ export function MarketplacePreorderCard({
         {variant === "list" ? (
           /* ── Compact list layout ── */
           <>
-            <Div className="flex items-start justify-between gap-2 min-w-0">
+            <Row className="min-w-0" align="start" justify="between" gap="sm">
               <TextLink href={detailHref} className="min-w-0 flex-1">
                 <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900 dark:text-zinc-100`}>
                   {product.title}
@@ -217,13 +208,13 @@ export function MarketplacePreorderCard({
                   {inWishlist ? "♥" : "♡"}
                 </Button>
               )}
-            </Div>
-            <Div className="flex items-center gap-2 flex-wrap">
+            </Row>
+            <Row align="center" gap="sm" wrap>
               <Text className="text-primary" size="sm" weight="bold">
                 {formatCurrency(product.price, getDefaultCurrency())}
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}
-            </Div>
+            </Row>
             <Button
               type="button"
               variant="primary"

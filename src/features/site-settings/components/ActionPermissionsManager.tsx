@@ -110,7 +110,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
 
   return (
     <Stack gap="md">
-      <Div className="flex items-center gap-3">
+      <Row align="center" gap="3">
         <Input
           placeholder="Search actions…"
           value={search}
@@ -120,7 +120,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
         <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
           {filteredActions.length} action{filteredActions.length !== 1 ? "s" : ""}
         </Text>
-      </Div>
+      </Row>
 
       <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
         <Table className="w-full text-sm">

@@ -1,6 +1,5 @@
 import React from "react";
-import { Aside, Div, Heading, Span, Stack, Text } from "../../../ui";
-
+import { Aside, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
 const __P = {
   p4: "p-4",
 } as const;
@@ -38,7 +37,7 @@ export function ContactInfoSidebar({
         </Heading>
         <Stack gap="md">
           {infoItems.map((item) => (
-            <Div key={item.label} className="flex items-start gap-3">
+            <Row key={item.label} align="start" gap="3">
               <Span size="xl" className="flex-shrink-0 mt-0.5">{item.icon}</Span>
               <Div>
                 <Text className="text-neutral-500 dark:text-neutral-400 tracking-wide mb-0.5" size="xs" weight="medium" transform="uppercase">
@@ -55,7 +54,7 @@ export function ContactInfoSidebar({
                   <Text size="sm">{item.value}</Text>
                 )}
               </Div>
-            </Div>
+            </Row>
           ))}
         </Stack>
       </Div>

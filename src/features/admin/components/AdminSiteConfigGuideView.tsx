@@ -1,6 +1,6 @@
 import React from "react";
 import { Settings } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 const CLS_HEADER_ICON = "w-5 h-5 text-amber-500";
@@ -24,12 +24,12 @@ export function AdminSiteConfigGuideView() {
   return (
     <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
       <Section>
-        <Div className="flex items-center gap-3 mb-2">
-          <Div className="flex-shrink-0 w-10 h-10 flex items-center justify-center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
+        <Row className="mb-2" align="center" gap="3">
+          <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
             <Settings className="w-5 h-5 text-white" />
-          </Div>
+          </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
-        </Div>
+        </Row>
         <Heading level={1} className="md:text-3xl text-[var(--appkit-color-text)] mb-2" size="2xl" weight="bold">Site Configuration</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">All site settings are stored in a single Firestore document at <code className="text-xs">site_settings/global</code>. Changes take effect on the next page render (ISR or cache revalidation).</Text>
       </Section>

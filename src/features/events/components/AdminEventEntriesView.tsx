@@ -3,15 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Div,
-  Input,
-  Select,
-  StackedViewShell,
-  Text,
-} from "../../../ui";
+import { Alert, Button, Div, Input, Row, Select, StackedViewShell, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { DataTable } from "../../admin/components/DataTable";
@@ -188,7 +180,7 @@ export function AdminEventEntriesView({
       key: "points",
       header: "Points",
       render: (row) => (
-        <Div className="flex items-center gap-1.5">
+        <Row className="gap-1.5" align="center">
           <input
             type="number"
             min={0}
@@ -213,14 +205,14 @@ export function AdminEventEntriesView({
           >
             Save
           </Button>
-        </Div>
+        </Row>
       ),
     },
     {
       key: "actions",
       header: "Actions",
       render: (row) => (
-        <Div className="flex items-center gap-2 flex-wrap">
+        <Row align="center" gap="sm" wrap>
           <Button
             size="sm"
             variant="secondary"
@@ -246,7 +238,7 @@ export function AdminEventEntriesView({
               {expandedEntryId === row.id ? "Hide" : "Responses"}
             </Button>
           )}
-        </Div>
+        </Row>
       ),
     },
   ], [reviewMutation, pointsMutation, pointsInputs, expandedEntryId]);

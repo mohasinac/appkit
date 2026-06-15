@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Section, Span, Text } from "../../../ui";
+import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
@@ -18,7 +18,7 @@ const CLS_GMAPS_LINK = "shrink-0 text-sm font-medium text-blue-600 dark:text-blu
 
 function StarRating({ rating }: { rating: number }) {
   return (
-    <Div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    <Row className="gap-0.5" align="center" aria-label={`${rating} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
@@ -30,7 +30,7 @@ function StarRating({ rating }: { rating: number }) {
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       ))}
-    </Div>
+    </Row>
   );
 }
 
@@ -83,7 +83,7 @@ function ReviewCard({
 
   return (
     <Div className={`flex flex-col gap-3 ${__P.p4} rounded-xl bg-[var(--appkit-color-surface)] shadow-sm border border-[var(--appkit-color-border)]`}>
-      <Div className="flex items-center gap-3">
+      <Row align="center" gap="3">
         {review.authorPhotoUrl ? (
           <img
             src={review.authorPhotoUrl}
@@ -93,11 +93,11 @@ function ReviewCard({
             referrerPolicy="no-referrer"
           />
         ) : (
-          <Div className="w-9 h-9 bg-[var(--appkit-color-primary)] flex items-center justify-center flex-shrink-0" rounded="full">
+          <Row className="w-9 h-9 bg-[var(--appkit-color-primary)] flex-shrink-0" align="center" justify="center" rounded="full">
             <Span size="sm" weight="bold" className="text-white">
               {review.authorName.charAt(0).toUpperCase()}
             </Span>
-          </Div>
+          </Row>
         )}
         <Div className="min-w-0">
           <Text className="truncate" size="sm" weight="semibold">{review.authorName}</Text>
@@ -105,7 +105,7 @@ function ReviewCard({
             <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{dateStr}</Text>
           )}
         </Div>
-      </Div>
+      </Row>
 
       {showRating && <StarRating rating={review.rating} />}
 
@@ -124,24 +124,24 @@ function ReviewCard({
 
 function NotConfiguredState() {
   return (
-    <Div className="flex flex-col items-center justify-center py-16 text-zinc-400 text-sm">
+    <Stack className="justify-center py-16 text-zinc-400 text-sm" align="center">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="12" cy="12" r="10" />
         <path d="M12 8v4m0 4h.01" />
       </svg>
       Google Reviews not configured. Add your Google Maps API key in Site Settings.
-    </Div>
+    </Stack>
   );
 }
 
 function EmptyState() {
   return (
-    <Div className="flex flex-col items-center justify-center py-16 text-zinc-400 text-sm">
+    <Stack className="justify-center py-16 text-zinc-400 text-sm" align="center">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
       </svg>
       No reviews yet.
-    </Div>
+    </Stack>
   );
 }
 
@@ -211,16 +211,16 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
   return (
     <Section className={`py-12 ${themed.bgPrimary}`}>
       <Div className="w-full max-w-7xl mx-auto px-4">
-        <Div className="mb-8 flex items-end justify-between gap-4">
+        <Row className="mb-8" align="end" justify="between" gap="md">
           <>
             <Heading level={2}>What Our Customers Say</Heading>
             {aggregateRating > 0 && (
-              <Div className="flex items-center gap-2 mt-1">
+              <Row className="mt-1" align="center" gap="sm">
                 <StarRating rating={Math.round(aggregateRating)} />
                 <Text size="sm" variant="muted">
                   {aggregateRating.toFixed(1)} · {totalRatings.toLocaleString()} reviews
                 </Text>
-              </Div>
+              </Row>
             )}
           </>
           {linkToGoogleMaps && mapsHref && (
@@ -233,7 +233,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
               View on Google →
             </a>
           )}
-        </Div>
+        </Row>
 
         {reviews.length === 0 ? (
           <EmptyState />

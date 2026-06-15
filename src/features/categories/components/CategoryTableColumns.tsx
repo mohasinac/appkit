@@ -1,4 +1,4 @@
-import { Div, StatusBadge, Span, Button } from "../../../ui";
+import { Button, Div, Row, Span, StatusBadge } from "../../../ui";
 import type { Category } from "../types";
 import { MediaImage } from "../../media";
 
@@ -52,13 +52,13 @@ export function getCategoryTableColumns(
                 className="w-full h-full object-cover"
               />
             ) : (
-              <Div
-                className="w-full h-full flex items-center justify-center text-base"
+              <Row
+                className="w-full h-full text-base" align="center" justify="center"
                 // audit-inline-style-ok: runtime theme color
                 style={{ backgroundColor: cat.display?.color ?? "var(--appkit-color-text-faint)", color: "var(--appkit-color-text-on-primary)" }}
               >
                 {cat.display?.icon ?? "🗂️"}
-              </Div>
+              </Row>
             )}
           </Div>
         ),

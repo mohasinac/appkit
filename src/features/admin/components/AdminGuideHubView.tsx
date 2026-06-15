@@ -11,7 +11,7 @@ import {
   AlertTriangle,
   BookOpen,
 } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-6";
@@ -117,14 +117,14 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
               "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 60%,var(--appkit-color-secondary-400) 100%)",
           }}
         >
-          <Div className="flex items-center gap-3 mb-3">
-            <Div className="flex-shrink-0 w-10 h-10 bg-white/20 flex items-center justify-center" rounded="xl">
+          <Row className="mb-3" align="center" gap="3">
+            <Row className="flex-shrink-0 w-10 h-10 bg-white/20" align="center" justify="center" rounded="xl">
               <BookOpen className="w-5 h-5 text-white" />
-            </Div>
+            </Row>
             <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">
               Admin &amp; Employee Guide
             </Text>
-          </Div>
+          </Row>
           <Heading level={1} className="md:text-3xl text-white mb-2" size="2xl" weight="bold">
             LetItRip Internal Guide
           </Heading>
@@ -159,20 +159,20 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
                 href={href}
                 className="group flex flex-col gap-3 rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5 hover:border-[var(--appkit-color-primary)] hover:shadow-md transition-all"
               >
-                <Div className="flex items-center gap-3">
-                  <Div
-                    className="flex-shrink-0 w-9 h-9 flex items-center justify-center" rounded="lg"
+                <Row align="center" gap="3">
+                  <Row
+                    className="flex-shrink-0 w-9 h-9" align="center" justify="center" rounded="lg"
                     style={{
                       background:
                         "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",
                     }}
                   >
                     <Icon className="w-4 h-4 text-white" />
-                  </Div>
+                  </Row>
                   <Text className="text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors" weight="semibold">
                     {title}
                   </Text>
-                </Div>
+                </Row>
                 <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">
                   {description}
                 </Text>
@@ -187,7 +187,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
 
       {/* Trust & Safety callout */}
       <Section className={CLS_WARN_PANEL}>
-        <Div className="flex items-start gap-3">
+        <Row align="start" gap="3">
           <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
           <Div>
             <Text className={CLS_WARN_HEAD}>
@@ -197,7 +197,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
               Admin actions are logged. Never access user PII (email, phone) without a legitimate support reason. Never grant capabilities or permissions without documented approval. When in doubt, escalate to a senior admin.
             </Text>
           </Div>
-        </Div>
+        </Row>
       </Section>
     </Div>
   );

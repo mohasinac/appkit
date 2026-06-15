@@ -11,7 +11,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Div, Text } from "../../../ui";
+import { Div, Row, Text } from "../../../ui";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -87,9 +87,9 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                     loading="lazy"
                   />
                 ) : (
-                  <Div className="absolute inset-0 flex items-center justify-center bg-[var(--appkit-color-surface-muted)] text-3xl">
+                  <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)] text-3xl" align="center" justify="center">
                     {PLACEHOLDER_EMOJI}
-                  </Div>
+                  </Row>
                 )}
 
                 <Div className="absolute left-2 top-2 rounded bg-black/70 px-1.5 py-0.5 text-xs font-semibold text-white">

@@ -1,7 +1,6 @@
 import type { BeforeAfterItem } from "../types";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
-import { Div, Text } from "../../../ui";
-
+import { Div, Stack, Text } from "../../../ui";
 interface BeforeAfterGalleryProps {
   items: BeforeAfterItem[];
   className?: string;
@@ -18,7 +17,7 @@ export function BeforeAfterGallery({
       className={`grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
     >
       {items.map((item) => (
-        <Div key={item.id} className="flex flex-col gap-2">
+        <Stack key={item.id} gap="sm">
           <BeforeAfterSlider item={item} />
           {(item.title || item.description) && (
             <Div className="text-center">
@@ -34,7 +33,7 @@ export function BeforeAfterGallery({
               )}
             </Div>
           )}
-        </Div>
+        </Stack>
       ))}
     </Div>
   );

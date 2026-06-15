@@ -3,18 +3,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import {
-  BlockFooter,
-  Button,
-  Div,
-  Heading,
-  Li,
-  Row,
-  Span,
-  Text,
-  Ul,
-} from "../../ui";
-
+import { BlockFooter, Button, Div, Heading, Li, Row, Span, Stack, Text, Ul } from "../../ui";
 export interface FooterLinkGroup {
   heading: string;
   links: { label: string; href: string }[];
@@ -214,7 +203,7 @@ export function FooterLayout({
         </Div>
 
         {/* Bottom bar */}
-        <Div className="mt-10 pt-6 border-t border-zinc-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600 dark:text-zinc-400">
+        <Stack className="mt-10 pt-6 border-t border-zinc-200 dark:border-slate-800 sm:flex-row justify-between text-xs text-zinc-600 dark:text-zinc-400" align="center" gap="3">
           <Text className="text-zinc-600 dark:text-zinc-400" size="xs">
             {copyrightText}
           </Text>
@@ -239,7 +228,7 @@ export function FooterLayout({
               {madeInText}
             </Text>
           )}
-        </Div>
+        </Stack>
       </Div>
     </BlockFooter>
   );

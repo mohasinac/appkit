@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Div, Heading, Row, Span } from "../../../ui";
+import { Button, Div, Heading, Row, Span, Stack } from "../../../ui";
 import type { Banner } from "../types";
 
 const FONT_BANGERS = "var(--font-bangers, Bangers, cursive)";
@@ -92,8 +92,8 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
       />
 
       {/* Content */}
-      <Div
-        className="relative flex flex-col justify-end px-5 pb-16 sm:px-12 sm:pb-24 lg:px-20"
+      <Stack
+        className="relative justify-end px-5 pb-16 sm:px-12 sm:pb-24 lg:px-20"
         style={{
           minHeight: "100svh",
           zIndex: 10,
@@ -154,7 +154,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             </Link>
           </Row>
         )}
-      </Div>
+      </Stack>
 
       {/* Prev / Next arrows */}
       {banners.length > 1 && (
@@ -266,8 +266,8 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
       )}
 
       {/* Scroll-down hint */}
-      <Div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
+      <Stack
+        className="absolute bottom-6 left-1/2 -translate-x-1/2" align="center" gap="xs"
         style={{ zIndex: 15, opacity: 0.5 }}
         aria-hidden="true"
       >
@@ -278,7 +278,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               "linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.8))",
           }}
         />
-      </Div>
+      </Stack>
     </Div>
   );
 }

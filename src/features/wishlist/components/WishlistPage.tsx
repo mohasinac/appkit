@@ -39,7 +39,7 @@ export function WishlistCard({
           />
         )}
       </Div>
-      <Div className="flex flex-1 flex-col justify-between">
+      <Stack className="flex-1 justify-between">
         <Text className={`font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp2}`}>
           {item.productTitle}
         </Text>
@@ -48,7 +48,7 @@ export function WishlistCard({
             {formatCurrency(item.productPrice, item.productCurrency)}
           </Text>
         )}
-      </Div>
+      </Stack>
       {onRemove && (
         <Button
           type="button"

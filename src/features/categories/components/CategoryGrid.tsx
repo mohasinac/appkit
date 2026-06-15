@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Div, Span, Text } from "../../../ui";
+import { Div, Row, Span, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { CategoryItem } from "../types";
 
@@ -34,7 +34,7 @@ export function CategoryCard({
     category.metrics?.productCount ?? (category as any).productCount ?? 0;
 
   const inner = (
-    <Div className="flex h-full flex-col">
+    <Stack className="h-full">
       {/* Image area — fixed aspect ratio */}
       <Div className={`relative aspect-[4/3] w-full ${__O.hidden} bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700 flex-shrink-0`}>
         {category.display?.coverImage ? (
@@ -54,9 +54,9 @@ export function CategoryCard({
         ) : null}
         {/* Icon overlay */}
         {category.display?.icon && (
-          <Div className="absolute inset-0 flex items-center justify-center text-4xl">
+          <Row className="absolute inset-0 text-4xl" align="center" justify="center">
             {category.display.icon}
-          </Div>
+          </Row>
         )}
         {/* Featured badge */}
         {category.isFeatured && (
@@ -76,16 +76,16 @@ export function CategoryCard({
             {category.description}
           </Text>
         )}
-        <Div className="mt-2 flex items-center justify-between gap-2">
+        <Row className="mt-2" align="center" justify="between" gap="sm">
           <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
             {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
           </Text>
           <Span size="xs" weight="medium" className="inline-flex items-center gap-1 rounded-md border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 text-zinc-600 dark:text-zinc-300 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors">
             Browse <ArrowRight className="h-3 w-3" />
           </Span>
-        </Div>
+        </Row>
       </Div>
-    </Div>
+    </Stack>
   );
 
   const cardClass = `group relative flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 shadow-sm transition hover:shadow-md h-full ${className}`;

@@ -1,7 +1,7 @@
 "use client"
 import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { Div, Span, Text } from "../../../ui";
+import { Div, Row, Span, Text } from "../../../ui";
 import type { BeforeAfterItem } from "../types";
 
 const __P = {
@@ -117,7 +117,7 @@ export function BeforeAfterCard({
           // audit-inline-style-ok: computed percentage
           style={{ left: `${position}%` }}
         >
-          <Div className="absolute top-1/2 left-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-card" rounded="full" shadow="lg">
+          <Row className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-card" align="center" justify="center" rounded="full" shadow="lg">
             <svg
               width="16"
               height="16"
@@ -133,7 +133,7 @@ export function BeforeAfterCard({
                 strokeLinejoin="round"
               />
             </svg>
-          </Div>
+          </Row>
         </Div>
 
         {/* Labels */}

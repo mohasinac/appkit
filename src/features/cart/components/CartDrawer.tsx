@@ -1,5 +1,5 @@
 import type { CartItem } from "../types";
-import { Aside, Button, Div, Heading, Row, Span, Text } from "../../../ui";
+import { Aside, Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -39,8 +39,8 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
           />
         )}
       </Div>
-      <Div className="flex flex-1 flex-col justify-between">
-        <Div className="flex items-start gap-1.5">
+      <Stack className="flex-1 justify-between">
+        <Row className="gap-1.5" align="start">
           {href ? (
             <a
               href={href}
@@ -60,7 +60,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               Out of Stock
             </Span>
           )}
-        </Div>
+        </Row>
         {item.meta.attributes &&
           Object.keys(item.meta.attributes).length > 0 && (
             <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
@@ -104,7 +104,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             <Span size="xs" color="muted">Qty: {item.quantity}</Span>
           )}
         </Row>
-      </Div>
+      </Stack>
       {onRemove && (
         <Button
           onClick={() => onRemove(item.id)}
@@ -177,9 +177,9 @@ export function CartDrawer({
         </Row>
         <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-3`}>
           {isLoading ? (
-            <Div className="flex justify-center py-12">
+            <Row className="py-12" justify="center">
               <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 dark:border-slate-600 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
-            </Div>
+            </Row>
           ) : items.length === 0 ? (
             <Text className="py-12 text-neutral-500 dark:text-zinc-400" size="sm" align="center">
               {labels.empty ?? "Your cart is empty"}

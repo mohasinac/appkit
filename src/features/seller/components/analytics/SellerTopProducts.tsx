@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Span, Text } from "../../../../ui";
+import { Div, Heading, Row, Span, Text } from "../../../../ui";
 import type { SellerAnalyticsTopProduct } from "../../types";
 
 export interface SellerTopProductsLabels {
@@ -39,7 +39,7 @@ export function SellerTopProducts({
       {products.length > 0 ? (
         <Div className="divide-y divide-neutral-100 dark:divide-neutral-800">
           {products.map((product, index) => (
-            <Div key={product.productId} className="flex items-center gap-4 py-3">
+            <Row key={product.productId} className="py-3" align="center" gap="md">
               <Span size="sm" weight="bold" className="w-6 text-neutral-500 dark:text-neutral-400">
                 {index + 1}.
               </Span>
@@ -55,7 +55,7 @@ export function SellerTopProducts({
                 </Span>
                 {renderProductLink?.(product)}
               </Div>
-            </Div>
+            </Row>
           ))}
         </Div>
       ) : (

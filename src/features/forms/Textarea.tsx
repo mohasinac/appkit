@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span, Text } from "../../ui";
+import { Div, Row, Span, Text } from "../../ui";
 import {
   cn,
   INPUT_BASE,
@@ -67,7 +67,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
 
-        <Div className="flex items-center justify-between mt-1.5">
+        <Row className="mt-1.5" align="center" justify="between">
           <Div className="flex-1">
             {error && (
               <Text className={ERROR_BASE} role="alert">
@@ -90,7 +90,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               {charCount} / {maxLength}
             </p>
           )}
-        </Div>
+        </Row>
       </Div>
     );
   },

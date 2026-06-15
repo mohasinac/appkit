@@ -9,7 +9,7 @@
  * sort/search/filter/pagination on top of the initial snapshot.
  */
 
-import { sortBy } from "@mohasinac/appkit";
+import { Row, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useMemo, useCallback, useState } from "react";
 import { Div, Span, Text } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
@@ -136,13 +136,13 @@ export function CategoryBundlesListing({
       />
 
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={safePage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       <Div className="py-6">
@@ -153,7 +153,7 @@ export function CategoryBundlesListing({
         ) : (
           <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {pageItems.map((bundle) => (
-              <Div key={bundle.id} className="flex flex-col">
+              <Stack key={bundle.id}>
                 <MarketplaceBundleCard bundle={bundle} />
                 {onBuyNow && (
                   <Div surface="default" className="border-t border-zinc-100 px-3 pt-2 pb-3 dark:border-zinc-800 -mt-px rounded-b-xl border border-t-0 border-zinc-200 dark:border-zinc-800">
@@ -165,7 +165,7 @@ export function CategoryBundlesListing({
                     />
                   </Div>
                 )}
-              </Div>
+              </Stack>
             ))}
           </Div>
         )}

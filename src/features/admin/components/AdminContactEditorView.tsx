@@ -3,15 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Badge,
-  Button,
-  Div,
-  FormActions,
-  SideDrawer,
-  Text,
-  useToast,
-} from "../../../ui";
+import { Badge, Button, Div, FormActions, Row, SideDrawer, Stack, Text, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 
@@ -77,7 +69,7 @@ export function AdminContactEditorView({
     >
       <Div className={`flex flex-col gap-5 ${__P.p4}`}>
         {/* Status badge */}
-        <Div className="flex items-center gap-2">
+        <Row align="center" gap="sm">
           <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Status:</Text>
           <span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -86,10 +78,10 @@ export function AdminContactEditorView({
           >
             {currentStatus ?? "new"}
           </span>
-        </Div>
+        </Row>
 
         {/* From */}
-        <Div className="flex flex-col gap-1">
+        <Stack gap="xs">
           <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="medium" transform="uppercase">
             From
           </Text>
@@ -99,10 +91,10 @@ export function AdminContactEditorView({
           {email && (
             <Text className="text-zinc-500 dark:text-zinc-400" size="sm">{email}</Text>
           )}
-        </Div>
+        </Stack>
 
         {/* Message */}
-        <Div className="flex flex-col gap-1">
+        <Stack gap="xs">
           <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="medium" transform="uppercase">
             Message
           </Text>
@@ -111,7 +103,7 @@ export function AdminContactEditorView({
               {message ?? "No message body."}
             </Text>
           </Div>
-        </Div>
+        </Stack>
 
         {/* Actions */}
         <FormActions align="right">

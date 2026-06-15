@@ -2,16 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Div,
-  Heading,
-  Input,
-  Span,
-  StackedViewShell,
-  Text,
-} from "../../../ui";
+import { Alert, Button, Div, Heading, Input, Row, Span, Stack, StackedViewShell, Text } from "../../../ui";
 import { apiClient } from "../../../http";
 import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
@@ -78,7 +69,7 @@ function renderCopilotChatPanel(props: {
 }) {
   const { messages, conversationId, isLoading, error, input, setInput, labels, messagesEndRef, handleSubmit } = props;
   return (
-    <Div className="flex flex-col border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
+    <Stack className="border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
       <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
         <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
@@ -86,18 +77,18 @@ function renderCopilotChatPanel(props: {
       </Div>
       <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
         {messages.length === 0 ? (
-          <Div className="flex flex-col items-center justify-center h-full text-center">
+          <Stack className="justify-center h-full text-center" align="center">
             <Text weight="medium">{labels?.noMessages ?? "No messages yet"}</Text>
             <Text variant="secondary" className="mt-1" size="sm">{labels?.noMessagesDesc ?? "Ask anything to get started"}</Text>
-          </Div>
+          </Stack>
         ) : null}
         {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
         {isLoading ? (
-          <Div className="flex justify-start">
+          <Row justify="start">
             <Div className="rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5" rounded="2xl">
               <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
             </Div>
-          </Div>
+          </Row>
         ) : null}
         {error ? <Text className={CLS_ERROR_TEXT}>{labels?.errorLabel ?? "An error occurred. Please try again."}</Text> : null}
         <Div ref={messagesEndRef} />
@@ -112,7 +103,7 @@ function renderCopilotChatPanel(props: {
           </Button>
         </form>
       </Div>
-    </Div>
+    </Stack>
   );
 }
 
@@ -200,15 +191,15 @@ export function AdminCopilotView({
         renderHeader ? (
           renderHeader(startNewConversation)
         ) : (
-          <Div className="flex items-center justify-between gap-3">
+          <Row align="center" justify="between" gap="3">
             <Heading level={2}>{labels.title ?? "AI Copilot"}</Heading>
             <Button type="button" variant="outline" size="sm" onClick={startNewConversation}>
               {labels.newConversation ?? "New Conversation"}
             </Button>
-          </Div>
+          </Row>
         ),
         <Div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
-          <Div className="flex flex-col border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
+          <Stack className="border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
             <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
@@ -217,22 +208,22 @@ export function AdminCopilotView({
 
             <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
               {messages.length === 0 ? (
-                <Div className="flex flex-col items-center justify-center h-full text-center">
+                <Stack className="justify-center h-full text-center" align="center">
                   <Text weight="medium">{labels.noMessages ?? "No messages yet"}</Text>
                   <Text variant="secondary" className="mt-1" size="sm">
                     {labels.noMessagesDesc ?? "Ask anything to get started"}
                   </Text>
-                </Div>
+                </Stack>
               ) : null}
               {messages.map((msg) => (
                 <MessageBubble key={msg.id} msg={msg} />
               ))}
               {isLoading ? (
-                <Div className="flex justify-start">
+                <Row justify="start">
                   <Div className="rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5" rounded="2xl">
                     <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
                   </Div>
-                </Div>
+                </Row>
               ) : null}
               {error ? (
                 <Text className={CLS_ERROR_TEXT}>
@@ -264,7 +255,7 @@ export function AdminCopilotView({
                 </Button>
               </form>
             </Div>
-          </Div>
+          </Stack>
 
           <Div surface="card" padding="sm" className="space-y-3">
             <Heading level={3} size="sm" weight="semibold">

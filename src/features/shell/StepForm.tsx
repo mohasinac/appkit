@@ -3,8 +3,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
-import { Div, Span, Text, useToast } from "../../ui";
-
+import { Div, Row, Span, Stack, Text, useToast } from "../../ui";
 import { normalizeError } from "../../errors/normalize";
 export interface StepDef<T extends object = Record<string, unknown>> {
   label: string;
@@ -56,7 +55,7 @@ export function StepFormActions({
   const nextStepLabel = `Next →`;
 
   return (
-    <Div className="flex items-center justify-between gap-2 px-5 py-3 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
+    <Row className="px-5 py-3 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" align="center" justify="between" gap="sm">
       <>
         {!isFirst && onPrev && (
           <Button variant="outline" size="sm" onClick={onPrev} disabled={disabled || isLoading}>
@@ -64,7 +63,7 @@ export function StepFormActions({
           </Button>
         )}
       </>
-      <Div className="flex items-center gap-3">
+      <Row align="center" gap="3">
         <Span size="xs" color="muted">
           {currentStep + 1} / {totalSteps}
         </Span>
@@ -77,8 +76,8 @@ export function StepFormActions({
         >
           {isLast ? completeLabel : nextStepLabel}
         </Button>
-      </Div>
-    </Div>
+      </Row>
+    </Row>
   );
 }
 
@@ -102,7 +101,7 @@ export function StepIndicator({
         const isActive = i === currentStep;
         const hasError = stepErrors?.[i] === true;
         return (
-          <Div key={i} className="flex items-center gap-0 flex-shrink-0">
+          <Row key={i} className="flex-shrink-0" align="center" gap="none">
             <button
               type="button"
               disabled={!isDone && !isActive}
@@ -150,7 +149,7 @@ export function StepIndicator({
                 )}
               />
             )}
-          </Div>
+          </Row>
         );
       })}
     </nav>
@@ -220,7 +219,7 @@ export function StepForm<T extends object = Record<string, unknown>>({
   const isLast = currentStep === steps.length - 1;
 
   return (
-    <Div className="flex flex-col">
+    <Stack>
       <StepIndicator
         steps={steps}
         currentStep={currentStep}
@@ -247,6 +246,6 @@ export function StepForm<T extends object = Record<string, unknown>>({
           disabled={isLoading}
         />
       )}
-    </Div>
+    </Stack>
   );
 }

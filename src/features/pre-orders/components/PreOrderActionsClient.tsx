@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Button, Div, LoginRequiredModal, Span, Stack, Text } from "../../../ui";
+import { Button, Div, LoginRequiredModal, Row, Span, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
@@ -110,18 +110,18 @@ export function PreOrderActionsClient({
       )}
 
       <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-        <Div className="flex flex-wrap gap-4 justify-center text-center">
+        <Row className="text-center" justify="center" gap="md" wrap>
           {[
             { icon: "🔒", label: "Secure\nPayment" },
             { icon: "📅", label: "Guaranteed\nDelivery" },
             { icon: "↩", label: "Free\nCancellation" },
           ].map(({ icon, label }) => (
-            <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+            <Stack key={label} className="text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]" align="center" gap="xs">
               <Span size="base">{icon}</Span>
               <Span className="whitespace-pre-line leading-tight">{label}</Span>
-            </Div>
+            </Stack>
           ))}
-        </Div>
+        </Row>
       </Div>
     </Div>
   );

@@ -1,16 +1,7 @@
 "use client"
 import { useCallback } from "react";
 import { Package } from "lucide-react";
-import {
-  BaseListingCard,
-  Caption,
-  Div,
-  Span,
-  StatusBadge,
-  Text,
-  TextLink,
-  Button,
-} from "../../../ui";
+import { BaseListingCard, Button, Caption, Div, Row, Span, StatusBadge, Text, TextLink } from "../../../ui";
 import { formatCurrency, formatDate } from "../../../utils";
 import { OrderStatusValues } from "../schemas";
 import { useLongPress } from "../../../react/hooks/useLongPress";
@@ -148,9 +139,9 @@ export function MarketplaceOrderCard({
         <div
           className={`flex items-start gap-3 ${selectable ? "pl-8" : ""} ${isListVariant ? "min-w-0 flex-1" : ""}`}
          data-section="marketplaceordercard-div-413">
-          <Div className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-zinc-100 dark:bg-slate-800" rounded="lg">
+          <Row className="h-10 w-10 flex-shrink-0 bg-zinc-100 dark:bg-slate-800" align="center" justify="center" rounded="lg">
             <Package className="h-5 w-5 text-zinc-500 dark:text-slate-400" />
-          </Div>
+          </Row>
           <Div className="min-w-0 space-y-1">
             <TextLink href={detailHref} className="leading-tight">
               <Text weight="semibold" className="truncate">
@@ -183,7 +174,7 @@ export function MarketplaceOrderCard({
             </Text>
           </div>
 
-          <Div className="flex flex-wrap items-center gap-2">
+          <Row align="center" gap="sm" wrap>
             {(isShipped || isDelivered) &&
               trackHref &&
               order.trackingNumber && (
@@ -214,7 +205,7 @@ export function MarketplaceOrderCard({
             >
               {mergedLabels.viewOrder}
             </Button>
-          </Div>
+          </Row>
         </div>
       </div>
     </div>

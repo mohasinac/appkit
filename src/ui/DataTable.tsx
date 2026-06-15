@@ -810,9 +810,9 @@ function SelectableCard({
         ].join(" ")}
         onClick={(e) => e.stopPropagation()}
       >
-        <Div className="w-6 h-6 bg-white/95 dark:bg-slate-800/95 flex items-center justify-center" rounded="md" shadow="md">
+        <Row className="w-6 h-6 bg-white/95 dark:bg-slate-800/95" align="center" justify="center" rounded="md" shadow="md">
           {/* relative wrapper ensures checkmark SVG centers over the input */}
-          <Div className="relative flex items-center justify-center">
+          <Row className="relative" align="center" justify="center">
             <input
               type="checkbox"
               className={[
@@ -841,8 +841,8 @@ function SelectableCard({
                 />
               </svg>
             )}
-          </Div>
-        </Div>
+          </Row>
+        </Row>
       </Div>
       {selected && (
         <Div

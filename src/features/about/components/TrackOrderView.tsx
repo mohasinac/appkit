@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Text, Caption, Grid, Section } from "../../../ui";
+import { Caption, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShoppingBag, Truck, MapPin, CheckCircle2 } from "lucide-react";
 
@@ -76,7 +76,7 @@ export async function TrackOrderView({
           <Heading level={2} className="mb-3">
             {t("signInPrompt")}
           </Heading>
-          <Div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+          <Stack className="sm:flex-row justify-center mt-6" gap="3">
             <TextLink
               href={String(ROUTES.AUTH.LOGIN)}
               className={`inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-lg transition-colors`}
@@ -89,7 +89,7 @@ export async function TrackOrderView({
             >
               {t("viewOrders")}
             </TextLink>
-          </Div>
+          </Stack>
         </Section>
 
         {/* How it works */}

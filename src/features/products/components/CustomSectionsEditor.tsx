@@ -1,6 +1,6 @@
 "use client";
 import React, { useId } from "react";
-import { Button, Div, Heading, Input, Span, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, Input, Row, Span, Stack, Text } from "../../../ui";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 import { MAX_CUSTOM_SECTIONS } from "../schemas/firestore";
 import { CustomFieldsEditor } from "./CustomFieldsEditor";
@@ -46,7 +46,7 @@ export function CustomSectionsEditor({
           key={section.id}
           className="dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/40 space-y-3" rounded="xl" padding="md" border="default"
         >
-          <Div className="flex items-center justify-between gap-2">
+          <Row align="center" justify="between" gap="sm">
             <Heading
               level={4}
               className="text-zinc-700 dark:text-zinc-200" size="sm" weight="semibold"
@@ -62,7 +62,7 @@ export function CustomSectionsEditor({
             >
               Remove
             </Button>
-          </Div>
+          </Row>
 
           {/* Title */}
           <Div>
@@ -116,7 +116,7 @@ export function CustomSectionsEditor({
         </Div>
       ))}
 
-      <Div className="flex items-center justify-between">
+      <Row align="center" justify="between">
         <Button
           type="button"
           variant="ghost"
@@ -130,7 +130,7 @@ export function CustomSectionsEditor({
         <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
           {sections.length} / {MAX_CUSTOM_SECTIONS} sections
         </Text>
-      </Div>
+      </Row>
     </Stack>
   );
 }

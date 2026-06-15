@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Span, Text, useToast } from "../../../ui";
+import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Row, Span, Text, useToast } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
@@ -137,8 +137,8 @@ export function SpinWheelView({
         className={CLS_WHEEL}
         aria-label="Spin wheel"
       >
-        <Div
-          className="absolute inset-0 flex items-center justify-center"
+        <Row
+          className="absolute inset-0" align="center" justify="center"
           style={{
             animation: spinning
               ? `lir-spin ${ANIMATION_MS}ms cubic-bezier(0.2, 0.8, 0.2, 1)`
@@ -146,7 +146,7 @@ export function SpinWheelView({
           }}
         >
           <Text size="4xl">🎁</Text>
-        </Div>
+        </Row>
         <style>{`
           @keyframes lir-spin {
             0% { transform: rotate(0deg); }
@@ -173,9 +173,9 @@ export function SpinWheelView({
                   the code to the clipboard and deep-links to /checkout?coupon=…
                   so the prize is actually redeemable instead of just being
                   rendered as a string the user has to remember. */}
-              <Div className="mt-3 flex justify-center">
+              <Row className="mt-3" justify="center">
                 <ClaimCouponButton couponCode={resultCoupon} size="sm" source="spin" />
-              </Div>
+              </Row>
             </>
           ) : null}
         </Div>
@@ -187,7 +187,7 @@ export function SpinWheelView({
         </Text>
       ) : null}
 
-      <Div className="flex justify-center">
+      <Row justify="center">
         <Button
           variant="primary"
           size="lg"
@@ -196,7 +196,7 @@ export function SpinWheelView({
         >
           {spinning ? l.spinningButton : l.spinButton}
         </Button>
-      </Div>
+      </Row>
 
       {alreadyUsed ? (
         <Text className="text-zinc-500 dark:text-zinc-400" size="sm" align="center">

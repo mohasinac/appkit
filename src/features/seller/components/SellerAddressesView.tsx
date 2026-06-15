@@ -109,7 +109,7 @@ function AddressCard({
   onDelete: () => void;
 }) {
   return (
-    <Div surface="card" padding="sm" className="flex flex-col gap-2">
+    <Stack surface="card" padding="sm" gap="sm">
       <Row align="start" justify="between" gap="xs">
         <Row gap="xs" className="min-w-0">
           <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
@@ -149,7 +149,7 @@ function AddressCard({
         {address.landmark ? ` (near ${address.landmark})` : ""}<br />
         {address.city}, {address.state} {address.postalCode}, {address.country}
       </Text>
-    </Div>
+    </Stack>
   );
 }
 
@@ -287,13 +287,13 @@ export function SellerAddressesView({
             <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
           </Row>
         ) : addresses.length === 0 ? (
-          <Div className="border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16 flex flex-col items-center gap-3" rounded="xl">
+          <Stack className="border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16" align="center" gap="3" rounded="xl">
             <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
             <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>
               Add your first address
             </Button>
-          </Div>
+          </Stack>
         ) : (
           <>
             {/* S-STORE-6-D — table view alongside the card grid. */}

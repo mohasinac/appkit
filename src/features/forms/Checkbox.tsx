@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { Div, Span, Text } from "../../ui";
+import { Div, Row, Span, Text } from "../../ui";
 import { cn, ERROR_BASE } from "./utils";
 
 export interface CheckboxProps extends Omit<
@@ -33,7 +33,7 @@ export function Checkbox({
   return (
     <Div className="w-full">
       <label className="flex flex-row items-center gap-3 cursor-pointer group">
-          <Div className="relative flex items-center justify-center flex-shrink-0">
+          <Row className="relative flex-shrink-0" align="center" justify="center">
           <input
             ref={inputRef}
             type="checkbox"
@@ -81,7 +81,7 @@ export function Checkbox({
               />
             )}
           </svg>
-          </Div>
+          </Row>
 
         {(label || suffix) && (
           <Span size="sm" className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">

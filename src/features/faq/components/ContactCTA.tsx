@@ -1,5 +1,4 @@
-import { Card, Div, Heading, Span, Text, TextLink } from "../../../ui";
-
+import { Card, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
 const __P = {
   p8: "p-8",
 } as const;
@@ -34,7 +33,7 @@ export function ContactCTA({
       padding="lg"
       className="text-center dark:bg-slate-800/60"
     >
-      <Div className="mb-6 flex justify-center">
+      <Row className="mb-6" justify="center">
         <Div className={`rounded-full bg-primary/10 ${__P.p8}`}>
           <svg
             className="h-12 w-12 text-primary"
@@ -50,7 +49,7 @@ export function ContactCTA({
             />
           </svg>
         </Div>
-      </Div>
+      </Row>
 
       <Heading level={2} className="mb-3" size="2xl" weight="semibold">
         {labels?.title ?? "Need More Help?"}

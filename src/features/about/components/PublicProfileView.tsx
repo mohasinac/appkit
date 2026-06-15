@@ -167,15 +167,15 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
   return (
     <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
       <Div className={`${page.container.md}`}>
-        <Div className="flex flex-wrap gap-4 flex-col sm:flex-row items-center sm:items-end">
+        <Stack className="flex-wrap sm:flex-row sm:items-end" align="center" gap="md">
           <Div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 ${__O.hidden}`}>
             {photoURL ? <MediaImage src={photoURL} alt={displayName} size="avatar" fallback="👤" /> : <User className="w-10 h-10 text-white/60" />}
           </Div>
           <Stack gap="xs" className="text-center sm:text-left">
-            <Div className="flex flex-wrap gap-1 justify-center sm:justify-start">
+            <Row className="sm:justify-start" justify="center" gap="xs" wrap>
               <Heading level={1} variant="none" className="text-white mb-0">{displayName}</Heading>
               {isSeller && <Span size="xs" weight="semibold" className="rounded-full bg-white/20 px-2.5 py-0.5 text-white/90">{t("roleSeller")}</Span>}
-            </Div>
+            </Row>
             <Text variant="none" className="text-white/60" size="sm">{memberSince}</Text>
           </Stack>
           {isSeller && storeSlug && (
@@ -186,7 +186,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
               </Link>
             </Div>
           )}
-        </Div>
+        </Stack>
       </Div>
     </Section>
   );

@@ -11,8 +11,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { MediaImage } from "./MediaImage";
-import { Button, Div, Span } from "../../ui";
-
+import { Button, Div, Row, Span } from "../../ui";
 export interface LightboxItem {
   src: string;
   alt: string;
@@ -132,7 +131,7 @@ function LightboxControlsBar({
   onClose: () => void;
 }) {
   return (
-    <Div className="flex items-center justify-center gap-1.5 px-4 py-3 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10 flex-wrap">
+    <Row className="gap-1.5 px-4 py-3 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10" align="center" justify="center" wrap>
       {items.length > 1 && (
         <IconBtn onClick={(e) => { e.stopPropagation(); goPrev(); }} ariaLabel={L.prevImage}>
           <ChevronLeft className="w-7 h-7" />
@@ -168,7 +167,7 @@ function LightboxControlsBar({
           <ChevronRight className="w-7 h-7" />
         </IconBtn>
       )}
-    </Div>
+    </Row>
   );
 }
 
@@ -186,8 +185,8 @@ function LightboxThumbnailStrip({
   L: Required<LightboxLabels>;
 }) {
   return (
-    <Div
-      className="flex gap-2 px-4 py-3 bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0 justify-center"
+    <Row
+      className="px-4 py-3 bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0" justify="center" gap="sm"
       // audit-inline-style-ok: safe-area inset
       style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
     >
@@ -206,7 +205,7 @@ function LightboxThumbnailStrip({
           <MediaImage src={item.src} alt={item.alt} size="thumbnail" />
         </Button>
       ))}
-    </Div>
+    </Row>
   );
 }
 

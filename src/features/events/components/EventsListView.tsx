@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Pagination, Text } from "../../../ui";
+import { Div, Pagination, Row, Text } from "../../../ui";
 import type { LayoutSlots } from "../../../contracts";
 import type { EventItem } from "../types";
 import { EventCard } from "./EventCard";
@@ -91,13 +91,13 @@ export function EventsListView<T extends EventItem = EventItem>({
           totalPages,
         }) as React.ReactNode)
       ) : totalPages > 1 && onPageChange ? (
-        <Div className="flex justify-center">
+        <Row justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
-        </Div>
+        </Row>
       ) : null}
     </Div>
   );

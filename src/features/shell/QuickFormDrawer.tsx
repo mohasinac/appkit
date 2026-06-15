@@ -5,8 +5,7 @@ import type { ZodType } from "zod";
 import { Button } from "../../ui/components/Button";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
-import { Div, Text } from "../../ui";
-
+import { Div, Row, Text } from "../../ui";
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
 
 export interface QuickFieldDef {
@@ -192,7 +191,7 @@ export function QuickFormDrawer({
         style={{ zIndex: "calc(var(--appkit-z-modal) + 2)" }}
       >
         {/* Header */}
-        <Div className="flex-shrink-0 flex items-center gap-3 px-4 py-4 border-b border-[var(--appkit-color-border)]">
+        <Row className="flex-shrink-0 px-4 py-4 border-b border-[var(--appkit-color-border)]" align="center" gap="3">
           <Text className="flex-1 text-[var(--appkit-color-text)]" size="base" weight="semibold">{title}</Text>
           <button
             type="button"
@@ -202,7 +201,7 @@ export function QuickFormDrawer({
           >
             <X className="w-5 h-5" />
           </button>
-        </Div>
+        </Row>
 
         {/* Scrollable body */}
         <form
@@ -259,7 +258,7 @@ export function QuickFormDrawer({
         </form>
 
         {/* Footer */}
-        <Div className="flex-shrink-0 flex items-center justify-between gap-2 px-4 py-4 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]">
+        <Row className="flex-shrink-0 px-4 py-4 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]" align="center" justify="between" gap="sm">
           <Button variant="outline" size="sm" onClick={handleClose} disabled={busy}>
             {cancelLabel}
           </Button>
@@ -272,7 +271,7 @@ export function QuickFormDrawer({
           >
             {submitLabel} →
           </Button>
-        </Div>
+        </Row>
       </div>
     </>
   );

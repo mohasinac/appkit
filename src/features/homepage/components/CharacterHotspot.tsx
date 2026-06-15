@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { useMediaQuery } from "../../../react";
-import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Button, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin as HotspotPinData } from "../types";
 
 const __O = {
@@ -511,8 +511,8 @@ function MobileHotspotSheet({
   onClose: () => void;
 }) {
   return (
-    <Div
-      className="fixed inset-0 z-50 flex items-end"
+    <Row
+      className="fixed inset-0 z-50" align="end"
       style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(3px)" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
@@ -526,9 +526,9 @@ function MobileHotspotSheet({
           animation: "fadeInUp 0.22s ease both",
         }}
       >
-        <Div className="flex justify-center pt-3 pb-1">
+        <Row className="pt-3 pb-1" justify="center">
           <Div style={{ width: 40, height: 4, borderRadius: 2, background: "#D1D5DB" }} />
-        </Div>
+        </Row>
         <Div style={{ height: 4, background: active.accent }} />
         <Div className="px-5 pt-4 pb-10">
           <Text
@@ -576,7 +576,7 @@ function MobileHotspotSheet({
           </Div>
         </Div>
       </Div>
-    </Div>
+    </Row>
   );
 }
 
@@ -692,7 +692,7 @@ function CharacterHotspotInner({
               { label: "ANIME", color: "#FFE500" },
             ] as { label: string; color: string }[]
           ).map(({ label, color }) => (
-            <Div key={label} className="flex flex-col items-center">
+            <Stack key={label} align="center">
               <Span
                 className="px-3 py-1 text-[10px] sm:text-xs font-black uppercase tracking-[0.18em] rounded-sm"
                 style={{
@@ -706,7 +706,7 @@ function CharacterHotspotInner({
                 {label}
               </Span>
               <Div className="mt-1 h-5 sm:h-8 w-px" style={{ background: color, opacity: 0.5 }} />
-            </Div>
+            </Stack>
           ))}
         </Div>
 

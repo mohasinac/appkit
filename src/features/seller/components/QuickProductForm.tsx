@@ -171,7 +171,7 @@ export function QuickProductForm({
         hint="How many units are available"
       />
 
-      <Div className="flex flex-col gap-3 pt-2">
+      <Stack className="pt-2" gap="3">
         <Div className="flex gap-3">
           <Button
             variant="primary"
@@ -197,7 +197,7 @@ export function QuickProductForm({
         >
           Show all fields (advanced)
         </Button>
-      </Div>
+      </Stack>
     </Stack>
   );
 }

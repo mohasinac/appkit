@@ -82,9 +82,9 @@ function ListingThumb({
             loading="lazy"
           />
         ) : (
-          <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
+          <Row className="w-full h-full bg-zinc-100 dark:bg-zinc-800 text-zinc-400 text-xs" align="center" justify="center">
             â—¯
-          </Div>
+          </Row>
         )}
       </div>
       <Text className="text-[10px] text-zinc-600 dark:text-zinc-400 leading-tight line-clamp-2 w-full" align="center">

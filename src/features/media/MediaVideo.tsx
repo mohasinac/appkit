@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect } from "react";
-import { Div, Span } from "../../ui";
+import { Div, Row, Span } from "../../ui";
 import { resolveMediaUrl } from "../../utils/media-url";
 
 export interface MediaVideoProps {
@@ -67,13 +67,13 @@ export function MediaVideo({
 
   if (!resolvedSrc) {
     return (
-      <Div
-        className="absolute inset-0 flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl"
+      <Row
+        className="absolute inset-0 bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl" align="center" justify="center"
         role="img"
         aria-label={alt}
       >
         <Span aria-hidden="true">🎬</Span>
-      </Div>
+      </Row>
     );
   }
 

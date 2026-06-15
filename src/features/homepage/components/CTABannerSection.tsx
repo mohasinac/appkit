@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Section, Span, Text } from "../../../ui";
-
+import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
 export interface CTABannerSectionProps {
   title?: string;
   subtitle?: string;
@@ -33,7 +32,7 @@ export function CTABannerSection({
         {subtitle && (
           <Text className="mt-3 text-white/80" size="base">{subtitle}</Text>
         )}
-        <Div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <Row className="mt-8" align="center" justify="center" gap="md" wrap>
           <Link
             href={primaryHref}
             className="inline-flex items-center rounded-full bg-white px-8 py-3 text-sm font-semibold text-primary-700 shadow-sm transition-all hover:bg-zinc-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
@@ -48,7 +47,7 @@ export function CTABannerSection({
               {secondaryLabel}
             </Link>
           )}
-        </Div>
+        </Row>
       </Div>
     </Section>
   );

@@ -3,6 +3,7 @@
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Div } from "../../../ui/components/Div";
 
+import { Stack } from "@mohasinac/appkit";
 interface PrintCenterStore {
   id: string;
   storeName: string;
@@ -43,10 +44,10 @@ interface PrintCenterViewProps {
 
 export function PrintCenterView({ store, brandName = "LetItRip" }: PrintCenterViewProps) {
   return (
-    <Div className="flex flex-col items-center justify-center py-24 text-center gap-4">
+    <Stack className="justify-center py-24 text-center" align="center" gap="md">
       <Heading level={2}>{brandName} Print Center</Heading>
       {store && <Text size="sm" variant="muted">{store.storeName}</Text>}
       <Text size="sm" variant="muted">Print center features are coming soon.</Text>
-    </Div>
+    </Stack>
   );
 }

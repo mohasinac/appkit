@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Div, Input, Slider, Span, Stack, Text } from "../../ui";
+import { Button, Div, Input, Row, Slider, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
 const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-emerald-600/20";
@@ -38,7 +38,7 @@ function DualSlider({
 
   return (
     <Stack gap="sm" className="w-full">
-      <Div className="flex items-center justify-between">
+      <Row align="center" justify="between">
         <Span size="sm" weight="semibold" className="tabular-nums text-primary-600 dark:text-secondary-400">
           {prefix}
           {minNum}
@@ -48,7 +48,7 @@ function DualSlider({
           {prefix}
           {maxNum}
         </Span>
-      </Div>
+      </Row>
 
       <Stack gap="xs" aria-hidden="true">
         <Slider
@@ -67,7 +67,7 @@ function DualSlider({
         />
       </Stack>
 
-      <Div className="flex items-center justify-between">
+      <Row align="center" justify="between">
         <Span size="xs" color="muted">
           {prefix}
           {minBound}
@@ -76,7 +76,7 @@ function DualSlider({
           {prefix}
           {maxBound}
         </Span>
-      </Div>
+      </Row>
     </Stack>
   );
 }
@@ -154,7 +154,7 @@ export function RangeFilter({
         className,
       )}
     >
-      <Div className="flex items-center gap-2">
+      <Row align="center" gap="sm">
         <Button
           type="button"
           id={`rf-${title}`}
@@ -216,7 +216,7 @@ export function RangeFilter({
             </svg>
           </Button>
         )}
-      </Div>
+      </Row>
 
       {!isCollapsed && (
         <Stack gap="3" className="mt-3">
@@ -233,7 +233,7 @@ export function RangeFilter({
             />
           )}
 
-          <Div className="flex items-end gap-2">
+          <Row align="end" gap="sm">
             <Div className="flex-1 min-w-0">
               {minLabel && (
                 <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">
@@ -285,7 +285,7 @@ export function RangeFilter({
                 />
               </Div>
             </Div>
-          </Div>
+          </Row>
         </Stack>
       )}
     </Div>

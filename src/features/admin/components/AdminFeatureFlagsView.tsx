@@ -3,18 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Div,
-  Form,
-  FormActions,
-  Input,
-  StackedViewShell,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert, Button, Div, Form, FormActions, Input, Row, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
@@ -117,13 +106,13 @@ interface FlagRowProps {
 
 function FlagRow({ label, desc, checked, onChange, rollout, onRolloutChange, showRollout }: FlagRowProps) {
   return (
-    <Div surface="default" padding="inline" className="flex items-center justify-between gap-4">
+    <Row surface="default" padding="inline" align="center" justify="between" gap="md">
       <Div className="flex-1 min-w-0">
         <Toggle checked={checked} onChange={onChange} label={label} />
         <Text className="mt-0.5 ml-10 text-zinc-400 dark:text-zinc-400 truncate" size="xs">{desc}</Text>
       </Div>
       {showRollout && (
-        <Div className="flex flex-col gap-1 w-28 shrink-0">
+        <Stack className="w-28 shrink-0" gap="xs">
           <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Rollout %</Text>
           <Input
             type="number"
@@ -136,9 +125,9 @@ function FlagRow({ label, desc, checked, onChange, rollout, onRolloutChange, sho
             disabled={!checked}
             className="w-full"
           />
-        </Div>
+        </Stack>
       )}
-    </Div>
+    </Row>
   );
 }
 

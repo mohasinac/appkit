@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import { Div, Heading, Section, Text } from "../../../ui";
+import { Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { SocialPostCard } from "./SocialPostCard";
 import {
@@ -47,13 +47,13 @@ function SocialFeedSkeleton({ count }: { count: number }) {
 
 function SocialFeedEmpty({ platform }: { platform: SocialPlatform }) {
   return (
-    <Div className="flex flex-col items-center justify-center py-16 text-zinc-400">
+    <Stack className="justify-center py-16 text-zinc-400" align="center">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="3" y="3" width="18" height="18" rx="3" />
         <path d="M9 9h6M9 12h6M9 15h4" />
       </svg>
       <Text size="sm">No posts from {PLATFORM_LABELS[platform]} yet.</Text>
-    </Div>
+    </Stack>
   );
 }
 
@@ -142,7 +142,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
   return (
     <Section className={`py-12 ${themed.bgPrimary}`}>
       <Div className="w-full max-w-7xl mx-auto px-4">
-        <Div className="mb-8 flex items-end justify-between gap-4">
+        <Row className="mb-8" align="end" justify="between" gap="md">
           <>
             <Heading level={2} className="mb-1">
               {title || `${PLATFORM_LABELS[platform]} Feed`}
@@ -163,7 +163,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
               Follow on {PLATFORM_LABELS[platform]} →
             </a>
           )}
-        </Div>
+        </Row>
 
         {error ? (
           <Div className="py-12 text-center text-zinc-400 text-sm">{error}</Div>

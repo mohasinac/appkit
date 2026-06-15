@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Stack, Text } from "../../../ui";
 import { MarketplacePreorderCard } from "../../pre-orders/components/MarketplacePreorderCard";
 import { ProductFilters } from "../../products/components/ProductFilters";
 import { ROUTES } from "../../../next";
@@ -110,13 +110,13 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
       />
 
       {totalPages > 1 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Div>
+        </Row>
       )}
 
       <Div className="py-6">
@@ -141,7 +141,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
             This store has no pre-orders yet.
           </Text>
         ) : view === "list" ? (
-          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}
@@ -150,7 +150,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
               />
             ))}
-          </Div>
+          </Stack>
         ) : (
           <Div className={gridClass}>
             {(preOrders as any[]).map((product) => (

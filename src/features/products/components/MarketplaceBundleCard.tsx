@@ -10,14 +10,7 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 const CLS_BUNDLE_PILL = "inline-flex items-center rounded-full bg-violet-600 px-2 py-0.5 text-white";
 const CLS_STOCK_OK = "bg-success-surface text-white";
 const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-1.5 text-center text-xs font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
-import {
-  BaseListingCard,
-  Div,
-  Row,
-  Span,
-  Text,
-  TextLink,
-} from "../../../ui";
+import { BaseListingCard, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 export type MarketplaceBundleCardData = Pick<
@@ -137,9 +130,9 @@ export function MarketplaceBundleCard({
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                   {i === collageTiles.length - 1 && overflow > 0 && (
-                    <Div className="absolute inset-0 flex items-center justify-center bg-black/55 text-sm font-semibold text-white">
+                    <Row className="absolute inset-0 bg-black/55 text-sm font-semibold text-white" align="center" justify="center">
                       +{overflow}
-                    </Div>
+                    </Row>
                   )}
                 </Div>
               ))}
@@ -155,13 +148,13 @@ export function MarketplaceBundleCard({
               />
             </Div>
           ) : (
-            <Div className="absolute inset-0 flex items-center justify-center bg-[var(--appkit-color-surface-muted)]">
+            <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]" align="center" justify="center">
               <Text className="text-[var(--appkit-color-text-muted)]" size="xs">No image</Text>
-            </Div>
+            </Row>
           )}
         </TextLink>
 
-        <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
+        <Stack className="absolute right-2 top-2" align="end" gap="xs">
           <Span size="xs" weight="medium" className={CLS_BUNDLE_PILL}>
             {mergedLabels.bundleBadge}
           </Span>
@@ -174,14 +167,14 @@ export function MarketplaceBundleCard({
           >
             {stock === "out_of_stock" ? mergedLabels.outOfStockBadge : mergedLabels.inStockBadge}
           </Span>
-        </Div>
+        </Stack>
 
         {stock === "out_of_stock" && (
-          <Div className="absolute inset-0 flex items-center justify-center bg-black/40">
+          <Row className="absolute inset-0 bg-black/40" align="center" justify="center">
             <Span size="xs" weight="bold" className="rounded bg-zinc-900/80 px-3 py-1 tracking-wider text-white" transform="uppercase">
               {mergedLabels.outOfStockBadge}
             </Span>
-          </Div>
+          </Row>
         )}
 
         {onSelect && (

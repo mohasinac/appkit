@@ -1,4 +1,4 @@
-import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, sieveAnd, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import Link from "next/link";
@@ -154,7 +154,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           </Nav>
 
           {/* Brand logo + name */}
-          <Div className="flex items-center gap-4 mb-3">
+          <Row className="mb-3" align="center" gap="md">
             {brand?.display?.icon && (
               <Span className="leading-none" size="5xl">
                 {brand.display.icon}
@@ -170,7 +170,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 </Text>
               )}
             </>
-          </Div>
+          </Row>
 
           {/* Item count chips */}
           <Div className="flex flex-wrap gap-2 mt-3">

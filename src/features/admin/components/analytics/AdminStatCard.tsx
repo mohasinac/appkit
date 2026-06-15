@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Text, Heading } from "../../../../ui";
-
+import { Div, Heading, Row, Text } from "../../../../ui";
 const BRAND_FROM = "var(--appkit-color-primary-700)";
 const BRAND_MID  = "var(--appkit-color-cobalt)";
 const BRAND_TO   = "var(--appkit-color-secondary-400)";
@@ -46,7 +45,7 @@ export function AdminStatCard({
         aria-hidden="true"
       />
 
-      <Div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
+      <Row className="px-5 pb-5 pt-6" align="start" justify="between" gap="3">
         <Div className="min-w-0 flex-1">
           <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)]" weight="semibold" transform="uppercase">
             {label}
@@ -63,15 +62,15 @@ export function AdminStatCard({
         </Div>
 
         {icon && (
-          <Div
-            className="flex-shrink-0 w-10 h-10 flex items-center justify-center text-xl" rounded="lg"
+          <Row
+            className="flex-shrink-0 w-10 h-10 text-xl" align="center" justify="center" rounded="lg"
             // audit-inline-style-ok: dynamic CSS
             style={{ background: resolvedGradient }}
           >
             {icon}
-          </Div>
+          </Row>
         )}
-      </Div>
+      </Row>
     </Div>
   );
 }

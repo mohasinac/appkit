@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -50,9 +50,9 @@ const PRE_ORDER_COLUMNS: AdminTableColumn<PreOrderRow>[] = [
           className="w-10 h-10 rounded-lg object-cover border border-[var(--appkit-color-border)]"
         />
       ) : (
-        <Div className="w-10 h-10 bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center" rounded="lg">
+        <Row className="w-10 h-10 bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)]" align="center" justify="center" rounded="lg">
           <Span size="xs" color="faint">–</Span>
-        </Div>
+        </Row>
       ),
   },
   {

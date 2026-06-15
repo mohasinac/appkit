@@ -57,7 +57,7 @@ export async function FAQPageView({
       </Section>
 
       <Div className={`${page.container.md} py-10 md:py-12 lg:py-16`}>
-        <Div className="flex flex-col md:flex-row gap-8">
+        <Stack className="md:flex-row" gap="xl">
           {/* Category sidebar */}
           {categories.length > 0 && (
             <aside className="md:w-56 flex-shrink-0">
@@ -161,7 +161,7 @@ export async function FAQPageView({
               </Div>
             </Section>
           </Div>
-        </Div>
+        </Stack>
       </Div>
     </Div>
   );

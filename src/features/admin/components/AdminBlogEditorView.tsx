@@ -3,22 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  ConfirmDeleteModal,
-  Div,
-  Heading,
-  Input,
-  RichTextEditor,
-  RichTextRenderer,
-  Select,
-  Span,
-  StackedViewShell,
-  TagInput,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Heading, Input, RichTextEditor, RichTextRenderer, Row, Select, Span, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload, useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -440,9 +425,9 @@ export function AdminBlogEditorView({
       key="preview"
       className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] p-5 max-h-[calc(100vh-12rem)] overflow-y-auto"
     >
-      <Div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+      <Row className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]" align="center" gap="sm">
         <span>Live preview</span>
-      </Div>
+      </Row>
       {draft.coverImage ? (
         <img src={draft.coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
       ) : null}

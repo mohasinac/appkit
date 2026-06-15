@@ -9,8 +9,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import { Alert, Button, Div, Span, Spinner } from "../../../ui";
-
+import { Alert, Button, Div, Row, Span, Spinner, Stack } from "../../../ui";
 export interface CameraCaptureProps {
   mode: "photo" | "video" | "both";
   facingMode?: "user" | "environment";
@@ -89,12 +88,12 @@ export default function CameraCapture({
       />
 
       {isStarting && (
-        <Div className="absolute inset-0 flex items-center justify-center bg-black/60">
-          <Div className="flex flex-col items-center gap-2">
+        <Row className="absolute inset-0 bg-black/60" align="center" justify="center">
+          <Stack align="center" gap="sm">
             <Spinner />
             <Span size="sm" className="text-white">{t("starting")}</Span>
-          </Div>
-        </Div>
+          </Stack>
+        </Row>
       )}
 
       {camera.error && (
@@ -104,7 +103,7 @@ export default function CameraCapture({
       )}
 
       {!isStarting && !camera.error && camera.isActive && (
-        <Div className="absolute bottom-0 left-0 right-0 bg-black/40 flex items-center justify-center gap-3" padding="sm">
+        <Row className="absolute bottom-0 left-0 right-0 bg-black/40" align="center" justify="center" gap="3" padding="sm">
           {showPhotoButton && (
             <Button
               variant="secondary"
@@ -142,7 +141,7 @@ export default function CameraCapture({
               {t("flipCamera")}
             </Button>
           )}
-        </Div>
+        </Row>
       )}
     </Div>
   );

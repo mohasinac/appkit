@@ -1,4 +1,4 @@
-import { Div, Heading, Nav, Text, Span, Button, Row } from "@mohasinac/appkit/ui";
+import { Button, Div, Heading, Nav, Row, Span, Stack, Text } from "@mohasinac/appkit/ui";
 import { ChevronRight } from "lucide-react";
 
 const __P = {
@@ -104,7 +104,7 @@ export function AdminPageHeader({
           ))}
         </Nav>
       )}
-      <Div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <Stack className="sm:flex-row sm:items-center sm:justify-between" gap="md">
         <Div className={themeConfig.spacingClass}>
           <Row gap="sm" wrap>
             <Heading level={2} className={themeConfig.titleClass}>
@@ -133,7 +133,7 @@ export function AdminPageHeader({
             {actionLabel}
           </Button>
         )}
-      </Div>
+      </Stack>
     </Div>
   );
 }

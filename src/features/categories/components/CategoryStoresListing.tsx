@@ -2,7 +2,7 @@
 import React from "react";
 import { InteractiveStoreCard } from "../../stores/components/InteractiveStoreCard";
 import { ROUTES } from "../../../next";
-import { Div, Text } from "../../../ui";
+import { Div, Stack, Text } from "../../../ui";
 import type { StoreListItem } from "../../stores/types";
 
 export interface CategoryStoresListingProps {
@@ -12,11 +12,11 @@ export interface CategoryStoresListingProps {
 export function CategoryStoresListing({ stores }: CategoryStoresListingProps) {
   if (stores.length === 0) {
     return (
-      <Div className="flex flex-col items-center justify-center py-16 text-center">
+      <Stack className="justify-center py-16 text-center" align="center">
         <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
           No stores found in this category.
         </Text>
-      </Div>
+      </Stack>
     );
   }
 
