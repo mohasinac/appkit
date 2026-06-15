@@ -106,7 +106,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             <Div
               role="img"
               aria-label={post.authorName ?? "author"}
-              className="h-7 w-7 flex-shrink-0 rounded-full bg-center bg-cover"
+              className="h-7 w-7 flex-shrink-0 bg-center bg-cover" rounded="full"
               // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${post.authorAvatar})` }}
             />
@@ -206,7 +206,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-100 dark:bg-slate-800"
+            className="animate-pulse overflow-hidden border border-neutral-200 dark:border-slate-700 bg-neutral-100 dark:bg-slate-800" rounded="xl"
           >
             <Div className="aspect-video bg-neutral-200 dark:bg-slate-700" />
             <Div className={`space-y-2 ${__P.p5}`}>

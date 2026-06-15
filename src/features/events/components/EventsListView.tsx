@@ -38,7 +38,7 @@ export function EventsListView<T extends EventItem = EventItem>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800"
+            className="animate-pulse overflow-hidden dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800" rounded="xl" border="default"
           >
             <Div className="aspect-video bg-zinc-200 dark:bg-zinc-700" />
             <Div className={`space-y-2 ${__P.p4}`}>

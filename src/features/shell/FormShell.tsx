@@ -383,7 +383,7 @@ export function FormShell({
             onClick={() => setShowUnsaved(false)}
           />
           <Div
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)] rounded-xl shadow-2xl p-6"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)] shadow-2xl" rounded="xl" padding="lg"
             // audit-inline-style-ok: z-index token
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
           >

@@ -36,11 +36,11 @@ export function NewsletterSection({
       />
       {/* Decorative circles */}
       <Div
-        className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-primary/5 dark:bg-primary/10 pointer-events-none"
+        className="absolute -top-20 -right-20 w-80 h-80 bg-primary/5 dark:bg-primary/10 pointer-events-none" rounded="full"
         aria-hidden
       />
       <Div
-        className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-cobalt/5 dark:bg-cobalt/10 pointer-events-none"
+        className="absolute -bottom-16 -left-16 w-64 h-64 bg-cobalt/5 dark:bg-cobalt/10 pointer-events-none" rounded="full"
         aria-hidden
       />
 

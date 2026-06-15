@@ -86,7 +86,7 @@ export function WishlistPage({
         {Array.from({ length: 4 }).map((_, i) => (
           <Div
             key={i}
-            className="flex animate-pulse gap-4 rounded-xl border border-neutral-200 p-4"
+            className="flex animate-pulse gap-4 border border-neutral-200" rounded="xl" padding="md"
           >
             <Div className="h-20 w-20 bg-neutral-200" rounded="lg" />
             <Stack gap="sm" className="flex-1">

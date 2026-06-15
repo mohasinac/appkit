@@ -56,7 +56,7 @@ export function ViewReviewModal({
             <Div
               role="img"
               aria-label={displayName}
-              className="h-10 w-10 flex-shrink-0 rounded-full bg-center bg-cover"
+              className="h-10 w-10 flex-shrink-0 bg-center bg-cover" rounded="full"
               // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />

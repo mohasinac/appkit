@@ -65,7 +65,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
             <Div
               role="img"
               aria-label={displayName}
-              className="h-9 w-9 flex-shrink-0 rounded-full bg-center bg-cover"
+              className="h-9 w-9 flex-shrink-0 bg-center bg-cover" rounded="full"
               // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
@@ -120,7 +120,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
                 key={i}
                 role="img"
                 aria-label={`Review image ${i + 1}`}
-                className="h-16 w-16 rounded-lg bg-center bg-cover border border-neutral-100 dark:border-zinc-700"
+                className="h-16 w-16 bg-center bg-cover border border-neutral-100 dark:border-zinc-700" rounded="lg"
                 // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
               />
@@ -201,7 +201,7 @@ export function ReviewsList({
         {Array.from({ length: 4 }).map((_, i) => (
           <Div
             key={i}
-            className="rounded-xl border border-neutral-200 dark:border-zinc-700 p-5"
+            className="border border-neutral-200 dark:border-zinc-700 p-5" rounded="xl"
           >
             <Div className="flex gap-3">
               <Skeleton className="h-9 w-9 rounded-full" />

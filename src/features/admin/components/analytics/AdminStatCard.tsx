@@ -64,7 +64,7 @@ export function AdminStatCard({
 
         {icon && (
           <Div
-            className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-xl"
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center text-xl" rounded="lg"
             // audit-inline-style-ok: dynamic CSS
             style={{ background: resolvedGradient }}
           >

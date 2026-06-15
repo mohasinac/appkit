@@ -463,7 +463,7 @@ export function AdminSupportTicketDetailView({
         {/* ST-6 — Linked parties (admin-assigned subjects of this ticket) */}
         <Div
           padding="sm"
-          className="flex flex-col gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700"
+          className="flex flex-col gap-2 dark:border-zinc-700" rounded="lg" border="default"
         >
           <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
             Linked parties
@@ -580,7 +580,7 @@ function OrderItemsPanel(props: {
   return (
     <Div
       padding="sm"
-      className="flex flex-col gap-2 rounded-lg border border-info/40 bg-info-surface/40"
+      className="flex flex-col gap-2 border border-info/40 bg-info-surface/40" rounded="lg"
     >
       <Text className="text-info tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Modify order items
@@ -612,7 +612,7 @@ function OrderItemsPanel(props: {
                   {orderItems.map((it, idx) => (
                     <Div
                       key={`${it.productId}-${idx}`}
-                      className="flex items-center gap-2 rounded border border-zinc-200 dark:border-zinc-700 px-2 py-1"
+                      className="flex items-center gap-2 rounded dark:border-zinc-700 px-2 py-1" border="default"
                     >
                       <Div className="flex-1 min-w-0">
                         <Text className="truncate" size="xs" weight="medium">
@@ -693,7 +693,7 @@ function StoreChangePanel(props: {
   return (
     <Div
       padding="sm"
-      className="flex flex-col gap-2 rounded-lg border border-warning/40 bg-warning-surface/40"
+      className="flex flex-col gap-2 border border-warning/40 bg-warning-surface/40" rounded="lg"
     >
       <Text className="text-warning tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Apply store change
@@ -759,7 +759,7 @@ function UnbanRequestPanel(props: {
   return (
     <Div
       padding="sm"
-      className="flex flex-col gap-2 rounded-lg border border-error/40 bg-error-surface/40"
+      className="flex flex-col gap-2 border border-error/40 bg-error-surface/40" rounded="lg"
     >
       <Text className="text-error tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Lift account ban

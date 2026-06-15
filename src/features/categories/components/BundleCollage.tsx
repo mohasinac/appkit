@@ -69,7 +69,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
           return (
             <Div
               key={p.id}
-              className="group relative overflow-hidden rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] transition-transform hover:scale-[1.01]"
+              className="group relative overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] transition-transform hover:scale-[1.01]" rounded="lg"
             >
               {/* Clickable image area → lightbox */}
               <button

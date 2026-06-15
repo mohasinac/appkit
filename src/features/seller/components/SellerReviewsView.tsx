@@ -292,7 +292,7 @@ export function SellerReviewsView({
               {reviews.map((review) => (
                 <Div
                   key={review.id}
-                  className="p-4 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]"
+                  className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="lg" padding="md"
                 >
                   <Div className="flex items-start justify-between gap-3 flex-wrap">
                     <Row align="start" className="flex-1 min-w-0" gap="3">

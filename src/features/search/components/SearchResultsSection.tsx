@@ -87,7 +87,7 @@ export function SearchResultsSection({
         {Array.from({ length: PAGE_SIZE }).map((_, i) => (
           <Div
             key={i}
-            className="aspect-square rounded-xl bg-zinc-100 dark:bg-slate-800 animate-pulse"
+            className="aspect-square bg-zinc-100 dark:bg-slate-800 animate-pulse" rounded="xl"
           />
         ))}
       </Grid>

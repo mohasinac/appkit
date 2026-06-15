@@ -96,7 +96,7 @@ export function AdminAnalyticsView({
           {Array.from({ length: 4 }).map((_, index) => (
             <Div
               key={index}
-              className="h-28 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 animate-pulse"
+              className="h-28 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 animate-pulse" rounded="xl"
             />
           ))}
         </Div>

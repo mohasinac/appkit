@@ -123,7 +123,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
               className="flex flex-col items-center gap-2 text-center sm:flex-row sm:items-center sm:text-left sm:gap-4"
             >
               <Div
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                className="flex h-12 w-12 shrink-0 items-center justify-center" rounded="full"
                 style={{
                   background: "rgba(240,196,23,0.12)",
                   color: "var(--color-red)",

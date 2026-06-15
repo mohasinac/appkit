@@ -1823,7 +1823,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       return (
         <Div
           key={`custom-card-${index}`}
-          className="space-y-3 rounded-md border border-zinc-200 p-3 dark:border-slate-700"
+          className="space-y-3 dark:border-slate-700" rounded="md" padding="sm" border="default"
         >
           <Div className="flex items-center justify-between">
             <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
@@ -2243,7 +2243,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     return (
       <Div
         key={`collection-${idx}`}
-        className="space-y-2 rounded-lg border border-zinc-200 p-3 dark:border-slate-700"
+        className="space-y-2 dark:border-slate-700" rounded="lg" padding="sm" border="default"
       >
         <Select
           label={`Collection ${idx + 1} type`}
@@ -2612,7 +2612,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             {reorderDraft.map((item, index) => (
               <Div
                 key={`reorder-${item.id}`}
-                className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-2 rounded-md border border-zinc-200 p-2 dark:border-slate-700"
+                className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-2 dark:border-slate-700" rounded="md" padding="xs" border="default"
                 draggable
                 onDragStart={() => setDragIndex(index)}
                 onDragOver={(event) => event.preventDefault()}

@@ -72,11 +72,11 @@ export function WelcomeSection({
     >
       {/* Decorative ambient glows */}
       <Div
-        className="pointer-events-none absolute -top-32 -left-32 w-[28rem] h-[28rem] rounded-full bg-primary/10 blur-3xl"
+        className="pointer-events-none absolute -top-32 -left-32 w-[28rem] h-[28rem] bg-primary/10 blur-3xl" rounded="full"
         aria-hidden="true"
       />
       <Div
-        className="pointer-events-none absolute -bottom-40 -right-40 w-[36rem] h-[36rem] rounded-full bg-secondary/10 dark:bg-secondary/15 blur-3xl"
+        className="pointer-events-none absolute -bottom-40 -right-40 w-[36rem] h-[36rem] bg-secondary/10 dark:bg-secondary/15 blur-3xl" rounded="full"
         aria-hidden="true"
       />
 

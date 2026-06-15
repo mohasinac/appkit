@@ -215,7 +215,7 @@ export function CharacterHotspotForm({
                 />
               )}
               <Div
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                className="flex h-8 w-8 shrink-0 items-center justify-center text-sm font-bold" rounded="full"
                 style={{
                   background:
                     i < stepIndex
@@ -425,7 +425,7 @@ export function CharacterHotspotForm({
                 }}
               >
                 <Div
-                  className="flex items-center justify-center rounded-full text-xs font-bold text-white"
+                  className="flex items-center justify-center text-xs font-bold text-white" rounded="full"
                   style={{
                     width: 24,
                     height: 24,
@@ -466,7 +466,7 @@ export function CharacterHotspotForm({
                   }}
                 />
                 <Div
-                  className="relative flex items-center justify-center rounded-full font-bold"
+                  className="relative flex items-center justify-center font-bold" rounded="full"
                   style={{
                     width: 32,
                     height: 32,
@@ -848,7 +848,7 @@ export function CharacterHotspotForm({
                 }}
               >
                 <Div
-                  className="flex items-center justify-center rounded-full text-xs font-bold text-white"
+                  className="flex items-center justify-center text-xs font-bold text-white" rounded="full"
                   style={{
                     width: 28,
                     height: 28,
@@ -918,7 +918,7 @@ export function CharacterHotspotForm({
             </Ul>
           ) : (
             <Div
-              className="rounded-lg border-2 border-dashed p-8 text-center text-sm"
+              className="border-2 border-dashed text-center text-sm" rounded="lg" padding="xl"
               style={{
                 borderColor: "var(--border-ink)",
                 color: "var(--color-muted)",

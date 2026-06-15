@@ -846,7 +846,7 @@ function SelectableCard({
       </Div>
       {selected && (
         <Div
-          className="absolute inset-0 z-[var(--appkit-z-raised)] rounded-xl ring-2 ring-primary ring-offset-0 pointer-events-none"
+          className="absolute inset-0 z-[var(--appkit-z-raised)] ring-2 ring-primary ring-offset-0 pointer-events-none" rounded="xl"
           aria-hidden="true"
         />
       )}

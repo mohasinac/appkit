@@ -161,7 +161,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               >
                 <Div className="flex items-center gap-3">
                   <Div
-                    className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+                    className="flex-shrink-0 w-9 h-9 flex items-center justify-center" rounded="lg"
                     style={{
                       background:
                         "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",
@@ -202,7 +202,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               </Div>
               <Div className="h-1.5 bg-[var(--appkit-color-border)]" rounded="full">
                 <Div
-                  className="h-full rounded-full transition-all"
+                  className="h-full transition-all" rounded="full"
                   style={{
                     width: `${Math.round((completedCount / steps.length) * 100)}%`,
                     background:

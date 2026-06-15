@@ -95,7 +95,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               <Div
                 role="img"
                 aria-label={item.title}
-                className="h-10 w-10 rounded-lg bg-center bg-cover"
+                className="h-10 w-10 bg-center bg-cover" rounded="lg"
                 // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${item.image})` }}
               />
@@ -151,7 +151,7 @@ export function OrdersList({
         {Array.from({ length: 3 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse rounded-xl border border-neutral-200 dark:border-slate-700 p-5"
+            className="animate-pulse border border-neutral-200 dark:border-slate-700 p-5" rounded="xl"
           >
             <Div className="flex justify-between">
               <Stack gap="xs">

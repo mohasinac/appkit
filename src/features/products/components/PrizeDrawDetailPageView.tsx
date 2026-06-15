@@ -346,7 +346,7 @@ export async function PrizeDrawDetailPageView({
           renderBuyBar={() => (
             <Div
               id="prize-draw-buy-bar"
-              className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5"
+              className="border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5" rounded="xl"
             >
               <PrizeDrawEntryActions
                 productId={String(product.id)}

@@ -299,7 +299,7 @@ export function AdminCopilotView({
               {(historyQuery.data?.messages ?? []).map((log, index) => (
                 <Div
                   key={`${log.createdAt}-${index}`}
-                  className="rounded-lg border border-neutral-200 dark:border-slate-700 p-2"
+                  className="border border-neutral-200 dark:border-slate-700" rounded="lg" padding="xs"
                 >
                   <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
                     {new Date(log.createdAt).toLocaleString()}

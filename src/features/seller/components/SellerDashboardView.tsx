@@ -22,7 +22,7 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
       {[1, 2, 3, 4].map((i) => (
         <Div
           key={i}
-          className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5"
+          className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5" rounded="xl"
         >
           {isLoading ? (
             <>
@@ -49,7 +49,7 @@ function DefaultQuickActionsPlaceholder() {
       {[1, 2, 3, 4].map((i) => (
         <Div
           key={i}
-          className="h-12 animate-pulse rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-border)]"
+          className="h-12 animate-pulse border border-[var(--appkit-color-border)] bg-[var(--appkit-color-border)]" rounded="xl"
         />
       ))}
     </Div>

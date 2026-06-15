@@ -113,7 +113,7 @@ export function BeforeAfterCard({
 
         {/* Divider */}
         <Div
-          className="absolute top-0 bottom-0 z-10 w-0.5 bg-card shadow-md"
+          className="absolute top-0 bottom-0 z-10 w-0.5 bg-card" shadow="md"
           // audit-inline-style-ok: computed percentage
           style={{ left: `${position}%` }}
         >

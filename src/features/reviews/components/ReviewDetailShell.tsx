@@ -141,7 +141,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               <Div
                 role="img"
                 aria-label={displayName}
-                className="h-11 w-11 flex-shrink-0 rounded-full bg-center bg-cover ring-2 ring-white dark:ring-zinc-800"
+                className="h-11 w-11 flex-shrink-0 bg-center bg-cover ring-2 ring-white dark:ring-zinc-800" rounded="full"
                 // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${review.userAvatar})` }}
               />

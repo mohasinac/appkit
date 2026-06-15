@@ -59,7 +59,7 @@ export function ReviewSummary({
               </Span>
               <Span size="xs" className={CLS_STAR}>★</Span>
               <Div
-                className="flex-1 h-2 rounded-full bg-neutral-100 dark:bg-zinc-800 overflow-hidden"
+                className="flex-1 h-2 bg-neutral-100 dark:bg-zinc-800 overflow-hidden" rounded="full"
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}

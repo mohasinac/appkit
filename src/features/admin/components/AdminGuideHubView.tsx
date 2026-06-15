@@ -161,7 +161,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
               >
                 <Div className="flex items-center gap-3">
                   <Div
-                    className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
+                    className="flex-shrink-0 w-9 h-9 flex items-center justify-center" rounded="lg"
                     style={{
                       background:
                         "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",

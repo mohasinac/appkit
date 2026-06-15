@@ -125,7 +125,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           return (
             <Div
               key={f.name}
-              className="group rounded-lg border border-zinc-200 dark:border-slate-700 overflow-hidden bg-zinc-50 dark:bg-slate-800"
+              className="group dark:border-slate-700 overflow-hidden bg-zinc-50 dark:bg-slate-800" rounded="lg" border="default"
             >
               <Div className="aspect-square flex items-center justify-center bg-zinc-100 dark:bg-slate-700 text-xs text-zinc-500 dark:text-zinc-400">
                 {isImage ? (
@@ -208,7 +208,7 @@ function MediaUploaderPanel({
 }: MediaUploaderPanelProps) {
   return (
     <Div
-      className="space-y-5 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
+      className="space-y-5 bg-white dark:border-slate-700 dark:bg-slate-900" rounded="xl" padding="md" border="default"
     >
       <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
         Upload & Copy URL
@@ -254,7 +254,7 @@ function MediaUploaderPanel({
           {galleryAssets.map((asset, i) => (
             <Div
               key={i}
-              className="flex items-center gap-2 rounded bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-1"
+              className="flex items-center gap-2 rounded bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-2 py-1" border="default"
             >
               <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
                 {asset.url}

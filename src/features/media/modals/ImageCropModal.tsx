@@ -132,7 +132,7 @@ export function ImageCropModal({
         {/* Preview container */}
         <Div
           ref={containerRef}
-          className="relative w-full max-w-sm mx-auto aspect-square bg-zinc-100 dark:bg-slate-800 rounded-lg overflow-hidden cursor-move max-h-[280px] touch-none"
+          className="relative w-full max-w-sm mx-auto aspect-square bg-zinc-100 dark:bg-slate-800 overflow-hidden cursor-move max-h-[280px] touch-none" rounded="lg"
           data-disable-swipe="true"
           tabIndex={0}
           role="application"

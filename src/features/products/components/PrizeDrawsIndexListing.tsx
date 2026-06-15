@@ -184,7 +184,7 @@ export function PrizeDrawsIndexListing({
             {Array.from({ length: 8 }).map((_, i) => (
               <Div
                 key={i}
-                className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse"
+                className="border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse" rounded="xl"
               >
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <Div className={`${__P.p3} space-y-2`}>

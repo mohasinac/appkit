@@ -44,7 +44,7 @@ export function CustomSectionsEditor({
       {sections.map((section, i) => (
         <Div
           key={section.id}
-          className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/40 p-4 space-y-3"
+          className="dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/40 space-y-3" rounded="xl" padding="md" border="default"
         >
           <Div className="flex items-center justify-between gap-2">
             <Heading

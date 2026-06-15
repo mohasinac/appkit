@@ -311,7 +311,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
   return (
                 <Div
                   key={group.id}
-                  className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]"
+                  className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="lg"
                 >
                   <button
                     type="button"
