@@ -30,7 +30,7 @@ export function SublistingCategorySelect({
         allowCreate={allowCreate}
         placeholder="— None —"
       />
-      <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
+      <Text size="xs" color="faint">
         Groups this listing with others for the same collectible (e.g. &ldquo;Base Set Charizard 108/120&rdquo;).
       </Text>
     </Stack>

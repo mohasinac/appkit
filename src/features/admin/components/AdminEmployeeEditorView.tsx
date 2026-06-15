@@ -120,7 +120,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
             <details key={domain.prefix} className="group">
               <summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
                 <Span size="xs">{domain.label}</Span>
-                <Span size="xs" weight="normal" className="normal-case text-zinc-400 dark:text-zinc-400">
+                <Span size="xs" weight="normal" className="normal-case" color="faint">
                   {checked}/{domainPerms.length}
                 </Span>
               </summary>

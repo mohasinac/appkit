@@ -222,7 +222,7 @@ export function SellerStoreCategoriesView({
           </Stack>
         ) : rows.length === 0 ? (
           <Div className="text-center" padding="y-4xl">
-            <Text className="text-zinc-400 dark:text-zinc-400">No categories yet — add your first storefront category</Text>
+            <Text color="faint">No categories yet — add your first storefront category</Text>
           </Div>
         ) : (
           <DataTable

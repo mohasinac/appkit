@@ -70,7 +70,7 @@ function CategoryTreeNode({
         <Text className="flex-1 truncate">{item.name}</Text>
 
         {item.metrics && (
-          <Span size="xs" className="ml-auto flex-shrink-0 text-zinc-400 dark:text-zinc-400 tabular-nums">
+          <Span size="xs" className="ml-auto flex-shrink-0 tabular-nums" color="faint">
             {item.metrics.productCount}
           </Span>
         )}

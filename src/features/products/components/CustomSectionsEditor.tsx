@@ -125,7 +125,7 @@ export function CustomSectionsEditor({
         >
           + Add section
         </Button>
-        <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="faint">
           {sections.length} / {MAX_CUSTOM_SECTIONS} sections
         </Text>
       </Row>

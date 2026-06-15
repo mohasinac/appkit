@@ -304,7 +304,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         {(() => {
           const seller = safeDisplayName(product.storeName, "");
           return seller ? (
-            <Text className="mt-0.5 text-[11px] text-zinc-400 dark:text-zinc-400 truncate">
+            <Text className="mt-0.5 text-[11px] truncate" color="faint">
               by {seller}
             </Text>
           ) : null;
@@ -327,7 +327,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {formatCurrency(product.price, getDefaultCurrency())}
             </Span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <Span size="xs" className="text-zinc-400 line-through dark:text-zinc-400">
+              <Span size="xs" className="line-through" color="faint">
                 {formatCurrency(product.originalPrice, getDefaultCurrency())}
               </Span>
             )}
@@ -563,7 +563,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
           {product.title}
         </Text>
         {(product.categoryName || product.brand) && (
-          <Span className="text-[11px] text-zinc-400 dark:text-zinc-400 truncate">
+          <Span className="text-[11px] truncate" color="faint">
             {[product.categoryName, product.brand].filter(Boolean).join(" · ")}
           </Span>
         )}
@@ -575,7 +575,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             <Span weight="bold" className={CLS_DISCOUNT_TEXT_BARE}>-{discount}%</Span>
           )}
           {product.rating !== undefined && (
-            <Span className="text-[11px] text-zinc-400 dark:text-zinc-400 flex items-center gap-0.5">
+            <Span className="text-[11px] flex items-center gap-0.5" color="faint">
               <Span className={CLS_STAR_BARE}>★</Span>
               {product.rating.toFixed(1)}
             </Span>

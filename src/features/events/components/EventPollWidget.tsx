@@ -84,7 +84,7 @@ export function EventPollWidget({
       <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-4 space-y-3 ${className}`}>
         <Text size="sm" weight="medium" color="muted">This poll has closed.</Text>
         {totalEntries !== undefined && (
-          <Text className="text-zinc-400 dark:text-zinc-400" size="sm">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
+          <Text size="sm" color="faint">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
         )}
         <Stack gap="sm">
           {pollConfig.options.map((opt) => (

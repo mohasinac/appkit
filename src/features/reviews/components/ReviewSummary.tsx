@@ -72,7 +72,7 @@ export function ReviewSummary({
                   style={{ width: `${pct}%` }}
                 />
               </Div>
-              <Span size="xs" className="w-8 text-zinc-400 dark:text-zinc-400 tabular-nums" align="end">
+              <Span size="xs" className="w-8 tabular-nums" color="faint" align="end">
                 {pct}%
               </Span>
             </Row>

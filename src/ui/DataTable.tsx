@@ -479,7 +479,7 @@ export function DataTable<T extends object>({
                       <Row gap="sm">
                         {col.header}
                         {col.sortable && (
-                          <Span className="text-zinc-400 dark:text-zinc-400" aria-hidden="true">
+                          <Span aria-hidden="true" color="faint">
                             {sortKey === col.key ? (
                               sortDirection === "asc" ? (
                                 "↑"
@@ -725,7 +725,7 @@ function DataTableTableView<T extends object>({
                   <Row gap="sm">
                     {col.header}
                     {col.sortable && (
-                      <Span className="text-zinc-400 dark:text-zinc-400" aria-hidden="true">
+                      <Span aria-hidden="true" color="faint">
                         {sortKey === col.key ? (sortDirection === "asc" ? "↑" : "↓") : <Span className="opacity-30">↕</Span>}
                       </Span>
                     )}

@@ -631,7 +631,7 @@ export async function ProductDetailPageView({
                 <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
                   <Row justify="between" align="center">
                     <Div>
-                      <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">
+                      <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">
                         Sold by
                       </Text>
                       <Text size="sm" weight="semibold" color="primary">
@@ -673,7 +673,7 @@ export async function ProductDetailPageView({
                     </Text>
                     {formattedOriginal && discount && (
                       <>
-                        <Span size="sm" className="text-zinc-400 line-through dark:text-zinc-400">
+                        <Span size="sm" className="line-through" color="faint">
                           {formattedOriginal}
                         </Span>
                         <Span size="xs" weight="bold" className={CLS_DISCOUNT_BADGE}>

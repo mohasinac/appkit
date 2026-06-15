@@ -159,7 +159,7 @@ export function AsyncFacetSection({
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span size="xs" className="inline-flex items-center px-2 py-0.5 rounded-full text-zinc-400 dark:text-zinc-400">
+            <Span size="xs" className="inline-flex items-center px-2 py-0.5 rounded-full" color="faint">
               +{selected.length - 3} more
             </Span>
           )}
@@ -194,7 +194,7 @@ export function AsyncFacetSection({
                   {opt.label}
                 </Span>
                 {opt.count !== undefined && (
-                  <Span size="xs" className="text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
+                  <Span size="xs" className="tabular-nums flex-shrink-0" color="faint">
                     {opt.count}
                   </Span>
                 )}
@@ -203,13 +203,13 @@ export function AsyncFacetSection({
           })}
 
           {options.length === 0 && !loading && (
-            <Text className="text-zinc-400 dark:text-zinc-400 py-1" size="xs">
+            <Text className="py-1" color="faint" size="xs">
               No results
             </Text>
           )}
 
           {loading && (
-            <Text className="text-zinc-400 dark:text-zinc-400 py-1 animate-pulse" size="xs">
+            <Text className="py-1 animate-pulse" color="faint" size="xs">
               Loading…{/* audit-spinner-defaults-ok — inline facet-loader; structural skeleton would mis-fit a single-line dropdown row */}
             </Text>
           )}

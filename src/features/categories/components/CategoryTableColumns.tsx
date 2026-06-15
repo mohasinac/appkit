@@ -72,7 +72,7 @@ export function getCategoryTableColumns(
           <Div style={{ paddingLeft: `${cat.tier * 20}px` }}>
             {cat.name}
             {cat.tier > 0 && (
-              <Span size="xs" className="text-zinc-400 dark:text-zinc-400 ml-2">
+              <Span size="xs" className="ml-2" color="faint">
                 (Tier {cat.tier})
               </Span>
             )}

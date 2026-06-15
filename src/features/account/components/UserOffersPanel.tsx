@@ -96,22 +96,22 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
 
       <Div className="flex gap-4 flex-wrap">
         <Div>
-          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Listed</Text>
+          <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Listed</Text>
           <Text size="sm" weight="medium" color="muted">{formatRupees(offer.listedPrice)}</Text>
         </Div>
         <Div>
-          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Your Offer</Text>
+          <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Your Offer</Text>
           <Text size="sm" weight="semibold" color="primary">{formatRupees(offer.offerAmount)}</Text>
         </Div>
         {offer.counterAmount != null && (
           <Div>
-            <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Seller Counter</Text>
+            <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Seller Counter</Text>
             <Text className={CLS_COUNTER_AMOUNT}>{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
         {offer.lockedPrice != null && (
           <Div>
-            <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Agreed Price</Text>
+            <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Agreed Price</Text>
             <Text className="text-success" size="sm" weight="semibold">{formatRupees(offer.lockedPrice)}</Text>
           </Div>
         )}
@@ -248,7 +248,7 @@ export function UserOffersPanel({
 
       {!loading && offers.length === 0 && (
         <Div className="text-center" padding="y-3xl">
-          <Text className="text-zinc-400 dark:text-zinc-400" size="sm">No offers yet</Text>
+          <Text size="sm" color="faint">No offers yet</Text>
         </Div>
       )}
 

@@ -168,7 +168,7 @@ export function AdminNavigationView({
             </Button>
           </Row>,
           sorted.length === 0 && !isLoading ? (
-            <Text key="empty" className="text-zinc-400 dark:text-zinc-400 py-8" size="sm" align="center">
+            <Text key="empty" className="py-8" color="faint" size="sm" align="center">
               No nav items yet. Click "New item" to add one.
             </Text>
           ) : null,

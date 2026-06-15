@@ -211,7 +211,7 @@ export function SellerPayoutMethodsView({
           </Stack>
         ) : rows.length === 0 ? (
           <Div className="text-center" padding="y-4xl">
-            <Text className="text-zinc-400 dark:text-zinc-400">
+            <Text color="faint">
               No payout methods yet — add a UPI VPA or bank account to receive payouts
             </Text>
             <Div className="mt-4">

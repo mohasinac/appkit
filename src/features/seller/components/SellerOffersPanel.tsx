@@ -149,16 +149,16 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {/* Amounts */}
       <Div className="flex gap-4 flex-wrap">
         <Div>
-          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Listed</Text>
+          <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Listed</Text>
           <Text size="sm" weight="medium" color="muted">{formatRupees(offer.listedPrice)}</Text>
         </Div>
         <Div>
-          <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Offered</Text>
+          <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Offered</Text>
           <Text size="sm" weight="semibold" color="primary">{formatRupees(offer.offerAmount)}</Text>
         </Div>
         {offer.counterAmount != null && (
           <Div>
-            <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Your Counter</Text>
+            <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Your Counter</Text>
             <Text className="text-info" size="sm" weight="medium">{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
@@ -351,7 +351,7 @@ export function SellerOffersPanel({
 
       {!loading && offers.length === 0 && (
         <Div className="text-center" padding="y-3xl">
-          <Text className="text-zinc-400 dark:text-zinc-400" size="sm">No offers found</Text>
+          <Text size="sm" color="faint">No offers found</Text>
         </Div>
       )}
 

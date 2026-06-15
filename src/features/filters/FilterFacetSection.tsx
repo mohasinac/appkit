@@ -176,7 +176,7 @@ export function FilterFacetSection({
                       {option.label}
                     </Span>
                     {option.count !== undefined && (
-                      <Span className="flex-shrink-0 text-[10px] tabular-nums text-zinc-400 dark:text-zinc-400">
+                      <Span className="flex-shrink-0 text-[10px] tabular-nums" color="faint">
                         {option.count}
                       </Span>
                     )}
@@ -184,7 +184,7 @@ export function FilterFacetSection({
                 );
               })}
               {filtered.length === 0 && (
-                <Text className="px-3 py-2 text-zinc-400 dark:text-zinc-400" size="xs">No results</Text>
+                <Text className="px-3 py-2" color="faint" size="xs">No results</Text>
               )}
             </Div>
             {hasValue && (
@@ -290,7 +290,7 @@ export function FilterFacetSection({
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span size="xs" className="inline-flex items-center px-2 py-0.5 rounded-full text-zinc-400 dark:text-zinc-400">
+            <Span size="xs" className="inline-flex items-center px-2 py-0.5 rounded-full" color="faint">
               +{selected.length - 3} more
             </Span>
           )}
@@ -349,7 +349,7 @@ export function FilterFacetSection({
                   {option.label}
                 </Span>
                 {option.count !== undefined && (
-                  <Span size="xs" className="text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
+                  <Span size="xs" className="tabular-nums flex-shrink-0" color="faint">
                     {option.count}
                   </Span>
                 )}
@@ -357,7 +357,7 @@ export function FilterFacetSection({
             );
           })}
           {filtered.length === 0 && (
-            <Text className="text-zinc-400 dark:text-zinc-400 py-1" size="xs">
+            <Text className="py-1" color="faint" size="xs">
               No results
             </Text>
           )}

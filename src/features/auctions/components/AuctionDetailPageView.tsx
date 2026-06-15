@@ -142,7 +142,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
           <Row justify="between" align="center">
             <Div>
-              <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">Listed by</Text>
+              <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">Listed by</Text>
               <Text size="sm" weight="semibold" color="primary">{safeSeller}</Text>
             </Div>
             {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
@@ -177,7 +177,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
             </Row>
             {review.title && <Text size="sm" weight="semibold" color="primary">{review.title}</Text>}
             <Text className="leading-relaxed" color="muted" size="sm">{review.comment}</Text>
-            <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{review.productTitle}</Text>
+            <Text size="xs" color="faint">{review.productTitle}</Text>
           </Div>
         ))}
       </Stack>

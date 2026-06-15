@@ -188,7 +188,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         {/* Image grid with lightbox trigger */}
         {images.length > 0 && (
           <Section>
-            <Heading level={2} className="tracking-wide text-zinc-400 dark:text-zinc-400 mb-3" size="sm" weight="semibold" transform="uppercase">
+            <Heading level={2} className="tracking-wide mb-3" color="faint" size="sm" weight="semibold" transform="uppercase">
               Photos ({images.length})
             </Heading>
             <Grid gap="xs" className="grid-cols-3 sm:grid-cols-4">
@@ -217,7 +217,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         {/* Video player */}
         {review.video && (
           <Section>
-            <Heading level={2} className="tracking-wide text-zinc-400 dark:text-zinc-400 mb-3" size="sm" weight="semibold" transform="uppercase">
+            <Heading level={2} className="tracking-wide mb-3" color="faint" size="sm" weight="semibold" transform="uppercase">
               Video
             </Heading>
             <Div className={`${__O.hidden} rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video`}>
@@ -314,7 +314,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 👤
               </Span>
               <Div className="min-w-0">
-                <Span size="xs" className="block text-zinc-400 dark:text-zinc-400 mb-0.5">Reviewer</Span>
+                <Span size="xs" className="block mb-0.5" color="faint">Reviewer</Span>
                 <Span size="sm" weight="medium" className="block text-neutral-900 dark:text-white truncate">
                   Anonymous
                 </Span>

@@ -357,7 +357,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           </Row>
         )}
 
-        <Text className="text-zinc-400 dark:text-zinc-400 mb-3" size="xs">
+        <Text className="mb-3" color="faint" size="xs">
           Only published standard products are synced. Auctions and pre-orders are excluded.
           Batches of up to 50 products per call.
         </Text>
@@ -381,7 +381,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           </Button>
         </Div>
 
-        <Text className="text-zinc-400 dark:text-zinc-400 mt-3" size="xs">
+        <Text className="mt-3" color="faint" size="xs">
           <Span weight="bold">Push</Span> sends your published standard products to WhatsApp.{" "}
           <Span weight="bold">Import</Span> creates draft products from your WhatsApp catalog.
           Products are matched by slug in the description field.

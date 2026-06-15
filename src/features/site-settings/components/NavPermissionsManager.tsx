@@ -83,7 +83,7 @@ export function NavPermissionsManager({
                         <Div>
                           <Text weight="medium" color="primary">{item.label}</Text>
                           {item.id && (
-                            <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{item.id}</Text>
+                            <Text size="xs" color="faint">{item.id}</Text>
                           )}
                         </Div>
                       </Td>

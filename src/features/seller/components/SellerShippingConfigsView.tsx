@@ -245,7 +245,7 @@ export function SellerShippingConfigsView({
           </Stack>
         ) : rows.length === 0 ? (
           <Div className="text-center" padding="y-4xl">
-            <Text className="text-zinc-400 dark:text-zinc-400">
+            <Text color="faint">
               No shipping configs yet — define your first shipping rule
             </Text>
             <Div className="mt-4">

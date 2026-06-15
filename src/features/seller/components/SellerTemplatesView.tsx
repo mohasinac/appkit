@@ -410,7 +410,7 @@ export function SellerTemplatesView({
           </Stack>
         ) : pageRows.length === 0 ? (
           <Div className="text-center" padding="y-4xl">
-            <Text className="text-zinc-400 dark:text-zinc-400">
+            <Text color="faint">
               {q || conditionFilter
                 ? "No templates match your search or filters"
                 : "No templates yet — add your first product template"}

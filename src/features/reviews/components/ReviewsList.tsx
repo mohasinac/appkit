@@ -129,7 +129,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
         )}
 
         {(review.helpfulCount ?? 0) > 0 && (
-          <Text className="mt-3 text-zinc-400 dark:text-zinc-400" size="xs">
+          <Text className="mt-3" color="faint" size="xs">
             {review.helpfulCount} found this helpful
           </Text>
         )}

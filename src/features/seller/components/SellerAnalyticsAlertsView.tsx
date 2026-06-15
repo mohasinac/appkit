@@ -93,7 +93,7 @@ function AlertCard({
           ))}
         </Row>
         {alert.lastTriggeredAt && (
-          <Text className="text-zinc-400 dark:text-zinc-400 mt-1" size="xs">
+          <Text className="mt-1" color="faint" size="xs">
             Last triggered: {new Date(alert.lastTriggeredAt).toLocaleString("en-IN")}
           </Text>
         )}

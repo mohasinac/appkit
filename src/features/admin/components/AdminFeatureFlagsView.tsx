@@ -109,7 +109,7 @@ function FlagRow({ label, desc, checked, onChange, rollout, onRolloutChange, sho
     <Row surface="default" padding="inline" align="center" justify="between" gap="md">
       <Div className="flex-1 min-w-0">
         <Toggle checked={checked} onChange={onChange} label={label} />
-        <Text className="mt-0.5 ml-10 text-zinc-400 dark:text-zinc-400 truncate" size="xs">{desc}</Text>
+        <Text className="mt-0.5 ml-10 truncate" color="faint" size="xs">{desc}</Text>
       </Div>
       {showRollout && (
         <Stack className="w-28 shrink-0" gap="xs">

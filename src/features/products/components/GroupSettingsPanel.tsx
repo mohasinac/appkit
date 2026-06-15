@@ -286,7 +286,7 @@ export function GroupSettingsPanel({
         <Heading level={3} size="sm" weight="semibold" color="muted">
           Group Settings
         </Heading>
-        <Span size="xs" className="text-zinc-400 dark:text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+        <Span size="xs" className="group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors" color="faint">
           {open ? "▲" : "▼"}
         </Span>
       </button>
@@ -338,7 +338,7 @@ export function GroupSettingsPanel({
                   Members ({childSlugsCount + 1} — including this listing)
                 </Text>
                 {loading && !children ? (
-                  <Text className="text-zinc-400 dark:text-zinc-400" size="xs">Loading…{/* audit-spinner-defaults-ok — single-line inline panel section, skeleton would over-claim space */}</Text>
+                  <Text size="xs" color="faint">Loading…{/* audit-spinner-defaults-ok — single-line inline panel section, skeleton would over-claim space */}</Text>
                 ) : (
                   <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}

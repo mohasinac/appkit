@@ -77,7 +77,7 @@ export function CategoryCard({
           </Text>
         )}
         <Row className="mt-2" align="center" justify="between" gap="sm">
-          <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="faint">
             {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
           </Text>
           <Span size="xs" weight="medium" className="inline-flex items-center gap-1 rounded-md border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors" color="muted">
