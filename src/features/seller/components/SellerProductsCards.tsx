@@ -3,7 +3,7 @@
 // main component stays under the 150-line code-quality threshold.
 
 import React from "react";
-import { Badge, Button, Div, Row, Stack, Text } from "../../../ui";
+import { Badge, Button, Div, Row, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { CARD_BORDER, CARD_BORDER_ACTIVE, CARD_GRID_CLS, CARD_LIST_CLS, KIND_BADGE_VARIANT } from "./seller-products-styles";
@@ -79,7 +79,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
                 aria-label="Select"
               />
             </Div>
-            <a href={href} className="block">
+            <TextLink href={href} className="block">
               <Div className="w-full aspect-square">
                 <MediaImage src={row.imageUrl} alt={row.primary} size="card" />
               </Div>
@@ -90,7 +90,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
                   <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
                 </Row>
               </Stack>
-            </a>
+            </TextLink>
             <Row className="border-t border-[var(--appkit-color-border)]" justify="end" gap="xs" padding="xs">
               <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(row); }} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
               <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDuplicate(row); }} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>
@@ -114,13 +114,13 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
             <Div className={`w-12 h-12 ${__O.hidden}`} rounded="default">
               <MediaImage src={row.imageUrl} alt={row.primary} size="thumbnail" />
             </Div>
-            <a href={href} className="flex-1 min-w-0">
+            <TextLink href={href} className="flex-1 min-w-0">
               <Text className="line-clamp-1" size="sm" weight="medium">{row.primary}</Text>
               <Row gap="sm">
                 <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
                 <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
               </Row>
-            </a>
+            </TextLink>
             <Row className="flex-shrink-0" gap="xs">
               <Button variant="ghost" size="sm" onClick={() => onEdit(row)} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
               <Button variant="ghost" size="sm" onClick={() => onDuplicate(row)} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Div, Heading, Section, Text } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Section, Text } from "@mohasinac/appkit";
 import type { ServerErrorDocument } from "../../../../../features/server-errors/schemas/firestore";
 
 export interface ServerErrorDetailViewProps {
@@ -22,9 +22,9 @@ export function ServerErrorDetailView({
   return (
     <Div style={{ padding: "1.5rem", maxWidth: "1200px", margin: "0 auto" }}>
       <Text as="p">
-        <a href={backHref} style={{ color: "var(--appkit-color-primary)" }}>
+        <Anchor href={backHref} external={false}>
           ← Back to list
-        </a>
+        </Anchor>
       </Text>
       <Heading level={1} style={{ fontSize: "1.5rem", fontWeight: 600 }}>
         {doc.code} <Text size="xs" style={{ fontSize: "1rem", color: "var(--appkit-color-text-muted)" }}>{doc.source}</Text>

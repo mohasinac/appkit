@@ -4,7 +4,7 @@ import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Pencil } from "lucide-react";
-import { Badge, Button, Div, FilterChipGroup, ListingLayout, Span, Text } from "../../../ui";
+import { Badge, Button, Div, FilterChipGroup, ListingLayout, Span, Text, TextLink } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -151,9 +151,9 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
     ],
     renderRowActions: (row) => (
       <Button variant="ghost" size="sm" asChild>
-        <a href={String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))} aria-label="Edit">
+        <TextLink href={String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))} aria-label="Edit">
           <Pencil className="w-4 h-4" />
-        </a>
+        </TextLink>
       </Button>
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (

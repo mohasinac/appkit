@@ -1,6 +1,6 @@
 import React from "react";
 import { UserCheck, Bell, Heart, Star, Lock, AlertTriangle, Flag } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../constants";
 import { GC } from "../../_guide-cls";
 
@@ -108,7 +108,7 @@ const SECTIONS: AccountSection[] = [
           </ul>
         </Alert>
         <Text className={`${GC.textMuted} mt-4`}>
-          Read the full <a href={String(ROUTES.PUBLIC.SCAMS)} className="text-[var(--appkit-color-primary)] underline hover:no-underline font-medium">Scam Registry →</a> for all 27 documented scam types.
+          Read the full <TextLink href={String(ROUTES.PUBLIC.SCAMS)} className="text-[var(--appkit-color-primary)] underline hover:no-underline font-medium">Scam Registry →</TextLink> for all 27 documented scam types.
         </Text>
       </>
     ),
@@ -120,12 +120,12 @@ const SECTIONS: AccountSection[] = [
         <Div>
           <Text className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Report a seller (scam, fake item, harassment)</Text>
           <Text className={`${GC.textMuted} mb-2`}>Use the Scam Registry report form. Our Trust &amp; Safety team reviews within 48 hours.</Text>
-          <a href={String(ROUTES.PUBLIC.SCAMS)} className="text-[var(--appkit-color-primary)] text-sm font-medium underline hover:no-underline">Go to Scam Registry →</a>
+          <TextLink href={String(ROUTES.PUBLIC.SCAMS)} className="text-[var(--appkit-color-primary)] text-sm font-medium underline hover:no-underline">Go to Scam Registry →</TextLink>
         </Div>
         <Div>
           <Text className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Open a support ticket (order dispute, billing, account)</Text>
           <Text className={`${GC.textMuted} mb-2`}>Go to My Account → Support Tickets. Choose the right category for a faster response.</Text>
-          <a href={String(ROUTES.USER.SUPPORT)} className="text-[var(--appkit-color-primary)] text-sm font-medium underline hover:no-underline">Open Support Ticket →</a>
+          <TextLink href={String(ROUTES.USER.SUPPORT)} className="text-[var(--appkit-color-primary)] text-sm font-medium underline hover:no-underline">Open Support Ticket →</TextLink>
         </Div>
       </Div>
     ),

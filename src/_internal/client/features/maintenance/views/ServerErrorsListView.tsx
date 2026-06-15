@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Div, Heading, Label, Span, Text } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Label, Span, Text } from "@mohasinac/appkit";
 import type { ServerErrorDocument, ServerErrorSource } from "../../../../../features/server-errors/schemas/firestore";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";
@@ -127,9 +127,9 @@ export function ServerErrorsListView({
                     return (
                       <td key={c.key as string} style={{ padding: "0.5rem 0.75rem", verticalAlign: "top" }}>
                         {c.key === "code" ? (
-                          <a href={`${detailHrefBase}/${r.id}`} style={{ color: "var(--appkit-color-primary)" }}>
+                          <Anchor href={`${detailHrefBase}/${r.id}`} external={false}>
                             {String(cell)}
-                          </a>
+                          </Anchor>
                         ) : (
                           String(cell ?? "")
                         )}

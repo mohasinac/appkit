@@ -567,8 +567,10 @@ export {
   EASE_OUT,
 } from "../tokens/motion";
 
-// --- W-E primitives (Details/Summary/HorizontalRule) -------------------------
+// --- W-E primitives (Details/Summary/HorizontalRule/Anchor) ------------------
 export { Details, Summary } from "./components/Details";
 export type { DetailsProps, SummaryProps } from "./components/Details";
 export { HorizontalRule } from "./components/HorizontalRule";
 export type { HorizontalRuleProps } from "./components/HorizontalRule";
+export { Anchor } from "./components/Anchor";
+export type { AnchorProps, AnchorTone, AnchorUnderline } from "./components/Anchor";

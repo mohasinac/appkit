@@ -9,7 +9,7 @@
 import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import { Alert, Button, Div, Label, Row, Span, Spinner, Stack, Text } from "../../../ui";
+import { Alert, Anchor, Button, Div, Label, Row, Span, Spinner, Stack, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";
@@ -267,17 +267,15 @@ function MediaPreviewPanel({
             <Div aria-hidden className={CLS_PDF_BADGE}>
               <Span size="xs" weight="bold">PDF</Span>
             </Div>
-            <a href={value} target="_blank" rel="noopener noreferrer"
-              className={CLS_PDF_NAME}>
+            <Anchor href={value} className={CLS_PDF_NAME}>
               {filenameFromUrl(value)}
-            </a>
+            </Anchor>
           </Row>
         </Stack>
       ) : (
-        <a href={value} target="_blank" rel="noopener noreferrer"
-          className={CLS_PDF_LINK}>
+        <Anchor href={value} className={CLS_PDF_LINK}>
           {filenameFromUrl(value)}
-        </a>
+        </Anchor>
       )}
 
       {!disabled && (

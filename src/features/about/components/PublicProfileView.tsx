@@ -3,7 +3,7 @@ import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews, getRev
 import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ProductCard } from "../../products/components/ProductGrid";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
@@ -215,7 +215,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
         {pub.bio && <Text className="leading-relaxed text-neutral-700" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
           {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500"><MapPin className="w-4 h-4" />{pub.location}</Span>}
-          {pub.website && <a href={pub.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-primary hover:underline"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></a>}
+          {pub.website && <Anchor href={pub.website} className="flex items-center gap-1.5"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></Anchor>}
         </Row>
       </Stack>
     </Section>

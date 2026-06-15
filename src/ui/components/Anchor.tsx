@@ -23,7 +23,7 @@ export type AnchorTone =
 export type AnchorUnderline = "none" | "hover" | "always";
 
 export interface AnchorProps
-  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "className"> {
+  extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: ReactNode;
   /** Colour tone. Defaults to `"brand"`. */
@@ -38,6 +38,12 @@ export interface AnchorProps
    * Pass `external={false}` to render an in-app anchor (e.g. `<a href="#…">`).
    */
   external?: boolean;
+  /**
+   * Escape hatch for behaviour-coupled utility classes (layout overrides,
+   * state-driven classes like `group`, structural card-link styling).
+   * Variant slots (tone/underline) own the visual styling; this extends them.
+   */
+  className?: string;
 }
 
 const TONE_CLS: Record<AnchorTone, string> = {
@@ -74,6 +80,7 @@ export function Anchor({
   external,
   rel,
   target,
+  className,
   ...rest
 }: AnchorProps) {
   const resolvedExternal = external ?? isExternalShape(href);
@@ -89,9 +96,9 @@ export function Anchor({
       target={computedTarget}
       rel={computedRel}
       // audit-variant-ok: Anchor is the catalogued primitive for external
-      // links. Tone + underline come from typed enums; consumer code never
-      // authors raw className on this element.
-      className={`${TONE_CLS[tone]} ${UNDERLINE_CLS[underline]} transition-colors`}
+      // links. Tone + underline come from typed enums; className is the
+      // escape hatch for behaviour-coupled utility classes only.
+      className={`${TONE_CLS[tone]} ${UNDERLINE_CLS[underline]} transition-colors${className ? ` ${className}` : ""}`}
       {...rest}
     >
       {children}

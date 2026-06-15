@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Div, Heading, Nav, Section, Span, Text } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Nav, Section, Span, Text } from "@mohasinac/appkit";
 import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";
 
 export interface MaintenanceDashboardViewProps {
@@ -81,30 +81,30 @@ export function MaintenanceDashboardView({
       </Section>
 
       <Nav aria-label="Maintenance sections" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem" }}>
-        <a href={`${basePath}/server-errors`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+        <Anchor href={`${basePath}/server-errors`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Server errors</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Vercel function failures</Div>
-        </a>
-        <a href={`${basePath}/client-errors`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+        </Anchor>
+        <Anchor href={`${basePath}/client-errors`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Client errors</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>window.onerror + unhandledrejection + boundaries</Div>
-        </a>
-        <a href={`${basePath}/function-errors`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+        </Anchor>
+        <Anchor href={`${basePath}/function-errors`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Function errors</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Cloud Functions handler exceptions</Div>
-        </a>
-        <a href={`${basePath}/cloud-logs`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+        </Anchor>
+        <Anchor href={`${basePath}/cloud-logs`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Cloud Logging</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Live stream from Cloud Logging API</Div>
-        </a>
-        <a href={`${basePath}/payment-rollbacks`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+        </Anchor>
+        <Anchor href={`${basePath}/payment-rollbacks`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Payment rollbacks</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Razorpay refund + upstream-unavailable rows</Div>
-        </a>
-        <a href={`${basePath}/analysis`} style={{ ...card, textDecoration: "none", color: "inherit" }}>
+        </Anchor>
+        <Anchor href={`${basePath}/analysis`} tone="default" underline="none" style={{ ...card }}>
           <Span weight="bold">Analysis</Span>
           <Div style={{ color: "var(--appkit-color-text-muted)", fontSize: "0.85rem" }}>Run the maintenance analyzer + recommendations</Div>
-        </a>
+        </Anchor>
       </Nav>
     </Div>
   );

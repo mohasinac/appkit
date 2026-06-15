@@ -3,7 +3,7 @@
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
-import { Badge, Button, Div, Stack, Text, useToast } from "../../../ui";
+import { Badge, Button, Div, Stack, Text, TextLink, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -153,9 +153,9 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     getRowHref: getEditHref,
     toolbarExtra: (
       <Button asChild size="sm" variant="primary">
-        <a href={newHref} className="flex items-center gap-1.5">
+        <TextLink href={newHref} className="flex items-center gap-1.5">
           + {BUNDLE_COPY.adminList.newButton}
-        </a>
+        </TextLink>
       </Button>
     ),
     buildBulkActions: (selection): BulkActionItem[] => [

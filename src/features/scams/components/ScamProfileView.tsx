@@ -18,23 +18,24 @@ import {
   Link2,
 } from "lucide-react";
 import {
+  Alert,
+  Anchor,
+  Badge,
+  Breadcrumb,
+  Card,
+  CardBody,
+  CardHeader,
   Container,
   Div,
+  EmptyState,
+  Grid,
   Heading,
   Main,
+  Row,
   Section,
   Span,
-  Text,
-  Grid,
   Stack,
-  Row,
-  Card,
-  CardHeader,
-  CardBody,
-  Badge,
-  Alert,
-  Breadcrumb,
-  EmptyState,
+  Text,
 } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import type {
@@ -446,10 +447,9 @@ export function ScamProfileView({
                           {SOCIAL_PLATFORM_LABELS[sm.platform] ?? sm.platform}:
                         </Text>
                         {sm.url ? (
-                          <a href={sm.url} target="_blank" rel="noopener noreferrer"
-                            className="text-sm text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline">
+                          <Anchor href={sm.url} className="text-sm">
                             {sm.handle}
-                          </a>
+                          </Anchor>
                         ) : (
                           <Text variant="secondary" size="sm">{sm.handle}</Text>
                         )}
@@ -496,9 +496,9 @@ export function ScamProfileView({
                   <Heading level={2} size="base" weight="semibold">Evidence</Heading>
                   <Row gap="sm" wrap>
                     {scammer.evidence.map((url, i) => (
-                      <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block h-32 w-32 rounded-lg overflow-hidden border shadow-sm hover:opacity-90">
+                      <Anchor key={i} href={url} underline="none" className="block h-32 w-32 rounded-lg overflow-hidden border shadow-sm hover:opacity-90">
                         <MediaImage src={url} alt={`Evidence ${i + 1}`} size="thumbnail" />
-                      </a>
+                      </Anchor>
                     ))}
                   </Row>
                 </Stack>
