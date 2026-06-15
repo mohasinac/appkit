@@ -239,7 +239,7 @@ export function DataTable<T extends object>({
     return (
       <Div className="appkit-data-table__wrapper">
         <Div className="appkit-data-table__empty">
-          <Div className="text-center px-4">
+          <Div className="text-center" padding="x-md">
             {emptyIcon ?? (
               <svg
                 className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-400"

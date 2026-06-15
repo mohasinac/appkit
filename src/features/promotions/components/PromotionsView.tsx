@@ -54,7 +54,7 @@ export function PromotionsHero({
 }: PromotionsHeroProps) {
   return (
     <Div className={`${heroBannerClass} text-white py-14`}>
-      <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <Div className="max-w-5xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
         <Text className="text-white mb-2 tracking-widest" size="sm" weight="medium" transform="uppercase">
           🎉 {labels.exclusiveOffersBadge}
         </Text>

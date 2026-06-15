@@ -84,7 +84,7 @@ function SectionCard({ title, children }: { title: string; children: React.React
           {title}
         </Text>
       </Div>
-      <Div className="px-4">{children}</Div>
+      <Div padding="x-md">{children}</Div>
     </Div>
   );
 }

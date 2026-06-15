@@ -64,7 +64,7 @@ export function HowItWorksInfoView({
     >
       {/* Header */}
       <Section className={`${heroClass} text-white py-14 md:py-16 lg:py-20`}>
-        <Div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
           <Heading level={1} variant="none" className="mb-4 text-white">
             {title}
           </Heading>

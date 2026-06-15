@@ -146,7 +146,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </>
         )}
 
-        <Div className={`relative z-10 max-w-7xl mx-auto px-4 ${hasCover ? "py-12" : "py-8"}`}>
+        <Div className={`relative z-10 max-w-7xl mx-auto ${hasCover ? "py-12" : "py-8"}`} padding="x-md">
           {/* Breadcrumb */}
           <Nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
             <Link

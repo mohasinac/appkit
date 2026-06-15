@@ -270,7 +270,7 @@ function HotspotHeaderOverlay({
         align="start"
         justify="between"
         gap="sm"
-        className="pointer-events-auto mx-auto max-w-7xl px-4 pt-4 pb-6 gap-y-3"
+        className="pointer-events-auto mx-auto max-w-7xl pt-4 pb-6 gap-y-3" padding="x-md"
       >
         <Div>
           <Text

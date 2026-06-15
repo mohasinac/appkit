@@ -68,7 +68,7 @@ export function WelcomeSection({
 
   return (
     <Section
-      className={`relative overflow-hidden py-20 md:py-28 px-4 ${className}`}
+      className={`relative overflow-hidden py-20 md:py-28 ${className}`} padding="x-md"
     >
       {/* Decorative ambient glows */}
       <Div

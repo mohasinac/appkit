@@ -404,7 +404,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
                 {/* Overlay text (no cards, or overlay present) */}
                 {slide.overlay && (
-                  <Div className={`${position.fill} ${flex.center} flex-col text-center px-6 md:px-16 lg:px-32`}>
+                  <Div className={`${position.fill} ${flex.center} flex-col text-center md:px-16 lg:px-32`} padding="x-lg">
                     {slide.overlay.subtitle && (
                       <Text className="stagger-1 md:text-sm !text-white/80 mb-1 md:mb-2 drop-shadow-sm tracking-widest" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}

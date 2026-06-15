@@ -39,7 +39,7 @@ export function AdminSiteConfigGuideView() {
           <Settings className="w-5 h-5 text-[var(--appkit-color-primary)]" />
           <Heading level={2} className={GC.sectionTitle}>Settings Groups</Heading>
         </Div>
-        <Stack className="px-6 py-5" gap="md">
+        <Stack className="py-5" padding="x-lg" gap="md">
           {SETTING_GROUPS.map(({ name, desc }) => (
             <Div key={name} className="flex gap-3 text-sm">
               <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{name}</Text>
@@ -54,7 +54,7 @@ export function AdminSiteConfigGuideView() {
           <Settings className={CLS_HEADER_ICON} />
           <Heading level={2} className={GC.sectionTitle}>API Keys &amp; Integrations</Heading>
         </Div>
-        <Div className="px-6 py-5">
+        <Div className="py-5" padding="x-lg">
           <Alert variant="warning">
             API keys in <code className="text-xs">integrations</code> are stored encrypted. They are masked in the admin UI — you see <code className="text-xs">••••••••</code> by design. To rotate a key: paste the new value into the field and save. The old key is immediately invalidated on your payment/shipping provider&apos;s side — test in staging first. Never paste API keys into Slack, email, or any external service.
           </Alert>
@@ -66,7 +66,7 @@ export function AdminSiteConfigGuideView() {
           <Settings className="w-5 h-5 text-[var(--appkit-color-primary)]" />
           <Heading level={2} className={GC.sectionTitle}>Feature Flags</Heading>
         </Div>
-        <Stack className="px-6 py-5" gap="3">
+        <Stack className="py-5" padding="x-lg" gap="3">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings</code>. They control platform-wide features without a code deploy:</Text>
           <ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
             <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enableAuctions</code> — globally enable/disable all auction listings.</li>

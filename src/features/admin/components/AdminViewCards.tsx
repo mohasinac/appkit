@@ -138,7 +138,7 @@ function AdminCardItem({
         <Row
           gap="xs"
           data-checkbox
-          className="px-3 pt-3"
+          className="pt-3" padding="x-sm"
           onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}
         >
           <input

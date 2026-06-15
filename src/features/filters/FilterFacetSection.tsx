@@ -162,7 +162,7 @@ export function FilterFacetSection({
                   <Row
                     key={option.value}
                     gap="xs"
-                    className="cursor-pointer px-3 py-1.5 hover:bg-zinc-50 dark:hover:bg-slate-800 mx-1" rounded="lg"
+                    className="cursor-pointer py-1.5 hover:bg-zinc-50 dark:hover:bg-slate-800 mx-1" padding="x-sm" rounded="lg"
                     onClick={() => toggle(option.value)}
                   >
                     <input

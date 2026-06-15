@@ -90,7 +90,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
       </Section>
 
       {/* Listing with sticky toolbar */}
-      <Container size="xl" className="px-4">
+      <Container size="xl" padding="x-md">
         <AdSlot id="listing-sidebar-top" className="mb-4 mt-4" />
         <ProductsIndexListing initialData={products} />
         <AdSlot id="listing-sidebar-bottom" className="mt-8" />

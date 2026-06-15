@@ -126,7 +126,7 @@ export function NavbarLayout({
       aria-label={ariaLabel}
       className="hidden lg:block bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-slate-800"
     >
-      <Row className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] h-10" align="center">
+      <Row className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px] h-10" padding="x-md" align="center">
         {/* Scrollable items area */}
         <Div className={`relative flex-1 ${__O.hidden}`}>
           {canScrollLeft && (

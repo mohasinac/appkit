@@ -107,7 +107,7 @@ export function SellerCouponEditorView({
           style={{ background: "linear-gradient(to right,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 55%,var(--appkit-color-secondary-400) 100%)" }}
           aria-hidden="true"
         />
-        <Div className="border-b border-[var(--appkit-color-border)] px-6 py-5">
+        <Div className="border-b border-[var(--appkit-color-border)] py-5" padding="x-lg">
           <Row justify="between" gap="3">
             <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
               {isEdit ? "Edit Coupon" : "Create Coupon"}

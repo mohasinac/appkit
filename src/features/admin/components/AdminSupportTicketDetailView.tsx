@@ -594,7 +594,7 @@ function OrderItemsPanel(props: {
                   {orderItems.map((it, idx) => (
                     <Row
                       key={`${it.productId}-${idx}`}
-                      className="px-2 py-1" rounded="default" align="center" gap="sm" border="default"
+                      className="py-1" padding="x-xs" rounded="default" align="center" gap="sm" border="default"
                     >
                       <Div className="flex-1 min-w-0">
                         <Text className="truncate" size="xs" weight="medium">

@@ -31,7 +31,7 @@ export function PromoGrid({
         borderBottom: "1px solid rgba(255,255,255,0.06)",
       }}
     >
-      <Div className="mx-auto max-w-7xl px-4">
+      <Div className="mx-auto max-w-7xl" padding="x-md">
         <Row
           wrap
           align="end"

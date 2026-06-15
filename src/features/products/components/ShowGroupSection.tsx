@@ -184,7 +184,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
         </button>
 
         {open && (
-          <Div className={`px-4 pb-4 pt-1 ${__O.xAuto}`}>
+          <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
             <Div className="flex gap-3 min-w-0">
               {/* Parent first */}
               {[...members]

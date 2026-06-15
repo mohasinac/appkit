@@ -471,7 +471,7 @@ export function SellerProductsView({
 
         {totalPages > 1 && (
           <Row
-            className="sticky z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-1.5" justify="center"
+            className="sticky z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] py-1.5" padding="x-sm" justify="center"
             // audit-inline-style-ok: sticky header offset
             style={{ top: "calc(var(--header-height, 0px) + 44px)" }}
           >

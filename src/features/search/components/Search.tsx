@@ -725,7 +725,7 @@ export function Search({
         </Row>
 
         {(filteredSiteLinks.length > 0 || query) && (
-          <Stack className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 z-50" gap="sm">
+          <Stack className="absolute top-full left-0 right-0 pt-2 pb-4 z-50" padding="x-md" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
               <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
                 <Div className="px-4 border-b border-zinc-200 dark:border-slate-700" padding="y-xs">

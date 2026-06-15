@@ -104,7 +104,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Channel name bottom-left */}
       {post.channelName && (
-        <Div className="absolute bottom-2 left-2 bg-black/60 px-2 py-0.5 text-xs text-white backdrop-blur-sm" rounded="default">
+        <Div className="absolute bottom-2 left-2 bg-black/60 py-0.5 text-xs text-white backdrop-blur-sm" padding="x-xs" rounded="default">
           {post.channelName}
         </Div>
       )}

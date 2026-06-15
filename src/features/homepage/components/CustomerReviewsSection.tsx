@@ -68,7 +68,7 @@ export function CustomerReviewsSection<T = unknown>({
 
   return (
     <Section className={`${themed.bgPrimary} ${className}`} padding="y-3xl">
-      <Div className="w-full max-w-7xl mx-auto px-4 md:px-8">
+      <Div className="w-full max-w-7xl mx-auto md:px-8" padding="x-md">
         {/* Section Header */}
         <Div className="text-center mb-10">
           <Heading

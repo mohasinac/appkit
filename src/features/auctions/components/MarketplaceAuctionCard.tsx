@@ -211,7 +211,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
       </Row>
       <Row align="center" gap="sm" wrap>
         <Text className="text-primary" size="sm" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
-        <Div className={`inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold ${countdownClass}`} rounded="full">
+        <Div className={`inline-flex items-center gap-1 py-0.5 text-[11px] font-semibold ${countdownClass}`} padding="x-xs" rounded="full">
           <Clock className="h-2.5 w-2.5" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
         </Div>

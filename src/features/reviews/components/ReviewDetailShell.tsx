@@ -110,7 +110,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
     <>
       {/* ── Hero: rating + title ──────────────────────────────────────────── */}
       <Div surface="default" className="border-b border-neutral-200 pb-8 pt-10">
-        <Div className="mx-auto max-w-3xl px-4">
+        <Div className="mx-auto max-w-3xl" padding="x-md">
           {/* Star rating — large */}
           <Row gap="sm" className="mb-4">
             <StarRating value={review.rating} size="lg" readOnly />
@@ -388,7 +388,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
           {/* Thumbnail strip */}
           {images.length > 1 && (
-            <Row justify="center" gap="xs" className="absolute bottom-4 left-0 right-0 px-4">
+            <Row justify="center" gap="xs" className="absolute bottom-4 left-0 right-0" padding="x-md">
               {images.map((img, i) => (
                 <button
                   key={i}

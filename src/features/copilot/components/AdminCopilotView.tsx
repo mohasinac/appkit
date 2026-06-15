@@ -45,7 +45,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
   return (
     <Div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <Div
-        className={`max-w-[80%] px-4 py-2.5 text-sm ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} rounded="2xl"
+        className={`max-w-[80%] py-2.5 text-sm ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} padding="x-md" rounded="2xl"
       >
         <Text className="whitespace-pre-wrap leading-relaxed" size="sm">{msg.content}</Text>
         {msg.durationMs ? (
@@ -81,7 +81,7 @@ function renderCopilotChatPanel(props: {
         {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
         {isLoading ? (
           <Row justify="start">
-            <Div className="rounded-tl-sm bg-neutral-100 px-4 py-2.5" rounded="2xl">
+            <Div className="rounded-tl-sm bg-neutral-100 py-2.5" padding="x-md" rounded="2xl">
               <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
             </Div>
           </Row>
@@ -216,7 +216,7 @@ export function AdminCopilotView({
               ))}
               {isLoading ? (
                 <Row justify="start">
-                  <Div className="rounded-tl-sm bg-neutral-100 px-4 py-2.5" rounded="2xl">
+                  <Div className="rounded-tl-sm bg-neutral-100 py-2.5" padding="x-md" rounded="2xl">
                     <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
                   </Div>
                 </Row>

@@ -55,6 +55,12 @@ export const PADDING_MAP = {
   "y-2xl": "py-10",
   "y-3xl": "py-12",
   "y-4xl": "py-16",
+  // Horizontal-only presets.
+  "x-xs": "px-2",
+  "x-sm": "px-3",
+  "x-md": "px-4",
+  "x-lg": "px-6",
+  "x-xl": "px-8",
 } as const;
 
 export type PaddingKey = keyof typeof PADDING_MAP;

@@ -86,7 +86,7 @@ export function AdminCatalogGuideView() {
             <Icon className="w-5 h-5 text-[var(--appkit-color-primary)]" />
             <Heading level={2} size="base" weight="semibold">{title}</Heading>
           </Row>
-          <Div className="px-6 py-5">{content}</Div>
+          <Div className="py-5" padding="x-lg">{content}</Div>
         </Section>
       ))}
     </Stack>

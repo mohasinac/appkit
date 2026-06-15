@@ -468,7 +468,7 @@ export function CharacterHotspotForm({
                   ★
                 </Row>
                 <Div
-                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap px-2 py-0.5 text-[10px] font-bold" rounded="default"
+                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap py-0.5 text-[10px] font-bold" padding="x-xs" rounded="default"
                   style={{
                     background: "var(--color-black)",
                     color: "var(--color-yellow)",

@@ -45,7 +45,7 @@ function CategoryTreeNode({
           if (hasChildren) setExpanded((p) => !p);
           onSelect?.(item);
         }}
-        className={`flex cursor-pointer items-center gap-1 px-2 py-1.5 text-sm transition select-none ${isActive ? "bg-primary-50 font-semibold text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} rounded="md"
+        className={`flex cursor-pointer items-center gap-1 py-1.5 text-sm transition select-none ${isActive ? "bg-primary-50 font-semibold text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} padding="x-xs" rounded="md"
         // audit-inline-style-ok: computed pixel offset
         style={{ paddingLeft: `${8 + indent}px` }}
       >

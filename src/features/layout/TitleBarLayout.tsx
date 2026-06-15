@@ -297,7 +297,7 @@ export function TitleBarLayout({
         </Div>
       )}
 
-      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
+      <Div className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px]" padding="x-md">
         {/* TB1 — primary row, always visible */}
         <Row justify="between" gap="none" className="relative h-14">
           {/* Left: #1 — wordmark, always shown */}

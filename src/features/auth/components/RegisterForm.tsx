@@ -76,7 +76,7 @@ export function RegisterForm({
   });
 
   return (
-    <Div className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}>
+    <Div className={`flex items-center justify-center min-h-[60vh] ${className}`} padding="x-md">
       <Stack className="max-w-md w-full" gap="lg">
         <Div className="text-center">
           <Heading level={1} className="font-extrabold" size="3xl">

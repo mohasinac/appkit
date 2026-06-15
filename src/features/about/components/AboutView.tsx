@@ -56,7 +56,7 @@ export function AboutView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section className={`${heroBannerClass} text-white md:py-20 lg:py-24`} padding="y-4xl">
-        <Div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
           <Heading level={1} variant="none" className="md:text-5xl mb-6 text-white" size="4xl" weight="bold">
             {labels.title}
           </Heading>

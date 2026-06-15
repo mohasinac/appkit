@@ -85,7 +85,7 @@ export function WhatsAppCommunitySection({
 
               {/* Member count pill */}
               {memberCount && (
-                <Row className="bg-white/15 backdrop-blur-sm px-4 py-1.5" align="center" gap="sm" rounded="full">
+                <Row className="bg-white/15 backdrop-blur-sm py-1.5" padding="x-md" align="center" gap="sm" rounded="full">
                   <Users className="w-4 h-4 text-white/80" />
                   <Span size="sm" weight="semibold" className="text-white">
                     {memberCount.toLocaleString(getDefaultLocale())}+ {memberCountLabel}

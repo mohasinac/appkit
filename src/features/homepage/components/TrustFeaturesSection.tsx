@@ -70,7 +70,7 @@ function TrustFeatureCard({
 
 function TrustStripItem({ item }: { item: TrustFeatureItem }) {
   return (
-    <Div className="inline-flex flex-shrink-0 items-center gap-2 px-6">
+    <Div className="inline-flex flex-shrink-0 items-center gap-2" padding="x-lg">
       {item.renderIcon ? (
         item.renderIcon({ className: "w-5 h-5" })
       ) : (
@@ -135,7 +135,7 @@ export function TrustFeaturesSection({
   return (
     <Section
       ref={sectionRef}
-      className={`py-14 px-4 dark:bg-slate-900/80 ${className}`} surface="muted"
+      className={`py-14 dark:bg-slate-900/80 ${className}`} padding="x-md" surface="muted"
     >
       <Div className="max-w-6xl mx-auto">
         {title && (

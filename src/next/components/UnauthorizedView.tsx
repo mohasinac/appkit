@@ -43,7 +43,7 @@ export function UnauthorizedView({
   homeHref = DEFAULT_ROUTE_MAP.HOME,
 }: UnauthorizedViewProps) {
   return (
-    <Stack className="justify-center min-h-[60vh] px-8 text-center" align="center">
+    <Stack className="justify-center min-h-[60vh] text-center" padding="x-xl" align="center">
       <Heading level={1} variant="primary" className="text-7xl mb-2" weight="bold">
         401
       </Heading>

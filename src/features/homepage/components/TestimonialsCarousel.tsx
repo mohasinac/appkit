@@ -30,7 +30,7 @@ export function TestimonialsCarousel({
       }}
     >
       <Stack
-        className="mx-auto w-full max-w-7xl px-6 sm:px-8"
+        className="mx-auto w-full max-w-7xl sm:px-8" padding="x-lg"
         style={{ minHeight: 0 }}
       >
         {/* Heading */}

@@ -115,7 +115,7 @@ export function AddressesIndexListing({
       />
 
       {/* ── Address list ────────────────────────────────────────────────── */}
-      <Div className="px-3 sm:px-4">
+      <Div className="sm:px-4" padding="x-sm">
         {isLoading ? (
           <Div className="grid sm:grid-cols-2 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (

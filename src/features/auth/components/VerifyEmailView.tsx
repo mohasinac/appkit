@@ -35,7 +35,7 @@ export function VerifyEmailView({
 }: VerifyEmailViewProps) {
   return (
     <Div
-      className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}
+      className={`flex items-center justify-center min-h-[60vh] ${className}`} padding="x-md"
     >
       <Div surface="elevated" padding="xl" className="max-w-md w-full text-center">
         {status === "loading" && (

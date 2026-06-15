@@ -211,7 +211,7 @@ function OrderDetailDrawer({
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
                 <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 border border-[var(--appkit-color-border)]" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
-                    <Row key={i} className="px-3 py-2.5" align="center" justify="between" gap="3">
+                    <Row key={i} className="py-2.5" padding="x-sm" align="center" justify="between" gap="3">
                       <Div className="min-w-0">
                         <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
                         <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
@@ -263,7 +263,7 @@ function OrderDetailDrawer({
           </Div>
 
           {/* Footer */}
-          <Row className="border-t border-[var(--appkit-color-border)] px-4 py-3.5" align="center" justify="end" gap="3">
+          <Row className="border-t border-[var(--appkit-color-border)] py-3.5" padding="x-md" align="center" justify="end" gap="3">
             <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
             <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
           </Row>
@@ -561,7 +561,7 @@ export function SellerOrdersView({
       />
 
       {totalPages > 1 && (
-        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5" justify="center">
+        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 py-1.5" padding="x-sm" justify="center">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
         </Row>
       )}

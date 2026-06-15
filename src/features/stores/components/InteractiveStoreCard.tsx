@@ -101,7 +101,7 @@ export function InteractiveStoreCard({
         </Div>
 
         {/* ── Info section ────────────────────────────────────────────── */}
-        <Stack className="flex-1 px-4 pb-4">
+        <Stack className="flex-1 pb-4" padding="x-md">
           {/* Logo — overlaps banner bottom edge.
               Uses a native <img> with onError → state flip so a missing or
               broken storeLogoURL falls back to the initials circle below

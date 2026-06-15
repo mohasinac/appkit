@@ -189,7 +189,7 @@ function DrawerPanel({
         aria-label={title}
         className="fixed top-0 right-0 z-50 h-full w-64 border-l border-zinc-200 dark:border-slate-700 shadow-2xl" surface="default"
       >
-        <Row className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" align="center" justify="between">
+        <Row className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
           <button
             type="button"
@@ -249,7 +249,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
         >
           {/* Nav panel */}
           <Div surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden}`} shadow="xl">
-            <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+            <Div className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md">
               <Span size="xs" weight="semibold" transform="uppercase" color="muted">My Account</Span>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>

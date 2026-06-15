@@ -253,7 +253,7 @@ export default function BottomActions() {
 
       {/* -- Info label row (page mode only) --------------------------------- */}
       {infoLabel && !isBulkMode && (
-        <Div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80">
+        <Div className="pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80" padding="x-md">
           <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
             {infoLabel}
           </Text>
@@ -261,7 +261,7 @@ export default function BottomActions() {
       )}
 
       {/* -- Main action row -------------------------------------------------- */}
-      <Row className={`gap-2 px-3 ${BOTTOM_NAV_HEIGHT}`}>
+      <Row className={`gap-2 ${BOTTOM_NAV_HEIGHT}`} padding="x-sm">
         {isBulkMode && bulk ? (
           <>
             {/* Selection count pill — tap to clear ----------------------- */}

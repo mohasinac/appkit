@@ -60,7 +60,7 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
           `}
         >
           {/* Fixed (non-scrolling) header strip */}
-          <Div className="flex-shrink-0 px-6 py-5 border-b border-zinc-200 dark:border-slate-800 dark:bg-slate-900/80" surface="muted">
+          <Div className="flex-shrink-0 py-5 border-b border-zinc-200 dark:border-slate-800 dark:bg-slate-900/80" padding="x-lg" surface="muted">
             {header}
           </Div>
 
