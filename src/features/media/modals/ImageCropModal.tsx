@@ -178,7 +178,7 @@ export function ImageCropModal({
         <Div className="space-y-1">
           <Row justify="between">
             <Text size="xs" weight="medium">{t("cropZoom")}</Text>
-            <Text className="text-zinc-500 dark:text-slate-400" size="xs">
+            <Text size="xs" color="muted">
               {Math.round(zoom * 100)}%
             </Text>
           </Row>
