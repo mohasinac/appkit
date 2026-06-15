@@ -83,12 +83,12 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
         </Row>
         <Heading
           level={3}
-          className={`${THEME_CONSTANTS.utilities.textClamp2} text-base font-semibold text-neutral-900 dark:text-zinc-100 group-hover:text-primary`}
+          className={`${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-zinc-100 group-hover:text-primary`} size="base" weight="semibold"
         >
           {post.title}
         </Heading>
         {post.excerpt && (
-          <Text className={`mt-2 ${THEME_CONSTANTS.utilities.textClamp3} flex-1 text-sm text-neutral-500 dark:text-zinc-400`}>
+          <Text className={`mt-2 ${THEME_CONSTANTS.utilities.textClamp3} flex-1 text-neutral-500 dark:text-zinc-400`} size="sm">
             {post.excerpt}
           </Text>
         )}

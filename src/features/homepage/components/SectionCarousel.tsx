@@ -237,7 +237,7 @@ export function SectionCarousel<T = unknown>({
           )}
 
           {description && (
-            <Text className={`text-base ${descVariant} mt-2`}>
+            <Text className={`${descVariant} mt-2`} size="base">
               {description}
             </Text>
           )}

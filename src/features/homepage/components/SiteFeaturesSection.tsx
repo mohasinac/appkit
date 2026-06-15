@@ -39,13 +39,13 @@ export function SiteFeaturesSection({
         <Div className="text-center mb-12">
           <Heading
             level={2}
-            className={`text-3xl md:text-4xl font-bold ${themed.textPrimary} mb-3`}
+            className={`md:text-4xl ${themed.textPrimary} mb-3`} size="3xl" weight="bold"
           >
             {title}
           </Heading>
           {subtitle && (
             <Text
-              className={`text-base ${themed.textSecondary} max-w-2xl mx-auto`}
+              className={`${themed.textSecondary} max-w-2xl mx-auto`} size="base"
             >
               {subtitle}
             </Text>
@@ -70,13 +70,13 @@ export function SiteFeaturesSection({
               {/* Title */}
               <Heading
                 level={3}
-                className={`text-base font-bold ${themed.textPrimary} mb-2`}
+                className={`${themed.textPrimary} mb-2`} size="base" weight="bold"
               >
                 {feature.title}
               </Heading>
 
               {/* Description */}
-              <Text className={`text-base ${themed.textSecondary}`}>
+              <Text className={`${themed.textSecondary}`} size="base">
                 {feature.description}
               </Text>
             </div>

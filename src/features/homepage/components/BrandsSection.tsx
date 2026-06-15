@@ -118,7 +118,7 @@ export function BrandsSection({
       <Div className="mx-auto max-w-7xl">
         <Row className="mb-6" align="center" justify="between">
           <>
-            <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>
+            <Heading level={2} className={`md:text-3xl ${themed.textPrimary}`} size="2xl" weight="bold">
               {title}
             </Heading>
             {subtitle && (

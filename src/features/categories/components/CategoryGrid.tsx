@@ -68,11 +68,11 @@ export function CategoryCard({
 
       {/* Content */}
       <Div className={`flex flex-1 flex-col ${__P.p3}.5`}>
-        <Text className={`font-semibold text-sm leading-snug ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`}>
+        <Text className={`leading-snug ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`} size="sm" weight="semibold">
           {category.name}
         </Text>
         {category.description && (
-          <Text className={`mt-1 text-xs ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400 flex-1`}>
+          <Text className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400 flex-1`} size="xs">
             {category.description}
           </Text>
         )}

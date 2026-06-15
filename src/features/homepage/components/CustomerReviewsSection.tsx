@@ -73,12 +73,12 @@ export function CustomerReviewsSection<T = unknown>({
         <Div className="text-center mb-10">
           <Heading
             level={2}
-            className={`text-3xl md:text-4xl font-bold ${themed.textPrimary} mb-3`}
+            className={`md:text-4xl ${themed.textPrimary} mb-3`} size="3xl" weight="bold"
           >
             {title}
           </Heading>
           {subtitle && (
-            <Text className={`text-base ${themed.textSecondary}`}>
+            <Text className={`${themed.textSecondary}`} size="base">
               {subtitle}
             </Text>
           )}

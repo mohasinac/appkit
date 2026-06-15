@@ -20,7 +20,7 @@ export function PreOrderBadge({ status, className = "" }: PreOrderBadgeProps) {
   const { label, color } = STATUS_MAP[status] ?? STATUS_MAP.pending;
   return (
     <Span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${color} ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 ${color} ${className}`} size="xs" weight="medium"
     >
       {label}
     </Span>

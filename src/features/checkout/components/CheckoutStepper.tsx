@@ -19,18 +19,12 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
           <React.Fragment key={step.id}>
             <Row className={THEME_CONSTANTS.spacing.gap["2.5"]}>
               <Span
-                className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
-                  isDone
-                    ? "bg-success text-white"
-                    : isActive
-                      ? "bg-neutral-900 text-white"
-                      : "bg-neutral-200 dark:bg-slate-700 text-neutral-500 dark:text-zinc-400"
-                }`}
+                className={`flex h-6 w-6 items-center justify-center rounded-full ${ isDone ? "bg-success text-white" : isActive ? "bg-neutral-900 text-white" : "bg-neutral-200 dark:bg-slate-700 text-neutral-500 dark:text-zinc-400" }`} size="xs" weight="semibold"
               >
                 {isDone ? "✓" : idx + 1}
               </Span>
               <Span
-                className={`text-sm font-medium ${isActive ? "text-neutral-900 dark:text-zinc-100" : isDone ? "text-neutral-500 dark:text-zinc-400" : "text-zinc-400 dark:text-zinc-400"}`}
+                className={`${isActive ? "text-neutral-900 dark:text-zinc-100" : isDone ? "text-neutral-500 dark:text-zinc-400" : "text-zinc-400 dark:text-zinc-400"}`} size="sm" weight="medium"
               >
                 {step.label}
               </Span>

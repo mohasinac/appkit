@@ -116,7 +116,7 @@ export function WelcomeSection({
             {/* Subtitle */}
             {subtitle && (
               <Text
-                className={`mt-4 text-xl ${themed.textSecondary} max-w-xl leading-relaxed mx-auto lg:mx-0`}
+                className={`mt-4 ${themed.textSecondary} max-w-xl leading-relaxed mx-auto lg:mx-0`} size="xl"
               >
                 {subtitle}
               </Text>

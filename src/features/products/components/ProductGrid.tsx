@@ -252,7 +252,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
       {/* Content area */}
       <Div className={`flex flex-1 flex-col ${__P.p3} pt-2.5`}>
-        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-900 dark:text-white leading-snug`}>
+        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} dark:text-white leading-snug`} size="sm" weight="semibold" color="primary">
           {product.title}
         </Text>
 
@@ -347,11 +347,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             const low = stock <= 5;
             return (
               <Text
-                className={`mt-1 text-[11px] font-medium ${
-                  low
-                    ? "text-warning"
-                    : "text-zinc-500 dark:text-zinc-400"
-                }`}
+                className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-zinc-500 dark:text-zinc-400" }`} weight="medium"
               >
                 {low ? `Only ${stock} left` : `${stock} in stock`}
               </Text>
@@ -559,7 +555,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
 
       {/* Content */}
       <Stack className="flex-1 min-w-0 gap-0.5">
-        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900 dark:text-zinc-100`}>
+        <Text className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="medium" color="primary">
           {product.title}
         </Text>
         {(product.categoryName || product.brand) && (

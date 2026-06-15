@@ -62,7 +62,7 @@ export function ViewReviewModal({
                 {displayName}
               </Text>
               {review.verified && (
-                <Text className={`text-xs ${THEME_CONSTANTS.themed.textSuccess}`}>
+                <Text className={`${THEME_CONSTANTS.themed.textSuccess}`} size="xs">
                   ✓ Verified purchase
                 </Text>
               )}

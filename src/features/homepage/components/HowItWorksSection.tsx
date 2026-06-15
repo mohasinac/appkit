@@ -88,12 +88,12 @@ function StepCard({
       {/* Text */}
       <Heading
         level={3}
-        className={`relative z-10 text-base font-semibold ${THEME_CONSTANTS.themed.textPrimary} mb-2`}
+        className={`relative z-10 ${THEME_CONSTANTS.themed.textPrimary} mb-2`} size="base" weight="semibold"
       >
         {step.title}
       </Heading>
       <Text
-        className={`relative z-10 text-sm ${THEME_CONSTANTS.themed.textSecondary} leading-relaxed`}
+        className={`relative z-10 ${THEME_CONSTANTS.themed.textSecondary} leading-relaxed`} size="sm"
       >
         {step.desc}
       </Text>
@@ -152,13 +152,13 @@ export function HowItWorksSection({
 
           <Heading
             level={2}
-            className={`text-3xl md:text-4xl font-bold ${themed.textPrimary} mb-3`}
+            className={`md:text-4xl ${themed.textPrimary} mb-3`} size="3xl" weight="bold"
           >
             {title}
           </Heading>
           {subtitle && (
             <Text
-              className={`text-base ${themed.textSecondary} max-w-xl mx-auto`}
+              className={`${themed.textSecondary} max-w-xl mx-auto`} size="base"
             >
               {subtitle}
             </Text>

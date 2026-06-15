@@ -169,12 +169,12 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </Nav>
 
           {/* Title + metrics */}
-          <Heading level={1} className={`text-3xl md:text-4xl font-bold mb-2 ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`}>
+          <Heading level={1} className={`md:text-4xl mb-2 ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" weight="bold">
             {category?.name ?? slug}
           </Heading>
 
           {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
-            <Text className={`text-base max-w-2xl mb-4 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`}>
+            <Text className={`max-w-2xl mb-4 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
               {category.description}
             </Text>
           )}

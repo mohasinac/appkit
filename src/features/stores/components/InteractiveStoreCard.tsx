@@ -128,7 +128,7 @@ export function InteractiveStoreCard({
           {/* Store name */}
           <Heading
             level={3}
-            className={`${THEME_CONSTANTS.utilities.textClamp1} text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-primary transition-colors`}
+            className={`${THEME_CONSTANTS.utilities.textClamp1} group-hover:text-primary transition-colors`} size="sm" weight="bold" color="primary"
           >
             {store.storeName}
           </Heading>

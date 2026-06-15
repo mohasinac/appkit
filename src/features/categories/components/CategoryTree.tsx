@@ -53,7 +53,7 @@ function CategoryTreeNode({
           <Span
             size="xs"
             aria-hidden="true"
-            className={`text-zinc-400 dark:text-zinc-400 transition-transform duration-150 ${expanded ? "rotate-90" : ""}`}
+            className={`transition-transform duration-150 ${expanded ? "rotate-90" : ""}`} color="faint"
           >
             ▶
           </Span>

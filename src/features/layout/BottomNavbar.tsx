@@ -254,9 +254,7 @@ export function BottomNavbar({
             />
             {user.role && (
               <Span
-                className={`text-[7px] font-semibold uppercase leading-none ${
-                  getRoleBadgeClass ? getRoleBadgeClass(user.role) : "text-zinc-500 dark:text-slate-400"
-                }`}
+                className={`text-[7px] uppercase leading-none ${ getRoleBadgeClass ? getRoleBadgeClass(user.role) : "text-zinc-500 dark:text-slate-400" }`} weight="semibold"
               >
                 {user.role}
               </Span>

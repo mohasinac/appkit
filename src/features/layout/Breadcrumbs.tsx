@@ -65,7 +65,7 @@ export function BreadcrumbItem({
     return (
       <Span
         aria-current={current ? "page" : undefined}
-        className={`text-zinc-700 dark:text-zinc-200 ${className}`}
+        className={`${className}`} color="primary"
       >
         {children}
       </Span>

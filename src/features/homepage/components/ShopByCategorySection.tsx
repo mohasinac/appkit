@@ -78,7 +78,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
             initial
           )}
         </Row>
-        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-800 dark:text-zinc-200`}>
+        <Text className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="semibold" color="primary">
           {category.name}
         </Text>
         <Text className="mt-1" color="muted" size="xs">
@@ -167,7 +167,7 @@ export function ShopByCategorySection({
     <Section className={`px-4 md:py-12 ${themed.bgSecondary} ${className}`} padding="y-2xl">
       <Div className="mx-auto max-w-7xl">
         <Div className="mb-6 text-center">
-          <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>
+          <Heading level={2} className={`md:text-3xl ${themed.textPrimary}`} size="2xl" weight="bold">
             {title}
           </Heading>
           {subtitle && (

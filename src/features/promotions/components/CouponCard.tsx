@@ -256,11 +256,7 @@ export function CouponCard({
       {(hasAdminActions || n.scope) && (
         <Row gap="xs" wrap className="mb-2">
           <Span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-              n.isActive
-                ? "bg-success-surface text-success"
-                : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300"
-            }`}
+            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide ${ n.isActive ? "bg-success-surface text-success" : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300" }`} weight="semibold"
           >
             {n.isActive ? labels.active : labels.inactive}
           </Span>

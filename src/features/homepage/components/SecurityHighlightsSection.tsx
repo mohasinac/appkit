@@ -110,7 +110,7 @@ export function SecurityHighlightsSection({
           )}
           <Heading
             level={2}
-            className={`mt-4 text-3xl md:text-4xl font-bold ${themed.textPrimary}`}
+            className={`mt-4 md:text-4xl ${themed.textPrimary}`} size="3xl" weight="bold"
           >
             {title}
           </Heading>

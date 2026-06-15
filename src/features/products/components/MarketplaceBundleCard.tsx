@@ -159,11 +159,7 @@ export function MarketplaceBundleCard({
             {mergedLabels.bundleBadge}
           </Span>
           <Span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-              stock === "out_of_stock"
-                ? "bg-zinc-500 text-white"
-                : CLS_STOCK_OK
-            }`}
+            className={`inline-flex items-center rounded-full px-2 py-0.5 ${ stock === "out_of_stock" ? "bg-zinc-500 text-white" : CLS_STOCK_OK }`} size="xs" weight="medium"
           >
             {stock === "out_of_stock" ? mergedLabels.outOfStockBadge : mergedLabels.inStockBadge}
           </Span>
@@ -196,7 +192,7 @@ export function MarketplaceBundleCard({
       <BaseListingCard.Info variant={variant}>
         <TextLink href={String(detailHref)}>
           <Text
-            className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900 dark:text-zinc-100`}
+            className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="medium" color="primary"
           >
             {bundle.name}
           </Text>

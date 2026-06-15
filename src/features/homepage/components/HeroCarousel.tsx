@@ -230,7 +230,7 @@ function CarouselCardRenderer({
           {card.content?.title && (
             <Heading
               level={2}
-              className={`text-[11px] md:text-2xl lg:text-3xl font-bold mb-0.5 md:mb-3 drop-shadow-md ${THEME_CONSTANTS.utilities.textClamp2}`}
+              className={`text-[11px] md:text-2xl lg:text-3xl mb-0.5 md:mb-3 drop-shadow-md ${THEME_CONSTANTS.utilities.textClamp2}`} weight="bold"
               style={{ color: card.content.textColor ?? "#ffffff" }}
             >
               {card.content.title}

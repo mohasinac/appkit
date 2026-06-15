@@ -37,7 +37,7 @@ export function ConcernCard({
           {concern.name}
         </Heading>
         {concern.description && (
-          <Text className={`mt-1 text-xs ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400`}>
+          <Text className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400`} size="xs">
             {concern.description}
           </Text>
         )}

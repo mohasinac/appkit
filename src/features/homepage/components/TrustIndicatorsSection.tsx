@@ -45,11 +45,11 @@ export function TrustIndicatorsSection({
               </Div>
               <Heading
                 level={3}
-                className={`text-sm font-semibold ${themed.textPrimary} mb-1 md:mb-2`}
+                className={`${themed.textPrimary} mb-1 md:mb-2`} size="sm" weight="semibold"
               >
                 {indicator.title}
               </Heading>
-              <Text className={`text-xs ${themed.textSecondary}`}>
+              <Text className={`${themed.textSecondary}`} size="xs">
                 {indicator.description}
               </Text>
             </div>

@@ -101,7 +101,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               />
             )}
             <Div>
-              <Text className={`text-sm font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp1}`}>
+              <Text className={`text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp1}`} size="sm" weight="medium">
                 {item.title}
               </Text>
               <Text size="xs" color="faint">×{item.quantity}</Text>

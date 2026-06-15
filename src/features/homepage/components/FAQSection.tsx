@@ -139,7 +139,7 @@ export function FAQSection({
             {title}
           </Heading>
           {subtitle && (
-            <Text className={`text-base max-w-xl mx-auto ${themed.textSecondary}`}>
+            <Text className={`max-w-xl mx-auto ${themed.textSecondary}`} size="base">
               {subtitle}
             </Text>
           )}
@@ -222,7 +222,7 @@ export function FAQSection({
                           proseClass="prose prose-sm max-w-none dark:prose-invert"
                         />
                       ) : (
-                        <Text className={`text-sm leading-relaxed ${themed.textSecondary}`}>
+                        <Text className={`leading-relaxed ${themed.textSecondary}`} size="sm">
                           {faq.answer}
                         </Text>
                       )}
