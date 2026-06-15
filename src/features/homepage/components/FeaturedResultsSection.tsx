@@ -54,7 +54,7 @@ export function FeaturedResultsSection({
 
         <Heading
           level={2}
-          className="mt-3 font-display text-4xl text-zinc-900 dark:text-white"
+          className="mt-3 font-display text-zinc-900 dark:text-white" size="4xl"
         >
           {title}
         </Heading>

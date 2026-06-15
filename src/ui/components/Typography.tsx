@@ -15,8 +15,13 @@ const TYPOGRAPHY = {
     base: "appkit-text--base",
     lg: "appkit-text--lg",
     xl: "appkit-text--xl",
+    "2xl": "appkit-text--2xl",
+    "3xl": "appkit-text--3xl",
+    "4xl": "appkit-text--4xl",
+    "5xl": "appkit-text--5xl",
   },
   textWeight: {
+    light: "appkit-font--light",
     normal: "appkit-font--normal",
     medium: "appkit-font--medium",
     semibold: "appkit-font--semibold",
@@ -82,9 +87,9 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   variant?: "primary" | "secondary" | "muted" | "none";
   color?: ColorVariant;
   /** Optional size override — defaults to the level's heading size. */
-  size?: "xs" | "sm" | "base" | "lg" | "xl";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
   /** Optional weight override — defaults to the level's heading weight. */
-  weight?: "normal" | "medium" | "semibold" | "bold";
+  weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   transform?: TextTransform;
   truncate?: TextTruncate;
   numeric?: boolean;
@@ -140,8 +145,8 @@ export function Heading({
 interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
   color?: ColorVariant;
-  size?: "xs" | "sm" | "base" | "lg" | "xl";
-  weight?: "normal" | "medium" | "semibold" | "bold";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   transform?: TextTransform;
   truncate?: TextTruncate;
   numeric?: boolean;
@@ -273,8 +278,8 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
     | "success"
     | "accent";
   color?: ColorVariant;
-  size?: "xs" | "sm" | "base" | "lg" | "xl";
-  weight?: "normal" | "medium" | "semibold" | "bold";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   transform?: TextTransform;
   truncate?: TextTruncate;
   numeric?: boolean;

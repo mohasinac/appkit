@@ -21,7 +21,7 @@ export function SellerStoreSetupView({
   return (
     <Div className={className}>
       {labels.title && (
-        <Heading level={1} className="text-2xl mb-6" weight="bold">{labels.title}</Heading>
+        <Heading level={1} className="mb-6" size="2xl" weight="bold">{labels.title}</Heading>
       )}
       {renderTabs?.(tab, setTab)}
       {renderForm(tab, isLoading)}

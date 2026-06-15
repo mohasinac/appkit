@@ -274,7 +274,7 @@ function HotspotHeaderOverlay({
       >
         <Div>
           <Text
-            className="mb-1 text-xs font-black uppercase tracking-[0.2em]"
+            className="mb-1 font-black uppercase tracking-[0.2em]" size="xs"
             style={{ color: "var(--color-red)" }}
           >
             Explore the Universe
@@ -293,19 +293,19 @@ function HotspotHeaderOverlay({
           </Heading>
           {subheading ? (
             <Text
-              className="mt-2 text-sm font-medium max-w-md"
+              className="mt-2 max-w-md" size="sm" weight="medium"
               style={{ color: "var(--dark-section-muted)" }}
             >
               {subheading}
             </Text>
           ) : (
             <Text
-              className="mt-2 text-sm font-medium max-w-md"
+              className="mt-2 max-w-md" size="sm" weight="medium"
               style={{ color: "var(--dark-section-muted)" }}
             >
               &amp; beyond — tap the{" "}
               <Span
-                className="inline-flex items-center justify-center rounded-full font-light"
+                className="inline-flex items-center justify-center rounded-full" weight="light"
                 style={{
                   background: "rgba(255,255,255,0.92)",
                   color: "#111111",
@@ -466,7 +466,7 @@ function HotspotPin({
           <Div style={{ height: 4, background: hotspot.accent }} />
           <Div className="px-5 py-4">
             <Text
-              className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1"
+              className="text-[10px] uppercase tracking-[0.18em] mb-1" weight="bold"
               style={{ color: hotspot.accent === "#FFE500" ? "#b08800" : hotspot.accent }}
             >
               {hotspot.universe}
@@ -532,7 +532,7 @@ function MobileHotspotSheet({
         <Div style={{ height: 4, background: active.accent }} />
         <Div className="px-5 pt-4 pb-10">
           <Text
-            className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1"
+            className="text-[10px] uppercase tracking-[0.18em] mb-1" weight="bold"
             style={{ color: active.accent === "#FFE500" ? "#b08800" : active.accent }}
           >
             {active.universe}

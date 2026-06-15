@@ -335,7 +335,7 @@ export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
 
       {/* Page title */}
       <Div>
-        <Heading level={1} className="text-2xl text-[var(--appkit-color-text)]" weight="bold">
+        <Heading level={1} className="text-[var(--appkit-color-text)]" size="2xl" weight="bold">
           Orders & Fulfilment Guide
         </Heading>
         <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">

@@ -167,7 +167,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
             {/* Page header */}
             <Row justify="between" gap="md" align="end" wrap>
               <Stack gap="xs">
-                <Heading level={1} className="text-3xl" weight="semibold">
+                <Heading level={1} weight="semibold" size="3xl">
                   Scam Registry
                 </Heading>
                 <Text variant="secondary" size="sm">

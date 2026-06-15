@@ -134,15 +134,13 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
               </Div>
               <Div>
                 <Text
-                  className="text-sm font-black uppercase tracking-wide"
+                  className="font-black uppercase tracking-wide" size="sm"
                   style={{ color: "var(--section-title-color)" }}
                 >
                   {badge.title}
                 </Text>
                 <Text
-                  className="text-xs font-medium"
-                  style={{ color: "var(--color-muted)" }}
-                >
+                  style={{ color: "var(--color-muted)" }} size="xs" weight="medium">
                   {badge.sub}
                 </Text>
               </Div>

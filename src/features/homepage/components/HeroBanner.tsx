@@ -103,7 +103,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
         {banner.subtitle && (
           <Div className="mb-3">
             <Span
-              className="inline-block px-3 py-1 text-xs font-black uppercase tracking-[0.18em]"
+              className="inline-block px-3 py-1 font-black uppercase tracking-[0.18em]" size="xs"
               style={{
                 background: "var(--color-red)",
                 color: "#FFFFFF",
@@ -147,7 +147,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               {banner.ctaLabel}
               <Span
                 aria-hidden="true"
-                className="text-lg sm:text-xl leading-none"
+                className="sm:text-xl leading-none" size="lg"
               >
                 →
               </Span>
@@ -231,7 +231,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
           style={{ zIndex: 15 }}
         >
           <Span
-            className="text-xs font-black tabular-nums"
+            className="font-black tabular-nums" size="xs"
             style={{
               color: "rgba(255,255,255,0.6)",
               fontFamily: FONT_BANGERS,

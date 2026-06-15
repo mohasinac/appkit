@@ -109,7 +109,7 @@ export function BuyerAuctionsGuideView() {
           </Div>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Buyer Guide</Text>
         </Div>
-        <Heading level={1} className="text-2xl md:text-3xl text-[var(--appkit-color-text)] mb-2" weight="bold">
+        <Heading level={1} className="md:text-3xl text-[var(--appkit-color-text)] mb-2" size="2xl" weight="bold">
           Auctions &amp; Pre-orders
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">

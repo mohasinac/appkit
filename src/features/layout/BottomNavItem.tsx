@@ -56,7 +56,7 @@ export function BottomNavItem({
           {badge != null && badge > 0 && (
             <Span
               aria-label={`${badge} items`}
-              className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full text-[10px] font-bold bg-secondary-500 text-white flex items-center justify-center leading-none"
+              className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full text-[10px] bg-secondary-500 text-white flex items-center justify-center leading-none" weight="bold"
             >
               {badge > 99 ? "99+" : badge}
             </Span>

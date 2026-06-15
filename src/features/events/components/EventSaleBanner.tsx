@@ -44,7 +44,7 @@ export function EventSaleBanner({
     <Div className={`rounded-2xl bg-gradient-to-br from-[var(--appkit-color-primary)] to-[var(--appkit-color-secondary)] ${__P.p6} text-white shadow-lg`}>
       <Stack gap="md">
         <Stack gap="xs">
-          <Heading level={2} className="text-3xl" weight="bold">
+          <Heading level={2} weight="bold" size="3xl">
             {headline}
           </Heading>
           {subtitle ? <Text className="text-white/90" size="base">{subtitle}</Text> : null}

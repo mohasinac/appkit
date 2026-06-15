@@ -101,7 +101,7 @@ export function SearchResultsSection({
 
     return (
       <Div className="flex flex-col items-center justify-center py-20 text-center gap-3">
-        <Span className="text-5xl" aria-hidden="true">
+        <Span aria-hidden="true" size="5xl">
           🔍
         </Span>
         <Text className="text-zinc-800 dark:text-zinc-100" size="lg" weight="semibold">

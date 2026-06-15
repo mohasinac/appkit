@@ -114,7 +114,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {/* Star rating — large */}
           <Row gap="sm" className="mb-4">
             <StarRating value={review.rating} size="lg" readOnly />
-            <Span weight="bold" className="text-2xl text-neutral-900 dark:text-white">
+            <Span weight="bold" className="text-neutral-900 dark:text-white" size="2xl">
               {review.rating}.0
             </Span>
             {review.verified && (
@@ -130,7 +130,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           </Row>
 
           {review.title && (
-            <Heading level={1} className="text-2xl text-neutral-900 dark:text-white mb-4 leading-snug" weight="bold">
+            <Heading level={1} className="text-neutral-900 dark:text-white mb-4 leading-snug" size="2xl" weight="bold">
               {review.title}
             </Heading>
           )}

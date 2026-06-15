@@ -41,7 +41,7 @@ export function PromoGrid({
         >
           <Div>
             <Text
-              className="mb-1 text-xs font-black uppercase tracking-widest"
+              className="mb-1 font-black uppercase tracking-widest" size="xs"
               style={{ color: "var(--color-red)", letterSpacing: "0.18em" }}
             >
               {eyebrow}
@@ -119,7 +119,7 @@ export function PromoGrid({
                   {banner.title}
                 </Text>
                 <Span
-                  className="mt-1 inline-flex items-center gap-1 text-xs font-black uppercase"
+                  className="mt-1 inline-flex items-center gap-1 font-black uppercase" size="xs"
                   style={{ color: "var(--color-yellow)" }}
                 >
                   {banner.ctaLabel} →

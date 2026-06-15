@@ -86,10 +86,10 @@ export function DigitalCodeDetailView({
                 <Badge variant="danger">Sold out</Badge>
               )}
             </Row>
-            <Heading level={1} className="text-2xl" weight="bold">
+            <Heading level={1} weight="bold" size="2xl">
               {product.title}
             </Heading>
-            <Text className="text-2xl text-primary" weight="semibold">{price}</Text>
+            <Text className="text-primary" size="2xl" weight="semibold">{price}</Text>
             <Text className="text-muted-foreground">{product.description}</Text>
           </Stack>
 

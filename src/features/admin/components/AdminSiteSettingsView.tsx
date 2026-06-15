@@ -684,7 +684,7 @@ export function AdminSiteSettingsView({
                 <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden} rounded`}>
                   <Span
                     weight="medium"
-                    className="text-zinc-400 select-none p-2"
+                    className="select-none p-2" color="faint"
                     // audit-inline-style-ok: computed pixel offset
                     style={{ fontSize: `${Math.max(10, watermarkSize / 5)}px`, opacity: watermarkOpacity / 100 }}
                   >

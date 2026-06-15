@@ -62,7 +62,7 @@ export function PrizeDrawEntryActions({
 
   return (
     <Stack gap="md">
-      <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
+      <Text className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="bold">
         {formatCurrency(pricePerEntry, currency)}
         <Text as="span" className="ml-1 text-[var(--appkit-color-text-muted)]" size="xs" weight="normal">
           per entry

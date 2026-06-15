@@ -274,7 +274,7 @@ export function CouponCard({
 
       {/* Discount label + name */}
       <Div className="mb-3">
-        <Text className="text-2xl font-extrabold tracking-tight leading-none">
+        <Text className="font-extrabold tracking-tight leading-none" size="2xl">
           {discountLabel}
         </Text>
         {n.name && (

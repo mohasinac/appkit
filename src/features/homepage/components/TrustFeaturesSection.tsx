@@ -46,7 +46,7 @@ function TrustFeatureCard({
           item.renderIcon({ className: "w-7 h-7" })
         ) : (
           <Span
-            className="text-primary-600 dark:text-secondary-400 text-2xl"
+            className="text-primary-600 dark:text-secondary-400" size="2xl"
             aria-hidden="true"
           >
             ✓
@@ -56,7 +56,7 @@ function TrustFeatureCard({
 
       <Heading
         level={3}
-        className="mt-3 mb-1 text-sm font-bold tracking-wide uppercase text-zinc-900 dark:text-zinc-100"
+        className="mt-3 mb-1 tracking-wide uppercase text-zinc-900 dark:text-zinc-100" size="sm" weight="bold"
       >
         {item.title}
       </Heading>
@@ -76,7 +76,7 @@ function TrustStripItem({ item }: { item: TrustFeatureItem }) {
         item.renderIcon({ className: "w-5 h-5" })
       ) : (
         <Span
-          className="text-primary-600 dark:text-primary-400 text-lg"
+          className="text-primary-600 dark:text-primary-400" size="lg"
           aria-hidden="true"
         >
           ✓
@@ -143,7 +143,7 @@ export function TrustFeaturesSection({
           <Div className="text-center mb-8">
             <Heading
               level={2}
-              className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100"
+              className="md:text-4xl text-zinc-900 dark:text-zinc-100" size="3xl" weight="bold"
             >
               {title}
             </Heading>

@@ -45,13 +45,13 @@ export async function UnauthorizedView({
           <Heading
             level={1}
             variant="none"
-            className="mb-4 text-white text-4xl"
+            className="mb-4 text-white" size="4xl"
           >
             {t("title")}
           </Heading>
           <Text
             variant="none"
-            className="text-white/80 max-w-lg mx-auto text-lg mb-8"
+            className="text-white/80 max-w-lg mx-auto mb-8" size="lg"
           >
             {t("subtitle")}
           </Text>

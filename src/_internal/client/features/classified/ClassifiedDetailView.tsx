@@ -106,10 +106,10 @@ export function ClassifiedDetailView({
               {meta?.negotiable && <Badge variant="secondary">Negotiable</Badge>}
               {meta?.acceptsShipping && <Badge variant="secondary">Shipping available</Badge>}
             </Row>
-            <Heading level={1} className="text-2xl" weight="bold">
+            <Heading level={1} weight="bold" size="2xl">
               {product.title}
             </Heading>
-            <Text className="text-2xl text-primary" weight="semibold">
+            <Text className="text-primary" size="2xl" weight="semibold">
               {price}
             </Text>
             {location && (

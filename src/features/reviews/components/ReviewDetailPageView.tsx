@@ -23,8 +23,8 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
         <Section className="py-24">
           <Container size="sm">
             <Div className="text-center">
-              <Text className="text-5xl mb-4" aria-hidden="true">🔍</Text>
-              <Heading level={1} className="text-2xl text-neutral-900 dark:text-white mb-2" weight="bold">
+              <Text className="mb-4" size="5xl" aria-hidden="true">🔍</Text>
+              <Heading level={1} className="text-neutral-900 dark:text-white mb-2" size="2xl" weight="bold">
                 Review not found
               </Heading>
               <Text className="text-neutral-500 dark:text-zinc-400 mb-6" size="sm">

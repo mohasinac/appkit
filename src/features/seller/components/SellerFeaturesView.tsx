@@ -107,7 +107,7 @@ export function SellerFeaturesView() {
         <Div>
           <Heading
             level={1}
-            className="text-lg font-semibold text-zinc-900 dark:text-zinc-50"
+            className="text-zinc-900 dark:text-zinc-50" size="lg" weight="semibold"
           >
             Custom feature badges
           </Heading>
@@ -155,13 +155,13 @@ export function SellerFeaturesView() {
               >
                 <Text
                   as="div"
-                  className="text-sm font-medium text-zinc-900 dark:text-zinc-100"
+                  className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium"
                 >
                   {f.label}
                 </Text>
                 <Text
                   as="div"
-                  className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5"
+                  className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs"
                 >
                   {f.category} · {f.productTypes.join(" · ")}
                 </Text>

@@ -73,7 +73,7 @@ export function StoreHeader({
             <Div className="flex flex-wrap items-center gap-2 mb-0.5">
               <Heading
                 level={1}
-                className="text-xl font-bold text-gray-900 dark:text-zinc-100"
+                className="text-gray-900 dark:text-zinc-100" size="xl" weight="bold"
               >
                 {store.storeName}
               </Heading>

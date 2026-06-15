@@ -53,7 +53,7 @@ export function FeaturedBundlesSection({
           <Stack gap="xs">
             <Heading
               level={2}
-              className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"
+              className="text-zinc-900 dark:text-zinc-100" size="2xl" weight="semibold"
             >
               {title}
             </Heading>

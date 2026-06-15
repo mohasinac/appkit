@@ -279,7 +279,7 @@ export function CharacterHotspotForm({
             className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 transition-colors hover:opacity-80"
             style={{ borderColor: "var(--border-ink)" }}
           >
-            <Span className="text-3xl">🖼</Span>
+            <Span size="3xl">🖼</Span>
             <Span weight="medium">
               {uploading ? "Uploading…" : "Click to choose image"}
             </Span>
@@ -817,7 +817,7 @@ export function CharacterHotspotForm({
               Review &amp; Save
             </Heading>
             <Span
-              className="rounded-full px-3 py-1 text-sm font-bold"
+              className="rounded-full px-3 py-1" size="sm" weight="bold"
               style={{ background: "var(--surface-warm)" }}
             >
               {pins.length} pin{pins.length !== 1 ? "s" : ""}
@@ -881,7 +881,7 @@ export function CharacterHotspotForm({
                 <Li key={pin.id} className="px-4 py-3">
                   <Row gap="sm">
                     <Span
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white" size="xs" weight="bold"
                       style={{ background: pin.accent || "#E8001C" }}
                     >
                       {i + 1}
@@ -898,9 +898,7 @@ export function CharacterHotspotForm({
                         )}
                       </Text>
                       <Text
-                        className="text-xs"
-                        style={{ color: "var(--color-muted)" }}
-                      >
+                        style={{ color: "var(--color-muted)" }} size="xs">
                         {pin.universe} · {pin.xPct.toFixed(0)}%,{" "}
                         {pin.yPct.toFixed(0)}%
                       </Text>

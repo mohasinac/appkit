@@ -24,10 +24,10 @@ export function CTABannerSection({
   return (
     <Section className={`bg-gradient-to-r from-primary-600 to-primary-700 py-16 px-4 ${className}`}>
       <Div className="mx-auto max-w-3xl text-center">
-        <Span className="mb-4 inline-block text-2xl" aria-hidden="true">
+        <Span className="mb-4 inline-block" size="2xl" aria-hidden="true">
           ✨
         </Span>
-        <Heading level={2} className="text-2xl text-white md:text-3xl lg:text-4xl" weight="bold">
+        <Heading level={2} className="text-white md:text-3xl lg:text-4xl" size="2xl" weight="bold">
           {title}
         </Heading>
         {subtitle && (

@@ -111,7 +111,7 @@ export function CategoryProductsView({
         {/* Category title */}
         {category && (
           <Div>
-            <Heading level={1} className="text-2xl" weight="bold">
+            <Heading level={1} weight="bold" size="2xl">
               {category.name}
             </Heading>
             {category.description && (

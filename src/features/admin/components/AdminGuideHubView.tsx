@@ -125,7 +125,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
               Admin &amp; Employee Guide
             </Text>
           </Div>
-          <Heading level={1} className="text-2xl md:text-3xl text-white mb-2" weight="bold">
+          <Heading level={1} className="md:text-3xl text-white mb-2" size="2xl" weight="bold">
             LetItRip Internal Guide
           </Heading>
           <Text className="text-white/80" size="base">

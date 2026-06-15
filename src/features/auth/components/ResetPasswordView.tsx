@@ -53,7 +53,7 @@ export function ResetPasswordView({
     <Div className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}>
       <Div className="max-w-md w-full space-y-6">
         <Div className="text-center">
-          <Heading level={1} className="text-3xl font-extrabold">
+          <Heading level={1} className="font-extrabold" size="3xl">
             {labels.title ?? "Reset Password"}
           </Heading>
           {labels.description && (

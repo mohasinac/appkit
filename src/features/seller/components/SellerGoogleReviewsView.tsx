@@ -184,7 +184,7 @@ export function SellerGoogleReviewsView({
                   <Text className="text-[var(--appkit-color-text-muted)] tracking-wide" size="xs" transform="uppercase">
                     Avg rating
                   </Text>
-                  <Text className="text-2xl tabular-nums" weight="bold">
+                  <Text className="tabular-nums" size="2xl" weight="bold">
                     {draft.averageRating.toFixed(1)}
                   </Text>
                 </Div>
@@ -194,7 +194,7 @@ export function SellerGoogleReviewsView({
                   <Text className="text-[var(--appkit-color-text-muted)] tracking-wide" size="xs" transform="uppercase">
                     Total reviews
                   </Text>
-                  <Text className="text-2xl tabular-nums" weight="bold">
+                  <Text className="tabular-nums" size="2xl" weight="bold">
                     {draft.totalReviews}
                   </Text>
                 </Div>

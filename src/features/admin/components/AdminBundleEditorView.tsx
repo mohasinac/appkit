@@ -301,7 +301,7 @@ export function AdminBundleEditorView({
             <Row gap="sm" align="center" justify="between" wrap>
               <Heading
                 level={1}
-                className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"
+                className="text-zinc-900 dark:text-zinc-100" size="2xl" weight="semibold"
               >
                 {isEdit
                   ? BUNDLE_COPY.adminEditorTitleEdit

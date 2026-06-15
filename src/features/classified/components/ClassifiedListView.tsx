@@ -50,7 +50,7 @@ export async function ClassifiedListView({ searchParams = {} }: ClassifiedListVi
     <Main>
       <Section className="py-10">
         <Container size="xl">
-          <Heading level={1} className="mb-8 text-3xl text-zinc-900 dark:text-zinc-50" weight="semibold">
+          <Heading level={1} className="mb-8 text-zinc-900 dark:text-zinc-50" size="3xl" weight="semibold">
             Classifieds
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />

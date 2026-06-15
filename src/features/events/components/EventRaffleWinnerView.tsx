@@ -63,7 +63,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
     <Article className="space-y-4">
       <Heading
         level={2}
-        className="text-xl font-semibold text-zinc-900 dark:text-zinc-100"
+        className="text-zinc-900 dark:text-zinc-100" size="xl" weight="semibold"
       >
         🎟️ {l.heading}
       </Heading>

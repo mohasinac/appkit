@@ -138,7 +138,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           />
         ) : (
           <Div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700">
-            <Span className="text-4xl opacity-30">🛍️</Span>
+            <Span className="opacity-30" size="4xl">🛍️</Span>
           </Div>
         )}
 

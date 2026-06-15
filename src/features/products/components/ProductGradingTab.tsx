@@ -41,7 +41,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
           <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="bold" transform="uppercase">
             {grading.service}
           </Text>
-          <Text className="text-4xl font-extrabold">{grading.grade}</Text>
+          <Text className="font-extrabold" size="4xl">{grading.grade}</Text>
         </Div>
         <Stack gap="xs" className="flex-1">
           <Heading level={3} size="base" weight="semibold">

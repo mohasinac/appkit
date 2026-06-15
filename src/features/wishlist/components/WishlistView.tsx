@@ -107,7 +107,7 @@ export function WishlistView({
     <Div className={`min-h-screen ${className}`}>
       <Div className="py-8 px-4 max-w-screen-xl mx-auto">
         {/* Header */}
-        <Heading level={1} className="text-2xl mb-1" weight="bold">
+        <Heading level={1} className="mb-1" size="2xl" weight="bold">
           {labels.title ?? "My Wishlist"}
         </Heading>
         {total > 0 && (

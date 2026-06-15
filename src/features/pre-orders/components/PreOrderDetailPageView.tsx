@@ -322,7 +322,7 @@ function PreOrderBuyBarPanel({
         <>
           {price !== null && (
             <Div>
-              <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
+              <Text className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="bold">
                 {formatCurrency(price, currency)}
               </Text>
               {depositAmount !== null && (
@@ -384,7 +384,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
         <Section className="py-20">
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
-              <Heading level={1} className="text-2xl text-zinc-900 dark:text-zinc-50" weight="semibold">
+              <Heading level={1} className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold">
                 Pre-Order Not Found
               </Heading>
               <Text color="muted">

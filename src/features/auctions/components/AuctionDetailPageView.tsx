@@ -108,7 +108,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       <Div>
         <Text className="text-zinc-500 dark:text-zinc-400 mb-0.5" size="xs">Current bid</Text>
         <Row align="center" gap="sm" wrap>
-          <Span weight="bold" className="text-2xl text-primary-600 dark:text-primary-400">{formatCurrency(currentBid, currency)}</Span>
+          <Span weight="bold" className="text-primary-600 dark:text-primary-400" size="2xl">{formatCurrency(currentBid, currency)}</Span>
           <Span size="sm" weight="medium" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-zinc-600 dark:text-zinc-300">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
         </Row>
         {endDate && <Text className="mt-1.5 text-zinc-500 dark:text-zinc-400" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
@@ -160,7 +160,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
     <Section className="mt-10">
       <Heading level={2} className="mb-2 text-zinc-900 dark:text-zinc-50" size="xl" weight="semibold">Store Reviews</Heading>
       <Div className="mb-4 flex items-center gap-3">
-        <Span weight="bold" className="text-3xl text-zinc-900 dark:text-zinc-50">{avg.toFixed(1)}</Span>
+        <Span weight="bold" className="text-zinc-900 dark:text-zinc-50" size="3xl">{avg.toFixed(1)}</Span>
         <Div>
           <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
           <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
@@ -204,7 +204,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
         <Section className="py-20">
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
-              <Heading level={1} className="text-2xl text-zinc-900 dark:text-zinc-50" weight="semibold">
+              <Heading level={1} className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold">
                 Auction Not Found
               </Heading>
               <Text color="muted">

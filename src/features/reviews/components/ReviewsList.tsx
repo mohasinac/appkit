@@ -99,7 +99,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
         {review.title && (
           <Heading
             level={4}
-            className="mt-3 font-semibold text-neutral-900 dark:text-white"
+            className="mt-3 text-neutral-900 dark:text-white" weight="semibold"
           >
             {review.title}
           </Heading>

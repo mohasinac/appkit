@@ -91,7 +91,7 @@ export function ViewReviewModal({
         {review.title && (
           <Heading
             level={4}
-            className="font-semibold text-neutral-900 dark:text-white"
+            className="text-neutral-900 dark:text-white" weight="semibold"
           >
             {review.title}
           </Heading>

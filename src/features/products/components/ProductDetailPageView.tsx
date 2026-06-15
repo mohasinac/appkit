@@ -229,7 +229,7 @@ export async function ProductDetailPageView({
             <Stack align="center" gap="md" className="text-center">
               <Heading
                 level={1}
-                className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50"
+                className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold"
               >
                 Product Not Found
               </Heading>
@@ -478,7 +478,7 @@ export async function ProductDetailPageView({
                 )}
                 <Heading
                   level={1}
-                  className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl"
+                  className="leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl" size="xl" weight="bold"
                 >
                   {title || "Untitled Product"}
                 </Heading>
@@ -670,7 +670,7 @@ export async function ProductDetailPageView({
               {formattedPrice && (
                 <Div>
                   <Row align="baseline" gap="sm" wrap>
-                    <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
+                    <Text className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="bold">
                       {formattedPrice}
                     </Text>
                     {formattedOriginal && discount && (
@@ -791,7 +791,7 @@ export async function ProductDetailPageView({
                     {tags.map((tag) => (
                       <Span
                         key={tag}
-                        className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300"
+                        className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300" size="xs"
                       >
                         {tag}
                       </Span>

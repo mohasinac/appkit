@@ -512,7 +512,7 @@ export function AdminCouponEditorView({
                 {applicableCategories.map((cid) => (
                   <Span
                     key={cid}
-                    className="inline-flex items-center gap-1 rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-0.5 text-xs text-zinc-800 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                    className="inline-flex items-center gap-1 rounded-full border border-zinc-300 bg-zinc-50 px-2.5 py-0.5 text-zinc-800 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100" size="xs"
                   >
                     {cid}
                     <button

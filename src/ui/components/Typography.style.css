@@ -67,6 +67,30 @@
   font-size: 1.25rem;
 }
 
+.appkit-text--2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.appkit-text--3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.appkit-text--4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.appkit-text--5xl {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.appkit-font--light {
+  font-weight: 300;
+}
+
 .appkit-font--normal {
   font-weight: 400;
 }

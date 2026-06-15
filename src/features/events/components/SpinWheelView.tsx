@@ -128,7 +128,7 @@ export function SpinWheelView({
       />
       <Heading
         level={2}
-        className="text-xl font-semibold text-zinc-900 dark:text-zinc-100"
+        className="text-zinc-900 dark:text-zinc-100" size="xl" weight="semibold"
       >
         🎡 {l.heading}
       </Heading>
@@ -145,7 +145,7 @@ export function SpinWheelView({
               : undefined,
           }}
         >
-          <Text className="text-4xl">🎁</Text>
+          <Text size="4xl">🎁</Text>
         </Div>
         <style>{`
           @keyframes lir-spin {

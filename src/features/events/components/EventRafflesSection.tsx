@@ -50,7 +50,7 @@ export async function EventRafflesSection({
           <Stack gap="xs">
             <Heading
               level={2}
-              className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50"
+              className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold"
             >
               {title}
             </Heading>

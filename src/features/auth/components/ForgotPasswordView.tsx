@@ -38,7 +38,7 @@ export function ForgotPasswordView({
     <Div className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}>
       <Div className="max-w-md w-full space-y-6">
         <Div className="text-center">
-          <Heading level={1} className="text-3xl font-extrabold">
+          <Heading level={1} className="font-extrabold" size="3xl">
             {labels.title ?? "Forgot Password"}
           </Heading>
           <Text className="mt-2 text-neutral-600 dark:text-zinc-400" size="sm">

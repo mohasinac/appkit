@@ -37,7 +37,7 @@ export function ReviewSummary({
     >
       {/* Score block */}
       <Div className="flex flex-col items-center gap-1 sm:items-start">
-        <Span weight="bold" className="text-5xl leading-none text-neutral-900 dark:text-white">
+        <Span weight="bold" className="leading-none text-neutral-900 dark:text-white" size="5xl">
           {averageRating.toFixed(1)}
         </Span>
         <StarRating value={averageRating} size="md" readOnly />

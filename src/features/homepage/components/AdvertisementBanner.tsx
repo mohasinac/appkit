@@ -95,14 +95,14 @@ export function AdvertisementBanner({
                 <Heading
                   level={2}
                   variant="none"
-                  className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight"
+                  className="md:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight" size="3xl"
                 >
                   {title}
                 </Heading>
                 {subtitle && (
                   <Text
                     variant="none"
-                    className="text-white/75 text-base md:text-lg mb-8 leading-relaxed"
+                    className="text-white/75 md:text-lg mb-8 leading-relaxed" size="base"
                   >
                     {subtitle}
                   </Text>
@@ -190,14 +190,14 @@ export function AdvertisementBanner({
               <Heading
                 level={2}
                 variant="none"
-                className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg leading-tight"
+                className="md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg leading-tight" size="3xl"
               >
                 {title}
               </Heading>
               {subtitle && (
                 <Text
                   variant="none"
-                  className="text-white text-base md:text-xl mb-10 max-w-2xl mx-auto"
+                  className="text-white md:text-xl mb-10 max-w-2xl mx-auto" size="base"
                 >
                   {subtitle}
                 </Text>

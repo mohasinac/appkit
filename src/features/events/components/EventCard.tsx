@@ -92,7 +92,7 @@ export function EventCard({
           </Div>
         ) : (
           <Div className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center">
-            <Span className="text-5xl opacity-40" aria-hidden="true">
+            <Span className="opacity-40" size="5xl" aria-hidden="true">
               {TYPE_ICONS[event.type]}
             </Span>
           </Div>
@@ -108,7 +108,7 @@ export function EventCard({
         <Link href={detailHref} className="block">
           <Heading
             level={3}
-            className="font-semibold text-gray-900 dark:text-zinc-100 text-base leading-snug mb-1 group-hover:text-primary transition-colors"
+            className="text-gray-900 dark:text-zinc-100 leading-snug mb-1 group-hover:text-primary transition-colors" size="base" weight="semibold"
           >
             {safeTitle}
           </Heading>

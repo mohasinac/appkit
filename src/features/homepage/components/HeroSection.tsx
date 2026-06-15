@@ -26,7 +26,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
         {content?.title && (
           <Heading
             level={1}
-            className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl"
+            className="leading-tight sm:text-5xl lg:text-6xl" size="4xl" weight="bold"
           >
             {content.title}
           </Heading>

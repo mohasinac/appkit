@@ -350,7 +350,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   if (!slides || slides.length === 0) {
     return (
       <Div className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-gradient-to-br from-primary/10 to-secondary/10 ${flex.center} flex-col gap-4`}>
-        <Heading level={2} className="text-2xl text-primary" weight="bold">Coming Soon</Heading>
+        <Heading level={2} className="text-primary" size="2xl" weight="bold">Coming Soon</Heading>
         <Text variant="secondary" className="max-w-md px-4" align="center">
           Amazing deals are on their way. Stay tuned!
         </Text>
@@ -413,7 +413,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                     {slide.overlay.title && (
                       <Heading
                         level={1}
-                        className="stagger-2 font-display text-4xl md:text-6xl lg:text-8xl !text-white drop-shadow-2xl mb-2 md:mb-4"
+                        className="stagger-2 font-display md:text-6xl lg:text-8xl !text-white drop-shadow-2xl mb-2 md:mb-4" size="4xl"
                       >
                         {slide.overlay.title}
                       </Heading>

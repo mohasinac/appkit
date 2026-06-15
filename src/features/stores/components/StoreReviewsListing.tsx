@@ -140,7 +140,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
       {/* ── Rating summary ───────────────────────────────────────────────── */}
       {totalReviews > 0 && (
         <Row align="center" gap="sm" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-700">
-          <Span weight="bold" className="text-2xl text-zinc-900 dark:text-zinc-100">
+          <Span weight="bold" className="text-zinc-900 dark:text-zinc-100" size="2xl">
             {averageRating.toFixed(1)}
           </Span>
           <Span size="sm" color="muted">/ 5 · {totalReviews} reviews</Span>

@@ -49,7 +49,7 @@ export function CustomSectionsEditor({
           <Div className="flex items-center justify-between gap-2">
             <Heading
               level={4}
-              className="text-sm font-semibold text-zinc-700 dark:text-zinc-200"
+              className="text-zinc-700 dark:text-zinc-200" size="sm" weight="semibold"
             >
               Section {i + 1}
             </Heading>

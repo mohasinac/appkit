@@ -446,7 +446,7 @@ export function AdminBlogEditorView({
       {draft.coverImage ? (
         <img src={draft.coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
       ) : null}
-      <Heading level={1} className="text-2xl mb-1" weight="bold">
+      <Heading level={1} className="mb-1" size="2xl" weight="bold">
         {draft.title || "Untitled post"}
       </Heading>
       <Text className="text-[var(--appkit-color-text-muted)] mb-4" size="xs">

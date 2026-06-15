@@ -64,7 +64,7 @@ export async function CollectionCardsSection({
           <Stack gap="xs">
             <Heading
               level={2}
-              className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50"
+              className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold"
             >
               {title}
             </Heading>
@@ -80,7 +80,7 @@ export async function CollectionCardsSection({
               {collections.slice(0, 3).map((entry, idx) => (
                 <Text
                   key={`${entry.type}-${idx}`}
-                  className="rounded-full border border-zinc-300 px-3 py-1 text-xs font-medium text-zinc-700 dark:border-slate-600 dark:text-zinc-300"
+                  className="rounded-full border border-zinc-300 px-3 py-1 text-zinc-700 dark:border-slate-600 dark:text-zinc-300" size="xs" weight="medium"
                 >
                   {entryLabel(entry)}
                 </Text>

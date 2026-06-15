@@ -86,7 +86,7 @@ export function InteractiveStoreCard({
             />
           ) : (
             <Div className="absolute inset-0 flex items-center justify-center">
-              <Span className="text-5xl opacity-20 select-none" aria-hidden="true">🏪</Span>
+              <Span className="opacity-20 select-none" size="5xl" aria-hidden="true">🏪</Span>
             </Div>
           )}
           {/* Dark gradient at bottom for logo legibility */}

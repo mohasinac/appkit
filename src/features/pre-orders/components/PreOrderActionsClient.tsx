@@ -54,7 +54,7 @@ export function PreOrderActionsClient({
     <Div className="space-y-4">
       {price !== null && (
         <Div>
-          <Text className="text-2xl text-zinc-900 dark:text-zinc-50" weight="bold">
+          <Text className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="bold">
             {formatCurrency(price, currency)}
           </Text>
           {depositAmount !== null && (

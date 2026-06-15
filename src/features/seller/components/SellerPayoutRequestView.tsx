@@ -103,7 +103,7 @@ export function SellerPayoutRequestView({
         <Div className="flex flex-wrap items-center justify-between gap-3">
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Available for Payout</Text>
-            <Text className="text-2xl text-[var(--appkit-color-primary)]" weight="bold">
+            <Text className="text-[var(--appkit-color-primary)]" size="2xl" weight="bold">
               {rupees(summary.availableEarnings)}
             </Text>
             <Text className="text-[var(--appkit-color-text-muted)] mt-0.5" size="xs">

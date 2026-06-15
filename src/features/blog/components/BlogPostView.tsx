@@ -69,7 +69,7 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
         <Span size="xs" weight="medium" className={`inline-block px-2 py-0.5 rounded-full capitalize ${CATEGORY_BADGE[post.category] ?? ""}`}>{post.category}</Span>
         {post.isFeatured && <Span size="xs" weight="medium" className={CLS_FEATURED_BADGE}>{labels?.featured ?? "Featured"}</Span>}
       </Row>
-      <Heading level={1} className="text-3xl mb-4" weight="bold">{post.title}</Heading>
+      <Heading level={1} className="mb-4" size="3xl" weight="bold">{post.title}</Heading>
       {post.excerpt && <Text className="text-zinc-500 dark:text-zinc-400 mb-6" size="lg">{post.excerpt}</Text>}
       <Row wrap gap="md" className="text-sm text-zinc-400 dark:text-zinc-400">
         {post.authorName && <Span>{labels?.author ?? "By"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{post.authorName}</Span></Span>}

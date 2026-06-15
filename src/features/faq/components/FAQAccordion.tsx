@@ -52,7 +52,7 @@ function FAQAccordionItem({
               {faq.tags.map((tag) => (
                 <Span
                   key={tag}
-                  className="rounded-md bg-neutral-100 dark:bg-slate-700 px-2 py-1 text-xs text-neutral-600 dark:text-zinc-300"
+                  className="rounded-md bg-neutral-100 dark:bg-slate-700 px-2 py-1 text-neutral-600 dark:text-zinc-300" size="xs"
                 >
                   {tag}
                 </Span>

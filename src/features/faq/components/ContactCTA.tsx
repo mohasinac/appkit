@@ -52,7 +52,7 @@ export function ContactCTA({
         </Div>
       </Div>
 
-      <Heading level={2} className="mb-3 text-2xl" weight="semibold">
+      <Heading level={2} className="mb-3" size="2xl" weight="semibold">
         {labels?.title ?? "Need More Help?"}
       </Heading>
 

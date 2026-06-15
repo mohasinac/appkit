@@ -36,7 +36,7 @@ export function TestimonialsCarousel({
         {/* Heading */}
         <Div className="mb-6 text-center" style={{ flexShrink: 0 }}>
           <Text
-            className="mb-1 text-xs font-black uppercase tracking-widest"
+            className="mb-1 font-black uppercase tracking-widest" size="xs"
             style={{ color: "var(--color-red)", letterSpacing: "0.18em" }}
           >
             {eyebrow}
@@ -73,13 +73,13 @@ export function TestimonialsCarousel({
             >
               <StarRating value={t.rating} readOnly size="sm" />
               <Text
-                className="flex-1 text-sm leading-relaxed"
+                className="flex-1 leading-relaxed" size="sm"
                 style={{ color: "var(--text-secondary)" }}
               >
                 &ldquo;{t.text}&rdquo;
               </Text>
               <Text
-                className="text-xs font-black uppercase"
+                className="font-black uppercase" size="xs"
                 style={{
                   color: "var(--color-yellow)",
                   letterSpacing: "0.06em",

@@ -964,7 +964,7 @@ export function ProductForm({
       <Div>
         <Heading
           level={3}
-          className="mb-1 text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+          className="mb-1 text-zinc-700 dark:text-zinc-300" size="sm" weight="semibold"
         >
           Custom Sections
         </Heading>

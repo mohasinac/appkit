@@ -156,7 +156,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           {/* Brand logo + name */}
           <Div className="flex items-center gap-4 mb-3">
             {brand?.display?.icon && (
-              <Span className="text-5xl leading-none">
+              <Span className="leading-none" size="5xl">
                 {brand.display.icon}
               </Span>
             )}

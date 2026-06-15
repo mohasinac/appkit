@@ -70,7 +70,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
           />
         ) : (
           <Div className="h-full w-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-slate-800 dark:via-slate-700 dark:to-slate-900 flex items-center justify-center">
-            <Span className="text-4xl opacity-30" aria-hidden="true">✍️</Span>
+            <Span className="opacity-30" size="4xl" aria-hidden="true">✍️</Span>
           </Div>
         )}
       </Div>

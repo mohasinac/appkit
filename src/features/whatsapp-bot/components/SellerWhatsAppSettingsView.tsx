@@ -434,7 +434,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             {SAMPLE_CATALOG_ITEMS.map((item) => (
               <Div key={item.id} surface="card" className={`${__O.hidden}`}>
                 <Div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
-                  <Text className="text-2xl">{item.emoji}</Text>
+                  <Text size="2xl">{item.emoji}</Text>
                 </Div>
                 <Div padding="xs">
                   <Text className="text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight" size="xs" weight="medium">

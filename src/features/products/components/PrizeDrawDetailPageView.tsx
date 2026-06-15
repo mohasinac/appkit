@@ -114,7 +114,7 @@ export async function PrizeDrawDetailPageView({
             <Stack align="center" gap="md" className="text-center">
               <Heading
                 level={1}
-                className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50"
+                className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold"
               >
                 Prize Draw Not Found
               </Heading>
@@ -259,7 +259,7 @@ export async function PrizeDrawDetailPageView({
                 </Row>
                 <Heading
                   level={1}
-                  className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl"
+                  className="leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl" size="xl" weight="bold"
                 >
                   {title}
                 </Heading>

@@ -91,7 +91,7 @@ export function BundleDetailView({
               <Stack gap="md" className="flex-1">
                 <Heading
                   level={1}
-                  className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100"
+                  className="text-zinc-900 dark:text-zinc-100" size="3xl" weight="semibold"
                 >
                   {bundle.name}
                 </Heading>
@@ -144,7 +144,7 @@ export function BundleDetailView({
             <Stack gap="md">
               <Heading
                 level={2}
-                className="text-xl font-semibold text-zinc-900 dark:text-zinc-100"
+                className="text-zinc-900 dark:text-zinc-100" size="xl" weight="semibold"
               >
                 {BUNDLE_COPY.detailItemsHeading}
               </Heading>

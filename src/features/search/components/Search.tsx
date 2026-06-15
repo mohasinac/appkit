@@ -732,7 +732,7 @@ export function Search({
                   <Text
                     variant="secondary"
                     size="xs"
-                    className="uppercase tracking-wider font-semibold"
+                    className="uppercase tracking-wider" weight="semibold"
                   >
                     {labels.quickLinks}
                   </Text>

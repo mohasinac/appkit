@@ -53,7 +53,7 @@ export function AdminStatCard({
           </Text>
           <Heading
             level={3}
-            className="mt-2 text-2xl font-bold tabular-nums leading-none text-[var(--appkit-color-text)]"
+            className="mt-2 tabular-nums leading-none text-[var(--appkit-color-text)]" size="2xl" weight="bold"
           >
             {value}
           </Heading>

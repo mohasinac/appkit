@@ -107,7 +107,7 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
       <Stack gap="md">
         <Row justify="between" gap="md" align="start" wrap>
           <Stack gap="xs">
-            <Heading level={1} className="text-2xl" weight="bold">
+            <Heading level={1} weight="bold" size="2xl">
               {scammer.displayNames[0]}
             </Heading>
             {scammer.displayNames.length > 1 && (

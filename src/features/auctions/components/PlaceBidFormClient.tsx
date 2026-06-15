@@ -265,7 +265,7 @@ export function PlaceBidFormClient({
             {tags.map((tag) => (
               <Span
                 key={tag}
-                className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300"
+                className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300" size="xs"
               >
                 {tag}
               </Span>

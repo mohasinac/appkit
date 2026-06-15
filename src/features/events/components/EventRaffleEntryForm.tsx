@@ -74,7 +74,7 @@ export function EventRaffleEntryForm({
       {prizeLabel ? (
         <Stack gap="xs">
           <Badge variant="warning">Prize</Badge>
-          <Heading level={2} className="text-2xl" weight="bold">
+          <Heading level={2} weight="bold" size="2xl">
             {prizeLabel}
           </Heading>
         </Stack>

@@ -95,7 +95,7 @@ export function WhatsAppCommunitySection({
             </Div>
 
             {/* Heading + description */}
-            <Heading level={2} className="text-white text-2xl sm:text-3xl mb-3 leading-tight" weight="bold">
+            <Heading level={2} className="text-white sm:text-3xl mb-3 leading-tight" size="2xl" weight="bold">
               {title}
             </Heading>
 
