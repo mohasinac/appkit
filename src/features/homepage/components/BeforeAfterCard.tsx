@@ -117,7 +117,7 @@ export function BeforeAfterCard({
           // audit-inline-style-ok: computed percentage
           style={{ left: `${position}%` }}
         >
-          <Div className="absolute top-1/2 left-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-card shadow-lg">
+          <Div className="absolute top-1/2 left-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-card" rounded="full" shadow="lg">
             <svg
               width="16"
               height="16"

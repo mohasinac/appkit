@@ -114,7 +114,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         {endDate && <Text className="mt-1.5 text-zinc-500 dark:text-zinc-400" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
-        <Row align="center" gap="sm" className="rounded-lg border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3 py-2">
+        <Row align="center" gap="sm" className="border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3 py-2" rounded="lg">
           <Span size="xs" className="text-zinc-600 dark:text-zinc-400">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
         </Row>
@@ -130,7 +130,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       )}
       {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
       {!productFeatures && features.length > 0 && (
-        <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
+        <Div className="border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3" rounded="xl">
           <Text className="mb-2 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">About this item</Text>
           <Ul className="space-y-1.5">
             {features.map((f, i) => <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}

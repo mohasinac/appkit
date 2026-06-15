@@ -90,7 +90,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Play button overlay */}
       <Div className="absolute inset-0 flex items-center justify-center">
-        <Div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--appkit-color-youtube)] shadow-lg transition-transform duration-200 group-hover:scale-110">
+        <Div className="flex h-14 w-14 items-center justify-center bg-[var(--appkit-color-youtube)] transition-transform duration-200 group-hover:scale-110" rounded="full" shadow="lg">
           <svg className="ml-1 h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z" />
           </svg>
@@ -160,7 +160,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       {/* Video play overlay */}
       {post.mediaType === "video" && (
         <Div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <Div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm">
+          <Div className="flex h-12 w-12 items-center justify-center bg-black/50 backdrop-blur-sm" rounded="full">
             <svg className="ml-1 h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5v14l11-7z" />
             </svg>

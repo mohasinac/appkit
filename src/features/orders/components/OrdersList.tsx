@@ -158,11 +158,11 @@ export function OrdersList({
                 <Div className="h-3 w-20 rounded bg-neutral-200 dark:bg-slate-700" />
                 <Div className="h-3 w-16 rounded bg-neutral-200 dark:bg-slate-700" />
               </Stack>
-              <Div className="h-6 w-20 rounded-full bg-neutral-200 dark:bg-slate-700" />
+              <Div className="h-6 w-20 bg-neutral-200 dark:bg-slate-700" rounded="full" />
             </Div>
             <Div className="mt-4 flex gap-3">
-              <Div className="h-10 w-10 rounded-lg bg-neutral-200 dark:bg-slate-700" />
-              <Div className="h-10 w-10 rounded-lg bg-neutral-200 dark:bg-slate-700" />
+              <Div className="h-10 w-10 bg-neutral-200 dark:bg-slate-700" rounded="lg" />
+              <Div className="h-10 w-10 bg-neutral-200 dark:bg-slate-700" rounded="lg" />
             </Div>
           </Div>
         ))}

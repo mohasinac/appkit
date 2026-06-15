@@ -17,7 +17,7 @@ function GuideSection({
   children: React.ReactNode;
 }) {
   return (
-    <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
+    <Section className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="xl" shadow="sm" padding="lg">
       <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
@@ -77,12 +77,12 @@ const STATUS_ROWS = [
 function OrderLifecycle() {
   return (
     <Div className="space-y-4">
-      <Div className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] p-4 font-mono text-xs text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre">
+      <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-xs text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
         {STATUS_LIFECYCLE}
       </Div>
       <Div className="space-y-2">
         {STATUS_ROWS.map(({ status, meaning, action }) => (
-          <Div key={status} className="rounded-lg border border-[var(--appkit-color-border)] p-3 text-sm">
+          <Div key={status} className="border border-[var(--appkit-color-border)] text-sm" rounded="lg" padding="sm">
             <Div className="flex items-center gap-2 mb-1">
               <Text className="font-mono text-[var(--appkit-color-text)] w-28 shrink-0" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{meaning}</Text>

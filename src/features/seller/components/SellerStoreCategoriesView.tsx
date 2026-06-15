@@ -210,14 +210,14 @@ export function SellerStoreCategoriesView({
 
       <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
             {errorMessage}
           </Div>
         )}
         {isLoading ? (
           <Div className="space-y-2">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Div key={i} className="h-14 animate-pulse rounded-xl border border-zinc-100 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800" />
+              <Div key={i} className="h-14 animate-pulse border border-zinc-100 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800" rounded="xl" />
             ))}
           </Div>
         ) : rows.length === 0 ? (

@@ -323,7 +323,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             No pre-orders found.
           </Text>
         ) : view === "list" ? (
-          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}

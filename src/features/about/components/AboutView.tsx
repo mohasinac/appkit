@@ -116,7 +116,7 @@ export function AboutView({
           <Div className="relative border-l-2 border-primary/30 pl-8 space-y-8 max-w-2xl mx-auto">
             {milestones.map(({ year, text }) => (
               <Div key={year} className="relative">
-                <Div className="absolute -left-10 top-1 w-4 h-4 rounded-full bg-primary border-2 border-white dark:border-slate-900" />
+                <Div className="absolute -left-10 top-1 w-4 h-4 bg-primary border-2 border-white dark:border-slate-900" rounded="full" />
                 <Span size="xs" weight="bold" className="text-primary tracking-wide" transform="uppercase">
                   {year}
                 </Span>

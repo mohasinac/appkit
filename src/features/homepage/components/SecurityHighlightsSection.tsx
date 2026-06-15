@@ -51,7 +51,7 @@ function SecurityCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="securityhighlightssection-div-357">
       {item.renderIcon && (
-        <Div className="w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 flex items-center justify-center mb-3">
+        <Div className="w-10 h-10 bg-white/60 dark:bg-white/10 flex items-center justify-center mb-3" rounded="lg">
           <span className={iconColorClass} aria-hidden="true">
             {item.renderIcon({ className: "w-6 h-6" })}
           </span>

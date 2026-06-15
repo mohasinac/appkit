@@ -40,7 +40,7 @@ export function VerifyEmailView({
       <Div surface="elevated" padding="xl" className="max-w-md w-full text-center">
         {status === "loading" && (
           <>
-            <Div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-6" />
+            <Div className="w-12 h-12 border-4 border-primary border-t-transparent animate-spin mx-auto mb-6" rounded="full" />
             <Heading level={2} className="mb-2" size="xl" weight="semibold">
               {labels.loadingTitle ?? "Verifying your email…"}
             </Heading>

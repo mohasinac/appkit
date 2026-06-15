@@ -77,7 +77,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
           className="h-16 w-16 rounded object-contain"
         />
       ) : (
-        <Div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
+        <Div className="flex h-16 w-16 items-center justify-center bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" rounded="lg">
           {initial}
         </Div>
       )}
@@ -145,7 +145,7 @@ export function BrandsSection({
         {isLoading ? (
           <Div className={`flex gap-3 ${__O.hidden}`}>
             {Array.from({ length: 8 }).map((_, i) => (
-              <Div key={i} className="h-32 w-36 flex-none animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700 md:h-40" />
+              <Div key={i} className="h-32 w-36 flex-none animate-pulse bg-zinc-200 dark:bg-slate-700 md:h-40" rounded="xl" />
             ))}
           </Div>
         ) : (

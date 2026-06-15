@@ -46,7 +46,7 @@ function SkeletonCard({ view }: { view: "grid" | "list" }) {
           <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
           <Div className="h-2.5 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
         </Stack>
-        <Div className="h-5 w-16 bg-zinc-200 dark:bg-slate-700 rounded-full shrink-0" />
+        <Div className="h-5 w-16 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="full" />
         <Div className="h-3 w-20 bg-zinc-200 dark:bg-slate-700 rounded shrink-0" />
       </Row>
     );
@@ -56,7 +56,7 @@ function SkeletonCard({ view }: { view: "grid" | "list" }) {
       <Stack gap="xs" padding="md">
         <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
         <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-        <Div className="h-5 bg-zinc-200 dark:bg-slate-700 rounded-full w-20 mt-1" />
+        <Div className="h-5 bg-zinc-200 dark:bg-slate-700 w-20 mt-1" rounded="full" />
         <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
       </Stack>
     </Div>

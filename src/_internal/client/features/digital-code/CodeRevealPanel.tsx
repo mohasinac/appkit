@@ -74,7 +74,7 @@ export function CodeRevealPanel({
           </Stack>
         ) : (
           <Stack gap="sm">
-            <Div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-lg">
+            <Div className="flex items-center gap-2 border border-border bg-background px-3 py-2 font-mono text-lg" rounded="md">
               <Span className="flex-1 select-all">{revealed.code}</Span>
               <Button
                 type="button"

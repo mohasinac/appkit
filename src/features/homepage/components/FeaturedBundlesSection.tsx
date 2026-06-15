@@ -72,7 +72,7 @@ export function FeaturedBundlesSection({
         </Row>
 
         {items.length === 0 ? (
-          <Div className="rounded-xl border border-dashed border-zinc-200 py-12 text-center dark:border-zinc-700">
+          <Div className="border-dashed py-12 text-center dark:border-zinc-700" rounded="xl" border="default">
             <Text color="muted">{BUNDLE_COPY.featured.empty}</Text>
           </Div>
         ) : (

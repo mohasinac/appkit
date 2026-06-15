@@ -88,7 +88,7 @@ export function WishlistPage({
             key={i}
             className="flex animate-pulse gap-4 rounded-xl border border-neutral-200 p-4"
           >
-            <Div className="h-20 w-20 rounded-lg bg-neutral-200" />
+            <Div className="h-20 w-20 bg-neutral-200" rounded="lg" />
             <Stack gap="sm" className="flex-1">
               <Div className="h-4 w-3/4 rounded bg-neutral-200 dark:bg-slate-700" />
               <Div className="h-4 w-1/3 rounded bg-neutral-200 dark:bg-slate-700" />

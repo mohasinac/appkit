@@ -118,7 +118,7 @@ export function InteractiveStoreCard({
                   loading="lazy"
                 />
               ) : (
-                <Div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-white dark:border-zinc-800 bg-primary/10 dark:bg-primary/20 text-base font-bold text-primary shadow-md">
+                <Div className="flex h-10 w-10 items-center justify-center border-2 border-white dark:border-zinc-800 bg-primary/10 dark:bg-primary/20 text-base font-bold text-primary" rounded="lg" shadow="md">
                   {initial}
                 </Div>
               )}

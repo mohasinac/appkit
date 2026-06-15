@@ -84,7 +84,7 @@ export function BottomSheet({
           className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 shrink-0"
         >
           {/* Drag handle */}
-          <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-600" />
+          <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-zinc-300 dark:bg-zinc-600" rounded="full" />
 
           {title && (
             <Span size="sm" weight="semibold" className="text-zinc-800 dark:text-zinc-100 mt-2">

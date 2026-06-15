@@ -62,7 +62,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
       )}
 
       <Div className={`flex flex-1 flex-col ${__P.p3} text-left`}>
-        <Div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
+        <Div className="mb-2 flex h-9 w-9 items-center justify-center bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" rounded="lg">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image
               src={iconSrc}
@@ -199,7 +199,7 @@ export function ShopByCategorySection({
         {isLoading ? (
           <Div className={`flex gap-3 ${__O.hidden} px-1`}>
             {Array.from({ length: 6 }).map((_, i) => (
-              <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700" />
+              <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse bg-zinc-200 dark:bg-slate-700" rounded="xl" />
             ))}
           </Div>
         ) : (

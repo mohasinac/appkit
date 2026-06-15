@@ -650,7 +650,7 @@ export function Search({
   if (!isOpen) return null;
 
   return (
-    <Div className="border-b border-zinc-200 bg-white shadow-md dark:border-slate-800 dark:bg-slate-950 animate-[fadeIn_150ms_ease-out]">
+    <Div className="border-b border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 animate-[fadeIn_150ms_ease-out]" shadow="md">
       <Div className="container mx-auto px-4 py-3 md:py-4 relative">
         <Row gap="sm" className="md:gap-3">
           <Div className="flex-1 relative">

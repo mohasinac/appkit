@@ -88,7 +88,7 @@ export function EventPollWidget({
         )}
         <Div className="space-y-2">
           {pollConfig.options.map((opt) => (
-            <Div key={opt.id} className="rounded-lg border border-zinc-100 dark:border-zinc-800 px-4 py-2.5 text-sm text-zinc-600 dark:text-zinc-400">
+            <Div key={opt.id} className="border border-zinc-100 dark:border-zinc-800 px-4 py-2.5 text-sm text-zinc-600 dark:text-zinc-400" rounded="lg">
               {opt.label}
             </Div>
           ))}

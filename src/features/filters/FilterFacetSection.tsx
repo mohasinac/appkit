@@ -143,9 +143,9 @@ export function FilterFacetSection({
         </Button>
 
         {dropdownOpen && (
-          <Div className="absolute left-0 top-full z-[var(--appkit-z-dropdown,50)] mt-1 min-w-[180px] max-w-[260px] rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+          <Div className="absolute left-0 top-full z-[var(--appkit-z-dropdown,50)] mt-1 min-w-[180px] max-w-[260px] bg-white dark:border-slate-700 dark:bg-slate-900" rounded="xl" shadow="lg" border="default">
             {searchable && (
-              <Div className="border-b border-zinc-100 p-2 dark:border-slate-800">
+              <Div className="border-b border-zinc-100 dark:border-slate-800" padding="xs">
                 <Input
                   type="search"
                   placeholder="Search…"

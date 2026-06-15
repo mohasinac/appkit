@@ -42,7 +42,7 @@ function StatCard({
       style={{ transitionDelay: `${delay}ms` }}
     >
       {stat.renderIcon && (
-        <Div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30">
+        <Div className="mb-4 flex h-14 w-14 items-center justify-center bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30" rounded="2xl">
           {stat.renderIcon({ className: "w-7 h-7" })}
         </Div>
       )}

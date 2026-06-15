@@ -182,12 +182,12 @@ function OrderDetailDrawer({
     <SideDrawer isOpen title={`Order ${order?.id ?? orderId}`} onClose={onClose}>
       {loading && (
         <Div className="flex items-center justify-center py-16">
-          <Div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
+          <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
         </Div>
       )}
 
       {fetchError && (
-        <Div className="mx-4 mt-4 rounded-lg border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+        <Div className="mx-4 mt-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="lg">
           {fetchError}
         </Div>
       )}
@@ -209,7 +209,7 @@ function OrderDetailDrawer({
             {(order.items ?? []).length > 0 && (
               <Div>
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
-                <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 rounded-lg border border-[var(--appkit-color-border)] dark:border-slate-700">
+                <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 border border-[var(--appkit-color-border)] dark:border-slate-700" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
                     <Div key={i} className="flex items-center justify-between px-3 py-2.5 gap-3">
                       <Div className="min-w-0">
@@ -224,7 +224,7 @@ function OrderDetailDrawer({
             )}
 
             {/* Total */}
-            <Div className="flex items-center justify-between rounded-lg bg-zinc-50 dark:bg-slate-800/60 px-4 py-3">
+            <Div className="flex items-center justify-between bg-zinc-50 dark:bg-slate-800/60 px-4 py-3" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
               <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toRupees(order.totalAmount ?? 0)}</Text>
             </Div>
@@ -255,7 +255,7 @@ function OrderDetailDrawer({
               <Input label="Carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="e.g. Delhivery, Bluedart" />
               <Input label="Tracking URL (optional)" value={trackingUrl} onChange={(e) => setTrackingUrl(e.target.value)} placeholder="https://..." type="url" />
               {saveError && (
-                <Div className="rounded-lg border border-error/20 bg-error-surface px-3 py-2 text-xs text-error">
+                <Div className="border border-error/20 bg-error-surface px-3 py-2 text-xs text-error" rounded="lg">
                   {saveError}
                 </Div>
               )}
@@ -578,7 +578,7 @@ export function SellerOrdersView({
 
       <Div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
             {errorMessage}
           </Div>
         )}

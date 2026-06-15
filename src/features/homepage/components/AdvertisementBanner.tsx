@@ -56,7 +56,7 @@ export function AdvertisementBanner({
     return (
       <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
-          <Div className="h-72 bg-zinc-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
+          <Div className="h-72 bg-zinc-200 dark:bg-slate-700 animate-pulse" rounded="2xl" />
         </Div>
       </Section>
     );
@@ -151,8 +151,8 @@ export function AdvertisementBanner({
 
           {/* Decorative blobs */}
           <Div className={`absolute inset-0 ${__O.hidden}`} aria-hidden>
-            <Div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-3xl animate-pulse" />
-            <Div className="absolute -bottom-16 right-0 w-80 h-80 rounded-full bg-cobalt/20 blur-3xl animate-pulse" />
+            <Div className="absolute -top-16 -left-16 w-64 h-64 bg-primary/20 blur-3xl animate-pulse" rounded="full" />
+            <Div className="absolute -bottom-16 right-0 w-80 h-80 bg-cobalt/20 blur-3xl animate-pulse" rounded="full" />
           </Div>
 
           {/* Content */}

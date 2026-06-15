@@ -223,7 +223,7 @@ function MediaUploaderPanel({
         onStagedUrlsChange={setHeroStagedUrls}
       />
       {heroAssetUrl && (
-        <Div className="flex items-center gap-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-2">
+        <Div className="flex items-center gap-2 bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-3 py-2" rounded="lg" border="default">
           <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
             {heroAssetUrl}
           </Text>

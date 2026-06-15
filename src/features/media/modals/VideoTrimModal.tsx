@@ -104,7 +104,7 @@ export function VideoTrimModal({
         </Text>
 
         {/* Video player — raw <video> required: needs ref for duration/currentTime */}
-        <Div className="relative aspect-video overflow-hidden rounded-lg bg-black">
+        <Div className="relative aspect-video overflow-hidden bg-black" rounded="lg">
           <video
             ref={videoRef}
             src={videoUrl}

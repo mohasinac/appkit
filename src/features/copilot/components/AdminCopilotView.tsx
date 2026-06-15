@@ -78,7 +78,7 @@ function renderCopilotChatPanel(props: {
 }) {
   const { messages, conversationId, isLoading, error, input, setInput, labels, messagesEndRef, handleSubmit } = props;
   return (
-    <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
+    <Div className="flex flex-col border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
       <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
         <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
@@ -94,7 +94,7 @@ function renderCopilotChatPanel(props: {
         {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
         {isLoading ? (
           <Div className="flex justify-start">
-            <Div className="rounded-2xl rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5">
+            <Div className="rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5" rounded="2xl">
               <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
             </Div>
           </Div>
@@ -135,7 +135,7 @@ function renderCopilotHistoryPanel(props: {
       ) : null}
       <Div className={`max-h-72 ${__O.yAuto} space-y-2`}>
         {(historyQuery.data?.messages ?? []).map((log, index) => (
-          <Div key={`${log.createdAt}-${index}`} className="rounded-lg border border-neutral-200 dark:border-slate-700 p-2">
+          <Div key={`${log.createdAt}-${index}`} className="border border-neutral-200 dark:border-slate-700" rounded="lg" padding="xs">
             <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
             <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3}`}>Q: {log.prompt}</Text>
             <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3} text-neutral-600 dark:text-zinc-300`}>A: {log.response}</Text>
@@ -208,7 +208,7 @@ export function AdminCopilotView({
           </Div>
         ),
         <Div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
-          <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
+          <Div className="flex flex-col border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
             <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
@@ -229,7 +229,7 @@ export function AdminCopilotView({
               ))}
               {isLoading ? (
                 <Div className="flex justify-start">
-                  <Div className="rounded-2xl rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5">
+                  <Div className="rounded-tl-sm bg-neutral-100 dark:bg-slate-700 px-4 py-2.5" rounded="2xl">
                     <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
                   </Div>
                 </Div>

@@ -109,7 +109,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
   return (
     <Div className="space-y-8 pb-10">
       {/* Welcome banner */}
-      <Section className="rounded-2xl overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm">
+      <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div
           className="px-6 py-8 md:px-10"
           style={{
@@ -118,7 +118,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
           }}
         >
           <Div className="flex items-center gap-3 mb-3">
-            <Div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+            <Div className="flex-shrink-0 w-10 h-10 bg-white/20 flex items-center justify-center" rounded="xl">
               <BookOpen className="w-5 h-5 text-white" />
             </Div>
             <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">

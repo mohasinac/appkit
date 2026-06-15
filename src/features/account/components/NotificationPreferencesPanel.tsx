@@ -189,7 +189,7 @@ export function NotificationPreferencesPanel({
               Always on — displayed in the notification bell and inbox
             </Text>
           </Div>
-          <Div className="h-5 w-9 rounded-full bg-[var(--appkit-color-primary)] flex items-center justify-end px-0.5" aria-label="Always on">
+          <Div className="h-5 w-9 bg-[var(--appkit-color-primary)] flex items-center justify-end px-0.5" rounded="full" aria-label="Always on">
             <span className="h-4 w-4 rounded-full bg-white shadow" />
           </Div>
         </Row>

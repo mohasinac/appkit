@@ -122,7 +122,7 @@ export function SellerCouponEditorView({
 
         <Stack gap="5" className="px-6 py-6">
           {error && (
-            <Div className="rounded-lg border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+            <Div className="border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="lg">
               {error}
             </Div>
           )}
@@ -296,7 +296,7 @@ export function SellerCouponEditorView({
           </Div>
 
           {/* Active toggle */}
-          <Div className="flex items-center gap-3 rounded-lg border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)] px-4 py-3">
+          <Div className="flex items-center gap-3 border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)] px-4 py-3" rounded="lg">
             <label className="flex items-center gap-3 cursor-pointer w-full">
               <input
                 type="checkbox"

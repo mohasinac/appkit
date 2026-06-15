@@ -46,7 +46,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   }
   if (view === "list") {
     return (
-      <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+      <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
         {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
       </Div>
     );

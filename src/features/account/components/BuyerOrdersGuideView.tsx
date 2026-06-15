@@ -129,7 +129,7 @@ export function BuyerOrdersGuideView() {
     <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
       <Section>
         <Div className="flex items-center gap-3 mb-2">
-          <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: GC.pageHeaderGradient }}>
+          <Div className="flex-shrink-0 w-10 h-10 flex items-center justify-center" rounded="xl" style={{ background: GC.pageHeaderGradient }}>
             <PackageCheck className="w-5 h-5 text-white" />
           </Div>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Buyer Guide</Text>

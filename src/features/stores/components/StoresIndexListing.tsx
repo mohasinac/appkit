@@ -215,7 +215,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
                 <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
                 <Div className={`${__P.p4} space-y-2.5`}>
                   <Div className="flex items-center gap-2">
-                    <Div className="h-10 w-10 rounded-lg bg-zinc-200 dark:bg-slate-700" />
+                    <Div className="h-10 w-10 bg-zinc-200 dark:bg-slate-700" rounded="lg" />
                   </Div>
                   <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
                   <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
@@ -229,7 +229,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
             No stores found.
           </Text>
         ) : view === "list" ? (
-          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+          <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
             {stores.map((store) => {
               const storeKey = store.storeSlug ?? store.id;
               return (

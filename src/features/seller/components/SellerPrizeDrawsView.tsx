@@ -57,7 +57,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
           className="w-10 h-10 rounded-lg object-cover border border-[var(--appkit-color-border)]"
         />
       ) : (
-        <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center">
+        <Div className="w-10 h-10 bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)] flex items-center justify-center" rounded="lg">
           <Span size="xs" color="faint">–</Span>
         </Div>
       ),

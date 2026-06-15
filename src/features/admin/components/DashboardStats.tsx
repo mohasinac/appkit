@@ -76,7 +76,7 @@ function SkeletonCard() {
           <Div className="h-2.5 w-20 rounded bg-[var(--appkit-color-border)]" />
           <Div className="h-7 w-24 rounded bg-[var(--appkit-color-border)]" />
         </Div>
-        <Div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-border)]" />
+        <Div className="w-10 h-10 bg-[var(--appkit-color-border)]" rounded="lg" />
       </Div>
     </Div>
   );

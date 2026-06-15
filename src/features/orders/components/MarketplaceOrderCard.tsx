@@ -148,7 +148,7 @@ export function MarketplaceOrderCard({
         <div
           className={`flex items-start gap-3 ${selectable ? "pl-8" : ""} ${isListVariant ? "min-w-0 flex-1" : ""}`}
          data-section="marketplaceordercard-div-413">
-          <Div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-slate-800">
+          <Div className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-zinc-100 dark:bg-slate-800" rounded="lg">
             <Package className="h-5 w-5 text-zinc-500 dark:text-slate-400" />
           </Div>
           <Div className="min-w-0 space-y-1">

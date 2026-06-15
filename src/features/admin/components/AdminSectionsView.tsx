@@ -1562,7 +1562,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Div className="space-y-2">
           <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Buttons (max 3)</Text>
           {bannerBuilder.buttons.map((btn, index) => (
-            <Div key={`banner-btn-${index}`} className="space-y-2 rounded-md border border-zinc-200 p-2 dark:border-slate-700">
+            <Div key={`banner-btn-${index}`} className="space-y-2 dark:border-slate-700" rounded="md" padding="xs" border="default">
               <Div className="flex items-center justify-between"><Text className="text-zinc-500 dark:text-zinc-400" size="xs">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Div>
               <Input label="Text" value={btn.text} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], text: e.target.value }; return { ...prev, buttons: next }; })} />
               <Input label="Link" value={btn.link} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], link: e.target.value }; return { ...prev, buttons: next }; })} />
@@ -2553,7 +2553,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           </Div>
         </Div>
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
             {errorMessage}
           </Div>
         )}

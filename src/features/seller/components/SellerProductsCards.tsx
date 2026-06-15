@@ -91,7 +91,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
                 </Row>
               </Div>
             </a>
-            <Div className="border-t border-[var(--appkit-color-border)] flex justify-end gap-1 p-2">
+            <Div className="border-t border-[var(--appkit-color-border)] flex justify-end gap-1" padding="xs">
               <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(row); }} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
               <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDuplicate(row); }} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>
               {onDelete && (

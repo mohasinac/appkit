@@ -17,7 +17,7 @@ function GuideSection({
   children: React.ReactNode;
 }) {
   return (
-    <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
+    <Section className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="xl" shadow="sm" padding="lg">
       <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
@@ -161,7 +161,7 @@ function LockedFeatureGuide() {
   return (
     <Div className="space-y-4">
       {LOCKED_FEATURES.map(({ cap, missing, howToUnlock, contractRequired }) => (
-        <Div key={cap} className="rounded-lg border border-[var(--appkit-color-border)] p-4 space-y-2">
+        <Div key={cap} className="border border-[var(--appkit-color-border)] space-y-2" rounded="lg" padding="md">
           <Div className="flex items-center gap-2">
             <Text className="font-mono text-[var(--appkit-color-text)]" size="sm" weight="semibold">{cap}</Text>
             {contractRequired && (

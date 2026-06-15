@@ -277,17 +277,17 @@ export function SellerAddressesView({
 
       <Div className="py-6 px-4 sm:px-6 max-w-2xl">
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+          <Div className="mb-4 border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
             {errorMessage}
           </Div>
         )}
 
         {isLoading ? (
           <Row justify="center" className="py-16">
-            <Div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
+            <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
           </Row>
         ) : addresses.length === 0 ? (
-          <Div className="rounded-xl border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16 flex flex-col items-center gap-3">
+          <Div className="border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16 flex flex-col items-center gap-3" rounded="xl">
             <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
             <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>
@@ -379,7 +379,7 @@ export function SellerAddressesView({
       >
         <Stack gap="md" className="py-1">
           {saveError && (
-            <Div className="rounded-lg border border-error/20 bg-error-surface px-3 py-2 text-sm text-error">
+            <Div className="border border-error/20 bg-error-surface px-3 py-2 text-sm text-error" rounded="lg">
               {saveError}
             </Div>
           )}

@@ -396,7 +396,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         <Text className="text-zinc-500 dark:text-zinc-400 mb-3" size="xs">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
         </Text>
-        <Div className="bg-zinc-50 dark:bg-zinc-800/60 rounded-lg px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono">
+        <Div className="bg-zinc-50 dark:bg-zinc-800/60 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono" rounded="lg">
           {buildPurchaseAnnouncementMessage({
             buyerName: "Ravi K.",
             firstItemName: "Charizard PSA 9",
@@ -419,7 +419,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         {/* Simulated WhatsApp catalog tile grid */}
         <Div className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`}>
           <Row gap="sm" align="center" className="mb-3">
-            <Div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
+            <Div className="w-8 h-8 bg-[#25D366] flex items-center justify-center" rounded="full">
               <Text className="text-white" size="xs" weight="bold">W</Text>
             </Div>
             <Div>
@@ -436,7 +436,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                 <Div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                   <Text className="text-2xl">{item.emoji}</Text>
                 </Div>
-                <Div className="p-2">
+                <Div padding="xs">
                   <Text className="text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight" size="xs" weight="medium">
                     {item.name}
                   </Text>

@@ -37,7 +37,7 @@ function SocialFeedSkeleton({ count }: { count: number }) {
   return (
     <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
       {Array.from({ length: count }).map((_, i) => (
-        <Div key={i} className="aspect-square rounded-xl bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
+        <Div key={i} className="aspect-square bg-zinc-200 dark:bg-zinc-700 animate-pulse" rounded="xl" />
       ))}
     </Div>
   );

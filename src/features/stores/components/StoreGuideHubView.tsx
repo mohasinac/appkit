@@ -120,7 +120,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
   return (
     <Div className="space-y-8 pb-10">
       {/* Welcome banner */}
-      <Section className="rounded-2xl overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm">
+      <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div
           className="px-6 py-8 md:px-10"
           style={{
@@ -129,7 +129,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           }}
         >
           <Div className="flex items-center gap-3 mb-3">
-            <Div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+            <Div className="flex-shrink-0 w-10 h-10 bg-white/20 flex items-center justify-center" rounded="xl">
               <BookOpen className="w-5 h-5 text-white" />
             </Div>
             <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">
@@ -189,7 +189,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Getting started
           </Heading>
-          <Div className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden">
+          <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="xl">
             {/* Progress bar */}
             <Div className="px-5 pt-5 pb-4 border-b border-[var(--appkit-color-border)]">
               <Div className="flex items-center justify-between mb-2">
@@ -200,7 +200,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   {Math.round((completedCount / steps.length) * 100)}%
                 </Text>
               </Div>
-              <Div className="h-1.5 rounded-full bg-[var(--appkit-color-border)]">
+              <Div className="h-1.5 bg-[var(--appkit-color-border)]" rounded="full">
                 <Div
                   className="h-full rounded-full transition-all"
                   style={{

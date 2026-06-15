@@ -318,7 +318,7 @@ export function SellerAnalyticsAlertsView({
       {isLoading && (
         <Div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <Div key={i} className="h-16 rounded-lg bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+            <Div key={i} className="h-16 bg-zinc-100 dark:bg-zinc-800 animate-pulse" rounded="lg" />
           ))}
         </Div>
       )}

@@ -93,7 +93,7 @@ function ReviewCard({
             referrerPolicy="no-referrer"
           />
         ) : (
-          <Div className="w-9 h-9 rounded-full bg-[var(--appkit-color-primary)] flex items-center justify-center flex-shrink-0">
+          <Div className="w-9 h-9 bg-[var(--appkit-color-primary)] flex items-center justify-center flex-shrink-0" rounded="full">
             <Span size="sm" weight="bold" className="text-white">
               {review.authorName.charAt(0).toUpperCase()}
             </Span>

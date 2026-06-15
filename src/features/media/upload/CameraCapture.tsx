@@ -104,7 +104,7 @@ export default function CameraCapture({
       )}
 
       {!isStarting && !camera.error && camera.isActive && (
-        <Div className="absolute bottom-0 left-0 right-0 p-3 bg-black/40 flex items-center justify-center gap-3">
+        <Div className="absolute bottom-0 left-0 right-0 bg-black/40 flex items-center justify-center gap-3" padding="sm">
           {showPhotoButton && (
             <Button
               variant="secondary"

@@ -150,7 +150,7 @@ export function PrizeDrawCollage({
                 ) : null}
               </Div>
 
-              <Div className="p-2">
+              <Div padding="xs">
                 <Text className="line-clamp-2" size="sm" weight="medium">
                   {it.title || `Prize #${it.itemNumber}`}
                 </Text>

@@ -148,7 +148,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
   return (
     <Main>
       {/* Site-wide notice: all profiles are moderation-verified */}
-      <Div className="border-b appkit-alert--warning rounded-none">
+      <Div className="border-b appkit-alert--warning" rounded="none">
         <Container size="xl" className="py-2.5">
           <Alert variant="warning" compact>
             All profiles on this page have been verified by our moderation team. If you recognise a

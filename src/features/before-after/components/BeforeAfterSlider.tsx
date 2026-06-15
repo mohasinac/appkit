@@ -68,7 +68,7 @@ export function BeforeAfterSlider({
         style={{ left: `${position}%` }}
       >
         <Div className="h-full w-0.5 bg-white/80 shadow" />
-        <Div className="absolute h-8 w-8 rounded-full border-2 border-white bg-white/80 shadow-md" />
+        <Div className="absolute h-8 w-8 border-2 border-white bg-white/80" rounded="full" shadow="md" />
       </Div>
 
       {/* Labels */}

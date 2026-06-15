@@ -60,7 +60,7 @@ export function EventOfferCard({
           ) : null}
         </Stack>
 
-        <Div className="flex items-center gap-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 px-4 py-3">
+        <Div className="flex items-center gap-3 bg-zinc-50 dark:bg-zinc-900 px-4 py-3" rounded="lg">
           <code className="flex-1 font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
             {couponCode}
           </code>

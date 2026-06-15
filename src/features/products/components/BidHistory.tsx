@@ -61,7 +61,7 @@ export function BidHistory({
     return (
       <Div className="animate-pulse space-y-2">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Div key={i} className="h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800" />
+          <Div key={i} className="h-10 bg-zinc-100 dark:bg-zinc-800" rounded="lg" />
         ))}
       </Div>
     );

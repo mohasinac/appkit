@@ -18,7 +18,7 @@ function GuideSection({
   children: React.ReactNode;
 }) {
   return (
-    <Section className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 shadow-sm">
+    <Section className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="xl" shadow="sm" padding="lg">
       <Heading level={2} className="mb-4 text-[var(--appkit-color-text)]" size="lg" weight="semibold">
         {title}
       </Heading>
@@ -42,7 +42,7 @@ function CommissionSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Worked example</Text>
-        <Div className="rounded-lg border border-[var(--appkit-color-border)] p-4 font-mono text-xs space-y-1">
+        <Div className="border border-[var(--appkit-color-border)] font-mono text-xs space-y-1" rounded="lg" padding="md">
           <Text className={MONO_MUTED}>
             Order total: ₹1,000.00
           </Text>

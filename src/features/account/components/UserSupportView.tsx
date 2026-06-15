@@ -189,16 +189,16 @@ function renderTicketListArea(props: {
     <>
       {isLoading && (
         <Div className="space-y-3">
-          {[1, 2, 3].map((i) => <Div key={i} className="h-16 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />)}
+          {[1, 2, 3].map((i) => <Div key={i} className="h-16 animate-pulse bg-zinc-100 dark:bg-zinc-800" rounded="lg" />)}
         </Div>
       )}
       {error && (
-        <Div className="rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
+        <Div className="border border-error/20 bg-error-surface px-4 py-3 text-sm text-error" rounded="xl">
           Failed to load support tickets.
         </Div>
       )}
       {!isLoading && tickets.length === 0 && (
-        <Div className="rounded-xl border border-zinc-200 bg-zinc-50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/40">
+        <Div className="bg-zinc-50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/40" rounded="xl" border="default">
           <Text className="text-zinc-500 dark:text-zinc-400" size="sm">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}
