@@ -113,9 +113,7 @@ export async function PrizeDrawDetailPageView({
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
               <Heading
-                level={1}
-                className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold"
-              >
+                level={1} size="2xl" weight="semibold" color="primary">
                 Prize Draw Not Found
               </Heading>
               <Text color="muted">
@@ -221,7 +219,7 @@ export async function PrizeDrawDetailPageView({
               Prize Draws
             </Link>
             <Span aria-hidden>/</Span>
-            <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">
+            <Span className="truncate max-w-[200px]" color="muted">
               {title}
             </Span>
           </nav>
@@ -247,7 +245,7 @@ export async function PrizeDrawDetailPageView({
                     {statusLabel(revealStatus)}
                   </Span>
                   {maxPerUser !== null && (
-                    <Span size="xs" weight="medium" className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-zinc-700 dark:text-zinc-300">
+                    <Span size="xs" weight="medium" className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5" color="muted">
                       Limit: {maxPerUser} entries per customer
                     </Span>
                   )}
@@ -259,7 +257,7 @@ export async function PrizeDrawDetailPageView({
                 </Row>
                 <Heading
                   level={1}
-                  className="leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl" size="xl" weight="bold"
+                  className="leading-snug sm:text-2xl" color="primary" size="xl" weight="bold"
                 >
                   {title}
                 </Heading>
@@ -313,7 +311,7 @@ export async function PrizeDrawDetailPageView({
                       <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">
                         Sold by
                       </Text>
-                      <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+                      <Text size="sm" weight="semibold" color="primary">
                         {safeSeller}
                       </Text>
                     </Div>

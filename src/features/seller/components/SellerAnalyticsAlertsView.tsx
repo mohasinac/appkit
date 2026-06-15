@@ -92,12 +92,12 @@ function AlertCard({
     <Row surface="card" padding="sm" align="start" justify="between" gap="md">
       <Div className="flex-1 min-w-0">
         <Row className="mb-1" gap="sm" wrap>
-          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">{alert.label}</Text>
+          <Text size="sm" weight="medium" color="primary">{alert.label}</Text>
           <Badge variant={alert.isActive ? "success" : "default"}>
             {alert.isActive ? "Active" : "Paused"}
           </Badge>
         </Row>
-        <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">
+        <Text className="mb-1" color="muted" size="xs">
           {metricLabel} {opLabel} {alert.threshold} · {windowLabel}
         </Text>
         <Row gap="xs" wrap>
@@ -230,7 +230,7 @@ export function SellerAnalyticsAlertsView({
   return (
     <Div className="space-y-6">
       <Row justify="between">
-        <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">
+        <Heading level={2} size="base" weight="semibold" color="primary">
           {labels.title ?? "Analytics Alerts"}
         </Heading>
         <Button size="sm" onClick={() => setShowForm((v) => !v)}>
@@ -238,13 +238,13 @@ export function SellerAnalyticsAlertsView({
         </Button>
       </Row>
 
-      <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
+      <Text size="sm" color="muted">
         Get notified when a key metric crosses a threshold. Alerts check the metric over the selected window and fire through your chosen channels.
       </Text>
 
       {showForm && (
         <Section className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__P.p5} space-y-4`}>
-          <Heading level={3} className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
+          <Heading level={3} size="sm" weight="semibold" color="primary">
             Create Alert
           </Heading>
           <Form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(); }}>
@@ -285,7 +285,7 @@ export function SellerAnalyticsAlertsView({
             </Div>
 
             <Div className="mt-3">
-              <Text className="text-zinc-700 dark:text-zinc-300 mb-2" size="xs" weight="medium">
+              <Text className="mb-2" color="muted" size="xs" weight="medium">
                 Notify via
               </Text>
               <Row gap="sm" wrap>

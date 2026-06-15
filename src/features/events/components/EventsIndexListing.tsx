@@ -188,7 +188,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
             ))}
           </Div>
         ) : events.length === 0 ? (
-          <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+          <Text className="py-12" color="muted" size="sm" align="center">
             No events found.
           </Text>
         ) : view === "list" ? (

@@ -204,7 +204,7 @@ export function BlogPostForm({
               minHeightClassName="min-h-[240px]"
               placeholder="Write blog content"
             />
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+            <Text size="xs" color="muted">
               Rich text is supported for blog content.
             </Text>
           </Stack>

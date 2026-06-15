@@ -56,7 +56,7 @@ function StatCard({
 
       <Text
         variant="none"
-        className="uppercase tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="medium"
+        className="uppercase tracking-widest" color="muted" size="xs" weight="medium"
       >
         {stat.label}
       </Text>

@@ -140,7 +140,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
       {/* ── Rating summary ───────────────────────────────────────────────── */}
       {totalReviews > 0 && (
         <Row align="center" gap="sm" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-700">
-          <Span weight="bold" className="text-zinc-900 dark:text-zinc-100" size="2xl">
+          <Span weight="bold" size="2xl" color="primary">
             {averageRating.toFixed(1)}
           </Span>
           <Span size="sm" color="muted">/ 5 · {totalReviews} reviews</Span>
@@ -190,7 +190,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
             ))}
           </Div>
         ) : reviews.length === 0 ? (
-          <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+          <Text className="py-12" color="muted" size="sm" align="center">
             No reviews found.
           </Text>
         ) : view === "list" ? (

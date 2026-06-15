@@ -54,11 +54,11 @@ export function PreOrderActionsClient({
     <Div className="space-y-4">
       {price !== null && (
         <Div>
-          <Text className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="bold">
+          <Text size="2xl" weight="bold" color="primary">
             {formatCurrency(price, currency)}
           </Text>
           {depositAmount !== null && (
-            <Text className="mt-0.5 text-zinc-500 dark:text-zinc-400" size="xs">
+            <Text className="mt-0.5" color="muted" size="xs">
               Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
             </Text>
           )}
@@ -91,7 +91,7 @@ export function PreOrderActionsClient({
           {isPending ? "Processing…" : "Reserve Now"}
         </Button>
         {isCancellable && (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs" align="center">
+          <Text size="xs" align="center" color="muted">
             ✓ Free cancellation before production
           </Text>
         )}
@@ -101,7 +101,7 @@ export function PreOrderActionsClient({
         <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
           <Div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
-              <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300">
+              <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted">
                 {tag}
               </Span>
             ))}

@@ -48,7 +48,7 @@ const COLUMNS: AdminTableColumn<GroupedRow>[] = [
   {
     key: "title",
     header: "Title",
-    render: (r) => <Span weight="medium" className="text-zinc-900 dark:text-zinc-100">{r.title}</Span>,
+    render: (r) => <Span weight="medium" color="primary">{r.title}</Span>,
   },
   {
     key: "groupTheme",
@@ -60,7 +60,7 @@ const COLUMNS: AdminTableColumn<GroupedRow>[] = [
   {
     key: "productCount",
     header: "Products",
-    render: (r) => <Span size="sm" className="text-zinc-600 dark:text-zinc-400">{r.productCount}</Span>,
+    render: (r) => <Span size="sm" color="muted">{r.productCount}</Span>,
   },
   {
     key: "visibilityStatus",

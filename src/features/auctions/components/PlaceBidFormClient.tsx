@@ -135,8 +135,8 @@ export function PlaceBidFormClient({
       {/* Current / starting bid summary */}
       <Div className="space-y-1">
         <Row justify="between" align="center">
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Current bid</Text>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Starting bid</Text>
+          <Text size="xs" color="muted">Current bid</Text>
+          <Text size="xs" color="muted">Starting bid</Text>
         </Row>
         <Row justify="between" align="baseline">
           <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
@@ -265,7 +265,7 @@ export function PlaceBidFormClient({
             {tags.map((tag) => (
               <Span
                 key={tag}
-                className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300" size="xs"
+                className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted" size="xs"
               >
                 {tag}
               </Span>

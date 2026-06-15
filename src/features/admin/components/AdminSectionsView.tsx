@@ -576,13 +576,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderProductsCategorySelectors(): React.ReactNode {
     return (
       <Div className="space-y-2">
-        <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+        <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
           Category selectors
         </Text>
         {categoriesQuery.isLoading ? (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Loading categories...</Text>
+          <Text size="sm" color="muted">Loading categories...</Text>
         ) : categoryOptions.length === 0 ? (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No categories available.</Text>
+          <Text size="sm" color="muted">No categories available.</Text>
         ) : (
           <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {categoryOptions.map((category) => (
@@ -611,7 +611,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderProductsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Products Carousel Builder
         </Text>
 
@@ -768,13 +768,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderAuctionsCategorySelectors(): React.ReactNode {
     return (
       <Div className="space-y-2">
-        <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+        <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
           Category selectors
         </Text>
         {categoriesQuery.isLoading ? (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Loading categories...</Text>
+          <Text size="sm" color="muted">Loading categories...</Text>
         ) : categoryOptions.length === 0 ? (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No categories available.</Text>
+          <Text size="sm" color="muted">No categories available.</Text>
         ) : (
           <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {categoryOptions.map((category) => (
@@ -803,7 +803,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderAuctionsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Auctions Carousel Builder
         </Text>
 
@@ -939,7 +939,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderStatsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Stats Section Builder
         </Text>
 
@@ -954,7 +954,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
         {statsBuilder.stats.map((stat, index) => (
           <Div key={`stat-row-${index}`} className={`space-y-3 rounded-md border border-zinc-200 ${__P.p3} dark:border-slate-700`}>
-            <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+            <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Stat {index + 1}
             </Text>
             <Input
@@ -1002,13 +1002,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   ): React.ReactNode {
     return (
       <Div className="space-y-2">
-        <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+        <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
           Category selectors
         </Text>
         {categoriesQuery.isLoading ? (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Loading categories...</Text>
+          <Text size="sm" color="muted">Loading categories...</Text>
         ) : categoryOptions.length === 0 ? (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No categories available.</Text>
+          <Text size="sm" color="muted">No categories available.</Text>
         ) : (
           <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {categoryOptions.map((category) => (
@@ -1028,7 +1028,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderPreOrdersBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Pre-Orders Carousel Builder
         </Text>
 
@@ -1169,7 +1169,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderStoresBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Stores Section Builder
         </Text>
 
@@ -1323,7 +1323,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderEventsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Events Section Builder
         </Text>
 
@@ -1477,7 +1477,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderFAQBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">FAQ Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">FAQ Section Builder</Text>
         <Input label="Section title" value={faqBuilder.title} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Input label="Subtitle" value={faqBuilder.subtitle} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
         <Input label="Display count" type="number" min={1} max={20} value={String(faqBuilder.displayCount)} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, displayCount: Math.min(20, Math.max(1, Number(e.target.value) || 1)) }))} />
@@ -1485,7 +1485,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Checkbox checked={faqBuilder.expandedByDefault} label="Expanded by default" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, expandedByDefault: e.target.checked }))} />
         <Checkbox checked={faqBuilder.linkToFullPage} label="Link to full FAQ page" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, linkToFullPage: e.target.checked }))} />
         <Div className="space-y-2">
-          <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Categories</Text>
+          <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Categories</Text>
           <Div className="grid grid-cols-2 gap-2">
             {FAQ_CATEGORY_OPTIONS.map((opt) => (
               <Checkbox
@@ -1509,7 +1509,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderBlogBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Blog Articles Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Blog Articles Builder</Text>
         <Input label="Section title" value={blogBuilder.title} onChange={(e) => setBlogBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Select label="Max articles" value={String(blogBuilder.maxArticles)} onValueChange={(v) => setBlogBuilder((prev) => ({ ...prev, maxArticles: Number(v) }))} options={[{ label: "3", value: "3" }, { label: "4", value: "4" }, { label: "6", value: "6" }]} />
         <Checkbox checked={blogBuilder.showReadTime} label="Show read time" onChange={(e) => setBlogBuilder((prev) => ({ ...prev, showReadTime: e.target.checked }))} />
@@ -1522,7 +1522,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderNewsletterBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Newsletter Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Newsletter Section Builder</Text>
         <Input label="Title" value={newsletterBuilder.title} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Textarea label="Description" value={newsletterBuilder.description} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
         <Input label="Email placeholder" value={newsletterBuilder.placeholder} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, placeholder: e.target.value }))} />
@@ -1536,7 +1536,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderBannerBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Banner Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Banner Section Builder</Text>
         <Select label="Height" value={bannerBuilder.height} onValueChange={(v) => setBannerBuilder((prev) => ({ ...prev, height: v as BannerBuilderState["height"] }))} options={[{ label: "Small (200px)", value: "sm" }, { label: "Medium (300px)", value: "md" }, { label: "Large (400px)", value: "lg" }, { label: "Extra Large (500px)", value: "xl" }]} />
         <Input label="Background image URL" type="url" value={bannerBuilder.backgroundImage} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, backgroundImage: e.target.value }))} placeholder="https://..." />
         <Input label="Background color (CSS token)" value={bannerBuilder.backgroundColor} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, backgroundColor: e.target.value }))} placeholder="var(--appkit-color-primary)" />
@@ -1546,10 +1546,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Input label="Content subtitle" value={bannerBuilder.contentSubtitle} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentSubtitle: e.target.value }))} />
         <Textarea label="Content description" value={bannerBuilder.contentDescription} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentDescription: e.target.value }))} rows={2} />
         <Div className="space-y-2">
-          <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Buttons (max 3)</Text>
+          <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Buttons (max 3)</Text>
           {bannerBuilder.buttons.map((btn, index) => (
             <Div key={`banner-btn-${index}`} className="space-y-2 dark:border-slate-700" rounded="md" padding="xs" border="default">
-              <Row align="center" justify="between"><Text className="text-zinc-500 dark:text-zinc-400" size="xs">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Row>
+              <Row align="center" justify="between"><Text size="xs" color="muted">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Row>
               <Input label="Text" value={btn.text} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], text: e.target.value }; return { ...prev, buttons: next }; })} />
               <Input label="Link" value={btn.link} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], link: e.target.value }; return { ...prev, buttons: next }; })} />
               <Select label="Variant" value={btn.variant} onValueChange={(v) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], variant: v as "primary" | "secondary" | "outline" }; return { ...prev, buttons: next }; })} options={[{ label: "Primary", value: "primary" }, { label: "Secondary", value: "secondary" }, { label: "Outline", value: "outline" }]} />
@@ -1570,10 +1570,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderFeaturesBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Features Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Features Section Builder</Text>
         <Input label="Section title" value={featuresBuilder.title} onChange={(e) => setFeaturesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Div className="space-y-2">
-          <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Feature items</Text>
+          <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Feature items</Text>
           {featuresBuilder.features.map((feature, index) => (
             <Row key={`feat-${index}`} align="center" gap="sm">
               <Input value={feature} onChange={(e) => setFeaturesBuilder((prev) => { const next = [...prev.features]; next[index] = e.target.value; return { ...prev, features: next }; })} className="flex-1" />
@@ -1589,7 +1589,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderReviewsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Reviews Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Reviews Section Builder</Text>
         <Input label="Section title" value={reviewsBuilder.title} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Select
           label="Reviews source"
@@ -1620,13 +1620,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderWhatsAppBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">WhatsApp Community Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">WhatsApp Community Builder</Text>
         <Input label="Title" value={whatsappBuilder.title} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Textarea label="Description" value={whatsappBuilder.description} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
         <Input label="WhatsApp group link" type="url" value={whatsappBuilder.groupLink} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, groupLink: e.target.value }))} placeholder="https://chat.whatsapp.com/..." />
         <Input label="Member count" type="number" min={0} value={String(whatsappBuilder.memberCount)} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, memberCount: Math.max(0, Number(e.target.value) || 0) }))} />
         <Div className="space-y-2">
-          <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Benefits</Text>
+          <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Benefits</Text>
           {whatsappBuilder.benefits.map((benefit, index) => (
             <Row key={`wb-${index}`} align="center" gap="sm">
               <Input value={benefit} onChange={(e) => setWhatsappBuilder((prev) => { const next = [...prev.benefits]; next[index] = e.target.value; return { ...prev, benefits: next }; })} className="flex-1" />
@@ -1644,7 +1644,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderWelcomeBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Welcome Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Welcome Section Builder</Text>
         <Input label="Headline (h1)" value={welcomeBuilder.h1} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, h1: e.target.value }))} />
         <Input label="Subtitle" value={welcomeBuilder.subtitle} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
         <Textarea label="Description" value={welcomeBuilder.description} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={3} />
@@ -1662,12 +1662,12 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderTrustIndicatorsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Trust Indicators Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Trust Indicators Builder</Text>
         <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         {trustIndicatorsBuilder.indicators.map((ind, index) => (
           <Div key={ind.id} className={`space-y-2 rounded-md border border-zinc-200 ${__P.p3} dark:border-slate-700`}>
             <Row align="center" justify="between">
-              <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Indicator {index + 1}</Text>
+              <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Indicator {index + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
             </Row>
             <Input label="Icon (emoji or text)" value={ind.icon} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], icon: e.target.value }; return { ...prev, indicators: next }; })} />
@@ -1683,7 +1683,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderCategoriesBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Categories Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Categories Section Builder</Text>
         <Input label="Section title" value={categoriesBuilder.title} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Input label="Max categories (4–12)" type="number" min={4} max={12} value={String(categoriesBuilder.maxCategories)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, maxCategories: Math.min(12, Math.max(4, Number(e.target.value) || 4)) }))} />
         <Checkbox checked={categoriesBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
@@ -1695,7 +1695,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderBrandsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Brands Section Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Brands Section Builder</Text>
         <Input label="Section title" value={brandsBuilder.title} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Input label="Subtitle" value={brandsBuilder.subtitle} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
         <Input label="Max brands" type="number" min={1} max={30} value={String(brandsBuilder.maxBrands)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, maxBrands: Math.max(1, Number(e.target.value) || 1) }))} />
@@ -1708,7 +1708,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderCarouselBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Carousel Section Builder
         </Text>
 
@@ -1812,7 +1812,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           className="space-y-3 dark:border-slate-700" rounded="md" padding="sm" border="default"
         >
           <Row align="center" justify="between">
-            <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+            <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Card {index + 1}
             </Text>
             <Button type="button" variant="outline" size="sm" onClick={() => removeCard(index)}>
@@ -1854,7 +1854,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Custom Cards Builder
         </Text>
 
@@ -1913,7 +1913,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
         <Div className="space-y-3">
           <Row align="center" justify="between">
-            <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+            <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Cards ({customCardsBuilder.cards.length})
             </Text>
             <Button type="button" variant="outline" size="sm" onClick={addCard}>
@@ -1924,7 +1924,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           {customCardsBuilder.cards.map((card, index) => renderCardFields(card, index))}
 
           {customCardsBuilder.cards.length === 0 ? (
-            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No cards added yet. Click "Add card" to start.</Text>
+            <Text size="sm" color="muted">No cards added yet. Click "Add card" to start.</Text>
           ) : null}
         </Div>
       </Div>
@@ -1934,7 +1934,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderGoogleReviewsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Google Reviews Builder
         </Text>
 
@@ -2019,7 +2019,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderFeaturedBundlesBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Featured Bundles Builder
         </Text>
         <Input
@@ -2080,7 +2080,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           label="Show savings % badge on each bundle"
           onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, showSavingsBadge: e.target.checked }))}
         />
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           The bundles collection lands later in the bundle / prize-draw work; until then this section renders an empty state.
         </Text>
       </Div>
@@ -2090,7 +2090,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderPrizeDrawsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Prize Draws Builder
         </Text>
         <Input
@@ -2146,7 +2146,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           label="Show entries-remaining bar"
           onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, showEntriesRemaining: e.target.checked }))}
         />
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           Prize-draw listing type is added with the prize-draw feature; until then this section renders an empty state.
         </Text>
       </Div>
@@ -2156,7 +2156,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderEventRafflesBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Event Raffles Builder
         </Text>
         <Input
@@ -2206,7 +2206,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           label="Show countdown to event start/end"
           onChange={(e) => setEventRafflesBuilder((prev) => ({ ...prev, showCountdown: e.target.checked }))}
         />
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           The hasRaffle flag on events ships with the raffle feature; until then this section renders an empty state.
         </Text>
       </Div>
@@ -2291,7 +2291,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     const canAdd = entries.length < 3;
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+        <Text size="sm" weight="semibold" color="primary">
           Collection Cards Builder
         </Text>
         <Input
@@ -2353,7 +2353,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Div className="space-y-3">
-          <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+          <Text size="sm" weight="semibold" color="primary">
             Collections ({entries.length}/3)
           </Text>
           {entries.map((entry, idx) => renderCollectionEntry(entry, idx))}
@@ -2374,13 +2374,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               + Add collection
             </Button>
           ) : (
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+            <Text size="xs" color="muted">
               Maximum of 3 collections per section.
             </Text>
           )}
         </Div>
 
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           Data fetching wires into the per-resource repositories — the section renders an
           empty state until the wiring lands.
         </Text>
@@ -2391,7 +2391,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   function renderSocialFeedBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
-        <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">Social Feed Builder</Text>
+        <Text size="sm" weight="semibold" color="primary">Social Feed Builder</Text>
         <Input
           label="Section title"
           value={socialFeedBuilder.title}
@@ -2460,7 +2460,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           label="Show like / view / comment counts on hover"
           onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, showStats: e.target.checked }))}
         />
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           Social platform credentials (access tokens, client IDs) must be set in ⑧ Integrations before this section will load live posts.
         </Text>
       </Div>
@@ -2526,8 +2526,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className="py-4 px-3 sm:px-4">
         <Row className="mb-4" align="center" justify="between" gap="3">
           <Div>
-            <Text className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">Homepage Sections</Text>
-            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Manage homepage sections and their display order</Text>
+            <Text size="base" weight="semibold" color="primary">Homepage Sections</Text>
+            <Text size="sm" color="muted">Manage homepage sections and their display order</Text>
           </Div>
           <Row align="center" gap="sm">
             <Button type="button" variant="outline" size="sm" onClick={() => setSeedResetOpen(true)}>
@@ -2548,7 +2548,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
       <Div className={`mt-4 space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
         <Row align="center" justify="between" gap="3">
-          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
+          <Text size="sm" weight="semibold" color="primary">
             Reorder Sections
           </Text>
           <Row align="center" gap="sm">
@@ -2592,7 +2592,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         </Row>
 
         {reorderDraft.length === 0 ? (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No sections to reorder.</Text>
+          <Text size="sm" color="muted">No sections to reorder.</Text>
         ) : (
           <Div className="space-y-2">
             {reorderDraft.map((item, index) => (
@@ -2605,8 +2605,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
                 onDrop={() => handleReorderDrop(index)}
                 onDragEnd={() => setDragIndex(null)}
               >
-                <Text className="text-zinc-500 dark:text-zinc-400" size="sm" weight="semibold">≡</Text>
-                <Text className="text-zinc-800 dark:text-zinc-200" size="sm">
+                <Text size="sm" weight="semibold" color="muted">≡</Text>
+                <Text size="sm" color="primary">
                   {item.type} #{item.order}
                 </Text>
                 <Input

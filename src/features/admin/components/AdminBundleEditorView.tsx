@@ -300,9 +300,7 @@ export function AdminBundleEditorView({
           <Stack gap="lg">
             <Row gap="sm" align="center" justify="between" wrap>
               <Heading
-                level={1}
-                className="text-zinc-900 dark:text-zinc-100" size="2xl" weight="semibold"
-              >
+                level={1} size="2xl" weight="semibold" color="primary">
                 {isEdit
                   ? BUNDLE_COPY.adminEditorTitleEdit
                   : BUNDLE_COPY.adminEditorTitleNew}

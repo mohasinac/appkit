@@ -101,7 +101,7 @@ export function WishlistPage({
 
   if (items.length === 0) {
     return (
-      <Text className="py-16 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+      <Text className="py-16" color="muted" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

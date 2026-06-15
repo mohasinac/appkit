@@ -106,7 +106,7 @@ function AdminCardItem({
           </Div>
         )}
         <Stack gap="none" className="flex-1 min-w-0">
-          <Text size="sm" weight="semibold" className="truncate text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+          <Text size="sm" weight="semibold" className="truncate" color="primary">{row.primary}</Text>
           <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
         </Stack>
         {flags.length > 0 && (
@@ -159,7 +159,7 @@ function AdminCardItem({
       )}
       <Stack gap="xs" className={`${__P.p3}.5`}>
         <Stack gap="none">
-          <Text size="sm" weight="semibold" className="line-clamp-2 leading-snug text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+          <Text size="sm" weight="semibold" className="line-clamp-2 leading-snug" color="primary">{row.primary}</Text>
           <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
         </Stack>
         <Row justify="between" gap="xs">

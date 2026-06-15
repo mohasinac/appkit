@@ -70,9 +70,9 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
         {post.isFeatured && <Span size="xs" weight="medium" className={CLS_FEATURED_BADGE}>{labels?.featured ?? "Featured"}</Span>}
       </Row>
       <Heading level={1} className="mb-4" size="3xl" weight="bold">{post.title}</Heading>
-      {post.excerpt && <Text className="text-zinc-500 dark:text-zinc-400 mb-6" size="lg">{post.excerpt}</Text>}
+      {post.excerpt && <Text className="mb-6" color="muted" size="lg">{post.excerpt}</Text>}
       <Row wrap gap="md" className="text-sm text-zinc-400 dark:text-zinc-400">
-        {post.authorName && <Span>{labels?.author ?? "By"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{post.authorName}</Span></Span>}
+        {post.authorName && <Span>{labels?.author ?? "By"} <Span weight="medium" color="muted">{post.authorName}</Span></Span>}
         {post.readTimeMinutes != null && <Span>{post.readTimeMinutes} {labels?.readTime ?? "min read"}</Span>}
         {date && <Span>{labels?.publishedOn ?? "Published"} {date}</Span>}
         {post.views != null && <Span>{post.views} {labels?.viewsLabel ?? "views"}</Span>}

@@ -55,11 +55,11 @@ function TrustFeatureCard({
 
       <Heading
         level={3}
-        className="mt-3 mb-1 tracking-wide uppercase text-zinc-900 dark:text-zinc-100" size="sm" weight="bold"
+        className="mt-3 mb-1 tracking-wide uppercase" color="primary" size="sm" weight="bold"
       >
         {item.title}
       </Heading>
-      <Text className="leading-relaxed text-zinc-500 dark:text-zinc-400" size="xs">
+      <Text className="leading-relaxed" color="muted" size="xs">
         {item.description}
       </Text>
     </div>
@@ -81,7 +81,7 @@ function TrustStripItem({ item }: { item: TrustFeatureItem }) {
           ✓
         </Span>
       )}
-      <Text className="text-zinc-700 dark:text-zinc-300 whitespace-nowrap" size="sm" weight="medium">
+      <Text className="whitespace-nowrap" color="muted" size="sm" weight="medium">
         {item.title}
       </Text>
     </Div>
@@ -142,7 +142,7 @@ export function TrustFeaturesSection({
           <Div className="text-center mb-8">
             <Heading
               level={2}
-              className="md:text-4xl text-zinc-900 dark:text-zinc-100" size="3xl" weight="bold"
+              className="md:text-4xl" color="primary" size="3xl" weight="bold"
             >
               {title}
             </Heading>

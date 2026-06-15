@@ -124,7 +124,7 @@ function ZonePicker({
   const zones = [1, 2, 3, 4, 5, 6] as const;
   return (
     <Div>
-      <Text className="text-zinc-500 dark:text-zinc-400 mb-1" size="xs">Zone (row × col grid)</Text>
+      <Text className="mb-1" color="muted" size="xs">Zone (row × col grid)</Text>
       <div
         className="grid gap-1"
         // audit-inline-style-ok: dynamic CSS
@@ -341,7 +341,7 @@ function CardEditor({
         {buttons.map((btn, bi) => (
           <Div key={btn.id ?? bi} className={`rounded-lg border border-zinc-200 dark:border-zinc-800 ${__P.p3} space-y-2`}>
             <Row className={CLS_ROW_BETWEEN}>
-              <Text className="text-zinc-500 dark:text-zinc-400" size="xs" weight="medium">Button {bi + 1}</Text>
+              <Text size="xs" weight="medium" color="muted">Button {bi + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => set({ buttons: buttons.filter((_, i) => i !== bi) })}>✕</Button>
             </Row>
             <Input label="Label" value={btn.text} onChange={(e) => { const next = [...buttons]; next[bi] = { ...btn, text: e.target.value }; set({ buttons: next }); }} />
@@ -549,7 +549,7 @@ export function AdminCarouselEditorView({
           {/* ── 3. Overlay text (optional) ───────────────────────────────── */}
           <Div className={CLS_PANEL}>
             <Heading level={3} className={CLS_SECTION_HEADING}>Overlay text (optional)</Heading>
-            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Centred text layered over the background. Leave blank to use cards only.</Text>
+            <Text size="sm" color="muted">Centred text layered over the background. Leave blank to use cards only.</Text>
             <Input label="Heading" value={overlayTitle} onChange={(e) => setOverlayTitle(e.target.value)} placeholder="India's #1 Collectibles Marketplace" />
             <Input label="Subtitle" value={overlaySubtitle} onChange={(e) => setOverlaySubtitle(e.target.value)} placeholder="Pokémon TCG · Hot Wheels · Beyblade X" />
             <Input label="Description" value={overlayDesc} onChange={(e) => setOverlayDesc(e.target.value)} placeholder="One sentence description..." />

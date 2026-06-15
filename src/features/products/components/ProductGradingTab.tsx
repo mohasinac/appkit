@@ -38,7 +38,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
     <Stack gap="lg">
       <Row align="center" gap="md">
         <Stack className="justify-center border-2 border-[var(--appkit-color-primary)] px-6 py-4 min-w-[120px]" align="center" rounded="2xl">
-          <Text className="tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="bold" transform="uppercase">
+          <Text className="tracking-wide" color="muted" size="xs" weight="bold" transform="uppercase">
             {grading.service}
           </Text>
           <Text className="font-extrabold" size="4xl">{grading.grade}</Text>
@@ -48,7 +48,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
             Graded by {grading.service}
           </Heading>
           {grading.certNumber ? (
-            <Text className="text-zinc-600 dark:text-zinc-400" size="sm">
+            <Text size="sm" color="muted">
               Cert #{grading.certNumber}
               {lookupUrl ? (
                 <>
@@ -76,7 +76,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
 
       {grading.attributes && Object.keys(grading.attributes).length > 0 ? (
         <Stack gap="sm">
-          <Heading level={3} className="tracking-wide text-zinc-500 dark:text-zinc-400" size="sm" weight="semibold" transform="uppercase">
+          <Heading level={3} className="tracking-wide" color="muted" size="sm" weight="semibold" transform="uppercase">
             Subgrades & attributes
           </Heading>
           <Div className="flex flex-wrap gap-2">

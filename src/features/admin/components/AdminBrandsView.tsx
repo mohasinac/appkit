@@ -38,10 +38,10 @@ const COLUMNS: AdminTableColumn<BrandRow>[] = [
     sortable: true,
     render: (row) => (
       <Div className="space-y-1">
-        <Text className="text-zinc-900 dark:text-zinc-100" weight="semibold">
+        <Text weight="semibold" color="primary">
           {row.primary}
         </Text>
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           {row.secondary}
         </Text>
       </Div>
@@ -62,7 +62,7 @@ const COLUMNS: AdminTableColumn<BrandRow>[] = [
     header: "Updated",
     className: "w-32",
     render: (row) => (
-      <Text className="text-zinc-500 dark:text-zinc-400" size="sm">{row.updatedAt}</Text>
+      <Text size="sm" color="muted">{row.updatedAt}</Text>
     ),
   },
 ];
@@ -119,7 +119,7 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
     ] satisfies BulkActionItem[],
   renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
     <Div className="space-y-2">
-      <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+      <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
         Status
       </Text>
       <Div className="flex flex-wrap gap-2">

@@ -527,14 +527,14 @@ export function AdminSiteSettingsView({
           {/* ⓪ About Page */}
           <TabsContent value="about">
             <Form onSubmit={(e) => { e.preventDefault(); aboutMutation.mutate(); }} className="space-y-4 pt-4">
-              <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+              <Text size="xs" color="muted">
                 Override the About page hero and mission text. Leave blank to use the platform defaults.
               </Text>
               <Input label="Hero title" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} placeholder="About LetItRip" />
               <Input label="Hero subtitle" value={aboutSubtitle} onChange={(e) => setAboutSubtitle(e.target.value)} placeholder="Connecting buyers, sellers, and bidders in one vibrant marketplace" />
               <Input label="Mission section title" value={aboutMissionTitle} onChange={(e) => setAboutMissionTitle(e.target.value)} placeholder="Our Mission" />
               <>
-                <Text className="text-zinc-700 dark:text-zinc-300 mb-1" size="sm" weight="medium">Mission text</Text>
+                <Text className="mb-1" color="muted" size="sm" weight="medium">Mission text</Text>
                 <textarea
                   value={aboutMissionText}
                   onChange={(e) => setAboutMissionText(e.target.value)}
@@ -649,7 +649,7 @@ export function AdminSiteSettingsView({
               </Grid>
               <Input label="Physical address" value={supportAddress} onChange={(e) => setSupportAddress(e.target.value)} placeholder="Mumbai, Maharashtra, India" />
               <Input label="Support hours" value={supportHours} onChange={(e) => setSupportHours(e.target.value)} placeholder="Mon–Fri, 10 AM – 6 PM IST" />
-              <Text className="text-zinc-600 dark:text-zinc-400 pt-2" size="sm" weight="medium">Social links</Text>
+              <Text className="pt-2" color="muted" size="sm" weight="medium">Social links</Text>
               <Grid cols={2} gap="md">
                 <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/letitrip" />
                 <Input label="Twitter / X URL" value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/letitrip" />
@@ -718,7 +718,7 @@ export function AdminSiteSettingsView({
           {/* ⑧ Integrations & Keys */}
           <TabsContent value="integrations">
             <Form onSubmit={(e) => { e.preventDefault(); integrationsMutation.mutate(); }} className="space-y-4 pt-4">
-              <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
+              <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">Razorpay</Text>
                 <Grid cols={2} gap="md">
@@ -816,7 +816,7 @@ export function AdminSiteSettingsView({
           {/* ⑬ WhatsApp Business Cloud API */}
           <TabsContent value="whatsapp">
             <Form onSubmit={(e) => { e.preventDefault(); whatsappMutation.mutate(); }} className="space-y-4 pt-4">
-              <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+              <Text size="xs" color="muted">
                 Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
                 announcements to admin numbers when orders are placed. Store owners configure their
                 own credentials in Store → WhatsApp.
@@ -849,7 +849,7 @@ export function AdminSiteSettingsView({
           {/* ⑭ Notification Channels */}
           <TabsContent value="notifications">
             <Form onSubmit={(e) => { e.preventDefault(); notifChannelsMutation.mutate(); }} className="space-y-6 pt-4">
-              <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+              <Text size="xs" color="muted">
                 In-app notifications are always on. Enable external channels below to let the platform
                 fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
               </Text>

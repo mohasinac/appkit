@@ -81,7 +81,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-800 dark:text-zinc-200`}>
           {category.name}
         </Text>
-        <Text className="mt-1 text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text className="mt-1" color="muted" size="xs">
           {productCount.toLocaleString()} items
         </Text>
         <Text className="mt-auto pt-3 text-primary dark:text-primary-400" size="xs" weight="medium">

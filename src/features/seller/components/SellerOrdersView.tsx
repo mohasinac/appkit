@@ -370,8 +370,8 @@ export function SellerOrdersView({
       header: "Order",
       render: (row) => (
         <Div className="space-y-0.5 min-w-0">
-          <Text className="font-mono text-zinc-900 dark:text-zinc-100 truncate" size="xs" weight="semibold">{row.primary}</Text>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
+          <Text className="font-mono truncate" color="primary" size="xs" weight="semibold">{row.primary}</Text>
+          <Text size="xs" color="muted">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
         </Div>
       ),
     },
@@ -397,7 +397,7 @@ export function SellerOrdersView({
       className: "w-28",
       render: (row) =>
         row.physicalLocation ? (
-          <Span size="xs" className="font-mono text-zinc-500 dark:text-zinc-400">
+          <Span size="xs" className="font-mono" color="muted">
             {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
           </Span>
         ) : (
@@ -411,7 +411,7 @@ export function SellerOrdersView({
       render: (row) => {
         const r = row as unknown as { shippingMethod?: string; carrier?: string; trackingNumber?: string };
         return (
-          <Span size="xs" className="text-zinc-600 dark:text-zinc-300">
+          <Span size="xs" color="muted">
             {r.shippingMethod ?? r.carrier ?? "—"}
           </Span>
         );
@@ -424,7 +424,7 @@ export function SellerOrdersView({
       render: (row) => {
         const r = row as unknown as { weightGrams?: number };
         return (
-          <Span size="xs" className="text-zinc-500 dark:text-zinc-400 tabular-nums">
+          <Span size="xs" className="tabular-nums" color="muted">
             {r.weightGrams ? `${r.weightGrams} g` : "—"}
           </Span>
         );

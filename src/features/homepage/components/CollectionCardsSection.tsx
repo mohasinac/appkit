@@ -63,13 +63,11 @@ export async function CollectionCardsSection({
         <Stack gap="md">
           <Stack gap="xs">
             <Heading
-              level={2}
-              className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold"
-            >
+              level={2} size="2xl" weight="semibold" color="primary">
               {title}
             </Heading>
             {subtitle ? (
-              <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
+              <Text size="sm" color="muted">
                 {subtitle}
               </Text>
             ) : null}
@@ -80,7 +78,7 @@ export async function CollectionCardsSection({
               {collections.slice(0, 3).map((entry, idx) => (
                 <Text
                   key={`${entry.type}-${idx}`}
-                  className="rounded-full border border-zinc-300 px-3 py-1 text-zinc-700 dark:border-slate-600 dark:text-zinc-300" size="xs" weight="medium"
+                  className="rounded-full border border-zinc-300 px-3 py-1 dark:border-slate-600" color="muted" size="xs" weight="medium"
                 >
                   {entryLabel(entry)}
                 </Text>
@@ -93,7 +91,7 @@ export async function CollectionCardsSection({
             gap="sm"
             className="border border-dashed border-zinc-300 px-6 py-12 text-center dark:border-slate-700" rounded="2xl"
           >
-            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
+            <Text size="sm" color="muted">
               Mixed collection rendering ({collections.length}/3 collection
               {collections.length === 1 ? "" : "s"}, up to {maxItems} items,
               {" "}{itemsPerRow} per row) — data wiring lands with the bundle/raffle

@@ -87,7 +87,7 @@ export function BottomSheet({
           <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-zinc-300 dark:bg-zinc-600" rounded="full" />
 
           {title && (
-            <Span size="sm" weight="semibold" className="text-zinc-800 dark:text-zinc-100 mt-2">
+            <Span size="sm" weight="semibold" className="mt-2" color="primary">
               {title}
             </Span>
           )}

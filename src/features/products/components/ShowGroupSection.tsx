@@ -69,10 +69,10 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
           </Span>
         )}
       </div>
-      <Text className="text-[10px] text-zinc-600 dark:text-zinc-400 leading-tight line-clamp-2 w-full" align="center">
+      <Text className="text-[10px] leading-tight line-clamp-2 w-full" color="muted" align="center">
         {member.title}
       </Text>
-      <Text className="text-[10px] text-zinc-800 dark:text-zinc-200" weight="semibold">{price}</Text>
+      <Text className="text-[10px]" color="primary" weight="semibold">{price}</Text>
     </Link>
   );
 }
@@ -90,16 +90,16 @@ function GroupTableRow({ member }: { member: GroupMember }) {
         </Div>
       </Td>
       <Td className="py-2 pr-3">
-        <Text className="text-zinc-800 dark:text-zinc-200 line-clamp-2" size="sm" weight="medium">{member.title}</Text>
+        <Text className="line-clamp-2" color="primary" size="sm" weight="medium">{member.title}</Text>
         {member.isGroupParent && (
           <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary)]">Parent</Span>
         )}
       </Td>
       <Td className="py-2 pr-3">
-        <Text className="text-zinc-700 dark:text-zinc-300" size="sm">{price}</Text>
+        <Text size="sm" color="muted">{price}</Text>
       </Td>
       <Td className="py-2 pr-3">
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs" transform="capitalize">{member.condition ?? "â€”"}</Text>
+        <Text size="xs" transform="capitalize" color="muted">{member.condition ?? "â€”"}</Text>
       </Td>
       <Td className="py-2">
         <Link
@@ -165,10 +165,10 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
         >
           <Row align="center" gap="xs">
             <Span size="xs" className="text-zinc-400 dark:text-zinc-400 mr-1">{open ? "â–¼" : "â–¶"}</Span>
-            <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="medium">
+            <Text size="sm" weight="medium" color="primary">
               {parentLabel}
             </Text>
-            <Span size="xs" className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5 text-zinc-600 dark:text-zinc-400">
+            <Span size="xs" className="ml-1 rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-0.5" color="muted">
               {members.length}
             </Span>
           </Row>

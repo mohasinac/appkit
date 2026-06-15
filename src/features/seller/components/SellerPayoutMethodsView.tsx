@@ -248,7 +248,7 @@ export function SellerPayoutMethodsView({
                           {row.isActive ? "Active" : "Inactive"}
                         </span>
                       </Row>
-                      <Text className="mt-1 text-zinc-500 dark:text-zinc-400 font-mono" size="xs">
+                      <Text className="mt-1 font-mono" color="muted" size="xs">
                         {row.maskedIdentifier}
                       </Text>
                     </Div>

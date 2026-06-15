@@ -115,7 +115,7 @@ export function CategoryProductsView({
               {category.name}
             </Heading>
             {category.description && (
-              <Text className="text-zinc-500 dark:text-zinc-400 mt-1">
+              <Text className="mt-1" color="muted">
                 {category.description}
               </Text>
             )}

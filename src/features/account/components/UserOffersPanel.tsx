@@ -82,10 +82,10 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
     <Div surface="card" padding="sm" className="space-y-3">
       <Row align="start" justify="between" gap="sm" wrap>
         <Div className="min-w-0">
-          <Text className="text-zinc-900 dark:text-zinc-100 truncate" size="sm" weight="semibold">
+          <Text className="truncate" color="primary" size="sm" weight="semibold">
             {offer.productTitle ?? "Unknown Product"}
           </Text>
-          <Text className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs">
+          <Text className="mt-0.5" color="muted" size="xs">
             {relativeTime(offer.createdAt)}
           </Text>
         </Div>
@@ -97,11 +97,11 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
       <Div className="flex gap-4 flex-wrap">
         <Div>
           <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Listed</Text>
-          <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">{formatRupees(offer.listedPrice)}</Text>
+          <Text size="sm" weight="medium" color="muted">{formatRupees(offer.listedPrice)}</Text>
         </Div>
         <Div>
           <Text className="text-zinc-400 dark:text-zinc-400 tracking-wide" size="xs" transform="uppercase">Your Offer</Text>
-          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">{formatRupees(offer.offerAmount)}</Text>
+          <Text size="sm" weight="semibold" color="primary">{formatRupees(offer.offerAmount)}</Text>
         </Div>
         {offer.counterAmount != null && (
           <Div>
@@ -118,7 +118,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
       </Div>
 
       {offer.sellerNote && (
-        <Text className="text-zinc-500 dark:text-zinc-400 italic" size="xs">
+        <Text className="italic" color="muted" size="xs">
           Seller note: "{offer.sellerNote}"
         </Text>
       )}
@@ -229,7 +229,7 @@ export function UserOffersPanel({
         message="You need to be signed in to manage your offers. Please log in or create an account to continue."
       />
       <Row align="center" justify="between">
-        <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="lg" weight="semibold">
+        <Heading level={2} size="lg" weight="semibold" color="primary">
           My Offers
         </Heading>
         <Button size="sm" variant="ghost" onClick={loadOffers} disabled={loading}

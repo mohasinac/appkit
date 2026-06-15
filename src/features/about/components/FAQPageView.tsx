@@ -63,7 +63,7 @@ export async function FAQPageView({
             <aside className="md:w-56 flex-shrink-0">
               <Heading
                 level={3}
-                className="uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-3" size="sm" weight="semibold"
+                className="uppercase tracking-wide mb-3" color="muted" size="sm" weight="semibold"
               >
                 {t("categoriesLabel")}
               </Heading>

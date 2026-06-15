@@ -127,9 +127,7 @@ export function SpinWheelView({
         message="You need to be signed in to spin the wheel. Please log in or create an account to continue."
       />
       <Heading
-        level={2}
-        className="text-zinc-900 dark:text-zinc-100" size="xl" weight="semibold"
-      >
+        level={2} size="xl" weight="semibold" color="primary">
         🎡 {l.heading}
       </Heading>
 
@@ -199,11 +197,11 @@ export function SpinWheelView({
       </Row>
 
       {alreadyUsed ? (
-        <Text className="text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+        <Text size="sm" align="center" color="muted">
           {l.alreadySpun}
         </Text>
       ) : !inWindow ? (
-        <Text className="text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+        <Text size="sm" align="center" color="muted">
           {l.outsideWindow}
         </Text>
       ) : null}

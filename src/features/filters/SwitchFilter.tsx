@@ -56,7 +56,7 @@ export function SwitchFilter({
           className="flex flex-1 items-center justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
-          <Text className="text-zinc-900 dark:text-zinc-50" size="sm" weight="semibold">
+          <Text size="sm" weight="semibold" color="primary">
             {title}
           </Text>
           <svg
@@ -106,7 +106,7 @@ export function SwitchFilter({
 
       {!isCollapsed && (
         <Row className="mt-3" align="center" justify="between" gap="3">
-          <Span size="sm" className="text-zinc-700 dark:text-zinc-300">
+          <Span size="sm" color="muted">
             {label}
           </Span>
           <Toggle checked={checked} onChange={onChange} size="sm" />

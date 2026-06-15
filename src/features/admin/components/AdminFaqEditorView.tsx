@@ -196,7 +196,7 @@ export function AdminFaqEditorView({
           />
 
           <Div className="space-y-1">
-            <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
+            <Text size="sm" weight="medium" color="muted">
               Answer
             </Text>
             <RichTextEditor
@@ -241,7 +241,7 @@ export function AdminFaqEditorView({
           />
 
           <Div className={`space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 ${__P.p4}`}>
-            <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">Visibility</Text>
+            <Text size="sm" weight="medium" color="muted">Visibility</Text>
             <Toggle label="Active (visible to users)" checked={isActive} onChange={setIsActive} />
             <Toggle label="Pinned (always shown at top)" checked={isPinned} onChange={setIsPinned} />
             <Toggle label="Show on homepage FAQ section" checked={showOnHomepage} onChange={setShowOnHomepage} />

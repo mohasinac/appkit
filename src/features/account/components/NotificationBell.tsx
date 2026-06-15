@@ -209,7 +209,7 @@ function renderNotificationDropdown(props: {
   return (
     <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 ${__O.hidden} ${dropdownClassName}`}>
       <Row justify="between" gap="none" className="px-4 py-3 border-b border-zinc-200 dark:border-slate-800">
-        <Heading level={3} className="text-zinc-900 dark:text-white" weight="semibold">
+        <Heading level={3} weight="semibold" color="primary">
           {labels.title}
           {unreadCount > 0 && <Span size="xs" weight="medium" className={CLS_UNREAD_PILL}>{unreadCount} {labels.unread}</Span>}
         </Heading>
@@ -244,8 +244,8 @@ function renderNotificationListContent(props: {
       <svg className="w-12 h-12 text-zinc-300 dark:text-zinc-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
-      <Text className="text-zinc-900 dark:text-white" weight="medium">{labels.empty}</Text>
-      <Text size="sm" className="mt-1 text-zinc-500 dark:text-zinc-400">{labels.emptyDesc}</Text>
+      <Text weight="medium" color="primary">{labels.empty}</Text>
+      <Text size="sm" className="mt-1" color="muted">{labels.emptyDesc}</Text>
     </Stack>
   );
   return (
@@ -255,11 +255,11 @@ function renderNotificationListContent(props: {
           <Span size="xl" className="flex-shrink-0 mt-0.5">{notificationIcons[notification.type] ?? "🔔"}</Span>
           <Div className="flex-1 min-w-0">
             <Div className={`flex items-start justify-between ${THEME_CONSTANTS.spacing.gap.xs}`}>
-              <Text size="sm" className="text-zinc-900 dark:text-white leading-tight" weight="medium">
+              <Text size="sm" className="leading-tight" color="primary" weight="medium">
                 {notification.title}
                 {!notification.isRead && <Span className="ml-1.5 inline-block w-2 h-2 rounded-full bg-primary flex-shrink-0 align-middle" />}
               </Text>
-              <Span size="xs" className="text-zinc-500 dark:text-zinc-400 flex-shrink-0">{formatRelativeTime(notification.createdAt)}</Span>
+              <Span size="xs" className="flex-shrink-0" color="muted">{formatRelativeTime(notification.createdAt)}</Span>
             </Div>
             <Text size="sm" className={`text-zinc-600 dark:text-zinc-300 mt-0.5 ${THEME_CONSTANTS.utilities.textClamp2}`}>{notification.message}</Text>
             <Row gap="3" className="mt-1.5">

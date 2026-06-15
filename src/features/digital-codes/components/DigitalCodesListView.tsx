@@ -46,7 +46,7 @@ export async function DigitalCodesListView({ searchParams = {} }: DigitalCodesLi
     <Main>
       <Section className="py-10">
         <Container size="xl">
-          <Heading level={1} className="mb-8 text-zinc-900 dark:text-zinc-50" size="3xl" weight="semibold">
+          <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             Digital Codes
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />

@@ -30,7 +30,7 @@ const STATE_OPTIONS = INDIAN_STATES.map((s) => ({ value: s, label: s }));
 // ── Section heading helper ─────────────────────────────────────────────────────
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
+    <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
       {children}
     </Text>
   );

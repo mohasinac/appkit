@@ -117,7 +117,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
           onChange={(e) => setSearch(e.target.value)}
           className="h-9 max-w-sm text-sm"
         />
-        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
+        <Text size="sm" color="muted">
           {filteredActions.length} action{filteredActions.length !== 1 ? "s" : ""}
         </Text>
       </Row>
@@ -149,7 +149,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                 >
                   <Td className="px-4 py-3">
                     <Div>
-                      <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{meta.label}</Text>
+                      <Text weight="medium" color="primary">{meta.label}</Text>
                       <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{id}</Text>
                     </Div>
                   </Td>

@@ -336,27 +336,27 @@ export function AdminSupportTicketDetailView({
           >
             {(currentStatus ?? "open").replace(/_/g, " ")}
           </Span>
-          <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+          <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">
             {category}
           </Span>
           {orderId && (
-            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">
               Order: {orderId}
             </Span>
           )}
         </Row>
 
         <Div className="text-sm text-zinc-500 dark:text-zinc-400">
-          From: <Span weight="medium" className="text-zinc-700 dark:text-zinc-200">{userDisplayName}</Span>
+          From: <Span weight="medium" color="primary">{userDisplayName}</Span>
         </Div>
 
         {/* Description */}
         {description && (
           <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
-            <Text className="mb-1 text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
+            <Text className="mb-1 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Description
             </Text>
-            <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200" size="sm">
+            <Text className="whitespace-pre-wrap" color="primary" size="sm">
               {description}
             </Text>
           </Div>
@@ -365,7 +365,7 @@ export function AdminSupportTicketDetailView({
         {/* Message thread */}
         {messages.length > 0 && (
           <Div className="space-y-2">
-            <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
+            <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Messages ({messages.length})
             </Text>
             <Div className={`space-y-2 max-h-64 ${__O.yAuto}`}>
@@ -379,14 +379,14 @@ export function AdminSupportTicketDetailView({
                   }`}
                 >
                   <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
-                    <Span weight="medium" className="text-zinc-600 dark:text-zinc-300">
+                    <Span weight="medium" color="muted">
                       {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
                     </Span>
                     {msg.createdAt && (
                       <Span>{new Date(msg.createdAt).toLocaleString()}</Span>
                     )}
                   </Row>
-                  <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
+                  <Text className="whitespace-pre-wrap" color="primary">{msg.body}</Text>
                 </Div>
               ))}
             </Div>
@@ -452,10 +452,10 @@ export function AdminSupportTicketDetailView({
           padding="sm"
           className="dark:border-zinc-700" gap="sm" rounded="lg" border="default"
         >
-          <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
+          <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             Linked parties
           </Text>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             Tag the buyer / store / order / product / bid this ticket concerns.
           </Text>
           {([
@@ -574,7 +574,7 @@ function OrderItemsPanel(props: {
       </Text>
       {linkedOrderId ? (
         <>
-          <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
+          <Text size="xs" color="muted">
             Editing order: <code className="font-mono">{linkedOrderId}</code>
           </Text>
           {!orderItemsOpen ? (
@@ -591,7 +591,7 @@ function OrderItemsPanel(props: {
           ) : (
             <>
               {orderItems.length === 0 ? (
-                <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+                <Text size="xs" color="muted">
                   Order has no items.
                 </Text>
               ) : (
@@ -644,7 +644,7 @@ function OrderItemsPanel(props: {
           )}
         </>
       ) : (
-        <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
+        <Text size="xs" color="muted">
           Set the{" "}
           <Text as="span" weight="semibold">
             Order ID
@@ -687,7 +687,7 @@ function StoreChangePanel(props: {
       </Text>
       {linkedStoreId ? (
         <>
-          <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
+          <Text size="xs" color="muted">
             Editing store: <code className="font-mono">{linkedStoreId}</code>
           </Text>
           <Select
@@ -723,7 +723,7 @@ function StoreChangePanel(props: {
           </Button>
         </>
       ) : (
-        <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
+        <Text size="xs" color="muted">
           Set the{" "}
           <Text as="span" weight="semibold">
             Store slug
@@ -753,7 +753,7 @@ function UnbanRequestPanel(props: {
       </Text>
       {linkedUserId ? (
         <>
-          <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
+          <Text size="xs" color="muted">
             Appellant: <code className="font-mono">{linkedUserId}</code>
           </Text>
           <Text size="xs" color="muted">
@@ -783,7 +783,7 @@ function UnbanRequestPanel(props: {
           </Row>
         </>
       ) : (
-        <Text className="text-zinc-600 dark:text-zinc-300" size="xs">
+        <Text size="xs" color="muted">
           Set the{" "}
           <Text as="span" weight="semibold">
             User slug

@@ -285,7 +285,7 @@ export function CouponsIndexListing({
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearPending} activeCount={activeFilterCount}>
         {/* Coupon type */}
         <>
-          <Heading level={6} className="tracking-wider text-zinc-500 dark:text-zinc-400 mb-3" size="xs" weight="semibold" transform="uppercase">
+          <Heading level={6} className="tracking-wider mb-3" color="muted" size="xs" weight="semibold" transform="uppercase">
             Discount Type
           </Heading>
           <Stack gap="xs">
@@ -316,7 +316,7 @@ export function CouponsIndexListing({
 
         {/* Date range */}
         <>
-          <Heading level={6} className="tracking-wider text-zinc-500 dark:text-zinc-400 mb-3" size="xs" weight="semibold" transform="uppercase">
+          <Heading level={6} className="tracking-wider mb-3" color="muted" size="xs" weight="semibold" transform="uppercase">
             Valid Date Range
           </Heading>
           <Stack gap="sm">

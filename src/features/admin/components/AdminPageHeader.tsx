@@ -96,7 +96,7 @@ export function AdminPageHeader({
                   {crumb.label}
                 </themeConfig.TextLink>
               ) : (
-                <Span weight="medium" className="text-zinc-700 dark:text-zinc-200">
+                <Span weight="medium" color="primary">
                   {crumb.label}
                 </Span>
               )}
@@ -116,7 +116,7 @@ export function AdminPageHeader({
             <Text className={themeConfig.subtitleClass}>{subtitle}</Text>
           )}
           {description && (
-            <Text className="text-zinc-500 dark:text-zinc-400 mt-1" size="sm">
+            <Text className="mt-1" color="muted" size="sm">
               {description}
             </Text>
           )}

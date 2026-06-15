@@ -61,7 +61,7 @@ export async function PrizeDrawsListingView({
         <Container size="xl">
           <Heading
             level={1}
-            className="mb-2 text-zinc-900 dark:text-zinc-100" size="3xl" weight="semibold"
+            className="mb-2" color="primary" size="3xl" weight="semibold"
           >
             Prize Draws
           </Heading>

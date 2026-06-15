@@ -130,7 +130,7 @@ export function AddressesIndexListing({
             ))}
           </Div>
         ) : addresses.length === 0 ? (
-          <Text className="py-8 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+          <Text className="py-8" color="muted" size="sm" align="center">
             {table.get(TABLE_KEYS.QUERY) ? `No addresses matching "${table.get(TABLE_KEYS.QUERY)}"` : "No saved addresses."}
           </Text>
         ) : (

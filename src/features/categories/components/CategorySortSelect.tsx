@@ -25,7 +25,7 @@ export function CategorySortSelect({
     <Row
       className={["items-center gap-3", className].filter(Boolean).join(" ")}
     >
-      <Span size="sm" className="text-zinc-600 dark:text-zinc-400">{label}</Span>
+      <Span size="sm" color="muted">{label}</Span>
       <Div className="min-w-44">
         <Select
           value={value}

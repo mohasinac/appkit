@@ -147,7 +147,7 @@ export function CategoryBundlesListing({
 
       <Div className="py-6">
         {pageItems.length === 0 ? (
-          <Text className="py-16 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+          <Text className="py-16" color="muted" size="sm" align="center">
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.
           </Text>
         ) : (
@@ -182,7 +182,7 @@ export function CategoryBundlesListing({
       >
         <Div className={`space-y-4 ${__P.p4}`}>
           <label className="flex items-center justify-between gap-3 cursor-pointer">
-            <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">Show out-of-stock bundles</Span>
+            <Span size="sm" weight="medium" color="muted">Show out-of-stock bundles</Span>
             <button
               type="button"
               role="switch"

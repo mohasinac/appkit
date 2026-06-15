@@ -54,7 +54,7 @@ export function FeaturedResultsSection({
 
         <Heading
           level={2}
-          className="mt-3 font-display text-zinc-900 dark:text-white" size="4xl"
+          className="mt-3 font-display" color="primary" size="4xl"
         >
           {title}
         </Heading>
@@ -69,7 +69,7 @@ export function FeaturedResultsSection({
         </Div>
 
         {subtitle && (
-          <Text className="mx-auto mt-4 max-w-md text-zinc-500 dark:text-zinc-400" size="sm">
+          <Text className="mx-auto mt-4 max-w-md" color="muted" size="sm">
             {subtitle}
           </Text>
         )}

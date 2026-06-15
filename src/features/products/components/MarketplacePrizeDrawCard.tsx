@@ -228,7 +228,7 @@ export function MarketplacePrizeDrawCard({
           </Text>
         </TextLink>
         <Row justify="between" className="mt-1" gap="sm">
-          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
+          <Text size="sm" weight="semibold" color="primary">
             {formatCurrency(pricePerEntry, getDefaultCurrency())}{" "}
             <Span size="xs" weight="normal" className="text-[var(--appkit-color-text-muted)]">
               {mergedLabels.pricePerEntryLabel}

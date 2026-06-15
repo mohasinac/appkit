@@ -113,7 +113,7 @@ function AddressCard({
       <Row align="start" justify="between" gap="xs">
         <Row gap="xs" className="min-w-0">
           <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
-          <Span size="sm" weight="semibold" className="text-zinc-900 dark:text-zinc-100 truncate">{address.label}</Span>
+          <Span size="sm" weight="semibold" className="truncate" color="primary">{address.label}</Span>
           {address.isDefault && (
             <Span size="xs" weight="medium" className={CLS_DEFAULT_PILL}>
               <Star className="h-3 w-3" />
@@ -140,10 +140,10 @@ function AddressCard({
           </button>
         </Row>
       </Row>
-      <Text className="text-zinc-700 dark:text-zinc-300" size="sm">
+      <Text size="sm" color="muted">
         {address.fullName} · {address.phone}
       </Text>
-      <Text className="text-zinc-500 dark:text-zinc-400 leading-relaxed" size="xs">
+      <Text className="leading-relaxed" color="muted" size="xs">
         {address.addressLine1}
         {address.addressLine2 ? `, ${address.addressLine2}` : ""}
         {address.landmark ? ` (near ${address.landmark})` : ""}<br />
@@ -266,7 +266,7 @@ export function SellerAddressesView({
         style={{ top: "var(--header-height, 0px)" }}
       >
         <Stack gap="none">
-          <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">Pickup Addresses</Heading>
+          <Heading level={2} size="base" weight="semibold" color="primary">Pickup Addresses</Heading>
           <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>
         </Stack>
         <Button size="sm" onClick={openAdd} className="flex items-center gap-1.5">
@@ -289,7 +289,7 @@ export function SellerAddressesView({
         ) : addresses.length === 0 ? (
           <Stack className="border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16" align="center" gap="3" rounded="xl">
             <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
-            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">No pickup addresses yet</Text>
+            <Text size="sm" color="muted">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>
               Add your first address
             </Button>

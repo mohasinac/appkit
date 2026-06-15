@@ -13,7 +13,7 @@ export function CategoryStoresListing({ stores }: CategoryStoresListingProps) {
   if (stores.length === 0) {
     return (
       <Stack className="justify-center py-16 text-center" align="center">
-        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
+        <Text size="sm" color="muted">
           No stores found in this category.
         </Text>
       </Stack>

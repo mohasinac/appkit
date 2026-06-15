@@ -284,14 +284,14 @@ export function AdminEventEntriesView({
 
   const responsesPanelSection = expandedEntry?.formResponses && Object.keys(expandedEntry.formResponses).length > 0 ? (
     <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 ${__P.p4} space-y-3`}>
-      <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+      <Text size="sm" weight="semibold" color="primary">
         Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
       </Text>
       <Div className="space-y-2">
         {Object.entries(expandedEntry.formResponses).map(([key, value]) => (
           <Div key={key} className="space-y-0.5">
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs" weight="medium">{key}</Text>
-            <Text className="text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap break-words" size="sm">
+            <Text size="xs" weight="medium" color="muted">{key}</Text>
+            <Text className="whitespace-pre-wrap break-words" color="primary" size="sm">
               {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}
             </Text>
           </Div>

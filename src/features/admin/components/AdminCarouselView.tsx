@@ -152,7 +152,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
         {row.thumbnailUrl && (
           <img src={row.thumbnailUrl} alt="" className="w-14 h-9 object-cover rounded flex-shrink-0 bg-zinc-200 dark:bg-zinc-800" />
         )}
-        <Span size="sm" className="text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</Span>
+        <Span size="sm" className="truncate" color="muted">{row.secondary}</Span>
       </Row>
     ) as unknown as string,
   }));
@@ -177,7 +177,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     {
       key: "primary",
       header: "Title",
-      render: (row) => <Span weight="medium" className="text-zinc-900 dark:text-zinc-100">{row.primary}</Span>,
+      render: (row) => <Span weight="medium" color="primary">{row.primary}</Span>,
     },
     {
       key: "secondary",
@@ -263,7 +263,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
 
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
           <Div className="space-y-2">
-            <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">Status</Text>
+            <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">Status</Text>
             <Div className="flex flex-wrap gap-2">
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
                 <Button key={opt.label} variant="ghost" type="button"

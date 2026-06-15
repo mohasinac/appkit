@@ -25,7 +25,7 @@ export function FAQSortDropdown({
 
   return (
     <Row align="center" gap="3">
-      <Span size="sm" className="text-zinc-600 dark:text-zinc-400">
+      <Span size="sm" color="muted">
         {labels?.label ?? "Sort"}
       </Span>
       <Div className="min-w-44">

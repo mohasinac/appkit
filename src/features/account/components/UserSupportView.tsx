@@ -159,7 +159,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
     <>
       <Div className="mx-auto max-w-2xl px-4 py-6">
         <Row className="mb-4" align="center" justify="between">
-          <Text className="text-zinc-900 dark:text-zinc-100" size="xl" weight="semibold">Support Tickets</Text>
+          <Text size="xl" weight="semibold" color="primary">Support Tickets</Text>
           <Button type="button" variant="primary" size="sm" onClick={() => setNewTicketOpen(true)}>New ticket</Button>
         </Row>
         {renderTicketListArea({ isLoading, error, tickets, setSelectedTicket, setDetailOpen })}
@@ -189,7 +189,7 @@ function renderTicketListArea(props: {
       )}
       {!isLoading && tickets.length === 0 && (
         <Div className="bg-zinc-50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/40" rounded="xl" border="default">
-          <Text className="text-zinc-500 dark:text-zinc-400" size="sm">You haven&apos;t opened any support tickets yet.</Text>
+          <Text size="sm" color="muted">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}
       <Ul className="space-y-3">
@@ -198,8 +198,8 @@ function renderTicketListArea(props: {
             <Button variant="ghost" type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
               <Row align="start" justify="between" gap="sm">
                 <Div className="min-w-0 flex-1">
-                  <Text className="text-zinc-900 dark:text-zinc-100 truncate" weight="medium">{ticket.subject}</Text>
-                  <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
+                  <Text className="truncate" color="primary" weight="medium">{ticket.subject}</Text>
+                  <Text size="xs" color="muted">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
                 </Div>
                 <Span size="xs" weight="medium" className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</Span>
               </Row>
@@ -262,26 +262,26 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
         <Div className={`flex flex-col gap-4 ${__P.p4}`}>
           <Div className="flex flex-wrap gap-2">
             <Span size="xs" weight="medium" className={`inline-flex rounded-full px-2.5 py-1 ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`}>{selectedTicket.status.replace(/_/g, " ")}</Span>
-            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{selectedTicket.category.replace(/_/g, " ")}</Span>
-            {selectedTicket.orderId && <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">Order: {selectedTicket.orderId}</Span>}
+            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">{selectedTicket.category.replace(/_/g, " ")}</Span>
+            {selectedTicket.orderId && <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">Order: {selectedTicket.orderId}</Span>}
           </Div>
           {selectedTicket.description && (
             <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
               <Text className="mb-1 tracking-wide" size="xs" weight="semibold" color="muted" transform="uppercase">Your description</Text>
-              <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200" size="sm">{selectedTicket.description}</Text>
+              <Text className="whitespace-pre-wrap" color="primary" size="sm">{selectedTicket.description}</Text>
             </Div>
           )}
           {(selectedTicket.messages ?? []).length > 0 && (
             <Div className="space-y-2">
-              <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">Messages</Text>
+              <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Messages</Text>
               <Div className={`space-y-2 max-h-72 ${__O.yAuto}`}>
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <Div key={msg.id ?? i} className={`rounded-lg ${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`}>
                     <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
-                      <Span weight="medium" className="text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</Span>
+                      <Span weight="medium" color="muted">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</Span>
                       {msg.createdAt && <Span>{new Date(msg.createdAt).toLocaleString()}</Span>}
                     </Row>
-                    <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
+                    <Text className="whitespace-pre-wrap" color="primary">{msg.body}</Text>
                   </Div>
                 ))}
               </Div>

@@ -106,12 +106,10 @@ export function SellerFeaturesView() {
       <Row align="center" justify="between">
         <Div>
           <Heading
-            level={1}
-            className="text-zinc-900 dark:text-zinc-50" size="lg" weight="semibold"
-          >
+            level={1} size="lg" weight="semibold" color="primary">
             Custom feature badges
           </Heading>
-          <Text className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs">
+          <Text className="mt-0.5" color="muted" size="xs">
             {features.length} of {limit} used. Platform features are always
             available on top of your custom ones.
           </Text>
@@ -154,14 +152,12 @@ export function SellerFeaturesView() {
                 className="flex-1 text-left"
               >
                 <Text
-                  as="div"
-                  className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium"
-                >
+                  as="div" size="sm" weight="medium" color="primary">
                   {f.label}
                 </Text>
                 <Text
                   as="div"
-                  className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs"
+                  className="mt-0.5" color="muted" size="xs"
                 >
                   {f.category} · {f.productTypes.join(" · ")}
                 </Text>

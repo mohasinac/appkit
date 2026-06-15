@@ -127,7 +127,7 @@ export function FAQPageContent({
         <Heading level={1} className="mb-4 sm:text-4xl" size="3xl" weight="bold">
           {labels.title}
         </Heading>
-        <Text className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-300">
+        <Text className="mx-auto max-w-2xl" color="muted">
           {labels.subtitle}
         </Text>
       </Div>
@@ -166,7 +166,7 @@ export function FAQPageContent({
             inlineToolbar
             className="space-y-6"
             renderHeader={() => (
-              <Text className="text-zinc-600 dark:text-zinc-300" size="sm">
+              <Text size="sm" color="muted">
                 {labels.resultCount(total)}
                 {selectedCategory !== "all"
                   ? ` ${labels.inCategory(categories.find((c) => c.key === selectedCategory)?.label ?? selectedCategory)}`

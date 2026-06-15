@@ -54,7 +54,7 @@ export function NavPermissionsManager({
     <Stack gap="lg">
       {navGroups.map((group) => (
         <Div key={group.groupLabel}>
-          <Text className="mb-3 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+          <Text className="mb-3 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             {group.groupLabel}
           </Text>
           <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
@@ -81,7 +81,7 @@ export function NavPermissionsManager({
                     >
                       <Td className="px-4 py-3">
                         <Div>
-                          <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{item.label}</Text>
+                          <Text weight="medium" color="primary">{item.label}</Text>
                           {item.id && (
                             <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{item.id}</Text>
                           )}

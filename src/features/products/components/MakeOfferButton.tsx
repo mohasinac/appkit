@@ -165,11 +165,11 @@ export function MakeOfferButton({
         }
       >
         <Stack gap="md">
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             Listed at {fmt(listedPrice)} · Minimum offer: {fmt(minOffer)}
           </Text>
           <Div className="space-y-1">
-            <Text className="text-zinc-600 dark:text-zinc-400" size="xs" weight="medium">Your offer amount</Text>
+            <Text size="xs" weight="medium" color="muted">Your offer amount</Text>
             <Input
               type="number"
               value={String(offerAmount)}
@@ -184,7 +184,7 @@ export function MakeOfferButton({
             </Text>
           </Div>
           <Div className="space-y-1">
-            <Text className="text-zinc-600 dark:text-zinc-400" size="xs" weight="medium">Note to seller (optional)</Text>
+            <Text size="xs" weight="medium" color="muted">Note to seller (optional)</Text>
             <Input
               type="text"
               value={buyerNote}
@@ -194,7 +194,7 @@ export function MakeOfferButton({
               aria-label="Note to seller"
             />
           </Div>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             The seller will accept, decline, or suggest a counter price.
           </Text>
           {state === "error" && (

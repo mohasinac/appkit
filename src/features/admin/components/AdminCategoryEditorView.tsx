@@ -154,7 +154,7 @@ export function AdminCategoryEditorView({
 
   const actionSidebar = (
     <Card variant="outlined" padding="md" className="space-y-3">
-      <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+      <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
         Status
       </Text>
       <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
@@ -198,7 +198,7 @@ export function AdminCategoryEditorView({
     >
       {/* ── Identity ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
+        <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
           Identity
         </Text>
         <Div className="space-y-4">
@@ -229,7 +229,7 @@ export function AdminCategoryEditorView({
             placeholder="Brief description of the category"
           />
           <Stack gap="xs">
-            <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
+            <Text size="sm" weight="medium" color="muted">
               Parent category
             </Text>
             <PaginatedSelect
@@ -257,7 +257,7 @@ export function AdminCategoryEditorView({
 
       {/* ── Display ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400 mb-4" size="xs" weight="semibold" transform="uppercase">
+        <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
           Display
         </Text>
         <Div className="space-y-4">

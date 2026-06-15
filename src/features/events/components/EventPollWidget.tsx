@@ -82,7 +82,7 @@ export function EventPollWidget({
   if (isEnded) {
     return (
       <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-4 space-y-3 ${className}`}>
-        <Text className="text-zinc-500 dark:text-zinc-400" size="sm" weight="medium">This poll has closed.</Text>
+        <Text size="sm" weight="medium" color="muted">This poll has closed.</Text>
         {totalEntries !== undefined && (
           <Text className="text-zinc-400 dark:text-zinc-400" size="sm">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
         )}
@@ -100,8 +100,8 @@ export function EventPollWidget({
   if (pollConfig.requireLogin && !user) {
     return (
       <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-6 py-8 text-center space-y-3 ${className}`}>
-        <Text className="text-zinc-900 dark:text-zinc-100" weight="semibold">Login to vote</Text>
-        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">You need an account to participate in this poll.</Text>
+        <Text weight="semibold" color="primary">Login to vote</Text>
+        <Text size="sm" color="muted">You need an account to participate in this poll.</Text>
         <a
           href={String(ROUTES.AUTH.LOGIN)}
           className="inline-block rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-600"
@@ -116,7 +116,7 @@ export function EventPollWidget({
     return (
       <Div className={`${CLS_THANKS_BOX} ${className}`}>
         <Text className="text-success" weight="semibold">Vote recorded!</Text>
-        <Text className="text-zinc-500 dark:text-zinc-400" size="sm">Thanks for participating.</Text>
+        <Text size="sm" color="muted">Thanks for participating.</Text>
       </Div>
     );
   }
@@ -128,7 +128,7 @@ export function EventPollWidget({
         onClose={() => setShowLoginModal(false)}
         message="You need to be signed in to vote in this poll. Please log in or create an account to continue."
       />
-      <Text className="text-zinc-700 dark:text-zinc-200" size="sm" weight="medium">
+      <Text size="sm" weight="medium" color="primary">
         {isMulti ? "Select all that apply:" : "Choose one:"}
       </Text>
       <Div className="space-y-2">
@@ -145,7 +145,7 @@ export function EventPollWidget({
               onChange={() => toggleVote(opt.id)}
               className="accent-primary"
             />
-            <Span size="sm" className="text-zinc-700 dark:text-zinc-300">{opt.label}</Span>
+            <Span size="sm" color="muted">{opt.label}</Span>
           </label>
         ))}
       </Div>

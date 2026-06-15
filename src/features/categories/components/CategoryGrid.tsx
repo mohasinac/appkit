@@ -80,7 +80,7 @@ export function CategoryCard({
           <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
             {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
           </Text>
-          <Span size="xs" weight="medium" className="inline-flex items-center gap-1 rounded-md border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 text-zinc-600 dark:text-zinc-300 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors">
+          <Span size="xs" weight="medium" className="inline-flex items-center gap-1 rounded-md border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors" color="muted">
             Browse <ArrowRight className="h-3 w-3" />
           </Span>
         </Row>

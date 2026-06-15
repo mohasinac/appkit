@@ -126,7 +126,7 @@ function PreOrderInfoSection({
             Pre-Order
           </Span>
           {productionStatus && (
-            <Span size="xs" weight="medium" className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-zinc-600 dark:text-zinc-300">
+            <Span size="xs" weight="medium" className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5" color="muted">
               {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
             </Span>
           )}
@@ -136,7 +136,7 @@ function PreOrderInfoSection({
             </Span>
           )}
         </Row>
-        <Heading level={1} className="leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl" size="xl" weight="bold">
+        <Heading level={1} className="leading-snug sm:text-2xl" color="primary" size="xl" weight="bold">
           {title}
         </Heading>
       </Div>
@@ -184,7 +184,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {!category && categoryName && (
-            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">
+            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted">
               {categoryName}
             </Span>
           )}
@@ -197,7 +197,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {brand && !brandSlug && (
-            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">
+            <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted">
               {brand}
             </Span>
           )}
@@ -210,7 +210,7 @@ function PreOrderInfoSection({
 
       {!productFeatures && features.length > 0 && (
         <Div className="border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3" rounded="xl">
-          <Text className="mb-2 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+          <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             About this product
           </Text>
           <Ul className="space-y-1.5">
@@ -239,7 +239,7 @@ function PreOrderInfoSection({
               <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">
                 Sold by
               </Text>
-              <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">
+              <Text size="sm" weight="semibold" color="primary">
                 {safeSeller}
               </Text>
             </Div>
@@ -290,7 +290,7 @@ function PreOrderBuyBarPanel({
       {reserveTarget > 0 && (
         <Div className="space-y-2">
           <Row justify="between" align="center">
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+            <Text size="xs" color="muted">
               {reservedCount} of {reserveTarget} reserved
             </Text>
             <Span size="xs" weight="semibold" className="text-primary-600 dark:text-primary-400">
@@ -322,11 +322,11 @@ function PreOrderBuyBarPanel({
         <>
           {price !== null && (
             <Div>
-              <Text className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="bold">
+              <Text size="2xl" weight="bold" color="primary">
                 {formatCurrency(price, currency)}
               </Text>
               {depositAmount !== null && (
-                <Text className="mt-0.5 text-zinc-500 dark:text-zinc-400" size="xs">
+                <Text className="mt-0.5" color="muted" size="xs">
                   Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
                 </Text>
               )}
@@ -337,7 +337,7 @@ function PreOrderBuyBarPanel({
               Reserve Now
             </Button>
             {isCancellable && (
-              <Text className="text-zinc-500 dark:text-zinc-400" size="xs" align="center">
+              <Text size="xs" align="center" color="muted">
                 ✓ Free cancellation before production
               </Text>
             )}
@@ -346,7 +346,7 @@ function PreOrderBuyBarPanel({
             <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
               <Row wrap gap="xs">
                 {tags.map((tag) => (
-                  <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300">
+                  <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted">
                     {tag}
                   </Span>
                 ))}
@@ -384,7 +384,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
         <Section className="py-20">
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
-              <Heading level={1} className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold">
+              <Heading level={1} size="2xl" weight="semibold" color="primary">
                 Pre-Order Not Found
               </Heading>
               <Text color="muted">
@@ -515,7 +515,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               </>
             )}
             <Span aria-hidden>/</Span>
-            <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
+            <Span className="truncate max-w-[200px]" color="muted">{title}</Span>
           </Nav>
           <ShareButton title={title} />
         </Row>

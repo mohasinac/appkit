@@ -88,11 +88,11 @@ export function FooterLayout({
                       {item.icon}
                     </Span>
                     <Span>
-                      <Span size="sm" weight="bold" className="text-zinc-900 dark:text-zinc-100 block">
+                      <Span size="sm" weight="bold" className="block" color="primary">
                         {item.label}
                       </Span>
                       {item.subtitle && (
-                        <Span size="xs" className="text-zinc-500 dark:text-zinc-400 block">
+                        <Span size="xs" className="block" color="muted">
                           {item.subtitle}
                         </Span>
                       )}
@@ -109,10 +109,10 @@ export function FooterLayout({
         <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
           <Div className="lg:col-span-2 space-y-4">
-            <Heading level={5} className="text-zinc-900 dark:text-zinc-50" size="xl" weight="bold">
+            <Heading level={5} size="xl" weight="bold" color="primary">
               {brandName}
             </Heading>
-            <Text className="text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm" size="sm">
+            <Text className="leading-relaxed max-w-sm" color="muted" size="sm">
               {brandDescription}
             </Text>
 
@@ -181,7 +181,7 @@ export function FooterLayout({
 
                 {/* Desktop column */}
                 <Div className="hidden lg:block">
-                  <Text className="tracking-wider text-zinc-500 dark:text-zinc-400 mb-3" size="xs" weight="semibold" transform="uppercase">
+                  <Text className="tracking-wider mb-3" color="muted" size="xs" weight="semibold" transform="uppercase">
                     {group.heading}
                   </Text>
                   <Ul className="space-y-2.5">
@@ -204,7 +204,7 @@ export function FooterLayout({
 
         {/* Bottom bar */}
         <Stack className="mt-10 pt-6 border-t border-zinc-200 dark:border-slate-800 sm:flex-row justify-between text-xs text-zinc-600 dark:text-zinc-400" align="center" gap="3">
-          <Text className="text-zinc-600 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             {copyrightText}
           </Text>
           {bottomLinks.length > 0 && (
@@ -224,7 +224,7 @@ export function FooterLayout({
             </nav>
           )}
           {madeInText && (
-            <Text className="text-zinc-600 dark:text-zinc-400" size="xs">
+            <Text size="xs" color="muted">
               {madeInText}
             </Text>
           )}

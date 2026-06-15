@@ -265,7 +265,7 @@ export function CouponCard({
             {n.isActive ? labels.active : labels.inactive}
           </Span>
           {n.scope && (
-            <Span weight="semibold" className="inline-flex items-center rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] tracking-wide text-zinc-700 dark:bg-zinc-700/60 dark:text-zinc-200" transform="uppercase">
+            <Span weight="semibold" className="inline-flex items-center rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] tracking-wide dark:bg-zinc-700/60" color="primary" transform="uppercase">
               {n.scope}
             </Span>
           )}

@@ -248,7 +248,7 @@ export function AdminBlogEditorView({
             placeholder="Short summary shown in listings and cards"
           />
           <Div className="space-y-1">
-            <Text className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
+            <Text size="sm" weight="medium" color="muted">
               Content
             </Text>
             <RichTextEditor

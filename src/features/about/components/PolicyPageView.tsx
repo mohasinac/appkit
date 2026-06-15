@@ -119,7 +119,7 @@ export async function PolicyPageView({
           <Div className={`mt-14 pt-8 border-t ${themed.border}`}>
             <Heading
               level={3}
-              className="mb-3 uppercase tracking-wide text-zinc-500 dark:text-zinc-400" size="sm" weight="semibold"
+              className="mb-3 uppercase tracking-wide" color="muted" size="sm" weight="semibold"
             >
               {t("relatedTitle")}
             </Heading>

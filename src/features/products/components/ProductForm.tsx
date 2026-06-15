@@ -201,7 +201,7 @@ export function ProductForm({
         }</>
       ) : (
         <Stack gap="xs">
-          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
+          <Text size="sm" weight="medium" color="primary">
             {t("formDescription")}
           </Text>
           <RichTextEditor
@@ -210,7 +210,7 @@ export function ProductForm({
             disabled={isReadonly}
             placeholder="Enter product description"
           />
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             Rich text is supported for product descriptions.
           </Text>
         </Stack>
@@ -250,7 +250,7 @@ export function ProductForm({
 
       {/* ── Brand ───────────────────────────────────────────────────────── */}
       <Stack gap="xs">
-        <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
+        <Text size="sm" weight="medium" color="primary">
           {t("formBrand")}
         </Text>
         {/* Mode selector */}
@@ -280,12 +280,12 @@ export function ProductForm({
         </Div>
         {/* Help text for unbranded / mixed */}
         {(product.brandMode === "unbranded") && (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             Unbranded items won&apos;t appear in brand-filtered results.
           </Text>
         )}
         {(product.brandMode === "mixed") && (
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             Mixed-brand items won&apos;t appear in single-brand filters. Select all applicable brands.
           </Text>
         )}
@@ -964,11 +964,11 @@ export function ProductForm({
       <Div>
         <Heading
           level={3}
-          className="mb-1 text-zinc-700 dark:text-zinc-300" size="sm" weight="semibold"
+          className="mb-1" color="muted" size="sm" weight="semibold"
         >
           Custom Sections
         </Heading>
-        <Text className="mb-3 text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text className="mb-3" color="muted" size="xs">
           Add up to 3 custom tabs to your product page — e.g. "Box Contents",
           "Compatibility", "Grading Details".
         </Text>
@@ -1000,10 +1000,10 @@ export function ProductForm({
 
       {/* ── Physical Inventory Location ── */}
       <Div>
-        <Heading level={3} className="mb-1 text-zinc-700 dark:text-zinc-300" size="sm" weight="semibold">
+        <Heading level={3} className="mb-1" color="muted" size="sm" weight="semibold">
           Physical Inventory
         </Heading>
-        <Text className="mb-3 text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text className="mb-3" color="muted" size="xs">
           Assign a storage location for warehouse or shelf organisation. Used by the Print & Label Center.
         </Text>
         <FormGroup columns={3}>

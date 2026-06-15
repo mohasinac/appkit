@@ -62,9 +62,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
   return (
     <Article className="space-y-4">
       <Heading
-        level={2}
-        className="text-zinc-900 dark:text-zinc-100" size="xl" weight="semibold"
-      >
+        level={2} size="xl" weight="semibold" color="primary">
         🎟️ {l.heading}
       </Heading>
 
@@ -83,7 +81,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
             <Text className={CLS_LABEL}>
               {l.prizeLabel}
             </Text>
-            <Text className="mt-1 text-zinc-800 dark:text-zinc-100" size="base">
+            <Text className="mt-1" color="primary" size="base">
               {event.rafflePrize}
             </Text>
           </Div>
@@ -106,7 +104,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           {typeof event.raffleEntryCount === "number" ? (
             <Span>
               {l.poolLabel}:{" "}
-              <Span weight="medium" className="text-zinc-900 dark:text-zinc-100">
+              <Span weight="medium" color="primary">
                 {event.raffleEntryCount}
               </Span>
             </Span>
@@ -121,7 +119,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
 
       {event.raffleGithubFunctionUrl ? (
         <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 ${__P.p4} text-sm`}>
-          <Text className="text-zinc-700 dark:text-zinc-200" weight="medium">
+          <Text weight="medium" color="primary">
             {l.fairnessLabel}
           </Text>
           <TextLink

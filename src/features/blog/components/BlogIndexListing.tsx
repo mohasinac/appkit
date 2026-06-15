@@ -42,7 +42,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
     );
   }
   if (posts.length === 0) {
-    return <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">No posts found.</Text>;
+    return <Text className="py-12" color="muted" size="sm" align="center">No posts found.</Text>;
   }
   if (view === "list") {
     return (

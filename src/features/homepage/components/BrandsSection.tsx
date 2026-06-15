@@ -81,7 +81,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
           {initial}
         </Row>
       )}
-      <Text className="w-full truncate text-zinc-700 dark:text-zinc-300" size="xs" weight="medium" align="center">
+      <Text className="w-full truncate" color="muted" size="xs" weight="medium" align="center">
         {brand.name}
       </Text>
     </Link>

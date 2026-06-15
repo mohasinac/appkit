@@ -25,14 +25,14 @@ export function ProductCardMetadataSection({ card }: ProductCardMetadataSectionP
 
   return (
     <Stack gap="sm">
-      <Heading level={3} className="tracking-wide text-zinc-500 dark:text-zinc-400" size="sm" weight="semibold" transform="uppercase">
+      <Heading level={3} className="tracking-wide" color="muted" size="sm" weight="semibold" transform="uppercase">
         Card details
       </Heading>
       <Div className="grid grid-cols-2 gap-y-1 text-sm sm:grid-cols-[140px_1fr]">
         {rows.map(([label, value]) => (
           <React.Fragment key={label}>
             <Text color="muted">{label}</Text>
-            <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{value}</Text>
+            <Text weight="medium" color="primary">{value}</Text>
           </React.Fragment>
         ))}
       </Div>

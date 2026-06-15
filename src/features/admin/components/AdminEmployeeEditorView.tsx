@@ -105,9 +105,9 @@ interface PermissionDomainsPanelProps {
 function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPanelProps) {
   return (
     <Stack gap="sm">
-      <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">
+      <Span size="sm" weight="medium" color="muted">
         Permissions
-        <Span size="xs" weight="normal" className="ml-2 text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" weight="normal" className="ml-2" color="muted">
           ({permissions.size} selected)
         </Span>
       </Span>
@@ -290,7 +290,7 @@ export function AdminEmployeeEditorView({
               onChange={(e) => applyGroupPreset(e.target.value)}
               options={GROUP_OPTIONS}
             />
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+            <Text size="xs" color="muted">
               Selecting a group auto-fills the permissions below. You can still
               customise individual permissions.
             </Text>

@@ -48,11 +48,11 @@ function NavItemRow({
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
       </Stack>
       <Div className="flex-1 min-w-0">
-        <Text className="text-zinc-800 dark:text-zinc-100 truncate" size="sm" weight="medium">
+        <Text className="truncate" color="primary" size="sm" weight="medium">
           {item.parentId ? <Span className="mr-1" color="faint">↳</Span> : null}
           {item.label}
         </Text>
-        <Text className="text-zinc-500 dark:text-zinc-400 truncate" size="xs">{item.href}</Text>
+        <Text className="truncate" color="muted" size="xs">{item.href}</Text>
       </Div>
       <Toggle checked={item.isVisible ?? true} onChange={(val) => onVisibilityChange(item.id!, val)} label="" />
       <RowActionMenu actions={[
@@ -155,7 +155,7 @@ export function AdminNavigationView({
             </Alert>
           ) : null,
           <Row key="header" className="mb-4" align="center" justify="between">
-            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">
+            <Text size="sm" color="muted">
               {sorted.length} nav item{sorted.length !== 1 ? "s" : ""}
             </Text>
             <Button

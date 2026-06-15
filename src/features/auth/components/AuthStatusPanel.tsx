@@ -56,7 +56,7 @@ export function AuthStatusPanel({
         {title}
       </Heading>
       {message ? (
-        <Text className="mb-6 text-zinc-600 dark:text-zinc-400" size="sm">
+        <Text className="mb-6" color="muted" size="sm">
           {message}
         </Text>
       ) : null}

@@ -254,7 +254,7 @@ export default function BottomActions() {
       {/* -- Info label row (page mode only) --------------------------------- */}
       {infoLabel && !isBulkMode && (
         <Div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80">
-          <Text className="text-zinc-500 dark:text-zinc-400 leading-5 truncate" size="xs" weight="semibold">
+          <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
             {infoLabel}
           </Text>
         </Div>

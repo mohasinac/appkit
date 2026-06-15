@@ -55,7 +55,7 @@ export function ContactCTA({
         {labels?.title ?? "Need More Help?"}
       </Heading>
 
-      <Text className="mx-auto mb-6 max-w-2xl text-zinc-600 dark:text-zinc-300">
+      <Text className="mx-auto mb-6 max-w-2xl" color="muted">
         {labels?.description ?? "Our support team is here to help you."}
       </Text>
 
@@ -68,7 +68,7 @@ export function ContactCTA({
           <Text className={CLS_CONTACT_LABEL}>
             {labels?.emailUs ?? "Email Us"}
           </Text>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             {email}
           </Text>
         </TextLink>
@@ -81,7 +81,7 @@ export function ContactCTA({
           <Text className={CLS_CONTACT_LABEL}>
             {labels?.callUs ?? "Call Us"}
           </Text>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             {phone}
           </Text>
         </TextLink>
@@ -93,7 +93,7 @@ export function ContactCTA({
           <Text className={CLS_CONTACT_LABEL}>
             {labels?.contactForm ?? "Contact Form"}
           </Text>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+          <Text size="xs" color="muted">
             {labels?.submitRequest ?? "Submit a request"}
           </Text>
         </TextLink>

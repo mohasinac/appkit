@@ -16,8 +16,8 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
     header: "Name",
     render: (row) => (
       <Div className="space-y-0.5">
-        <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{String(row.primary ?? "")}</Text>
-        {row.secondary ? <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{String(row.secondary)}</Text> : null}
+        <Text weight="medium" color="primary">{String(row.primary ?? "")}</Text>
+        {row.secondary ? <Text size="xs" color="muted">{String(row.secondary)}</Text> : null}
       </Div>
     ),
   },

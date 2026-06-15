@@ -120,7 +120,7 @@ export function AdminScammerEditorView({
             {(currentStatus ?? "pending_review").replace(/_/g, " ")}
           </Span>
           {scamType && (
-            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">
               {scamType.replace(/_/g, " ")}
             </Span>
           )}
@@ -129,7 +129,7 @@ export function AdminScammerEditorView({
         {/* Names */}
         {displayNames.length > 0 && (
           <Div>
-            <Text className="mb-1 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+            <Text className="mb-1 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Names / Aliases
             </Text>
             <Div className="flex flex-wrap gap-1">
@@ -186,7 +186,7 @@ export function AdminScammerEditorView({
             <Text className={CLS_SECTION_LABEL}>
               Description
             </Text>
-            <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200" size="sm">
+            <Text className="whitespace-pre-wrap" color="primary" size="sm">
               {description}
             </Text>
           </Div>
@@ -195,7 +195,7 @@ export function AdminScammerEditorView({
         {/* Reporter */}
         <Div className="text-xs text-zinc-500 dark:text-zinc-400">
           Reported by:{" "}
-          <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">
+          <Span weight="medium" color="muted">
             {reportedByAnon ? "Anonymous" : (reportedBy ?? "Unknown")}
           </Span>
         </Div>

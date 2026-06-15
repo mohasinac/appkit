@@ -52,14 +52,14 @@ export function NewsletterSection({
 
         <Heading
           level={2}
-          className="sm:text-3xl text-zinc-900 dark:text-white mb-3" size="2xl" weight="bold"
+          className="sm:text-3xl mb-3" color="primary" size="2xl" weight="bold"
         >
           {title}
         </Heading>
         {subtitle && (
           <Text
             size="base"
-            className="text-zinc-500 dark:text-zinc-400 mb-8 max-w-md mx-auto"
+            className="mb-8 max-w-md mx-auto" color="muted"
           >
             {subtitle}
           </Text>

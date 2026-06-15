@@ -139,7 +139,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <Div className="space-y-2">
-        <Text className="tracking-widest text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">
+        <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Type
         </Text>
         <Div className="flex flex-wrap gap-2">

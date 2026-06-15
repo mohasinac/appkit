@@ -63,8 +63,8 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       sortable: true,
       render: (row) => (
         <Div className="space-y-1">
-          <Text className="text-zinc-900 dark:text-zinc-100" weight="semibold">{row.primary}</Text>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{row.secondary}</Text>
+          <Text weight="semibold" color="primary">{row.primary}</Text>
+          <Text size="xs" color="muted">{row.secondary}</Text>
         </Div>
       ),
     },
@@ -85,7 +85,7 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       sortable: true,
       className: "w-36",
       render: (row) => (
-        <Span size="sm" className="text-zinc-600 dark:text-zinc-300">{row.updatedAt}</Span>
+        <Span size="sm" color="muted">{row.updatedAt}</Span>
       ),
     },
   ];

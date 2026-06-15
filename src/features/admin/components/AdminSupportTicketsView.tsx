@@ -59,9 +59,9 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
       const priority = toStringValue(row._raw?.priority, "normal");
       return (
         <Div className="space-y-1">
-          <Text className="text-zinc-900 dark:text-zinc-100" weight="medium">{row.primary}</Text>
+          <Text weight="medium" color="primary">{row.primary}</Text>
           {row.secondary ? (
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{row.secondary}</Text>
+            <Text size="xs" color="muted">{row.secondary}</Text>
           ) : null}
           <span
             className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${

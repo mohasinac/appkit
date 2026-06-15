@@ -61,7 +61,7 @@ export function Slider({
             </label>
           )}
           {showValue && (
-            <Span size="sm" weight="semibold" className="tabular-nums text-zinc-900 dark:text-zinc-100">
+            <Span size="sm" weight="semibold" className="tabular-nums" color="primary">
               {displayValue}
             </Span>
           )}

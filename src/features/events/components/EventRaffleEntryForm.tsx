@@ -80,7 +80,7 @@ export function EventRaffleEntryForm({
         </Stack>
       ) : null}
 
-      <Text className="text-zinc-600 dark:text-zinc-400" size="sm">
+      <Text size="sm" color="muted">
         {eligibilityCopy}
       </Text>
 

@@ -174,9 +174,9 @@ export function AdminStoreEditorView({
 
   const renderCapabilitiesSection = () => (
     <Stack gap="sm">
-      <Span size="sm" weight="medium" className="text-zinc-700 dark:text-zinc-300">
+      <Span size="sm" weight="medium" color="muted">
         Capabilities
-        <Span size="xs" weight="normal" className="ml-2 text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" weight="normal" className="ml-2" color="muted">
           ({capabilities.size} active)
         </Span>
       </Span>

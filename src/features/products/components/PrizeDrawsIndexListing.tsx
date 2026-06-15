@@ -146,7 +146,7 @@ export function PrizeDrawsIndexListing({
         hasActiveState={hasActiveState}
         extra={
           <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
-            <Span size="xs" className="hidden sm:inline text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+            <Span size="xs" className="hidden sm:inline whitespace-nowrap" color="muted">
               Show closed
             </Span>
             <button
@@ -196,7 +196,7 @@ export function PrizeDrawsIndexListing({
             ))}
           </Div>
         ) : filteredDraws.length === 0 ? (
-          <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+          <Text className="py-12" color="muted" size="sm" align="center">
             No prize draws found.
           </Text>
         ) : (

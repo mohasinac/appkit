@@ -103,19 +103,19 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
             <Span size="xs" weight="medium" className="inline-block rounded-full bg-success-surface px-2.5 py-0.5 text-success">Active</Span>
           )}
         </Row>
-        <Heading level={1} className="leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl" size="xl" weight="bold">{title}</Heading>
+        <Heading level={1} className="leading-snug sm:text-2xl" color="primary" size="xl" weight="bold">{title}</Heading>
       </Div>
       <Div>
-        <Text className="text-zinc-500 dark:text-zinc-400 mb-0.5" size="xs">Current bid</Text>
+        <Text className="mb-0.5" color="muted" size="xs">Current bid</Text>
         <Row align="center" gap="sm" wrap>
           <Span weight="bold" className="text-primary-600 dark:text-primary-400" size="2xl">{formatCurrency(currentBid, currency)}</Span>
-          <Span size="sm" weight="medium" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-zinc-600 dark:text-zinc-300">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
+          <Span size="sm" weight="medium" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1" color="muted">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
         </Row>
-        {endDate && <Text className="mt-1.5 text-zinc-500 dark:text-zinc-400" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" className="text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
+        {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
         <Row align="center" gap="sm" className="border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3 py-2" rounded="lg">
-          <Span size="xs" className="text-zinc-600 dark:text-zinc-400">Buy Now:</Span>
+          <Span size="xs" color="muted">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
         </Row>
       )}
@@ -123,15 +123,15 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       {(categoryName || category || brand) && (
         <Row gap="sm" wrap>
           {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
-          {!category && categoryName && <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">{categoryName}</Span>}
+          {!category && categoryName && <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted">{categoryName}</Span>}
           {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
-          {brand && !brandSlug && <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-zinc-500 dark:text-zinc-400">{brand}</Span>}
+          {brand && !brandSlug && <Span size="xs" weight="medium" className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1" color="muted">{brand}</Span>}
         </Row>
       )}
       {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
       {!productFeatures && features.length > 0 && (
         <Div className="border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3" rounded="xl">
-          <Text className="mb-2 tracking-wide text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold" transform="uppercase">About this item</Text>
+          <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">About this item</Text>
           <Ul className="space-y-1.5">
             {features.map((f, i) => <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
           </Ul>
@@ -143,7 +143,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
           <Row justify="between" align="center">
             <Div>
               <Text className="text-[10px] tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5" transform="uppercase">Listed by</Text>
-              <Text className="text-zinc-800 dark:text-zinc-200" size="sm" weight="semibold">{safeSeller}</Text>
+              <Text size="sm" weight="semibold" color="primary">{safeSeller}</Text>
             </Div>
             {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
           </Row>
@@ -158,12 +158,12 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
   const avg = storeReviews.reduce((s, r) => s + r.rating, 0) / storeReviews.length;
   return (
     <Section className="mt-10">
-      <Heading level={2} className="mb-2 text-zinc-900 dark:text-zinc-50" size="xl" weight="semibold">Store Reviews</Heading>
+      <Heading level={2} className="mb-2" color="primary" size="xl" weight="semibold">Store Reviews</Heading>
       <Row className="mb-4" align="center" gap="3">
-        <Span weight="bold" className="text-zinc-900 dark:text-zinc-50" size="3xl">{avg.toFixed(1)}</Span>
+        <Span weight="bold" size="3xl" color="primary">{avg.toFixed(1)}</Span>
         <Div>
           <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
+          <Text size="xs" color="muted">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
         </Div>
       </Row>
       <Stack gap="sm">
@@ -171,12 +171,12 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
           <Div key={review.id} surface="card" padding="sm" className="space-y-1.5">
             <Row justify="between" align="center">
               <Row gap="xs" align="center">
-                <Span size="sm" weight="medium" className="text-zinc-800 dark:text-zinc-200">{review.userName}</Span>
+                <Span size="sm" weight="medium" color="primary">{review.userName}</Span>
                 <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} size="xs" className={star <= review.rating ? CLS_STAR_ON : CLS_STAR_OFF}>★</Span>)}</Row>
               </Row>
             </Row>
-            {review.title && <Text className="text-zinc-800 dark:text-zinc-100" size="sm" weight="semibold">{review.title}</Text>}
-            <Text className="text-zinc-600 dark:text-zinc-400 leading-relaxed" size="sm">{review.comment}</Text>
+            {review.title && <Text size="sm" weight="semibold" color="primary">{review.title}</Text>}
+            <Text className="leading-relaxed" color="muted" size="sm">{review.comment}</Text>
             <Text className="text-zinc-400 dark:text-zinc-400" size="xs">{review.productTitle}</Text>
           </Div>
         ))}
@@ -204,7 +204,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
         <Section className="py-20">
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
-              <Heading level={1} className="text-zinc-900 dark:text-zinc-50" size="2xl" weight="semibold">
+              <Heading level={1} size="2xl" weight="semibold" color="primary">
                 Auction Not Found
               </Heading>
               <Text color="muted">
@@ -318,7 +318,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               </>
             )}
             <Span aria-hidden>/</Span>
-            <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
+            <Span className="truncate max-w-[200px]" color="muted">{title}</Span>
           </Nav>
           <ShareButton title={title} />
         </Row>
@@ -362,7 +362,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
               <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
                 <Div className="space-y-1">
-                  <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+                  <Text size="xs" color="muted">
                     Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
                   </Text>
                 </Div>
@@ -387,7 +387,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
                     <Row wrap gap="xs">
                       {tags.map((tag) => (
-                        <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-zinc-600 dark:text-zinc-300">
+                        <Span key={tag} size="xs" className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1" color="muted">
                           {tag}
                         </Span>
                       ))}

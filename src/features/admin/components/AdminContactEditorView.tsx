@@ -70,7 +70,7 @@ export function AdminContactEditorView({
       <Div className={`flex flex-col gap-5 ${__P.p4}`}>
         {/* Status badge */}
         <Row align="center" gap="sm">
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs">Status:</Text>
+          <Text size="xs" color="muted">Status:</Text>
           <span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
               statusColor[currentStatus ?? "new"] ?? statusColor.new
@@ -82,24 +82,24 @@ export function AdminContactEditorView({
 
         {/* From */}
         <Stack gap="xs">
-          <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="medium" transform="uppercase">
+          <Text className="tracking-wide" color="muted" size="xs" weight="medium" transform="uppercase">
             From
           </Text>
-          <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
+          <Text size="sm" weight="medium" color="primary">
             {name ?? "Unknown"}
           </Text>
           {email && (
-            <Text className="text-zinc-500 dark:text-zinc-400" size="sm">{email}</Text>
+            <Text size="sm" color="muted">{email}</Text>
           )}
         </Stack>
 
         {/* Message */}
         <Stack gap="xs">
-          <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="medium" transform="uppercase">
+          <Text className="tracking-wide" color="muted" size="xs" weight="medium" transform="uppercase">
             Message
           </Text>
           <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 ${__P.p3} max-h-64 ${__O.yAuto}`}>
-            <Text className="text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap leading-relaxed" size="sm">
+            <Text className="whitespace-pre-wrap leading-relaxed" color="primary" size="sm">
               {message ?? "No message body."}
             </Text>
           </Div>

@@ -241,7 +241,7 @@ export function MarketplacePreorderCard({
               />
             ) : null}
             <Row justify="between" className="mt-1" gap="sm">
-              <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
+              <Text size="sm" weight="semibold" color="primary">
                 {formatCurrency(product.price, getDefaultCurrency())}
               </Text>
               {shipDate && <PreorderBadge shipDate={shipDate} />}

@@ -22,12 +22,12 @@ export function BeforeAfterGallery({
           {(item.title || item.description) && (
             <Div className="text-center">
               {item.title && (
-                <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
+                <Text size="sm" weight="semibold" color="primary">
                   {item.title}
                 </Text>
               )}
               {item.description && (
-                <Text className="mt-0.5 text-zinc-500 dark:text-zinc-400" size="xs">
+                <Text className="mt-0.5" color="muted" size="xs">
                   {item.description}
                 </Text>
               )}

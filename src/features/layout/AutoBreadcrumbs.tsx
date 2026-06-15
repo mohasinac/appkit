@@ -117,9 +117,7 @@ export function AutoBreadcrumbs({
                 <Li key={crumb.href} className="flex items-center gap-2">
                   {isLast ? (
                     <Span
-                      aria-current="page"
-                      className="text-zinc-700 dark:text-zinc-200"
-                    >
+                      aria-current="page" color="primary">
                       {crumb.label}
                     </Span>
                   ) : renderLink ? (

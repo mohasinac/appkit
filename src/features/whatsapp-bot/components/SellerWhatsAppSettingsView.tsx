@@ -241,7 +241,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 1: Step-by-step setup guide ─────────────────────────── */}
       <Section>
-        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-4" size="base" weight="semibold">
+        <Heading level={2} className="mb-4" color="primary" size="base" weight="semibold">
           How to connect your WhatsApp Business account
         </Heading>
         <Stack gap="sm">
@@ -264,8 +264,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   {done ? "✓" : step.n}
                 </Div>
                 <Div>
-                  <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">{step.title}</Text>
-                  <Text className="text-zinc-500 dark:text-zinc-400 mt-0.5" size="xs">{step.body}</Text>
+                  <Text size="sm" weight="medium" color="primary">{step.title}</Text>
+                  <Text className="mt-0.5" color="muted" size="xs">{step.body}</Text>
                 </Div>
               </Row>
             );
@@ -276,7 +276,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
       {/* ── Section 2: Connection form ──────────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
         <Row justify="between" align="center" className="mb-4">
-          <Heading level={2} className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">Connection</Heading>
+          <Heading level={2} size="sm" weight="semibold" color="primary">Connection</Heading>
           {isLoading ? null : cfg?.connected ? (
             <Badge variant="success">Connected</Badge>
           ) : (
@@ -329,12 +329,12 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 3: Catalog sync ─────────────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
-        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-4" size="sm" weight="semibold">Catalog Sync</Heading>
+        <Heading level={2} className="mb-4" color="primary" size="sm" weight="semibold">Catalog Sync</Heading>
 
         <Row justify="between" align="center" className="mb-4">
           <Div>
-            <Text className="text-zinc-700 dark:text-zinc-300" size="sm">Enable catalog sync</Text>
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+            <Text size="sm" color="muted">Enable catalog sync</Text>
+            <Text size="xs" color="muted">
               When enabled, your published standard products can be synced to WhatsApp.
             </Text>
           </Div>
@@ -390,10 +390,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 4: Announcement preview ─────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
-        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-2" size="sm" weight="semibold">
+        <Heading level={2} className="mb-2" color="primary" size="sm" weight="semibold">
           Purchase Announcement Preview
         </Heading>
-        <Text className="text-zinc-500 dark:text-zinc-400 mb-3" size="xs">
+        <Text className="mb-3" color="muted" size="xs">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
         </Text>
         <Div className="bg-zinc-50 dark:bg-zinc-800/60 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono" rounded="lg">
@@ -409,10 +409,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
       {/* ── Section 5: Catalog preview ───────────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
-        <Heading level={2} className="text-zinc-900 dark:text-zinc-100 mb-2" size="sm" weight="semibold">
+        <Heading level={2} className="mb-2" color="primary" size="sm" weight="semibold">
           Catalog Preview
         </Heading>
-        <Text className="text-zinc-500 dark:text-zinc-400 mb-4" size="xs">
+        <Text className="mb-4" color="muted" size="xs">
           This is how your products appear in the WhatsApp Catalog when a buyer taps "View Catalog" in the chat. Only published standard products are included.
         </Text>
 
@@ -423,10 +423,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
               <Text className="text-white" size="xs" weight="bold">W</Text>
             </Row>
             <Div>
-              <Text className="text-zinc-900 dark:text-zinc-100" size="xs" weight="semibold">
+              <Text size="xs" weight="semibold" color="primary">
                 {cfg?.connected ? "Your Store" : "Store Name"}
               </Text>
-              <Text className="text-[10px] text-zinc-500 dark:text-zinc-400">WhatsApp Business</Text>
+              <Text className="text-[10px]" color="muted">WhatsApp Business</Text>
             </Div>
           </Row>
 
@@ -437,7 +437,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   <Text size="2xl">{item.emoji}</Text>
                 </Row>
                 <Div padding="xs">
-                  <Text className="text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight" size="xs" weight="medium">
+                  <Text className="line-clamp-2 leading-tight" color="primary" size="xs" weight="medium">
                     {item.name}
                   </Text>
                   <Text className="text-[#25D366] mt-0.5" size="xs" weight="semibold">
@@ -449,7 +449,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           </Div>
 
           <Div className="mt-3 text-center">
-            <Text className="text-[10px] text-zinc-500 dark:text-zinc-400">
+            <Text className="text-[10px]" color="muted">
               {cfg?.lastSyncCount
                 ? `${cfg.lastSyncCount} products synced to catalog`
                 : "Sync your products to populate the catalog"}

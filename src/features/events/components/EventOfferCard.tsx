@@ -54,7 +54,7 @@ export function EventOfferCard({
             {title}
           </Heading>
           {offerDescription ? (
-            <Text className="text-zinc-600 dark:text-zinc-400" size="sm">
+            <Text size="sm" color="muted">
               {offerDescription}
             </Text>
           ) : null}

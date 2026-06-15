@@ -153,7 +153,7 @@ export function AsyncFacetSection({
             <Span
               key={label}
               size="xs"
-              className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-slate-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-600"
+              className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-slate-700 border border-zinc-200 dark:border-slate-600" color="muted"
             >
               {label}
             </Span>
@@ -190,7 +190,7 @@ export function AsyncFacetSection({
                   aria-label={opt.label}
                   className="flex-shrink-0 w-4 h-4 rounded border-zinc-300 dark:border-slate-600 cursor-pointer text-primary-600 dark:text-secondary-500"
                 />
-                <Span size="sm" className="flex-1 text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate">
+                <Span size="sm" className="flex-1 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate" color="muted">
                   {opt.label}
                 </Span>
                 {opt.count !== undefined && (

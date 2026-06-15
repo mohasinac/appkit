@@ -63,7 +63,7 @@ export function ContactInfoSidebar({
         <Stack gap="sm" className={`rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800/60 ${__P.p4}`}>
           {labels.businessHoursLabel && labels.businessHoursValue && (
             <Div>
-              <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
+              <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
                 {labels.businessHoursLabel}
               </Text>
               <Text className="mt-0.5" size="sm">{labels.businessHoursValue}</Text>
@@ -71,7 +71,7 @@ export function ContactInfoSidebar({
           )}
           {labels.responseTimeLabel && labels.responseTimeValue && (
             <Div>
-              <Text className="text-zinc-500 dark:text-zinc-400 tracking-wide" size="xs" weight="semibold" transform="uppercase">
+              <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
                 {labels.responseTimeLabel}
               </Text>
               <Text className="mt-0.5" size="sm">{labels.responseTimeValue}</Text>

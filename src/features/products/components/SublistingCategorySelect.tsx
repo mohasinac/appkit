@@ -20,7 +20,7 @@ export function SublistingCategorySelect({
 }: Props) {
   return (
     <Stack gap="xs">
-      <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="medium">
+      <Text size="sm" weight="medium" color="primary">
         Sub-listing category
       </Text>
       <SublistingInlineSelect

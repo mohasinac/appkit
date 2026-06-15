@@ -86,7 +86,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
 
   return (
     <Div className={`space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
-      <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
+      <Text size="sm" weight="semibold" color="primary">
         Browse existing media
       </Text>
       <Row align="center" gap="sm" wrap>
@@ -134,7 +134,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                 )}
               </Row>
               <Div className="p-1.5">
-                <Text className="truncate text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">
+                <Text className="truncate text-[10px] font-mono" color="muted">
                   {f.name.split("/").pop()}
                 </Text>
                 <Button
@@ -150,13 +150,13 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           );
         })}
         {filtered.length === 0 && !isLoading && (
-          <Text className="col-span-full py-6 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+          <Text className="col-span-full py-6" color="muted" size="sm" align="center">
             No files found.
           </Text>
         )}
       </Div>
       <Row align="center" justify="between">
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           {filtered.length} file(s){nextPageToken ? " · more available" : ""}
         </Text>
         {nextPageToken && (
@@ -201,7 +201,7 @@ function MediaUploaderPanel({
     <Div
       className="space-y-5 bg-white dark:border-slate-700 dark:bg-slate-900" rounded="xl" padding="md" border="default"
     >
-      <Text className="text-zinc-900 dark:text-zinc-100" size="sm" weight="semibold">
+      <Text size="sm" weight="semibold" color="primary">
         Upload & Copy URL
       </Text>
       <MediaUploadField
@@ -215,7 +215,7 @@ function MediaUploaderPanel({
       />
       {heroAssetUrl && (
         <Row className="bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-3 py-2" align="center" gap="sm" rounded="lg" border="default">
-          <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
+          <Text className="flex-1 truncate font-mono" color="muted" size="xs">
             {heroAssetUrl}
           </Text>
           <Button
@@ -239,7 +239,7 @@ function MediaUploaderPanel({
       />
       {galleryAssets.length > 0 && (
         <Stack gap="xs">
-          <Text className="text-zinc-500 dark:text-zinc-400" size="xs" weight="medium">
+          <Text size="xs" weight="medium" color="muted">
             Gallery URLs
           </Text>
           {galleryAssets.map((asset, i) => (
@@ -247,7 +247,7 @@ function MediaUploaderPanel({
               key={i}
               className="rounded bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-2 py-1" align="center" gap="sm" border="default"
             >
-              <Text className="flex-1 truncate text-zinc-600 dark:text-zinc-400 font-mono" size="xs">
+              <Text className="flex-1 truncate font-mono" color="muted" size="xs">
                 {asset.url}
               </Text>
               <Button
@@ -278,7 +278,7 @@ function MediaUploaderPanel({
         >
           {isCleanupPending ? "Discarding…" : ACTIONS.MEDIA["discard-staged"].label}
         </Button>
-        <Text className="text-zinc-500 dark:text-zinc-400" size="xs">
+        <Text size="xs" color="muted">
           {stagedUrls.length} staged upload(s)
         </Text>
       </Row>

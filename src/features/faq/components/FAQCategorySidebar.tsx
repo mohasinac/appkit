@@ -95,7 +95,7 @@ export function FAQCategorySidebar({
                 </Span>
               </Row>
               {isSelected && category.description ? (
-                <Text className="ml-11 text-zinc-500 dark:text-zinc-400" size="xs">
+                <Text className="ml-11" color="muted" size="xs">
                   {category.description}
                 </Text>
               ) : null}
@@ -106,7 +106,7 @@ export function FAQCategorySidebar({
 
       {contactHref ? (
         <Div className="border-t border-zinc-200 pt-6 dark:border-slate-700">
-          <Text className="mb-3 text-zinc-600 dark:text-zinc-300" size="sm">
+          <Text className="mb-3" color="muted" size="sm">
             {labels?.stillHaveQuestions ?? "Still have questions?"}
           </Text>
           <TextLink

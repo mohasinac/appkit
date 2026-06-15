@@ -215,7 +215,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               counts={counts}
             />
           ) : (
-            <Text className="py-12 text-zinc-500 dark:text-zinc-400" size="sm" align="center">
+            <Text className="py-12" color="muted" size="sm" align="center">
               Brand not found.
             </Text>
           )}

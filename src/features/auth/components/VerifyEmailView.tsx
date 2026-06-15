@@ -71,7 +71,7 @@ export function VerifyEmailView({
             <Heading level={2} className="mb-2" size="xl" weight="semibold">
               {labels.successTitle ?? "Email verified!"}
             </Heading>
-            <Text className="text-zinc-500 dark:text-zinc-400 mb-6">
+            <Text className="mb-6" color="muted">
               {labels.successDescription ??
                 "Your email has been verified successfully."}
             </Text>
@@ -100,7 +100,7 @@ export function VerifyEmailView({
             <Heading level={2} className="mb-2" size="xl" weight="semibold">
               {labels.errorTitle ?? "Verification failed"}
             </Heading>
-            <Text className="text-zinc-500 dark:text-zinc-400 mb-2">
+            <Text className="mb-2" color="muted">
               {error ??
                 labels.errorDescription ??
                 "The verification link may have expired."}

@@ -46,7 +46,7 @@ export function RelatedFAQs({
                 />
               </svg>
 
-              <Text className="text-zinc-800 transition-colors group-hover:text-primary dark:text-zinc-100" size="sm">
+              <Text className="transition-colors group-hover:text-primary" color="primary" size="sm">
                 {faq.question}
               </Text>
 

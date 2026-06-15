@@ -38,7 +38,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function GoogleBadge() {
   return (
-    <Span size="xs" className="inline-flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
+    <Span size="xs" className="inline-flex items-center gap-1" color="muted">
       <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" aria-hidden="true">
         <path
           fill="#4285F4"
@@ -102,7 +102,7 @@ function ReviewCard({
         <Div className="min-w-0">
           <Text className="truncate" size="sm" weight="semibold">{review.authorName}</Text>
           {dateStr && (
-            <Text className="text-zinc-500 dark:text-zinc-400" size="xs">{dateStr}</Text>
+            <Text size="xs" color="muted">{dateStr}</Text>
           )}
         </Div>
       </Row>
@@ -110,7 +110,7 @@ function ReviewCard({
       {showRating && <StarRating rating={review.rating} />}
 
       {review.text && (
-        <Text className="leading-relaxed text-zinc-700 dark:text-zinc-300 line-clamp-4" size="sm">
+        <Text className="leading-relaxed line-clamp-4" color="muted" size="sm">
           {review.text}
         </Text>
       )}

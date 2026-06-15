@@ -209,7 +209,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <FieldRow label={labels.field.price}>
-        <Text className="text-zinc-900 dark:text-zinc-100" size="base" weight="semibold">
+        <Text size="base" weight="semibold" color="primary">
           {priceLabel(item)}
         </Text>
       </FieldRow>
@@ -233,7 +233,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <FieldRow label={labels.field.store}>
-        <Text className="text-zinc-700 dark:text-zinc-300" size="sm">
+        <Text size="sm" color="muted">
           {item.storeName ?? "â€”"}
         </Text>
       </FieldRow>

@@ -48,9 +48,7 @@ export function CustomSectionsEditor({
         >
           <Row align="center" justify="between" gap="sm">
             <Heading
-              level={4}
-              className="text-zinc-700 dark:text-zinc-200" size="sm" weight="semibold"
-            >
+              level={4} size="sm" weight="semibold" color="primary">
               Section {i + 1}
             </Heading>
             <Button
@@ -103,7 +101,7 @@ export function CustomSectionsEditor({
 
           {/* Custom fields within section */}
           <Div>
-            <Text className="mb-2 text-zinc-600 dark:text-zinc-400" size="xs" weight="medium">
+            <Text className="mb-2" color="muted" size="xs" weight="medium">
               Fields{" "}
               <Span weight="normal" color="faint">(optional)</Span>
             </Text>

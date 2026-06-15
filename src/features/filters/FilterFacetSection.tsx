@@ -172,7 +172,7 @@ export function FilterFacetSection({
                       aria-label={option.label}
                       className="h-3.5 w-3.5 flex-shrink-0 cursor-pointer rounded border-zinc-300 text-primary-600 dark:border-slate-600 dark:text-secondary-500"
                     />
-                    <Span size="xs" className="flex-1 truncate text-zinc-700 dark:text-zinc-300">
+                    <Span size="xs" className="flex-1 truncate" color="muted">
                       {option.label}
                     </Span>
                     {option.count !== undefined && (
@@ -284,7 +284,7 @@ export function FilterFacetSection({
             <Span
               key={label}
               size="xs"
-              className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-slate-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-600"
+              className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-slate-700 border border-zinc-200 dark:border-slate-600" color="muted"
             >
               {label}
             </Span>
@@ -345,7 +345,7 @@ export function FilterFacetSection({
                     )}
                   />
                 )}
-                <Span size="sm" className="flex-1 text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate">
+                <Span size="sm" className="flex-1 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate" color="muted">
                   {option.label}
                 </Span>
                 {option.count !== undefined && (
