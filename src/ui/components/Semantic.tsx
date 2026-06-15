@@ -369,13 +369,31 @@ export function Table({ variant = "default", size = "md", stickyHeader = false, 
   );
 }
 
+type TheadSurface = "none" | "default" | "muted" | "subtle";
+
+const THEAD_SURFACE_MAP: Record<TheadSurface, string> = {
+  none: "",
+  default: "bg-[var(--appkit-color-surface)]",
+  muted: "bg-[var(--appkit-color-bg)]",
+  subtle: "bg-[var(--appkit-color-surface-elevated)]",
+};
+
 export interface TheadProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  /** Background tone for the header row. */
+  surface?: TheadSurface;
   children: React.ReactNode;
 }
 
-export function Thead({ className = "", children, ...props }: TheadProps) {
+export function Thead({ surface, className = "", children, ...props }: TheadProps) {
   return (
-    <thead className={["appkit-thead", className].filter(Boolean).join(" ")} {...props}>
+    <thead
+      className={[
+        "appkit-thead",
+        surface ? THEAD_SURFACE_MAP[surface] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </thead>
   );
@@ -393,14 +411,32 @@ export function Tbody({ className = "", children, ...props }: TbodyProps) {
   );
 }
 
+type TrBorder = "none" | "default" | "subtle" | "strong";
+
+const TR_BORDER_MAP: Record<TrBorder, string> = {
+  none: "",
+  default: "border-b border-[var(--appkit-color-border)]",
+  subtle: "border-b border-[var(--appkit-color-border-subtle)]",
+  strong: "border-b border-[var(--appkit-color-border-strong)]",
+};
+
 export interface TrProps extends React.HTMLAttributes<HTMLTableRowElement> {
   hover?: boolean;
+  border?: TrBorder;
   children: React.ReactNode;
 }
 
-export function Tr({ hover = false, className = "", children, ...props }: TrProps) {
+export function Tr({ hover = false, border, className = "", children, ...props }: TrProps) {
   return (
-    <tr className={["appkit-tr", hover ? "appkit-tr--hover" : "", className].filter(Boolean).join(" ")} {...props}>
+    <tr
+      className={[
+        "appkit-tr",
+        hover ? "appkit-tr--hover" : "",
+        border ? TR_BORDER_MAP[border] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </tr>
   );

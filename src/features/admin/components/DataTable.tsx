@@ -102,7 +102,7 @@ function SelectableRow<T extends { id: string }>({
       onMouseLeave={selectionEnabled && !isSelected ? longPress.onMouseLeave : undefined}
       onTouchStart={selectionEnabled && !isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={selectionEnabled && !isSelected ? longPress.onTouchEnd : undefined}
-      className={`border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
+      className={`hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`} border="default"
     >
       {selectionEnabled && (
         <Td className="relative w-10 px-2 py-3" onClick={(e) => e.stopPropagation()}>
@@ -161,7 +161,7 @@ export function DataTable<T extends { id: string }>({
       <Div className={`${__O.xAuto}`}>
         <Table data-testid="data-table" className="w-full text-sm">
           <Thead>
-            <Tr className="border-b border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800">
+            <Tr className="bg-neutral-50 dark:bg-slate-800" border="default">
               {selectionEnabled && (
                 <Th scope="col" className="w-10 px-2 py-3">
                   {onToggleSelectAll && (
@@ -199,7 +199,7 @@ export function DataTable<T extends { id: string }>({
           <Tbody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <Tr key={i} className="border-b border-neutral-100 dark:border-slate-700">
+                <Tr key={i} border="default">
                   {selectionEnabled && <Td className="w-10 px-2 py-3" />}
                   {columns.map((col) => (
                     <Td key={col.key} className="px-4 py-3">

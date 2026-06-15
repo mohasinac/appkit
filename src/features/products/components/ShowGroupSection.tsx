@@ -83,7 +83,7 @@ function GroupTableRow({ member }: { member: GroupMember }) {
   const image = member.images?.[0] ?? "";
 
   return (
-    <Tr className="border-b border-zinc-100 dark:border-zinc-800 last:border-0">
+    <Tr className="last:border-0" border="subtle">
       <Td className="py-2 pr-3">
         <Div className={`w-10 h-10 ${__O.hidden}`} rounded="full" border="default">
           <MediaImage src={image} alt={member.title} size="thumbnail" />
@@ -139,7 +139,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
     <Div className={`${__O.xAuto}`}>
       <Table className="w-full text-left min-w-[400px]">
         <Thead>
-          <Tr className="border-b border-zinc-200 dark:border-zinc-700">
+          <Tr border="default">
             <Th className="pb-2 pr-3 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">Image</Th>
             <Th className="pb-2 pr-3 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">Name</Th>
             <Th className="pb-2 pr-3 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">Price</Th>

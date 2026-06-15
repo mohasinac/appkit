@@ -328,7 +328,7 @@ export function SellerAddressesView({
             ) : (
               <Div className={`${__O.xAuto}`} rounded="lg" border="default">
                 <Table className="w-full text-sm">
-                  <Thead className="bg-zinc-50 dark:bg-slate-800">
+                  <Thead surface="muted">
                     <Tr>
                       <Th className="text-left px-3 py-2" weight="semibold">Label</Th>
                       <Th className="text-left px-3 py-2" weight="semibold">Name</Th>
