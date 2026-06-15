@@ -283,7 +283,7 @@ export function AdminEventEntriesView({
   const expandedEntry = expandedEntryId ? rows.find((r) => r.id === expandedEntryId) : null;
 
   const responsesPanelSection = expandedEntry?.formResponses && Object.keys(expandedEntry.formResponses).length > 0 ? (
-    <Div className={`${__P.p4} space-y-3`} rounded="xl" surface="muted" border="default">
+    <Stack className={`${__P.p4}`} gap="3" rounded="xl" surface="muted" border="default">
       <Text size="sm" weight="semibold" color="primary">
         Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
       </Text>
@@ -297,7 +297,7 @@ export function AdminEventEntriesView({
           </Div>
         ))}
       </Stack>
-    </Div>
+    </Stack>
   ) : null;
 
   const tableSection = (

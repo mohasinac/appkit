@@ -177,11 +177,11 @@ export function ReviewsIndexListing({
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
-                <Div className={`${__P.p4} space-y-3`}>
+                <Stack className={`${__P.p4}`} gap="3">
                   <Div className="h-4 w-3/4" surface="subtle" rounded="default" />
                   <Div className="h-3 w-full" surface="subtle" rounded="default" />
                   <Div className="h-3 w-2/3" surface="subtle" rounded="default" />
-                </Div>
+                </Stack>
               </Div>
             ))}
           </Div>

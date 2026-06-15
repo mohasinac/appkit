@@ -270,7 +270,7 @@ export function StoreSidebar({
           }}
         >
           {/* Nav panel */}
-          <Div surface="sidePanel" className={`flex-1 border-r border-zinc-200 dark:border-slate-700 flex flex-col ${__O.hidden}`} shadow="xl">
+          <Stack surface="sidePanel" className={`flex-1 border-r border-zinc-200 dark:border-slate-700 ${__O.hidden}`} shadow="xl">
             <Div className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md">
               <Row className="min-w-0" align="center" gap="3">
                 {storeLogoURL ? (
@@ -285,7 +285,7 @@ export function StoreSidebar({
               </Row>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
-          </Div>
+          </Stack>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </Div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
-import { BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Text } from "../../../ui";
+import { BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Stack, Text } from "../../../ui";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
@@ -234,8 +234,8 @@ export function CouponCard({
   };
 
   return (
-    <Div
-      className={`group relative flex h-full flex-col border-2 ${colors.card} ${isSelected ? "ring-2 ring-primary" : ""} ${!n.isActive ? "opacity-70" : ""} ${className}`} rounded="xl" padding="md"
+    <Stack
+      className={`group relative h-full border-2 ${colors.card} ${isSelected ? "ring-2 ring-primary" : ""} ${!n.isActive ? "opacity-70" : ""} ${className}`} rounded="xl" padding="md"
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -285,7 +285,7 @@ export function CouponCard({
       {/* Copy code block + Claim CTA (public surfaces). On admin/CRUD surfaces
           the Claim button is hidden via `hideClaim` since admins aren't
           redeeming the coupons they're managing. */}
-      <Div className={`flex items-center gap-2 border border-dashed px-3 ${colors.code}`} rounded="lg" padding="y-xs">
+      <Row className={`border border-dashed px-3 ${colors.code}`} align="center" gap="sm" rounded="lg" padding="y-xs">
         <Span size="sm" weight="bold" className="flex-1 font-mono tracking-widest select-all" transform="uppercase">
           {n.code || "—"}
         </Span>
@@ -299,7 +299,7 @@ export function CouponCard({
             {copied ? labels.copied : labels.copy}
           </button>
         )}
-      </Div>
+      </Row>
       {showClaim && n.code && n.isActive && (
         <Div className="mt-2">
           <button
@@ -381,6 +381,6 @@ export function CouponCard({
           isDeleting={busy === "delete"}
         />
       )}
-    </Div>
+    </Stack>
   );
 }

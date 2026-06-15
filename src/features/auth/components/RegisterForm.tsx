@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { z } from "zod";
-import { Alert, Button, Div, Heading, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Heading, Row, Stack, Text } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
@@ -76,7 +76,7 @@ export function RegisterForm({
   });
 
   return (
-    <Div className={`flex items-center justify-center min-h-[60vh] ${className}`} padding="x-md">
+    <Row className={`min-h-[60vh] ${className}`} align="center" justify="center" padding="x-md">
       <Stack className="max-w-md w-full" gap="lg">
         <Div className="text-center">
           <Heading level={1} className="font-extrabold" size="3xl">
@@ -182,6 +182,6 @@ export function RegisterForm({
 
         {renderSocialButtons?.()}
       </Stack>
-    </Div>
+    </Row>
   );
 }

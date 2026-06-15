@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Article, BaseListingCard, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
+import { Article, BaseListingCard, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { getMediaUrl } from "../../media/types/index";
@@ -99,7 +99,7 @@ export function BlogFeaturedCard({
         </Div>
 
         {/* Content */}
-        <Div className={`flex flex-1 flex-col ${__P.p4}`}>
+        <Stack className={`flex-1 ${__P.p4}`}>
           {/* Category + featured badges */}
           <Row className="gap-1.5 mb-2" wrap>
             <Span
@@ -144,7 +144,7 @@ export function BlogFeaturedCard({
             )}
             {date && <Span>{date}</Span>}
           </Row>
-        </Div>
+        </Stack>
       </TextLink>
     </Article>
   );

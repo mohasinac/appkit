@@ -67,7 +67,7 @@ export function CategoryCard({
       </Div>
 
       {/* Content */}
-      <Div className={`flex flex-1 flex-col ${__P.p3}.5`}>
+      <Stack className={`flex-1 ${__P.p3}.5`}>
         <Text className={`leading-snug ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`} size="sm" weight="semibold">
           {category.name}
         </Text>
@@ -84,7 +84,7 @@ export function CategoryCard({
             Browse <ArrowRight className="h-3 w-3" />
           </Span>
         </Row>
-      </Div>
+      </Stack>
     </Stack>
   );
 

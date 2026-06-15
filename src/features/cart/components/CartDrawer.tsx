@@ -175,7 +175,7 @@ export function CartDrawer({
             ✕
           </Button>
         </Row>
-        <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-3`}>
+        <Stack className={`flex-1 ${__O.yAuto} ${__P.p4}`} gap="3">
           {isLoading ? (
             <Row justify="center" padding="y-3xl">
               <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
@@ -194,9 +194,9 @@ export function CartDrawer({
               />
             ))
           )}
-        </Div>
+        </Stack>
         {items.length > 0 && (
-          <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p4} space-y-4`}>
+          <Stack className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p4}`} gap="md">
             <Row justify="between" className="text-sm">
               <Span className="text-neutral-600">
                 {labels.subtotal ?? "Subtotal"}
@@ -214,7 +214,7 @@ export function CartDrawer({
                 {labels.checkout ?? ACTIONS.CART["checkout"].label}
               </Button>
             )}
-          </Div>
+          </Stack>
         )}
       </Aside>
     </>

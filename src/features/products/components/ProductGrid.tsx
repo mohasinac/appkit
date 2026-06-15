@@ -154,7 +154,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
 
         {/* Top-left: badges (offset right when checkbox is shown) */}
-        <Div className={`absolute top-2 flex flex-col gap-1 ${onSelect ? "left-10" : "left-2"}`}>
+        <Stack className={`absolute top-2 ${onSelect ? "left-10" : "left-2"}`} gap="xs">
           {!selectionMode && !isSelected && (
             <>
               {discount && (
@@ -203,7 +203,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               )}
             </>
           )}
-        </Div>
+        </Stack>
 
         {/* W1-45 — group/sublisting icon overlay (bottom-right) */}
         <BaseListingCard.IconOverlay
@@ -251,7 +251,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Content area */}
-      <Div className={`flex flex-1 flex-col ${__P.p3} pt-2.5`}>
+      <Stack className={`flex-1 ${__P.p3} pt-2.5`}>
         <Text className={`${THEME_CONSTANTS.utilities.textClamp2} dark:text-white leading-snug`} size="sm" weight="semibold" color="primary">
           {product.title}
         </Text>
@@ -407,7 +407,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             </Div>
           )}
         </Div>
-      </Div>
+      </Stack>
     </Div>
   );
 
@@ -689,8 +689,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
   const renderItems = () => {
     if (view === "list") {
       return (
-        <Div
-          className={`flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800 ${className}`} rounded="xl"
+        <Stack
+          className={`divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800 ${className}`} rounded="xl"
         >
           {products.map((p) => (
             <ProductListRow<T>
@@ -701,7 +701,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
               isWishlisted={wishlistedIds?.has(p.id) ?? false}
             />
           ))}
-        </Div>
+        </Stack>
       );
     }
 

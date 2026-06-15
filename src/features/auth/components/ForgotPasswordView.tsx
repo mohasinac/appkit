@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { Alert, Button, Div, Heading, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Heading, Row, Stack, Text } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
@@ -35,7 +35,7 @@ export function ForgotPasswordView({
   const [email, setEmail] = useState("");
 
   return (
-    <Div className={`flex items-center justify-center min-h-[60vh] ${className}`} padding="x-md">
+    <Row className={`min-h-[60vh] ${className}`} align="center" justify="center" padding="x-md">
       <Stack className="max-w-md w-full" gap="lg">
         <Div className="text-center">
           <Heading level={1} className="font-extrabold" size="3xl">
@@ -99,6 +99,6 @@ export function ForgotPasswordView({
           <Div className="text-center text-sm">{renderBackLink()}</Div>
         )}
       </Stack>
-    </Div>
+    </Row>
   );
 }

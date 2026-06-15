@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, HorizontalScroller, Row, Section, Span, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
@@ -61,7 +61,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Div className="aspect-video w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" />
       )}
 
-      <Div className={`flex flex-1 flex-col ${__P.p3} text-left`}>
+      <Stack className={`flex-1 ${__P.p3} text-left`}>
         <Row className="mb-2 h-9 w-9 bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image
@@ -87,7 +87,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Text className="mt-auto pt-3 text-primary dark:text-primary-400" size="xs" weight="medium">
           Browse category →
         </Text>
-      </Div>
+      </Stack>
     </Link>
   );
 }

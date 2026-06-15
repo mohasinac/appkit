@@ -216,7 +216,7 @@ function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen
   const { newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation } = props;
   return (
     <SideDrawer isOpen={newTicketOpen} onClose={() => setNewTicketOpen(false)} title="Open a support ticket">
-      <Div className={`flex flex-col gap-4 ${__P.p4}`}>
+      <Stack className={`${__P.p4}`} gap="md">
         <Select label="Category" options={CATEGORY_OPTIONS} value={newCategory} onValueChange={setNewCategory} />
         <FieldInput
           name="subject"
@@ -248,7 +248,7 @@ function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen
           <Button type="button" variant="secondary" onClick={() => setNewTicketOpen(false)}>Cancel</Button>
           <Button type="button" isLoading={createMutation.isPending} disabled={!newSubject.trim() || !newDescription.trim() || createMutation.isPending} onClick={() => createMutation.mutate()}>Submit ticket</Button>
         </FormActions>
-      </Div>
+      </Stack>
     </SideDrawer>
   );
 }
@@ -259,7 +259,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
   return (
     <SideDrawer isOpen={detailOpen} onClose={() => setDetailOpen(false)} title={selectedTicket?.subject ?? "Ticket"}>
       {selectedTicket && (
-        <Div className={`flex flex-col gap-4 ${__P.p4}`}>
+        <Stack className={`${__P.p4}`} gap="md">
           <Div className="flex flex-wrap gap-2">
             <Span size="xs" weight="medium" className={`inline-flex rounded-full px-2.5 py-1 ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`}>{selectedTicket.status.replace(/_/g, " ")}</Span>
             <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">{selectedTicket.category.replace(/_/g, " ")}</Span>
@@ -274,7 +274,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
           {(selectedTicket.messages ?? []).length > 0 && (
             <Stack gap="sm">
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Messages</Text>
-              <Div className={`space-y-2 max-h-72 ${__O.yAuto}`}>
+              <Stack className={`max-h-72 ${__O.yAuto}`} gap="sm">
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <Div key={msg.id ?? i} className={`${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`} rounded="lg">
                     <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
@@ -284,7 +284,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
                     <Text className="whitespace-pre-wrap" color="primary">{msg.body}</Text>
                   </Div>
                 ))}
-              </Div>
+              </Stack>
             </Stack>
           )}
           {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (
@@ -300,7 +300,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
               <Button type="button" variant="primary" size="sm" isLoading={replyMutation.isPending} disabled={!replyBody.trim() || replyMutation.isPending} onClick={() => replyMutation.mutate()}>Send reply</Button>
             </Stack>
           )}
-        </Div>
+        </Stack>
       )}
     </SideDrawer>
   );

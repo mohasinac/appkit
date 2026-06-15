@@ -57,7 +57,7 @@ export function LoginForm({
   });
 
   return (
-    <Div className={`flex items-center justify-center min-h-[60vh] ${className}`} padding="x-md">
+    <Row className={`min-h-[60vh] ${className}`} align="center" justify="center" padding="x-md">
       <Stack className="max-w-md w-full" gap="lg">
         <Div className="text-center">
           <Heading level={1} className="font-extrabold" size="3xl">
@@ -144,6 +144,6 @@ export function LoginForm({
           renderSocialButtons?.()
         )}
       </Stack>
-    </Div>
+    </Row>
   );
 }

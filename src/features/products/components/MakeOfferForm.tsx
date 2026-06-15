@@ -1,6 +1,7 @@
 import React from "react";
 import { Div } from "../../../ui/components/Div";
 
+import { Stack } from "@mohasinac/appkit";
 export interface MakeOfferFormProps {
   listedPrice?: number;
   isLoading?: boolean;
@@ -34,11 +35,11 @@ export function MakeOfferForm({
   if (isSubmitted && renderSuccess) return <>{renderSuccess()}</>;
 
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       {renderError?.()}
       {renderInput?.()}
       {renderTerms?.()}
       {renderAction?.()}
-    </Div>
+    </Stack>
   );
 }

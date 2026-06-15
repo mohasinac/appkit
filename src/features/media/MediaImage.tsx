@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import { useState } from "react";
-import { Div, Span } from "../../ui";
+import { Div, Row, Span } from "../../ui";
 import { resolveMediaUrl } from "../../utils/media-url";
 
 // --- Size presets -------------------------------------------------------------
@@ -117,13 +117,13 @@ export function MediaImage({
 
   if (!resolvedSrc || hasError) {
     return (
-      <Div
-        className={`relative w-full h-full overflow-hidden flex items-center justify-center text-zinc-400 text-4xl${className ? ` ${className}` : ""}`} surface="subtle"
+      <Row
+        className={`relative w-full h-full overflow-hidden text-zinc-400 text-4xl${className ? ` ${className}` : ""}`} align="center" justify="center" surface="subtle"
         role="img"
         aria-label={alt}
       >
         <Span aria-hidden="true">{icon}</Span>
-      </Div>
+      </Row>
     );
   }
 

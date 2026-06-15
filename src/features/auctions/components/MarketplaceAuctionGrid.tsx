@@ -51,9 +51,9 @@ function AuctionCardSkeleton({
 }) {
   if (variant === "list") {
     return (
-      <Div className={`flex min-h-[220px] flex-row ${__O.hidden} animate-pulse`} rounded="xl" surface="subtle">
+      <Row className={`min-h-[220px] ${__O.hidden} animate-pulse`} rounded="xl" surface="subtle">
         <Div className="aspect-square w-40 flex-shrink-0 bg-zinc-300" />
-        <Div className={`flex-1 space-y-2 ${__P.p3}`}>
+        <Stack className={`flex-1 ${__P.p3}`} gap="sm">
           <Div className="h-4 w-2/3 bg-zinc-300" rounded="default" />
           <Div className="h-3 w-full bg-zinc-300" rounded="default" />
           <Div className="h-3 w-3/4 bg-zinc-300" rounded="default" />
@@ -62,15 +62,15 @@ function AuctionCardSkeleton({
             <Div className={CLS_SKELETON_BTN} />
             <Div className={CLS_SKELETON_BTN} />
           </Row>
-        </Div>
-      </Div>
+        </Stack>
+      </Row>
     );
   }
 
   return (
     <Div className={`${__O.hidden} animate-pulse`} rounded="xl" surface="subtle">
       <Div className="aspect-square bg-zinc-300" />
-      <Div className={`space-y-2 ${__P.p3}`}>
+      <Stack className={`${__P.p3}`} gap="sm">
         <Div className="h-4 w-3/4 bg-zinc-300" rounded="default" />
         <Div className="h-3 w-1/3 bg-zinc-300" rounded="default" />
         <Div className="h-5 w-1/2 bg-zinc-300" rounded="default" />
@@ -81,7 +81,7 @@ function AuctionCardSkeleton({
         <Row gap="sm">
           <Div className={CLS_SKELETON_BTN} />
         </Row>
-      </Div>
+      </Stack>
     </Div>
   );
 }

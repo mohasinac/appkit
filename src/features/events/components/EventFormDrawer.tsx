@@ -1,5 +1,5 @@
 import React from "react";
-import { Div } from "../../../ui";
+import { Div, Stack } from "../../../ui";
 import type { EventType } from "../types";
 
 export interface EventFormDrawerProps {
@@ -36,13 +36,13 @@ export function EventFormDrawer({
   if (!isOpen) return null;
 
   return (
-    <Div className={`space-y-6 ${className}`}>
+    <Stack className={`${className}`} gap="lg">
       {renderHeader?.()}
       {renderTypeSelector?.()}
       {renderBaseFields?.()}
       {renderMediaFields?.()}
       {renderTypeConfig?.()}
       {renderFooter?.()}
-    </Div>
+    </Stack>
   );
 }

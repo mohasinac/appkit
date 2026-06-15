@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, RichText, Row, Span, Text } from "../../../ui";
+import { Div, Heading, RichText, Row, Span, Stack, Text } from "../../../ui";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
@@ -128,7 +128,7 @@ export function BlogPostView({
   if (error || !post) {
     if (renderError) return <>{renderError(error ?? null)}</>;
     return (
-      <Div className={`flex flex-col items-center justify-center min-h-screen gap-4 ${__P.p8}`}>
+      <Stack className={`justify-center min-h-screen ${__P.p8}`} align="center" gap="md">
         <Heading level={1} size="xl" weight="semibold">
           {labels.notFound ?? "Post not found"}
         </Heading>
@@ -136,7 +136,7 @@ export function BlogPostView({
           {labels.notFoundDescription ?? "This post is not available."}
         </Text>
         {renderBackButton?.()}
-      </Div>
+      </Stack>
     );
   }
 

@@ -324,7 +324,7 @@ export function AdminSupportTicketDetailView({
       onClose={onClose}
       title={subject ?? "Support Ticket"}
     >
-      <Div className={`flex flex-col gap-4 ${__P.p4}`}>
+      <Stack className={`${__P.p4}`} gap="md">
         {/* Meta row */}
         <Row align="center" gap="sm" wrap>
           <Span
@@ -368,7 +368,7 @@ export function AdminSupportTicketDetailView({
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Messages ({messages.length})
             </Text>
-            <Div className={`space-y-2 max-h-64 ${__O.yAuto}`}>
+            <Stack className={`max-h-64 ${__O.yAuto}`} gap="sm">
               {messages.map((msg, i) => (
                 <Div
                   key={msg.id ?? i}
@@ -385,7 +385,7 @@ export function AdminSupportTicketDetailView({
                   <Text className="whitespace-pre-wrap" color="primary">{msg.body}</Text>
                 </Div>
               ))}
-            </Div>
+            </Stack>
           </Stack>
         )}
 
@@ -519,7 +519,7 @@ export function AdminSupportTicketDetailView({
             Save changes
           </Button>
         </FormActions>
-      </Div>
+      </Stack>
     </SideDrawer>
   );
 }

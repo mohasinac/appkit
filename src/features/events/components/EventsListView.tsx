@@ -41,11 +41,11 @@ export function EventsListView<T extends EventItem = EventItem>({
             className="animate-pulse overflow-hidden" surface="subtle" rounded="xl" border="default"
           >
             <Div className="aspect-video" surface="subtle" />
-            <Div className={`space-y-2 ${__P.p4}`}>
+            <Stack className={`${__P.p4}`} gap="sm">
               <Div className="h-4 w-16" surface="subtle" rounded="default" />
               <Div className="h-5 w-full" surface="subtle" rounded="default" />
               <Div className="h-4 w-3/4" surface="subtle" rounded="default" />
-            </Div>
+            </Stack>
           </Div>
         ))}
       </Div>

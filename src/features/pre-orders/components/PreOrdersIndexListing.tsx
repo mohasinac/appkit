@@ -309,12 +309,12 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             {Array.from({ length: 10 }).map((_, i) => (
               <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
-                <Div className={`${__P.p3} space-y-2`}>
+                <Stack className={`${__P.p3}`} gap="sm">
                   <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
                   <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
                   <Div className="h-4 w-1/3" surface="subtle" rounded="default" />
                   <Div className="h-8" surface="subtle" rounded="default" />
-                </Div>
+                </Stack>
               </Div>
             ))}
           </Div>

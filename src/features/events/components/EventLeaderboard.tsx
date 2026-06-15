@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Row, Span, Text } from "../../../ui";
+import { Div, Row, Span, Stack, Text } from "../../../ui";
 import type { LeaderboardEntry } from "../types";
 
 export interface EventLeaderboardProps {
@@ -51,7 +51,7 @@ export function EventLeaderboard({
   if (renderList) return <Div className={className}>{renderList()}</Div>;
 
   return (
-    <Div className={`space-y-2 ${className}`}>
+    <Stack className={`${className}`} gap="sm">
       {entries.map((entry, i) =>
         renderEntry ? (
           <React.Fragment key={entry.userId}>
@@ -71,6 +71,6 @@ export function EventLeaderboard({
           </div>
         ),
       )}
-    </Div>
+    </Stack>
   );
 }

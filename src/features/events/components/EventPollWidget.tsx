@@ -81,7 +81,7 @@ export function EventPollWidget({
 
   if (isEnded) {
     return (
-      <Div className={`px-5 space-y-3 ${className}`} rounded="xl" padding="y-md" border="default">
+      <Stack className={`px-5 ${className}`} gap="3" rounded="xl" padding="y-md" border="default">
         <Text size="sm" weight="medium" color="muted">This poll has closed.</Text>
         {totalEntries !== undefined && (
           <Text size="sm" color="faint">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
@@ -93,13 +93,13 @@ export function EventPollWidget({
             </Div>
           ))}
         </Stack>
-      </Div>
+      </Stack>
     );
   }
 
   if (pollConfig.requireLogin && !user) {
     return (
-      <Div className={`px-6 text-center space-y-3 ${className}`} rounded="xl" padding="y-xl" border="default">
+      <Stack className={`px-6 text-center ${className}`} gap="3" rounded="xl" padding="y-xl" border="default">
         <Text weight="semibold" color="primary">Login to vote</Text>
         <Text size="sm" color="muted">You need an account to participate in this poll.</Text>
         <a
@@ -108,7 +108,7 @@ export function EventPollWidget({
         >
           Log In
         </a>
-      </Div>
+      </Stack>
     );
   }
 
@@ -122,7 +122,7 @@ export function EventPollWidget({
   }
 
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       <LoginRequiredModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -167,6 +167,6 @@ export function EventPollWidget({
       >
         {isLoading ? "Submitting…" : "Submit Vote"}
       </button>
-    </Div>
+    </Stack>
   );
 }

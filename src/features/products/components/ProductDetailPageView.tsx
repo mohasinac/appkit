@@ -661,7 +661,7 @@ export async function ProductDetailPageView({
             </Stack>
           )}
           renderActions={() => (
-            <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5} space-y-4`} rounded="xl" surface="muted">
+            <Stack className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="md" rounded="xl" surface="muted">
               {/* Price + discount */}
               {formattedPrice && (
                 <Div>
@@ -811,7 +811,7 @@ export async function ProductDetailPageView({
                   ))}
                 </Row>
               </Div>
-            </Div>
+            </Stack>
           )}
           renderSublistingSection={
             sublistingCategoryId

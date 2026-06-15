@@ -42,7 +42,7 @@ export function StoreAboutView({
     : null;
 
   return (
-    <Div className={`space-y-6 ${className}`} padding="y-lg">
+    <Stack className={`${className}`} gap="lg" padding="y-lg">
       {/* Bio */}
       {store.bio && (
         <Div>
@@ -127,6 +127,6 @@ export function StoreAboutView({
           )}
         </Div>
       )}
-    </Div>
+    </Stack>
   );
 }

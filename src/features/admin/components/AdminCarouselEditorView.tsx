@@ -182,7 +182,7 @@ function BackgroundEditor({
               placeholder="https://..."
             />
           )}
-          <Div className={`space-y-2 dark:border-zinc-800 ${__P.p3}`} rounded="lg" border="default">
+          <Stack className={`dark:border-zinc-800 ${__P.p3}`} gap="sm" rounded="lg" border="default">
             <Toggle
               label="Dim overlay"
               checked={value.dimOverlay?.enabled ?? false}
@@ -202,7 +202,7 @@ function BackgroundEditor({
                 />
               </Div>
             )}
-          </Div>
+          </Stack>
         </>
       )}
 
@@ -321,7 +321,7 @@ function CardEditor({
           )}
         </Row>
         {buttons.map((btn, bi) => (
-          <Div key={btn.id ?? bi} className={`dark:border-zinc-800 ${__P.p3} space-y-2`} rounded="lg" border="default">
+          <Stack key={btn.id ?? bi} className={`dark:border-zinc-800 ${__P.p3}`} gap="sm" rounded="lg" border="default">
             <Row className={CLS_ROW_BETWEEN}>
               <Text size="xs" weight="medium" color="muted">Button {bi + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => set({ buttons: buttons.filter((_, i) => i !== bi) })}>✕</Button>
@@ -330,7 +330,7 @@ function CardEditor({
             <Input label="Link (href)" value={btn.href} onChange={(e) => { const next = [...buttons]; next[bi] = { ...btn, href: e.target.value }; set({ buttons: next }); }} placeholder="/products or https://..." />
             <Select label="Variant" value={btn.variant} onChange={(e) => { const next = [...buttons]; next[bi] = { ...btn, variant: e.target.value as typeof btn.variant }; set({ buttons: next }); }} options={VARIANT_OPTIONS} />
             <Toggle label="Open in new tab" checked={btn.openInNewTab ?? false} onChange={(v) => { const next = [...buttons]; next[bi] = { ...btn, openInNewTab: v }; set({ buttons: next }); }} />
-          </Div>
+          </Stack>
         ))}
       </Stack>
 
@@ -535,7 +535,7 @@ export function AdminCarouselEditorView({
             <Input label="Heading" value={overlayTitle} onChange={(e) => setOverlayTitle(e.target.value)} placeholder="India's #1 Collectibles Marketplace" />
             <Input label="Subtitle" value={overlaySubtitle} onChange={(e) => setOverlaySubtitle(e.target.value)} placeholder="Pokémon TCG · Hot Wheels · Beyblade X" />
             <Input label="Description" value={overlayDesc} onChange={(e) => setOverlayDesc(e.target.value)} placeholder="One sentence description..." />
-            <Div className={`dark:border-zinc-800 ${__P.p3} space-y-2`} rounded="lg" border="default">
+            <Stack className={`dark:border-zinc-800 ${__P.p3}`} gap="sm" rounded="lg" border="default">
               <Text size="sm" weight="medium">CTA button</Text>
               <Input label="Button text" value={overlayBtnText} onChange={(e) => setOverlayBtnText(e.target.value)} placeholder="Shop Now" />
               <Input label="Button link" value={overlayBtnLink} onChange={(e) => setOverlayBtnLink(e.target.value)} placeholder="/products" />
@@ -546,7 +546,7 @@ export function AdminCarouselEditorView({
                 options={VARIANT_OPTIONS.filter((v) => ["primary", "secondary", "outline"].includes(v.value))}
               />
               <Toggle label="Open in new tab" checked={overlayBtnNewTab} onChange={setOverlayBtnNewTab} />
-            </Div>
+            </Stack>
           </Div>
 
           {/* ── 4. Cards ─────────────────────────────────────────────────── */}

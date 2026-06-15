@@ -1,4 +1,4 @@
-import { Button, Div } from "@mohasinac/appkit/ui";
+import { Button, Div, Row } from "@mohasinac/appkit/ui";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../../products/constants/action-defs";
 
 /**
@@ -82,7 +82,7 @@ export function DrawerFormFooter({
         </Button>
       )}
 
-      <Div className={`flex items-center gap-3${!onDelete ? " ml-auto" : ""}`}>
+      <Row className={`${!onDelete ? " ml-auto" : ""}`} align="center" gap="3">
         <Button
           variant={FORM_ACTION_META[FORM_ACTION_ID.CANCEL].variant}
           onClick={onCancel}
@@ -100,7 +100,7 @@ export function DrawerFormFooter({
         >
           {isLoading ? l.saving : l.submit}
         </Button>
-      </Div>
+      </Row>
     </div>
   );
 }

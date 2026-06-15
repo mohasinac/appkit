@@ -222,7 +222,7 @@ export function UserOffersPanel({
   }
 
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       <LoginRequiredModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -267,6 +267,6 @@ export function UserOffersPanel({
           ))}
         </Stack>
       )}
-    </Div>
+    </Stack>
   );
 }

@@ -9,16 +9,7 @@ import { useCountdown, type CountdownRemaining } from "../../../react";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import {
-  BaseListingCard,
-  Button,
-  Caption,
-  Div,
-  Row,
-  Span,
-  Text,
-  TextLink,
-} from "../../../ui";
+import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 const CLS_STAR_ICON = "h-5 w-5 fill-warning text-warning";
@@ -160,12 +151,12 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
           className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
         />
       )}
-      <Div className={`absolute left-2 z-10 flex flex-col gap-1 ${product.featured ? "top-8" : "top-2"}`}>
+      <Stack className={`absolute left-2 z-10 ${product.featured ? "top-8" : "top-2"}`} gap="xs">
         {!isEnded ? <Span size="xs" weight="bold" className={CLS_LIVE_BADGE}>{mergedLabels.liveBadge}</Span> : null}
         {isEndingSoon ? <Span size="xs" weight="bold" className={CLS_ENDING_BADGE}>{mergedLabels.endingSoon}</Span> : null}
         {isEnded ? <Span size="xs" weight="bold" className="rounded-full bg-zinc-600/90 px-2 py-0.5 text-white">{mergedLabels.ended}</Span> : null}
         {product.status === "sold" ? <Span size="xs" weight="bold" className="rounded-full bg-zinc-700/90 px-2 py-0.5 text-white">{mergedLabels.sold}</Span> : null}
-      </Div>
+      </Stack>
       <Div className="pointer-events-none absolute bottom-2 right-2 z-10">
         <Span size="xs" weight="semibold" className={CLS_RESERVE_BADGE}>
           <Gavel className="h-3 w-3" />

@@ -303,7 +303,7 @@ export function SellerOffersPanel({
   const pending = offers.filter((o) => o.status === "pending").length;
 
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       <LoginRequiredModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -362,6 +362,6 @@ export function SellerOffersPanel({
           ))}
         </Stack>
       )}
-    </Div>
+    </Stack>
   );
 }

@@ -1,5 +1,5 @@
 "use client"
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { useState } from "react";
 import { Div, Span, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
@@ -29,7 +29,7 @@ function CategoryTreeNode({
 
   return (
     <Div>
-      <Div
+      <Row
         role="treeitem"
         aria-expanded={hasChildren ? expanded : undefined}
         aria-selected={isActive}
@@ -45,7 +45,7 @@ function CategoryTreeNode({
           if (hasChildren) setExpanded((p) => !p);
           onSelect?.(item);
         }}
-        className={`flex cursor-pointer items-center gap-1 py-1.5 text-sm transition select-none ${isActive ? "bg-primary-50 font-semibold text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} padding="x-xs" rounded="md"
+        className={`cursor-pointer py-1.5 text-sm transition select-none ${isActive ? "bg-primary-50 font-semibold text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} align="center" gap="xs" padding="x-xs" rounded="md"
         // audit-inline-style-ok: computed pixel offset
         style={{ paddingLeft: `${8 + indent}px` }}
       >
@@ -73,7 +73,7 @@ function CategoryTreeNode({
             {item.metrics.productCount}
           </Span>
         )}
-      </Div>
+      </Row>
 
       {hasChildren && expanded && (
         <Div role="group">

@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Label, Row, Select, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Input, Label, Row, Select, Stack, StackedViewShell, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -95,7 +95,7 @@ function AdsSettingsPanel({
   currentConsentRequired, settingsMessage, onSave,
 }: AdsSettingsPanelProps) {
   return (
-    <Div className={`border border-neutral-200 dark:border-slate-700 ${__P.p3} space-y-3`} rounded="lg">
+    <Stack className={`border border-neutral-200 dark:border-slate-700 ${__P.p3}`} gap="3" rounded="lg">
       <Text size="sm" weight="semibold">Provider and publish settings</Text>
       <Text className="text-neutral-500" size="xs">
         Save provider credentials here before publishing AdSense or third-party inventory.
@@ -150,7 +150,7 @@ function AdsSettingsPanel({
           {settingsMessage}
         </Alert>
       ) : null}
-    </Div>
+    </Stack>
   );
 }
 

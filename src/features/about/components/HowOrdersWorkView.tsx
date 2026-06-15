@@ -195,13 +195,13 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
       <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
       <Stack gap="3">
         {statuses.map(({ status, icon, badge, desc }) => (
-          <Div key={status} className={`flex items-start gap-4 ${__P.p4} border ${themed.border} ${themed.bgPrimary}`} rounded="xl">
+          <Row key={status} className={`${__P.p4} border ${themed.border} ${themed.bgPrimary}`} align="start" gap="md" rounded="xl">
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
               <Span size="xl">{icon}</Span>
               <Span size="xs" weight="semibold" className={`px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
             </Row>
             <Text variant="secondary" className="leading-relaxed" size="sm">{desc}</Text>
-          </Div>
+          </Row>
         ))}
       </Stack>
     </Section>

@@ -254,13 +254,13 @@ function renderNotificationListContent(props: {
         <Li key={notification.id} className={`group flex items-start gap-3 px-4 py-3 border-b border-zinc-200 dark:border-slate-800 last:border-0 transition-colors hover:bg-zinc-50 dark:hover:bg-slate-900 ${!notification.isRead ? "bg-primary/5 dark:bg-primary/10" : ""}`}>
           <Span size="xl" className="flex-shrink-0 mt-0.5">{notificationIcons[notification.type] ?? "🔔"}</Span>
           <Div className="flex-1 min-w-0">
-            <Div className={`flex items-start justify-between ${THEME_CONSTANTS.spacing.gap.xs}`}>
+            <Row className={`${THEME_CONSTANTS.spacing.gap.xs}`} align="start" justify="between">
               <Text size="sm" className="leading-tight" color="primary" weight="medium">
                 {notification.title}
                 {!notification.isRead && <Span className="ml-1.5 inline-block w-2 h-2 rounded-full bg-primary flex-shrink-0 align-middle" />}
               </Text>
               <Span size="xs" className="flex-shrink-0" color="muted">{formatRelativeTime(notification.createdAt)}</Span>
-            </Div>
+            </Row>
             <Text size="sm" className={`mt-0.5 ${THEME_CONSTANTS.utilities.textClamp2}`} color="muted">{notification.message}</Text>
             <Row gap="3" className="mt-1.5">
               {notification.actionUrl && renderActionLink({ href: notification.actionUrl, onClick: () => { void handleMarkReadAndClose(notification); }, className: "text-xs text-primary hover:underline font-medium", children: notification.actionLabel ?? labels.viewAction })}

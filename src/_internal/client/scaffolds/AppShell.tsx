@@ -18,8 +18,7 @@
  */
 
 import * as React from "react";
-import { Div } from "../../../ui";
-
+import { Div, Stack } from "../../../ui";
 export interface AppShellRenderContext {
   /** Current path (consumer-supplied; this scaffold is path-agnostic). */
   path?: string;
@@ -60,7 +59,7 @@ export function AppShell({
   const sidebar = renderSidebar ? renderSidebar(ctx) : slotSidebar;
 
   return (
-    <Div className={`appkit-app-shell flex min-h-screen flex-col ${className ?? ""}`}>
+    <Stack className={`appkit-app-shell min-h-screen ${className ?? ""}`}>
       {header ? (
         <header className="sticky top-0 z-30 w-full" data-appshell-slot="header">
           {header}
@@ -81,6 +80,6 @@ export function AppShell({
           {footer}
         </footer>
       ) : null}
-    </Div>
+    </Stack>
   );
 }

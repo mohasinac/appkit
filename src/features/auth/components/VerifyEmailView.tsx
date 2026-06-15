@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Text, Button } from "../../../ui";
+import { Button, Div, Heading, Row, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 const CLS_SUCCESS_CIRCLE = "w-12 h-12 rounded-full bg-success-surface flex items-center justify-center mx-auto mb-6";
@@ -34,8 +34,8 @@ export function VerifyEmailView({
   className = "",
 }: VerifyEmailViewProps) {
   return (
-    <Div
-      className={`flex items-center justify-center min-h-[60vh] ${className}`} padding="x-md"
+    <Row
+      className={`min-h-[60vh] ${className}`} align="center" justify="center" padding="x-md"
     >
       <Div surface="elevated" padding="xl" className="max-w-md w-full text-center">
         {status === "loading" && (
@@ -116,6 +116,6 @@ export function VerifyEmailView({
           </>
         )}
       </Div>
-    </Div>
+    </Row>
   );
 }

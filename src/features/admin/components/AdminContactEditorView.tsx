@@ -67,7 +67,7 @@ export function AdminContactEditorView({
       onClose={onClose}
       title={subject ?? "Contact Submission"}
     >
-      <Div className={`flex flex-col gap-5 ${__P.p4}`}>
+      <Stack className={`${__P.p4}`} gap="5">
         {/* Status badge */}
         <Row align="center" gap="sm">
           <Text size="xs" color="muted">Status:</Text>
@@ -143,7 +143,7 @@ export function AdminContactEditorView({
             Archive
           </Button>
         </FormActions>
-      </Div>
+      </Stack>
     </SideDrawer>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { SocialPost, SocialPlatform } from "../schemas";
-import { Div, Row, Span, Text } from "../../../ui";
+import { Div, Row, Span, Stack, Text } from "../../../ui";
 const __P = {
   p3: "p-3",
 } as const;
@@ -97,10 +97,10 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       </Row>
 
       {/* YouTube branding top-right */}
-      <Div className={`absolute right-2 top-2 flex items-center gap-1 px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`} rounded="default">
+      <Row className={`absolute right-2 top-2 px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`} align="center" gap="xs" rounded="default">
         {meta.icon}
         <span className="hidden sm:inline">{meta.label}</span>
-      </Div>
+      </Row>
 
       {/* Channel name bottom-left */}
       {post.channelName && (
@@ -111,9 +111,9 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Caption hover overlay */}
       {showCaption && post.caption && (
-        <Div className={`absolute inset-0 flex flex-col justify-end bg-black/60 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
+        <Stack className={`absolute inset-0 justify-end bg-black/60 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
           <Text className="line-clamp-2 text-white" size="xs">{post.caption}</Text>
-        </Div>
+        </Stack>
       )}
     </a>
   );
@@ -180,13 +180,13 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       )}
 
       {/* Platform badge */}
-      <Div className={`absolute left-2 top-2 flex items-center gap-1 px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`} rounded="default">
+      <Row className={`absolute left-2 top-2 px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`} align="center" gap="xs" rounded="default">
         {meta.icon}
         <span className="hidden sm:inline">{meta.label}</span>
-      </Div>
+      </Row>
 
       {/* Hover overlay — caption + stats */}
-      <Div className={`pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
+      <Stack className={`pointer-events-none absolute inset-0 justify-end bg-black/70 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
         {showCaption && post.caption && (
           <Text className="mb-2 line-clamp-3 text-white" size="xs">{post.caption}</Text>
         )}
@@ -218,7 +218,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
             )}
           </Row>
         )}
-      </Div>
+      </Stack>
     </a>
   );
 }

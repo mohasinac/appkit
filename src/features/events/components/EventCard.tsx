@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Article, BaseListingCard, Button, Div, Heading, RichText, Row, Span, TextLink } from "../../../ui";
+import { Article, BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
 import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
@@ -98,7 +98,7 @@ export function EventCard({
           </Row>
         )}
       </Link>
-      <Div className={`flex flex-1 flex-col ${__P.p4}`}>
+      <Stack className={`flex-1 ${__P.p4}`}>
         <Row className="mb-2" align="start" justify="between" gap="sm">
           <Span size="lg" aria-hidden="true">
             {TYPE_ICONS[event.type]}
@@ -143,7 +143,7 @@ export function EventCard({
             {labels.viewDetails ?? "View details"} →
           </TextLink>
         )}
-      </Div>
+      </Stack>
     </Article>
   );
 }

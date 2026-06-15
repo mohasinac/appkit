@@ -187,11 +187,11 @@ export function PrizeDrawsIndexListing({
                 className="border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse" rounded="xl"
               >
                 <Div className="aspect-square" surface="subtle" />
-                <Div className={`${__P.p3} space-y-2`}>
+                <Stack className={`${__P.p3}`} gap="sm">
                   <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
                   <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
                   <Div className="h-8" surface="subtle" rounded="default" />
-                </Div>
+                </Stack>
               </Div>
             ))}
           </Div>

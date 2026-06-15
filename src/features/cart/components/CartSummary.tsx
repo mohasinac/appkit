@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Heading } from "../../../ui";
-
+import { Div, Heading, Stack } from "../../../ui";
 export interface CartSummaryProps {
   isLoading?: boolean;
   /** Render the line-items breakdown (subtotal, discount, shipping rows) */
@@ -27,7 +26,7 @@ export function CartSummary({
   className = "",
 }: CartSummaryProps) {
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       {labels.title && (
         <Heading level={2} variant="none" size="base" weight="bold">
           {labels.title}
@@ -38,6 +37,6 @@ export function CartSummary({
       {renderTotal?.()}
       {renderCheckoutAction?.()}
       {renderContinueShopping?.()}
-    </Div>
+    </Stack>
   );
 }

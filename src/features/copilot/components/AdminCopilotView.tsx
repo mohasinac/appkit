@@ -71,7 +71,7 @@ function renderCopilotChatPanel(props: {
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
       </Div>
-      <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
+      <Stack className={`flex-1 ${__O.yAuto} ${__P.p4}`} gap="md">
         {messages.length === 0 ? (
           <Stack className="justify-center h-full text-center" align="center">
             <Text weight="medium">{labels?.noMessages ?? "No messages yet"}</Text>
@@ -88,7 +88,7 @@ function renderCopilotChatPanel(props: {
         ) : null}
         {error ? <Text className={CLS_ERROR_TEXT}>{labels?.errorLabel ?? "An error occurred. Please try again."}</Text> : null}
         <Div ref={messagesEndRef} />
-      </Div>
+      </Stack>
       <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
         {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
         <form onSubmit={handleSubmit} className="flex gap-2">
@@ -120,7 +120,7 @@ function renderCopilotHistoryPanel(props: {
       {historyQuery.error ? (
         <Alert variant="warning" title="History unavailable">{historyQuery.error instanceof Error ? historyQuery.error.message : "Could not load history"}</Alert>
       ) : null}
-      <Div className={`max-h-72 ${__O.yAuto} space-y-2`}>
+      <Stack className={`max-h-72 ${__O.yAuto}`} gap="sm">
         {(historyQuery.data?.messages ?? []).map((log, index) => (
           <Div key={`${log.createdAt}-${index}`} className="border border-neutral-200" rounded="lg" padding="xs">
             <Text className="text-neutral-500" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
@@ -131,7 +131,7 @@ function renderCopilotHistoryPanel(props: {
         {!historyQuery.isLoading && (historyQuery.data?.messages?.length ?? 0) === 0 ? (
           <Text variant="secondary" size="sm">No server history found for this conversation yet.</Text>
         ) : null}
-      </Div>
+      </Stack>
     </Stack>
   );
 }
@@ -202,7 +202,7 @@ export function AdminCopilotView({
               </Text>
             </Div>
 
-            <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-4`}>
+            <Stack className={`flex-1 ${__O.yAuto} ${__P.p4}`} gap="md">
               {messages.length === 0 ? (
                 <Stack className="justify-center h-full text-center" align="center">
                   <Text weight="medium">{labels.noMessages ?? "No messages yet"}</Text>
@@ -227,7 +227,7 @@ export function AdminCopilotView({
                 </Text>
               ) : null}
               <Div ref={messagesEndRef} />
-            </Div>
+            </Stack>
 
             <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
@@ -282,7 +282,7 @@ export function AdminCopilotView({
               </Alert>
             ) : null}
 
-            <Div className={`max-h-72 ${__O.yAuto} space-y-2`}>
+            <Stack className={`max-h-72 ${__O.yAuto}`} gap="sm">
               {(historyQuery.data?.messages ?? []).map((log, index) => (
                 <Div
                   key={`${log.createdAt}-${index}`}
@@ -302,7 +302,7 @@ export function AdminCopilotView({
                   No server history found for this conversation yet.
                 </Text>
               ) : null}
-            </Div>
+            </Stack>
           </Stack>
         </Div>,
       ]}

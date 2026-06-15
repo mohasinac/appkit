@@ -248,14 +248,14 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           }}
         >
           {/* Nav panel */}
-          <Div surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden}`} shadow="xl">
+          <Stack surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 ${__O.hidden}`} shadow="xl">
             <Div className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md">
               <Span size="xs" weight="semibold" transform="uppercase" color="muted">My Account</Span>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>
               <DrawerContent groups={groups} items={items} activeHref={pathname} />
             </Div>
-          </Div>
+          </Stack>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </Div>

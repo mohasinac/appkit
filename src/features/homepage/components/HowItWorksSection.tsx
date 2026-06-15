@@ -1,8 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Grid, Heading, Section, Text } from "../../../ui";
-
+import { Button, Div, Grid, Heading, Row, Section, Text } from "../../../ui";
 // --- Constants ---------------------------------------------------------------
 
 const CLS_VISIBLE = "opacity-100 translate-y-0";
@@ -68,21 +67,21 @@ function StepCard({
       </Div>
 
       {/* Visible index badge */}
-      <Div
-        className={`relative z-10 w-10 h-10 ${badgeBg} text-white font-bold text-sm flex items-center justify-center mb-5`} rounded="full" shadow="md"
+      <Row
+        className={`relative z-10 w-10 h-10 ${badgeBg} text-white font-bold text-sm mb-5`} align="center" justify="center" rounded="full" shadow="md"
       >
         {step.number}
-      </Div>
+      </Row>
 
       {/* Icon */}
       {step.renderIcon && (
-        <Div
-          className={`relative z-10 w-14 h-14 ${iconBg} flex items-center justify-center mb-4 border border-white/80 dark:border-slate-700/50`} rounded="2xl"
+        <Row
+          className={`relative z-10 w-14 h-14 ${iconBg} mb-4 border border-white/80 dark:border-slate-700/50`} align="center" justify="center" rounded="2xl"
         >
           <span className={`${iconColor}`} aria-hidden="true">
             {step.renderIcon({ className: "w-6 h-6" })}
           </span>
-        </Div>
+        </Row>
       )}
 
       {/* Text */}

@@ -240,13 +240,13 @@ export function AdminFaqEditorView({
             placeholder="e.g. shipping, pokemon, returns"
           />
 
-          <Div className={`space-y-3 ${__P.p4}`} rounded="lg" border="default">
+          <Stack className={`${__P.p4}`} gap="3" rounded="lg" border="default">
             <Text size="sm" weight="medium" color="muted">Visibility</Text>
             <Toggle label="Active (visible to users)" checked={isActive} onChange={setIsActive} />
             <Toggle label="Pinned (always shown at top)" checked={isPinned} onChange={setIsPinned} />
             <Toggle label="Show on homepage FAQ section" checked={showOnHomepage} onChange={setShowOnHomepage} />
             <Toggle label="Show in footer FAQ links" checked={showInFooter} onChange={setShowInFooter} />
-          </Div>
+          </Stack>
 
           <Div className="flex gap-3 pt-2">
             <Button

@@ -332,7 +332,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             onPlaceBid ? (
               <Stack id="auction-bid-form" gap="3">
                 {/* Compact summary card — modal owns the form */}
-                <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5} space-y-3`} rounded="xl" surface="muted">
+                <Stack className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="3" rounded="xl" surface="muted">
                   <Row justify="between" align="baseline">
                     <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
                       {formatCurrency(currentBid, currency)}
@@ -356,11 +356,11 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     onBuyNow={onBuyNow}
                     triggerClassName="w-full"
                   />
-                </Div>
+                </Stack>
               </Stack>
             ) : (
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
-              <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5} space-y-4`} rounded="xl" surface="muted">
+              <Stack className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="md" rounded="xl" surface="muted">
                 <Stack gap="xs">
                   <Text size="xs" color="muted">
                     Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
@@ -394,12 +394,12 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     </Row>
                   </Div>
                 )}
-              </Div>
+              </Stack>
             )
           }
           renderMobileBidForm={() =>
             !isEnded && onPlaceBid ? (
-              <Div className={`lg:hidden border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4} space-y-3`} rounded="xl" surface="muted">
+              <Stack className={`lg:hidden border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4}`} gap="3" rounded="xl" surface="muted">
                 <Row align="center" gap="sm">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
@@ -421,7 +421,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   onBuyNow={onBuyNow}
                   triggerClassName="w-full"
                 />
-              </Div>
+              </Stack>
             ) : !isEnded ? (
               <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4} lg:hidden`} rounded="xl" surface="muted">
                 <Row align="center" gap="sm" className="mb-3">

@@ -65,7 +65,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
           </Row>
         )}
       </Div>
-      <Div className={`flex flex-1 flex-col ${__P.p5}`}>
+      <Stack className={`flex-1 ${__P.p5}`}>
         <Row className="mb-2" gap="sm" wrap>
           <Span size="xs" weight="medium" className="rounded-full bg-primary/10 px-2 py-0.5 text-primary" transform="capitalize">
             {post.category}
@@ -115,7 +115,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             {date && <Span className="ml-1 text-neutral-400">· {date}</Span>}
           </Text>
         </Row>
-      </Div>
+      </Stack>
     </Article>
   );
 
@@ -200,11 +200,11 @@ export function BlogListView<T extends BlogPost = BlogPost>({
             className="animate-pulse overflow-hidden border border-neutral-200 bg-neutral-100" rounded="xl"
           >
             <Div className="aspect-video bg-neutral-200" />
-            <Div className={`space-y-2 ${__P.p5}`}>
+            <Stack className={`${__P.p5}`} gap="sm">
               <Div className="h-4 w-16 bg-neutral-200" rounded="default" />
               <Div className="h-5 w-full bg-neutral-200" rounded="default" />
               <Div className="h-4 w-3/4 bg-neutral-200" rounded="default" />
-            </Div>
+            </Stack>
           </Div>
         ))}
       </Div>

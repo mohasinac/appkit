@@ -286,7 +286,7 @@ function PreOrderBuyBarPanel({
   onReserveNow,
 }: PreOrderBuyBarPanelProps) {
   return (
-    <Div id="pre-order-buy-bar" className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5} space-y-4`} rounded="xl" surface="muted">
+    <Stack id="pre-order-buy-bar" className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="md" rounded="xl" surface="muted">
       {reserveTarget > 0 && (
         <Stack gap="sm">
           <Row justify="between" align="center">
@@ -369,7 +369,7 @@ function PreOrderBuyBarPanel({
           </Div>
         </>
       )}
-    </Div>
+    </Stack>
   );
 }
 

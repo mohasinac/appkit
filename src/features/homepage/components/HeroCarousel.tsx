@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useMediaQuery } from "../../../react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Button, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { MediaVideo } from "../../media/MediaVideo";
 import { useHeroCarousel } from "../hooks/useHeroCarousel";
@@ -214,8 +214,8 @@ function CarouselCardRenderer({
     >
       <CardBackground bg={card.background} />
       {!card.isButtonOnly && (
-        <Div
-          className={`${position.fill} flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent md:p-6 ${textAlignClass}`} padding="xs"
+        <Stack
+          className={`${position.fill} justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent md:p-6 ${textAlignClass}`} padding="xs"
         >
           {card.content?.eyebrow && (
             <Text className="text-[10px] md:text-xs !text-white/70 mb-0.5 tracking-wider drop-shadow-sm" transform="uppercase">
@@ -262,7 +262,7 @@ function CarouselCardRenderer({
               })}
             </Row>
           )}
-        </Div>
+        </Stack>
       )}
       {card.isButtonOnly && card.buttons?.[0] && (
         <Button

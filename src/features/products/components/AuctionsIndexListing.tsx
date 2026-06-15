@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, useToast } from "../../../ui";
+import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -240,12 +240,12 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
             {Array.from({ length: 8 }).map((_, i) => (
               <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
-                <Div className={`${__P.p3} space-y-2`}>
+                <Stack className={`${__P.p3}`} gap="sm">
                   <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
                   <Div className="h-4 w-1/2" surface="subtle" rounded="default" />
                   <Div className="h-3 w-full" surface="subtle" rounded="default" />
                   <Div className="h-8" surface="subtle" rounded="default" />
-                </Div>
+                </Stack>
               </Div>
             ))}
           </Div>

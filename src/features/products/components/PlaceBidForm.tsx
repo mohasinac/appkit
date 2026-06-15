@@ -1,6 +1,7 @@
 import React from "react";
 import { Div } from "../../../ui/components/Div";
 
+import { Stack } from "@mohasinac/appkit";
 export interface PlaceBidFormProps {
   currentBid?: number;
   minBidIncrement?: number;
@@ -32,12 +33,12 @@ export function PlaceBidForm({
   if (renderAuthGate) return <>{renderAuthGate()}</>;
 
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       {renderCountdown?.()}
       {renderBidInfo?.()}
       {renderError?.()}
       {renderInput?.()}
       {renderAction?.()}
-    </Div>
+    </Stack>
   );
 }

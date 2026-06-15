@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Heading } from "../../../ui";
-
+import { Div, Heading, Stack } from "../../../ui";
 export interface RelatedProductsProps {
   isLoading?: boolean;
   isEmpty?: boolean;
@@ -37,7 +36,7 @@ export function RelatedProducts({
   if (isEmpty) return null;
 
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       {renderTitle ? (
         renderTitle()
       ) : labels.title ? (
@@ -46,6 +45,6 @@ export function RelatedProducts({
         </Heading>
       ) : null}
       {renderGrid?.()}
-    </Div>
+    </Stack>
   );
 }

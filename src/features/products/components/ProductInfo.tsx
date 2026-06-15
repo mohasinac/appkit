@@ -1,6 +1,7 @@
 import React from "react";
 import { Div } from "../../../ui/components/Div";
 
+import { Stack } from "@mohasinac/appkit";
 export interface ProductInfoProps {
   isLoading?: boolean;
   /** Title, condition badge, brand */
@@ -32,7 +33,7 @@ export function ProductInfo({
   className = "",
 }: ProductInfoProps) {
   return (
-    <Div className={`space-y-4 ${className}`}>
+    <Stack className={`${className}`} gap="md">
       {renderTitle?.(isLoading)}
       {renderRating?.()}
       {renderPrice?.(isLoading)}
@@ -40,6 +41,6 @@ export function ProductInfo({
       {renderVariants?.()}
       {renderDescription?.()}
       {renderSeller?.()}
-    </Div>
+    </Stack>
   );
 }

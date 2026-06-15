@@ -85,7 +85,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
   }, [files, search]);
 
   return (
-    <Div className={`space-y-3 ${__P.p4} dark:border-slate-700 dark:bg-slate-900`} rounded="xl" surface="default" border="default">
+    <Stack className={`${__P.p4} dark:border-slate-700 dark:bg-slate-900`} gap="3" rounded="xl" surface="default" border="default">
       <Text size="sm" weight="semibold" color="primary">
         Browse existing media
       </Text>
@@ -170,7 +170,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           </Button>
         )}
       </Row>
-    </Div>
+    </Stack>
   );
 }
 

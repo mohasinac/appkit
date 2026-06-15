@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, HorizontalScroller, Section, Text } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Section, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
@@ -64,8 +64,8 @@ function CardItem({ card }: { card: CustomCardsCard }) {
   if (card.textColor) cardStyle.color = card.textColor;
 
   return (
-    <Div
-      className={`flex flex-col overflow-hidden ${radiusClass} ${shadowClass} bg-[var(--appkit-color-surface)]`}
+    <Stack
+      className={`overflow-hidden ${radiusClass} ${shadowClass} bg-[var(--appkit-color-surface)]`}
       // audit-inline-style-ok: pass-through style prop
       style={cardStyle}
     >
@@ -79,7 +79,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
         </Div>
       )}
 
-      <Div className={`flex flex-col gap-2 ${__P.p4} flex-1`}>
+      <Stack className={`${__P.p4} flex-1`} gap="sm">
         {card.eyebrow && (
           <Text className="tracking-widest opacity-70" size="xs" weight="semibold" transform="uppercase">
             {card.eyebrow}
@@ -119,8 +119,8 @@ function CardItem({ card }: { card: CustomCardsCard }) {
             title="Embedded form"
           />
         )}
-      </Div>
-    </Div>
+      </Stack>
+    </Stack>
   );
 }
 
@@ -196,13 +196,13 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
       <Section className={`${themed.bgPrimary}`} padding="y-3xl">
         <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
-          <Div className={`${masonryClass} gap-4 space-y-4`}>
+          <Stack className={`${masonryClass} space-y-4`} gap="md">
             {cards.map((card) => (
               <Div key={card.id} className="break-inside-avoid">
                 <CardItem card={card} />
               </Div>
             ))}
-          </Div>
+          </Stack>
         </Div>
       </Section>
     );

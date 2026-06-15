@@ -31,9 +31,9 @@ export function HomepageSkeleton() {
       <Section className={`${__P.p8} ${themed.bgPrimary}`}>
         <Grid className="grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Div
+            <Stack
               key={i}
-              className={`${skeleton.card} flex flex-col items-center gap-3 ${trustCardH}`} padding="lg"
+              className={`${skeleton.card} ${trustCardH}`} align="center" gap="3" padding="lg"
             />
           ))}
         </Grid>

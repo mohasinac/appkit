@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Span } from "../../../ui";
+import { Div, Heading, Span, Stack } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface MessagesViewLabels {
@@ -43,10 +43,10 @@ export function MessagesView({
 
       {/* Chat window */}
       {chatId ? (
-        <Div className={`flex flex-col ${THEME_CONSTANTS.spacing.gap.xs}`}>
+        <Stack className={`${THEME_CONSTANTS.spacing.gap.xs}`}>
           {renderMobileBack?.()}
           {renderChatWindow?.()}
-        </Div>
+        </Stack>
       ) : (
         <Div className="hidden md:flex items-center justify-center text-zinc-400 dark:text-zinc-400 border border-dashed border-neutral-200 dark:border-neutral-700" rounded="xl">
           {renderEmptyState?.() ?? (

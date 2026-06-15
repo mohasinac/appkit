@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, useToast } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast } from "../../../ui";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
@@ -180,11 +180,11 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
                 className="border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse" rounded="xl"
               >
                 <Div className="aspect-square" surface="subtle" />
-                <Div className={`${__P.p3} space-y-2`}>
+                <Stack className={`${__P.p3}`} gap="sm">
                   <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
                   <Div className="h-4 w-1/2" surface="subtle" rounded="default" />
                   <Div className="h-8" surface="subtle" rounded="default" />
-                </Div>
+                </Stack>
               </Div>
             ))}
           </Div>

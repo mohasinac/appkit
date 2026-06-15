@@ -107,7 +107,7 @@ export function AdminScammerEditorView({
       onClose={onClose}
       title={displayNames.length > 0 ? displayNames[0] : "Scammer Profile"}
     >
-      <Div className={`flex flex-col gap-4 ${__P.p4}`}>
+      <Stack className={`${__P.p4}`} gap="md">
         {/* Status badge */}
         <Row align="center" gap="sm">
           <Span
@@ -247,7 +247,7 @@ export function AdminScammerEditorView({
             Save changes
           </Button>
         </FormActions>
-      </Div>
+      </Stack>
     </SideDrawer>
   );
 }

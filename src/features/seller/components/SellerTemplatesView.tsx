@@ -458,7 +458,7 @@ export function SellerTemplatesView({
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <Div className={`space-y-4 ${__P.p4}`}>
+        <Stack className={`${__P.p4}`} gap="md">
           <Div>
             <Label className="mb-1.5 block text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
               Condition
@@ -469,7 +469,7 @@ export function SellerTemplatesView({
               options={CONDITION_OPTIONS}
             />
           </Div>
-        </Div>
+        </Stack>
       </FilterDrawer>
 
       <SideDrawer

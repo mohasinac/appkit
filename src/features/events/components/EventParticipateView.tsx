@@ -47,10 +47,10 @@ export function EventParticipateView({
   if (isSubmitted && renderSuccess) return <>{renderSuccess()}</>;
 
   return (
-    <Div className={`max-w-xl mx-auto space-y-6 ${className}`}>
+    <Stack className={`max-w-xl mx-auto ${className}`} gap="lg">
       {renderEventInfo?.()}
       {renderForm?.()}
       {renderAction?.()}
-    </Div>
+    </Stack>
   );
 }

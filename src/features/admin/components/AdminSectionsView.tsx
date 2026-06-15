@@ -953,7 +953,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         {statsBuilder.stats.map((stat, index) => (
-          <Div key={`stat-row-${index}`} className={`space-y-3 ${__P.p3} dark:border-slate-700`} rounded="md" border="default">
+          <Stack key={`stat-row-${index}`} className={`${__P.p3} dark:border-slate-700`} gap="3" rounded="md" border="default">
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Stat {index + 1}
             </Text>
@@ -990,7 +990,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
                 })
               }
             />
-          </Div>
+          </Stack>
         ))}
       </Div>
     );
@@ -1665,7 +1665,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Text size="sm" weight="semibold" color="primary">Trust Indicators Builder</Text>
         <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         {trustIndicatorsBuilder.indicators.map((ind, index) => (
-          <Div key={ind.id} className={`space-y-2 ${__P.p3} dark:border-slate-700`} rounded="md" border="default">
+          <Stack key={ind.id} className={`${__P.p3} dark:border-slate-700`} gap="sm" rounded="md" border="default">
             <Row align="center" justify="between">
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Indicator {index + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
@@ -1673,7 +1673,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             <Input label="Icon (emoji or text)" value={ind.icon} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], icon: e.target.value }; return { ...prev, indicators: next }; })} />
             <Input label="Title" value={ind.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], title: e.target.value }; return { ...prev, indicators: next }; })} />
             <Input label="Description" value={ind.description} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], description: e.target.value }; return { ...prev, indicators: next }; })} />
-          </Div>
+          </Stack>
         ))}
         <Button type="button" variant="outline" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: [...prev.indicators, { id: `ti-${Date.now()}`, icon: "✨", title: "", description: "" }] }))}>+ Add indicator</Button>
       </Div>
@@ -2542,7 +2542,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <DataTable rows={rows} isLoading={isLoading} emptyLabel="No sections found" />
       </Div>
 
-      <Div className={`mt-4 space-y-3 ${__P.p4} dark:border-slate-700 dark:bg-slate-900`} rounded="xl" surface="default" border="default">
+      <Stack className={`mt-4 ${__P.p4} dark:border-slate-700 dark:bg-slate-900`} gap="3" rounded="xl" surface="default" border="default">
         <Row align="center" justify="between" gap="3">
           <Text size="sm" weight="semibold" color="primary">
             Reorder Sections
@@ -2637,7 +2637,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             ))}
           </Stack>
         )}
-      </Div>
+      </Stack>
 
 
       <ConfirmDeleteModal

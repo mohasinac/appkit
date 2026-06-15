@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
-import { Button, Div, Row, Span } from "../../ui";
-
+import { Button, Div, Row, Span, Stack } from "../../ui";
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
@@ -72,11 +71,11 @@ export function BottomSheet({
       />
 
       {/* Drawer panel */}
-      <Div
+      <Stack
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`absolute bottom-0 inset-x-0 flex flex-col rounded-t-2xl border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`} surface="default"
+        className={`absolute bottom-0 inset-x-0 rounded-t-2xl border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`} surface="default"
       >
         {/* Handle and header */}
         <Row
@@ -121,7 +120,7 @@ export function BottomSheet({
         <Div className={`flex-1 ${__O.yAuto} overscroll-contain pb-[env(safe-area-inset-bottom)]`}>
           {children}
         </Div>
-      </Div>
+      </Stack>
     </Div>
   );
 }

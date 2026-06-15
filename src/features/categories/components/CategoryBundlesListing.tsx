@@ -180,7 +180,7 @@ export function CategoryBundlesListing({
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <Div className={`space-y-4 ${__P.p4}`}>
+        <Stack className={`${__P.p4}`} gap="md">
           <label className="flex items-center justify-between gap-3 cursor-pointer">
             <Span size="sm" weight="medium" color="muted">Show out-of-stock bundles</Span>
             <button
@@ -199,7 +199,7 @@ export function CategoryBundlesListing({
               />
             </button>
           </label>
-        </Div>
+        </Stack>
       </FilterDrawer>
     </Div>
   );

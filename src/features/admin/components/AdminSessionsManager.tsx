@@ -1,6 +1,5 @@
 import React from "react";
-import { Div } from "../../../ui";
-
+import { Div, Stack } from "../../../ui";
 export interface AdminSessionsManagerProps {
   renderHeader?: () => React.ReactNode;
   renderStats: () => React.ReactNode;
@@ -17,11 +16,11 @@ export function AdminSessionsManager({
   className = "",
 }: AdminSessionsManagerProps) {
   return (
-    <Div className={`space-y-6 ${className}`}>
+    <Stack className={`${className}`} gap="lg">
       {renderHeader?.()}
       {renderStats()}
       {renderTable()}
       {renderConfirmModal?.()}
-    </Div>
+    </Stack>
   );
 }
