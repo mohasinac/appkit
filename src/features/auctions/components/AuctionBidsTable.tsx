@@ -79,7 +79,7 @@ function AuctionRow({
   const isWinning = auction.bids.some((b) => b.isWinning);
 
   return (
-    <Div className={`border border-[var(--appkit-color-border)] rounded-xl ${__O.hidden} bg-[var(--appkit-color-surface)] shadow-sm`}>
+    <Div className={`border border-[var(--appkit-color-border)] ${__O.hidden} bg-[var(--appkit-color-surface)]`} rounded="xl" shadow="sm">
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}

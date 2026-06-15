@@ -205,7 +205,7 @@ function CarouselCardRenderer({
 
   return (
     <Div
-      className={`relative rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${hoverClass}`}
+      className={`relative overflow-hidden transition-all duration-300 ${hoverClass}`} rounded="lg" shadow="lg"
       style={{
         gridRow: String(gridPos.gridRow),
         gridColumn: String(gridPos.gridColumn),
@@ -215,7 +215,7 @@ function CarouselCardRenderer({
       <CardBackground bg={card.background} />
       {!card.isButtonOnly && (
         <Div
-          className={`${position.fill} flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2 md:p-6 ${textAlignClass}`}
+          className={`${position.fill} flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent md:p-6 ${textAlignClass}`} padding="xs"
         >
           {card.content?.eyebrow && (
             <Text className="text-[10px] md:text-xs !text-white/70 mb-0.5 tracking-wider drop-shadow-sm" transform="uppercase">
@@ -444,7 +444,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 {/* Cards grid */}
                 {hasCards && (
                   <Div
-                    className={`${position.fill} grid gap-2 md:gap-4 p-4 md:p-8`}
+                    className={`${position.fill} grid gap-2 md:gap-4 md:p-8`} padding="md"
                     style={{
                       gridTemplateRows: "repeat(2, 1fr)",
                       gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",

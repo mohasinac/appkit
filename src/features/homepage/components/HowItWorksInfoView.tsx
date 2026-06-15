@@ -99,10 +99,10 @@ export function HowItWorksInfoView({
             }) => (
               <Section
                 key={number}
-                className={`flex gap-4 items-start ${themed.bgSecondary} rounded-xl p-6 border ${themed.border}`}
+                className={`flex gap-4 items-start ${themed.bgSecondary} border ${themed.border}`} rounded="xl" padding="lg"
               >
                 <Div
-                  className={`shrink-0 w-10 h-10 rounded-xl ${stepAccent ?? accentClass} ${flex.center} text-sm font-bold`}
+                  className={`shrink-0 w-10 h-10 ${stepAccent ?? accentClass} ${flex.center} text-sm font-bold`} rounded="xl"
                 >
                   <Span className={textClass}>{number}</Span>
                 </Div>

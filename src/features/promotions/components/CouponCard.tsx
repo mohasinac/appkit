@@ -235,7 +235,7 @@ export function CouponCard({
 
   return (
     <Div
-      className={`group relative flex h-full flex-col rounded-xl border-2 p-4 ${colors.card} ${isSelected ? "ring-2 ring-primary" : ""} ${!n.isActive ? "opacity-70" : ""} ${className}`}
+      className={`group relative flex h-full flex-col border-2 ${colors.card} ${isSelected ? "ring-2 ring-primary" : ""} ${!n.isActive ? "opacity-70" : ""} ${className}`} rounded="xl" padding="md"
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -289,7 +289,7 @@ export function CouponCard({
       {/* Copy code block + Claim CTA (public surfaces). On admin/CRUD surfaces
           the Claim button is hidden via `hideClaim` since admins aren't
           redeeming the coupons they're managing. */}
-      <Div className={`flex items-center gap-2 rounded-lg border border-dashed px-3 py-2 ${colors.code}`}>
+      <Div className={`flex items-center gap-2 border border-dashed px-3 ${colors.code}`} rounded="lg" padding="y-xs">
         <Span size="sm" weight="bold" className="flex-1 font-mono tracking-widest select-all" transform="uppercase">
           {n.code || "—"}
         </Span>

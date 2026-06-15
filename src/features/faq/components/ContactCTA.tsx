@@ -34,7 +34,7 @@ export function ContactCTA({
       className="text-center dark:bg-slate-800/60"
     >
       <Row className="mb-6" justify="center">
-        <Div className={`rounded-full bg-primary/10 ${__P.p8}`}>
+        <Div className={`bg-primary/10 ${__P.p8}`} rounded="full">
           <svg
             className="h-12 w-12 text-primary"
             fill="none"

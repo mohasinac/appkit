@@ -282,7 +282,7 @@ export function FormShell({
 
           {/* Mobile horizontal section strip */}
           {sections && sections.length > 0 && !previewMode && (
-            <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-5 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`}>
+            <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-5 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`} padding="y-xs">
               {sections.map((sec) => (
                 <button
                   key={sec.id}
@@ -321,7 +321,7 @@ export function FormShell({
                 <Div className="max-w-3xl mx-auto px-5 sm:px-6 lg:max-w-none lg:px-0 lg:py-0" padding="y-lg">
                   {children}
                 </Div>
-                <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] ${__P.p4}`}>
+                <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] ${__P.p4}`} rounded="lg">
                   <Row gap="xs" className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
                     <Eye className="w-3.5 h-3.5" />
                     <Span>Live preview</Span>

@@ -263,7 +263,7 @@ export async function PrizeDrawDetailPageView({
                 </Heading>
               </Div>
 
-              <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p4}`}>
+              <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4}`} rounded="xl" surface="muted">
                 <Stack gap="sm">
                   <Row justify="between" align="center">
                     <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
@@ -305,7 +305,7 @@ export async function PrizeDrawDetailPageView({
               )}
 
               {safeSeller && (
-                <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
+                <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p3}`} rounded="xl" surface="muted">
                   <Row justify="between" align="center">
                     <Div>
                       <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">

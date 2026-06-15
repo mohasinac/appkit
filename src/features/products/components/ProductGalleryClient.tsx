@@ -42,7 +42,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
   if (images.length === 0) {
     return (
-      <Div className={`${__O.hidden} rounded-xl border border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900`}>
+      <Div className={`${__O.hidden} border border-zinc-100 dark:border-zinc-800`} rounded="xl" surface="muted">
         <Row className="aspect-square text-zinc-300 dark:text-zinc-700" align="center" justify="center">
           <PlaceholderSvg />
         </Row>

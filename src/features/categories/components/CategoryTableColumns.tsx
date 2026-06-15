@@ -43,7 +43,7 @@ export function getCategoryTableColumns(
         key: "image",
         header: "",
         render: (cat: Category) => (
-          <Div className={`relative w-9 h-9 rounded ${__O.hidden} flex-shrink-0`}>
+          <Div className={`relative w-9 h-9 ${__O.hidden} flex-shrink-0`} rounded="default">
             {cat.display?.coverImage ? (
               <MediaImage
                 src={cat.display.coverImage}

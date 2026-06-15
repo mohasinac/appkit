@@ -82,7 +82,7 @@ function ReviewCard({
     : null;
 
   return (
-    <Div className={`flex flex-col gap-3 ${__P.p4} rounded-xl bg-[var(--appkit-color-surface)] shadow-sm border border-[var(--appkit-color-border)]`}>
+    <Div className={`flex flex-col gap-3 ${__P.p4} bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)]`} rounded="xl" shadow="sm">
       <Row align="center" gap="3">
         {review.authorPhotoUrl ? (
           <img
@@ -172,7 +172,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
 
   if (!apiKey) {
     return (
-      <Section className={`py-12 ${themed.bgPrimary}`}>
+      <Section className={`${themed.bgPrimary}`} padding="y-3xl">
         <Div className="w-full max-w-7xl mx-auto px-4">
           <NotConfiguredState />
         </Div>
@@ -209,7 +209,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
     googleMapsUrl || (placeId ? `https://search.google.com/local/reviews?placeid=${placeId}` : "");
 
   return (
-    <Section className={`py-12 ${themed.bgPrimary}`}>
+    <Section className={`${themed.bgPrimary}`} padding="y-3xl">
       <Div className="w-full max-w-7xl mx-auto px-4">
         <Row className="mb-8" align="end" justify="between" gap="md">
           <>

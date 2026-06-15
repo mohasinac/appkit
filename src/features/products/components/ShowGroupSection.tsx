@@ -85,7 +85,7 @@ function GroupTableRow({ member }: { member: GroupMember }) {
   return (
     <Tr className="border-b border-zinc-100 dark:border-zinc-800 last:border-0">
       <Td className="py-2 pr-3">
-        <Div className={`w-10 h-10 rounded-full ${__O.hidden} border border-zinc-200 dark:border-zinc-700`}>
+        <Div className={`w-10 h-10 ${__O.hidden}`} rounded="full" border="default">
           <MediaImage src={image} alt={member.title} size="thumbnail" />
         </Div>
       </Td>
@@ -156,7 +156,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
 
   return (
     <>
-      <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-800/40 ${__O.hidden}`}>
+      <Div className={`bg-zinc-50/60 dark:bg-zinc-800/40 ${__O.hidden}`} rounded="xl" border="default">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}

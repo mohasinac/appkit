@@ -259,7 +259,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "revealing" ? (
-          <Div className={`rounded bg-[var(--appkit-color-surface-muted)] ${__P.p4} text-center`}>
+          <Div className={`bg-[var(--appkit-color-surface-muted)] ${__P.p4} text-center`} rounded="default">
             <Text size="lg" weight="semibold">Rolling…</Text>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
               The winner was locked by the server before this animation started.
@@ -269,7 +269,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "won" && winner ? (
-          <Div className={`rounded-lg border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center`}>
+          <Div className={`border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center`} rounded="lg">
             <Text className="tracking-wider text-[var(--appkit-color-text-muted)]" size="xs" transform="uppercase">
               You won
             </Text>

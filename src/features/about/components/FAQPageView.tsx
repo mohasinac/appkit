@@ -56,7 +56,7 @@ export async function FAQPageView({
         </Div>
       </Section>
 
-      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16`}>
+      <Div className={`${page.container.md} md:py-12 lg:py-16`} padding="y-2xl">
         <Stack className="md:flex-row" gap="xl">
           {/* Category sidebar */}
           {categories.length > 0 && (
@@ -107,7 +107,7 @@ export async function FAQPageView({
           <Div className="flex-1 min-w-0">
             {visibleItems.length === 0 ? (
               <Section
-                className={`text-center py-16 rounded-2xl border ${themed.border} ${themed.bgSecondary}`}
+                className={`text-center border ${themed.border} ${themed.bgSecondary}`} rounded="2xl" padding="y-4xl"
               >
                 <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-zinc-600" />
                 <Heading level={3} className="mb-2" size="base">
@@ -143,7 +143,7 @@ export async function FAQPageView({
 
             {/* Still need help? */}
             <Section
-              className={`mt-10 rounded-2xl p-6 text-center border ${themed.border} ${themed.bgSecondary}`}
+              className={`mt-10 text-center border ${themed.border} ${themed.bgSecondary}`} rounded="2xl" padding="lg"
             >
               <Heading level={3} className="mb-2" size="base">
                 {t("stillNeedHelpTitle")}

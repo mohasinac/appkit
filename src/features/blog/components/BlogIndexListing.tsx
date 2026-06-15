@@ -28,7 +28,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
     return (
       <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
+          <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
             <Div className="aspect-video" surface="subtle" />
             <Div className={`${__P.p5} space-y-2`}>
               <Div className="h-3 w-1/4" surface="subtle" rounded="default" />

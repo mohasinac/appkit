@@ -158,9 +158,7 @@ export function PrizeDrawItemsEditor({
           return (
             <Div
               key={`prize-item-${it.itemNumber}-${index}`}
-              className={`relative rounded-lg border border-[var(--appkit-color-border)] p-4 ${
-                locked ? "opacity-60" : ""
-              }`}
+              className={`relative border border-[var(--appkit-color-border)] ${ locked ? "opacity-60" : "" }`} rounded="lg" padding="md"
             >
               {locked ? (
                 <Row className="absolute inset-0 z-10 bg-black/10 dark:bg-black/40 pointer-events-none" align="center" justify="center" rounded="lg">

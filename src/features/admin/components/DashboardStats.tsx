@@ -31,7 +31,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCardProps) {
   return (
-    <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} shadow-sm hover:shadow-md transition-shadow`}>
+    <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} hover:shadow-md transition-shadow`} rounded="xl" shadow="sm">
       {/* 3-px gradient top accent */}
       <Div
         className="absolute top-0 left-0 right-0 h-[3px]"
@@ -69,7 +69,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
 
 function SkeletonCard() {
   return (
-    <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} ${__P.p5} animate-pulse`}>
+    <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} ${__P.p5} animate-pulse`} rounded="xl">
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
       <Row className="pt-1" align="start" justify="between" gap="3">
         <Stack className="flex-1" gap="sm">

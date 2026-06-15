@@ -61,7 +61,7 @@ function ChartCard({
 }) {
   return (
     <Div
-      className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden shadow-sm ${className}`}
+      className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden ${className}`} rounded="xl" shadow="sm"
     >
       {/* brand gradient top accent */}
       <div

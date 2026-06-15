@@ -228,7 +228,7 @@ export function SellerAnalyticsAlertsView({
       </Text>
 
       {showForm && (
-        <Section className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__P.p5} space-y-4`}>
+        <Section className={`${__P.p5} space-y-4`} rounded="xl" border="default">
           <Heading level={3} size="sm" weight="semibold" color="primary">
             Create Alert
           </Heading>

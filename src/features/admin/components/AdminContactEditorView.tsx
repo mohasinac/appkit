@@ -98,7 +98,7 @@ export function AdminContactEditorView({
           <Text className="tracking-wide" color="muted" size="xs" weight="medium" transform="uppercase">
             Message
           </Text>
-          <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 ${__P.p3} max-h-64 ${__O.yAuto}`}>
+          <Div className={`${__P.p3} max-h-64 ${__O.yAuto}`} rounded="lg" surface="muted" border="default">
             <Text className="whitespace-pre-wrap leading-relaxed" color="primary" size="sm">
               {message ?? "No message body."}
             </Text>

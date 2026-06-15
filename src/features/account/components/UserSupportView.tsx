@@ -266,7 +266,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
             {selectedTicket.orderId && <Span size="xs" className="rounded-full bg-zinc-100 px-2.5 py-1 dark:bg-zinc-800" color="muted">Order: {selectedTicket.orderId}</Span>}
           </Div>
           {selectedTicket.description && (
-            <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
+            <Div className={`${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`} rounded="lg" surface="muted" border="default">
               <Text className="mb-1 tracking-wide" size="xs" weight="semibold" color="muted" transform="uppercase">Your description</Text>
               <Text className="whitespace-pre-wrap" color="primary" size="sm">{selectedTicket.description}</Text>
             </Div>
@@ -276,7 +276,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Messages</Text>
               <Div className={`space-y-2 max-h-72 ${__O.yAuto}`}>
                 {(selectedTicket.messages ?? []).map((msg, i) => (
-                  <Div key={msg.id ?? i} className={`rounded-lg ${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`}>
+                  <Div key={msg.id ?? i} className={`${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`} rounded="lg">
                     <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
                       <Span weight="medium" color="muted">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</Span>
                       {msg.createdAt && <Span>{new Date(msg.createdAt).toLocaleString()}</Span>}

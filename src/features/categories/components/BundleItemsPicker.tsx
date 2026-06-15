@@ -61,7 +61,7 @@ function renderBundleSelectedChips(props: {
   const { value, metadata, remove } = props;
   if (value.length === 0) return null;
   return (
-    <Div className={`flex flex-wrap gap-2 rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900`}>
+    <Div className={`flex flex-wrap gap-2 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900`} rounded="lg" surface="muted" border="default">
       {value.map((id) => {
         const meta = metadata[id];
         const label = meta?.title ?? id;
@@ -90,12 +90,12 @@ function renderBundleSearchResults(props: {
         <Text size="sm" color="muted">{BUNDLE_COPY.picker.noMatches(debouncedQuery)}</Text>
       )}
       {results.length > 0 && (
-        <Div className={`max-h-72 ${__O.yAuto} rounded-lg border border-zinc-200 dark:border-zinc-700`}>
+        <Div className={`max-h-72 ${__O.yAuto}`} rounded="lg" border="default">
           {results.map((r) => {
             const isSelected = selectedSet.has(r.id);
             const atCap = !isSelected && value.length >= maxItems;
             return (
-              <Row key={r.id} gap="sm" align="center" className={`border-b border-zinc-100 px-3 py-2 last:border-b-0 dark:border-zinc-800 ${isSelected ? CLS_ROW_SELECTED : ""} ${atCap ? "opacity-50" : ""}`}>
+              <Row key={r.id} gap="sm" align="center" className={`border-b border-zinc-100 px-3 last:border-b-0 dark:border-zinc-800 ${isSelected ? CLS_ROW_SELECTED : ""} ${atCap ? "opacity-50" : ""}`} padding="y-xs">
                 <Checkbox checked={isSelected} disabled={atCap} onChange={() => toggle(r.id)} aria-label={BUNDLE_COPY.picker.toggleAria(r.title)} />
                 <Stack gap="xs" className="flex-1">
                   <Text size="sm" weight="medium">{r.title}</Text>

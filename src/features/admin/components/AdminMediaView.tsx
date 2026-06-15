@@ -85,7 +85,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
   }, [files, search]);
 
   return (
-    <Div className={`space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
+    <Div className={`space-y-3 ${__P.p4} dark:border-slate-700 dark:bg-slate-900`} rounded="xl" surface="default" border="default">
       <Text size="sm" weight="semibold" color="primary">
         Browse existing media
       </Text>

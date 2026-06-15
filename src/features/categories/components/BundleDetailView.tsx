@@ -80,7 +80,7 @@ export function BundleDetailView({
                 {members.length > 0 ? (
                   <BundleCollage members={members} />
                 ) : (
-                  <Div className={`aspect-video w-full ${__O.hidden} rounded-2xl bg-zinc-100 dark:bg-zinc-800`}>
+                  <Div className={`aspect-video w-full ${__O.hidden}`} rounded="2xl" surface="subtle">
                     <Div className="h-full w-full">
                       <MediaImage src={cover} alt={bundle.name} size="hero" fallback={PLACEHOLDER_EMOJI} />
                     </Div>

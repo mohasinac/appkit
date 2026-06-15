@@ -89,7 +89,7 @@ export async function HowOffersWorkView({
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
+      <Div className={`${page.container.md} md:py-12 lg:py-16 space-y-14`} padding="y-2xl">
         {renderOffersStepsSection(t, themed, flex, STEPS)}
         <Section>
           <FlowDiagram title={`🤝 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
@@ -110,8 +110,8 @@ function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
       <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
       <Stack gap="5">
         {steps.map(({ number, icon, title, text }) => (
-          <Div key={number} className={`flex items-start gap-4 ${__P.p5} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
-            <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
+          <Div key={number} className={`flex items-start gap-4 ${__P.p5} border ${themed.border} ${themed.bgPrimary}`} rounded="xl">
+            <Div className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15 ${flex.center}`} rounded="full">{icon}</Div>
             <Div>
               <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
               <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
@@ -125,7 +125,7 @@ function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
 
 function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["themed"], rules: string[]) {
   return (
-    <Section className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} ${__P.p6}`}>
+    <Section className={`border ${themed.border} ${themed.bgSecondary} ${__P.p6}`} rounded="2xl">
       <Heading level={2} className="mb-4">{t("rulesTitle")}</Heading>
       <Ul className="space-y-2">
         {rules.map((rule) => (
@@ -141,7 +141,7 @@ function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
 
 function renderOffersCtaSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
   return (
-    <Section className={`rounded-2xl ${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`}>
+    <Section className={`${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`} rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
       <Div className={`${flex.center} gap-4 flex-wrap`}>

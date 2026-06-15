@@ -220,7 +220,7 @@ export function ImageUpload({
       <Div className="relative">
         {preview ? (
           <Stack gap="sm">
-            <Div className={`relative h-32 max-w-xs mx-auto ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`}>
+            <Div className={`relative h-32 max-w-xs mx-auto ${__O.hidden}`} rounded="lg" border="default">
               <MediaImage src={preview} alt="Preview" size="card" />
               {uploading && progress > 0 && (
                 <Div className="absolute inset-x-0 bottom-0">

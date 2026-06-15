@@ -27,7 +27,7 @@ export function MediaAvatar({
 }: MediaAvatarProps) {
   return (
     <Div
-      className={`relative ${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0 ${className}`}
+      className={`relative ${sizeClasses[size]} overflow-hidden flex-shrink-0 ${className}`} rounded="full"
     >
       <MediaImage src={src} alt={alt} size="avatar" />
     </Div>

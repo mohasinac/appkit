@@ -51,7 +51,7 @@ function AuctionCardSkeleton({
 }) {
   if (variant === "list") {
     return (
-      <Div className={`flex min-h-[220px] flex-row ${__O.hidden} rounded-xl bg-zinc-200 animate-pulse`}>
+      <Div className={`flex min-h-[220px] flex-row ${__O.hidden} animate-pulse`} rounded="xl" surface="subtle">
         <Div className="aspect-square w-40 flex-shrink-0 bg-zinc-300" />
         <Div className={`flex-1 space-y-2 ${__P.p3}`}>
           <Div className="h-4 w-2/3 bg-zinc-300" rounded="default" />
@@ -68,7 +68,7 @@ function AuctionCardSkeleton({
   }
 
   return (
-    <Div className={`${__O.hidden} rounded-xl bg-zinc-200 animate-pulse`}>
+    <Div className={`${__O.hidden} animate-pulse`} rounded="xl" surface="subtle">
       <Div className="aspect-square bg-zinc-300" />
       <Div className={`space-y-2 ${__P.p3}`}>
         <Div className="h-4 w-3/4 bg-zinc-300" rounded="default" />

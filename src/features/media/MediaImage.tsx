@@ -118,7 +118,7 @@ export function MediaImage({
   if (!resolvedSrc || hasError) {
     return (
       <Div
-        className={`relative w-full h-full overflow-hidden flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl${className ? ` ${className}` : ""}`}
+        className={`relative w-full h-full overflow-hidden flex items-center justify-center text-zinc-400 text-4xl${className ? ` ${className}` : ""}`} surface="subtle"
         role="img"
         aria-label={alt}
       >

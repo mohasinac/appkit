@@ -67,7 +67,7 @@ export function AdvertisementBanner({
     return (
       <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
-          <Div className={`relative ${__O.hidden} rounded-2xl bg-zinc-900 shadow-xl`}>
+          <Div className={`relative ${__O.hidden} bg-zinc-900`} rounded="2xl" shadow="xl">
             <Grid className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`}>
               {/* Left: image */}
               <Div className={`relative ${THEME_CONSTANTS.card.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`}>

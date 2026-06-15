@@ -240,7 +240,7 @@ export function AdminFaqEditorView({
             placeholder="e.g. shipping, pokemon, returns"
           />
 
-          <Div className={`space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 ${__P.p4}`}>
+          <Div className={`space-y-3 ${__P.p4}`} rounded="lg" border="default">
             <Text size="sm" weight="medium" color="muted">Visibility</Text>
             <Toggle label="Active (visible to users)" checked={isActive} onChange={setIsActive} />
             <Toggle label="Pinned (always shown at top)" checked={isPinned} onChange={setIsPinned} />

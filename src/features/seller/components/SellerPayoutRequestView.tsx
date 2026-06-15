@@ -90,7 +90,7 @@ export function SellerPayoutRequestView({
 
   return (
     <>
-      <Div className={`${__P.p4} rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]`}>
+      <Div className={`${__P.p4} border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]`} rounded="lg">
         <Row align="center" justify="between" gap="3" wrap>
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Available for Payout</Text>
@@ -126,7 +126,7 @@ export function SellerPayoutRequestView({
         title="Request Payout"
       >
         <Stack gap="md" className={`${__P.p4}`}>
-          <Div className={`${__P.p3} rounded bg-[var(--appkit-color-surface-muted)]`}>
+          <Div className={`${__P.p3} bg-[var(--appkit-color-surface-muted)]`} rounded="default">
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Amount to be paid</Text>
             <Text size="xl" weight="bold">{rupees(summary?.availableEarnings ?? 0)}</Text>
             <Text className="text-[var(--appkit-color-text-muted)]" size="xs">

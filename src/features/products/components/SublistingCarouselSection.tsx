@@ -125,7 +125,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
   const label = category?.name ?? "More listings like this";
 
   return (
-    <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-800/40 ${__O.hidden}`}>
+    <Div className={`bg-zinc-50/60 dark:bg-zinc-800/40 ${__O.hidden}`} rounded="xl" border="default">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

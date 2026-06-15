@@ -77,7 +77,7 @@ export default function CameraCapture({
 
   return (
     <Div
-      className={`relative rounded-xl overflow-hidden bg-black ${className ?? ""}`}
+      className={`relative overflow-hidden bg-black ${className ?? ""}`} rounded="xl"
     >
       <video
         ref={camera.videoRef}

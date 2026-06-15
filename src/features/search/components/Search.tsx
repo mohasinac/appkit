@@ -727,7 +727,7 @@ export function Search({
         {(filteredSiteLinks.length > 0 || query) && (
           <Stack className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 z-50" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
-              <Div className={`rounded-xl ${__O.hidden} border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900`}>
+              <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
                 <Div className="px-4 border-b border-zinc-200 dark:border-slate-700" padding="y-xs">
                   <Text
                     variant="secondary"
@@ -769,7 +769,7 @@ export function Search({
             )}
 
             {query && (
-              <Div className={`rounded-xl ${__O.hidden} border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900`}>
+              <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
                 {suggestionsLoading ? (
                   <Div className="px-4" padding="y-sm">
                     <Text variant="secondary" size="sm">

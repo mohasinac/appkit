@@ -45,11 +45,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
   return (
     <Div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <Div
-        className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-          isUser
-            ? "bg-primary text-white rounded-tr-sm"
-            : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm"
-        }`}
+        className={`max-w-[80%] px-4 py-2.5 text-sm ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} rounded="2xl"
       >
         <Text className="whitespace-pre-wrap leading-relaxed" size="sm">{msg.content}</Text>
         {msg.durationMs ? (

@@ -106,7 +106,7 @@ export async function HowCheckoutWorksView({
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
+      <Div className={`${page.container.md} md:py-12 lg:py-16 space-y-14`} padding="y-2xl">
         {renderCheckoutStepsSection(t, themed, flex, STEPS)}
         <Section>
           <FlowDiagram title={`🗺️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
@@ -129,8 +129,8 @@ function renderCheckoutStepsSection(t: CheckoutT, themed: (typeof THEME_CONSTANT
       <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
       <Stack gap="5">
         {steps.map(({ number, icon, title, text }) => (
-          <Div key={number} className={`flex items-start gap-4 ${__P.p5} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
-            <Div className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center}`}>{icon}</Div>
+          <Div key={number} className={`flex items-start gap-4 ${__P.p5} border ${themed.border} ${themed.bgPrimary}`} rounded="xl">
+            <Div className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15 ${flex.center}`} rounded="full">{icon}</Div>
             <Div>
               <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
               <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
@@ -149,8 +149,8 @@ function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS
       <Text variant="secondary" className="mb-8 max-w-xl mx-auto" align="center">{t("paymentMethodsSubtitle")}</Text>
       <Div className="grid gap-5 md:grid-cols-3">
         {methods.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <Div key={title} className={`rounded-xl border ${__P.p5} ${color}`}>
-            <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
+          <Div key={title} className={`border ${__P.p5} ${color}`} rounded="xl">
+            <Div className={`w-10 h-10 bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Text className="mb-1" weight="semibold">{title}</Text>
@@ -164,7 +164,7 @@ function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS
 
 function renderCheckoutCtaSection(t: CheckoutT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
   return (
-    <Section className={`rounded-2xl ${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`}>
+    <Section className={`${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`} rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
       <Div className={`${flex.center} gap-4 flex-wrap`}>

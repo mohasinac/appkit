@@ -172,7 +172,7 @@ export function AdminNavigationView({
               No nav items yet. Click "New item" to add one.
             </Text>
           ) : null,
-          <Div key="list" className={`divide-y divide-zinc-200 dark:divide-zinc-700 rounded-lg border border-zinc-200 dark:border-zinc-700 ${__O.hidden}`}>
+          <Div key="list" className={`divide-y divide-zinc-200 dark:divide-zinc-700 ${__O.hidden}`} rounded="lg" border="default">
             {sorted.map((item, idx) => (
               <NavItemRow
                 key={item.id}

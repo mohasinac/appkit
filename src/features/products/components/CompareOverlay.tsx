@@ -195,7 +195,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
 
       <FieldRow label={labels.field.image}>
         <Link href={href} target="_blank" rel={REL_NOOPENER}>
-          <Div className={`relative aspect-square ${__O.hidden} rounded-lg bg-zinc-100 dark:bg-zinc-800`}>
+          <Div className={`relative aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img

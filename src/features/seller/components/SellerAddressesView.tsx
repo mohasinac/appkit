@@ -326,7 +326,7 @@ export function SellerAddressesView({
                 ))}
               </Grid>
             ) : (
-              <Div className={`${__O.xAuto} rounded-lg border border-zinc-200 dark:border-slate-700`}>
+              <Div className={`${__O.xAuto}`} rounded="lg" border="default">
                 <Table className="w-full text-sm">
                   <Thead className="bg-zinc-50 dark:bg-slate-800">
                     <Tr>

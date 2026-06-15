@@ -173,7 +173,7 @@ export function MediaUploadList({
             <Div
               key={`${item.url}-${index}`} rounded="lg" padding="sm" border="default" surface="muted">
               {item.type === "video" ? (
-                <Div className={`relative aspect-square max-h-24 ${__O.hidden} rounded-lg`}>
+                <Div className={`relative aspect-square max-h-24 ${__O.hidden}`} rounded="lg">
                   <MediaVideo
                     src={item.url}
                     alt={item.alt || `Media ${index + 1}`}
@@ -181,7 +181,7 @@ export function MediaUploadList({
                   />
                 </Div>
               ) : item.type === "image" ? (
-                <Div className={`relative aspect-square max-h-24 ${__O.hidden} rounded-lg`}>
+                <Div className={`relative aspect-square max-h-24 ${__O.hidden}`} rounded="lg">
                   <MediaImage
                     src={item.url}
                     alt={item.alt || `Media ${index + 1}`}

@@ -224,7 +224,7 @@ export function AdminSidebar({
           }}
         >
           {/* Nav panel */}
-          <Div surface="sidePanel" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden} shadow-xl`}>
+          <Div surface="sidePanel" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden}`} shadow="xl">
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               {renderHeader ? renderHeader() : <Span size="xs" weight="semibold" transform="uppercase" color="muted">Admin Panel</Span>}
             </Div>

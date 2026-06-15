@@ -53,7 +53,7 @@ export function CodeRevealPanel({
   }
 
   return (
-    <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
+    <Div className={`border border-border bg-muted/40 ${__P.p4}`} rounded="lg">
       <Stack gap="sm">
         <Text weight="medium">Your Digital Code</Text>
         {!revealed ? (

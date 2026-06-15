@@ -233,7 +233,7 @@ function PreOrderInfoSection({
       )}
 
       {safeSeller && (
-        <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
+        <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p3}`} rounded="xl" surface="muted">
           <Row justify="between" align="center">
             <Div>
               <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">
@@ -286,7 +286,7 @@ function PreOrderBuyBarPanel({
   onReserveNow,
 }: PreOrderBuyBarPanelProps) {
   return (
-    <Div id="pre-order-buy-bar" className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
+    <Div id="pre-order-buy-bar" className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5} space-y-4`} rounded="xl" surface="muted">
       {reserveTarget > 0 && (
         <Stack gap="sm">
           <Row justify="between" align="center">
@@ -297,7 +297,7 @@ function PreOrderBuyBarPanel({
               {progressPct}%
             </Span>
           </Row>
-          <Div className={`h-2 w-full ${__O.hidden} rounded-full bg-zinc-200 dark:bg-zinc-700`}>
+          <Div className={`h-2 w-full ${__O.hidden} dark:bg-zinc-700`} rounded="full" surface="subtle">
             <Div
               className="h-full bg-primary transition-all" rounded="full"
               // audit-inline-style-ok: computed percentage

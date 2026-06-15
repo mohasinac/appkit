@@ -255,11 +255,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             return (
               <Row key={step.n} gap="sm" align="start">
                 <Div
-                  className={`flex-shrink-0 w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center mt-0.5 ${
-                    done
-                      ? "bg-[var(--appkit-color-success)] text-white"
-                      : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300"
-                  }`}
+                  className={`flex-shrink-0 w-6 h-6 text-xs font-bold flex items-center justify-center mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300" }`} rounded="full"
                 >
                   {done ? "✓" : step.n}
                 </Div>
@@ -417,7 +413,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Text>
 
         {/* Simulated WhatsApp catalog tile grid */}
-        <Div className={`border border-zinc-200 dark:border-zinc-700 rounded-xl ${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`}>
+        <Div className={`${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`} rounded="xl" border="default">
           <Row gap="sm" align="center" className="mb-3">
             <Row className="w-8 h-8 bg-[#25D366]" align="center" justify="center" rounded="full">
               <Text className="text-white" size="xs" weight="bold">W</Text>

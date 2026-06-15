@@ -82,7 +82,7 @@ export async function FeesView({
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.sm} py-10 md:py-12 lg:py-16 space-y-12`}>
+      <Div className={`${page.container.sm} md:py-12 lg:py-16 space-y-12`} padding="y-2xl">
         {renderFeeTableSection(t, themed, FEE_ROWS)}
         {renderPayoutExampleSection(t, themed, OFFER_PAYOUT_ROWS)}
         {renderDisclaimerSection(t, themed)}
@@ -100,7 +100,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
   return (
     <Section>
       <Heading level={2} className="mb-6">{t("tableTitle")}</Heading>
-      <Div className={`${__O.xAuto} rounded-xl border ${themed.border}`}>
+      <Div className={`${__O.xAuto} border ${themed.border}`} rounded="xl">
         <Table className="w-full text-sm">
           <Thead className={themed.bgSecondary}>
             <Tr>
@@ -132,7 +132,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
     <Section>
       <Heading level={2} className="mb-3">{t("payoutExampleTitle")}</Heading>
       <Text variant="secondary" className="mb-6">{t("payoutExampleSubtitle")}</Text>
-      <Div className={`rounded-xl border ${themed.border} ${themed.bgPrimary} ${__P.p5} max-w-sm`}>
+      <Div className={`border ${themed.border} ${themed.bgPrimary} ${__P.p5} max-w-sm`} rounded="xl">
         <Heading level={3} className="mb-4" size="base">{t("payoutExampleProduct")}</Heading>
         <Stack gap="sm">
           {rows.map((row, i) => (
@@ -149,7 +149,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
 
 function renderDisclaimerSection(t: TranslateFn, themed: ThemedTokens) {
   return (
-    <Section className={`rounded-xl border ${themed.border} ${__P.p5} ${themed.bgSecondary}`}>
+    <Section className={`border ${themed.border} ${__P.p5} ${themed.bgSecondary}`} rounded="xl">
       <Heading level={3} className="mb-2" size="base">{t("disclaimerTitle")}</Heading>
       <Caption className="leading-relaxed">{t("disclaimerText")}</Caption>
     </Section>

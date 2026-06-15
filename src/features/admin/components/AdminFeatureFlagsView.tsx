@@ -68,7 +68,7 @@ interface AccordionSectionProps {
 function AccordionSection({ title, defaultOpen = true, children }: AccordionSectionProps) {
   const [open, setOpen] = React.useState(defaultOpen);
   return (
-    <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 ${__O.hidden}`}>
+    <Div className={`${__O.hidden}`} rounded="lg" border="default">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

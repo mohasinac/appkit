@@ -69,7 +69,7 @@ function StepCard({
 
       {/* Visible index badge */}
       <Div
-        className={`relative z-10 w-10 h-10 rounded-full ${badgeBg} text-white font-bold text-sm flex items-center justify-center mb-5 shadow-md`}
+        className={`relative z-10 w-10 h-10 ${badgeBg} text-white font-bold text-sm flex items-center justify-center mb-5`} rounded="full" shadow="md"
       >
         {step.number}
       </Div>
@@ -77,7 +77,7 @@ function StepCard({
       {/* Icon */}
       {step.renderIcon && (
         <Div
-          className={`relative z-10 w-14 h-14 rounded-2xl ${iconBg} flex items-center justify-center mb-4 border border-white/80 dark:border-slate-700/50`}
+          className={`relative z-10 w-14 h-14 ${iconBg} flex items-center justify-center mb-4 border border-white/80 dark:border-slate-700/50`} rounded="2xl"
         >
           <span className={`${iconColor}`} aria-hidden="true">
             {step.renderIcon({ className: "w-6 h-6" })}
@@ -135,7 +135,7 @@ export function HowItWorksSection({
   return (
     <Section
       ref={sectionRef}
-      className={`p-8 ${themed.bgPrimary} ${className}`}
+      className={`${themed.bgPrimary} ${className}`} padding="xl"
     >
       <Div className="max-w-6xl mx-auto">
         {/* Header */}

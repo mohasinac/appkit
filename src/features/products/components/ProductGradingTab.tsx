@@ -69,7 +69,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
       </Row>
 
       {slabImageUrl ? (
-        <Div className={`${__O.hidden} rounded-2xl border border-zinc-200 dark:border-zinc-700 aspect-[4/3] w-full`}>
+        <Div className={`${__O.hidden} aspect-[4/3] w-full`} rounded="2xl" border="default">
           <MediaImage src={slabImageUrl} alt="Slab certificate image" size="gallery" objectFit="contain" />
         </Div>
       ) : null}

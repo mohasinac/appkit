@@ -235,10 +235,10 @@ function MediaPreviewPanel({
   tMediaEditor: (key: string) => string;
 }) {
   return (
-    <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 ${__P.p3}`}>
+    <Div className={`${__P.p3}`} rounded="lg" surface="muted" border="default">
       {isVideo(value) ? (
         <Stack gap="sm">
-          <Div className={`relative aspect-video ${__O.hidden} rounded-lg`}>
+          <Div className={`relative aspect-video ${__O.hidden}`} rounded="lg">
             <MediaVideo src={value} alt={label} controls objectFit="contain" />
           </Div>
           {/* Video size warning for large files */}
@@ -247,13 +247,13 @@ function MediaPreviewPanel({
           </Text>
         </Stack>
       ) : isImage(value) ? (
-        <Div className={`relative aspect-video ${__O.hidden} rounded-lg`}>
+        <Div className={`relative aspect-video ${__O.hidden}`} rounded="lg">
           <MediaImage src={value} alt={label} size="card" objectFit="contain" />
         </Div>
       ) : isPdf(value) ? (
         <Stack gap="sm">
           <Div
-            className={`relative w-full ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`}
+            className={`relative w-full ${__O.hidden}`} rounded="lg" border="default"
             // audit-inline-style-ok: dynamic CSS
             style={{ height: 280 }}
           >

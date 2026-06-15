@@ -35,7 +35,7 @@ export function AdminStatCard({
 
   return (
     <Div
-      className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
+      className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow ${className}`} rounded="xl" shadow="sm"
     >
       {/* 3-px gradient top accent */}
       <div

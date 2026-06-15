@@ -207,7 +207,7 @@ function renderNotificationDropdown(props: {
 }) {
   const { dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead, isLoading, notifications, notificationIcons, handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref, setIsOpen } = props;
   return (
-    <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 ${__O.hidden} ${dropdownClassName}`}>
+    <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 shadow-2xl z-50 ${__O.hidden} ${dropdownClassName}`} rounded="xl" surface="default" border="default">
       <Row justify="between" gap="none" className="px-4 border-b border-zinc-200 dark:border-slate-800" padding="y-sm">
         <Heading level={3} weight="semibold" color="primary">
           {labels.title}

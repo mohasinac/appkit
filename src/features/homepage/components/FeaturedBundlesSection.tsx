@@ -47,7 +47,7 @@ export function FeaturedBundlesSection({
   const items = initialItems.filter((c) => c.categoryType === "bundle");
 
   return (
-    <Section className={`py-10 ${className}`}>
+    <Section className={`${className}`} padding="y-2xl">
       <Stack gap="md">
         <Row gap="sm" align="center" justify="between" wrap>
           <Stack gap="xs">
@@ -101,7 +101,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
       gap="none" surface="default" rounded="xl" border="default"
     >
       <Link href={href} className="group block p-3 hover:no-underline">
-        <Div className={`mb-2 aspect-square ${__O.hidden} rounded-lg bg-zinc-100 dark:bg-zinc-800`}>
+        <Div className={`mb-2 aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
           {cover ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img

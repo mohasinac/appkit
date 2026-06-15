@@ -93,7 +93,7 @@ export async function ShippingPolicyView({
         </Div>
       </Section>
 
-      <Div className={`${page.container.sm} py-10 md:py-12 lg:py-16`}>
+      <Div className={`${page.container.sm} md:py-12 lg:py-16`} padding="y-2xl">
         <Text size="lg" variant="secondary" className="mb-8">
           {t("subtitle")}
         </Text>
@@ -121,7 +121,7 @@ export async function ShippingPolicyView({
 
           {/* Contact */}
           <Section
-            className={`${themed.bgSecondary} rounded-xl p-6 border ${themed.border}`}
+            className={`${themed.bgSecondary} border ${themed.border}`} rounded="xl" padding="lg"
           >
             <Heading level={2} className="mb-2">
               {t("contactTitle")}

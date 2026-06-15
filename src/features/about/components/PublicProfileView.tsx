@@ -117,7 +117,7 @@ export async function PublicProfileView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {renderProfileHero(t, profileHeroCtx)}
-      <Stack gap="2xl" className={`${page.container.md} py-10 md:py-12`}>
+      <Stack gap="2xl" className={`${page.container.md} md:py-12`} padding="y-2xl">
         {renderProfileStatsRow(themed, flex, statItems)}
         {renderProfileBioSection(themed, pub)}
         {renderStoreDescriptionSection(themed, isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
@@ -165,10 +165,10 @@ function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewC
 function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: string | null; memberSince: string; isSeller: boolean; storeSlug: string | null | undefined; flex: ProfileFlex; page: ProfilePage; heroBannerClass: string }) {
   const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page, heroBannerClass } = ctx;
   return (
-    <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
+    <Section className={`${heroBannerClass} text-white md:py-14`} padding="y-2xl">
       <Div className={`${page.container.md}`}>
         <Stack className="flex-wrap sm:flex-row sm:items-end" align="center" gap="md">
-          <Div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 ${__O.hidden}`}>
+          <Div className={`w-20 h-20 bg-white/20 ${flex.center} flex-shrink-0 ${__O.hidden}`} rounded="full">
             {photoURL ? <MediaImage src={photoURL} alt={displayName} size="avatar" fallback="👤" /> : <User className="w-10 h-10 text-white/60" />}
           </Div>
           <Stack gap="xs" className="text-center sm:text-left">
@@ -211,7 +211,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
   if (!pub?.bio && !pub?.location && !pub?.website) return null;
   return (
     <Section>
-      <Stack gap="sm" className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} ${__P.p6}`}>
+      <Stack gap="sm" className={`border ${themed.border} ${themed.bgPrimary} ${__P.p6}`} rounded="2xl">
         {pub.bio && <Text className="leading-relaxed text-neutral-700" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
           {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500"><MapPin className="w-4 h-4" />{pub.location}</Span>}

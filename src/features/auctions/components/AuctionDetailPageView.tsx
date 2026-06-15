@@ -139,7 +139,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       )}
       {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4" />}
       {safeSeller && (
-        <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p3}`}>
+        <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p3}`} rounded="xl" surface="muted">
           <Row justify="between" align="center">
             <Div>
               <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">Listed by</Text>
@@ -332,7 +332,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             onPlaceBid ? (
               <Stack id="auction-bid-form" gap="3">
                 {/* Compact summary card — modal owns the form */}
-                <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-3`}>
+                <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5} space-y-3`} rounded="xl" surface="muted">
                   <Row justify="between" align="baseline">
                     <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
                       {formatCurrency(currentBid, currency)}
@@ -360,7 +360,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               </Stack>
             ) : (
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
-              <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
+              <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5} space-y-4`} rounded="xl" surface="muted">
                 <Stack gap="xs">
                   <Text size="xs" color="muted">
                     Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
@@ -399,7 +399,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           }
           renderMobileBidForm={() =>
             !isEnded && onPlaceBid ? (
-              <Div className={`lg:hidden rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p4} space-y-3`}>
+              <Div className={`lg:hidden border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4} space-y-3`} rounded="xl" surface="muted">
                 <Row align="center" gap="sm">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
@@ -423,7 +423,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 />
               </Div>
             ) : !isEnded ? (
-              <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p4} lg:hidden`}>
+              <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4} lg:hidden`} rounded="xl" surface="muted">
                 <Row align="center" gap="sm" className="mb-3">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}

@@ -47,7 +47,7 @@ export function EventOfferCard({
   };
 
   return (
-    <Div className={`rounded-2xl border border-zinc-200 dark:border-zinc-700 ${__P.p6}`}>
+    <Div className={`${__P.p6}`} rounded="2xl" border="default">
       <Stack gap="md">
         <Stack gap="xs">
           <Heading level={2} weight="semibold" size="2xl">

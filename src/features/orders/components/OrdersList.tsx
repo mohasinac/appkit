@@ -58,7 +58,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           : undefined
       }
       onClick={onClick ? () => onClick(order) : undefined}
-      className={`rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`}
+      className={`border border-neutral-200 p-5 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`} rounded="xl" surface="default"
     >
       <Row wrap align="start" justify="between" gap="3">
         <Div>

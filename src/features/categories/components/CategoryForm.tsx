@@ -129,7 +129,7 @@ export function CategoryForm({
           <Label className="block mb-2" size="sm" weight="medium">
             {L.categoryImage}
           </Label>
-          <Div className={`relative h-32 w-40 ${__O.hidden} rounded`}>
+          <Div className={`relative h-32 w-40 ${__O.hidden}`} rounded="default">
             <MediaImage
               src={category.display.coverImage}
               alt={category.name || ""}

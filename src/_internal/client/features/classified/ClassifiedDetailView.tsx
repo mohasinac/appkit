@@ -90,7 +90,7 @@ export function ClassifiedDetailView({
         <Stack gap="lg">
           {/* Gallery */}
           {product.images.length > 0 && (
-            <Div className={`${__O.hidden} rounded-lg bg-muted`}>
+            <Div className={`${__O.hidden} bg-muted`} rounded="lg">
               <img
                 src={product.mainImage || product.images[0]}
                 alt={product.title}
@@ -120,7 +120,7 @@ export function ClassifiedDetailView({
 
           {/* Contact Seller CTA */}
           {conversation ? (
-            <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
+            <Div className={`border border-border bg-muted/40 ${__P.p4}`} rounded="lg">
               <Text className="mb-2" weight="medium">Conversation started!</Text>
               <Link
                 href={ROUTES.USER.MESSAGES}

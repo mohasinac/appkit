@@ -292,7 +292,7 @@ export function GroupSettingsPanel({
       </button>
 
       {open && (
-        <Stack gap="sm" className={`mt-3 ${__P.p4} rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-800/30`}>
+        <Stack gap="sm" className={`mt-3 ${__P.p4} bg-zinc-50/50 dark:bg-zinc-800/30`} rounded="lg" border="default">
           {/* State 1: Not in a group */}
           {!groupId && !groupParentSlug && (
             <Stack gap="xs">

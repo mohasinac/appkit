@@ -172,7 +172,7 @@ export async function HowOrdersWorkView({
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
+      <Div className={`${page.container.md} md:py-12 lg:py-16 space-y-14`} padding="y-2xl">
         {renderOrderStatusesSection(t, themed, ORDER_STATUSES)}
         <Section>
           <FlowDiagram title={`📦 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
@@ -195,7 +195,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
       <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
       <Stack gap="3">
         {statuses.map(({ status, icon, badge, desc }) => (
-          <Div key={status} className={`flex items-start gap-4 ${__P.p4} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
+          <Div key={status} className={`flex items-start gap-4 ${__P.p4} border ${themed.border} ${themed.bgPrimary}`} rounded="xl">
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
               <Span size="xl">{icon}</Span>
               <Span size="xs" weight="semibold" className={`px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
@@ -213,8 +213,8 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
     <Section>
       <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
-          <Div key={title} className={`rounded-xl border ${__P.p5} ${color}`}>
-            <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
+          <Div key={title} className={`border ${__P.p5} ${color}`} rounded="xl">
+            <Div className={`w-10 h-10 bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Text className="mb-1" weight="semibold">{title}</Text>
@@ -228,7 +228,7 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
 
 function renderOrdersCtaSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
   return (
-    <Section className={`rounded-2xl ${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`}>
+    <Section className={`${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`} rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
       <Div className={`${flex.center} gap-4 flex-wrap`}>

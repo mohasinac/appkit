@@ -248,7 +248,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           }}
         >
           {/* Nav panel */}
-          <Div surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden} shadow-xl`}>
+          <Div surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 flex flex-col ${__O.hidden}`} shadow="xl">
             <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <Span size="xs" weight="semibold" transform="uppercase" color="muted">My Account</Span>
             </Div>

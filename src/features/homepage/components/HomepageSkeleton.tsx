@@ -33,7 +33,7 @@ export function HomepageSkeleton() {
           {Array.from({ length: 4 }).map((_, i) => (
             <Div
               key={i}
-              className={`${skeleton.card} flex flex-col items-center gap-3 p-6 ${trustCardH}`}
+              className={`${skeleton.card} flex flex-col items-center gap-3 ${trustCardH}`} padding="lg"
             />
           ))}
         </Grid>
@@ -86,7 +86,7 @@ export function HomepageSkeleton() {
       {/* Newsletter skeleton */}
       <Section className={`${__P.p8} ${themed.bgPrimary}`}>
         <Div
-          className={`${skeleton.card} rounded-2xl max-w-2xl mx-auto ${newsletterH}`}
+          className={`${skeleton.card} max-w-2xl mx-auto ${newsletterH}`} rounded="2xl"
         />
       </Section>
     </Div>

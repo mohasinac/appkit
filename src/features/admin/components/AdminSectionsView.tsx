@@ -953,7 +953,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         {statsBuilder.stats.map((stat, index) => (
-          <Div key={`stat-row-${index}`} className={`space-y-3 rounded-md border border-zinc-200 ${__P.p3} dark:border-slate-700`}>
+          <Div key={`stat-row-${index}`} className={`space-y-3 ${__P.p3} dark:border-slate-700`} rounded="md" border="default">
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Stat {index + 1}
             </Text>
@@ -1665,7 +1665,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Text size="sm" weight="semibold" color="primary">Trust Indicators Builder</Text>
         <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         {trustIndicatorsBuilder.indicators.map((ind, index) => (
-          <Div key={ind.id} className={`space-y-2 rounded-md border border-zinc-200 ${__P.p3} dark:border-slate-700`}>
+          <Div key={ind.id} className={`space-y-2 ${__P.p3} dark:border-slate-700`} rounded="md" border="default">
             <Row align="center" justify="between">
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Indicator {index + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
@@ -2542,7 +2542,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <DataTable rows={rows} isLoading={isLoading} emptyLabel="No sections found" />
       </Div>
 
-      <Div className={`mt-4 space-y-3 rounded-xl border border-zinc-200 bg-white ${__P.p4} dark:border-slate-700 dark:bg-slate-900`}>
+      <Div className={`mt-4 space-y-3 ${__P.p4} dark:border-slate-700 dark:bg-slate-900`} rounded="xl" surface="default" border="default">
         <Row align="center" justify="between" gap="3">
           <Text size="sm" weight="semibold" color="primary">
             Reorder Sections

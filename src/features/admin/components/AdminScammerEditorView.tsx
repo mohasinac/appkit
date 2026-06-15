@@ -148,7 +148,7 @@ export function AdminScammerEditorView({
 
         {/* Contact identifiers */}
         {(phones.length > 0 || upiIds.length > 0) && (
-          <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
+          <Div className={`${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`} rounded="lg" surface="muted" border="default">
             {phones.length > 0 && (
               <Div className="mb-2">
                 <Text className={CLS_SECTION_LABEL}>
@@ -182,7 +182,7 @@ export function AdminScammerEditorView({
 
         {/* Description */}
         {description && (
-          <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
+          <Div className={`${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`} rounded="lg" surface="muted" border="default">
             <Text className={CLS_SECTION_LABEL}>
               Description
             </Text>

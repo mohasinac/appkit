@@ -57,7 +57,7 @@ export function NavPermissionsManager({
           <Text className="mb-3 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             {group.groupLabel}
           </Text>
-          <Div className={`${__O.hidden} rounded-xl border border-zinc-200 dark:border-slate-700`}>
+          <Div className={`${__O.hidden}`} rounded="xl" border="default">
             <Table className="w-full text-sm">
               <Thead>
                 <Tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">

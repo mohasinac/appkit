@@ -79,7 +79,7 @@ export async function PolicyPageView({
         </Div>
       </Section>
 
-      <Div className={`${page.container.sm} py-10 md:py-12 lg:py-16`}>
+      <Div className={`${page.container.sm} md:py-12 lg:py-16`} padding="y-2xl">
         {adminHtml ? (
           /* Admin-set HTML takes priority */
           <div

@@ -70,7 +70,7 @@ export function EventRaffleEntryForm({
           : "Spin the wheel to claim your prize.";
 
   return (
-    <Div className={`rounded-2xl border border-zinc-200 dark:border-zinc-700 ${__P.p6} space-y-4`}>
+    <Div className={`${__P.p6} space-y-4`} rounded="2xl" border="default">
       {prizeLabel ? (
         <Stack gap="xs">
           <Badge variant="warning">Prize</Badge>

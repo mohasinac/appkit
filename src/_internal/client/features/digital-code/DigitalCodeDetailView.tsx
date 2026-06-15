@@ -67,7 +67,7 @@ export function DigitalCodeDetailView({
         <Stack gap="lg">
           {/* Gallery */}
           {product.images.length > 0 && (
-            <Div className={`${__O.hidden} rounded-lg bg-muted`}>
+            <Div className={`${__O.hidden} bg-muted`} rounded="lg">
               <img
                 src={product.mainImage || product.images[0]}
                 alt={product.title}
@@ -101,7 +101,7 @@ export function DigitalCodeDetailView({
               fetchCode={fetchCode}
             />
           ) : (
-            <Div className={`rounded-lg border border-border bg-muted/40 ${__P.p4}`}>
+            <Div className={`border border-border bg-muted/40 ${__P.p4}`} rounded="lg">
               <Text className="text-muted-foreground" size="sm">
                 After purchase, return to your order to reveal the code instantly.
               </Text>

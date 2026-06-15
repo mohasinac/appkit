@@ -220,7 +220,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="tracking-wide mb-3" color="faint" size="sm" weight="semibold" transform="uppercase">
               Video
             </Heading>
-            <Div className={`${__O.hidden} rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video`}>
+            <Div className={`${__O.hidden} border border-neutral-200 dark:border-zinc-700 bg-black aspect-video`} rounded="xl">
               <video
                 src={review.video.url}
                 poster={review.video.thumbnailUrl}
@@ -309,7 +309,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </Div>
             </Link>
           ) : (
-            <Row surface="default" gap="sm" className={`rounded-xl border border-neutral-200 dark:border-zinc-700 ${__P.p4}`}>
+            <Row surface="default" gap="sm" className={`border border-neutral-200 dark:border-zinc-700 ${__P.p4}`} rounded="xl">
               <Span size="xl" className={CLS_ICON_PURPLE_BARE}>
                 👤
               </Span>

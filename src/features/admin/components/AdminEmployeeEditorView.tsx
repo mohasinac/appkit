@@ -111,7 +111,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           ({permissions.size} selected)
         </Span>
       </Span>
-      <Div className={`rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] ${__O.yAuto}`}>
+      <Div className={`divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] ${__O.yAuto}`} rounded="xl" border="default">
         {PERMISSION_DOMAINS.map((domain) => {
           const domainPerms = getPermissionsForDomain(domain.prefix);
           if (domainPerms.length === 0) return null;

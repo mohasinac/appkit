@@ -67,7 +67,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
         return view === "grid" ? (
           <Div
             key={row.id}
-            className={`group relative rounded-xl border bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow ${borderCls}`}
+            className={`group relative border bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow ${borderCls}`} rounded="xl"
           >
             <Div className="absolute top-2 left-2 z-10">
               <input
@@ -102,7 +102,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
         ) : (
           <Div
             key={row.id}
-            className={`flex items-center gap-3 rounded-lg border bg-[var(--appkit-color-surface)] px-3 py-2 hover:bg-[var(--appkit-color-surface-raised)] ${borderCls}`}
+            className={`flex items-center gap-3 border bg-[var(--appkit-color-surface)] px-3 hover:bg-[var(--appkit-color-surface-raised)] ${borderCls}`} rounded="lg" padding="y-xs"
           >
             <input
               type="checkbox"
@@ -111,7 +111,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               className="h-4 w-4 rounded border-[var(--appkit-color-border)]"
               aria-label="Select"
             />
-            <Div className={`w-12 h-12 rounded ${__O.hidden}`}>
+            <Div className={`w-12 h-12 ${__O.hidden}`} rounded="default">
               <MediaImage src={row.imageUrl} alt={row.primary} size="thumbnail" />
             </Div>
             <a href={href} className="flex-1 min-w-0">

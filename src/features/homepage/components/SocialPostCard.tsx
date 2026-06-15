@@ -97,7 +97,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       </Row>
 
       {/* YouTube branding top-right */}
-      <Div className={`absolute right-2 top-2 flex items-center gap-1 rounded px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`}>
+      <Div className={`absolute right-2 top-2 flex items-center gap-1 px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`} rounded="default">
         {meta.icon}
         <span className="hidden sm:inline">{meta.label}</span>
       </Div>
@@ -180,7 +180,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       )}
 
       {/* Platform badge */}
-      <Div className={`absolute left-2 top-2 flex items-center gap-1 rounded px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`}>
+      <Div className={`absolute left-2 top-2 flex items-center gap-1 px-1.5 py-1 text-xs font-medium text-white ${meta.colorClass}`} rounded="default">
         {meta.icon}
         <span className="hidden sm:inline">{meta.label}</span>
       </Div>

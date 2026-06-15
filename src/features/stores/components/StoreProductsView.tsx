@@ -55,7 +55,7 @@ export function StoreProductsView({
   void storeSlug;
 
   return (
-    <Div className={`py-4 ${className}`}>
+    <Div className={`${className}`} padding="y-md">
       <SlottedListingView
         portal="public"
         inlineToolbar

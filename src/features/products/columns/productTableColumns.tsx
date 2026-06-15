@@ -68,7 +68,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       render: (product: T) => (
         <Row gap="sm">
           {product.mainImage ? (
-            <Div className={`relative h-8 w-8 flex-shrink-0 ${__O.hidden} rounded`}>
+            <Div className={`relative h-8 w-8 flex-shrink-0 ${__O.hidden}`} rounded="default">
               <MediaImage
                 src={product.mainImage}
                 alt={product.title}

@@ -681,7 +681,7 @@ export function AdminSiteSettingsView({
               <Slider label={`Opacity — ${watermarkOpacity}%`} value={watermarkOpacity} onChange={setWatermarkOpacity} min={5} max={100} step={5} />
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Text size="xs" color="muted">Preview (text watermark only)</Text>
-                <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden} rounded`}>
+                <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">
                   <Span
                     weight="medium"
                     className="select-none p-2" color="faint"

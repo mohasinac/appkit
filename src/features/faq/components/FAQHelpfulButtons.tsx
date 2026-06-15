@@ -66,7 +66,7 @@ export function FAQHelpfulButtons({
   };
 
   return (
-    <Div className={`rounded-lg bg-zinc-100 ${__P.p6} dark:bg-slate-700`}>
+    <Div className={`${__P.p6} dark:bg-slate-700`} rounded="lg" surface="subtle">
       <Text className="mb-3" color="muted" size="sm">
         {userVote
           ? (labels?.thanksForFeedback ?? "Thanks for your feedback")

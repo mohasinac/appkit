@@ -81,7 +81,7 @@ export function EventPollWidget({
 
   if (isEnded) {
     return (
-      <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-4 space-y-3 ${className}`}>
+      <Div className={`px-5 space-y-3 ${className}`} rounded="xl" padding="y-md" border="default">
         <Text size="sm" weight="medium" color="muted">This poll has closed.</Text>
         {totalEntries !== undefined && (
           <Text size="sm" color="faint">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
@@ -99,7 +99,7 @@ export function EventPollWidget({
 
   if (pollConfig.requireLogin && !user) {
     return (
-      <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-6 py-8 text-center space-y-3 ${className}`}>
+      <Div className={`px-6 text-center space-y-3 ${className}`} rounded="xl" padding="y-xl" border="default">
         <Text weight="semibold" color="primary">Login to vote</Text>
         <Text size="sm" color="muted">You need an account to participate in this poll.</Text>
         <a

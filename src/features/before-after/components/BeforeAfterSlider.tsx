@@ -33,7 +33,7 @@ export function BeforeAfterSlider({
   return (
     <Div
       ref={containerRef}
-      className={`relative aspect-square select-none overflow-hidden rounded-xl ${className}`}
+      className={`relative aspect-square select-none overflow-hidden ${className}`} rounded="xl"
       onPointerMove={handlePointerMove}
       onTouchMove={handleTouchMove}
     >

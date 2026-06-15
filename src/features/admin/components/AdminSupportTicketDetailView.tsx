@@ -352,7 +352,7 @@ export function AdminSupportTicketDetailView({
 
         {/* Description */}
         {description && (
-          <Div className={`rounded-lg border border-zinc-200 bg-zinc-50 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`}>
+          <Div className={`${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`} rounded="lg" surface="muted" border="default">
             <Text className="mb-1 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Description
             </Text>
@@ -372,11 +372,7 @@ export function AdminSupportTicketDetailView({
               {messages.map((msg, i) => (
                 <Div
                   key={msg.id ?? i}
-                  className={`rounded-lg p-3 text-sm ${
-                    msg.authorRole === "user"
-                      ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700"
-                      : "bg-info-surface border border-info dark:border-info"
-                  }`}
+                  className={`text-sm ${ msg.authorRole === "user" ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700" : "bg-info-surface border border-info dark:border-info" }`} rounded="lg" padding="sm"
                 >
                   <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
                     <Span weight="medium" color="muted">

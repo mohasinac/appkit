@@ -41,7 +41,7 @@ export function EventSaleBanner({
     : `${ROUTES.PUBLIC.PRODUCTS}?onSale=true`;
 
   return (
-    <Div className={`rounded-2xl bg-gradient-to-br from-[var(--appkit-color-primary)] to-[var(--appkit-color-secondary)] ${__P.p6} text-white shadow-lg`}>
+    <Div className={`bg-gradient-to-br from-[var(--appkit-color-primary)] to-[var(--appkit-color-secondary)] ${__P.p6} text-white`} rounded="2xl" shadow="lg">
       <Stack gap="md">
         <Stack gap="xs">
           <Heading level={2} weight="bold" size="3xl">

@@ -59,7 +59,7 @@ export function SellerRevenueChart({
 
   return (
     <Div
-      className={`bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 ${className}`}
+      className={`dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 sm:p-6 ${className}`} rounded="xl" padding="md" surface="default"
     >
       {labels.title && (
         <Heading level={3} className="mb-4" size="base" weight="semibold">

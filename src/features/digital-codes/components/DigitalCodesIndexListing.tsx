@@ -180,7 +180,7 @@ export function DigitalCodesIndexListing({ initialData }: DigitalCodesIndexListi
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (
-              <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
+              <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
                 <Div className={`${__P.p3} space-y-2`}>
                   <Div className="h-3 w-3/4" surface="subtle" rounded="default" />

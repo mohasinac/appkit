@@ -126,7 +126,7 @@ export function FAQSection({
   }, [items, showTabs, activeTab]);
 
   return (
-    <Section className={`py-16 px-4 sm:px-8 ${themed.bgSecondary} ${className}`}>
+    <Section className={`px-4 sm:px-8 ${themed.bgSecondary} ${className}`} padding="y-4xl">
       <Div className="w-full max-w-4xl mx-auto">
 
         {/* Section Header */}

@@ -42,7 +42,7 @@ export function StoreAboutView({
     : null;
 
   return (
-    <Div className={`space-y-6 py-6 ${className}`}>
+    <Div className={`space-y-6 ${className}`} padding="y-lg">
       {/* Bio */}
       {store.bio && (
         <Div>

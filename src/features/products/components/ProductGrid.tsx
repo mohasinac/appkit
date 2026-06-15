@@ -128,7 +128,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Image area */}
-      <Div className={`relative ${__O.hidden} bg-zinc-100 dark:bg-slate-800 aspect-square`}>
+      <Div className={`relative ${__O.hidden} aspect-square`} surface="subtle">
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}
@@ -545,7 +545,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Thumbnail */}
-      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg ${__O.hidden} bg-neutral-100 dark:bg-zinc-800`}>
+      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-zinc-800`} rounded="lg">
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}
@@ -694,7 +694,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
     if (view === "list") {
       return (
         <Div
-          className={`flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 ${className}`}
+          className={`flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800 ${className}`} rounded="xl"
         >
           {products.map((p) => (
             <ProductListRow<T>

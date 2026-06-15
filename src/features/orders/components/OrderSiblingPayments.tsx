@@ -34,7 +34,7 @@ export function OrderSiblingPayments({
 
   return (
     <Div
-      className={`rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900 ${className}`}
+      className={`dark:border-zinc-800 ${className}`} rounded="xl" padding="md" surface="muted" border="default"
     >
       <Heading level={3} className="mb-3" color="muted" size="sm" weight="semibold">
         {REFUND_COPY.siblingPayments.heading(others.length)}

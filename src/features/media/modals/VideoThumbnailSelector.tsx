@@ -87,7 +87,7 @@ export function VideoThumbnailSelector({
         </Text>
 
         {/* Video player — raw <video> required: needs ref for videoWidth/videoHeight */}
-        <Div className={`relative aspect-video ${__O.hidden} rounded-lg bg-black`}>
+        <Div className={`relative aspect-video ${__O.hidden} bg-black`} rounded="lg">
           <video
             ref={videoRef}
             src={videoUrl}

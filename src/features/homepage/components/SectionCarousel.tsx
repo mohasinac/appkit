@@ -113,7 +113,7 @@ function CarouselSkeleton({ count }: { count: number }) {
           key={i}
           className="flex-none min-w-[clamp(150px,18vw,260px)] max-w-[clamp(240px,36vw,380px)] h-[clamp(180px,26vh,260px)]" gap="sm"
         >
-          <Div className={`aspect-square rounded-xl ${skeleton.image}`} />
+          <Div className={`aspect-square ${skeleton.image}`} rounded="xl" />
           <Div className={`${skeleton.text} w-3/4`} />
           <Div className={`${skeleton.text} w-1/2`} />
         </Stack>

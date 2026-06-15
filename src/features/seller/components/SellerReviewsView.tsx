@@ -384,7 +384,7 @@ export function SellerReviewsView({
       >
         <Stack gap="md" className={`${__P.p4}`}>
           {replyTarget && (
-            <Div className={`${__P.p3} rounded bg-[var(--appkit-color-surface-muted)]`}>
+            <Div className={`${__P.p3} bg-[var(--appkit-color-surface-muted)]`} rounded="default">
               <Stars rating={replyTarget.rating} />
               <Text className="mt-1" size="sm">{replyTarget.comment}</Text>
             </Div>

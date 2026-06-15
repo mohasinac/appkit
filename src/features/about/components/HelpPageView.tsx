@@ -91,7 +91,7 @@ export async function HelpPageView({
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}>
+      <Div className={`${page.container.md} md:py-12 lg:py-16 space-y-14`} padding="y-2xl">
         {renderTopicsGrid(t, flex, TOPICS)}
         {renderScamAwarenessAlert(t)}
         {renderTrackOrderSection(t, themed)}
@@ -114,7 +114,7 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: Topi
       <Div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {topics.map(({ icon: Icon, title, desc, href, color, iconColor }) => (
           <TextLink key={href} href={href} className={`group rounded-xl border p-5 transition-shadow hover:shadow-md ${color} no-underline`}>
-            <Div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}>
+            <Div className={`w-10 h-10 bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Div className={`${flex.row} justify-between items-start`}>
@@ -144,7 +144,7 @@ function renderScamAwarenessAlert(t: HelpTranslateFn) {
 
 function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
-    <Section className={`rounded-2xl ${__P.p6} border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}>
+    <Section className={`${__P.p6} border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`} rounded="2xl">
       <Div className="flex-1">
         <Heading level={3} className="mb-1" size="base">{t("trackOrderTitle")}</Heading>
         <Text variant="secondary" size="sm">{t("trackOrderText")}</Text>
@@ -156,7 +156,7 @@ function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
 
 function renderContactCtaSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
-    <Section className={`rounded-2xl ${__P.p8} text-center border ${themed.border} ${themed.bgSecondary}`}>
+    <Section className={`${__P.p8} text-center border ${themed.border} ${themed.bgSecondary}`} rounded="2xl">
       <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />
       <Heading level={2} className="mb-3">{t("contactTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("contactText")}</Text>

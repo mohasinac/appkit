@@ -56,7 +56,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
 
   return (
     <Div
-      className={`group flex flex-col h-full rounded-xl border border-neutral-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900 transition-shadow hover:shadow-md ${className}`}
+      className={`group flex flex-col h-full border border-neutral-200 p-5 transition-shadow hover:shadow-md ${className}`} rounded="xl" surface="default"
     >
       {/* Clicking the main body navigates to the review detail */}
       <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">

@@ -34,7 +34,7 @@ function renderCategoryGrid(props: {
     return (
       <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
-          <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
+          <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
             <Div className="aspect-[4/3]" surface="subtle" />
             <Div className={`${__P.p3}.5 space-y-2`}>
               <Div className="h-3.5 w-3/4" surface="subtle" rounded="default" />

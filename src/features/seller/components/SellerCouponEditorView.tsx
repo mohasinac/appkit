@@ -100,7 +100,7 @@ export function SellerCouponEditorView({
 
   return (
     <Form onSubmit={handleSubmit} noValidate>
-      <Stack gap="none" className={`max-w-lg mx-auto rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm ${__O.hidden}`}>
+      <Stack gap="none" className={`max-w-lg mx-auto border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`} rounded="xl" shadow="sm">
         <div
           className="h-[3px] w-full"
           // audit-inline-style-ok: runtime theme gradient

@@ -67,7 +67,7 @@ export function CustomerReviewsSection<T = unknown>({
   if (items.length === 0) return null;
 
   return (
-    <Section className={`py-12 ${themed.bgPrimary} ${className}`}>
+    <Section className={`${themed.bgPrimary} ${className}`} padding="y-3xl">
       <Div className="w-full max-w-7xl mx-auto px-4 md:px-8">
         {/* Section Header */}
         <Div className="text-center mb-10">

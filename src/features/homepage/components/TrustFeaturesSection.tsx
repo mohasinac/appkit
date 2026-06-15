@@ -121,7 +121,7 @@ export function TrustFeaturesSection({
     return (
       <Section
         ref={sectionRef}
-        className={`py-4 overflow-hidden border-y border-zinc-100 dark:border-slate-800 ${className}`}
+        className={`overflow-hidden border-y border-zinc-100 dark:border-slate-800 ${className}`} padding="y-md"
       >
         <Div className="flex animate-marquee">
           {doubled.map((item, i) => (
@@ -135,7 +135,7 @@ export function TrustFeaturesSection({
   return (
     <Section
       ref={sectionRef}
-      className={`py-14 px-4 bg-zinc-50 dark:bg-slate-900/80 ${className}`}
+      className={`py-14 px-4 dark:bg-slate-900/80 ${className}`} surface="muted"
     >
       <Div className="max-w-6xl mx-auto">
         {title && (

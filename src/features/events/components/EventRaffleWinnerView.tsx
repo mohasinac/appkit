@@ -118,7 +118,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
       </Div>
 
       {event.raffleGithubFunctionUrl ? (
-        <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 ${__P.p4} text-sm`}>
+        <Div className={`${__P.p4} text-sm`} rounded="lg" border="default">
           <Text weight="medium" color="primary">
             {l.fairnessLabel}
           </Text>

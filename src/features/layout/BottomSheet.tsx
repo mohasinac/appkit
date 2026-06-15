@@ -76,7 +76,7 @@ export function BottomSheet({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`absolute bottom-0 inset-x-0 flex flex-col rounded-t-2xl bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`}
+        className={`absolute bottom-0 inset-x-0 flex flex-col rounded-t-2xl border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`} surface="default"
       >
         {/* Handle and header */}
         <Row

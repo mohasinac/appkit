@@ -194,7 +194,7 @@ function OrderDetailDrawer({
 
       {order && !loading && (
         <Stack gap="none" className="flex flex-col">
-          <Div className={`flex-1 ${__O.yAuto} px-4 py-4 space-y-5`}>
+          <Div className={`flex-1 ${__O.yAuto} px-4 space-y-5`} padding="y-md">
             {/* Status row */}
             <Row align="center" justify="between">
               <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>
