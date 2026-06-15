@@ -97,7 +97,7 @@ function AdsSettingsPanel({
   return (
     <Div className={`rounded-lg border border-neutral-200 dark:border-slate-700 ${__P.p3} space-y-3`}>
       <Text size="sm" weight="semibold">Provider and publish settings</Text>
-      <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
+      <Text className="text-neutral-500" size="xs">
         Save provider credentials here before publishing AdSense or third-party inventory.
       </Text>
       {serverCredentialIssues.length > 0 ? (
@@ -119,7 +119,7 @@ function AdsSettingsPanel({
           placeholder={providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
         />
       </Div>
-      <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
+      <Text className="text-neutral-500" size="xs">
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
       <Row align="center" justify="between" gap="3">
@@ -284,7 +284,7 @@ export function AdminAdsView({
       render: (row) => (
         <Div>
           <Text weight="medium">{row.name}</Text>
-          <Text className="text-neutral-500 dark:text-zinc-400" size="xs">{row.id}</Text>
+          <Text className="text-neutral-500" size="xs">{row.id}</Text>
         </Div>
       ),
     },
@@ -309,7 +309,7 @@ export function AdminAdsView({
       key: "placementIds",
       header: "Placements",
       render: (row) => (
-        <Text className="text-neutral-500 dark:text-zinc-400" size="xs">{row.placementIds.join(", ")}</Text>
+        <Text className="text-neutral-500" size="xs">{row.placementIds.join(", ")}</Text>
       ),
     },
     {

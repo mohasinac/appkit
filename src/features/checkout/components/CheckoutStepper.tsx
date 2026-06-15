@@ -36,7 +36,7 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
               </Span>
             </Row>
             {idx < steps.length - 1 && (
-              <Span className="h-px flex-1 bg-neutral-200 dark:bg-slate-700" />
+              <Span className="h-px flex-1 bg-neutral-200" />
             )}
           </React.Fragment>
         );

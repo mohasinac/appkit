@@ -62,7 +62,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
     >
       <Row wrap align="start" justify="between" gap="3">
         <Div>
-          <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
+          <Text className="text-neutral-500" size="xs">
             Order #{order.id.slice(-8).toUpperCase()}
           </Text>
           {date && (
@@ -115,10 +115,10 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         )}
       </Row>
         <Row justify="between" className="mt-4 border-t border-neutral-100 pt-3">
-          <Span size="sm" className="text-neutral-500 dark:text-zinc-400">
+          <Span size="sm" className="text-neutral-500">
           {order.currency ?? ""} Total
         </Span>
-          <Span weight="semibold" className="text-neutral-900 dark:text-zinc-100">
+          <Span weight="semibold" className="text-neutral-900">
           {formatCurrency(order.total, order.currency)}
         </Span>
       </Row>
@@ -155,14 +155,14 @@ export function OrdersList({
           >
             <Row justify="between">
               <Stack gap="xs">
-                <Div className="h-3 w-20 bg-neutral-200 dark:bg-slate-700" rounded="default" />
-                <Div className="h-3 w-16 bg-neutral-200 dark:bg-slate-700" rounded="default" />
+                <Div className="h-3 w-20 bg-neutral-200" rounded="default" />
+                <Div className="h-3 w-16 bg-neutral-200" rounded="default" />
               </Stack>
-              <Div className="h-6 w-20 bg-neutral-200 dark:bg-slate-700" rounded="full" />
+              <Div className="h-6 w-20 bg-neutral-200" rounded="full" />
             </Row>
             <Div className="mt-4 flex gap-3">
-              <Div className="h-10 w-10 bg-neutral-200 dark:bg-slate-700" rounded="lg" />
-              <Div className="h-10 w-10 bg-neutral-200 dark:bg-slate-700" rounded="lg" />
+              <Div className="h-10 w-10 bg-neutral-200" rounded="lg" />
+              <Div className="h-10 w-10 bg-neutral-200" rounded="lg" />
             </Div>
           </Div>
         ))}

@@ -106,9 +106,9 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
               {post.authorName.charAt(0).toUpperCase()}
             </Row>
           ) : null}
-          <Text className="text-neutral-500 dark:text-zinc-400 min-w-0" size="xs">
+          <Text className="text-neutral-500 min-w-0" size="xs">
             {post.authorName && (
-              <Span weight="medium" className="text-neutral-700 dark:text-zinc-300">
+              <Span weight="medium" className="text-neutral-700">
                 {safeDisplayName(post.authorName, "Author")}
               </Span>
             )}
@@ -197,13 +197,13 @@ export function BlogListView<T extends BlogPost = BlogPost>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden border border-neutral-200 bg-neutral-100 dark:bg-slate-800" rounded="xl"
+            className="animate-pulse overflow-hidden border border-neutral-200 bg-neutral-100" rounded="xl"
           >
-            <Div className="aspect-video bg-neutral-200 dark:bg-slate-700" />
+            <Div className="aspect-video bg-neutral-200" />
             <Div className={`space-y-2 ${__P.p5}`}>
-              <Div className="h-4 w-16 bg-neutral-200 dark:bg-slate-700" rounded="default" />
-              <Div className="h-5 w-full bg-neutral-200 dark:bg-slate-700" rounded="default" />
-              <Div className="h-4 w-3/4 bg-neutral-200 dark:bg-slate-700" rounded="default" />
+              <Div className="h-4 w-16 bg-neutral-200" rounded="default" />
+              <Div className="h-5 w-full bg-neutral-200" rounded="default" />
+              <Div className="h-4 w-3/4 bg-neutral-200" rounded="default" />
             </Div>
           </Div>
         ))}

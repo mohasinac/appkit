@@ -109,7 +109,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
   return (
     <>
       {/* ── Hero: rating + title ──────────────────────────────────────────── */}
-      <Div surface="default" className="border-b border-neutral-200 dark:border-zinc-800 pb-8 pt-10">
+      <Div surface="default" className="border-b border-neutral-200 pb-8 pt-10">
         <Div className="mx-auto max-w-3xl px-4">
           {/* Star rating — large */}
           <Row gap="sm" className="mb-4">
@@ -233,8 +233,8 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         )}
 
         {/* Helpful votes */}
-        <Section className="flex items-center gap-4 border-t border-neutral-100 dark:border-zinc-800" padding="y-md">
-          <Div className="text-sm text-neutral-500 dark:text-zinc-400">
+        <Section className="flex items-center gap-4 border-t border-neutral-100" padding="y-md">
+          <Div className="text-sm text-neutral-500">
             {helpfulCount > 0 && (
               <Span>
                 <Span weight="bold" className="text-neutral-900 dark:text-white">{helpfulCount}</Span>{" "}

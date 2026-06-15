@@ -28,16 +28,16 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
         <Div className={`${LAYOUT.cardHeight.md} ${CLS_PLACEHOLDER}`} />
       )}
       <Div surface="default" padding="sm">
-          <Heading level={3} className="text-gray-900 dark:text-zinc-100" weight="semibold">
+          <Heading level={3} className="text-gray-900" weight="semibold">
           {collection.title}
         </Heading>
         {collection.subtitle && (
-            <Text className="mt-1 text-gray-500 dark:text-zinc-400" size="sm">
+            <Text className="mt-1 text-gray-500" size="sm">
             {collection.subtitle}
           </Text>
         )}
         {collection.productCount !== undefined && (
-            <Text className="mt-2 text-gray-400 dark:text-zinc-500" size="xs">
+            <Text className="mt-2 text-gray-400" size="xs">
             {collection.productCount}{" "}
             {collection.productCount === 1 ? "item" : "items"}
           </Text>

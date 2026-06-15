@@ -44,7 +44,7 @@ export function WishlistCard({
           {item.productTitle}
         </Text>
         {item.productPrice !== undefined && (
-            <Text className="text-neutral-900 dark:text-zinc-100" size="sm" weight="semibold">
+            <Text className="text-neutral-900" size="sm" weight="semibold">
             {formatCurrency(item.productPrice, item.productCurrency)}
           </Text>
         )}
@@ -90,8 +90,8 @@ export function WishlistPage({
           >
             <Div className="h-20 w-20 bg-neutral-200" rounded="lg" />
             <Stack gap="sm" className="flex-1">
-              <Div className="h-4 w-3/4 bg-neutral-200 dark:bg-slate-700" rounded="default" />
-              <Div className="h-4 w-1/3 bg-neutral-200 dark:bg-slate-700" rounded="default" />
+              <Div className="h-4 w-3/4 bg-neutral-200" rounded="default" />
+              <Div className="h-4 w-1/3 bg-neutral-200" rounded="default" />
             </Stack>
           </Div>
         ))}

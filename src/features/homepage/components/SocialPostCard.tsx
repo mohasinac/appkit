@@ -151,7 +151,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
           loading="lazy"
         />
       ) : (
-        <Row className="h-full w-full dark:bg-zinc-700" surface="subtle" align="center" justify="center">
+        <Row className="h-full w-full" surface="subtle" align="center" justify="center">
           <Span size="sm" color="faint">No preview</Span>
         </Row>
       )}

@@ -115,7 +115,7 @@ export function AboutView({
           <Stack className="relative border-l-2 border-primary/30 pl-8 max-w-2xl mx-auto" gap="xl">
             {milestones.map(({ year, text }) => (
               <Div key={year} className="relative">
-                <Div className="absolute -left-10 top-1 w-4 h-4 bg-primary border-2 border-white dark:border-slate-900" rounded="full" />
+                <Div className="absolute -left-10 top-1 w-4 h-4 bg-primary border-2 border-white" rounded="full" />
                 <Span size="xs" weight="bold" className="text-primary tracking-wide" transform="uppercase">
                   {year}
                 </Span>

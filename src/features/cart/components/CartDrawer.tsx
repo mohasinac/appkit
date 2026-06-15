@@ -63,14 +63,14 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
         </Row>
         {item.meta.attributes &&
           Object.keys(item.meta.attributes).length > 0 && (
-            <Text className="text-neutral-500 dark:text-zinc-400" size="xs">
+            <Text className="text-neutral-500" size="xs">
               {Object.entries(item.meta.attributes)
                 .map(([k, v]) => `${k}: ${v}`)
                 .join(", ")}
             </Text>
           )}
         <Row justify="between">
-          <Text className="text-neutral-900 dark:text-zinc-100" weight="semibold">
+          <Text className="text-neutral-900" weight="semibold">
             {formatCurrency(
               item.meta.price * item.quantity,
               item.meta.currency,
@@ -178,10 +178,10 @@ export function CartDrawer({
         <Div className={`flex-1 ${__O.yAuto} ${__P.p4} space-y-3`}>
           {isLoading ? (
             <Row justify="center" padding="y-3xl">
-              <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 dark:border-slate-600 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
+              <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
             </Row>
           ) : items.length === 0 ? (
-            <Text className="py-12 text-neutral-500 dark:text-zinc-400" size="sm" align="center">
+            <Text className="py-12 text-neutral-500" size="sm" align="center">
               {labels.empty ?? "Your cart is empty"}
             </Text>
           ) : (
@@ -198,7 +198,7 @@ export function CartDrawer({
         {items.length > 0 && (
           <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p4} space-y-4`}>
             <Row justify="between" className="text-sm">
-              <Span className="text-neutral-600 dark:text-zinc-300">
+              <Span className="text-neutral-600">
                 {labels.subtotal ?? "Subtotal"}
               </Span>
               <Span weight="semibold">

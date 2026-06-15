@@ -19,7 +19,7 @@ export function SocialAuthButtons({
           <Div className="w-full border-t border-neutral-200" />
         </Row>
         <Row className="relative text-sm" justify="center">
-          <Span className="px-2 bg-white dark:bg-slate-950 text-neutral-500 dark:text-slate-400">{dividerLabel}</Span>
+          <Span className="px-2 bg-white dark:bg-slate-950 text-neutral-500">{dividerLabel}</Span>
         </Row>
       </Div>
 

@@ -186,11 +186,11 @@ export function PrizeDrawsIndexListing({
                 key={i}
                 className="border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse" rounded="xl"
               >
-                <Div className="aspect-square dark:bg-slate-700" surface="subtle" />
+                <Div className="aspect-square" surface="subtle" />
                 <Div className={`${__P.p3} space-y-2`}>
-                  <Div className="h-3 dark:bg-slate-700 w-3/4" surface="subtle" rounded="default" />
-                  <Div className="h-3 dark:bg-slate-700 w-1/2" surface="subtle" rounded="default" />
-                  <Div className="h-8 dark:bg-slate-700" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
+                  <Div className="h-8" surface="subtle" rounded="default" />
                 </Div>
               </Div>
             ))}

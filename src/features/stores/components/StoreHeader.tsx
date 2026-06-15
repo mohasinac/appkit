@@ -73,7 +73,7 @@ export function StoreHeader({
             <Row className="mb-0.5" align="center" gap="sm" wrap>
               <Heading
                 level={1}
-                className="text-gray-900 dark:text-zinc-100" size="xl" weight="bold"
+                className="text-gray-900" size="xl" weight="bold"
               >
                 {store.storeName}
               </Heading>
@@ -83,7 +83,7 @@ export function StoreHeader({
                 </Span>
               )}
             </Row>
-            <Row className="text-xs text-gray-500 dark:text-zinc-400 mb-0.5" gap="3">
+            <Row className="text-xs text-gray-500 mb-0.5" gap="3">
               {(store as any).category && <Span transform="capitalize">{(store as any).category}</Span>}
               {store.totalProducts != null && store.totalProducts > 0 && (
                 <Span>{store.totalProducts} {labels.products ?? "products"}</Span>

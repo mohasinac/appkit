@@ -553,7 +553,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             size="thumbnail"
           />
         ) : (
-          <Div className="w-full h-full bg-neutral-200 dark:bg-zinc-700" />
+          <Div className="w-full h-full bg-neutral-200" />
         )}
       </Div>
 

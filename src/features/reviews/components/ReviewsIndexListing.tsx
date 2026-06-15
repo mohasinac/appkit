@@ -178,9 +178,9 @@ export function ReviewsIndexListing({
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className={`${__P.p4} space-y-3`}>
-                  <Div className="h-4 dark:bg-slate-700 w-3/4" surface="subtle" rounded="default" />
-                  <Div className="h-3 dark:bg-slate-700 w-full" surface="subtle" rounded="default" />
-                  <Div className="h-3 dark:bg-slate-700 w-2/3" surface="subtle" rounded="default" />
+                  <Div className="h-4 w-3/4" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-full" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-2/3" surface="subtle" rounded="default" />
                 </Div>
               </Div>
             ))}

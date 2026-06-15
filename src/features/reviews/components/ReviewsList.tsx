@@ -70,7 +70,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
-            <Row className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300" align="center" justify="center" rounded="full">
+            <Row className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-sm font-medium text-neutral-600" align="center" justify="center" rounded="full">
               {initials}
             </Row>
           )}
@@ -137,7 +137,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
 
       {/* Footer links — rendered outside the review Link to avoid nested anchors */}
       {hasFooter && (
-        <Stack className="mt-3 pt-3 border-t border-neutral-100 dark:border-zinc-800 gap-1.5">
+        <Stack className="mt-3 pt-3 border-t border-neutral-100 gap-1.5">
           {showStoreLink && (
             <Link
               href={String(ROUTES.PUBLIC.STORE_DETAIL(review.storeSlug!))}
@@ -222,7 +222,7 @@ export function ReviewsList({
 
   if (reviews.length === 0) {
     return (
-      <Text className="py-12 text-neutral-500 dark:text-zinc-500" size="sm" align="center">
+      <Text className="py-12 text-neutral-500" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

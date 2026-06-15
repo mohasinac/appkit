@@ -54,12 +54,12 @@ export function WelcomeSection({
         className={`relative overflow-hidden py-16 md:py-24 px-4 ${className}`}
       >
         <Div className="animate-pulse max-w-4xl mx-auto text-center">
-          <Div className="h-6 dark:bg-slate-700 w-52 mx-auto mb-6" surface="subtle" rounded="full" />
-          <Div className="h-20 dark:bg-slate-700 mb-4 max-w-2xl mx-auto" surface="subtle" rounded="lg" />
-          <Div className="h-6 dark:bg-slate-700 mb-8 max-w-lg mx-auto" surface="subtle" rounded="lg" />
+          <Div className="h-6 w-52 mx-auto mb-6" surface="subtle" rounded="full" />
+          <Div className="h-20 mb-4 max-w-2xl mx-auto" surface="subtle" rounded="lg" />
+          <Div className="h-6 mb-8 max-w-lg mx-auto" surface="subtle" rounded="lg" />
           <Row justify="center" gap="md">
-            <Div className="h-12 dark:bg-slate-700 w-36" surface="subtle" rounded="xl" />
-            <Div className="h-12 dark:bg-slate-700 w-36" surface="subtle" rounded="xl" />
+            <Div className="h-12 w-36" surface="subtle" rounded="xl" />
+            <Div className="h-12 w-36" surface="subtle" rounded="xl" />
           </Row>
         </Div>
       </Section>

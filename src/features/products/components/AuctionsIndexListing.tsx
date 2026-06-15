@@ -239,12 +239,12 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
           <Div className={gridClass}>
             {Array.from({ length: 8 }).map((_, i) => (
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
-                <Div className="aspect-square dark:bg-slate-700" surface="subtle" />
+                <Div className="aspect-square" surface="subtle" />
                 <Div className={`${__P.p3} space-y-2`}>
-                  <Div className="h-3 dark:bg-slate-700 w-3/4" surface="subtle" rounded="default" />
-                  <Div className="h-4 dark:bg-slate-700 w-1/2" surface="subtle" rounded="default" />
-                  <Div className="h-3 dark:bg-slate-700 w-full" surface="subtle" rounded="default" />
-                  <Div className="h-8 dark:bg-slate-700" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
+                  <Div className="h-4 w-1/2" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-full" surface="subtle" rounded="default" />
+                  <Div className="h-8" surface="subtle" rounded="default" />
                 </Div>
               </Div>
             ))}

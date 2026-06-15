@@ -118,7 +118,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
               key={f.name}
               className="group overflow-hidden" surface="muted" rounded="lg" border="default"
             >
-              <Row className="aspect-square dark:bg-slate-700 text-xs text-zinc-500 dark:text-zinc-400" surface="subtle" align="center" justify="center">
+              <Row className="aspect-square text-xs text-zinc-500 dark:text-zinc-400" surface="subtle" align="center" justify="center">
                 {isImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img

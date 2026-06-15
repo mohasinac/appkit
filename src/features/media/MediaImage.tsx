@@ -142,7 +142,7 @@ export function MediaImage({
       >
         {!isLoaded && (
           <Div
-            className="absolute inset-0 dark:bg-slate-700 animate-pulse" surface="subtle"
+            className="absolute inset-0 animate-pulse" surface="subtle"
             aria-hidden="true"
           />
         )}
@@ -179,7 +179,7 @@ export function MediaImage({
     >
       {!isLoaded && (
         <Div
-          className="absolute inset-0 dark:bg-slate-700 animate-pulse" surface="subtle"
+          className="absolute inset-0 animate-pulse" surface="subtle"
           aria-hidden="true"
         />
       )}

@@ -235,9 +235,9 @@ export function CouponsIndexListing({
                 padding="md"
                 className="border-2 border-zinc-100 dark:border-slate-700 animate-pulse"
               >
-                <Div className="h-6 dark:bg-slate-700 w-2/3" surface="subtle" rounded="default" />
-                <Div className="h-4 dark:bg-slate-700 w-full" surface="subtle" rounded="default" />
-                <Div className="h-3 dark:bg-slate-700 w-1/2" surface="subtle" rounded="default" />
+                <Div className="h-6 w-2/3" surface="subtle" rounded="default" />
+                <Div className="h-4 w-full" surface="subtle" rounded="default" />
+                <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
               </Stack>
             ))}
           </Grid>

@@ -145,7 +145,7 @@ export function BrandsSection({
         {isLoading ? (
           <Div className={`flex gap-3 ${__O.hidden}`}>
             {Array.from({ length: 8 }).map((_, i) => (
-              <Div key={i} className="h-32 w-36 flex-none animate-pulse dark:bg-slate-700 md:h-40" surface="subtle" rounded="xl" />
+              <Div key={i} className="h-32 w-36 flex-none animate-pulse md:h-40" surface="subtle" rounded="xl" />
             ))}
           </Div>
         ) : (

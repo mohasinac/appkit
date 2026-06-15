@@ -108,7 +108,7 @@ export function EventCard({
         <Link href={detailHref} className="block">
           <Heading
             level={3}
-            className="text-gray-900 dark:text-zinc-100 leading-snug mb-1 group-hover:text-primary transition-colors" size="base" weight="semibold"
+            className="text-gray-900 leading-snug mb-1 group-hover:text-primary transition-colors" size="base" weight="semibold"
           >
             {safeTitle}
           </Heading>

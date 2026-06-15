@@ -177,12 +177,12 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
-                <Div className="aspect-video dark:bg-slate-700" surface="subtle" />
+                <Div className="aspect-video" surface="subtle" />
                 <Div className={`${__P.p4} space-y-2`}>
-                  <Div className="h-4 dark:bg-slate-700 w-3/4" surface="subtle" rounded="default" />
-                  <Div className="h-3 dark:bg-slate-700 w-full" surface="subtle" rounded="default" />
-                  <Div className="h-3 dark:bg-slate-700 w-2/3" surface="subtle" rounded="default" />
-                  <Div className="h-8 dark:bg-slate-700 mt-2" surface="subtle" rounded="default" />
+                  <Div className="h-4 w-3/4" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-full" surface="subtle" rounded="default" />
+                  <Div className="h-3 w-2/3" surface="subtle" rounded="default" />
+                  <Div className="h-8 mt-2" surface="subtle" rounded="default" />
                 </Div>
               </Div>
             ))}

@@ -27,7 +27,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
               <Heading level={1} className="text-neutral-900 dark:text-white mb-2" size="2xl" weight="bold">
                 Review not found
               </Heading>
-              <Text className="text-neutral-500 dark:text-zinc-400 mb-6" size="sm">
+              <Text className="text-neutral-500 mb-6" size="sm">
                 This review may have been removed or is no longer available.
               </Text>
               <Link
@@ -46,7 +46,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
   return (
     <Main>
       {/* Breadcrumb */}
-      <Div className="border-b border-neutral-100 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 py-2.5 px-4">
+      <Div className="border-b border-neutral-100 bg-neutral-50 py-2.5 px-4">
         <Nav className="mx-auto max-w-3xl flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-400" aria-label="Breadcrumb">
           <Link href={String(ROUTES.HOME)} className="hover:text-primary transition-colors">
             Home
@@ -56,7 +56,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
             Reviews
           </Link>
           <Span>/</Span>
-          <Span className="text-neutral-700 dark:text-zinc-300 truncate max-w-[200px]">
+          <Span className="text-neutral-700 truncate max-w-[200px]">
             {review.title ?? review.id}
           </Span>
         </Nav>

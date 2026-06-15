@@ -98,8 +98,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
 
   return (
     <Stack
-      gap="none"
-      className="dark:border-zinc-800" surface="default" rounded="xl" border="default"
+      gap="none" surface="default" rounded="xl" border="default"
     >
       <Link href={href} className="group block p-3 hover:no-underline">
         <Div className={`mb-2 aspect-square ${__O.hidden} rounded-lg bg-zinc-100 dark:bg-zinc-800`}>

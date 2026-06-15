@@ -131,7 +131,7 @@ export function CategoryTree({
 
   if (roots.length === 0) {
     return (
-      <Text className="py-4 text-neutral-500 dark:text-zinc-500" size="sm" align="center">
+      <Text className="py-4 text-neutral-500" size="sm" align="center">
         No categories
       </Text>
     );

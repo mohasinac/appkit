@@ -41,7 +41,7 @@ export function ReviewSummary({
           {averageRating.toFixed(1)}
         </Span>
         <StarRating value={averageRating} size="md" readOnly />
-        <Text size="sm" className="text-neutral-500 dark:text-zinc-400">
+        <Text size="sm" className="text-neutral-500">
           {totalReviews.toLocaleString()} review
           {totalReviews !== 1 ? "s" : ""}
         </Text>
@@ -54,12 +54,12 @@ export function ReviewSummary({
           const pct = totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0;
           return (
             <Row key={star} align="center" gap="sm">
-              <Span size="xs" weight="medium" className="w-4 text-neutral-600 dark:text-zinc-400 tabular-nums" align="end">
+              <Span size="xs" weight="medium" className="w-4 text-neutral-600 tabular-nums" align="end">
                 {star}
               </Span>
               <Span size="xs" className={CLS_STAR}>★</Span>
               <Div
-                className="flex-1 h-2 bg-neutral-100 dark:bg-zinc-800 overflow-hidden" rounded="full"
+                className="flex-1 h-2 bg-neutral-100 overflow-hidden" rounded="full"
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}
