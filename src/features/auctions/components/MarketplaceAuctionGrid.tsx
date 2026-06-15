@@ -54,10 +54,10 @@ function AuctionCardSkeleton({
       <Div className={`flex min-h-[220px] flex-row ${__O.hidden} rounded-xl bg-zinc-200 animate-pulse`}>
         <Div className="aspect-square w-40 flex-shrink-0 bg-zinc-300" />
         <Div className={`flex-1 space-y-2 ${__P.p3}`}>
-          <Div className="h-4 w-2/3 rounded bg-zinc-300" />
-          <Div className="h-3 w-full rounded bg-zinc-300" />
-          <Div className="h-3 w-3/4 rounded bg-zinc-300" />
-          <Div className="h-5 w-1/2 rounded bg-zinc-300" />
+          <Div className="h-4 w-2/3 bg-zinc-300" rounded="default" />
+          <Div className="h-3 w-full bg-zinc-300" rounded="default" />
+          <Div className="h-3 w-3/4 bg-zinc-300" rounded="default" />
+          <Div className="h-5 w-1/2 bg-zinc-300" rounded="default" />
           <Row gap="sm">
             <Div className={CLS_SKELETON_BTN} />
             <Div className={CLS_SKELETON_BTN} />
@@ -71,12 +71,12 @@ function AuctionCardSkeleton({
     <Div className={`${__O.hidden} rounded-xl bg-zinc-200 animate-pulse`}>
       <Div className="aspect-square bg-zinc-300" />
       <Div className={`space-y-2 ${__P.p3}`}>
-        <Div className="h-4 w-3/4 rounded bg-zinc-300" />
-        <Div className="h-3 w-1/3 rounded bg-zinc-300" />
-        <Div className="h-5 w-1/2 rounded bg-zinc-300" />
+        <Div className="h-4 w-3/4 bg-zinc-300" rounded="default" />
+        <Div className="h-3 w-1/3 bg-zinc-300" rounded="default" />
+        <Div className="h-5 w-1/2 bg-zinc-300" rounded="default" />
         <Row justify="between">
-          <Div className="h-3 w-1/4 rounded bg-zinc-300" />
-          <Div className="h-3 w-1/3 rounded bg-zinc-300" />
+          <Div className="h-3 w-1/4 bg-zinc-300" rounded="default" />
+          <Div className="h-3 w-1/3 bg-zinc-300" rounded="default" />
         </Row>
         <Row gap="sm">
           <Div className={CLS_SKELETON_BTN} />

@@ -104,7 +104,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Channel name bottom-left */}
       {post.channelName && (
-        <Div className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-xs text-white backdrop-blur-sm">
+        <Div className="absolute bottom-2 left-2 bg-black/60 px-2 py-0.5 text-xs text-white backdrop-blur-sm" rounded="default">
           {post.channelName}
         </Div>
       )}
@@ -170,7 +170,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       {/* Carousel indicator */}
       {post.mediaType === "carousel" && (
         <Div className="pointer-events-none absolute right-2 top-2">
-          <Row className="h-6 w-6 rounded bg-black/50 backdrop-blur-sm" align="center" justify="center">
+          <Row className="h-6 w-6 bg-black/50 backdrop-blur-sm" rounded="default" align="center" justify="center">
             <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="2" y="3" width="15" height="15" rx="2" />
               <path d="M7 8h14M7 12h14M7 16h14" />

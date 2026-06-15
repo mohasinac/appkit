@@ -235,7 +235,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "error" ? (
-          <Div className="rounded border border-error/40 bg-error-surface px-4 py-3 text-error">
+          <Div className="border border-error/40 bg-error-surface px-4 py-3 text-error" rounded="default">
             <Text size="sm" weight="semibold">Something went wrong</Text>
             <Text size="sm">{errorMessage}</Text>
           </Div>
@@ -294,7 +294,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {/* Always-visible fairness disclaimer. */}
-        <Div className="rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-muted)] px-3 py-2 text-xs text-[var(--appkit-color-text-muted)]">
+        <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-muted)] px-3 py-2 text-xs text-[var(--appkit-color-text-muted)]" rounded="default">
           <Span weight="bold">
             Fairness guarantee:
           </Span>{" "}

@@ -26,8 +26,8 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
         >
           {isLoading ? (
             <>
-              <Div className="h-3 w-16 animate-pulse rounded bg-[var(--appkit-color-border)]" />
-              <Div className="mt-3 h-6 w-20 animate-pulse rounded bg-[var(--appkit-color-border)]" />
+              <Div className="h-3 w-16 animate-pulse bg-[var(--appkit-color-border)]" rounded="default" />
+              <Div className="mt-3 h-6 w-20 animate-pulse bg-[var(--appkit-color-border)]" rounded="default" />
             </>
           ) : (
             <>

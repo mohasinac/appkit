@@ -203,7 +203,7 @@ export function DataTable<T extends { id: string }>({
                   {selectionEnabled && <Td className="w-10 px-2 py-3" />}
                   {columns.map((col) => (
                     <Td key={col.key} className="px-4 py-3">
-                      <Div className="h-4 w-full animate-pulse rounded bg-neutral-200 dark:bg-slate-700" />
+                      <Div className="h-4 w-full animate-pulse bg-neutral-200 dark:bg-slate-700" rounded="default" />
                     </Td>
                   ))}
                 </Tr>

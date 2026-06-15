@@ -73,8 +73,8 @@ function SkeletonCard() {
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
       <Row className="pt-1" align="start" justify="between" gap="3">
         <Div className="flex-1 space-y-2">
-          <Div className="h-2.5 w-20 rounded bg-[var(--appkit-color-border)]" />
-          <Div className="h-7 w-24 rounded bg-[var(--appkit-color-border)]" />
+          <Div className="h-2.5 w-20 bg-[var(--appkit-color-border)]" rounded="default" />
+          <Div className="h-7 w-24 bg-[var(--appkit-color-border)]" rounded="default" />
         </Div>
         <Div className="w-10 h-10 bg-[var(--appkit-color-border)]" rounded="lg" />
       </Row>

@@ -155,8 +155,8 @@ export function OrdersList({
           >
             <Row justify="between">
               <Stack gap="xs">
-                <Div className="h-3 w-20 rounded bg-neutral-200 dark:bg-slate-700" />
-                <Div className="h-3 w-16 rounded bg-neutral-200 dark:bg-slate-700" />
+                <Div className="h-3 w-20 bg-neutral-200 dark:bg-slate-700" rounded="default" />
+                <Div className="h-3 w-16 bg-neutral-200 dark:bg-slate-700" rounded="default" />
               </Stack>
               <Div className="h-6 w-20 bg-neutral-200 dark:bg-slate-700" rounded="full" />
             </Row>

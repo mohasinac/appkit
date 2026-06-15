@@ -41,23 +41,23 @@ function SkeletonCard({ view }: { view: "grid" | "list" }) {
   if (view === "list") {
     return (
       <Row gap="sm" className="px-4 py-3 animate-pulse">
-        <Div className="h-4 w-4 rounded bg-zinc-200 dark:bg-slate-700 shrink-0" />
+        <Div className="h-4 w-4 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="default" />
         <Stack gap="xs" className="flex-1">
-          <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-          <Div className="h-2.5 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+          <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-2/3" rounded="default" />
+          <Div className="h-2.5 bg-zinc-200 dark:bg-slate-700 w-1/3" rounded="default" />
         </Stack>
         <Div className="h-5 w-16 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="full" />
-        <Div className="h-3 w-20 bg-zinc-200 dark:bg-slate-700 rounded shrink-0" />
+        <Div className="h-3 w-20 bg-zinc-200 dark:bg-slate-700 shrink-0" rounded="default" />
       </Row>
     );
   }
   return (
     <Div rounded="xl" border="subtle" className={`${__O.hidden} animate-pulse`}>
       <Stack gap="xs" padding="md">
-        <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+        <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-3/4" rounded="default" />
+        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/2" rounded="default" />
         <Div className="h-5 bg-zinc-200 dark:bg-slate-700 w-20 mt-1" rounded="full" />
-        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/3" rounded="default" />
       </Stack>
     </Div>
   );

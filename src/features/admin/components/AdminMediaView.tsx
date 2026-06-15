@@ -245,7 +245,7 @@ function MediaUploaderPanel({
           {galleryAssets.map((asset, i) => (
             <Row
               key={i}
-              className="rounded bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-2 py-1" align="center" gap="sm" border="default"
+              className="bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-2 py-1" rounded="default" align="center" gap="sm" border="default"
             >
               <Text className="flex-1 truncate font-mono" color="muted" size="xs">
                 {asset.url}

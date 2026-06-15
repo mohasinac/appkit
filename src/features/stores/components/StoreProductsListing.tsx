@@ -164,9 +164,9 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
               >
                 <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <Div className={`${__P.p3} space-y-2`}>
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-3/4" rounded="default" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/2" rounded="default" />
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-1/3" rounded="default" />
                 </Div>
               </Div>
             ))}

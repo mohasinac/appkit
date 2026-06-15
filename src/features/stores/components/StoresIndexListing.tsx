@@ -217,9 +217,9 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
                   <Row align="center" gap="sm">
                     <Div className="h-10 w-10 bg-zinc-200 dark:bg-slate-700" rounded="lg" />
                   </Row>
-                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-2/3" rounded="default" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-full" rounded="default" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/2" rounded="default" />
                 </Div>
               </Div>
             ))}

@@ -152,9 +152,9 @@ export function SellerCouponsView({
               key={i}
               className="border-2 border-zinc-100 dark:border-slate-700 animate-pulse space-y-3" rounded="xl" padding="md"
             >
-              <Div className="h-6 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-              <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+              <Div className="h-6 bg-zinc-200 dark:bg-slate-700 w-2/3" rounded="default" />
+              <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-full" rounded="default" />
+              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-1/2" rounded="default" />
             </Div>
           ))}
         </Div>

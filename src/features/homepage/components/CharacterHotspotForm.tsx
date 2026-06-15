@@ -426,7 +426,7 @@ export function CharacterHotspotForm({
                 </Row>
                 {pin.name && (
                   <Div
-                    className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
+                    className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] font-bold text-white" rounded="default"
                     style={{ background: "#0D0D0D" }}
                   >
                     {pin.name}
@@ -468,7 +468,7 @@ export function CharacterHotspotForm({
                   ★
                 </Row>
                 <Div
-                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-bold"
+                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap px-2 py-0.5 text-[10px] font-bold" rounded="default"
                   style={{
                     background: "var(--color-black)",
                     color: "var(--color-yellow)",
@@ -849,7 +849,7 @@ export function CharacterHotspotForm({
                 </Row>
                 {pin.name && (
                   <Div
-                    className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
+                    className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] font-bold text-white" rounded="default"
                     style={{ background: "#0D0D0D" }}
                   >
                     {pin.name}

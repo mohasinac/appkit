@@ -210,9 +210,9 @@ export function BlogListView<T extends BlogPost = BlogPost>({
           >
             <Div className="aspect-video bg-neutral-200 dark:bg-slate-700" />
             <Div className={`space-y-2 ${__P.p5}`}>
-              <Div className="h-4 w-16 rounded bg-neutral-200 dark:bg-slate-700" />
-              <Div className="h-5 w-full rounded bg-neutral-200 dark:bg-slate-700" />
-              <Div className="h-4 w-3/4 rounded bg-neutral-200 dark:bg-slate-700" />
+              <Div className="h-4 w-16 bg-neutral-200 dark:bg-slate-700" rounded="default" />
+              <Div className="h-5 w-full bg-neutral-200 dark:bg-slate-700" rounded="default" />
+              <Div className="h-4 w-3/4 bg-neutral-200 dark:bg-slate-700" rounded="default" />
             </Div>
           </Div>
         ))}

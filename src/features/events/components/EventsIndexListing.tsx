@@ -179,10 +179,10 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
               <Div key={i} className={`rounded-xl border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`}>
                 <Div className="aspect-video bg-zinc-200 dark:bg-slate-700" />
                 <Div className={`${__P.p4} space-y-2`}>
-                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-                  <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded mt-2" />
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 w-3/4" rounded="default" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-full" rounded="default" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 w-2/3" rounded="default" />
+                  <Div className="h-8 bg-zinc-200 dark:bg-slate-700 mt-2" rounded="default" />
                 </Div>
               </Div>
             ))}

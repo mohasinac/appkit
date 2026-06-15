@@ -76,7 +76,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
               />
             </Div>
           ) : (
-            <Div className="h-8 w-8 flex-shrink-0 rounded bg-zinc-200 dark:bg-slate-700" />
+            <Div className="h-8 w-8 flex-shrink-0 bg-zinc-200 dark:bg-slate-700" rounded="default" />
           )}
           <Span weight="medium" className="max-w-[180px] truncate">
             {product.title}
