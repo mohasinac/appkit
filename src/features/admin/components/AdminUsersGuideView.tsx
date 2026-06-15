@@ -26,7 +26,7 @@ export function AdminUsersGuideView() {
                 <Thead>
                   <Tr className="border-b border-[var(--appkit-color-border)]">
                     {["Role", "What they can do", "How assigned"].map((h) => (
-                      <Th key={h} className="text-left py-2 pr-4 font-semibold text-[var(--appkit-color-text)]">{h}</Th>
+                      <Th key={h} className="text-left py-2 pr-4 text-[var(--appkit-color-text)]" weight="semibold">{h}</Th>
                     ))}
                   </Tr>
                 </Thead>
@@ -39,7 +39,7 @@ export function AdminUsersGuideView() {
                     ["admin", "Full access to all admin sections, bypasses RBAC checks", "Manual via Firebase console"],
                   ].map(([role, can, how]) => (
                     <Tr key={role} className="border-b border-[var(--appkit-color-border)]/50">
-                      <Td className="py-2 pr-4 font-mono text-xs text-[var(--appkit-color-primary)]">{role}</Td>
+                      <Td className="py-2 pr-4 font-mono text-[var(--appkit-color-primary)]" size="xs">{role}</Td>
                       <Td className="py-2 pr-4">{can}</Td>
                       <Td className="py-2">{how}</Td>
                     </Tr>

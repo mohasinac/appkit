@@ -42,7 +42,7 @@ export function Breadcrumbs({
             {item}
             {index < items.length - 1 && (
               <Span
-                className="text-zinc-500 dark:text-zinc-400/90 select-none"
+                className="dark:text-zinc-400/90 select-none" color="muted"
                 aria-hidden="true"
               >
                 {separator}

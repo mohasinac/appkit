@@ -104,7 +104,7 @@ export function CustomerReviewsSection<T = unknown>({
           <Div className="text-center mt-8">
             <TextLink
               href={viewMoreHref}
-              className="text-sm font-medium text-primary hover:text-primary/80"
+              className="text-primary hover:text-primary/80" size="sm" weight="medium"
             >
               {viewMoreLabel}
             </TextLink>

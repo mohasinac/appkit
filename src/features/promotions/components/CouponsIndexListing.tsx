@@ -290,7 +290,7 @@ export function CouponsIndexListing({
           </Heading>
           <Stack gap="xs">
             {COUPON_TYPES.map((t) => (
-              <Label key={t.value} className="flex items-center gap-2 cursor-pointer text-zinc-700 dark:text-zinc-300" size="sm">
+              <Label key={t.value} className="flex items-center gap-2 cursor-pointer" color="primary" size="sm">
                 <input
                   type="radio"
                   name="coupon-type"
@@ -321,7 +321,7 @@ export function CouponsIndexListing({
           </Heading>
           <Stack gap="sm">
             <>
-              <Label className="block text-zinc-500 dark:text-zinc-400 mb-1" size="xs">From date</Label>
+              <Label className="block mb-1" color="muted" size="xs">From date</Label>
               <input
                 type="date"
                 value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
@@ -330,7 +330,7 @@ export function CouponsIndexListing({
               />
             </>
             <>
-              <Label className="block text-zinc-500 dark:text-zinc-400 mb-1" size="xs">To date</Label>
+              <Label className="block mb-1" color="muted" size="xs">To date</Label>
               <input
                 type="date"
                 value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}

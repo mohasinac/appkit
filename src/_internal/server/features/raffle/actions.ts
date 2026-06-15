@@ -8,6 +8,7 @@
  */
 
 
+import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { getAdminDb } from "../../../../providers/db-firebase/admin";
 import {
   runTriggerEventRaffle,
@@ -39,12 +40,16 @@ function buildContext(job: string): JobContext {
 
 export async function triggerEventRaffleAction(
   input: TriggerEventRaffleInput,
-): Promise<TriggerEventRaffleResult> {
-  return runTriggerEventRaffle(input, buildContext("admin.triggerEventRaffle"));
+): Promise<ActionResult<TriggerEventRaffleResult>> {
+  return wrapAction(async () =>
+    runTriggerEventRaffle(input, buildContext("admin.triggerEventRaffle")),
+  );
 }
 
 export async function assignSpinPrizeAction(
   input: AssignSpinPrizeInput,
-): Promise<AssignSpinPrizeResult> {
-  return runAssignSpinPrize(input, buildContext("user.assignSpinPrize"));
+): Promise<ActionResult<AssignSpinPrizeResult>> {
+  return wrapAction(async () =>
+    runAssignSpinPrize(input, buildContext("user.assignSpinPrize")),
+  );
 }

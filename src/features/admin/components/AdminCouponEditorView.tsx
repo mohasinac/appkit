@@ -465,7 +465,7 @@ export function AdminCouponEditorView({
 
           {/* Applicability — restrict the coupon to a specific set of products or categories. */}
           <Stack gap="xs">
-            <Label className="text-zinc-800 dark:text-zinc-100" size="sm" weight="medium">
+            <Label size="sm" weight="medium" color="primary">
               Applicable products (optional)
             </Label>
             <ProductInlineSelect
@@ -481,7 +481,7 @@ export function AdminCouponEditorView({
           </Stack>
 
           <Stack gap="xs">
-            <Label className="text-zinc-800 dark:text-zinc-100" size="sm" weight="medium">
+            <Label size="sm" weight="medium" color="primary">
               Applicable categories (optional)
             </Label>
             {/* CategoryInlineSelect is single-select today; we maintain a chip list around it. */}

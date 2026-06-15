@@ -104,19 +104,19 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
         <Table className="w-full text-sm">
           <Thead className={themed.bgSecondary}>
             <Tr>
-              <Th className="py-3 px-4 text-left font-semibold">{t("colFeeType")}</Th>
-              <Th className="py-3 px-4 text-left font-semibold">{t("colRate")}</Th>
-              <Th className="py-3 px-4 text-left font-semibold">{t("colPaidBy")}</Th>
-              <Th className="py-3 px-4 text-left font-semibold hidden md:table-cell">{t("colNote")}</Th>
+              <Th className="py-3 px-4 text-left" weight="semibold">{t("colFeeType")}</Th>
+              <Th className="py-3 px-4 text-left" weight="semibold">{t("colRate")}</Th>
+              <Th className="py-3 px-4 text-left" weight="semibold">{t("colPaidBy")}</Th>
+              <Th className="py-3 px-4 text-left hidden md:table-cell" weight="semibold">{t("colNote")}</Th>
             </Tr>
           </Thead>
           <Tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
             {rows.map((row) => (
               <Tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 dark:hover:bg-neutral-800/50`}>
-                <Td className="py-3 px-4 font-medium">{row.category}</Td>
+                <Td className="py-3 px-4" weight="medium">{row.category}</Td>
                 <Td className={CLS_RATE_CELL}>{row.rate}</Td>
                 <Td className="py-3 px-4"><Caption>{row.who}</Caption></Td>
-                <Td className="py-3 px-4 text-neutral-500 dark:text-neutral-400 hidden md:table-cell text-xs">{row.note}</Td>
+                <Td className="py-3 px-4 text-neutral-500 dark:text-neutral-400 hidden md:table-cell" size="xs">{row.note}</Td>
               </Tr>
             ))}
           </Tbody>

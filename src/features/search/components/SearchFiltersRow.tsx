@@ -51,7 +51,7 @@ export function SearchFiltersRow({
     <Row wrap gap="md" align="end">
       {/* Category filter */}
       <Stack gap="xs">
-        <Label className="text-zinc-600 dark:text-zinc-400" size="sm" weight="medium">
+        <Label size="sm" weight="medium" color="muted">
           {L.categoryFilter}
         </Label>
         <Select
@@ -67,7 +67,7 @@ export function SearchFiltersRow({
 
       {/* Price range */}
       <Stack gap="xs">
-        <Label className="text-zinc-600 dark:text-zinc-400" size="sm" weight="medium">
+        <Label size="sm" weight="medium" color="muted">
           {L.priceRange}
         </Label>
         <Row align="center" gap="sm">

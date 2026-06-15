@@ -70,11 +70,7 @@ export async function FAQPageView({
               <nav className="space-y-1">
                 <TextLink
                   href={String(ROUTES.PUBLIC.FAQS)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                    !category
-                      ? "bg-primary/10 text-primary font-semibold"
-                      : "hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  }`}
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
                 >
                   <span className={`${flex.row} gap-2`}>
                     <HelpCircle className="w-4 h-4" />
@@ -86,11 +82,7 @@ export async function FAQPageView({
                   <TextLink
                     key={cat.slug}
                     href={String(ROUTES.PUBLIC.FAQ_CATEGORY(cat.slug))}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                      category === cat.slug
-                        ? "bg-primary/10 text-primary font-semibold"
-                        : "hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                    }`}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
                   >
                     <span className={`${flex.row} gap-2`}>
                       <span>{cat.icon}</span>

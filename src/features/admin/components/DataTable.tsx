@@ -183,7 +183,7 @@ export function DataTable<T extends { id: string }>({
                   onClick={
                     col.sortable && onSort ? () => onSort(col.key) : undefined
                   }
-                  className={`px-4 py-3 text-left font-semibold text-neutral-900 dark:text-zinc-100 ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`}
+                  className={`px-4 py-3 text-left text-neutral-900 dark:text-zinc-100 ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} weight="semibold"
                 >
                   {col.header}
                   {col.sortable && sortKey === col.key && (

@@ -138,7 +138,7 @@ export function EventCard({
         ) : (
           <TextLink
             href={detailHref}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-slate-600 dark:text-zinc-200 dark:hover:bg-slate-800"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-zinc-300 px-3 py-2 text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-slate-600 dark:text-zinc-200 dark:hover:bg-slate-800" size="sm" weight="medium"
           >
             {labels.viewDetails ?? "View details"} →
           </TextLink>

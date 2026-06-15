@@ -527,7 +527,7 @@ function AddChildContent({
               onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
               options={CONDITION_OPTIONS}
             />
-            <Text className="text-zinc-400 dark:text-zinc-400/80" size="xs">
+            <Text className="dark:text-zinc-400/80" color="faint" size="xs">
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.
             </Text>

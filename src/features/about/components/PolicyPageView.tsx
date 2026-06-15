@@ -128,9 +128,7 @@ export async function PolicyPageView({
                 <TextLink
                   key={l.href}
                   href={l.href}
-                  variant="muted"
-                  className="text-sm"
-                >
+                  variant="muted" size="sm">
                   {l.label}
                 </TextLink>
               ))}

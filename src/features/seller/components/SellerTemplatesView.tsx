@@ -460,7 +460,7 @@ export function SellerTemplatesView({
       >
         <Stack className={`${__P.p4}`} gap="md">
           <Div>
-            <Label className="mb-1.5 block text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
+            <Label className="mb-1.5 block" color="primary" size="sm" weight="medium">
               Condition
             </Label>
             <Select

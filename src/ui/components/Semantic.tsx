@@ -408,14 +408,44 @@ export function Tr({ hover = false, className = "", children, ...props }: TrProp
 
 type CellAlign = "left" | "center" | "right";
 
+type CellTypographySize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+type CellTypographyWeight = "normal" | "medium" | "semibold" | "bold";
+
 export interface ThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   align?: CellAlign;
+  size?: CellTypographySize;
+  weight?: CellTypographyWeight;
   children?: React.ReactNode;
 }
 
-export function Th({ align, className = "", children, ...props }: ThProps) {
+const CELL_SIZE_MAP: Record<CellTypographySize, string> = {
+  xs: "appkit-text--xs",
+  sm: "appkit-text--sm",
+  base: "appkit-text--base",
+  lg: "appkit-text--lg",
+  xl: "appkit-text--xl",
+  "2xl": "appkit-text--2xl",
+};
+
+const CELL_WEIGHT_MAP: Record<CellTypographyWeight, string> = {
+  normal: "appkit-font--normal",
+  medium: "appkit-font--medium",
+  semibold: "appkit-font--semibold",
+  bold: "appkit-font--bold",
+};
+
+export function Th({ align, size, weight, className = "", children, ...props }: ThProps) {
   return (
-    <th className={["appkit-th", align ? `text-${align}` : "", className].filter(Boolean).join(" ")} {...props}>
+    <th
+      className={[
+        "appkit-th",
+        align ? `text-${align}` : "",
+        size ? CELL_SIZE_MAP[size] : "",
+        weight ? CELL_WEIGHT_MAP[weight] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </th>
   );
@@ -423,12 +453,23 @@ export function Th({ align, className = "", children, ...props }: ThProps) {
 
 export interface TdProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   align?: CellAlign;
+  size?: CellTypographySize;
+  weight?: CellTypographyWeight;
   children?: React.ReactNode;
 }
 
-export function Td({ align, className = "", children, ...props }: TdProps) {
+export function Td({ align, size, weight, className = "", children, ...props }: TdProps) {
   return (
-    <td className={["appkit-td", align ? `text-${align}` : "", className].filter(Boolean).join(" ")} {...props}>
+    <td
+      className={[
+        "appkit-td",
+        align ? `text-${align}` : "",
+        size ? CELL_SIZE_MAP[size] : "",
+        weight ? CELL_WEIGHT_MAP[weight] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </td>
   );

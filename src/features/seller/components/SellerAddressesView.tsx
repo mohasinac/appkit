@@ -21,7 +21,7 @@ const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <Stack gap="xs">
-      <Label className="block text-zinc-700 dark:text-zinc-300" size="xs" weight="medium">{label}</Label>
+      <Label className="block" color="primary" size="xs" weight="medium">{label}</Label>
       {children}
       {hint && <Text size="xs" color="muted">{hint}</Text>}
     </Stack>
@@ -330,11 +330,11 @@ export function SellerAddressesView({
                 <Table className="w-full text-sm">
                   <Thead className="bg-zinc-50 dark:bg-slate-800">
                     <Tr>
-                      <Th className="text-left px-3 py-2 font-semibold">Label</Th>
-                      <Th className="text-left px-3 py-2 font-semibold">Name</Th>
-                      <Th className="text-left px-3 py-2 font-semibold">City</Th>
-                      <Th className="text-left px-3 py-2 font-semibold">Phone</Th>
-                      <Th className="text-right px-3 py-2 font-semibold">Actions</Th>
+                      <Th className="text-left px-3 py-2" weight="semibold">Label</Th>
+                      <Th className="text-left px-3 py-2" weight="semibold">Name</Th>
+                      <Th className="text-left px-3 py-2" weight="semibold">City</Th>
+                      <Th className="text-left px-3 py-2" weight="semibold">Phone</Th>
+                      <Th className="text-right px-3 py-2" weight="semibold">Actions</Th>
                     </Tr>
                   </Thead>
                   <Tbody>

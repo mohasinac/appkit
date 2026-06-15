@@ -111,7 +111,7 @@ export function FAQCategorySidebar({
           </Text>
           <TextLink
             href={contactHref}
-            className="block rounded-lg bg-primary p-4 text-center font-medium text-white transition-colors hover:bg-primary/90"
+            className="block rounded-lg bg-primary p-4 text-center text-white transition-colors hover:bg-primary/90" weight="medium"
           >
             {labels?.contactSupport ?? "Contact Support"}
           </TextLink>

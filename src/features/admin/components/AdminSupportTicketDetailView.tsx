@@ -391,7 +391,7 @@ export function AdminSupportTicketDetailView({
 
         {/* Reply box */}
         <Stack gap="xs">
-          <Label className="text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" size="xs" weight="semibold">
+          <Label className="uppercase tracking-wide" color="muted" size="xs" weight="semibold">
             Reply to user
           </Label>
           <textarea
@@ -431,7 +431,7 @@ export function AdminSupportTicketDetailView({
 
         {/* Internal notes */}
         <Stack gap="xs">
-          <Label className="text-zinc-500 dark:text-zinc-400 uppercase tracking-wide" size="xs" weight="semibold">
+          <Label className="uppercase tracking-wide" color="muted" size="xs" weight="semibold">
             Internal notes (staff only)
           </Label>
           <textarea

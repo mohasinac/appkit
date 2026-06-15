@@ -173,14 +173,17 @@ function shouldPersist(status: number, code: string): boolean {
 }
 
 /**
- * Resolve a registered ApiRouteKey to the body schema entry in SCHEMAS.api.
- * Returns null when the key isn't registered or the registered entry has no
- * `body` schema. Keeps the createRouteHandler body parsing branch flat.
+ * Resolve the body schema for a createRouteHandler call. Accepts either a
+ * direct ParseableSchema or a registered ApiRouteKey string; returns the
+ * resolved schema, or null when the key isn't registered / has no `body`.
+ * Pulls the registry lookup out of the request hot path so the body parsing
+ * branch in createRouteHandler stays flat (audit-code-quality:DEEP_NESTING).
  */
-function resolveRegisteredBodySchema<T>(
-  key: RegisteredApiRouteKey,
+function resolveBodySchema<T>(
+  schema: ParseableSchema<T> | ApiRouteKey,
 ): ParseableSchema<T> | null {
-  const entry = SCHEMAS.api[key];
+  if (typeof schema !== "string") return schema;
+  const entry = SCHEMAS.api[schema as RegisteredApiRouteKey];
   if (!entry || !("body" in entry) || !entry.body) return null;
   return entry.body as unknown as ParseableSchema<T>;
 }
@@ -281,27 +284,18 @@ export function createRouteHandler<
 
       // -- Body parsing ------------------------------------------------------
       let body: TInput | undefined;
-      if (options.schema) {
-        // Resolve the schema — either a direct ParseableSchema or a
-        // registry key string. Keys resolve against SCHEMAS.api[key].body
-        // via `resolveRegisteredBodySchema` above.
-        let resolvedSchema: ParseableSchema<TInput>;
-        if (typeof options.schema === "string") {
-          const fromRegistry = resolveRegisteredBodySchema<TInput>(
-            options.schema as RegisteredApiRouteKey,
-          );
-          if (!fromRegistry) {
-            return errorJson(
-              500,
-              HTTP_ERROR_CODES.INTERNAL,
-              `Route schema not registered: ${String(options.schema)}`,
-              requestId,
-            );
-          }
-          resolvedSchema = fromRegistry;
-        } else {
-          resolvedSchema = options.schema;
-        }
+      const resolvedSchema = options.schema
+        ? resolveBodySchema<TInput>(options.schema)
+        : undefined;
+      if (options.schema && !resolvedSchema) {
+        return errorJson(
+          500,
+          HTTP_ERROR_CODES.INTERNAL,
+          `Route schema not registered: ${String(options.schema)}`,
+          requestId,
+        );
+      }
+      if (resolvedSchema) {
         let raw: unknown;
         try {
           raw = await request.json();

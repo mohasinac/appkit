@@ -89,16 +89,12 @@ export async function UnauthorizedView({
           <Stack gap="sm" className="flex-row flex-wrap justify-center gap-4">
             <TextLink
               href={String(ROUTES.PUBLIC.HELP)}
-              variant="muted"
-              className="text-sm"
-            >
+              variant="muted" size="sm">
               {t("helpCenter")}
             </TextLink>
             <TextLink
               href={String(ROUTES.PUBLIC.CONTACT)}
-              variant="muted"
-              className="text-sm"
-            >
+              variant="muted" size="sm">
               {t("contact")}
             </TextLink>
           </Stack>

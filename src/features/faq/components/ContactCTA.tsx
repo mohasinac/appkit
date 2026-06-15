@@ -101,7 +101,7 @@ export function ContactCTA({
 
       <TextLink
         href={contactHref}
-        className="inline-flex items-center gap-2 rounded-xl bg-primary p-6 font-medium text-white transition-colors hover:bg-primary/90"
+        className="inline-flex items-center gap-2 rounded-xl bg-primary p-6 text-white transition-colors hover:bg-primary/90" weight="medium"
       >
         <Span>{labels?.contactTeam ?? "Contact Team"}</Span>
         <svg

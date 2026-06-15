@@ -239,7 +239,7 @@ export function FAQSection({
           <Div className="text-center mt-10">
             <TextLink
               href={viewMoreHref}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"
             >
               {viewMoreLabel}
               {hasMore && moreCount > 0 && (

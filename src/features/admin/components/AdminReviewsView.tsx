@@ -224,7 +224,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       >
         <Stack gap="md">
           <Stack gap="xs">
-            <Label className="text-zinc-700 dark:text-zinc-300" size="sm" weight="medium">
+            <Label size="sm" weight="medium" color="primary">
               Admin reply
             </Label>
             <textarea

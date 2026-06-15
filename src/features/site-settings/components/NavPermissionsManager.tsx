@@ -61,10 +61,10 @@ export function NavPermissionsManager({
             <Table className="w-full text-sm">
               <Thead>
                 <Tr className="border-b border-zinc-200 bg-zinc-50 dark:border-slate-700 dark:bg-slate-800">
-                  <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Nav Item</Th>
-                  <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Route</Th>
-                  <Th className="px-4 py-3 text-left font-semibold text-zinc-700 dark:text-zinc-300">Permission</Th>
-                  <Th className="px-4 py-3 text-right font-semibold text-zinc-700 dark:text-zinc-300">Enabled</Th>
+                  <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Nav Item</Th>
+                  <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Route</Th>
+                  <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Permission</Th>
+                  <Th className="px-4 py-3 text-right text-zinc-700 dark:text-zinc-300" weight="semibold">Enabled</Th>
                 </Tr>
               </Thead>
               <Tbody>

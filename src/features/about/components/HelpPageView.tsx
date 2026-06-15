@@ -135,7 +135,7 @@ function renderScamAwarenessAlert(t: HelpTranslateFn) {
   return (
     <Alert variant="warning" title={t("scamAwarenessTitle")}>
       {t("scamAwarenessText")}{" "}
-      <TextLink href={String(ROUTES.PUBLIC.SCAMS)} className="font-semibold underline">
+      <TextLink href={String(ROUTES.PUBLIC.SCAMS)} className="underline" weight="semibold">
         {t("scamAwarenessCta")}
       </TextLink>
     </Alert>

@@ -27,10 +27,34 @@ function isExternalUrl(href: string): boolean {
   );
 }
 
+type LinkTypographySize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+type LinkTypographyWeight = "light" | "normal" | "medium" | "semibold" | "bold";
+
+const LINK_SIZE_MAP: Record<LinkTypographySize, string> = {
+  xs: "appkit-text--xs",
+  sm: "appkit-text--sm",
+  base: "appkit-text--base",
+  lg: "appkit-text--lg",
+  xl: "appkit-text--xl",
+  "2xl": "appkit-text--2xl",
+};
+
+const LINK_WEIGHT_MAP: Record<LinkTypographyWeight, string> = {
+  light: "appkit-font--light",
+  normal: "appkit-font--normal",
+  medium: "appkit-font--medium",
+  semibold: "appkit-font--semibold",
+  bold: "appkit-font--bold",
+};
+
 export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
   variant?: keyof typeof VARIANTS;
+  /** Optional typography size override. */
+  size?: LinkTypographySize;
+  /** Optional typography weight override. */
+  weight?: LinkTypographyWeight;
   /**
    * Force external rendering (`<a target="_blank" rel="noopener noreferrer">`).
    * Auto-detected when `href` starts with http/https/mailto/tel.
@@ -57,11 +81,18 @@ export function TextLink({
   href,
   children,
   variant = "default",
+  size,
+  weight,
   external,
   className = "",
   ...props
 }: TextLinkProps) {
-  const cls = twMerge(VARIANTS[variant], className);
+  const cls = twMerge(
+    VARIANTS[variant],
+    size ? LINK_SIZE_MAP[size] : "",
+    weight ? LINK_WEIGHT_MAP[weight] : "",
+    className,
+  );
   const shouldBeExternal = external ?? isExternalUrl(href);
 
   if (shouldBeExternal) {

@@ -29,7 +29,7 @@ export function AdminTrustGuideView() {
                   <Thead>
                     <Tr className="border-b border-[var(--appkit-color-border)]">
                       {["", "Soft Ban", "Hard Ban"].map((h) => (
-                        <Th key={h} className="text-left py-2 pr-4 font-semibold text-[var(--appkit-color-text)]">{h}</Th>
+                        <Th key={h} className="text-left py-2 pr-4 text-[var(--appkit-color-text)]" weight="semibold">{h}</Th>
                       ))}
                     </Tr>
                   </Thead>
@@ -43,7 +43,7 @@ export function AdminTrustGuideView() {
                       ["Duration", "Set expiry date", "Permanent until admin lifts"],
                     ].map(([action, soft, hard]) => (
                       <Tr key={action} className="border-b border-[var(--appkit-color-border)]/50">
-                        <Td className="py-2 pr-4 font-medium text-[var(--appkit-color-text)]">{action}</Td>
+                        <Td className="py-2 pr-4 text-[var(--appkit-color-text)]" weight="medium">{action}</Td>
                         <Td className="py-2 pr-4">{soft}</Td>
                         <Td className="py-2">{hard}</Td>
                       </Tr>
