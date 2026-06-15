@@ -61,10 +61,10 @@ export function NavPermissionsManager({
             <Table className="w-full text-sm">
               <Thead>
                 <Tr className="bg-zinc-50 dark:bg-slate-800" border="default">
-                  <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Nav Item</Th>
-                  <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Route</Th>
-                  <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Permission</Th>
-                  <Th className="px-4 py-3 text-right text-zinc-700 dark:text-zinc-300" weight="semibold">Enabled</Th>
+                  <Th className="text-left" padding="md" color="primary" weight="semibold">Nav Item</Th>
+                  <Th className="text-left" padding="md" color="primary" weight="semibold">Route</Th>
+                  <Th className="text-left" padding="md" color="primary" weight="semibold">Permission</Th>
+                  <Th className="text-right" padding="md" color="primary" weight="semibold">Enabled</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -79,7 +79,7 @@ export function NavPermissionsManager({
                         !enabled ? "opacity-60" : "",
                       ].join(" ")}
                     >
-                      <Td className="px-4 py-3">
+                      <Td padding="md">
                         <Div>
                           <Text weight="medium" color="primary">{item.label}</Text>
                           {item.id && (
@@ -87,10 +87,10 @@ export function NavPermissionsManager({
                           )}
                         </Div>
                       </Td>
-                      <Td className="px-4 py-3">
+                      <Td padding="md">
                         <code className="text-xs text-zinc-500 dark:text-zinc-400">{item.href}</code>
                       </Td>
-                      <Td className="px-4 py-3">
+                      <Td padding="md">
                         {item.requiredPermission ? (
                           <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
                             {item.requiredPermission}
@@ -99,7 +99,7 @@ export function NavPermissionsManager({
                           <Text size="xs" color="faint">—</Text>
                         )}
                       </Td>
-                      <Td className="px-4 py-3 text-right">
+                      <Td className="text-right" padding="md">
                         {hasId ? (
                           <Toggle
                             checked={enabled}

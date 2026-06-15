@@ -3,17 +3,13 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
-const DEFAULT_HERO_CLASS =
-  "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
 const CLS_FOOTER_LINK = "text-sky-600 dark:text-sky-400 hover:underline";
 
 export interface ShippingPolicyViewProps {
-  heroBannerClass?: string;
 }
 
 export async function ShippingPolicyView({
-  heroBannerClass = DEFAULT_HERO_CLASS,
 }: ShippingPolicyViewProps = {}) {
   const { themed, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
@@ -81,7 +77,7 @@ export async function ShippingPolicyView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Header */}
       <Section
-        className={`${heroBannerClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl"
+        tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl"
       >
         <Div className={`${page.container.sm}`}>
           <Heading level={1} variant="none" className="mb-3 text-white">

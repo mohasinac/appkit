@@ -4,15 +4,11 @@ import { Caption, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShoppingBag, Truck, MapPin, CheckCircle2 } from "lucide-react";
 
-const DEFAULT_HERO_CLASS =
-  "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
 export interface TrackOrderViewProps {
-  heroBannerClass?: string;
 }
 
 export async function TrackOrderView({
-  heroBannerClass = DEFAULT_HERO_CLASS,
 }: TrackOrderViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
@@ -53,7 +49,7 @@ export async function TrackOrderView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Header */}
       <Section
-        className={`${heroBannerClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl"
+        tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl"
       >
         <Div className={`${page.container.sm} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">

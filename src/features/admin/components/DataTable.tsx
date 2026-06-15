@@ -118,7 +118,7 @@ function SelectableRow<T extends { id: string }>({
       {columns.map((col) => (
         <Td
           key={col.key}
-          className={`px-4 py-3 text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`}
+          className={`text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`} padding="md"
         >
           {col.render
             ? col.render(row)
@@ -183,7 +183,7 @@ export function DataTable<T extends { id: string }>({
                   onClick={
                     col.sortable && onSort ? () => onSort(col.key) : undefined
                   }
-                  className={`px-4 py-3 text-left text-neutral-900 dark:text-zinc-100 ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} weight="semibold"
+                  className={`text-left text-neutral-900 dark:text-zinc-100 ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} padding="md" weight="semibold"
                 >
                   {col.header}
                   {col.sortable && sortKey === col.key && (
@@ -202,7 +202,7 @@ export function DataTable<T extends { id: string }>({
                 <Tr key={i} border="default">
                   {selectionEnabled && <Td className="w-10 px-2 py-3" />}
                   {columns.map((col) => (
-                    <Td key={col.key} className="px-4 py-3">
+                    <Td key={col.key} padding="md">
                       <Div className="h-4 w-full animate-pulse bg-neutral-200" rounded="default" />
                     </Td>
                   ))}

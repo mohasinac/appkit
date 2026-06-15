@@ -24,12 +24,9 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const DEFAULT_HERO_CLASS =
-  "bg-gradient-to-br from-neutral-800 to-neutral-900 dark:from-neutral-900 dark:to-black";
 
 export interface PublicProfileViewProps {
   userId: string;
-  heroBannerClass?: string;
 }
 
 function toProductItem(p: ProductDocument): ProductItem {
@@ -70,7 +67,6 @@ function getProductHref(p: ProductDocument): string {
 
 export async function PublicProfileView({
   userId,
-  heroBannerClass = DEFAULT_HERO_CLASS,
 }: PublicProfileViewProps) {
   const { themed, flex, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
@@ -111,7 +107,7 @@ export async function PublicProfileView({
   const storeName = store?.storeName ?? pub?.storeName ?? displayName;
   const storeDescription = store?.storeDescription ?? pub?.storeDescription;
 
-  const profileHeroCtx = { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page, heroBannerClass };
+  const profileHeroCtx = { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page };
   const statItems = buildProfileStatItems(t, { listingCount, reviewCount, itemsSold, auctionsWon, totalOrders, isSeller });
 
   return (
@@ -162,10 +158,10 @@ function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewC
   ];
 }
 
-function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: string | null; memberSince: string; isSeller: boolean; storeSlug: string | null | undefined; flex: ProfileFlex; page: ProfilePage; heroBannerClass: string }) {
-  const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page, heroBannerClass } = ctx;
+function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: string | null; memberSince: string; isSeller: boolean; storeSlug: string | null | undefined; flex: ProfileFlex; page: ProfilePage }) {
+  const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page } = ctx;
   return (
-    <Section className={`${heroBannerClass} text-white md:py-14`} padding="y-2xl">
+    <Section tone="accent-banner" className="text-white md:py-14" padding="y-2xl">
       <Div className={`${page.container.md}`}>
         <Stack className="flex-wrap sm:flex-row sm:items-end" align="center" gap="md">
           <Div className={`w-20 h-20 ${flex.center} flex-shrink-0 ${__O.hidden}`} surface="default" rounded="full">

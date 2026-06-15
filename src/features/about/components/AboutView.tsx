@@ -38,7 +38,6 @@ export interface AboutViewProps {
   howItems?: AboutHowItem[];
   valueItems?: AboutValueItem[];
   milestones?: AboutMilestone[];
-  heroBannerClass?: string;
   ctaBannerClass?: string;
   /** Render the CTA action buttons  */
   renderCtaButtons?: () => React.ReactNode;
@@ -49,13 +48,12 @@ export function AboutView({
   howItems = [],
   valueItems = [],
   milestones = [],
-  heroBannerClass = "bg-gradient-to-br from-violet-600 to-indigo-600",
   ctaBannerClass = "bg-gradient-to-br from-violet-600 to-indigo-600",
   renderCtaButtons,
 }: AboutViewProps) {
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section className={`${heroBannerClass} text-white md:py-20 lg:py-24`} padding="y-4xl">
+      <Section tone="accent-banner" className="text-white md:py-20 lg:py-24" padding="y-4xl">
         <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
           <Heading level={1} variant="none" className="md:text-5xl mb-6 text-white" size="4xl" weight="bold">
             {labels.title}

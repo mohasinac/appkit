@@ -446,11 +446,35 @@ type CellAlign = "left" | "center" | "right";
 
 type CellTypographySize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
 type CellTypographyWeight = "normal" | "medium" | "semibold" | "bold";
+type CellPadding = "none" | "xs" | "sm" | "md" | "lg" | "compact";
+type CellColor = "default" | "primary" | "muted" | "faint" | "success" | "warning" | "error" | "info";
+
+const CELL_PADDING_MAP: Record<CellPadding, string> = {
+  none: "",
+  xs: "px-2 py-1",
+  sm: "px-3 py-2",
+  md: "px-4 py-3",
+  lg: "px-6 py-4",
+  compact: "px-2 py-1.5",
+};
+
+const CELL_COLOR_MAP: Record<CellColor, string> = {
+  default: "",
+  primary: "appkit-color--primary",
+  muted: "appkit-color--muted",
+  faint: "appkit-color--faint",
+  success: "appkit-color--success",
+  warning: "appkit-color--warning",
+  error: "appkit-color--error",
+  info: "appkit-color--info",
+};
 
 export interface ThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   align?: CellAlign;
   size?: CellTypographySize;
   weight?: CellTypographyWeight;
+  padding?: CellPadding;
+  color?: CellColor;
   children?: React.ReactNode;
 }
 
@@ -470,7 +494,7 @@ const CELL_WEIGHT_MAP: Record<CellTypographyWeight, string> = {
   bold: "appkit-font--bold",
 };
 
-export function Th({ align, size, weight, className = "", children, ...props }: ThProps) {
+export function Th({ align, size, weight, padding, color, className = "", children, ...props }: ThProps) {
   return (
     <th
       className={[
@@ -478,6 +502,8 @@ export function Th({ align, size, weight, className = "", children, ...props }: 
         align ? `text-${align}` : "",
         size ? CELL_SIZE_MAP[size] : "",
         weight ? CELL_WEIGHT_MAP[weight] : "",
+        padding ? CELL_PADDING_MAP[padding] : "",
+        color ? CELL_COLOR_MAP[color] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}
@@ -491,10 +517,12 @@ export interface TdProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   align?: CellAlign;
   size?: CellTypographySize;
   weight?: CellTypographyWeight;
+  padding?: CellPadding;
+  color?: CellColor;
   children?: React.ReactNode;
 }
 
-export function Td({ align, size, weight, className = "", children, ...props }: TdProps) {
+export function Td({ align, size, weight, padding, color, className = "", children, ...props }: TdProps) {
   return (
     <td
       className={[
@@ -502,6 +530,8 @@ export function Td({ align, size, weight, className = "", children, ...props }: 
         align ? `text-${align}` : "",
         size ? CELL_SIZE_MAP[size] : "",
         weight ? CELL_WEIGHT_MAP[weight] : "",
+        padding ? CELL_PADDING_MAP[padding] : "",
+        color ? CELL_COLOR_MAP[color] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}

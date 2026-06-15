@@ -330,11 +330,11 @@ export function SellerAddressesView({
                 <Table className="w-full text-sm">
                   <Thead surface="muted">
                     <Tr>
-                      <Th className="text-left px-3 py-2" weight="semibold">Label</Th>
-                      <Th className="text-left px-3 py-2" weight="semibold">Name</Th>
-                      <Th className="text-left px-3 py-2" weight="semibold">City</Th>
-                      <Th className="text-left px-3 py-2" weight="semibold">Phone</Th>
-                      <Th className="text-right px-3 py-2" weight="semibold">Actions</Th>
+                      <Th className="text-left" padding="sm" weight="semibold">Label</Th>
+                      <Th className="text-left" padding="sm" weight="semibold">Name</Th>
+                      <Th className="text-left" padding="sm" weight="semibold">City</Th>
+                      <Th className="text-left" padding="sm" weight="semibold">Phone</Th>
+                      <Th className="text-right" padding="sm" weight="semibold">Actions</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -343,11 +343,11 @@ export function SellerAddressesView({
                         key={addr.id}
                         className={`border-t border-zinc-100 dark:border-slate-700 ${deletingId === addr.id ? "opacity-50" : ""}`}
                       >
-                        <Td className="px-3 py-2">{addr.label}</Td>
-                        <Td className="px-3 py-2">{addr.fullName}</Td>
-                        <Td className="px-3 py-2">{addr.city}, {addr.state}</Td>
-                        <Td className="px-3 py-2 tabular-nums">{addr.phone}</Td>
-                        <Td className="px-3 py-2 text-right">
+                        <Td padding="sm">{addr.label}</Td>
+                        <Td padding="sm">{addr.fullName}</Td>
+                        <Td padding="sm">{addr.city}, {addr.state}</Td>
+                        <Td className="tabular-nums" padding="sm">{addr.phone}</Td>
+                        <Td className="text-right" padding="sm">
                           <Row justify="end" gap="xs">
                             <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
                             <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>

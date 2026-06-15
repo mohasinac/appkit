@@ -4,15 +4,11 @@ import { Div, Heading, Text, Section, Stack } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShieldAlert, Home, LogIn } from "lucide-react";
 
-const DEFAULT_HERO_CLASS =
-  "bg-gradient-to-br from-rose-600 to-red-700 dark:from-rose-700 dark:to-red-800";
 
 export interface UnauthorizedViewProps {
-  heroBannerClass?: string;
 }
 
 export async function UnauthorizedView({
-  heroBannerClass = DEFAULT_HERO_CLASS,
 }: UnauthorizedViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
@@ -36,7 +32,7 @@ export async function UnauthorizedView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section
-        className={`${heroBannerClass} text-white min-h-[60vh] flex flex-col items-center justify-center py-20 text-center`}
+        tone="accent-banner" className="text-white min-h-[60vh] flex flex-col items-center justify-center py-20 text-center"
       >
         <Div className={`${page.container.sm}`}>
           <Div className={`w-20 h-20 ${flex.center} mx-auto mb-6`} surface="default" rounded="2xl">

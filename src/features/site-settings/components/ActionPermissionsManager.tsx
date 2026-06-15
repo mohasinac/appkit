@@ -126,11 +126,11 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
         <Table className="w-full text-sm">
           <Thead>
             <Tr className="bg-zinc-50 dark:bg-slate-800" border="default">
-              <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Action</Th>
-              <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Category</Th>
-              <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Auth</Th>
-              <Th className="px-4 py-3 text-left text-zinc-700 dark:text-zinc-300" weight="semibold">Permission</Th>
-              <Th className="px-4 py-3 text-right text-zinc-700 dark:text-zinc-300" weight="semibold">Enabled</Th>
+              <Th className="text-left" padding="md" color="primary" weight="semibold">Action</Th>
+              <Th className="text-left" padding="md" color="primary" weight="semibold">Category</Th>
+              <Th className="text-left" padding="md" color="primary" weight="semibold">Auth</Th>
+              <Th className="text-left" padding="md" color="primary" weight="semibold">Permission</Th>
+              <Th className="text-right" padding="md" color="primary" weight="semibold">Enabled</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -147,18 +147,18 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                     !enabled ? "opacity-60" : "",
                   ].join(" ")}
                 >
-                  <Td className="px-4 py-3">
+                  <Td padding="md">
                     <Div>
                       <Text weight="medium" color="primary">{meta.label}</Text>
                       <Text size="xs" color="faint">{id}</Text>
                     </Div>
                   </Td>
-                  <Td className="px-4 py-3">
+                  <Td padding="md">
                     <Span size="xs" weight="medium" className={`inline-block py-0.5 ${categoryColor}`} rounded="full" padding="x-xs">
                       {category}
                     </Span>
                   </Td>
-                  <Td className="px-4 py-3">
+                  <Td padding="md">
                     {meta.requiresAuth ? (
                       <Span className={CLS_CUSTOM_PILL}>
                         Auth required
@@ -167,7 +167,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                       <Text size="xs" color="faint">—</Text>
                     )}
                   </Td>
-                  <Td className="px-4 py-3">
+                  <Td padding="md">
                     {meta.requiredPermission ? (
                       <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
                         {meta.requiredPermission}
@@ -176,7 +176,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                       <Text size="xs" color="faint">—</Text>
                     )}
                   </Td>
-                  <Td className="px-4 py-3 text-right">
+                  <Td className="text-right" padding="md">
                     <Toggle
                       checked={enabled}
                       onChange={(v) => handleToggle(id, v)}

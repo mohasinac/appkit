@@ -8,18 +8,14 @@ const __P = {
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
-const DEFAULT_HERO_CLASS =
-  "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
 const CLS_RATE_CELL = "py-3 px-4 font-semibold text-violet-700 dark:text-violet-400";
 const CLS_HIGHLIGHT = "font-bold text-green-700 dark:text-green-400";
 
 export interface FeesViewProps {
-  heroBannerClass?: string;
 }
 
 export async function FeesView({
-  heroBannerClass = DEFAULT_HERO_CLASS,
 }: FeesViewProps = {}) {
   const { themed, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
@@ -76,7 +72,7 @@ export async function FeesView({
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section className={`${heroBannerClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl">
+      <Section tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl">
         <Div className={`${page.container.sm} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
@@ -104,19 +100,19 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
         <Table className="w-full text-sm">
           <Thead className={themed.bgSecondary}>
             <Tr>
-              <Th className="py-3 px-4 text-left" weight="semibold">{t("colFeeType")}</Th>
-              <Th className="py-3 px-4 text-left" weight="semibold">{t("colRate")}</Th>
-              <Th className="py-3 px-4 text-left" weight="semibold">{t("colPaidBy")}</Th>
-              <Th className="py-3 px-4 text-left hidden md:table-cell" weight="semibold">{t("colNote")}</Th>
+              <Th className="text-left" padding="md" weight="semibold">{t("colFeeType")}</Th>
+              <Th className="text-left" padding="md" weight="semibold">{t("colRate")}</Th>
+              <Th className="text-left" padding="md" weight="semibold">{t("colPaidBy")}</Th>
+              <Th className="text-left hidden md:table-cell" padding="md" weight="semibold">{t("colNote")}</Th>
             </Tr>
           </Thead>
           <Tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
             {rows.map((row) => (
               <Tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 dark:hover:bg-neutral-800/50`}>
-                <Td className="py-3 px-4" weight="medium">{row.category}</Td>
+                <Td weight="medium" padding="md">{row.category}</Td>
                 <Td className={CLS_RATE_CELL}>{row.rate}</Td>
-                <Td className="py-3 px-4"><Caption>{row.who}</Caption></Td>
-                <Td className="py-3 px-4 text-neutral-500 dark:text-neutral-400 hidden md:table-cell" size="xs">{row.note}</Td>
+                <Td padding="md"><Caption>{row.who}</Caption></Td>
+                <Td className="text-neutral-500 dark:text-neutral-400 hidden md:table-cell" padding="md" size="xs">{row.note}</Td>
               </Tr>
             ))}
           </Tbody>

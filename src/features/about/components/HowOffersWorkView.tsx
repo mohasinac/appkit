@@ -9,15 +9,11 @@ const __P = {
   p6: "p-6",
   p8: "p-8",
 } as const;
-const DEFAULT_HERO_CLASS =
-  "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
 export interface HowOffersWorkViewProps {
-  heroBannerClass?: string;
 }
 
 export async function HowOffersWorkView({
-  heroBannerClass = DEFAULT_HERO_CLASS,
 }: HowOffersWorkViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
@@ -83,7 +79,7 @@ export async function HowOffersWorkView({
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section className={`${heroBannerClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl">
+      <Section tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl">
         <Div className={`${page.container.md} text-center`}>
           <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>

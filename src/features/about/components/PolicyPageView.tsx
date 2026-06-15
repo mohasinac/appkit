@@ -4,13 +4,10 @@ import { Div, Heading, Text, Section, Stack } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { siteSettingsRepository } from "../../../repositories";
 
-const DEFAULT_HERO_CLASS =
-  "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
 export interface PolicyPageViewProps {
   /** Which policy to render */
   policy: "privacy" | "terms" | "cookies" | "refund";
-  heroBannerClass?: string;
 }
 
 const namespaceMap = {
@@ -29,7 +26,6 @@ const firestoreFieldMap: Record<PolicyPageViewProps["policy"], string> = {
 
 export async function PolicyPageView({
   policy,
-  heroBannerClass = DEFAULT_HERO_CLASS,
 }: PolicyPageViewProps) {
   const { themed, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
@@ -67,7 +63,7 @@ export async function PolicyPageView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Hero */}
       <Section
-        className={`${heroBannerClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl"
+        tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl"
       >
         <Div className={`${page.container.sm}`}>
           <Heading level={1} variant="none" className="mb-3 text-white">
