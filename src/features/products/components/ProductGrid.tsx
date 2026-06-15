@@ -690,7 +690,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
     if (view === "list") {
       return (
         <Stack
-          className={`divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800 ${className}`} rounded="xl"
+          className={`divide-y divide-zinc-100 dark:divide-zinc-800 ${className}`} border="subtle" rounded="xl"
         >
           {products.map((p) => (
             <ProductListRow<T>

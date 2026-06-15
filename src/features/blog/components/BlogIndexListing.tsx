@@ -28,7 +28,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
     return (
       <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
+          <Div key={i} className={`dark:border-slate-700 ${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-video" surface="subtle" />
             <Stack className={`${__P.p5}`} gap="sm">
               <Div className="h-3 w-1/4" surface="subtle" rounded="default" />
@@ -46,7 +46,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   }
   if (view === "list") {
     return (
-      <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+      <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
         {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
       </Stack>
     );

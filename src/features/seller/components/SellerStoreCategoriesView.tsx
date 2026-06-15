@@ -217,7 +217,7 @@ export function SellerStoreCategoriesView({
         {isLoading ? (
           <Stack gap="sm">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Div key={i} className="h-14 animate-pulse border border-zinc-100 dark:border-slate-700" surface="muted" rounded="xl" />
+              <Div key={i} className="h-14 animate-pulse dark:border-slate-700" border="subtle" surface="muted" rounded="xl" />
             ))}
           </Stack>
         ) : rows.length === 0 ? (

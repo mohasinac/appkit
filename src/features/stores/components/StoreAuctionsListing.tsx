@@ -177,7 +177,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
             {Array.from({ length: 8 }).map((_, i) => (
               <Div
                 key={i}
-                className="border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse" rounded="xl"
+                className="dark:border-slate-700 overflow-hidden animate-pulse" border="subtle" rounded="xl"
               >
                 <Div className="aspect-square" surface="subtle" />
                 <Stack className={`${__P.p3}`} gap="sm">

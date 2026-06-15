@@ -209,7 +209,7 @@ function PreOrderInfoSection({
       )}
 
       {!productFeatures && features.length > 0 && (
-        <Div className="border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 px-4" surface="muted" padding="y-sm" rounded="xl">
+        <Div className="dark:bg-zinc-900/60 px-4" border="subtle" surface="muted" padding="y-sm" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             About this product
           </Text>
@@ -233,7 +233,7 @@ function PreOrderInfoSection({
       )}
 
       {safeSeller && (
-        <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p3}`} rounded="xl" surface="muted">
+        <Div className={`dark:bg-zinc-900/60 ${__P.p3}`} border="subtle" rounded="xl" surface="muted">
           <Row justify="between" align="center">
             <Div>
               <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">
@@ -286,7 +286,7 @@ function PreOrderBuyBarPanel({
   onReserveNow,
 }: PreOrderBuyBarPanelProps) {
   return (
-    <Stack id="pre-order-buy-bar" className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="md" rounded="xl" surface="muted">
+    <Stack id="pre-order-buy-bar" className={`dark:bg-zinc-900/60 ${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
       {reserveTarget > 0 && (
         <Stack gap="sm">
           <Row justify="between" align="center">

@@ -180,7 +180,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
         {isLoading ? (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
+              <Div key={i} className={`dark:border-slate-700 ${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Stack className={`${__P.p4}`} gap="3">
                   <Div className="h-4 w-3/4" surface="subtle" rounded="default" />
                   <Div className="h-3 w-full" surface="subtle" rounded="default" />
@@ -194,7 +194,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
             No reviews found.
           </Text>
         ) : view === "list" ? (
-          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
             { }
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review as any} context="store" />

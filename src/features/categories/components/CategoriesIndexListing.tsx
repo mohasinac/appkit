@@ -34,7 +34,7 @@ function renderCategoryGrid(props: {
     return (
       <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
-          <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
+          <Div key={i} className={`dark:border-slate-700 ${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-[4/3]" surface="subtle" />
             <Stack className={`${__P.p3}.5`} gap="sm">
               <Div className="h-3.5 w-3/4" surface="subtle" rounded="default" />
@@ -54,7 +54,7 @@ function renderCategoryGrid(props: {
   }
   if (view === "list") {
     return (
-      <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+      <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
         {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
       </Stack>
     );

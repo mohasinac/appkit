@@ -125,7 +125,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
             {Array.from({ length: 8 }).map((_, i) => (
               <Div
                 key={i}
-                className="border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse" rounded="xl"
+                className="dark:border-slate-700 overflow-hidden animate-pulse" border="subtle" rounded="xl"
               >
                 <Div className="aspect-square" surface="subtle" />
                 <Stack className={`${__P.p3}`} gap="sm">
@@ -141,7 +141,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
             This store has no pre-orders yet.
           </Text>
         ) : view === "list" ? (
-          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}

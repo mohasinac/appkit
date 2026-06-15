@@ -131,7 +131,7 @@ export function PlaceBidFormClient({
   }
 
   return (
-    <Stack className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="md" rounded="xl" surface="muted">
+    <Stack className={`dark:bg-zinc-900/60 ${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
       {/* Current / starting bid summary */}
       <Stack gap="xs">
         <Row justify="between" align="center">

@@ -18,7 +18,7 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
   const [open, setOpen] = useState(false);
 
   return (
-    <Div className={`mt-6 border border-zinc-100 dark:border-zinc-800 ${__O.hidden}`} rounded="xl">
+    <Div className={`mt-6 ${__O.hidden}`} border="subtle" rounded="xl">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

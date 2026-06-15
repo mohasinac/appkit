@@ -205,7 +205,7 @@ export function SellerPayoutMethodsView({
             {Array.from({ length: 3 }).map((_, i) => (
               <Div
                 key={i}
-                className="h-20 animate-pulse border border-zinc-100 dark:border-slate-700" surface="muted" rounded="xl"
+                className="h-20 animate-pulse dark:border-slate-700" border="subtle" surface="muted" rounded="xl"
               />
             ))}
           </Stack>

@@ -307,7 +307,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 10 }).map((_, i) => (
-              <Div key={i} className={`border border-zinc-100 dark:border-slate-700 ${__O.hidden} animate-pulse`} rounded="xl">
+              <Div key={i} className={`dark:border-slate-700 ${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
                 <Stack className={`${__P.p3}`} gap="sm">
                   <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
@@ -323,7 +323,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             No pre-orders found.
           </Text>
         ) : view === "list" ? (
-          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800 border border-zinc-100 dark:border-zinc-800" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}

@@ -600,7 +600,7 @@ export async function ProductDetailPageView({
 
               {/* Highlights (legacy text fallback) — suppressed when productFeatures is provided */}
               {!productFeatures && features.length > 0 && (
-                <Div className="border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 px-4" surface="muted" padding="y-sm" rounded="xl">
+                <Div className="dark:bg-zinc-900/60 px-4" border="subtle" surface="muted" padding="y-sm" rounded="xl">
                   <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
                     About this product
                   </Text>
@@ -626,7 +626,7 @@ export async function ProductDetailPageView({
 
               {/* Store card — W1-34 adds optional seller rating + review count */}
               {safeSeller && (
-                <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p3}`} rounded="xl" surface="muted">
+                <Div className={`dark:bg-zinc-900/60 ${__P.p3}`} border="subtle" rounded="xl" surface="muted">
                   <Row justify="between" align="center">
                     <Div>
                       <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">
@@ -661,7 +661,7 @@ export async function ProductDetailPageView({
             </Stack>
           )}
           renderActions={() => (
-            <Stack className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="md" rounded="xl" surface="muted">
+            <Stack className={`dark:bg-zinc-900/60 ${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
               {/* Price + discount */}
               {formattedPrice && (
                 <Div>

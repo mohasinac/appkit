@@ -130,7 +130,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       )}
       {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
       {!productFeatures && features.length > 0 && (
-        <Div className="border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 px-4" surface="muted" padding="y-sm" rounded="xl">
+        <Div className="dark:bg-zinc-900/60 px-4" border="subtle" surface="muted" padding="y-sm" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">About this item</Text>
           <Ul className="space-y-1.5">
             {features.map((f, i) => <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
@@ -139,7 +139,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       )}
       {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4" />}
       {safeSeller && (
-        <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p3}`} rounded="xl" surface="muted">
+        <Div className={`dark:bg-zinc-900/60 ${__P.p3}`} border="subtle" rounded="xl" surface="muted">
           <Row justify="between" align="center">
             <Div>
               <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">Listed by</Text>
@@ -332,7 +332,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             onPlaceBid ? (
               <Stack id="auction-bid-form" gap="3">
                 {/* Compact summary card — modal owns the form */}
-                <Stack className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="3" rounded="xl" surface="muted">
+                <Stack className={`dark:bg-zinc-900/60 ${__P.p5}`} border="subtle" gap="3" rounded="xl" surface="muted">
                   <Row justify="between" align="baseline">
                     <Span size="xl" weight="bold" className="text-primary-600 dark:text-primary-400">
                       {formatCurrency(currentBid, currency)}
@@ -360,7 +360,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               </Stack>
             ) : (
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
-              <Stack className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p5}`} gap="md" rounded="xl" surface="muted">
+              <Stack className={`dark:bg-zinc-900/60 ${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
                 <Stack gap="xs">
                   <Text size="xs" color="muted">
                     Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
@@ -399,7 +399,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           }
           renderMobileBidForm={() =>
             !isEnded && onPlaceBid ? (
-              <Stack className={`lg:hidden border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4}`} gap="3" rounded="xl" surface="muted">
+              <Stack className={`lg:hidden dark:bg-zinc-900/60 ${__P.p4}`} border="subtle" gap="3" rounded="xl" surface="muted">
                 <Row align="center" gap="sm">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
@@ -423,7 +423,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 />
               </Stack>
             ) : !isEnded ? (
-              <Div className={`border border-zinc-100 dark:border-zinc-800 dark:bg-zinc-900/60 ${__P.p4} lg:hidden`} rounded="xl" surface="muted">
+              <Div className={`dark:bg-zinc-900/60 ${__P.p4} lg:hidden`} border="subtle" rounded="xl" surface="muted">
                 <Row align="center" gap="sm" className="mb-3">
                   <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
