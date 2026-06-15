@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Heading } from "../../../ui";
-
+import { Div, Heading, Stack } from "../../../ui";
 export interface CheckoutAddressStepLabels {
   title?: string;
 }
@@ -46,7 +45,7 @@ export function CheckoutAddressStep<TAddress>({
       {addresses.length === 0 ? (
         (renderEmptyState?.() ?? null)
       ) : (
-        <Div className="space-y-3">
+        <Stack gap="3">
           {addresses.map((address) => {
             const addressId = getAddressId(address);
             const isSelected = addressId === selectedAddressId;
@@ -57,7 +56,7 @@ export function CheckoutAddressStep<TAddress>({
               </React.Fragment>
             );
           })}
-        </Div>
+        </Stack>
       )}
 
       {renderAddNew?.()}

@@ -3,22 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Alert,
-  Badge,
-  Button,
-  Div,
-  Form,
-  FormActions,
-  Heading,
-  Input,
-  Row,
-  Section,
-  Select,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Select, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AnalyticsAlertDocument } from "../../store-extensions/schemas/firestore";
@@ -228,7 +213,7 @@ export function SellerAnalyticsAlertsView({
   }, []);
 
   return (
-    <Div className="space-y-6">
+    <Stack gap="lg">
       <Row justify="between">
         <Heading level={2} size="base" weight="semibold" color="primary">
           {labels.title ?? "Analytics Alerts"}
@@ -316,11 +301,11 @@ export function SellerAnalyticsAlertsView({
       )}
 
       {isLoading && (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           {[1, 2, 3].map((i) => (
             <Div key={i} className="h-16 animate-pulse" surface="subtle" rounded="lg" />
           ))}
-        </Div>
+        </Stack>
       )}
 
       {!isLoading && alerts.length === 0 && !showForm && (
@@ -330,7 +315,7 @@ export function SellerAnalyticsAlertsView({
       )}
 
       {!isLoading && alerts.length > 0 && (
-        <Div className="space-y-3">
+        <Stack gap="3">
           {alerts.map((alert) => (
             <AlertCard
               key={alert.id}
@@ -339,8 +324,8 @@ export function SellerAnalyticsAlertsView({
               onDelete={(id) => deleteMutation.mutate(id)}
             />
           ))}
-        </Div>
+        </Stack>
       )}
-    </Div>
+    </Stack>
   );
 }

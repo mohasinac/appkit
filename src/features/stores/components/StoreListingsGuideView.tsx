@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -142,7 +142,7 @@ const STANDARD_STEPS = [
 
 function StandardWalkthrough() {
   return (
-    <Div className="space-y-5">
+    <Stack gap="5">
       {STANDARD_STEPS.map(({ step, items }) => (
         <Div key={step}>
           <Text className="mb-2 text-[var(--appkit-color-text)]" weight="semibold">{step}</Text>
@@ -155,7 +155,7 @@ function StandardWalkthrough() {
           </ul>
         </Div>
       ))}
-    </Div>
+    </Stack>
   );
 }
 
@@ -163,7 +163,7 @@ function StandardWalkthrough() {
 
 function AuctionWalkthrough() {
   return (
-    <Div className="space-y-4 text-sm text-[var(--appkit-color-text-muted)]">
+    <Stack className="text-sm text-[var(--appkit-color-text-muted)]" gap="md">
       <Div>
         <Text className={SUBHEADING}>Reserve price vs starting bid</Text>
         <Text className="leading-relaxed">
@@ -214,7 +214,7 @@ function AuctionWalkthrough() {
           You can edit the title, description, and images at any time.
         </Text>
       </Div>
-    </Div>
+    </Stack>
   );
 }
 
@@ -222,7 +222,7 @@ function AuctionWalkthrough() {
 
 function PreorderWalkthrough() {
   return (
-    <Div className="space-y-4 text-sm text-[var(--appkit-color-text-muted)]">
+    <Stack className="text-sm text-[var(--appkit-color-text-muted)]" gap="md">
       <Div>
         <Text className={SUBHEADING}>Deposit mechanic</Text>
         <Text className="leading-relaxed">
@@ -251,7 +251,7 @@ function PreorderWalkthrough() {
           If you cannot fulfill the pre-order, initiate cancellation promptly — the deposit is refunded automatically.
         </Text>
       </Div>
-    </Div>
+    </Stack>
   );
 }
 
@@ -276,22 +276,22 @@ const STATUS_NOTES = [
 
 function StatusLifecycle() {
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-xs text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
         {STATUS_LIFECYCLE}
       </Div>
-      <Div className="space-y-2">
+      <Stack gap="sm">
         {STATUS_NOTES.map(({ status, note }) => (
           <Div key={status} className="flex gap-3 text-sm">
             <Text className="shrink-0 font-mono text-[var(--appkit-color-text)] w-24" weight="semibold">{status}</Text>
             <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
           </Div>
         ))}
-      </Div>
+      </Stack>
       <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         Live auctions with at least one bid cannot be taken to ARCHIVED until the auction ends.
       </Text>
-    </Div>
+    </Stack>
   );
 }
 
@@ -308,14 +308,14 @@ const MEDIA_TIPS = [
 
 function MediaGuide() {
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       {MEDIA_TIPS.map(({ label, detail }) => (
         <Div key={label} className="flex gap-3 text-sm">
           <Text className="shrink-0 w-28 text-[var(--appkit-color-text)]" weight="semibold">{label}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{detail}</Text>
         </Div>
       ))}
-    </Div>
+    </Stack>
   );
 }
 
@@ -350,7 +350,7 @@ export type StoreListingsGuideViewProps = Record<string, never>;
 
 export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
   return (
-    <Div className="space-y-6 pb-10">
+    <Stack className="pb-10" gap="lg">
       {/* Back nav */}
       <a
         href={String(ROUTES.STORE.GUIDE)}
@@ -398,6 +398,6 @@ export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
       <GuideSection title="7. Common mistakes">
         <CommonMistakes />
       </GuideSection>
-    </Div>
+    </Stack>
   );
 }

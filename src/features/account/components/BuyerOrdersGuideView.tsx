@@ -1,6 +1,6 @@
 import React from "react";
 import { PackageCheck, Truck, Camera, RotateCcw, Clock, Headphones, Scale } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
@@ -26,27 +26,27 @@ const SECTIONS: OrderSection[] = [
   {
     Icon: PackageCheck, title: "Order Lifecycle",
     content: (
-      <Div className="space-y-4 text-sm">
+      <Stack className="text-sm" gap="md">
         <Text className={GC.textMuted}>Every order on LetItRip moves through these statuses:</Text>
-        <Div className="space-y-2">
+        <Stack gap="sm">
           {ORDER_STATUSES.map(({ status, desc }) => (
             <Div key={status} className="flex gap-3">
               <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-36" size="xs" weight="semibold">{status}</Text>
               <Text className={GC.textMuted}>{desc}</Text>
             </Div>
           ))}
-        </Div>
-      </Div>
+        </Stack>
+      </Stack>
     ),
   },
   {
     Icon: Truck, title: "Tracking Your Order",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>Once your order is SHIPPED, go to <Span weight="bold">My Orders → [Order] → Tracking</Span> tab. Your tracking number and carrier name are shown there.</Text>
         <Text className={GC.textMuted}>Paste the tracking number into the carrier&apos;s website for real-time updates. Common carriers: Shiprocket, Delhivery, BlueDart, India Post, Ekart.</Text>
         <Text className={GC.textMuted}>Typical delivery times: 2–5 days metro cities, 5–10 days remote areas, 7–14 days for pre-orders subject to supplier shipping.</Text>
-      </Div>
+      </Stack>
     ),
   },
   {
@@ -63,7 +63,7 @@ const SECTIONS: OrderSection[] = [
   {
     Icon: RotateCcw, title: "Return Policy",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>Platform-wide return window: <Span weight="bold">7 days from DELIVERED date</Span>. Some stores offer 30-day windows — shown on the product page.</Text>
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">Non-returnable items:</Text>
         <ul className={GC.listDiscMuted}>
@@ -71,13 +71,13 @@ const SECTIONS: OrderSection[] = [
           <li>Cracked or opened graded card slabs without documented photographic evidence of a defect</li>
           <li>Items explicitly marked &quot;Final Sale&quot; on the listing</li>
         </ul>
-      </Div>
+      </Stack>
     ),
   },
   {
     Icon: Clock, title: "Refund Timeline",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>After the seller accepts your return and confirms receipt of the item:</Text>
         <ul className={GC.listMuted}>
           <li><Span weight="bold" className={GC.textStrong}>Credit/debit card</Span> — 3–7 business days back to your card via Razorpay.</li>
@@ -85,13 +85,13 @@ const SECTIONS: OrderSection[] = [
           <li><Span weight="bold" className={GC.textStrong}>Net banking</Span> — 3–5 business days.</li>
         </ul>
         <Text className={GC.textMuted}>Refunds go back to the original payment method. LetItRip does not issue platform credits in lieu of a refund unless both parties agree.</Text>
-      </Div>
+      </Stack>
     ),
   },
   {
     Icon: Headphones, title: "Opening a Support Ticket",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">When to use a support ticket:</Text>
         <ul className={GC.listDiscMuted}>
           <li>Seller is unresponsive to your return request for more than 3 days</li>
@@ -105,19 +105,19 @@ const SECTIONS: OrderSection[] = [
           <li>A clear timeline of events</li>
         </ul>
         <Text className={GC.textMuted}>Response SLA: 24–48 hours. You can have up to 2 active general tickets and 1 additional ticket per active order.</Text>
-      </Div>
+      </Stack>
     ),
   },
   {
     Icon: Scale, title: "Dispute Escalation",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>If the seller does not respond to your return request within <Span weight="bold">3 days</Span>, LetItRip&apos;s support team steps in to mediate.</Text>
         <Text className={GC.textMuted}>If mediation cannot resolve the dispute, LetItRip issues a <Span weight="bold">full platform-funded refund</Span> to the buyer. The seller&apos;s payout for that order is withheld.</Text>
         <Alert variant="info">
           All dispute decisions are final. False dispute claims may result in account restrictions. Always provide accurate, photographic evidence when raising a dispute.
         </Alert>
-      </Div>
+      </Stack>
     ),
   },
 ];
@@ -126,7 +126,7 @@ const SECTIONS: OrderSection[] = [
 
 export function BuyerOrdersGuideView() {
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: GC.pageHeaderGradient }}>
@@ -151,6 +151,6 @@ export function BuyerOrdersGuideView() {
           <Div className={GC.sectionBody}>{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }

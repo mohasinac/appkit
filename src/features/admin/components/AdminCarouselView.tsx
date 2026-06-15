@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Text } from "../../../ui";
+import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -262,7 +262,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       </Div>
 
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-          <Div className="space-y-2">
+          <Stack gap="sm">
             <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">Status</Text>
             <Div className="flex flex-wrap gap-2">
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
@@ -272,7 +272,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
                 >{opt.label}</Button>
               ))}
             </Div>
-          </Div>
+          </Stack>
       </ListingFilterDrawer>
 
       {deleteTargetId && (

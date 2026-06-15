@@ -4,7 +4,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -195,7 +195,7 @@ export function AdminFaqEditorView({
             helperText="Auto-generated from question. Must start with 'faq-'."
           />
 
-          <Div className="space-y-1">
+          <Stack gap="xs">
             <Text size="sm" weight="medium" color="muted">
               Answer
             </Text>
@@ -205,7 +205,7 @@ export function AdminFaqEditorView({
               placeholder="Write a clear, helpful answer..."
               minHeightClassName="min-h-[200px]"
             />
-          </Div>
+          </Stack>
 
           <Div className="grid grid-cols-2 gap-4">
             <Select

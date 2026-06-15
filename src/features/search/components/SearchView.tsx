@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Heading, Main, Row, Span, Text } from "../../../ui";
-
+import { Div, Heading, Main, Row, Span, Stack, Text } from "../../../ui";
 export interface SearchViewProps {
   /** Current search query string */
   query?: string;
@@ -46,7 +45,7 @@ export function SearchView({
 
   return (
     <Main className={`min-h-screen ${className}`}>
-      <Div className="space-y-4" padding="y-lg">
+      <Stack padding="y-lg" gap="md">
         {/* Search input */}
         <Div>{renderSearchInput()}</Div>
 
@@ -91,7 +90,7 @@ export function SearchView({
             {renderPagination?.()}
           </>
         )}
-      </Div>
+      </Stack>
     </Main>
   );
 }

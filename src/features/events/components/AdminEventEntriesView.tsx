@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Row, Select, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Input, Row, Select, Stack, StackedViewShell, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { DataTable } from "../../admin/components/DataTable";
@@ -287,7 +287,7 @@ export function AdminEventEntriesView({
       <Text size="sm" weight="semibold" color="primary">
         Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
       </Text>
-      <Div className="space-y-2">
+      <Stack gap="sm">
         {Object.entries(expandedEntry.formResponses).map(([key, value]) => (
           <Div key={key} className="space-y-0.5">
             <Text size="xs" weight="medium" color="muted">{key}</Text>
@@ -296,7 +296,7 @@ export function AdminEventEntriesView({
             </Text>
           </Div>
         ))}
-      </Div>
+      </Stack>
     </Div>
   ) : null;
 

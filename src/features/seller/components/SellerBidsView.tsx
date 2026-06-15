@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -302,7 +302,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
             onToggleSelectAll={() => selection.toggleAll()}
           />
         ) : (
-          <Div className="space-y-3">
+          <Stack gap="3">
             {groupedRows.length === 0 && !isLoading && (
               <Text size="sm" color="muted">No bids found for your auctions.</Text>
             )}
@@ -343,7 +343,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                 </Div>
               );
             })}
-          </Div>
+          </Stack>
         )}
       </Div>
 

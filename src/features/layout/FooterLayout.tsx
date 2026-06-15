@@ -108,7 +108,7 @@ export function FooterLayout({
       <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] lg:py-14" padding="y-2xl">
         <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
-          <Div className="lg:col-span-2 space-y-4">
+          <Stack className="lg:col-span-2" gap="md">
             <Heading level={5} size="xl" weight="bold" color="primary">
               {brandName}
             </Heading>
@@ -139,7 +139,7 @@ export function FooterLayout({
             {newsletterEnabled && newsletterSlot && (
               <Div className="pt-2">{newsletterSlot}</Div>
             )}
-          </Div>
+          </Stack>
 
           {/* Link groups — desktop: columns, mobile: accordions */}
           <Div className={`lg:col-span-3 grid grid-cols-1 gap-0 lg:gap-8 ${

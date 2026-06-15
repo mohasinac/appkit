@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Pencil } from "lucide-react";
@@ -49,12 +49,12 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     key: "primary",
     header: "Prize Draw",
     render: (row) => (
-      <Div className="space-y-1">
+      <Stack gap="xs">
         <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="semibold">
           {row.primary}
         </Text>
         <Text className="text-[var(--appkit-color-text-muted)]" size="xs">{row.storeName}</Text>
-      </Div>
+      </Stack>
     ),
   },
   {

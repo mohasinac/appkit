@@ -10,7 +10,7 @@ const CLS_HOVER_ROW = "hover:bg-zinc-100 dark:hover:bg-slate-800";
 const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400";
 const CLS_TRUNCATE = "font-medium truncate";
 import type { LucideIcon } from "lucide-react";
-import { Button, Div, Input, Li, Row, Span, Text, Ul } from "../../../ui";
+import { Button, Div, Input, Li, Row, Span, Stack, Text, Ul } from "../../../ui";
 import { useNavSuggestions } from "../hooks/useNavSuggestions";
 import type { NavSuggestionRecord } from "../hooks/useNavSuggestions";
 
@@ -725,7 +725,7 @@ export function Search({
         </Row>
 
         {(filteredSiteLinks.length > 0 || query) && (
-          <Div className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 space-y-2 z-50">
+          <Stack className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 z-50" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
               <Div className={`rounded-xl ${__O.hidden} border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900`}>
                 <Div className="px-4 border-b border-zinc-200 dark:border-slate-700" padding="y-xs">
@@ -819,7 +819,7 @@ export function Search({
                 </Button>
               </Div>
             )}
-          </Div>
+          </Stack>
         )}
       </Div>
     </Div>

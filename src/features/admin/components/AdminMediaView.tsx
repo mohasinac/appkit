@@ -198,9 +198,7 @@ function MediaUploaderPanel({
   setGalleryStagedUrls, handleAbort, copiedUrl, onCopy, onClearPreviews, onDiscardStaged,
 }: MediaUploaderPanelProps) {
   return (
-    <Div
-      className="space-y-5" surface="default" rounded="xl" padding="md" border="default"
-    >
+    <Stack surface="default" rounded="xl" padding="md" border="default" gap="5">
       <Text size="sm" weight="semibold" color="primary">
         Upload & Copy URL
       </Text>
@@ -282,7 +280,7 @@ function MediaUploaderPanel({
           {stagedUrls.length} staged upload(s)
         </Text>
       </Row>
-    </Div>
+    </Stack>
   );
 }
 

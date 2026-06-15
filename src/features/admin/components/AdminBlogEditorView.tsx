@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Div, Heading, Input, RichTextEditor, RichTextRenderer, Row, Select, Span, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Heading, Input, RichTextEditor, RichTextRenderer, Row, Select, Span, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload, useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -220,7 +220,7 @@ export function AdminBlogEditorView({
       validate: (values) =>
         !values.title.trim() ? "Title is required" : null,
       render: ({ values, onChange }) => (
-        <Div className="space-y-5">
+        <Stack gap="5">
           <Heading level={3} className="mb-2">Content</Heading>
           <Input
             label="Title"
@@ -247,7 +247,7 @@ export function AdminBlogEditorView({
             onChange={(e) => onChange({ excerpt: e.target.value })}
             placeholder="Short summary shown in listings and cards"
           />
-          <Div className="space-y-1">
+          <Stack gap="xs">
             <Text size="sm" weight="medium" color="muted">
               Content
             </Text>
@@ -257,14 +257,14 @@ export function AdminBlogEditorView({
               placeholder="Write your article here..."
               minHeightClassName="min-h-[320px]"
             />
-          </Div>
-        </Div>
+          </Stack>
+        </Stack>
       ),
     },
     {
       label: "Media",
       render: ({ values, onChange }) => (
-        <Div className="space-y-5">
+        <Stack gap="5">
           <Heading level={3} className="mb-2">Media</Heading>
           <ImageUpload
             label="Cover Image"
@@ -285,7 +285,7 @@ export function AdminBlogEditorView({
             placeholder="e.g. dQw4w9WgXcQ"
             helperText="The 11-character video ID from the YouTube URL."
           />
-        </Div>
+        </Stack>
       ),
     },
     {
@@ -298,7 +298,7 @@ export function AdminBlogEditorView({
           ),
         );
         return (
-          <Div className="space-y-5">
+          <Stack gap="5">
             <Heading level={3} className="mb-2">SEO &amp; Tags</Heading>
             <Div className="grid grid-cols-2 gap-4">
               <Select
@@ -333,14 +333,14 @@ export function AdminBlogEditorView({
               placeholder="SEO description — max 160 chars"
               maxLength={160}
             />
-          </Div>
+          </Stack>
         );
       },
     },
     {
       label: "Publish",
       render: ({ values, onChange }) => (
-        <Div className="space-y-5">
+        <Stack gap="5">
           <Heading level={3} className="mb-2">Publish Settings</Heading>
           <Div className="grid grid-cols-2 gap-4">
             <Select
@@ -381,7 +381,7 @@ export function AdminBlogEditorView({
               </Button>
             </Div>
           )}
-        </Div>
+        </Stack>
       ),
     },
   ];

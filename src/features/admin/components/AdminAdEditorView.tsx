@@ -3,20 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Div,
-  Form,
-  FormActions,
-  Input,
-  Select,
-  Span,
-  StackedViewShell,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert, Button, Div, Form, FormActions, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -439,7 +426,7 @@ export function AdminAdEditorView({
             label="Require user ad-consent for this ad"
           />
 
-          <Div className="space-y-2">
+          <Stack gap="sm">
             <Text size="sm" weight="medium">Placements</Text>
             <Div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {placements.map((placement) => (
@@ -456,7 +443,7 @@ export function AdminAdEditorView({
                 </label>
               ))}
             </Div>
-          </Div>
+          </Stack>
 
           {scheduleSection}
           {creativeSection}

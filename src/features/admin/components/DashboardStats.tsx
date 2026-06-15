@@ -3,7 +3,7 @@
 import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
-import { Div, Grid, Row, Text } from "../../../ui";
+import { Div, Grid, Row, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
@@ -72,10 +72,10 @@ function SkeletonCard() {
     <Div className={`relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} ${__P.p5} animate-pulse`}>
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
       <Row className="pt-1" align="start" justify="between" gap="3">
-        <Div className="flex-1 space-y-2">
+        <Stack className="flex-1" gap="sm">
           <Div className="h-2.5 w-20 bg-[var(--appkit-color-border)]" rounded="default" />
           <Div className="h-7 w-24 bg-[var(--appkit-color-border)]" rounded="default" />
-        </Div>
+        </Stack>
         <Div className="w-10 h-10 bg-[var(--appkit-color-border)]" rounded="lg" />
       </Row>
     </Div>

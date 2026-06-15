@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, sortBy } from "@mohasinac/appkit";
+import { Row, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { X, Plus } from "lucide-react";
@@ -215,11 +215,11 @@ export function SellerStoreCategoriesView({
           </Div>
         )}
         {isLoading ? (
-          <Div className="space-y-2">
+          <Stack gap="sm">
             {Array.from({ length: 5 }).map((_, i) => (
               <Div key={i} className="h-14 animate-pulse border border-zinc-100 dark:border-slate-700" surface="muted" rounded="xl" />
             ))}
-          </Div>
+          </Stack>
         ) : rows.length === 0 ? (
           <Div className="text-center" padding="y-4xl">
             <Text className="text-zinc-400 dark:text-zinc-400">No categories yet — add your first storefront category</Text>

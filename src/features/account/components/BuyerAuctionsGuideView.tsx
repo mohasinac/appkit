@@ -1,6 +1,6 @@
 import React from "react";
 import { Gavel, TrendingUp, Trophy, AlertTriangle, Package, XCircle, ShieldCheck } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
@@ -101,7 +101,7 @@ const SECTIONS: AuctionSection[] = [
 
 export function BuyerAuctionsGuideView() {
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: GC.pageHeaderGradient }}>
@@ -126,6 +126,6 @@ export function BuyerAuctionsGuideView() {
           <Div className={GC.sectionBody}>{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }

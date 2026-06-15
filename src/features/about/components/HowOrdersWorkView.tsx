@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Text, Section, Span, Row, FlowDiagram } from "../../../ui";
+import { Div, FlowDiagram, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { PackageSearch, MapPinned, FileText, XCircle } from "lucide-react";
@@ -193,7 +193,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
   return (
     <Section>
       <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
-      <Div className="space-y-3">
+      <Stack gap="3">
         {statuses.map(({ status, icon, badge, desc }) => (
           <Div key={status} className={`flex items-start gap-4 ${__P.p4} rounded-xl border ${themed.border} ${themed.bgPrimary}`}>
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
@@ -203,7 +203,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
             <Text variant="secondary" className="leading-relaxed" size="sm">{desc}</Text>
           </Div>
         ))}
-      </Div>
+      </Stack>
     </Section>
   );
 }

@@ -8,7 +8,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Div, Modal, Row, Span, Text } from "../../../ui";
+import { Alert, Button, Div, Modal, Row, Span, Stack, Text } from "../../../ui";
 import { MediaSlider } from "../components/MediaSlider";
 
 export interface ImageCropData {
@@ -124,7 +124,7 @@ export function ImageCropModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("cropTitle")} size="lg">
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text variant="secondary" size="xs">
           {t("cropInstruction")}
         </Text>
@@ -175,7 +175,7 @@ export function ImageCropModal({
         </Div>
 
         {/* Zoom control */}
-        <Div className="space-y-1">
+        <Stack gap="xs">
           <Row justify="between">
             <Text size="xs" weight="medium">{t("cropZoom")}</Text>
             <Text size="xs" color="muted">
@@ -229,7 +229,7 @@ export function ImageCropModal({
               </Button>
             ))}
           </Div>
-        </Div>
+        </Stack>
 
         {/* Zoom warning */}
         {showZoomWarning && (
@@ -263,7 +263,7 @@ export function ImageCropModal({
             {t("cropCancel")}
           </Button>
         </Div>
-      </Div>
+      </Stack>
     </Modal>
   );
 }

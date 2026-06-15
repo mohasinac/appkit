@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -143,14 +143,14 @@ export function AdminCouponsView({
       isLoading ? (
         <Div className="fluid-grid-card gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Div
+            <Stack
               key={i}
-              className="border-2 border-zinc-100 dark:border-slate-700 animate-pulse space-y-3" rounded="xl" padding="md"
+              className="border-2 border-zinc-100 dark:border-slate-700 animate-pulse" gap="3" rounded="xl" padding="md"
             >
               <Div className="h-6 dark:bg-slate-700 w-2/3" surface="subtle" rounded="default" />
               <Div className="h-4 dark:bg-slate-700 w-full" surface="subtle" rounded="default" />
               <Div className="h-3 dark:bg-slate-700 w-1/2" surface="subtle" rounded="default" />
-            </Div>
+            </Stack>
           ))}
         </Div>
       ) : rows.length === 0 ? (

@@ -364,7 +364,7 @@ export function AdminSupportTicketDetailView({
 
         {/* Message thread */}
         {messages.length > 0 && (
-          <Div className="space-y-2">
+          <Stack gap="sm">
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Messages ({messages.length})
             </Text>
@@ -390,7 +390,7 @@ export function AdminSupportTicketDetailView({
                 </Div>
               ))}
             </Div>
-          </Div>
+          </Stack>
         )}
 
         {/* Reply box */}

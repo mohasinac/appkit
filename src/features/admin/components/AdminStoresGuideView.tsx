@@ -1,11 +1,11 @@
 import React from "react";
 import { Store, GitBranch, Edit, Shield, MapPin, Ban } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminStoresGuideView() {
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
@@ -95,6 +95,6 @@ export function AdminStoresGuideView() {
           <Div className="px-6 py-5">{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }

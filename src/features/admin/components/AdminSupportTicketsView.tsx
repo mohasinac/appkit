@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
@@ -58,7 +58,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
     render: (row) => {
       const priority = toStringValue(row._raw?.priority, "normal");
       return (
-        <Div className="space-y-1">
+        <Stack gap="xs">
           <Text weight="medium" color="primary">{row.primary}</Text>
           {row.secondary ? (
             <Text size="xs" color="muted">{row.secondary}</Text>
@@ -70,7 +70,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
           >
             {priority}
           </span>
-        </Div>
+        </Stack>
       );
     },
   },

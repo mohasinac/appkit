@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
-import { Div, LoginRequiredModal, Span, Text } from "../../../ui";
+import { Div, LoginRequiredModal, Span, Stack, Text } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 
 const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-6 py-8 text-center space-y-2";
@@ -86,13 +86,13 @@ export function EventPollWidget({
         {totalEntries !== undefined && (
           <Text className="text-zinc-400 dark:text-zinc-400" size="sm">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
         )}
-        <Div className="space-y-2">
+        <Stack gap="sm">
           {pollConfig.options.map((opt) => (
             <Div key={opt.id} className="border border-zinc-100 dark:border-zinc-800 px-4 py-2.5 text-sm text-zinc-600 dark:text-zinc-400" rounded="lg">
               {opt.label}
             </Div>
           ))}
-        </Div>
+        </Stack>
       </Div>
     );
   }
@@ -131,7 +131,7 @@ export function EventPollWidget({
       <Text size="sm" weight="medium" color="primary">
         {isMulti ? "Select all that apply:" : "Choose one:"}
       </Text>
-      <Div className="space-y-2">
+      <Stack gap="sm">
         {pollConfig.options.map((opt) => (
           <label
             key={opt.id}
@@ -148,7 +148,7 @@ export function EventPollWidget({
             <Span size="sm" color="muted">{opt.label}</Span>
           </label>
         ))}
-      </Div>
+      </Stack>
       {pollConfig.allowComment && (
         <textarea
           value={comment}

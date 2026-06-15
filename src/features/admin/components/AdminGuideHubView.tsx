@@ -11,7 +11,7 @@ import {
   AlertTriangle,
   BookOpen,
 } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-6";
@@ -107,7 +107,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
   const hasAny = visibleCards.length > 0;
 
   return (
-    <Div className="space-y-8 pb-10">
+    <Stack className="pb-10" gap="xl">
       {/* Welcome banner */}
       <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div
@@ -199,6 +199,6 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
           </Div>
         </Row>
       </Section>
-    </Div>
+    </Stack>
   );
 }

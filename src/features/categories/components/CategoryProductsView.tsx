@@ -1,12 +1,6 @@
 "use client"
 import React from "react";
-import {
-  Div,
-  Heading,
-  Input,
-  SlottedListingView,
-  Text,
-} from "../../../ui";
+import { Div, Heading, Input, SlottedListingView, Stack, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { CategoryFilters } from "./CategoryFilters";
@@ -104,7 +98,7 @@ export function CategoryProductsView({
 
   return (
     <Div className={`min-h-screen ${className}`}>
-      <Div className="px-4 max-w-screen-xl mx-auto space-y-4" padding="y-lg">
+      <Stack className="px-4 max-w-screen-xl mx-auto" gap="md" padding="y-lg">
         {/* Breadcrumbs */}
         {category && renderBreadcrumbs?.(category)}
 
@@ -161,7 +155,7 @@ export function CategoryProductsView({
           total={total}
           isLoading={isLoading}
         />
-      </Div>
+      </Stack>
     </Div>
   );
 }

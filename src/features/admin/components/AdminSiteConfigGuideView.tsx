@@ -1,6 +1,6 @@
 import React from "react";
 import { Settings } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 const CLS_HEADER_ICON = "w-5 h-5 text-amber-500";
@@ -22,7 +22,7 @@ export function AdminSiteConfigGuideView() {
   ];
 
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
@@ -39,14 +39,14 @@ export function AdminSiteConfigGuideView() {
           <Settings className="w-5 h-5 text-[var(--appkit-color-primary)]" />
           <Heading level={2} className={GC.sectionTitle}>Settings Groups</Heading>
         </Div>
-        <Div className="px-6 py-5 space-y-4">
+        <Stack className="px-6 py-5" gap="md">
           {SETTING_GROUPS.map(({ name, desc }) => (
             <Div key={name} className="flex gap-3 text-sm">
               <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{name}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{desc}</Text>
             </Div>
           ))}
-        </Div>
+        </Stack>
       </Section>
 
       <Section className={GC.sectionWrap}>
@@ -66,7 +66,7 @@ export function AdminSiteConfigGuideView() {
           <Settings className="w-5 h-5 text-[var(--appkit-color-primary)]" />
           <Heading level={2} className={GC.sectionTitle}>Feature Flags</Heading>
         </Div>
-        <Div className="px-6 py-5 space-y-3">
+        <Stack className="px-6 py-5" gap="3">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings</code>. They control platform-wide features without a code deploy:</Text>
           <ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
             <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enableAuctions</code> — globally enable/disable all auction listings.</li>
@@ -74,8 +74,8 @@ export function AdminSiteConfigGuideView() {
             <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">maintenanceMode</code> — shows a maintenance banner and blocks non-admin access.</li>
           </ul>
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Flags are evaluated per-request via ISR cache — a change may take up to the revalidation interval (3600s default) to propagate to all pages.</Text>
-        </Div>
+        </Stack>
       </Section>
-    </Div>
+    </Stack>
   );
 }

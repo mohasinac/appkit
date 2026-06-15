@@ -1,5 +1,5 @@
 import type { UserAddress } from "../types";
-import { Button, Div, Span, Text } from "../../../ui";
+import { Button, Div, Span, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface AddressCardAddress {
@@ -123,7 +123,7 @@ export function AddressBook({
   addLabel = "Add Address",
 }: AddressBookProps) {
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       {addresses.length === 0 && (
         <Text className="text-neutral-500 dark:text-zinc-400" size="sm">{emptyLabel}</Text>
       )}
@@ -147,6 +147,6 @@ export function AddressBook({
           + {addLabel}
         </Button>
       )}
-    </Div>
+    </Stack>
   );
 }

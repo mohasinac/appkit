@@ -168,7 +168,7 @@ export function MakeOfferButton({
           <Text size="xs" color="muted">
             Listed at {fmt(listedPrice)} · Minimum offer: {fmt(minOffer)}
           </Text>
-          <Div className="space-y-1">
+          <Stack gap="xs">
             <Text size="xs" weight="medium" color="muted">Your offer amount</Text>
             <Input
               type="number"
@@ -182,8 +182,8 @@ export function MakeOfferButton({
             <Text className="text-zinc-400 dark:text-zinc-400" size="xs">
               Must be between {fmt(minOffer)} and {fmt(listedPrice - 1)}
             </Text>
-          </Div>
-          <Div className="space-y-1">
+          </Stack>
+          <Stack gap="xs">
             <Text size="xs" weight="medium" color="muted">Note to seller (optional)</Text>
             <Input
               type="text"
@@ -193,7 +193,7 @@ export function MakeOfferButton({
               maxLength={300}
               aria-label="Note to seller"
             />
-          </Div>
+          </Stack>
           <Text size="xs" color="muted">
             The seller will accept, decline, or suggest a counter price.
           </Text>

@@ -248,7 +248,7 @@ function OrderDetailDrawer({
             )}
 
             {/* Update section */}
-            <Div className="border-t border-[var(--appkit-color-border)] pt-4 space-y-3">
+            <Stack className="border-t border-[var(--appkit-color-border)] pt-4" gap="3">
               <Heading level={4} size="sm" weight="semibold">Update order</Heading>
               <Select label="New status" value={newStatus} options={UPDATE_STATUS_OPTIONS} onChange={(e) => setNewStatus(e.target.value)} />
               <Input label="Tracking number" value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. 12345678901234" />
@@ -259,7 +259,7 @@ function OrderDetailDrawer({
                   {saveError}
                 </Div>
               )}
-            </Div>
+            </Stack>
           </Div>
 
           {/* Footer */}

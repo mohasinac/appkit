@@ -419,9 +419,9 @@ function SidebarContent({
       : [];
 
   return (
-    <Div className="space-y-6">
+    <Stack gap="lg">
       {!isAuthenticated && sidebarPrimaryActions && sidebarPrimaryActions.length > 0 && (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           {sidebarPrimaryActions.map((action) => (
             <TextLink
               key={`${action.href}-${action.label}`}
@@ -437,7 +437,7 @@ function SidebarContent({
               {action.label}
             </TextLink>
           ))}
-        </Div>
+        </Stack>
       )}
 
       {isAuthenticated && (
@@ -514,7 +514,7 @@ function SidebarContent({
       ))}
 
       {(sidebarLocaleSlot || showThemeToggleInSidebar || (isAuthenticated && onLogout)) && (
-        <Div className="border-t border-zinc-200 pt-4 space-y-3 dark:border-slate-800">
+        <Stack className="border-t border-zinc-200 pt-4 dark:border-slate-800" gap="3">
           {sidebarLocaleSlot}
           {showThemeToggleInSidebar && (
             <button
@@ -535,9 +535,9 @@ function SidebarContent({
               {labels.logout}
             </button>
           )}
-        </Div>
+        </Stack>
       )}
-    </Div>
+    </Stack>
   );
 }
 

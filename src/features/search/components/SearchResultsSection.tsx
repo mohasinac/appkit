@@ -117,7 +117,7 @@ export function SearchResultsSection({
   }
 
   return (
-    <Div className="space-y-5">
+    <Stack gap="5">
       {/* Sort + count bar */}
       {renderSortBar ? (
         renderSortBar({
@@ -188,6 +188,6 @@ export function SearchResultsSection({
             </Button>
           </Row>
         ))}
-    </Div>
+    </Stack>
   );
 }

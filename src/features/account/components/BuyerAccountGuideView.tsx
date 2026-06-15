@@ -1,6 +1,6 @@
 import React from "react";
 import { UserCheck, Bell, Heart, Star, Lock, AlertTriangle, Flag } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../constants";
 import { GC } from "../../_guide-cls";
 
@@ -17,7 +17,7 @@ const SECTIONS: AccountSection[] = [
   {
     Icon: UserCheck, title: "Your Profile",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>Update your profile at <Span weight="bold">My Account → My Profile</Span>. Your <Span weight="bold">display name</Span> is shown to sellers on order summaries.</Text>
         <Div className="grid sm:grid-cols-2 gap-4 text-sm">
           <Div>
@@ -39,13 +39,13 @@ const SECTIONS: AccountSection[] = [
             </ul>
           </Div>
         </Div>
-      </Div>
+      </Stack>
     ),
   },
   {
     Icon: Bell, title: "Notifications",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>You&apos;ll receive in-app notifications for:</Text>
         <ul className={GC.listDiscMuted}>
           <li>Order status changes (Processing, Shipped, Delivered)</li>
@@ -55,24 +55,24 @@ const SECTIONS: AccountSection[] = [
           <li>Support ticket replies</li>
         </ul>
         <Text className={GC.textMuted}>Manage notification preferences at <Span weight="bold">My Account → Settings → Notifications</Span>.</Text>
-      </Div>
+      </Stack>
     ),
   },
   {
     Icon: Heart, iconCls: "w-5 h-5 text-rose-500", title: "Wishlist",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>Save any listing to your wishlist by clicking the heart icon on a product card. View your wishlist at <Span weight="bold">My Account → Wishlist</Span>.</Text>
         <Alert variant="info">
           Your wishlist holds up to <Span weight="bold">20 items</Span>. Remove items you no longer want to make room for new ones. Wishlists are private — other users cannot see your saved items.
         </Alert>
-      </Div>
+      </Stack>
     ),
   },
   {
     Icon: Star, iconCls: "w-5 h-5 text-amber-400", title: "Leaving a Review",
     content: (
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text className={GC.textMuted}>You can leave a review after your order is marked <Span weight="bold">DELIVERED</Span>. Reviews are verified — only buyers who completed an order can review that product.</Text>
         <ul className={GC.listMuted}>
           <li><Span weight="bold" className={GC.textStrong}>Rating</Span> — 1–5 stars. Be fair and specific.</li>
@@ -81,7 +81,7 @@ const SECTIONS: AccountSection[] = [
           <li><Span weight="bold" className={GC.textStrong}>Seller response</Span> — the seller may respond publicly. You cannot edit a review after a seller has responded.</li>
         </ul>
         <Text className={GC.textMuted}>Review guidelines: no personal information, no hate speech or slurs, factual only.</Text>
-      </Div>
+      </Stack>
     ),
   },
   {
@@ -136,7 +136,7 @@ const SECTIONS: AccountSection[] = [
 
 export function BuyerAccountGuideView() {
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: GC.pageHeaderGradient }}>
@@ -161,6 +161,6 @@ export function BuyerAccountGuideView() {
           <Div className={GC.sectionBody}>{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }

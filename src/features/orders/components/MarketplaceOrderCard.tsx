@@ -1,7 +1,7 @@
 "use client"
 import { useCallback } from "react";
 import { Package } from "lucide-react";
-import { BaseListingCard, Button, Caption, Div, Row, Span, StatusBadge, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, StatusBadge, Text, TextLink } from "../../../ui";
 import { formatCurrency, formatDate } from "../../../utils";
 import { OrderStatusValues } from "../schemas";
 import { useLongPress } from "../../../react/hooks/useLongPress";
@@ -142,7 +142,7 @@ export function MarketplaceOrderCard({
           <Row className="h-10 w-10 flex-shrink-0" surface="subtle" align="center" justify="center" rounded="lg">
             <Package className="h-5 w-5 text-zinc-500 dark:text-slate-400" />
           </Row>
-          <Div className="min-w-0 space-y-1">
+          <Stack className="min-w-0" gap="xs">
             <TextLink href={detailHref} className="leading-tight">
               <Text weight="semibold" className="truncate">
                 {order.productTitle ?? shortId}
@@ -159,7 +159,7 @@ export function MarketplaceOrderCard({
                 {mergedLabels.items}: <Span weight="medium">{itemCount}</Span>
               </Caption>
             )}
-          </Div>
+          </Stack>
         </div>
 
         <div

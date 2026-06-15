@@ -288,7 +288,7 @@ function PreOrderBuyBarPanel({
   return (
     <Div id="pre-order-buy-bar" className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
       {reserveTarget > 0 && (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Row justify="between" align="center">
             <Text size="xs" color="muted">
               {reservedCount} of {reserveTarget} reserved
@@ -304,7 +304,7 @@ function PreOrderBuyBarPanel({
               style={{ width: `${progressPct}%` }}
             />
           </Div>
-        </Div>
+        </Stack>
       )}
 
       {onReserveNow ? (

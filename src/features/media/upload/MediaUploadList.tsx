@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Alert, Button, Div, Label, Row, Spinner, Text } from "../../../ui";
+import { Alert, Button, Div, Label, Row, Spinner, Stack, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
@@ -162,7 +162,7 @@ export function MediaUploadList({
   };
 
   return (
-    <Div className="space-y-2">
+    <Stack gap="sm">
       <Label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
         {label}
       </Label>
@@ -256,6 +256,6 @@ export function MediaUploadList({
       )}
 
       {error && <Alert variant="error">{error}</Alert>}
-    </Div>
+    </Stack>
   );
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Div, Heading } from "../../../ui";
+import { Div, Heading, Stack } from "../../../ui";
 import { Alert } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -124,7 +124,7 @@ export function AdminAnalyticsView({
       {renderCharts ? (
         renderCharts()
       ) : ordersByMonth.length > 0 ? (
-        <Div className="space-y-6">
+        <Stack gap="lg">
           <AdminRevenueChart
             data={ordersByMonth}
             labels={{ title: labels.revenueByMonth }}
@@ -133,7 +133,7 @@ export function AdminAnalyticsView({
             data={ordersByMonth}
             labels={{ title: labels.ordersByMonth }}
           />
-        </Div>
+        </Stack>
       ) : null}
 
       {renderTable ? (

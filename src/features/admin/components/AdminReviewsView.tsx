@@ -222,7 +222,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
         }}
         title="Reply to review"
       >
-        <Div className="space-y-4">
+        <Stack gap="md">
           <Stack gap="xs">
             <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Admin reply
@@ -254,7 +254,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
               Save reply
             </Button>
           </Row>
-        </Div>
+        </Stack>
       </Modal>
     </>
   );

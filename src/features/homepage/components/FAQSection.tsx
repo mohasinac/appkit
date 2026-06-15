@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useMemo } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Heading, RichText, Section, Span, Text, TextLink } from "../../../ui";
+import { Button, Div, Heading, RichText, Section, Span, Stack, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
 
 const __O = {
@@ -171,7 +171,7 @@ export function FAQSection({
         )}
 
         {/* FAQ Accordion */}
-        <Div className="space-y-2">
+        <Stack gap="sm">
           {visibleItems.length === 0 && (
             <Text className={`text-center py-12 ${themed.textSecondary}`}>
               No FAQs in this category yet.
@@ -232,7 +232,7 @@ export function FAQSection({
               </div>
             );
           })}
-        </Div>
+        </Stack>
 
         {/* View More */}
         {viewMoreHref && (

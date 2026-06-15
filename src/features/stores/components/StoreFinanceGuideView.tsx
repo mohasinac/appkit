@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -42,7 +42,7 @@ function CommissionSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Worked example</Text>
-        <Div className="border border-[var(--appkit-color-border)] font-mono text-xs space-y-1" rounded="lg" padding="md">
+        <Stack className="border border-[var(--appkit-color-border)] font-mono text-xs" gap="xs" rounded="lg" padding="md">
           <Text className={MONO_MUTED}>
             Order total: ₹1,000.00
           </Text>
@@ -57,7 +57,7 @@ function CommissionSection() {
               Seller receives: ≈ ₹930.00
             </Text>
           </Div>
-        </Div>
+        </Stack>
         <Text className="text-[var(--appkit-color-text-muted)] mt-2" size="xs">
           Exact amounts depend on the current platform fee configured in Site Settings.
           Razorpay charges vary by payment method (UPI is lowest).
@@ -93,14 +93,14 @@ function PayoutCycleSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Payout statuses</Text>
-        <Div className="space-y-2">
+        <Stack gap="sm">
           {PAYOUT_STATUSES.map(({ status, note }) => (
             <Div key={status} className="flex gap-3">
               <Text className="shrink-0 font-mono text-[var(--appkit-color-text)] w-24" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
             </Div>
           ))}
-        </Div>
+        </Stack>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Minimum payout threshold</Text>
@@ -180,14 +180,14 @@ function CouponsSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Coupon field reference</Text>
-        <Div className="space-y-3">
+        <Stack gap="3">
           {COUPON_FIELDS.map(({ field, detail }) => (
             <Div key={field} className="flex gap-3">
               <Text className="shrink-0 w-32 text-[var(--appkit-color-text)]" size="sm" weight="semibold">{field}</Text>
               <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">{detail}</Text>
             </Div>
           ))}
-        </Div>
+        </Stack>
       </Div>
     </Div>
   );
@@ -249,7 +249,7 @@ export type StoreFinanceGuideViewProps = Record<string, never>;
 
 export function StoreFinanceGuideView(_props: StoreFinanceGuideViewProps) {
   return (
-    <Div className="space-y-6 pb-10">
+    <Stack className="pb-10" gap="lg">
       {/* Back nav */}
       <a
         href={String(ROUTES.STORE.GUIDE)}
@@ -289,6 +289,6 @@ export function StoreFinanceGuideView(_props: StoreFinanceGuideViewProps) {
       <GuideSection title="5. Taxes">
         <TaxesSection />
       </GuideSection>
-    </Div>
+    </Stack>
   );
 }

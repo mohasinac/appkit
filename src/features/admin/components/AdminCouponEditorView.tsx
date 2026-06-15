@@ -4,20 +4,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import {
-  Button,
-  ConfirmDeleteModal,
-  Div,
-  Form,
-  Input,
-  Label,
-  Select,
-  StackedViewShell,
-  Span,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, Input, Label, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -477,7 +464,7 @@ export function AdminCouponEditorView({
           />
 
           {/* Applicability — restrict the coupon to a specific set of products or categories. */}
-          <Div className="space-y-1">
+          <Stack gap="xs">
             <Label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
               Applicable products (optional)
             </Label>
@@ -491,9 +478,9 @@ export function AdminCouponEditorView({
             <Text size="xs" color="muted">
               Leave empty to apply the coupon to every eligible product.
             </Text>
-          </Div>
+          </Stack>
 
-          <Div className="space-y-1">
+          <Stack gap="xs">
             <Label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
               Applicable categories (optional)
             </Label>
@@ -532,7 +519,7 @@ export function AdminCouponEditorView({
             <Text size="xs" color="muted">
               Leave empty to apply the coupon to every category.
             </Text>
-          </Div>
+          </Stack>
 
           {/* Actions */}
           <Div className="flex gap-3 pt-2">

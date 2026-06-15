@@ -10,7 +10,7 @@ import {
   Circle,
   BookOpen,
 } from "lucide-react";
-import { Div, Heading, Row, Section, Text } from "../../../ui";
+import { Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { StoreDocument } from "../schemas";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -118,7 +118,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
   const completedCount = steps.filter((s) => s.done).length;
 
   return (
-    <Div className="space-y-8 pb-10">
+    <Stack className="pb-10" gap="xl">
       {/* Welcome banner */}
       <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div
@@ -148,7 +148,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
       {/* Main content: guide cards + checklist sidebar */}
       <Div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Guide cards — 2/3 width on lg */}
-        <Div className="lg:col-span-2 space-y-4">
+        <Stack className="lg:col-span-2" gap="md">
           <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Guides
           </Heading>
@@ -182,10 +182,10 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               </a>
             ))}
           </Div>
-        </Div>
+        </Stack>
 
         {/* Getting started checklist — 1/3 width on lg */}
-        <Div className="space-y-4">
+        <Stack gap="md">
           <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Getting started
           </Heading>
@@ -249,8 +249,8 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               </Text>
             </Div>
           )}
-        </Div>
+        </Stack>
       </Div>
-    </Div>
+    </Stack>
   );
 }

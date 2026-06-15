@@ -42,9 +42,9 @@ export function CustomSectionsEditor({
   return (
     <Stack gap="md">
       {sections.map((section, i) => (
-        <Div
+        <Stack
           key={section.id}
-          className="dark:bg-zinc-900/40 space-y-3" surface="muted" rounded="xl" padding="md" border="default"
+          className="dark:bg-zinc-900/40" gap="3" surface="muted" rounded="xl" padding="md" border="default"
         >
           <Row align="center" justify="between" gap="sm">
             <Heading
@@ -111,7 +111,7 @@ export function CustomSectionsEditor({
               showUnit
             />
           </Div>
-        </Div>
+        </Stack>
       ))}
 
       <Row align="center" justify="between">

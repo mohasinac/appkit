@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -203,14 +203,14 @@ function VisibilityStatesSection() {
     },
   ];
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       {STATES.map(({ state, note }) => (
         <Div key={state} className="flex gap-3 text-sm">
           <Text className="shrink-0 w-32 text-[var(--appkit-color-text)]" weight="semibold">{state}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{note}</Text>
         </Div>
       ))}
-    </Div>
+    </Stack>
   );
 }
 
@@ -220,7 +220,7 @@ export type StoreSettingsGuideViewProps = Record<string, never>;
 
 export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
   return (
-    <Div className="space-y-6 pb-10">
+    <Stack className="pb-10" gap="lg">
       {/* Back nav */}
       <a
         href={String(ROUTES.STORE.GUIDE)}
@@ -264,6 +264,6 @@ export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
       <GuideSection title="6. Visibility states">
         <VisibilityStatesSection />
       </GuideSection>
-    </Div>
+    </Stack>
   );
 }

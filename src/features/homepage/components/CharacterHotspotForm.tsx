@@ -174,7 +174,7 @@ export function CharacterHotspotForm({
   const stepIndex = STEPS.findIndex((s) => s.key === step);
 
   return (
-    <Div className="mx-auto max-w-3xl space-y-6">
+    <Stack className="mx-auto max-w-3xl" gap="lg">
       {error && (
         <Text className={CLS_ERROR_BANNER}>
           {error}
@@ -284,7 +284,7 @@ export function CharacterHotspotForm({
           </Label>
 
           {imageUrl && (
-            <Div className="space-y-1">
+            <Stack gap="xs">
               <Div
                 className={CLS_IMG_WRAP}
                 style={{ paddingTop: "37.5%" }}
@@ -300,7 +300,7 @@ export function CharacterHotspotForm({
               <Text className={CLS_SUCCESS_TEXT}>
                 ✓ Image uploaded
               </Text>
-            </Div>
+            </Stack>
           )}
 
           <Stack gap="xs">
@@ -924,7 +924,7 @@ export function CharacterHotspotForm({
             <summary className="cursor-pointer text-sm font-medium">
               Image Settings
             </summary>
-            <Div className="mt-3 space-y-3">
+            <Stack className="mt-3" gap="3">
               <Label
                 className="inline-flex cursor-pointer items-center gap-2 rounded border-2 border-dashed px-3 py-1.5 text-sm font-medium transition-colors hover:opacity-80"
                 style={{ borderColor: "var(--border-ink)" }}
@@ -961,7 +961,7 @@ export function CharacterHotspotForm({
                 />
                 Active (show on homepage)
               </Label>
-            </Div>
+            </Stack>
           </details>
 
           <Row
@@ -1001,6 +1001,6 @@ export function CharacterHotspotForm({
           </Row>
         </Div>
       )}
-    </Div>
+    </Stack>
   );
 }

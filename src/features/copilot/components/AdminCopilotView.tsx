@@ -114,7 +114,7 @@ function renderCopilotHistoryPanel(props: {
 }) {
   const { historyQuery, conversationInput, setConversationInput, loadConversation, labels } = props;
   return (
-    <Div surface="card" padding="sm" className="space-y-3">
+    <Stack surface="card" padding="sm" gap="3">
       <Heading level={3} size="sm" weight="semibold">{labels?.historyTitle ?? "Conversation History"}</Heading>
       {/* audit-raw-form-input-ok: conversation-id loader — single field, no validation */}
       <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); if (!conversationInput.trim()) return; loadConversation(conversationInput.trim()); }}>
@@ -136,7 +136,7 @@ function renderCopilotHistoryPanel(props: {
           <Text variant="secondary" size="sm">No server history found for this conversation yet.</Text>
         ) : null}
       </Div>
-    </Div>
+    </Stack>
   );
 }
 
@@ -257,7 +257,7 @@ export function AdminCopilotView({
             </Div>
           </Stack>
 
-          <Div surface="card" padding="sm" className="space-y-3">
+          <Stack surface="card" padding="sm" gap="3">
             <Heading level={3} size="sm" weight="semibold">
               {labels.historyTitle ?? "Conversation History"}
             </Heading>
@@ -307,7 +307,7 @@ export function AdminCopilotView({
                 </Text>
               ) : null}
             </Div>
-          </Div>
+          </Stack>
         </Div>,
       ]}
     />

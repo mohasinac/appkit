@@ -1,4 +1,4 @@
-import { Card, Div, Heading, Row, Text, TextLink } from "../../../ui";
+import { Card, Div, Heading, Row, Stack, Text, TextLink } from "../../../ui";
 import type { FAQ } from "../types";
 
 interface RelatedFAQsProps {
@@ -24,7 +24,7 @@ export function RelatedFAQs({
         {labels?.title ?? "Related Questions"}
       </Heading>
 
-      <Div className="space-y-3">
+      <Stack gap="3">
         {relatedFAQs.map((faq) => (
           <TextLink
             key={faq.id}
@@ -66,7 +66,7 @@ export function RelatedFAQs({
             </Row>
           </TextLink>
         ))}
-      </Div>
+      </Stack>
     </Card>
   );
 }

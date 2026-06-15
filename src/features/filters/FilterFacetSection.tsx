@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
-import { Button, Div, Input, Row, Span, Text } from "../../ui";
+import { Button, Div, Input, Row, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FilterOption } from "./filterUtils";
 
@@ -311,7 +311,7 @@ export function FilterFacetSection({
       )}
 
       {!isCollapsed && (
-        <Div className="mt-3 space-y-1">
+        <Stack className="mt-3" gap="xs">
           {filtered.map((option) => {
             const isSelected = selected.includes(option.value);
             return (
@@ -361,7 +361,7 @@ export function FilterFacetSection({
               No results
             </Text>
           )}
-        </Div>
+        </Stack>
       )}
     </Div>
   );

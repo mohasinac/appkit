@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState, useTransition } from "react";
-import { Alert, Badge, Button, Div, Heading, Input, LoginRequiredModal, Row, Spinner, Text } from "../../../ui";
+import { Alert, Badge, Button, Div, Heading, Input, LoginRequiredModal, Row, Spinner, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../schemas";
@@ -130,7 +130,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
   }
 
   return (
-    <Div surface="card" padding="sm" className="space-y-3">
+    <Stack surface="card" padding="sm" gap="3">
       {/* Header row */}
       <Row align="start" justify="between" gap="sm" wrap>
         <Div className="min-w-0">
@@ -183,7 +183,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
 
       {/* Accept confirmation */}
       {uiState === "accepting" && (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Input
             placeholder={PLACEHOLDER_SELLER_NOTE}
             value={sellerNote}
@@ -196,12 +196,12 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
           </Div>
-        </Div>
+        </Stack>
       )}
 
       {/* Decline confirmation */}
       {uiState === "declining" && (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Input
             placeholder={PLACEHOLDER_SELLER_NOTE}
             value={sellerNote}
@@ -215,12 +215,12 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
           </Div>
-        </Div>
+        </Stack>
       )}
 
       {/* Counter form */}
       {uiState === "countering" && (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Text size="xs" color="muted">
             Suggest a price between the buyer's offer ({formatRupees(offer.offerAmount)}) and your listed price ({formatRupees(offer.listedPrice)}).
           </Text>
@@ -243,11 +243,11 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
           </Div>
-        </Div>
+        </Stack>
       )}
 
       {error && <Alert variant="error"><Text size="xs">{error}</Text></Alert>}
-    </Div>
+    </Stack>
   );
 }
 
@@ -356,11 +356,11 @@ export function SellerOffersPanel({
       )}
 
       {!loading && offers.length > 0 && (
-        <Div className="space-y-3">
+        <Stack gap="3">
           {offers.map((offer) => (
             <OfferCard key={offer.id} offer={offer} onRespond={onRespond} onUpdate={handleUpdate} onNeedsLogin={() => setShowLoginModal(true)} />
           ))}
-        </Div>
+        </Stack>
       )}
     </Div>
   );

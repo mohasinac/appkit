@@ -4,25 +4,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import {
-  Alert,
-  Button,
-  ConfirmDeleteModal,
-  Form,
-  FormActions,
-  Input,
-  Select,
-  StackedViewShell,
-  Toggle,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-  Div,
-  Text,
-  Heading,
-  Row,
-} from "../../../ui";
+import { Alert, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Toggle } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -170,7 +152,7 @@ function BackgroundEditor({
   const set = (patch: Partial<CarouselBackground>) => onChange({ ...value, ...patch });
 
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       <Select
         label="Background type"
         value={value.type}
@@ -258,7 +240,7 @@ function BackgroundEditor({
           />
         </>
       )}
-    </Div>
+    </Stack>
   );
 }
 
@@ -318,7 +300,7 @@ function CardEditor({
         />
       </Div>
 
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Text size="sm" weight="medium">Content</Text>
         <Input label="Eyebrow" value={card.content?.eyebrow ?? ""} onChange={(e) => setContent({ eyebrow: e.target.value || undefined })} placeholder="New · Limited · Featured" />
         <Input label="Title" value={card.content?.title ?? ""} onChange={(e) => setContent({ title: e.target.value })} />
@@ -327,9 +309,9 @@ function CardEditor({
         {/* audit-hex-tokens-ok: text-color default when card has none set */}
         <Input label="Text colour (CSS)" value={card.content?.textColor ?? "#ffffff"} onChange={(e) => setContent({ textColor: e.target.value })} />
         <Select label="Text align" value={card.content?.textAlign ?? "left"} onChange={(e) => setContent({ textAlign: e.target.value as "left" | "center" | "right" })} options={TEXT_ALIGN_OPTIONS} />
-      </Div>
+      </Stack>
 
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Row className={CLS_ROW_BETWEEN}>
           <Text size="sm" weight="medium">Buttons (max 3)</Text>
           {buttons.length < 3 && (
@@ -350,9 +332,9 @@ function CardEditor({
             <Toggle label="Open in new tab" checked={btn.openInNewTab ?? false} onChange={(v) => { const next = [...buttons]; next[bi] = { ...btn, openInNewTab: v }; set({ buttons: next }); }} />
           </Div>
         ))}
-      </Div>
+      </Stack>
 
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Text size="sm" weight="medium">Hover effect</Text>
         <Select
           label="Effect"
@@ -360,7 +342,7 @@ function CardEditor({
           onChange={(e) => set({ hover: { effect: e.target.value as CarouselHoverEffect } })}
           options={HOVER_OPTIONS}
         />
-      </Div>
+      </Stack>
 
       <Toggle label="Button-only card (no text content)" checked={card.isButtonOnly ?? false} onChange={(v) => set({ isButtonOnly: v })} />
     </Div>

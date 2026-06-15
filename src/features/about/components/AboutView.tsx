@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
-
+import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 const __P = {
   p8: "p-8",
 } as const;
@@ -113,7 +112,7 @@ export function AboutView({
 
         <Section>
           <Heading level={2} className="mb-10" align="center">{labels.milestonesTitle}</Heading>
-          <Div className="relative border-l-2 border-primary/30 pl-8 space-y-8 max-w-2xl mx-auto">
+          <Stack className="relative border-l-2 border-primary/30 pl-8 max-w-2xl mx-auto" gap="xl">
             {milestones.map(({ year, text }) => (
               <Div key={year} className="relative">
                 <Div className="absolute -left-10 top-1 w-4 h-4 bg-primary border-2 border-white dark:border-slate-900" rounded="full" />
@@ -123,7 +122,7 @@ export function AboutView({
                 <Text className="mt-1">{text}</Text>
               </Div>
             ))}
-          </Div>
+          </Stack>
         </Section>
 
         <Section className={`text-center ${ctaBannerClass} rounded-2xl ${__P.p8} md:p-12 text-white`}>

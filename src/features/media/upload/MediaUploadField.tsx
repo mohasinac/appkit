@@ -9,7 +9,7 @@
 import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import { Alert, Button, Div, Label, Row, Span, Spinner, Text } from "../../../ui";
+import { Alert, Button, Div, Label, Row, Span, Spinner, Stack, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";
@@ -161,7 +161,7 @@ function YoutubeTabPanel({
   value: string;
 }) {
   return (
-    <Div className="space-y-2">
+    <Stack gap="sm">
       <Row gap="sm">
         <input
           type="text"
@@ -176,7 +176,7 @@ function YoutubeTabPanel({
       {value?.includes("youtube.com") && (
         <Text size="xs" variant="secondary">YouTube embed: {value}</Text>
       )}
-    </Div>
+    </Stack>
   );
 }
 
@@ -194,7 +194,7 @@ function ExternalUrlTabPanel({
   onApply: () => void;
 }) {
   return (
-    <Div className="space-y-2">
+    <Stack gap="sm">
       <Row gap="sm">
         <input
           type="url"
@@ -209,7 +209,7 @@ function ExternalUrlTabPanel({
       <Text size="xs" variant="secondary">
         External URLs are stored as-is and are not watermarked.
       </Text>
-    </Div>
+    </Stack>
   );
 }
 
@@ -237,7 +237,7 @@ function MediaPreviewPanel({
   return (
     <Div className={`rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 ${__P.p3}`}>
       {isVideo(value) ? (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Div className={`relative aspect-video ${__O.hidden} rounded-lg`}>
             <MediaVideo src={value} alt={label} controls objectFit="contain" />
           </Div>
@@ -245,13 +245,13 @@ function MediaPreviewPanel({
           <Text size="xs" variant="secondary">
             Video uploaded successfully. Large videos may take longer to process.
           </Text>
-        </Div>
+        </Stack>
       ) : isImage(value) ? (
         <Div className={`relative aspect-video ${__O.hidden} rounded-lg`}>
           <MediaImage src={value} alt={label} size="card" objectFit="contain" />
         </Div>
       ) : isPdf(value) ? (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Div
             className={`relative w-full ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`}
             // audit-inline-style-ok: dynamic CSS
@@ -272,7 +272,7 @@ function MediaPreviewPanel({
               {filenameFromUrl(value)}
             </a>
           </Row>
-        </Div>
+        </Stack>
       ) : (
         <a href={value} target="_blank" rel="noopener noreferrer"
           className={CLS_PDF_LINK}>
@@ -571,7 +571,7 @@ export function MediaUploadField({
   };
 
   return (
-    <Div className="space-y-2">
+    <Stack gap="sm">
       <Label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
         {label}
       </Label>
@@ -748,6 +748,6 @@ export function MediaUploadField({
           onUpload={onUpload}
         />
       )}
-    </Div>
+    </Stack>
   );
 }

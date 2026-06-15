@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Button, Div, Input, Progress, Row, Text, useToast } from "../../ui";
+import { Alert, Button, Div, Input, Progress, Row, Stack, Text, useToast } from "../../ui";
 import { useMediaUpload } from "./hooks/useMedia";
 import { ImageCropModal, type ImageCropData } from "./modals/ImageCropModal";
 import { AvatarDisplay } from "../../ui/components/AvatarDisplay";
@@ -174,7 +174,7 @@ export function AvatarUpload({
 
   return (
     <>
-      <Div className="space-y-4">
+      <Stack gap="md">
         <Row align="start" gap="lg">
           <Div className="shrink-0">
             <AvatarDisplay
@@ -185,7 +185,7 @@ export function AvatarUpload({
             />
           </Div>
 
-          <Div className="flex-1 space-y-3">
+          <Stack className="flex-1" gap="3">
             <Text variant="secondary" size="xs">
               JPG, PNG, WEBP or GIF up to 10MB.
             </Text>
@@ -200,7 +200,7 @@ export function AvatarUpload({
             ) : null}
 
             {hasPending && !isUploading ? (
-              <Div className="space-y-2">
+              <Stack gap="sm">
                 <Text variant="secondary" className="text-primary" size="xs">
                   {t.readyToSave}
                 </Text>
@@ -217,7 +217,7 @@ export function AvatarUpload({
                     {t.cancelChange}
                   </Button>
                 </Div>
-              </Div>
+              </Stack>
             ) : null}
 
             {!hasPending && !isUploading ? (
@@ -251,13 +251,13 @@ export function AvatarUpload({
               className="hidden"
               aria-label={t.changePhoto}
             />
-          </Div>
+          </Stack>
         </Row>
 
         {uploadApiError ? (
           <Alert variant="error">{uploadApiError.message}</Alert>
         ) : null}
-      </Div>
+      </Stack>
 
       {showCropModal && tempImageUrl ? (
         <ImageCropModal

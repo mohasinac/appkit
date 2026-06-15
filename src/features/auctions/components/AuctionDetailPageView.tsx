@@ -330,7 +330,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           renderInfo={() => renderAuctionInfoPanel({ title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
           renderBidForm={() =>
             onPlaceBid ? (
-              <Div id="auction-bid-form" className="space-y-3">
+              <Stack id="auction-bid-form" gap="3">
                 {/* Compact summary card — modal owns the form */}
                 <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-3`}>
                   <Row justify="between" align="baseline">
@@ -357,15 +357,15 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     triggerClassName="w-full"
                   />
                 </Div>
-              </Div>
+              </Stack>
             ) : (
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
               <Div className={`rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 ${__P.p5} space-y-4`}>
-                <Div className="space-y-1">
+                <Stack gap="xs">
                   <Text size="xs" color="muted">
                     Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
                   </Text>
-                </Div>
+                </Stack>
                 <Stack gap="sm">
                   <Input
                     type="number"

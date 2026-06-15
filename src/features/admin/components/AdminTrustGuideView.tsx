@@ -1,13 +1,13 @@
 import React from "react";
 import { Shield, Ban, AlertTriangle, Headphones, Flag, ClipboardList } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 const STILL_ALLOWED = "✓ Still allowed";
 
 export function AdminTrustGuideView() {
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
@@ -120,6 +120,6 @@ export function AdminTrustGuideView() {
           <Div className="px-6 py-5">{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }

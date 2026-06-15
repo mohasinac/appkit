@@ -2,16 +2,7 @@ import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
-import {
-  Article,
-  Button,
-  Div,
-  Heading,
-  Pagination,
-  Row,
-  Span,
-  Text,
-} from "../../../ui";
+import { Article, Button, Div, Heading, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
@@ -232,7 +223,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
   }
 
   return (
-    <Div className="space-y-8">
+    <Stack gap="xl">
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
@@ -265,6 +256,6 @@ export function BlogListView<T extends BlogPost = BlogPost>({
           />
         </Row>
       ) : null}
-    </Div>
+    </Stack>
   );
 }

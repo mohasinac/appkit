@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Pagination, Row, Text } from "../../../ui";
+import { Div, Pagination, Row, Stack, Text } from "../../../ui";
 import type { LayoutSlots } from "../../../contracts";
 import type { EventItem } from "../types";
 import { EventCard } from "./EventCard";
@@ -64,7 +64,7 @@ export function EventsListView<T extends EventItem = EventItem>({
   }
 
   return (
-    <Div className="space-y-8">
+    <Stack gap="xl">
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
@@ -99,6 +99,6 @@ export function EventsListView<T extends EventItem = EventItem>({
           />
         </Row>
       ) : null}
-    </Div>
+    </Stack>
   );
 }

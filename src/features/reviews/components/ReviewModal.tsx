@@ -1,15 +1,6 @@
 "use client"
 import { useState } from "react";
-import {
-  Button,
-  Div,
-  Heading,
-  IconButton,
-  Modal,
-  RichText,
-  Row,
-  Text,
-} from "../../../ui";
+import { Button, Div, Heading, IconButton, Modal, RichText, Row, Stack, Text } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { maskName } from "../../../security";
@@ -49,7 +40,7 @@ export function ViewReviewModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Review Details">
-      <Div className="space-y-4">
+      <Stack gap="md">
         {/* Author + rating */}
         <Row gap="3">
           {review.userAvatar ? (
@@ -136,7 +127,7 @@ export function ViewReviewModal({
             Close
           </Button>
         </Row>
-      </Div>
+      </Stack>
     </Modal>
   );
 }

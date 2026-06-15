@@ -1,5 +1,5 @@
 import React from "react";
-import { Div } from "../../../ui";
+import { Div, Stack } from "../../../ui";
 import { Skeleton } from "../../../ui/components/Skeleton";
 
 export interface EventParticipateViewProps {
@@ -34,11 +34,11 @@ export function EventParticipateView({
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
     return (
-      <Div className="max-w-xl mx-auto space-y-4" padding="y-lg">
+      <Stack className="max-w-xl mx-auto" gap="md" padding="y-lg">
         <Skeleton variant="rectangular" height="32px" />
         <Skeleton variant="rectangular" height="80px" />
         <Skeleton variant="rectangular" height="48px" />
-      </Div>
+      </Stack>
     );
   }
 

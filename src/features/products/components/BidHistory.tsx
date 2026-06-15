@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Span, Text } from "../../../ui";
+import { Div, Heading, Span, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface BidHistoryEntry {
@@ -59,11 +59,11 @@ export function BidHistory({
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
     return (
-      <Div className="animate-pulse space-y-2">
+      <Stack className="animate-pulse" gap="sm">
         {Array.from({ length: 3 }).map((_, i) => (
           <Div key={i} className="h-10" surface="subtle" rounded="lg" />
         ))}
-      </Div>
+      </Stack>
     );
   }
 
@@ -85,7 +85,7 @@ export function BidHistory({
           {labels.title}
         </Heading>
       )}
-      <Div className="space-y-2">
+      <Stack gap="sm">
         {bids.map((bid, i) =>
           renderBid ? (
             <React.Fragment key={bid.id}>{renderBid(bid, i)}</React.Fragment>
@@ -103,7 +103,7 @@ export function BidHistory({
             </div>
           ),
         )}
-      </Div>
+      </Stack>
     </Div>
   );
 }

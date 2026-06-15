@@ -201,7 +201,7 @@ export function AdminCategoryEditorView({
         <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
           Identity
         </Text>
-        <Div className="space-y-4">
+        <Stack gap="md">
           <Div className="grid sm:grid-cols-2 gap-4">
             <FieldInput
               name="name"
@@ -252,7 +252,7 @@ export function AdminCategoryEditorView({
               Leave empty to create a root category.
             </Text>
           </Stack>
-        </Div>
+        </Stack>
       </Card>
 
       {/* ── Display ── */}
@@ -260,7 +260,7 @@ export function AdminCategoryEditorView({
         <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
           Display
         </Text>
-        <Div className="space-y-4">
+        <Stack gap="md">
           <Input
             label="Display order"
             value={order}
@@ -271,7 +271,7 @@ export function AdminCategoryEditorView({
           />
           <Toggle label="Active" checked={isActive} onChange={setIsActive} />
           <Toggle label="Show in menu" checked={showInMenu} onChange={setShowInMenu} />
-        </Div>
+        </Stack>
       </Card>
 
       {/* Mobile-only action buttons */}

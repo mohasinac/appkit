@@ -1,6 +1,6 @@
 import React from "react";
 import { ShoppingBag, ShoppingCart, CreditCard, Tag, CheckCircle, UserX } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
@@ -116,7 +116,7 @@ const SECTIONS: ShoppingSection[] = [
 
 export function BuyerShoppingGuideView() {
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: GC.pageHeaderGradient }}>
@@ -141,6 +141,6 @@ export function BuyerShoppingGuideView() {
           <Div className={GC.sectionBody}>{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, useTransition } from "react";
-import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Row, Spinner, Text } from "../../../ui";
+import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Row, Spinner, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../../seller/schemas";
@@ -79,7 +79,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
   }
 
   return (
-    <Div surface="card" padding="sm" className="space-y-3">
+    <Stack surface="card" padding="sm" gap="3">
       <Row align="start" justify="between" gap="sm" wrap>
         <Div className="min-w-0">
           <Text className="truncate" color="primary" size="sm" weight="semibold">
@@ -125,7 +125,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
 
       {/* Counter received — accept or withdraw */}
       {offer.status === "countered" && (
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Text className="text-info" size="xs" weight="medium">
             Seller countered at {formatRupees(offer.counterAmount)}. Accept or withdraw your offer.
           </Text>
@@ -142,7 +142,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
               Withdraw
             </Button>
           </Div>
-        </Div>
+        </Stack>
       )}
 
       {/* Accepted — checkout CTA */}
@@ -178,7 +178,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
       )}
 
       {error && <Alert variant="error"><Text size="xs">{error}</Text></Alert>}
-    </Div>
+    </Stack>
   );
 }
 
@@ -253,7 +253,7 @@ export function UserOffersPanel({
       )}
 
       {!loading && offers.length > 0 && (
-        <Div className="space-y-3">
+        <Stack gap="3">
           {offers.map((offer) => (
             <BuyerOfferCard
               key={offer.id}
@@ -265,7 +265,7 @@ export function UserOffersPanel({
               onNeedsLogin={() => setShowLoginModal(true)}
             />
           ))}
-        </Div>
+        </Stack>
       )}
     </Div>
   );

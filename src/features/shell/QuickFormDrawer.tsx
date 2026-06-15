@@ -5,7 +5,7 @@ import type { ZodType } from "zod";
 import { Button } from "../../ui/components/Button";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
-import { Div, Row, Text } from "../../ui";
+import { Div, Row, Stack, Text } from "../../ui";
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
 
 export interface QuickFieldDef {
@@ -213,7 +213,7 @@ export function QuickFormDrawer({
             const value = values[field.name];
             if (field.type === "toggle") {
               return (
-                <Div key={field.name} className="space-y-1">
+                <Stack key={field.name} gap="xs">
                   <Toggle
                     checked={!!value}
                     onChange={(checked) => set(field.name, checked)}
@@ -222,7 +222,7 @@ export function QuickFormDrawer({
                   {field.helperText && (
                     <Text className="text-[var(--appkit-color-text-muted)]" size="xs">{field.helperText}</Text>
                   )}
-                </Div>
+                </Stack>
               );
             }
             return (

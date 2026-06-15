@@ -1,6 +1,5 @@
 import React from "react";
-import { Div, Heading, RichText, Text } from "../../../ui";
-
+import { Div, Heading, RichText, Stack, Text } from "../../../ui";
 const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
 const CLS_WARN_BOX = "bg-warning-surface border border-warning rounded-lg p-4";
 const CLS_WARN_TITLE = "text-warning font-medium";
@@ -58,7 +57,7 @@ export function StoreAboutView({
       {renderStats?.(store)}
 
       {/* Details list */}
-      <Div className="space-y-3 text-sm">
+      <Stack className="text-sm" gap="3">
         {store.location && (
           <Div className="flex gap-2">
             <Text className={CLS_LABEL}>
@@ -90,7 +89,7 @@ export function StoreAboutView({
             </a>
           </Div>
         )}
-      </Div>
+      </Stack>
 
       {/* Social links */}
       {store.socialLinks && renderSocialLinks?.(store.socialLinks)}

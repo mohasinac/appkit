@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -129,7 +129,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Status
         </Text>
@@ -152,7 +152,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
             </button>
           ))}
         </Div>
-      </Div>
+      </Stack>
     ),
   };
 

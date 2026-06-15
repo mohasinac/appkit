@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { sortBy } from "@mohasinac/appkit";
+import { Stack, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
@@ -235,14 +235,14 @@ export function SellerShippingConfigsView({
           </Div>
         )}
         {isLoading ? (
-          <Div className="space-y-2">
+          <Stack gap="sm">
             {Array.from({ length: 3 }).map((_, i) => (
               <Div
                 key={i}
                 className="h-14 animate-pulse border border-zinc-100 dark:border-slate-700" surface="muted" rounded="xl"
               />
             ))}
-          </Div>
+          </Stack>
         ) : rows.length === 0 ? (
           <Div className="text-center" padding="y-4xl">
             <Text className="text-zinc-400 dark:text-zinc-400">

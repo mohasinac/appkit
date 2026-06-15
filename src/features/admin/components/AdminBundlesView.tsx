@@ -205,7 +205,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
             Status
           </Text>
@@ -229,8 +229,8 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
               </button>
             ))}
           </Div>
-        </Div>
-        <Div className="space-y-2">
+        </Stack>
+        <Stack gap="sm">
           <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
             Stock
           </Text>
@@ -255,7 +255,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
               </button>
             ))}
           </Div>
-        </Div>
+        </Stack>
       </>
     ),
   };

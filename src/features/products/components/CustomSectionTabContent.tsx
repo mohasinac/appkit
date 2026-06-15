@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Dl, Dt, Dd, RichText, Text } from "../../../ui";
+import { Dd, Div, Dl, Dt, RichText, Stack, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 
@@ -13,7 +13,7 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
   const fields = section.fields?.filter((f) => f.key && f.value) ?? [];
 
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       {html && (
         <RichText
           html={html}
@@ -52,6 +52,6 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
       {!html && fields.length === 0 && (
         <Text className="text-zinc-400 dark:text-zinc-400" size="sm">No content in this section.</Text>
       )}
-    </Div>
+    </Stack>
   );
 }

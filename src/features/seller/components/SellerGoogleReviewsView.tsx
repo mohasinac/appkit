@@ -110,14 +110,14 @@ export function SellerGoogleReviewsView({
 
   if (loading) {
     return (
-      <Div className="space-y-4 px-4" padding="y-lg">
+      <Stack className="px-4" gap="md" padding="y-lg">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
             className="h-12 animate-pulse rounded-xl border border-zinc-100 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800"
           />
         ))}
-      </Div>
+      </Stack>
     );
   }
 

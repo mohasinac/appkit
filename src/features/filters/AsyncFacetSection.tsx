@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Div, Input, Row, Span, Text } from "../../ui";
+import { Button, Div, Input, Row, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FacetOption } from "./FilterFacetSection";
 import type { AsyncPage } from "../../ui/components/PaginatedSelect";
@@ -178,7 +178,7 @@ export function AsyncFacetSection({
       </Div>
 
       {!collapsed && (
-        <Div className="mt-3 space-y-1">
+        <Stack className="mt-3" gap="xs">
           {options.map((opt) => {
             const isSelected = selected.includes(opt.value);
             return (
@@ -225,7 +225,7 @@ export function AsyncFacetSection({
               Load more…
             </Button>
           )}
-        </Div>
+        </Stack>
       )}
     </Div>
   );

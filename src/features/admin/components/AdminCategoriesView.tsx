@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
@@ -37,14 +37,14 @@ const COLUMNS: AdminTableColumn<CategoryRow>[] = [
     header: "Category",
     sortable: true,
     render: (row) => (
-      <Div className="space-y-1">
+      <Stack gap="xs">
         <Text weight="semibold" color="primary">
           {row.primary}
         </Text>
         <Text size="xs" color="muted">
           {row.secondary}
         </Text>
-      </Div>
+      </Stack>
     ),
   },
   {
@@ -125,7 +125,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
     ] satisfies BulkActionItem[],
   renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
     <>
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Active
         </Text>
@@ -151,8 +151,8 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
             </button>
           ))}
         </Div>
-      </Div>
-      <Div className="space-y-2">
+      </Stack>
+      <Stack gap="sm">
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Featured
         </Text>
@@ -177,7 +177,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
             </button>
           ))}
         </Div>
-      </Div>
+      </Stack>
     </>
   ),
   renderEditor: ({ editId, closePanel }) => (

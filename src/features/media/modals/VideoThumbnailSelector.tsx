@@ -8,16 +8,7 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Alert,
-  Button,
-  Div,
-  Modal,
-  Row,
-  Span,
-  Spinner,
-  Text,
-} from "../../../ui";
+import { Alert, Button, Div, Modal, Row, Span, Spinner, Stack, Text } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 
 const __O = {
@@ -90,7 +81,7 @@ export function VideoThumbnailSelector({
       title={t("thumbnailTitle")}
       size="lg"
     >
-      <Div className="space-y-4">
+      <Stack gap="md">
         <Text variant="secondary" size="xs">
           {t("thumbnailInstruction")}
         </Text>
@@ -138,7 +129,7 @@ export function VideoThumbnailSelector({
             )}
           </Button>
         </Row>
-      </Div>
+      </Stack>
     </Modal>
   );
 }

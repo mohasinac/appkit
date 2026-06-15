@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -86,7 +86,7 @@ const CAPABILITY_GROUPS = [
 
 function CapabilityTable() {
   return (
-    <Div className="space-y-6">
+    <Stack gap="lg">
       {CAPABILITY_GROUPS.map(({ group, items }) => (
         <Div key={group}>
           <Text className="tracking-wide text-[var(--appkit-color-text-muted)] mb-2" size="xs" weight="semibold" transform="uppercase">{group}</Text>
@@ -118,7 +118,7 @@ function CapabilityTable() {
           </Div>
         </Div>
       ))}
-    </Div>
+    </Stack>
   );
 }
 
@@ -159,9 +159,9 @@ const LOCKED_FEATURES = [
 
 function LockedFeatureGuide() {
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       {LOCKED_FEATURES.map(({ cap, missing, howToUnlock, contractRequired }) => (
-        <Div key={cap} className="border border-[var(--appkit-color-border)] space-y-2" rounded="lg" padding="md">
+        <Stack key={cap} className="border border-[var(--appkit-color-border)]" gap="sm" rounded="lg" padding="md">
           <Row align="center" gap="sm">
             <Text className="font-mono text-[var(--appkit-color-text)]" size="sm" weight="semibold">{cap}</Text>
             {contractRequired && (
@@ -180,9 +180,9 @@ function LockedFeatureGuide() {
             <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">How to unlock:</Text>
             <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">{howToUnlock}</Text>
           </Div>
-        </Div>
+        </Stack>
       ))}
-    </Div>
+    </Stack>
   );
 }
 
@@ -245,7 +245,7 @@ export type StoreCapabilitiesGuideViewProps = Record<string, never>;
 
 export function StoreCapabilitiesGuideView(_props: StoreCapabilitiesGuideViewProps) {
   return (
-    <Div className="space-y-6 pb-10">
+    <Stack className="pb-10" gap="lg">
       {/* Back nav */}
       <a
         href={String(ROUTES.STORE.GUIDE)}
@@ -285,6 +285,6 @@ export function StoreCapabilitiesGuideView(_props: StoreCapabilitiesGuideViewPro
       <GuideSection title="5. Multiple stores">
         <MultipleStoresSection />
       </GuideSection>
-    </Div>
+    </Stack>
   );
 }

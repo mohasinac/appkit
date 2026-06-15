@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Row, Span, Text, useToast } from "../../../ui";
+import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Row, Span, Stack, Text, useToast } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
@@ -120,7 +120,7 @@ export function SpinWheelView({
     : undefined;
 
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       <LoginRequiredModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -205,6 +205,6 @@ export function SpinWheelView({
           {l.outsideWindow}
         </Text>
       ) : null}
-    </Div>
+    </Stack>
   );
 }

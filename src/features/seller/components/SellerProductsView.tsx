@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -150,7 +150,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     key: "primary",
     header: "Product",
     render: (row) => (
-      <Div className="space-y-1">
+      <Stack gap="xs">
         <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="medium">{row.primary}</Text>
         <Row gap="sm">
           <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>
@@ -158,7 +158,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
           </Badge>
           <Span size="xs" color="muted">{row.secondary}</Span>
         </Row>
-      </Div>
+      </Stack>
     ),
   },
   {

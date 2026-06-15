@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -66,10 +66,10 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     key: "primary",
     header: "Prize Draw",
     render: (row) => (
-      <Div className="space-y-1">
+      <Stack gap="xs">
         <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="medium">{row.primary}</Text>
         <Span size="xs" color="muted">{row.secondary}</Span>
-      </Div>
+      </Stack>
     ),
   },
   {

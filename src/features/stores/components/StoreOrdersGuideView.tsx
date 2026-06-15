@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Accordion, Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Accordion, Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -76,11 +76,11 @@ const STATUS_ROWS = [
 
 function OrderLifecycle() {
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-xs text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
         {STATUS_LIFECYCLE}
       </Div>
-      <Div className="space-y-2">
+      <Stack gap="sm">
         {STATUS_ROWS.map(({ status, meaning, action }) => (
           <Div key={status} className="border border-[var(--appkit-color-border)] text-sm" rounded="lg" padding="sm">
             <Row className="mb-1" align="center" gap="sm">
@@ -92,8 +92,8 @@ function OrderLifecycle() {
             </Text>
           </Div>
         ))}
-      </Div>
-    </Div>
+      </Stack>
+    </Stack>
   );
 }
 
@@ -135,7 +135,7 @@ const CARRIERS = [
 
 function CarriersSection() {
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
         Any carrier is accepted — enter the tracking number manually in the order detail.
         Buyers receive the tracking number as entered; they look it up on the carrier's website.
@@ -162,7 +162,7 @@ function CarriersSection() {
         For items above ₹5,000, consider using a carrier that offers shipment insurance (Blue Dart, Delhivery Premium).
         Document the item with photos before sealing the package — this is your evidence if a damage claim arises.
       </Alert>
-    </Div>
+    </Stack>
   );
 }
 
@@ -307,13 +307,13 @@ const FAQS = [
 
 function CommonFAQs() {
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       {FAQS.map(({ q, a }) => (
         <Accordion key={q} title={q}>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">{a}</Text>
         </Accordion>
       ))}
-    </Div>
+    </Stack>
   );
 }
 
@@ -323,7 +323,7 @@ export type StoreOrdersGuideViewProps = Record<string, never>;
 
 export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
   return (
-    <Div className="space-y-6 pb-10">
+    <Stack className="pb-10" gap="lg">
       {/* Back nav */}
       <a
         href={String(ROUTES.STORE.GUIDE)}
@@ -371,6 +371,6 @@ export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
       <GuideSection title="7. Common questions">
         <CommonFAQs />
       </GuideSection>
-    </Div>
+    </Stack>
   );
 }

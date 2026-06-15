@@ -1,6 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Text, TextLink, type PerViewConfig } from "../../../ui";
+import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text, TextLink, type PerViewConfig } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 const __O = {
@@ -109,14 +109,14 @@ function CarouselSkeleton({ count }: { count: number }) {
   return (
     <Div className={`flex gap-4 ${__O.hidden} px-4`}>
       {Array.from({ length: count }).map((_, i) => (
-        <Div
+        <Stack
           key={i}
-          className="flex-none min-w-[clamp(150px,18vw,260px)] max-w-[clamp(240px,36vw,380px)] h-[clamp(180px,26vh,260px)] space-y-2"
+          className="flex-none min-w-[clamp(150px,18vw,260px)] max-w-[clamp(240px,36vw,380px)] h-[clamp(180px,26vh,260px)]" gap="sm"
         >
           <Div className={`aspect-square rounded-xl ${skeleton.image}`} />
           <Div className={`${skeleton.text} w-3/4`} />
           <Div className={`${skeleton.text} w-1/2`} />
-        </Div>
+        </Stack>
       ))}
     </Div>
   );

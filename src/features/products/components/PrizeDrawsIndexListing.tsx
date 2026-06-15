@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Span, Text } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
@@ -221,7 +221,7 @@ export function PrizeDrawsIndexListing({
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <Div className="space-y-4">
+        <Stack gap="md">
           <>
             <label
               htmlFor="prizeRevealStatusFilter"
@@ -249,7 +249,7 @@ export function PrizeDrawsIndexListing({
             categoryOptions={categoryOptions}
             brandOptions={brandOptions}
           />
-        </Div>
+        </Stack>
       </FilterDrawer>
     </Div>
   );

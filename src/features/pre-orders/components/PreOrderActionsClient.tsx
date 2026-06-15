@@ -51,7 +51,7 @@ export function PreOrderActionsClient({
   }
 
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       {price !== null && (
         <Div>
           <Text size="2xl" weight="bold" color="primary">
@@ -123,6 +123,6 @@ export function PreOrderActionsClient({
           ))}
         </Row>
       </Div>
-    </Div>
+    </Stack>
   );
 }

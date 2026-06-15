@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useAddresses } from "../hooks/useAddresses";
-import { BulkActionBar, Div, ListingFilterDrawer, ListingToolbar, Text } from "../../../ui";
+import { BulkActionBar, Div, ListingFilterDrawer, ListingToolbar, Stack, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";
@@ -99,7 +99,7 @@ export function AddressesIndexListing({
   });
 
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       {/* ── Toolbar ─────────────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={activeFilterCount}
@@ -147,6 +147,6 @@ export function AddressesIndexListing({
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
         <AddressFilters table={pendingTable} />
       </ListingFilterDrawer>
-    </Div>
+    </Stack>
   );
 }

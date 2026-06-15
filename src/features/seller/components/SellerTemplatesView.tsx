@@ -400,14 +400,14 @@ export function SellerTemplatesView({
           </Div>
         )}
         {isLoading ? (
-          <Div className="space-y-2">
+          <Stack gap="sm">
             {Array.from({ length: 5 }).map((_, i) => (
               <Div
                 key={i}
                 className="h-14 animate-pulse border border-zinc-100 dark:border-slate-700" surface="muted" rounded="xl"
               />
             ))}
-          </Div>
+          </Stack>
         ) : pageRows.length === 0 ? (
           <Div className="text-center" padding="y-4xl">
             <Text className="text-zinc-400 dark:text-zinc-400">

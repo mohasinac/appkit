@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { Div, Row, Text, Badge } from "../../../ui";
+import { Badge, Div, Row, Stack, Text } from "../../../ui";
 import type { BidDocument } from "../schemas/firestore";
 
 const __O = {
@@ -165,10 +165,10 @@ export function AuctionBidsTable({
   }
 
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       {auctions.map((auction) => (
         <AuctionRow key={auction.productId} auction={auction} portal={portal} />
       ))}
-    </Div>
+    </Stack>
   );
 }

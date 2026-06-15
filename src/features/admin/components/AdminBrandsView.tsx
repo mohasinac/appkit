@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, ListingLayout, Text } from "../../../ui";
@@ -37,14 +37,14 @@ const COLUMNS: AdminTableColumn<BrandRow>[] = [
     header: "Brand",
     sortable: true,
     render: (row) => (
-      <Div className="space-y-1">
+      <Stack gap="xs">
         <Text weight="semibold" color="primary">
           {row.primary}
         </Text>
         <Text size="xs" color="muted">
           {row.secondary}
         </Text>
-      </Div>
+      </Stack>
     ),
   },
   {
@@ -118,7 +118,7 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
       },
     ] satisfies BulkActionItem[],
   renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-    <Div className="space-y-2">
+    <Stack gap="sm">
       <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
         Status
       </Text>
@@ -144,7 +144,7 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
           </button>
         ))}
       </Div>
-    </Div>
+    </Stack>
   ),
   renderEditor: ({ editId, closePanel }) => (
     <AdminBrandEditorView

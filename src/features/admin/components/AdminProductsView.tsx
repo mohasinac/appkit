@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Div, ListingLayout, Span, Text, Toggle, useToast } from "../../../ui";
@@ -62,10 +62,10 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       header: "Item",
       sortable: true,
       render: (row) => (
-        <Div className="space-y-1">
+        <Stack gap="xs">
           <Text weight="semibold" color="primary">{row.primary}</Text>
           <Text size="xs" color="muted">{row.secondary}</Text>
-        </Div>
+        </Stack>
       ),
     },
     {

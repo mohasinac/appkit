@@ -178,9 +178,9 @@ function renderTicketListArea(props: {
   return (
     <>
       {isLoading && (
-        <Div className="space-y-3">
+        <Stack gap="3">
           {[1, 2, 3].map((i) => <Div key={i} className="h-16 animate-pulse" surface="subtle" rounded="lg" />)}
-        </Div>
+        </Stack>
       )}
       {error && (
         <Div className="border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
@@ -272,7 +272,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
             </Div>
           )}
           {(selectedTicket.messages ?? []).length > 0 && (
-            <Div className="space-y-2">
+            <Stack gap="sm">
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Messages</Text>
               <Div className={`space-y-2 max-h-72 ${__O.yAuto}`}>
                 {(selectedTicket.messages ?? []).map((msg, i) => (
@@ -285,7 +285,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
                   </Div>
                 ))}
               </Div>
-            </Div>
+            </Stack>
           )}
           {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (
             <Stack gap="sm">

@@ -11,17 +11,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useState, useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import {
-  Alert,
-  Button,
-  Div,
-  Label,
-  Progress,
-  Row,
-  Span,
-  Spinner,
-  Text,
-} from "../../../ui";
+import { Alert, Button, Div, Label, Progress, Row, Span, Spinner, Stack, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { ImageCropModal } from "../modals/ImageCropModal";
 import type { ImageCropData } from "../modals/ImageCropModal";
@@ -220,7 +210,7 @@ export function ImageUpload({
   };
 
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       {label && (
         <Label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {label}
@@ -229,7 +219,7 @@ export function ImageUpload({
 
       <Div className="relative">
         {preview ? (
-          <Div className="space-y-2">
+          <Stack gap="sm">
             <Div className={`relative h-32 max-w-xs mx-auto ${__O.hidden} rounded-lg border border-zinc-200 dark:border-zinc-700`}>
               <MediaImage src={preview} alt="Preview" size="card" />
               {uploading && progress > 0 && (
@@ -269,7 +259,7 @@ export function ImageUpload({
                 </Button>
               </Row>
             )}
-          </Div>
+          </Stack>
         ) : (
           <>
             {showCamera && isCameraSupported && (
@@ -282,7 +272,7 @@ export function ImageUpload({
             )}
 
             {!showCamera && (
-              <Div className="space-y-2">
+              <Stack gap="sm">
                 <Row gap="sm" wrap>
                   {showFileInput && (
                     <Button
@@ -324,7 +314,7 @@ export function ImageUpload({
                     : accept.split(",").map((a) => a.split("/")[1]?.toUpperCase() ?? a).join(" ")}{" "}
                   — max {maxSizeMB}MB
                 </Text>
-              </Div>
+              </Stack>
             )}
           </>
         )}
@@ -388,6 +378,6 @@ export function ImageUpload({
           aspectRatio={cropAspectRatio}
         />
       )}
-    </Div>
+    </Stack>
   );
 }

@@ -3,21 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Card,
-  CardBody,
-  ConfirmDeleteModal,
-  Div,
-  Form,
-  Input,
-  Select,
-  Span,
-  StackedViewShell,
-  Text,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, Card, CardBody, ConfirmDeleteModal, Div, Form, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -201,7 +187,7 @@ export function AdminAddressEditorView({
       {/* ── Ownership ── */}
       <Card variant="outlined" padding="lg">
         <SectionHeading>Ownership</SectionHeading>
-        <Div className="space-y-4">
+        <Stack gap="md">
           <Div className="flex gap-6">
             {(["user", "store"] as AddressOwnerType[]).map((type) => (
               <label
@@ -239,13 +225,13 @@ export function AdminAddressEditorView({
                 : "Store slug (e.g. store-pokemon-palace)"
             }
           />
-        </Div>
+        </Stack>
       </Card>
 
       {/* ── Contact & Location ── */}
       <Card variant="outlined" padding="lg">
         <SectionHeading>Contact &amp; Location</SectionHeading>
-        <Div className="space-y-4">
+        <Stack gap="md">
           <Div className="grid gap-4 sm:grid-cols-2">
             <Input
               label="Label"
@@ -322,7 +308,7 @@ export function AdminAddressEditorView({
             onChange={(e) => set("country", e.target.value)}
             placeholder="India"
           />
-        </Div>
+        </Stack>
       </Card>
 
       {/* ── Flags ── */}

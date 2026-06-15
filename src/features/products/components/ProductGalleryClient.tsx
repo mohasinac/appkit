@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
-import { Div, Row, Text } from "../../../ui";
+import { Div, Row, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 const __O = {
@@ -53,7 +53,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
   const mainImage = images[activeIndex] ?? images[0];
 
   return (
-    <Div className="space-y-3">
+    <Stack gap="3">
       {/* Main image — click to open lightbox */}
       <div
         className="overflow-hidden rounded-xl border border-zinc-100 dark:border-zinc-800 cursor-zoom-in aspect-square w-full"
@@ -108,6 +108,6 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
         onClose={() => setLightboxIndex(null)}
         onNavigate={(i) => setLightboxIndex(i)}
       />
-    </Div>
+    </Stack>
   );
 }

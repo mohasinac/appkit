@@ -283,7 +283,7 @@ export function AdminProductEditorView({
         <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
           Classification
         </Text>
-        <Div className="space-y-4">
+        <Stack gap="md">
           <Stack gap="xs">
             <Text size="sm" weight="medium" color="primary">
               Store
@@ -379,7 +379,7 @@ export function AdminProductEditorView({
               </Stack>
             )}
           />
-        </Div>
+        </Stack>
       </Card>
 
       {/* Mobile-only action buttons */}

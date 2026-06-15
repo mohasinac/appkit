@@ -10,8 +10,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Cropper, CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
-import { Button, Div, Modal, Row, Text, useToast } from "../../../ui";
-
+import { Button, Div, Modal, Row, Stack, Text, useToast } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 export interface ImageEditorProps {
   isOpen: boolean;
@@ -98,7 +97,7 @@ export function ImageEditor({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("cropTitle")} size="lg">
-      <Div className="space-y-3">
+      <Stack gap="3">
         <Text variant="secondary" size="xs">
           {t("cropInstruction")}
         </Text>
@@ -212,7 +211,7 @@ export function ImageEditor({
             {t("cropCancel")}
           </Button>
         </Div>
-      </Div>
+      </Stack>
     </Modal>
   );
 }

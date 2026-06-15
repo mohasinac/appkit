@@ -575,7 +575,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderProductsCategorySelectors(): React.ReactNode {
     return (
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
           Category selectors
         </Text>
@@ -604,7 +604,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             ))}
           </Div>
         )}
-      </Div>
+      </Stack>
     );
   }
 
@@ -767,7 +767,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderAuctionsCategorySelectors(): React.ReactNode {
     return (
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
           Category selectors
         </Text>
@@ -796,7 +796,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             ))}
           </Div>
         )}
-      </Div>
+      </Stack>
     );
   }
 
@@ -1001,7 +1001,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     onToggle: (categoryId: string, checked: boolean) => void,
   ): React.ReactNode {
     return (
-      <Div className="space-y-2">
+      <Stack gap="sm">
         <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
           Category selectors
         </Text>
@@ -1021,7 +1021,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             ))}
           </Div>
         )}
-      </Div>
+      </Stack>
     );
   }
 
@@ -1484,7 +1484,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Checkbox checked={faqBuilder.showOnHomepage} label="Show on homepage" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, showOnHomepage: e.target.checked }))} />
         <Checkbox checked={faqBuilder.expandedByDefault} label="Expanded by default" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, expandedByDefault: e.target.checked }))} />
         <Checkbox checked={faqBuilder.linkToFullPage} label="Link to full FAQ page" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, linkToFullPage: e.target.checked }))} />
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Categories</Text>
           <Div className="grid grid-cols-2 gap-2">
             {FAQ_CATEGORY_OPTIONS.map((opt) => (
@@ -1501,7 +1501,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               />
             ))}
           </Div>
-        </Div>
+        </Stack>
       </Div>
     );
   }
@@ -1545,20 +1545,20 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Input label="Content title" value={bannerBuilder.contentTitle} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentTitle: e.target.value }))} />
         <Input label="Content subtitle" value={bannerBuilder.contentSubtitle} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentSubtitle: e.target.value }))} />
         <Textarea label="Content description" value={bannerBuilder.contentDescription} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentDescription: e.target.value }))} rows={2} />
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Buttons (max 3)</Text>
           {bannerBuilder.buttons.map((btn, index) => (
-            <Div key={`banner-btn-${index}`} className="space-y-2" rounded="md" padding="xs" border="default">
+            <Stack key={`banner-btn-${index}`} rounded="md" padding="xs" border="default" gap="sm">
               <Row align="center" justify="between"><Text size="xs" color="muted">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Row>
               <Input label="Text" value={btn.text} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], text: e.target.value }; return { ...prev, buttons: next }; })} />
               <Input label="Link" value={btn.link} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], link: e.target.value }; return { ...prev, buttons: next }; })} />
               <Select label="Variant" value={btn.variant} onValueChange={(v) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], variant: v as "primary" | "secondary" | "outline" }; return { ...prev, buttons: next }; })} options={[{ label: "Primary", value: "primary" }, { label: "Secondary", value: "secondary" }, { label: "Outline", value: "outline" }]} />
-            </Div>
+            </Stack>
           ))}
           {bannerBuilder.buttons.length < 3 ? (
             <Button type="button" variant="outline" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: [...prev.buttons, { text: "", link: "", variant: "primary" }] }))}>+ Add button</Button>
           ) : null}
-        </Div>
+        </Stack>
         <Checkbox checked={bannerBuilder.clickable} label="Make entire banner clickable" onChange={(e) => setBannerBuilder((prev) => ({ ...prev, clickable: e.target.checked }))} />
         {bannerBuilder.clickable ? (
           <Input label="Click link" value={bannerBuilder.clickLink} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, clickLink: e.target.value }))} placeholder="/products" />
@@ -1572,7 +1572,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">Features Section Builder</Text>
         <Input label="Section title" value={featuresBuilder.title} onChange={(e) => setFeaturesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Feature items</Text>
           {featuresBuilder.features.map((feature, index) => (
             <Row key={`feat-${index}`} align="center" gap="sm">
@@ -1581,7 +1581,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             </Row>
           ))}
           <Button type="button" variant="outline" size="sm" onClick={() => setFeaturesBuilder((prev) => ({ ...prev, features: [...prev.features, ""] }))}>+ Add feature</Button>
-        </Div>
+        </Stack>
       </Div>
     );
   }
@@ -1625,7 +1625,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Textarea label="Description" value={whatsappBuilder.description} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
         <Input label="WhatsApp group link" type="url" value={whatsappBuilder.groupLink} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, groupLink: e.target.value }))} placeholder="https://chat.whatsapp.com/..." />
         <Input label="Member count" type="number" min={0} value={String(whatsappBuilder.memberCount)} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, memberCount: Math.max(0, Number(e.target.value) || 0) }))} />
-        <Div className="space-y-2">
+        <Stack gap="sm">
           <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Benefits</Text>
           {whatsappBuilder.benefits.map((benefit, index) => (
             <Row key={`wb-${index}`} align="center" gap="sm">
@@ -1634,7 +1634,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             </Row>
           ))}
           <Button type="button" variant="outline" size="sm" onClick={() => setWhatsappBuilder((prev) => ({ ...prev, benefits: [...prev.benefits, ""] }))}>+ Add benefit</Button>
-        </Div>
+        </Stack>
         <Input label="Button text" value={whatsappBuilder.buttonText} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, buttonText: e.target.value }))} />
         <Input label="Testimonial (optional)" value={whatsappBuilder.testimonial} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, testimonial: e.target.value }))} />
       </Div>
@@ -1807,10 +1807,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
     function renderCardFields(card: CustomCardsCardBuilderEntry, index: number): React.ReactNode {
       return (
-        <Div
-          key={`custom-card-${index}`}
-          className="space-y-3" rounded="md" padding="sm" border="default"
-        >
+        <Stack
+          key={`custom-card-${index}`} rounded="md" padding="sm" border="default" gap="3">
           <Row align="center" justify="between">
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Card {index + 1}
@@ -1848,7 +1846,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               { label: "Medium", value: "md" }, { label: "Large", value: "lg" },
             ]}
           />
-        </Div>
+        </Stack>
       );
     }
 
@@ -1911,7 +1909,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           }
         />
 
-        <Div className="space-y-3">
+        <Stack gap="3">
           <Row align="center" justify="between">
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Cards ({customCardsBuilder.cards.length})
@@ -1926,7 +1924,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           {customCardsBuilder.cards.length === 0 ? (
             <Text size="sm" color="muted">No cards added yet. Click "Add card" to start.</Text>
           ) : null}
-        </Div>
+        </Stack>
       </Div>
     );
   }
@@ -2227,10 +2225,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderCollectionEntry(entry: { type: CollectionCardEntryType; label: string; limit: number }, idx: number): React.ReactNode {
     return (
-      <Div
-        key={`collection-${idx}`}
-        className="space-y-2" rounded="lg" padding="sm" border="default"
-      >
+      <Stack
+        key={`collection-${idx}`} rounded="lg" padding="sm" border="default" gap="sm">
         <Select
           label={`Collection ${idx + 1} type`}
           value={entry.type}
@@ -2282,7 +2278,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         >
           Remove
         </Button>
-      </Div>
+      </Stack>
     );
   }
 
@@ -2352,7 +2348,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           onChange={(e) => setCollectionCardsBuilder((prev) => ({ ...prev, showCollectionTabs: e.target.checked }))}
         />
 
-        <Div className="space-y-3">
+        <Stack gap="3">
           <Text size="sm" weight="semibold" color="primary">
             Collections ({entries.length}/3)
           </Text>
@@ -2378,7 +2374,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               Maximum of 3 collections per section.
             </Text>
           )}
-        </Div>
+        </Stack>
 
         <Text size="xs" color="muted">
           Data fetching wires into the per-resource repositories — the section renders an
@@ -2594,7 +2590,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         {reorderDraft.length === 0 ? (
           <Text size="sm" color="muted">No sections to reorder.</Text>
         ) : (
-          <Div className="space-y-2">
+          <Stack gap="sm">
             {reorderDraft.map((item, index) => (
               <Div
                 key={`reorder-${item.id}`}
@@ -2639,7 +2635,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
                 </Button>
               </Div>
             ))}
-          </Div>
+          </Stack>
         )}
       </Div>
 

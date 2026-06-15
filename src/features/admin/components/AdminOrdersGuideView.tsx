@@ -1,11 +1,11 @@
 import React from "react";
 import { ShoppingBag, Hash, Scale, Wallet, RotateCcw, DollarSign, Gavel } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminOrdersGuideView() {
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
@@ -21,7 +21,7 @@ export function AdminOrdersGuideView() {
         {
           Icon: ShoppingBag, title: "Order Statuses",
           content: (
-            <Div className="space-y-2 text-sm">
+            <Stack className="text-sm" gap="sm">
               {[
                 ["PENDING", "Payment received. Can still be cancelled by buyer or admin."],
                 ["PROCESSING", "Seller has acknowledged and is packing."],
@@ -37,7 +37,7 @@ export function AdminOrdersGuideView() {
                 </Div>
               ))}
               <Text className="text-[var(--appkit-color-text-muted)] pt-2" size="sm">Admin-only transitions: force-cancel (any status before DELIVERED), force-refund (post-DELIVERED dispute).</Text>
-            </Div>
+            </Stack>
           ),
         },
         {
@@ -113,6 +113,6 @@ export function AdminOrdersGuideView() {
           <Div className="px-6 py-5">{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }

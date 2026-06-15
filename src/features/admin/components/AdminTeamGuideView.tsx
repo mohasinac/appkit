@@ -1,6 +1,6 @@
 import React from "react";
 import { Users, Shield } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 export function AdminTeamGuideView() {
   const PERMISSION_GROUPS = [
     { name: "content_manager", desc: "Blog, FAQs, Events, Carousel, Sections, Ads, Newsletter read + write." },
@@ -14,7 +14,7 @@ export function AdminTeamGuideView() {
   ];
 
   return (
-    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+    <Stack className="pb-10 max-w-3xl mx-auto" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
           <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
@@ -48,14 +48,14 @@ export function AdminTeamGuideView() {
           content: (
             <>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Permission groups are predefined bundles. Assign a group to an employee to give them a coherent set of access rights:</Text>
-              <Div className="space-y-2">
+              <Stack gap="sm">
                 {PERMISSION_GROUPS.map(({ name, desc }) => (
                   <Div key={name} className="flex gap-3 text-sm">
                     <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{name}</Text>
                     <Text className="text-[var(--appkit-color-text-muted)]">{desc}</Text>
                   </Div>
                 ))}
-              </Div>
+              </Stack>
             </>
           ),
         },
@@ -90,6 +90,6 @@ export function AdminTeamGuideView() {
           <Div className="px-6 py-5">{content}</Div>
         </Section>
       ))}
-    </Div>
+    </Stack>
   );
 }
