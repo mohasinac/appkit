@@ -236,7 +236,7 @@ export function DataTable<T extends { id: string }>({
         </Table>
       </Div>
       {totalPages > 1 && onPageChange && (
-        <Row className="border-t border-neutral-200 dark:border-slate-700 px-4" padding="y-sm" align="center" justify="end" gap="sm">
+        <Row className="border-t border-neutral-200 px-4" padding="y-sm" align="center" justify="end" gap="sm">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <Button
               key={p}

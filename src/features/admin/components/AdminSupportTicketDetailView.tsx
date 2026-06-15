@@ -449,8 +449,7 @@ export function AdminSupportTicketDetailView({
 
         {/* ST-6 — Linked parties (admin-assigned subjects of this ticket) */}
         <Stack
-          padding="sm"
-          className="dark:border-zinc-700" gap="sm" rounded="lg" border="default"
+          padding="sm" gap="sm" rounded="lg" border="default"
         >
           <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             Linked parties
@@ -599,7 +598,7 @@ function OrderItemsPanel(props: {
                   {orderItems.map((it, idx) => (
                     <Row
                       key={`${it.productId}-${idx}`}
-                      className="dark:border-zinc-700 px-2 py-1" rounded="default" align="center" gap="sm" border="default"
+                      className="px-2 py-1" rounded="default" align="center" gap="sm" border="default"
                     >
                       <Div className="flex-1 min-w-0">
                         <Text className="truncate" size="xs" weight="medium">

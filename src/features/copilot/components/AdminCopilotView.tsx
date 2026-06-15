@@ -69,7 +69,7 @@ function renderCopilotChatPanel(props: {
 }) {
   const { messages, conversationId, isLoading, error, input, setInput, labels, messagesEndRef, handleSubmit } = props;
   return (
-    <Stack className="border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
+    <Stack className="border border-neutral-200 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
       <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
         <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
@@ -126,7 +126,7 @@ function renderCopilotHistoryPanel(props: {
       ) : null}
       <Div className={`max-h-72 ${__O.yAuto} space-y-2`}>
         {(historyQuery.data?.messages ?? []).map((log, index) => (
-          <Div key={`${log.createdAt}-${index}`} className="border border-neutral-200 dark:border-slate-700" rounded="lg" padding="xs">
+          <Div key={`${log.createdAt}-${index}`} className="border border-neutral-200" rounded="lg" padding="xs">
             <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
             <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3}`}>Q: {log.prompt}</Text>
             <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3} text-neutral-600 dark:text-zinc-300`}>A: {log.response}</Text>
@@ -199,7 +199,7 @@ export function AdminCopilotView({
           </Row>
         ),
         <Div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
-          <Stack className="border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
+          <Stack className="border border-neutral-200 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]" rounded="xl">
             <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
@@ -290,7 +290,7 @@ export function AdminCopilotView({
               {(historyQuery.data?.messages ?? []).map((log, index) => (
                 <Div
                   key={`${log.createdAt}-${index}`}
-                  className="border border-neutral-200 dark:border-slate-700" rounded="lg" padding="xs"
+                  className="border border-neutral-200" rounded="lg" padding="xs"
                 >
                   <Text className="text-neutral-500 dark:text-zinc-400" size="xs" weight="medium">
                     {new Date(log.createdAt).toLocaleString()}

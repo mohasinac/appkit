@@ -110,7 +110,7 @@ export function CategoryBundlesListing({
 
   if (filtered.length === 0 && !query && !showOutOfStock) {
     return (
-      <Div className="border-dashed text-center dark:border-zinc-700" padding="y-4xl" rounded="2xl" border="default">
+      <Div className="border-dashed text-center" padding="y-4xl" rounded="2xl" border="default">
         <Text color="muted">
           No bundles available{brandName ? ` for ${brandName}` : ""} yet.
         </Text>

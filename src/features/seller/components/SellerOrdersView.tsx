@@ -209,7 +209,7 @@ function OrderDetailDrawer({
             {(order.items ?? []).length > 0 && (
               <Div>
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
-                <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 border border-[var(--appkit-color-border)] dark:border-slate-700" rounded="lg">
+                <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 border border-[var(--appkit-color-border)]" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
                     <Row key={i} className="px-3 py-2.5" align="center" justify="between" gap="3">
                       <Div className="min-w-0">
@@ -248,7 +248,7 @@ function OrderDetailDrawer({
             )}
 
             {/* Update section */}
-            <Div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 pt-4 space-y-3">
+            <Div className="border-t border-[var(--appkit-color-border)] pt-4 space-y-3">
               <Heading level={4} size="sm" weight="semibold">Update order</Heading>
               <Select label="New status" value={newStatus} options={UPDATE_STATUS_OPTIONS} onChange={(e) => setNewStatus(e.target.value)} />
               <Input label="Tracking number" value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. 12345678901234" />
@@ -263,7 +263,7 @@ function OrderDetailDrawer({
           </Div>
 
           {/* Footer */}
-          <Row className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 px-4 py-3.5" align="center" justify="end" gap="3">
+          <Row className="border-t border-[var(--appkit-color-border)] px-4 py-3.5" align="center" justify="end" gap="3">
             <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
             <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
           </Row>

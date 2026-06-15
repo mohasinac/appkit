@@ -206,7 +206,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden border border-neutral-200 dark:border-slate-700 bg-neutral-100 dark:bg-slate-800" rounded="xl"
+            className="animate-pulse overflow-hidden border border-neutral-200 bg-neutral-100 dark:bg-slate-800" rounded="xl"
           >
             <Div className="aspect-video bg-neutral-200 dark:bg-slate-700" />
             <Div className={`space-y-2 ${__P.p5}`}>

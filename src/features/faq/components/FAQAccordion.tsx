@@ -17,7 +17,7 @@ function FAQAccordionItem({
   renderExpandedFooter,
 }: FAQAccordionItemProps) {
   return (
-    <Div className="border-b border-neutral-200 dark:border-slate-700 last:border-0">
+    <Div className="border-b border-neutral-200 last:border-0">
       <Button
         variant="ghost"
         onClick={onToggle}

@@ -1548,7 +1548,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Div className="space-y-2">
           <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Buttons (max 3)</Text>
           {bannerBuilder.buttons.map((btn, index) => (
-            <Div key={`banner-btn-${index}`} className="space-y-2 dark:border-slate-700" rounded="md" padding="xs" border="default">
+            <Div key={`banner-btn-${index}`} className="space-y-2" rounded="md" padding="xs" border="default">
               <Row align="center" justify="between"><Text size="xs" color="muted">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Row>
               <Input label="Text" value={btn.text} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], text: e.target.value }; return { ...prev, buttons: next }; })} />
               <Input label="Link" value={btn.link} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], link: e.target.value }; return { ...prev, buttons: next }; })} />
@@ -1809,7 +1809,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       return (
         <Div
           key={`custom-card-${index}`}
-          className="space-y-3 dark:border-slate-700" rounded="md" padding="sm" border="default"
+          className="space-y-3" rounded="md" padding="sm" border="default"
         >
           <Row align="center" justify="between">
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
@@ -2229,7 +2229,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     return (
       <Div
         key={`collection-${idx}`}
-        className="space-y-2 dark:border-slate-700" rounded="lg" padding="sm" border="default"
+        className="space-y-2" rounded="lg" padding="sm" border="default"
       >
         <Select
           label={`Collection ${idx + 1} type`}
@@ -2598,7 +2598,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             {reorderDraft.map((item, index) => (
               <Div
                 key={`reorder-${item.id}`}
-                className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-2 dark:border-slate-700" rounded="md" padding="xs" border="default"
+                className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-2" rounded="md" padding="xs" border="default"
                 draggable
                 onDragStart={() => setDragIndex(index)}
                 onDragOver={(event) => event.preventDefault()}

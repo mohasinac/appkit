@@ -114,7 +114,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           </Span>
         )}
       </Row>
-        <Row justify="between" className="mt-4 border-t border-neutral-100 dark:border-slate-700 pt-3">
+        <Row justify="between" className="mt-4 border-t border-neutral-100 pt-3">
           <Span size="sm" className="text-neutral-500 dark:text-zinc-400">
           {order.currency ?? ""} Total
         </Span>
@@ -151,7 +151,7 @@ export function OrdersList({
         {Array.from({ length: 3 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse border border-neutral-200 dark:border-slate-700 p-5" rounded="xl"
+            className="animate-pulse border border-neutral-200 p-5" rounded="xl"
           >
             <Row justify="between">
               <Stack gap="xs">

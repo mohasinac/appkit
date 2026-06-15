@@ -107,7 +107,7 @@ export function AutoBreadcrumbs({
   const allCrumbs = [{ label: "Home", href: localePrefix || "/" }, ...crumbs];
 
   return (
-    <Div className="border-y border-zinc-200/80 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:border-slate-800 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/85">
+    <Div className="border-y border-zinc-200/80 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/85">
       <Div className="container mx-auto max-w-[1920px] px-5 sm:px-6 lg:px-8" padding="y-xs">
         <Nav aria-label="Breadcrumb" className={className}>
           <Ol className="flex items-center gap-2 text-sm flex-wrap">

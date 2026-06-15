@@ -116,7 +116,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           return (
             <Div
               key={f.name}
-              className="group dark:border-slate-700 overflow-hidden bg-zinc-50 dark:bg-slate-800" rounded="lg" border="default"
+              className="group overflow-hidden bg-zinc-50 dark:bg-slate-800" rounded="lg" border="default"
             >
               <Row className="aspect-square bg-zinc-100 dark:bg-slate-700 text-xs text-zinc-500 dark:text-zinc-400" align="center" justify="center">
                 {isImage ? (
@@ -199,7 +199,7 @@ function MediaUploaderPanel({
 }: MediaUploaderPanelProps) {
   return (
     <Div
-      className="space-y-5 bg-white dark:border-slate-700 dark:bg-slate-900" rounded="xl" padding="md" border="default"
+      className="space-y-5 bg-white dark:bg-slate-900" rounded="xl" padding="md" border="default"
     >
       <Text size="sm" weight="semibold" color="primary">
         Upload & Copy URL
@@ -214,7 +214,7 @@ function MediaUploaderPanel({
         onStagedUrlsChange={setHeroStagedUrls}
       />
       {heroAssetUrl && (
-        <Row className="bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-3" padding="y-xs" align="center" gap="sm" rounded="lg" border="default">
+        <Row className="bg-zinc-50 dark:bg-zinc-800 px-3" padding="y-xs" align="center" gap="sm" rounded="lg" border="default">
           <Text className="flex-1 truncate font-mono" color="muted" size="xs">
             {heroAssetUrl}
           </Text>
@@ -245,7 +245,7 @@ function MediaUploaderPanel({
           {galleryAssets.map((asset, i) => (
             <Row
               key={i}
-              className="bg-zinc-50 dark:bg-zinc-800 dark:border-zinc-700 px-2 py-1" rounded="default" align="center" gap="sm" border="default"
+              className="bg-zinc-50 dark:bg-zinc-800 px-2 py-1" rounded="default" align="center" gap="sm" border="default"
             >
               <Text className="flex-1 truncate font-mono" color="muted" size="xs">
                 {asset.url}

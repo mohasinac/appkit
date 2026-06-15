@@ -120,7 +120,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
                 key={i}
                 role="img"
                 aria-label={`Review image ${i + 1}`}
-                className="h-16 w-16 bg-center bg-cover border border-neutral-100 dark:border-zinc-700" rounded="lg"
+                className="h-16 w-16 bg-center bg-cover border border-neutral-100" rounded="lg"
                 // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
               />
@@ -201,7 +201,7 @@ export function ReviewsList({
         {Array.from({ length: 4 }).map((_, i) => (
           <Div
             key={i}
-            className="border border-neutral-200 dark:border-zinc-700 p-5" rounded="xl"
+            className="border border-neutral-200 p-5" rounded="xl"
           >
             <Div className="flex gap-3">
               <Skeleton className="h-9 w-9 rounded-full" />

@@ -180,7 +180,7 @@ export function AdminStoreEditorView({
           ({capabilities.size} active)
         </Span>
       </Span>
-      <Div className="dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700" rounded="xl" border="default">
+      <Div className="divide-y divide-zinc-100 dark:divide-slate-700" rounded="xl" border="default">
         {CAPABILITY_GROUPS.map((group) => {
           const checked = group.caps.filter((c) => capabilities.has(c.key)).length;
           return (

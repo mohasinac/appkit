@@ -60,7 +60,7 @@ export function StoreHeader({
             <Div
               role="img"
               aria-label={store.storeName}
-              className="-mt-8 h-16 w-16 border-2 border-white dark:border-slate-800 bg-center bg-cover" rounded="xl" shadow="sm"
+              className="-mt-8 h-16 w-16 border-2 border-white bg-center bg-cover" rounded="xl" shadow="sm"
               // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${store.storeLogoURL})` }}
             />
