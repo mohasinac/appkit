@@ -116,7 +116,7 @@ if (STRICT && violations.length > 0) {
 
 if (violations.length > 0) {
   console.warn(`audit-unknown-leakage: REPORT MODE — ${violations.length} sites await migration (across ${totalScanned} files).`);
-  console.warn(`  Run with MIGRATE=strict to fail. Wired strict-zero by W8.`);
+  console.warn(`  Run with MIGRATE=strict to fail. Wired into the consumer dispatcher (REPORT mode) — flip to strict-zero once the backlog drains.`);
   console.warn(`  Top patterns:`);
   const byPat = new Map();
   for (const v of violations) byPat.set(v.pattern, (byPat.get(v.pattern) ?? 0) + 1);
