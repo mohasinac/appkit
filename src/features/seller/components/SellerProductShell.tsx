@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
@@ -1140,7 +1141,7 @@ export function SellerProductShell({
 
   if (mode === "create" && formMode === "quick") {
     return (
-      <FormShellProvider isDirty={isDirty} values={draft as Record<string, unknown>}>
+      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>}>
         <FormShell
           isOpen
           onClose={handleDiscard}
@@ -1217,7 +1218,7 @@ export function SellerProductShell({
           </Div>
         )}
       >
-        <FormShellProvider isDirty={isDirty} values={draft as Record<string, unknown>}>
+        <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>}>
           <StepForm<SellerProductDraft>
             steps={steps}
             values={draft}
@@ -1260,7 +1261,7 @@ export function SellerProductShell({
       publishLabel="Update"
       previewSlot={previewSlot}
     >
-      <FormShellProvider isDirty={isDirty} values={draft as Record<string, unknown>}>
+      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>}>
       <Stack gap="lg">
         <Section id="basic">
           <Heading level={3} className="mb-4">Basic Info</Heading>

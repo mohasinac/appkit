@@ -1,9 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import type { JsonValue } from "@mohasinac/appkit";
 import { apiClient, ApiClientError } from "../../../http";
 
-type UnknownRecord = Record<string, unknown>;
+type UnknownRecord = Record<string, JsonValue>;
 
 interface UseSellerListingDataOptions<TResponse, TRow extends { id: string }> {
   queryKey: readonly unknown[];

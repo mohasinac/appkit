@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 
 import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -331,7 +332,7 @@ export function SellerProductsView({
           price: priceRaw ? `₹${(priceRaw / 100).toLocaleString("en-IN")}` : "—",
           physicalLocation:
             item.physicalLocation &&
-            typeof (item.physicalLocation as Record<string, unknown>).zone === "string"
+            typeof (item.physicalLocation as Record<string, JsonValue>).zone === "string"
               ? (item.physicalLocation as { zone: string; shelf: string; bin: string })
               : undefined,
         };
