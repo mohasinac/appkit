@@ -165,7 +165,7 @@ export function ShopByCategorySection({
   if (!isLoading && allCategories.length === 0) return null;
 
   return (
-    <Section className={`px-4 md:py-12 ${className}`} surface="subtle" padding="y-2xl">
+    <Section className={`md:py-12 ${className}`} surface="subtle" paddingY="y-2xl" paddingX="x-md">
       <Div className="mx-auto max-w-7xl">
         <Div className="mb-6 text-center">
           <Heading level={2} className={`md:text-3xl ${themed.textPrimary}`} size="2xl" weight="bold">

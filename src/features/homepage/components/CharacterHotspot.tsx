@@ -586,7 +586,7 @@ function UniverseBrowseRow({
 }) {
   return (
     <Div gap="3" 
-      className={`mx-auto max-w-7xl px-4 ${THEME_CONSTANTS.grid.cols6Lg}`} padding="y-lg"
+      className={`mx-auto max-w-7xl ${THEME_CONSTANTS.grid.cols6Lg}`} paddingY="y-lg" paddingX="x-md"
       style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
     >
       {universeLinks.map(({ label, href, color, icon }) => (

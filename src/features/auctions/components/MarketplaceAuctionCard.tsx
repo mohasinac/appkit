@@ -241,7 +241,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
         )}
       </Div>
       <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">
-        <Div layout="inline-flex" gap="1" textWeight="semibold" textSize="xs" className={`items-center px-2.5 ${countdownClass}`} padding="y-2xs" rounded="full">
+        <Div layout="inline-flex" gap="1" textWeight="semibold" textSize="xs" className={`items-center .5 ${countdownClass}`} paddingY="y-2xs" paddingX="x-xs" rounded="full">
           <Clock className="h-3 w-3" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
         </Div>

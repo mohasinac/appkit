@@ -21,7 +21,7 @@ export function CTABannerSection({
   className = "",
 }: CTABannerSectionProps) {
   return (
-    <Section tone="accent-banner" className={`px-4 ${className}`} padding="y-4xl">
+    <Section tone="accent-banner" className={`${className}`} paddingY="y-4xl" paddingX="x-md">
       <Div className="mx-auto max-w-3xl text-center">
         <Span className="mb-4 inline-block" size="2xl" aria-hidden="true">
           ✨

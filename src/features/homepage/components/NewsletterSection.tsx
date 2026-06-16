@@ -28,7 +28,7 @@ export function NewsletterSection({
   className = "",
 }: NewsletterSectionProps) {
   return (
-    <Section className={`px-4 relative ${__O.hidden} ${className}`} padding="y-4xl">
+    <Section className={`relative ${__O.hidden} ${className}`} paddingY="y-4xl" paddingX="x-md">
       {/* Gradient background layer */}
       <Div
         className="absolute inset-0 bg-[image:var(--appkit-gradient-section-cool)] pointer-events-none"

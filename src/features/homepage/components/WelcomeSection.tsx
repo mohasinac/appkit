@@ -51,7 +51,7 @@ export function WelcomeSection({
   if (isLoading) {
     return (
       <Section
-        className={`relative overflow-hidden md:py-24 px-4 ${className}`} padding="y-4xl"
+        className={`relative overflow-hidden md:py-24 ${className}`} paddingY="y-4xl" paddingX="x-md"
       >
         <Div className="animate-pulse max-w-4xl mx-auto text-center">
           <Div className="h-6 w-52 mx-auto mb-6" surface="subtle" rounded="full" />

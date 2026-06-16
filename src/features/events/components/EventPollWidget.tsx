@@ -100,7 +100,7 @@ export function EventPollWidget({
 
   if (pollConfig.requireLogin && !user) {
     return (
-      <Stack className={`px-6 text-center ${className}`} gap="3" rounded="xl" padding="y-xl" border="default">
+      <Stack className={`text-center ${className}`} gap="3" rounded="xl" paddingY="y-xl" paddingX="x-lg" border="default">
         <Text weight="semibold" color="primary">Login to vote</Text>
         <Text size="sm" color="muted">You need an account to participate in this poll.</Text>
         <a
