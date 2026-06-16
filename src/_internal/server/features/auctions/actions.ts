@@ -12,6 +12,7 @@ import {
   computeExtendedEndDate,
 } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export async function placeBidAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
@@ -44,7 +45,7 @@ export async function placeBidAction(input: unknown): Promise<ActionResult<unkno
       // Now set this new bid as the winning bid
       await bidRepository.setWinningBid(bid.id, auctionId);
     
-      const updates: Record<string, unknown> = {
+      const updates: FirestoreDocument = {
         currentBid: amount,
         bidCount: ((product as any).bidCount ?? 0) + 1,
       };

@@ -89,7 +89,7 @@ export async function runSeed(config: SeedConfig): Promise<SeedResult> {
       const toUpdate: string[] = [];
       const ids = validDocs.map((doc, i) =>
         String(
-          (doc as Record<string, unknown>)[idField] ?? `auto-${i}`,
+          (doc as FirestoreDocument)[idField] ?? `auto-${i}`,
         ),
       );
       const GETALL_CHUNK = 30;

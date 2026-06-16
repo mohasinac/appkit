@@ -1,5 +1,5 @@
 "use client";
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type FormValues } from "@mohasinac/appkit";
 import React from "react";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import type {
@@ -82,7 +82,7 @@ const NEXT_YEAR_ISO = () => {
 };
 
 async function quickCreateStoreCoupon(
-  values: Record<string, unknown>,
+  values: FormValues,
 ): Promise<PaginatedSelectOption<string>> {
   const code = String(values.code ?? "")
     .toUpperCase()

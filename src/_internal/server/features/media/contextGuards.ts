@@ -20,6 +20,7 @@ import {
   validateMediaFilename,
   type MediaFilenameContext,
 } from "../../../../utils/id-generators";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 /**
  * W1-51 — validate the generated filename before returning ok:true so a
@@ -32,7 +33,7 @@ function okWithFilename(
   ext: string,
 ):
   | { ok: true; filename: string; ext: string }
-  | { ok: false; status: 500; error: string; details: Record<string, unknown> } {
+  | { ok: false; status: 500; error: string; details: FirestoreDocument } {
   if (validateMediaFilename(filename)) return { ok: true, filename, ext };
   return {
     ok: false,
@@ -85,7 +86,7 @@ export interface GuardError {
   ok: false;
   error: string;
   status: number;
-  details?: Record<string, unknown>;
+  details?: FirestoreDocument;
 }
 
 export interface GuardSuccess {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Div, Form, FormActions, Input, Label, Select, SideDrawer, Stack, useToast } from "../../../ui";
@@ -67,7 +67,7 @@ export function AdminOrderEditorView({
 
   const saveMutation = useApiMutation({
     mutationFn: async () => {
-      const payload: Record<string, unknown> = {
+      const payload: FirestoreDocument = {
         status,
         notes: notes || undefined,
       };

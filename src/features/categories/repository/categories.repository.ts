@@ -27,6 +27,7 @@ import {
   type CategoryMoveInput,
   type CategoryTreeNode,
 } from "../schemas";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
@@ -318,7 +319,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       const now = new Date();
 
       const categoryRef = this.db.collection(this.collection).doc(categoryId);
-      const updates: Record<string, unknown> = {
+      const updates: FirestoreDocument = {
         "metrics.productCount": increment(productDelta),
         "metrics.auctionCount": increment(auctionDelta),
         "metrics.totalProductCount": increment(productDelta),
@@ -497,7 +498,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     const colRef = this.db.collection(this.collection);
 
     const directRef = colRef.doc(categoryId);
-    const directUpdate: Record<string, unknown> = {
+    const directUpdate: FirestoreDocument = {
       "metrics.productCount": increment(productDelta),
       "metrics.auctionCount": increment(auctionDelta),
       "metrics.totalProductCount": increment(productDelta),
@@ -592,7 +593,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   async getSublistingListings(
     sublistingId: string,
     limit = 20,
-  ): Promise<Record<string, unknown>[]> {
+  ): Promise<FirestoreDocument[]> {
     const snap = await this.db
       .collection("products")
       .where("sublistingCategoryId", "==", sublistingId)

@@ -14,6 +14,7 @@
  */
 
 import type { BidDocument } from "../features/auctions/schemas/firestore";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -24,7 +25,7 @@ const BIDDER_EMAILS: Record<string, string> = {
   "user-seto-kaiba": "kaiba@kaibalandmark.in",
 };
 
-function withBidDefaults(b: Record<string, unknown>): Partial<BidDocument> {
+function withBidDefaults(b: FirestoreDocument): Partial<BidDocument> {
   return {
     ...b,
     productTitle: b.productTitle as string ?? (b.productId as string ?? "").replace(/^auction-/, "").replace(/-/g, " "),

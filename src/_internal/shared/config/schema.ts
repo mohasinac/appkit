@@ -1,3 +1,4 @@
+import type { FirestoreDocument } from "@mohasinac/appkit";
 /**
  * AppkitConfig — consumer's contract with all appkit CLI binaries.
  *
@@ -71,7 +72,7 @@ export interface AppkitFirebaseExtensions {
   /** Additional Firestore field overrides appended to the base list. */
   fieldOverrides?: FirestoreFieldOverride[];
   /** Additional RTDB rule paths deep-merged into the base rules object. */
-  database?: Record<string, unknown>;
+  database?: FirestoreDocument;
   /** Raw Firestore security rules block injected inside the top-level match block. */
   firestoreRules?: string;
   /** Raw Storage security rules block injected inside the bucket match block. */

@@ -5,11 +5,12 @@ import { SideDrawer } from "./SideDrawer";
 import { Button } from "./Button";
 import { QuickFormDrawer } from "../../features/shell/QuickFormDrawer";
 import type { QuickFieldDef } from "../../features/shell/QuickFormDrawer";
+import type { FirestoreDocument, FormValues } from "../../schemas/types";
 
 export interface PaginatedSelectOption<V = string> {
   value: V;
   label: string;
-  meta?: Record<string, unknown>;
+  meta?: FirestoreDocument;
 }
 
 export interface AsyncPage<T> {
@@ -39,9 +40,9 @@ interface BaseProps<V> {
   }) => ReactNode;
   createFields?: QuickFieldDef[];
   /** Zod schema for the inline create form — forwarded to QuickFormDrawer. */
-  createSchema?: import("zod").ZodType<Record<string, unknown>> | import("zod").ZodType<unknown>;
+  createSchema?: import("zod").ZodType<FormValues> | import("zod").ZodType<unknown>;
   onCreateSubmit?: (
-    values: Record<string, unknown>,
+    values: FormValues,
   ) => Promise<PaginatedSelectOption<V>>;
   createSubmitLabel?: string;
 }

@@ -1,3 +1,4 @@
+import type { FirestoreDocument } from "@mohasinac/appkit";
 /**
  * Action telemetry sink — SB-UNI-X5 2026-05-13.
  *
@@ -21,7 +22,7 @@ export interface ActionEvent {
   /** Stable id from the CTA registry (e.g. "product.add-to-cart"). */
   actionId: string;
   /** Contextual payload — resource id, listingType, store, etc. */
-  ctx?: Record<string, unknown>;
+  ctx?: FirestoreDocument;
   /** Result of the action — undefined when not yet known. */
   success?: boolean;
   /** ISO timestamp of the emission. */
@@ -59,7 +60,7 @@ export const actionTracker = {
    */
   emit(
     actionId: string,
-    ctx?: Record<string, unknown>,
+    ctx?: FirestoreDocument,
     success?: boolean,
   ): void {
     const event: ActionEvent = {

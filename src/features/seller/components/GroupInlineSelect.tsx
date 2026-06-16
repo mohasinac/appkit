@@ -8,6 +8,7 @@ import type {
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { Text } from "../../../ui";
+import type { FormValues } from "@mohasinac/appkit";
 
 interface GroupItem {
   id?: string;
@@ -80,7 +81,7 @@ function toGroupSlug(name: string): string {
 }
 
 async function quickCreateGroup(
-  values: Record<string, unknown>,
+  values: FormValues,
   scope: "store" | "admin",
 ): Promise<PaginatedSelectOption<string>> {
   const title = String(values.title ?? "").trim();
@@ -128,7 +129,7 @@ export function GroupInlineSelect(props: GroupInlineSelectProps) {
             placeholder: "e.g. Pokémon Starter Bundle",
           },
         ],
-        onCreateSubmit: (values: Record<string, unknown>) =>
+        onCreateSubmit: (values: FormValues) =>
           quickCreateGroup(values, scope),
         createSubmitLabel: "Create group",
       }

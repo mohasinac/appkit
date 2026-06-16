@@ -1,3 +1,4 @@
+import type { FirestoreDocument } from "@mohasinac/appkit";
 // appkit/src/seed/factories/homepage-section.factory.ts
 let _seq = 1;
 
@@ -16,7 +17,7 @@ export interface SeedHomepageSectionDocument {
   type: HomepageSectionType;
   sortOrder: number;
   isActive: boolean;
-  content: Record<string, unknown>;
+  content: FirestoreDocument;
 }
 
 export function makeHomepageSection(

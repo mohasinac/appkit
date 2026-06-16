@@ -71,6 +71,7 @@ import {
   runSyncPreflight,
 } from "../../../shared/checkout/rules";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 /**
  * SB-UNI-N — Atomically claim the next available digital code for a confirmed
@@ -261,7 +262,7 @@ async function resolveShippingCost(
 function buildStockUpdatePayload(
   product: ProductDocument,
   qtyDelta: number,
-): Record<string, unknown> {
+): FirestoreDocument {
   const lt = (product.listingType ?? "standard") as ListingType;
   const rule = getListingRule(lt);
   return {

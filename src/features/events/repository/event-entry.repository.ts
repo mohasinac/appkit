@@ -21,6 +21,7 @@ import {
   type EventEntryCreateInput,
   type EventEntryDocument,
 } from "../schemas";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 class EventEntryRepository extends BaseRepository<EventEntryDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
@@ -143,7 +144,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
       const byUser = new Map<string, { displayName: string; totalPoints: number; entryCount: number }>();
       for (const doc of snapshot.docs) {
         const raw = decryptPiiFields(
-          { id: doc.id, ...doc.data() } as Record<string, unknown>,
+          { id: doc.id, ...doc.data() } as FirestoreDocument,
           [...EVENT_ENTRY_PII_FIELDS],
         ) as unknown as EventEntryDocument;
         if (!raw.userId) continue;
@@ -183,7 +184,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
   async createEntry(input: EventEntryCreateInput): Promise<EventEntryDocument> {
     try {
       const now = new Date();
-      const encrypted = encryptPiiFields(input as Record<string, unknown>, [
+      const encrypted = encryptPiiFields(input as FirestoreDocument, [
         ...EVENT_ENTRY_PII_FIELDS,
       ]);
       const data = prepareForFirestore({

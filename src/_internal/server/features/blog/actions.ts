@@ -6,6 +6,7 @@ import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { blogPostInputSchema, blogPostUpdateSchema } from "../../../shared/features/blog/schema";
 import { assertBlogPostExists, assertBlogSlugUnique, computeReadTime } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export async function createBlogPostAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
@@ -31,7 +32,7 @@ export async function updateBlogPostAction(postId: string, input: unknown): Prom
       const post = await assertBlogPostExists(postId);
       const parsed = blogPostUpdateSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid blog post input");
-      const updates: Record<string, unknown> = { ...parsed.data };
+      const updates: FirestoreDocument = { ...parsed.data };
       if (parsed.data.content) updates.readTimeMinutes = computeReadTime(parsed.data.content);
       if (parsed.data.status === "published" && post.status !== "published") {
         updates.publishedAt = new Date();

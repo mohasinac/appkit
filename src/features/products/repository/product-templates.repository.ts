@@ -12,6 +12,7 @@ import {
   type ProductTemplateUpdateInput,
 } from "../schemas/product-templates";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 function slugify(name: string): string {
   return name
@@ -50,7 +51,7 @@ export class ProductTemplateRepository extends BaseRepository<ProductTemplateDoc
     await this.db
       .collection(this.collection)
       .doc(id)
-      .update(prepareForFirestore(update as Record<string, unknown>));
+      .update(prepareForFirestore(update as FirestoreDocument));
     const updated = await this.findById(id);
     if (!updated) throw new Error(`Template ${id} not found after update`);
     return updated;

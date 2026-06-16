@@ -2,11 +2,12 @@ import { reviewRepository, storeRepository } from "../../../../repositories";
 import { ReviewStatusValues } from "../../../../features/reviews/schemas/firestore";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import type { JobContext } from "../runtime/types";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export interface HandleReviewWriteInput {
   reviewId: string;
-  before: Record<string, unknown> | null;
-  after: Record<string, unknown> | null;
+  before: FirestoreDocument | null;
+  after: FirestoreDocument | null;
 }
 
 export async function handleReviewWrite(

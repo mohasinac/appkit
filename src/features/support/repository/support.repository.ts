@@ -20,6 +20,7 @@ import {
   type TicketMessage,
   type TicketStatus,
 } from "../schemas/firestore";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export class SupportRepository extends BaseRepository<SupportTicketDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
@@ -144,7 +145,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
       const ref = this.db
         .collection(SUPPORT_TICKET_COLLECTION)
         .doc(ticketId);
-      const updateData: Record<string, unknown> = {
+      const updateData: FirestoreDocument = {
         messages: firebaseFieldOps.arrayUnion(prepareForFirestore(message)),
         updatedAt: new Date(),
       };

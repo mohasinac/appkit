@@ -1,7 +1,7 @@
 "use client";
 
 import { Row } from "@mohasinac/appkit/ui";
-import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonValue, type FirestoreDocument } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -172,7 +172,7 @@ export function AdminProductEditorView({
 
   const handleStoreSelect = (
     value: string | null,
-    option: { value: string; label: string; meta?: Record<string, unknown> } | null,
+    option: { value: string; label: string; meta?: FirestoreDocument } | null,
   ) => {
     setProduct((prev) => ({
       ...prev,

@@ -1,3 +1,4 @@
+import type { FirestoreDocument } from "@mohasinac/appkit";
 const LABEL_VERIFIED_SELLERS = "Verified Sellers";
 
 export const SECTION_TYPE_OPTIONS = [
@@ -33,7 +34,7 @@ export type SectionType = (typeof SECTION_TYPE_OPTIONS)[number];
 export interface SectionPatchPayload {
   enabled: boolean;
   order?: number;
-  config: Record<string, unknown>;
+  config: FirestoreDocument;
 }
 
 export type ResourceMode = "automatic" | "manual";

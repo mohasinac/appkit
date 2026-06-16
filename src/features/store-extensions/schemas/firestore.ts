@@ -1,3 +1,4 @@
+import type { FirestoreDocument } from "@mohasinac/appkit";
 /**
  * S-STORE Extensions — Firestore Document Types
  *
@@ -116,7 +117,7 @@ export interface AnalyticsCardDocument {
   title: string;
   type: AnalyticsCardType;
   metric: string;
-  filters: Record<string, unknown>;
+  filters: FirestoreDocument;
   position: number;
   isBuiltIn: boolean;
   isVisible: boolean;
@@ -223,7 +224,7 @@ export interface ListingTemplateDocument {
   description?: string;
   listingType: ListingTemplateType;
   /** JSON-shaped default fields applied when the template is selected. */
-  defaults: Record<string, unknown>;
+  defaults: FirestoreDocument;
   isShared: boolean;
   isActive: boolean;
   usageCount: number;

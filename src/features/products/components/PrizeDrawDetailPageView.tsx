@@ -34,6 +34,7 @@ import type {
   ProductDocument,
 } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export interface PrizeDrawDetailPageViewProps {
   id: string;
@@ -132,7 +133,7 @@ export async function PrizeDrawDetailPageView({
     );
   }
 
-  const p = product as unknown as Record<string, unknown>;
+  const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
   const title = String(p.title ?? p.name ?? "Prize Draw");
   const slug = typeof p.slug === "string" ? p.slug : String(p.id ?? "");

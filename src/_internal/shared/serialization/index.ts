@@ -1,3 +1,4 @@
+import type { FirestoreDocument } from "@mohasinac/appkit";
 /**
  * Hydration helpers — narrow the gap between Firestore document shapes
  * (which contain Timestamps, server FieldValues, undefined fields, etc.)
@@ -27,8 +28,8 @@ export function toClient<T>(value: T): T {
     return value.map((v) => toClient(v)) as unknown as T;
   }
 
-  const out: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+  const out: FirestoreDocument = {};
+  for (const [k, v] of Object.entries(value as FirestoreDocument)) {
     if (v === undefined) continue;
     out[k] = toClient(v);
   }

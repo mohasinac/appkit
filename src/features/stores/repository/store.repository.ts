@@ -26,6 +26,7 @@ import {
   encryptSecret,
   decryptSecret,
 } from "../../../security/settings-encryption";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export class StoreRepository extends BaseRepository<StoreDocument> {
   constructor() {
@@ -230,7 +231,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     averageRating: number | null,
   ): Promise<void> {
     if (!storeId) return;
-    const data: Record<string, unknown> = {
+    const data: FirestoreDocument = {
       "stats.totalProducts": totalProducts,
       "stats.itemsSold": itemsSold,
       "stats.totalReviews": totalReviews,

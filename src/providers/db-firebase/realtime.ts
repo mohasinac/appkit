@@ -24,6 +24,7 @@ import type {
 } from "../../contracts";
 import type { DocumentData } from "firebase-admin/firestore";
 import { getAdminRealtimeDb } from "./admin";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export abstract class FirebaseRealtimeRepository<
   T extends DocumentData,
@@ -151,7 +152,7 @@ export abstract class FirebaseRealtimeRepository<
     const ref = this.nodeRef(id);
     const handler = (snap: {
       exists(): boolean;
-      val(): Record<string, unknown> | null;
+      val(): FirestoreDocument | null;
     }) => {
       cb(snap.exists() ? ({ id, ...snap.val() } as unknown as T) : null);
     };
@@ -170,7 +171,7 @@ export abstract class FirebaseRealtimeRepository<
 
     const handler = (snap: {
       exists(): boolean;
-      val(): Record<string, Record<string, unknown>> | null;
+      val(): Record<string, FirestoreDocument> | null;
     }) => {
       if (!snap.exists()) {
         cb([]);

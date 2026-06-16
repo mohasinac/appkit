@@ -20,6 +20,7 @@ import {
   triggerEventRaffleHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 const REGION = "asia-south1";
 // Consumer-specific env var name — chosen at consumer install time, not appkit.
@@ -123,7 +124,7 @@ interface GatewayInput {
 }
 
 type GatewayHandler = (
-  input: Record<string, unknown>,
+  input: FirestoreDocument,
   ctx: JobContext,
 ) => Promise<unknown>;
 
@@ -148,7 +149,7 @@ async function gatewayHandler(input: GatewayInput, ctx: JobContext): Promise<unk
       httpStatus: 400,
     });
   }
-  return handler(params as Record<string, unknown>, ctx);
+  return handler(params as FirestoreDocument, ctx);
 }
 
 export const gateway = defineFunction<GatewayInput, unknown>({

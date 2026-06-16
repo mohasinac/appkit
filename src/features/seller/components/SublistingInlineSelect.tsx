@@ -1,5 +1,5 @@
 "use client";
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type FormValues } from "@mohasinac/appkit";
 import React from "react";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import type {
@@ -74,12 +74,12 @@ function toSublistingSlug(name: string): string {
 }
 
 async function quickCreateSublisting(
-  values: Record<string, unknown>,
+  values: FormValues,
 ): Promise<PaginatedSelectOption<string>> {
   const name = String(values.name ?? "").trim();
   const itemCode = String(values.itemCode ?? "").trim();
   if (!name) throw new Error("Name is required");
-  const payload: Record<string, unknown> = {
+  const payload: FormValues = {
     name,
     slug: toSublistingSlug(name),
   };

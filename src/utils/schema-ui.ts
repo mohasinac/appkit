@@ -1,3 +1,4 @@
+import type { FirestoreDocument } from "@mohasinac/appkit";
 /**
  * deriveFormFields — @mohasinac/appkit/utils
  *
@@ -167,7 +168,7 @@ function inferInputType(zodType: ZodLike): {
 
   switch (typeName) {
     case "ZodString": {
-      const checks = (unwrapped._def as Record<string, unknown>)?.checks;
+      const checks = (unwrapped._def as FirestoreDocument)?.checks;
       if (Array.isArray(checks)) {
         const hasMax = checks.some(
           (c: { kind?: string; value?: number }) =>
