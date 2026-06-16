@@ -67,9 +67,9 @@ export async function TrackOrderView({
         <Section
           className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="xl"
         >
-          <Div className={`w-16 h-16 bg-primary/10 dark:bg-primary/15 ${flex.center} mx-auto mb-4`} rounded="full">
+          <Row align="center" justify="center" className={`w-16 h-16 bg-primary/10 dark:bg-primary/15 mx-auto mb-4`} rounded="full">
             <ShoppingBag className="w-8 h-8 text-primary" />
-          </Div>
+          </Row>
           <Heading level={2} className="mb-3">
             {t("signInPrompt")}
           </Heading>
@@ -103,9 +103,9 @@ export async function TrackOrderView({
                 <Caption className="absolute top-4 right-4" weight="bold">
                   {String(index + 1).padStart(2, "0")}
                 </Caption>
-                <Div className={`w-12 h-12 ${bg} ${flex.center} mb-4`} rounded="xl">
+                <Row align="center" justify="center" className={`w-12 h-12 ${bg} mb-4`} rounded="xl">
                   <Icon className={`w-6 h-6 ${color}`} />
-                </Div>
+                </Row>
                 <Heading level={3} className="mb-2">
                   {title}
                 </Heading>

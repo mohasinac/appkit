@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Section, Span, Stack, Text } from "../../../ui";
+import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShieldAlert, Home, LogIn } from "lucide-react";
 
@@ -35,9 +35,9 @@ export async function UnauthorizedView({
         tone="accent-banner" className="min-h-[60vh] flex flex-col items-center justify-center text-center"
       >
         <Div className={`${page.container.sm}`}>
-          <Div className={`w-20 h-20 ${flex.center} mx-auto mb-6`} surface="default" rounded="2xl">
+          <Row align="center" justify="center" className={`w-20 h-20 mx-auto mb-6`} surface="default" rounded="2xl">
             <ShieldAlert className="w-10 h-10 text-white" />
-          </Div>
+          </Row>
           <Heading color="inverse" 
             level={1}
             variant="none"
@@ -51,7 +51,7 @@ export async function UnauthorizedView({
           >
             {t("subtitle")}
           </Text>
-          <Div className={`${flex.center} gap-4 flex-wrap`}>
+          <Row align="center" justify="center" gap="md" wrap >
             {LINKS.map(({ icon: Icon, label, href, isPrimary }) => (
               <TextLink
                 key={href}
@@ -68,7 +68,7 @@ export async function UnauthorizedView({
                 </Span>
               </TextLink>
             ))}
-          </Div>
+          </Row>
         </Div>
       </Section>
 

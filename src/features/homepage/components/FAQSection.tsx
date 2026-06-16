@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useMemo } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Heading, RichText, Section, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button, Div, Heading, RichText, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
 
 const __O = {
@@ -148,7 +148,7 @@ export function FAQSection({
 
         {/* Category Tabs — appkit Button with ghost variant */}
         {showTabs && (
-          <Div className={`${flex.center} flex-wrap gap-2 mb-8`}>
+          <Row align="center" justify="center" gap="sm" wrap className={`mb-8`}>
             <Button
               variant={activeTab === "all" ? "primary" : "ghost"}
               size="sm"
@@ -168,7 +168,7 @@ export function FAQSection({
                 {tab.label}
               </Button>
             ))}
-          </Div>
+          </Row>
         )}
 
         {/* FAQ Accordion */}

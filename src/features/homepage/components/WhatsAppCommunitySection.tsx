@@ -73,7 +73,7 @@ export function WhatsAppCommunitySection({
           <Div className="relative z-10 px-6 sm:px-10 sm:py-12" padding="y-2xl">
 
             {/* Top row — WhatsApp icon + member pill */}
-            <Div className={`${flex.between} flex-wrap gap-4 mb-8`}>
+            <Row align="center" justify="between" gap="md" wrap className={`mb-8`}>
               {/* WhatsApp branded icon */}
               <Row align="center" gap="3">
                 <Row className="w-12 h-12 bg-[#25D366] flex-shrink-0" align="center" justify="center" rounded="xl" shadow="lg">
@@ -95,7 +95,7 @@ export function WhatsAppCommunitySection({
                   </Span>
                 </Row>
               )}
-            </Div>
+            </Row>
 
             {/* Heading + description */}
             <Heading color="inverse" level={2} className="mb-3 leading-tight" smSize="3xl" size="2xl" weight="bold">

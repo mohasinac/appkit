@@ -107,7 +107,7 @@ function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
       <Stack gap="5">
         {steps.map(({ number, icon, title, text }) => (
           <Row key={number} className={`${__P.p5}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
-            <Div className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15 ${flex.center}`} rounded="full">{icon}</Div>
+            <Row align="center" justify="center" className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15`} rounded="full">{icon}</Row>
             <Div>
               <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
               <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
@@ -140,10 +140,10 @@ function renderOffersCtaSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["th
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <Div className={`${flex.center} gap-4 flex-wrap`}>
+      <Row align="center" justify="center" gap="md" wrap >
         <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>{t("ctaBrowse")}</TextLink>
         <TextLink href={String(ROUTES.PUBLIC.HOW_ORDERS_WORK)} variant="muted">{t("ctaOrders")}</TextLink>
-      </Div>
+      </Row>
     </Section>
   );
 }

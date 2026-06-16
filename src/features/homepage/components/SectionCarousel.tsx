@@ -230,14 +230,14 @@ export function SectionCarousel<T = unknown>({
 
           {/* Editorial ornament */}
           {headingVariant === "editorial" && (
-            <Div textSize="xs" 
-              className={`${flex.center} gap-2 mt-1 text-zinc-400 dark:text-zinc-400 select-none`}
+            <Row align="center" justify="center" gap="sm" textSize="xs" 
+              className={`mt-1 text-zinc-400 dark:text-zinc-400 select-none`}
               aria-hidden="true"
             >
               <Span className="h-px w-6 bg-current" />
               <Span size="xs">✶</Span>
               <Span className="h-px w-6 bg-current" />
-            </Div>
+            </Row>
           )}
 
           {description && (

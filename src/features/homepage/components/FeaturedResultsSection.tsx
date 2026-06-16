@@ -1,5 +1,5 @@
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Section, Span, Text, HorizontalScroller } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Row, Section, Span, Text } from "../../../ui";
 import { BeforeAfterCard } from "./BeforeAfterCard";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
@@ -60,14 +60,14 @@ export function FeaturedResultsSection({
           {title}
         </Heading>
 
-        <Div
-          className={`mt-3 ${flex.center} gap-2 text-zinc-400 dark:text-zinc-400`}
+        <Row align="center" justify="center" gap="sm" 
+          className={`mt-3 text-zinc-400 dark:text-zinc-400`}
           aria-hidden="true"
         >
           <Span className="h-px w-6 bg-current" />
           <Span size="xs">{ornamentLabel}</Span>
           <Span className="h-px w-6 bg-current" />
-        </Div>
+        </Row>
 
         {subtitle && (
           <Text className="mx-auto mt-4 max-w-md" color="muted" size="sm">

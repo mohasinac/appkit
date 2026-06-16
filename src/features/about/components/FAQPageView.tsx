@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Aside, Container, Details, Div, Heading, Nav, RichTextRenderer, Section, Span, Stack, Summary, Text } from "../../../ui";
+import { Aside, Container, Details, Div, Heading, Nav, RichTextRenderer, Row, Section, Span, Stack, Summary, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
 
@@ -140,14 +140,14 @@ export async function FAQPageView({
               <Text variant="secondary" className="mb-4" size="sm">
                 {t("stillNeedHelpText")}
               </Text>
-              <Div className={`${flex.center} gap-4 flex-wrap`}>
+              <Row align="center" justify="center" gap="md" wrap >
                 <TextLink href={String(ROUTES.PUBLIC.HELP)}>
                   {t("helpCenter")}
                 </TextLink>
                 <TextLink href={String(ROUTES.PUBLIC.CONTACT)} variant="muted">
                   {t("contactUs")}
                 </TextLink>
-              </Div>
+              </Row>
             </Section>
           </Div>
         </Stack>

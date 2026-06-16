@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Grid, Heading, Section, Span, Text } from "../../../ui";
+import { Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 
 // --- Types -------------------------------------------------------------------
 
@@ -101,11 +101,11 @@ export function HowItWorksInfoView({
                 key={number}
                 className={`flex gap-4 items-start`} border="default" surface="subtle" rounded="xl" padding="lg"
               >
-                <Div textSize="sm" 
-                  className={`shrink-0 w-10 h-10 ${stepAccent ?? accentClass} ${flex.center} font-bold`} rounded="xl"
+                <Row align="center" justify="center" textSize="sm" 
+                  className={`shrink-0 w-10 h-10 ${stepAccent ?? accentClass} font-bold`} rounded="xl"
                 >
                   <Span className={textClass}>{number}</Span>
-                </Div>
+                </Row>
                 <Div>
                   <Heading level={3} className="mb-1" weight="semibold">
                     {icon} {stepTitle}

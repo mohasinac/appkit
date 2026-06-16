@@ -142,7 +142,7 @@ function renderPreOrdersStepsSection(t: PreOrdersT, themed: (typeof THEME_CONSTA
       <Stack gap="5">
         {steps.map(({ number, icon, title, text }) => (
           <Row key={number} className={`${__P.p5}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
-            <Div className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15 ${flex.center}`} rounded="full">{icon}</Div>
+            <Row align="center" justify="center" className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15`} rounded="full">{icon}</Row>
             <Div>
               <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
               <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
@@ -160,9 +160,9 @@ function renderPreOrdersInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"],
       <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
           <Div key={title} className={`border ${__P.p5} ${color}`} rounded="xl">
-            <Div className={`w-10 h-10 ${flex.center} mb-3`} surface="default" rounded="lg">
+            <Row align="center" justify="center" className={`w-10 h-10 mb-3`} surface="default" rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
-            </Div>
+            </Row>
             <Text className="mb-1" weight="semibold">{title}</Text>
             <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
           </Div>
@@ -177,10 +177,10 @@ function renderPreOrdersCtaSection(t: PreOrdersT, themed: (typeof THEME_CONSTANT
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <Div className={`${flex.center} gap-4 flex-wrap`}>
+      <Row align="center" justify="center" gap="md" wrap >
         <TextLink href={String(ROUTES.PUBLIC.PRE_ORDERS)}>{t("ctaBrowse")}</TextLink>
         <TextLink href={String(ROUTES.PUBLIC.HOW_ORDERS_WORK)} variant="muted">{t("ctaOrders")}</TextLink>
-      </Div>
+      </Row>
     </Section>
   );
 }
