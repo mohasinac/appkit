@@ -143,7 +143,7 @@ export function BlogCategoryTabs({
   labels = {},
 }: BlogCategoryTabsProps) {
   return (
-    <Div className={`scrollbar-none flex gap-2 ${__O.xAuto}`} padding="b-2xs">
+    <Div layout="flex" gap="2" className={`scrollbar-none ${__O.xAuto}`} padding="b-2xs">
       <Button
         onClick={() => onSelect(null)}
         variant={!active ? "primary" : "ghost"}

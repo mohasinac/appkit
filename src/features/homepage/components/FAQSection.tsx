@@ -210,8 +210,8 @@ export function FAQSection({
                 </Button>
 
                 {/* Answer — CSS grid expand/collapse animation */}
-                <Div
-                  className={`grid transition-all duration-300 ease-out ${
+                <Div layout="grid" 
+                  className={`transition-all duration-300 ease-out ${
                     isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}
                 >

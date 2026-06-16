@@ -42,7 +42,7 @@ const CLS_ERROR_TEXT = "text-center text-sm text-error";
 function MessageBubble({ msg }: { msg: CopilotMessage }) {
   const isUser = msg.role === "user";
   return (
-    <Div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <Div layout="flex" className={`${isUser ? "justify-end" : "justify-start"}`}>
       <Div textSize="sm" 
         className={`max-w-[80%] py-2.5 ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} padding="x-md" rounded="2xl"
       >

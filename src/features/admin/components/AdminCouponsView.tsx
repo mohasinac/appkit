@@ -142,7 +142,7 @@ export function AdminCouponsView({
     ),
     renderCards: (rows, _view, selectionCtx, isLoading) =>
       isLoading ? (
-        <Div className="fluid-grid-card gap-3">
+        <Div gap="3" className="fluid-grid-card">
           {Array.from({ length: 6 }).map((_, i) => (
             <Stack border="subtle" 
               key={i}
@@ -159,7 +159,7 @@ export function AdminCouponsView({
           <Text color="faint">No coupons found</Text>
         </Div>
       ) : (
-        <Div className="fluid-grid-card gap-3">
+        <Div gap="3" className="fluid-grid-card">
           {rows.map((row) => (
             <CouponCard
               key={row.id}

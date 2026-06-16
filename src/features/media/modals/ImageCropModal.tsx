@@ -161,7 +161,7 @@ export function ImageCropModal({
           />
           {/* 3×3 grid overlay */}
           <Div className="absolute inset-0 pointer-events-none">
-            <Div className="absolute w-full h-full grid grid-cols-3 grid-rows-3">
+            <Div layout="grid" className="absolute w-full h-full grid-cols-3 grid-rows-3">
               {Array.from({ length: 9 }).map((_, i) => (
                 <Div key={i} className="border border-white/20 dark:border-slate-600/30" />
               ))}

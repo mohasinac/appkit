@@ -65,7 +65,7 @@ export function AppShell({
           {header}
         </BlockHeader>
       ) : null}
-      <Div className="flex flex-1">
+      <Div layout="flex" className="flex-1">
         {sidebar ? (
           <Aside className="hidden lg:block lg:w-64 lg:shrink-0" data-appshell-slot="sidebar">
             {sidebar}

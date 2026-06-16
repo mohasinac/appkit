@@ -586,8 +586,8 @@ function UniverseBrowseRow({
   universeLinks: InnerProps["universeLinks"];
 }) {
   return (
-    <Div
-      className={`mx-auto max-w-7xl px-4 ${THEME_CONSTANTS.grid.cols6Lg} gap-3`} padding="y-lg"
+    <Div gap="3" 
+      className={`mx-auto max-w-7xl px-4 ${THEME_CONSTANTS.grid.cols6Lg}`} padding="y-lg"
       style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
     >
       {universeLinks.map(({ label, href, color, icon }) => (

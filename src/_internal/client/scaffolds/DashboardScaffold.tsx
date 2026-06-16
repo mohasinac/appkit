@@ -54,7 +54,7 @@ export function DashboardScaffold({
   const bottomNav = renderBottomNav ? renderBottomNav(ctx) : nav;
 
   return (
-    <Div className={`appkit-dashboard-scaffold flex min-h-screen ${className ?? ""}`}>
+    <Div layout="flex" className={`appkit-dashboard-scaffold min-h-screen ${className ?? ""}`}>
       {nav ? (
         <aside
           className="sticky top-0 hidden h-screen w-64 shrink-0 overflow-y-auto border-r border-[var(--appkit-color-border)] lg:block"

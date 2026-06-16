@@ -145,7 +145,7 @@ export function HowItWorksSection({
           }`}
         >
           {pillLabel && (
-            <Div textWeight="medium" textSize="xs" className="inline-block mb-4 inline-flex items-center gap-2 border border-primary-500/30 bg-primary-500/10 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
+            <Div layout="inline-flex" gap="2" textWeight="medium" textSize="xs" className="inline-block mb-4 items-center border border-primary-500/30 bg-primary-500/10 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
               {pillLabel}
             </Div>
           )}

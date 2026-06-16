@@ -450,9 +450,9 @@ export function MediaLightbox({
 
   const current = items[index];
   return (
-    <Div
+    <Div layout="flex" 
       ref={containerRef}
-      className="fixed inset-0 z-[var(--appkit-z-tooltip)] bg-black/95 flex flex-col"
+      className="fixed inset-0 z-[var(--appkit-z-tooltip)] bg-black/95 flex-col"
       role="dialog"
       aria-modal="true"
       aria-label={L.lightboxTitle}

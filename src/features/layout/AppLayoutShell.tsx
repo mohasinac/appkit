@@ -460,7 +460,7 @@ function SidebarContent({
       )}
 
       {isAuthenticated && user?.stats && (
-        <Div className="grid grid-cols-2 gap-2">
+        <Div layout="grid" gap="2" className="grid-cols-2">
           {user.stats.totalOrders != null && (
             <Div className={CLS_STAT_BOX}>
               <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.totalOrders}</Text>
@@ -722,7 +722,7 @@ export function AppLayoutShell({
 
         <AutoBreadcrumbs />
 
-        <Div className="relative flex w-full flex-1 overflow-x-clip">
+        <Div layout="flex" className="relative w-full flex-1 overflow-x-clip">
           <SidebarLayout
             isOpen={sidebarOpen}
             ariaLabel="Secondary navigation"

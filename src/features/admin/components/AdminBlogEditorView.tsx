@@ -300,7 +300,7 @@ export function AdminBlogEditorView({
         return (
           <Stack gap="5">
             <Heading level={3} className="mb-2">SEO &amp; Tags</Heading>
-            <Div className="grid grid-cols-2 gap-4">
+            <Div layout="grid" gap="4" className="grid-cols-2">
               <Select
                 label="Category"
                 options={CATEGORY_OPTIONS}
@@ -342,7 +342,7 @@ export function AdminBlogEditorView({
       render: ({ values, onChange }) => (
         <Stack gap="5">
           <Heading level={3} className="mb-2">Publish Settings</Heading>
-          <Div className="grid grid-cols-2 gap-4">
+          <Div layout="grid" gap="4" className="grid-cols-2">
             <Select
               label="Status"
               options={STATUS_OPTIONS}

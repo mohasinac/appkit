@@ -159,7 +159,7 @@ export function OrdersList({
               </Stack>
               <Div className="h-6 w-20 bg-neutral-200" rounded="full" />
             </Row>
-            <Div className="mt-4 flex gap-3">
+            <Div layout="flex" gap="3" className="mt-4">
               <Div className="h-10 w-10 bg-neutral-200" rounded="lg" />
               <Div className="h-10 w-10 bg-neutral-200" rounded="lg" />
             </Div>

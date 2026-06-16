@@ -193,7 +193,7 @@ export function SellerCouponEditorView({
             <Text size="sm" className={CLS_SECTION_LABEL}>
               Usage Limits
             </Text>
-            <Div className="grid grid-cols-2 gap-3">
+            <Div layout="grid" gap="3" className="grid-cols-2">
               <Input
                 label="Total Uses"
                 type="number"
@@ -218,7 +218,7 @@ export function SellerCouponEditorView({
             <Text size="sm" className={CLS_SECTION_LABEL}>
               Validity Period
             </Text>
-            <Div className="grid grid-cols-2 gap-3">
+            <Div layout="grid" gap="3" className="grid-cols-2">
               <Input
                 label="Start Date"
                 type="date"

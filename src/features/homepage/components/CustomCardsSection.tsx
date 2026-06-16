@@ -215,7 +215,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
     <Section padding="y-3xl" surface="muted">
       <Div className={CLS_CONTAINER}>
         <SectionHeader title={title} />
-        <Div className={`grid ${colsClass} gap-4`}>
+        <Div layout="grid" gap="4" className={`${colsClass}`}>
           {cards.map((card) => (
             <CardItem key={card.id} card={card} />
           ))}

@@ -70,7 +70,7 @@ function TrustFeatureCard({
 
 function TrustStripItem({ item }: { item: TrustFeatureItem }) {
   return (
-    <Div className="inline-flex flex-shrink-0 items-center gap-2" padding="x-lg">
+    <Div layout="inline-flex" gap="2" className="flex-shrink-0 items-center" padding="x-lg">
       {item.renderIcon ? (
         item.renderIcon({ className: "w-5 h-5" })
       ) : (
@@ -123,7 +123,7 @@ export function TrustFeaturesSection({
         ref={sectionRef}
         className={`overflow-hidden border-y ${className}`} padding="y-md"
       >
-        <Div className="flex animate-marquee">
+        <Div layout="flex" className="animate-marquee">
           {doubled.map((item, i) => (
             <TrustStripItem key={`${item.iconName}-${i}`} item={item} />
           ))}

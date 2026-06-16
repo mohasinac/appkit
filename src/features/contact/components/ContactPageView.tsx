@@ -41,7 +41,7 @@ export function ContactPageView() {
 
           <AdSlot id="detail-below-gallery" className="mb-2" />
 
-          <Div className="grid grid-cols-12 gap-6">
+          <Div layout="grid" gap="6" className="grid-cols-12">
             <Div className="col-span-12 lg:col-span-8">
               <ContactForm
                 onSubmit={submitContact}

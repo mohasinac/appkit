@@ -198,7 +198,7 @@ export function ShopByCategorySection({
         )}
 
         {isLoading ? (
-          <Div className={`flex gap-3 ${__O.hidden} px-1`}>
+          <Div layout="flex" gap="3" className={`${__O.hidden} px-1`}>
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse" surface="subtle" rounded="xl" />
             ))}

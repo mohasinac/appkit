@@ -83,7 +83,7 @@ export function ProductTabsShell({
 
   return (
     <Div className={`mt-8 ${className}`}>
-      <Div border="default" className={`mb-6 flex gap-1 ${__O.xAuto} border-b pb-px`}>
+      <Div layout="flex" gap="1" border="default" className={`mb-6 ${__O.xAuto} border-b pb-px`}>
         {allTabs.map((t) => (
           <button
             key={t.id}

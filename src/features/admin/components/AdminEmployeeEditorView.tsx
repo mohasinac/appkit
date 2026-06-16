@@ -124,7 +124,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
                   {checked}/{domainPerms.length}
                 </Span>
               </Summary>
-              <Div className="grid grid-cols-2 gap-x-2 gap-y-1.5 py-2.5" surface="muted" padding="x-sm">
+              <Div layout="grid" className="grid-cols-2 gap-x-2 gap-y-1.5 py-2.5" surface="muted" padding="x-sm">
                 {domainPerms.map((perm) => (
                   <label
                     key={perm}

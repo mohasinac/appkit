@@ -77,7 +77,7 @@ export function AddressCard({
       {address.phone && (
         <Text className="mt-1 text-neutral-500" size="sm">{address.phone}</Text>
       )}
-      <Div className={`mt-3 flex ${THEME_CONSTANTS.spacing.gap.xs}`}>
+      <Div layout="flex" className={`mt-3 ${THEME_CONSTANTS.spacing.gap.xs}`}>
         {onEdit && (
           <Button
             onClick={() => onEdit(address)}

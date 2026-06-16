@@ -77,7 +77,7 @@ export async function PrizeDrawsSection({
               </Link>
             </Stack>
           ) : (
-            <Div className="fluid-grid-card gap-3">
+            <Div gap="3" className="fluid-grid-card">
               {draws.map((draw) => (
                 <InteractiveProductCard
                   key={draw.id}

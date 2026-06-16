@@ -206,7 +206,7 @@ export function AdminFaqEditorView({
             />
           </Stack>
 
-          <Div className="grid grid-cols-2 gap-4">
+          <Div layout="grid" gap="4" className="grid-cols-2">
             <Select
               label="Category"
               options={CATEGORY_OPTIONS}

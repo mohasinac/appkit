@@ -75,7 +75,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
       {/* Thumbnail strip */}
       {images.length > 1 && (
-        <Div className={`flex gap-2 ${__O.xAuto}`} padding="b-2xs">
+        <Div layout="flex" gap="2" className={`${__O.xAuto}`} padding="b-2xs">
           {images.map((src, i) => (
             <button
               key={i}

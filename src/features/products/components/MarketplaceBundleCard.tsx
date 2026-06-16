@@ -111,8 +111,8 @@ export function MarketplaceBundleCard({
       <BaseListingCard.Hero aspect="square" variant={variant}>
         <TextLink href={String(detailHref)} className="absolute inset-0 block">
           {showCollage ? (
-            <Div
-              className={`grid h-full w-full gap-0.5 bg-[var(--appkit-color-surface-muted)] ${
+            <Div layout="grid" 
+              className={`h-full w-full gap-0.5 bg-[var(--appkit-color-surface-muted)] ${
                 collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
               }`}
             >

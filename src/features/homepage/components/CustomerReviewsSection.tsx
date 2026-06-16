@@ -52,7 +52,7 @@ export function CustomerReviewsSection<T = unknown>({
       <Section className={`${__P.p8} ${className}`} surface="muted">
         <Div className="w-full max-w-7xl mx-auto">
           <Div className={`h-8 ${skeleton.base} mb-8 max-w-xs mx-auto`} />
-          <Div className={`flex gap-6 ${__O.hidden}`}>
+          <Div layout="flex" gap="6" className={`${__O.hidden}`}>
             {[...Array(3)].map((_, i) => (
               <Div
                 key={i}

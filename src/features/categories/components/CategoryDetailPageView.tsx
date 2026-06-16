@@ -208,8 +208,8 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       {childCategories.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
           <Div className="max-w-7xl mx-auto" padding="inline">
-            <Div
-              className={`flex gap-2.5 ${__O.xAuto}`} padding="b-2xs"
+            <Div layout="flex" gap="2" 
+              className={`.5 ${__O.xAuto}`} padding="b-2xs"
               // audit-inline-style-ok: dynamic CSS
               style={{ scrollbarWidth: "none" }}
             >

@@ -150,7 +150,7 @@ export function MarketplacePrizeDrawCard({
       <BaseListingCard.Hero aspect="square" variant={variant}>
         <TextLink href={String(detailHref)} className="absolute inset-0 block">
           {thumbItems.length > 0 ? (
-            <Div className="grid grid-cols-2 grid-rows-2 gap-0.5 h-full w-full bg-[var(--appkit-color-surface-muted)]">
+            <Div layout="grid" className="grid-cols-2 grid-rows-2 gap-0.5 h-full w-full bg-[var(--appkit-color-surface-muted)]">
               {Array.from({ length: 4 }).map((_, i) => {
                 const it = thumbItems[i];
                 const img = it?.images?.[0];

@@ -16,7 +16,7 @@ export function WishlistCard({
   onProductClick,
 }: WishlistCardProps) {
   return (
-    <Div surface="card" padding="sm" className="flex gap-4">
+    <Div layout="flex" gap="4" surface="card" padding="sm">
       <Div
         role={onProductClick ? "button" : undefined}
         tabIndex={onProductClick ? 0 : undefined}
@@ -83,9 +83,9 @@ export function WishlistPage({
     return (
       <Stack gap="md">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Div
+          <Div layout="flex" gap="4" 
             key={i}
-            className="flex animate-pulse gap-4 border border-neutral-200" rounded="xl" padding="md"
+            className="animate-pulse border border-neutral-200" rounded="xl" padding="md"
           >
             <Div className="h-20 w-20 bg-neutral-200" rounded="lg" />
             <Stack gap="sm" className="flex-1">

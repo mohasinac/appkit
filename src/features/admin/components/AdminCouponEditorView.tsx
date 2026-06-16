@@ -139,7 +139,7 @@ function CouponDiscountFields({
         />
       )}
       {type === "buy_x_get_y" && (
-        <Div className="grid grid-cols-2 gap-4">
+        <Div layout="grid" gap="4" className="grid-cols-2">
           <Input label="Buy quantity" value={buyQty} onChange={(e) => setBuyQty(e.target.value)} type="number" min={1} required />
           <Input label="Get quantity" value={getQty} onChange={(e) => setGetQty(e.target.value)} type="number" min={1} required />
         </Div>
@@ -169,14 +169,14 @@ function CouponValidityFields({
 }: CouponValidityFieldsProps) {
   return (
     <>
-      <Div className="grid grid-cols-2 gap-4">
+      <Div layout="grid" gap="4" className="grid-cols-2">
         <Input label="Total usage limit (optional)" value={totalLimit} onChange={(e) => setTotalLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
         <Input label="Per-user limit (optional)" value={perUserLimit} onChange={(e) => setPerUserLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
       </Div>
       {isEdit && (
         <Input label="Current usage" value={String(currentUsage)} disabled helperText="Read-only — updated by orders." />
       )}
-      <Div className="grid grid-cols-2 gap-4">
+      <Div layout="grid" gap="4" className="grid-cols-2">
         <Input label="Start date" value={startDate} onChange={(e) => setStartDate(e.target.value)} type="date" required />
         <Input label="End date (optional)" value={endDate} onChange={(e) => setEndDate(e.target.value)} type="date" helperText="Leave blank for no expiry." />
       </Div>

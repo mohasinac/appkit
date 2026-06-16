@@ -23,7 +23,7 @@ export function SocialAuthButtons({
         </Row>
       </Div>
 
-      <Div className="grid grid-cols-1 gap-3">
+      <Div layout="grid" gap="3" className="grid-cols-1">
         <Button
           type="button"
           onClick={onGoogle}

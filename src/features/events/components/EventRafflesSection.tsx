@@ -76,7 +76,7 @@ export async function EventRafflesSection({
               </Link>
             </Stack>
           ) : (
-            <Div className="fluid-grid-card gap-3">
+            <Div gap="3" className="fluid-grid-card">
               {events.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}

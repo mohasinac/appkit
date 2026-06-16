@@ -178,12 +178,12 @@ export function FormShell({
       />
 
       {/* Panel */}
-      <Div
+      <Div layout="flex" 
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 bottom-0 left-0 right-0 lg:left-[10%] lg:right-[10%] flex flex-col bg-[var(--appkit-color-surface)] shadow-2xl"
+        className="fixed top-0 bottom-0 left-0 right-0 lg:left-[10%] lg:right-[10%] flex-col bg-[var(--appkit-color-surface)] shadow-2xl"
         // audit-inline-style-ok: z-index token
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
@@ -260,7 +260,7 @@ export function FormShell({
         </Row>
 
         {/* ── Body (left nav + scrollable content) ───────── */}
-        <Div className={`flex flex-1 ${__O.hidden}`}>
+        <Div layout="flex" className={`flex-1 ${__O.hidden}`}>
           {/* Left section nav — desktop only (lg+), hidden in preview mode */}
           {sections && sections.length > 0 && !previewMode && (
             <nav

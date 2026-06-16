@@ -424,7 +424,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             </Div>
           </Row>
 
-          <Div className="grid grid-cols-2 gap-2">
+          <Div layout="grid" gap="2" className="grid-cols-2">
             {SAMPLE_CATALOG_ITEMS.map((item) => (
               <Div key={item.id} surface="card" className={`${__O.hidden}`}>
                 <Row className="aspect-square" surface="subtle" align="center" justify="center">

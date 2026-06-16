@@ -480,7 +480,7 @@ export function CharacterHotspotForm({
             )}
           </Div>
 
-          <Div className="grid grid-cols-2 gap-3">
+          <Div layout="grid" gap="3" className="grid-cols-2">
             {(
               [
                 {
@@ -606,7 +606,7 @@ export function CharacterHotspotForm({
             .
           </Text>
 
-          <Div className="grid grid-cols-2 gap-3">
+          <Div layout="grid" gap="3" className="grid-cols-2">
             {(
               [
                 {
@@ -675,7 +675,7 @@ export function CharacterHotspotForm({
             />
           </Stack>
 
-          <Div className="grid grid-cols-2 gap-3">
+          <Div layout="grid" gap="3" className="grid-cols-2">
             {(
               [
                 {

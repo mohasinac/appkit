@@ -351,7 +351,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (!slides || slides.length === 0) {
     return (
-      <Div className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${FLEX_CENTER} flex-col gap-4`}>
+      <Div gap="4" className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${FLEX_CENTER} flex-col`}>
         <Heading level={2} className="text-primary" size="2xl" weight="bold">Coming Soon</Heading>
         <Text variant="secondary" className="max-w-md px-4" align="center">
           Amazing deals are on their way. Stay tuned!
@@ -379,10 +379,10 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
       {/* Snap Scroll Rail */}
       <Div className={POSITION_FILL}>
-        <Div
+        <Div layout="flex" 
           ref={slidesRef}
           onScroll={handleSlidesScroll}
-          className="flex h-full overflow-x-auto scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="h-full overflow-x-auto scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           style={{ gap: 0 }}
         >
           {slides.map((slide, slideIndex) => {

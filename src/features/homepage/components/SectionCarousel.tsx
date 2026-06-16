@@ -108,7 +108,7 @@ export interface SectionCarouselProps<T = unknown> {
 function CarouselSkeleton({ count }: { count: number }) {
   const { skeleton } = THEME_CONSTANTS;
   return (
-    <Div className={`flex gap-4 ${__O.hidden}`} padding="x-md">
+    <Div layout="flex" gap="4" className={`${__O.hidden}`} padding="x-md">
       {Array.from({ length: count }).map((_, i) => (
         <Stack
           key={i}

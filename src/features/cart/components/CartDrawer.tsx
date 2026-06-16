@@ -27,7 +27,7 @@ interface CartItemRowProps {
 
 export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
-    <Div surface="card" padding="sm" className={`flex gap-4 transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
+    <Div layout="flex" gap="4" surface="card" padding="sm" className={`transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
       <Div className={`h-20 w-20 flex-shrink-0 ${__O.hidden} bg-neutral-100 dark:bg-slate-800`} rounded="lg">
         {item.meta.image && (
           <Div

@@ -1487,7 +1487,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Checkbox checked={faqBuilder.linkToFullPage} label="Link to full FAQ page" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, linkToFullPage: e.target.checked }))} />
         <Stack gap="sm">
           <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Categories</Text>
-          <Div className="grid grid-cols-2 gap-2">
+          <Div layout="grid" gap="2" className="grid-cols-2">
             {FAQ_CATEGORY_OPTIONS.map((opt) => (
               <Checkbox
                 key={opt.value}
@@ -2593,9 +2593,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         ) : (
           <Stack gap="sm">
             {reorderDraft.map((item, index) => (
-              <Div
+              <Div layout="grid" gap="2" 
                 key={`reorder-${item.id}`}
-                className="grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-2" rounded="md" padding="xs" border="default"
+                className="grid-cols-[auto_1fr_auto_auto_auto] items-center" rounded="md" padding="xs" border="default"
                 draggable
                 onDragStart={() => setDragIndex(index)}
                 onDragOver={(event) => event.preventDefault()}
