@@ -84,24 +84,24 @@ function GroupTableRow({ member }: { member: GroupMember }) {
 
   return (
     <Tr className="last:border-0" border="subtle">
-      <Td className="py-2 pr-3">
+      <Td className="pr-3" padding="xs-tall">
         <Div className={`w-10 h-10 ${__O.hidden}`} rounded="full" border="default">
           <MediaImage src={image} alt={member.title} size="thumbnail" />
         </Div>
       </Td>
-      <Td className="py-2 pr-3">
+      <Td className="pr-3" padding="xs-tall">
         <Text className="line-clamp-2" color="primary" size="sm" weight="medium">{member.title}</Text>
         {member.isGroupParent && (
           <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary)]">Parent</Span>
         )}
       </Td>
-      <Td className="py-2 pr-3">
+      <Td className="pr-3" padding="xs-tall">
         <Text size="sm" color="muted">{price}</Text>
       </Td>
-      <Td className="py-2 pr-3">
+      <Td className="pr-3" padding="xs-tall">
         <Text size="xs" transform="capitalize" color="muted">{member.condition ?? "â€”"}</Text>
       </Td>
-      <Td className="py-2">
+      <Td padding="xs-tall">
         <Link
           href={href}
           className="text-xs text-[var(--appkit-color-primary)] hover:underline"

@@ -178,8 +178,8 @@ function AuctionWalkthrough() {
           <Table className="min-w-[320px]" size="sm">
             <Thead>
               <Tr className="border-b border-[var(--appkit-color-border)]">
-                <Th className="py-2 pr-4 text-left font-semibold text-[var(--appkit-color-text)]">Current high bid</Th>
-                <Th className="py-2 text-left font-semibold text-[var(--appkit-color-text)]">Minimum increment</Th>
+                <Th className="pr-4 text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">Current high bid</Th>
+                <Th className="text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">Minimum increment</Th>
               </Tr>
             </Thead>
             <Tbody className="divide-y divide-[var(--appkit-color-border)]">
@@ -191,8 +191,8 @@ function AuctionWalkthrough() {
                 ["₹50,000+", "₹1,000"],
               ].map(([range, inc]) => (
                 <Tr key={range}>
-                  <Td className="py-2 pr-4">{range}</Td>
-                  <Td className="py-2">{inc}</Td>
+                  <Td className="pr-4" padding="xs-tall">{range}</Td>
+                  <Td padding="xs-tall">{inc}</Td>
                 </Tr>
               ))}
             </Tbody>

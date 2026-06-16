@@ -494,13 +494,15 @@ type CellAlign = "left" | "center" | "right";
 
 type CellTypographySize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
 type CellTypographyWeight = "normal" | "medium" | "semibold" | "bold";
-type CellPadding = "none" | "xs" | "sm" | "md" | "lg" | "compact";
+type CellPadding = "none" | "xs" | "xs-tall" | "sm" | "sm-tall" | "md" | "lg" | "compact";
 type CellColor = "default" | "primary" | "muted" | "faint" | "success" | "warning" | "error" | "info";
 
 const CELL_PADDING_MAP: Record<CellPadding, string> = {
   none: "",
   xs: "px-2 py-1",
+  "xs-tall": "px-2 py-2",
   sm: "px-3 py-2",
+  "sm-tall": "px-3 py-4",
   md: "px-4 py-3",
   lg: "px-6 py-4",
   compact: "px-2 py-1.5",

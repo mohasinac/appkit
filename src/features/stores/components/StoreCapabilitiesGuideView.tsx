@@ -94,17 +94,17 @@ function CapabilityTable() {
             <Table className="min-w-full" size="sm">
               <Thead>
                 <Tr className="border-b border-[var(--appkit-color-border)]">
-                  <Th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)]">Capability</Th>
-                  <Th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)]">What it unlocks</Th>
-                  <Th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)] w-24">Default</Th>
+                  <Th className="px-6 text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">Capability</Th>
+                  <Th className="px-6 text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">What it unlocks</Th>
+                  <Th className="px-6 text-left font-semibold text-[var(--appkit-color-text)] w-24" padding="xs-tall">Default</Th>
                 </Tr>
               </Thead>
               <Tbody className="divide-y divide-[var(--appkit-color-border)]">
                 {items.map(({ cap, unlocks, defaultOn }) => (
                   <Tr key={cap}>
-                    <Td className="px-6 py-2 font-mono text-xs text-[var(--appkit-color-text)] align-top whitespace-nowrap">{cap}</Td>
-                    <Td className="px-6 py-2 text-[var(--appkit-color-text-muted)] align-top">{unlocks}</Td>
-                    <Td className="px-6 py-2 align-top">
+                    <Td className="px-6 font-mono text-xs text-[var(--appkit-color-text)] align-top whitespace-nowrap" padding="xs-tall">{cap}</Td>
+                    <Td className="px-6 text-[var(--appkit-color-text-muted)] align-top" padding="xs-tall">{unlocks}</Td>
+                    <Td className="px-6 align-top" padding="xs-tall">
                       {defaultOn ? (
                         <Span className="inline-block bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">On</Span>
                       ) : (
