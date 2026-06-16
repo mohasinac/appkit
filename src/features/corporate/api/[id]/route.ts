@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "../../../../schemas/types";
 
 const ERR_INQUIRY_ID_REQUIRED = "Inquiry ID is required";
 const ERR_DB_NOT_CONFIGURED = "Database provider not configured";

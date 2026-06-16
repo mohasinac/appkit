@@ -22,6 +22,7 @@ import { mediaFieldSchema } from "../../media/types/index";
 import { sanitizeProductsForPublic } from "../utils/sanitize";
 
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "../../../schemas/types";
 type ProductRecord = ProductItem & {
   sellerId?: string;
   sellerName?: string;
@@ -176,7 +177,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const totalPages = Math.max(1, Math.ceil(result.total / pageSize));
     const body: ProductListResponse = {
       items: sanitizeProductsForPublic(
-        result.data as unknown as Array<Record<string, unknown>>,
+        result.data as unknown as Array<Record<string, JsonValue>>,
       ) as unknown as ProductItem[],
       total: result.total,
       page: result.page,
@@ -209,8 +210,8 @@ export const POST = createRouteHandler({
   roles: ["seller", "moderator", "admin"],
   schema: productMutateSchema,
   handler: async ({ user, body }) => {
-    const payload = body as Record<string, unknown>;
-    const userRecord = (user ?? {}) as Record<string, unknown>;
+    const payload = body as Record<string, JsonValue>;
+    const userRecord = (user ?? {}) as Record<string, JsonValue>;
     const { db } = getProviders();
     if (!db) {
       return NextResponse.json(

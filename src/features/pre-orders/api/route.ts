@@ -13,6 +13,7 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
 import { parseListingParams } from "../../../utils/listing-params";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "../../../schemas/types";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 20;
@@ -85,7 +86,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     const created = await repo.create({
       ...input,
       status: "pending",
-    } as Omit<Record<string, unknown>, "id" | "createdAt" | "updatedAt">);
+    } as Omit<Record<string, JsonValue>, "id" | "createdAt" | "updatedAt">);
     return NextResponse.json({ success: true, data: created }, { status: 201 });
   } catch (error) {
     void normalizeError(error);
