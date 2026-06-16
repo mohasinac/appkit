@@ -1,6 +1,7 @@
 // appkit/src/seed/test-utils.ts
 // Server-only — used in integration tests and Firestore emulator setup.
 import type { SeedConfig } from "./types";
+import type { JsonValue } from "@mohasinac/appkit";
 import { runSeed } from "./runner";
 import { encryptPiiFields, decryptPiiFields, ENC_PREFIX } from "../security/pii-encrypt";
 import { DEFAULT_CATEGORIES } from "./defaults/categories";
@@ -31,7 +32,7 @@ import type { SeedFaqDocument } from "./factories/faq.factory";
  * await assertPiiRoundTrip(user, ["email", "phone"]);
  * ```
  */
-export async function assertPiiRoundTrip<T extends Record<string, unknown>>(
+export async function assertPiiRoundTrip<T extends Record<string, JsonValue>>(
   doc: T,
   piiFields: Array<keyof T & string>,
 ): Promise<void> {

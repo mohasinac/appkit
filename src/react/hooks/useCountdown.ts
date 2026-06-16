@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 
 /**
  * useCountdown — tracks time remaining until a future date.
@@ -28,7 +29,7 @@ function resolveMs(endDate: unknown): number {
     typeof endDate === "object" &&
     endDate !== null &&
     "_seconds" in endDate &&
-    typeof (endDate as Record<string, unknown>)._seconds === "number"
+    typeof (endDate as Record<string, JsonValue>)._seconds === "number"
   ) {
     return (endDate as { _seconds: number })._seconds * 1000;
   }

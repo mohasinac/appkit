@@ -1,4 +1,5 @@
 import React from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
@@ -138,7 +139,7 @@ export function TextLink({
   }
 
   return (
-    <Link href={href} className={cls} {...(props as Record<string, unknown>)}>
+    <Link href={href} className={cls} {...(props as Record<string, JsonValue>)}>
       {children}
     </Link>
   );

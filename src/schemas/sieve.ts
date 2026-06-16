@@ -4,9 +4,10 @@
 // `listingProcessor` as opaque strings (e.g. "status==published,price>100").
 // This module gives them a Zod schema for the request envelope plus a typed
 // shape for a single parsed clause so per-repository `parseSieveFilters`
-// helpers stop returning `Record<string, unknown>`.
+// helpers stop returning `Record<string, JsonValue>`.
 
 import { z } from "zod";
+import type { JsonValue } from "@mohasinac/appkit";
 
 // ---------------------------------------------------------------------------
 // SieveGrammarSchema — the wire-level request envelope. `filters` and `sorts`

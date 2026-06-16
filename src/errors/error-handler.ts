@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server.js";
+import type { JsonValue } from "@mohasinac/appkit";
 import { AppError } from "./base-error";
 import { ERROR_CODES, ERROR_MESSAGES_BY_CODE } from "./error-codes";
 
@@ -55,7 +56,7 @@ export function handleApiError(error: unknown): NextResponse {
  */
 export function logError(
   error: unknown,
-  context?: Record<string, unknown>,
+  context?: Record<string, JsonValue>,
 ): void {
   console.error("[Application Error]", {
     ...(context && { context }),

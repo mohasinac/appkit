@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,7 @@ import { usePanelStore } from "../../stores/panel-store";
 
 export type DispatchAction =
   | { type: "NAVIGATE"; href: string }
-  | { type: "OPEN_PANEL"; panelId: string; data?: Record<string, unknown> }
+  | { type: "OPEN_PANEL"; panelId: string; data?: Record<string, JsonValue> }
   | { type: "TOAST"; message: string; variant?: ToastVariant }
   | { type: "BULK"; actionId: string; ids: string[] }
   | { type: "COPY"; text: string; successMessage?: string }

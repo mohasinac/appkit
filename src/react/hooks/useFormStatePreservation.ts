@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useCallback } from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface FormStatePreservationOptions<TValues> {
   /** Current form values to persist. */
@@ -22,7 +23,7 @@ function stripPii<T>(values: T, stripFields: string[]): T {
   if (!stripFields.length || typeof values !== "object" || values === null) {
     return values;
   }
-  const clone: Record<string, unknown> = { ...(values as Record<string, unknown>) };
+  const clone: Record<string, JsonValue> = { ...(values as Record<string, JsonValue>) };
   for (const path of stripFields) {
     if (path in clone) {
       delete clone[path];
@@ -31,7 +32,7 @@ function stripPii<T>(values: T, stripFields: string[]): T {
   return clone as T;
 }
 
-export function useFormStatePreservation<TValues extends Record<string, unknown>>({
+export function useFormStatePreservation<TValues extends Record<string, JsonValue>>({
   values,
   onRestore,
   stripFields = [],

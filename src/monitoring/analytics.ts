@@ -1,4 +1,5 @@
 import { normalizeError } from "../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import {
   getAnalytics,
   isSupported,
@@ -55,7 +56,7 @@ export async function initializeAnalytics(params: {
 
 export const trackEvent = (
   eventName: string,
-  eventParams?: Record<string, unknown>,
+  eventParams?: Record<string, JsonValue>,
 ): void => {
   if (!analytics || !analyticsEnabled) return;
 
@@ -131,7 +132,7 @@ export const trackEcommerce = {
           item_category: product.category,
           price: product.price,
         },
-      ] as Array<Record<string, unknown>>,
+      ] as Array<Record<string, JsonValue>>,
     });
   },
 
@@ -155,7 +156,7 @@ export const trackEcommerce = {
           price: product.price,
           quantity: product.quantity,
         },
-      ] as Array<Record<string, unknown>>,
+      ] as Array<Record<string, JsonValue>>,
     });
   },
 
@@ -186,7 +187,7 @@ export const trackEcommerce = {
         item_category: item.category,
         price: item.price,
         quantity: item.quantity,
-      })) as Array<Record<string, unknown>>,
+      })) as Array<Record<string, JsonValue>>,
     });
   },
 
