@@ -35,7 +35,7 @@ function getSupportEmail(): string {
 
 export async function sendEmail(
   opts: SendEmailOptions,
-): Promise<{ data: unknown; error: unknown }> {
+): Promise<{ data: JsonValue; error: JsonValue }> {
   try {
     const data = await getProviders().email.send({
       to: opts.to,
@@ -58,14 +58,14 @@ export async function sendEmail(
 
 async function sendConfiguredEmail(
   opts: SendEmailOptions,
-): Promise<{ data: unknown; error: unknown }> {
+): Promise<{ data: JsonValue; error: JsonValue }> {
   return sendEmail(opts);
 }
 
 export async function sendVerificationEmailWithLink(
   email: string,
   verificationLink: string,
-): Promise<{ success: boolean; data?: unknown }> {
+): Promise<{ success: boolean; data?: JsonValue }> {
   const siteName = getSiteName();
 
   try {
@@ -91,7 +91,7 @@ export async function sendVerificationEmailWithLink(
 export async function sendPasswordResetEmailWithLink(
   email: string,
   resetLink: string,
-): Promise<{ success: boolean; data?: unknown }> {
+): Promise<{ success: boolean; data?: JsonValue }> {
   const siteName = getSiteName();
 
   try {
@@ -219,7 +219,7 @@ function buildOrderConfirmationHtml(params: {
 
 export async function sendOrderConfirmationEmail(
   params: OrderConfirmationEmailParams,
-): Promise<{ success: boolean; data?: unknown }> {
+): Promise<{ success: boolean; data?: JsonValue }> {
   const siteName = getSiteName();
   const siteUrl = getSiteUrl();
   const {
@@ -268,7 +268,7 @@ export async function sendContactEmail(params: {
   email: string;
   subject: string;
   message: string;
-}): Promise<{ success: boolean; data?: unknown }> {
+}): Promise<{ success: boolean; data?: JsonValue }> {
   const siteName = getSiteName();
   const supportEmail = getSupportEmail();
   const { name, email, subject, message } = params;
@@ -388,7 +388,7 @@ export async function sendSiteSettingsChangedEmail(params: {
   adminEmails: string[];
   changedByEmail: string;
   changedFields: string[];
-}): Promise<{ success: boolean; data?: unknown }> {
+}): Promise<{ success: boolean; data?: JsonValue }> {
   const siteName = getSiteName();
   const siteUrl = getSiteUrl();
   const { adminEmails, changedByEmail, changedFields } = params;

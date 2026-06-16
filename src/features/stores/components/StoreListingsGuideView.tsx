@@ -67,9 +67,9 @@ function ListingTypesTable() {
         <Thead>
           <Tr className="border-b border-[var(--appkit-color-border)]">
             {HEADERS.map((h) => (
-              <Th padding="lg-3" 
+              <Th weight="semibold" padding="lg-3" 
                 key={h}
-                className="text-left font-semibold text-[var(--appkit-color-text)]"
+                className="text-left text-[var(--appkit-color-text)]"
               >
                 {h}
               </Th>
@@ -79,7 +79,7 @@ function ListingTypesTable() {
         <Tbody className="divide-y divide-[var(--appkit-color-border)]">
           {ROWS.map(({ label, keys }) => (
             <Tr key={label}>
-              <Td padding="lg-3" className="font-medium text-[var(--appkit-color-text-muted)] whitespace-nowrap">
+              <Td weight="medium" padding="lg-3" className="text-[var(--appkit-color-text-muted)] whitespace-nowrap">
                 {label}
               </Td>
               {LISTING_TYPES.map((t) => (
@@ -179,8 +179,8 @@ function AuctionWalkthrough() {
           <Table className="min-w-[320px]" size="sm">
             <Thead>
               <Tr className="border-b border-[var(--appkit-color-border)]">
-                <Th className="pr-4 text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">Current high bid</Th>
-                <Th className="text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">Minimum increment</Th>
+                <Th weight="semibold" className="pr-4 text-left text-[var(--appkit-color-text)]" padding="xs-tall">Current high bid</Th>
+                <Th weight="semibold" className="text-left text-[var(--appkit-color-text)]" padding="xs-tall">Minimum increment</Th>
               </Tr>
             </Thead>
             <Tbody className="divide-y divide-[var(--appkit-color-border)]">

@@ -94,9 +94,9 @@ function CapabilityTable() {
             <Table className="min-w-full" size="sm">
               <Thead>
                 <Tr className="border-b border-[var(--appkit-color-border)]">
-                  <Th className="text-left font-semibold text-[var(--appkit-color-text)]" padding="lg-tight">Capability</Th>
-                  <Th className="text-left font-semibold text-[var(--appkit-color-text)]" padding="lg-tight">What it unlocks</Th>
-                  <Th className="text-left font-semibold text-[var(--appkit-color-text)] w-24" padding="lg-tight">Default</Th>
+                  <Th weight="semibold" className="text-left text-[var(--appkit-color-text)]" padding="lg-tight">Capability</Th>
+                  <Th weight="semibold" className="text-left text-[var(--appkit-color-text)]" padding="lg-tight">What it unlocks</Th>
+                  <Th weight="semibold" className="text-left text-[var(--appkit-color-text)] w-24" padding="lg-tight">Default</Th>
                 </Tr>
               </Thead>
               <Tbody className="divide-y divide-[var(--appkit-color-border)]">

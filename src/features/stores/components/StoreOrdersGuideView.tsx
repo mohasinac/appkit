@@ -144,14 +144,14 @@ function CarriersSection() {
         <Table className="min-w-full" size="sm">
           <Thead>
             <Tr className="border-b border-[var(--appkit-color-border)]">
-              <Th padding="lg-3" className="text-left font-semibold text-[var(--appkit-color-text)]">Carrier</Th>
-              <Th padding="lg-3" className="text-left font-semibold text-[var(--appkit-color-text)]">Typical SLA</Th>
+              <Th weight="semibold" padding="lg-3" className="text-left text-[var(--appkit-color-text)]">Carrier</Th>
+              <Th weight="semibold" padding="lg-3" className="text-left text-[var(--appkit-color-text)]">Typical SLA</Th>
             </Tr>
           </Thead>
           <Tbody className="divide-y divide-[var(--appkit-color-border)]">
             {CARRIERS.map(({ name, sla }) => (
               <Tr key={name}>
-                <Td padding="lg-3" className="font-medium text-[var(--appkit-color-text)]">{name}</Td>
+                <Td weight="medium" padding="lg-3" className="text-[var(--appkit-color-text)]">{name}</Td>
                 <Td padding="lg-3" className="text-[var(--appkit-color-text-muted)]">{sla}</Td>
               </Tr>
             ))}
