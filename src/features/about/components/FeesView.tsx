@@ -78,7 +78,7 @@ export async function FeesView({
           <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.sm} md:py-12 lg:py-16 space-y-12`} padding="y-2xl">
+      <Div className={`${page.container.sm} space-y-12`} padding="content-banner">
         {renderFeeTableSection(t, themed, FEE_ROWS)}
         {renderPayoutExampleSection(t, themed, OFFER_PAYOUT_ROWS)}
         {renderDisclaimerSection(t, themed)}

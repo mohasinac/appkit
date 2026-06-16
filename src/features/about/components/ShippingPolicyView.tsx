@@ -89,7 +89,7 @@ export async function ShippingPolicyView({
         </Div>
       </Section>
 
-      <Div className={`${page.container.sm} md:py-12 lg:py-16`} padding="y-2xl">
+      <Div className={`${page.container.sm}`} padding="content-banner">
         <Text size="lg" variant="secondary" className="mb-8">
           {t("subtitle")}
         </Text>

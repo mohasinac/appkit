@@ -168,7 +168,7 @@ export async function SecurityPrivacyView({
           <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} md:py-12 lg:py-16 space-y-14`} padding="y-2xl">
+      <Div className={`${page.container.md} space-y-14`} padding="content-banner">
         <Section className="text-center">
           <Heading level={2} className="mb-3">{t("overviewTitle")}</Heading>
           <Text variant="secondary" className="max-w-2xl mx-auto">{t("overviewText")}</Text>

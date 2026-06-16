@@ -76,7 +76,7 @@ export function HowItWorksInfoView({
         </Div>
       </Section>
 
-      <Div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 md:py-12 lg:py-16" padding="y-2xl">
+      <Div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" padding="content-banner">
         {/* Optional diagram slot */}
         {renderDiagram?.()}
 

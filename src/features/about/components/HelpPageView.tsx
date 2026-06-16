@@ -87,7 +87,7 @@ export async function HelpPageView({
           <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} md:py-12 lg:py-16 space-y-14`} padding="y-2xl">
+      <Div className={`${page.container.md} space-y-14`} padding="content-banner">
         {renderTopicsGrid(t, flex, TOPICS)}
         {renderScamAwarenessAlert(t)}
         {renderTrackOrderSection(t, themed)}

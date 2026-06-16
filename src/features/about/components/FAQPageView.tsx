@@ -53,7 +53,7 @@ export async function FAQPageView({
         </Container>
       </Section>
 
-      <Container size="md" padding="y-2xl" className="md:py-12 lg:py-16">
+      <Container size="md" padding="content-banner">
         <Stack className="md:flex-row" gap="xl">
           {/* Category sidebar */}
           {categories.length > 0 && (
