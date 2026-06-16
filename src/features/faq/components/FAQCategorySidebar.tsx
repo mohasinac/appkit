@@ -45,14 +45,10 @@ export function FAQCategorySidebar({
         {labels?.title ?? "Categories"}
       </Heading>
 
-      <TextLink
+      <TextLink rounded="lg" 
         href={allFaqsHref}
         onClick={() => onCategorySelect?.("all")}
-        className={`mb-3 block w-full rounded-lg p-4 text-left transition-colors ${
-          selectedCategory === "all"
-            ? "bg-primary/10 text-zinc-900 dark:text-zinc-100"
-            : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700"
-        }`}
+        className={`mb-3 block w-full p-4 text-left transition-colors ${ selectedCategory === "all" ? "bg-primary/10 text-zinc-900 dark:text-zinc-100" : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700" }`}
       >
         <Row justify="between">
           <Row gap="3">
@@ -73,15 +69,11 @@ export function FAQCategorySidebar({
           const count = categoryCounts[category.key] || 0;
 
           return (
-            <TextLink
+            <TextLink rounded="lg" 
               key={category.key}
               href={categoryHref(category.key)}
               onClick={() => onCategorySelect?.(category.key)}
-              className={`mb-3 block w-full rounded-lg p-4 text-left transition-colors ${
-                isSelected
-                  ? "bg-primary/10 text-zinc-900 dark:text-zinc-100"
-                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700"
-              }`}
+              className={`mb-3 block w-full p-4 text-left transition-colors ${ isSelected ? "bg-primary/10 text-zinc-900 dark:text-zinc-100" : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700" }`}
             >
               <Row justify="between" className="mb-1">
                 <Row gap="3">
@@ -109,9 +101,9 @@ export function FAQCategorySidebar({
           <Text className="mb-3" color="muted" size="sm">
             {labels?.stillHaveQuestions ?? "Still have questions?"}
           </Text>
-          <TextLink
+          <TextLink rounded="lg" 
             href={contactHref}
-            className="block rounded-lg bg-primary p-4 text-center text-white transition-colors hover:bg-primary/90" weight="medium"
+            className="block bg-primary p-4 text-center text-white transition-colors hover:bg-primary/90" weight="medium"
           >
             {labels?.contactSupport ?? "Contact Support"}
           </TextLink>

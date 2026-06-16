@@ -131,9 +131,9 @@ export function WelcomeSection({
                 className="mt-8 lg:justify-start" justify="center"
               >
                 {ctaHref ? (
-                  <TextLink
+                  <TextLink rounded="xl" 
                     href={ctaHref}
-                    className="inline-flex items-center justify-center rounded-xl px-8 py-3.5 !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]" size="base" weight="bold"
+                    className="inline-flex items-center justify-center px-8 py-3.5 !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]" size="base" weight="bold"
                   >
                     {ctaLabel}
                   </TextLink>
@@ -147,9 +147,9 @@ export function WelcomeSection({
                   </Button>
                 )}
                 {secondaryCtaHref ? (
-                  <TextLink
+                  <TextLink rounded="xl" 
                     href={secondaryCtaHref}
-                    className="inline-flex items-center justify-center rounded-xl border-2 border-cobalt/40 dark:border-cobalt-400/40 px-8 py-3.5 text-cobalt-700 dark:text-cobalt-300 hover:bg-cobalt-50 dark:hover:bg-cobalt-900/20 transition-all hover:scale-[1.02]" size="base" weight="semibold"
+                    className="inline-flex items-center justify-center border-2 border-cobalt/40 dark:border-cobalt-400/40 px-8 py-3.5 text-cobalt-700 dark:text-cobalt-300 hover:bg-cobalt-50 dark:hover:bg-cobalt-900/20 transition-all hover:scale-[1.02]" size="base" weight="semibold"
                   >
                     {secondaryCtaLabel}
                   </TextLink>

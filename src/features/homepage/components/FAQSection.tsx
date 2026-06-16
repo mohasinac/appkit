@@ -238,9 +238,9 @@ export function FAQSection({
         {/* View More */}
         {viewMoreHref && (
           <Div className="text-center mt-10">
-            <TextLink
+            <TextLink rounded="full" 
               href={viewMoreHref}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"
             >
               {viewMoreLabel}
               {hasMore && moreCount > 0 && (

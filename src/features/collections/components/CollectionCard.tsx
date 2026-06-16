@@ -12,9 +12,9 @@ interface CollectionCardProps {
 
 export function CollectionCard({ collection, href }: CollectionCardProps) {
   return (
-    <TextLink
+    <TextLink rounded="xl" 
       href={href}
-      className="group relative block overflow-hidden rounded-xl bg-gray-100 dark:bg-slate-800 transition-shadow hover:shadow-lg"
+      className="group relative block overflow-hidden bg-gray-100 dark:bg-slate-800 transition-shadow hover:shadow-lg"
     >
       {collection.image ? (
         <Div

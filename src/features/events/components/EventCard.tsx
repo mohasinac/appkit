@@ -136,9 +136,9 @@ export function EventCard({
             {labels.participate ?? "Participate"}
           </Button>
         ) : (
-          <TextLink
+          <TextLink rounded="lg" 
             href={detailHref}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-zinc-300 px-3 py-2 transition-colors hover:bg-zinc-100 dark:border-slate-600 dark:hover:bg-slate-800" color="primary" size="sm" weight="medium"
+            className="inline-flex w-full items-center justify-center gap-1.5 border border-zinc-300 px-3 py-2 transition-colors hover:bg-zinc-100 dark:border-slate-600 dark:hover:bg-slate-800" color="primary" size="sm" weight="medium"
           >
             {labels.viewDetails ?? "View details"} →
           </TextLink>

@@ -64,9 +64,9 @@ export async function FAQPageView({
                 {t("categoriesLabel")}
               </Heading>
               <Nav aria-label="FAQ categories" spacing="xs">
-                <TextLink
+                <TextLink rounded="lg" 
                   href={String(ROUTES.PUBLIC.FAQS)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
+                  className={`flex items-center justify-between px-3 py-2 transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
                 >
                   <Span className={`${flex.row} gap-2`}>
                     <HelpCircle className="w-4 h-4" />
@@ -75,10 +75,10 @@ export async function FAQPageView({
                   <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                 </TextLink>
                 {categories.map((cat) => (
-                  <TextLink
+                  <TextLink rounded="lg" 
                     key={cat.slug}
                     href={String(ROUTES.PUBLIC.FAQ_CATEGORY(cat.slug))}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
+                    className={`flex items-center justify-between px-3 py-2 transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
                   >
                     <Span className={`${flex.row} gap-2`}>
                       <Span>{cat.icon}</Span>

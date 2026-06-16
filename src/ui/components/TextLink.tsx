@@ -54,6 +54,19 @@ function truncateClass(truncate: LinkTruncate | undefined): string {
   return `appkit-text--truncate-${lines}`;
 }
 
+type LinkRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+const LINK_ROUNDED_MAP: Record<LinkRounded, string> = {
+  none: "",
+  default: "rounded",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+  "3xl": "rounded-3xl",
+  full: "rounded-full",
+};
+
 export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
@@ -64,6 +77,8 @@ export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
   weight?: LinkTypographyWeight;
   /** Multi-line clamp. `true` = 1 line; pass `2`, `3`, or `4` for line-clamp. */
   truncate?: LinkTruncate;
+  /** Border radius for card-style links. */
+  rounded?: LinkRounded;
   /**
    * Force external rendering (`<a target="_blank" rel="noopener noreferrer">`).
    * Auto-detected when `href` starts with http/https/mailto/tel.
@@ -93,6 +108,7 @@ export function TextLink({
   size,
   weight,
   truncate,
+  rounded,
   external,
   className = "",
   ...props
@@ -102,6 +118,7 @@ export function TextLink({
     size ? LINK_SIZE_MAP[size] : "",
     weight ? LINK_WEIGHT_MAP[weight] : "",
     truncateClass(truncate),
+    rounded ? LINK_ROUNDED_MAP[rounded] : "",
     className,
   );
   const shouldBeExternal = external ?? isExternalUrl(href);

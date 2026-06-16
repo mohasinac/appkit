@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
@@ -120,12 +121,12 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
         id: toStringValue(item.id, `payout-${index}`),
         primary: [`Payout ${toStringValue(item.id, "-")}`, toRupees(item.amount)].join(" · "),
         secondary: toStringValue(
-          (item as Record<string, unknown>).storeName ?? (item as Record<string, unknown>).sellerName,
+          (item as Record<string, JsonValue>).storeName ?? (item as Record<string, JsonValue>).sellerName,
           "Unknown store",
         ),
         status: toStringValue(item.status, "Pending"),
         updatedAt: toRelativeDate(
-          (item as Record<string, unknown>).updatedAt ?? (item as Record<string, unknown>).createdAt,
+          (item as Record<string, JsonValue>).updatedAt ?? (item as Record<string, JsonValue>).createdAt,
         ),
       })),
     getTotal: (response, mappedRows) =>

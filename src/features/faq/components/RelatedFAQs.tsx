@@ -26,10 +26,10 @@ export function RelatedFAQs({
 
       <Stack gap="3">
         {relatedFAQs.map((faq) => (
-          <TextLink
+          <TextLink rounded="lg" 
             key={faq.id}
             href={hrefForFaq ? hrefForFaq(faq) : `/faqs#${faq.id}`}
-            className="group block rounded-lg bg-zinc-100 p-4 transition-colors hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600"
+            className="group block bg-zinc-100 p-4 transition-colors hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600"
           >
             <Row align="start" gap="3">
               <svg

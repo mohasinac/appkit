@@ -99,9 +99,9 @@ export function ContactCTA({
         </TextLink>
       </Div>
 
-      <TextLink
+      <TextLink rounded="xl" 
         href={contactHref}
-        className="inline-flex items-center gap-2 rounded-xl bg-primary p-6 text-white transition-colors hover:bg-primary/90" weight="medium"
+        className="inline-flex items-center gap-2 bg-primary p-6 text-white transition-colors hover:bg-primary/90" weight="medium"
       >
         <Span>{labels?.contactTeam ?? "Contact Team"}</Span>
         <svg
