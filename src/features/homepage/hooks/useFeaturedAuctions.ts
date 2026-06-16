@@ -3,7 +3,7 @@ import { apiClient } from "../../../http";
 import type {
   ProductItem,
   ProductListResponse,
-} from "@mohasinac/appkit/features/products";
+} from "../../products/types";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_COUNT = 12;
