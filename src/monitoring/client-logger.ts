@@ -9,6 +9,7 @@
 
 import { logger } from "../core/Logger";
 import { AppError } from "../errors";
+import type { JsonValue } from "../schemas/types";
 
 export interface ClientErrorContext {
   userId?: string;
@@ -106,7 +107,7 @@ export const logApiError = async (
 
 export const logValidationError = (
   formName: string,
-  errors: Record<string, unknown>,
+  errors: Record<string, JsonValue>,
   context?: ClientErrorContext,
 ): void => {
   logClientWarning(`Form validation failed: ${formName}`, {

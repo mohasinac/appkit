@@ -5,6 +5,8 @@
  * be wired in the app's monitoring setup by calling setErrorTracker().
  */
 
+import type { JsonValue } from "../schemas/types";
+
 export enum ErrorSeverity {
   LOW = "low",
   MEDIUM = "medium",
@@ -29,7 +31,7 @@ export interface ErrorContext {
   page?: string;
   component?: string;
   action?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, JsonValue>;
 }
 
 export interface TrackedError {
