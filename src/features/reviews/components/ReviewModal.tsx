@@ -52,7 +52,7 @@ export function ViewReviewModal({
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
-            <Row textSize="sm" className="h-10 w-10 flex-shrink-0 bg-neutral-200 font-medium text-neutral-600" align="center" justify="center" rounded="full">
+            <Row textWeight="medium" textSize="sm" className="h-10 w-10 flex-shrink-0 bg-neutral-200 text-neutral-600" align="center" justify="center" rounded="full">
               {displayName.charAt(0).toUpperCase()}
             </Row>
           )}

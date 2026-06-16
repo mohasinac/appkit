@@ -118,7 +118,7 @@ export function InteractiveStoreCard({
                   loading="lazy"
                 />
               ) : (
-                <Row textSize="base" className="h-10 w-10 border-2 border-white bg-primary/10 dark:bg-primary/20 font-bold text-primary" align="center" justify="center" rounded="lg" shadow="md">
+                <Row textWeight="bold" textSize="base" className="h-10 w-10 border-2 border-white bg-primary/10 dark:bg-primary/20 text-primary" align="center" justify="center" rounded="lg" shadow="md">
                   {initial}
                 </Row>
               )}

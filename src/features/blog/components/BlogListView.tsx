@@ -102,7 +102,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
               style={{ backgroundImage: `url(${post.authorAvatar})` }}
             />
           ) : post.authorName ? (
-            <Row textSize="xs" className="h-7 w-7 flex-shrink-0 bg-primary/10 font-bold text-primary" align="center" justify="center" rounded="full">
+            <Row textWeight="bold" textSize="xs" className="h-7 w-7 flex-shrink-0 bg-primary/10 text-primary" align="center" justify="center" rounded="full">
               {post.authorName.charAt(0).toUpperCase()}
             </Row>
           ) : null}

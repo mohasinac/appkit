@@ -258,6 +258,8 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
   justify?: JustifyContent;
   /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
   textSize?: "xs" | "sm" | "base" | "lg";
+  /** Cascade font-weight to children. Use sparingly — prefer wrapping in `<Text weight=…>`. */
+  textWeight?: TextWeightKey;
   /**
    * Render a themed top-border between adjacent children. `true` / `"default"`
    * uses the active theme's border colour; `"subtle"` uses border-subtle.
@@ -282,6 +284,7 @@ export function Stack({
   align = "stretch",
   justify = "start",
   textSize,
+  textWeight,
   divide,
   as,
   surface,
@@ -301,6 +304,7 @@ export function Stack({
     !centered && align !== "stretch" ? ITEMS_MAP[align] : "",
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     textSize ? TEXT_SIZE_MAP[textSize] : "",
+    textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
     resolveDivideClass(divide, "stack"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,
@@ -343,6 +347,8 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   justify?: JustifyContent;
   /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
   textSize?: "xs" | "sm" | "base" | "lg";
+  /** Cascade font-weight to children. Use sparingly — prefer wrapping in `<Text weight=…>`. */
+  textWeight?: TextWeightKey;
   /** Allow children to wrap onto multiple lines. */
   wrap?: boolean;
   /**
@@ -368,12 +374,22 @@ const TEXT_SIZE_MAP = {
   lg: "text-lg",
 } as const;
 
+const TEXT_WEIGHT_MAP = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+  bold: "font-bold",
+} as const;
+
+type TextWeightKey = keyof typeof TEXT_WEIGHT_MAP;
+
 export function Row({
   gap = "md",
   centered = false,
   align = "center",
   justify = "start",
   textSize,
+  textWeight,
   wrap = false,
   divide,
   as,
@@ -394,6 +410,7 @@ export function Row({
     GAP_MAP[gap],
     wrap ? "appkit-row--wrap" : "",
     textSize ? TEXT_SIZE_MAP[textSize] : "",
+    textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
     resolveDivideClass(divide, "row"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,

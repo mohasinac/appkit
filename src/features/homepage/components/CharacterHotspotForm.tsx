@@ -202,8 +202,8 @@ export function CharacterHotspotForm({
                   }}
                 />
               )}
-              <Row textSize="sm" 
-                className="h-8 w-8 shrink-0 font-bold" align="center" justify="center" rounded="full"
+              <Row textWeight="bold" textSize="sm" 
+                className="h-8 w-8 shrink-0" align="center" justify="center" rounded="full"
                 style={{
                   background:
                     i < stepIndex
@@ -412,8 +412,8 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <Row textSize="xs" 
-                  className="font-bold text-white" align="center" justify="center" rounded="full"
+                <Row textWeight="bold" textSize="xs" 
+                  className="text-white" align="center" justify="center" rounded="full"
                   style={{
                     width: 24,
                     height: 24,
@@ -425,8 +425,8 @@ export function CharacterHotspotForm({
                   +
                 </Row>
                 {pin.name && (
-                  <Div
-                    className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] font-bold text-white" rounded="default"
+                  <Div textWeight="bold" 
+                    className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] text-white" rounded="default"
                     style={{ background: "#0D0D0D" }}
                   >
                     {pin.name}
@@ -453,8 +453,8 @@ export function CharacterHotspotForm({
                     pointerEvents: "none",
                   }}
                 />
-                <Row
-                  className="relative font-bold" align="center" justify="center" rounded="full"
+                <Row textWeight="bold" 
+                  className="relative" align="center" justify="center" rounded="full"
                   style={{
                     width: 32,
                     height: 32,
@@ -467,8 +467,8 @@ export function CharacterHotspotForm({
                 >
                   ★
                 </Row>
-                <Div
-                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap py-0.5 text-[10px] font-bold" padding="x-xs" rounded="default"
+                <Div textWeight="bold" 
+                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap py-0.5 text-[10px]" padding="x-xs" rounded="default"
                   style={{
                     background: "var(--color-black)",
                     color: "var(--color-yellow)",
@@ -834,8 +834,8 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <Row textSize="xs" 
-                  className="font-bold text-white" align="center" justify="center" rounded="full"
+                <Row textWeight="bold" textSize="xs" 
+                  className="text-white" align="center" justify="center" rounded="full"
                   style={{
                     width: 28,
                     height: 28,
@@ -847,8 +847,8 @@ export function CharacterHotspotForm({
                   +
                 </Row>
                 {pin.name && (
-                  <Div
-                    className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] font-bold text-white" rounded="default"
+                  <Div textWeight="bold" 
+                    className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] text-white" rounded="default"
                     style={{ background: "#0D0D0D" }}
                   >
                     {pin.name}

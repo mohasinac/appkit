@@ -254,8 +254,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   : Boolean(cfg?.[step.checkKey]);
             return (
               <Row key={step.n} gap="sm" align="start">
-                <Row textSize="xs" 
-                  className={`flex-shrink-0 w-6 h-6 font-bold mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300" }`} align="center" justify="center" rounded="full"
+                <Row textWeight="bold" textSize="xs" 
+                  className={`flex-shrink-0 w-6 h-6 mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300" }`} align="center" justify="center" rounded="full"
                 >
                   {done ? "✓" : step.n}
                 </Row>

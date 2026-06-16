@@ -322,7 +322,7 @@ export function FormShell({
                   {children}
                 </Div>
                 <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] ${__P.p4}`} rounded="lg">
-                  <Row textSize="xs" gap="xs" className="mb-3 font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+                  <Row textWeight="semibold" textSize="xs" gap="xs" className="mb-3 uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
                     <Eye className="w-3.5 h-3.5" />
                     <Span>Live preview</Span>
                   </Row>

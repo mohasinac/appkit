@@ -1,6 +1,7 @@
 "use client";
 
 import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,7 +29,7 @@ interface AdminCouponsResponse {
 
 interface CouponRow {
   id: string;
-  raw: Record<string, unknown>;
+  raw: Record<string, JsonValue>;
 }
 
 export interface AdminCouponsViewProps extends ListingLayoutProps {

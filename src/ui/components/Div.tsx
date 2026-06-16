@@ -25,22 +25,34 @@ const DIV_TEXT_SIZE_MAP: Record<DivTextSize, string> = {
   lg: "text-lg",
 };
 
+type DivTextWeight = "normal" | "medium" | "semibold" | "bold";
+
+const DIV_TEXT_WEIGHT_MAP: Record<DivTextWeight, string> = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+  bold: "font-bold",
+};
+
 export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceProps {
   /** Colour variant cascaded onto Div text. Pragmatic — most Div sites wrap mixed inline content where a `<Text>` wrap would force structural change. */
   color?: DivColor;
   /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
   textSize?: DivTextSize;
+  /** Cascade font-weight to children. Use sparingly — prefer wrapping in `<Text weight=…>`. */
+  textWeight?: DivTextWeight;
   children?: React.ReactNode;
 }
 
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
-  ({ className = "", surface, padding, rounded, border, shadow, color, textSize, children, ...props }, ref) => (
+  ({ className = "", surface, padding, rounded, border, shadow, color, textSize, textWeight, children, ...props }, ref) => (
     <div
       ref={ref}
       className={[
         buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
         color ? DIV_COLOR_MAP[color] : "",
         textSize ? DIV_TEXT_SIZE_MAP[textSize] : "",
+        textWeight ? DIV_TEXT_WEIGHT_MAP[textWeight] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}

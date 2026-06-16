@@ -146,7 +146,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 style={{ backgroundImage: `url(${review.userAvatar})` }}
               />
             ) : (
-              <Row textSize="base" centered className="h-11 w-11 flex-shrink-0 bg-primary/10 font-bold text-primary ring-2 ring-white dark:ring-zinc-800" rounded="full">
+              <Row textWeight="bold" textSize="base" centered className="h-11 w-11 flex-shrink-0 bg-primary/10 text-primary ring-2 ring-white dark:ring-zinc-800" rounded="full">
                 {initials}
               </Row>
             )}

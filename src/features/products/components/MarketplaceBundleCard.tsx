@@ -129,7 +129,7 @@ export function MarketplaceBundleCard({
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                   {i === collageTiles.length - 1 && overflow > 0 && (
-                    <Row textSize="sm" surface="overlay-md" className="absolute inset-0 font-semibold text-white" align="center" justify="center">
+                    <Row textWeight="semibold" textSize="sm" surface="overlay-md" className="absolute inset-0 text-white" align="center" justify="center">
                       +{overflow}
                     </Row>
                   )}
