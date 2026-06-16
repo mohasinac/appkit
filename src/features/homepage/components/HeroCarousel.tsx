@@ -6,6 +6,7 @@ import { Button, Div, Heading, Row, Scrim, Section, Span, Stack, Text } from "..
 import { MediaImage } from "../../media/MediaImage";
 import { MediaVideo } from "../../media/MediaVideo";
 import { useHeroCarousel } from "../hooks/useHeroCarousel";
+import { HERO_CAROUSEL_ARROW, HERO_CAROUSEL_DOT_ACTIVE, HERO_CAROUSEL_DOT_INACTIVE } from "../constants/hero-carousel-styles";
 import type {
   CarouselBackground,
   CarouselSlide,
@@ -480,8 +481,8 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               variant="ghost"
               className={`relative overflow-hidden rounded-full transition-all duration-500 p-0 !min-h-0 ${
                 index === currentSlide
-                  ? THEME_CONSTANTS.carousel.dotActive
-                  : `${THEME_CONSTANTS.carousel.dotInactive} hover:bg-white/75`
+                  ? HERO_CAROUSEL_DOT_ACTIVE
+                  : `${HERO_CAROUSEL_DOT_INACTIVE} hover:bg-white/75`
               }`}
               onClick={() => goToSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
@@ -502,7 +503,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
         <Div className="absolute bottom-4 right-4 z-20 flex gap-2">
           <Button
             variant="ghost"
-            className={`p-0 ${THEME_CONSTANTS.carousel.arrow}`}
+            className={`p-0 ${HERO_CAROUSEL_ARROW}`}
             onClick={goPrev}
             aria-label="Previous slide"
           >
@@ -512,7 +513,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
           </Button>
           <Button
             variant="ghost"
-            className={`p-0 ${THEME_CONSTANTS.carousel.arrow}`}
+            className={`p-0 ${HERO_CAROUSEL_ARROW}`}
             onClick={goNext}
             aria-label="Next slide"
           >
