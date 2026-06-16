@@ -19,6 +19,20 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
 import { ProductStatusValues } from "../features/products/schemas";
 import { getDefaultCurrency } from "../core/baseline-resolver";
 
+/**
+ * JSON-LD permits omitting optional fields at every nesting level — JSON.stringify
+ * drops undefined keys, so the emitted schema.org output remains valid. This
+ * recursive type allows `undefined` anywhere inside the tree.
+ */
+type JsonLdValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | JsonLdValue[]
+  | { [key: string]: JsonLdValue };
+
 // --- Input Types --------------------------------------------------------------
 
 export interface ProductJsonLdInput {
@@ -74,7 +88,7 @@ export interface BlogPostJsonLdInput {
 
 export function productJsonLd(
   product: ProductJsonLdInput,
-): Record<string, unknown> {
+): Record<string, JsonLdValue> {
   const url = `${SITE_URL}/products/${product.slug}`;
   const images = [
     ...(product.mainImage ? [product.mainImage] : []),
@@ -111,7 +125,7 @@ export function productJsonLd(
 
 export function reviewJsonLd(
   review: ReviewJsonLdInput,
-): Record<string, unknown> {
+): Record<string, JsonLdValue> {
   return {
     "@context": "https://schema.org",
     "@type": "Review",
@@ -133,7 +147,7 @@ export function reviewJsonLd(
 export function aggregateRatingJsonLd(
   product: Pick<ProductJsonLdInput, "title" | "slug">,
   stats: { average: number; count: number },
-): Record<string, unknown> {
+): Record<string, JsonLdValue> {
   return {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -151,7 +165,7 @@ export function aggregateRatingJsonLd(
 
 export function breadcrumbJsonLd(
   items: BreadcrumbJsonLdItem[],
-): Record<string, unknown> {
+): Record<string, JsonLdValue> {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -164,7 +178,7 @@ export function breadcrumbJsonLd(
   };
 }
 
-export function faqJsonLd(faqs: FaqJsonLdInput[]): Record<string, unknown> {
+export function faqJsonLd(faqs: FaqJsonLdInput[]): Record<string, JsonLdValue> {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -178,7 +192,7 @@ export function faqJsonLd(faqs: FaqJsonLdInput[]): Record<string, unknown> {
 
 export function blogPostJsonLd(
   post: BlogPostJsonLdInput,
-): Record<string, unknown> {
+): Record<string, JsonLdValue> {
   const url = `${SITE_URL}/blog/${post.slug}`;
   return {
     "@context": "https://schema.org",
@@ -198,7 +212,7 @@ export function blogPostJsonLd(
   };
 }
 
-export function organizationJsonLd(): Record<string, unknown> {
+export function organizationJsonLd(): Record<string, JsonLdValue> {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -214,7 +228,7 @@ export function organizationJsonLd(): Record<string, unknown> {
   };
 }
 
-export function searchBoxJsonLd(): Record<string, unknown> {
+export function searchBoxJsonLd(): Record<string, JsonLdValue> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -233,7 +247,7 @@ export function searchBoxJsonLd(): Record<string, unknown> {
 
 export function auctionJsonLd(
   auction: ProductJsonLdInput,
-): Record<string, unknown> {
+): Record<string, JsonLdValue> {
   const url = `${SITE_URL}/products/${auction.slug}`;
   const base = productJsonLd(auction);
   return {

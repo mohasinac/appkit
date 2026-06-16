@@ -12,3 +12,12 @@ export const HERO_CAROUSEL_DOT_ACTIVE =
 
 export const HERO_CAROUSEL_DOT_INACTIVE =
   "w-2 h-2 !min-h-0 rounded-full bg-white/55 shadow-sm transition-all duration-500";
+
+/** Absolute fill helper — `position: absolute; inset: 0`. */
+export const POSITION_FILL = "absolute inset-0";
+
+/** Flex centering helper — `flex items-center justify-center`. */
+export const FLEX_CENTER = "flex items-center justify-center";
+
+/** Background for hero placeholder skeleton. */
+export const HERO_PLACEHOLDER_BG = "bg-zinc-200 dark:bg-slate-800";

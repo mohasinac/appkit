@@ -1,12 +1,11 @@
 "use client"
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useMediaQuery } from "../../../react";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Div, Heading, Row, Scrim, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { MediaVideo } from "../../media/MediaVideo";
 import { useHeroCarousel } from "../hooks/useHeroCarousel";
-import { HERO_CAROUSEL_ARROW, HERO_CAROUSEL_DOT_ACTIVE, HERO_CAROUSEL_DOT_INACTIVE } from "../constants/hero-carousel-styles";
+import { HERO_CAROUSEL_ARROW, HERO_CAROUSEL_DOT_ACTIVE, HERO_CAROUSEL_DOT_INACTIVE, POSITION_FILL, FLEX_CENTER, HERO_PLACEHOLDER_BG } from "../constants/hero-carousel-styles";
 import type {
   CarouselBackground,
   CarouselSlide,
@@ -14,7 +13,6 @@ import type {
   CarouselHoverEffect,
 } from "../types/index";
 
-const { flex, position } = THEME_CONSTANTS;
 
 export interface HeroCarouselProps {
   initialSlides?: CarouselSlide[];
@@ -105,12 +103,12 @@ function SlideBackground({
   const src = mobileUrl ?? effectiveBg?.url ?? "";
 
   if (!effectiveBg) {
-    return <Div className={`${position.fill} bg-zinc-900`} />;
+    return <Div className={`${POSITION_FILL} bg-zinc-900`} />;
   }
 
   if (effectiveBg.type === "color") {
     const bg_color = effectiveBg.color ?? "var(--appkit-color-primary)";
-    return <Div className={position.fill} style={{ backgroundColor: bg_color }} />;
+    return <Div className={POSITION_FILL} style={{ backgroundColor: bg_color }} />;
   }
 
   if (effectiveBg.type === "gradient") {
@@ -119,7 +117,7 @@ function SlideBackground({
     const angle = effectiveBg.gradientAngle ?? 135;
     return (
       <Div
-        className={position.fill}
+        className={POSITION_FILL}
         style={{ background: `linear-gradient(${angle}deg, ${from}, ${to})` }}
       />
     );
@@ -138,7 +136,7 @@ function SlideBackground({
         />
         {effectiveBg.dimOverlay?.enabled && (
           <Div
-            className={position.fill}
+            className={POSITION_FILL}
             style={{ backgroundColor: `rgba(0,0,0,${(effectiveBg.dimOverlay.opacity ?? 0) / 100})` }}
           />
         )}
@@ -151,7 +149,7 @@ function SlideBackground({
       <MediaImage src={src} alt="" size="hero" priority={priority} />
       {effectiveBg.dimOverlay?.enabled && (
         <Div
-          className={position.fill}
+          className={POSITION_FILL}
           style={{ backgroundColor: `rgba(0,0,0,${(effectiveBg.dimOverlay.opacity ?? 0) / 100})` }}
         />
       )}
@@ -164,7 +162,7 @@ function CardBackground({ bg }: { bg: CarouselBackground }) {
   if (bg.type === "color") {
     return (
       <Div
-        className={position.fill}
+        className={POSITION_FILL}
         style={{ backgroundColor: bg.color ?? "var(--appkit-color-surface)" }}
       />
     );
@@ -175,7 +173,7 @@ function CardBackground({ bg }: { bg: CarouselBackground }) {
     const angle = bg.gradientAngle ?? 135;
     return (
       <Div
-        className={position.fill}
+        className={POSITION_FILL}
         style={{ background: `linear-gradient(${angle}deg, ${from}, ${to})` }}
       />
     );
@@ -216,9 +214,9 @@ function CarouselCardRenderer({
       <CardBackground bg={card.background} />
       {!card.isButtonOnly && (
         <>
-          <Scrim direction="bottom-up" intensity="strong" className={position.fill} />
+          <Scrim direction="bottom-up" intensity="strong" className={POSITION_FILL} />
           <Stack
-            className={`${position.fill} justify-end md:p-6 ${textAlignClass}`} padding="xs"
+            className={`${POSITION_FILL} justify-end md:p-6 ${textAlignClass}`} padding="xs"
           >
           {card.content?.eyebrow && (
             <Text className="text-[10px] md:text-xs !text-white/70 mb-0.5 tracking-wider drop-shadow-sm" transform="uppercase">
@@ -271,7 +269,7 @@ function CarouselCardRenderer({
       {card.isButtonOnly && card.buttons?.[0] && (
         <Button
           variant="ghost"
-          className={`${position.fill} ${flex.center} font-semibold text-white hover:bg-black/20 transition-colors rounded-none p-0`}
+          className={`${POSITION_FILL} ${FLEX_CENTER} font-semibold text-white hover:bg-black/20 transition-colors rounded-none p-0`}
           onClick={makeButtonClickHandler(card.buttons[0].href, card.buttons[0].openInNewTab, push)}
         >
           <Span size="lg" className="md:text-2xl">{card.buttons[0].text}</Span>
@@ -343,8 +341,8 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (isLoading) {
     return (
-      <Div className={`relative w-full ${heightClass} ${THEME_CONSTANTS.themed.bgTertiary} animate-pulse`}>
-        <Div className={`${position.fill} ${flex.center}`}>
+      <Div className={`relative w-full ${heightClass} ${HERO_PLACEHOLDER_BG} animate-pulse`}>
+        <Div className={`${POSITION_FILL} ${FLEX_CENTER}`}>
           <Text variant="secondary">Loading...</Text>
         </Div>
       </Div>
@@ -353,7 +351,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (!slides || slides.length === 0) {
     return (
-      <Div className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${flex.center} flex-col gap-4`}>
+      <Div className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${FLEX_CENTER} flex-col gap-4`}>
         <Heading level={2} className="text-primary" size="2xl" weight="bold">Coming Soon</Heading>
         <Text variant="secondary" className="max-w-md px-4" align="center">
           Amazing deals are on their way. Stay tuned!
@@ -380,7 +378,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       </Div>
 
       {/* Snap Scroll Rail */}
-      <Div className={position.fill}>
+      <Div className={POSITION_FILL}>
         <Div
           ref={slidesRef}
           onScroll={handleSlidesScroll}
@@ -396,7 +394,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 className={`snap-start flex-none w-full relative self-stretch bg-zinc-900 ${slideHeightClass}`}
               >
                 {/* Background */}
-                <Div className={position.fill}>
+                <Div className={POSITION_FILL}>
                   <SlideBackground
                     bg={slide.background}
                     legacy={slide.media}
@@ -408,7 +406,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
                 {/* Overlay text (no cards, or overlay present) */}
                 {slide.overlay && (
-                  <Div className={`${position.fill} ${flex.center} flex-col text-center md:px-16 lg:px-32`} padding="x-lg">
+                  <Div className={`${POSITION_FILL} ${FLEX_CENTER} flex-col text-center md:px-16 lg:px-32`} padding="x-lg">
                     {slide.overlay.subtitle && (
                       <Text className="stagger-1 md:text-sm !text-white/80 mb-1 md:mb-2 drop-shadow-sm tracking-widest" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}
@@ -448,7 +446,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 {/* Cards grid */}
                 {hasCards && (
                   <Div
-                    className={`${position.fill} grid gap-2 md:gap-4 md:p-8`} padding="md"
+                    className={`${POSITION_FILL} grid gap-2 md:gap-4 md:p-8`} padding="md"
                     style={{
                       gridTemplateRows: "repeat(2, 1fr)",
                       gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
