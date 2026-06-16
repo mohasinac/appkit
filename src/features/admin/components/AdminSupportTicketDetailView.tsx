@@ -344,7 +344,7 @@ export function AdminSupportTicketDetailView({
           )}
         </Row>
 
-        <Div className="text-sm text-zinc-500 dark:text-zinc-400">
+        <Div className="text-sm" color="muted">
           From: <Span weight="medium" color="primary">{userDisplayName}</Span>
         </Div>
 

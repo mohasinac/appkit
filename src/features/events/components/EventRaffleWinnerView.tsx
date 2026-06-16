@@ -100,7 +100,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           </Div>
         ) : null}
 
-        <Div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-zinc-600 dark:text-zinc-300" padding="t-xs">
+        <Div className="flex flex-wrap gap-x-6 gap-y-2 text-sm" color="muted" padding="t-xs">
           {typeof event.raffleEntryCount === "number" ? (
             <Span>
               {l.poolLabel}:{" "}
