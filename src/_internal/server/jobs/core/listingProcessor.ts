@@ -28,6 +28,7 @@ import {
   userRepository,
 } from "../../../../repositories";
 import type { JobContext } from "../runtime/types";
+import type { JsonValue } from "../../../../schemas/types";
 
 const DEFAULT_SORT = "-createdAt";
 const DEFAULT_PAGE = 1;
@@ -42,7 +43,7 @@ export interface ListingRequestBody {
   p?: number | string;
   ps?: number | string;
   cursor?: string;
-  baseOpts?: Record<string, unknown>;
+  baseOpts?: Record<string, JsonValue>;
 }
 
 export interface ListingResponseBody {
@@ -66,7 +67,7 @@ interface SieveLikeResult {
 
 type Lister = (
   model: { filters: string; sorts: string; page: string; pageSize: string },
-  baseOpts: Record<string, unknown>,
+  baseOpts: Record<string, JsonValue>,
 ) => Promise<SieveLikeResult>;
 
 class ListingError extends Error {
@@ -78,7 +79,7 @@ class ListingError extends Error {
   }
 }
 
-function requireOpt(baseOpts: Record<string, unknown>, key: string, collection: string): string {
+function requireOpt(baseOpts: Record<string, JsonValue>, key: string, collection: string): string {
   const value = baseOpts[key];
   if (typeof value !== "string" || value.length === 0) {
     throw new ListingError(400, `${collection} listing requires baseOpts.${key}`);
@@ -86,7 +87,7 @@ function requireOpt(baseOpts: Record<string, unknown>, key: string, collection: 
   return value;
 }
 
-function getBoolOpt(baseOpts: Record<string, unknown>, key: string, fallback: boolean): boolean {
+function getBoolOpt(baseOpts: Record<string, JsonValue>, key: string, fallback: boolean): boolean {
   const value = baseOpts[key];
   if (typeof value === "boolean") return value;
   if (value === "true") return true;
