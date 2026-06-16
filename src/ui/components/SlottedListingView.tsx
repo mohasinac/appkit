@@ -109,7 +109,7 @@ export function SlottedListingView({
       {renderHeader ? (
         renderHeader()
       ) : displayTitle ? (
-        <Heading level={1} className="text-2xl font-bold mb-6">
+        <Heading level={1} className="mb-6" size="2xl" weight="bold">
           {displayTitle}
         </Heading>
       ) : null}
