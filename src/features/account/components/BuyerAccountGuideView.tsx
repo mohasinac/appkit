@@ -99,7 +99,7 @@ const SECTIONS: AccountSection[] = [
     content: (
       <>
         <Alert variant="warning" title="Top scam types in the collectibles market:">
-          <Ul className="space-y-1 text-sm mt-1">
+          <Ul className="mt-1" spacing="tight" size="sm">
             <Li><Span weight="bold">1. Fake payment screenshots</Span> — always verify refunds in your bank app.</Li>
             <Li><Span weight="bold">2. Empty box shipping</Span> — item photos look real but the box arrives empty. Check seller rating.</Li>
             <Li><Span weight="bold">3. Fake graded cards</Span> — counterfeit PSA/BGS slabs. Verify cert numbers on the grading company&apos;s website.</Li>

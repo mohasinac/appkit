@@ -21,7 +21,7 @@ const __P = {
  *   actionLabel="Add User"
  *   onAction={() => setShowUserDrawer(true)}
  *   themeConfig={{
- *     gradient: "bg-gradient-to-r from-blue-50 to-blue-100",
+ *     gradient: "bg-info-surface",
  *     titleClass: "text-3xl font-bold",
  *     subtitleClass: "text-lg text-gray-600"
  *   }}

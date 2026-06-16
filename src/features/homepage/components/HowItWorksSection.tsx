@@ -59,12 +59,13 @@ function StepCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="howitworkssection-div-340">
       {/* Step number watermark */}
-      <Div
-        className="absolute top-4 right-5 font-display text-7xl bg-gradient-to-br from-primary to-cobalt opacity-10 bg-clip-text text-transparent select-none pointer-events-none leading-none"
+      <Span
+        gradient="brand"
+        className="absolute top-4 right-5 font-display text-7xl opacity-10 select-none pointer-events-none leading-none"
         aria-hidden="true"
       >
         {step.number}
-      </Div>
+      </Span>
 
       {/* Visible index badge */}
       <Row

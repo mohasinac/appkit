@@ -192,7 +192,7 @@ function renderTicketListArea(props: {
           <Text size="sm" color="muted">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}
-      <Ul className="space-y-3">
+      <Ul spacing="loose">
         {tickets.map((ticket) => (
           <Li key={ticket.id}>
             <Button variant="ghost" type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>

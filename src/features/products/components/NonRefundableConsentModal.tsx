@@ -112,7 +112,7 @@ export function NonRefundableConsentModal({
           </Text>
         )}
 
-        <Ul className="list-disc pl-5 space-y-2">
+        <Ul marker="disc" spacing="comfortable" indent="lg">
           {copy.bullets.map((b, i) => (
             <Li key={i}>
               <Text>{b}</Text>

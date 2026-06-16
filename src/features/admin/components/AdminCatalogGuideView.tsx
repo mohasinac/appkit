@@ -70,7 +70,7 @@ export function AdminCatalogGuideView() {
           Icon: AlertTriangle, title: "Common Admin Mistakes",
           content: (
             <Alert variant="warning">
-              <Ul className="space-y-1 text-sm">
+              <Ul spacing="tight" size="sm">
                 <Li>✗ Publishing a product with no images — buyers cannot evaluate it.</Li>
                 <Li>✗ Creating a subcategory without setting <Code className={CLS_CODE}>rootId</Code> — category tree breaks.</Li>
                 <Li>✗ Setting <Code className={CLS_CODE}>parentId</Code> of a root category to anything other than <Code className={CLS_CODE}>null</Code> — creates circular hierarchy.</Li>

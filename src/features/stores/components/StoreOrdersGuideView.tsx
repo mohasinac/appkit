@@ -111,7 +111,7 @@ const PROCESSING_STEPS = [
 
 function ProcessingWalkthrough() {
   return (
-    <Ol className="space-y-3 pl-5">
+    <Ol spacing="loose" indent="lg">
       {PROCESSING_STEPS.map((step, i) => (
         <Li key={i} className="list-decimal text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
           {step}
@@ -173,7 +173,7 @@ function CancellationsSection() {
     <Div className={SECTION_BODY}>
       <Div>
         <Text className={SUBHEADING}>Who can cancel</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>
             <Span weight="bold">Buyer</Span> — can self-cancel any time before the order reaches SHIPPED status.
           </Li>
@@ -222,7 +222,7 @@ function ReturnsSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>What you see</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>The buyer's reason for return (pre-defined category + optional description).</Li>
           <Li className={LIST_DISC}>Photos of the item as received.</Li>
           <Li className={LIST_DISC}>A 3-day SLA to respond before LetItRip mediates.</Li>
@@ -262,7 +262,7 @@ function AuctionOrdersSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>If the winner does not pay</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>The order is automatically cancelled after 48 hours.</Li>
           <Li className={LIST_DISC}>You are notified. The winner may receive a bid restriction on their account.</Li>
           <Li className={LIST_DISC}>If "offer to next bidder" is enabled in your auction settings, the next-highest bidder is contacted automatically.</Li>

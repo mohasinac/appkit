@@ -50,10 +50,10 @@ export interface PromotionsHeroProps {
 /** Slim hero banner for the promotions page — tabs + content live in the page. */
 export function PromotionsHero({
   labels,
-  heroBannerClass = "bg-gradient-to-br from-rose-500 to-orange-500",
+  heroBannerClass = "",
 }: PromotionsHeroProps) {
   return (
-    <Div className={`${heroBannerClass} text-white`} padding="y-2-5xl">
+    <Section tone="accent-banner" className={`${heroBannerClass} text-white`} padding="y-2-5xl">
       <Div className="max-w-5xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
         <Text className="text-white mb-2 tracking-widest" size="sm" weight="medium" transform="uppercase">
           🎉 {labels.exclusiveOffersBadge}
@@ -65,7 +65,7 @@ export function PromotionsHero({
           {labels.subtitle}
         </Text>
       </Div>
-    </Div>
+    </Section>
   );
 }
 
@@ -98,7 +98,7 @@ export interface PromotionsViewProps {
 export function PromotionsView({
   labels,
   hasContent,
-  heroBannerClass = "bg-gradient-to-br from-rose-500 to-orange-500",
+  heroBannerClass = "",
   renderCoupons,
   couponsCount = 0,
   renderDealsSection,

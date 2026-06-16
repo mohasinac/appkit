@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Card, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 const __P = {
   p8: "p-8",
 } as const;
@@ -8,7 +8,7 @@ export interface AboutHowItem {
   title: string;
   text: string;
   icon: string;
-  color?: string;
+  tone?: "indigo" | "teal" | "amber" | "rose";
 }
 
 export interface AboutValueItem {
@@ -48,7 +48,7 @@ export function AboutView({
   howItems = [],
   valueItems = [],
   milestones = [],
-  ctaBannerClass = "bg-gradient-to-br from-violet-600 to-indigo-600",
+  ctaBannerClass = "",
   renderCtaButtons,
 }: AboutViewProps) {
   return (
@@ -75,17 +75,19 @@ export function AboutView({
         <Section>
           <Heading level={2} className="mb-12" align="center">{labels.howItWorksTitle}</Heading>
           <Div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {howItems.map(({ title, text, icon, color }) => (
-              <div
+            {howItems.map(({ title, text, icon, tone }) => (
+              <Card
                 key={title}
-                className={`bg-gradient-to-br ${color ?? "from-primary/5 to-primary/5"} rounded-2xl p-6 space-y-3`}
+                variant={`gradient-${tone ?? "indigo"}`}
+                padding="md"
+                className="space-y-3"
               >
                 <Div className="text-4xl">{icon}</Div>
                 <Heading level={3}>{title}</Heading>
                 <Text size="sm" variant="secondary" className="leading-relaxed">
                   {text}
                 </Text>
-              </div>
+              </Card>
             ))}
           </Div>
         </Section>
@@ -123,7 +125,7 @@ export function AboutView({
           </Stack>
         </Section>
 
-        <Section className={`text-center ${ctaBannerClass} ${__P.p8} md:p-12 text-white`} rounded="2xl">
+        <Section tone="accent-banner" className={`text-center ${ctaBannerClass} ${__P.p8} md:p-12 text-white`} rounded="2xl">
           <Heading level={2} variant="none" className="mb-8 text-white" size="3xl" weight="bold">
             {labels.ctaTitle}
           </Heading>

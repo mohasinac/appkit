@@ -24,7 +24,7 @@ export interface HowItWorksInfoViewProps {
   /** Page hero heading */
   title: string;
   subtitle?: string;
-  /** Tailwind gradient class for the hero header, e.g. "bg-gradient-to-r from-cobalt-600 to-violet-700" */
+  /** Extra className for the hero <Section>. The themed brand-banner gradient is applied automatically via tone="accent-banner". */
   heroClass?: string;
   /** Step-by-step section heading */
   stepsTitle?: string;
@@ -46,7 +46,7 @@ export interface HowItWorksInfoViewProps {
 export function HowItWorksInfoView({
   title,
   subtitle,
-  heroClass = "bg-gradient-to-br from-cobalt-700 via-cobalt-600 to-violet-700",
+  heroClass = "",
   stepsTitle,
   steps,
   detailsSectionTitle,
@@ -63,7 +63,7 @@ export function HowItWorksInfoView({
       className={`-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10 ${className}`}
     >
       {/* Header */}
-      <Section className={`${heroClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl">
+      <Section tone="accent-banner" className={`${heroClass} text-white md:py-16 lg:py-20`} padding="y-2-5xl">
         <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
           <Heading level={1} variant="none" className="mb-4 text-white">
             {title}

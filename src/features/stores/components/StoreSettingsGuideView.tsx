@@ -42,7 +42,7 @@ function StoreProfileSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Logo (storeLogoURL)</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>Minimum size: 200 × 200 px. Recommended: 400 × 400 px.</Li>
           <Li className={LIST_DISC}>Displayed as a circle avatar on your profile page and in order confirmation emails.</Li>
           <Li className={LIST_DISC}>Format: PNG with transparent background looks best.</Li>
@@ -50,7 +50,7 @@ function StoreProfileSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Banner (storeBannerURL)</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>Minimum size: 1200 × 300 px. Recommended: 1600 × 400 px.</Li>
           <Li className={LIST_DISC}>Displayed at the top of your store profile page.</Li>
           <Li className={LIST_DISC}>Avoid putting critical text near the edges — it may be cropped on mobile.</Li>
@@ -111,7 +111,7 @@ function ReturnPolicySection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Non-returnable categories</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>Opened card packs (boosters, elite trainer boxes).</Li>
           <Li className={LIST_DISC}>Cracked or opened graded slabs — unless the defect was documented before shipping.</Li>
           <Li className={LIST_DISC}>Items explicitly marked "Final Sale" in the listing.</Li>
@@ -135,7 +135,7 @@ function VacationModeSection() {
     <Div className={SECTION_BODY}>
       <Div>
         <Text className={SUBHEADING}>What vacation mode does</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>All your published listings are hidden from search results and browse pages.</Li>
           <Li className={LIST_DISC}>Your store profile page shows a "On Vacation" banner.</Li>
           <Li className={LIST_DISC}>Buyers cannot add your items to cart or checkout while on vacation.</Li>

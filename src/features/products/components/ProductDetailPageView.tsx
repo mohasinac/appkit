@@ -864,7 +864,7 @@ export async function ProductDetailPageView({
               }
               ingredientsContent={
                 ingredients.length > 0 ? (
-                  <Ul className="space-y-2">
+                  <Ul spacing="comfortable">
                     {ingredients.map((item, i) => (
                       <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
                         <Span className="mt-1 flex-shrink-0 h-1.5 w-1.5 bg-primary-400" rounded="full" />
@@ -876,7 +876,7 @@ export async function ProductDetailPageView({
               }
               howToUseContent={
                 howToUse.length > 0 ? (
-                  <Ol className="space-y-3">
+                  <Ol spacing="loose">
                     {howToUse.map((step, i) => (
                       <Li key={i} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
                         <Span size="xs" weight="bold" className="flex-shrink-0 flex h-6 w-6 items-center justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" rounded="full">

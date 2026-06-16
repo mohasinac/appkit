@@ -72,9 +72,10 @@ export function EventBanner({
   };
 
   return (
-    <div
+    <Section
+      tone="accent-banner"
       className={[
-        "relative bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-2 text-center text-sm font-medium text-white",
+        "relative px-4 py-2 text-center text-sm font-medium text-white",
         className,
       ].join(" ")}
      data-section="eventbanner-div-277">
@@ -90,7 +91,7 @@ export function EventBanner({
       >
         ×
       </Button>
-    </div>
+    </Section>
   );
 }
 

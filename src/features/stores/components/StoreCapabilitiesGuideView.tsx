@@ -170,7 +170,7 @@ function LockedFeatureGuide() {
           </Row>
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">What you are missing:</Text>
-            <Ul className="pl-4 space-y-0.5">
+            <Ul className="space-y-0.5" indent="md">
               {missing.map((item) => (
                 <Li key={item} className={`text-sm text-[var(--appkit-color-text-muted)] ${LIST_DISC}`}>{item}</Li>
               ))}
@@ -201,7 +201,7 @@ function VerifiedSellerSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Requirements</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>Government-issued photo ID submitted to LetItRip support.</Li>
           <Li className={LIST_DISC}>Store active for at least 6 months.</Li>
           <Li className={LIST_DISC}>Average rating of 4.5 or above (across all reviews).</Li>

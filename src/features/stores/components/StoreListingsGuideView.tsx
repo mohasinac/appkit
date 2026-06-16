@@ -146,7 +146,7 @@ function StandardWalkthrough() {
       {STANDARD_STEPS.map(({ step, items }) => (
         <Div key={step}>
           <Text className="mb-2 text-[var(--appkit-color-text)]" weight="semibold">{step}</Text>
-          <Ul className="space-y-1.5 pl-5">
+          <Ul className="space-y-1.5" indent="lg">
             {items.map((item) => (
               <Li key={item} className="list-disc text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
                 {item}
@@ -201,7 +201,7 @@ function AuctionWalkthrough() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Auction end</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>Winner receives an email and has 48 hours to complete payment.</Li>
           <Li className={LIST_DISC}>If payment is not completed within 48 hours, the order is auto-cancelled.</Li>
           <Li className={LIST_DISC}>The next-highest bidder may be offered the item (if enabled in your auction settings).</Li>
@@ -333,7 +333,7 @@ const MISTAKES = [
 function CommonMistakes() {
   return (
     <Alert variant="warning" title="Common mistakes to avoid">
-      <Ul className="mt-2 space-y-2 pl-4">
+      <Ul className="mt-2" spacing="comfortable" indent="md">
         {MISTAKES.map((m) => (
           <Li key={m} className="list-disc text-sm leading-relaxed">
             {m}

@@ -123,7 +123,7 @@ function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
   return (
     <Section className={`border ${themed.border} ${themed.bgSecondary} ${__P.p6}`} rounded="2xl">
       <Heading level={2} className="mb-4">{t("rulesTitle")}</Heading>
-      <Ul className="space-y-2">
+      <Ul spacing="comfortable">
         {rules.map((rule) => (
           <Li key={rule} className="flex items-start gap-2 text-sm">
             <Span color="primary" className="mt-0.5">•</Span>

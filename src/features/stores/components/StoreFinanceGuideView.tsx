@@ -166,7 +166,7 @@ function CouponsSection() {
     <Div className={SECTION_BODY}>
       <Div>
         <Text className={SUBHEADING}>Admin coupons vs store coupons</Text>
-        <Ul className="space-y-1 pl-5">
+        <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>
             <Span weight="bold">Admin coupons</Span> — created by LetItRip and apply platform-wide (all stores). You cannot create these.
           </Li>

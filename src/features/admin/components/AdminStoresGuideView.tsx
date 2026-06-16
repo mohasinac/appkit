@@ -36,7 +36,7 @@ export function AdminStoresGuideView() {
                 <Code size="xs">storeId = storeSlug</Code> (public-facing, used in all product and order references).<br />
                 <Code size="xs">ownerId = Firebase Auth UID</Code> (internal only — never exposed in API responses).
               </Alert>
-              <Ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)] mt-4">
+              <Ul className="text-[var(--appkit-color-text-muted)] mt-4" spacing="comfortable" size="sm">
                 <Li><Span weight="bold">Why separate?</Span> Allows future store ownership transfer without rewriting all product/order documents.</Li>
                 <Li><Span weight="bold">Two-step lookup</Span>: To find a store by owner, query <Code size="xs" padding="xs" rounded="default" surface="subtle">stores where ownerId == uid</Code>. Never join products by ownerId directly.</Li>
                 <Li><Span weight="bold">Anti-patterns to reject</Span>: PRs that filter <Code size="xs" padding="xs" rounded="default" surface="subtle">products where ownerId ==</Code> — the correct field is <Code size="xs" padding="xs" rounded="default" surface="subtle">storeId</Code>.</Li>

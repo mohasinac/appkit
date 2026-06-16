@@ -54,7 +54,7 @@ export function AdminAnalyticsGuideView() {
           content: (
             <>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Filter analytics by store to see individual seller performance. Available metrics:</Text>
-              <Ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
+              <Ul className="list-inside text-[var(--appkit-color-text-muted)]" marker="disc" spacing="tight" size="sm">
                 <Li>Total orders and completion rate</Li>
                 <Li>Average order value</Li>
                 <Li>Return and refund rate</Li>

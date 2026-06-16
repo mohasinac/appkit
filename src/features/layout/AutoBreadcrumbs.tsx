@@ -110,7 +110,7 @@ export function AutoBreadcrumbs({
     <Div className="border-y border-zinc-200/80 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:supports-[backdrop-filter]:bg-slate-950/85" surface="default">
       <Div className="container mx-auto max-w-[1920px] px-5 sm:px-6 lg:px-8" padding="y-xs">
         <Nav aria-label="Breadcrumb" className={className}>
-          <Ol className="flex items-center gap-2 text-sm flex-wrap">
+          <Ol className="flex items-center gap-2 flex-wrap" size="sm">
             {allCrumbs.map((crumb, index) => {
               const isLast = index === allCrumbs.length - 1;
               return (

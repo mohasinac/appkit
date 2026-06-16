@@ -86,7 +86,7 @@ const SECTIONS: AuctionSection[] = [
     Icon: ShieldCheck, iconCls: "w-5 h-5 text-emerald-500", title: "Bidding Safety Tips",
     content: (
       <Alert variant="info">
-        <Ul className="space-y-1 text-sm">
+        <Ul spacing="tight" size="sm">
           <Li>✓ Check the seller&apos;s rating and number of completed orders before bidding.</Li>
           <Li>✓ Read every product photo carefully — look for condition issues, especially on graded card slabs.</Li>
           <Li>✓ If authenticity is unclear, contact support before placing a bid — not after.</Li>

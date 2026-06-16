@@ -36,7 +36,7 @@ export function Breadcrumbs({
 
   return (
     <Nav aria-label="Breadcrumb" className={className}>
-      <Ol className="flex items-center gap-2 text-sm flex-wrap">
+      <Ol className="flex items-center gap-2 flex-wrap" size="sm">
         {items.map((item, index) => (
           <Li key={index} className="flex items-center gap-2">
             {item}

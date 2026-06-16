@@ -240,6 +240,12 @@ export function BlockFooter({
 export type ListMarker = "disc" | "decimal" | "none" | "check" | "arrow";
 /** Spacing between list items. */
 export type ListSpacing = "tight" | "comfortable" | "loose" | "none";
+/** Indent (left padding) applied to the list for marker visibility. */
+export type ListIndent = "none" | "sm" | "md" | "lg" | "xl";
+/** Typography size cascaded onto list items. */
+export type ListSize = "xs" | "sm" | "base" | "lg";
+/** Colour variant cascaded onto list items. */
+export type ListColor = "default" | "primary" | "muted" | "faint";
 
 const LIST_MARKER_MAP: Record<ListMarker, string> = {
   disc: "appkit-list--marker-disc",
@@ -256,21 +262,52 @@ const LIST_SPACING_MAP: Record<ListSpacing, string> = {
   loose: "appkit-list--spacing-loose",
 };
 
+const LIST_INDENT_MAP: Record<ListIndent, string> = {
+  none: "",
+  sm: "pl-2",
+  md: "pl-4",
+  lg: "pl-5",
+  xl: "pl-6",
+};
+
+const LIST_SIZE_MAP: Record<ListSize, string> = {
+  xs: "appkit-text--xs",
+  sm: "appkit-text--sm",
+  base: "appkit-text--base",
+  lg: "appkit-text--lg",
+};
+
+const LIST_COLOR_MAP: Record<ListColor, string> = {
+  default: "",
+  primary: "appkit-color--primary",
+  muted: "appkit-color--muted",
+  faint: "appkit-color--faint",
+};
+
 export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
   /** Marker style — replaces consumer `list-disc`/`list-none` className. */
   marker?: ListMarker;
   /** Vertical spacing between items — replaces consumer `space-y-N`. */
   spacing?: ListSpacing;
+  /** Left padding — replaces consumer `pl-N`. */
+  indent?: ListIndent;
+  /** Typography size cascaded onto list items. */
+  size?: ListSize;
+  /** Colour variant cascaded onto list items. */
+  color?: ListColor;
   children: React.ReactNode;
 }
 
 export const Ul = React.forwardRef<HTMLUListElement, UlProps>(
-  ({ marker, spacing, className = "", children, ...props }, ref) => (
+  ({ marker, spacing, indent, size, color, className = "", children, ...props }, ref) => (
     <ul
       ref={ref}
       className={[
         marker ? LIST_MARKER_MAP[marker] : "",
         spacing ? LIST_SPACING_MAP[spacing] : "",
+        indent ? LIST_INDENT_MAP[indent] : "",
+        size ? LIST_SIZE_MAP[size] : "",
+        color ? LIST_COLOR_MAP[color] : "",
         className,
       ]
         .filter(Boolean)
@@ -300,15 +337,24 @@ export interface OlProps extends React.HTMLAttributes<HTMLOListElement> {
   marker?: ListMarker;
   /** Vertical spacing between items — replaces consumer `space-y-N`. */
   spacing?: ListSpacing;
+  /** Left padding — replaces consumer `pl-N`. */
+  indent?: ListIndent;
+  /** Typography size cascaded onto list items. */
+  size?: ListSize;
+  /** Colour variant cascaded onto list items. */
+  color?: ListColor;
   children: React.ReactNode;
 }
 
-export function Ol({ marker = "decimal", spacing, className = "", children, ...props }: OlProps) {
+export function Ol({ marker = "decimal", spacing, indent, size, color, className = "", children, ...props }: OlProps) {
   return (
     <ol
       className={[
         LIST_MARKER_MAP[marker],
         spacing ? LIST_SPACING_MAP[spacing] : "",
+        indent ? LIST_INDENT_MAP[indent] : "",
+        size ? LIST_SIZE_MAP[size] : "",
+        color ? LIST_COLOR_MAP[color] : "",
         className,
       ]
         .filter(Boolean)

@@ -62,7 +62,7 @@ export function AdminTeamGuideView() {
         {
           Icon: Users, title: "Employee Invite Flow",
           content: (
-            <Ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)]">
+            <Ul className="text-[var(--appkit-color-text-muted)]" spacing="comfortable" size="sm">
               <Li>Go to <Span weight="bold">Admin → Team → Invite Employee</Span>. Enter the person&apos;s email and select their permission group.</Li>
               <Li>They receive an invitation email with a sign-up link. On first login, their Firestore profile is created with <Code size="xs" padding="xs" rounded="default" surface="subtle">role: "employee"</Code> and the selected permissions array.</Li>
               <Li>To update permissions later: edit the employee in the Team section. Changes take effect on their next login (session tokens carry the old permissions until refreshed).</Li>

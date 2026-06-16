@@ -68,7 +68,7 @@ export function AdminSiteConfigGuideView() {
         </Div>
         <Stack className="py-5" padding="x-lg" gap="3">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <Code size="xs" padding="xs" rounded="default" surface="subtle">siteSettings</Code>. They control platform-wide features without a code deploy:</Text>
-          <Ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
+          <Ul className="list-inside text-[var(--appkit-color-text-muted)]" marker="disc" spacing="tight" size="sm">
             <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">enableAuctions</Code> — globally enable/disable all auction listings.</Li>
             <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">enablePreOrders</Code> — globally enable/disable pre-order creation.</Li>
             <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">maintenanceMode</Code> — shows a maintenance banner and blocks non-admin access.</Li>
