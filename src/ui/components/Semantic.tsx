@@ -788,25 +788,62 @@ export function Dl({ variant = "stacked", divide, className = "", surface, paddi
   );
 }
 
+type DtDdColor = "default" | "primary" | "muted" | "faint";
+type DtDdWeight = "normal" | "medium" | "semibold" | "bold";
+
+const DT_DD_COLOR_MAP: Record<DtDdColor, string> = {
+  default: "",
+  primary: "appkit-color--primary",
+  muted: "appkit-color--muted",
+  faint: "appkit-color--faint",
+};
+
+const DT_DD_WEIGHT_MAP: Record<DtDdWeight, string> = {
+  normal: "appkit-font--normal",
+  medium: "appkit-font--medium",
+  semibold: "appkit-font--semibold",
+  bold: "appkit-font--bold",
+};
+
 export interface DtProps extends React.HTMLAttributes<HTMLElement> {
+  color?: DtDdColor;
+  weight?: DtDdWeight;
   children: React.ReactNode;
 }
 
-export function Dt({ className = "", children, ...props }: DtProps) {
+export function Dt({ color, weight, className = "", children, ...props }: DtProps) {
   return (
-    <dt className={["appkit-dt", className].filter(Boolean).join(" ")} {...props}>
+    <dt
+      className={[
+        "appkit-dt",
+        color ? DT_DD_COLOR_MAP[color] : "",
+        weight ? DT_DD_WEIGHT_MAP[weight] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </dt>
   );
 }
 
 export interface DdProps extends React.HTMLAttributes<HTMLElement> {
+  color?: DtDdColor;
+  weight?: DtDdWeight;
   children: React.ReactNode;
 }
 
-export function Dd({ className = "", children, ...props }: DdProps) {
+export function Dd({ color, weight, className = "", children, ...props }: DdProps) {
   return (
-    <dd className={["appkit-dd", className].filter(Boolean).join(" ")} {...props}>
+    <dd
+      className={[
+        "appkit-dd",
+        color ? DT_DD_COLOR_MAP[color] : "",
+        weight ? DT_DD_WEIGHT_MAP[weight] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </dd>
   );

@@ -132,8 +132,8 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       {!productFeatures && features.length > 0 && (
         <Div className="px-4" border="subtle" surface="muted" padding="y-sm" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">About this item</Text>
-          <Ul className="space-y-1.5">
-            {features.map((f, i) => <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
+          <Ul spacing="comfortable" size="sm" color="primary">
+            {features.map((f, i) => <Li key={i} className="flex items-start gap-2"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
           </Ul>
         </Div>
       )}
@@ -305,7 +305,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
       <Container size="xl" padding="y-lg">
         {/* Breadcrumb + share */}
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
-          <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
+          <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs flex-wrap" color="muted">
             <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
             <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className={CLS_BREADCRUMB_LINK}>Auctions</Link>
@@ -465,10 +465,10 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                         key={i}
                         className="flex gap-4 px-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="y-sm"
                       >
-                        <Dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
+                        <Dt className="w-36 flex-shrink-0" color="primary" weight="medium">
                           {s.name}
                         </Dt>
-                        <Dd className="flex-1 text-zinc-600 dark:text-zinc-400">
+                        <Dd className="flex-1" color="muted">
                           {s.value}{s.unit ? ` ${s.unit}` : ""}
                         </Dd>
                       </Div>
