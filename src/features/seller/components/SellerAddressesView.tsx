@@ -269,7 +269,7 @@ export function SellerAddressesView({
           <Heading level={2} size="base" weight="semibold" color="primary">Pickup Addresses</Heading>
           <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>
         </Stack>
-        <Button gap="xs" size="sm" onClick={openAdd} className="flex items-center .5">
+        <Button gap="sm" size="sm" onClick={openAdd} className="flex items-center">
           <Plus className="h-4 w-4" />
           <Span>Add Address</Span>
         </Button>

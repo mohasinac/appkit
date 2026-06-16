@@ -102,7 +102,7 @@ export function BlogFeaturedCard({
         {/* Content */}
         <Stack className={`flex-1 ${__P.p4}`}>
           {/* Category + featured badges */}
-          <Row gap="xs" className=".5 mb-2" wrap>
+          <Row gap="xs" className="mb-2" wrap>
             <Span
               size="xs" weight="medium"
               className={`inline-block capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`} rounded="full" padding="pill-xs"

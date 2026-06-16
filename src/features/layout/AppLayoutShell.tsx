@@ -167,7 +167,7 @@ function CollapsibleNavGroup({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <Stack gap="none" className=".5">
+    <Stack gap="none" className="">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -184,7 +184,7 @@ function CollapsibleNavGroup({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {open && <Stack gap="none" className=".5">{children}</Stack>}
+      {open && <Stack gap="none" className="">{children}</Stack>}
     </Stack>
   );
 }
@@ -219,7 +219,7 @@ function CollapsibleSidebarSection({
   }
 
   return (
-    <Stack gap="none" className=".5">
+    <Stack gap="none" className="">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

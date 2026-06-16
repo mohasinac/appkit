@@ -45,7 +45,7 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
     key: "primary",
     header: "Name / Aliases",
     render: (row) => (
-      <Stack gap="none" className=".5">
+      <Stack gap="none" className="">
         <Text weight="medium" color="primary">{row.primary}</Text>
         {row.secondary ? (
           <Text size="xs" color="muted">{row.secondary}</Text>

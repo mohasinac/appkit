@@ -16,7 +16,7 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, JsonValue>>[] = [
     key: "primary",
     header: "Name",
     render: (row) => (
-      <Stack gap="none" className=".5">
+      <Stack gap="none" className="">
         <Text weight="medium" color="primary">{String(row.primary ?? "")}</Text>
         {row.secondary ? <Text size="xs" color="muted">{String(row.secondary)}</Text> : null}
       </Stack>

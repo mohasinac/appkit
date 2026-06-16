@@ -445,7 +445,7 @@ export function AdminBlogEditorView({
       ) : null}
       <RichTextRenderer html={draft.content || "<em>No content yet…</em>"} />
       {draft.tags.length > 0 ? (
-        <Row wrap gap="xs" className="mt-6 .5">
+        <Row wrap gap="xs" className="mt-6">
           {draft.tags.map((t) => (
             <Span
               key={t}

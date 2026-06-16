@@ -740,7 +740,7 @@ export async function ProductDetailPageView({
 
               {/* Delivery & Returns */}
               {(shippingInfo || returnPolicy || freeShipping) && (
-                <Stack gap="sm" border="default" className="border-t .5" padding="t-md">
+                <Stack gap="sm" border="default" className="border-t" padding="t-md">
                   {freeShipping && (
                     <Row align="start" gap="sm">
                       <Span className={CLS_FREE_SHIPPING_ICON}>🚚</Span>

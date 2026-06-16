@@ -114,11 +114,11 @@ export function SellerFeaturesView() {
             available on top of your custom ones.
           </Text>
         </Div>
-        <Button gap="xs" 
+        <Button gap="sm" 
           size="sm"
           onClick={openCreatePanel}
           disabled={isFull}
-          className="flex items-center .5"
+          className="flex items-center"
         >
           <Plus className="h-4 w-4" />
           Add Feature

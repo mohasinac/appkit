@@ -131,7 +131,7 @@ function LightboxControlsBar({
   onClose: () => void;
 }) {
   return (
-    <Row gap="xs" className=".5 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10" padding="inline" align="center" justify="center" wrap>
+    <Row gap="xs" className="bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10" padding="inline" align="center" justify="center" wrap>
       {items.length > 1 && (
         <IconBtn onClick={(e) => { e.stopPropagation(); goPrev(); }} ariaLabel={L.prevImage}>
           <ChevronLeft className="w-7 h-7" />

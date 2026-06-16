@@ -367,9 +367,9 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           {/* Action buttons */}
           {(onAddToCart || onBuyNow) && (
             // audit-inline-style-ok: runtime grid template
-            <Div layout="grid" gap="1" className="mt-2 .5" style={{ gridTemplateColumns: onBuyNow && onAddToCart ? "1fr 1fr" : "1fr" }}>
+            <Div layout="grid" gap="1" className="mt-2" style={{ gridTemplateColumns: onBuyNow && onAddToCart ? "1fr 1fr" : "1fr" }}>
               {onBuyNow && (
-                <Button gap="xs" 
+                <Button gap="sm" 
                   type="button"
                   variant="primary"
                   size="sm"
@@ -387,7 +387,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Button>
               )}
               {onAddToCart && (
-                <Button gap="xs" 
+                <Button gap="sm" 
                   type="button"
                   variant="outline"
                   size="sm"

@@ -49,7 +49,7 @@ export function SellerProductsFilterDrawer({
         value={pendingFilters.status ?? ""}
         onChange={(id) => patch("status", id)}
       />
-      <Stack gap="xs" className=".5">
+      <Stack gap="xs" className="">
         <Text className={FILTER_LABEL_CLS}>Category</Text>
         <CategoryInlineSelect
           value={pendingFilters.category ?? ""}
@@ -57,7 +57,7 @@ export function SellerProductsFilterDrawer({
           placeholder="Search categories…"
         />
       </Stack>
-      <Stack gap="xs" className=".5">
+      <Stack gap="xs" className="">
         <Text className={FILTER_LABEL_CLS}>Brand</Text>
         <BrandInlineSelect
           value={pendingFilters.brand ?? ""}
@@ -66,7 +66,7 @@ export function SellerProductsFilterDrawer({
           allowCreate={false}
         />
       </Stack>
-      <Stack gap="xs" className=".5">
+      <Stack gap="xs" className="">
         <Text className={FILTER_LABEL_CLS}>Condition</Text>
         <select
           value={pendingFilters.condition ?? ""}
@@ -78,7 +78,7 @@ export function SellerProductsFilterDrawer({
           ))}
         </select>
       </Stack>
-      <Stack gap="xs" className=".5">
+      <Stack gap="xs" className="">
         <Text className={FILTER_LABEL_CLS}>Price (₹ Rupees)</Text>
         <Row gap="sm">
           <input
@@ -99,7 +99,7 @@ export function SellerProductsFilterDrawer({
           />
         </Row>
       </Stack>
-      <Stack gap="xs" className=".5">
+      <Stack gap="xs" className="">
         <Text className={FILTER_LABEL_CLS}>Tags (comma-separated)</Text>
         <input
           type="text"
@@ -109,7 +109,7 @@ export function SellerProductsFilterDrawer({
           className={INPUT_CLS}
         />
       </Stack>
-      <Stack gap="xs" className=".5">
+      <Stack gap="xs" className="">
         <Text className={FILTER_LABEL_CLS}>Badges (feature slugs)</Text>
         <input
           type="text"

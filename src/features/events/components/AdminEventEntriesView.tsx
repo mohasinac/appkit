@@ -180,7 +180,7 @@ export function AdminEventEntriesView({
       key: "points",
       header: "Points",
       render: (row) => (
-        <Row gap="xs" className=".5" align="center">
+        <Row gap="xs" className="" align="center">
           <input
             type="number"
             min={0}
@@ -289,7 +289,7 @@ export function AdminEventEntriesView({
       </Text>
       <Stack gap="sm">
         {Object.entries(expandedEntry.formResponses).map(([key, value]) => (
-          <Stack gap="none" key={key} className=".5">
+          <Stack gap="none" key={key} className="">
             <Text size="xs" weight="medium" color="muted">{key}</Text>
             <Text className="whitespace-pre-wrap break-words" color="primary" size="sm">
               {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}

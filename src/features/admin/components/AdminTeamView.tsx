@@ -132,11 +132,11 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
     buildFilters: (state) =>
       state.group && state.group !== "All" ? sieveFilter("permissionGroup", SIEVE_OP.EQ, state.group) : undefined,
     toolbarExtra: (
-      <Button gap="xs" 
+      <Button gap="sm" 
         type="button"
         variant="primary"
         onClick={openInvite}
-        className="flex items-center .5 whitespace-nowrap"
+        className="flex items-center whitespace-nowrap"
       >
         <UserPlus className="h-4 w-4" />
         Invite Employee

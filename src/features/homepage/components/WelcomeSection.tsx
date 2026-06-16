@@ -176,7 +176,7 @@ export function WelcomeSection({
                   <Span layout="inline-flex" gap="xs" 
                     key={chip.key}
                     size="xs" weight="medium"
-                    className=".5 border border-zinc-200 dark:border-slate-700 px-3.5 py-1.5" rounded="full" surface="subtle" color="muted"
+                    className="border border-zinc-200 dark:border-slate-700 px-3.5 py-1.5" rounded="full" surface="subtle" color="muted"
                   >
                     {chip.emoji} {chip.label}
                   </Span>

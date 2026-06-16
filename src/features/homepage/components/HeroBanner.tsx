@@ -241,7 +241,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             {String(current + 1).padStart(2, "0")} /{" "}
             {String(banners.length).padStart(2, "0")}
           </Span>
-          <Row gap="xs" className=".5">
+          <Row gap="xs" className="">
             {banners.map((_, i) => (
               <Button
                 key={i}
