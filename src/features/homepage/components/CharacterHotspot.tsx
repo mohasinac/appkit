@@ -304,8 +304,7 @@ function HotspotHeaderOverlay({
               style={{ color: "var(--dark-section-muted)" }}
             >
               &amp; beyond — tap the{" "}
-              <Span layout="inline-flex" 
-                className="justify-center" rounded="full" weight="light"
+              <Span layout="inline-flex-center" rounded="full" weight="light"
                 style={{
                   background: "rgba(255,255,255,0.92)",
                   color: "#111111",

@@ -480,7 +480,7 @@ export function ScamProfileView({
                     <Stack gap="xs" as="ol">
                       {scamTypeDef.howToAvoid.map((tip, i) => (
                         <Row key={i} gap="sm" align="start" as="li">
-                          <Span layout="flex" size="xs" weight="bold" className="h-5 w-5 shrink-0 justify-center bg-[color:var(--appkit-color-success,theme(colors.green.600))]/10 text-[color:var(--appkit-color-success,theme(colors.green.700))]" rounded="full">
+                          <Span layout="flex-center" size="xs" weight="bold" className="h-5 w-5 shrink-0 bg-[color:var(--appkit-color-success,theme(colors.green.600))]/10 text-[color:var(--appkit-color-success,theme(colors.green.700))]" rounded="full">
                             {i + 1}
                           </Span>
                           <Text variant="secondary" className="leading-relaxed" size="sm">{tip}</Text>

@@ -406,12 +406,14 @@ const SPAN_BG_MAP: Record<SpanBg, string> = {
   "info-surface": "bg-[var(--appkit-color-info-surface)]",
 };
 
-type SpanLayout = "inline" | "inline-flex" | "flex" | "inline-block" | "block";
+type SpanLayout = "inline" | "inline-flex" | "flex" | "inline-flex-center" | "flex-center" | "inline-block" | "block";
 
 const SPAN_LAYOUT_MAP: Record<SpanLayout, string> = {
   inline: "",
   "inline-flex": "inline-flex items-center",
   flex: "flex items-center",
+  "inline-flex-center": "inline-flex items-center justify-center",
+  "flex-center": "flex items-center justify-center",
   "inline-block": "inline-block",
   block: "block",
 };

@@ -75,7 +75,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
               key={cat.id}
               className="flex gap-3 rounded-lg border border-[color:var(--appkit-color-border,theme(colors.zinc.200))] bg-[color:var(--appkit-color-surface,theme(colors.zinc.50))] p-3"
             >
-              <Span layout="flex" className="mt-0.5 h-8 w-8 shrink-0 justify-center bg-[color:var(--appkit-color-warning,theme(colors.amber.500))]/10 text-[color:var(--appkit-color-warning,theme(colors.amber.600))]" rounded="md">
+              <Span layout="flex-center" className="mt-0.5 h-8 w-8 shrink-0 bg-[color:var(--appkit-color-warning,theme(colors.amber.500))]/10 text-[color:var(--appkit-color-warning,theme(colors.amber.600))]" rounded="md">
                 {CATEGORY_ICONS[cat.id] ?? <Shield className="h-4 w-4" />}
               </Span>
               <Stack gap="none">

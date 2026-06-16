@@ -879,7 +879,7 @@ export async function ProductDetailPageView({
                   <Ol spacing="loose">
                     {howToUse.map((step, i) => (
                       <Li key={i} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
-                        <Span layout="flex" size="xs" weight="bold" className="flex-shrink-0 h-6 w-6 justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" rounded="full">
+                        <Span layout="flex-center" size="xs" weight="bold" className="flex-shrink-0 h-6 w-6 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" rounded="full">
                           {i + 1}
                         </Span>
                         {step}
