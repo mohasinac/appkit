@@ -12,7 +12,7 @@ import {
 
 export type { RealtimeEventStatus as BulkEventStatus };
 
-export interface UseBulkEventOptions<TData = Record<string, unknown>> {
+export interface UseBulkEventOptions<TData = unknown> {
   realtimeProvider?: IClientRealtimeProvider;
   rtdbPath: string;
   timeoutMs?: number;
@@ -21,7 +21,7 @@ export interface UseBulkEventOptions<TData = Record<string, unknown>> {
   extractData?: (raw: RTDBEventPayload) => BulkActionResult<TData> | null;
 }
 
-export interface UseBulkEventReturn<TData = Record<string, unknown>> {
+export interface UseBulkEventReturn<TData = unknown> {
   status: RealtimeEventStatus;
   error: string | null;
   result: BulkActionResult<TData> | null;
@@ -51,7 +51,7 @@ function extractBulkResult(
   return result;
 }
 
-export function useBulkEvent<TData = Record<string, unknown>>(
+export function useBulkEvent<TData = unknown>(
   options: UseBulkEventOptions<TData>,
 ): UseBulkEventReturn<TData> {
   const {
