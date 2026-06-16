@@ -102,7 +102,7 @@ export function RegisterForm({
           </Alert>
         )}
 
-        <Form className="space-y-4" noValidate onSubmit={(e) => e.preventDefault()}>
+        <Form noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
           {({ setFieldError, clearErrors }) => (
             <>
               <FieldInput

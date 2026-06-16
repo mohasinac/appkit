@@ -74,9 +74,7 @@ export function AdminSiteView({
       onSubmit={(event) => {
         event.preventDefault();
         saveAnnouncement.mutate();
-      }}
-      className="space-y-4"
-    >
+      }} spacing="md">
       <Toggle
         checked={announcementEnabled}
         onChange={setAnnouncementEnabled}

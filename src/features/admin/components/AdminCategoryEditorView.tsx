@@ -193,9 +193,7 @@ export function AdminCategoryEditorView({
         clearErrors();
         if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
         saveMutation.mutate();
-      }}
-      className="space-y-6"
-    >
+      }} spacing="lg">
       {/* ── Identity ── */}
       <Card variant="outlined" padding="lg">
         <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">

@@ -198,9 +198,7 @@ export function AdminFeatureFlagsView({
       onSubmit={(event) => {
         event.preventDefault();
         saveFlags.mutate();
-      }}
-      className="space-y-4"
-    >
+      }} spacing="md">
       <AccordionSection title="Platform Features">
         {PLATFORM_FLAGS.map(({ key, label, desc }) => (
           <FlagRow

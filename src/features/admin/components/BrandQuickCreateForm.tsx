@@ -45,9 +45,7 @@ export function BrandQuickCreateForm({ onSaved, onCancel }: BrandQuickCreateForm
       onSubmit={(e) => {
         e.preventDefault();
         mutation.mutate();
-      }}
-      className="space-y-4"
-    >
+      }} spacing="md">
       <Input
         label="Brand name"
         value={name}

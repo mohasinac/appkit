@@ -284,9 +284,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
-          }}
-          className="space-y-4"
-        >
+          }} spacing="md">
           <Input
             label="WhatsApp Business Phone Number"
             value={phoneNumber}

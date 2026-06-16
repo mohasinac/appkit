@@ -44,9 +44,7 @@ export function CategoryQuickCreateForm({ onSaved, onCancel }: CategoryQuickCrea
       onSubmit={(e) => {
         e.preventDefault();
         mutation.mutate();
-      }}
-      className="space-y-4"
-    >
+      }} spacing="md">
       <Input
         label="Category name"
         value={name}

@@ -63,7 +63,7 @@ export function ConsultationForm({
   }
 
   return (
-    <Form onSubmit={handleSubmit} className="space-y-4">
+    <Form onSubmit={handleSubmit} spacing="md">
       <FieldInput
         name="name"
         type="text"

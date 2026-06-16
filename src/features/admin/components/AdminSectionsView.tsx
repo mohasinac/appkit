@@ -2654,12 +2654,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Manage Homepage Section" size="lg">
         <Form
-          className="space-y-4"
           onSubmit={(event) => {
             event.preventDefault();
             saveSection.mutate();
-          }}
-        >
+          }} spacing="md">
           <Select
             label="Mode"
             value={mode}

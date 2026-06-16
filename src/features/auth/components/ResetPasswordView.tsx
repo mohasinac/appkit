@@ -75,7 +75,7 @@ export function ResetPasswordView({
             {renderLoginLink && <Div className="mt-2">{renderLoginLink()}</Div>}
           </Alert>
         ) : (
-          <Form className="space-y-4" noValidate onSubmit={(e) => e.preventDefault()}>
+          <Form noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
             {({ setFieldError, clearErrors }) => (
               <>
                 <FieldInput

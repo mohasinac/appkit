@@ -77,10 +77,8 @@ export function LoginForm({
         )}
 
         <Form
-          className="space-y-4"
           noValidate
-          onSubmit={(e) => e.preventDefault()}
-        >
+          onSubmit={(e) => e.preventDefault()} spacing="md">
           {({ setFieldError, clearErrors }) => (
             <>
               <FieldInput

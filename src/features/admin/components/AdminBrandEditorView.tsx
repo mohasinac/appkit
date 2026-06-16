@@ -165,9 +165,7 @@ export function AdminBrandEditorView({
         clearErrors();
         if (!name.trim()) { setFieldError("name", "Brand name is required"); return; }
         saveMutation.mutate();
-      }}
-      className="space-y-4"
-    >
+      }} spacing="md">
           <Div className="grid sm:grid-cols-2 gap-4">
             <FieldInput
               name="name"

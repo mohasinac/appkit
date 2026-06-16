@@ -175,12 +175,10 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       <DataListingView config={config} />
       <Modal isOpen={markPaidOpen} onClose={closePaidModal} title="Mark payout as paid">
         <Form
-          className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             markPaid.mutate();
-          }}
-        >
+          }} spacing="md">
           <Input
             label="Transaction / reference ID"
             value={transactionId}

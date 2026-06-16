@@ -181,9 +181,7 @@ export function AdminAddressEditorView({
       onSubmit={(e) => {
         e.preventDefault();
         saveMutation.mutate();
-      }}
-      className="space-y-6"
-    >
+      }} spacing="lg">
       {/* ── Ownership ── */}
       <Card variant="outlined" padding="lg">
         <SectionHeading>Ownership</SectionHeading>

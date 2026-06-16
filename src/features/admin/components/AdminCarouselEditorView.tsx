@@ -495,9 +495,7 @@ export function AdminCarouselEditorView({
             clearErrors();
             if (!title.trim()) { setFieldError("title", "Title is required"); return; }
             saveMutation.mutate();
-          }}
-          className="space-y-6"
-        >
+          }} spacing="lg">
           {/* ── 1. Slide Info ───────────────────────────────────────────── */}
           <Div className={CLS_PANEL}>
             <Heading level={3} className={CLS_SECTION_HEADING}>Slide info</Heading>

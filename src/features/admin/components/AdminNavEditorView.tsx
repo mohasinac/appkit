@@ -134,7 +134,7 @@ export function AdminNavEditorView({
           e.preventDefault();
           saveMutation.mutate();
         }}
-        className="space-y-4 p-4"
+        className="p-4" spacing="md"
       >
         <Input
           label="Label"

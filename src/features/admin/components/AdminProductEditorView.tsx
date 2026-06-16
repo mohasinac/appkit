@@ -252,9 +252,7 @@ export function AdminProductEditorView({
       onSubmit={(e) => {
         e.preventDefault();
         saveMutation.mutate();
-      }}
-      className="space-y-6"
-    >
+      }} spacing="lg">
       {/* ── Listing type ── */}
       <Card variant="outlined" padding="lg">
         <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">

@@ -381,9 +381,7 @@ export function AdminAdEditorView({
               return;
             }
             saveMutation.mutate();
-          }}
-          className="space-y-4"
-        >
+          }} spacing="md">
           <Input
             label="Ad name"
             value={name}

@@ -100,7 +100,7 @@ export function AdminOrderEditorView({
           e.preventDefault();
           saveMutation.mutate();
         }}
-        className="space-y-4 p-4"
+        className="p-4" spacing="md"
       >
         <Select
           label="Order status"

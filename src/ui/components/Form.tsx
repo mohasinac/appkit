@@ -7,6 +7,17 @@ import {
   type UseFormShellStateResult,
 } from "../forms/FormShell";
 
+export type FormSpacing = "none" | "xs" | "sm" | "md" | "lg" | "xl";
+
+const FORM_SPACING_MAP: Record<FormSpacing, string> = {
+  none: "",
+  xs: "space-y-1",
+  sm: "space-y-2",
+  md: "space-y-4",
+  lg: "space-y-6",
+  xl: "space-y-8",
+};
+
 export interface FormProps
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "children"> {
   /**
@@ -17,6 +28,8 @@ export interface FormProps
   children:
     | React.ReactNode
     | ((helpers: UseFormShellStateResult) => React.ReactNode);
+  /** Vertical spacing between top-level children. */
+  spacing?: FormSpacing;
 }
 
 export type GapToken = "none" | "xs" | "sm" | "md" | "lg" | "xl";
@@ -48,7 +61,7 @@ const GAP_MAP: Record<GapToken, string> = {
  *     )}
  *   </Form>
  */
-export function Form({ children, className = "", ...props }: FormProps) {
+export function Form({ children, spacing, className = "", ...props }: FormProps) {
   const helpers = useFormShellState();
   const content =
     typeof children === "function"
@@ -57,7 +70,7 @@ export function Form({ children, className = "", ...props }: FormProps) {
   return (
     <FormShellContext.Provider value={helpers.shellCtx}>
       <form
-        className={["appkit-form", className].filter(Boolean).join(" ")}
+        className={["appkit-form", spacing ? FORM_SPACING_MAP[spacing] : "", className].filter(Boolean).join(" ")}
         {...props}
       >
         {content}

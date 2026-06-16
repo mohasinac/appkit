@@ -39,7 +39,7 @@ export function CorporateInquiryForm({
   }
 
   return (
-    <Form onSubmit={handleSubmit} className="space-y-4">
+    <Form onSubmit={handleSubmit} spacing="md">
       <Div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FieldInput
           name="companyName"

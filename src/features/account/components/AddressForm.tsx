@@ -107,7 +107,7 @@ export function AddressForm({
   };
 
   return (
-    <Form onSubmit={(e) => e.preventDefault()} className="space-y-4">{({ setFieldError, clearErrors }) => (<>
+    <Form onSubmit={(e) => e.preventDefault()} spacing="md">{({ setFieldError, clearErrors }) => (<>
       <FormField
         label={mergedLabels.label}
         name="label"
