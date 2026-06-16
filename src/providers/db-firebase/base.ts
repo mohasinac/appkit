@@ -151,7 +151,7 @@ export class FirebaseRepository<
   async create(data: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T> {
     const now = new Date();
     const payload = prepareForFirestore({
-      ...(data as Record<string, unknown>),
+      ...data,
       createdAt: now,
       updatedAt: now,
     });
@@ -162,12 +162,12 @@ export class FirebaseRepository<
 
   async update(id: string, data: Partial<T>): Promise<T> {
     const payload = prepareForFirestore({
-      ...(data as Record<string, unknown>),
+      ...data,
       updatedAt: new Date(),
     });
     await this.getCollection()
       .doc(id)
-      .update(payload as Record<string, unknown>);
+      .update(payload);
     const snap = await this.getCollection().doc(id).get();
     if (!snap.exists) throw new Error(`Document not found after update: ${id}`);
     return this.mapDoc(snap);
@@ -185,7 +185,7 @@ export class FirebaseRepository<
     const refs = items.map((item) => {
       const ref = this.getCollection().doc();
       const payload = prepareForFirestore({
-        ...(item as Record<string, unknown>),
+        ...item,
         createdAt: now,
         updatedAt: now,
       });

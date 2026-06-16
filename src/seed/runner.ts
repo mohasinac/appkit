@@ -8,6 +8,7 @@ import type {
 } from "./types";
 import { SeedAbortedError } from "./types";
 import { encryptPiiFields } from "../security/pii-encrypt";
+import type { FirestoreDocument } from "../schemas/types";
 
 const BATCH_SIZE = 400; // Firestore max batch is 500
 const DEFAULT_MAX_ATTEMPTS = 2;
@@ -62,7 +63,7 @@ export async function runSeed(config: SeedConfig): Promise<SeedResult> {
     const validDocs: unknown[] = [];
     const skipped: string[] = [];
     for (const rawDoc of data) {
-      const record = rawDoc as Record<string, unknown>;
+      const record = rawDoc as FirestoreDocument;
       const docId = String(record[idField] ?? `auto-${data.indexOf(rawDoc)}`);
       if (validate) {
         const errors = validate(rawDoc);
@@ -114,12 +115,12 @@ export async function runSeed(config: SeedConfig): Promise<SeedResult> {
       for (const rawDoc of slice) {
         const doc = piiFields.length
           ? encryptPiiFields(
-              rawDoc as Record<string, unknown>,
+              rawDoc as FirestoreDocument,
               piiFields as string[],
             )
-          : (rawDoc as Record<string, unknown>);
+          : (rawDoc as FirestoreDocument);
         const id = String(
-          (rawDoc as Record<string, unknown>)[idField] ??
+          (rawDoc as FirestoreDocument)[idField] ??
             `auto-${written + slice.indexOf(rawDoc)}`,
         );
         const ref = db.collection(name).doc(id);

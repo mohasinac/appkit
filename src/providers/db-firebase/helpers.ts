@@ -3,6 +3,7 @@ import type {
   DocumentData,
   Query,
 } from "firebase-admin/firestore";
+import type { FirestoreDocument, FirestoreValue } from "../../schemas/types";
 
 /**
  * Firestore serialisation helpers.
@@ -20,7 +21,7 @@ import type {
  * FieldValue sentinels (increment, arrayUnion, deleteField, etc.) are not
  * stripped.
  */
-function isPlainObject(v: unknown): v is Record<string, unknown> {
+function isPlainObject(v: unknown): v is Record<string, FirestoreValue> {
   if (v === null || typeof v !== "object" || Array.isArray(v)) return false;
   const proto = Object.getPrototypeOf(v) as unknown;
   return proto === Object.prototype || proto === null;
@@ -34,19 +35,20 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
  * are passed through as-is so that Firestore transform operations
  * (increment, arrayUnion, deleteField, serverTimestamp) survive the strip.
  */
-export function removeUndefined<T extends Record<string, unknown>>(
+export function removeUndefined<T extends object>(
   obj: T,
 ): Partial<T> {
-  const result: Record<string, unknown> = {};
+  const result: Record<string, FirestoreValue> = {};
+  const source = obj as Record<string, FirestoreValue>;
 
-  for (const key of Object.keys(obj)) {
-    const value = obj[key];
+  for (const key of Object.keys(source)) {
+    const value = source[key];
     if (value === undefined) continue;
 
     if (isPlainObject(value)) {
       const cleaned = removeUndefined(value);
       if (Object.keys(cleaned).length > 0) {
-        result[key] = cleaned;
+        result[key] = cleaned as FirestoreValue;
       }
     } else {
       result[key] = value;
@@ -60,7 +62,7 @@ export function removeUndefined<T extends Record<string, unknown>>(
  * Strip `undefined` values before any Firestore write.
  * Call this on every `create()` / `update()` payload.
  */
-export function prepareForFirestore<T extends Record<string, unknown>>(
+export function prepareForFirestore<T extends object>(
   data: T,
 ): Partial<T> {
   return removeUndefined(data);
