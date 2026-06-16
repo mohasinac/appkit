@@ -85,14 +85,14 @@ export async function HowOffersWorkView({
           <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} space-y-14`} padding="content-banner">
+      <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
         {renderOffersStepsSection(t, themed, flex, STEPS)}
         <Section>
           <FlowDiagram title={`🤝 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
         {renderOffersRulesSection(t, themed, RULES)}
         {renderOffersCtaSection(t, themed, flex)}
-      </Div>
+      </Stack>
     </Div>
   );
 }

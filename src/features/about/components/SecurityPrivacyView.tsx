@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, FlowDiagram, Heading, Row, Section, Text } from "../../../ui";
+import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
 import {
@@ -168,7 +168,7 @@ export async function SecurityPrivacyView({
           <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} space-y-14`} padding="content-banner">
+      <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
         <Section className="text-center">
           <Heading level={2} className="mb-3">{t("overviewTitle")}</Heading>
           <Text variant="secondary" className="max-w-2xl mx-auto">{t("overviewText")}</Text>
@@ -179,7 +179,7 @@ export async function SecurityPrivacyView({
         </Section>
         <Text variant="secondary" size="sm" align="center">{t("lastUpdated")}</Text>
         {renderSecurityCtaSection(t, themed, flex)}
-      </Div>
+      </Stack>
     </Div>
   );
 }

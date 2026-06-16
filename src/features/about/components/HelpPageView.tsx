@@ -87,12 +87,12 @@ export async function HelpPageView({
           <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
-      <Div className={`${page.container.md} space-y-14`} padding="content-banner">
+      <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
         {renderTopicsGrid(t, flex, TOPICS)}
         {renderScamAwarenessAlert(t)}
         {renderTrackOrderSection(t, themed)}
         {renderContactCtaSection(t, themed)}
-      </Div>
+      </Stack>
     </Div>
   );
 }

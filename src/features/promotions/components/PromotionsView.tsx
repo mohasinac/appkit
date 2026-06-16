@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Section, Text } from "../../../ui";
+import { Div, Heading, Section, Stack, Text } from "../../../ui";
 
 export interface PromotionProductItem {
   id: string;
@@ -108,7 +108,7 @@ export function PromotionsView({
     <Div surface="default" className="min-h-screen">
       <PromotionsHero labels={labels} heroBannerClass={heroBannerClass} />
 
-      <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12" padding="y-3xl">
+      <Stack gap="section" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" padding="y-3xl">
         {!hasContent && (
           <Div className="text-center" padding="y-4xl">
             <Heading level={2} className="mb-2">{labels.emptyDeals}</Heading>
@@ -117,7 +117,7 @@ export function PromotionsView({
         )}
 
         {hasContent && (
-          <Div className="space-y-12">
+          <Stack gap="section" >
             {/* Coupons section — only rendered if renderCoupons is provided */}
             {renderCoupons && (
               <Section>
@@ -141,9 +141,9 @@ export function PromotionsView({
 
             {renderDealsSection?.()}
             {renderFeaturedSection?.()}
-          </Div>
+          </Stack>
         )}
-      </Div>
+      </Stack>
     </Div>
   );
 }
