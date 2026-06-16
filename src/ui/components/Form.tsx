@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Row } from "./Layout";
+import { buildSurfaceClasses, type SurfaceProps } from "./surface-tokens";
 import {
   FormShellContext,
   useFormShellState,
@@ -19,7 +20,7 @@ const FORM_SPACING_MAP: Record<FormSpacing, string> = {
 };
 
 export interface FormProps
-  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "children"> {
+  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "children">, SurfaceProps {
   /**
    * Either a React node or a render function that receives the FormShell
    * helpers. Use the function form when the submit handler needs to surface
@@ -61,7 +62,7 @@ const GAP_MAP: Record<GapToken, string> = {
  *     )}
  *   </Form>
  */
-export function Form({ children, spacing, className = "", ...props }: FormProps) {
+export function Form({ children, spacing, surface, padding, rounded, border, shadow, className = "", ...props }: FormProps) {
   const helpers = useFormShellState();
   const content =
     typeof children === "function"
@@ -70,7 +71,12 @@ export function Form({ children, spacing, className = "", ...props }: FormProps)
   return (
     <FormShellContext.Provider value={helpers.shellCtx}>
       <form
-        className={["appkit-form", spacing ? FORM_SPACING_MAP[spacing] : "", className].filter(Boolean).join(" ")}
+        className={[
+          "appkit-form",
+          spacing ? FORM_SPACING_MAP[spacing] : "",
+          buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+          className,
+        ].filter(Boolean).join(" ")}
         {...props}
       >
         {content}
