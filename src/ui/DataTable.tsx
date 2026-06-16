@@ -1,5 +1,6 @@
 "use client"
 import { ReactNode, useState, useMemo } from "react";
+import type { JsonValue } from "../schemas/types";
 
 const CLS_CHECKBOX = "rounded border-zinc-300";
 import { Button } from "./components/Button";
@@ -190,8 +191,8 @@ export function DataTable<T extends object>({
     const sorted = [...data];
     if (sortKey && sortDirection) {
       sorted.sort((a, b) => {
-        const aVal = (a as Record<string, unknown>)[sortKey];
-        const bVal = (b as Record<string, unknown>)[sortKey];
+        const aVal = (a as Record<string, JsonValue>)[sortKey];
+        const bVal = (b as Record<string, JsonValue>)[sortKey];
         if (aVal == null) return 1;
         if (bVal == null) return -1;
         if (typeof aVal === "string" && typeof bVal === "string") {
@@ -535,7 +536,7 @@ export function DataTable<T extends object>({
                       <td key={col.key} className="appkit-data-table__td">
                         {col.render
                           ? col.render(item)
-                          : (((item as Record<string, unknown>)[
+                          : (((item as Record<string, JsonValue>)[
                               col.key
                             ] as string) ?? "-")}
                       </td>
@@ -763,7 +764,7 @@ function DataTableTableView<T extends object>({
                 )}
                 {columns.map((col) => (
                   <td key={col.key} className="appkit-data-table__td">
-                    {col.render ? col.render(item) : (((item as Record<string, unknown>)[col.key] as string) ?? "-")}
+                    {col.render ? col.render(item) : (((item as Record<string, JsonValue>)[col.key] as string) ?? "-")}
                   </td>
                 ))}
                 {actions && (
