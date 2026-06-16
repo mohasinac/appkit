@@ -3,7 +3,7 @@ import { Div, Heading, Text, TextLink } from "../../../ui";
 import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import type { CollectionListItem } from "../types";
 
-const CLS_PLACEHOLDER = "w-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30";
+const CLS_PLACEHOLDER = "w-full";
 
 interface CollectionCardProps {
   collection: CollectionListItem;
@@ -25,7 +25,7 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
           style={{ backgroundImage: `url(${collection.image})` }}
         />
       ) : (
-        <Div className={`${LAYOUT.cardHeight.md} ${CLS_PLACEHOLDER}`} />
+        <Div surface="muted" className={`${LAYOUT.cardHeight.md} ${CLS_PLACEHOLDER}`} />
       )}
       <Div surface="default" padding="sm">
           <Heading level={3} className="text-gray-900" weight="semibold">

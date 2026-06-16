@@ -248,7 +248,7 @@ export default function BottomActions() {
 
       {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
       {isBulkMode && (
-        <Div className="h-[3px] w-full bg-gradient-to-r from-primary-600 via-secondary-400 to-primary-600 dark:from-primary-600 dark:via-primary-400 dark:to-primary-600" />
+        <Div className="h-[3px] w-full bg-[image:var(--appkit-gradient-brand-tri)]" />
       )}
 
       {/* -- Info label row (page mode only) --------------------------------- */}

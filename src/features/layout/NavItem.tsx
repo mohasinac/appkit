@@ -49,7 +49,7 @@ export function NavItem({
       >
         {isActive && (
           <Span
-            className="absolute inset-0 rounded-t-xl bg-gradient-to-b from-primary/20 dark:from-secondary/25 to-transparent pointer-events-none"
+            className="absolute inset-0 rounded-t-xl bg-primary/15 dark:bg-secondary/20 pointer-events-none"
             aria-hidden
           />
         )}

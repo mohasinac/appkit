@@ -1,6 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Button, Div, Grid, Heading, Row, Scrim, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -77,7 +77,7 @@ export function AdvertisementBanner({
                   size="banner"
                   priority
                 />
-                <Div className="hidden md:block absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-zinc-900/60 pointer-events-none" />
+                <Scrim direction="right-to-left" intensity="medium" className="hidden md:block absolute inset-y-0 right-0 w-24" />
               </Div>
 
               {/* Right: content */}

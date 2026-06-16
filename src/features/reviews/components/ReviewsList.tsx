@@ -144,7 +144,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
             >
               <Span aria-hidden="true">🏪</Span>
-              <Span className={THEME_CONSTANTS.utilities.textClamp1}>{review.storeName}</Span>
+              <Span truncate>{review.storeName}</Span>
             </Link>
           )}
           {showProductLink && (
@@ -153,7 +153,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
               <Span aria-hidden="true">📦</Span>
-              <Span className={THEME_CONSTANTS.utilities.textClamp1}>
+              <Span truncate>
                 {review.productTitle ?? "View Product"}
               </Span>
               <Span aria-hidden="true" className="ml-auto text-primary group-hover:translate-x-0.5 transition-transform">→</Span>
@@ -165,7 +165,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
               <Span aria-hidden="true">👤</Span>
-              <Span className={THEME_CONSTANTS.utilities.textClamp1}>{displayName}</Span>
+              <Span truncate>{displayName}</Span>
             </Link>
           )}
         </Stack>
