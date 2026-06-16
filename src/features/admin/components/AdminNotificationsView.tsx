@@ -142,7 +142,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Type
         </Text>
-        <Row gap="sm" className="flex-wrap">
+        <Row wrap gap="sm">
           {NOTIF_TYPES.map((opt) => (
             <button
               key={opt}

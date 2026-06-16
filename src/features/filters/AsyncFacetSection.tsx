@@ -148,7 +148,7 @@ export function AsyncFacetSection({
 
       {/* Selected chips — visible when collapsed */}
       {collapsed && hasValue && (
-        <Row gap="xs" className="mt-2 flex-wrap">
+        <Row wrap gap="xs" className="mt-2">
           {selectedLabels.map((label) => (
             <Span layout="inline-flex" 
               key={label}

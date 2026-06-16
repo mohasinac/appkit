@@ -255,7 +255,7 @@ export function ProductForm({
           {t("formBrand")}
         </Text>
         {/* Mode selector */}
-        <Row gap="3" className="flex-wrap">
+        <Row wrap gap="3">
           {(["single", "unbranded", "mixed"] as const).map((mode) => (
             <Label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none" color="primary" size="sm">
               <input

@@ -209,7 +209,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
           <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
             Status
           </Text>
-          <Row gap="sm" className="flex-wrap">
+          <Row wrap gap="sm">
             {[
               { label: "All", value: "" },
               { label: "Active", value: "true" },
@@ -234,7 +234,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
           <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
             Stock
           </Text>
-          <Row gap="sm" className="flex-wrap">
+          <Row wrap gap="sm">
             {[
               { label: "All", value: "" },
               { label: "Sold out", value: "out_of_stock" },

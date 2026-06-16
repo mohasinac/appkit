@@ -129,7 +129,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Active
         </Text>
-        <Row gap="sm" className="flex-wrap">
+        <Row wrap gap="sm">
           {[
             { label: "All", value: "" },
             { label: "Active", value: "true" },
@@ -156,7 +156,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Featured
         </Text>
-        <Row gap="sm" className="flex-wrap">
+        <Row wrap gap="sm">
           {[
             { label: "All", value: "" },
             { label: "Featured only", value: "true" },

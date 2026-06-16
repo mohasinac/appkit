@@ -120,7 +120,7 @@ export async function PolicyPageView({
             >
               {t("relatedTitle")}
             </Heading>
-            <Row gap="md" className="flex-wrap">
+            <Row wrap gap="md">
               {relatedLinks.map((l) => (
                 <TextLink
                   key={l.href}

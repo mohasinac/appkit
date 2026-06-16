@@ -147,7 +147,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       </Row>
 
       {/* Amounts */}
-      <Row gap="md" className="flex-wrap">
+      <Row wrap gap="md">
         <Div>
           <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Listed</Text>
           <Text size="sm" weight="medium" color="muted">{formatRupees(offer.listedPrice)}</Text>
@@ -172,7 +172,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
 
       {/* Actions */}
       {isPendingOffer && uiState === "idle" && (
-        <Row gap="sm" className="flex-wrap">
+        <Row wrap gap="sm">
           <Button size="sm" variant="primary" onClick={toAccepting} disabled={isPending}>Accept</Button>
           <Button size="sm" variant="ghost" onClick={toCountering} disabled={isPending}
             className="border border-zinc-300 dark:border-zinc-600">Counter</Button>
@@ -327,7 +327,7 @@ export function SellerOffersPanel({
       </Row>
 
       {/* Filter tabs */}
-      <Row gap="xs" className="flex-wrap">
+      <Row wrap gap="xs">
         {STATUS_FILTERS.map((f) => (
           <Button
             key={f.value}

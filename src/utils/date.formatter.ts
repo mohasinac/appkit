@@ -15,7 +15,7 @@ export function resolveDate(value: unknown): Date | null {
     typeof value === "object" &&
     value !== null &&
     "_seconds" in value &&
-    typeof (value as Record<string, unknown>)._seconds === "number"
+    typeof (value as { _seconds?: unknown })._seconds === "number"
   ) {
     return new Date((value as { _seconds: number })._seconds * 1000);
   }

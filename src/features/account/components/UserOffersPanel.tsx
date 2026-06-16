@@ -94,7 +94,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         </Badge>
       </Row>
 
-      <Row gap="md" className="flex-wrap">
+      <Row wrap gap="md">
         <Div>
           <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Listed</Text>
           <Text size="sm" weight="medium" color="muted">{formatRupees(offer.listedPrice)}</Text>
@@ -129,7 +129,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
           <Text className="text-info" size="xs" weight="medium">
             Seller countered at {formatRupees(offer.counterAmount)}. Accept or withdraw your offer.
           </Text>
-          <Row gap="sm" className="flex-wrap">
+          <Row wrap gap="sm">
             <Button size="sm" variant="primary"
               onClick={() => act(() => onAcceptCounter(offer.id), { status: "accepted", lockedPrice: offer.counterAmount })}
               disabled={isPending}>

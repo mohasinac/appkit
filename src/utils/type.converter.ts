@@ -2,6 +2,8 @@
  * Data Type Converters
  */
 
+import type { JsonValue } from "../schemas/types";
+
 export function stringToBoolean(value: string): boolean {
   return ["true", "yes", "1", "on"].includes(value.toLowerCase());
 }
@@ -47,7 +49,7 @@ export function queryStringToObject(
   return result;
 }
 
-export function objectToQueryString(obj: Record<string, unknown>): string {
+export function objectToQueryString(obj: Record<string, JsonValue>): string {
   const params = new URLSearchParams();
   Object.entries(obj).forEach(([key, value]) => {
     if (value !== null && value !== undefined) {

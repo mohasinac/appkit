@@ -179,7 +179,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             </Text>
           )}
 
-          <Row gap="sm" className="flex-wrap">
+          <Row wrap gap="sm">
             {productCount > 0 && (
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
                 {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}

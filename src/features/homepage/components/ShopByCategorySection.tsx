@@ -180,7 +180,7 @@ export function ShopByCategorySection({
 
         {/* Filter chips */}
         {hasFilters && !isLoading && (
-          <Row gap="sm" className="mb-4 flex-wrap">
+          <Row wrap gap="sm" className="mb-4">
             <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
             {rootIds.slice(0, 5).map((id) => {
               const cat = allCategories.find((c) => c.id === id);

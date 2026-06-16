@@ -279,7 +279,7 @@ export function FilterFacetSection({
 
       {/* Selected chips — visible when collapsed */}
       {isCollapsed && hasValue && (
-        <Row gap="xs" className="mt-2 flex-wrap">
+        <Row wrap gap="xs" className="mt-2">
           {selectedLabels.map((label) => (
             <Span layout="inline-flex" 
               key={label}

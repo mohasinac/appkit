@@ -130,7 +130,7 @@ export function AdminScammerEditorView({
             <Text className="mb-1 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Names / Aliases
             </Text>
-            <Row gap="xs" className="flex-wrap">
+            <Row wrap gap="xs">
               {displayNames.map((name, i) => (
                 <Span
                   key={i}
@@ -150,7 +150,7 @@ export function AdminScammerEditorView({
                 <Text className={CLS_SECTION_LABEL}>
                   Phone numbers
                 </Text>
-                <Row gap="xs" className="flex-wrap">
+                <Row wrap gap="xs">
                   {phones.map((p, i) => (
                     <Code key={i} size="xs" rounded="default" padding="sm" surface="subtle">
                       {p}
@@ -164,7 +164,7 @@ export function AdminScammerEditorView({
                 <Text className={CLS_SECTION_LABEL}>
                   UPI IDs
                 </Text>
-                <Row gap="xs" className="flex-wrap">
+                <Row wrap gap="xs">
                   {upiIds.map((u, i) => (
                     <Code key={i} size="xs" rounded="default" padding="sm" surface="subtle">
                       {u}

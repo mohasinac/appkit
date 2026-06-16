@@ -267,7 +267,7 @@ export function SellerCouponEditorView({
                   placeholder="Add a category…"
                 />
                 {draft.applicableCategories.length > 0 && (
-                  <Row gap="sm" className="flex-wrap" padding="t-xs">
+                  <Row wrap gap="sm" padding="t-xs">
                     {draft.applicableCategories.map((cid) => (
                       <Span layout="inline-flex" gap="xs" 
                         key={cid}

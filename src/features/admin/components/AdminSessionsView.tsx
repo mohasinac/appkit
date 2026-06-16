@@ -134,7 +134,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Status
         </Text>
-        <Row gap="sm" className="flex-wrap">
+        <Row wrap gap="sm">
           {[
             { label: "All", value: "" },
             { label: "Active only", value: "true" },

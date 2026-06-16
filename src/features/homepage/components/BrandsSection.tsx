@@ -136,7 +136,7 @@ export function BrandsSection({
 
         {/* Filter chips */}
         {showFeaturedChip && !isLoading && (
-          <Row gap="sm" className="mb-4 flex-wrap">
+          <Row wrap gap="sm" className="mb-4">
             <BrandFilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
             <BrandFilterChip label="Featured" active={activeFilter === "featured"} onClick={() => setActiveFilter(activeFilter === "featured" ? "all" : "featured")} />
           </Row>

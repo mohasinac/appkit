@@ -265,7 +265,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
           <Stack gap="sm">
             <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">Status</Text>
-            <Row gap="sm" className="flex-wrap">
+            <Row wrap gap="sm">
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
                 <Button key={opt.label} variant="ghost" type="button"
                   onClick={() => setPendingFilters((p) => ({ ...p, active: opt.value }))}
