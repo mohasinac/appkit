@@ -1,4 +1,5 @@
 import path from "path";
+import type { JsonValue } from "@mohasinac/appkit";
 
 /**
  * defineNextConfig — appkit-aware Next.js config factory.
@@ -56,9 +57,9 @@ const FIREBASE_EXTERNAL_PACKAGES = [
 
 export interface NextConfigOverride {
   serverExternalPackages?: string[];
-  experimental?: Record<string, unknown>;
+  experimental?: Record<string, JsonValue>;
   outputFileTracingIncludes?: Record<string, string[]>;
-  images?: Record<string, unknown>;
+  images?: Record<string, JsonValue>;
   webpack?: (config: unknown, ctx: unknown) => unknown;
   [key: string]: unknown;
 }
@@ -93,11 +94,11 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     ),
   ];
 
-  const defaultExperimental: Record<string, unknown> = {
+  const defaultExperimental: Record<string, JsonValue> = {
     serverActions: { bodySizeLimit: "4mb" },
   };
 
-  const mergedExperimental: Record<string, unknown> = {
+  const mergedExperimental: Record<string, JsonValue> = {
     ...defaultExperimental,
     ...consumerExperimental,
   };
@@ -316,7 +317,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
   // hosts (ygoprodeck, unsplash, picsum); prod images move to Firebase
   // Storage via /api/media. Consumer can still pass an explicit
   // `images.unoptimized: false` + remotePatterns to opt back in.
-  const consumerImages = (override.images as Record<string, unknown>) ?? {};
+  const consumerImages = (override.images as Record<string, JsonValue>) ?? {};
   const mergedImages = {
     unoptimized: true,
     ...consumerImages,
@@ -326,7 +327,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
   // webpack. Mirror the firebase deduplication alias so prod builds share the
   // same Firebase app registry as dev builds.
   const firebaseRoot = path.resolve(process.cwd(), "node_modules", "firebase");
-  const consumerTurbopackResolved = consumerTurbopack as Record<string, unknown>;
+  const consumerTurbopackResolved = consumerTurbopack as Record<string, JsonValue>;
   const consumerTurbopackAlias = (consumerTurbopackResolved.resolveAlias ?? {}) as Record<string, string>;
   const mergedTurbopack = {
     ...consumerTurbopackResolved,

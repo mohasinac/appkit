@@ -14,6 +14,7 @@
 // throwable class while `NormalizedError` is the result of catching one.
 
 import { ZodError } from "zod";
+import type { JsonValue } from "@mohasinac/appkit";
 import { ApiError } from "../client/api/ApiError";
 import { AppError } from "./base-error";
 
@@ -128,7 +129,7 @@ export const isUnknownNormalized = (e: NormalizedError): e is NormalizedUnknownT
 // ---------------------------------------------------------------------------
 
 function hasStringProp<K extends string>(value: unknown, key: K): value is Record<K, string> {
-  return typeof value === "object" && value !== null && typeof (value as Record<string, unknown>)[key] === "string";
+  return typeof value === "object" && value !== null && typeof (value as Record<string, JsonValue>)[key] === "string";
 }
 
 type CodedError = Error & { code: string };

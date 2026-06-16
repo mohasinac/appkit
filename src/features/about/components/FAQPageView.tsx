@@ -1,4 +1,5 @@
 import { ROUTES } from "../../../constants";
+import type { JsonValue } from "@mohasinac/appkit";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Aside, Container, Details, Div, Heading, Nav, RichTextRenderer, Row, Section, Span, Stack, Summary, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -18,7 +19,7 @@ export async function FAQPageView({
   const t = await getTranslations("faqs");
   const messages = await getMessages();
 
-  const faqMessages = (messages as Record<string, unknown>).faqs as
+  const faqMessages = (messages as Record<string, JsonValue>).faqs as
     | {
         categories: Array<{ slug: string; label: string; icon: string }>;
         items: Array<{ category: string; question: string; answer: string }>;

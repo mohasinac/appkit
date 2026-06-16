@@ -16,6 +16,7 @@
  */
 
 import type { FeaturesConfig } from "../contracts";
+import type { JsonValue } from "@mohasinac/appkit";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -28,7 +29,7 @@ export interface NextConfig {
   [key: string]: unknown;
 }
 
-type Messages = Record<string, unknown>;
+type Messages = Record<string, JsonValue>;
 
 // ---------------------------------------------------------------------------
 // withFeatures — next.config.js helper
@@ -141,7 +142,7 @@ const FEATURE_NAMESPACE_MAP: Record<string, string> = {
 const _dynamicImport = new Function(
   "modulePath",
   "return import(modulePath)",
-) as (modulePath: string) => Promise<Record<string, unknown>>;
+) as (modulePath: string) => Promise<Record<string, JsonValue>>;
 
 function deepMerge(a: Messages, b: Messages): Messages {
   const result: Messages = { ...a };
