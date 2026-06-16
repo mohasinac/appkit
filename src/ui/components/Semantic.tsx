@@ -552,7 +552,7 @@ type CellAlign = "left" | "center" | "right";
 
 type CellTypographySize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
 type CellTypographyWeight = "normal" | "medium" | "semibold" | "bold";
-type CellPadding = "none" | "xs" | "xs-tall" | "xs-3" | "sm" | "sm-tall" | "md" | "lg" | "compact";
+type CellPadding = "none" | "xs" | "xs-tall" | "xs-3" | "sm" | "sm-tall" | "md" | "lg" | "lg-tight" | "lg-3" | "compact";
 type CellColor = "default" | "primary" | "muted" | "faint" | "success" | "warning" | "error" | "info";
 
 const CELL_PADDING_MAP: Record<CellPadding, string> = {
@@ -564,6 +564,8 @@ const CELL_PADDING_MAP: Record<CellPadding, string> = {
   "sm-tall": "px-3 py-4",
   md: "px-4 py-3",
   lg: "px-6 py-4",
+  "lg-tight": "px-6 py-2",
+  "lg-3": "px-6 py-3",
   compact: "px-2 py-1.5",
 };
 
