@@ -32,6 +32,9 @@ export const SURFACE_MAP = {
   "overlay-md": "bg-black/55",
   "overlay-lg": "bg-black/60",
   "overlay-xl": "bg-black/70",
+  // Skeleton loader presets — light grey + dark variant.
+  skeleton: "bg-zinc-300 dark:bg-slate-700",
+  "skeleton-light": "bg-zinc-200 dark:bg-slate-800",
 } as const;
 
 export type SurfaceKey = keyof typeof SURFACE_MAP;

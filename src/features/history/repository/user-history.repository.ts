@@ -11,6 +11,7 @@
  */
 
 import { getAdminDb } from "../../../providers/db-firebase";
+import type { JsonValue } from "@mohasinac/appkit";
 import { serverLogger } from "../../../monitoring";
 import {
   HISTORY_COLLECTION,
@@ -53,7 +54,7 @@ function toDate(raw: unknown): Date {
 function normaliseItems(raw: unknown): UserHistoryItem[] {
   if (!Array.isArray(raw)) return [];
   return raw
-    .filter((r): r is Record<string, unknown> => !!r && typeof r === "object")
+    .filter((r): r is Record<string, JsonValue> => !!r && typeof r === "object")
     .map((r) => ({
       productId: String(r.productId ?? ""),
       productType: (r.productType as HistoryProductType) ?? "product",

@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 
 import { Stack, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -38,7 +39,7 @@ const SORT_OPTIONS = [
 
 interface ShippingConfigRow {
   id: string;
-  raw: Record<string, unknown>;
+  raw: Record<string, JsonValue>;
   label: string;
   method: string;
   estimatedDays: number | null;

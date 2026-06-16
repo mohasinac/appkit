@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 
 import { Row, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -36,7 +37,7 @@ const SORT_OPTIONS = [
 
 interface PayoutMethodRow {
   id: string;
-  raw: Record<string, unknown>;
+  raw: Record<string, JsonValue>;
   label: string;
   type: string;
   isDefault: boolean;
@@ -56,7 +57,7 @@ export interface SellerPayoutMethodsViewProps {
   onSetDefault?: (id: string) => Promise<void>;
 }
 
-function getMaskedIdentifier(item: Record<string, unknown>): string {
+function getMaskedIdentifier(item: Record<string, JsonValue>): string {
   if (item.upiVpa && typeof item.upiVpa === "string") {
     return item.upiVpa;
   }

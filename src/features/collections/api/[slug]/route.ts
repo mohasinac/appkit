@@ -10,6 +10,7 @@
  */
 
 import { NextResponse } from "next/server.js";
+import type { JsonValue } from "@mohasinac/appkit";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
 
@@ -18,7 +19,7 @@ const ERR_DB_NOT_CONFIGURED = "Database provider not configured";
 const ERR_COLLECTION_NOT_FOUND = "Collection not found";
 const ERR_INTERNAL_SERVER_ERROR = "Internal server error";
 
-interface CollectionEntity extends Record<string, unknown> {
+interface CollectionEntity extends Record<string, JsonValue> {
   id: string;
 }
 

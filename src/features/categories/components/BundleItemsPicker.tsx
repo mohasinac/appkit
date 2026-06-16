@@ -15,6 +15,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 import { Badge, Button, Checkbox, Div, Input, Row, Stack, Text } from "../../../ui";
 import {
   BUNDLE_MAX_ITEMS,
@@ -239,7 +240,7 @@ export async function defaultBundleItemsFetch(
   const rawItems: unknown[] = data?.data?.items ?? data?.items ?? [];
   return rawItems
     .map((r): BundleItemSearchResult | null => {
-      const rec = r as Record<string, unknown>;
+      const rec = r as Record<string, JsonValue>;
       const id = typeof rec.id === "string" ? rec.id : null;
       const title =
         typeof rec.title === "string"

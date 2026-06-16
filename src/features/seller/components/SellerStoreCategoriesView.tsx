@@ -1,6 +1,7 @@
 "use client";
 
 import { Row, Span, Stack, sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { X, Plus } from "lucide-react";
@@ -41,7 +42,7 @@ const SORT_OPTIONS = [
 
 interface CategoryRow {
   id: string;
-  raw: Record<string, unknown>;
+  raw: Record<string, JsonValue>;
   label: string;
   slug: string;
   productCount: number;

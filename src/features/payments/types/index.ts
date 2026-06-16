@@ -1,4 +1,5 @@
 import { type PaymentGateway, PaymentGatewayValues } from "../schemas";
+import type { JsonValue } from "@mohasinac/appkit";
 export { type PaymentGateway, PaymentGatewayValues };
 export type PaymentStatus =
   | "pending"
@@ -39,7 +40,7 @@ export interface PaymentRecord {
   amount: number;
   currency: string;
   status: PaymentStatus;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, JsonValue>;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 /**
  * AddressesRepository — SB-UNI-A 2026-05-13
  *
@@ -38,12 +39,12 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
   }
 
   private decryptAddress(doc: AddressDocument): AddressDocument {
-    return decryptPiiFields(doc as unknown as Record<string, unknown>, [
+    return decryptPiiFields(doc as unknown as Record<string, JsonValue>, [
       ...ADDRESS_PII_FIELDS,
     ]) as unknown as AddressDocument;
   }
 
-  private encryptAddressData<T extends Record<string, unknown>>(data: T): T {
+  private encryptAddressData<T extends Record<string, JsonValue>>(data: T): T {
     return encryptPiiFields(data, [...ADDRESS_PII_FIELDS]);
   }
 
@@ -57,7 +58,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     data: Partial<AddressDocument>,
   ): Promise<AddressDocument> {
     const encrypted = this.encryptAddressData(
-      data as unknown as Record<string, unknown>,
+      data as unknown as Record<string, JsonValue>,
     );
     return super.createWithId(id, encrypted as Partial<AddressDocument>);
   }
@@ -67,7 +68,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     data: Partial<AddressDocument>,
   ): Promise<AddressDocument> {
     const encrypted = this.encryptAddressData(
-      data as unknown as Record<string, unknown>,
+      data as unknown as Record<string, JsonValue>,
     );
     return super.update(id, encrypted as Partial<AddressDocument>);
   }
@@ -156,7 +157,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
       };
 
       const encrypted = this.encryptAddressData(
-        addressData as unknown as Record<string, unknown>,
+        addressData as unknown as Record<string, JsonValue>,
       );
       await docRef.set(prepareForFirestore(encrypted));
 

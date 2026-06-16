@@ -12,6 +12,7 @@
  */
 
 import { useMutation } from "@tanstack/react-query";
+import type { JsonValue } from "@mohasinac/appkit";
 import { apiClient } from "../../../http";
 import {
   classifyMime,
@@ -45,7 +46,7 @@ interface UploadVariables {
   file: File;
   folder: string;
   isPublic: boolean;
-  context?: MediaFilenameContext | Record<string, unknown>;
+  context?: MediaFilenameContext | Record<string, JsonValue>;
 }
 
 export interface MediaCropInput {
@@ -134,7 +135,7 @@ export function useMediaUpload(
     file: File,
     folder = "uploads",
     isPublic = true,
-    context?: MediaFilenameContext | Record<string, unknown>,
+    context?: MediaFilenameContext | Record<string, JsonValue>,
   ): Promise<string> => {
     const data = await mutation.mutateAsync({ file, folder, isPublic, context });
     return data.url;

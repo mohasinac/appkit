@@ -1,4 +1,5 @@
 import { normalizeError } from "../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import { getProviders } from "../../contracts";
 import { serverLogger } from "../../monitoring";
 import {
@@ -11,7 +12,7 @@ import {
 const EMAIL_STYLE_MUTED = "color: #666; font-size: 14px;";
 const EMAIL_STYLE_BODY = "color: #333; font-size: 14px;";
 
-type SendEmailOptions = Record<string, unknown> & {
+type SendEmailOptions = Record<string, JsonValue> & {
   to: string | string[];
   subject: string;
   html?: string;

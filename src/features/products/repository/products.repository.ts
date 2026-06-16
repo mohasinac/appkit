@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
@@ -190,7 +191,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     await this.db
       .collection(this.collection)
       .doc(id)
-      .set(prepareForFirestore(productData as unknown as Record<string, unknown>));
+      .set(prepareForFirestore(productData as unknown as Record<string, JsonValue>));
 
     const created = { id, ...productData };
     this.cacheSet(created);
