@@ -137,7 +137,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             className="transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <Row className="h-full w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" align="center" justify="center">
+          <Row surface="muted" className="h-full w-full" align="center" justify="center">
             <Span className="opacity-30" size="4xl">🛍️</Span>
           </Row>
         )}

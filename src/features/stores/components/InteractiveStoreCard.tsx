@@ -76,7 +76,7 @@ export function InteractiveStoreCard({
 
       <Link href={href} className="flex flex-col flex-1 min-h-0">
         {/* ── Banner ──────────────────────────────────────────────────── */}
-        <Div className={`relative aspect-video w-full ${__O.hidden} bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-300 dark:from-zinc-800 dark:via-zinc-700 dark:to-zinc-900 flex-shrink-0`}>
+        <Div surface="muted" className={`relative aspect-video w-full ${__O.hidden} flex-shrink-0`}>
           {hasBanner ? (
             <MediaImage
               src={store.storeBannerURL!}

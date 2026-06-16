@@ -91,7 +91,7 @@ export function EventCard({
             />
           </Div>
         ) : (
-          <Row className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" align="center" justify="center">
+          <Row surface="muted" className="aspect-video" align="center" justify="center">
             <Span className="opacity-40" size="5xl" aria-hidden="true">
               {TYPE_ICONS[event.type]}
             </Span>

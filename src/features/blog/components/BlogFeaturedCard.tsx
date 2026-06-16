@@ -93,7 +93,8 @@ export function BlogFeaturedCard({
             <Div
               role="img"
               aria-label={safeTitle}
-              className="h-full w-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-slate-800 dark:via-slate-700 dark:to-slate-900"
+              surface="muted"
+              className="h-full w-full"
             />
           )}
         </Div>

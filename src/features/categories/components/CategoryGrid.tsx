@@ -36,7 +36,7 @@ export function CategoryCard({
   const inner = (
     <Stack className="h-full">
       {/* Image area — fixed aspect ratio */}
-      <Div className={`relative aspect-[4/3] w-full ${__O.hidden} bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700 flex-shrink-0`}>
+      <Div surface="muted" className={`relative aspect-[4/3] w-full ${__O.hidden} flex-shrink-0`}>
         {category.display?.coverImage ? (
           <Div
             role="img"

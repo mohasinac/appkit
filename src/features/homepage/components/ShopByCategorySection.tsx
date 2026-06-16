@@ -58,7 +58,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
           />
         </Div>
       ) : (
-        <Div className="aspect-video w-full bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" />
+        <Div surface="muted" className="aspect-video w-full" />
       )}
 
       <Stack className={`flex-1 ${__P.p3} text-left`}>
