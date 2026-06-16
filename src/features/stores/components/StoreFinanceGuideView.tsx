@@ -52,7 +52,7 @@ function CommissionSection() {
           <Text className={MONO_MUTED}>
             Payment processing (Razorpay ~2%): − ₹20.00
           </Text>
-          <Div className="border-t border-[var(--appkit-color-border)] pt-1">
+          <Div className="border-t border-[var(--appkit-color-border)]" padding="t-2xs">
             <Text className="font-mono text-[var(--appkit-color-text)]" size="xs" weight="semibold">
               Seller receives: ≈ ₹930.00
             </Text>

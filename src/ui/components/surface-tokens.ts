@@ -63,6 +63,8 @@ export const PADDING_MAP = {
   "x-lg": "px-6",
   "x-xl": "px-8",
   // Top-only and bottom-only side presets.
+  "t-2xs": "pt-1",
+  "b-2xs": "pb-1",
   "t-xs": "pt-2",
   "t-sm": "pt-3",
   "t-md": "pt-4",

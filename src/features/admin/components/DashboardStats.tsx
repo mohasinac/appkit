@@ -71,7 +71,7 @@ function SkeletonCard() {
   return (
     <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} ${__P.p5} animate-pulse`} rounded="xl">
       <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
-      <Row className="pt-1" align="start" justify="between" gap="3">
+      <Row align="start" justify="between" gap="3" padding="t-2xs">
         <Stack className="flex-1" gap="sm">
           <Div className="h-2.5 w-20 bg-[var(--appkit-color-border)]" rounded="default" />
           <Div className="h-7 w-24 bg-[var(--appkit-color-border)]" rounded="default" />

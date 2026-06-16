@@ -209,7 +209,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         <Section surface="default" className="border-b border-zinc-100 dark:border-zinc-800">
           <Div className="max-w-7xl mx-auto px-4" padding="y-sm">
             <Div
-              className={`flex gap-2.5 ${__O.xAuto} pb-1`}
+              className={`flex gap-2.5 ${__O.xAuto}`} padding="b-2xs"
               // audit-inline-style-ok: dynamic CSS
               style={{ scrollbarWidth: "none" }}
             >

@@ -495,7 +495,7 @@ export function AdminCouponEditorView({
               placeholder="Add a category…"
             />
             {applicableCategories.length > 0 && (
-              <Div className="flex flex-wrap gap-2 pt-1">
+              <Div className="flex flex-wrap gap-2" padding="t-2xs">
                 {applicableCategories.map((cid) => (
                   <Span
                     key={cid}
