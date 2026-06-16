@@ -48,11 +48,7 @@ const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
     header: "Shipping",
     render: (row) => (
       <Span
-        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-          row.acceptsShipping
-            ? "bg-success-surface text-success"
-            : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
-        }`}
+        className={`inline-flex items-center py-0.5 ${ row.acceptsShipping ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="x-xs"
       >
         {row.acceptsShipping ? "Ships" : "Meetup only"}
       </Span>
@@ -63,11 +59,7 @@ const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
     header: "Status",
     render: (row) => (
       <Span
-        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
-          row.status === "active"
-            ? "bg-success-surface text-success"
-            : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
-        }`}
+        className={`inline-flex items-center py-0.5 capitalize ${ row.status === "active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="x-xs"
       >
         {row.status}
       </Span>

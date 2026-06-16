@@ -2,7 +2,7 @@
 import { normalizeError } from "../../../../../errors/normalize";
 
 import * as React from "react";
-import { Div, Heading, Section, Span, Text } from "@mohasinac/appkit";
+import { Div, Heading, Li, Section, Span, Text, Ul } from "@mohasinac/appkit";
 import type { AnalyzeReport } from "../../../../server/features/maintenance/analyze";
 
 export function AnalysisRunnerView(): React.JSX.Element {
@@ -121,31 +121,31 @@ function ReportView({ report }: { report: AnalyzeReport }): React.JSX.Element {
 
       {report.stackClusters.length > 0 ? (
         <ReportSection title={`Stack clusters (≥5)`}>
-          <ul>
+          <Ul>
             {report.stackClusters.map((c) => (
-              <li key={c.signature} style={{ marginBottom: "0.5rem", fontSize: "0.82rem" }}>
+              <Li key={c.signature} style={{ marginBottom: "0.5rem", fontSize: "0.82rem" }}>
                 <Span weight="bold">{c.count}×</Span> <Span style={{ fontFamily: "monospace" }}>{c.signature}</Span>
                 <Div style={{ color: "var(--appkit-color-text-muted)" }}>sample: {c.sampleMessage}</Div>
-              </li>
+              </Li>
             ))}
-          </ul>
+          </Ul>
         </ReportSection>
       ) : null}
 
       {report.burstWindows.length > 0 ? (
         <ReportSection title="5xx burst windows">
-          <ul>
+          <Ul>
             {report.burstWindows.map((b) => (
-              <li key={b.start}>{b.start} — {b.count} errors ({b.multiplier}× avg)</li>
+              <Li key={b.start}>{b.start} — {b.count} errors ({b.multiplier}× avg)</Li>
             ))}
-          </ul>
+          </Ul>
         </ReportSection>
       ) : null}
 
       <ReportSection title="Recommendations">
-        <ul>
-          {report.recommendations.map((r, i) => <li key={i}>{r}</li>)}
-        </ul>
+        <Ul>
+          {report.recommendations.map((r, i) => <Li key={i}>{r}</Li>)}
+        </Ul>
       </ReportSection>
     </Div>
   );

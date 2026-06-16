@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -42,19 +42,19 @@ function StoreProfileSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Logo (storeLogoURL)</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>Minimum size: 200 × 200 px. Recommended: 400 × 400 px.</li>
-          <li className={LIST_DISC}>Displayed as a circle avatar on your profile page and in order confirmation emails.</li>
-          <li className={LIST_DISC}>Format: PNG with transparent background looks best.</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>Minimum size: 200 × 200 px. Recommended: 400 × 400 px.</Li>
+          <Li className={LIST_DISC}>Displayed as a circle avatar on your profile page and in order confirmation emails.</Li>
+          <Li className={LIST_DISC}>Format: PNG with transparent background looks best.</Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Banner (storeBannerURL)</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>Minimum size: 1200 × 300 px. Recommended: 1600 × 400 px.</li>
-          <li className={LIST_DISC}>Displayed at the top of your store profile page.</li>
-          <li className={LIST_DISC}>Avoid putting critical text near the edges — it may be cropped on mobile.</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>Minimum size: 1200 × 300 px. Recommended: 1600 × 400 px.</Li>
+          <Li className={LIST_DISC}>Displayed at the top of your store profile page.</Li>
+          <Li className={LIST_DISC}>Avoid putting critical text near the edges — it may be cropped on mobile.</Li>
+        </Ul>
       </Div>
       <Alert variant="info" title="Profile completeness affects discoverability">
         Stores with a logo, banner, description, and at least one published listing appear higher in
@@ -111,11 +111,11 @@ function ReturnPolicySection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Non-returnable categories</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>Opened card packs (boosters, elite trainer boxes).</li>
-          <li className={LIST_DISC}>Cracked or opened graded slabs — unless the defect was documented before shipping.</li>
-          <li className={LIST_DISC}>Items explicitly marked "Final Sale" in the listing.</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>Opened card packs (boosters, elite trainer boxes).</Li>
+          <Li className={LIST_DISC}>Cracked or opened graded slabs — unless the defect was documented before shipping.</Li>
+          <Li className={LIST_DISC}>Items explicitly marked "Final Sale" in the listing.</Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>What buyers see</Text>
@@ -135,12 +135,12 @@ function VacationModeSection() {
     <Div className={SECTION_BODY}>
       <Div>
         <Text className={SUBHEADING}>What vacation mode does</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>All your published listings are hidden from search results and browse pages.</li>
-          <li className={LIST_DISC}>Your store profile page shows a "On Vacation" banner.</li>
-          <li className={LIST_DISC}>Buyers cannot add your items to cart or checkout while on vacation.</li>
-          <li className={LIST_DISC}>Existing orders that were placed before vacation mode must still be fulfilled.</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>All your published listings are hidden from search results and browse pages.</Li>
+          <Li className={LIST_DISC}>Your store profile page shows a "On Vacation" banner.</Li>
+          <Li className={LIST_DISC}>Buyers cannot add your items to cart or checkout while on vacation.</Li>
+          <Li className={LIST_DISC}>Existing orders that were placed before vacation mode must still be fulfilled.</Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>How to enable</Text>

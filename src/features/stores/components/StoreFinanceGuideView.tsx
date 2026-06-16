@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -166,17 +166,17 @@ function CouponsSection() {
     <Div className={SECTION_BODY}>
       <Div>
         <Text className={SUBHEADING}>Admin coupons vs store coupons</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>
             <Span weight="bold">Admin coupons</Span> — created by LetItRip and apply platform-wide (all stores). You cannot create these.
-          </li>
-          <li className={LIST_DISC}>
+          </Li>
+          <Li className={LIST_DISC}>
             <Span weight="bold">Store coupons</Span> — created by you. Apply only to purchases from your store. You control the terms.
-          </li>
-          <li className={LIST_DISC}>
+          </Li>
+          <Li className={LIST_DISC}>
             Admin coupons and store coupons can stack if the admin coupon has "Combine with seller coupons" enabled. If not, only the better coupon is applied automatically.
-          </li>
-        </ul>
+          </Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Coupon field reference</Text>

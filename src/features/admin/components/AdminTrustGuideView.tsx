@@ -1,6 +1,6 @@
 import React from "react";
 import { Shield, Ban, AlertTriangle, Headphones, Flag, ClipboardList } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 const STILL_ALLOWED = "✓ Still allowed";
@@ -60,44 +60,44 @@ export function AdminTrustGuideView() {
         {
           Icon: AlertTriangle, title: "Scam Registry",
           content: (
-            <ul className={GC.listMuted}>
-              <li><Span weight="bold">27 scam types</Span>: Documented in the registry, covering fake payments, empty-box shipping, counterfeit graded cards, and more.</li>
-              <li><Span weight="bold">Scammer profile</Span>: Stored with slug prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">scammer-</code>. Includes phone, UPI VPA, and social handles as identifiers.</li>
-              <li><Span weight="bold">Report review</Span>: All community-submitted reports go through a review queue before publishing. Require at least 2 corroborating reports or 1 strong piece of evidence (payment screenshot, police complaint).</li>
-              <li><Span weight="bold">Takedown requests</Span>: Route to senior admin with legal involvement. Preserve evidence before any deletion.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li><Span weight="bold">27 scam types</Span>: Documented in the registry, covering fake payments, empty-box shipping, counterfeit graded cards, and more.</Li>
+              <Li><Span weight="bold">Scammer profile</Span>: Stored with slug prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">scammer-</code>. Includes phone, UPI VPA, and social handles as identifiers.</Li>
+              <Li><Span weight="bold">Report review</Span>: All community-submitted reports go through a review queue before publishing. Require at least 2 corroborating reports or 1 strong piece of evidence (payment screenshot, police complaint).</Li>
+              <Li><Span weight="bold">Takedown requests</Span>: Route to senior admin with legal involvement. Preserve evidence before any deletion.</Li>
+            </Ul>
           ),
         },
         {
           Icon: Headphones, title: "Support Tickets",
           content: (
-            <ul className={GC.listMuted}>
-              <li><Span weight="bold">SLA</Span>: 24–48 hours first response. Escalation: 72-hour unresponded tickets go to senior admin queue automatically.</li>
-              <li><Span weight="bold">Categories</Span>: order_issue, billing_payment, account_access, seller_dispute, technical, other.</li>
-              <li><Span weight="bold">Limit</Span>: Buyers can have 2 active general tickets + 1 per active order. This prevents abuse. Admins can override the limit for legitimate edge cases.</li>
-              <li><Span weight="bold">Closing tickets</Span>: Only close a ticket after confirming the issue is resolved. Auto-close (7 days no response from buyer) is enabled for status-inquiry tickets only.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li><Span weight="bold">SLA</Span>: 24–48 hours first response. Escalation: 72-hour unresponded tickets go to senior admin queue automatically.</Li>
+              <Li><Span weight="bold">Categories</Span>: order_issue, billing_payment, account_access, seller_dispute, technical, other.</Li>
+              <Li><Span weight="bold">Limit</Span>: Buyers can have 2 active general tickets + 1 per active order. This prevents abuse. Admins can override the limit for legitimate edge cases.</Li>
+              <Li><Span weight="bold">Closing tickets</Span>: Only close a ticket after confirming the issue is resolved. Auto-close (7 days no response from buyer) is enabled for status-inquiry tickets only.</Li>
+            </Ul>
           ),
         },
         {
           Icon: Flag, title: "Moderation Queue",
           content: (
-            <ul className={GC.listMuted}>
-              <li>The moderation queue surfaces flagged listings, reviews, and user-generated content for review.</li>
-              <li><Span weight="bold">Listing flags</Span>: Counterfeit claim, inappropriate images, misleading description. Each flag requires a decision: dismiss, warn seller, remove listing.</li>
-              <li><Span weight="bold">Review flags</Span>: PII in review text, slurs, spam. Decision: edit (remove PII), hide (dispute pending), or delete (violation confirmed).</li>
-              <li><Span weight="bold">Appeals</Span>: Any moderation action can be appealed by the seller/user via a support ticket. Document your original decision clearly in the mod log.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li>The moderation queue surfaces flagged listings, reviews, and user-generated content for review.</Li>
+              <Li><Span weight="bold">Listing flags</Span>: Counterfeit claim, inappropriate images, misleading description. Each flag requires a decision: dismiss, warn seller, remove listing.</Li>
+              <Li><Span weight="bold">Review flags</Span>: PII in review text, slurs, spam. Decision: edit (remove PII), hide (dispute pending), or delete (violation confirmed).</Li>
+              <Li><Span weight="bold">Appeals</Span>: Any moderation action can be appealed by the seller/user via a support ticket. Document your original decision clearly in the mod log.</Li>
+            </Ul>
           ),
         },
         {
           Icon: ClipboardList, title: "Item Requests",
           content: (
-            <ul className={GC.listMuted}>
-              <li>Buyers can submit "Want to Buy" item requests for items not currently listed on LetItRip.</li>
-              <li>Admins review requests and can forward them to relevant verified sellers via the Item Requests section.</li>
-              <li>High-frequency requests (5+ requests for the same item) should be shared with the seller community newsletter.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li>Buyers can submit "Want to Buy" item requests for items not currently listed on LetItRip.</Li>
+              <Li>Admins review requests and can forward them to relevant verified sellers via the Item Requests section.</Li>
+              <Li>High-frequency requests (5+ requests for the same item) should be shared with the seller community newsletter.</Li>
+            </Ul>
           ),
         },
         {

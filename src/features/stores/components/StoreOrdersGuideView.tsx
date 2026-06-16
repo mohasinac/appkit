@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Accordion, Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Accordion, Alert, Div, Heading, Li, Ol, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -111,13 +111,13 @@ const PROCESSING_STEPS = [
 
 function ProcessingWalkthrough() {
   return (
-    <ol className="space-y-3 pl-5">
+    <Ol className="space-y-3 pl-5">
       {PROCESSING_STEPS.map((step, i) => (
-        <li key={i} className="list-decimal text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
+        <Li key={i} className="list-decimal text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
           {step}
-        </li>
+        </Li>
       ))}
-    </ol>
+    </Ol>
   );
 }
 
@@ -173,17 +173,17 @@ function CancellationsSection() {
     <Div className={SECTION_BODY}>
       <Div>
         <Text className={SUBHEADING}>Who can cancel</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>
             <Span weight="bold">Buyer</Span> — can self-cancel any time before the order reaches SHIPPED status.
-          </li>
-          <li className={LIST_DISC}>
+          </Li>
+          <Li className={LIST_DISC}>
             <Span weight="bold">Seller (you)</Span> — can cancel any time before SHIPPED (e.g. item found damaged during packaging).
-          </li>
-          <li className={LIST_DISC}>
+          </Li>
+          <Li className={LIST_DISC}>
             <Span weight="bold">LetItRip admin</Span> — can force-cancel at any status for policy violations or unresolved disputes.
-          </li>
-        </ul>
+          </Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Refund timeline</Text>
@@ -222,11 +222,11 @@ function ReturnsSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>What you see</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>The buyer's reason for return (pre-defined category + optional description).</li>
-          <li className={LIST_DISC}>Photos of the item as received.</li>
-          <li className={LIST_DISC}>A 3-day SLA to respond before LetItRip mediates.</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>The buyer's reason for return (pre-defined category + optional description).</Li>
+          <Li className={LIST_DISC}>Photos of the item as received.</Li>
+          <Li className={LIST_DISC}>A 3-day SLA to respond before LetItRip mediates.</Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Accepting a return</Text>
@@ -262,12 +262,12 @@ function AuctionOrdersSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>If the winner does not pay</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>The order is automatically cancelled after 48 hours.</li>
-          <li className={LIST_DISC}>You are notified. The winner may receive a bid restriction on their account.</li>
-          <li className={LIST_DISC}>If "offer to next bidder" is enabled in your auction settings, the next-highest bidder is contacted automatically.</li>
-          <li className={LIST_DISC}>You can re-list the item immediately.</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>The order is automatically cancelled after 48 hours.</Li>
+          <Li className={LIST_DISC}>You are notified. The winner may receive a bid restriction on their account.</Li>
+          <Li className={LIST_DISC}>If "offer to next bidder" is enabled in your auction settings, the next-highest bidder is contacted automatically.</Li>
+          <Li className={LIST_DISC}>You can re-list the item immediately.</Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Fulfilment after payment</Text>

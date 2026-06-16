@@ -1,6 +1,6 @@
 import React from "react";
 import { BarChart2 } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminAnalyticsGuideView() {
@@ -21,32 +21,32 @@ export function AdminAnalyticsGuideView() {
         {
           title: "Revenue Dashboard",
           content: (
-            <ul className={GC.listMuted}>
-              <li><Span weight="bold">GMV (Gross Merchandise Value)</Span>: Total order subtotals across all stores. Does not deduct platform commission or refunds.</li>
-              <li><Span weight="bold">Net Revenue</Span>: GMV × platformFee — refunded orders excluded.</li>
-              <li><Span weight="bold">Period filter</Span>: Last 7 / 30 / 90 days, or custom date range. All monetary values shown in INR.</li>
-              <li><Span weight="bold">Payout total</Span>: Total disbursed to sellers in the same period. Revenue - Payout = Platform earnings.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li><Span weight="bold">GMV (Gross Merchandise Value)</Span>: Total order subtotals across all stores. Does not deduct platform commission or refunds.</Li>
+              <Li><Span weight="bold">Net Revenue</Span>: GMV × platformFee — refunded orders excluded.</Li>
+              <Li><Span weight="bold">Period filter</Span>: Last 7 / 30 / 90 days, or custom date range. All monetary values shown in INR.</Li>
+              <Li><Span weight="bold">Payout total</Span>: Total disbursed to sellers in the same period. Revenue - Payout = Platform earnings.</Li>
+            </Ul>
           ),
         },
         {
           title: "Order Funnel",
           content: (
-            <ul className={GC.listMuted}>
-              <li>The funnel shows drop-off at each stage: Add to Cart → Checkout started → Payment initiated → Payment completed → Delivered.</li>
-              <li>High drop-off at "Payment initiated → completed" often indicates a payment gateway issue or UX friction. Check Razorpay dashboard if you see a spike.</li>
-              <li>High cancellation rate at PENDING → CANCELLED indicates buyers are placing test orders or listing quality issues (item description doesn&apos;t match photos).</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li>The funnel shows drop-off at each stage: Add to Cart → Checkout started → Payment initiated → Payment completed → Delivered.</Li>
+              <Li>High drop-off at "Payment initiated → completed" often indicates a payment gateway issue or UX friction. Check Razorpay dashboard if you see a spike.</Li>
+              <Li>High cancellation rate at PENDING → CANCELLED indicates buyers are placing test orders or listing quality issues (item description doesn&apos;t match photos).</Li>
+            </Ul>
           ),
         },
         {
           title: "Product Performance",
           content: (
-            <ul className={GC.listMuted}>
-              <li><Span weight="bold">Top products by orders</Span>: Which products drive the most completed transactions.</li>
-              <li><Span weight="bold">Top products by views</Span>: High views but low orders may indicate pricing, photos, or description issues.</li>
-              <li><Span weight="bold">Return rate</Span>: Products with &gt;10% return rate need review — usually a condition description or photo quality issue.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li><Span weight="bold">Top products by orders</Span>: Which products drive the most completed transactions.</Li>
+              <Li><Span weight="bold">Top products by views</Span>: High views but low orders may indicate pricing, photos, or description issues.</Li>
+              <Li><Span weight="bold">Return rate</Span>: Products with &gt;10% return rate need review — usually a condition description or photo quality issue.</Li>
+            </Ul>
           ),
         },
         {
@@ -54,13 +54,13 @@ export function AdminAnalyticsGuideView() {
           content: (
             <>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Filter analytics by store to see individual seller performance. Available metrics:</Text>
-              <ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
-                <li>Total orders and completion rate</li>
-                <li>Average order value</li>
-                <li>Return and refund rate</li>
-                <li>Average seller rating</li>
-                <li>Payout history</li>
-              </ul>
+              <Ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
+                <Li>Total orders and completion rate</Li>
+                <Li>Average order value</Li>
+                <Li>Return and refund rate</Li>
+                <Li>Average seller rating</Li>
+                <Li>Payout history</Li>
+              </Ul>
               <Alert variant="info" className="mt-4">
                 Store analytics are visible to the store owner in their seller dashboard. Admin sees the full platform view. Do not share a specific store&apos;s metrics with other stores.
               </Alert>

@@ -1,6 +1,6 @@
 import React from "react";
 import { PackageCheck, Truck, Camera, RotateCcw, Clock, Headphones, Scale } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
@@ -66,11 +66,11 @@ const SECTIONS: OrderSection[] = [
       <Stack gap="3">
         <Text className={GC.textMuted}>Platform-wide return window: <Span weight="bold">7 days from DELIVERED date</Span>. Some stores offer 30-day windows — shown on the product page.</Text>
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">Non-returnable items:</Text>
-        <ul className={GC.listDiscMuted}>
-          <li>Opened card packs (Pokémon, Yu-Gi-Oh!, etc.)</li>
-          <li>Cracked or opened graded card slabs without documented photographic evidence of a defect</li>
-          <li>Items explicitly marked &quot;Final Sale&quot; on the listing</li>
-        </ul>
+        <Ul className={GC.listDiscMuted}>
+          <Li>Opened card packs (Pokémon, Yu-Gi-Oh!, etc.)</Li>
+          <Li>Cracked or opened graded card slabs without documented photographic evidence of a defect</Li>
+          <Li>Items explicitly marked &quot;Final Sale&quot; on the listing</Li>
+        </Ul>
       </Stack>
     ),
   },
@@ -79,11 +79,11 @@ const SECTIONS: OrderSection[] = [
     content: (
       <Stack gap="3">
         <Text className={GC.textMuted}>After the seller accepts your return and confirms receipt of the item:</Text>
-        <ul className={GC.listMuted}>
-          <li><Span weight="bold" className={GC.textStrong}>Credit/debit card</Span> — 3–7 business days back to your card via Razorpay.</li>
-          <li><Span weight="bold" className={GC.textStrong}>UPI</Span> — typically 1–2 business days.</li>
-          <li><Span weight="bold" className={GC.textStrong}>Net banking</Span> — 3–5 business days.</li>
-        </ul>
+        <Ul className={GC.listMuted}>
+          <Li><Span weight="bold" className={GC.textStrong}>Credit/debit card</Span> — 3–7 business days back to your card via Razorpay.</Li>
+          <Li><Span weight="bold" className={GC.textStrong}>UPI</Span> — typically 1–2 business days.</Li>
+          <Li><Span weight="bold" className={GC.textStrong}>Net banking</Span> — 3–5 business days.</Li>
+        </Ul>
         <Text className={GC.textMuted}>Refunds go back to the original payment method. LetItRip does not issue platform credits in lieu of a refund unless both parties agree.</Text>
       </Stack>
     ),
@@ -93,17 +93,17 @@ const SECTIONS: OrderSection[] = [
     content: (
       <Stack gap="3">
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">When to use a support ticket:</Text>
-        <ul className={GC.listDiscMuted}>
-          <li>Seller is unresponsive to your return request for more than 3 days</li>
-          <li>Tracking has not updated in 7+ days</li>
-          <li>Item is significantly not as described</li>
-        </ul>
+        <Ul className={GC.listDiscMuted}>
+          <Li>Seller is unresponsive to your return request for more than 3 days</Li>
+          <Li>Tracking has not updated in 7+ days</Li>
+          <Li>Item is significantly not as described</Li>
+        </Ul>
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">What to include:</Text>
-        <ul className={GC.listDiscMuted}>
-          <li>Your order ID (e.g. <code className={GC.code}>order-2-20260508-a1b2c3</code>)</li>
-          <li>Photos of the item and packaging</li>
-          <li>A clear timeline of events</li>
-        </ul>
+        <Ul className={GC.listDiscMuted}>
+          <Li>Your order ID (e.g. <code className={GC.code}>order-2-20260508-a1b2c3</code>)</Li>
+          <Li>Photos of the item and packaging</Li>
+          <Li>A clear timeline of events</Li>
+        </Ul>
         <Text className={GC.textMuted}>Response SLA: 24–48 hours. You can have up to 2 active general tickets and 1 additional ticket per active order.</Text>
       </Stack>
     ),

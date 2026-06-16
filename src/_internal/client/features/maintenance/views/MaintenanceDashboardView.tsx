@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Anchor, Div, Heading, Nav, Section, Span, Text } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Li, Nav, Section, Span, Text, Ul } from "@mohasinac/appkit";
 import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";
 
 export interface MaintenanceDashboardViewProps {
@@ -56,28 +56,28 @@ export function MaintenanceDashboardView({
 
       <Section style={{ marginBottom: "1.5rem" }}>
         <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600 }}>Top codes (30d)</Heading>
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {counts.topCodes.length === 0 ? <li style={{ color: "var(--appkit-color-text-muted)" }}>No errors recorded.</li> :
+        <Ul style={{ listStyle: "none", padding: 0 }}>
+          {counts.topCodes.length === 0 ? <Li style={{ color: "var(--appkit-color-text-muted)" }}>No errors recorded.</Li> :
             counts.topCodes.map((c) => (
-              <li key={c.code} style={{ display: "flex", justifyContent: "space-between", padding: "0.25rem 0", borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
+              <Li key={c.code} style={{ display: "flex", justifyContent: "space-between", padding: "0.25rem 0", borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
                 <Span style={{ fontFamily: "monospace" }}>{c.code}</Span>
                 <Span>{c.count}</Span>
-              </li>
+              </Li>
             ))}
-        </ul>
+        </Ul>
       </Section>
 
       <Section style={{ marginBottom: "1.5rem" }}>
         <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600 }}>Top routes (30d)</Heading>
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {counts.topRoutes.length === 0 ? <li style={{ color: "var(--appkit-color-text-muted)" }}>No errors recorded.</li> :
+        <Ul style={{ listStyle: "none", padding: 0 }}>
+          {counts.topRoutes.length === 0 ? <Li style={{ color: "var(--appkit-color-text-muted)" }}>No errors recorded.</Li> :
             counts.topRoutes.map((r) => (
-              <li key={`${r.source}:${r.route}`} style={{ display: "flex", justifyContent: "space-between", padding: "0.25rem 0", borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
+              <Li key={`${r.source}:${r.route}`} style={{ display: "flex", justifyContent: "space-between", padding: "0.25rem 0", borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
                 <Span style={{ fontFamily: "monospace" }}>[{r.source}] {r.route}</Span>
                 <Span>{r.count}</Span>
-              </li>
+              </Li>
             ))}
-        </ul>
+        </Ul>
       </Section>
 
       <Nav aria-label="Maintenance sections" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem" }}>

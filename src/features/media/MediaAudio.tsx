@@ -42,7 +42,7 @@ export function MediaAudio({
         role="img"
         aria-label={title ?? "Audio unavailable"}
         // audit-variant-ok: MediaAudio fallback chip — primitive owns its style.
-        className="inline-flex items-center gap-1 text-xs text-[var(--appkit-color-text-muted)]"
+        className="inline-flex items-center gap-1 text-[var(--appkit-color-text-muted)]" size="xs"
       >
         🎵 {title ?? "Audio unavailable"}
       </Span>

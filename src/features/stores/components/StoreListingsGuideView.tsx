@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -146,13 +146,13 @@ function StandardWalkthrough() {
       {STANDARD_STEPS.map(({ step, items }) => (
         <Div key={step}>
           <Text className="mb-2 text-[var(--appkit-color-text)]" weight="semibold">{step}</Text>
-          <ul className="space-y-1.5 pl-5">
+          <Ul className="space-y-1.5 pl-5">
             {items.map((item) => (
-              <li key={item} className="list-disc text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
+              <Li key={item} className="list-disc text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
                 {item}
-              </li>
+              </Li>
             ))}
-          </ul>
+          </Ul>
         </Div>
       ))}
     </Stack>
@@ -201,11 +201,11 @@ function AuctionWalkthrough() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Auction end</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>Winner receives an email and has 48 hours to complete payment.</li>
-          <li className={LIST_DISC}>If payment is not completed within 48 hours, the order is auto-cancelled.</li>
-          <li className={LIST_DISC}>The next-highest bidder may be offered the item (if enabled in your auction settings).</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>Winner receives an email and has 48 hours to complete payment.</Li>
+          <Li className={LIST_DISC}>If payment is not completed within 48 hours, the order is auto-cancelled.</Li>
+          <Li className={LIST_DISC}>The next-highest bidder may be offered the item (if enabled in your auction settings).</Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Editing a live auction</Text>
@@ -333,13 +333,13 @@ const MISTAKES = [
 function CommonMistakes() {
   return (
     <Alert variant="warning" title="Common mistakes to avoid">
-      <ul className="mt-2 space-y-2 pl-4">
+      <Ul className="mt-2 space-y-2 pl-4">
         {MISTAKES.map((m) => (
-          <li key={m} className="list-disc text-sm leading-relaxed">
+          <Li key={m} className="list-disc text-sm leading-relaxed">
             {m}
-          </li>
+          </Li>
         ))}
-      </ul>
+      </Ul>
     </Alert>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Settings } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 const CLS_HEADER_ICON = "w-5 h-5 text-amber-500";
@@ -68,11 +68,11 @@ export function AdminSiteConfigGuideView() {
         </Div>
         <Stack className="py-5" padding="x-lg" gap="3">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings</code>. They control platform-wide features without a code deploy:</Text>
-          <ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
-            <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enableAuctions</code> — globally enable/disable all auction listings.</li>
-            <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enablePreOrders</code> — globally enable/disable pre-order creation.</li>
-            <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">maintenanceMode</code> — shows a maintenance banner and blocks non-admin access.</li>
-          </ul>
+          <Ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
+            <Li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enableAuctions</code> — globally enable/disable all auction listings.</Li>
+            <Li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enablePreOrders</code> — globally enable/disable pre-order creation.</Li>
+            <Li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">maintenanceMode</code> — shows a maintenance banner and blocks non-admin access.</Li>
+          </Ul>
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Flags are evaluated per-request via ISR cache — a change may take up to the revalidation interval (3600s default) to propagate to all pages.</Text>
         </Stack>
       </Section>

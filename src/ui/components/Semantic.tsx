@@ -264,9 +264,10 @@ export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
   children: React.ReactNode;
 }
 
-export function Ul({ marker, spacing, className = "", children, ...props }: UlProps) {
-  return (
+export const Ul = React.forwardRef<HTMLUListElement, UlProps>(
+  ({ marker, spacing, className = "", children, ...props }, ref) => (
     <ul
+      ref={ref}
       className={[
         marker ? LIST_MARKER_MAP[marker] : "",
         spacing ? LIST_SPACING_MAP[spacing] : "",
@@ -278,8 +279,9 @@ export function Ul({ marker, spacing, className = "", children, ...props }: UlPr
     >
       {children}
     </ul>
-  );
-}
+  ),
+);
+Ul.displayName = "Ul";
 
 // --- Ol ----------------------------------------------------------------------
 /**

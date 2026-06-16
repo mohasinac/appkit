@@ -118,7 +118,7 @@ export function StepIndicator({
               <Span className="relative flex-shrink-0">
                 {hasError && (
                   <Span
-                    className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--appkit-color-error)] z-10"
+                    className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[var(--appkit-color-error)] z-10" rounded="full"
                     aria-label="This step has errors"
                   />
                 )}

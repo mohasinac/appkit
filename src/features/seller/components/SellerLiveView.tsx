@@ -62,11 +62,7 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
     header: "Verified",
     render: (row) => (
       <Span
-        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-          row.vendorVerified
-            ? "bg-success-surface text-success"
-            : "bg-warning-surface text-warning"
-        }`}
+        className={`inline-flex items-center py-0.5 ${ row.vendorVerified ? "bg-success-surface text-success" : "bg-warning-surface text-warning" }`} size="xs" weight="medium" rounded="full" padding="x-xs"
       >
         {row.vendorVerified ? "Verified" : "Pending"}
       </Span>
@@ -77,11 +73,7 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
     header: "Status",
     render: (row) => (
       <Span
-        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
-          row.status === "active"
-            ? "bg-success-surface text-success"
-            : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
-        }`}
+        className={`inline-flex items-center py-0.5 capitalize ${ row.status === "active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="x-xs"
       >
         {row.status}
       </Span>

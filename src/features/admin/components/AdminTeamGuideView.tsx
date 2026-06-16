@@ -1,6 +1,6 @@
 import React from "react";
 import { Users, Shield } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 export function AdminTeamGuideView() {
   const PERMISSION_GROUPS = [
     { name: "content_manager", desc: "Blog, FAQs, Events, Carousel, Sections, Ads, Newsletter read + write." },
@@ -62,12 +62,12 @@ export function AdminTeamGuideView() {
         {
           Icon: Users, title: "Employee Invite Flow",
           content: (
-            <ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)]">
-              <li>Go to <Span weight="bold">Admin → Team → Invite Employee</Span>. Enter the person&apos;s email and select their permission group.</li>
-              <li>They receive an invitation email with a sign-up link. On first login, their Firestore profile is created with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</code> and the selected permissions array.</li>
-              <li>To update permissions later: edit the employee in the Team section. Changes take effect on their next login (session tokens carry the old permissions until refreshed).</li>
-              <li>To offboard: use <Span weight="bold">Revoke Access</Span> in Team — sets <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isDisabled: true</code> on their Auth account and clears all permissions.</li>
-            </ul>
+            <Ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)]">
+              <Li>Go to <Span weight="bold">Admin → Team → Invite Employee</Span>. Enter the person&apos;s email and select their permission group.</Li>
+              <Li>They receive an invitation email with a sign-up link. On first login, their Firestore profile is created with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</code> and the selected permissions array.</Li>
+              <Li>To update permissions later: edit the employee in the Team section. Changes take effect on their next login (session tokens carry the old permissions until refreshed).</Li>
+              <Li>To offboard: use <Span weight="bold">Revoke Access</Span> in Team — sets <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isDisabled: true</code> on their Auth account and clears all permissions.</Li>
+            </Ul>
           ),
         },
         {

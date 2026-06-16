@@ -64,9 +64,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
             <Text size="xs" color="muted">{row.secondary}</Text>
           ) : null}
           <Span
-            className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-              PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal
-            }`}
+            className={`inline-flex py-0.5 ${ PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal }`} size="xs" weight="medium" rounded="full" padding="x-xs"
           >
             {priority}
           </Span>
@@ -80,9 +78,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
     className: "w-36",
     render: (row) => (
       <Span
-        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-          STATUS_BADGE[row.status] ?? STATUS_BADGE.open
-        }`}
+        className={`inline-flex px-2.5 ${ STATUS_BADGE[row.status] ?? STATUS_BADGE.open }`} size="xs" weight="medium" rounded="full" padding="y-2xs"
       >
         {row.status.replace(/_/g, " ")}
       </Span>

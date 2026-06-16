@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -106,9 +106,9 @@ function CapabilityTable() {
                     <td className="px-6 py-2 text-[var(--appkit-color-text-muted)] align-top">{unlocks}</td>
                     <td className="px-6 py-2 align-top">
                       {defaultOn ? (
-                        <Span className="inline-block rounded-full bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)] text-xs px-2 py-0.5 font-medium">On</Span>
+                        <Span className="inline-block bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">On</Span>
                       ) : (
-                        <Span className="inline-block rounded-full bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] text-xs px-2 py-0.5 font-medium">Off</Span>
+                        <Span className="inline-block bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">Off</Span>
                       )}
                     </td>
                   </tr>
@@ -165,16 +165,16 @@ function LockedFeatureGuide() {
           <Row align="center" gap="sm">
             <Text className="font-mono text-[var(--appkit-color-text)]" size="sm" weight="semibold">{cap}</Text>
             {contractRequired && (
-              <Span className="inline-block rounded-full bg-[var(--appkit-color-warning)]/10 text-[var(--appkit-color-warning)] text-xs px-2 py-0.5 font-medium">Requires agreement</Span>
+              <Span className="inline-block bg-[var(--appkit-color-warning)]/10 text-[var(--appkit-color-warning)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">Requires agreement</Span>
             )}
           </Row>
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">What you are missing:</Text>
-            <ul className="pl-4 space-y-0.5">
+            <Ul className="pl-4 space-y-0.5">
               {missing.map((item) => (
-                <li key={item} className={`text-sm text-[var(--appkit-color-text-muted)] ${LIST_DISC}`}>{item}</li>
+                <Li key={item} className={`text-sm text-[var(--appkit-color-text-muted)] ${LIST_DISC}`}>{item}</Li>
               ))}
-            </ul>
+            </Ul>
           </Div>
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">How to unlock:</Text>
@@ -201,13 +201,13 @@ function VerifiedSellerSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Requirements</Text>
-        <ul className="space-y-1 pl-5">
-          <li className={LIST_DISC}>Government-issued photo ID submitted to LetItRip support.</li>
-          <li className={LIST_DISC}>Store active for at least 6 months.</li>
-          <li className={LIST_DISC}>Average rating of 4.5 or above (across all reviews).</li>
-          <li className={LIST_DISC}>At least 50 delivered orders with no outstanding fraud reports.</li>
-          <li className={LIST_DISC}>No active hard ban or store suspension in the past 12 months.</li>
-        </ul>
+        <Ul className="space-y-1 pl-5">
+          <Li className={LIST_DISC}>Government-issued photo ID submitted to LetItRip support.</Li>
+          <Li className={LIST_DISC}>Store active for at least 6 months.</Li>
+          <Li className={LIST_DISC}>Average rating of 4.5 or above (across all reviews).</Li>
+          <Li className={LIST_DISC}>At least 50 delivered orders with no outstanding fraud reports.</Li>
+          <Li className={LIST_DISC}>No active hard ban or store suspension in the past 12 months.</Li>
+        </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>How to apply</Text>

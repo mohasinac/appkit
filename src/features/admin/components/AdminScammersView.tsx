@@ -59,9 +59,7 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
     className: "w-36",
     render: (row) => (
       <Span
-        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-          STATUS_BADGE[row.status] ?? STATUS_BADGE.pending_review
-        }`}
+        className={`inline-flex px-2.5 ${ STATUS_BADGE[row.status] ?? STATUS_BADGE.pending_review }`} size="xs" weight="medium" rounded="full" padding="y-2xs"
       >
         {row.status.replace(/_/g, " ")}
       </Span>

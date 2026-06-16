@@ -14,14 +14,7 @@
  */
 
 import React, { useEffect, useId, useState } from "react";
-import {
-  Button,
-  Checkbox,
-  Modal,
-  Stack,
-  Text,
-} from "../../../ui";
-
+import { Button, Checkbox, Li, Modal, Stack, Text, Ul } from "../../../ui";
 // SB-UNI-E 2026-05-13 — "bundle" dropped (bundle UI deleted in SB-UNI-V; bundles
 // are now a category discriminator). Prize draws remain the only consumer.
 export type NonRefundableListingType = "prize-draw";
@@ -119,13 +112,13 @@ export function NonRefundableConsentModal({
           </Text>
         )}
 
-        <ul className="list-disc pl-5 space-y-2">
+        <Ul className="list-disc pl-5 space-y-2">
           {copy.bullets.map((b, i) => (
-            <li key={i}>
+            <Li key={i}>
               <Text>{b}</Text>
-            </li>
+            </Li>
           ))}
-        </ul>
+        </Ul>
 
         <Checkbox
           id={consentId}

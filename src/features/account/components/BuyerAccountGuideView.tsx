@@ -1,6 +1,6 @@
 import React from "react";
 import { UserCheck, Bell, Heart, Star, Lock, AlertTriangle, Flag } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, TextLink, Ul } from "../../../ui";
 import { ROUTES } from "../../../constants";
 import { GC } from "../../_guide-cls";
 
@@ -22,21 +22,21 @@ const SECTIONS: AccountSection[] = [
         <Div className="grid sm:grid-cols-2 gap-4 text-sm">
           <Div>
             <Text className="text-[var(--appkit-color-text)] mb-1" weight="semibold">Visible to others:</Text>
-            <ul className={GC.listDiscMuted}>
-              <li>Display name</li>
-              <li>Avatar / profile photo</li>
-              <li>Bio</li>
-              <li>Member since date</li>
-            </ul>
+            <Ul className={GC.listDiscMuted}>
+              <Li>Display name</Li>
+              <Li>Avatar / profile photo</Li>
+              <Li>Bio</Li>
+              <Li>Member since date</Li>
+            </Ul>
           </Div>
           <Div>
             <Text className="text-[var(--appkit-color-text)] mb-1" weight="semibold">Only you can see:</Text>
-            <ul className={GC.listDiscMuted}>
-              <li>Email address</li>
-              <li>Phone number</li>
-              <li>Saved addresses</li>
-              <li>Order history</li>
-            </ul>
+            <Ul className={GC.listDiscMuted}>
+              <Li>Email address</Li>
+              <Li>Phone number</Li>
+              <Li>Saved addresses</Li>
+              <Li>Order history</Li>
+            </Ul>
           </Div>
         </Div>
       </Stack>
@@ -47,13 +47,13 @@ const SECTIONS: AccountSection[] = [
     content: (
       <Stack gap="3">
         <Text className={GC.textMuted}>You&apos;ll receive in-app notifications for:</Text>
-        <ul className={GC.listDiscMuted}>
-          <li>Order status changes (Processing, Shipped, Delivered)</li>
-          <li>Outbid alerts on auctions you&apos;re participating in</li>
-          <li>Auction win notification</li>
-          <li>Review request after a delivered order</li>
-          <li>Support ticket replies</li>
-        </ul>
+        <Ul className={GC.listDiscMuted}>
+          <Li>Order status changes (Processing, Shipped, Delivered)</Li>
+          <Li>Outbid alerts on auctions you&apos;re participating in</Li>
+          <Li>Auction win notification</Li>
+          <Li>Review request after a delivered order</Li>
+          <Li>Support ticket replies</Li>
+        </Ul>
         <Text className={GC.textMuted}>Manage notification preferences at <Span weight="bold">My Account → Settings → Notifications</Span>.</Text>
       </Stack>
     ),
@@ -74,12 +74,12 @@ const SECTIONS: AccountSection[] = [
     content: (
       <Stack gap="3">
         <Text className={GC.textMuted}>You can leave a review after your order is marked <Span weight="bold">DELIVERED</Span>. Reviews are verified — only buyers who completed an order can review that product.</Text>
-        <ul className={GC.listMuted}>
-          <li><Span weight="bold" className={GC.textStrong}>Rating</Span> — 1–5 stars. Be fair and specific.</li>
-          <li><Span weight="bold" className={GC.textStrong}>Title &amp; body</Span> — describe item condition vs listing, packaging quality, and seller communication.</li>
-          <li><Span weight="bold" className={GC.textStrong}>Photos</Span> — optional but helpful for other buyers.</li>
-          <li><Span weight="bold" className={GC.textStrong}>Seller response</Span> — the seller may respond publicly. You cannot edit a review after a seller has responded.</li>
-        </ul>
+        <Ul className={GC.listMuted}>
+          <Li><Span weight="bold" className={GC.textStrong}>Rating</Span> — 1–5 stars. Be fair and specific.</Li>
+          <Li><Span weight="bold" className={GC.textStrong}>Title &amp; body</Span> — describe item condition vs listing, packaging quality, and seller communication.</Li>
+          <Li><Span weight="bold" className={GC.textStrong}>Photos</Span> — optional but helpful for other buyers.</Li>
+          <Li><Span weight="bold" className={GC.textStrong}>Seller response</Span> — the seller may respond publicly. You cannot edit a review after a seller has responded.</Li>
+        </Ul>
         <Text className={GC.textMuted}>Review guidelines: no personal information, no hate speech or slurs, factual only.</Text>
       </Stack>
     ),
@@ -87,11 +87,11 @@ const SECTIONS: AccountSection[] = [
   {
     Icon: Lock, title: "Account Security",
     content: (
-      <ul className={GC.listMuted}>
-        <li><Span weight="bold" className={GC.textStrong}>Change password</Span> — use &quot;Forgot password&quot; on the login page. A reset link is sent to your registered email.</li>
-        <li><Span weight="bold" className={GC.textStrong}>Active sessions</Span> — view all devices signed in at <Span weight="bold">My Account → Sessions</Span>. Sign out unfamiliar devices immediately.</li>
-        <li><Span weight="bold" className={GC.textStrong}>Sign out everywhere</Span> — use &quot;Sign out everywhere&quot; on the Sessions page to invalidate all active sessions at once.</li>
-      </ul>
+      <Ul className={GC.listMuted}>
+        <Li><Span weight="bold" className={GC.textStrong}>Change password</Span> — use &quot;Forgot password&quot; on the login page. A reset link is sent to your registered email.</Li>
+        <Li><Span weight="bold" className={GC.textStrong}>Active sessions</Span> — view all devices signed in at <Span weight="bold">My Account → Sessions</Span>. Sign out unfamiliar devices immediately.</Li>
+        <Li><Span weight="bold" className={GC.textStrong}>Sign out everywhere</Span> — use &quot;Sign out everywhere&quot; on the Sessions page to invalidate all active sessions at once.</Li>
+      </Ul>
     ),
   },
   {
@@ -99,13 +99,13 @@ const SECTIONS: AccountSection[] = [
     content: (
       <>
         <Alert variant="warning" title="Top scam types in the collectibles market:">
-          <ul className="space-y-1 text-sm mt-1">
-            <li><Span weight="bold">1. Fake payment screenshots</Span> — always verify refunds in your bank app.</li>
-            <li><Span weight="bold">2. Empty box shipping</Span> — item photos look real but the box arrives empty. Check seller rating.</li>
-            <li><Span weight="bold">3. Fake graded cards</Span> — counterfeit PSA/BGS slabs. Verify cert numbers on the grading company&apos;s website.</li>
-            <li><Span weight="bold">4. Urgency pressure</Span> — &quot;someone else is about to buy&quot;. Legitimate sellers don&apos;t pressure you.</li>
-            <li><Span weight="bold">5. Sympathy plays</Span> — emotional manipulation is a red flag.</li>
-          </ul>
+          <Ul className="space-y-1 text-sm mt-1">
+            <Li><Span weight="bold">1. Fake payment screenshots</Span> — always verify refunds in your bank app.</Li>
+            <Li><Span weight="bold">2. Empty box shipping</Span> — item photos look real but the box arrives empty. Check seller rating.</Li>
+            <Li><Span weight="bold">3. Fake graded cards</Span> — counterfeit PSA/BGS slabs. Verify cert numbers on the grading company&apos;s website.</Li>
+            <Li><Span weight="bold">4. Urgency pressure</Span> — &quot;someone else is about to buy&quot;. Legitimate sellers don&apos;t pressure you.</Li>
+            <Li><Span weight="bold">5. Sympathy plays</Span> — emotional manipulation is a red flag.</Li>
+          </Ul>
         </Alert>
         <Text className={`${GC.textMuted} mt-4`}>
           Read the full <TextLink href={String(ROUTES.PUBLIC.SCAMS)} className="text-[var(--appkit-color-primary)] underline hover:no-underline font-medium">Scam Registry →</TextLink> for all 27 documented scam types.

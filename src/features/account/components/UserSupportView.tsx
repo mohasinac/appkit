@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { Li, useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FormActions, Row, Select, SideDrawer, Span, Stack, Text, Ul, useToast } from "../../../ui";
@@ -194,7 +194,7 @@ function renderTicketListArea(props: {
       )}
       <Ul className="space-y-3">
         {tickets.map((ticket) => (
-          <li key={ticket.id}>
+          <Li key={ticket.id}>
             <Button variant="ghost" type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
               <Row align="start" justify="between" gap="sm">
                 <Div className="min-w-0 flex-1">
@@ -204,7 +204,7 @@ function renderTicketListArea(props: {
                 <Span size="xs" weight="medium" className={`shrink-0 inline-flex px-2.5 py-0.5 ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`} rounded="full">{ticket.status.replace(/_/g, " ")}</Span>
               </Row>
             </Button>
-          </li>
+          </Li>
         ))}
       </Ul>
     </>

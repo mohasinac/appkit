@@ -1,6 +1,6 @@
 import React from "react";
 import { ShoppingBag, Hash, Scale, Wallet, RotateCcw, DollarSign, Gavel } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminOrdersGuideView() {
@@ -56,52 +56,52 @@ export function AdminOrdersGuideView() {
         {
           Icon: Scale, title: "Intervening in a Dispute",
           content: (
-            <ul className={GC.listMuted}>
-              <li>Admin steps in when: seller is unresponsive for 3+ days on a return, or buyer escalates via support ticket.</li>
-              <li>Admin dispute tools: <Span weight="bold">force-accept return</Span> (moves to REFUNDED and withholds seller payout), <Span weight="bold">platform credit</Span> (future feature).</li>
-              <li>Document your reasoning in the support ticket before taking any force action.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li>Admin steps in when: seller is unresponsive for 3+ days on a return, or buyer escalates via support ticket.</Li>
+              <Li>Admin dispute tools: <Span weight="bold">force-accept return</Span> (moves to REFUNDED and withholds seller payout), <Span weight="bold">platform credit</Span> (future feature).</Li>
+              <Li>Document your reasoning in the support ticket before taking any force action.</Li>
+            </Ul>
           ),
         },
         {
           Icon: Wallet, title: "Payouts",
           content: (
-            <ul className={GC.listMuted}>
-              <li><Span weight="bold">Payout cycle</Span>: Weekly. All DELIVERED orders (minus platform commission) are batched into a single payout per store.</li>
-              <li><Span weight="bold">Status flow</Span>: PENDING → PROCESSING → PAID / FAILED.</li>
-              <li><Span weight="bold">FAILED payout</Span>: Check the store&apos;s <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">payoutDetails</code> — UPI VPA or bank details may be stale. Contact the seller via their store email before retrying.</li>
-              <li><Span weight="bold">ordersIncluded</Span>: Array of order IDs bundled in this payout batch — use to audit which orders are covered.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li><Span weight="bold">Payout cycle</Span>: Weekly. All DELIVERED orders (minus platform commission) are batched into a single payout per store.</Li>
+              <Li><Span weight="bold">Status flow</Span>: PENDING → PROCESSING → PAID / FAILED.</Li>
+              <Li><Span weight="bold">FAILED payout</Span>: Check the store&apos;s <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">payoutDetails</code> — UPI VPA or bank details may be stale. Contact the seller via their store email before retrying.</Li>
+              <Li><Span weight="bold">ordersIncluded</Span>: Array of order IDs bundled in this payout batch — use to audit which orders are covered.</Li>
+            </Ul>
           ),
         },
         {
           Icon: RotateCcw, title: "Return Requests",
           content: (
-            <ul className={GC.listMuted}>
-              <li>Admin can view the return reason and attached photos on the order detail page.</li>
-              <li><Span weight="bold">When to override a seller rejection</Span>: Only when photographic evidence clearly supports the buyer&apos;s claim of a significant not-as-described defect. Do not override for buyer&apos;s remorse.</li>
-              <li>After admin override: refund is issued automatically via Razorpay (3–7 business days for card, 1–2 for UPI). Seller payout for that order is withheld.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li>Admin can view the return reason and attached photos on the order detail page.</Li>
+              <Li><Span weight="bold">When to override a seller rejection</Span>: Only when photographic evidence clearly supports the buyer&apos;s claim of a significant not-as-described defect. Do not override for buyer&apos;s remorse.</Li>
+              <Li>After admin override: refund is issued automatically via Razorpay (3–7 business days for card, 1–2 for UPI). Seller payout for that order is withheld.</Li>
+            </Ul>
           ),
         },
         {
           Icon: DollarSign, title: "Commission & Settlement Math",
           content: (
-            <ul className={GC.listMuted}>
-              <li><Span weight="bold">platformFee</Span>: Set in <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings.fees.platformFee</code> (percentage). Applied to the order&apos;s item subtotal.</li>
-              <li><Span weight="bold">customCommissionRate</Span>: Stored on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">StoreDocument</code> for stores with the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">lower_commission_rate</code> capability. Overrides the platform default for that store.</li>
-              <li>Payout = order subtotal × (1 − commission rate). Shipping fees are passed through to the seller at cost.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li><Span weight="bold">platformFee</Span>: Set in <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings.fees.platformFee</code> (percentage). Applied to the order&apos;s item subtotal.</Li>
+              <Li><Span weight="bold">customCommissionRate</Span>: Stored on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">StoreDocument</code> for stores with the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">lower_commission_rate</code> capability. Overrides the platform default for that store.</Li>
+              <Li>Payout = order subtotal × (1 − commission rate). Shipping fees are passed through to the seller at cost.</Li>
+            </Ul>
           ),
         },
         {
           Icon: Gavel, title: "Auction Settlement",
           content: (
-            <ul className={GC.listMuted}>
-              <li>When an auction ends and the winner does not pay within 48 hours: the order auto-cancels and the system notifies the next-highest bidder.</li>
-              <li>If the auto-cancel system fails (rare), admin can manually cancel from the order detail page and trigger the next-bidder flow via a support action.</li>
-              <li>Repeat non-paying winners can receive a <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</code> soft ban from the Trust &amp; Safety section.</li>
-            </ul>
+            <Ul className={GC.listMuted}>
+              <Li>When an auction ends and the winner does not pay within 48 hours: the order auto-cancels and the system notifies the next-highest bidder.</Li>
+              <Li>If the auto-cancel system fails (rare), admin can manually cancel from the order detail page and trigger the next-bidder flow via a support action.</Li>
+              <Li>Repeat non-paying winners can receive a <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</code> soft ban from the Trust &amp; Safety section.</Li>
+            </Ul>
           ),
         },
       ].map(({ Icon, title, content }) => (

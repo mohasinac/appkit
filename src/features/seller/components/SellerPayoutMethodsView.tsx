@@ -239,11 +239,7 @@ export function SellerPayoutMethodsView({
                           </Span>
                         )}
                         <Span
-                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                            row.isActive
-                              ? "bg-success-surface text-success"
-                              : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
-                          }`}
+                          className={`inline-flex items-center py-0.5 ${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="x-xs"
                         >
                           {row.isActive ? "Active" : "Inactive"}
                         </Span>

@@ -353,7 +353,7 @@ function ScammerActionsColumn({
           <Stack gap="xs" as="ul">
             {Object.entries(CONTEST_TYPE_LABELS).map(([, label]) => (
               <Row key={label} gap="sm" align="start" as="li">
-                <Span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--appkit-color-border,theme(colors.zinc.300))]" />
+                <Span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-[color:var(--appkit-color-border,theme(colors.zinc.300))]" rounded="full" />
                 <Text variant="secondary" size="xs">{label}</Text>
               </Row>
             ))}

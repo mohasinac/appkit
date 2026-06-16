@@ -190,7 +190,7 @@ export function NotificationPreferencesPanel({
             </Text>
           </Div>
           <Row className="h-5 w-9 bg-[var(--appkit-color-primary)] px-0.5" align="center" justify="end" rounded="full" aria-label="Always on">
-            <Span className="h-4 w-4 rounded-full bg-white shadow" />
+            <Span className="h-4 w-4 shadow" rounded="full" surface="default" />
           </Row>
         </Row>
       </SectionCard>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Anchor, Div, Heading, Section, Text } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Li, Section, Text, Ul } from "@mohasinac/appkit";
 import type { ServerErrorDocument } from "../../../../../features/server-errors/schemas/firestore";
 
 export interface ServerErrorDetailViewProps {
@@ -79,13 +79,13 @@ export function ServerErrorDetailView({
           <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.5rem" }}>
             Related client errors (same requestId)
           </Heading>
-          <ul>
+          <Ul>
             {related.map((r) => (
-              <li key={r.id} style={{ fontFamily: "monospace", fontSize: "0.82rem" }}>
+              <Li key={r.id} style={{ fontFamily: "monospace", fontSize: "0.82rem" }}>
                 {fmt(r.occurredAt)} — {r.code} — {r.message.slice(0, 100)}
-              </li>
+              </Li>
             ))}
-          </ul>
+          </Ul>
         </Section>
       ) : null}
     </Div>

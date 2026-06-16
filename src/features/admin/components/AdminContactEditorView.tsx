@@ -72,9 +72,7 @@ export function AdminContactEditorView({
         <Row align="center" gap="sm">
           <Text size="xs" color="muted">Status:</Text>
           <Span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-              statusColor[currentStatus ?? "new"] ?? statusColor.new
-            }`}
+            className={`inline-flex items-center py-0.5 ${ statusColor[currentStatus ?? "new"] ?? statusColor.new }`} size="xs" weight="medium" rounded="full" padding="x-xs"
           >
             {currentStatus ?? "new"}
           </Span>

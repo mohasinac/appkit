@@ -142,12 +142,12 @@ export function NavbarLayout({
             </button>
           )}
 
-          <ul
+          <Ul
             ref={scrollRef}
             className="flex items-center gap-0.5 lg:gap-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {items.map((item) => (
-              <li key={item.href} className="shrink-0">
+              <Li key={item.href} className="shrink-0">
                 {renderItem ? (
                   renderItem(item, activeHref === item.href)
                 ) : (
@@ -156,9 +156,9 @@ export function NavbarLayout({
                     isActive={activeHref === item.href}
                   />
                 )}
-              </li>
+              </Li>
             ))}
-          </ul>
+          </Ul>
 
           {canScrollRight && (
             <button

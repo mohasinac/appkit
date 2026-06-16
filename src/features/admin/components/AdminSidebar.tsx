@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Div, Nav, Row, Span, Stack } from "../../../ui";
+import { Div, Li, Nav, Row, Span, Stack, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -105,13 +105,13 @@ function GroupsContent({
               </svg>
             </button>
             {isOpen && (
-              <ul className="space-y-0.5 px-3 pb-1">
+              <Ul className="space-y-0.5 px-3 pb-1">
                 {group.items.map((item) => (
-                  <li key={item.href}>
+                  <Li key={item.href}>
                     <NavLink item={item} isActive={isNavItemActive(item, activePath)} onClick={onItemClick} />
-                  </li>
+                  </Li>
                 ))}
-              </ul>
+              </Ul>
             )}
           </Div>
         );
