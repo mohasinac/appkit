@@ -64,7 +64,7 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
       await this.db
         .collection(this.collection)
         .doc(id)
-        .set(prepareForFirestore(doc as unknown as Record<string, unknown>));
+        .set(prepareForFirestore(doc));
 
       return doc;
     } catch (error) {

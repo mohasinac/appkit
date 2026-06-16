@@ -145,7 +145,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
         .collection(SUPPORT_TICKET_COLLECTION)
         .doc(ticketId);
       const updateData: Record<string, unknown> = {
-        messages: firebaseFieldOps.arrayUnion(prepareForFirestore(message as unknown as Record<string, unknown>)),
+        messages: firebaseFieldOps.arrayUnion(prepareForFirestore(message)),
         updatedAt: new Date(),
       };
       if (newStatus) updateData.status = newStatus;

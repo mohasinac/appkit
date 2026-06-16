@@ -36,7 +36,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<OfferDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
+    return decryptPiiFields(raw, [
       ...OFFER_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -70,7 +70,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
 
     // Encrypt PII fields before persisting
     const encrypted = encryptPiiFields(
-      { ...data } as unknown as Record<string, unknown>,
+      { ...data },
       [...OFFER_PII_FIELDS],
     ) as typeof data;
 

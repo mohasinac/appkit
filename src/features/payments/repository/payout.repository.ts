@@ -38,30 +38,28 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   /** Decrypt PII fields on a payout document after Firestore read */
   private decryptPayout(doc: PayoutDocument): PayoutDocument {
     const decrypted = decryptPiiFields(
-      doc as unknown as Record<string, unknown>,
+      doc,
       [...PAYOUT_PII_FIELDS],
     ) as unknown as PayoutDocument;
     if (decrypted.bankAccount) {
       decrypted.bankAccount = decryptPayoutBankAccount(
-        decrypted.bankAccount as unknown as Record<string, unknown>,
+        decrypted.bankAccount,
       ) as unknown as typeof decrypted.bankAccount;
     }
     return decrypted;
   }
 
   /** Encrypt PII fields on payout data before Firestore write */
-  private encryptPayoutData<T extends Record<string, unknown>>(data: T): T {
+  private encryptPayoutData<T extends object>(data: T): T {
     let encrypted = encryptPiiFields(data, [...PAYOUT_PII_FIELDS]);
-    encrypted = addPiiIndices(data, PAYOUT_PII_INDEX_MAP) as unknown as T;
+    encrypted = addPiiIndices(data, PAYOUT_PII_INDEX_MAP) as T;
     encrypted = {
       ...encryptPiiFields(data, [...PAYOUT_PII_FIELDS]),
       ...encrypted,
     };
-    if (encrypted.bankAccount) {
-      (encrypted as Record<string, unknown>).bankAccount =
-        encryptPayoutBankAccount(
-          encrypted.bankAccount as Record<string, unknown>,
-        );
+    const access = encrypted as { bankAccount?: object | null };
+    if (access.bankAccount) {
+      access.bankAccount = encryptPayoutBankAccount(access.bankAccount);
     }
     return encrypted;
   }
@@ -91,7 +89,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
 
     // Encrypt PII before persisting
     const encrypted = this.encryptPayoutData(
-      data as unknown as Record<string, unknown>,
+      data,
     );
 
     await this.db
@@ -108,7 +106,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     data: Partial<PayoutDocument>,
   ): Promise<PayoutDocument> {
     const encrypted = this.encryptPayoutData(
-      data as unknown as Record<string, unknown>,
+      data,
     );
     return super.update(payoutId, encrypted as Partial<PayoutDocument>);
   }
@@ -298,7 +296,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       const totalDeducted = newDeductions.reduce((s, d) => s + d.deductedAmount, 0);
       const netAmount = Math.max(0, doc.amount - totalDeducted);
       tx.update(ref, {
-        refundDeductions: newDeductions.map((d) => prepareForFirestore(d as unknown as Record<string, unknown>)),
+        refundDeductions: newDeductions.map((d) => prepareForFirestore(d)),
         netAmount,
         updatedAt: new Date(),
       });

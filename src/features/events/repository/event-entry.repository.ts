@@ -40,7 +40,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<EventEntryDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
+    return decryptPiiFields(raw, [
       ...EVENT_ENTRY_PII_FIELDS,
     ]) as unknown as D;
   }

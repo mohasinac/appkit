@@ -47,7 +47,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       ...result,
       items: result.items.map(
         (item) =>
-          decryptPiiFields(item as unknown as Record<string, unknown>, [
+          decryptPiiFields(item, [
             ...REVIEW_PII_FIELDS,
           ]) as unknown as ReviewDocument,
       ),
@@ -68,7 +68,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<ReviewDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
+    return decryptPiiFields(raw, [
       ...REVIEW_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -88,7 +88,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     };
 
     const encrypted = this.encryptReviewData(
-      reviewData as unknown as Record<string, unknown>,
+      reviewData,
     );
 
     await this.db
@@ -104,7 +104,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     data: Partial<ReviewDocument>,
   ): Promise<ReviewDocument> {
     const encrypted = this.encryptReviewData(
-      data as unknown as Record<string, unknown>,
+      data,
     );
     return super.update(reviewId, encrypted as Partial<ReviewDocument>);
   }

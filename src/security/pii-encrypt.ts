@@ -10,9 +10,11 @@
  * Blind index format: "hmac-sha256:<sha256_hex>"
  */
 
+import type { FirestoreValue } from "../schemas/types";
+
 // crypto is a Node.js built-in. Use require() to keep it out of the static
 // import graph so Next.js Edge bundler does not warn about this file.
- 
+
 function nodeCrypto() { return require("crypto") as typeof import("crypto"); }
  
 
@@ -104,13 +106,14 @@ export function hmacBlindIndex(value: string): string {
  * For each encrypted field, a `<field>Index` blind-index sibling is added.
  * Already-encrypted values (prefix `enc:v1:`) are left unchanged.
  */
-export function encryptPiiFields<T extends Record<string, unknown>>(
+export function encryptPiiFields<T extends object>(
   doc: T,
   piiFields: string[],
 ): T {
-  const result = { ...doc } as Record<string, unknown>;
+  const result = { ...doc } as Record<string, FirestoreValue>;
+  const source = doc as Record<string, FirestoreValue>;
   for (const field of piiFields) {
-    const value = doc[field];
+    const value = source[field];
     if (typeof value !== "string" || !value) continue;
     if (value.startsWith(ENC_PREFIX)) continue; // already encrypted
     result[field] = encryptValue(value);
@@ -123,13 +126,14 @@ export function encryptPiiFields<T extends Record<string, unknown>>(
  * Decrypt specified PII fields in a Firestore document.
  * Fields that are not encrypted (no `enc:v1:` prefix) are passed through.
  */
-export function decryptPiiFields<T extends Record<string, unknown>>(
+export function decryptPiiFields<T extends object>(
   doc: T,
   piiFields: string[],
 ): T {
-  const result = { ...doc } as Record<string, unknown>;
+  const result = { ...doc } as Record<string, FirestoreValue>;
+  const source = doc as Record<string, FirestoreValue>;
   for (const field of piiFields) {
-    const value = doc[field];
+    const value = source[field];
     if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
       result[field] = decryptValue(value);
     }
@@ -171,15 +175,16 @@ export function piiBlindIndex(plaintext: string): string {
  * For each mapping entry (e.g. { email: "emailIndex" }), if the source field
  * is a non-empty string, computes the HMAC and stores it as the index field.
  */
-export function addPiiIndices<T extends Record<string, unknown>>(
+export function addPiiIndices<T extends object>(
   obj: T,
   mapping: Record<string, string>,
 ): T {
   const result = { ...obj };
+  const access = result as Record<string, FirestoreValue>;
   for (const [sourceField, indexField] of Object.entries(mapping)) {
-    const val = result[sourceField];
+    const val = access[sourceField];
     if (typeof val === "string" && val) {
-      (result as Record<string, unknown>)[indexField] = piiBlindIndex(val);
+      access[indexField] = piiBlindIndex(val);
     }
   }
   return result;
@@ -199,7 +204,7 @@ export function encryptShippingAddress<T>(
     return encryptPii(addr) as T;
   }
   if (typeof addr !== "object") return addr;
-  return encryptPiiFields(addr as Record<string, unknown>, [
+  return encryptPiiFields(addr as object, [
     "fullName",
     "phone",
     "addressLine1",
@@ -219,7 +224,7 @@ export function decryptShippingAddress<T>(
     return decryptPii(addr) as T;
   }
   if (typeof addr !== "object") return addr;
-  return decryptPiiFields(addr as Record<string, unknown>, [
+  return decryptPiiFields(addr as object, [
     "fullName",
     "phone",
     "addressLine1",
@@ -230,102 +235,94 @@ export function decryptShippingAddress<T>(
 /**
  * Encrypt PII inside seller payoutDetails before writing to Firestore.
  */
-export function encryptPayoutDetails<T extends Record<string, unknown>>(
+export function encryptPayoutDetails<T extends object>(
   details: T | undefined | null,
 ): T | undefined | null {
   if (!details) return details;
-  const result = { ...details };
+  const result = { ...details } as Record<string, FirestoreValue>;
   // Encrypt top-level upiId
   if (typeof result.upiId === "string" && result.upiId) {
-    (result as Record<string, unknown>).upiId = encryptPii(
-      result.upiId as string,
-    );
+    result.upiId = encryptPii(result.upiId);
   }
   // Encrypt nested bankAccount fields
-  const bank = result.bankAccount as Record<string, unknown> | undefined;
-  if (bank) {
-    (result as Record<string, unknown>).bankAccount = encryptPiiFields(
+  const bank = result.bankAccount;
+  if (bank && typeof bank === "object" && !Array.isArray(bank) && !(bank instanceof Date)) {
+    result.bankAccount = encryptPiiFields(
       { ...bank },
       ["accountNumber"],
-    );
+    ) as FirestoreValue;
   }
-  return result as T;
+  return result as unknown as T;
 }
 
 /**
  * Decrypt PII inside seller payoutDetails after reading from Firestore.
  */
-export function decryptPayoutDetails<T extends Record<string, unknown>>(
+export function decryptPayoutDetails<T extends object>(
   details: T | undefined | null,
 ): T | undefined | null {
   if (!details) return details;
-  const result = { ...details };
+  const result = { ...details } as Record<string, FirestoreValue>;
   if (typeof result.upiId === "string" && result.upiId) {
-    (result as Record<string, unknown>).upiId = decryptPii(
-      result.upiId as string,
-    );
+    result.upiId = decryptPii(result.upiId);
   }
-  const bank = result.bankAccount as Record<string, unknown> | undefined;
-  if (bank) {
-    (result as Record<string, unknown>).bankAccount = decryptPiiFields(
+  const bank = result.bankAccount;
+  if (bank && typeof bank === "object" && !Array.isArray(bank) && !(bank instanceof Date)) {
+    result.bankAccount = decryptPiiFields(
       { ...bank },
       ["accountNumber"],
-    );
+    ) as FirestoreValue;
   }
-  return result as T;
+  return result as unknown as T;
 }
 
 /**
  * Encrypt PII inside seller shippingConfig.pickupAddress before writing.
  */
-export function encryptShippingConfig<T extends Record<string, unknown>>(
+export function encryptShippingConfig<T extends object>(
   config: T | undefined | null,
 ): T | undefined | null {
   if (!config) return config;
-  const result = { ...config };
+  const result = { ...config } as Record<string, FirestoreValue>;
   // shiprocketEmail is PII
   if (typeof result.shiprocketEmail === "string" && result.shiprocketEmail) {
-    (result as Record<string, unknown>).shiprocketEmail = encryptPii(
-      result.shiprocketEmail as string,
-    );
+    result.shiprocketEmail = encryptPii(result.shiprocketEmail);
   }
-  const addr = result.pickupAddress as Record<string, unknown> | undefined;
-  if (addr) {
-    (result as Record<string, unknown>).pickupAddress = encryptPiiFields(
+  const addr = result.pickupAddress;
+  if (addr && typeof addr === "object" && !Array.isArray(addr) && !(addr instanceof Date)) {
+    result.pickupAddress = encryptPiiFields(
       { ...addr },
       ["phone", "email", "address", "address2"],
-    );
+    ) as FirestoreValue;
   }
-  return result as T;
+  return result as unknown as T;
 }
 
 /**
  * Decrypt PII inside seller shippingConfig.pickupAddress after reading.
  */
-export function decryptShippingConfig<T extends Record<string, unknown>>(
+export function decryptShippingConfig<T extends object>(
   config: T | undefined | null,
 ): T | undefined | null {
   if (!config) return config;
-  const result = { ...config };
+  const result = { ...config } as Record<string, FirestoreValue>;
   if (typeof result.shiprocketEmail === "string" && result.shiprocketEmail) {
-    (result as Record<string, unknown>).shiprocketEmail = decryptPii(
-      result.shiprocketEmail as string,
-    );
+    result.shiprocketEmail = decryptPii(result.shiprocketEmail);
   }
-  const addr = result.pickupAddress as Record<string, unknown> | undefined;
-  if (addr) {
-    (result as Record<string, unknown>).pickupAddress = decryptPiiFields(
+  const addr = result.pickupAddress;
+  if (addr && typeof addr === "object" && !Array.isArray(addr) && !(addr instanceof Date)) {
+    result.pickupAddress = decryptPiiFields(
       { ...addr },
       ["phone", "email", "address", "address2"],
-    );
+    ) as FirestoreValue;
   }
-  return result as T;
+  return result as unknown as T;
 }
 
 /**
  * Encrypt PII on a payout bankAccount sub-object for the payouts collection.
  */
-export function encryptPayoutBankAccount<T extends Record<string, unknown>>(
+export function encryptPayoutBankAccount<T extends object>(
   bank: T | undefined | null,
 ): T | undefined | null {
   if (!bank) return bank;
@@ -335,7 +332,7 @@ export function encryptPayoutBankAccount<T extends Record<string, unknown>>(
 /**
  * Decrypt PII on a payout bankAccount sub-object from the payouts collection.
  */
-export function decryptPayoutBankAccount<T extends Record<string, unknown>>(
+export function decryptPayoutBankAccount<T extends object>(
   bank: T | undefined | null,
 ): T | undefined | null {
   if (!bank) return bank;

@@ -47,7 +47,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<ChatRoomDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
+    return decryptPiiFields(raw, [
       ...CHAT_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -69,7 +69,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
     };
 
     const encrypted = encryptPiiFields(
-      { ...doc } as unknown as Record<string, unknown>,
+      { ...doc },
       [...CHAT_PII_FIELDS],
     ) as typeof doc;
 
@@ -157,7 +157,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
         if (!deletedBy.includes(userId)) {
           rooms.push(
             decryptPiiFields(
-              { id: d.id, ...data } as unknown as Record<string, unknown>,
+              { id: d.id, ...data },
               [...CHAT_PII_FIELDS],
             ) as unknown as ChatRoomDocument,
           );

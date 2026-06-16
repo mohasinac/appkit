@@ -46,46 +46,38 @@ export class UserRepository extends BaseRepository<UserDocument> {
   }
 
   private decryptUser(doc: UserDocument): UserDocument {
-    const decrypted = decryptPiiFields(
-      doc as unknown as Record<string, unknown>,
-      [...USER_PII_FIELDS],
-    ) as unknown as UserDocument;
+    const decrypted = decryptPiiFields(doc, [...USER_PII_FIELDS]);
 
     if (decrypted.payoutDetails) {
       decrypted.payoutDetails = decryptPayoutDetails(
-        decrypted.payoutDetails as unknown as Record<string, unknown>,
-      ) as unknown as typeof decrypted.payoutDetails;
+        decrypted.payoutDetails,
+      ) as typeof decrypted.payoutDetails;
     }
 
     if (decrypted.shippingConfig) {
       decrypted.shippingConfig = decryptShippingConfig(
-        decrypted.shippingConfig as unknown as Record<string, unknown>,
-      ) as unknown as typeof decrypted.shippingConfig;
+        decrypted.shippingConfig,
+      ) as typeof decrypted.shippingConfig;
     }
 
     return decrypted;
   }
 
-  private encryptUserData<T extends Record<string, unknown>>(data: T): T {
+  private encryptUserData<T extends object>(data: T): T {
     // encryptPiiFields encrypts each PII field in-place AND adds the corresponding
     // blind-index sibling (e.g. email → emailIndex) from the plaintext value.
     // addPiiIndices is intentionally NOT called here — it spreads the original
     // plaintext `data` back into the result, which would overwrite the encrypted
     // ciphertext with the original plaintext values, defeating the encryption.
     const encrypted = encryptPiiFields(data, [...USER_PII_FIELDS]);
+    const access = encrypted as { payoutDetails?: object | null; shippingConfig?: object | null };
 
-    if (encrypted.payoutDetails) {
-      (encrypted as Record<string, unknown>).payoutDetails =
-        encryptPayoutDetails(
-          encrypted.payoutDetails as Record<string, unknown>,
-        );
+    if (access.payoutDetails) {
+      access.payoutDetails = encryptPayoutDetails(access.payoutDetails);
     }
 
-    if (encrypted.shippingConfig) {
-      (encrypted as Record<string, unknown>).shippingConfig =
-        encryptShippingConfig(
-          encrypted.shippingConfig as Record<string, unknown>,
-        );
+    if (access.shippingConfig) {
+      access.shippingConfig = encryptShippingConfig(access.shippingConfig);
     }
 
     return encrypted;
@@ -100,8 +92,8 @@ export class UserRepository extends BaseRepository<UserDocument> {
     id: string,
     data: Partial<UserDocument>,
   ): Promise<UserDocument> {
-    const encrypted = this.encryptUserData(data as unknown as Record<string, unknown>);
-    return super.createWithId(id, encrypted as Partial<UserDocument>);
+    const encrypted = this.encryptUserData(data);
+    return super.createWithId(id, encrypted);
   }
 
   async create(
@@ -119,9 +111,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
       updatedAt: new Date(),
     };
 
-    const encrypted = this.encryptUserData(
-      userData as unknown as Record<string, unknown>,
-    );
+    const encrypted = this.encryptUserData(userData);
 
     await this.db
       .collection(this.collection)
@@ -187,10 +177,8 @@ export class UserRepository extends BaseRepository<UserDocument> {
     uid: string,
     data: Partial<UserDocument>,
   ): Promise<UserDocument> {
-    const encrypted = this.encryptUserData(
-      data as unknown as Record<string, unknown>,
-    );
-    return super.update(uid, encrypted as Partial<UserDocument>);
+    const encrypted = this.encryptUserData(data);
+    return super.update(uid, encrypted);
   }
 
   async markEmailAsVerified(uid: string): Promise<UserDocument> {
