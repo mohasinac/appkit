@@ -337,6 +337,8 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   align?: ItemsAlign;
   /** Main-axis (horizontal) distribution. Defaults to `"start"`. */
   justify?: JustifyContent;
+  /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
+  textSize?: "xs" | "sm" | "base" | "lg";
   /** Allow children to wrap onto multiple lines. */
   wrap?: boolean;
   /**
@@ -355,11 +357,19 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   children?: React.ReactNode;
 }
 
+const TEXT_SIZE_MAP = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+} as const;
+
 export function Row({
   gap = "md",
   centered = false,
   align = "center",
   justify = "start",
+  textSize,
   wrap = false,
   divide,
   as,
@@ -379,6 +389,7 @@ export function Row({
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],
     wrap ? "appkit-row--wrap" : "",
+    textSize ? TEXT_SIZE_MAP[textSize] : "",
     resolveDivideClass(divide, "row"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,

@@ -119,7 +119,7 @@ export class ConversationsRepository {
         updatedAt: now,
       };
       tx.set(ref, newDoc);
-      return normaliseDoc(stableId, newDoc as Record<string, JsonValue>);
+      return normaliseDoc(stableId, newDoc as unknown as Record<string, JsonValue>);
     });
   }
 
@@ -196,7 +196,7 @@ export class ConversationsRepository {
           updatedAt: now,
         };
         tx.update(ref, patch);
-        return normaliseDoc(conversationId, { ...data, ...patch });
+        return normaliseDoc(conversationId, { ...data, ...patch } as unknown as Record<string, JsonValue>);
       });
     } catch (error) {
       serverLogger.error("ConversationsRepository.appendMessage error", {
