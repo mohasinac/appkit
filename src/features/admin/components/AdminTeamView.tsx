@@ -1,7 +1,6 @@
 "use client";
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
-import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { UserPlus } from "lucide-react";
@@ -60,7 +59,7 @@ interface EmployeeRow {
   secondary: string;
   status: string;
   updatedAt: string;
-  _raw?: Record<string, JsonValue>;
+  _raw?: Record<string, unknown>;
 }
 
 export interface AdminTeamViewProps extends ListingLayoutProps {
