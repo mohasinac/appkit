@@ -99,7 +99,7 @@ export async function TrackOrderView({
                 key={title}
                 className={`${themed.bgSecondary} rounded-xl border ${themed.border} p-6 relative`}
               >
-                <Caption className="absolute top-4 right-4 font-bold">
+                <Caption className="absolute top-4 right-4" weight="bold">
                   {String(index + 1).padStart(2, "0")}
                 </Caption>
                 <Div className={`w-12 h-12 ${bg} ${flex.center} mb-4`} rounded="xl">
