@@ -55,7 +55,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     };
   }
 
-  private encryptReviewData<T extends Record<string, unknown>>(data: T): T {
+  private encryptReviewData<T extends object>(data: T): T {
     let encrypted = encryptPiiFields(data, [...REVIEW_PII_FIELDS]);
     // audit-unknown-ok: TS structural escape — generic param
     encrypted = addPiiIndices(data, REVIEW_PII_INDEX_MAP) as unknown as T;

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 import { productRepository, reviewRepository } from "../../../repositories";
 
 const __P = {
@@ -114,7 +115,7 @@ export interface ProductDetailPageViewProps {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function toProductItem(doc: Record<string, unknown>): ProductItem {
+function toProductItem(doc: FirestoreDocument): ProductItem {
   return {
     id: String(doc.id ?? ""),
     title: String(doc.title ?? doc.name ?? ""),
@@ -135,7 +136,7 @@ function toProductItem(doc: Record<string, unknown>): ProductItem {
   };
 }
 
-function toReview(doc: Record<string, unknown>): Review {
+function toReview(doc: FirestoreDocument): Review {
   const images = Array.isArray(doc.images)
     ? (doc.images as string[]).map((url) => ({ url }))
     : undefined;
@@ -250,7 +251,7 @@ export async function ProductDetailPageView({
   }
 
   // audit-unknown-ok: TS structural escape — Record
-  const p = product as unknown as Record<string, unknown>;
+  const p = product as unknown as FirestoreDocument;
   const currency =
     (p.currency as string | undefined) || getDefaultCurrency();
 
@@ -386,12 +387,12 @@ export async function ProductDetailPageView({
       : Promise.resolve([] as unknown[]),
   ]);
 
-  const reviews: Review[] = (reviewDocs as Record<string, unknown>[]).map(
+  const reviews: Review[] = (reviewDocs as FirestoreDocument[]).map(
     toReview,
   );
   const _now = new Date();
   const relatedItems: ProductItem[] = (
-    relatedDocs as Record<string, unknown>[]
+    relatedDocs as FirestoreDocument[]
   )
     .filter((r) => {
       if (r.id === product.id) return false;
@@ -402,7 +403,8 @@ export async function ProductDetailPageView({
       if (r.listingType === "auction" && r.auctionEndDate) {
         const end = r.auctionEndDate;
         const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
-          ? (end as { toDate: () => Date }).toDate()
+          // audit-unknown-ok: TS structural escape
+          ? (end as unknown as { toDate: () => Date }).toDate()
           : end instanceof Date ? end : new Date(String(end));
         if (endDate <= _now) return false;
       }

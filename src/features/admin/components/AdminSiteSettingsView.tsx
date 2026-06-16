@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Div, Form, FormActions, Grid, Input, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
@@ -258,9 +259,9 @@ export function AdminSiteSettingsView({
     setDefaultTheme(s.appearance?.defaultTheme ?? "light");
     setFontFamily(s.appearance?.fontFamily ?? "inter");
 
-    const themeBlock = (s as Record<string, unknown>).theme as
+    const themeBlock = (s as FirestoreDocument).theme as
       | {
-          themes?: Array<Record<string, unknown>>;
+          themes?: Array<FirestoreDocument>;
           defaultLightThemeId?: string;
           defaultDarkThemeId?: string;
         }
@@ -377,7 +378,7 @@ export function AdminSiteSettingsView({
     setNotifFromName(s.emailSettings?.fromName ?? "");
   }, [data]);
 
-  function useSave(group: string, payload: () => Record<string, unknown>) {
+  function useSave(group: string, payload: () => FirestoreDocument) {
     return useApiMutation({
       mutationFn: async () => {
         await apiClient.put(ADMIN_ENDPOINTS.ADMIN_SITE, payload());
@@ -400,7 +401,8 @@ export function AdminSiteSettingsView({
   }));
   const themeMutation = useSave("Themes", () => ({
     theme: {
-      themes: themeRegistry.themes,
+      // audit-unknown-ok: TS structural escape — domain document type lacks index signature
+      themes: themeRegistry.themes as unknown as FirestoreDocument[],
       defaultLightThemeId: themeRegistry.defaultLightThemeId,
       defaultDarkThemeId: themeRegistry.defaultDarkThemeId,
     },
