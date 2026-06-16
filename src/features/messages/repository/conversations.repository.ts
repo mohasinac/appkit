@@ -12,6 +12,7 @@
 import { getAdminDb } from "../../../providers/db-firebase";
 import { serverLogger } from "../../../monitoring";
 import { CONVERSATION_FIELDS } from "../../../constants/field-names";
+import type { JsonValue } from "../../../schemas/types";
 import {
   CONVERSATIONS_COLLECTION,
   type ConversationDocument,
@@ -28,7 +29,7 @@ function toDate(raw: unknown): Date {
 }
 
 function normaliseMessage(raw: unknown): ConversationMessage {
-  const r = (raw ?? {}) as Record<string, unknown>;
+  const r = (raw ?? {}) as Record<string, JsonValue>;
   return {
     id: String(r.id ?? ""),
     senderId: String(r.senderId ?? ""),
@@ -42,7 +43,7 @@ function normaliseMessage(raw: unknown): ConversationMessage {
   };
 }
 
-function normaliseDoc(id: string, raw: Record<string, unknown>): ConversationDocument {
+function normaliseDoc(id: string, raw: Record<string, JsonValue>): ConversationDocument {
   return {
     id,
     buyerId: String(raw.buyerId ?? ""),
@@ -118,7 +119,7 @@ export class ConversationsRepository {
         updatedAt: now,
       };
       tx.set(ref, newDoc);
-      return normaliseDoc(stableId, newDoc as Record<string, unknown>);
+      return normaliseDoc(stableId, newDoc as Record<string, JsonValue>);
     });
   }
 
