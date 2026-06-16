@@ -1,6 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue, JsonArray } from "@mohasinac/appkit";
 
 import { Row, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback, useMemo } from "react";
@@ -87,7 +87,7 @@ const EMPTY_DRAFT: DraftTemplate = {
 };
 
 interface TemplatesResponse {
-  templates?: unknown[];
+  templates?: JsonArray;
   total?: number;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
@@ -30,7 +30,7 @@ const TYPE_OPTIONS = [
 ] as const;
 
 interface AdminEventsApiResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, sortBy } from "@mohasinac/appkit";
+import { Row, sortBy, type JsonArray } from "@mohasinac/appkit";
 import React from "react";
 import { Badge, Button, Div, Span } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
@@ -40,7 +40,7 @@ interface GroupedRow {
 }
 
 interface GroupedListingsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   meta?: { total: number };
 }
 

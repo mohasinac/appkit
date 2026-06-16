@@ -1,6 +1,6 @@
 "use client";
 
-import { Span, sortBy } from "@mohasinac/appkit";
+import { Span, sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -30,7 +30,7 @@ interface ClassifiedRow {
 }
 
 interface ProductsResponse {
-  products?: unknown[];
+  products?: JsonArray;
   meta?: { total: number };
 }
 

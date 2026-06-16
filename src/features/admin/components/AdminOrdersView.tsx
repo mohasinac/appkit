@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { FilterChipGroup, ListingLayout, useToast } from "../../../ui";
@@ -21,7 +21,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { AdminOrderEditorView } from "./AdminOrderEditorView";
 
 interface AdminOrdersResponse {
-  orders?: unknown[];
+  orders?: JsonArray;
   meta?: { total?: number };
 }
 

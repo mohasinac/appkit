@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -49,7 +49,7 @@ function formatGroup(group: string): string {
 }
 
 interface AdminTeamResponse {
-  users?: unknown[];
+  users?: JsonArray;
   total?: number;
   meta?: { total?: number };
 }

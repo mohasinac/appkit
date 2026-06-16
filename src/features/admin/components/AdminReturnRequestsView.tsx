@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,7 +18,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 
 interface AdminOrdersResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

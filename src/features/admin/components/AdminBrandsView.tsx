@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, ListingLayout, Text } from "../../../ui";
@@ -19,7 +19,7 @@ import { Span } from "../../../ui";
 import type { AdminTableColumn } from "../types";
 
 interface AdminBrandsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

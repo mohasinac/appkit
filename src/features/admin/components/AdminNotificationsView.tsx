@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
@@ -24,7 +24,7 @@ import { NOTIFICATION_TYPES } from "../../../constants/notification-types";
 const NOTIF_TYPES = ["All", ...NOTIFICATION_TYPES] as const;
 
 interface AdminNotificationsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

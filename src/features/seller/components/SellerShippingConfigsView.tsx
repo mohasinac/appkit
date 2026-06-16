@@ -1,6 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue, JsonArray } from "@mohasinac/appkit";
 
 import { Stack, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -48,7 +48,7 @@ interface ShippingConfigRow {
 }
 
 interface ShippingConfigsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

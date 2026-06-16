@@ -4,7 +4,7 @@
  * AdminDigitalCodesView — admin browse of digital-code listings (W1-29).
  */
 
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
@@ -20,7 +20,7 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 
 interface AdminProductsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { BID_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface BidResult {
   id: string;
@@ -8,7 +9,7 @@ export interface BidResult {
   bidAmount: number;
   isWinning: boolean;
   currency: string;
-  [key: string]: unknown;
+  [key: string]: JsonValue;
 }
 
 export interface PlaceBidPayload {

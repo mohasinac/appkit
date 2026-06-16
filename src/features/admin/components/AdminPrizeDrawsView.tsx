@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Pencil } from "lucide-react";
@@ -40,7 +40,7 @@ interface PrizeDrawAdminRow extends AdminListingScaffoldRow {
 }
 
 interface AdminProductsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

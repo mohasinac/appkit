@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -65,7 +65,7 @@ interface BidRow {
 }
 
 interface SellerBidsResponse {
-  bids?: unknown[];
+  bids?: JsonArray;
   total?: number;
   auctions?: { id: string; title: string }[];
 }

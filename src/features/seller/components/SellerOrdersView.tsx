@@ -1,6 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue, JsonArray } from "@mohasinac/appkit";
 
 import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -96,7 +96,7 @@ interface OrderDetail {
 }
 
 interface SellerOrdersResponse {
-  orders?: unknown[];
+  orders?: JsonArray;
   meta?: { total: number };
 }
 

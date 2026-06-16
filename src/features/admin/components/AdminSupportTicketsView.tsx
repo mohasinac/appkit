@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
@@ -38,7 +38,7 @@ const STATUS_BADGE: Record<string, string> = {
 };
 
 interface AdminSupportTicketsResponse {
-  tickets?: unknown[];
+  tickets?: JsonArray;
   meta?: { total?: number; filteredTotal?: number };
   total?: number;
 }

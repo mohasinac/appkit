@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -30,7 +30,7 @@ const TAB_INACTIVE_CLASS =
   "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800";
 
 interface AdminFeaturesResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

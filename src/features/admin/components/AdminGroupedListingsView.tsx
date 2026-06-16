@@ -5,7 +5,7 @@
  * W1-29 — pairs with the new GET /api/admin/grouped-listings endpoint.
  */
 
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -29,7 +29,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface AdminGroupedListingsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

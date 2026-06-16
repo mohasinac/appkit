@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import React from "react";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -15,7 +15,7 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 
 interface SublistingCategoriesResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

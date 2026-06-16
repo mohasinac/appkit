@@ -1,6 +1,6 @@
 "use client";
 
-import { Span, sortBy } from "@mohasinac/appkit";
+import { Span, sortBy, type JsonArray } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
@@ -30,7 +30,7 @@ interface BundleRow {
 }
 
 interface ProductsResponse {
-  products?: unknown[];
+  products?: JsonArray;
   meta?: { total: number };
 }
 

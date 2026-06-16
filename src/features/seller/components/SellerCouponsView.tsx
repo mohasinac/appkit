@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -24,7 +24,7 @@ interface CouponRow {
 }
 
 interface SellerCouponsResponse {
-  coupons?: unknown[];
+  coupons?: JsonArray;
   total?: number;
 }
 

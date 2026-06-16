@@ -1,6 +1,7 @@
 import React from "react";
 import { Div, Heading, Stack } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
+import type { JsonArray } from "@mohasinac/appkit";
 
 /** Minimal shape of a per-store/per-type order group surfaced to the slot. */
 export interface CartOrderGroup {
@@ -9,7 +10,7 @@ export interface CartOrderGroup {
   storeId: string;
   storeName: string;
   orderType: string;
-  items: unknown[];
+  items: JsonArray;
   subtotalInPaise: number;
   shippingFeeInPaise: number;
 }

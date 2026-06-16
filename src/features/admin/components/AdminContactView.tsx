@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -24,7 +24,7 @@ import { AdminContactEditorView } from "./AdminContactEditorView";
 import { apiClient } from "../../../http";
 
 interface AdminContactResponse {
-  submissions?: unknown[];
+  submissions?: JsonArray;
   meta?: { filteredTotal?: number; total?: number };
 }
 

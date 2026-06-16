@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -24,7 +24,7 @@ import type { Review, ReviewStatus } from "../../reviews/types";
 import { apiClient } from "../../../http";
 
 interface AdminReviewsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

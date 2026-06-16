@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -32,7 +32,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 
 interface AdminPayoutsResponse {
-  payouts?: unknown[];
+  payouts?: JsonArray;
   meta?: { total?: number };
 }
 

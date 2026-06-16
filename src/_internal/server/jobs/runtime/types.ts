@@ -17,6 +17,7 @@ import type { JsonValue } from "@mohasinac/appkit";
 export interface JobLogger {
   info(message: string, meta?: Record<string, JsonValue>): void;
   warn(message: string, meta?: Record<string, JsonValue>): void;
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error(message: string, err?: unknown, meta?: Record<string, JsonValue>): void;
 }
 

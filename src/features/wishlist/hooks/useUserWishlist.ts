@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { JsonArray } from "@mohasinac/appkit";
 
 export interface UserWishlistItem<TProduct = unknown> {
   productId: string;
@@ -16,7 +17,7 @@ export interface UserWishlistResponse<TProduct = unknown> {
 interface UseUserWishlistOptions<TProduct> {
   enabled?: boolean;
   endpoint?: string;
-  queryKey?: unknown[];
+  queryKey?: JsonArray;
   initialData?: UserWishlistResponse<TProduct>;
 }
 

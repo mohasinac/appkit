@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback } from "react";
@@ -23,7 +23,7 @@ import { AdminCouponEditorView } from "./AdminCouponEditorView";
 import { CouponCard } from "../../promotions/components/CouponCard";
 
 interface AdminCouponsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

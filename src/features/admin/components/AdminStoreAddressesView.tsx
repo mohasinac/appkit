@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import React from "react";
 import {
   toRecordArray,
@@ -11,7 +11,7 @@ import type { ListingViewConfig } from "./DataListingView";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface AdminStoreAddressesResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

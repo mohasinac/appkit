@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import type { JsonArray } from "@mohasinac/appkit";
 
 export interface ScamOgData {
   displayName: string;
@@ -9,7 +10,7 @@ export interface ScamOgData {
 interface ScammerDocLike {
   displayNames?: string[];
   scamType?: string;
-  incidents?: unknown[];
+  incidents?: JsonArray;
   totalReports?: number;
 }
 

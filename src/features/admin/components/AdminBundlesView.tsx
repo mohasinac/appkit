@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Badge, Button, Div, Stack, Text, TextLink, useToast } from "../../../ui";
@@ -22,7 +22,7 @@ import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers"
 import type { AdminTableColumn } from "../types";
 
 interface BundlesResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

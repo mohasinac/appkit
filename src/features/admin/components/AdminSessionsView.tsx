@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -28,7 +28,7 @@ function maskIp(ip?: string): string {
 }
 
 interface AdminSessionsResponse {
-  sessions?: unknown[];
+  sessions?: JsonArray;
   count?: number;
 }
 

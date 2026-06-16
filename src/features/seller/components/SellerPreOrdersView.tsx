@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -33,7 +33,7 @@ interface PreOrderRow {
 }
 
 interface SellerProductsResponse {
-  products?: unknown[];
+  products?: JsonArray;
   meta?: { total: number };
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,7 +32,7 @@ export interface AdminCarouselViewProps extends ListingLayoutProps {
 
 interface AdminCarouselResponse {
   data?: unknown;
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy } from "@mohasinac/appkit";
+import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -31,7 +31,7 @@ interface DigitalCodeRow {
 }
 
 interface ProductsResponse {
-  products?: unknown[];
+  products?: JsonArray;
   meta?: { total: number };
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
@@ -18,7 +18,7 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 
 interface SellerOffersResponse {
-  offers?: unknown[];
+  offers?: JsonArray;
   meta?: { total: number };
 }
 

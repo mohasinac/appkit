@@ -1,6 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue, JsonArray } from "@mohasinac/appkit";
 
 import { Row, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -46,7 +46,7 @@ interface PayoutMethodRow {
 }
 
 interface PayoutMethodsResponse {
-  items?: unknown[];
+  items?: JsonArray;
   total?: number;
 }
 

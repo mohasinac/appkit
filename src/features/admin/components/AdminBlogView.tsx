@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
@@ -23,7 +23,7 @@ const FEATURED_TABS = [
 ] as const;
 
 interface AdminBlogResponse {
-  posts?: unknown[];
+  posts?: JsonArray;
   meta?: { filteredTotal?: number; total?: number };
 }
 
