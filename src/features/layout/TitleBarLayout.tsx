@@ -292,9 +292,9 @@ export function TitleBarLayout({
     >
       {/* Promo strip */}
       {promoStripText && (
-        <Div className="bg-gradient-to-r from-primary-700 to-secondary-600 dark:from-primary-700 dark:to-cobalt-700 text-white text-xs text-center font-medium" padding="y-2xs">
+        <Section tone="accent-banner" className="text-white text-xs text-center font-medium" padding="y-2xs">
           {promoStripText}
-        </Div>
+        </Section>
       )}
 
       <Div className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px]" padding="x-md">

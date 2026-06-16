@@ -140,11 +140,11 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
       <Table className="w-full text-left min-w-[400px]">
         <Thead>
           <Tr border="default">
-            <Th className="pb-2 pr-3 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">Image</Th>
-            <Th className="pb-2 pr-3 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">Name</Th>
-            <Th className="pb-2 pr-3 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">Price</Th>
-            <Th className="pb-2 pr-3 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold">Condition</Th>
-            <Th className="pb-2 text-zinc-500 dark:text-zinc-400" size="xs" weight="semibold"></Th>
+            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Image</Th>
+            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Name</Th>
+            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Price</Th>
+            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Condition</Th>
+            <Th className="pb-2" color="muted" size="xs" weight="semibold"></Th>
           </Tr>
         </Thead>
         <Tbody>

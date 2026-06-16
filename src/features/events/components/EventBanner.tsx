@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useMemo, useState } from "react";
 import { useEvents } from "../hooks/useEvents";
-import { Button, TextLink } from "../../../ui";
+import { Button, Section, TextLink } from "../../../ui";
 import type { EventItem } from "../types";
 
 export interface EventBannerProps {

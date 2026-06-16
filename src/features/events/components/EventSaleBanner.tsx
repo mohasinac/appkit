@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, Span, Stack, Text } from "../../../ui";
+import { Div, Heading, Section, Span, Stack, Text } from "../../../ui";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -41,7 +41,7 @@ export function EventSaleBanner({
     : `${ROUTES.PUBLIC.PRODUCTS}?onSale=true`;
 
   return (
-    <Div className={`bg-gradient-to-br from-[var(--appkit-color-primary)] to-[var(--appkit-color-secondary)] ${__P.p6} text-white`} rounded="2xl" shadow="lg">
+    <Section tone="accent-banner" className={`${__P.p6} text-white`} rounded="2xl" shadow="lg">
       <Stack gap="md">
         <Stack gap="xs">
           <Heading level={2} weight="bold" size="3xl">
@@ -61,6 +61,6 @@ export function EventSaleBanner({
           </Link>
         </Div>
       </Stack>
-    </Div>
+    </Section>
   );
 }
