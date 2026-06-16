@@ -69,7 +69,7 @@ function toAuthUser(record: {
   emailVerified: boolean;
   disabled: boolean;
   metadata: { creationTime?: string };
-  customClaims?: Record<string, unknown>;
+  customClaims?: Record<string, JsonValue>;
 }): AuthUser {
   return {
     uid: record.uid,
@@ -101,7 +101,7 @@ export const firebaseAuthProvider: IAuthProvider = {
 
   async createCustomToken(
     uid: string,
-    claims?: Record<string, unknown>,
+    claims?: Record<string, JsonValue>,
   ): Promise<string> {
     return getAdminAuthLite().createCustomToken(uid, claims);
   },

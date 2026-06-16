@@ -50,7 +50,7 @@ export interface IAuthProvider {
   verifyToken(token: string): Promise<AuthPayload>;
   createCustomToken(
     uid: string,
-    claims?: Record<string, unknown>,
+    claims?: Record<string, JsonValue>,
   ): Promise<string>;
   getUser(uid: string): Promise<AuthUser | null>;
   createUser(data: CreateUserInput): Promise<AuthUser>;

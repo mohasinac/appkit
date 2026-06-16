@@ -25,6 +25,7 @@
 //      CLAUDE.md seed table has a `firestore.<collection>` entry.
 
 import type { SchemaRegistry } from "./types";
+import type { JsonValue } from "@mohasinac/appkit";
 
 // ── W2 — Firestore document schemas ──────────────────────────────────────────
 import { addressFirestoreSchema } from "../features/addresses/schemas";
@@ -130,7 +131,7 @@ const forms = {
 // ---------------------------------------------------------------------------
 // Sieve filter-grammar schemas — populated by W6. Each collection registers
 // a Zod schema for its filter clauses so `listingProcessor` and per-repo
-// `parseSieveFilters` return typed clauses (not `Record<string, unknown>`).
+// `parseSieveFilters` return typed clauses (not `Record<string, JsonValue>`).
 // ---------------------------------------------------------------------------
 const sieve = {
   // Populated in W6.

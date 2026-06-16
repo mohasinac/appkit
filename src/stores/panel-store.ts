@@ -1,9 +1,10 @@
 import { create } from "zustand";
+import type { JsonValue } from "@mohasinac/appkit";
 
 interface PanelState {
   panelId: string | null;
-  data: Record<string, unknown>;
-  openPanel: (panelId: string, data?: Record<string, unknown>) => void;
+  data: Record<string, JsonValue>;
+  openPanel: (panelId: string, data?: Record<string, JsonValue>) => void;
   closePanel: () => void;
   isPanelOpen: (panelId: string) => boolean;
 }

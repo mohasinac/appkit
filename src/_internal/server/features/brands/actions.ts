@@ -1,6 +1,7 @@
 "use server";
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
+import type { JsonValue } from "@mohasinac/appkit";
 import { categoriesRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { brandInputSchema, brandUpdateSchema, type BrandInput, type BrandUpdate } from "../../../shared/features/brands/schema";
@@ -13,7 +14,7 @@ import { ValidationError } from "../../../shared/errors/index";
  * SB-UNI-C consolidated brands into the categories collection.
  */
 function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
-  const out: Record<string, unknown> = {};
+  const out: Record<string, JsonValue> = {};
   if ("name" in input && input.name !== undefined) out.name = input.name;
   if ("slug" in input && input.slug !== undefined) {
     out.slug = input.slug;

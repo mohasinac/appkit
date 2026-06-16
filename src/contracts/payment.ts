@@ -42,7 +42,7 @@ export interface IPaymentProvider {
   createOrder(
     amount: number,
     currency: string,
-    metadata?: Record<string, unknown>,
+    metadata?: Record<string, JsonValue>,
   ): Promise<PaymentOrder>;
   /** Returns true if the webhook signature is valid. */
   verifyWebhook(payload: string, signature: string): boolean;

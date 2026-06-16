@@ -1,5 +1,6 @@
 // appkit/src/next/middleware/pii-scrubber.ts
 import type { NextRequest, NextResponse as NR } from "next/server";
+import type { JsonValue } from "@mohasinac/appkit";
 import { NextResponse } from "next/server";
 import type { BaseRequestContext, Middleware } from "./types";
 
@@ -12,7 +13,7 @@ function scrubValue(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(scrubValue);
   if (value !== null && typeof value === "object") {
     return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([k, v]) => [
+      Object.entries(value as Record<string, JsonValue>).map(([k, v]) => [
         k,
         scrubValue(v),
       ]),
