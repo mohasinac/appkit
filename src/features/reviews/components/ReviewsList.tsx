@@ -80,7 +80,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
                 {displayName}
               </Span>
               {review.verified && (
-                <Span size="xs" weight="medium" className="bg-success-surface text-success" rounded="full" padding="pill-xs">
+                <Span color="success" surface="success-surface" size="xs" weight="medium" rounded="full" padding="pill-xs">
                   Verified
                 </Span>
               )}

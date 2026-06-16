@@ -234,7 +234,7 @@ export function SellerPayoutMethodsView({
                         <Text size="sm" weight="medium">{row.label}</Text>
                         <TypeBadge type={row.type} />
                         {row.isDefault && (
-                          <Span size="xs" weight="medium" className="inline-flex items-center bg-success-surface text-success" rounded="full" padding="pill-xs">
+                          <Span color="success" surface="success-surface" size="xs" weight="medium" className="inline-flex items-center" rounded="full" padding="pill-xs">
                             Default
                           </Span>
                         )}

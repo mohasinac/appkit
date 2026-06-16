@@ -56,7 +56,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Text>
           )}
           {isOutOfStock && (
-            <Span weight="semibold" className="flex-shrink-0 bg-error-surface px-1.5 py-0.5 text-[10px] tracking-wide text-error" rounded="default" transform="uppercase">
+            <Span color="error" surface="danger-surface" weight="semibold" className="flex-shrink-0 px-1.5 py-0.5 text-[10px] tracking-wide" rounded="default" transform="uppercase">
               Out of Stock
             </Span>
           )}

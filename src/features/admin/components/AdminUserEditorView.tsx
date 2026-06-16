@@ -102,9 +102,9 @@ function HardBanPanel({
       <Row justify="between" gap="sm" className="mb-2">
         <Span size="sm" weight="medium" color="muted">Hard ban</Span>
         {isHardBanned ? (
-          <Span size="xs" weight="semibold" className="bg-error-surface text-error" rounded="full" padding="pill-xs">Banned</Span>
+          <Span color="error" surface="danger-surface" size="xs" weight="semibold" rounded="full" padding="pill-xs">Banned</Span>
         ) : (
-          <Span size="xs" weight="semibold" className="bg-success-surface text-success" rounded="full" padding="pill-xs">Active</Span>
+          <Span color="success" surface="success-surface" size="xs" weight="semibold" rounded="full" padding="pill-xs">Active</Span>
         )}
       </Row>
       {isHardBanned ? (

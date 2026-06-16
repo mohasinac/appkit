@@ -66,7 +66,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
       <Div>
         <Text size="sm" weight="medium">{row.label}</Text>
         {row.isDefault && (
-          <Span size="xs" weight="medium" className="mt-0.5 inline-flex items-center px-1.5 py-px bg-success-surface text-success" rounded="full">
+          <Span color="success" surface="success-surface" size="xs" weight="medium" className="mt-0.5 inline-flex items-center px-1.5 py-px" rounded="full">
             Default
           </Span>
         )}

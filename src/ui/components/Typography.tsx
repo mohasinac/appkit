@@ -342,7 +342,7 @@ export function Caption({
 /** Inline-decorations allowed on Span (pill chips, code-like wraps, etc). */
 type SpanRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-xs" | "pill-sm" | "pill-md" | "pill-lg";
-type SpanBg = "none" | "muted" | "subtle" | "default";
+type SpanBg = "none" | "muted" | "subtle" | "default" | "success-surface" | "danger-surface" | "warning-surface" | "info-surface";
 
 const SPAN_ROUNDED_MAP: Record<SpanRounded, string> = {
   none: "",
@@ -374,6 +374,10 @@ const SPAN_BG_MAP: Record<SpanBg, string> = {
   muted: "bg-[var(--appkit-color-bg)]",
   subtle: "bg-[var(--appkit-color-border-subtle)]",
   default: "bg-[var(--appkit-color-surface)]",
+  "success-surface": "bg-[var(--appkit-color-success-surface)]",
+  "danger-surface": "bg-[var(--appkit-color-error-surface)]",
+  "warning-surface": "bg-[var(--appkit-color-warning-surface)]",
+  "info-surface": "bg-[var(--appkit-color-info-surface)]",
 };
 
 interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
