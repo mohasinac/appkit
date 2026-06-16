@@ -6,6 +6,7 @@
  */
 
 import { siteSettingsRepository } from "../repository/site-settings.repository";
+import type { JsonValue } from "@mohasinac/appkit";
 import { serverLogger } from "../../../monitoring/index";
 
 export async function getSiteSettings(): Promise<unknown> {
@@ -15,7 +16,7 @@ export async function getSiteSettings(): Promise<unknown> {
 
 export async function updateSiteSettings(
   adminId: string,
-  data: Record<string, unknown>,
+  data: Record<string, JsonValue>,
 ): Promise<void> {
   await siteSettingsRepository.updateSingleton(data as any);
   serverLogger.info("updateSiteSettings", { adminId });

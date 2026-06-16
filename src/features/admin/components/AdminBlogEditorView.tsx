@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, Div, Heading, Input, RichTextEditor, RichTextRenderer, Row, Select, Span, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
@@ -155,7 +156,7 @@ export function AdminBlogEditorView({
   // --- save ---
   const saveMutation = useApiMutation({
     mutationFn: async () => {
-      const payload: Record<string, unknown> = {
+      const payload: Record<string, JsonValue> = {
         title: draft.title,
         slug: draft.slug || toSlug(draft.title),
         excerpt: draft.excerpt,
