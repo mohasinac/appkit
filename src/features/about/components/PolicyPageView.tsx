@@ -92,7 +92,7 @@ export async function PolicyPageView({
             )}
 
             {/* Policy sections from i18n */}
-            <Stack gap="xl" className="space-y-10">
+            <Stack gap="xl">
               {sections.map((section, i) => (
                 <Section key={i}>
                   <Heading level={2} className="mb-3">

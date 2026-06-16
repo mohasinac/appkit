@@ -196,7 +196,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
       <Section padding="y-3xl" surface="muted">
         <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
-          <Stack className={`${masonryClass} space-y-4`} gap="md">
+          <Stack className={`${masonryClass}`} gap="md">
             {cards.map((card) => (
               <Div key={card.id} className="break-inside-avoid">
                 <CardItem card={card} />

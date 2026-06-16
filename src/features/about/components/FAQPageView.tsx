@@ -106,7 +106,7 @@ export async function FAQPageView({
                 </Text>
               </Section>
             ) : (
-              <Stack gap="sm" className="space-y-3">
+              <Stack gap="sm">
                 {visibleItems.map((item, i) => (
                   <Details
                     key={i}
