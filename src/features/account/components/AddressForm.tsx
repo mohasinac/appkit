@@ -205,7 +205,7 @@ export function AddressForm({
         label={mergedLabels.setDefault}
       />
 
-      <Row className={`${THEME_CONSTANTS.spacing.gap.xs}`} padding="t-xs" align="center" justify="start">
+      <Row padding="t-xs" align="center" justify="start" gap="xs">
         <Button
           type="button"
           variant="outline"

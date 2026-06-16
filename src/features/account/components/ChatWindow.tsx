@@ -37,7 +37,7 @@ export function ChatWindow({
         justify="between"
         className="border-b border-neutral-200 dark:border-neutral-700 mb-3" padding="b-sm"
       >
-        <Row className={THEME_CONSTANTS.spacing.gap.xs}>
+        <Row gap="xs">
           {labels.title && <Heading level={4}>{labels.title}</Heading>}
           <Span
             className={`w-2 h-2 ${isConnected ? CLS_DOT_ON : "bg-zinc-400"}`} rounded="full"

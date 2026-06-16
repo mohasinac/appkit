@@ -43,7 +43,7 @@ export function MessagesView({
 
       {/* Chat window */}
       {chatId ? (
-        <Stack className={`${THEME_CONSTANTS.spacing.gap.xs}`}>
+        <Stack gap="xs">
           {renderMobileBack?.()}
           {renderChatWindow?.()}
         </Stack>
