@@ -238,7 +238,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         {isLoading ? (
           <Div className={gridClass}>
             {Array.from({ length: 8 }).map((_, i) => (
-              <Div key={i} className={`dark:border-slate-700 ${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
+              <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-square" surface="subtle" />
                 <Stack className={`${__P.p3}`} gap="sm">
                   <Div className="h-3 w-3/4" surface="subtle" rounded="default" />

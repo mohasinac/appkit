@@ -182,7 +182,7 @@ export function PrizeDrawsIndexListing({
             {Array.from({ length: 8 }).map((_, i) => (
               <Div
                 key={i}
-                className="dark:border-slate-700 overflow-hidden animate-pulse" border="subtle" rounded="xl"
+                className="overflow-hidden animate-pulse" border="subtle" rounded="xl"
               >
                 <Div className="aspect-square" surface="subtle" />
                 <Stack className={`${__P.p3}`} gap="sm">

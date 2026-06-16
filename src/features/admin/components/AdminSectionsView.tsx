@@ -954,7 +954,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         {statsBuilder.stats.map((stat, index) => (
-          <Stack key={`stat-row-${index}`} className={`${__P.p3} dark:border-slate-700`} gap="3" rounded="md" border="default">
+          <Stack key={`stat-row-${index}`} className={`${__P.p3}`} gap="3" rounded="md" border="default">
             <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Stat {index + 1}
             </Text>
@@ -1666,7 +1666,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Text size="sm" weight="semibold" color="primary">Trust Indicators Builder</Text>
         <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         {trustIndicatorsBuilder.indicators.map((ind, index) => (
-          <Stack key={ind.id} className={`${__P.p3} dark:border-slate-700`} gap="sm" rounded="md" border="default">
+          <Stack key={ind.id} className={`${__P.p3}`} gap="sm" rounded="md" border="default">
             <Row align="center" justify="between">
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Indicator {index + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
@@ -2543,7 +2543,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <DataTable rows={rows} isLoading={isLoading} emptyLabel="No sections found" />
       </Div>
 
-      <Stack className={`mt-4 ${__P.p4} dark:border-slate-700 dark:bg-slate-900`} gap="3" rounded="xl" surface="default" border="default">
+      <Stack className={`mt-4 ${__P.p4}`} gap="3" rounded="xl" surface="default" border="default">
         <Row align="center" justify="between" gap="3">
           <Text size="sm" weight="semibold" color="primary">
             Reorder Sections

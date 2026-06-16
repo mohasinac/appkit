@@ -1,6 +1,7 @@
 "use client";
 
 import { Code, useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
@@ -320,7 +321,7 @@ export function AdminUserEditorView({
       if (instagram.trim()) socialLinks.instagram = instagram.trim();
       if (facebook.trim()) socialLinks.facebook = facebook.trim();
       if (linkedin.trim()) socialLinks.linkedin = linkedin.trim();
-      const publicProfile: Record<string, unknown> = {};
+      const publicProfile: Record<string, JsonValue> = {};
       if (bio.trim()) publicProfile.bio = bio.trim();
       if (location.trim()) publicProfile.location = location.trim();
       if (website.trim()) publicProfile.website = website.trim();

@@ -135,7 +135,7 @@ export function TrustFeaturesSection({
   return (
     <Section
       ref={sectionRef}
-      className={`py-14 dark:bg-slate-900/80 ${className}`} padding="x-md" surface="muted"
+      className={`py-14 ${className}`} padding="x-md" surface="muted"
     >
       <Div className="max-w-6xl mx-auto">
         {title && (

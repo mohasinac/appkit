@@ -65,7 +65,7 @@ function renderCopilotChatPanel(props: {
 }) {
   const { messages, conversationId, isLoading, error, input, setInput, labels, messagesEndRef, handleSubmit } = props;
   return (
-    <Stack className="border border-neutral-200 dark:bg-slate-800/60 h-[calc(100vh-300px)]" surface="default" rounded="xl">
+    <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
       <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
         <Text className="text-neutral-500" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
@@ -195,7 +195,7 @@ export function AdminCopilotView({
           </Row>
         ),
         <Div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
-          <Stack className="border border-neutral-200 dark:bg-slate-800/60 h-[calc(100vh-300px)]" surface="default" rounded="xl">
+          <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
             <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               <Text className="text-neutral-500" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}

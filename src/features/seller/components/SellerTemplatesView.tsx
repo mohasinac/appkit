@@ -404,7 +404,7 @@ export function SellerTemplatesView({
             {Array.from({ length: 5 }).map((_, i) => (
               <Div
                 key={i}
-                className="h-14 animate-pulse dark:border-slate-700" border="subtle" surface="muted" rounded="xl"
+                className="h-14 animate-pulse" border="subtle" surface="muted" rounded="xl"
               />
             ))}
           </Stack>

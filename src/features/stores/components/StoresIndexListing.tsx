@@ -211,7 +211,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         {isLoading ? (
           <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Div key={i} className={`dark:border-slate-700 ${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
+              <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-video" surface="subtle" />
                 <Div className={`${__P.p4} space-y-2.5`}>
                   <Row align="center" gap="sm">

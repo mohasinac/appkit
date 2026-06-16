@@ -224,7 +224,7 @@ function OrderDetailDrawer({
             )}
 
             {/* Total */}
-            <Row className="dark:bg-slate-800/60 px-4" surface="muted" padding="y-sm" align="center" justify="between" rounded="lg">
+            <Row className="px-4" surface="muted" padding="y-sm" align="center" justify="between" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
               <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toRupees(order.totalAmount ?? 0)}</Text>
             </Row>

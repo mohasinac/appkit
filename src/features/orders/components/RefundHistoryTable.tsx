@@ -88,7 +88,7 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
   if (events.length === 0 && order.contestable !== false) return null;
 
   return (
-    <Div className={`dark:border-zinc-800 ${className}`} rounded="xl" surface="default" border="default">
+    <Div className={`${className}`} rounded="xl" surface="default" border="default">
       {order.contestable === false && (
         <Div className="rounded-t-xl px-4" surface="warning-surface" padding="y-sm">
           <Row gap="sm" align="center">

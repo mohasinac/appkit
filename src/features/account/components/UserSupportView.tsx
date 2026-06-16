@@ -188,7 +188,7 @@ function renderTicketListArea(props: {
         </Div>
       )}
       {!isLoading && tickets.length === 0 && (
-        <Div className="px-6 text-center dark:bg-zinc-900/40" surface="muted" padding="y-2xl" rounded="xl" border="default">
+        <Div className="px-6 text-center" surface="muted" padding="y-2xl" rounded="xl" border="default">
           <Text size="sm" color="muted">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}
@@ -266,7 +266,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
             {selectedTicket.orderId && <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">Order: {selectedTicket.orderId}</Span>}
           </Div>
           {selectedTicket.description && (
-            <Div className={`${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`} rounded="lg" surface="muted" border="default">
+            <Div className={`${__P.p3}`} rounded="lg" surface="muted" border="default">
               <Text className="mb-1 tracking-wide" size="xs" weight="semibold" color="muted" transform="uppercase">Your description</Text>
               <Text className="whitespace-pre-wrap" color="primary" size="sm">{selectedTicket.description}</Text>
             </Div>

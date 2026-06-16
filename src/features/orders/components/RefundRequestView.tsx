@@ -45,7 +45,7 @@ export function RefundRequestView({
   if (order.isNonRefundable) {
     return (
       <Div
-        className={`dark:border-zinc-800 ${className}`} rounded="xl" padding="md" surface="muted" border="default"
+        className={`${className}`} rounded="xl" padding="md" surface="muted" border="default"
       >
         <Text size="sm" color="muted">
           {REFUND_COPY.request.nonRefundableMessage}

@@ -43,8 +43,7 @@ export function CustomSectionsEditor({
     <Stack gap="md">
       {sections.map((section, i) => (
         <Stack
-          key={section.id}
-          className="dark:bg-zinc-900/40" gap="3" surface="muted" rounded="xl" padding="md" border="default"
+          key={section.id} gap="3" surface="muted" rounded="xl" padding="md" border="default"
         >
           <Row align="center" justify="between" gap="sm">
             <Heading

@@ -350,7 +350,7 @@ export function AdminSupportTicketDetailView({
 
         {/* Description */}
         {description && (
-          <Div className={`${__P.p3} dark:border-zinc-700 dark:bg-zinc-900/40`} rounded="lg" surface="muted" border="default">
+          <Div className={`${__P.p3}`} rounded="lg" surface="muted" border="default">
             <Text className="mb-1 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Description
             </Text>

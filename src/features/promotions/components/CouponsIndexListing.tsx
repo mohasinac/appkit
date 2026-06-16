@@ -145,7 +145,7 @@ export function CouponsIndexListing({
           </button>
 
           {/* Search */}
-          <Row surface="default" className={`flex-1 ${__O.hidden} dark:border-slate-600`} border="strong" rounded="lg">
+          <Row surface="default" className={`flex-1 ${__O.hidden}`} border="strong" rounded="lg">
             <input
               type="text"
               value={searchInput}

@@ -61,12 +61,12 @@ function renderBundleSelectedChips(props: {
   const { value, metadata, remove } = props;
   if (value.length === 0) return null;
   return (
-    <Div className={`flex flex-wrap gap-2 ${__P.p3} dark:border-zinc-700 dark:bg-zinc-900`} rounded="lg" surface="muted" border="default">
+    <Div className={`flex flex-wrap gap-2 ${__P.p3}`} rounded="lg" surface="muted" border="default">
       {value.map((id) => {
         const meta = metadata[id];
         const label = meta?.title ?? id;
         return (
-          <Row key={id} gap="xs" align="center" className="py-1 text-xs dark:border-zinc-600" border="strong" padding="x-sm" surface="default" rounded="full">
+          <Row key={id} gap="xs" align="center" className="py-1 text-xs" border="strong" padding="x-sm" surface="default" rounded="full">
             <Text size="xs" className="max-w-[200px] truncate">{label}</Text>
             <Button variant="ghost" size="sm" aria-label={BUNDLE_COPY.picker.removeAria(label)} onClick={() => remove(id)}>×</Button>
           </Row>

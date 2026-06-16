@@ -159,7 +159,7 @@ function renderPayoutsInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], c
       <Div className="grid gap-5 md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
           <Div key={title} className={`border ${__P.p5} ${color}`} rounded="xl">
-            <Div className={`w-10 h-10 dark:bg-white/10 ${flex.center} mb-3`} surface="default" rounded="lg">
+            <Div className={`w-10 h-10 ${flex.center} mb-3`} surface="default" rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Div>
             <Text className="mb-1" weight="semibold">{title}</Text>

@@ -263,7 +263,7 @@ export async function PrizeDrawDetailPageView({
                 </Heading>
               </Div>
 
-              <Div className={`dark:bg-zinc-900/60 ${__P.p4}`} border="subtle" rounded="xl" surface="muted">
+              <Div className={`${__P.p4}`} border="subtle" rounded="xl" surface="muted">
                 <Stack gap="sm">
                   <Row justify="between" align="center">
                     <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
@@ -305,7 +305,7 @@ export async function PrizeDrawDetailPageView({
               )}
 
               {safeSeller && (
-                <Div className={`dark:bg-zinc-900/60 ${__P.p3}`} border="subtle" rounded="xl" surface="muted">
+                <Div className={`${__P.p3}`} border="subtle" rounded="xl" surface="muted">
                   <Row justify="between" align="center">
                     <Div>
                       <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">
@@ -344,7 +344,7 @@ export async function PrizeDrawDetailPageView({
           renderBuyBar={() => (
             <Div
               id="prize-draw-buy-bar"
-              className="dark:bg-zinc-900/60 p-5" border="subtle" surface="muted" rounded="xl"
+              className="p-5" border="subtle" surface="muted" rounded="xl"
             >
               <PrizeDrawEntryActions
                 productId={String(product.id)}
