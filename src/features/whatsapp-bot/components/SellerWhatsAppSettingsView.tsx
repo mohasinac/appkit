@@ -225,7 +225,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
   if (!hasCapability) {
     return (
-      <Div className="max-w-xl mx-auto px-4" padding="y-xl">
+      <Div className="max-w-xl mx-auto" paddingY="y-xl" paddingX="x-md">
         <Alert variant="warning">
           <Text weight="medium">WhatsApp catalog sync is not enabled for your store.</Text>
           <Text className="mt-1" size="sm">
@@ -237,7 +237,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   }
 
   return (
-    <Stack gap="xl" className="max-w-2xl mx-auto px-4" padding="y-lg">
+    <Stack gap="xl" className="max-w-2xl mx-auto" paddingY="y-lg" paddingX="x-md">
 
       {/* ── Section 1: Step-by-step setup guide ─────────────────────────── */}
       <Section>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Span, sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, Div, RowActionMenu, Text } from "../../../ui";
@@ -149,7 +150,7 @@ export function SellerLiveView({
     columns: COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.products).map((item, index) => {
-        const live = (item.liveItem ?? {}) as Record<string, unknown>;
+        const live = (item.liveItem ?? {}) as Record<string, JsonValue>;
         return {
           id: toStringValue(item.id, `live-${index}`),
           title: toStringValue(item.productTitle ?? item.title, "Untitled"),

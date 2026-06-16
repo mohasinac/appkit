@@ -224,7 +224,7 @@ export function CouponsIndexListing({
       </Div>
 
       {/* ── Coupon grid ─────────────────────────────────────────────────── */}
-      <Div className="px-4" padding="y-lg">
+      <Div paddingY="y-lg" paddingX="x-md">
         {isLoading ? (
           <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (

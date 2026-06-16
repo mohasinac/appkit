@@ -306,7 +306,7 @@ export function FormShell({
           >
             {previewMode && previewSlot ? (
               <>
-                <Row textSize="sm" gap="xs" className="sticky top-0 z-10 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]" padding="y-xs">
+                <Row textSize="sm" gap="xs" className="sticky top-0 z-10 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]" paddingY="y-xs" paddingX="x-md">
                   <Eye className="w-4 h-4 flex-shrink-0" />
                   <Span>Preview — not visible to buyers until published</Span>
                 </Row>

@@ -728,7 +728,7 @@ export function Search({
           <Stack className="absolute top-full left-0 right-0 pt-2 pb-4 z-50" padding="x-md" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
               <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
-                <Div border="default" className="px-4 border-b" padding="y-xs">
+                <Div border="default" className="border-b" paddingY="y-xs" paddingX="x-md">
                   <Text
                     variant="secondary"
                     size="xs"

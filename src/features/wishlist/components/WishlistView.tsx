@@ -105,7 +105,7 @@ export function WishlistView({
 
   return (
     <Div className={`min-h-screen ${className}`}>
-      <Div className="px-4 max-w-screen-xl mx-auto" padding="y-xl">
+      <Div className="max-w-screen-xl mx-auto" paddingY="y-xl" paddingX="x-md">
         {/* Header */}
         <Heading level={1} className="mb-1" size="2xl" weight="bold">
           {labels.title ?? "My Wishlist"}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Span, sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
@@ -135,8 +136,8 @@ export function SellerClassifiedView({
     columns: COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.products).map((item, index) => {
-        const classified = (item.classified ?? {}) as Record<string, unknown>;
-        const meetupArea = (classified.meetupArea ?? {}) as Record<string, unknown>;
+        const classified = (item.classified ?? {}) as Record<string, JsonValue>;
+        const meetupArea = (classified.meetupArea ?? {}) as Record<string, JsonValue>;
         return {
           id: toStringValue(item.id, `classified-${index}`),
           title: toStringValue(item.productTitle ?? item.title, "Untitled"),

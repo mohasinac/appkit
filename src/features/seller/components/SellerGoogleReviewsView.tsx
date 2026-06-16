@@ -110,7 +110,7 @@ export function SellerGoogleReviewsView({
 
   if (loading) {
     return (
-      <Stack className="px-4" gap="md" padding="y-lg">
+      <Stack gap="md" paddingY="y-lg" paddingX="x-md">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}

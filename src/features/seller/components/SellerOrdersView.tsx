@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 
 import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -85,7 +86,7 @@ interface OrderDetail {
   status: string;
   totalAmount?: number;
   buyerName?: string;
-  shippingAddress?: Record<string, unknown>;
+  shippingAddress?: Record<string, JsonValue>;
   items?: Array<{ productId?: string; title?: string; quantity?: number; price?: number }>;
   trackingNumber?: string;
   carrier?: string;
@@ -147,7 +148,7 @@ function OrderDetailDrawer({
     setSaving(true);
     setSaveError(null);
     try {
-      const payload: Record<string, unknown> = {};
+      const payload: Record<string, JsonValue> = {};
       if (newStatus) payload.status = newStatus;
       if (trackingNumber !== (order.trackingNumber ?? "")) payload.trackingNumber = trackingNumber;
       if (carrier !== (order.carrier ?? "")) payload.shippingCarrier = carrier;

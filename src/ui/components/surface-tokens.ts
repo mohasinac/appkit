@@ -166,9 +166,41 @@ export type GapPresetKey = keyof typeof GAP_PRESETS;
 export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
+type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-lg" | "x-xl";
+type YPaddingKey = "none" | "y-2xs" | "y-xs" | "y-sm" | "y-md" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl";
+
+const X_ONLY_MAP: Record<XPaddingKey, string> = {
+  none: "",
+  "x-xs": "px-2",
+  "x-sm": "px-3",
+  "x-md": "px-4",
+  "x-lg": "px-6",
+  "x-xl": "px-8",
+};
+
+const Y_ONLY_MAP: Record<YPaddingKey, string> = {
+  none: "",
+  "y-2xs": "py-1",
+  "y-xs": "py-2",
+  "y-sm": "py-3",
+  "y-md": "py-4",
+  "y-lg": "py-6",
+  "y-xl": "py-8",
+  "y-2xl": "py-10",
+  "y-3xl": "py-12",
+  "y-2-5xl": "py-14",
+  "y-4xl": "py-16",
+  "y-5xl": "py-20",
+  "y-6xl": "py-24",
+};
+
 export interface SurfaceProps {
   surface?: SurfaceKey;
   padding?: PaddingKey;
+  /** Independent horizontal padding. Use with `paddingY` when you need different x/y padding without authoring raw className. */
+  paddingX?: XPaddingKey;
+  /** Independent vertical padding. Use with `paddingX` when you need different x/y padding without authoring raw className. */
+  paddingY?: YPaddingKey;
   rounded?: RoundedKey;
   border?: BorderKey;
   shadow?: ShadowKey;
@@ -178,6 +210,8 @@ export function buildSurfaceClasses(props: SurfaceProps): string {
   return [
     props.surface ? SURFACE_MAP[props.surface] : "",
     props.padding ? PADDING_MAP[props.padding] : "",
+    props.paddingX ? X_ONLY_MAP[props.paddingX] : "",
+    props.paddingY ? Y_ONLY_MAP[props.paddingY] : "",
     props.rounded ? ROUNDED_MAP[props.rounded] : "",
     props.border ? BORDER_MAP[props.border] : "",
     props.shadow ? SHADOW_MAP[props.shadow] : "",

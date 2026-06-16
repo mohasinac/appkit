@@ -115,7 +115,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
         borderBottom: "var(--section-border)",
       }}
     >
-      <Div className="mx-auto max-w-7xl px-4 sm:py-10" padding="y-lg">
+      <Div className="mx-auto max-w-7xl sm:py-10" paddingY="y-lg" paddingX="x-md">
         <Div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {items.map((badge) => (
             <Stack

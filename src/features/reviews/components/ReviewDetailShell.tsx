@@ -172,7 +172,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
       </Div>
 
       {/* ── Main content ─────────────────────────────────────────────────────── */}
-      <Stack gap="xl" className="mx-auto max-w-3xl px-4" padding="y-xl">
+      <Stack gap="xl" className="mx-auto max-w-3xl" paddingY="y-xl" paddingX="x-md">
 
         {/* Rich text comment */}
         {review.comment && (

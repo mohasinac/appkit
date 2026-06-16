@@ -64,7 +64,7 @@ export async function PrizeDrawsSection({
             <Stack
               align="center"
               gap="sm"
-              className="border-dashed px-6 text-center" border="strong" padding="y-3xl" rounded="2xl"
+              className="border-dashed text-center" border="strong" paddingY="y-3xl" paddingX="x-lg" rounded="2xl"
             >
               <Text size="sm" color="muted">
                 No active prize draws — new draws are announced regularly.

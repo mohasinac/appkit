@@ -1,6 +1,7 @@
 "use client";
 
 import { sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
@@ -140,7 +141,7 @@ export function SellerDigitalCodesView({
     columns: COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.products).map((item, index) => {
-        const dc = (item.digitalCode ?? {}) as Record<string, unknown>;
+        const dc = (item.digitalCode ?? {}) as Record<string, JsonValue>;
         return {
           id: toStringValue(item.id, `dc-${index}`),
           title: toStringValue(item.productTitle ?? item.title, "Untitled"),

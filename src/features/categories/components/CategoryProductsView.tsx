@@ -98,7 +98,7 @@ export function CategoryProductsView({
 
   return (
     <Div className={`min-h-screen ${className}`}>
-      <Stack className="px-4 max-w-screen-xl mx-auto" gap="md" padding="y-lg">
+      <Stack className="max-w-screen-xl mx-auto" gap="md" paddingY="y-lg" paddingX="x-md">
         {/* Breadcrumbs */}
         {category && renderBreadcrumbs?.(category)}
 

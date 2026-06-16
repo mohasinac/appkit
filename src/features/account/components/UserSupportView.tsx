@@ -157,7 +157,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
 
   return (
     <>
-      <Div className="mx-auto max-w-2xl px-4" padding="y-lg">
+      <Div className="mx-auto max-w-2xl" paddingY="y-lg" paddingX="x-md">
         <Row className="mb-4" align="center" justify="between">
           <Text size="xl" weight="semibold" color="primary">Support Tickets</Text>
           <Button type="button" variant="primary" size="sm" onClick={() => setNewTicketOpen(true)}>New ticket</Button>
@@ -188,7 +188,7 @@ function renderTicketListArea(props: {
         </Div>
       )}
       {!isLoading && tickets.length === 0 && (
-        <Div className="px-6 text-center" surface="muted" padding="y-2xl" rounded="xl" border="default">
+        <Div className="text-center" surface="muted" paddingY="y-2xl" paddingX="x-lg" rounded="xl" border="default">
           <Text size="sm" color="muted">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}

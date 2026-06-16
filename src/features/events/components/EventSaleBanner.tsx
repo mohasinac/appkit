@@ -50,7 +50,7 @@ export function EventSaleBanner({
           {subtitle ? <Text color="inverse" className="/90" size="base">{subtitle}</Text> : null}
         </Stack>
         {couponCode ? (
-          <Div layout="inline-flex" gap="3" className="items-center px-4 backdrop-blur" surface="default" padding="y-xs" rounded="lg">
+          <Div layout="inline-flex" gap="3" className="items-center backdrop-blur" surface="default" paddingY="y-xs" paddingX="x-md" rounded="lg">
             <Span size="xs" className="tracking-wide opacity-80" transform="uppercase">Code</Span>
             <Span size="lg" weight="bold" className="font-mono">{couponCode}</Span>
           </Div>
