@@ -44,11 +44,22 @@ const UI_BUTTON = {
   },
 } as const;
 
+type ButtonGap = "none" | "xs" | "sm" | "md" | "lg";
+const BUTTON_GAP_MAP: Record<ButtonGap, string> = {
+  none: "",
+  xs: "gap-1",
+  sm: "gap-1.5",
+  md: "gap-2",
+  lg: "gap-3",
+};
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof UI_BUTTON.variants;
   size?: keyof typeof UI_BUTTON.sizes;
   isLoading?: boolean;
   children?: React.ReactNode;
+  /** Gap between flex children (icon + label). Defaults to no extra gap. */
+  gap?: ButtonGap;
   /** Render as the child element (e.g. next/link) with button styling applied */
   asChild?: boolean;
   /**
@@ -76,6 +87,7 @@ export function Button({
   isLoading = false,
   disabled,
   children,
+  gap,
   asChild = false,
   action,
   ...props
@@ -91,6 +103,7 @@ export function Button({
     UI_BUTTON.base,
     UI_BUTTON.variants[resolvedVariant],
     UI_BUTTON.sizes[size],
+    gap ? BUTTON_GAP_MAP[gap] : "",
     className,
   );
 

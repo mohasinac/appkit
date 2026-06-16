@@ -369,7 +369,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             // audit-inline-style-ok: runtime grid template
             <Div layout="grid" gap="1" className="mt-2 .5" style={{ gridTemplateColumns: onBuyNow && onAddToCart ? "1fr 1fr" : "1fr" }}>
               {onBuyNow && (
-                <Button
+                <Button gap="xs" 
                   type="button"
                   variant="primary"
                   size="sm"
@@ -378,7 +378,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                     e.preventDefault();
                     onBuyNow(product);
                   }}
-                  className="flex items-center justify-center gap-1 text-xs btn-glow"
+                  className="flex items-center justify-center text-xs btn-glow"
                 >
                   <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -387,7 +387,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Button>
               )}
               {onAddToCart && (
-                <Button
+                <Button gap="xs" 
                   type="button"
                   variant="outline"
                   size="sm"
@@ -396,7 +396,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                     e.preventDefault();
                     onAddToCart(product);
                   }}
-                  className="flex items-center justify-center gap-1 text-xs"
+                  className="flex items-center justify-center text-xs"
                 >
                   <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3H3m4 10v7a1 1 0 001 1h8a1 1 0 001-1v-7M9 21h6" />

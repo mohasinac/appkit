@@ -184,7 +184,7 @@ export function SellerStoreCategoriesView({
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          <Button size="sm" onClick={handleNavigateNew} className="flex items-center gap-1.5">
+          <Button gap="xs" size="sm" onClick={handleNavigateNew} className="flex items-center .5">
             <Plus className="h-4 w-4" />
             <Span>New Category</Span>
           </Button>

@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 
 import { Row, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback, useMemo } from "react";
@@ -62,7 +63,7 @@ const CONDITION_OPTIONS = [
 
 interface TemplateRow {
   id: string;
-  raw: Record<string, unknown>;
+  raw: Record<string, JsonValue>;
   name: string;
   category: string;
   brand: string;
@@ -131,7 +132,7 @@ const COLUMNS: DataTableColumn<TemplateRow>[] = [
 export interface SellerTemplatesViewProps {
   onDelete?: (id: string) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
-  onDuplicate?: (row: { id: string; name: string; raw: Record<string, unknown> }) => Promise<void>;
+  onDuplicate?: (row: { id: string; name: string; raw: Record<string, JsonValue> }) => Promise<void>;
 }
 
 export function SellerTemplatesView({
@@ -368,7 +369,7 @@ export function SellerTemplatesView({
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          <Button size="sm" onClick={openCreate} className="flex items-center gap-1.5">
+          <Button gap="xs" size="sm" onClick={openCreate} className="flex items-center .5">
             <Plus className="h-4 w-4" />
             <Span>New Template</Span>
           </Button>

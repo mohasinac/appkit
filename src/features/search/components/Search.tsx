@@ -680,11 +680,11 @@ export function Search({
               ))}
             </select>
           )}
-          <Button
+          <Button gap="md" 
             onClick={handleOverlaySearch}
             variant="primary"
             size="md"
-            className="hidden sm:flex gap-2"
+            className="hidden sm:flex"
           >
             <svg
               className="w-5 h-5"

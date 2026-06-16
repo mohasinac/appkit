@@ -208,7 +208,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
         {bidCount > 0 && <Caption className="text-[11px]">{mergedLabels.totalBids(bidCount)}</Caption>}
       </Row>
       {!isEnded && (
-        <Button type="button" variant="warning" size="sm" className="self-start gap-1 px-2.5 text-xs mt-0.5" onClick={handleNavigate}>
+        <Button gap="xs" type="button" variant="warning" size="sm" className="self-start px-2.5 text-xs mt-0.5" onClick={handleNavigate}>
           <Gavel className="h-3 w-3" />
           <Span>{mergedLabels.placeBid}</Span>
         </Button>
@@ -249,17 +249,17 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
       </Row>
       <Row wrap gap="xs" className="mt-auto">
         {isEnded ? (
-          <Button type="button" variant="ghost" size="sm" className="flex-1 cursor-not-allowed gap-1 px-2 text-xs opacity-60" disabled>
+          <Button gap="xs" type="button" variant="ghost" size="sm" className="flex-1 cursor-not-allowed px-2 text-xs opacity-60" disabled>
             <Span>{mergedLabels.ended}</Span>
           </Button>
         ) : (
           <>
-            <Button type="button" variant="warning" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
+            <Button gap="xs" type="button" variant="warning" size="sm" className="flex-1 px-2 text-xs" onClick={handleNavigate}>
               <Gavel className="h-3 w-3" />
               <Span>{mergedLabels.placeBid}</Span>
             </Button>
             {resolvedBuyoutPrice ? (
-              <Button type="button" variant="danger" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
+              <Button gap="xs" type="button" variant="danger" size="sm" className="flex-1 px-2 text-xs" onClick={handleNavigate}>
                 <ShoppingBag className="h-3 w-3" />
                 <Span>{mergedLabels.buyout}</Span>
               </Button>

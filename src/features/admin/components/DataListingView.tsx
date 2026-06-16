@@ -256,14 +256,14 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             <Row align="center" gap="sm">
               {config.toolbarExtra}
               {config.primaryAction && (
-                <Button
+                <Button gap="xs" 
                   size="sm"
                   onClick={() =>
                     config.primaryAction!.onClick({
                       openCreatePanel: panel.openCreatePanel,
                     })
                   }
-                  className="flex items-center gap-1.5"
+                  className="flex items-center .5"
                 >
                   {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
                   {config.primaryAction.label}

@@ -206,13 +206,13 @@ export function SellerGoogleReviewsView({
 
         {/* Actions */}
         <Row className="border-t border-[var(--appkit-color-border)]" padding="t-md" align="center" justify="between" gap="3">
-          <Button
+          <Button gap="xs" 
             variant="outline"
             size="sm"
             onClick={handleSync}
             isLoading={syncing}
             disabled={saving || !draft.placeId.trim()}
-            className="flex items-center gap-1.5"
+            className="flex items-center .5"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             {ACTIONS.STORE["google-reviews-sync"].label}

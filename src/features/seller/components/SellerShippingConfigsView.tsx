@@ -218,7 +218,7 @@ export function SellerShippingConfigsView({
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          <Button size="sm" onClick={handleCreate} className="flex items-center gap-1.5">
+          <Button gap="xs" size="sm" onClick={handleCreate} className="flex items-center .5">
             <Plus className="h-4 w-4" />
             <Span>New Config</Span>
           </Button>
