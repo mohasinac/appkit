@@ -35,7 +35,7 @@ function platformProfileUrl(platform: SocialPlatform, handle: string): string {
 
 function SocialFeedSkeleton({ count }: { count: number }) {
   return (
-    <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+    <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
       {Array.from({ length: count }).map((_, i) => (
         <Div key={i} className="aspect-square animate-pulse" surface="subtle" rounded="xl" />
       ))}

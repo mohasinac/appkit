@@ -207,7 +207,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
 function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: OrderInfoCard[]) {
   return (
     <Section>
-      <Div className="grid gap-5 md:grid-cols-2">
+      <Div layout="grid" gap="5" className="md:grid-cols-2">
         {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
           <Div key={title} className={`border ${__P.p5} ${color}`} rounded="xl">
             <Row align="center" justify="center" className={`w-10 h-10 mb-3`} surface="default" rounded="lg">

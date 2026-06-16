@@ -13,8 +13,8 @@ export function BeforeAfterGallery({
   if (items.length === 0) return null;
 
   return (
-    <Div
-      className={`grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
+    <Div layout="grid" gap="6" 
+      className={`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
     >
       {items.map((item) => (
         <Stack key={item.id} gap="sm">

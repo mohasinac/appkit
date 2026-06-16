@@ -67,7 +67,7 @@ export function PromoGrid({
           - sm: 2 columns
           - lg: 3 cols, first card spans 2 rows
         */}
-        <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {banners.slice(0, 4).map((banner, i) => (
             <Link
               key={banner.id}

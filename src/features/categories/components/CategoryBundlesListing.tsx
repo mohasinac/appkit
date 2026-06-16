@@ -151,7 +151,7 @@ export function CategoryBundlesListing({
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.
           </Text>
         ) : (
-          <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {pageItems.map((bundle) => (
               <Stack key={bundle.id}>
                 <MarketplaceBundleCard bundle={bundle} />

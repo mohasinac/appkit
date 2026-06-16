@@ -32,7 +32,7 @@ function renderCategoryGrid(props: {
   const isBrandView = activeTab === "brands" || brandsOnly;
   if (isLoading) {
     return (
-      <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {Array.from({ length: 10 }).map((_, i) => (
           <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-[4/3]" surface="subtle" />
@@ -60,7 +60,7 @@ function renderCategoryGrid(props: {
     );
   }
   return (
-    <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
     </Div>
   );

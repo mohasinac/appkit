@@ -96,7 +96,7 @@ export function PrizeDrawCollage({
 
   return (
     <>
-      <Div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+      <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
         {items.map((it, idx) => {
           const cover = it.images?.[0];
           const isHighlight = highlightItemNumber === it.itemNumber;

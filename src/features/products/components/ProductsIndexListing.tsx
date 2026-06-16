@@ -315,7 +315,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
       {/* ── Product grid ───────────────────────────────────────────────── */}
       <Div padding="y-lg">
         {isLoading ? (
-          <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 10 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-square" surface="subtle" />

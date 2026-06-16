@@ -85,7 +85,7 @@ interface AdScheduleSectionProps {
 
 function renderAdScheduleSection({ startAt, setStartAt, endAt, setEndAt }: AdScheduleSectionProps) {
   return (
-    <Div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-2">
       <Input
         label="Start at (ISO)"
         value={startAt}
@@ -119,7 +119,7 @@ function renderAdCreativeSection({
   adsenseSlot, setAdsenseSlot, thirdPartyUrl, setThirdPartyUrl, provider,
 }: AdCreativeSectionProps) {
   return (
-    <Div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-2">
       <Input label="Creative title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Catch the mega sale" />
       <Input label="Creative body" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Up to 40% off this weekend" />
       <Input label="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
@@ -388,7 +388,7 @@ export function AdminAdEditorView({
             onChange={(event) => setName(event.target.value)}
             placeholder="Summer Campaign"
           />
-          <Div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-3">
             <Select
               label="Provider"
               value={provider}
@@ -426,7 +426,7 @@ export function AdminAdEditorView({
 
           <Stack gap="sm">
             <Text size="sm" weight="medium">Placements</Text>
-            <Div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <Div layout="grid" gap="2" className="grid-cols-1 md:grid-cols-2">
               {placements.map((placement) => (
                 <label
                   key={placement.id}

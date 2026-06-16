@@ -201,7 +201,7 @@ export function AdminCategoryEditorView({
           Identity
         </Text>
         <Stack gap="md">
-          <Div className="grid sm:grid-cols-2 gap-4">
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <FieldInput
               name="name"
               label="Category name"
@@ -298,7 +298,7 @@ export function AdminCategoryEditorView({
   }
 
   const twoPanel = (
-    <Div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
+    <Div layout="grid" gap="6" className="lg:grid-cols-[1fr_280px] lg:items-start">
       <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
       <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}

@@ -129,7 +129,7 @@ export function AdminSublistingCategoryEditorView({
             if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
             saveMutation.mutate();
           }} spacing="md">
-          <Div className="grid sm:grid-cols-2 gap-4">
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <FieldInput
               name="name"
               label="Category name"

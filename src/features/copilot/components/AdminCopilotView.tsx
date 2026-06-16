@@ -193,7 +193,7 @@ export function AdminCopilotView({
             </Button>
           </Row>
         ),
-        <Div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-4">
+        <Div layout="grid" gap="4" className="grid-cols-1 lg:grid-cols-[2fr,1fr]">
           <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
             <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
               <Text className="text-neutral-500" size="xs" weight="medium">

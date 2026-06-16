@@ -27,8 +27,8 @@ export function MessagesView({
   className = "",
 }: MessagesViewProps) {
   return (
-    <Div
-      className={`grid grid-cols-1 md:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr] 2xl:grid-cols-[360px_1fr] gap-4 h-full min-h-[600px] ${className}`}
+    <Div layout="grid" gap="4" 
+      className={`grid-cols-1 md:grid-cols-[280px_1fr] xl:grid-cols-[320px_1fr] 2xl:grid-cols-[360px_1fr] h-full min-h-[600px] ${className}`}
     >
       {/* Room list — hidden on mobile when a chat is open */}
       <Div className={chatId ? "hidden md:block" : "block"}>

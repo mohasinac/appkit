@@ -107,7 +107,7 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: Topi
   return (
     <Section>
       <Heading level={2} className="mb-6" align="center">{t("browseTopics")}</Heading>
-      <Div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Div layout="grid" gap="4" className="sm:grid-cols-2 lg:grid-cols-3">
         {topics.map(({ icon: Icon, title, desc, href, color, iconColor }) => (
           <TextLink rounded="xl" key={href} href={href} className={`group border p-5 transition-shadow hover:shadow-md ${color} no-underline`}>
             <Row align="center" justify="center" className={`w-10 h-10 mb-3`} surface="default" rounded="lg">

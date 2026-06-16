@@ -18,7 +18,7 @@ export interface SellerDashboardViewProps extends Omit<
 
 function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
   return (
-    <Div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (
         <Div padding="5" 
           key={i}
@@ -45,7 +45,7 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
 
 function DefaultQuickActionsPlaceholder() {
   return (
-    <Div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (
         <Div
           key={i}

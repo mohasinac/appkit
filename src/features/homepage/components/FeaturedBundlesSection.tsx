@@ -74,7 +74,7 @@ export function FeaturedBundlesSection({
             <Text color="muted">{BUNDLE_COPY.featured.empty}</Text>
           </Div>
         ) : (
-          <Div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
             {items.map((bundle) => (
               <FeaturedBundleCard key={bundle.id} bundle={bundle} onBuyNow={onBuyNow} />
             ))}

@@ -585,7 +585,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         ) : categoryOptions.length === 0 ? (
           <Text size="sm" color="muted">No categories available.</Text>
         ) : (
-          <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <Div layout="grid" gap="2" className="grid-cols-1 sm:grid-cols-2">
             {categoryOptions.map((category) => (
               <Checkbox
                 key={category.id}
@@ -777,7 +777,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         ) : categoryOptions.length === 0 ? (
           <Text size="sm" color="muted">No categories available.</Text>
         ) : (
-          <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <Div layout="grid" gap="2" className="grid-cols-1 sm:grid-cols-2">
             {categoryOptions.map((category) => (
               <Checkbox
                 key={category.id}
@@ -1011,7 +1011,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         ) : categoryOptions.length === 0 ? (
           <Text size="sm" color="muted">No categories available.</Text>
         ) : (
-          <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <Div layout="grid" gap="2" className="grid-cols-1 sm:grid-cols-2">
             {categoryOptions.map((category) => (
               <Checkbox
                 key={category.id}

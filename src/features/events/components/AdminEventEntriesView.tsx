@@ -244,7 +244,7 @@ export function AdminEventEntriesView({
   ], [reviewMutation, pointsMutation, pointsInputs, expandedEntryId]);
 
   const statsSection = (
-    <Div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-3">
       <Alert variant="info" title="Total entries">
         {String(statsQuery.data?.stats?.totalEntries ?? 0)}
       </Alert>
@@ -258,7 +258,7 @@ export function AdminEventEntriesView({
   );
 
   const filtersSection = (
-    <Div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-3">
       <Input
         label="Search entries"
         value={searchQuery}

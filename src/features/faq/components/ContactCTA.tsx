@@ -59,7 +59,7 @@ export function ContactCTA({
         {labels?.description ?? "Our support team is here to help you."}
       </Text>
 
-      <Div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <Div layout="grid" gap="4" className="mb-8 grid-cols-1 md:grid-cols-3">
         <TextLink
           href={`mailto:${email}`}
           variant="none"

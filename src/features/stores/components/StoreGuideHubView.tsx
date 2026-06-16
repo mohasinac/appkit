@@ -146,13 +146,13 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
       </Section>
 
       {/* Main content: guide cards + checklist sidebar */}
-      <Div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <Div layout="grid" gap="8" className="grid-cols-1 lg:grid-cols-3">
         {/* Guide cards — 2/3 width on lg */}
         <Stack className="lg:col-span-2" gap="md">
           <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Guides
           </Heading>
-          <Div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Div layout="grid" gap="4" className="grid-cols-1 sm:grid-cols-2">
             {GUIDE_CARDS.map(({ Icon, title, description, href }) => (
               <a
                 key={title}

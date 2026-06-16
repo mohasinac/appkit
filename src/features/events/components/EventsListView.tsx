@@ -34,7 +34,7 @@ export function EventsListView<T extends EventItem = EventItem>({
 }: EventsListViewProps<T>) {
   if (isLoading) {
     return (
-      <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Div layout="grid" gap="6" className="sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
@@ -68,7 +68,7 @@ export function EventsListView<T extends EventItem = EventItem>({
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
-      <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Div layout="grid" gap="6" className="sm:grid-cols-2 lg:grid-cols-3">
         {events.map((event, i) =>
           slots?.renderCard ? (
             <React.Fragment key={event.id}>

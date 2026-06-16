@@ -372,8 +372,8 @@ export function CompareOverlay({
         ) : (
           <>
             {/* Desktop / tablet â€” grid of columns */}
-            <Div
-              className="hidden md:grid gap-4"
+            <Div layout="grid" gap="4" 
+              className="hidden md:"
               // audit-inline-style-ok: dynamic CSS
               style={{
                 gridTemplateColumns: `repeat(${trimmed.length}, minmax(0, 1fr))`,

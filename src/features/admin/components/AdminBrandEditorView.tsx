@@ -167,7 +167,7 @@ export function AdminBrandEditorView({
         if (!name.trim()) { setFieldError("name", "Brand name is required"); return; }
         saveMutation.mutate();
       }} spacing="md">
-          <Div className="grid sm:grid-cols-2 gap-4">
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <FieldInput
               name="name"
               label="Brand name"
@@ -196,7 +196,7 @@ export function AdminBrandEditorView({
             placeholder="Brief description of the brand"
           />
 
-          <Div className="grid sm:grid-cols-2 gap-4">
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <ImageUpload
               label="Logo"
               currentImage={logoURL}
@@ -212,7 +212,7 @@ export function AdminBrandEditorView({
             />
           </Div>
 
-          <Div className="grid sm:grid-cols-2 gap-4">
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <Input
               label="Website"
               value={website}

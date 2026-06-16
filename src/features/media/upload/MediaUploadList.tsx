@@ -168,7 +168,7 @@ export function MediaUploadList({
       </Label>
 
       {value.length > 0 && (
-        <Div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2">
           {value.map((item, index) => (
             <Div
               key={`${item.url}-${index}`} rounded="lg" padding="sm" border="default" surface="muted">

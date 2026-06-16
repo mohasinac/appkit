@@ -143,7 +143,7 @@ function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS
     <Section>
       <Heading level={2} className="mb-3" align="center">{t("paymentMethodsTitle")}</Heading>
       <Text variant="secondary" className="mb-8 max-w-xl mx-auto" align="center">{t("paymentMethodsSubtitle")}</Text>
-      <Div className="grid gap-5 md:grid-cols-3">
+      <Div layout="grid" gap="5" className="md:grid-cols-3">
         {methods.map(({ icon: Icon, title, text, color, iconColor }) => (
           <Div key={title} className={`border ${__P.p5} ${color}`} rounded="xl">
             <Row align="center" justify="center" className={`w-10 h-10 mb-3`} surface="default" rounded="lg">

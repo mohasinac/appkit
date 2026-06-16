@@ -112,7 +112,7 @@ export function WhatsAppCommunitySection({
 
             {/* Benefits grid */}
             {benefits.length > 0 && (
-              <Div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 max-w-2xl">
+              <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2 mb-8 max-w-2xl">
                 {benefits.slice(0, 4).map((benefit, i) => (
                   <Row key={i} align="start" gap="2.5">
                     <Span layout="flex-center" className="mt-0.5 flex-shrink-0 w-5 h-5 bg-white/20" rounded="full">

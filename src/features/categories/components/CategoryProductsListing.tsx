@@ -29,7 +29,7 @@ function renderCategoryProductGrid(props: { isLoading: boolean; products: any[];
   const { isLoading, products, view, getProductHref, onWishlistToggle, wishlistedIds, onAddToCart } = props;
   if (isLoading) {
     return (
-      <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      <Div layout="grid" gap="6" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-square" surface="subtle" />

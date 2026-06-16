@@ -240,8 +240,8 @@ export function MediaPickerModal({
               />
             </Row>
             {existingError && <Alert variant="error">{existingError}</Alert>}
-            <Div
-              className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 ${EXISTING_GRID_MAX_HEIGHT} overflow-y-auto`}
+            <Div layout="grid" gap="2" 
+              className={`grid-cols-3 sm:grid-cols-4 md:grid-cols-5 ${EXISTING_GRID_MAX_HEIGHT} overflow-y-auto`}
             >
               {filteredExisting.map((f) => {
                 const isImage = (f.contentType ?? "").startsWith("image/");

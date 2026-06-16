@@ -231,7 +231,7 @@ export function AdminAddressEditorView({
       <Card variant="outlined" padding="lg">
         <SectionHeading>Contact &amp; Location</SectionHeading>
         <Stack gap="md">
-          <Div className="grid gap-4 sm:grid-cols-2">
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <Input
               label="Label"
               value={form.label}
@@ -262,7 +262,7 @@ export function AdminAddressEditorView({
             required
             placeholder="House/flat no., street (PII)"
           />
-          <Div className="grid gap-4 sm:grid-cols-2">
+          <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <Input
               label="Address Line 2"
               value={form.addressLine2 ?? ""}
@@ -276,7 +276,7 @@ export function AdminAddressEditorView({
               placeholder="Near hospital, etc. (optional)"
             />
           </Div>
-          <Div className="grid gap-4 sm:grid-cols-3">
+          <Div layout="grid" gap="4" className="sm:grid-cols-3">
             <Input
               label="City"
               value={form.city}
@@ -344,7 +344,7 @@ export function AdminAddressEditorView({
   );
 
   const twoPanel = (
-    <Div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
+    <Div layout="grid" gap="6" className="lg:grid-cols-[1fr_280px] lg:items-start">
       <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
       <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}

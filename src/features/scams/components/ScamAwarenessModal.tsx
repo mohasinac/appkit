@@ -69,7 +69,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
         </Text>
 
         {/* Category cards */}
-        <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2">
           {SCAM_CATEGORIES.map((cat) => (
             <div
               key={cat.id}

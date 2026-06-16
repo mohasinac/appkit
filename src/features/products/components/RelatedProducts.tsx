@@ -25,7 +25,7 @@ export function RelatedProducts({
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
     return (
-      <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse">
+      <Div layout="grid" gap="4" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 animate-pulse">
         {Array.from({ length: 4 }).map((_, i) => (
           <Div key={i} className="aspect-square" surface="subtle" rounded="xl" />
         ))}

@@ -21,7 +21,7 @@ export function CategoryStoresListing({ stores }: CategoryStoresListingProps) {
   }
 
   return (
-    <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    <Div layout="grid" gap="5" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {stores.map((store) => (
         <InteractiveStoreCard
           key={store.id}

@@ -92,7 +92,7 @@ export function AdminAnalyticsView({
       {renderSummaryCards ? (
         renderSummaryCards()
       ) : busy ? (
-        <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Div layout="grid" gap="4" className="grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <Div
               key={index}
@@ -101,7 +101,7 @@ export function AdminAnalyticsView({
           ))}
         </Div>
       ) : summary ? (
-        <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Div layout="grid" gap="4" className="grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           <AdminStatCard
             label={labels.totalRevenue ?? "Total Revenue"}
             value={formatRevenue(summary.totalRevenue)}

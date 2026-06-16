@@ -116,7 +116,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
       }}
     >
       <Div className="mx-auto max-w-7xl sm:py-10" paddingY="y-lg" paddingX="x-md">
-        <Div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+        <Div layout="grid" gap="6" className="grid-cols-2 sm:grid-cols-4">
           {items.map((badge) => (
             <Stack
               key={badge.id}

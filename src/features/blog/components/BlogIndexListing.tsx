@@ -26,7 +26,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   const { isLoading, posts, view } = props;
   if (isLoading) {
     return (
-      <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
             <Div className="aspect-video" surface="subtle" />
@@ -52,7 +52,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
     );
   }
   return (
-    <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
     </Div>
   );

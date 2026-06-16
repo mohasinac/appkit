@@ -178,7 +178,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
       {/* ── Reviews grid ───────────────────────────────────────────────── */}
       <Div paddingY="y-lg" paddingX="x-md">
         {isLoading ? (
-          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Stack className={`${__P.p4}`} gap="3">
@@ -201,7 +201,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
             ))}
           </Stack>
         ) : (
-          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             { }
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review as any} context="store" />

@@ -29,7 +29,7 @@ export function QuickActionsPanel({
           {title}
         </Heading>
       )}
-      <Div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Div layout="grid" gap="4" className="grid-cols-1 md:grid-cols-3">
         {actions.map((action) => (
           <Div key={action.id}>
             {renderAction ? (

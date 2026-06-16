@@ -110,7 +110,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           {error}
         </Alert>
       )}
-      <Div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+      <Div layout="grid" gap="2" className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
         {filtered.map((f) => {
           const isImage = (f.contentType ?? "").startsWith("image/");
           return (

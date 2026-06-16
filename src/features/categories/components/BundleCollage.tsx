@@ -60,7 +60,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
 
   return (
     <>
-      <Div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+      <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
         {members.map((p, idx) => {
           const cover = p.mainImage ?? p.images?.[0];
           const href = String(

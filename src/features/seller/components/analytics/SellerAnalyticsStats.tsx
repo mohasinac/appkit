@@ -32,7 +32,7 @@ export function SellerAnalyticsStats({
   className = "",
 }: SellerAnalyticsStatsProps) {
   return (
-    <Div className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 ${className}`}>
+    <Div layout="grid" gap="4" className={`grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 ${className}`}>
       <AdminStatCard
         label={labels.totalRevenue ?? "Total Revenue"}
         value={formatRevenue(summary.totalRevenue)}

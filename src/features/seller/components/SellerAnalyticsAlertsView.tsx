@@ -233,7 +233,7 @@ export function SellerAnalyticsAlertsView({
             Create Alert
           </Heading>
           <Form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(); }}>
-            <Div className="grid sm:grid-cols-2 gap-4">
+            <Div layout="grid" gap="4" className="sm:grid-cols-2">
               <Input
                 label="Alert label"
                 value={draft.label}

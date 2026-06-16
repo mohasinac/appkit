@@ -105,7 +105,7 @@ function AdsSettingsPanel({
           {serverCredentialIssues.join("; ")}
         </Alert>
       ) : null}
-      <Div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-2">
         <Input
           label="AdSense client id"
           value={adsenseClientId}
@@ -169,7 +169,7 @@ interface AdsFilterRowProps {
 
 function AdsFilterRow({ q, setQ, status, setStatus, provider, setProvider, placement, setPlacement, placements, onPageReset }: AdsFilterRowProps) {
   return (
-    <Div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+    <Div layout="grid" gap="3" className="grid-cols-1 md:grid-cols-4">
       <Input
         label="Search"
         value={q}

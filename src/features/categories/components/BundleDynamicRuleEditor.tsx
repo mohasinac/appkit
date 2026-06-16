@@ -93,7 +93,7 @@ export function BundleDynamicRuleEditor({
         </Text>
       </Row>
 
-      <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2">
         <Stack gap="xs">
           <Text size="xs" weight="semibold">
             {BUNDLE_COPY.adminEditor.dynamic.fields.categorySlug}
@@ -138,7 +138,7 @@ export function BundleDynamicRuleEditor({
         />
       </Stack>
 
-      <Div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-3">
         <Stack gap="xs">
           <Text size="xs" weight="semibold">
             {BUNDLE_COPY.adminEditor.dynamic.fields.listingType}

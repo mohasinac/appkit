@@ -141,7 +141,7 @@ export function FAQPageContent({
         })}
       </Div>
 
-      <Div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+      <Div layout="grid" gap="8" className="grid-cols-1 lg:grid-cols-12">
         <Div className="hidden lg:col-span-4 lg:block xl:col-span-3">
           <FAQCategorySidebar
             selectedCategory={selectedCategory}

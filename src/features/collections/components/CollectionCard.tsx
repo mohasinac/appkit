@@ -54,7 +54,7 @@ interface CollectionGridProps {
 
 export function CollectionGrid({ collections, getHref }: CollectionGridProps) {
   return (
-    <Div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {collections.map((c) => (
         <CollectionCard key={c.slug} collection={c} href={getHref(c.slug)} />
       ))}

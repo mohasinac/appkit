@@ -87,11 +87,11 @@ function renderBlogPostMetaFields(props: {
   const { value, update, isReadonly, categoryOptions, statusOptions, labels } = props;
   return (
     <>
-      <Div className="grid gap-4 md:grid-cols-2">
+      <Div layout="grid" gap="4" className="md:grid-cols-2">
         <Select label={labels.category} value={value.category} onValueChange={(category) => update({ category })} options={categoryOptions} disabled={isReadonly} />
         <Select label={labels.status} value={value.status} onValueChange={(status) => update({ status })} options={statusOptions} disabled={isReadonly} />
       </Div>
-      <Div className="grid gap-4 md:grid-cols-2">
+      <Div layout="grid" gap="4" className="md:grid-cols-2">
         <TagInput label={labels.tags} value={value.tags ?? []} onChange={(tags) => update({ tags })} disabled={isReadonly} />
         <Stack gap="xs">
           <Label htmlFor="blog-post-read-time">{labels.readTime}</Label>
@@ -148,7 +148,7 @@ export function BlogPostForm({
 
   return (
     <Stack gap="5">
-      <Div className="grid gap-4 md:grid-cols-2">
+      <Div layout="grid" gap="4" className="md:grid-cols-2">
         <Stack gap="xs">
           <Label htmlFor="blog-post-title">{labels.title}</Label>
           <Input

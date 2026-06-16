@@ -86,7 +86,7 @@ function renderBlogPostRelated(related: BlogPost[], labels: BlogPostViewLabels, 
   return (
     <Div>
       <Heading level={2} className="mb-6" size="xl" weight="semibold">{labels?.relatedTitle ?? "Related Posts"}</Heading>
-      <Div className="grid sm:grid-cols-3 gap-6">
+      <Div layout="grid" gap="6" className="sm:grid-cols-3">
         {related.map((rel, i) =>
           renderRelatedCard ? (
             <React.Fragment key={rel.id}>{renderRelatedCard(rel, i)}</React.Fragment>

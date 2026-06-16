@@ -174,7 +174,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
       {/* ── Event grid ─────────────────────────────────────────────────── */}
       <Div padding="y-lg">
         {isLoading ? (
-          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-video" surface="subtle" />
@@ -198,7 +198,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
             ))}
           </Stack>
         ) : (
-          <Div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
