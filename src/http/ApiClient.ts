@@ -1,3 +1,5 @@
+import type { JsonValue } from "../schemas/types";
+
 /**
  * ApiClient — @mohasinac/http
  *
@@ -33,7 +35,7 @@ export interface RequestConfig extends RequestInit {
   timeout?: number;
 }
 
-export interface ApiResponse<T = unknown> {
+export interface ApiResponse<T = JsonValue> {
   success: boolean;
   data?: T;
   error?: string;
@@ -178,11 +180,11 @@ export class ApiClient {
     }
   }
 
-  async get<T = unknown>(endpoint: string, config?: RequestConfig): Promise<T> {
+  async get<T = JsonValue>(endpoint: string, config?: RequestConfig): Promise<T> {
     return this.request<T>(endpoint, { ...config, method: "GET" });
   }
 
-  async post<T = unknown>(
+  async post<T = JsonValue>(
     endpoint: string,
     data?: unknown,
     config?: RequestConfig,
@@ -194,7 +196,7 @@ export class ApiClient {
     });
   }
 
-  async put<T = unknown>(
+  async put<T = JsonValue>(
     endpoint: string,
     data?: unknown,
     config?: RequestConfig,
@@ -206,7 +208,7 @@ export class ApiClient {
     });
   }
 
-  async patch<T = unknown>(
+  async patch<T = JsonValue>(
     endpoint: string,
     data?: unknown,
     config?: RequestConfig,
@@ -218,14 +220,14 @@ export class ApiClient {
     });
   }
 
-  async delete<T = unknown>(
+  async delete<T = JsonValue>(
     endpoint: string,
     config?: RequestConfig,
   ): Promise<T> {
     return this.request<T>(endpoint, { ...config, method: "DELETE" });
   }
 
-  async upload<T = unknown>(
+  async upload<T = JsonValue>(
     endpoint: string,
     formData: FormData,
     config?: RequestConfig,

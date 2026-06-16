@@ -1,5 +1,6 @@
 "use client"
 import { Button, Div, Label, Row, Select, SideDrawer } from "../../../ui";
+import type { JsonValue } from "@mohasinac/appkit";
 import { useState, useCallback } from "react";
 import { useCategories, useCreateCategory } from "../hooks/useCategorySelector";
 import { useMessage } from "../../../react";
@@ -54,7 +55,7 @@ function CreateCategoryContent({
   });
 
   const { mutate, isPending: isLoading } = useCreateCategory({
-    onSuccess: (res: JsonValue) => {
+    onSuccess: (res) => {
       showSuccess(labels.successCreated);
       onSuccess((res as { id?: string })?.id ?? "");
     },
