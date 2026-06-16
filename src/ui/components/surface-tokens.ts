@@ -91,6 +91,8 @@ export const PADDING_MAP = {
   "y-2-5xl": "py-14",
   "y-5xl": "py-20",
   "y-6xl": "py-24",
+  // Responsive banner preset — used by accent-banner Sections.
+  banner: "py-14 md:py-16 lg:py-20",
 } as const;
 
 export type PaddingKey = keyof typeof PADDING_MAP;

@@ -50,7 +50,7 @@ export async function TrackOrderView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Header */}
       <Section color="inverse" 
-        tone="accent-banner" className="md:py-16 lg:py-20" padding="y-2-5xl"
+        tone="accent-banner" padding="banner"
       >
         <Div className={`${page.container.sm} text-center`}>
           <Heading color="inverse" level={1} variant="none" className="mb-4">
