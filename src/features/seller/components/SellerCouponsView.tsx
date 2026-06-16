@@ -28,8 +28,8 @@ interface SellerCouponsResponse {
   total?: number;
 }
 
-function getIsActive(item: Record<string, unknown>): boolean {
-  const validity = item.validity as Record<string, unknown> | undefined;
+function getIsActive(item: Record<string, JsonValue>): boolean {
+  const validity = item.validity as Record<string, JsonValue> | undefined;
   return Boolean(validity?.isActive ?? item.isActive);
 }
 

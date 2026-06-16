@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
@@ -33,7 +34,7 @@ interface ContactRow {
   secondary: string;
   status: string;
   updatedAt: string;
-  _raw?: Record<string, unknown>;
+  _raw?: Record<string, JsonValue>;
 }
 
 export interface AdminContactViewProps extends ListingLayoutProps {
@@ -113,7 +114,7 @@ export function AdminContactView({
             .filter(Boolean)
             .join(" · ") || "—",
         status: toStringValue(item.status, "new"),
-        updatedAt: toRelativeDate((item as Record<string, unknown>).createdAt),
+        updatedAt: toRelativeDate((item as Record<string, JsonValue>).createdAt),
         _raw: item,
       })),
     getTotal: (response, mappedRows) => {

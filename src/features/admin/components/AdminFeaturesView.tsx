@@ -1,6 +1,7 @@
 "use client";
 
 import { sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ListingLayout, Row } from "../../../ui";
@@ -41,7 +42,7 @@ interface FeatureRow {
   updatedAt: string;
 }
 
-function mapFeatureRow(item: Record<string, unknown>, index: number): FeatureRow {
+function mapFeatureRow(item: Record<string, JsonValue>, index: number): FeatureRow {
   const productTypes = Array.isArray(item.productTypes) ? (item.productTypes as string[]) : [];
   const isActive = typeof item.isActive === "boolean" ? item.isActive : true;
   return {

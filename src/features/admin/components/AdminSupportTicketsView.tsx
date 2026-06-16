@@ -1,6 +1,7 @@
 "use client";
 
 import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
@@ -48,7 +49,7 @@ interface TicketRow {
   secondary: string;
   status: string;
   updatedAt: string;
-  _raw?: Record<string, unknown>;
+  _raw?: Record<string, JsonValue>;
 }
 
 const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
@@ -196,7 +197,7 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
         description={toStringValue(selectedRow?._raw?.description, "")}
         messages={
           Array.isArray(selectedRow?._raw?.messages)
-            ? (selectedRow!._raw!.messages as Array<Record<string, unknown>>)
+            ? (selectedRow!._raw!.messages as Array<Record<string, JsonValue>>)
             : []
         }
         internalNotes={toStringValue(selectedRow?._raw?.internalNotes, "") || undefined}

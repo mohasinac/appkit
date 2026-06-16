@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
@@ -31,7 +32,7 @@ interface StoreRow {
   secondary: string;
   status: string;
   updatedAt: string;
-  _raw?: Record<string, unknown>;
+  _raw?: Record<string, JsonValue>;
 }
 
 export type AdminStoresViewProps = ListingLayoutProps;

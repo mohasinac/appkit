@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
@@ -43,7 +44,7 @@ interface UserRow {
   secondary: string;
   status: string;
   updatedAt: string;
-  _raw?: Record<string, unknown>;
+  _raw?: Record<string, JsonValue>;
 }
 
 export type AdminUsersViewProps = ListingLayoutProps;
@@ -229,7 +230,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
         currentHardBanReason={toStringValue(selectedRow?._raw?.hardBanReason, "") || undefined}
         currentSoftBans={
           Array.isArray(selectedRow?._raw?.softBans)
-            ? (selectedRow!._raw!.softBans as Array<Record<string, unknown>>).map((b) => ({
+            ? (selectedRow!._raw!.softBans as Array<Record<string, JsonValue>>).map((b) => ({
                 action: toStringValue(b.action, ""),
                 reason: toStringValue(b.reason, ""),
                 bannedAt: toStringValue(
@@ -256,27 +257,27 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
         }
         currentBio={
           toStringValue(
-            (selectedRow?._raw?.publicProfile as Record<string, unknown> | undefined)?.bio,
+            (selectedRow?._raw?.publicProfile as Record<string, JsonValue> | undefined)?.bio,
             "",
           ) || undefined
         }
         currentLocation={
           toStringValue(
-            (selectedRow?._raw?.publicProfile as Record<string, unknown> | undefined)?.location,
+            (selectedRow?._raw?.publicProfile as Record<string, JsonValue> | undefined)?.location,
             "",
           ) || undefined
         }
         currentWebsite={
           toStringValue(
-            (selectedRow?._raw?.publicProfile as Record<string, unknown> | undefined)?.website,
+            (selectedRow?._raw?.publicProfile as Record<string, JsonValue> | undefined)?.website,
             "",
           ) || undefined
         }
         currentSocialLinks={(() => {
           const pp = selectedRow?._raw?.publicProfile as
-            | Record<string, unknown>
+            | Record<string, JsonValue>
             | undefined;
-          const sl = pp?.socialLinks as Record<string, unknown> | undefined;
+          const sl = pp?.socialLinks as Record<string, JsonValue> | undefined;
           if (!sl) return undefined;
           return {
             twitter: toStringValue(sl.twitter, "") || undefined,

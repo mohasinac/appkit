@@ -1,6 +1,7 @@
 "use client";
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Stack, Text } from "../../../ui";
@@ -37,7 +38,7 @@ interface ScammerRow {
   secondary: string;
   status: string;
   updatedAt: string;
-  _raw?: Record<string, unknown>;
+  _raw?: Record<string, JsonValue>;
 }
 
 const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [

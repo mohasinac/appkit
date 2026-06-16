@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -34,7 +35,7 @@ interface ReviewRow {
   status: string;
   updatedAt: string;
   isFeatured?: boolean;
-  _raw?: Record<string, unknown>;
+  _raw?: Record<string, JsonValue>;
 }
 
 export type AdminReviewsViewProps = ListingLayoutProps;
@@ -48,7 +49,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
   const [replyText, setReplyText] = useState("");
 
   const patchMutation = useApiMutation({
-    mutationFn: async ({ id, payload }: { id: string; payload: Record<string, unknown> }) => {
+    mutationFn: async ({ id, payload }: { id: string; payload: Record<string, JsonValue> }) => {
       await apiClient.patch(ADMIN_ENDPOINTS.REVIEW_BY_ID(id), payload);
     },
     onSuccess: () => {
