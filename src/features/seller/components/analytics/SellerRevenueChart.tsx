@@ -97,7 +97,7 @@ export function SellerRevenueChart({
           </ResponsiveContainer>
         </Div>
       ) : (
-        <Text className="text-neutral-600 dark:text-neutral-400 py-8" size="sm" align="center">
+        <Text className="py-8" color="muted" size="sm" align="center">
           {labels.noData ?? "No data available"}
         </Text>
       )}

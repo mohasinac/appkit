@@ -118,7 +118,7 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
           </Tbody>
         </Table>
       </Div>
-      <Caption className="mt-3 block text-zinc-500 dark:text-zinc-400">{t("tableNote")}</Caption>
+      <Caption className="mt-3 block" color="muted">{t("tableNote")}</Caption>
     </Section>
   );
 }

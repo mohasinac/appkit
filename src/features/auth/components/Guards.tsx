@@ -218,7 +218,7 @@ export function ProtectedRoute({
             <Heading level={1} className="mb-2" size="2xl" weight="bold">
               {uiLabels.accessDenied}
             </Heading>
-            <Text className="mb-6 text-neutral-600 dark:text-neutral-400">
+            <Text className="mb-6" color="muted">
               {uiLabels.unauthorizedDescription}
             </Text>
             <Button

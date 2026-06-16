@@ -40,12 +40,12 @@ export function SellerTopProducts({
         <Div className="divide-y divide-neutral-100 dark:divide-neutral-800">
           {products.map((product, index) => (
             <Row key={product.productId} align="center" gap="md" padding="y-sm">
-              <Span size="sm" weight="bold" className="w-6 text-neutral-500 dark:text-neutral-400">
+              <Span size="sm" weight="bold" className="w-6" color="muted">
                 {index + 1}.
               </Span>
               <Div className="flex-1 min-w-0">
                 <Text className="truncate" size="sm" weight="medium">{product.title}</Text>
-                <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
+                <Text size="xs" color="muted">
                   {product.orders} {labels.ordersLabel ?? "orders"}
                 </Text>
               </Div>
@@ -62,7 +62,7 @@ export function SellerTopProducts({
         <Div className="text-center" padding="y-xl">
           <Text size="sm" weight="medium">{labels.noData ?? "No data available"}</Text>
           {labels.noDataDescription && (
-            <Text className="text-neutral-500 dark:text-neutral-400 mt-1" size="xs">
+            <Text className="mt-1" color="muted" size="xs">
               {labels.noDataDescription}
             </Text>
           )}

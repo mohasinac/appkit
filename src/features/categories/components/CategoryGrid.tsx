@@ -72,7 +72,7 @@ export function CategoryCard({
           {category.name}
         </Text>
         {category.description && (
-          <Text className={`mt-1 text-neutral-500 dark:text-zinc-400 flex-1`} truncate={2} size="xs">
+          <Text className={`mt-1 flex-1`} color="muted" truncate={2} size="xs">
             {category.description}
           </Text>
         )}

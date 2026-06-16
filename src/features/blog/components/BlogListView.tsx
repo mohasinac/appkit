@@ -88,7 +88,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
           {post.title}
         </Heading>
         {post.excerpt && (
-          <Text className={`mt-2 flex-1 text-neutral-500 dark:text-zinc-400`} truncate={3} size="sm">
+          <Text className={`mt-2 flex-1`} color="muted" truncate={3} size="sm">
             {post.excerpt}
           </Text>
         )}

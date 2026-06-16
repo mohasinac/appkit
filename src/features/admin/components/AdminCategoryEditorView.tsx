@@ -246,7 +246,7 @@ export function AdminCategoryEditorView({
                 />
               )}
             />
-            <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
+            <Text size="xs" color="muted">
               Leave empty to create a root category.
             </Text>
           </Stack>

@@ -127,7 +127,7 @@ export function BlogFeaturedCard({
           {/* Excerpt */}
           {post.excerpt && (
             <Text
-              className={`text-neutral-500 dark:text-zinc-400 mb-3`} truncate={2} size="sm"
+              className={`mb-3`} color="muted" truncate={2} size="sm"
             >
               {post.excerpt}
             </Text>

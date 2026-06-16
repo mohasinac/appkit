@@ -40,7 +40,7 @@ export function ContactInfoSidebar({
             <Row key={item.label} align="start" gap="3">
               <Span size="xl" className="flex-shrink-0 mt-0.5">{item.icon}</Span>
               <Div>
-                <Text className="text-neutral-500 dark:text-neutral-400 tracking-wide mb-0.5" size="xs" weight="medium" transform="uppercase">
+                <Text className="tracking-wide mb-0.5" color="muted" size="xs" weight="medium" transform="uppercase">
                   {item.label}
                 </Text>
                 {item.href ? (
