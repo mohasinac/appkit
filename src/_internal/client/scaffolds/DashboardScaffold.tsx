@@ -14,7 +14,7 @@
  */
 
 import * as React from "react";
-import { Div, Main, Nav, Stack } from "../../../ui";
+import { Div, Main, Nav, Span, Stack } from "../../../ui";
 export interface DashboardScaffoldRenderContext {
   /** Whether the off-canvas drawer is open. */
   drawerOpen: boolean;
@@ -90,9 +90,9 @@ export function DashboardScaffold({
             data-dashboard-slot="page-header"
           >
             {slotMenuToggle ? (
-              <span className="lg:hidden" onClick={toggleDrawer} role="presentation">
+              <Span className="lg:hidden" onClick={toggleDrawer} role="presentation">
                 {slotMenuToggle}
-              </span>
+              </Span>
             ) : null}
             <Div className="min-w-0 flex-1">{slotPageHeader}</Div>
           </div>

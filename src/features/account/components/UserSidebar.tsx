@@ -145,7 +145,7 @@ function DrawerContent({
                   : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               }`}
             >
-              <span>{group.title}</span>
+              <Span>{group.title}</Span>
               <svg
                 className={`w-3 h-3 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
                 fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"

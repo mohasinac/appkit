@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Aside, Details, Div, Heading, Nav, Section, Stack, Summary, Text, RichTextRenderer } from "../../../ui";
+import { Aside, Details, Div, Heading, Nav, RichTextRenderer, Section, Span, Stack, Summary, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
 
@@ -68,10 +68,10 @@ export async function FAQPageView({
                   href={String(ROUTES.PUBLIC.FAQS)}
                   className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
                 >
-                  <span className={`${flex.row} gap-2`}>
+                  <Span className={`${flex.row} gap-2`}>
                     <HelpCircle className="w-4 h-4" />
                     {t("allCategories")}
-                  </span>
+                  </Span>
                   <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                 </TextLink>
                 {categories.map((cat) => (
@@ -80,10 +80,10 @@ export async function FAQPageView({
                     href={String(ROUTES.PUBLIC.FAQ_CATEGORY(cat.slug))}
                     className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
                   >
-                    <span className={`${flex.row} gap-2`}>
-                      <span>{cat.icon}</span>
+                    <Span className={`${flex.row} gap-2`}>
+                      <Span>{cat.icon}</Span>
                       {cat.label}
-                    </span>
+                    </Span>
                     <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                   </TextLink>
                 ))}
@@ -115,7 +115,7 @@ export async function FAQPageView({
                     <Summary
                       className={`flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none font-medium text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors`}
                     >
-                      <span>{item.question}</span>
+                      <Span>{item.question}</Span>
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
                     </Summary>
                     <Div className="px-5 pb-5 pt-1">

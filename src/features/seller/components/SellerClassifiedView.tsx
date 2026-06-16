@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy } from "@mohasinac/appkit";
+import { Span, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
@@ -47,7 +47,7 @@ const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
     key: "acceptsShipping",
     header: "Shipping",
     render: (row) => (
-      <span
+      <Span
         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
           row.acceptsShipping
             ? "bg-success-surface text-success"
@@ -55,14 +55,14 @@ const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
         }`}
       >
         {row.acceptsShipping ? "Ships" : "Meetup only"}
-      </span>
+      </Span>
     ),
   },
   {
     key: "status",
     header: "Status",
     render: (row) => (
-      <span
+      <Span
         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
           row.status === "active"
             ? "bg-success-surface text-success"
@@ -70,7 +70,7 @@ const COLUMNS: AdminTableColumn<ClassifiedRow>[] = [
         }`}
       >
         {row.status}
-      </span>
+      </Span>
     ),
   },
   {

@@ -127,7 +127,7 @@ export function WelcomeSection({
               <Row
                 wrap
                 gap="md"
-                className="mt-8 justify-center lg:justify-start"
+                className="mt-8 lg:justify-start" justify="center"
               >
                 {ctaHref ? (
                   <TextLink
@@ -169,7 +169,7 @@ export function WelcomeSection({
               <Row
                 wrap
                 gap="sm"
-                className="mt-6 justify-center lg:justify-start"
+                className="mt-6 lg:justify-start" justify="center"
               >
                 {trustChips.map((chip) => (
                   <Span

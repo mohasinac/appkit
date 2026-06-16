@@ -1,4 +1,4 @@
-import { sortBy } from "@mohasinac/appkit";
+import { Span, sortBy } from "@mohasinac/appkit";
 import React from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -240,7 +240,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
                   className={CLS_PILL_LINK}
                 >
                   {SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS]}
-                  <span aria-hidden="true">×</span>
+                  <Span aria-hidden="true">×</Span>
                 </Link>
               </Row>
             )}

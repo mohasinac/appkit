@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Grid, Heading, Row, Section, Text } from "../../../ui";
+import { Button, Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 // --- Constants ---------------------------------------------------------------
 
 const CLS_VISIBLE = "opacity-100 translate-y-0";
@@ -78,9 +78,9 @@ function StepCard({
         <Row
           className={`relative z-10 w-14 h-14 ${iconBg} mb-4 border border-white/80 dark:border-slate-700/50`} align="center" justify="center" rounded="2xl"
         >
-          <span className={`${iconColor}`} aria-hidden="true">
+          <Span className={`${iconColor}`} aria-hidden="true">
             {step.renderIcon({ className: "w-6 h-6" })}
-          </span>
+          </Span>
         </Row>
       )}
 

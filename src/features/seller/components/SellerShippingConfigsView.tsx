@@ -95,7 +95,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "isActive",
     header: "Status",
     render: (row) => (
-      <span
+      <Span
         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
           row.isActive
             ? "bg-success-surface text-success"
@@ -103,7 +103,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
         }`}
       >
         {row.isActive ? "Active" : "Inactive"}
-      </span>
+      </Span>
     ),
   },
 ];
@@ -223,7 +223,7 @@ export function SellerShippingConfigsView({
         extra={
           <Button size="sm" onClick={handleCreate} className="flex items-center gap-1.5">
             <Plus className="h-4 w-4" />
-            <span>New Config</span>
+            <Span>New Config</Span>
           </Button>
         }
       />

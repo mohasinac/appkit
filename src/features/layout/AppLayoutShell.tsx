@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 // owns the singleton; nesting another would risk Turbopack chunk-splitting.
 // The actual 2.8.8 SSR crash was a peer-dep duplicate fixed by the
 // scripts/dedupe-peer-deps.mjs postinstall hook (see scripts/ and CLAUDE.md #19).
-import { AvatarDisplay, BackgroundRenderer, Div, Li, Main, Row, Stack, Text, TextLink, Ul, UnsavedChangesModal } from "../../ui";
+import { AvatarDisplay, BackgroundRenderer, Div, Li, Main, Row, Span, Stack, Text, TextLink, Ul, UnsavedChangesModal } from "../../ui";
 // Role indicator dots — distinct hues per role tier. Brand-decorative palette
 // kept inline so a future tokens.css "role" namespace can replace this in one
 // edit. The audit allows these as static role markers.
@@ -173,7 +173,7 @@ function CollapsibleNavGroup({
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
       >
-        <span>{title}</span>
+        <Span>{title}</Span>
         <svg
           className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           fill="none"
@@ -206,9 +206,9 @@ function CollapsibleSidebarSection({
           <Li key={`${item.href}-${item.label}`}>
             <TextLink href={item.href} variant="none" className={navItemClass}>
               {item.icon && (
-                <span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
                   {item.icon}
-                </span>
+                </Span>
               )}
               {item.label}
             </TextLink>
@@ -225,7 +225,7 @@ function CollapsibleSidebarSection({
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
       >
-        <span>{section.title}</span>
+        <Span>{section.title}</Span>
         <svg
           className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           fill="none"
@@ -242,9 +242,9 @@ function CollapsibleSidebarSection({
             <Li key={`${item.href}-${item.label}`}>
               <TextLink href={item.href} variant="none" className={navItemClass}>
                 {item.icon && (
-                  <span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                  <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
                     {item.icon}
-                  </span>
+                  </Span>
                 )}
                 {item.label}
               </TextLink>
@@ -522,7 +522,7 @@ function SidebarContent({
               onClick={toggleTheme}
               className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-secondary-300"
             >
-              <span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</span>
+              <Span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</Span>
               {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>
           )}

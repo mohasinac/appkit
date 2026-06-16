@@ -370,7 +370,7 @@ export function SellerTemplatesView({
         extra={
           <Button size="sm" onClick={openCreate} className="flex items-center gap-1.5">
             <Plus className="h-4 w-4" />
-            <span>New Template</span>
+            <Span>New Template</Span>
           </Button>
         }
       />

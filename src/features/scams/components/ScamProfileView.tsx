@@ -78,9 +78,9 @@ function IdentityChip({
   return (
     <Card variant="outlined" padding="sm">
       <Row gap="sm" align="center">
-        <span className="text-[color:var(--appkit-color-text-muted,theme(colors.zinc.400))]">
+        <Span className="text-[color:var(--appkit-color-text-muted,theme(colors.zinc.400))]">
           {icon}
-        </span>
+        </Span>
         <Stack gap="none">
           <Text className="text-[11px] tracking-wide" weight="medium" transform="uppercase" variant="secondary">
             {label}
@@ -353,7 +353,7 @@ function ScammerActionsColumn({
           <Stack gap="xs" as="ul">
             {Object.entries(CONTEST_TYPE_LABELS).map(([, label]) => (
               <Row key={label} gap="sm" align="start" as="li">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--appkit-color-border,theme(colors.zinc.300))]" />
+                <Span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--appkit-color-border,theme(colors.zinc.300))]" />
                 <Text variant="secondary" size="xs">{label}</Text>
               </Row>
             ))}

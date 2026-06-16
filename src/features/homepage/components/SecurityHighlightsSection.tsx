@@ -51,9 +51,9 @@ function SecurityCard({
      data-section="securityhighlightssection-div-357">
       {item.renderIcon && (
         <Row className="w-10 h-10 dark:bg-white/10 mb-3" surface="default" align="center" justify="center" rounded="lg">
-          <span className={iconColorClass} aria-hidden="true">
+          <Span className={iconColorClass} aria-hidden="true">
             {item.renderIcon({ className: "w-6 h-6" })}
-          </span>
+          </Span>
         </Row>
       )}
       <Text className="mb-1" weight="semibold">{item.title}</Text>

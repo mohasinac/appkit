@@ -88,7 +88,7 @@ export function RefundRequestView({
 
       <Stack gap="xs">
         <Text size="sm" weight="semibold">
-          {REFUND_COPY.request.reasonLabel} <span aria-hidden>*</span>
+          {REFUND_COPY.request.reasonLabel} <Span aria-hidden>*</Span>
         </Text>
         <Textarea
           value={reason}

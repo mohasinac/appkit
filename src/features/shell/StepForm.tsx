@@ -115,14 +115,14 @@ export function StepIndicator({
                     : "text-[var(--appkit-color-text-faint)] cursor-default",
               )}
             >
-              <span className="relative flex-shrink-0">
+              <Span className="relative flex-shrink-0">
                 {hasError && (
-                  <span
+                  <Span
                     className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--appkit-color-error)] z-10"
                     aria-label="This step has errors"
                   />
                 )}
-              <span
+              <Span
                 className={classNames(
                   "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2",
                   hasError
@@ -135,9 +135,9 @@ export function StepIndicator({
                 )}
               >
                 {isDone && !hasError ? <Check className="w-3 h-3" /> : hasError ? "!" : i + 1}
-              </span>
-              </span>
-              <span className="hidden sm:inline">{step.label}</span>
+              </Span>
+              </Span>
+              <Span className="hidden sm:inline">{step.label}</Span>
             </button>
             {i < steps.length - 1 && (
               <Div

@@ -426,7 +426,7 @@ export function AdminBlogEditorView({
       className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] p-5 max-h-[calc(100vh-12rem)] overflow-y-auto"
     >
       <Row className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]" align="center" gap="sm">
-        <span>Live preview</span>
+        <Span>Live preview</Span>
       </Row>
       {draft.coverImage ? (
         <img src={draft.coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />

@@ -68,7 +68,7 @@ export function CustomSectionsEditor({
               htmlFor={`${baseId}-title-${i}`}
               className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400"
             >
-              Section title <span className="text-error">*</span>
+              Section title <Span className="text-error">*</Span>
             </label>
             <Input
               id={`${baseId}-title-${i}`}

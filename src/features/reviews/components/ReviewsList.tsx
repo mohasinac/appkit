@@ -143,8 +143,8 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               href={String(ROUTES.PUBLIC.STORE_DETAIL(review.storeSlug!))}
               className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
             >
-              <span aria-hidden="true">🏪</span>
-              <span className={THEME_CONSTANTS.utilities.textClamp1}>{review.storeName}</span>
+              <Span aria-hidden="true">🏪</Span>
+              <Span className={THEME_CONSTANTS.utilities.textClamp1}>{review.storeName}</Span>
             </Link>
           )}
           {showProductLink && (
@@ -152,11 +152,11 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               href={productHref!}
               className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
-              <span aria-hidden="true">📦</span>
-              <span className={THEME_CONSTANTS.utilities.textClamp1}>
+              <Span aria-hidden="true">📦</Span>
+              <Span className={THEME_CONSTANTS.utilities.textClamp1}>
                 {review.productTitle ?? "View Product"}
-              </span>
-              <span aria-hidden="true" className="ml-auto text-primary group-hover:translate-x-0.5 transition-transform">→</span>
+              </Span>
+              <Span aria-hidden="true" className="ml-auto text-primary group-hover:translate-x-0.5 transition-transform">→</Span>
             </Link>
           )}
           {showProfileLink && (
@@ -164,8 +164,8 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               href={profileHref!}
               className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
-              <span aria-hidden="true">👤</span>
-              <span className={THEME_CONSTANTS.utilities.textClamp1}>{displayName}</span>
+              <Span aria-hidden="true">👤</Span>
+              <Span className={THEME_CONSTANTS.utilities.textClamp1}>{displayName}</Span>
             </Link>
           )}
         </Stack>

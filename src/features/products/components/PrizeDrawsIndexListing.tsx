@@ -158,7 +158,7 @@ export function PrizeDrawsIndexListing({
                 showClosed ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
               }`}
             >
-              <span
+              <Span
                 className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
                   showClosed ? "translate-x-[19px]" : "translate-x-[3px]"
                 }`}

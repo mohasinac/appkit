@@ -634,7 +634,7 @@ export async function ProductDetailPageView({
                       {typeof p.storeRating === "number" && p.storeRating > 0 && (
                         <Row gap="xs" align="center" className="mt-0.5">
                           <Text size="xs" color="muted">
-                            <span className="text-warning" aria-hidden="true">★</span>{" "}
+                            <Span className="text-warning" aria-hidden="true">★</Span>{" "}
                             {(p.storeRating as number).toFixed(1)}
                             {typeof p.storeReviewCount === "number" &&
                               p.storeReviewCount > 0 &&

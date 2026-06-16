@@ -69,9 +69,9 @@ function getMaskedIdentifier(item: Record<string, unknown>): string {
 
 function TypeBadge({ type }: { type: string }) {
   return (
-    <span className={CLS_TYPE_PILL}>
+    <Span className={CLS_TYPE_PILL}>
       {type === "upi" ? "UPI" : type === "bank" ? "Bank" : type.toUpperCase()}
-    </span>
+    </Span>
   );
 }
 
@@ -189,7 +189,7 @@ export function SellerPayoutMethodsView({
         extra={
           <Button size="sm" onClick={handleCreate} className="flex items-center gap-1.5">
             <Plus className="h-4 w-4" />
-            <span>New Method</span>
+            <Span>New Method</Span>
           </Button>
         }
       />
@@ -238,7 +238,7 @@ export function SellerPayoutMethodsView({
                             Default
                           </Span>
                         )}
-                        <span
+                        <Span
                           className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                             row.isActive
                               ? "bg-success-surface text-success"
@@ -246,7 +246,7 @@ export function SellerPayoutMethodsView({
                           }`}
                         >
                           {row.isActive ? "Active" : "Inactive"}
-                        </span>
+                        </Span>
                       </Row>
                       <Text className="mt-1 font-mono" color="muted" size="xs">
                         {row.maskedIdentifier}

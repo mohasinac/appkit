@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Stack, Row, Text, Button, Div, useToast } from "../../../ui";
+import { Button, Div, Row, Span, Stack, Text, useToast } from "../../../ui";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { NotificationPreferences, NotificationChannelPrefs, NotificationTypePrefs } from "../types";
 import type { NotificationChannelConfig } from "../../admin/schemas/firestore";
@@ -62,7 +62,7 @@ function ToggleRow({
           checked ? "bg-[var(--appkit-color-primary)]" : "bg-[var(--appkit-color-text-faint)]",
         ].join(" ")}
       >
-        <span
+        <Span
           className={[
             "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-lg",
             "ring-0 transition duration-200 ease-in-out",
@@ -190,7 +190,7 @@ export function NotificationPreferencesPanel({
             </Text>
           </Div>
           <Row className="h-5 w-9 bg-[var(--appkit-color-primary)] px-0.5" align="center" justify="end" rounded="full" aria-label="Always on">
-            <span className="h-4 w-4 rounded-full bg-white shadow" />
+            <Span className="h-4 w-4 rounded-full bg-white shadow" />
           </Row>
         </Row>
       </SectionCard>

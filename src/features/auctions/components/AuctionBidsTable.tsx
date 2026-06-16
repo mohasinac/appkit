@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { Badge, Div, Row, Stack, Text } from "../../../ui";
+import { Badge, Div, Row, Span, Stack, Text } from "../../../ui";
 import type { BidDocument } from "../schemas/firestore";
 
 const __O = {
@@ -115,10 +115,10 @@ function AuctionRow({
             // audit-inline-style-ok: runtime grid template
             style={{ gridTemplateColumns: portal === "buyer" ? "1fr auto auto" : "1fr 1fr auto auto" }}
           >
-            <span>{portal === "buyer" ? "Amount" : "Bidder"}</span>
-            {portal !== "buyer" && <span>Amount</span>}
-            <span>Status</span>
-            <span className="text-right">Time</span>
+            <Span>{portal === "buyer" ? "Amount" : "Bidder"}</Span>
+            {portal !== "buyer" && <Span>Amount</Span>}
+            <Span>Status</Span>
+            <Span className="text-right">Time</Span>
           </div>
           {sorted.map((bid) => (
             <div

@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy } from "@mohasinac/appkit";
+import { Span, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, Div, RowActionMenu, Text } from "../../../ui";
@@ -61,7 +61,7 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
     key: "vendorVerified",
     header: "Verified",
     render: (row) => (
-      <span
+      <Span
         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
           row.vendorVerified
             ? "bg-success-surface text-success"
@@ -69,14 +69,14 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
         }`}
       >
         {row.vendorVerified ? "Verified" : "Pending"}
-      </span>
+      </Span>
     ),
   },
   {
     key: "status",
     header: "Status",
     render: (row) => (
-      <span
+      <Span
         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
           row.status === "active"
             ? "bg-success-surface text-success"
@@ -84,7 +84,7 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
         }`}
       >
         {row.status}
-      </span>
+      </Span>
     ),
   },
   {

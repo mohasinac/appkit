@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { Div } from "../../../ui/components/Div";
 
-import { Row } from "@mohasinac/appkit";
+import { Row, Span } from "@mohasinac/appkit";
 const STORAGE_KEY = "letitrip:announcement-dismissed";
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -63,7 +63,7 @@ export function AnnouncementBar({ message, className = "", onDismiss }: Announce
     <Div className={`relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700 transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
       <Div className="container mx-auto max-w-[1920px] sm:px-6 lg:px-8" padding="x-md">
         <Row className="relative text-center text-sm font-medium text-white" padding="y-xs" align="center" justify="center">
-          <span>{message}</span>
+          <Span>{message}</Span>
           <button
             type="button"
             onClick={() => {

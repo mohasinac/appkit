@@ -30,7 +30,7 @@ const REL_NOOPENER = "noopener noreferrer";
 const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-error dark:hover:bg-zinc-800";
 import Link from "next/link";
 import { X } from "lucide-react";
-import { Button, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
 import { useSwipe } from "../../../react/hooks/useSwipe";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -215,17 +215,17 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <FieldRow label={labels.field.condition}>
-        <Text>{item.condition ? <span className={CHIP_CLASS}>{item.condition}</span> : "â€”"}</Text>
+        <Text>{item.condition ? <Span className={CHIP_CLASS}>{item.condition}</Span> : "â€”"}</Text>
       </FieldRow>
 
       <FieldRow label={labels.field.brand}>
-        <Text>{item.brand ? <span className={CHIP_CLASS}>{item.brand}</span> : "â€”"}</Text>
+        <Text>{item.brand ? <Span className={CHIP_CLASS}>{item.brand}</Span> : "â€”"}</Text>
       </FieldRow>
 
       <FieldRow label={labels.field.category}>
         <Text>
           {(Array.isArray(item.categoryNames) ? item.categoryNames[0] : item.categoryName) || (Array.isArray(item.categorySlugs) ? item.categorySlugs[0] : item.category) ? (
-            <span className={CHIP_CLASS}>{(Array.isArray(item.categoryNames) ? item.categoryNames[0] : item.categoryName) ?? (Array.isArray(item.categorySlugs) ? item.categorySlugs[0] : item.category)}</span>
+            <Span className={CHIP_CLASS}>{(Array.isArray(item.categoryNames) ? item.categoryNames[0] : item.categoryName) ?? (Array.isArray(item.categorySlugs) ? item.categorySlugs[0] : item.category)}</Span>
           ) : (
             "â€”"
           )}

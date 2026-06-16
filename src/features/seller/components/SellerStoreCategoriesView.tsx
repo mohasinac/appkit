@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, Stack, sortBy } from "@mohasinac/appkit";
+import { Row, Span, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { X, Plus } from "lucide-react";
@@ -82,7 +82,7 @@ const COLUMNS: DataTableColumn<CategoryRow>[] = [
     key: "isActive",
     header: "Status",
     render: (row) => (
-      <span
+      <Span
         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
           row.isActive
             ? "bg-success-surface text-success"
@@ -90,7 +90,7 @@ const COLUMNS: DataTableColumn<CategoryRow>[] = [
         }`}
       >
         {row.isActive ? "Active" : "Hidden"}
-      </span>
+      </Span>
     ),
   },
 ];
@@ -189,7 +189,7 @@ export function SellerStoreCategoriesView({
         extra={
           <Button size="sm" onClick={handleNavigateNew} className="flex items-center gap-1.5">
             <Plus className="h-4 w-4" />
-            <span>New Category</span>
+            <Span>New Category</Span>
           </Button>
         }
       />

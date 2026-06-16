@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Heading, Text, Section, Stack } from "../../../ui";
+import { Div, Heading, Section, Span, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShieldAlert, Home, LogIn } from "lucide-react";
 
@@ -62,10 +62,10 @@ export async function UnauthorizedView({
                     : "border border-white/40 text-white px-6 py-2.5 rounded-xl hover:bg-white/10 transition-colors"
                 }
               >
-                <span className="inline-flex items-center gap-2">
+                <Span className="inline-flex items-center gap-2">
                   <Icon className="w-4 h-4" />
                   {label}
-                </span>
+                </Span>
               </TextLink>
             ))}
           </Div>

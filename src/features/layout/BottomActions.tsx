@@ -261,7 +261,7 @@ export default function BottomActions() {
       )}
 
       {/* -- Main action row -------------------------------------------------- */}
-      <Row className={`gap-2 ${BOTTOM_NAV_HEIGHT}`} padding="x-sm">
+      <Row className={`${BOTTOM_NAV_HEIGHT}`} gap="sm" padding="x-sm">
         {isBulkMode && bulk ? (
           <>
             {/* Selection count pill — tap to clear ----------------------- */}

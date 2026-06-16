@@ -1,6 +1,7 @@
 "use client";
 
 import { resolveMediaUrl } from "../../utils/media-url";
+import { Span } from "../../ui/components/Typography";
 
 /**
  * MediaAudio — primitive for `<audio>` playback of internal media slugs or
@@ -37,14 +38,14 @@ export function MediaAudio({
   const resolved = src ? resolveMediaUrl(src) : undefined;
   if (!resolved) {
     return (
-      <span
+      <Span
         role="img"
         aria-label={title ?? "Audio unavailable"}
         // audit-variant-ok: MediaAudio fallback chip — primitive owns its style.
         className="inline-flex items-center gap-1 text-xs text-[var(--appkit-color-text-muted)]"
       >
         🎵 {title ?? "Audio unavailable"}
-      </span>
+      </Span>
     );
   }
 

@@ -64,7 +64,7 @@ const COLUMNS: AdminTableColumn<DigitalCodeRow>[] = [
     key: "status",
     header: "Status",
     render: (row) => (
-      <span
+      <Span
         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
           row.status === "active"
             ? "bg-success-surface text-success"
@@ -72,7 +72,7 @@ const COLUMNS: AdminTableColumn<DigitalCodeRow>[] = [
         }`}
       >
         {row.status}
-      </span>
+      </Span>
     ),
   },
   {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { Span, useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Shield, IndianRupee, UserX, CreditCard, Package, UserCheck, ShieldAlert, Truck } from "lucide-react";
@@ -47,7 +47,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
       title={
         <Row gap="sm" align="center">
           <Shield className="h-5 w-5 text-[color:var(--appkit-color-warning,theme(colors.amber.500))]" />
-          <span>Before you start — Stay Safe on LetItRip</span>
+          <Span>Before you start — Stay Safe on LetItRip</Span>
         </Row>
       }
       actions={
@@ -75,9 +75,9 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
               key={cat.id}
               className="flex gap-3 rounded-lg border border-[color:var(--appkit-color-border,theme(colors.zinc.200))] bg-[color:var(--appkit-color-surface,theme(colors.zinc.50))] p-3"
             >
-              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[color:var(--appkit-color-warning,theme(colors.amber.500))]/10 text-[color:var(--appkit-color-warning,theme(colors.amber.600))]">
+              <Span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[color:var(--appkit-color-warning,theme(colors.amber.500))]/10 text-[color:var(--appkit-color-warning,theme(colors.amber.600))]">
                 {CATEGORY_ICONS[cat.id] ?? <Shield className="h-4 w-4" />}
-              </span>
+              </Span>
               <Stack gap="none">
                 <Text weight="semibold" size="sm">
                   {cat.label}

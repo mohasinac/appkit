@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import type { ZodType } from "zod";
 import { Button } from "../../../ui/components/Button";
-import { Div } from "../../../ui";
+import { Div, Span } from "../../../ui";
 import { useClickOutside, useKeyPress } from "../../../react";
 import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
 import type { QuickFieldDef } from "../../shell/QuickFormDrawer";
@@ -90,7 +90,7 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
                   className={`appkit-row-action-menu__item ${action.destructive ? "appkit-row-action-menu__item--destructive" : ""} ${action.disabled ? "opacity-40 cursor-not-allowed" : ""}`}
                 >
                   {action.icon && (
-                    <span className="appkit-row-action-menu__icon">{action.icon}</span>
+                    <Span className="appkit-row-action-menu__icon">{action.icon}</Span>
                   )}
                   {action.label}
                 </Button>

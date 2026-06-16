@@ -380,7 +380,7 @@ export function Search({
     };
 
     return (
-      <Row className={`relative gap-2 ${className ?? ""}`}>
+      <Row className={`relative ${className ?? ""}`} gap="sm">
         <Row className="relative flex-1">
           <svg
             className="absolute left-3 w-4 h-4 text-zinc-400 pointer-events-none"

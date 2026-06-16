@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { Span, useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, Button, Div, FormActions, Row, SideDrawer, Stack, Text, useToast } from "../../../ui";
@@ -71,13 +71,13 @@ export function AdminContactEditorView({
         {/* Status badge */}
         <Row align="center" gap="sm">
           <Text size="xs" color="muted">Status:</Text>
-          <span
+          <Span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
               statusColor[currentStatus ?? "new"] ?? statusColor.new
             }`}
           >
             {currentStatus ?? "new"}
-          </span>
+          </Span>
         </Row>
 
         {/* From */}

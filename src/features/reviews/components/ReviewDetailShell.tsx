@@ -252,7 +252,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 : "border-neutral-300 dark:border-zinc-600 text-neutral-700 dark:text-zinc-200 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
             }`}
           >
-            <span aria-hidden="true">{voted ? "✓" : "👍"}</span>
+            <Span aria-hidden="true">{voted ? "✓" : "👍"}</Span>
             {voted ? "Marked helpful" : voting ? "Saving…" : "Helpful?"}
           </button>
         </Section>
@@ -264,9 +264,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               href={productHref}
               className={CLS_RELATED_LINK}
             >
-              <span className={CLS_ICON_ORANGE}>
+              <Span className={CLS_ICON_ORANGE}>
                 📦
-              </span>
+              </Span>
               <Div className="min-w-0">
                 <Text className={CLS_RELATED_LABEL}>Product</Text>
                 <Text className={CLS_RELATED_TITLE}>
@@ -281,9 +281,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               href={sellerHref}
               className={CLS_RELATED_LINK}
             >
-              <span className={CLS_ICON_BLUE}>
+              <Span className={CLS_ICON_BLUE}>
                 🏪
-              </span>
+              </Span>
               <Div className="min-w-0">
                 <Text className={CLS_RELATED_LABEL}>Seller</Text>
                 <Text className={CLS_RELATED_TITLE}>
@@ -298,9 +298,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               href={reviewerHref}
               className={CLS_RELATED_LINK}
             >
-              <span className={CLS_ICON_PURPLE}>
+              <Span className={CLS_ICON_PURPLE}>
                 👤
-              </span>
+              </Span>
               <Div className="min-w-0">
                 <Text className={CLS_RELATED_LABEL}>Reviewer</Text>
                 <Text className={CLS_RELATED_TITLE}>
