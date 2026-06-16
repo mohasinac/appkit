@@ -114,7 +114,7 @@ export function BrandsSection({
   if (!isLoading && allBrands.length === 0) return null;
 
   return (
-    <Section className={`px-4 ${themed.bgSecondary} ${className}`} padding="y-3xl">
+    <Section className={`px-4 ${className}`} surface="subtle" padding="y-3xl">
       <Div className="mx-auto max-w-7xl">
         <Row className="mb-6" align="center" justify="between">
           <>

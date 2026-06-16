@@ -193,7 +193,7 @@ function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statIte
   return (
     <Grid gap="md" className="grid-cols-2 sm:grid-cols-4">
       {statItems.map(({ icon: Icon, label, value }) => (
-        <Div key={label} rounded="xl" className={`border ${themed.border} ${themed.bgPrimary} ${__P.p4} text-center`}>
+        <Div key={label} rounded="xl" className={`${__P.p4} text-center`} border="default" surface="muted">
           <Row centered className={`${flex.center} mb-1`}><Icon className="w-4 h-4 text-neutral-400" /></Row>
           <Text size="lg" weight="bold">{value}</Text>
           <Text variant="secondary" size="xs">{label}</Text>
@@ -207,7 +207,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
   if (!pub?.bio && !pub?.location && !pub?.website) return null;
   return (
     <Section>
-      <Stack gap="sm" className={`border ${themed.border} ${themed.bgPrimary} ${__P.p6}`} rounded="2xl">
+      <Stack gap="sm" className={`${__P.p6}`} border="default" surface="muted" rounded="2xl">
         {pub.bio && <Text className="leading-relaxed text-neutral-700" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
           {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500"><MapPin className="w-4 h-4" />{pub.location}</Span>}
@@ -222,7 +222,7 @@ function renderStoreDescriptionSection(themed: ProfileThemed, isSeller: boolean,
   if (!isSeller || !storeSlug || !storeDescription) return null;
   return (
     <Section>
-      <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} ${__P.p6}`}>
+      <Div rounded="2xl" className={`${__P.p6}`} border="default" surface="subtle">
         <Heading level={3} className="mb-2">{storeName}</Heading>
         <Text variant="secondary" className="leading-relaxed" size="sm">{storeDescription}</Text>
         <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">{t("visitStore")} →</Link>
@@ -236,7 +236,7 @@ function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, produc
     <Section>
       <Heading level={2} className="mb-4">{t("listingsTitle")}</Heading>
       {products.length === 0 ? (
-        <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+        <Div rounded="2xl" className={`p-12 text-center`} border="default" surface="subtle">
           <ShoppingBag className={CLS_EMPTY_ICON} />
           <Text variant="secondary" size="sm">{t("noListings")}</Text>
         </Div>
@@ -259,7 +259,7 @@ function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsReceivedTitle")}</Heading>
       {reviews.length === 0 ? (
-        <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+        <Div rounded="2xl" className={`p-12 text-center`} border="default" surface="subtle">
           <Star className={CLS_EMPTY_ICON} />
           <Text variant="secondary" size="sm">{t("noReviewsReceived")}</Text>
         </Div>
@@ -282,7 +282,7 @@ function renderAuthoredReviewsSection(t: ProfileT, themed: ProfileThemed, review
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsAuthoredTitle", { name: displayName })}</Heading>
       {reviews.length === 0 ? (
-        <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+        <Div rounded="2xl" className={`p-12 text-center`} border="default" surface="subtle">
           <Star className={CLS_EMPTY_ICON} />
           <Text variant="secondary" size="sm">{t("noReviewsAuthored", { name: displayName })}</Text>
         </Div>

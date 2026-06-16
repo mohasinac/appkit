@@ -140,7 +140,7 @@ function renderScamAwarenessAlert(t: HelpTranslateFn) {
 
 function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
-    <Section className={`${__P.p6} border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`} rounded="2xl">
+    <Section className={`${__P.p6} flex flex-col sm:flex-row items-center gap-4`} border="default" surface="subtle" rounded="2xl">
       <Div className="flex-1">
         <Heading level={3} className="mb-1" size="base">{t("trackOrderTitle")}</Heading>
         <Text variant="secondary" size="sm">{t("trackOrderText")}</Text>
@@ -152,7 +152,7 @@ function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
 
 function renderContactCtaSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   return (
-    <Section className={`${__P.p8} text-center border ${themed.border} ${themed.bgSecondary}`} rounded="2xl">
+    <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />
       <Heading level={2} className="mb-3">{t("contactTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("contactText")}</Text>

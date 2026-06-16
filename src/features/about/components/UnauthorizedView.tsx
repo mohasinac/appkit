@@ -74,7 +74,7 @@ export async function UnauthorizedView({
 
       <Div className={`${page.container.sm}`} padding="y-2xl">
         <Section
-          className={`text-center border ${themed.border} ${themed.bgSecondary}`} rounded="2xl" padding="lg"
+          className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="lg"
         >
           <Heading level={2} className="mb-2" size="base">
             {t("helpTitle")}

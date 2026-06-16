@@ -98,7 +98,7 @@ export function SecurityHighlightsSection({
   return (
     <Section
       ref={sectionRef}
-      className={`py-14 ${themed.bgPrimary} ${className}`} padding="x-md"
+      className={`py-14 ${className}`} surface="muted" padding="x-md"
     >
       <Div className="max-w-6xl mx-auto">
         {/* Header */}

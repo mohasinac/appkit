@@ -64,7 +64,7 @@ export async function TrackOrderView({
       <Div className={`${page.container.md} md:py-16 space-y-14 md:space-y-16`} padding="y-2-5xl">
         {/* Sign-in prompt */}
         <Section
-          className={`${themed.bgSecondary} border ${themed.border} text-center`} rounded="2xl" padding="xl"
+          className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="xl"
         >
           <Div className={`w-16 h-16 bg-primary/10 dark:bg-primary/15 ${flex.center} mx-auto mb-4`} rounded="full">
             <ShoppingBag className="w-8 h-8 text-primary" />
@@ -118,7 +118,7 @@ export async function TrackOrderView({
 
         {/* Need help */}
         <Section
-          className={`${themed.bgSecondary} border ${themed.border} flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4`} rounded="xl" padding="lg"
+          className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4`} border="default" surface="subtle" rounded="xl" padding="lg"
         >
           <Div>
             <Heading level={2} className="mb-1">

@@ -191,7 +191,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
       <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
       <Stack gap="3">
         {statuses.map(({ status, icon, badge, desc }) => (
-          <Row key={status} className={`${__P.p4} border ${themed.border} ${themed.bgPrimary}`} align="start" gap="md" rounded="xl">
+          <Row key={status} className={`${__P.p4}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
               <Span size="xl">{icon}</Span>
               <Span size="xs" weight="semibold" className={`py-0.5 ${badge}`} rounded="full" padding="x-xs">{status}</Span>
@@ -224,7 +224,7 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
 
 function renderOrdersCtaSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
   return (
-    <Section className={`${__P.p8} text-center ${themed.bgSecondary} border ${themed.border}`} rounded="2xl">
+    <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
       <Div className={`${flex.center} gap-4 flex-wrap`}>

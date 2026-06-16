@@ -95,7 +95,7 @@ export async function FAQPageView({
           <Div className="flex-1 min-w-0">
             {visibleItems.length === 0 ? (
               <Section
-                className={`text-center border ${themed.border} ${themed.bgSecondary}`} rounded="2xl" padding="y-4xl"
+                className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="y-4xl"
               >
                 <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-zinc-600" />
                 <Heading level={3} className="mb-2" size="base">
@@ -131,7 +131,7 @@ export async function FAQPageView({
 
             {/* Still need help? */}
             <Section
-              className={`mt-10 text-center border ${themed.border} ${themed.bgSecondary}`} rounded="2xl" padding="lg"
+              className={`mt-10 text-center`} border="default" surface="subtle" rounded="2xl" padding="lg"
             >
               <Heading level={3} className="mb-2" size="base">
                 {t("stillNeedHelpTitle")}

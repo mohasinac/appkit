@@ -116,9 +116,7 @@ export async function ShippingPolicyView({
           ))}
 
           {/* Contact */}
-          <Section
-            className={`${themed.bgSecondary} border ${themed.border}`} rounded="xl" padding="lg"
-          >
+          <Section rounded="xl" padding="lg" border="default" surface="subtle">
             <Heading level={2} className="mb-2">
               {t("contactTitle")}
             </Heading>
@@ -126,7 +124,7 @@ export async function ShippingPolicyView({
           </Section>
         </Stack>
 
-        <Div className={`mt-12 border-t ${themed.border} flex gap-6 text-sm`} padding="t-xl">
+        <Div className={`mt-12 border-t flex gap-6 text-sm`} border="default" padding="t-xl">
           <TextLink
             href={String(ROUTES.PUBLIC.TRACK_ORDER)}
             className={CLS_FOOTER_LINK}

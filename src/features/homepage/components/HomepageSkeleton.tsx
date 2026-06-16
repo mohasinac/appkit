@@ -28,7 +28,7 @@ export function HomepageSkeleton() {
       />
 
       {/* Trust Features skeleton — 4 cards */}
-      <Section className={`${__P.p8} ${themed.bgPrimary}`}>
+      <Section className={`${__P.p8}`} surface="muted">
         <Grid className="grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Stack
@@ -40,7 +40,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Top Categories skeleton — 6 tiles */}
-      <Section className={`${__P.p8} ${themed.bgSecondary}`}>
+      <Section className={`${__P.p8}`} surface="subtle">
         <Div className={`${skeleton.heading} w-48 mx-auto mb-6`} />
         <Grid className="grid-cols-2 sm:grid-cols-4">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -50,7 +50,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Featured Products skeleton — 5 cards */}
-      <Section className={`${__P.p8} ${themed.bgPrimary}`}>
+      <Section className={`${__P.p8}`} surface="muted">
         <Row className={`${flex.between} mb-6`}>
           <Div className={`${skeleton.heading} w-52`} />
           <Div className={`${skeleton.text} w-24`} />
@@ -67,7 +67,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Featured Auctions skeleton — 5 cards */}
-      <Section className={`${__P.p8} ${themed.bgSecondary}`}>
+      <Section className={`${__P.p8}`} surface="subtle">
         <Row className={`${flex.between} mb-6`}>
           <Div className={`${skeleton.heading} w-56`} />
           <Div className={`${skeleton.text} w-24`} />
@@ -84,7 +84,7 @@ export function HomepageSkeleton() {
       </Section>
 
       {/* Newsletter skeleton */}
-      <Section className={`${__P.p8} ${themed.bgPrimary}`}>
+      <Section className={`${__P.p8}`} surface="muted">
         <Div
           className={`${skeleton.card} max-w-2xl mx-auto ${newsletterH}`} rounded="2xl"
         />

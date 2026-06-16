@@ -151,7 +151,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   // autoScroll: wrap all cards in SectionCarousel (client carousel)
   if (autoScroll) {
     return (
-      <Section className={`${themed.bgPrimary}`} padding="y-3xl">
+      <Section padding="y-3xl" surface="muted">
         <Div className={CLS_CONTAINER}>
           <SectionCarousel
             title={title ?? ""}
@@ -170,7 +170,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   // Row layout: horizontal scroller
   if (layout === "row") {
     return (
-      <Section className={`${themed.bgPrimary}`} padding="y-3xl">
+      <Section padding="y-3xl" surface="muted">
         <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
           <HorizontalScroller gap={16} showArrows snapToItems loop>
@@ -193,7 +193,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
       .map((c) => c.replace("grid-cols-", "columns-"))
       .join(" ");
     return (
-      <Section className={`${themed.bgPrimary}`} padding="y-3xl">
+      <Section padding="y-3xl" surface="muted">
         <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
           <Stack className={`${masonryClass} space-y-4`} gap="md">
@@ -211,7 +211,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   // Grid layout (default)
   const colsClass = COLS_CLASS[columns as 1 | 2 | 3 | 4] ?? COLS_CLASS[3];
   return (
-    <Section className={`${themed.bgPrimary}`} padding="y-3xl">
+    <Section padding="y-3xl" surface="muted">
       <Div className={CLS_CONTAINER}>
         <SectionHeader title={title} />
         <Div className={`grid ${colsClass} gap-4`}>

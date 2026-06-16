@@ -112,7 +112,7 @@ export async function PolicyPageView({
 
         {/* Related policies footer */}
         {relatedLinks.length > 0 && (
-          <Div className={`mt-14 border-t ${themed.border}`} padding="t-xl">
+          <Div className={`mt-14 border-t`} border="default" padding="t-xl">
             <Heading
               level={3}
               className="mb-3 uppercase tracking-wide" color="muted" size="sm" weight="semibold"

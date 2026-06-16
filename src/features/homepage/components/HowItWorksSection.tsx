@@ -135,7 +135,7 @@ export function HowItWorksSection({
   return (
     <Section
       ref={sectionRef}
-      className={`${themed.bgPrimary} ${className}`} padding="xl"
+      className={`${className}`} surface="muted" padding="xl"
     >
       <Div className="max-w-6xl mx-auto">
         {/* Header */}

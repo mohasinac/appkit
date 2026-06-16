@@ -140,7 +140,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
         : "";
 
   return (
-    <Section className={`${themed.bgPrimary}`} padding="y-3xl">
+    <Section padding="y-3xl" surface="muted">
       <Div className="w-full max-w-7xl mx-auto" padding="x-md">
         <Row className="mb-8" align="end" justify="between" gap="md">
           <>

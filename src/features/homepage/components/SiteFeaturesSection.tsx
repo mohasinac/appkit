@@ -33,7 +33,7 @@ export function SiteFeaturesSection({
   const { themed } = THEME_CONSTANTS;
 
   return (
-    <Section className={`${__P.p8} ${themed.bgSecondary} ${className}`}>
+    <Section className={`${__P.p8} ${className}`} surface="subtle">
       <Div className="w-full">
         {/* Section Header */}
         <Div className="text-center mb-12">

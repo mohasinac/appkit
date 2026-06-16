@@ -49,7 +49,7 @@ export function CustomerReviewsSection<T = unknown>({
 
   if (isLoading) {
     return (
-      <Section className={`${__P.p8} ${themed.bgPrimary} ${className}`}>
+      <Section className={`${__P.p8} ${className}`} surface="muted">
         <Div className="w-full max-w-7xl mx-auto">
           <Div className={`h-8 ${skeleton.base} mb-8 max-w-xs mx-auto`} />
           <Div className={`flex gap-6 ${__O.hidden}`}>
@@ -68,7 +68,7 @@ export function CustomerReviewsSection<T = unknown>({
   if (items.length === 0) return null;
 
   return (
-    <Section className={`${themed.bgPrimary} ${className}`} padding="y-3xl">
+    <Section className={`${className}`} surface="muted" padding="y-3xl">
       <Div className="w-full max-w-7xl mx-auto md:px-8" padding="x-md">
         {/* Section Header */}
         <Div className="text-center mb-10">

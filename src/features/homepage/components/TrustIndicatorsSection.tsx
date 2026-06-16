@@ -29,7 +29,7 @@ export function TrustIndicatorsSection({
   const { themed } = THEME_CONSTANTS;
 
   return (
-    <Section className={`${__P.p6} ${themed.bgSecondary} ${className}`}>
+    <Section className={`${__P.p6} ${className}`} surface="subtle">
       <Div className="w-full">
         <Grid
           gap="md"

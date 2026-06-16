@@ -172,7 +172,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
 
   if (!apiKey) {
     return (
-      <Section className={`${themed.bgPrimary}`} padding="y-3xl">
+      <Section padding="y-3xl" surface="muted">
         <Div className="w-full max-w-7xl mx-auto" padding="x-md">
           <NotConfiguredState />
         </Div>
@@ -209,7 +209,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
     googleMapsUrl || (placeId ? `https://search.google.com/local/reviews?placeid=${placeId}` : "");
 
   return (
-    <Section className={`${themed.bgPrimary}`} padding="y-3xl">
+    <Section padding="y-3xl" surface="muted">
       <Div className="w-full max-w-7xl mx-auto" padding="x-md">
         <Row className="mb-8" align="end" justify="between" gap="md">
           <>
