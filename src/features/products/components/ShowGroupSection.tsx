@@ -137,7 +137,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
 
   const tableContent = (
     <Div className={`${__O.xAuto}`}>
-      <Table className="w-full text-left min-w-[400px]">
+      <Table className="text-left min-w-[400px]">
         <Thead>
           <Tr border="default">
             <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Image</Th>

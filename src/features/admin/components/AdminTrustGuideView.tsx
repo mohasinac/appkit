@@ -25,7 +25,7 @@ export function AdminTrustGuideView() {
           content: (
             <>
               <Div className="overflow-x-auto">
-                <Table className="w-full text-sm border-collapse">
+                <Table size="sm">
                   <Thead>
                     <Tr className="border-b border-[var(--appkit-color-border)]">
                       {["", "Soft Ban", "Hard Ban"].map((h) => (

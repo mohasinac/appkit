@@ -22,7 +22,7 @@ export function AdminUsersGuideView() {
           Icon: Users, title: "User Roles Overview",
           content: (
             <Div className="overflow-x-auto">
-              <Table className="w-full text-sm border-collapse">
+              <Table size="sm">
                 <Thead>
                   <Tr className="border-b border-[var(--appkit-color-border)]">
                     {["Role", "What they can do", "How assigned"].map((h) => (

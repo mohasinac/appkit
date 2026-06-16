@@ -91,7 +91,7 @@ function CapabilityTable() {
         <Div key={group}>
           <Text className="tracking-wide text-[var(--appkit-color-text-muted)] mb-2" size="xs" weight="semibold" transform="uppercase">{group}</Text>
           <Div className="overflow-x-auto -mx-6">
-            <Table className="min-w-full text-sm">
+            <Table className="min-w-full" size="sm">
               <Thead>
                 <Tr className="border-b border-[var(--appkit-color-border)]">
                   <Th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)]">Capability</Th>

@@ -58,7 +58,7 @@ export function NavPermissionsManager({
             {group.groupLabel}
           </Text>
           <Div className={`${__O.hidden}`} rounded="xl" border="default">
-            <Table className="w-full text-sm">
+            <Table size="sm">
               <Thead>
                 <Tr className="bg-zinc-50 dark:bg-slate-800" border="default">
                   <Th className="text-left" padding="md" color="primary" weight="semibold">Nav Item</Th>

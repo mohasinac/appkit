@@ -159,7 +159,7 @@ export function DataTable<T extends { id: string }>({
   return (
     <Div surface="card" className={`${__O.hidden}`}>
       <Div className={`${__O.xAuto}`}>
-        <Table data-testid="data-table" className="w-full text-sm">
+        <Table data-testid="data-table" size="sm">
           <Thead>
             <Tr className="bg-neutral-50 dark:bg-slate-800" border="default">
               {selectionEnabled && (

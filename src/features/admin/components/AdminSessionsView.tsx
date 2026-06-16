@@ -3,6 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, Div, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
@@ -84,10 +85,10 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
     ],
     mapRows: (response) =>
       toRecordArray(response.sessions).map((item, index) => {
-        const deviceInfo = (item.deviceInfo ?? {}) as Record<string, unknown>;
+        const deviceInfo = (item.deviceInfo ?? {}) as Record<string, JsonValue>;
         const userLabel = toStringValue(
-          (item as Record<string, unknown>).user &&
-            ((item as Record<string, unknown>).user as Record<string, unknown>)?.displayName,
+          (item as Record<string, JsonValue>).user &&
+            ((item as Record<string, JsonValue>).user as Record<string, JsonValue>)?.displayName,
           toStringValue(item.userId, `user-${index}`),
         );
         const ipMasked = maskIp(toStringValue(deviceInfo.ip, ""));

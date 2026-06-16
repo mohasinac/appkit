@@ -62,7 +62,7 @@ function ListingTypesTable() {
 
   return (
     <Div className="overflow-x-auto -mx-6">
-      <Table className="min-w-full text-sm">
+      <Table className="min-w-full" size="sm">
         <Thead>
           <Tr className="border-b border-[var(--appkit-color-border)]">
             {HEADERS.map((h) => (
@@ -175,7 +175,7 @@ function AuctionWalkthrough() {
       <Div>
         <Text className={SUBHEADING}>Bid increment</Text>
         <Div className="overflow-x-auto">
-          <Table className="text-xs min-w-[320px]">
+          <Table className="min-w-[320px]" size="sm">
             <Thead>
               <Tr className="border-b border-[var(--appkit-color-border)]">
                 <Th className="py-2 pr-4 text-left font-semibold text-[var(--appkit-color-text)]">Current high bid</Th>

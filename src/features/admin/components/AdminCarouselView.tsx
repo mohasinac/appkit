@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
@@ -70,11 +71,11 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       return toRecordArray(sourceItems)
         .sort((a, b) => ((a.order as number) ?? 0) - ((b.order as number) ?? 0))
         .map((item, index) => {
-          const bg = item.background as Record<string, unknown> | undefined;
-          const legacyMedia = item.media as Record<string, unknown> | undefined;
+          const bg = item.background as Record<string, JsonValue> | undefined;
+          const legacyMedia = item.media as Record<string, JsonValue> | undefined;
           const thumbnailUrl = toStringValue(bg?.url, "") || toStringValue(legacyMedia?.url, "") || "";
           const orderValue = typeof item.order === "number" ? item.order : index + 1;
-          const height = toStringValue((item.settings as Record<string, unknown> | undefined)?.height, "—");
+          const height = toStringValue((item.settings as Record<string, JsonValue> | undefined)?.height, "—");
           return {
             id: toStringValue(item.id, `slide-${index}`),
             primary: toStringValue(item.title, `Carousel slide ${index + 1}`),
