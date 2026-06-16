@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Accordion, Alert, Div, Heading, Li, Ol, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Accordion, Alert, Div, Heading, Li, Ol, Row, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -141,22 +141,22 @@ function CarriersSection() {
         Buyers receive the tracking number as entered; they look it up on the carrier's website.
       </Text>
       <Div className="overflow-x-auto -mx-6">
-        <table className="min-w-full text-sm">
-          <thead>
-            <tr className="border-b border-[var(--appkit-color-border)]">
-              <th className="px-6 py-3 text-left font-semibold text-[var(--appkit-color-text)]">Carrier</th>
-              <th className="px-6 py-3 text-left font-semibold text-[var(--appkit-color-text)]">Typical SLA</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--appkit-color-border)]">
+        <Table className="min-w-full text-sm">
+          <Thead>
+            <Tr className="border-b border-[var(--appkit-color-border)]">
+              <Th className="px-6 py-3 text-left font-semibold text-[var(--appkit-color-text)]">Carrier</Th>
+              <Th className="px-6 py-3 text-left font-semibold text-[var(--appkit-color-text)]">Typical SLA</Th>
+            </Tr>
+          </Thead>
+          <Tbody className="divide-y divide-[var(--appkit-color-border)]">
             {CARRIERS.map(({ name, sla }) => (
-              <tr key={name}>
-                <td className="px-6 py-3 font-medium text-[var(--appkit-color-text)]">{name}</td>
-                <td className="px-6 py-3 text-[var(--appkit-color-text-muted)]">{sla}</td>
-              </tr>
+              <Tr key={name}>
+                <Td className="px-6 py-3 font-medium text-[var(--appkit-color-text)]">{name}</Td>
+                <Td className="px-6 py-3 text-[var(--appkit-color-text-muted)]">{sla}</Td>
+              </Tr>
             ))}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </Div>
       <Alert variant="info" title="Tip: insurance for high-value shipments">
         For items above ₹5,000, consider using a carrier that offers shipment insurance (Blue Dart, Delhivery Premium).

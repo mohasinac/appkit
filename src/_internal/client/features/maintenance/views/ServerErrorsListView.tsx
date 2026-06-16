@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Anchor, Div, Heading, Label, Span, Text } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Label, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit";
 import type { ServerErrorDocument, ServerErrorSource } from "../../../../../features/server-errors/schemas/firestore";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";
@@ -90,11 +90,11 @@ export function ServerErrorsListView({
       </Div>
 
       <Div style={{ overflowX: "auto", border: BORDER_STYLE, borderRadius: 6 }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
-          <thead style={{ background: "var(--appkit-color-bg)" }}>
-            <tr>
+        <Table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+          <Thead style={{ background: "var(--appkit-color-bg)" }}>
+            <Tr>
               {COLUMNS.map((c) => (
-                <th
+                <Th
                   key={c.key as string}
                   style={{
                     textAlign: "left",
@@ -105,27 +105,27 @@ export function ServerErrorsListView({
                   }}
                 >
                   {c.label}
-                </th>
+                </Th>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </Tr>
+          </Thead>
+          <Tbody>
             {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={COLUMNS.length} style={{ padding: "2rem", textAlign: "center", color: "var(--appkit-color-text-muted)" }}>
+              <Tr>
+                <Td colSpan={COLUMNS.length} style={{ padding: "2rem", textAlign: "center", color: "var(--appkit-color-text-muted)" }}>
                   No errors in the selected window.
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             ) : (
               filtered.map((r) => (
-                <tr key={r.id} style={{ borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
+                <Tr key={r.id} style={{ borderBottom: "1px solid var(--appkit-color-border-subtle)" }}>
                   {COLUMNS.map((c) => {
                     let cell: React.ReactNode;
                     if (c.key === "occurredAtFmt") cell = fmt(r.occurredAt);
                     else if (c.key === "messagePreview") cell = preview(r.message);
                     else cell = (r[c.key as keyof ServerErrorDocument] ?? "") as React.ReactNode;
                     return (
-                      <td key={c.key as string} style={{ padding: "0.5rem 0.75rem", verticalAlign: "top" }}>
+                      <Td key={c.key as string} style={{ padding: "0.5rem 0.75rem", verticalAlign: "top" }}>
                         {c.key === "code" ? (
                           <Anchor href={`${detailHrefBase}/${r.id}`} external={false}>
                             {String(cell)}
@@ -133,14 +133,14 @@ export function ServerErrorsListView({
                         ) : (
                           String(cell ?? "")
                         )}
-                      </td>
+                      </Td>
                     );
                   })}
-                </tr>
+                </Tr>
               ))
             )}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </Div>
     </Div>
   );

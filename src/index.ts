@@ -107,6 +107,9 @@ export { DEFAULT_STICKY_CONFIG } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // DataTable - Component for data table.
 export { DataTable } from "./ui/index";
+// Table family primitives — replace raw <table>/<tr>/<td>/etc. (W-E).
+export { Table, Thead, Tbody, Tr, Th, Td } from "./ui/index";
+export type { TableProps, TheadProps, TbodyProps, TrProps, ThProps, TdProps } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // DescriptionField - Shared export for description field.
 export { DescriptionField } from "./ui/index";

@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Div, Heading, Li, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -62,34 +62,34 @@ function ListingTypesTable() {
 
   return (
     <Div className="overflow-x-auto -mx-6">
-      <table className="min-w-full text-sm">
-        <thead>
-          <tr className="border-b border-[var(--appkit-color-border)]">
+      <Table className="min-w-full text-sm">
+        <Thead>
+          <Tr className="border-b border-[var(--appkit-color-border)]">
             {HEADERS.map((h) => (
-              <th
+              <Th
                 key={h}
                 className="px-6 py-3 text-left font-semibold text-[var(--appkit-color-text)]"
               >
                 {h}
-              </th>
+              </Th>
             ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-[var(--appkit-color-border)]">
+          </Tr>
+        </Thead>
+        <Tbody className="divide-y divide-[var(--appkit-color-border)]">
           {ROWS.map(({ label, keys }) => (
-            <tr key={label}>
-              <td className="px-6 py-3 font-medium text-[var(--appkit-color-text-muted)] whitespace-nowrap">
+            <Tr key={label}>
+              <Td className="px-6 py-3 font-medium text-[var(--appkit-color-text-muted)] whitespace-nowrap">
                 {label}
-              </td>
+              </Td>
               {LISTING_TYPES.map((t) => (
-                <td key={t.type} className="px-6 py-3 text-[var(--appkit-color-text)] align-top">
+                <Td key={t.type} className="px-6 py-3 text-[var(--appkit-color-text)] align-top">
                   {t[keys[0]]}
-                </td>
+                </Td>
               ))}
-            </tr>
+            </Tr>
           ))}
-        </tbody>
-      </table>
+        </Tbody>
+      </Table>
     </Div>
   );
 }
@@ -175,14 +175,14 @@ function AuctionWalkthrough() {
       <Div>
         <Text className={SUBHEADING}>Bid increment</Text>
         <Div className="overflow-x-auto">
-          <table className="text-xs min-w-[320px]">
-            <thead>
-              <tr className="border-b border-[var(--appkit-color-border)]">
-                <th className="py-2 pr-4 text-left font-semibold text-[var(--appkit-color-text)]">Current high bid</th>
-                <th className="py-2 text-left font-semibold text-[var(--appkit-color-text)]">Minimum increment</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--appkit-color-border)]">
+          <Table className="text-xs min-w-[320px]">
+            <Thead>
+              <Tr className="border-b border-[var(--appkit-color-border)]">
+                <Th className="py-2 pr-4 text-left font-semibold text-[var(--appkit-color-text)]">Current high bid</Th>
+                <Th className="py-2 text-left font-semibold text-[var(--appkit-color-text)]">Minimum increment</Th>
+              </Tr>
+            </Thead>
+            <Tbody className="divide-y divide-[var(--appkit-color-border)]">
               {[
                 ["₹0 – ₹499", "₹10"],
                 ["₹500 – ₹1,999", "₹25"],
@@ -190,13 +190,13 @@ function AuctionWalkthrough() {
                 ["₹10,000 – ₹49,999", "₹500"],
                 ["₹50,000+", "₹1,000"],
               ].map(([range, inc]) => (
-                <tr key={range}>
-                  <td className="py-2 pr-4">{range}</td>
-                  <td className="py-2">{inc}</td>
-                </tr>
+                <Tr key={range}>
+                  <Td className="py-2 pr-4">{range}</Td>
+                  <Td className="py-2">{inc}</Td>
+                </Tr>
               ))}
-            </tbody>
-          </table>
+            </Tbody>
+          </Table>
         </Div>
       </Div>
       <Div>

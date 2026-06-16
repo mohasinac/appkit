@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -91,30 +91,30 @@ function CapabilityTable() {
         <Div key={group}>
           <Text className="tracking-wide text-[var(--appkit-color-text-muted)] mb-2" size="xs" weight="semibold" transform="uppercase">{group}</Text>
           <Div className="overflow-x-auto -mx-6">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="border-b border-[var(--appkit-color-border)]">
-                  <th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)]">Capability</th>
-                  <th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)]">What it unlocks</th>
-                  <th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)] w-24">Default</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--appkit-color-border)]">
+            <Table className="min-w-full text-sm">
+              <Thead>
+                <Tr className="border-b border-[var(--appkit-color-border)]">
+                  <Th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)]">Capability</Th>
+                  <Th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)]">What it unlocks</Th>
+                  <Th className="px-6 py-2 text-left font-semibold text-[var(--appkit-color-text)] w-24">Default</Th>
+                </Tr>
+              </Thead>
+              <Tbody className="divide-y divide-[var(--appkit-color-border)]">
                 {items.map(({ cap, unlocks, defaultOn }) => (
-                  <tr key={cap}>
-                    <td className="px-6 py-2 font-mono text-xs text-[var(--appkit-color-text)] align-top whitespace-nowrap">{cap}</td>
-                    <td className="px-6 py-2 text-[var(--appkit-color-text-muted)] align-top">{unlocks}</td>
-                    <td className="px-6 py-2 align-top">
+                  <Tr key={cap}>
+                    <Td className="px-6 py-2 font-mono text-xs text-[var(--appkit-color-text)] align-top whitespace-nowrap">{cap}</Td>
+                    <Td className="px-6 py-2 text-[var(--appkit-color-text-muted)] align-top">{unlocks}</Td>
+                    <Td className="px-6 py-2 align-top">
                       {defaultOn ? (
                         <Span className="inline-block bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">On</Span>
                       ) : (
                         <Span className="inline-block bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">Off</Span>
                       )}
-                    </td>
-                  </tr>
+                    </Td>
+                  </Tr>
                 ))}
-              </tbody>
-            </table>
+              </Tbody>
+            </Table>
           </Div>
         </Div>
       ))}

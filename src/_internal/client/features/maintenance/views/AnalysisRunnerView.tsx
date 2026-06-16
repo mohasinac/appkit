@@ -2,7 +2,7 @@
 import { normalizeError } from "../../../../../errors/normalize";
 
 import * as React from "react";
-import { Div, Heading, Li, Section, Span, Text, Ul } from "@mohasinac/appkit";
+import { Div, Heading, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit";
 import type { AnalyzeReport } from "../../../../server/features/maintenance/analyze";
 
 export function AnalysisRunnerView(): React.JSX.Element {
@@ -98,25 +98,25 @@ function ReportView({ report }: { report: AnalyzeReport }): React.JSX.Element {
       </Text>
 
       <ReportSection title="Top codes">
-        <table style={{ width: "100%", fontSize: "0.85rem" }}>
-          <thead><tr><th align="left">Code</th><th align="right">Count</th><th align="right">User impact</th></tr></thead>
-          <tbody>
+        <Table style={{ width: "100%", fontSize: "0.85rem" }}>
+          <Thead><Tr><Th align="left">Code</Th><Th align="right">Count</Th><Th align="right">User impact</Th></Tr></Thead>
+          <Tbody>
             {report.topCodes.map((c) => (
-              <tr key={c.code}><td style={{ fontFamily: "monospace" }}>{c.code}</td><td align="right">{c.count}</td><td align="right">{c.userImpact}</td></tr>
+              <Tr key={c.code}><Td style={{ fontFamily: "monospace" }}>{c.code}</Td><Td align="right">{c.count}</Td><Td align="right">{c.userImpact}</Td></Tr>
             ))}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </ReportSection>
 
       <ReportSection title="Top routes">
-        <table style={{ width: "100%", fontSize: "0.85rem" }}>
-          <thead><tr><th align="left">Route</th><th align="left">Source</th><th align="right">Count</th></tr></thead>
-          <tbody>
+        <Table style={{ width: "100%", fontSize: "0.85rem" }}>
+          <Thead><Tr><Th align="left">Route</Th><Th align="left">Source</Th><Th align="right">Count</Th></Tr></Thead>
+          <Tbody>
             {report.topRoutes.map((r) => (
-              <tr key={`${r.source}:${r.route}`}><td style={{ fontFamily: "monospace" }}>{r.route}</td><td>{r.source}</td><td align="right">{r.count}</td></tr>
+              <Tr key={`${r.source}:${r.route}`}><Td style={{ fontFamily: "monospace" }}>{r.route}</Td><Td>{r.source}</Td><Td align="right">{r.count}</Td></Tr>
             ))}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </ReportSection>
 
       {report.stackClusters.length > 0 ? (
