@@ -42,6 +42,7 @@ const GAP_MAP = {
   none: "",
   px: "appkit-gap--px",
   xs: "appkit-gap--xs",
+  "1.5": "appkit-gap--1-5",
   sm: "appkit-gap--sm",
   "2.5": "appkit-gap--2-5",
   "3": "appkit-gap--3",

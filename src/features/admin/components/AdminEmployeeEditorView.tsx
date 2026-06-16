@@ -266,7 +266,7 @@ export function AdminEmployeeEditorView({
       >
         <Form onSubmit={handleSubmit} className="flex flex-col gap-5" padding="md">
           {mode === "invite" && (
-            <Stack className="gap-1.5">
+            <Stack gap="xs" className=".5">
               <Label size="sm" weight="medium" color="primary">
                 Email address
               </Label>
@@ -281,7 +281,7 @@ export function AdminEmployeeEditorView({
             </Stack>
           )}
 
-          <Stack className="gap-1.5">
+          <Stack gap="xs" className=".5">
             <Label size="sm" weight="medium" color="primary">
               Permission group
             </Label>

@@ -137,7 +137,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
 
       {/* Footer links — rendered outside the review Link to avoid nested anchors */}
       {hasFooter && (
-        <Stack className="mt-3 border-t border-neutral-100 gap-1.5" padding="t-sm">
+        <Stack gap="xs" className="mt-3 border-t border-neutral-100 .5" padding="t-sm">
           {showStoreLink && (
             <Link
               href={String(ROUTES.PUBLIC.STORE_DETAIL(review.storeSlug!))}

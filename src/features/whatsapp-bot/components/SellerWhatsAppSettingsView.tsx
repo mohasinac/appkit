@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 
 const __P = {
@@ -169,7 +170,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   // Save mutation
   const saveMutation = useApiMutation({
     mutationFn: async () => {
-      const payload: Record<string, unknown> = {
+      const payload: Record<string, JsonValue> = {
         catalogSyncEnabled: syncEnabled,
       };
       if (phoneNumber) payload.phoneNumber = phoneNumber;

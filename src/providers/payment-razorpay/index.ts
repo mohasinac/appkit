@@ -20,6 +20,7 @@
  */
 
 import Razorpay from "razorpay";
+import type { JsonValue } from "@mohasinac/appkit";
 import { createHmac, timingSafeEqual } from "crypto";
 import type {
   IPaymentProvider,
@@ -52,7 +53,7 @@ export class RazorpayProvider implements IPaymentProvider {
   async createOrder(
     amount: number,
     currency?: string,
-    metadata?: Record<string, unknown>,
+    metadata?: Record<string, JsonValue>,
   ): Promise<PaymentOrder> {
     const resolvedCurrency = currency ?? getDefaultCurrency();
     const order = await this.razorpay.orders.create({
@@ -100,7 +101,7 @@ export class RazorpayProvider implements IPaymentProvider {
   }
 
   async refund(paymentId: string, amount?: number): Promise<Refund> {
-    const refundData: Record<string, unknown> = {};
+    const refundData: Record<string, JsonValue> = {};
     if (amount !== undefined) refundData.amount = amount;
     const result = await this.razorpay.payments.refund(
       paymentId,
@@ -293,7 +294,7 @@ export async function createRazorpayRefund(
   amountPaise?: number,
 ): Promise<RazorpayRefundResult> {
   const razorpay = await getRazorpayInstance();
-  const opts: Record<string, unknown> = {};
+  const opts: Record<string, JsonValue> = {};
   if (amountPaise) opts.amount = amountPaise;
   const refund = await razorpay.payments.refund(
     paymentId,

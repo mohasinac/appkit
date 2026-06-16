@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import { createHmac, timingSafeEqual } from "crypto";
 import {
   getDefaultCurrencySymbol,
@@ -89,7 +90,7 @@ export function parseIncomingWebhookPayload(
       };
     }
     // JSON format (Wati.io or generic)
-    const json = JSON.parse(rawBody) as Record<string, unknown>;
+    const json = JSON.parse(rawBody) as Record<string, JsonValue>;
     const from =
       typeof json.senderWaId === "string"
         ? json.senderWaId
@@ -97,9 +98,9 @@ export function parseIncomingWebhookPayload(
           ? json.from
           : "";
     const body =
-      typeof (json.text as Record<string, unknown> | undefined)?.body ===
+      typeof (json.text as Record<string, JsonValue> | undefined)?.body ===
       "string"
-        ? ((json.text as Record<string, unknown>).body as string)
+        ? ((json.text as Record<string, JsonValue>).body as string)
         : typeof json.body === "string"
           ? json.body
           : "";

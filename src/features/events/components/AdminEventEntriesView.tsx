@@ -180,7 +180,7 @@ export function AdminEventEntriesView({
       key: "points",
       header: "Points",
       render: (row) => (
-        <Row className="gap-1.5" align="center">
+        <Row gap="xs" className=".5" align="center">
           <input
             type="number"
             min={0}

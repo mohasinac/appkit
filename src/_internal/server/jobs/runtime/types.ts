@@ -12,11 +12,12 @@
  */
 
 import type { Firestore } from "firebase-admin/firestore";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface JobLogger {
-  info(message: string, meta?: Record<string, unknown>): void;
-  warn(message: string, meta?: Record<string, unknown>): void;
-  error(message: string, err?: unknown, meta?: Record<string, unknown>): void;
+  info(message: string, meta?: Record<string, JsonValue>): void;
+  warn(message: string, meta?: Record<string, JsonValue>): void;
+  error(message: string, err?: unknown, meta?: Record<string, JsonValue>): void;
 }
 
 export interface JobContext {
