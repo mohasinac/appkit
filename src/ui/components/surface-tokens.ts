@@ -104,6 +104,10 @@ export const BORDER_MAP = {
   subtle: "border border-zinc-100 dark:border-slate-800/60",
   strong: "border border-zinc-300 dark:border-slate-600",
   dashed: "border border-dashed border-zinc-300 dark:border-slate-600",
+  bottom: "border-b border-zinc-200 dark:border-slate-700",
+  "bottom-subtle": "border-b border-zinc-100 dark:border-slate-800/60",
+  top: "border-t border-zinc-200 dark:border-slate-700",
+  "top-subtle": "border-t border-zinc-100 dark:border-slate-800/60",
 } as const;
 
 export type BorderKey = keyof typeof BORDER_MAP;

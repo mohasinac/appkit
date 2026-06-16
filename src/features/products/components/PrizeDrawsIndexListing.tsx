@@ -167,7 +167,7 @@ export function PrizeDrawsIndexListing({
       />
 
       {totalPages > 1 && (
-        <Row border="default" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b py-1.5" surface="default" padding="x-sm" justify="center">
+        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
