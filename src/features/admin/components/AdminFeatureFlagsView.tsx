@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Div, Form, FormActions, Input, Row, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
@@ -13,7 +14,7 @@ const __O = {
 } as const;
 
 interface FlagData {
-  flags: Record<string, unknown>;
+  flags: Record<string, JsonValue>;
   rollouts: Record<string, number>;
 }
 
@@ -147,7 +148,7 @@ export function AdminFeatureFlagsView({
     },
   });
 
-  const [flags, setFlags] = React.useState<Record<string, unknown>>({});
+  const [flags, setFlags] = React.useState<Record<string, JsonValue>>({});
   const [rollouts, setRollouts] = React.useState<Record<string, number>>({});
 
   React.useEffect(() => {

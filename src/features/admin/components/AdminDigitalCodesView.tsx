@@ -5,6 +5,7 @@
  */
 
 import { sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -47,7 +48,7 @@ const ADMIN_DIGITAL_CODES_CONFIG: ListingViewConfig<AdminProductsResponse, Digit
   ],
   mapRows: (response) =>
     toRecordArray(response.items).map((item, index) => {
-      const dc = (item.digitalCode ?? {}) as Record<string, unknown>;
+      const dc = (item.digitalCode ?? {}) as Record<string, JsonValue>;
       return {
         id: toStringValue(item.id, `dc-${index}`),
         primary: toStringValue(item.title ?? item.productTitle, "Untitled digital code"),

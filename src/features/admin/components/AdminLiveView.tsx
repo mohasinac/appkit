@@ -5,6 +5,7 @@
  */
 
 import { sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -47,7 +48,7 @@ const ADMIN_LIVE_CONFIG: ListingViewConfig<AdminProductsResponse, LiveRow> = {
   ],
   mapRows: (response) =>
     toRecordArray(response.items).map((item, index) => {
-      const live = (item.liveItem ?? {}) as Record<string, unknown>;
+      const live = (item.liveItem ?? {}) as Record<string, JsonValue>;
       return {
         id: toStringValue(item.id, `live-${index}`),
         primary: toStringValue(item.title ?? item.productTitle, "Untitled live item"),

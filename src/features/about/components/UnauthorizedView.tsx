@@ -82,7 +82,7 @@ export async function UnauthorizedView({
           <Text variant="secondary" className="mb-3" size="sm">
             {t("helpText")}
           </Text>
-          <Stack justify="center" gap="sm" className="flex-row flex-wrap gap-4">
+          <Row justify="center" gap="sm" className="flex-wrap gap-4">
             <TextLink
               href={String(ROUTES.PUBLIC.HELP)}
               variant="muted" size="sm">
@@ -93,7 +93,7 @@ export async function UnauthorizedView({
               variant="muted" size="sm">
               {t("contact")}
             </TextLink>
-          </Stack>
+          </Row>
         </Section>
       </Div>
     </Div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Row } from "@mohasinac/appkit/ui";
+import type { JsonValue } from "@mohasinac/appkit";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -122,7 +123,7 @@ export function AdminFaqEditorView({
   // --- save ---
   const saveMutation = useApiMutation({
     mutationFn: async () => {
-      const payload: Record<string, unknown> = {
+      const payload: Record<string, JsonValue> = {
         question,
         slug: slug || toSlug(question),
         answer,

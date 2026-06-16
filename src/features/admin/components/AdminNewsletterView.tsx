@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useCallback, useState } from "react";
@@ -109,8 +110,8 @@ export function AdminNewsletterView({
             .join(" · ") || "—",
         status: toStringValue(item.status, "unknown"),
         updatedAt: toRelativeDate(
-          (item as Record<string, unknown>).subscribedAt ??
-            (item as Record<string, unknown>).createdAt,
+          (item as Record<string, JsonValue>).subscribedAt ??
+            (item as Record<string, JsonValue>).createdAt,
         ),
       })),
     getTotal: (response, mappedRows) => {

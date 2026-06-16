@@ -252,7 +252,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                 />
                 <Div>
                   <Text className="mb-1.5" size="sm" weight="medium">Account Type</Text>
-                  <Stack gap="xs" className="flex-row">
+                  <Row gap="xs">
                     {(["savings", "current"] as const).map((t) => (
                       <Label layout="flex" gap="md" key={t} className="cursor-pointer">
                         <input
@@ -267,7 +267,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                         <Text size="sm" transform="capitalize">{t}</Text>
                       </Label>
                     ))}
-                  </Stack>
+                  </Row>
                 </Div>
               </FormGroup>
             </Stack>
