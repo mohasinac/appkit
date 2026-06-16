@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Div, Li, Nav, Row, Span, Ul } from "../../ui";
+import { NavbarChevron } from "../../ui/components/NavbarChevron";
 const __O = {
   hidden: "overflow-hidden",
 } as const;
@@ -54,8 +55,6 @@ function DefaultNavItem({
   );
 }
 
-const chevronBtn =
-  "absolute top-0 bottom-0 z-10 flex items-center justify-center w-8 bg-gradient-to-r from-white/95 dark:from-slate-950/95 to-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors";
 
 /**
  * NavbarLayout — generic horizontal navigation bar shell.
@@ -130,16 +129,7 @@ export function NavbarLayout({
         {/* Scrollable items area */}
         <Div className={`relative flex-1 ${__O.hidden}`}>
           {canScrollLeft && (
-            <button
-              type="button"
-              onClick={() => scroll("left")}
-              aria-label="Scroll navigation left"
-              className={`${chevronBtn} left-0 bg-gradient-to-r`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+            <NavbarChevron direction="left" onClick={() => scroll("left")} />
           )}
 
           <Ul
@@ -161,16 +151,7 @@ export function NavbarLayout({
           </Ul>
 
           {canScrollRight && (
-            <button
-              type="button"
-              onClick={() => scroll("right")}
-              aria-label="Scroll navigation right"
-              className={`${chevronBtn} right-0 bg-gradient-to-l`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            <NavbarChevron direction="right" onClick={() => scroll("right")} />
           )}
         </Div>
 

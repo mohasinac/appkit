@@ -188,9 +188,9 @@ export function WelcomeSection({
           {/* Right: brand logo (desktop only) */}
           <Div className="hidden lg:block">
             <Div
-              className={`relative overflow-hidden aspect-[4/3] bg-gradient-to-br from-primary-100 via-cobalt-100/60 to-secondary-100 dark:from-primary-950/60 dark:via-cobalt-950/40 dark:to-secondary-950/60 border ${themed.border} shadow-2xl`} rounded="3xl"
+              className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)] border ${themed.border} shadow-2xl`} rounded="3xl"
             >
-              <Div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-cobalt/5" />
+              <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
               <Row centered className={`absolute inset-0 ${flex.center} px-10`}>
                 <SiteLogo
                   title={brandLogoText || "LetItRip.in"}

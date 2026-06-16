@@ -352,7 +352,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (!slides || slides.length === 0) {
     return (
-      <Div className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-gradient-to-br from-primary/10 to-secondary/10 ${flex.center} flex-col gap-4`}>
+      <Div className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${flex.center} flex-col gap-4`}>
         <Heading level={2} className="text-primary" size="2xl" weight="bold">Coming Soon</Heading>
         <Text variant="secondary" className="max-w-md px-4" align="center">
           Amazing deals are on their way. Stay tuned!

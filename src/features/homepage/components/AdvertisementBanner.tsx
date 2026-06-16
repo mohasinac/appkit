@@ -12,7 +12,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_GRADIENT_BG = "absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600";
+const CLS_GRADIENT_BG = "absolute inset-0 bg-[image:var(--appkit-gradient-promotion)]";
 const CLS_CTA_BTN_SM = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0";
 const CLS_CTA_BTN_LG = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2";
 
@@ -49,8 +49,7 @@ export function AdvertisementBanner({
   compact = false,
   className = "",
 }: AdvertisementBannerProps) {
-  const wrapClass =
-    "bg-gradient-to-br from-amber-50/40 to-orange-50/20 dark:from-amber-950/10 dark:to-orange-950/5";
+  const wrapClass = "bg-[image:var(--appkit-gradient-section-warm)]";
 
   if (isLoading) {
     return (

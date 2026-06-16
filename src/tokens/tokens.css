@@ -212,6 +212,7 @@
   --appkit-color-deviantart: #05CC47;
   --appkit-color-whatsapp:   #25D366;
   --appkit-color-youtube:    #FF0000;
+  --appkit-gradient-instagram: linear-gradient(to bottom right, #a855f7, #ec4899, #fb923c);
 }
 
 /* --- Colour — Semantic (light mode defaults) ------------------------------ */

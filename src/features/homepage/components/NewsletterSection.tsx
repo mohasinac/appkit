@@ -31,7 +31,7 @@ export function NewsletterSection({
     <Section className={`px-4 relative ${__O.hidden} ${className}`} padding="y-4xl">
       {/* Gradient background layer */}
       <Div
-        className="absolute inset-0 bg-gradient-to-br from-primary/10 via-cobalt/5 to-secondary/10 dark:from-primary/15 dark:via-cobalt/10 dark:to-secondary/15 pointer-events-none"
+        className="absolute inset-0 bg-[image:var(--appkit-gradient-section-cool)] pointer-events-none"
         aria-hidden
       />
       {/* Decorative circles */}
