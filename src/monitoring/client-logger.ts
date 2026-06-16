@@ -24,8 +24,8 @@ export interface ClientErrorContext {
 function buildClientMeta(
   error: unknown,
   context?: ClientErrorContext,
-): Record<string, JsonValue> {
-  const base: Record<string, JsonValue> = {
+): Record<string, unknown> {
+  const base: Record<string, unknown> = {
     ...context,
     timestamp: new Date().toISOString(),
     userAgent:

@@ -3,7 +3,7 @@
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
+import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Stack, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -45,12 +45,12 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
     key: "primary",
     header: "Name / Aliases",
     render: (row) => (
-      <Div className="space-y-0.5">
+      <Stack gap="none" className=".5">
         <Text weight="medium" color="primary">{row.primary}</Text>
         {row.secondary ? (
           <Text size="xs" color="muted">{row.secondary}</Text>
         ) : null}
-      </Div>
+      </Stack>
     ),
   },
   {

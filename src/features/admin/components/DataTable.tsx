@@ -3,7 +3,7 @@
 import React from "react";
 import type { JsonValue } from "@mohasinac/appkit";
 import type { AdminTableColumn } from "../types";
-import { BaseListingCard, Button, Div, Row, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
+import { BaseListingCard, Button, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __O = {
@@ -16,10 +16,10 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, JsonValue>>[] = [
     key: "primary",
     header: "Name",
     render: (row) => (
-      <Div className="space-y-0.5">
+      <Stack gap="none" className=".5">
         <Text weight="medium" color="primary">{String(row.primary ?? "")}</Text>
         {row.secondary ? <Text size="xs" color="muted">{String(row.secondary)}</Text> : null}
-      </Div>
+      </Stack>
     ),
   },
   {

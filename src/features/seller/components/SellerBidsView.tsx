@@ -158,10 +158,10 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       key: "productTitle",
       header: "Auction",
       render: (row) => (
-        <Div className="space-y-0.5">
+        <Stack gap="none" className=".5">
           <Text className="line-clamp-1" color="primary" size="sm" weight="medium">{row.productTitle}</Text>
           <Text className="font-mono" color="faint" size="xs">{row.productId}</Text>
-        </Div>
+        </Stack>
       ),
     },
     {

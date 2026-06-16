@@ -370,10 +370,10 @@ export function SellerOrdersView({
       key: "primary",
       header: "Order",
       render: (row) => (
-        <Div className="space-y-0.5 min-w-0">
+        <Stack gap="none" className=".5 min-w-0">
           <Text className="font-mono truncate" color="primary" size="xs" weight="semibold">{row.primary}</Text>
           <Text size="xs" color="muted">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
-        </Div>
+        </Stack>
       ),
     },
     {

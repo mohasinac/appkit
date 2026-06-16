@@ -168,7 +168,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
       </Row>
       <Stack gap="sm">
         {storeReviews.slice(0, 10).map((review) => (
-          <Div key={review.id} surface="card" padding="sm" className="space-y-1.5">
+          <Stack gap="xs" key={review.id} surface="card" padding="sm" className=".5">
             <Row justify="between" align="center">
               <Row gap="xs" align="center">
                 <Span size="sm" weight="medium" color="primary">{review.userName}</Span>
@@ -178,7 +178,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
             {review.title && <Text size="sm" weight="semibold" color="primary">{review.title}</Text>}
             <Text className="leading-relaxed" color="muted" size="sm">{review.comment}</Text>
             <Text size="xs" color="faint">{review.productTitle}</Text>
-          </Div>
+          </Stack>
         ))}
       </Stack>
     </Section>

@@ -3,7 +3,7 @@
 // component stays under the 150-line code-quality threshold.
 
 import React from "react";
-import { Div, FilterChipGroup, ListingFilterDrawer, Row, Text } from "../../../ui";
+import { Div, FilterChipGroup, ListingFilterDrawer, Row, Stack, Text } from "../../../ui";
 import { INPUT_CLS, FILTER_LABEL_CLS } from "./seller-products-styles";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 import { BrandInlineSelect } from "./BrandInlineSelect";
@@ -49,15 +49,15 @@ export function SellerProductsFilterDrawer({
         value={pendingFilters.status ?? ""}
         onChange={(id) => patch("status", id)}
       />
-      <Div className="space-y-1.5">
+      <Stack gap="xs" className=".5">
         <Text className={FILTER_LABEL_CLS}>Category</Text>
         <CategoryInlineSelect
           value={pendingFilters.category ?? ""}
           onChange={(v) => patch("category", v)}
           placeholder="Search categories…"
         />
-      </Div>
-      <Div className="space-y-1.5">
+      </Stack>
+      <Stack gap="xs" className=".5">
         <Text className={FILTER_LABEL_CLS}>Brand</Text>
         <BrandInlineSelect
           value={pendingFilters.brand ?? ""}
@@ -65,8 +65,8 @@ export function SellerProductsFilterDrawer({
           placeholder="Search brands…"
           allowCreate={false}
         />
-      </Div>
-      <Div className="space-y-1.5">
+      </Stack>
+      <Stack gap="xs" className=".5">
         <Text className={FILTER_LABEL_CLS}>Condition</Text>
         <select
           value={pendingFilters.condition ?? ""}
@@ -77,8 +77,8 @@ export function SellerProductsFilterDrawer({
             <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
-      </Div>
-      <Div className="space-y-1.5">
+      </Stack>
+      <Stack gap="xs" className=".5">
         <Text className={FILTER_LABEL_CLS}>Price (₹ Rupees)</Text>
         <Row gap="sm">
           <input
@@ -98,8 +98,8 @@ export function SellerProductsFilterDrawer({
             className={HALF_INPUT_CLS}
           />
         </Row>
-      </Div>
-      <Div className="space-y-1.5">
+      </Stack>
+      <Stack gap="xs" className=".5">
         <Text className={FILTER_LABEL_CLS}>Tags (comma-separated)</Text>
         <input
           type="text"
@@ -108,8 +108,8 @@ export function SellerProductsFilterDrawer({
           placeholder="pokemon, vintage, holo"
           className={INPUT_CLS}
         />
-      </Div>
-      <Div className="space-y-1.5">
+      </Stack>
+      <Stack gap="xs" className=".5">
         <Text className={FILTER_LABEL_CLS}>Badges (feature slugs)</Text>
         <input
           type="text"
@@ -118,7 +118,7 @@ export function SellerProductsFilterDrawer({
           placeholder="feature-free-shipping, feature-verified"
           className={INPUT_CLS}
         />
-      </Div>
+      </Stack>
     </ListingFilterDrawer>
   );
 }

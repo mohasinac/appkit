@@ -289,12 +289,12 @@ export function AdminEventEntriesView({
       </Text>
       <Stack gap="sm">
         {Object.entries(expandedEntry.formResponses).map(([key, value]) => (
-          <Div key={key} className="space-y-0.5">
+          <Stack gap="none" key={key} className=".5">
             <Text size="xs" weight="medium" color="muted">{key}</Text>
             <Text className="whitespace-pre-wrap break-words" color="primary" size="sm">
               {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}
             </Text>
-          </Div>
+          </Stack>
         ))}
       </Stack>
     </Stack>

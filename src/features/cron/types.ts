@@ -7,6 +7,8 @@
  * No Firebase SDK imported here — types only.
  */
 
+import type { JsonValue } from "../../schemas/types";
+
 // --- Job context --------------------------------------------------------------
 
 /** Context passed into every scheduled job at runtime. */
@@ -28,7 +30,7 @@ export interface JobResult {
   /** Number of errors encountered (0 = clean run). */
   errors: number;
   /** Any extra key/value metadata the job wants to surface. */
-  meta?: Record<string, unknown>;
+  meta?: Record<string, JsonValue>;
 }
 
 // --- Job definition -----------------------------------------------------------
