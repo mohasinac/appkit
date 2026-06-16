@@ -122,7 +122,7 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
       </TextLink>
       {hasVideo && imageIndex === 0 ? (
         <Div className="absolute right-2 top-2">
-          <Span layout="flex-center" color="inverse" className="h-8 w-8 bg-black/50" rounded="full">
+          <Span surface="overlay-sm" layout="flex-center" color="inverse" className="h-8 w-8" rounded="full">
             <Play className="h-4 w-4" aria-label={mergedLabels.videoLabel} />
           </Span>
         </Div>

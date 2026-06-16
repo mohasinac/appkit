@@ -385,7 +385,7 @@ export function Caption({
 /** Inline-decorations allowed on Span (pill chips, code-like wraps, etc). */
 type SpanRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-xs" | "pill-sm" | "pill-sm-tall" | "pill-md" | "pill-lg";
-type SpanBg = "none" | "muted" | "subtle" | "default" | "success-surface" | "danger-surface" | "warning-surface" | "info-surface";
+type SpanBg = "none" | "muted" | "subtle" | "default" | "success-surface" | "danger-surface" | "warning-surface" | "info-surface" | "overlay-xs" | "overlay-sm" | "overlay-md" | "overlay-lg" | "overlay-xl";
 
 const SPAN_ROUNDED_MAP: Record<SpanRounded, string> = {
   none: "",
@@ -422,6 +422,11 @@ const SPAN_BG_MAP: Record<SpanBg, string> = {
   "danger-surface": "bg-[var(--appkit-color-error-surface)]",
   "warning-surface": "bg-[var(--appkit-color-warning-surface)]",
   "info-surface": "bg-[var(--appkit-color-info-surface)]",
+  "overlay-xs": "bg-black/40",
+  "overlay-sm": "bg-black/50",
+  "overlay-md": "bg-black/55",
+  "overlay-lg": "bg-black/60",
+  "overlay-xl": "bg-black/70",
 };
 
 type SpanLayout = "inline" | "inline-flex" | "flex" | "inline-flex-center" | "flex-center" | "inline-block" | "block";

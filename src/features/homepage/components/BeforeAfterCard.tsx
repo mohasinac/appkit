@@ -137,10 +137,10 @@ export function BeforeAfterCard({
         </Div>
 
         {/* Labels */}
-        <Span color="inverse" size="xs" weight="medium" className="absolute top-3 left-3 z-10 bg-black/50" padding="pill-sm" rounded="full">
+        <Span surface="overlay-sm" color="inverse" size="xs" weight="medium" className="absolute top-3 left-3 z-10" padding="pill-sm" rounded="full">
           {beforeLabel}
         </Span>
-        <Span color="inverse" size="xs" weight="medium" className="absolute top-3 right-3 z-10 bg-black/50" padding="pill-sm" rounded="full">
+        <Span surface="overlay-sm" color="inverse" size="xs" weight="medium" className="absolute top-3 right-3 z-10" padding="pill-sm" rounded="full">
           {afterLabel}
         </Span>
       </Div>
