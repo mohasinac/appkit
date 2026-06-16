@@ -32,8 +32,8 @@ export function ReviewSummary({
   const stars = [5, 4, 3, 2, 1];
 
   return (
-    <Stack
-      className={`sm:flex-row sm:items-center sm:gap-8 ${className}`} gap="md"
+    <Stack align="center" 
+      className={`sm:flex-row sm: sm:gap-8 ${className}`} gap="md"
     >
       {/* Score block */}
       <Stack className="sm:items-start" align="center" gap="xs">

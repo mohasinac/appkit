@@ -62,8 +62,8 @@ export function BeforeAfterSlider({
       </Div>
 
       {/* Divider handle */}
-      <Stack
-        className="absolute inset-y-0 w-1 -translate-x-1/2 cursor-ew-resize justify-center" align="center"
+      <Stack justify="center" 
+        className="absolute inset-y-0 w-1 -translate-x-1/2 cursor-ew-resize" align="center"
         style={{ left: `${position}%` }}
       >
         <Div className="h-full w-0.5 shadow" surface="default" />

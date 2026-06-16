@@ -38,7 +38,7 @@ export function WishlistCard({
           />
         )}
       </Div>
-      <Stack className="flex-1 justify-between">
+      <Stack justify="between" className="flex-1">
         <Text truncate={2} weight="medium" color="primary">
           {item.productTitle}
         </Text>

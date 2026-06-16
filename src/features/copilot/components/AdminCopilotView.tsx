@@ -72,7 +72,7 @@ function renderCopilotChatPanel(props: {
       </Div>
       <Stack className={`flex-1 ${__O.yAuto} ${__P.p4}`} gap="md">
         {messages.length === 0 ? (
-          <Stack className="justify-center h-full text-center" align="center">
+          <Stack justify="center" className="h-full text-center" align="center">
             <Text weight="medium">{labels?.noMessages ?? "No messages yet"}</Text>
             <Text variant="secondary" className="mt-1" size="sm">{labels?.noMessagesDesc ?? "Ask anything to get started"}</Text>
           </Stack>
@@ -203,7 +203,7 @@ export function AdminCopilotView({
 
             <Stack className={`flex-1 ${__O.yAuto} ${__P.p4}`} gap="md">
               {messages.length === 0 ? (
-                <Stack className="justify-center h-full text-center" align="center">
+                <Stack justify="center" className="h-full text-center" align="center">
                   <Text weight="medium">{labels.noMessages ?? "No messages yet"}</Text>
                   <Text variant="secondary" className="mt-1" size="sm">
                     {labels.noMessagesDesc ?? "Ask anything to get started"}

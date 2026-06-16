@@ -39,7 +39,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
           />
         )}
       </Div>
-      <Stack className="flex-1 justify-between">
+      <Stack justify="between" className="flex-1">
         <Row className="gap-1.5" align="start">
           {href ? (
             <a

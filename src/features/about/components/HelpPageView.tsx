@@ -156,7 +156,7 @@ function renderContactCtaSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
       <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />
       <Heading level={2} className="mb-3">{t("contactTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("contactText")}</Text>
-      <Stack gap="sm" className="flex-row flex-wrap justify-center gap-4">
+      <Stack justify="center" gap="sm" className="flex-row flex-wrap gap-4">
         <TextLink href={String(ROUTES.PUBLIC.CONTACT)}>{t("contactCta")}</TextLink>
         <TextLink href={String(ROUTES.PUBLIC.FAQS)} variant="muted">{t("faqCta")}</TextLink>
       </Stack>

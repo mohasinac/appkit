@@ -705,7 +705,7 @@ export function AdminEventEditorView({
                       <Text size="xs" color="muted">No spin prizes yet. Add at least one to enable spinning.</Text>
                     )}
                     {values.spinPrizes.map((p) => (
-                      <Grid key={p.id} gap="xs" className="grid-cols-12 items-end">
+                      <Grid align="end" key={p.id} gap="xs" className="grid-cols-12">
                         <Div className="col-span-5">
                           <Input label="Label" value={p.label} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, label: e.target.value } : sp) })} placeholder="₹100 off" />
                         </Div>

@@ -53,9 +53,9 @@ export function ErrorView({
   }, [error]);
 
   return (
-    <Stack
+    <Stack justify="center" 
       role="alert"
-      className="justify-center min-h-[50vh] text-center" padding="x-xl" align="center"
+      className="min-h-[50vh] text-center" padding="x-xl" align="center"
     >
       <Heading level={2} className="mb-2">{heading}</Heading>
       <Text variant="secondary" className="mb-6">{description}</Text>

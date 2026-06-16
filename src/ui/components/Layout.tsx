@@ -254,6 +254,8 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
   centered?: boolean;
   /** Cross-axis (horizontal) alignment. Defaults to `"stretch"`. */
   align?: Extract<ItemsAlign, "start" | "center" | "end" | "stretch">;
+  /** Main-axis (vertical) alignment. Defaults to `"start"`. */
+  justify?: JustifyContent;
   /**
    * Render a themed top-border between adjacent children. `true` / `"default"`
    * uses the active theme's border colour; `"subtle"` uses border-subtle.
@@ -276,6 +278,7 @@ export function Stack({
   gap = "md",
   centered = false,
   align = "stretch",
+  justify = "start",
   divide,
   as,
   surface,
@@ -293,6 +296,7 @@ export function Stack({
     GAP_MAP[gap],
     centered ? "appkit-stack--centered" : "",
     !centered && align !== "stretch" ? ITEMS_MAP[align] : "",
+    !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     resolveDivideClass(divide, "stack"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,
@@ -421,6 +425,10 @@ export interface GridProps extends React.HTMLAttributes<HTMLElement>, SurfacePro
   cols?: GridCols;
   /** Space between grid cells. Defaults to `"md"` (`gap-4`). */
   gap?: GapKey;
+  /** Cross-axis (column) alignment for grid items. */
+  align?: ItemsAlign;
+  /** Main-axis (row) alignment for grid tracks. */
+  justify?: JustifyContent;
   /** Render as a different element. Defaults to `"div"`. */
   as?: React.ElementType;
   children?: React.ReactNode;
@@ -429,6 +437,8 @@ export interface GridProps extends React.HTMLAttributes<HTMLElement>, SurfacePro
 export function Grid({
   cols,
   gap = "md",
+  align,
+  justify,
   as,
   surface,
   padding,
@@ -441,7 +451,14 @@ export function Grid({
 }: GridProps) {
   const Tag = (as ?? "div") as React.ElementType;
   const baseClass = cols !== undefined ? GRID_MAP[cols] : "appkit-grid";
-  const classes = [baseClass, GAP_MAP[gap], buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className]
+  const classes = [
+    baseClass,
+    GAP_MAP[gap],
+    align ? ITEMS_MAP[align] : "",
+    justify ? JUSTIFY_MAP[justify] : "",
+    buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+    className,
+  ]
     .filter(Boolean)
     .join(" ");
   return (

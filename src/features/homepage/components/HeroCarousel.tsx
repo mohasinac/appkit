@@ -215,8 +215,8 @@ function CarouselCardRenderer({
       {!card.isButtonOnly && (
         <>
           <Scrim direction="bottom-up" intensity="strong" className={POSITION_FILL} />
-          <Stack
-            className={`${POSITION_FILL} justify-end md:p-6 ${textAlignClass}`} padding="xs"
+          <Stack justify="end" 
+            className={`${POSITION_FILL} md:p-6 ${textAlignClass}`} padding="xs"
           >
           {card.content?.eyebrow && (
             <Text color="inverse" className="text-[10px] !/70 mb-0.5 tracking-wider drop-shadow-sm" mdSize="xs" transform="uppercase">

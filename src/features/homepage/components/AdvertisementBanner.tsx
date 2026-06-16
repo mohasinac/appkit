@@ -80,7 +80,7 @@ export function AdvertisementBanner({
               </Div>
 
               {/* Right: content */}
-              <Stack className="relative justify-center px-8 md:px-12 md:py-14" padding="y-2xl">
+              <Stack justify="center" className="relative px-8 md:px-12 md:py-14" padding="y-2xl">
                 <Div
                   className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,_white_1px,_transparent_1px)] bg-[length:12px_12px]"
                   aria-hidden

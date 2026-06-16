@@ -81,9 +81,9 @@ export function WelcomeSection({
       />
 
       <Div className="relative z-10 max-w-7xl mx-auto">
-        <Grid
+        <Grid align="center" 
           gap="2xl"
-          className="grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 items-center"
+          className="grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
         >
           {/* Left: text content */}
           <Div className="text-center lg:text-left">

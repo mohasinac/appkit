@@ -82,7 +82,7 @@ export async function UnauthorizedView({
           <Text variant="secondary" className="mb-3" size="sm">
             {t("helpText")}
           </Text>
-          <Stack gap="sm" className="flex-row flex-wrap justify-center gap-4">
+          <Stack justify="center" gap="sm" className="flex-row flex-wrap gap-4">
             <TextLink
               href={String(ROUTES.PUBLIC.HELP)}
               variant="muted" size="sm">

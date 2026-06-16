@@ -128,7 +128,7 @@ export function BlogPostView({
   if (error || !post) {
     if (renderError) return <>{renderError(error ?? null)}</>;
     return (
-      <Stack className={`justify-center min-h-screen ${__P.p8}`} align="center" gap="md">
+      <Stack justify="center" className={`min-h-screen ${__P.p8}`} align="center" gap="md">
         <Heading level={1} size="xl" weight="semibold">
           {labels.notFound ?? "Post not found"}
         </Heading>

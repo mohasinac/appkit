@@ -47,7 +47,7 @@ function SocialFeedSkeleton({ count }: { count: number }) {
 
 function SocialFeedEmpty({ platform }: { platform: SocialPlatform }) {
   return (
-    <Stack className="justify-center text-zinc-400" padding="y-4xl" align="center">
+    <Stack justify="center" className="text-zinc-400" padding="y-4xl" align="center">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="3" y="3" width="18" height="18" rx="3" />
         <path d="M9 9h6M9 12h6M9 15h4" />
