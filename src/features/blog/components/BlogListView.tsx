@@ -83,7 +83,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
         </Row>
         <Heading
           level={3}
-          className={`text-neutral-900 dark:text-zinc-100 group-hover:text-primary`} truncate={2} size="base" weight="semibold"
+          className={`group-hover:text-primary`} color="primary" truncate={2} size="base" weight="semibold"
         >
           {post.title}
         </Heading>

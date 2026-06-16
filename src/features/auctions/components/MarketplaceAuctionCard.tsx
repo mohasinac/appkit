@@ -191,7 +191,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
   return (
     <>
       <Row className="min-w-0" align="start" justify="between" gap="sm">
-        <TextLink href={auctionHref ?? "#"} className={`flex-1 leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary`} truncate={2} size="sm" weight="medium">
+        <TextLink href={auctionHref ?? "#"} className={`flex-1 leading-snug transition-colors hover:text-primary`} color="primary" truncate={2} size="sm" weight="medium">
           {product.title}
         </TextLink>
         {wishlistActions ? (
@@ -223,7 +223,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
   return (
     <>
       <Row align="start" gap="sm">
-        <TextLink href={auctionHref ?? "#"} className="min-w-0 flex-1 leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary" size="sm" weight="medium">
+        <TextLink href={auctionHref ?? "#"} className="min-w-0 flex-1 leading-snug transition-colors hover:text-primary" color="primary" size="sm" weight="medium">
           {product.title}
         </TextLink>
         {wishlistActions ? (

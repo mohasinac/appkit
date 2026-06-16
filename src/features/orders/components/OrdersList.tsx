@@ -101,7 +101,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               />
             )}
             <Div>
-              <Text className={`text-neutral-900 dark:text-zinc-100`} truncate size="sm" weight="medium">
+              <Text truncate size="sm" weight="medium" color="primary">
                 {item.title}
               </Text>
               <Text size="xs" color="faint">×{item.quantity}</Text>

@@ -40,7 +40,7 @@ export function WishlistCard({
         )}
       </Div>
       <Stack className="flex-1 justify-between">
-        <Text className={`text-neutral-900 dark:text-zinc-100`} truncate={2} weight="medium">
+        <Text truncate={2} weight="medium" color="primary">
           {item.productTitle}
         </Text>
         {item.productPrice !== undefined && (

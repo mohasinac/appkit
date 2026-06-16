@@ -119,7 +119,7 @@ export function BlogFeaturedCard({
           {/* Title — clamped to 2 lines */}
           <Heading
             level={3}
-            className={`text-neutral-900 dark:text-zinc-100 leading-snug mb-1`} truncate={2} size="base" weight="semibold"
+            className={`leading-snug mb-1`} color="primary" truncate={2} size="base" weight="semibold"
           >
             {safeTitle}
           </Heading>
