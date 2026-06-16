@@ -17,7 +17,7 @@
 
 import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { Div, Text } from "../../../ui";
+import { Div, Scrim, Text } from "../../../ui";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import type { PrizeDrawItem } from "../schemas/firestore";
@@ -137,9 +137,11 @@ export function PrizeDrawCollage({
 
                 {it.isWon && !hideWonState ? (
                   <>
-                    <Div
-                      aria-hidden
-                      className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/30 to-black/60 mix-blend-multiply"
+                    <Scrim
+                      direction="diagonal"
+                      intensity="medium"
+                      multiply
+                      className="absolute inset-0"
                     />
                     <Row className="absolute inset-0" align="center" justify="center">
                       <Text className={CLS_WON_STAMP}>

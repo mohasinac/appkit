@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Div, Heading, RichText, Row, Span, Stack, Text } from "../../../ui";
+import { Div, Heading, RichText, Row, Scrim, Span, Stack, Text } from "../../../ui";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
@@ -165,7 +165,7 @@ export function BlogPostView({
               style={{ backgroundImage: `url(${coverImageUrl})` }}
             />
           )}
-          <Div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <Scrim direction="bottom-up" intensity="subtle" className="absolute inset-0" />
         </Div>
       )}
 

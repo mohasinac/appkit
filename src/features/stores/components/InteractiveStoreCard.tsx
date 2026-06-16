@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { StoreListItem } from "../types";
-import { BaseListingCard, Div, Heading, RichText, Row, Span, Stack } from "../../../ui";
+import { BaseListingCard, Div, Heading, RichText, Row, Scrim, Span, Stack } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils";
@@ -90,7 +90,7 @@ export function InteractiveStoreCard({
             </Row>
           )}
           {/* Dark gradient at bottom for logo legibility */}
-          <Div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+          <Scrim direction="bottom-up" intensity="subtle" className="absolute inset-x-0 bottom-0 h-12" />
 
           {/* Rating badge — top right */}
           {store.averageRating != null && store.averageRating > 0 && (

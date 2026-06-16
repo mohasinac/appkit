@@ -574,3 +574,5 @@ export { HorizontalRule } from "./components/HorizontalRule";
 export type { HorizontalRuleProps } from "./components/HorizontalRule";
 export { Anchor } from "./components/Anchor";
 export type { AnchorProps, AnchorTone, AnchorUnderline } from "./components/Anchor";
+export { Scrim } from "./components/Scrim";
+export type { ScrimProps, ScrimDirection, ScrimIntensity } from "./components/Scrim";

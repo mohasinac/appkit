@@ -254,6 +254,9 @@ export type {
   HorizontalRuleSpacing,
   HorizontalRuleTone,
 } from "./ui/components/HorizontalRule";
+// Scrim — primitive for dark fade overlays (image legibility / hero scrims).
+export { Scrim } from "./ui/components/Scrim";
+export type { ScrimProps, ScrimDirection, ScrimIntensity } from "./ui/components/Scrim";
 // Kbd — primitive for <kbd> (keyboard key affordance).
 export { Kbd } from "./ui/components/Kbd";
 export type { KbdProps, KbdSize, KbdTone } from "./ui/components/Kbd";
