@@ -11,6 +11,7 @@ import type {
   AuthUser,
   CreateUserInput,
 } from "../../contracts";
+import type { JsonValue } from "../../schemas/types";
 import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
 
 /** Firebase error codes that represent a normal "not authenticated" state. */
@@ -56,7 +57,7 @@ function toAuthPayload(decoded: {
             "firebase",
           ].includes(k),
       ),
-    ),
+    ) as Record<string, JsonValue>,
   };
 }
 

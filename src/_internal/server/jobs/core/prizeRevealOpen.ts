@@ -69,7 +69,7 @@ export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
         notified++;
       } catch (err) {
         void normalizeError(err);
-        ctx.logger.warn("Reveal-ready notification failed", { err });
+        ctx.logger.warn("Reveal-ready notification failed", { err: err instanceof Error ? err.message : String(err) });
       }
     }
     ctx.logger.info("Opened prize draw", {

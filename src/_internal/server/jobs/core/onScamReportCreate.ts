@@ -70,7 +70,7 @@ export async function handleScamReportCreate(
           userEmail: employee.email ?? undefined,
           userPhone: employee.phoneNumber ?? undefined,
         }).catch((err) =>
-          ctx.logger.error("Failed to notify employee (non-fatal)", err, { scammerId, employeeId: employee.id }),
+          ctx.logger.error("Failed to notify employee (non-fatal)", err, { scammerId, employeeId: employee.id ?? null }),
         ),
       ),
     );
@@ -79,5 +79,5 @@ export async function handleScamReportCreate(
     ctx.logger.error("Failed to query employees for scam notification (non-fatal)", err, { scammerId });
   }
 
-  ctx.logger.info("onScamReportCreate complete", { scammerId, reportedBy });
+  ctx.logger.info("onScamReportCreate complete", { scammerId, reportedBy: reportedBy ?? null });
 }

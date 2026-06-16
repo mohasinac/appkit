@@ -48,7 +48,7 @@ export async function runPrizeRevealReminder(ctx: JobContext): Promise<void> {
       notified++;
     } catch (err) {
       void normalizeError(err);
-      ctx.logger.warn("Reveal reminder notification failed", { err });
+      ctx.logger.warn("Reveal reminder notification failed", { err: err instanceof Error ? err.message : String(err) });
     }
   }
   ctx.logger.info("Prize reveal reminder sweep complete", { notified });

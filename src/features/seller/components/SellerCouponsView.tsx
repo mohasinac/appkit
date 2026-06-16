@@ -2,6 +2,7 @@
 
 import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Div, ListingLayout, Text, useToast } from "../../../ui";
@@ -18,7 +19,7 @@ import { CouponCard } from "../../promotions/components/CouponCard";
 
 interface CouponRow {
   id: string;
-  raw: Record<string, unknown>;
+  raw: Record<string, JsonValue>;
   isActive: boolean;
 }
 

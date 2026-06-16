@@ -61,7 +61,7 @@ export const prizeDrawRule: ListingCheckoutRule = {
     }
   },
 
-  stockDecrementExtras: (product: ProductDocument, quantity: number) => {
+  stockDecrementExtras: (product: ProductDocument, quantity: number): Record<string, JsonValue> => {
     if (product.listingType !== "prize-draw") return {};
     return {
       prizeCurrentEntries: (product.prizeCurrentEntries ?? 0) + quantity,

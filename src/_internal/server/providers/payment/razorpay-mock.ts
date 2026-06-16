@@ -28,6 +28,7 @@ import type {
   PaymentOrder,
   Refund,
 } from "../../../../contracts";
+import type { JsonValue } from "../../../../schemas/types";
 
 const MOCK_WEBHOOK_SECRET = "appkit-mock-razorpay-webhook-secret-v1";
 
@@ -63,7 +64,7 @@ export class MockRazorpayProvider implements IPaymentProvider {
   async createOrder(
     amount: number,
     currency: string,
-    metadata?: Record<string, unknown>,
+    metadata?: Record<string, JsonValue>,
   ): Promise<PaymentOrder> {
     const order: PaymentOrder = {
       id: `order_mock_${randomBytes(8).toString("hex")}`,

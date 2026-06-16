@@ -61,5 +61,5 @@ export async function handleSupportTicketUpdate(
     ctx.logger.error("Failed to notify user of ticket status change (non-fatal)", err, { ticketId, userId, nextStatus });
   }
 
-  ctx.logger.info("onSupportTicketUpdate complete", { ticketId, userId, prevStatus, nextStatus });
+  ctx.logger.info("onSupportTicketUpdate complete", { ticketId, userId, prevStatus: prevStatus ?? null, nextStatus });
 }

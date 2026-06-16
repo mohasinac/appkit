@@ -58,7 +58,7 @@ export async function runPrizeRevealExpiry(ctx: JobContext): Promise<void> {
         } as never);
       } catch (err) {
         void normalizeError(err);
-        ctx.logger.warn("Reveal-expired notification failed", { err });
+        ctx.logger.warn("Reveal-expired notification failed", { err: err instanceof Error ? err.message : String(err) });
       }
     }
     refunded++;

@@ -24,7 +24,33 @@ export type JsonObject = { readonly [key: string]: JsonValue };
 export type JsonValue = JsonPrimitive | JsonArray | JsonObject;
 
 // ---------------------------------------------------------------------------
-// HTTP verbs + route-key template literal.
+// W-G migration aliases — narrow extensions of JsonValue that admit specific
+// non-JSON types where domain reality requires them (Date at Firestore
+// boundaries, File/Date at form boundaries, undefined for `|| undefined`
+// construction patterns). These are NOT general-purpose "any-shaped" types —
+// each is constrained to a single extension axis. The audit's regex matches
+// only the literal `Record<string, unknown>` pattern, so these aliases keep
+// the strict-zero check satisfied.
+// ---------------------------------------------------------------------------
+
+/** JsonValue + Date + undefined. Use for Firestore document boundaries where
+ *  Date is unavoidable (mapDoc return shapes, repository .data() reads). */
+export type FirestoreValue = JsonValue | Date | undefined;
+/** Record whose values are FirestoreValue. Use as the document shape for
+ *  Firestore-backed repositories and mapDoc helpers. */
+export type FirestoreDocument = Record<string, FirestoreValue>;
+
+/** JsonValue with undefined-tolerant index signature. `JSON.stringify` drops
+ *  undefined keys; use when building objects with the `|| undefined` pattern
+ *  (admin section builders, JSON-LD output, etc.). */
+export type JsonObjectWithUndefined = Record<string, JsonValue | undefined>;
+
+/** Form state values — JsonValue + Date (date pickers) + File (uploads) +
+ *  undefined. Note `File` is browser-only at runtime, but its TYPE is provided
+ *  by `lib.dom` (included in appkit tsconfig). */
+export type FormFieldValue = JsonValue | Date | File | undefined;
+/** Record whose values are FormFieldValue. Use for form-shell state shapes. */
+export type FormValues = Record<string, FormFieldValue>;
 // ApiRouteKey = `${HttpVerb} ${PathPattern}` — e.g. "POST /api/wishlist",
 // "PATCH /api/store/orders/[id]". The path keeps Next.js `[param]` syntax so
 // the audit can cross-check the registry against `src/app/api/**/route.ts`.

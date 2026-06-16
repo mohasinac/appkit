@@ -1,6 +1,7 @@
 import { ValidationError } from "../../../../errors";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import type { JsonValue } from "../../../../schemas/types";
 import type { ListingCheckoutRule, CartItemProductPair } from "./types";
 import { DEFAULT_LISTING_RULE } from "./_defaults";
 
@@ -29,7 +30,7 @@ export const preOrderRule: ListingCheckoutRule = {
     }
   },
 
-  stockDecrementExtras: (product: ProductDocument, quantity: number) => {
+  stockDecrementExtras: (product: ProductDocument, quantity: number): Record<string, JsonValue> => {
     if (product.listingType !== "pre-order") return {};
     return {
       preOrderCurrentCount: (product.preOrderCurrentCount ?? 0) + quantity,

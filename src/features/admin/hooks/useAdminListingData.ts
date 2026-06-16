@@ -2,8 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { apiClient, ApiClientError } from "../../../http";
+import type { JsonValue } from "../../../schemas/types";
 
-type UnknownRecord = Record<string, unknown>;
+/**
+ * Listing-row record. Items come from JSON API responses, so values are
+ * JsonValue. `toRecordArray()` returns this shape and downstream mappers
+ * (e.g. `item.foo`) read fields with JsonValue chaining.
+ */
+export type ListingItemRecord = Record<string, JsonValue>;
 
 interface UseAdminListingDataOptions<TResponse, TRow extends { id: string }> {
   queryKey: readonly unknown[];
@@ -76,8 +82,8 @@ export function useAdminListingData<TResponse, TRow extends { id: string }>({
   };
 }
 
-export function toRecordArray(value: unknown): UnknownRecord[] {
-  return Array.isArray(value) ? (value.filter(Boolean) as UnknownRecord[]) : [];
+export function toRecordArray(value: unknown): ListingItemRecord[] {
+  return Array.isArray(value) ? (value.filter(Boolean) as ListingItemRecord[]) : [];
 }
 
 export function toStringValue(value: unknown, fallback = "-"): string {
@@ -143,7 +149,7 @@ function parseDate(value: unknown): Date | null {
   }
 
   if (value && typeof value === "object") {
-    const asRecord = value as UnknownRecord;
+    const asRecord = value as { toDate?: () => Date };
     const toDate = asRecord.toDate;
     if (typeof toDate === "function") {
       const parsed = toDate.call(value);
