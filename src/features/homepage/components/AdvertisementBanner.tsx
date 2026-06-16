@@ -158,7 +158,7 @@ export function AdvertisementBanner({
           {compact ? (
             <Row
               justify="between"
-              className="relative z-10 w-full px-6" gap="md" padding="y-md"
+              className="relative z-10 w-full" gap="md" padding="inlineLg"
             >
               <Span className="inline-flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-white/80" />

@@ -56,7 +56,7 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
           </Div>
 
           {/* Scrollable body */}
-          <Div className={`flex-1 ${__O.yAuto} scrollbar-thin px-6`} padding="y-md">
+          <Div className={`flex-1 ${__O.yAuto} scrollbar-thin`} padding="inlineLg">
             {children}
           </Div>
         </Aside>

@@ -80,7 +80,7 @@ export function BottomSheet({
         {/* Handle and header */}
         <Row border="subtle" 
           justify="between"
-          className="px-4 border-b shrink-0" padding="y-sm"
+          className="border-b shrink-0" padding="inline"
         >
           {/* Drag handle */}
           <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-zinc-300 dark:bg-zinc-600" rounded="full" />

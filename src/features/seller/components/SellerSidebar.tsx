@@ -82,7 +82,7 @@ function FlatContent({
   return (
     <>
       {storeName && (
-        <Row border="subtle" gap="3" className="px-4 border-b dark:border-slate-700" padding="y-sm">
+        <Row border="subtle" gap="3" className="border-b dark:border-slate-700" padding="inline">
           {storeLogoURL ? (
             // audit-inline-style-ok: dynamic image URL
             <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
@@ -134,7 +134,7 @@ function GroupsContent({
   return (
     <>
       {storeName && (
-        <Row border="subtle" gap="3" className="px-4 border-b dark:border-slate-700" padding="y-sm">
+        <Row border="subtle" gap="3" className="border-b dark:border-slate-700" padding="inline">
           {storeLogoURL ? (
             // audit-inline-style-ok: dynamic image URL
             <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />

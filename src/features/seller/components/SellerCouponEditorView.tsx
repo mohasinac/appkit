@@ -120,9 +120,9 @@ export function SellerCouponEditorView({
           </Row>
         </Div>
 
-        <Stack gap="5" className="px-6" padding="y-lg">
+        <Stack gap="5" padding="lg">
           {error && (
-            <Div className="border border-error/20 px-4 text-sm" color="error" surface="danger-surface" padding="y-sm" rounded="lg">
+            <Div className="border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="lg">
               {error}
             </Div>
           )}
@@ -296,7 +296,7 @@ export function SellerCouponEditorView({
           </Div>
 
           {/* Active toggle */}
-          <Row className="border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)] px-4" padding="y-sm" align="center" gap="3" rounded="lg">
+          <Row className="border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)]" padding="inline" align="center" gap="3" rounded="lg">
             <Label className="flex items-center gap-3 cursor-pointer w-full">
               <input
                 type="checkbox"
@@ -317,7 +317,7 @@ export function SellerCouponEditorView({
         </Stack>
 
         {/* Footer actions */}
-        <Div className="border-t border-[var(--appkit-color-border)] px-6" padding="y-md">
+        <Div className="border-t border-[var(--appkit-color-border)]" padding="inlineLg">
           <Row justify="end" gap="3">
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>

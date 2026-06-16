@@ -102,7 +102,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
         ) : (
           <Row
             key={row.id}
-            className={`border bg-[var(--appkit-color-surface)] px-3 hover:bg-[var(--appkit-color-surface-raised)] ${borderCls}`} align="center" gap="3" rounded="lg" padding="y-xs"
+            className={`border bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-raised)] ${borderCls}`} align="center" gap="3" rounded="lg" padding="inlineSm"
           >
             <input
               type="checkbox"

@@ -114,7 +114,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
-        <Row align="center" gap="sm" className="border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3" padding="y-xs" rounded="lg">
+        <Row align="center" gap="sm" className="border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
           <Span size="xs" color="muted">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
         </Row>
@@ -130,7 +130,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       )}
       {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
       {!productFeatures && features.length > 0 && (
-        <Div className="px-4" border="subtle" surface="muted" padding="y-sm" rounded="xl">
+        <Div border="subtle" surface="muted" padding="inline" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">About this item</Text>
           <Ul spacing="comfortable" size="sm" color="primary">
             {features.map((f, i) => <Li key={i} className="flex items-start gap-2"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
@@ -463,7 +463,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     {specs.map((s, i) => (
                       <Div
                         key={i}
-                        className="flex gap-4 px-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="y-sm"
+                        className="flex gap-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="inline"
                       >
                         <Dt className="w-36 flex-shrink-0" color="primary" weight="medium">
                           {s.name}

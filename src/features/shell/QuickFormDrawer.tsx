@@ -191,7 +191,7 @@ export function QuickFormDrawer({
         style={{ zIndex: "calc(var(--appkit-z-modal) + 2)" }}
       >
         {/* Header */}
-        <Row className="flex-shrink-0 px-4 border-b border-[var(--appkit-color-border)]" padding="y-md" align="center" gap="3">
+        <Row className="flex-shrink-0 border-b border-[var(--appkit-color-border)]" padding="md" align="center" gap="3">
           <Text className="flex-1 text-[var(--appkit-color-text)]" size="base" weight="semibold">{title}</Text>
           <button
             type="button"
@@ -258,7 +258,7 @@ export function QuickFormDrawer({
         </form>
 
         {/* Footer */}
-        <Row className="flex-shrink-0 px-4 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]" padding="y-md" align="center" justify="between" gap="sm">
+        <Row className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]" padding="md" align="center" justify="between" gap="sm">
           <Button variant="outline" size="sm" onClick={handleClose} disabled={busy}>
             {cancelLabel}
           </Button>

@@ -207,7 +207,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
       {childCategories.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
-          <Div className="max-w-7xl mx-auto px-4" padding="y-sm">
+          <Div className="max-w-7xl mx-auto" padding="inline">
             <Div
               className={`flex gap-2.5 ${__O.xAuto}`} padding="b-2xs"
               // audit-inline-style-ok: dynamic CSS

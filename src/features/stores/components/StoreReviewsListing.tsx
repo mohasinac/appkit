@@ -139,7 +139,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
     <Div className="min-h-screen">
       {/* ── Rating summary ───────────────────────────────────────────────── */}
       {totalReviews > 0 && (
-        <Row border="default" align="center" gap="sm" className="px-4 border-b" padding="y-sm">
+        <Row border="default" align="center" gap="sm" className="border-b" padding="inline">
           <Span weight="bold" size="2xl" color="primary">
             {averageRating.toFixed(1)}
           </Span>

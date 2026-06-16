@@ -209,7 +209,7 @@ function PreOrderInfoSection({
       )}
 
       {!productFeatures && features.length > 0 && (
-        <Div className="px-4" border="subtle" surface="muted" padding="y-sm" rounded="xl">
+        <Div border="subtle" surface="muted" padding="inline" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
             About this product
           </Text>
@@ -584,7 +584,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
                     {specs.map((s, i) => (
                       <Div
                         key={i}
-                        className="flex gap-4 px-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="y-sm"
+                        className="flex gap-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="inline"
                       >
                         <Dt className="w-36 flex-shrink-0" color="primary" weight="medium">
                           {s.name}

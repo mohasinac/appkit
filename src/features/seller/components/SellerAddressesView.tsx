@@ -261,7 +261,7 @@ export function SellerAddressesView({
       {/* Header */}
       <Row border="default" 
         justify="between"
-        className="sticky z-10 backdrop-blur-sm border-b px-4" surface="default" padding="y-sm"
+        className="sticky z-10 backdrop-blur-sm border-b" surface="default" padding="inline"
         // audit-inline-style-ok: dynamic CSS
         style={{ top: "var(--header-height, 0px)" }}
       >
@@ -277,7 +277,7 @@ export function SellerAddressesView({
 
       <Div className="px-4 sm:px-6 max-w-2xl" padding="y-lg">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 px-4 text-sm" color="error" surface="danger-surface" padding="y-sm" rounded="xl">
+          <Div className="mb-4 border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}
           </Div>
         )}
@@ -379,7 +379,7 @@ export function SellerAddressesView({
       >
         <Stack gap="md" padding="y-2xs">
           {saveError && (
-            <Div className="border border-error/20 px-3 text-sm" color="error" surface="danger-surface" padding="y-xs" rounded="lg">
+            <Div className="border border-error/20 text-sm" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
               {saveError}
             </Div>
           )}

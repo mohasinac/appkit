@@ -212,7 +212,7 @@ function MediaUploaderPanel({
         onStagedUrlsChange={setHeroStagedUrls}
       />
       {heroAssetUrl && (
-        <Row className="px-3" surface="muted" padding="y-xs" align="center" gap="sm" rounded="lg" border="default">
+        <Row surface="muted" padding="inlineSm" align="center" gap="sm" rounded="lg" border="default">
           <Text className="flex-1 truncate font-mono" color="muted" size="xs">
             {heroAssetUrl}
           </Text>

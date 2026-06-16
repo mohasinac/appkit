@@ -37,7 +37,7 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
   return (
     <Stack gap="lg">
       <Row align="center" gap="md">
-        <Stack className="justify-center border-2 border-[var(--appkit-color-primary)] px-6 min-w-[120px]" padding="y-md" align="center" rounded="2xl">
+        <Stack className="justify-center border-2 border-[var(--appkit-color-primary)] min-w-[120px]" padding="inlineLg" align="center" rounded="2xl">
           <Text className="tracking-wide" color="muted" size="xs" weight="bold" transform="uppercase">
             {grading.service}
           </Text>

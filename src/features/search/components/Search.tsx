@@ -495,7 +495,7 @@ export function Search({
             )}
 
             {query && suggestionsLoading && (
-              <Div className="px-4" padding="y-sm">
+              <Div padding="inline">
                 <Text variant="secondary" size="sm">
                   {labels.searching}
                 </Text>
@@ -651,7 +651,7 @@ export function Search({
 
   return (
     <Div border="default" className="border-b dark:border-slate-800 animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
-      <Div className="container mx-auto px-4 md:py-4 relative" padding="y-sm">
+      <Div className="container mx-auto md:py-4 relative" padding="inline">
         <Row gap="sm" className="md:gap-3">
           <Div className="flex-1 relative">
             <Input
@@ -771,7 +771,7 @@ export function Search({
             {query && (
               <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
                 {suggestionsLoading ? (
-                  <Div className="px-4" padding="y-sm">
+                  <Div padding="inline">
                     <Text variant="secondary" size="sm">
                       {labels.searching}
                     </Text>

@@ -286,7 +286,7 @@ export function CouponCard({
       {/* Copy code block + Claim CTA (public surfaces). On admin/CRUD surfaces
           the Claim button is hidden via `hideClaim` since admins aren't
           redeeming the coupons they're managing. */}
-      <Row className={`border border-dashed px-3 ${colors.code}`} align="center" gap="sm" rounded="lg" padding="y-xs">
+      <Row className={`border border-dashed ${colors.code}`} align="center" gap="sm" rounded="lg" padding="inlineSm">
         <Span size="sm" weight="bold" className="flex-1 font-mono tracking-widest select-all" transform="uppercase">
           {n.code || "—"}
         </Span>

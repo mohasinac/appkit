@@ -196,7 +196,7 @@ export function SellerPayoutMethodsView({
 
       <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 px-4 text-sm" color="error" surface="danger-surface" padding="y-sm" rounded="xl">
+          <Div className="mb-4 border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}
           </Div>
         )}

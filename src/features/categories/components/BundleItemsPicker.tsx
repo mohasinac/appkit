@@ -95,7 +95,7 @@ function renderBundleSearchResults(props: {
             const isSelected = selectedSet.has(r.id);
             const atCap = !isSelected && value.length >= maxItems;
             return (
-              <Row border="subtle" key={r.id} gap="sm" align="center" className={`border-b px-3 last:border-b-0 ${isSelected ? CLS_ROW_SELECTED : ""} ${atCap ? "opacity-50" : ""}`} padding="y-xs">
+              <Row border="subtle" key={r.id} gap="sm" align="center" className={`border-b last:border-b-0 ${isSelected ? CLS_ROW_SELECTED : ""} ${atCap ? "opacity-50" : ""}`} padding="inlineSm">
                 <Checkbox checked={isSelected} disabled={atCap} onChange={() => toggle(r.id)} aria-label={BUNDLE_COPY.picker.toggleAria(r.title)} />
                 <Stack gap="xs" className="flex-1">
                   <Text size="sm" weight="medium">{r.title}</Text>

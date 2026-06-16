@@ -187,14 +187,14 @@ function OrderDetailDrawer({
       )}
 
       {fetchError && (
-        <Div className="mx-4 mt-4 border border-error/20 px-4 text-sm" color="error" surface="danger-surface" padding="y-sm" rounded="lg">
+        <Div className="mx-4 mt-4 border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="lg">
           {fetchError}
         </Div>
       )}
 
       {order && !loading && (
         <Stack gap="none" className="flex flex-col">
-          <Stack className={`flex-1 ${__O.yAuto} px-4`} gap="5" padding="y-md">
+          <Stack className={`flex-1 ${__O.yAuto}`} gap="5" padding="md">
             {/* Status row */}
             <Row align="center" justify="between">
               <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>
@@ -224,7 +224,7 @@ function OrderDetailDrawer({
             )}
 
             {/* Total */}
-            <Row className="px-4" surface="muted" padding="y-sm" align="center" justify="between" rounded="lg">
+            <Row surface="muted" padding="inline" align="center" justify="between" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
               <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toRupees(order.totalAmount ?? 0)}</Text>
             </Row>
@@ -255,7 +255,7 @@ function OrderDetailDrawer({
               <Input label="Carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="e.g. Delhivery, Bluedart" />
               <Input label="Tracking URL (optional)" value={trackingUrl} onChange={(e) => setTrackingUrl(e.target.value)} placeholder="https://..." type="url" />
               {saveError && (
-                <Div className="border border-error/20 px-3 text-xs" color="error" surface="danger-surface" padding="y-xs" rounded="lg">
+                <Div className="border border-error/20 text-xs" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
                   {saveError}
                 </Div>
               )}
@@ -578,7 +578,7 @@ export function SellerOrdersView({
 
       <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 px-4 text-sm" color="error" surface="danger-surface" padding="y-sm" rounded="xl">
+          <Div className="mb-4 border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}
           </Div>
         )}

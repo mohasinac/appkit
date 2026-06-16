@@ -45,7 +45,7 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
       </button>
 
       {open && (
-        <Div surface="default" className="px-4" padding="y-md">
+        <Div surface="default" padding="md">
           <BidHistory
             bids={bids}
             isEmpty={bids.length === 0}

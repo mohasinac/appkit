@@ -73,7 +73,7 @@ export function CodeRevealPanel({
           </Stack>
         ) : (
           <Stack gap="sm">
-            <Row className="border border-border bg-background px-3 font-mono text-lg" padding="y-xs" align="center" gap="sm" rounded="md">
+            <Row className="border border-border bg-background font-mono text-lg" padding="inlineSm" align="center" gap="sm" rounded="md">
               <Span className="flex-1 select-all">{revealed.code}</Span>
               <Button
                 type="button"
