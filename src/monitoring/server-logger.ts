@@ -46,7 +46,7 @@ interface LogEntry {
   level: LogLevel;
   message: string;
   timestamp: string;
-  data?: unknown;
+  data?: FirestoreValue;
 }
 
 export interface ServerErrorContext {
@@ -83,9 +83,12 @@ function serializeError(error: Error): Record<string, FirestoreValue> {
   return serialized;
 }
 
-function normalizeLogData(data: unknown): unknown {
-  if (data instanceof Error) return serializeError(data);
-  if (Array.isArray(data)) return data.map(normalizeLogData);
+// audit-unknown-ok: this is the entry-point normaliser that accepts arbitrary
+// log-data payloads (Error, Date, primitive, object). Output is bounded by the
+// downstream JSON-stringify contract.
+function normalizeLogData(data: unknown): FirestoreValue {
+  if (data instanceof Error) return serializeError(data) as FirestoreValue;
+  if (Array.isArray(data)) return data.map(normalizeLogData) as FirestoreValue;
   if (data instanceof Date || data === null || data === undefined) return data;
   if (typeof data === "object") {
     return Object.fromEntries(
@@ -93,9 +96,9 @@ function normalizeLogData(data: unknown): unknown {
         key,
         normalizeLogData(value),
       ]),
-    );
+    ) as FirestoreValue;
   }
-  return data;
+  return data as FirestoreValue;
 }
 
 async function ensureLogsDir(): Promise<void> {
@@ -189,42 +192,46 @@ async function writeLog(entry: LogEntry): Promise<void> {
 }
 
 export const serverLogger = {
+  // audit-unknown-ok: logger entry-point — accepts arbitrary log data, normalised internally
   debug(message: string, data?: unknown): void {
     const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
     console.debug(`[DEBUG] ${message}`, sanitized);
   },
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary log data
   info(message: string, data?: unknown): void {
     const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
     const entry: LogEntry = {
       level: "info",
       message,
       timestamp: new Date().toISOString(),
-      data: sanitized,
+      data: sanitized as FirestoreValue,
     };
     console.info(`[INFO] ${message}`, sanitized);
     if (isFileLoggingEnabled) writeLog(entry).catch(() => {}); // audit-silent-catch-ok: logger must never throw
   },
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary log data
   warn(message: string, data?: unknown): void {
     const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
     const entry: LogEntry = {
       level: "warn",
       message,
       timestamp: new Date().toISOString(),
-      data: sanitized,
+      data: sanitized as FirestoreValue,
     };
     console.warn(`[WARN] ${message}`, sanitized);
     if (isFileLoggingEnabled) writeLog(entry).catch(() => {}); // audit-silent-catch-ok: logger must never throw
   },
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary log data
   error(message: string, data?: unknown): void {
     const sanitized = data ? redactPii(normalizeLogData(data)) : undefined;
     const entry: LogEntry = {
       level: "error",
       message,
       timestamp: new Date().toISOString(),
-      data: sanitized,
+      data: sanitized as FirestoreValue,
     };
     console.error(`[ERROR] ${message}`, sanitized);
     if (isFileLoggingEnabled) writeLog(entry).catch(() => {}); // audit-silent-catch-ok: logger must never throw
@@ -244,6 +251,7 @@ export const extractRequestMetadata = (request: NextRequest) => ({
 });
 
 function buildServerMeta(
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   context?: ServerErrorContext,
 ): Record<string, FirestoreValue> {
@@ -280,6 +288,7 @@ function buildServerMeta(
 
 export const logServerError = (
   message: string,
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   context?: ServerErrorContext,
 ): void => {
@@ -309,6 +318,7 @@ export const logServerDebug = (
 
 export const logApiRouteError = (
   endpoint: string,
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   request?: NextRequest,
   context?: ServerErrorContext,
@@ -323,6 +333,7 @@ export const logApiRouteError = (
 export const logDatabaseError = (
   operation: string,
   collection: string,
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   context?: ServerErrorContext,
 ): void => {
@@ -336,6 +347,7 @@ export const logDatabaseError = (
 
 export const logServerAuthError = (
   operation: string,
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   context?: ServerErrorContext,
 ): void => {
@@ -366,6 +378,7 @@ export const logAuthorizationError = (
 
 export const logEmailError = (
   recipient: string,
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   context?: ServerErrorContext,
 ): void => {
@@ -379,6 +392,7 @@ export const logEmailError = (
 export const logStorageError = (
   operation: string,
   filePath: string,
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   context?: ServerErrorContext,
 ): void => {
@@ -393,6 +407,7 @@ export const logStorageError = (
 export const logExternalApiError = (
   serviceName: string,
   endpoint: string,
+  // audit-unknown-ok: error-handler entry point — receives thrown values
   error: unknown,
   context?: ServerErrorContext,
 ): void => {

@@ -177,7 +177,7 @@ function emitOrderPlacedNotifications(args: {
     } as never)
     .catch((err: unknown) =>
       serverLogger.warn("Failed to create buyer order_placed notification", {
-        err,
+        err: err instanceof Error ? err.message : String(err),
         orderId,
       }),
     );
@@ -197,7 +197,7 @@ function emitOrderPlacedNotifications(args: {
         } as never)
         .catch((err: unknown) =>
           serverLogger.warn("Failed to create seller order_placed notification", {
-            err,
+            err: err instanceof Error ? err.message : String(err),
             orderId,
           }),
         )
@@ -303,13 +303,13 @@ async function flushCouponUsageAccumulator(
           }
         } catch (err) {
           void normalizeError(err);
-          serverLogger.warn("Failed to update claimed-coupon status", { err });
+          serverLogger.warn("Failed to update claimed-coupon status", { err: err instanceof Error ? err.message : String(err) });
         }
       }),
     );
   } catch (err) {
     void normalizeError(err);
-    serverLogger.error("Failed to record coupon usage:", err);
+    serverLogger.error("Failed to record coupon usage:", { err: err instanceof Error ? err.message : String(err) });
   }
 }
 

@@ -36,7 +36,7 @@ import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
 import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
 import { SCHEMAS } from "../../schemas/registry";
 import type { RegisteredApiRouteKey } from "../../schemas/registry";
-import type { ApiRouteKey } from "../../schemas/types";
+import type { ApiRouteKey, FirestoreValue } from "../../schemas/types";
 
 /** Minimal schema interface compatible with Zod v3 and v4. */
 interface ParseableSchema<TOutput> {
@@ -51,8 +51,9 @@ export interface RouteUser {
   uid: string;
   email?: string | null;
   displayName?: string;
+  name?: string | null;
   role?: string;
-  [key: string]: unknown;
+  [key: string]: FirestoreValue;
 }
 
 interface RouteHandlerOptions<

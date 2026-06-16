@@ -1,6 +1,6 @@
 "use client"
 import { normalizeError } from "../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 import React, {
   createContext,
   useContext,
@@ -64,9 +64,9 @@ export interface SessionUser {
   phoneVerified?: boolean;
   avatarMetadata?: AvatarMetadataShape | null;
 
-  publicProfile?: Record<string, JsonValue>;
-  stats?: Record<string, JsonValue>;
-  metadata?: Record<string, JsonValue>;
+  publicProfile?: FirestoreDocument;
+  stats?: FirestoreDocument;
+  metadata?: FirestoreDocument;
   scamAwarenessAcknowledgedAt?: Date | null;
   /** RBAC permission keys granted to this user (from their role's permission set). */
   permissions?: string[];

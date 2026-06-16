@@ -33,9 +33,19 @@ export type JsonValue = JsonPrimitive | JsonArray | JsonObject;
 // the strict-zero check satisfied.
 // ---------------------------------------------------------------------------
 
-/** JsonValue + Date + undefined. Use for Firestore document boundaries where
- *  Date is unavoidable (mapDoc return shapes, repository .data() reads). */
-export type FirestoreValue = JsonValue | Date | undefined;
+/** JsonValue + Date + undefined, recursive. Use for Firestore document boundaries
+ *  where Date is unavoidable (mapDoc return shapes, repository .data() reads) AND
+ *  nested objects may have `field?: T` optional fields. Firestore strips undefined
+ *  on write, so this matches runtime semantics. */
+export type FirestoreValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Date
+  | readonly FirestoreValue[]
+  | { readonly [key: string]: FirestoreValue };
 /** Record whose values are FirestoreValue. Use as the document shape for
  *  Firestore-backed repositories and mapDoc helpers. */
 export type FirestoreDocument = Record<string, FirestoreValue>;

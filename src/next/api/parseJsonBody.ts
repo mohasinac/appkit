@@ -1,5 +1,5 @@
 import { ValidationError } from "../../errors";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 
 /**
  * Strict JSON body parser for createRouteHandler handlers that need a body
@@ -13,7 +13,7 @@ import type { JsonValue } from "@mohasinac/appkit";
  *   const body = await parseJsonBody<{ name: string }>(request);
  *   const body = await parseJsonBody<{ name?: string }>(request, { allowEmpty: true });
  */
-export async function parseJsonBody<T = Record<string, JsonValue>>(
+export async function parseJsonBody<T = FirestoreDocument>(
   request: Request,
   options?: { allowEmpty?: boolean },
 ): Promise<T> {

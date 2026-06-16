@@ -26,7 +26,7 @@ import {
   createCouponId,
 } from "../schemas";
 import type { CouponType } from "../types";
-import type { JsonValue } from "../../../schemas/types";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { USER_COLLECTION } from "../../auth/schemas";
 import { DatabaseError } from "../../../errors";
 import { increment, arrayUnion, serverTimestamp } from "../../../contracts/field-ops";
@@ -45,7 +45,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
   /**
    * Create new coupon with SEO-friendly ID based on code
    */
-  async create(input: Partial<CouponDocument> | Record<string, JsonValue>): Promise<CouponDocument> {
+  async create(input: CouponCreateInput | Partial<CouponDocument> | FirestoreDocument): Promise<CouponDocument> {
     // Narrow to the expected create-input shape — the base class accepts a
     // broader union for FieldValue/Date passthrough.
     const data = input as CouponCreateInput;
