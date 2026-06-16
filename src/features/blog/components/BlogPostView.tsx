@@ -71,7 +71,7 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
       </Row>
       <Heading level={1} className="mb-4" size="3xl" weight="bold">{post.title}</Heading>
       {post.excerpt && <Text className="mb-6" color="muted" size="lg">{post.excerpt}</Text>}
-      <Row textSize="sm" wrap gap="md" className="text-zinc-400 dark:text-zinc-400">
+      <Row color="muted" textSize="sm" wrap gap="md">
         {post.authorName && <Span>{labels?.author ?? "By"} <Span weight="medium" color="muted">{post.authorName}</Span></Span>}
         {post.readTimeMinutes != null && <Span>{post.readTimeMinutes} {labels?.readTime ?? "min read"}</Span>}
         {date && <Span>{labels?.publishedOn ?? "Published"} {date}</Span>}

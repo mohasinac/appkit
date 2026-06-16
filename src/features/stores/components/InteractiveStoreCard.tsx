@@ -145,7 +145,7 @@ export function InteractiveStoreCard({
           )}
 
           {/* Stats row */}
-          <Row textSize="xs" gap="sm" className="mt-2.5 text-zinc-500 dark:text-zinc-400" wrap>
+          <Row color="muted" textSize="xs" gap="sm" className="mt-2.5" wrap>
             {store.totalProducts != null && store.totalProducts > 0 && (
               <Span layout="flex" className="gap-0.5">
                 <Span aria-hidden="true">📦</Span> {store.totalProducts} {labels.products ?? "products"}

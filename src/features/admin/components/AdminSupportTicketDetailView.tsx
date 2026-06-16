@@ -372,7 +372,7 @@ export function AdminSupportTicketDetailView({
                   key={msg.id ?? i}
                   className={`${ msg.authorRole === "user" ? "bg-zinc-50 dark:bg-zinc-900/40 " : "bg-info-surface border-info dark:border-info" }`} rounded="lg" padding="sm"
                 >
-                  <Row textSize="xs" className="mb-1 text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
+                  <Row color="muted" textSize="xs" className="mb-1" align="center" gap="sm">
                     <Span weight="medium" color="muted">
                       {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
                     </Span>

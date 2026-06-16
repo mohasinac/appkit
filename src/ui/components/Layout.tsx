@@ -261,6 +261,8 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
   textSize?: "xs" | "sm" | "base" | "lg";
   /** Cascade font-weight to children. Use sparingly — prefer wrapping in `<Text weight=…>`. */
   textWeight?: TextWeightKey;
+  /** Cascade text color to children. Use sparingly — prefer wrapping in `<Text color=…>`. */
+  color?: TextColorKey;
   /**
    * Render a themed top-border between adjacent children. `true` / `"default"`
    * uses the active theme's border colour; `"subtle"` uses border-subtle.
@@ -286,6 +288,7 @@ export function Stack({
   justify = "start",
   textSize,
   textWeight,
+  color,
   divide,
   as,
   surface,
@@ -306,6 +309,7 @@ export function Stack({
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     textSize ? TEXT_SIZE_MAP[textSize] : "",
     textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
+    color ? TEXT_COLOR_MAP[color] : "",
     resolveDivideClass(divide, "stack"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,
@@ -350,6 +354,8 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   textSize?: "xs" | "sm" | "base" | "lg";
   /** Cascade font-weight to children. Use sparingly — prefer wrapping in `<Text weight=…>`. */
   textWeight?: TextWeightKey;
+  /** Cascade text color to children. Use sparingly — prefer wrapping in `<Text color=…>`. */
+  color?: TextColorKey;
   /** Allow children to wrap onto multiple lines. */
   wrap?: boolean;
   /**
@@ -384,6 +390,20 @@ const TEXT_WEIGHT_MAP = {
 
 type TextWeightKey = keyof typeof TEXT_WEIGHT_MAP;
 
+const TEXT_COLOR_MAP = {
+  default: "",
+  primary: "appkit-color--primary",
+  muted: "appkit-color--muted",
+  faint: "appkit-color--faint",
+  inverse: "appkit-color--inverse",
+  success: "appkit-color--success",
+  warning: "appkit-color--warning",
+  error: "appkit-color--error",
+  info: "appkit-color--info",
+} as const;
+
+type TextColorKey = keyof typeof TEXT_COLOR_MAP;
+
 export function Row({
   gap = "md",
   centered = false,
@@ -391,6 +411,7 @@ export function Row({
   justify = "start",
   textSize,
   textWeight,
+  color,
   wrap = false,
   divide,
   as,
@@ -412,6 +433,7 @@ export function Row({
     wrap ? "appkit-row--wrap" : "",
     textSize ? TEXT_SIZE_MAP[textSize] : "",
     textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
+    color ? TEXT_COLOR_MAP[color] : "",
     resolveDivideClass(divide, "row"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,

@@ -116,7 +116,7 @@ export function PreOrderActionsClient({
             { icon: "📅", label: "Guaranteed\nDelivery" },
             { icon: "↩", label: "Free\nCancellation" },
           ].map(({ icon, label }) => (
-            <Stack textSize="xs" key={label} className="text-zinc-500 dark:text-zinc-400 min-w-[60px]" align="center" gap="xs">
+            <Stack color="muted" textSize="xs" key={label} className="min-w-[60px]" align="center" gap="xs">
               <Span size="base">{icon}</Span>
               <Span className="whitespace-pre-line leading-tight">{label}</Span>
             </Stack>

@@ -143,7 +143,7 @@ function PreOrderInfoSection({
       </Div>
 
       {deliveryDate && (
-        <Row textSize="sm" align="center" gap="xs" className="text-zinc-600 dark:text-zinc-400">
+        <Row color="muted" textSize="sm" align="center" gap="xs" className="text-zinc-600 dark:">
           <Span>📅</Span>
           <Span>Estimated delivery:</Span>
           <Span weight="medium">
@@ -361,7 +361,7 @@ function PreOrderBuyBarPanel({
                 { icon: "📅", label: "Guaranteed\nDelivery" },
                 { icon: "↩", label: "Free\nCancellation" },
               ].map(({ icon, label }) => (
-                <Stack textSize="xs" key={label} className="text-zinc-500 dark:text-zinc-400 min-w-[60px]" align="center" gap="xs">
+                <Stack color="muted" textSize="xs" key={label} className="min-w-[60px]" align="center" gap="xs">
                   <Span size="base">{icon}</Span>
                   <Span className="whitespace-pre-line leading-tight">{label}</Span>
                 </Stack>

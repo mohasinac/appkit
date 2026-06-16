@@ -341,7 +341,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Row>
 
         {cfg?.lastCatalogSyncAt && (
-          <Row textSize="xs" gap="sm" align="center" className="text-zinc-500 dark:text-zinc-400 mb-3">
+          <Row color="muted" textSize="xs" gap="sm" align="center" className="mb-3">
             <Text>Last sync: {new Date(cfg.lastCatalogSyncAt).toLocaleString("en-IN")}</Text>
             {cfg.lastSyncCount !== undefined && <Text>· {cfg.lastSyncCount} products</Text>}
             {cfg.lastSyncStatus && (

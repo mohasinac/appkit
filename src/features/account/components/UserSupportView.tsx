@@ -277,7 +277,7 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
               <Stack className={`max-h-72 ${__O.yAuto}`} gap="sm">
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <Div textSize="sm" key={msg.id ?? i} className={`${__P.p3} ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`} rounded="lg">
-                    <Row textSize="xs" className="mb-1 text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
+                    <Row color="muted" textSize="xs" className="mb-1" align="center" gap="sm">
                       <Span weight="medium" color="muted">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</Span>
                       {msg.createdAt && <Span>{new Date(msg.createdAt).toLocaleString()}</Span>}
                     </Row>

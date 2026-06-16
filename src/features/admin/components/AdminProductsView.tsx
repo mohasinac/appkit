@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 
 import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -111,7 +112,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
   );
 
   const handleQuickEdit = useCallback(
-    async (id: string, values: Record<string, unknown>) => {
+    async (id: string, values: Record<string, JsonValue>) => {
       const prev = overrides[id];
       setOverrides((o) => ({ ...o, [id]: { ...o[id], ...values } }));
       try {
