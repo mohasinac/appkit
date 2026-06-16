@@ -153,7 +153,7 @@ export function AdminCategoryEditorView({
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
 
   const actionSidebar = (
-    <Card variant="outlined" padding="md" className="space-y-3">
+    <Card variant="outlined" padding="md" spacing="sm">
       <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
         Status
       </Text>

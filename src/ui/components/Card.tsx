@@ -62,10 +62,23 @@ const UI_CARD = {
   },
 } as const;
 
+export type CardSpacing = "none" | "xs" | "sm" | "md" | "lg" | "xl";
+
+const CARD_SPACING_MAP: Record<CardSpacing, string> = {
+  none: "",
+  xs: "space-y-1",
+  sm: "space-y-2",
+  md: "space-y-4",
+  lg: "space-y-6",
+  xl: "space-y-8",
+};
+
 export interface CardProps extends SurfaceProps {
   children: React.ReactNode;
   variant?: CardVariant;
   padding?: CardPadding;
+  /** Vertical spacing between top-level children — wraps content in a stack. */
+  spacing?: CardSpacing;
   hover?: boolean;
   animate?: CardAnimate;
   className?: string;
@@ -77,6 +90,7 @@ export function Card({
   children,
   variant = "flat",
   padding = "md",
+  spacing,
   hover = false,
   animate,
   surface,
@@ -92,6 +106,7 @@ export function Card({
     UI_CARD.base,
     UI_CARD.variants[variant],
     UI_CARD.padding[padding],
+    spacing ? CARD_SPACING_MAP[spacing] : "",
     hover ? "appkit-card--hoverable" : "",
     onClick ? "appkit-card--clickable" : "",
     buildSurfaceClasses({ surface, rounded, border, shadow }),

@@ -149,7 +149,7 @@ export function AdminAddressEditorView({
 
   // ── Action sidebar (desktop) ───────────────────────────────────────────────
   const actionSidebar = (
-    <Card variant="outlined" padding="md" className="space-y-3">
+    <Card variant="outlined" padding="md" spacing="sm">
       <Button
         type="submit"
         form="address-editor-form"

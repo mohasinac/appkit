@@ -79,9 +79,7 @@ export function AboutView({
               <Card
                 key={title}
                 variant={`gradient-${tone ?? "indigo"}`}
-                padding="md"
-                className="space-y-3"
-              >
+                padding="md" spacing="sm">
                 <Div className="text-4xl">{icon}</Div>
                 <Heading level={3}>{title}</Heading>
                 <Text size="sm" variant="secondary" className="leading-relaxed">
