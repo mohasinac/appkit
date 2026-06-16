@@ -650,7 +650,7 @@ export function Search({
   if (!isOpen) return null;
 
   return (
-    <Div className="border-b border-zinc-200 dark:border-slate-800 animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
+    <Div border="default" className="border-b dark:border-slate-800 animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
       <Div className="container mx-auto px-4 md:py-4 relative" padding="y-sm">
         <Row gap="sm" className="md:gap-3">
           <Div className="flex-1 relative">
@@ -728,7 +728,7 @@ export function Search({
           <Stack className="absolute top-full left-0 right-0 pt-2 pb-4 z-50" padding="x-md" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
               <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
-                <Div className="px-4 border-b border-zinc-200 dark:border-slate-700" padding="y-xs">
+                <Div border="default" className="px-4 border-b" padding="y-xs">
                   <Text
                     variant="secondary"
                     size="xs"

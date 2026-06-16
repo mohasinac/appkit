@@ -67,7 +67,7 @@ export function FAQCategorySidebar({
         </Row>
       </TextLink>
 
-      <Div className="mt-4 border-t border-zinc-200 dark:border-slate-700" padding="t-md">
+      <Div border="default" className="mt-4 border-t" padding="t-md">
         {categories.map((category) => {
           const isSelected = selectedCategory === category.key;
           const count = categoryCounts[category.key] || 0;
@@ -105,7 +105,7 @@ export function FAQCategorySidebar({
       </Div>
 
       {contactHref ? (
-        <Div className="border-t border-zinc-200 dark:border-slate-700" padding="t-lg">
+        <Div border="default" className="border-t" padding="t-lg">
           <Text className="mb-3" color="muted" size="sm">
             {labels?.stillHaveQuestions ?? "Still have questions?"}
           </Text>

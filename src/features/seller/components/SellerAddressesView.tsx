@@ -259,9 +259,9 @@ export function SellerAddressesView({
   return (
     <Div className="min-h-screen">
       {/* Header */}
-      <Row
+      <Row border="default" 
         justify="between"
-        className="sticky z-10 backdrop-blur-sm border-b border-zinc-200 px-4" surface="default" padding="y-sm"
+        className="sticky z-10 backdrop-blur-sm border-b px-4" surface="default" padding="y-sm"
         // audit-inline-style-ok: dynamic CSS
         style={{ top: "var(--header-height, 0px)" }}
       >
@@ -287,7 +287,7 @@ export function SellerAddressesView({
             <Div className="h-6 w-6 animate-spin border-2 border-[var(--appkit-color-primary)] border-t-transparent" rounded="full" />
           </Row>
         ) : addresses.length === 0 ? (
-          <Stack className="border-2 border-dashed border-zinc-200 dark:border-slate-700" padding="y-4xl" align="center" gap="3" rounded="xl">
+          <Stack border="default" className="border-2 border-dashed" padding="y-4xl" align="center" gap="3" rounded="xl">
             <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
             <Text size="sm" color="muted">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>

@@ -120,10 +120,10 @@ export function NavbarLayout({
   }
 
   return (
-    <Nav
+    <Nav border="subtle" 
       id={id}
       aria-label={ariaLabel}
-      className="hidden lg:block bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-slate-800"
+      className="hidden lg:block bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b"
     >
       <Row className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px] h-10" padding="x-md" align="center">
         {/* Scrollable items area */}

@@ -119,9 +119,9 @@ export function TrustFeaturesSection({
   if (variant === "strip") {
     const doubled = [...items, ...items];
     return (
-      <Section
+      <Section border="subtle" 
         ref={sectionRef}
-        className={`overflow-hidden border-y border-zinc-100 dark:border-slate-800 ${className}`} padding="y-md"
+        className={`overflow-hidden border-y ${className}`} padding="y-md"
       >
         <Div className="flex animate-marquee">
           {doubled.map((item, i) => (

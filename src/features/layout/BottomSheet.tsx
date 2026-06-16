@@ -78,9 +78,9 @@ export function BottomSheet({
         className={`absolute bottom-0 inset-x-0 rounded-t-2xl border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`} surface="default"
       >
         {/* Handle and header */}
-        <Row
+        <Row border="subtle" 
           justify="between"
-          className="px-4 border-b border-zinc-100 dark:border-zinc-800 shrink-0" padding="y-sm"
+          className="px-4 border-b shrink-0" padding="y-sm"
         >
           {/* Drag handle */}
           <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-zinc-300 dark:bg-zinc-600" rounded="full" />

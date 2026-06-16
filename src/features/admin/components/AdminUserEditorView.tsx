@@ -462,7 +462,7 @@ export function AdminUserEditorView({
   );
 
   const renderProfileSection = () => (
-    <Stack as="section" gap="sm" className="border-t border-zinc-200 dark:border-zinc-700" padding="t-sm">
+    <Stack border="default" as="section" gap="sm" className="border-t" padding="t-sm">
       <Heading level={3} className="mb-1" color="muted" size="sm" weight="semibold">
         Profile details
       </Heading>
@@ -563,7 +563,7 @@ export function AdminUserEditorView({
   );
 
   const renderModerationSection = () => (
-    <Stack as="section" gap="sm" className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
+    <Stack border="default" as="section" gap="sm" className="border-t" padding="t-md">
       <Heading level={3} className="mb-3" color="muted" size="sm" weight="semibold">
         Moderation
       </Heading>

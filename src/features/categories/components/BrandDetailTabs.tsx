@@ -79,7 +79,7 @@ export function BrandDetailTabs({
 
   return (
     <>
-      <Div className={`flex border-b border-zinc-200 dark:border-slate-700 mb-6 ${__O.xAuto}`}>
+      <Div border="default" className={`flex border-b mb-6 ${__O.xAuto}`}>
         {visibleTabs.map((t) => (
           <button
             key={t.id}

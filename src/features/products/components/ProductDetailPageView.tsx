@@ -740,7 +740,7 @@ export async function ProductDetailPageView({
 
               {/* Delivery & Returns */}
               {(shippingInfo || returnPolicy || freeShipping) && (
-                <Div className="border-t border-zinc-200 dark:border-zinc-700 space-y-2.5" padding="t-md">
+                <Div border="default" className="border-t space-y-2.5" padding="t-md">
                   {freeShipping && (
                     <Row align="start" gap="sm">
                       <Span className={CLS_FREE_SHIPPING_ICON}>🚚</Span>
@@ -775,7 +775,7 @@ export async function ProductDetailPageView({
 
               {/* Tags */}
               {tags.length > 0 && (
-                <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
+                <Div border="default" className="border-t" padding="t-md">
                   <Text className="mb-2" color="muted" size="xs" weight="medium">
                     Tags
                   </Text>
@@ -793,7 +793,7 @@ export async function ProductDetailPageView({
               )}
 
               {/* Trust badges */}
-              <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
+              <Div border="default" className="border-t" padding="t-md">
                 <Row wrap gap="sm" justify="center" className="text-center">
                   {[
                     { icon: "🔒", label: "Secure\nPayment" },

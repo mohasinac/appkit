@@ -368,9 +368,9 @@ export function AdminSupportTicketDetailView({
             </Text>
             <Stack className={`max-h-64 ${__O.yAuto}`} gap="sm">
               {messages.map((msg, i) => (
-                <Div
+                <Div border="default" 
                   key={msg.id ?? i}
-                  className={`text-sm ${ msg.authorRole === "user" ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700" : "bg-info-surface border border-info dark:border-info" }`} rounded="lg" padding="sm"
+                  className={`text-sm ${ msg.authorRole === "user" ? "bg-zinc-50 dark:bg-zinc-900/40 " : "bg-info-surface border-info dark:border-info" }`} rounded="lg" padding="sm"
                 >
                   <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
                     <Span weight="medium" color="muted">

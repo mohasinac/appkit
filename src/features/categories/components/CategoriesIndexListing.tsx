@@ -222,7 +222,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     <Div className="min-h-screen">
       {/* ── Tab bar — only shown on the combined /categories page ──────── */}
       {!brandsOnly && (
-        <Div className="flex gap-1 border-b border-zinc-200 dark:border-slate-700 mb-2">
+        <Div border="default" className="flex gap-1 border-b mb-2">
           {TABS.map((tab) => (
             <button
               key={tab.key}
@@ -260,7 +260,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b border-zinc-200 py-1.5" surface="default" padding="x-sm" justify="center">
+        <Row border="default" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b py-1.5" surface="default" padding="x-sm" justify="center">
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
         </Row>
       )}

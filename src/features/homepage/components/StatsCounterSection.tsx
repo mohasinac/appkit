@@ -93,9 +93,9 @@ export function StatsCounterSection({
   }, []);
 
   return (
-    <Section
+    <Section border="subtle" 
       ref={sectionRef}
-      className={`border-y border-zinc-100 py-14 ${className}`} padding="x-md" surface="default"
+      className={`border-y py-14 ${className}`} padding="x-md" surface="default"
     >
       <Div className="mx-auto max-w-5xl">
         <Grid

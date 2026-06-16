@@ -128,7 +128,7 @@ export function CouponsIndexListing({
   return (
     <Div className="min-h-[40vh]">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <Div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 backdrop-blur-sm py-2.5" surface="default" padding="x-md">
+      <Div border="default" className="sticky top-[var(--header-height,0px)] z-20 border-b backdrop-blur-sm py-2.5" surface="default" padding="x-md">
         <Row gap="xs" className="max-w-full">
           {/* Filters button */}
           <button
@@ -228,12 +228,12 @@ export function CouponsIndexListing({
         {isLoading ? (
           <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Stack
+              <Stack border="subtle" 
                 key={i}
                 gap="sm"
                 rounded="xl"
                 padding="md"
-                className="border-2 border-zinc-100 dark:border-slate-700 animate-pulse"
+                className="border-2 dark:border-slate-700 animate-pulse"
               >
                 <Div className="h-6 w-2/3" surface="subtle" rounded="default" />
                 <Div className="h-4 w-full" surface="subtle" rounded="default" />

@@ -561,13 +561,13 @@ export function SellerOrdersView({
       />
 
       {totalPages > 1 && (
-        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b border-zinc-200 py-1.5" surface="default" padding="x-sm" justify="center">
+        <Row border="default" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b py-1.5" surface="default" padding="x-sm" justify="center">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
         </Row>
       )}
 
       {selection.selectedIds.length > 0 && (
-        <Div className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 backdrop-blur-sm border-b border-zinc-200" surface="default" padding="y-xs">
+        <Div border="default" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 backdrop-blur-sm border-b" surface="default" padding="y-xs">
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}

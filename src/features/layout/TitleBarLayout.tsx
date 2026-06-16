@@ -351,12 +351,12 @@ export function TitleBarLayout({
             Bottom nav (BN-1) is shown on the same breakpoint — TB2 carries
             wishlist/cart/profile since BN-1 does not have those slots. */}
         {hasTb2 && (
-          <Row
+          <Row border="subtle" 
             as="nav"
             aria-label="Account actions"
             justify="end"
             gap="xs"
-            className="flex lg:hidden h-10 border-t border-zinc-100 dark:border-slate-800 px-1"
+            className="flex lg:hidden h-10 border-t px-1"
           >
             {notificationsEl}
             {wishlistEl}

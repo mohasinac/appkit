@@ -183,13 +183,13 @@ function DrawerPanel({
       {/* Backdrop */}
       <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       {/* Panel — slides in from RIGHT */}
-      <Stack
+      <Stack border="default" 
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 right-0 z-50 h-full w-64 border-l border-zinc-200 dark:border-slate-700 shadow-2xl" surface="default"
+        className="fixed top-0 right-0 z-50 h-full w-64 border-l shadow-2xl" surface="default"
       >
-        <Row className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md" align="center" justify="between">
+        <Row border="subtle" className="py-3.5 border-b shrink-0" padding="x-md" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
           <button
             type="button"
@@ -248,8 +248,8 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           }}
         >
           {/* Nav panel */}
-          <Stack surface="default" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 ${__O.hidden}`} shadow="xl">
-            <Div className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md">
+          <Stack border="default" surface="default" className={`flex-1 border-r dark:border-slate-800 ${__O.hidden}`} shadow="xl">
+            <Div border="subtle" className="py-3.5 border-b shrink-0" padding="x-md">
               <Span size="xs" weight="semibold" transform="uppercase" color="muted">My Account</Span>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>

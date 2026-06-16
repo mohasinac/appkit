@@ -29,11 +29,11 @@ function formatDate(d: Date | string): string {
 
 function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: string }) {
   return (
-    <Row
+    <Row border="subtle" 
       justify="between"
       align="start"
       gap="sm"
-      className="border-b border-zinc-100 last:border-0 dark:border-zinc-800" padding="y-sm"
+      className="border-b last:border-0" padding="y-sm"
     >
       <Stack gap="xs" className="flex-1">
         <Row gap="sm" align="center">

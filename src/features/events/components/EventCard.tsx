@@ -62,8 +62,8 @@ export function EventCard({
   const detailHref = String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
 
   return (
-    <Article
-      className={`group relative flex h-full ${LAYOUT.cardHeight.event} flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900 ${isSelected ? "border-primary outline outline-2 outline-primary" : "border-zinc-200 dark:border-slate-700"} ${className}`}
+    <Article border="default" 
+      className={`group relative flex h-full ${LAYOUT.cardHeight.event} flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900 ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}

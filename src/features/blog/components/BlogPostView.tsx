@@ -200,7 +200,7 @@ export function BlogPostView({
         {renderBlogPostRelated(related, labels, renderRelatedCard)}
 
         {/* Back button */}
-        {renderBackButton && <Div className="mt-10 border-t border-zinc-200 dark:border-zinc-700" padding="t-xl">{renderBackButton()}</Div>}
+        {renderBackButton && <Div border="default" className="mt-10 border-t" padding="t-xl">{renderBackButton()}</Div>}
       </Div>
     </Div>
   );

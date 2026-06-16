@@ -303,7 +303,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b border-zinc-200 py-1.5" surface="default" padding="x-sm" justify="center">
+        <Row border="default" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b py-1.5" surface="default" padding="x-sm" justify="center">
           <Pagination
             currentPage={page}
             totalPages={totalPages}

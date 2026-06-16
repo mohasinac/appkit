@@ -208,7 +208,7 @@ function renderNotificationDropdown(props: {
   const { dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead, isLoading, notifications, notificationIcons, handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref, setIsOpen } = props;
   return (
     <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 shadow-2xl z-50 ${__O.hidden} ${dropdownClassName}`} rounded="xl" surface="default" border="default">
-      <Row justify="between" gap="none" className="px-4 border-b border-zinc-200 dark:border-slate-800" padding="y-sm">
+      <Row border="default" justify="between" gap="none" className="px-4 border-b dark:border-slate-800" padding="y-sm">
         <Heading level={3} weight="semibold" color="primary">
           {labels.title}
           {unreadCount > 0 && <Span size="xs" weight="medium" className={CLS_UNREAD_PILL}>{unreadCount} {labels.unread}</Span>}
@@ -223,7 +223,7 @@ function renderNotificationDropdown(props: {
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
       </Div>
       {viewAllHref && (
-        <Div className="px-4 border-t border-zinc-200 dark:border-slate-800 text-center" padding="y-sm">
+        <Div border="default" className="px-4 border-t dark:border-slate-800 text-center" padding="y-sm">
           {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-sm text-primary hover:underline font-medium", children: labels.viewAll })}
         </Div>
       )}

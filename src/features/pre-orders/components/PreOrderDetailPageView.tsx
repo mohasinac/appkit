@@ -343,7 +343,7 @@ function PreOrderBuyBarPanel({
             )}
           </Stack>
           {tags.length > 0 && (
-            <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
+            <Div border="default" className="border-t" padding="t-md">
               <Row wrap gap="xs">
                 {tags.map((tag) => (
                   <Span key={tag} size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">
@@ -353,7 +353,7 @@ function PreOrderBuyBarPanel({
               </Row>
             </Div>
           )}
-          <Div className="border-t border-zinc-200 dark:border-zinc-700" padding="t-md">
+          <Div border="default" className="border-t" padding="t-md">
             <Row wrap gap="sm" justify="center" className="text-center">
               {[
                 { icon: "🔒", label: "Secure\nPayment" },

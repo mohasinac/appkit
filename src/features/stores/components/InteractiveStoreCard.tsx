@@ -159,7 +159,7 @@ export function InteractiveStoreCard({
           </Row>
 
           {/* CTA */}
-          <Row className="mt-3 pt-2.5 border-t border-zinc-100 dark:border-zinc-800" align="center" justify="between">
+          <Row border="subtle" className="mt-3 pt-2.5 border-t" align="center" justify="between">
             <Span size="xs" weight="semibold" className="text-primary group-hover:underline transition-colors">
               {labels.visitStore ?? "Visit store"} →
             </Span>

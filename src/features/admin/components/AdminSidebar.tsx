@@ -132,13 +132,13 @@ function DrawerPanel({
   return (
     <Div className="hidden md:block">
       <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
-      <Stack
+      <Stack border="default" 
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 right-0 z-50 h-full w-64 border-l border-zinc-200 dark:border-slate-700 shadow-2xl" surface="default"
+        className="fixed top-0 right-0 z-50 h-full w-64 border-l shadow-2xl" surface="default"
       >
-        <Row className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md" align="center" justify="between">
+        <Row border="subtle" className="py-3.5 border-b shrink-0" padding="x-md" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
           <button
             type="button"
@@ -224,12 +224,12 @@ export function AdminSidebar({
           }}
         >
           {/* Nav panel */}
-          <Stack surface="sidePanel" className={`flex-1 border-r border-zinc-200 dark:border-slate-800 ${__O.hidden}`} shadow="xl">
-            <Div className="py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0" padding="x-md">
+          <Stack border="default" surface="sidePanel" className={`flex-1 border-r dark:border-slate-800 ${__O.hidden}`} shadow="xl">
+            <Div border="subtle" className="py-3.5 border-b shrink-0" padding="x-md">
               {renderHeader ? renderHeader() : <Span size="xs" weight="semibold" transform="uppercase" color="muted">Admin Panel</Span>}
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
-            {renderFooter && <Div className="px-4 border-t border-zinc-200 dark:border-slate-800" padding="y-sm">{renderFooter()}</Div>}
+            {renderFooter && <Div border="default" className="px-4 border-t dark:border-slate-800" padding="y-sm">{renderFooter()}</Div>}
           </Stack>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />

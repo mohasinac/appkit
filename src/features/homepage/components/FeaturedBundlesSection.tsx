@@ -134,7 +134,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
         </Row>
       </Link>
       {onBuyNow && (
-        <Div className={`border-t border-zinc-100 ${__P.p3} dark:border-zinc-800`} padding="t-xs">
+        <Div border="subtle" className={`border-t ${__P.p3}`} padding="t-xs">
           <BundleBuyNowCta
             bundleSlug={bundle.slug}
             outOfStock={stock === "out_of_stock"}

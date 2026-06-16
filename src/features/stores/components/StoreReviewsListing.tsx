@@ -139,7 +139,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
     <Div className="min-h-screen">
       {/* ── Rating summary ───────────────────────────────────────────────── */}
       {totalReviews > 0 && (
-        <Row align="center" gap="sm" className="px-4 border-b border-zinc-200 dark:border-slate-700" padding="y-sm">
+        <Row border="default" align="center" gap="sm" className="px-4 border-b" padding="y-sm">
           <Span weight="bold" size="2xl" color="primary">
             {averageRating.toFixed(1)}
           </Span>
@@ -166,7 +166,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Row className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b border-zinc-200 py-1.5" surface="default" padding="x-sm" justify="center">
+        <Row border="default" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm border-b py-1.5" surface="default" padding="x-sm" justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

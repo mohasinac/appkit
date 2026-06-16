@@ -78,7 +78,7 @@ export function FooterLayout({
     >
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (
-              <Div className="border-b border-zinc-100 dark:border-slate-800" padding="y-xl">
+              <Div border="subtle" className="border-b" padding="y-xl">
           <Div className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px]" padding="x-md">
             <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
               {visibleTrustItems.map((item, i) => (
@@ -203,7 +203,7 @@ export function FooterLayout({
         </Div>
 
         {/* Bottom bar */}
-        <Stack className="mt-10 border-t border-zinc-200 dark:border-slate-800 sm:flex-row justify-between text-xs text-zinc-600 dark:text-zinc-400" padding="t-lg" align="center" gap="3">
+        <Stack border="default" className="mt-10 border-t dark:border-slate-800 sm:flex-row justify-between text-xs text-zinc-600 dark:text-zinc-400" padding="t-lg" align="center" gap="3">
           <Text size="xs" color="muted">
             {copyrightText}
           </Text>
