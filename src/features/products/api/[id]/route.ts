@@ -15,6 +15,7 @@ import { z } from "zod";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { ProductItem } from "../../types/index";
+import type { JsonValue } from "../../../../schemas/types";
 import { mediaFieldSchema } from "../../../media/types/index";
 import { storeRepository } from "../../../stores/repository/store.repository";
 // SB-UNI-V — bundlesRepository deleted; bundle stock-sync moves to the
@@ -113,7 +114,7 @@ export async function GET(
     }
 
     const sanitized = sanitizeProductForPublic(
-      item as unknown as Record<string, unknown>,
+      item as unknown as Record<string, JsonValue>,
     );
     return NextResponse.json({ success: true, data: sanitized });
   } catch (error) {

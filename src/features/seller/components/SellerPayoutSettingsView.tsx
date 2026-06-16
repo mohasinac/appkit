@@ -254,7 +254,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   <Text className="mb-1.5" size="sm" weight="medium">Account Type</Text>
                   <Stack gap="xs" className="flex-row">
                     {(["savings", "current"] as const).map((t) => (
-                      <Label key={t} className="flex items-center gap-2 cursor-pointer">
+                      <Label layout="flex" gap="md" key={t} className="cursor-pointer">
                         <input
                           type="radio"
                           name="accountType"

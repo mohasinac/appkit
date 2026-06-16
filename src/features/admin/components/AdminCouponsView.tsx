@@ -29,7 +29,7 @@ interface AdminCouponsResponse {
 
 interface CouponRow {
   id: string;
-  raw: Record<string, JsonValue>;
+  raw: Record<string, unknown>;
 }
 
 export interface AdminCouponsViewProps extends ListingLayoutProps {

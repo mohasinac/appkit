@@ -290,7 +290,7 @@ export function CouponsIndexListing({
           </Heading>
           <Stack gap="xs">
             {COUPON_TYPES.map((t) => (
-              <Label key={t.value} className="flex items-center gap-2 cursor-pointer" color="primary" size="sm">
+              <Label layout="flex" gap="md" key={t.value} className="cursor-pointer" color="primary" size="sm">
                 <input
                   type="radio"
                   name="coupon-type"

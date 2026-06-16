@@ -297,7 +297,7 @@ export function SellerCouponEditorView({
 
           {/* Active toggle */}
           <Row className="border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)]" padding="inline" align="center" gap="3" rounded="lg">
-            <Label className="flex items-center gap-3 cursor-pointer w-full">
+            <Label layout="flex" gap="lg" className="cursor-pointer w-full">
               <input
                 type="checkbox"
                 checked={draft.isActive}

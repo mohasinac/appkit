@@ -145,7 +145,7 @@ export function PrizeDrawsIndexListing({
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          <Label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+          <Label layout="flex" gap="xs" className=".5 cursor-pointer select-none shrink-0">
             <Span size="xs" className="hidden sm:inline whitespace-nowrap" color="muted">
               Show closed
             </Span>

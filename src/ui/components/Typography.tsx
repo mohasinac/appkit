@@ -236,6 +236,24 @@ export function Text({
 
 // --- Label --------------------------------------------------------------------
 
+type LabelLayout = "inline" | "inline-flex" | "flex";
+
+const LABEL_LAYOUT_MAP: Record<LabelLayout, string> = {
+  inline: "",
+  "inline-flex": "inline-flex items-center",
+  flex: "flex items-center",
+};
+
+type LabelGap = "none" | "xs" | "sm" | "md" | "lg";
+
+const LABEL_GAP_MAP: Record<LabelGap, string> = {
+  none: "",
+  xs: "gap-1",
+  sm: "gap-1.5",
+  md: "gap-2",
+  lg: "gap-3",
+};
+
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
   /** Optional size override — defaults to `sm` (the existing label sizing). */
@@ -245,6 +263,10 @@ interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   color?: ColorVariant;
   transform?: TextTransform;
   align?: TextAlign;
+  /** Display + cross-axis alignment. flex variants auto-apply items-center. */
+  layout?: LabelLayout;
+  /** Gap between children. Only takes effect when `layout` is set to a flex variant. */
+  gap?: LabelGap;
   children: React.ReactNode;
 }
 
@@ -255,6 +277,8 @@ export function Label({
   color,
   transform,
   align,
+  layout,
+  gap,
   className = "",
   children,
   ...props
@@ -268,6 +292,8 @@ export function Label({
         color ? TYPOGRAPHY.colorVariant[color] : "",
         transform && transform !== "none" ? `appkit-text--transform-${transform}` : "",
         align ? `appkit-text--align-${align}` : "",
+        layout ? LABEL_LAYOUT_MAP[layout] : "",
+        gap ? LABEL_GAP_MAP[gap] : "",
         className,
       ]
         .filter(Boolean)

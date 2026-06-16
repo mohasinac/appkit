@@ -263,8 +263,8 @@ export function CharacterHotspotForm({
             will place pins on it in the next step.
           </Text>
 
-          <Label
-            className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 transition-colors hover:opacity-80"
+          <Label layout="flex" gap="md" 
+            className="cursor-pointer flex-col justify-center rounded-lg border-2 border-dashed p-8 transition-colors hover:opacity-80"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Span size="3xl">🖼</Span>
@@ -319,7 +319,7 @@ export function CharacterHotspotForm({
             />
           </Stack>
 
-          <Label className="inline-flex cursor-pointer items-center gap-2" size="sm" weight="medium">
+          <Label layout="inline-flex" gap="md" className="cursor-pointer" size="sm" weight="medium">
             <Input
               type="checkbox"
               checked={active}
@@ -924,8 +924,8 @@ export function CharacterHotspotForm({
               Image Settings
             </Summary>
             <Stack className="mt-3" gap="3">
-              <Label
-                className="inline-flex cursor-pointer items-center gap-2 rounded border-2 border-dashed px-3 py-1.5 transition-colors hover:opacity-80" size="sm" weight="medium"
+              <Label layout="inline-flex" gap="md" 
+                className="cursor-pointer rounded border-2 border-dashed px-3 py-1.5 transition-colors hover:opacity-80" size="sm" weight="medium"
                 style={{ borderColor: "var(--border-ink)" }}
               >
                 {uploading ? "Uploading…" : "Replace Image"}
@@ -951,7 +951,7 @@ export function CharacterHotspotForm({
                   }}
                 />
               </Stack>
-              <Label className="inline-flex cursor-pointer items-center gap-2" size="sm" weight="medium">
+              <Label layout="inline-flex" gap="md" className="cursor-pointer" size="sm" weight="medium">
                 <Input
                   type="checkbox"
                   checked={active}
