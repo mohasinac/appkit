@@ -185,7 +185,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {!category && categoryName && (
-            <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
+            <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
               {categoryName}
             </Span>
           )}
@@ -198,7 +198,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {brand && !brandSlug && (
-            <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
+            <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
               {brand}
             </Span>
           )}
@@ -347,7 +347,7 @@ function PreOrderBuyBarPanel({
             <Div border="default" className="border-t" padding="t-md">
               <Row wrap gap="xs">
                 {tags.map((tag) => (
-                  <Span key={tag} size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">
+                  <Span key={tag} size="xs" rounded="full" padding="pill-sm-tall" surface="subtle" color="muted">
                     {tag}
                   </Span>
                 ))}

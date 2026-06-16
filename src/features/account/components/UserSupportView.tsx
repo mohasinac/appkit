@@ -261,9 +261,9 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
       {selectedTicket && (
         <Stack className={`${__P.p4}`} gap="md">
           <Row wrap gap="sm">
-            <Span size="xs" weight="medium" className={`inline-flex px-2.5 ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`} rounded="full" padding="y-2xs">{selectedTicket.status.replace(/_/g, " ")}</Span>
-            <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">{selectedTicket.category.replace(/_/g, " ")}</Span>
-            {selectedTicket.orderId && <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">Order: {selectedTicket.orderId}</Span>}
+            <Span size="xs" weight="medium" className={`inline-flex ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`} rounded="full" padding="pill-sm-tall">{selectedTicket.status.replace(/_/g, " ")}</Span>
+            <Span size="xs" rounded="full" padding="pill-sm-tall" surface="subtle" color="muted">{selectedTicket.category.replace(/_/g, " ")}</Span>
+            {selectedTicket.orderId && <Span size="xs" rounded="full" padding="pill-sm-tall" surface="subtle" color="muted">Order: {selectedTicket.orderId}</Span>}
           </Row>
           {selectedTicket.description && (
             <Div className={`${__P.p3}`} rounded="lg" surface="muted" border="default">

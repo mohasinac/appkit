@@ -26,7 +26,7 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
     header: "Status",
     className: "w-32",
     render: (row) => (
-      <Span size="xs" weight="medium" className="inline-flex bg-primary-50 px-2.5 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300" rounded="full" padding="y-2xs">
+      <Span size="xs" weight="medium" className="inline-flex bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300" rounded="full" padding="pill-sm-tall">
         {String(row.status ?? "—")}
       </Span>
     ),

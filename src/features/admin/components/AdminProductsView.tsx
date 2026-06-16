@@ -74,7 +74,7 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       sortable: true,
       className: "w-36",
       render: (row) => (
-        <Span size="xs" weight="medium" className="inline-flex bg-primary-50 px-2.5 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300" rounded="full" padding="y-2xs">
+        <Span size="xs" weight="medium" className="inline-flex bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300" rounded="full" padding="pill-sm-tall">
           {row.status}
         </Span>
       ),

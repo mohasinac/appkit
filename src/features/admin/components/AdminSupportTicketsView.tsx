@@ -78,7 +78,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
     className: "w-36",
     render: (row) => (
       <Span
-        className={`inline-flex px-2.5 ${ STATUS_BADGE[row.status] ?? STATUS_BADGE.open }`} size="xs" weight="medium" rounded="full" padding="y-2xs"
+        className={`inline-flex ${ STATUS_BADGE[row.status] ?? STATUS_BADGE.open }`} size="xs" weight="medium" rounded="full" padding="pill-sm-tall"
       >
         {row.status.replace(/_/g, " ")}
       </Span>

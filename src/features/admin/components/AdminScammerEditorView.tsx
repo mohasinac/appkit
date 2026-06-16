@@ -113,12 +113,12 @@ export function AdminScammerEditorView({
           <Span
             size="xs"
             weight="medium"
-            className={`inline-flex px-2.5 ${ STATUS_COLOR[currentStatus ?? "pending_review"] ?? STATUS_COLOR.pending_review }`} rounded="full" padding="y-2xs"
+            className={`inline-flex ${ STATUS_COLOR[currentStatus ?? "pending_review"] ?? STATUS_COLOR.pending_review }`} rounded="full" padding="pill-sm-tall"
           >
             {(currentStatus ?? "pending_review").replace(/_/g, " ")}
           </Span>
           {scamType && (
-            <Span size="xs" className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted">
+            <Span size="xs" rounded="full" padding="pill-sm-tall" surface="subtle" color="muted">
               {scamType.replace(/_/g, " ")}
             </Span>
           )}

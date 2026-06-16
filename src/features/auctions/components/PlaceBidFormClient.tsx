@@ -264,8 +264,7 @@ export function PlaceBidFormClient({
           <Row wrap gap="xs">
             {tags.map((tag) => (
               <Span
-                key={tag}
-                className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted" size="xs"
+                key={tag} rounded="full" padding="pill-sm-tall" surface="subtle" color="muted" size="xs"
               >
                 {tag}
               </Span>

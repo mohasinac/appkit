@@ -525,7 +525,7 @@ export async function ProductDetailPageView({
                     </Link>
                   ))}
                   {subcategory && (
-                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted" transform="capitalize">
+                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted" transform="capitalize">
                       {subcategory}
                     </Span>
                   )}
@@ -538,7 +538,7 @@ export async function ProductDetailPageView({
                     </Link>
                   )}
                   {brand && !brandSlug && (
-                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
+                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
                       {brand}
                     </Span>
                   )}
@@ -782,8 +782,7 @@ export async function ProductDetailPageView({
                   <Row wrap gap="xs">
                     {tags.map((tag) => (
                       <Span
-                        key={tag}
-                        className="px-2.5" rounded="full" padding="y-2xs" surface="subtle" color="muted" size="xs"
+                        key={tag} rounded="full" padding="pill-sm-tall" surface="subtle" color="muted" size="xs"
                       >
                         {tag}
                       </Span>
