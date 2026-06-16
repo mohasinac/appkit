@@ -52,10 +52,10 @@ export async function TrackOrderView({
         tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl"
       >
         <Div className={`${page.container.sm} text-center`}>
-          <Heading level={1} variant="none" className="mb-4 text-white">
+          <Heading color="inverse" level={1} variant="none" className="mb-4">
             {t("title")}
           </Heading>
-          <Text variant="none" className="text-white/80">
+          <Text color="inverse" variant="none" className="/80">
             {t("subtitle")}
           </Text>
         </Div>

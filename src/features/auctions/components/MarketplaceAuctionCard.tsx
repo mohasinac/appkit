@@ -122,7 +122,7 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
       </TextLink>
       {hasVideo && imageIndex === 0 ? (
         <Div className="absolute right-2 top-2">
-          <Span className="flex h-8 w-8 items-center justify-center bg-black/50 text-white" rounded="full">
+          <Span color="inverse" className="flex h-8 w-8 items-center justify-center bg-black/50" rounded="full">
             <Play className="h-4 w-4" aria-label={mergedLabels.videoLabel} />
           </Span>
         </Div>
@@ -153,8 +153,8 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
       <Stack className={`absolute left-2 z-10 ${product.featured ? "top-8" : "top-2"}`} gap="xs">
         {!isEnded ? <Span size="xs" weight="bold" className={CLS_LIVE_BADGE}>{mergedLabels.liveBadge}</Span> : null}
         {isEndingSoon ? <Span size="xs" weight="bold" className={CLS_ENDING_BADGE}>{mergedLabels.endingSoon}</Span> : null}
-        {isEnded ? <Span size="xs" weight="bold" className="bg-zinc-600/90 py-0.5 text-white" rounded="full" padding="x-xs">{mergedLabels.ended}</Span> : null}
-        {product.status === "sold" ? <Span size="xs" weight="bold" className="bg-zinc-700/90 py-0.5 text-white" rounded="full" padding="x-xs">{mergedLabels.sold}</Span> : null}
+        {isEnded ? <Span color="inverse" size="xs" weight="bold" className="bg-zinc-600/90 py-0.5" rounded="full" padding="x-xs">{mergedLabels.ended}</Span> : null}
+        {product.status === "sold" ? <Span color="inverse" size="xs" weight="bold" className="bg-zinc-700/90 py-0.5" rounded="full" padding="x-xs">{mergedLabels.sold}</Span> : null}
       </Stack>
       <Div className="pointer-events-none absolute bottom-2 right-2 z-10">
         <Span size="xs" weight="semibold" className={CLS_RESERVE_BADGE}>

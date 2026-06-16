@@ -91,7 +91,7 @@ export default function CameraCapture({
         <Row className="absolute inset-0 bg-black/60" align="center" justify="center">
           <Stack align="center" gap="sm">
             <Spinner />
-            <Span size="sm" className="text-white">{t("starting")}</Span>
+            <Span color="inverse" size="sm">{t("starting")}</Span>
           </Stack>
         </Row>
       )}

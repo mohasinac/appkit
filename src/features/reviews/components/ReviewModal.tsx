@@ -58,7 +58,7 @@ export function ViewReviewModal({
           )}
           <Div>
             <Row gap="sm">
-              <Text className="text-neutral-900 dark:text-white" weight="medium">
+              <Text color="inverse" className="text-neutral-900 dark:" weight="medium">
                 {displayName}
               </Text>
               {review.verified && (
@@ -80,9 +80,9 @@ export function ViewReviewModal({
 
         {/* Title + comment */}
         {review.title && (
-          <Heading
+          <Heading color="inverse" 
             level={4}
-            className="text-neutral-900 dark:text-white" weight="semibold"
+            className="text-neutral-900 dark:" weight="semibold"
           >
             {review.title}
           </Heading>

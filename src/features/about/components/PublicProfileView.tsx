@@ -169,10 +169,10 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
           </Div>
           <Stack gap="xs" className="text-center sm:text-left">
             <Row className="sm:justify-start" justify="center" gap="xs" wrap>
-              <Heading level={1} variant="none" className="text-white mb-0">{displayName}</Heading>
-              {isSeller && <Span size="xs" weight="semibold" className="bg-white/20 text-white/90" padding="pill-sm" rounded="full">{t("roleSeller")}</Span>}
+              <Heading color="inverse" level={1} variant="none" className="mb-0">{displayName}</Heading>
+              {isSeller && <Span color="inverse" size="xs" weight="semibold" className="bg-white/20 /90" padding="pill-sm" rounded="full">{t("roleSeller")}</Span>}
             </Row>
-            <Text variant="none" className="text-white/60" size="sm">{memberSince}</Text>
+            <Text color="inverse" variant="none" className="/60" size="sm">{memberSince}</Text>
           </Stack>
           {isSeller && storeSlug && (
             <Div className="sm:ml-auto">

@@ -86,22 +86,22 @@ export function AdvertisementBanner({
                   aria-hidden
                 />
                 {tagLabel && (
-                  <Span size="xs" weight="semibold" className="inline-flex items-center gap-1.5 self-start bg-white/10 text-white/80 tracking-widest py-1 mb-5 backdrop-blur-sm" rounded="full" padding="x-sm" transform="uppercase">
+                  <Span color="inverse" size="xs" weight="semibold" className="inline-flex items-center gap-1.5 self-start bg-white/10 /80 tracking-widest py-1 mb-5 backdrop-blur-sm" rounded="full" padding="x-sm" transform="uppercase">
                     <Sparkles className="w-3.5 h-3.5" />
                     {tagLabel}
                   </Span>
                 )}
-                <Heading
+                <Heading color="inverse" 
                   level={2}
                   variant="none"
-                  className="font-extrabold text-white mb-4 leading-tight" mdSize="4xl" lgSize="5xl" size="3xl"
+                  className="font-extrabold mb-4 leading-tight" mdSize="4xl" lgSize="5xl" size="3xl"
                 >
                   {title}
                 </Heading>
                 {subtitle && (
-                  <Text
+                  <Text color="inverse" 
                     variant="none"
-                    className="text-white/75 mb-8 leading-relaxed" mdSize="lg" size="base"
+                    className="/75 mb-8 leading-relaxed" mdSize="lg" size="base"
                   >
                     {subtitle}
                   </Text>
@@ -162,7 +162,7 @@ export function AdvertisementBanner({
             >
               <Span className="inline-flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-white/80" />
-                <Span size="sm" weight="semibold" className="text-white">
+                <Span color="inverse" size="sm" weight="semibold">
                   {title}
                 </Span>
               </Span>
@@ -181,22 +181,22 @@ export function AdvertisementBanner({
           ) : (
             <Div className="relative z-10 w-full max-w-4xl mx-auto px-6 md:py-16 text-center" padding="y-3xl">
               {tagLabel && (
-                <Span size="xs" weight="semibold" className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 tracking-widest py-1.5 mb-5 backdrop-blur-sm shadow-sm" rounded="full" padding="x-md" transform="uppercase">
+                <Span color="inverse" size="xs" weight="semibold" className="inline-flex items-center gap-1.5 bg-white/15 /90 tracking-widest py-1.5 mb-5 backdrop-blur-sm shadow-sm" rounded="full" padding="x-md" transform="uppercase">
                   <Sparkles className="w-3.5 h-3.5" />
                   {tagLabel}
                 </Span>
               )}
-              <Heading
+              <Heading color="inverse" 
                 level={2}
                 variant="none"
-                className="lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg leading-tight" mdSize="5xl" size="3xl"
+                className="lg:text-6xl font-extrabold mb-4 drop-shadow-lg leading-tight" mdSize="5xl" size="3xl"
               >
                 {title}
               </Heading>
               {subtitle && (
-                <Text
+                <Text color="inverse" 
                   variant="none"
-                  className="text-white mb-10 max-w-2xl mx-auto" mdSize="xl" size="base"
+                  className="mb-10 max-w-2xl mx-auto" mdSize="xl" size="base"
                 >
                   {subtitle}
                 </Text>

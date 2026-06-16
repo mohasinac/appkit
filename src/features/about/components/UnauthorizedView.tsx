@@ -38,16 +38,16 @@ export async function UnauthorizedView({
           <Div className={`w-20 h-20 ${flex.center} mx-auto mb-6`} surface="default" rounded="2xl">
             <ShieldAlert className="w-10 h-10 text-white" />
           </Div>
-          <Heading
+          <Heading color="inverse" 
             level={1}
             variant="none"
-            className="mb-4 text-white" size="4xl"
+            className="mb-4" size="4xl"
           >
             {t("title")}
           </Heading>
-          <Text
+          <Text color="inverse" 
             variant="none"
-            className="text-white/80 max-w-lg mx-auto mb-8" size="lg"
+            className="/80 max-w-lg mx-auto mb-8" size="lg"
           >
             {t("subtitle")}
           </Text>

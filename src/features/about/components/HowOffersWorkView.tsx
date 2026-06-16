@@ -81,8 +81,8 @@ export async function HowOffersWorkView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl">
         <Div className={`${page.container.md} text-center`}>
-          <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
-          <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
+          <Heading color="inverse" level={1} variant="none" className="mb-4">{t("title")}</Heading>
+          <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </Div>
       </Section>
       <Div className={`${page.container.md} md:py-12 lg:py-16 space-y-14`} padding="y-2xl">

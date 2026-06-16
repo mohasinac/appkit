@@ -94,7 +94,7 @@ function ReviewCard({
           />
         ) : (
           <Row className="w-9 h-9 bg-[var(--appkit-color-primary)] flex-shrink-0" align="center" justify="center" rounded="full">
-            <Span size="sm" weight="bold" className="text-white">
+            <Span color="inverse" size="sm" weight="bold">
               {review.authorName.charAt(0).toUpperCase()}
             </Span>
           </Row>

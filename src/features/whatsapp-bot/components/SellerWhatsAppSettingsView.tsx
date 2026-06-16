@@ -390,7 +390,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         <Text className="mb-3" color="muted" size="xs">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
         </Text>
-        <Div className="px-4 text-sm text-zinc-700 dark:text-zinc-200 font-mono" surface="muted" padding="y-sm" rounded="lg">
+        <Div className="px-4 text-sm font-mono" color="primary" surface="muted" padding="y-sm" rounded="lg">
           {buildPurchaseAnnouncementMessage({
             buyerName: "Ravi K.",
             firstItemName: "Charizard PSA 9",
@@ -414,7 +414,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         <Div className={`${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`} rounded="xl" border="default">
           <Row gap="sm" align="center" className="mb-3">
             <Row className="w-8 h-8 bg-[#25D366]" align="center" justify="center" rounded="full">
-              <Text className="text-white" size="xs" weight="bold">W</Text>
+              <Text color="inverse" size="xs" weight="bold">W</Text>
             </Row>
             <Div>
               <Text size="xs" weight="semibold" color="primary">

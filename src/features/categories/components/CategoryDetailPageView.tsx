@@ -169,34 +169,34 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </Nav>
 
           {/* Title + metrics */}
-          <Heading level={1} className={`md:text-4xl mb-2 ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" weight="bold">
+          <Heading color="inverse" level={1} className={`md:text-4xl mb-2 ${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" weight="bold">
             {category?.name ?? slug}
           </Heading>
 
           {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
-            <Text className={`max-w-2xl mb-4 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
+            <Text color="inverse" className={`max-w-2xl mb-4 ${hasCover ? "/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
               {category.description}
             </Text>
           )}
 
           <Div className="flex flex-wrap gap-2">
             {productCount > 0 && (
-              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
+              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
                 {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
               </Span>
             )}
             {auctionCount > 0 && (
-              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="y-2xs">
+              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="y-2xs">
                 {auctionCount.toLocaleString()} {auctionCount === 1 ? "auction" : "auctions"}
               </Span>
             )}
             {preOrderCount > 0 && (
-              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" }`} rounded="full" padding="y-2xs">
+              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" }`} rounded="full" padding="y-2xs">
                 {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
               </Span>
             )}
             {storeCount > 0 && (
-              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success" }`} rounded="full" padding="y-2xs">
+              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success" }`} rounded="full" padding="y-2xs">
                 {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
               </Span>
             )}

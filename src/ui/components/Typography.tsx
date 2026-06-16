@@ -40,6 +40,7 @@ const TYPOGRAPHY = {
     none: "",
     inherit: "",
     accent: "appkit-color--accent",
+    inverse: "appkit-color--inverse",
   },
 } as const;
 

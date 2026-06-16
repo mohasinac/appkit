@@ -55,10 +55,10 @@ export function AboutView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section tone="accent-banner" className="text-white md:py-20 lg:py-24" padding="y-4xl">
         <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
-          <Heading level={1} variant="none" className="mb-6 text-white" mdSize="5xl" size="4xl" weight="bold">
+          <Heading color="inverse" level={1} variant="none" className="mb-6" mdSize="5xl" size="4xl" weight="bold">
             {labels.title}
           </Heading>
-          <Text variant="none" className="text-white/80 max-w-2xl mx-auto" size="xl">
+          <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto" size="xl">
             {labels.subtitle}
           </Text>
         </Div>
@@ -124,14 +124,14 @@ export function AboutView({
         </Section>
 
         <Section tone="accent-banner" className={`text-center ${ctaBannerClass} ${__P.p8} md:p-12 text-white`} rounded="2xl">
-          <Heading level={2} variant="none" className="mb-8 text-white" size="3xl" weight="bold">
+          <Heading color="inverse" level={2} variant="none" className="mb-8" size="3xl" weight="bold">
             {labels.ctaTitle}
           </Heading>
           {renderCtaButtons ? (
             renderCtaButtons()
           ) : (
             <Row justify="center" gap="3" wrap>
-              <Span size="sm" className="text-white/70">
+              <Span color="inverse" size="sm" className="/70">
                 {labels.ctaSell} · {labels.ctaShop}
               </Span>
             </Row>

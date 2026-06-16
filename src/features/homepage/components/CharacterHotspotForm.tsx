@@ -868,8 +868,8 @@ export function CharacterHotspotForm({
               {pins.map((pin, i) => (
                 <Li key={pin.id} className="px-4 py-3">
                   <Row gap="sm">
-                    <Span
-                      className="flex h-6 w-6 shrink-0 items-center justify-center text-white" rounded="full" size="xs" weight="bold"
+                    <Span color="inverse" 
+                      className="flex h-6 w-6 shrink-0 items-center justify-center" rounded="full" size="xs" weight="bold"
                       style={{ background: pin.accent || "#E8001C" }}
                     >
                       {i + 1}

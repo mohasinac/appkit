@@ -66,10 +66,10 @@ export async function PolicyPageView({
         tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl"
       >
         <Div className={`${page.container.sm}`}>
-          <Heading level={1} variant="none" className="mb-3 text-white">
+          <Heading color="inverse" level={1} variant="none" className="mb-3">
             {t("title")}
           </Heading>
-          <Text variant="none" className="text-white/80" size="sm">
+          <Text color="inverse" variant="none" className="/80" size="sm">
             {t("lastUpdated")}
           </Text>
         </Div>

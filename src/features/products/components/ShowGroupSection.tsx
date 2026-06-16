@@ -64,7 +64,7 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
       >
         <MediaImage src={image} alt={member.title} size="card" />
         {member.isGroupParent && (
-          <Span className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-white text-[8px] leading-none px-1 py-0.5 rounded-tl">
+          <Span color="inverse" className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-[8px] leading-none px-1 py-0.5 rounded-tl">
             Set
           </Span>
         )}

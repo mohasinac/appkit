@@ -37,7 +37,7 @@ export function ReviewSummary({
     >
       {/* Score block */}
       <Stack className="sm:items-start" align="center" gap="xs">
-        <Span weight="bold" className="leading-none text-neutral-900 dark:text-white" size="5xl">
+        <Span color="inverse" weight="bold" className="leading-none text-neutral-900 dark:" size="5xl">
           {averageRating.toFixed(1)}
         </Span>
         <StarRating value={averageRating} size="md" readOnly />

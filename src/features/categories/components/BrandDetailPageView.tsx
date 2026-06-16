@@ -161,11 +161,11 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               </Span>
             )}
             <>
-              <Heading level={1} className={`md:text-4xl ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" weight="bold">
+              <Heading color="inverse" level={1} className={`md:text-4xl ${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" weight="bold">
                 {brand?.name ?? slug}
               </Heading>
               {brand?.description && typeof brand.description === "string" && !brand.description.startsWith("{") && (
-                <Text className={`max-w-2xl mt-1 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
+                <Text color="inverse" className={`max-w-2xl mt-1 ${hasCover ? "/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
                   {brand.description}
                 </Text>
               )}
@@ -175,17 +175,17 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           {/* Item count chips */}
           <Div className="flex flex-wrap gap-2 mt-3">
             {counts.products > 0 && (
-              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
+              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
                 {counts.products.toLocaleString()} {counts.products === 1 ? "product" : "products"}
               </Span>
             )}
             {counts.auctions > 0 && (
-              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="y-2xs">
+              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="y-2xs">
                 {counts.auctions.toLocaleString()} {counts.auctions === 1 ? "auction" : "auctions"}
               </Span>
             )}
             {counts.preOrders > 0 && (
-              <Span size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" }`} rounded="full" padding="y-2xs">
+              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" }`} rounded="full" padding="y-2xs">
                 {counts.preOrders.toLocaleString()} {counts.preOrders === 1 ? "pre-order" : "pre-orders"}
               </Span>
             )}

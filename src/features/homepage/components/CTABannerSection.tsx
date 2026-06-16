@@ -26,11 +26,11 @@ export function CTABannerSection({
         <Span className="mb-4 inline-block" size="2xl" aria-hidden="true">
           ✨
         </Span>
-        <Heading level={2} className="text-white" mdSize="3xl" lgSize="4xl" size="2xl" weight="bold">
+        <Heading color="inverse" level={2} mdSize="3xl" lgSize="4xl" size="2xl" weight="bold">
           {title}
         </Heading>
         {subtitle && (
-          <Text className="mt-3 text-white/80" size="base">{subtitle}</Text>
+          <Text color="inverse" className="mt-3 /80" size="base">{subtitle}</Text>
         )}
         <Row className="mt-8" align="center" justify="center" gap="md" wrap>
           <Link

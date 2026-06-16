@@ -80,19 +80,18 @@ export function NewsletterBanner({
       <Div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 border border-dashed border-white/[0.08]" rounded="full" />
 
       <Div className="relative mx-auto max-w-2xl text-center sm:px-6" padding="x-md">
-        <Span size="xs" weight="semibold" className="mb-4 inline-flex border border-white/20 py-1 tracking-widest text-white/70" rounded="full" padding="x-sm" transform="uppercase">
+        <Span color="inverse" size="xs" weight="semibold" className="mb-4 inline-flex border border-white/20 py-1 tracking-widest /70" rounded="full" padding="x-sm" transform="uppercase">
           {eyebrow}
         </Span>
-        <Heading
-          level={2}
-          className="text-white" smSize="4xl" size="3xl" weight="bold"
+        <Heading color="inverse" 
+          level={2} smSize="4xl" size="3xl" weight="bold"
         >
           {heading}
         </Heading>
-        <Text className="mt-4 text-white/60">{subheading}</Text>
+        <Text color="inverse" className="mt-4 /60">{subheading}</Text>
 
         {success ? (
-          <Text className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6 py-4 text-white" size="sm" weight="semibold">
+          <Text color="inverse" className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6 py-4" size="sm" weight="semibold">
             {successMessage}
           </Text>
         ) : (
@@ -126,7 +125,7 @@ export function NewsletterBanner({
           <Text className={CLS_ERROR_TEXT}>{errorMessage}</Text>
         )}
 
-        <Text className="mt-4 text-white/40" size="xs">
+        <Text color="inverse" className="mt-4 /40" size="xs">
           No spam, ever. Unsubscribe anytime.
         </Text>
       </Div>

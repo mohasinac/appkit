@@ -121,14 +121,14 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
             <Row className="flex-shrink-0 w-10 h-10" surface="default" align="center" justify="center" rounded="xl">
               <BookOpen className="w-5 h-5 text-white" />
             </Row>
-            <Text className="text-white/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">
+            <Text color="inverse" className="/80 tracking-widest" size="sm" weight="semibold" transform="uppercase">
               Admin &amp; Employee Guide
             </Text>
           </Row>
-          <Heading level={1} className="text-white mb-2" mdSize="3xl" size="2xl" weight="bold">
+          <Heading color="inverse" level={1} className="mb-2" mdSize="3xl" size="2xl" weight="bold">
             LetItRip Internal Guide
           </Heading>
-          <Text className="text-white/80" size="base">
+          <Text color="inverse" className="/80" size="base">
             Everything you need to operate and manage LetItRip — India&apos;s largest collectibles marketplace.
           </Text>
         </Div>

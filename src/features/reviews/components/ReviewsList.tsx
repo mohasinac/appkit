@@ -76,7 +76,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           )}
           <Div className="flex-1 min-w-0">
             <Row wrap gap="sm">
-              <Span weight="medium" className="text-neutral-900 dark:text-white">
+              <Span color="inverse" weight="medium" className="text-neutral-900 dark:">
                 {displayName}
               </Span>
               {review.verified && (
@@ -97,9 +97,9 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
         </Row>
 
         {review.title && (
-          <Heading
+          <Heading color="inverse" 
             level={4}
-            className="mt-3 text-neutral-900 dark:text-white" weight="semibold"
+            className="mt-3 text-neutral-900 dark:" weight="semibold"
           >
             {review.title}
           </Heading>

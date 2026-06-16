@@ -143,6 +143,10 @@
   color: var(--appkit-color-info, #0284c7);
 }
 
+.appkit-color--inverse {
+  color: var(--appkit-color-text-on-primary, #ffffff);
+}
+
 .dark .appkit-color--primary {
   color: var(--appkit-color-text);
 }

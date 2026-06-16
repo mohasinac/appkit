@@ -219,12 +219,12 @@ function CarouselCardRenderer({
             className={`${POSITION_FILL} justify-end md:p-6 ${textAlignClass}`} padding="xs"
           >
           {card.content?.eyebrow && (
-            <Text className="text-[10px] !text-white/70 mb-0.5 tracking-wider drop-shadow-sm" mdSize="xs" transform="uppercase">
+            <Text color="inverse" className="text-[10px] !/70 mb-0.5 tracking-wider drop-shadow-sm" mdSize="xs" transform="uppercase">
               {card.content.eyebrow}
             </Text>
           )}
           {card.content?.subtitle && (
-            <Text className="hidden md:block !text-white/90 mb-0.5 md:mb-2 drop-shadow-sm" mdSize="sm" size="xs">
+            <Text color="inverse" className="hidden md:block !/90 mb-0.5 md:mb-2 drop-shadow-sm" mdSize="sm" size="xs">
               {card.content.subtitle}
             </Text>
           )}
@@ -238,8 +238,8 @@ function CarouselCardRenderer({
             </Heading>
           )}
           {card.content?.description && (
-            <Text
-              className={`text-[10px] md:text-sm !text-white/80 mb-1 md:mb-4 drop-shadow-sm`} truncate
+            <Text color="inverse" 
+              className={`text-[10px] md:text-sm !/80 mb-1 md:mb-4 drop-shadow-sm`} truncate
             >
               {card.content.description}
             </Text>
@@ -408,20 +408,20 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 {slide.overlay && (
                   <Div className={`${POSITION_FILL} ${FLEX_CENTER} flex-col text-center md:px-16 lg:px-32`} padding="x-lg">
                     {slide.overlay.subtitle && (
-                      <Text className="stagger-1 !text-white/80 mb-1 md:mb-2 drop-shadow-sm tracking-widest" mdSize="sm" size="xs" transform="uppercase">
+                      <Text color="inverse" className="stagger-1 !/80 mb-1 md:mb-2 drop-shadow-sm tracking-widest" mdSize="sm" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}
                       </Text>
                     )}
                     {slide.overlay.title && (
-                      <Heading
+                      <Heading color="inverse" 
                         level={1}
-                        className="stagger-2 font-display md:text-6xl lg:text-8xl !text-white drop-shadow-2xl mb-2 md:mb-4" size="4xl"
+                        className="stagger-2 font-display md:text-6xl lg:text-8xl ! drop-shadow-2xl mb-2 md:mb-4" size="4xl"
                       >
                         {slide.overlay.title}
                       </Heading>
                     )}
                     {slide.overlay.description && (
-                      <Text className="stagger-3 !text-white/90 mb-4 md:mb-8 drop-shadow-sm max-w-2xl mx-auto" mdSize="lg" lgSize="xl" size="sm">
+                      <Text color="inverse" className="stagger-3 !/90 mb-4 md:mb-8 drop-shadow-sm max-w-2xl mx-auto" mdSize="lg" lgSize="xl" size="sm">
                         {slide.overlay.description}
                       </Text>
                     )}

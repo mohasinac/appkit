@@ -68,7 +68,7 @@ export function CategoryCard({
 
       {/* Content */}
       <Stack className={`flex-1 ${__P.p3}.5`}>
-        <Text className={`leading-snug text-neutral-900 dark:text-white`} truncate={2} size="sm" weight="semibold">
+        <Text color="inverse" className={`leading-snug text-neutral-900 dark:`} truncate={2} size="sm" weight="semibold">
           {category.name}
         </Text>
         {category.description && (
