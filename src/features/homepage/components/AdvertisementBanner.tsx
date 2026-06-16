@@ -101,7 +101,7 @@ export function AdvertisementBanner({
                 {subtitle && (
                   <Text
                     variant="none"
-                    className="text-white/75 md:text-lg mb-8 leading-relaxed" size="base"
+                    className="text-white/75 mb-8 leading-relaxed" mdSize="lg" size="base"
                   >
                     {subtitle}
                   </Text>
@@ -196,7 +196,7 @@ export function AdvertisementBanner({
               {subtitle && (
                 <Text
                   variant="none"
-                  className="text-white md:text-xl mb-10 max-w-2xl mx-auto" size="base"
+                  className="text-white mb-10 max-w-2xl mx-auto" mdSize="xl" size="base"
                 >
                   {subtitle}
                 </Text>

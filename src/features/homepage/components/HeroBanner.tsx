@@ -147,7 +147,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               {banner.ctaLabel}
               <Span
                 aria-hidden="true"
-                className="sm:text-xl leading-none" size="lg"
+                className="leading-none" smSize="xl" size="lg"
               >
                 →
               </Span>

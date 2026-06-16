@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
 import { BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Stack, Text } from "../../../ui";
+import type { JsonValue } from "../../../schemas/types";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
@@ -23,7 +24,7 @@ const TYPE_COLORS: Record<CouponType, { card: string; code: string }> = {
  *
  * API endpoints return the nested shape; this card accepts either and normalizes.
  */
-type CouponLike = Record<string, unknown>;
+type CouponLike = Record<string, JsonValue>;
 
 interface Normalized {
   id: string;
