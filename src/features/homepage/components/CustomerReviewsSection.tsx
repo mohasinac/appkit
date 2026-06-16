@@ -1,5 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 import {
   Div,
   Heading,
@@ -88,7 +89,7 @@ export function CustomerReviewsSection<T = unknown>({
         <HorizontalScroller
           items={items}
           renderItem={(item) => renderItem(item)}
-          perView={THEME_CONSTANTS.carousel.perView.reviews}
+          perView={CAROUSEL_PER_VIEW.reviews}
           gap={24}
           autoScroll
           autoScrollInterval={4500}

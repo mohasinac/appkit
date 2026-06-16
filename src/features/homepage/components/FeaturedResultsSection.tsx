@@ -1,6 +1,7 @@
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Heading, Section, Span, Text, HorizontalScroller } from "../../../ui";
 import { BeforeAfterCard } from "./BeforeAfterCard";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 // --- Types -------------------------------------------------------------------
 
@@ -93,7 +94,7 @@ export function FeaturedResultsSection({
             </Div>
           )}
           keyExtractor={(item, i) => item.id ?? `result-${i}`}
-          perView={THEME_CONSTANTS.carousel.perView.cards}
+          perView={CAROUSEL_PER_VIEW.cards}
           gap={24}
           minItemWidth={260}
           snapToItems

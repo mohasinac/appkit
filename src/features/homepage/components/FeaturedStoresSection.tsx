@@ -6,6 +6,7 @@ import { useFeaturedStores } from "../hooks/useFeaturedStores";
 import { InteractiveStoreCard } from "../../stores/components/InteractiveStoreCard";
 import { ROUTES } from "../../../next";
 import type { StoreListItem } from "../../stores/types";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 export interface FeaturedStoresSectionProps {
   title?: string;
@@ -39,7 +40,7 @@ export function FeaturedStoresSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={THEME_CONSTANTS.carousel.perView.standard}
+      perView={CAROUSEL_PER_VIEW.standard}
       gap={16}
       keyExtractor={(store: StoreListItem) => store.id}
       renderItem={(store: StoreListItem) => (

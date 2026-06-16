@@ -5,6 +5,7 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { SectionCarousel } from "../../homepage/components/SectionCarousel";
 import type { ProductItem } from "../types";
 import { ProductCard } from "./ProductGrid";
+import { CAROUSEL_PER_VIEW } from "../../homepage/constants/carousel-per-view";
 
 interface RelatedProductsCarouselProps {
   items: ProductItem[];
@@ -24,7 +25,7 @@ export function RelatedProductsCarousel({
       headingVariant="editorial"
       items={items}
       isLoading={false}
-      perView={THEME_CONSTANTS.carousel.perView.standard}
+      perView={CAROUSEL_PER_VIEW.standard}
       keyExtractor={(item: ProductItem) => item.id}
       renderItem={(item: ProductItem) => (
         <ProductCard

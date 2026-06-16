@@ -5,6 +5,7 @@ import { SectionCarousel } from "./SectionCarousel";
 import { useHomepageEvents } from "../hooks/useHomepageEvents";
 import { EventCard } from "../../events/components/EventCard";
 import type { EventItem } from "../../events/types";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 export interface EventsSectionProps {
   title?: string;
@@ -38,7 +39,7 @@ export function EventsSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={3}
-      perView={THEME_CONSTANTS.carousel.perView.events}
+      perView={CAROUSEL_PER_VIEW.events}
       gap={16}
       keyExtractor={(event: EventItem) => event.id}
       renderItem={(event: EventItem) => (

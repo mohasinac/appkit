@@ -2,6 +2,7 @@ import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text, TextLink, type PerViewConfig } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -134,7 +135,7 @@ export function SectionCarousel<T = unknown>({
   viewMoreLabel = "View all →",
   items,
   renderItem,
-  perView = THEME_CONSTANTS.carousel.perView.standard,
+  perView = CAROUSEL_PER_VIEW.standard,
   gap = 16,
   autoScroll = false,
   autoScrollInterval = 3500,

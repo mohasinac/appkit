@@ -5,6 +5,7 @@ import { InteractiveProductCard } from "../../products/components/InteractivePro
 import { ROUTES } from "../../../next";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { ProductItem } from "../../products/types";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 export interface FeaturedProductsSectionProps {
   title?: string;
@@ -51,7 +52,7 @@ export function FeaturedProductsSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={THEME_CONSTANTS.carousel.perView.standard}
+      perView={CAROUSEL_PER_VIEW.standard}
       gap={16}
       rows={Math.min(Math.max(rows, 1), 4)}
       autoScroll={autoScroll}

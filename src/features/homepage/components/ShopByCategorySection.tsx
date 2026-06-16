@@ -8,6 +8,7 @@ import { ROUTES } from "../../../next";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 const __P = {
   p3: "p-3",
@@ -206,7 +207,7 @@ export function ShopByCategorySection({
           <HorizontalScroller
             items={categories}
             renderItem={(cat) => <CategoryChip category={cat} />}
-            perView={THEME_CONSTANTS.carousel.perView.standard}
+            perView={CAROUSEL_PER_VIEW.standard}
             gap={16}
             keyExtractor={(cat) => cat.id}
             autoScroll

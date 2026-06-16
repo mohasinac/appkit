@@ -6,6 +6,7 @@ import { useBlogArticles } from "../hooks/useBlogArticles";
 import { BlogFeaturedCard } from "../../blog/components/BlogFeaturedCard";
 import { ROUTES } from "../../../next";
 import type { BlogPost } from "../../blog/types";
+import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 export interface BlogArticlesSectionProps {
   title?: string;
@@ -38,7 +39,7 @@ export function BlogArticlesSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={THEME_CONSTANTS.carousel.perView.standard}
+      perView={CAROUSEL_PER_VIEW.standard}
       gap={16}
       keyExtractor={(post: BlogPost) => post.id}
       renderItem={(post: BlogPost) => (
