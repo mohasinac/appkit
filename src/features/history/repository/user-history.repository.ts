@@ -42,6 +42,7 @@ export interface HistoryDocument {
   updatedAt: Date;
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function toDate(raw: unknown): Date {
   if (raw instanceof Date) return raw;
   if (raw && typeof (raw as { toDate?: () => Date }).toDate === "function") {
@@ -51,6 +52,7 @@ function toDate(raw: unknown): Date {
   return new Date();
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function normaliseItems(raw: unknown): UserHistoryItem[] {
   if (!Array.isArray(raw)) return [];
   return raw

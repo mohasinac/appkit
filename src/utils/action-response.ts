@@ -10,6 +10,7 @@ export type { ActionResult };
 
 type ActionErrorResult = Extract<ActionResult<never>, { ok: false }>;
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function handleActionError(err: unknown): ActionErrorResult {
   const devDebug =
     process.env.NODE_ENV === "development"

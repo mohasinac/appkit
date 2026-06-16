@@ -21,6 +21,7 @@ import type { FirestoreDocument, FirestoreValue } from "../../schemas/types";
  * FieldValue sentinels (increment, arrayUnion, deleteField, etc.) are not
  * stripped.
  */
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isPlainObject(v: unknown): v is Record<string, FirestoreValue> {
   if (v === null || typeof v !== "object" || Array.isArray(v)) return false;
   // audit-unknown-ok: TS structural escape

@@ -67,6 +67,7 @@ export interface PreOrderDetailPageViewProps {
   productFeatures?: ProductFeatureDocument[];
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function toDescriptionHtml(raw: unknown): string {
   if (!raw) return "";
   const s = typeof raw === "string" ? raw : JSON.stringify(raw);

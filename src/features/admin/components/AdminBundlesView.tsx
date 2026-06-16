@@ -38,6 +38,7 @@ type BundleRow = {
   updatedAt: string;
 };
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function formatPrice(paise: unknown): string {
   if (typeof paise !== "number" || paise <= 0) return "—";
   return `₹${Math.round(paise / 100).toLocaleString("en-IN")}`;

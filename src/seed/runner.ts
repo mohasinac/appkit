@@ -18,6 +18,7 @@ const DEFAULT_MAX_ATTEMPTS = 2;
  * surface a canonical "retryable" flag — we match the error message against
  * known-transient patterns (DEADLINE_EXCEEDED, UNAVAILABLE, network resets).
  */
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isRetryableError(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err);
   return (

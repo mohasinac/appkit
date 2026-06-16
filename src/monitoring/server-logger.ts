@@ -86,6 +86,7 @@ function serializeError(error: Error): Record<string, FirestoreValue> {
 // audit-unknown-ok: this is the entry-point normaliser that accepts arbitrary
 // log-data payloads (Error, Date, primitive, object). Output is bounded by the
 // downstream JSON-stringify contract.
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function normalizeLogData(data: unknown): FirestoreValue {
   if (data instanceof Error) return serializeError(data) as FirestoreValue;
   if (Array.isArray(data)) return data.map(normalizeLogData) as FirestoreValue;

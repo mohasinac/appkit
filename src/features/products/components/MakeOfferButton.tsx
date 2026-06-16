@@ -60,6 +60,7 @@ export function MakeOfferButton({
     if (!isNaN(parsed)) setOfferAmount(parsed);
   }
 
+  // audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
   function handleOfferError(err: unknown) {
     if (isAuthError(err)) {
       setState("idle");

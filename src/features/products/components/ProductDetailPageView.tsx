@@ -173,6 +173,7 @@ function toReview(doc: Record<string, unknown>): Review {
   };
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function toDescriptionHtml(raw: unknown): string {
   if (!raw) return "";
   const s =

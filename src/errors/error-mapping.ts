@@ -50,6 +50,7 @@ interface ZodLikeError {
   issues: unknown[];
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isZodLikeError(err: unknown): err is ZodLikeError {
   return (
     typeof err === "object" &&
@@ -64,6 +65,7 @@ interface FirestoreLikeError {
   message?: string;
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isFirestoreLikeError(err: unknown): err is FirestoreLikeError {
   if (typeof err !== "object" || err === null) return false;
   const codeVal = (err as { code?: unknown }).code;

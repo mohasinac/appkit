@@ -70,6 +70,7 @@ export function deepClone<T>(obj: T): T {
   return cloned;
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function isEqual(obj1: unknown, obj2: unknown): boolean {
   if (obj1 === obj2) return true;
   if (

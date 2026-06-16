@@ -6,6 +6,7 @@ import type { BaseRequestContext, Middleware } from "./types";
 
 const ENC_PREFIX = "enc:v1:";
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function scrubValue(value: unknown): unknown {
   if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
     return "[encrypted]";

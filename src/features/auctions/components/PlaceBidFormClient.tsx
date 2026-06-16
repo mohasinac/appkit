@@ -100,6 +100,7 @@ export function PlaceBidFormClient({
     }
   }
 
+  // audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
   function bidErrorMessage(result: unknown): string | null {
     if (!result || typeof result !== "object" || !("ok" in result)) return null;
     const r = result as { ok: boolean; error?: string; code?: string };

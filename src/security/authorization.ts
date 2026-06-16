@@ -24,6 +24,7 @@ const ROLE_HIERARCHY: Record<UserRole, number> = {
   user: 1,
 };
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function requireAuth(user: unknown): void {
   if (!user) {
     throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);

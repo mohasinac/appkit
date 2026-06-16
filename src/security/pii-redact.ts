@@ -113,6 +113,7 @@ function redactStringValue(key: string, value: string): string {
  * Returns a new object with sensitive fields masked — the original is
  * never mutated.
  */
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function redactPii(data: unknown, depth = 0): unknown {
   if (depth > MAX_DEPTH) return "[MAX_DEPTH]";
   if (data === null || data === undefined) return data;

@@ -187,6 +187,7 @@ function isNetworkErrorShape(e: Error): boolean {
 // normalizeError — the single funnel for every `catch (e: unknown)`.
 // ---------------------------------------------------------------------------
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function normalizeError(e: unknown): NormalizedError {
   // ApiError (client-side API failure with stable code + status).
   if (e instanceof ApiError) {

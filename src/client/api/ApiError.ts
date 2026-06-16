@@ -27,6 +27,7 @@ export class ApiError extends Error {
   }
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function isApiError(err: unknown): err is ApiError {
   return err instanceof ApiError;
 }

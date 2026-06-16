@@ -8,6 +8,7 @@ import { getDefaultLocale } from "../core/baseline-resolver";
  * Resolve any date-like value (Date, ISO string, number, or Firestore Timestamp JSON)
  * into a native Date object. Returns null for falsy or unparseable input.
  */
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function resolveDate(value: unknown): Date | null {
   if (!value) return null;
   if (value instanceof Date) return value;

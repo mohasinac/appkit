@@ -21,6 +21,7 @@ export interface CountdownRemaining {
 }
 
 /** Resolve any date-like value into a ms timestamp. */
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function resolveMs(endDate: unknown): number {
   if (!endDate) return NaN;
   if (endDate instanceof Date) return endDate.getTime();

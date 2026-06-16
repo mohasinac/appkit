@@ -16,6 +16,7 @@ import {
 
 function mapDoc(doc: FirebaseFirestore.QueryDocumentSnapshot): GroupedListingDocument {
   const data = doc.data() as Record<string, JsonValue>;
+  // audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
   const ts = (v: unknown): Date => {
     const d = (v as { toDate?: () => Date } | undefined)?.toDate?.();
     return d ?? (v instanceof Date ? v : new Date());

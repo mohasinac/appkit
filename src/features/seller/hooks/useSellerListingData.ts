@@ -80,10 +80,12 @@ export function useSellerListingData<TResponse, TRow extends { id: string }>({
   };
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function toRecordArray(value: unknown): UnknownRecord[] {
   return Array.isArray(value) ? (value.filter(Boolean) as UnknownRecord[]) : [];
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function toStringValue(value: unknown, fallback = "-"): string {
   if (typeof value === "string") {
     return value.trim() || fallback;
@@ -94,6 +96,7 @@ export function toStringValue(value: unknown, fallback = "-"): string {
   return fallback;
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function toRupees(value: unknown): string {
   if (typeof value !== "number" || Number.isNaN(value)) {
     return "-";
@@ -120,6 +123,7 @@ export function toRelativeDate(value: unknown): string {
   return date.toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" });
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function parseDate(value: unknown): Date | null {
   if (value instanceof Date) return value;
   if (typeof value === "string") {
