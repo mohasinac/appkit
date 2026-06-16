@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
@@ -54,7 +55,7 @@ export function EventPollWidget({
     setIsLoading(true);
     setError(null);
     try {
-      const body: Record<string, unknown> = { pollVotes: selectedVotes };
+      const body: Record<string, JsonValue> = { pollVotes: selectedVotes };
       if (comment.trim()) body.pollComment = comment.trim();
       const res = await fetch(endpoint, {
         method: "POST",

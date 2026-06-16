@@ -6,6 +6,7 @@
  */
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import { serverLogger } from "../../../monitoring";
 import { eventRepository } from "../repository/events.repository";
@@ -86,7 +87,7 @@ export type UpdateEventInput = Partial<CreateEventInput>;
 export interface EnterEventInput {
   pollVotes?: string[];
   pollComment?: string;
-  formResponses?: Record<string, unknown>;
+  formResponses?: Record<string, JsonValue>;
 }
 // --- Admin: Create Event --------------------------------------------------
 

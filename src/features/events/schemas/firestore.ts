@@ -3,6 +3,7 @@
  */
 
 import type { MediaField } from "../../media/types";
+import type { JsonValue } from "@mohasinac/appkit";
 import type {
   EventType,
   EventStatus,
@@ -75,7 +76,7 @@ export interface EventEntryDocument {
   userEmail?: string;
   pollVotes?: string[];
   pollComment?: string;
-  formResponses?: Record<string, unknown>;
+  formResponses?: Record<string, JsonValue>;
   reviewStatus: EntryReviewStatus;
   reviewedBy?: string;
   reviewedAt?: Date;

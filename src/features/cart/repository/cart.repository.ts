@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { DocumentReference } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError, NotFoundError, ValidationError } from "../../../errors";
@@ -83,7 +84,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
         .collection(this.collection)
         .doc(userId)
         .set(
-          prepareForFirestore(cartData as unknown as Record<string, unknown>),
+          prepareForFirestore(cartData as unknown as Record<string, JsonValue>),
         );
 
       return cartData;
@@ -159,7 +160,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
         .doc(userId)
         .set(
           prepareForFirestore(
-            updatedCart as unknown as Record<string, unknown>,
+            updatedCart as unknown as Record<string, JsonValue>,
           ),
         );
 
@@ -201,7 +202,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
         .doc(userId)
         .set(
           prepareForFirestore(
-            updatedCart as unknown as Record<string, unknown>,
+            updatedCart as unknown as Record<string, JsonValue>,
           ),
         );
 
@@ -236,7 +237,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
         .doc(userId)
         .set(
           prepareForFirestore(
-            updatedCart as unknown as Record<string, unknown>,
+            updatedCart as unknown as Record<string, JsonValue>,
           ),
         );
 
@@ -265,7 +266,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
         .doc(userId)
         .set(
           prepareForFirestore(
-            clearedCart as unknown as Record<string, unknown>,
+            clearedCart as unknown as Record<string, JsonValue>,
           ),
         );
 
@@ -335,7 +336,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       await this.db
         .collection(this.collection)
         .doc(userId)
-        .set(prepareForFirestore(updatedCart as unknown as Record<string, unknown>));
+        .set(prepareForFirestore(updatedCart as unknown as Record<string, JsonValue>));
 
       return updatedCart;
     } catch (error) {

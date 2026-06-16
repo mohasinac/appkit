@@ -1,4 +1,5 @@
 import type { MediaField } from "../../media/types/index";
+import type { JsonValue } from "@mohasinac/appkit";
 
 // --- Enums / union types ------------------------------------------------------
 
@@ -150,7 +151,7 @@ export interface EventEntryItem {
   userEmail?: string;
   pollVotes?: string[];
   pollComment?: string;
-  formResponses?: Record<string, unknown>;
+  formResponses?: Record<string, JsonValue>;
   reviewStatus: EntryReviewStatus;
   reviewedBy?: string;
   reviewedAt?: string;
@@ -198,7 +199,7 @@ export interface CreateEventEntryInput {
   eventId: string;
   pollVotes?: string[];
   pollComment?: string;
-  formResponses?: Record<string, unknown>;
+  formResponses?: Record<string, JsonValue>;
 }
 
 export interface EventListParams {

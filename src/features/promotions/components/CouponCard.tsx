@@ -49,7 +49,7 @@ function pick<T = unknown>(obj: CouponLike, ...keys: string[]): T | undefined {
     const parts = k.split(".");
     let cur: unknown = obj;
     for (const p of parts) {
-      if (cur && typeof cur === "object") cur = (cur as Record<string, unknown>)[p];
+      if (cur && typeof cur === "object") cur = (cur as Record<string, JsonValue>)[p];
       else { cur = undefined; break; }
     }
     if (cur !== undefined && cur !== null) return cur as T;
@@ -134,7 +134,7 @@ const DEFAULT_LABELS: Required<CouponCardLabels> = {
 
 interface CouponCardProps {
   /** Accepts either `CouponItem` (flat) or `CouponDocument` (nested). */
-  coupon: CouponItem | Record<string, unknown>;
+  coupon: CouponItem | Record<string, JsonValue>;
   labels?: CouponCardLabels;
   onCopy?: (code: string) => void;
   className?: string;

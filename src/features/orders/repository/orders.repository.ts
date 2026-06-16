@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { DatabaseError, NotFoundError } from "../../../errors";
 import type {
@@ -45,12 +46,12 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   }
 
   private decryptOrder(doc: OrderDocument): OrderDocument {
-    return decryptPiiFields(doc as unknown as Record<string, unknown>, [
+    return decryptPiiFields(doc as unknown as Record<string, JsonValue>, [
       ...ORDER_PII_FIELDS,
     ]) as unknown as OrderDocument;
   }
 
-  private encryptOrderData<T extends Record<string, unknown>>(data: T): T {
+  private encryptOrderData<T extends Record<string, JsonValue>>(data: T): T {
     return encryptPiiFields(data, [...ORDER_PII_FIELDS]);
   }
 
@@ -73,7 +74,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     };
 
     const encrypted = this.encryptOrderData(
-      orderData as unknown as Record<string, unknown>,
+      orderData as unknown as Record<string, JsonValue>,
     );
 
     await this.db
