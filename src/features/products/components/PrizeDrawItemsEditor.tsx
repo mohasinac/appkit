@@ -141,7 +141,7 @@ export function PrizeDrawItemsEditor({
         edited or removed.
       </Text>
       {anyWon ? (
-        <Div className="border border-error/40 px-3 text-sm text-error" surface="danger-surface" padding="y-xs" rounded="default">
+        <Div className="border border-error/40 px-3 text-sm" color="error" surface="danger-surface" padding="y-xs" rounded="default">
           <Span weight="bold">Draw locked.</Span> At least one prize has been revealed —
           this listing can no longer be edited. To run a similar draw, clone it
           into a new prize-draw listing.
@@ -313,7 +313,7 @@ export function PrizeDrawItemsEditor({
       </Stack>
 
       {items.length < MIN_ITEMS ? (
-        <Div className="border border-error/40 px-3 text-sm text-error" surface="danger-surface" padding="y-xs" rounded="default">
+        <Div className="border border-error/40 px-3 text-sm" color="error" surface="danger-surface" padding="y-xs" rounded="default">
           At least {MIN_ITEMS} prizes are required.
         </Div>
       ) : null}

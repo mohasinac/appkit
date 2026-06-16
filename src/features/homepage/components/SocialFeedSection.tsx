@@ -166,7 +166,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
         </Row>
 
         {error ? (
-          <Div className="text-center text-zinc-400 text-sm" padding="y-3xl">{error}</Div>
+          <Div className="text-center text-sm" color="faint" padding="y-3xl">{error}</Div>
         ) : posts.length === 0 ? (
           <SocialFeedEmpty platform={platform} />
         ) : (

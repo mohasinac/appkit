@@ -85,11 +85,11 @@ export function EventRaffleEntryForm({
       </Text>
 
       {submitted ? (
-        <Div className="px-4 text-sm text-success" surface="success-surface" padding="y-sm" rounded="lg">
+        <Div className="px-4 text-sm" color="success" surface="success-surface" padding="y-sm" rounded="lg">
           You&apos;re in. Check the leaderboard for results.
         </Div>
       ) : overLimit ? (
-        <Div className="px-4 text-sm text-warning" surface="warning-surface" padding="y-sm" rounded="lg">
+        <Div className="px-4 text-sm" color="warning" surface="warning-surface" padding="y-sm" rounded="lg">
           You&apos;ve used all {maxEntriesPerUser} entry slot{maxEntriesPerUser === 1 ? "" : "s"} for this raffle.
         </Div>
       ) : (
