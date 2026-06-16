@@ -248,6 +248,7 @@ export async function ProductDetailPageView({
     );
   }
 
+  // audit-unknown-ok: TS structural escape — Record
   const p = product as unknown as Record<string, unknown>;
   const currency =
     (p.currency as string | undefined) || getDefaultCurrency();
@@ -375,9 +376,12 @@ export async function ProductDetailPageView({
   const [reviewDocs, relatedDocs] = await Promise.all([
     reviewRepository
       .findApprovedByProduct(product.id)
+      // audit-unknown-ok: TS structural escape
       .catch(() => [] as unknown[]),
     category
+      // audit-unknown-ok: TS structural escape
       ? productRepository.findByCategory(category).catch(() => [] as unknown[])
+      // audit-unknown-ok: TS structural escape
       : Promise.resolve([] as unknown[]),
   ]);
 

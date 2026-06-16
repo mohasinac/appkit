@@ -81,6 +81,7 @@ export async function PrizeDrawsSection({
               {draws.map((draw) => (
                 <InteractiveProductCard
                   key={draw.id}
+                  // audit-unknown-ok: TS structural escape — extracted function type
                   product={draw as unknown as Parameters<typeof InteractiveProductCard>[0]["product"]}
                   href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(draw.slug ?? draw.id ?? ""))}
                 />

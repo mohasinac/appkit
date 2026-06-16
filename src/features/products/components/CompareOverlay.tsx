@@ -119,6 +119,7 @@ export interface CompareOverlayProps {
 
 const OVERLAY_CLASS =
   "fixed inset-0 flex flex-col bg-white dark:bg-zinc-950 overflow-hidden";
+// audit-unknown-ok: TS structural escape — primitive cast
 const OVERLAY_STYLE: React.CSSProperties = { zIndex: "var(--appkit-z-modal, 60)" as unknown as number };
 const HEADER_CLASS =
   "flex items-center justify-between gap-3 border-b border-zinc-200 dark:border-zinc-800 px-4 py-3";

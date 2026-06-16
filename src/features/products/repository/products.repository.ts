@@ -145,6 +145,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     if (!doc.categorySlugs || doc.categorySlugs.length === 0) {
       doc.categorySlugs = doc.category ? [doc.category] : [];
     }
+    // audit-unknown-ok: TS structural escape — generic param
     return doc as unknown as D;
   }
 

@@ -51,6 +51,7 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
         createdAt: now,
         updatedAt: now,
       };
+      // audit-unknown-ok: TS structural escape — domain document type lacks index signature
       return this.create(data as unknown as SupportTicketDocument);
     } catch (err) {
       void normalizeError(err);

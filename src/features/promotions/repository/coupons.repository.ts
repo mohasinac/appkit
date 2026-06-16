@@ -661,6 +661,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
    * Cloud Functions: stage coupon deactivation into a caller-owned WriteBatch.
    */
   deactivateInBatch(batch: WriteBatch, ref: DocumentReference): void {
+    // audit-unknown-ok: TS structural escape — Firebase SDK type
     batch.update(ref as unknown as FirebaseFirestore.DocumentReference, {
       [COUPON_FIELDS.VALIDITY.IS_ACTIVE]: false,
       updatedAt: serverTimestamp(),

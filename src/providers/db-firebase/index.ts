@@ -62,6 +62,7 @@ export const firebaseDbProvider: IDbProvider = {
   getRepository<T>(collection: string): IRepository<T> {
     return new _FirebaseRepository<T & DocumentData>(
       collection,
+    // audit-unknown-ok: TS structural escape — IRepository
     ) as unknown as IRepository<T>;
   },
 };

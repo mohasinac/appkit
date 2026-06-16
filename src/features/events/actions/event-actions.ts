@@ -126,6 +126,7 @@ export async function createEvent(
     winnerImages: finalizedWinnerImages,
     additionalImages: finalizedAdditionalImages,
     createdBy: adminId,
+  // audit-unknown-ok: TS structural escape — EventCreateInput
   } as unknown as EventCreateInput);
 
   serverLogger.info("createEvent", { adminId, eventId: event.id });

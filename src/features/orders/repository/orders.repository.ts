@@ -48,6 +48,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   private decryptOrder(doc: OrderDocument): OrderDocument {
     return decryptPiiFields(doc, [
       ...ORDER_PII_FIELDS,
+    // audit-unknown-ok: TS structural escape — domain document type lacks index signature
     ]) as unknown as OrderDocument;
   }
 
@@ -59,6 +60,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<OrderDocument>(snap);
+    // audit-unknown-ok: TS structural escape — generic param
     return this.decryptOrder(raw) as unknown as D;
   }
 

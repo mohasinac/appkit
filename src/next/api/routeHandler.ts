@@ -186,6 +186,7 @@ function resolveBodySchema<T>(
   if (typeof schema !== "string") return schema;
   const entry = SCHEMAS.api[schema as RegisteredApiRouteKey];
   if (!entry || !("body" in entry) || !entry.body) return null;
+  // audit-unknown-ok: TS structural escape — ParseableSchema
   return entry.body as unknown as ParseableSchema<T>;
 }
 

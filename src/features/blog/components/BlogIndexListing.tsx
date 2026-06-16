@@ -123,6 +123,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
     buildSieveParams: () => "",
     buildSearchParams: () => "",
     params: new URLSearchParams(),
+  // audit-unknown-ok: TS structural escape — table-state type
   }), [pendingFilters]) as unknown as UrlTable;
 
   const openFilters = useCallback(() => {

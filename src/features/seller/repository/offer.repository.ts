@@ -38,6 +38,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     const raw = super.mapDoc<OfferDocument>(snap);
     return decryptPiiFields(raw, [
       ...OFFER_PII_FIELDS,
+    // audit-unknown-ok: TS structural escape — generic param
     ]) as unknown as D;
   }
 

@@ -58,6 +58,7 @@ async function validateSchema<TInput>(
     const data = (await request.json()) as TInput;
     return { validationError: false, data };
   } catch {
+    // audit-unknown-ok: TS structural escape — TInput
     return { validationError: false, data: undefined as unknown as TInput };
   }
 }

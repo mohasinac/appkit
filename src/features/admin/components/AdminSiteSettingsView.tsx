@@ -266,6 +266,7 @@ export function AdminSiteSettingsView({
         }
       | undefined;
     setThemeRegistry({
+      // audit-unknown-ok: TS structural escape — ThemeManagerValue
       themes: (themeBlock?.themes ?? []) as unknown as ThemeManagerValue["themes"],
       defaultLightThemeId:
         themeBlock?.defaultLightThemeId ?? DEFAULT_LIGHT_THEME.id,

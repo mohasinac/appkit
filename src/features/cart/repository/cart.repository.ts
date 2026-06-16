@@ -56,6 +56,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
             ? (decryptPii(item.storeName) ?? item.storeName)
             : item.storeName,
       })),
+    // audit-unknown-ok: TS structural escape — generic param
     } as unknown as D;
   }
 

@@ -44,6 +44,7 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
   mapRows: (response) =>
     toRecordArray(response.items).map((item, index) => {
       const isGuest = !item.userId;
+      // audit-unknown-ok: TS structural escape
       const itemCount = Array.isArray(item.items) ? (item.items as unknown[]).length : 0;
       const sessionShort = toStringValue(item.sessionId, "").slice(0, 8);
       return {

@@ -133,6 +133,7 @@ export async function PrizeDrawDetailPageView({
     );
   }
 
+  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
   const title = String(p.title ?? p.name ?? "Prize Draw");

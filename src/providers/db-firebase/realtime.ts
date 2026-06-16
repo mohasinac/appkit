@@ -48,6 +48,7 @@ export abstract class FirebaseRealtimeRepository<
   async findById(id: string): Promise<T | null> {
     const snap = await this.nodeRef(id).get();
     if (!snap.exists()) return null;
+    // audit-unknown-ok: TS structural escape — generic param
     return { id, ...snap.val() } as unknown as T;
   }
 
@@ -65,6 +66,7 @@ export abstract class FirebaseRealtimeRepository<
 
     const raw = snap.val() as Record<string, Omit<T, "id">>;
     let data: T[] = Object.entries(raw).map(
+      // audit-unknown-ok: TS structural escape — generic param
       ([id, val]) => ({ id, ...val }) as unknown as T,
     );
 
@@ -105,6 +107,7 @@ export abstract class FirebaseRealtimeRepository<
     if (!snap.exists()) return [];
     const raw = snap.val() as Record<string, Omit<T, "id">>;
     return Object.entries(raw).map(
+      // audit-unknown-ok: TS structural escape — generic param
       ([id, val]) => ({ id, ...val }) as unknown as T,
     );
   }
@@ -115,6 +118,7 @@ export abstract class FirebaseRealtimeRepository<
     const now = Date.now();
     const payload = { ...data, createdAt: now, updatedAt: now };
     const ref = await this.nodeRef().push(payload);
+    // audit-unknown-ok: TS structural escape — generic param
     return { id: ref.key as string, ...payload } as unknown as T;
   }
 
@@ -122,6 +126,7 @@ export abstract class FirebaseRealtimeRepository<
     const payload = { ...data, updatedAt: Date.now() };
     await this.nodeRef(id).update(payload as object);
     const snap = await this.nodeRef(id).get();
+    // audit-unknown-ok: TS structural escape — generic param
     return { id, ...snap.val() } as unknown as T;
   }
 
@@ -154,6 +159,7 @@ export abstract class FirebaseRealtimeRepository<
       exists(): boolean;
       val(): FirestoreDocument | null;
     }) => {
+      // audit-unknown-ok: TS structural escape — generic param
       cb(snap.exists() ? ({ id, ...snap.val() } as unknown as T) : null);
     };
     ref.on("value", handler as never);
@@ -178,6 +184,7 @@ export abstract class FirebaseRealtimeRepository<
         return;
       }
       const raw = snap.val()!;
+      // audit-unknown-ok: TS structural escape — generic param
       cb(Object.entries(raw).map(([id, v]) => ({ id, ...v }) as unknown as T));
     };
     ref.on("value", handler as never);

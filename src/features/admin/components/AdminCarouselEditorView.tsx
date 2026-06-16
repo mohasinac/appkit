@@ -406,7 +406,9 @@ export function AdminCarouselEditorView({
     const s = d.settings as JsonObject | undefined;
     setHeight((s?.height as CarouselSlideHeight) ?? "tall");
     setAutoplayDelayMs(s?.autoplayDelayMs !== undefined ? String(s.autoplayDelayMs) : "4000");
+    // audit-unknown-ok: TS structural escape — CarouselBackground
     if (d.background) setBackground(d.background as unknown as CarouselBackground);
+    // audit-unknown-ok: TS structural escape — CarouselCard
     if (Array.isArray(d.cards)) setCards(d.cards as unknown as CarouselCard[]);
     const ov = d.overlay as JsonObject | undefined;
     if (ov) {

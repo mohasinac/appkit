@@ -384,7 +384,7 @@ export function Caption({
  */
 /** Inline-decorations allowed on Span (pill chips, code-like wraps, etc). */
 type SpanRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
-type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-xs" | "pill-sm" | "pill-sm-tall" | "pill-md" | "pill-lg";
+type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-2xs" | "pill-xs" | "pill-sm" | "pill-sm-tall" | "pill-md" | "pill-lg";
 type SpanBg = "none" | "muted" | "subtle" | "default" | "success-surface" | "danger-surface" | "warning-surface" | "info-surface" | "overlay-xs" | "overlay-sm" | "overlay-md" | "overlay-lg" | "overlay-xl";
 
 const SPAN_ROUNDED_MAP: Record<SpanRounded, string> = {
@@ -407,6 +407,7 @@ const SPAN_PADDING_MAP: Record<SpanPadding, string> = {
   "y-sm": "py-3",
   "inline-sm": "px-2 py-0.5",
   inline: "px-2 py-1",
+  "pill-2xs": "px-1.5 py-0.5",
   "pill-xs": "px-2 py-0.5",
   "pill-sm": "px-2.5 py-0.5",
   "pill-sm-tall": "px-2.5 py-1",

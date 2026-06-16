@@ -63,6 +63,7 @@ export class FirebaseRepository<
     return deserializeTimestamps({
       id: snap.id,
       ...(snap.data() ?? {}),
+    // audit-unknown-ok: TS structural escape — generic param
     }) as unknown as D;
   }
 

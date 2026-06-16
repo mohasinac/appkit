@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { FirestoreDocument, JsonValue } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
 
@@ -73,7 +74,7 @@ export interface AuctionDetailPageViewProps {
   productFeatures?: ProductFeatureDocument[];
 }
 
-function toDescriptionHtml(raw: unknown): string {
+function toDescriptionHtml(raw: JsonValue): string {
   if (!raw) return "";
   const s = typeof raw === "string" ? raw : JSON.stringify(raw);
   return normalizeRichTextHtml(s);
@@ -193,7 +194,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     ? await listBidsByProduct(String(product.id), { pageSize: 20 }).catch(() => null)
     : null;
 
-  const storeId = (product as unknown as Record<string, unknown>)?.storeId as string | undefined;
+  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
+  const storeId = (product as unknown as FirestoreDocument)?.storeId as string | undefined;
   const storeReviews: ReviewDocument[] = storeId
     ? await listReviewsBySeller(storeId).catch(() => [])
     : [];
@@ -220,7 +222,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     );
   }
 
-  const p = product as unknown as Record<string, unknown>;
+  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
+  const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
 
   const title = String(p.title ?? p.name ?? "Auction Item");
@@ -276,13 +279,13 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
   const customSections: CustomSection[] = Array.isArray(p.customSections)
     ? (p.customSections as CustomSection[])
     : [];
-  const descriptionHtml = toDescriptionHtml(p.description);
+  const descriptionHtml = toDescriptionHtml(p.description as JsonValue);
 
   const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
 
-  const relatedDocs: Record<string, unknown>[] = await productRepository
+  const relatedDocs: FirestoreDocument[] = await productRepository
     .findByCategory(String(p.category ?? ""))
-    .catch(() => []) as Record<string, unknown>[];
+    .catch(() => []) as FirestoreDocument[];
 
   return (
     <Main>
@@ -484,7 +487,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
             />
           )}
           renderBidHistory={() => {
-            const bids = (bidsResult?.items ?? []).map((b: Record<string, unknown>) => ({
+            const bids = (bidsResult?.items ?? []).map((b: FirestoreDocument) => ({
               id: String(b.id ?? ""),
               bidderId: String(b.userId ?? b.bidderId ?? ""),
               bidderName: (b.bidderName ?? b.userName) as string | undefined,
@@ -504,7 +507,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 const end = r.auctionEndDate;
                 if (!end) return true;
                 const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
-                  ? (end as { toDate: () => Date }).toDate()
+                  // audit-unknown-ok: TS structural escape
+                  ? (end as unknown as { toDate: () => Date }).toDate()
                   : end instanceof Date ? end : new Date(String(end));
                 return endDate > now;
               })

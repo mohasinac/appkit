@@ -135,6 +135,7 @@ export function SellerStoreCategoriesView({
         raw: item,
         label: String(item.label ?? ""),
         slug: String(item.slug ?? ""),
+        // audit-unknown-ok: TS structural escape
         productCount: Number((item.productIds as unknown[])?.length ?? 0),
         isActive: Boolean(item.isActive),
       })),

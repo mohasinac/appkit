@@ -401,6 +401,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
     );
   }
 
+  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
 

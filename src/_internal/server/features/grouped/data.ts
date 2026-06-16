@@ -75,6 +75,7 @@ export const getGroupedListingForDetail = cache(
       if (snap.empty) {
         const byId = await db.collection(GROUPED_LISTINGS_COLLECTION).doc(slug).get();
         if (!byId.exists) return null;
+        // audit-unknown-ok: TS structural escape — Firebase SDK type
         return mapDoc(byId as unknown as FirebaseFirestore.QueryDocumentSnapshot);
       }
       return mapDoc(snap.docs[0]);

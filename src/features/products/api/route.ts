@@ -177,7 +177,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     const totalPages = Math.max(1, Math.ceil(result.total / pageSize));
     const body: ProductListResponse = {
       items: sanitizeProductsForPublic(
+        // audit-unknown-ok: TS structural escape — Array
         result.data as unknown as Array<Record<string, JsonValue>>,
+      // audit-unknown-ok: TS structural escape — ProductItem
       ) as unknown as ProductItem[],
       total: result.total,
       page: result.page,

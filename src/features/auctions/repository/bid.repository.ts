@@ -44,6 +44,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
     const raw = super.mapDoc<BidDocument>(snap);
     return decryptPiiFields(raw, [
       ...BID_PII_FIELDS,
+    // audit-unknown-ok: TS structural escape — generic param
     ]) as unknown as D;
   }
 

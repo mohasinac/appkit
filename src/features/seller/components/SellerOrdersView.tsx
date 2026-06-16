@@ -341,6 +341,7 @@ export function SellerOrdersView({
     q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.orders).map((item, index) => {
+        // audit-unknown-ok: TS structural escape
         const itemsArr = Array.isArray(item.items) ? (item.items as unknown[]) : [];
         const loc = item.physicalLocation as { zone?: string; shelf?: string; bin?: string } | undefined;
         return {
@@ -410,6 +411,7 @@ export function SellerOrdersView({
       header: "Shipping",
       className: "w-32",
       render: (row) => {
+        // audit-unknown-ok: TS structural escape
         const r = row as unknown as { shippingMethod?: string; carrier?: string; trackingNumber?: string };
         return (
           <Span size="xs" color="muted">
@@ -423,6 +425,7 @@ export function SellerOrdersView({
       header: "Weight",
       className: "w-20 text-right",
       render: (row) => {
+        // audit-unknown-ok: TS structural escape
         const r = row as unknown as { weightGrams?: number };
         return (
           <Span size="xs" className="tabular-nums" color="muted">

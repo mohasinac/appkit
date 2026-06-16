@@ -52,6 +52,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
   }
 
   protected override mapDoc<D = StoreDocument>(snap: DocumentSnapshot): D {
+    // audit-unknown-ok: TS structural escape — generic param
     return this.decryptSecrets(super.mapDoc<StoreDocument>(snap)) as unknown as D;
   }
 

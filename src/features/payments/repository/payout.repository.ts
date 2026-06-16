@@ -40,10 +40,12 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     const decrypted = decryptPiiFields(
       doc,
       [...PAYOUT_PII_FIELDS],
+    // audit-unknown-ok: TS structural escape — domain document type lacks index signature
     ) as unknown as PayoutDocument;
     if (decrypted.bankAccount) {
       decrypted.bankAccount = decryptPayoutBankAccount(
         decrypted.bankAccount,
+      // audit-unknown-ok: TS structural escape — typeof
       ) as unknown as typeof decrypted.bankAccount;
     }
     return decrypted;
@@ -69,6 +71,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<PayoutDocument>(snap);
+    // audit-unknown-ok: TS structural escape — generic param
     return this.decryptPayout(raw) as unknown as D;
   }
 

@@ -31,6 +31,7 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
     const raw = super.mapDoc<EmailVerificationTokenDocument>(snap);
     return decryptPiiFields(raw, [
       ...TOKEN_PII_FIELDS,
+    // audit-unknown-ok: TS structural escape — generic param
     ]) as unknown as D;
   }
 
@@ -139,6 +140,7 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
     const raw = super.mapDoc<PasswordResetTokenDocument>(snap);
     return decryptPiiFields(raw, [
       ...TOKEN_PII_FIELDS,
+    // audit-unknown-ok: TS structural escape — generic param
     ]) as unknown as D;
   }
 

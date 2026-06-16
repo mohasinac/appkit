@@ -118,6 +118,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       itemsSold: s.stats?.itemsSold,
       totalReviews: s.stats?.totalReviews,
       averageRating: s.stats?.averageRating,
+      // audit-unknown-ok: TS structural escape — primitive cast
       createdAt: s.createdAt as unknown as string,
     }));
 

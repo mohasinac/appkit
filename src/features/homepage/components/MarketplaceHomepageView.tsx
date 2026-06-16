@@ -130,28 +130,36 @@ export async function MarketplaceHomepageView({
   // components only read display fields that are present on both document and item shapes.
   const sectionData: SectionData = {
     products: productsResult?.items?.length
+      // audit-unknown-ok: TS structural escape — ProductItem
       ? (productsResult.items as unknown as ProductItem[])
       : undefined,
     auctions: auctionsResult?.items?.length
+      // audit-unknown-ok: TS structural escape — ProductItem
       ? (auctionsResult.items as unknown as ProductItem[])
       : undefined,
     preOrders: preOrdersResult?.items?.length
+      // audit-unknown-ok: TS structural escape — ProductItem
       ? (preOrdersResult.items as unknown as ProductItem[])
       : undefined,
     categories: categoriesResult?.length
+      // audit-unknown-ok: TS structural escape — CategoryItem
       ? (categoriesResult as unknown as CategoryItem[])
       : undefined,
     brands: brandsResult?.length
+      // audit-unknown-ok: TS structural escape — CategoryItem
       ? (brandsResult as unknown as CategoryItem[])
       : undefined,
     bundles: bundlesResult?.length ? bundlesResult : undefined,
     stores: storesResult?.items?.length
+      // audit-unknown-ok: TS structural escape — StoreListItem
       ? (storesResult.items as unknown as StoreListItem[])
       : undefined,
     blog: blogResult?.length
+      // audit-unknown-ok: TS structural escape — BlogPost
       ? (blogResult as unknown as BlogPost[])
       : undefined,
     events: eventsResult?.items?.length
+      // audit-unknown-ok: TS structural escape — EventItem
       ? (eventsResult.items as unknown as EventItem[])
       : undefined,
   };

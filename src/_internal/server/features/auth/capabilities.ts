@@ -22,6 +22,7 @@ export async function getStoreCapabilities(
   if (!storeId) return [...DEFAULT_STORE_CAPABILITIES];
   const store = await storeRepository.findById(storeId);
   if (!store) return [...DEFAULT_STORE_CAPABILITIES];
+  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   const raw = (store as unknown as FirestoreDocument).capabilities;
   if (Array.isArray(raw) && raw.length > 0) return raw as StoreCapability[];
   return [...DEFAULT_STORE_CAPABILITIES];

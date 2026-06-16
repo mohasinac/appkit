@@ -52,6 +52,7 @@ export async function CategoriesIndexPageView({ searchParams = {} }: CategoriesI
     })
     .catch(() => null);
 
+  // audit-unknown-ok: TS structural escape — CategoryItem
   const initialData = (result?.items ?? []) as unknown as CategoryItem[];
 
   return (

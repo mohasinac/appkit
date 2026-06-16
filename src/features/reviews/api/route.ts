@@ -212,6 +212,7 @@ export const POST = createRouteHandler({
       status: "pending",
       createdAt: now,
       updatedAt: now,
+    // audit-unknown-ok: TS structural escape — Review
     } as unknown as Review);
 
     return NextResponse.json({ success: true, data: created }, { status: 201 });

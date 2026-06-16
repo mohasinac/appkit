@@ -47,6 +47,7 @@ export function renderEventOg(
     null;
   const coverImageUrl = resolveOgImageUrl(rawCoverImageUrl, opts.baseUrl);
   const startsAt = doc?.startsAt
+    // audit-unknown-ok: TS structural escape — primitive cast
     ? new Date(doc.startsAt as unknown as string).toLocaleDateString(locale, {
         day: "numeric",
         month: "short",

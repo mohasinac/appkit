@@ -20,6 +20,7 @@ export const APPKIT_FUNCTIONS: readonly FunctionDefinition[] = [
   ...SCHEDULED_FUNCTIONS,
   ...FIRESTORE_TRIGGER_FUNCTIONS,
   ...HTTPS_FUNCTIONS,
+// audit-unknown-ok: TS structural escape — readonly
 ] as unknown as readonly FunctionDefinition[];
 
 export const APPKIT_FUNCTIONS_BY_NAME: Readonly<Record<string, FunctionDefinition>> =

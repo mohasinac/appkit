@@ -82,10 +82,12 @@ export function useAdminListingData<TResponse, TRow extends { id: string }>({
   };
 }
 
+// audit-unknown-ok: type-narrowing entry point — receives arbitrary repo data
 export function toRecordArray(value: unknown): ListingItemRecord[] {
   return Array.isArray(value) ? (value.filter(Boolean) as ListingItemRecord[]) : [];
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof
 export function toStringValue(value: unknown, fallback = "-"): string {
   if (typeof value === "string") {
     return value.trim() || fallback;
@@ -96,6 +98,7 @@ export function toStringValue(value: unknown, fallback = "-"): string {
   return fallback;
 }
 
+// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof
 export function toRupees(value: unknown): string {
   if (typeof value !== "number" || Number.isNaN(value)) {
     return "-";
@@ -103,6 +106,7 @@ export function toRupees(value: unknown): string {
   return `INR ${value.toLocaleString("en-IN")}`;
 }
 
+// audit-unknown-ok: type-narrowing entry point — Date | string | number | other
 export function toRelativeDate(value: unknown): string {
   const date = parseDate(value);
   if (!date) {
@@ -136,6 +140,7 @@ export function toRelativeDate(value: unknown): string {
   });
 }
 
+// audit-unknown-ok: type-narrowing entry point — Date | string | number | Timestamp
 function parseDate(value: unknown): Date | null {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
     return value;

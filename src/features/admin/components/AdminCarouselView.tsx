@@ -155,6 +155,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
         )}
         <Span size="sm" className="truncate" color="muted">{row.secondary}</Span>
       </Row>
+    // audit-unknown-ok: TS structural escape — primitive cast
     ) as unknown as string,
   }));
 
@@ -183,6 +184,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     {
       key: "secondary",
       header: "Details",
+      // audit-unknown-ok: TS structural escape — DOM/JSX node
       render: (row) => row.secondary as unknown as React.ReactNode,
     },
     {

@@ -112,7 +112,7 @@ function AdminCardItem({
         {flags.length > 0 && (
           <Row gap="xs" className="hidden sm:flex shrink-0">
             {flags.map(({ key, label, color }) => (
-              <Span key={key} weight="medium" className={`inline-flex px-1.5 py-0.5 text-[10px] ${color}`} rounded="full">{label}</Span>
+              <Span padding="pill-2xs" key={key} weight="medium" className={`inline-flex text-[10px] ${color}`} rounded="full">{label}</Span>
             ))}
           </Row>
         )}
@@ -151,7 +151,7 @@ function AdminCardItem({
           {flags.length > 0 && (
             <Row gap="xs" wrap>
               {flags.map(({ key, label, color }) => (
-                <Span key={key} weight="medium" className={`inline-flex px-1.5 py-0.5 text-[10px] ${color}`} rounded="full">{label}</Span>
+                <Span padding="pill-2xs" key={key} weight="medium" className={`inline-flex text-[10px] ${color}`} rounded="full">{label}</Span>
               ))}
             </Row>
           )}

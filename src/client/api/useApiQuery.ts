@@ -53,6 +53,7 @@ export function useApiQuery<
     // Background refetch failures: toast a quiet warning.
     if (result.isFetching || !result.data) return;
 
+    // audit-unknown-ok: TS structural escape
     const err = result.error as unknown;
     if (err instanceof ApiError) {
       const display = getErrorDisplay(err.code);

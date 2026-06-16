@@ -132,6 +132,7 @@ export function SellerBundlesView({
         title: toStringValue(item.productTitle ?? item.title, "Untitled bundle"),
         price: toRupees(item.price),
         itemCount: Array.isArray(item.bundleProductIds)
+          // audit-unknown-ok: TS structural escape
           ? (item.bundleProductIds as unknown[]).length
           : Number(item.bundleItemCount ?? 0),
         status: toStringValue(item.status, "draft"),

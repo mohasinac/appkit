@@ -136,16 +136,19 @@ type CodedError = Error & { code: string };
 
 function isFirebaseAuthErrorShape(e: Error): e is CodedError {
   if (!hasStringProp(e, "code")) return false;
+  // audit-unknown-ok: TS structural escape — CodedError
   return (e as unknown as CodedError).code.startsWith("auth/");
 }
 
 function isFirebaseStorageErrorShape(e: Error): e is CodedError {
   if (!hasStringProp(e, "code")) return false;
+  // audit-unknown-ok: TS structural escape — CodedError
   return (e as unknown as CodedError).code.startsWith("storage/");
 }
 
 function isFirebaseFirestoreErrorShape(e: Error): e is CodedError {
   if (!hasStringProp(e, "code")) return false;
+  // audit-unknown-ok: TS structural escape — CodedError
   const code = (e as unknown as CodedError).code;
   // Firestore codes are bare strings: "permission-denied", "not-found", etc.
   return (

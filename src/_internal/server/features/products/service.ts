@@ -61,6 +61,7 @@ export function isAvailableForPurchase(product: ProductDocument): boolean {
   if (isAuctionListing(product)) {
     const endDate = product.auctionEndDate instanceof Date
       ? product.auctionEndDate
+      // audit-unknown-ok: TS structural escape — primitive cast
       : product.auctionEndDate ? new Date(product.auctionEndDate as unknown as string) : null;
     return endDate ? endDate.getTime() > Date.now() : false;
   }
