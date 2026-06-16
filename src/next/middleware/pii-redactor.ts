@@ -2,6 +2,7 @@
 import type { NextRequest, NextResponse as NR } from "next/server";
 import { NextResponse } from "next/server";
 import type { AuthRequestContext, Middleware } from "./types";
+import type { JsonValue } from "../../schemas/types";
 
 export interface PiiRedactionRule {
   /** Fields to redact from the top-level object or items[] */
@@ -31,14 +32,14 @@ function hasPermission(permissions: Set<string>, required: string): boolean {
 }
 
 function redactObject(
-  obj: Record<string, unknown>,
+  obj: Record<string, JsonValue>,
   fields: string[],
   mask: boolean,
-): Record<string, unknown> {
+): Record<string, JsonValue> {
   return fields.reduce((acc, field) => {
     if (!(field in acc)) return acc;
     const current = acc[field];
-    const redacted: Record<string, unknown> = { ...acc };
+    const redacted: Record<string, JsonValue> = { ...acc };
     if (mask && typeof current === "string") {
       redacted[field] = maskPii(current);
     } else {
@@ -80,9 +81,9 @@ export function createPiiRedactorMiddleware(
     const contentType = response.headers.get("content-type") ?? "";
     if (!contentType.includes("application/json")) return response;
 
-    let body: Record<string, unknown>;
+    let body: Record<string, JsonValue>;
     try {
-      body = (await response.json()) as Record<string, unknown>;
+      body = (await response.json()) as Record<string, JsonValue>;
     } catch {
       return response;
     }
@@ -95,7 +96,7 @@ export function createPiiRedactorMiddleware(
       if (Array.isArray(body.data)) {
         body = {
           ...body,
-          data: (body.data as Record<string, unknown>[]).map((item) =>
+          data: (body.data as Record<string, JsonValue>[]).map((item) =>
             redactObject(item, fields, mask),
           ),
         };
