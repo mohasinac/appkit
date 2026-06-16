@@ -237,7 +237,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
         </Caption>
         <Text className="leading-none text-primary" size="base" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
         {isEnded && product.winnerDisplayName && (
-          <Caption className="mt-0.5 text-zinc-500 dark:text-zinc-400">{mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}</Caption>
+          <Caption className="mt-0.5" color="muted">{mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}</Caption>
         )}
       </Div>
       <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">

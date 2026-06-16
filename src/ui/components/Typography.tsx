@@ -284,6 +284,8 @@ export function Label({
 interface CaptionProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** "default" — muted grey (default); "accent" — indigo, semibold; "inverse" — light indigo for use on dark indigo backgrounds */
   variant?: "default" | "accent" | "inverse";
+  /** Optional colour variant override. */
+  color?: ColorVariant;
   /** Optional typography weight override. */
   weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   children: React.ReactNode;
@@ -291,6 +293,7 @@ interface CaptionProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export function Caption({
   variant = "default",
+  color,
   weight,
   className = "",
   children,
@@ -307,6 +310,7 @@ export function Caption({
       className={[
         "appkit-caption",
         variantClasses[variant],
+        color ? TYPOGRAPHY.colorVariant[color] : "",
         weight ? TYPOGRAPHY.textWeight[weight] : "",
         className,
       ]
