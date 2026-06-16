@@ -48,7 +48,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
     .sort()[0];
 
   return (
-    <Div
+    <Div padding="5" 
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={
@@ -57,7 +57,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           : undefined
       }
       onClick={onClick ? () => onClick(order) : undefined}
-      className={`border border-neutral-200 p-5 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`} rounded="xl" surface="default"
+      className={`border border-neutral-200 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`} rounded="xl" surface="default"
     >
       <Row wrap align="start" justify="between" gap="3">
         <Div>
@@ -148,9 +148,9 @@ export function OrdersList({
     return (
       <Stack gap="md">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Div
+          <Div padding="5" 
             key={i}
-            className="animate-pulse border border-neutral-200 p-5" rounded="xl"
+            className="animate-pulse border border-neutral-200" rounded="xl"
           >
             <Row justify="between">
               <Stack gap="xs">

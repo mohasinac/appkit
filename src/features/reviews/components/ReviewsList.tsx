@@ -55,8 +55,8 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
   const hasFooter = showStoreLink || showProductLink || showProfileLink;
 
   return (
-    <Stack
-      className={`group h-full border border-neutral-200 p-5 transition-shadow hover:shadow-md ${className}`} rounded="xl" surface="default"
+    <Stack padding="5" 
+      className={`group h-full border border-neutral-200 transition-shadow hover:shadow-md ${className}`} rounded="xl" surface="default"
     >
       {/* Clicking the main body navigates to the review detail */}
       <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">
@@ -199,9 +199,9 @@ export function ReviewsList({
     return (
       <Stack gap="md">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Div
+          <Div padding="5" 
             key={i}
-            className="border border-neutral-200 p-5" rounded="xl"
+            className="border border-neutral-200" rounded="xl"
           >
             <Row gap="3" >
               <Skeleton className="h-9 w-9 rounded-full" />

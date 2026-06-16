@@ -61,9 +61,9 @@ export function TestimonialsCarousel({
           style={{ maxHeight: "50svh", alignContent: "flex-start" }}
         >
           {testimonials.map((t) => (
-            <Stack
+            <Stack padding="5" 
               key={t.id}
-              className="shrink-0 p-5" gap="3"
+              className="shrink-0" gap="3"
               style={{
                 width: "clamp(260px, 28vw, 360px)",
                 background: "var(--card-bg)",

@@ -20,9 +20,9 @@ function DefaultStatsPlaceholder({ isLoading }: { isLoading: boolean }) {
   return (
     <Div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {[1, 2, 3, 4].map((i) => (
-        <Div
+        <Div padding="5" 
           key={i}
-          className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5" rounded="xl"
+          className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="xl"
         >
           {isLoading ? (
             <>

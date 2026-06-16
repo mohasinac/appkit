@@ -44,6 +44,7 @@ export const PADDING_MAP = {
   xs: "p-2",
   sm: "p-3",
   md: "p-4",
+  "5": "p-5",
   lg: "p-6",
   xl: "p-8",
   card: "p-5 sm:p-6 lg:p-8",
