@@ -191,7 +191,7 @@ export function LiveItemsIndexListing({ initialData }: LiveItemsIndexListingProp
             ))}
           </Div>
         ) : products.length === 0 ? (
-          <Text className="py-12" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="center">
             No live item listings found.
           </Text>
         ) : (

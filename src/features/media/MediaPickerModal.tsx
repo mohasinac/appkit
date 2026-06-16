@@ -284,12 +284,12 @@ export function MediaPickerModal({
                 );
               })}
               {existingLoading && (
-                <Text className="col-span-full py-6" align="center" color="muted">
+                <Text paddingY="lg" className="col-span-full" align="center" color="muted">
                   Loading…
                 </Text>
               )}
               {!existingLoading && filteredExisting.length === 0 && (
-                <Text className="col-span-full py-6" align="center" color="muted">
+                <Text paddingY="lg" className="col-span-full" align="center" color="muted">
                   No files match.
                 </Text>
               )}

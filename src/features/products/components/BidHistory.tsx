@@ -70,7 +70,7 @@ export function BidHistory({
   if (isEmpty) {
     if (renderEmpty) return <>{renderEmpty()}</>;
     return (
-      <Text variant="secondary" size="sm" className="py-4">
+      <Text paddingY="md" variant="secondary" size="sm">
         {labels.noHistory ?? "No bids yet."}
       </Text>
     );

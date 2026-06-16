@@ -362,11 +362,11 @@ export function CompareOverlay({
 
       <Div className={`flex-1 ${__O.auto} ${__P.p4}`}>
         {isLoading ? (
-          <Text variant="secondary" className="py-12" align="center">
+          <Text paddingY="3xl" variant="secondary" align="center">
             Loadingâ€¦
           </Text>
         ) : trimmed.length === 0 ? (
-          <Text variant="secondary" className="py-12" align="center">
+          <Text paddingY="3xl" variant="secondary" align="center">
             {labels.empty}
           </Text>
         ) : (

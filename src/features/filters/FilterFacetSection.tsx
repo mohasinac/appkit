@@ -184,7 +184,7 @@ export function FilterFacetSection({
                 );
               })}
               {filtered.length === 0 && (
-                <Text className="px-3 py-2" color="faint" size="xs">No results</Text>
+                <Text paddingY="xs" className="px-3" color="faint" size="xs">No results</Text>
               )}
             </Div>
             {hasValue && (

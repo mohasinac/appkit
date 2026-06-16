@@ -168,6 +168,19 @@ export function Heading({
 
 // --- Text ---------------------------------------------------------------------
 
+type TextPaddingY = "none" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+const TEXT_PADDING_Y_MAP: Record<TextPaddingY, string> = {
+  none: "",
+  xs: "py-2",
+  sm: "py-3",
+  md: "py-4",
+  lg: "py-6",
+  xl: "py-8",
+  "2xl": "py-10",
+  "3xl": "py-12",
+  "4xl": "py-16",
+};
+
 interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
   color?: ColorVariant;
@@ -184,6 +197,8 @@ interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   family?: FontFamily;
   align?: TextAlign;
   gradient?: TextGradient;
+  /** Vertical padding — used for empty-state Text wrappers. */
+  paddingY?: TextPaddingY;
   /** Override the rendered element. Defaults to `p`. */
   as?: React.ElementType;
   children: React.ReactNode;
@@ -205,6 +220,7 @@ export function Text({
   family,
   align,
   gradient,
+  paddingY,
   className = "",
   as: Tag = "p",
   children,
@@ -223,6 +239,7 @@ export function Text({
         TYPOGRAPHY.textWeight[weight],
         TYPOGRAPHY.colorVariant[resolvedColor],
         ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
+        paddingY ? TEXT_PADDING_Y_MAP[paddingY] : "",
         className,
       ]
         .filter(Boolean)

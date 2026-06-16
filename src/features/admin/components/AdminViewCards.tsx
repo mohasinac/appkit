@@ -198,7 +198,7 @@ export function AdminViewCards({
 
   if (rows.length === 0) {
     return (
-      <Text size="sm" color="muted" className="py-12" align="center">{emptyLabel}</Text>
+      <Text paddingY="3xl" size="sm" color="muted" align="center">{emptyLabel}</Text>
     );
   }
 

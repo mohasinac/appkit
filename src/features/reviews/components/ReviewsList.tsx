@@ -222,7 +222,7 @@ export function ReviewsList({
 
   if (reviews.length === 0) {
     return (
-      <Text className="py-12 text-neutral-500" size="sm" align="center">
+      <Text paddingY="3xl" className="text-neutral-500" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

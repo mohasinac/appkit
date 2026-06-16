@@ -181,7 +181,7 @@ export function CartDrawer({
               <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
             </Row>
           ) : items.length === 0 ? (
-            <Text className="py-12 text-neutral-500" size="sm" align="center">
+            <Text paddingY="3xl" className="text-neutral-500" size="sm" align="center">
               {labels.empty ?? "Your cart is empty"}
             </Text>
           ) : (

@@ -319,7 +319,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             ))}
           </Div>
         ) : preOrders.length === 0 ? (
-          <Text className="py-12" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="center">
             No pre-orders found.
           </Text>
         ) : view === "list" ? (

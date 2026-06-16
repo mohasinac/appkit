@@ -193,7 +193,7 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
             ))}
           </Div>
         ) : products.length === 0 ? (
-          <Text className="py-12" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="center">
             No classified listings found.
           </Text>
         ) : (

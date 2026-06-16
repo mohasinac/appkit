@@ -150,7 +150,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           );
         })}
         {filtered.length === 0 && !isLoading && (
-          <Text className="col-span-full py-6" color="muted" size="sm" align="center">
+          <Text paddingY="lg" className="col-span-full" color="muted" size="sm" align="center">
             No files found.
           </Text>
         )}

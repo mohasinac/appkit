@@ -147,7 +147,7 @@ export function CategoryBundlesListing({
 
       <Div padding="y-lg">
         {pageItems.length === 0 ? (
-          <Text className="py-16" color="muted" size="sm" align="center">
+          <Text paddingY="4xl" color="muted" size="sm" align="center">
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.
           </Text>
         ) : (

@@ -91,7 +91,7 @@ export function NewsletterBanner({
         <Text color="inverse" className="mt-4 /60">{subheading}</Text>
 
         {success ? (
-          <Text color="inverse" className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6 py-4" size="sm" weight="semibold">
+          <Text paddingY="md" color="inverse" className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6" size="sm" weight="semibold">
             {successMessage}
           </Text>
         ) : (
