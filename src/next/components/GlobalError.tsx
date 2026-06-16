@@ -28,7 +28,7 @@ export function GlobalError({ error, reset }: GlobalErrorProps) {
   useEffect(() => {
     trackError(error, ErrorCategory.UNKNOWN, ErrorSeverity.CRITICAL, {
       component: "GlobalError",
-      metadata: { digest: error.digest },
+      metadata: { digest: error.digest ?? null },
     });
   }, [error]);
 

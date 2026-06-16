@@ -48,7 +48,7 @@ export function ErrorView({
   useEffect(() => {
     trackError(error, ErrorCategory.UNKNOWN, ErrorSeverity.HIGH, {
       component: "ErrorView",
-      metadata: { digest: error.digest },
+      metadata: { digest: error.digest ?? null },
     });
   }, [error]);
 
