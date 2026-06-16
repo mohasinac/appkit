@@ -194,7 +194,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
           <Row key={status} className={`${__P.p4}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
             <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
               <Span size="xl">{icon}</Span>
-              <Span size="xs" weight="semibold" className={`py-0.5 ${badge}`} rounded="full" padding="x-xs">{status}</Span>
+              <Span size="xs" weight="semibold" className={`${badge}`} rounded="full" padding="pill-xs">{status}</Span>
             </Row>
             <Text variant="secondary" className="leading-relaxed" size="sm">{desc}</Text>
           </Row>

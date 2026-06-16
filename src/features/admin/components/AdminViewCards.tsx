@@ -31,7 +31,7 @@ const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; co
 
 function StatusBadge({ status }: { status: string }) {
   return (
-    <Span size="xs" weight="medium" className="inline-flex bg-primary-50 py-0.5 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300 truncate max-w-[120px]" rounded="full" padding="x-xs">
+    <Span size="xs" weight="medium" className="inline-flex bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300 truncate max-w-[120px]" rounded="full" padding="pill-xs">
       {status}
     </Span>
   );

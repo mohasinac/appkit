@@ -64,7 +64,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
             <Text size="xs" color="muted">{row.secondary}</Text>
           ) : null}
           <Span
-            className={`inline-flex py-0.5 ${ PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal }`} size="xs" weight="medium" rounded="full" padding="x-xs"
+            className={`inline-flex ${ PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
           >
             {priority}
           </Span>

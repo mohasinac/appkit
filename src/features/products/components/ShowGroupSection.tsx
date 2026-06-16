@@ -168,7 +168,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
             <Text size="sm" weight="medium" color="primary">
               {parentLabel}
             </Text>
-            <Span size="xs" className="ml-1 py-0.5" rounded="full" padding="x-xs" surface="subtle" color="muted">
+            <Span size="xs" className="ml-1" rounded="full" padding="pill-xs" surface="subtle" color="muted">
               {members.length}
             </Span>
           </Row>

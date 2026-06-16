@@ -118,7 +118,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               {review.rating}.0
             </Span>
             {review.verified && (
-              <Span size="xs" weight="semibold" className="inline-flex items-center gap-1 bg-success-surface py-1 text-success" rounded="full" padding="x-sm">
+              <Span size="xs" weight="semibold" className="inline-flex items-center gap-1 bg-success-surface text-success" rounded="full" padding="pill-md">
                 ✓ Verified Purchase
               </Span>
             )}

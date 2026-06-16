@@ -153,13 +153,13 @@ export function AsyncFacetSection({
             <Span
               key={label}
               size="xs"
-              className="inline-flex items-center py-0.5 border border-zinc-200 dark:border-slate-600" rounded="full" padding="x-xs" surface="subtle" color="muted"
+              className="inline-flex items-center border border-zinc-200 dark:border-slate-600" rounded="full" padding="pill-xs" surface="subtle" color="muted"
             >
               {label}
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span size="xs" className="inline-flex items-center py-0.5" rounded="full" padding="x-xs" color="faint">
+            <Span size="xs" className="inline-flex items-center" rounded="full" padding="pill-xs" color="faint">
               +{selected.length - 3} more
             </Span>
           )}

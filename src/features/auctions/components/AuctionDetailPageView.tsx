@@ -109,7 +109,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Text className="mb-0.5" color="muted" size="xs">Current bid</Text>
         <Row align="center" gap="sm" wrap>
           <Span weight="bold" className="text-primary-600 dark:text-primary-400" size="2xl">{formatCurrency(currentBid, currency)}</Span>
-          <Span size="sm" weight="medium" className="py-1" rounded="full" padding="x-sm" surface="subtle" color="muted">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
+          <Span size="sm" weight="medium" rounded="full" padding="pill-md" surface="subtle" color="muted">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
         </Row>
         {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
       </Div>

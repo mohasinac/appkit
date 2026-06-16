@@ -341,7 +341,7 @@ export function Caption({
  */
 /** Inline-decorations allowed on Span (pill chips, code-like wraps, etc). */
 type SpanRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
-type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-sm" | "pill-md" | "pill-lg";
+type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-xs" | "pill-sm" | "pill-md" | "pill-lg";
 type SpanBg = "none" | "muted" | "subtle" | "default";
 
 const SPAN_ROUNDED_MAP: Record<SpanRounded, string> = {
@@ -364,6 +364,7 @@ const SPAN_PADDING_MAP: Record<SpanPadding, string> = {
   "y-sm": "py-3",
   "inline-sm": "px-2 py-0.5",
   inline: "px-2 py-1",
+  "pill-xs": "px-2 py-0.5",
   "pill-sm": "px-2.5 py-0.5",
   "pill-md": "px-3 py-1",
   "pill-lg": "px-4 py-1.5",

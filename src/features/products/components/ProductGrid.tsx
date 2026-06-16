@@ -163,7 +163,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Span>
               )}
               {typeBadge && (
-                <Span weight="bold" className={`py-0.5 text-[10px] shadow-sm ${typeBadge.cls}`} rounded="full" padding="x-xs">
+                <Span weight="bold" className={`text-[10px] shadow-sm ${typeBadge.cls}`} rounded="full" padding="pill-xs">
                   {typeBadge.label}
                 </Span>
               )}

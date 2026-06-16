@@ -450,7 +450,7 @@ export function AdminBlogEditorView({
             <Span
               key={t}
               size="xs"
-              className="py-0.5 bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)]" rounded="full" padding="x-xs"
+              className="bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)]" rounded="full" padding="pill-xs"
             >
               #{t}
             </Span>

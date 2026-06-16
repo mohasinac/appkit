@@ -70,7 +70,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         </Div>
         <Span
           size="xs" weight="semibold"
-          className={`py-1 capitalize ${statusColor}`} rounded="full" padding="x-sm"
+          className={`capitalize ${statusColor}`} rounded="full" padding="pill-md"
         >
           {labels[order.orderStatus] ?? order.orderStatus.replace(/_/g, " ")}
         </Span>

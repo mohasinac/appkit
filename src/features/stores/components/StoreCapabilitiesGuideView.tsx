@@ -106,9 +106,9 @@ function CapabilityTable() {
                     <Td className="px-6 text-[var(--appkit-color-text-muted)] align-top" padding="xs-tall">{unlocks}</Td>
                     <Td className="px-6 align-top" padding="xs-tall">
                       {defaultOn ? (
-                        <Span className="inline-block bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">On</Span>
+                        <Span className="inline-block bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)]" size="xs" weight="medium" rounded="full" padding="pill-xs">On</Span>
                       ) : (
-                        <Span className="inline-block bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">Off</Span>
+                        <Span className="inline-block bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]" size="xs" weight="medium" rounded="full" padding="pill-xs">Off</Span>
                       )}
                     </Td>
                   </Tr>
@@ -165,7 +165,7 @@ function LockedFeatureGuide() {
           <Row align="center" gap="sm">
             <Text className="font-mono text-[var(--appkit-color-text)]" size="sm" weight="semibold">{cap}</Text>
             {contractRequired && (
-              <Span className="inline-block bg-[var(--appkit-color-warning)]/10 text-[var(--appkit-color-warning)] py-0.5" size="xs" weight="medium" rounded="full" padding="x-xs">Requires agreement</Span>
+              <Span className="inline-block bg-[var(--appkit-color-warning)]/10 text-[var(--appkit-color-warning)]" size="xs" weight="medium" rounded="full" padding="pill-xs">Requires agreement</Span>
             )}
           </Row>
           <Div>

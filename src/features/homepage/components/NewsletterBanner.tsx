@@ -80,7 +80,7 @@ export function NewsletterBanner({
       <Div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 border border-dashed border-white/[0.08]" rounded="full" />
 
       <Div className="relative mx-auto max-w-2xl text-center sm:px-6" padding="x-md">
-        <Span color="inverse" size="xs" weight="semibold" className="mb-4 inline-flex border border-white/20 py-1 tracking-widest /70" rounded="full" padding="x-sm" transform="uppercase">
+        <Span color="inverse" size="xs" weight="semibold" className="mb-4 inline-flex border border-white/20 tracking-widest /70" rounded="full" padding="pill-md" transform="uppercase">
           {eyebrow}
         </Span>
         <Heading color="inverse" 

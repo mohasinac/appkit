@@ -102,9 +102,9 @@ function HardBanPanel({
       <Row justify="between" gap="sm" className="mb-2">
         <Span size="sm" weight="medium" color="muted">Hard ban</Span>
         {isHardBanned ? (
-          <Span size="xs" weight="semibold" className="bg-error-surface py-0.5 text-error" rounded="full" padding="x-xs">Banned</Span>
+          <Span size="xs" weight="semibold" className="bg-error-surface text-error" rounded="full" padding="pill-xs">Banned</Span>
         ) : (
-          <Span size="xs" weight="semibold" className="bg-success-surface py-0.5 text-success" rounded="full" padding="x-xs">Active</Span>
+          <Span size="xs" weight="semibold" className="bg-success-surface text-success" rounded="full" padding="pill-xs">Active</Span>
         )}
       </Row>
       {isHardBanned ? (

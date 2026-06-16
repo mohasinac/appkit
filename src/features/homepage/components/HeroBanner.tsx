@@ -103,7 +103,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
         {banner.subtitle && (
           <Div className="mb-3">
             <Span
-              className="inline-block py-1 font-black uppercase tracking-[0.18em]" padding="x-sm" size="xs"
+              className="inline-block font-black uppercase tracking-[0.18em]" padding="pill-md" size="xs"
               style={{
                 background: "var(--color-red)",
                 color: "#FFFFFF",

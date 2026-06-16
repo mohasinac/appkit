@@ -188,7 +188,7 @@ export function MarketplacePrizeDrawCard({
           <Span
             size="xs"
             weight="medium"
-            className={`inline-flex items-center py-0.5 ${statusVariant(status)}`} rounded="full" padding="x-xs"
+            className={`inline-flex items-center ${statusVariant(status)}`} rounded="full" padding="pill-xs"
           >
             {statusLabel(status, mergedLabels)}
           </Span>
@@ -196,7 +196,7 @@ export function MarketplacePrizeDrawCard({
 
         {status === "closed" ? (
           <Row className="absolute inset-0 bg-black/40" align="center" justify="center">
-            <Span color="inverse" size="xs" weight="bold" className="bg-zinc-900/80 py-1 tracking-wider" rounded="default" padding="x-sm" transform="uppercase">
+            <Span color="inverse" size="xs" weight="bold" className="bg-zinc-900/80 tracking-wider" rounded="default" padding="pill-md" transform="uppercase">
               {mergedLabels.closedBadge}
             </Span>
           </Row>

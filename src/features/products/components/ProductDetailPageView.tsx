@@ -503,7 +503,7 @@ export async function ProductDetailPageView({
                 </Row>
               ) : (
                 <Span
-                  className={`inline-flex w-fit items-center gap-1.5 py-1 ${ inStock ? CLS_STOCK_IN : CLS_STOCK_OUT }`} rounded="full" padding="x-sm" size="xs" weight="medium"
+                  className={`inline-flex w-fit items-center gap-1.5 ${ inStock ? CLS_STOCK_IN : CLS_STOCK_OUT }`} rounded="full" padding="pill-md" size="xs" weight="medium"
                 >
                   {inStock ? "✓ In Stock" : "✗ Out of Stock"}
                   {inStock && effectiveStock !== null && effectiveStock <= 10

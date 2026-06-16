@@ -804,8 +804,7 @@ export function CharacterHotspotForm({
             <Heading level={2} size="lg" weight="bold">
               Review &amp; Save
             </Heading>
-            <Span
-              className="py-1" rounded="full" padding="x-sm" size="sm" weight="bold"
+            <Span rounded="full" padding="pill-md" size="sm" weight="bold"
               style={{ background: "var(--surface-warm)" }}
             >
               {pins.length} pin{pins.length !== 1 ? "s" : ""}

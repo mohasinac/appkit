@@ -694,7 +694,7 @@ function CharacterHotspotInner({
           ).map(({ label, color }) => (
             <Stack key={label} align="center">
               <Span
-                className="py-1 text-[10px] font-black uppercase tracking-[0.18em]" smSize="xs" rounded="sm" padding="x-sm"
+                className="text-[10px] font-black uppercase tracking-[0.18em]" smSize="xs" rounded="sm" padding="pill-md"
                 style={{
                   background: color,
                   color: color === "#FFE500" ? "#0D0D0D" : "#FFFFFF",

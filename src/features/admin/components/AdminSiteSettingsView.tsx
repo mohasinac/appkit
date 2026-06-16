@@ -858,7 +858,7 @@ export function AdminSiteSettingsView({
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Row justify="between" gap="sm">
                   <Text size="sm" weight="medium" color="muted">In-app (notification bell)</Text>
-                  <Span size="xs" weight="semibold" className="bg-success-surface py-0.5 text-success" rounded="full" padding="x-xs">Always on</Span>
+                  <Span size="xs" weight="semibold" className="bg-success-surface text-success" rounded="full" padding="pill-xs">Always on</Span>
                 </Row>
                 <Text size="xs" color="muted">Displayed in the notification bell and inbox. Cannot be disabled.</Text>
               </Stack>

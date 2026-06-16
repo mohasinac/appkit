@@ -66,7 +66,7 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
   return (
     <Div className="mb-8">
       <Row className="mb-4" gap="sm">
-        <Span size="xs" weight="medium" className={`inline-block py-0.5 capitalize ${CATEGORY_BADGE[post.category] ?? ""}`} rounded="full" padding="x-xs">{post.category}</Span>
+        <Span size="xs" weight="medium" className={`inline-block capitalize ${CATEGORY_BADGE[post.category] ?? ""}`} rounded="full" padding="pill-xs">{post.category}</Span>
         {post.isFeatured && <Span size="xs" weight="medium" className={CLS_FEATURED_BADGE}>{labels?.featured ?? "Featured"}</Span>}
       </Row>
       <Heading level={1} className="mb-4" size="3xl" weight="bold">{post.title}</Heading>

@@ -135,7 +135,7 @@ function SuggestionItem({
             </Text>
           )}
         </Div>
-        <Span size="xs" className={`py-0.5 ${typeBadges[suggestion.type]}`} rounded="full" padding="x-xs">
+        <Span size="xs" className={`${typeBadges[suggestion.type]}`} rounded="full" padding="pill-xs">
           {suggestion.type}
         </Span>
       </Button>

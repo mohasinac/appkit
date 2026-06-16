@@ -77,7 +77,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "method",
     header: "Method",
     render: (row) => (
-      <Span size="xs" weight="medium" className="inline-flex items-center py-0.5" rounded="full" padding="x-xs" surface="subtle" color="muted" transform="capitalize">
+      <Span size="xs" weight="medium" className="inline-flex items-center" rounded="full" padding="pill-xs" surface="subtle" color="muted" transform="capitalize">
         {row.method.replace(/_/g, " ")}
       </Span>
     ),
@@ -96,7 +96,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     header: "Status",
     render: (row) => (
       <Span
-        className={`inline-flex items-center py-0.5 ${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="x-xs"
+        className={`inline-flex items-center ${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
       >
         {row.isActive ? "Active" : "Inactive"}
       </Span>
