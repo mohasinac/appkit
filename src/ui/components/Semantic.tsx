@@ -149,15 +149,33 @@ Aside.displayName = "Aside";
  * <Nav aria-label="Product categories">...</Nav>
  * ```
  */
-export interface NavProps extends React.HTMLAttributes<HTMLElement> {
+export interface NavProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /** REQUIRED — describes the purpose of this navigation region for screen readers. */
   "aria-label": string;
+  /** Vertical spacing between top-level children. */
+  spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
   children: React.ReactNode;
 }
 
-export function Nav({ className = "", children, ...props }: NavProps) {
+const NAV_SPACING_MAP: Record<NonNullable<NavProps["spacing"]>, string> = {
+  none: "",
+  xs: "space-y-1",
+  sm: "space-y-2",
+  md: "space-y-3",
+  lg: "space-y-4",
+  xl: "space-y-6",
+};
+
+export function Nav({ surface, padding, rounded, border, shadow, spacing, className = "", children, ...props }: NavProps) {
   return (
-    <nav className={className} {...props}>
+    <nav
+      className={[
+        buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+        spacing ? NAV_SPACING_MAP[spacing] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </nav>
   );

@@ -94,7 +94,7 @@ function FlatContent({
           <Text className={CLS_STORE_NAME}>{storeName}</Text>
         </Row>
       )}
-      <Nav aria-label="Store navigation" className="py-3">
+      <Nav aria-label="Store navigation" padding="y-sm">
         <Ul className="space-y-0.5 px-3">
           {items.map((item) => {
             const isActive = activeHref === item.href;
@@ -146,7 +146,7 @@ function GroupsContent({
           <Text className={CLS_STORE_NAME}>{storeName}</Text>
         </Row>
       )}
-      <Nav aria-label="Store navigation" className="py-2">
+      <Nav aria-label="Store navigation" padding="y-xs">
         {groups.map((group) => {
           const isOpen = openGroups[group.title] ?? false;
           const hasActive = group.items.some((i) => activeHref === i.href);

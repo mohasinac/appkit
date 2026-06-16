@@ -63,7 +63,7 @@ export async function FAQPageView({
               >
                 {t("categoriesLabel")}
               </Heading>
-              <Nav aria-label="FAQ categories" className="space-y-1">
+              <Nav aria-label="FAQ categories" spacing="xs">
                 <TextLink
                   href={String(ROUTES.PUBLIC.FAQS)}
                   className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"

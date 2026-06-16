@@ -112,7 +112,7 @@ function DrawerContent({
 
   if (!groups || groups.length === 0) {
     return (
-      <Nav aria-label="User navigation" className="py-3">
+      <Nav aria-label="User navigation" padding="y-sm">
         <Ul className="space-y-0.5 px-3">
           {items.map((item) => {
             const isActive = activeHref === item.href || activeHref.startsWith(item.href + "/");
@@ -128,7 +128,7 @@ function DrawerContent({
   }
 
   return (
-    <Nav aria-label="User navigation" className="py-2">
+    <Nav aria-label="User navigation" padding="y-xs">
       {groups.map((group) => {
         const isOpen = openGroups[group.title] ?? false;
         const hasActive = group.items.some(

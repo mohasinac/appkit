@@ -81,7 +81,7 @@ function GroupsContent({
   const toggle = useCallback((title: string) => setOpenGroups((p) => ({ ...p, [title]: !p[title] })), []);
 
   return (
-    <Nav aria-label="Admin navigation" className="py-2">
+    <Nav aria-label="Admin navigation" padding="y-xs">
       {groups.map((group) => {
         const isOpen = openGroups[group.title] ?? false;
         const hasActive = group.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/"));
@@ -182,7 +182,7 @@ export function AdminSidebar({
   const navContent = groups ? (
     <GroupsContent groups={groups} activePath={activePath} onItemClick={close} />
   ) : (
-    <Nav aria-label="Admin sidebar" className="py-3">
+    <Nav aria-label="Admin sidebar" padding="y-sm">
       {renderHeader?.()}
       {renderNavItems?.(activePath)}
       {renderFooter?.()}
@@ -192,7 +192,7 @@ export function AdminSidebar({
   const mobileNavContent = groups ? (
     <GroupsContent groups={groups} activePath={activePath} onItemClick={close} />
   ) : (
-    <Nav aria-label="Admin sidebar" className="py-3">
+    <Nav aria-label="Admin sidebar" padding="y-sm">
       {renderHeader?.()}
       {renderNavItems?.(activePath)}
       {renderFooter?.()}
