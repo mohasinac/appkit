@@ -1,8 +1,9 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
+import type { JsonValue } from "@mohasinac/appkit";
 import { handleProductStockChange } from "../core/onProductStockChange";
 import type { ProductStockSnapshot } from "../core/onProductStockChange";
 
-type ProductDoc = Record<string, unknown>;
+type ProductDoc = Record<string, JsonValue>;
 
 function toSnapshot(doc: ProductDoc | null | undefined): ProductStockSnapshot | null {
   if (!doc) return null;

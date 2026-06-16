@@ -6,12 +6,13 @@
  */
 
 import { NextResponse } from "next/server";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface ApiSuccessResponse<T = unknown> {
   success: true;
   data?: T;
   message?: string;
-  meta?: Record<string, unknown>;
+  meta?: Record<string, JsonValue>;
 }
 
 export interface ApiErrorResponse {
@@ -24,7 +25,7 @@ export function successResponse<T>(
   data?: T,
   message?: string,
   status: number = 200,
-  meta?: Record<string, unknown>,
+  meta?: Record<string, JsonValue>,
 ): NextResponse<ApiSuccessResponse<T>> {
   return NextResponse.json(
     {

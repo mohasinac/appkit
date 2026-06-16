@@ -4,8 +4,9 @@
  */
 
 import type { JobContext } from "../runtime/types";
+import type { JsonValue } from "@mohasinac/appkit";
 
-export type StoreDoc = Record<string, unknown>;
+export type StoreDoc = Record<string, JsonValue>;
 
 export interface HandleStoreWriteInput {
   storeId: string;

@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 /**
  * Core: maintain DFS `position` + `subtreeSize` on every category write.
  * CREATE → insert into parent's subtree + shift later siblings;
@@ -67,7 +68,7 @@ async function getMaxPosition(ctx: JobContext, excludeId?: string): Promise<numb
   return 0;
 }
 
-export type CategoryDoc = Record<string, unknown>;
+export type CategoryDoc = Record<string, JsonValue>;
 
 export interface HandleCategoryWriteInput {
   categoryId: string;

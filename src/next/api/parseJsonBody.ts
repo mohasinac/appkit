@@ -1,4 +1,5 @@
 import { ValidationError } from "../../errors";
+import type { JsonValue } from "@mohasinac/appkit";
 
 /**
  * Strict JSON body parser for createRouteHandler handlers that need a body
@@ -12,7 +13,7 @@ import { ValidationError } from "../../errors";
  *   const body = await parseJsonBody<{ name: string }>(request);
  *   const body = await parseJsonBody<{ name?: string }>(request, { allowEmpty: true });
  */
-export async function parseJsonBody<T = Record<string, unknown>>(
+export async function parseJsonBody<T = Record<string, JsonValue>>(
   request: Request,
   options?: { allowEmpty?: boolean },
 ): Promise<T> {

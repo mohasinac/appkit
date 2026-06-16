@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 /**
  * Core: keep category metrics + store stats in sync when a product document
  * is written. Only published products count.
@@ -12,7 +13,7 @@ import { ProductStatusValues } from "../../../../features/products/schemas/fires
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import type { JobContext } from "../runtime/types";
 
-export type ProductDoc = Record<string, unknown>;
+export type ProductDoc = Record<string, JsonValue>;
 
 const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
   ProductStatusValues.ARCHIVED,

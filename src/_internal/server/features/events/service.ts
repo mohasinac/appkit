@@ -1,4 +1,5 @@
 import { eventRepository } from "../../../../repositories";
+import type { JsonValue } from "@mohasinac/appkit";
 import {
   EventNotFoundError,
   EventNotActiveError,
@@ -25,7 +26,7 @@ export async function assertEventActive(eventId: string) {
   return event;
 }
 
-export function isEventAcceptingRegistrations(event: Record<string, unknown>): boolean {
+export function isEventAcceptingRegistrations(event: Record<string, JsonValue>): boolean {
   const status = event.status as string | undefined;
   if (status !== "active" && status !== "upcoming") return false;
   const endsAt = event.endsAt ? new Date(event.endsAt as unknown as string) : null;

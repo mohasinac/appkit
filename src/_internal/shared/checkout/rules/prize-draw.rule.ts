@@ -1,4 +1,5 @@
 import { ValidationError } from "../../../../errors";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type {
@@ -80,7 +81,7 @@ export const prizeDrawRule: ListingCheckoutRule = {
   decorateOrderDoc: (
     _groupFirstItem: CartItemDocument,
     groupFirstProduct: ProductDocument,
-  ): Record<string, unknown> => ({
+  ): Record<string, JsonValue> => ({
     prizeDrawProductId: groupFirstProduct.id,
     isNonRefundable: true,
   }),

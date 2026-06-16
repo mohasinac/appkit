@@ -1,4 +1,5 @@
 import { cache } from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import {
   GROUPED_LISTINGS_COLLECTION,
@@ -14,7 +15,7 @@ import {
 } from "../../../shared/features/grouped/config";
 
 function mapDoc(doc: FirebaseFirestore.QueryDocumentSnapshot): GroupedListingDocument {
-  const data = doc.data() as Record<string, unknown>;
+  const data = doc.data() as Record<string, JsonValue>;
   const ts = (v: unknown): Date => {
     const d = (v as { toDate?: () => Date } | undefined)?.toDate?.();
     return d ?? (v instanceof Date ? v : new Date());

@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { JobContext } from "../runtime/types";
 
 interface BanHistoryEntry {
@@ -55,8 +56,8 @@ export async function handleUserBanChange(
   }
 
   // Soft ban changes — detect additions
-  const prevSoftBans = (before?.softBans as Array<Record<string, unknown>> | undefined) ?? [];
-  const nextSoftBans = (after.softBans as Array<Record<string, unknown>> | undefined) ?? [];
+  const prevSoftBans = (before?.softBans as Array<Record<string, JsonValue>> | undefined) ?? [];
+  const nextSoftBans = (after.softBans as Array<Record<string, JsonValue>> | undefined) ?? [];
   const prevActions = new Set(prevSoftBans.map((b) => b.action as string));
   const nextActions = new Set(nextSoftBans.map((b) => b.action as string));
 

@@ -1,9 +1,10 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
+import type { JsonValue } from "@mohasinac/appkit";
 import { handleSupportTicketUpdate } from "../core/onSupportTicketUpdate";
 
 export const onSupportTicketUpdateHandler: FirestoreTriggerHandler<
-  Record<string, unknown>,
-  Record<string, unknown>
+  Record<string, JsonValue>,
+  Record<string, JsonValue>
 > = async (event, ctx) => {
   await handleSupportTicketUpdate(
     {

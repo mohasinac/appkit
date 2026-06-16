@@ -1,4 +1,5 @@
 import { normalizeError } from "../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import type {
   CollectionReference,
   DocumentData,
@@ -115,7 +116,7 @@ export abstract class BaseRepository<T extends DocumentData> {
     }
   }
 
-  async create(data: Partial<T> | Record<string, unknown>): Promise<T> {
+  async create(data: Partial<T> | Record<string, JsonValue>): Promise<T> {
     try {
       const cleanData = prepareForFirestore({
         ...data,
@@ -244,7 +245,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
   createInTx(
     tx: Transaction,
-    data: Partial<T> | Record<string, unknown>,
+    data: Partial<T> | Record<string, JsonValue>,
   ): DocumentReference {
     const docRef = this.getCollection().doc();
     const now = new Date();
@@ -262,7 +263,7 @@ export abstract class BaseRepository<T extends DocumentData> {
   createWithIdInTx(
     tx: Transaction,
     id: string,
-    data: Partial<T> | Record<string, unknown>,
+    data: Partial<T> | Record<string, JsonValue>,
   ): DocumentReference {
     const docRef = this.getCollection().doc(id);
     const now = new Date();
@@ -292,7 +293,7 @@ export abstract class BaseRepository<T extends DocumentData> {
 
   createInBatch(
     batch: WriteBatch,
-    data: Partial<T> | Record<string, unknown>,
+    data: Partial<T> | Record<string, JsonValue>,
   ): DocumentReference {
     const docRef = this.getCollection().doc();
     const now = new Date();
@@ -310,7 +311,7 @@ export abstract class BaseRepository<T extends DocumentData> {
   createWithIdInBatch(
     batch: WriteBatch,
     id: string,
-    data: Partial<T> | Record<string, unknown>,
+    data: Partial<T> | Record<string, JsonValue>,
   ): void {
     const docRef = this.getCollection().doc(id);
     const now = new Date();

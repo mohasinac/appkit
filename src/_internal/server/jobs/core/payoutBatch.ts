@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 /**
  * Core: dispatch pending payouts via Razorpay Payouts API.
  *
@@ -32,7 +33,7 @@ async function dispatch(ctx: JobContext, entry: { ref: DocumentReference; data: 
 
     const basicAuth = Buffer.from(`${keyId}:${keySecret}`).toString("base64");
 
-    let fundAccount: Record<string, unknown>;
+    let fundAccount: Record<string, JsonValue>;
     if (payout.paymentMethod === "upi" && payout.upiId) {
       fundAccount = { account_type: "vpa", vpa: { address: payout.upiId } };
     } else if (payout.bankAccount) {
