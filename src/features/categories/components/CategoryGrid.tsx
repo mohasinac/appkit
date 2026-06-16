@@ -68,11 +68,11 @@ export function CategoryCard({
 
       {/* Content */}
       <Stack className={`flex-1 ${__P.p3}.5`}>
-        <Text className={`leading-snug ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`} size="sm" weight="semibold">
+        <Text className={`leading-snug text-neutral-900 dark:text-white`} truncate={2} size="sm" weight="semibold">
           {category.name}
         </Text>
         {category.description && (
-          <Text className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400 flex-1`} size="xs">
+          <Text className={`mt-1 text-neutral-500 dark:text-zinc-400 flex-1`} truncate={2} size="xs">
             {category.description}
           </Text>
         )}

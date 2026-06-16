@@ -51,7 +51,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               {item.meta.title}
             </a>
           ) : (
-            <Text className={`text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp2}`} weight="medium">
+            <Text className={`text-neutral-900 dark:text-zinc-100`} truncate={2} weight="medium">
               {item.meta.title}
             </Text>
           )}

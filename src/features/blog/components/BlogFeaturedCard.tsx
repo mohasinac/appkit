@@ -119,7 +119,7 @@ export function BlogFeaturedCard({
           {/* Title — clamped to 2 lines */}
           <Heading
             level={3}
-            className={`text-neutral-900 dark:text-zinc-100 leading-snug mb-1 ${THEME_CONSTANTS.utilities.textClamp2}`} size="base" weight="semibold"
+            className={`text-neutral-900 dark:text-zinc-100 leading-snug mb-1`} truncate={2} size="base" weight="semibold"
           >
             {safeTitle}
           </Heading>
@@ -127,7 +127,7 @@ export function BlogFeaturedCard({
           {/* Excerpt */}
           {post.excerpt && (
             <Text
-              className={`text-neutral-500 dark:text-zinc-400 ${THEME_CONSTANTS.utilities.textClamp2} mb-3`} size="sm"
+              className={`text-neutral-500 dark:text-zinc-400 mb-3`} truncate={2} size="sm"
             >
               {post.excerpt}
             </Text>

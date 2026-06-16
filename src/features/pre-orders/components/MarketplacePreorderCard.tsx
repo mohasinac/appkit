@@ -192,7 +192,7 @@ export function MarketplacePreorderCard({
           <>
             <Row className="min-w-0" align="start" justify="between" gap="sm">
               <TextLink href={detailHref} className="min-w-0 flex-1">
-                <Text className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="medium" color="primary">
+                <Text size="sm" weight="medium" color="primary" truncate={2}>
                   {product.title}
                 </Text>
               </TextLink>
@@ -229,7 +229,7 @@ export function MarketplacePreorderCard({
           /* ── Full grid layout ── */
           <>
             <TextLink href={detailHref}>
-              <Text className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="medium" color="primary">
+              <Text size="sm" weight="medium" color="primary" truncate={2}>
                 {product.title}
               </Text>
             </TextLink>

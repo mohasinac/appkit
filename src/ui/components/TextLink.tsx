@@ -29,6 +29,7 @@ function isExternalUrl(href: string): boolean {
 
 type LinkTypographySize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
 type LinkTypographyWeight = "light" | "normal" | "medium" | "semibold" | "bold";
+type LinkTruncate = boolean | 1 | 2 | 3 | 4;
 
 const LINK_SIZE_MAP: Record<LinkTypographySize, string> = {
   xs: "appkit-text--xs",
@@ -47,6 +48,12 @@ const LINK_WEIGHT_MAP: Record<LinkTypographyWeight, string> = {
   bold: "appkit-font--bold",
 };
 
+function truncateClass(truncate: LinkTruncate | undefined): string {
+  if (!truncate) return "";
+  const lines = typeof truncate === "number" ? truncate : 1;
+  return `appkit-text--truncate-${lines}`;
+}
+
 export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
@@ -55,6 +62,8 @@ export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
   size?: LinkTypographySize;
   /** Optional typography weight override. */
   weight?: LinkTypographyWeight;
+  /** Multi-line clamp. `true` = 1 line; pass `2`, `3`, or `4` for line-clamp. */
+  truncate?: LinkTruncate;
   /**
    * Force external rendering (`<a target="_blank" rel="noopener noreferrer">`).
    * Auto-detected when `href` starts with http/https/mailto/tel.
@@ -83,6 +92,7 @@ export function TextLink({
   variant = "default",
   size,
   weight,
+  truncate,
   external,
   className = "",
   ...props
@@ -91,6 +101,7 @@ export function TextLink({
     VARIANTS[variant],
     size ? LINK_SIZE_MAP[size] : "",
     weight ? LINK_WEIGHT_MAP[weight] : "",
+    truncateClass(truncate),
     className,
   );
   const shouldBeExternal = external ?? isExternalUrl(href);

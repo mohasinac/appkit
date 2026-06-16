@@ -252,7 +252,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
       {/* Content area */}
       <Stack className={`flex-1 ${__P.p3} pt-2.5`}>
-        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} dark:text-white leading-snug`} size="sm" weight="semibold" color="primary">
+        <Text className={`dark:text-white leading-snug`} truncate={2} size="sm" weight="semibold" color="primary">
           {product.title}
         </Text>
 
@@ -555,7 +555,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
 
       {/* Content */}
       <Stack className="flex-1 min-w-0 gap-0.5">
-        <Text className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="medium" color="primary">
+        <Text size="sm" weight="medium" color="primary" truncate={2}>
           {product.title}
         </Text>
         {(product.categoryName || product.brand) && (

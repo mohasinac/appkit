@@ -124,8 +124,8 @@ function renderCopilotHistoryPanel(props: {
         {(historyQuery.data?.messages ?? []).map((log, index) => (
           <Div key={`${log.createdAt}-${index}`} className="border border-neutral-200" rounded="lg" padding="xs">
             <Text className="text-neutral-500" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
-            <Text className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp3}`} size="sm">Q: {log.prompt}</Text>
-            <Text className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp3} text-neutral-600 dark:text-zinc-300`} size="sm">A: {log.response}</Text>
+            <Text className={`mt-1`} truncate={3} size="sm">Q: {log.prompt}</Text>
+            <Text className={`mt-1 text-neutral-600 dark:text-zinc-300`} truncate={3} size="sm">A: {log.response}</Text>
           </Div>
         ))}
         {!historyQuery.isLoading && (historyQuery.data?.messages?.length ?? 0) === 0 ? (
@@ -291,8 +291,8 @@ export function AdminCopilotView({
                   <Text className="text-neutral-500" size="xs" weight="medium">
                     {new Date(log.createdAt).toLocaleString()}
                   </Text>
-                  <Text className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp3}`} size="sm">Q: {log.prompt}</Text>
-                  <Text className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp3} text-neutral-600 dark:text-zinc-300`} size="sm">
+                  <Text className={`mt-1`} truncate={3} size="sm">Q: {log.prompt}</Text>
+                  <Text className={`mt-1 text-neutral-600 dark:text-zinc-300`} truncate={3} size="sm">
                     A: {log.response}
                   </Text>
                 </Div>

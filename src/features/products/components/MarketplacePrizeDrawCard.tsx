@@ -221,9 +221,7 @@ export function MarketplacePrizeDrawCard({
 
       <BaseListingCard.Info variant={variant}>
         <TextLink href={String(detailHref)}>
-          <Text
-            className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="medium" color="primary"
-          >
+          <Text size="sm" weight="medium" color="primary" truncate={2}>
             {product.title}
           </Text>
         </TextLink>

@@ -261,7 +261,7 @@ function renderNotificationListContent(props: {
               </Text>
               <Span size="xs" className="flex-shrink-0" color="muted">{formatRelativeTime(notification.createdAt)}</Span>
             </Row>
-            <Text size="sm" className={`mt-0.5 ${THEME_CONSTANTS.utilities.textClamp2}`} color="muted">{notification.message}</Text>
+            <Text size="sm" className={`mt-0.5`} truncate={2} color="muted">{notification.message}</Text>
             <Row gap="3" className="mt-1.5">
               {notification.actionUrl && renderActionLink({ href: notification.actionUrl, onClick: () => { void handleMarkReadAndClose(notification); }, className: "text-xs text-primary hover:underline font-medium", children: notification.actionLabel ?? labels.viewAction })}
               {!notification.isRead && <Button variant="ghost" onClick={() => void handleMarkRead(notification.id)} className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:underline p-0 h-auto">{labels.markRead}</Button>}

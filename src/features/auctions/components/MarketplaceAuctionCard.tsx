@@ -191,7 +191,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
   return (
     <>
       <Row className="min-w-0" align="start" justify="between" gap="sm">
-        <TextLink href={auctionHref ?? "#"} className={`${THEME_CONSTANTS.utilities.textClamp2} flex-1 leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary`} size="sm" weight="medium">
+        <TextLink href={auctionHref ?? "#"} className={`flex-1 leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary`} truncate={2} size="sm" weight="medium">
           {product.title}
         </TextLink>
         {wishlistActions ? (

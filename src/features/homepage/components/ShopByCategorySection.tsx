@@ -78,7 +78,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
             initial
           )}
         </Row>
-        <Text className={`${THEME_CONSTANTS.utilities.textClamp2}`} size="sm" weight="semibold" color="primary">
+        <Text size="sm" weight="semibold" color="primary" truncate={2}>
           {category.name}
         </Text>
         <Text className="mt-1" color="muted" size="xs">

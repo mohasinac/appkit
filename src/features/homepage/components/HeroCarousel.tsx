@@ -230,7 +230,7 @@ function CarouselCardRenderer({
           {card.content?.title && (
             <Heading
               level={2}
-              className={`text-[11px] md:text-2xl lg:text-3xl mb-0.5 md:mb-3 drop-shadow-md ${THEME_CONSTANTS.utilities.textClamp2}`} weight="bold"
+              className={`text-[11px] md:text-2xl lg:text-3xl mb-0.5 md:mb-3 drop-shadow-md`} truncate={2} weight="bold"
               style={{ color: card.content.textColor ?? "#ffffff" }}
             >
               {card.content.title}
@@ -238,7 +238,7 @@ function CarouselCardRenderer({
           )}
           {card.content?.description && (
             <Text
-              className={`text-[10px] md:text-sm !text-white/80 mb-1 md:mb-4 ${THEME_CONSTANTS.utilities.textClamp1} drop-shadow-sm`}
+              className={`text-[10px] md:text-sm !text-white/80 mb-1 md:mb-4 drop-shadow-sm`} truncate
             >
               {card.content.description}
             </Text>
