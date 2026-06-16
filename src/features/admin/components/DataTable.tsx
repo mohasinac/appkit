@@ -106,7 +106,7 @@ function SelectableRow<T extends { id: string }>({
       className={`hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`} border="default"
     >
       {selectionEnabled && (
-        <Td className="relative w-10 px-2 py-3" onClick={(e) => e.stopPropagation()}>
+        <Td padding="xs-3" className="relative w-10" onClick={(e) => e.stopPropagation()}>
           <BaseListingCard.Checkbox
             selected={isSelected}
             onSelect={(e) => { e.preventDefault(); onToggle?.(row.id, !isSelected); }}
@@ -127,7 +127,7 @@ function SelectableRow<T extends { id: string }>({
         </Td>
       ))}
       {renderRowActions && (
-        <Td className="px-2 py-3" onClick={(e) => e.stopPropagation()}>
+        <Td padding="xs-3" onClick={(e) => e.stopPropagation()}>
           {renderRowActions(row)}
         </Td>
       )}
@@ -164,7 +164,7 @@ export function DataTable<T extends { id: string }>({
           <Thead>
             <Tr className="bg-neutral-50 dark:bg-slate-800" border="default">
               {selectionEnabled && (
-                <Th scope="col" className="w-10 px-2 py-3">
+                <Th padding="xs-3" scope="col" className="w-10">
                   {onToggleSelectAll && (
                     <input
                       type="checkbox"
@@ -194,14 +194,14 @@ export function DataTable<T extends { id: string }>({
                   )}
                 </Th>
               ))}
-              {renderRowActions && <Th scope="col" className="w-12 px-2 py-3" />}
+              {renderRowActions && <Th padding="xs-3" scope="col" className="w-12" />}
             </Tr>
           </Thead>
           <Tbody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <Tr key={i} border="default">
-                  {selectionEnabled && <Td className="w-10 px-2 py-3" />}
+                  {selectionEnabled && <Td padding="xs-3" className="w-10" />}
                   {columns.map((col) => (
                     <Td key={col.key} padding="md">
                       <Div className="h-4 w-full animate-pulse bg-neutral-200" rounded="default" />
