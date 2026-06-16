@@ -49,10 +49,10 @@ export async function sendEmail(
           ? (opts.headers as Record<string, string>)
           : undefined,
     });
-    return { data, error: null };
+    return { data: data as unknown as JsonValue, error: null };
   } catch (error) {
     void normalizeError(error);
-    return { data: null, error };
+    return { data: null, error: error instanceof Error ? error.message : String(error) };
   }
 }
 

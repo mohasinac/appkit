@@ -85,9 +85,9 @@ export interface VerifyEmailData {
 
 export function useLogin(options?: {
   onSuccess?: () => void;
-  onError?: (error: unknown) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, LoginCredentials>({
+  return useMutation<JsonValue, Error,LoginCredentials>({
     mutationFn: async (credentials) => {
       // Client Firebase SDK authenticates first (handles password verification)
       await getClientAuthProvider().signInWithEmailAndPassword(
@@ -114,7 +114,7 @@ export function useGoogleLogin(options?: {
   onSuccess?: (
     data: { isNewUser: boolean; uid: string; role: string } | null,
   ) => void;
-  onError?: (error: unknown) => void;
+  onError?: (error: Error) => void;
   onSessionSynced?: () => Promise<void> | void;
 }) {
   const authEvent = useAuthEvent();
@@ -250,10 +250,10 @@ export function useGoogleLogin(options?: {
 }
 
 export function useRegister(options?: {
-  onSuccess?: (data: unknown) => void;
-  onError?: (error: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, RegisterData>({
+  return useMutation<JsonValue, Error,RegisterData>({
     mutationFn: async (data) => {
       // Create the user account on the server
       const response = await apiClient.post<Record<string, JsonValue>>(
@@ -286,10 +286,10 @@ export function useRegister(options?: {
 }
 
 export function useVerifyEmail(options?: {
-  onSuccess?: (data: unknown) => void;
-  onError?: (error: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, VerifyEmailData>({
+  return useMutation<JsonValue, Error,VerifyEmailData>({
     mutationFn: async ({ token }) => {
       const authProvider = getClientAuthProvider();
       await authProvider.applyActionCode(token);
@@ -302,10 +302,10 @@ export function useVerifyEmail(options?: {
 }
 
 export function useResendVerification(options?: {
-  onSuccess?: (data: unknown) => void;
-  onError?: (error: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, ResendVerificationData>({
+  return useMutation<JsonValue, Error,ResendVerificationData>({
     mutationFn: (data) =>
       apiClient.post(AUTH_ENDPOINTS.RESEND_VERIFICATION, data),
     onSuccess: options?.onSuccess,
@@ -314,10 +314,10 @@ export function useResendVerification(options?: {
 }
 
 export function useForgotPassword(options?: {
-  onSuccess?: (data: unknown) => void;
-  onError?: (error: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, ForgotPasswordData>({
+  return useMutation<JsonValue, Error,ForgotPasswordData>({
     mutationFn: async (data) => {
       await getClientAuthProvider().sendPasswordResetEmail(data.email);
       return { success: true };
@@ -328,10 +328,10 @@ export function useForgotPassword(options?: {
 }
 
 export function useResetPassword(options?: {
-  onSuccess?: (data: unknown) => void;
-  onError?: (error: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, ResetPasswordData>({
+  return useMutation<JsonValue, Error,ResetPasswordData>({
     mutationFn: async (data) => {
       await getClientAuthProvider().confirmPasswordReset(
         data.token,
@@ -345,10 +345,10 @@ export function useResetPassword(options?: {
 }
 
 export function useChangePassword(options?: {
-  onSuccess?: (data: unknown) => void;
-  onError?: (error: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, ChangePasswordData>({
+  return useMutation<JsonValue, Error,ChangePasswordData>({
     mutationFn: async (data) => {
       await getClientAuthProvider().reauthenticateAndChangePassword(
         data.currentPassword,
@@ -362,15 +362,16 @@ export function useChangePassword(options?: {
 }
 
 export function useChangeEmail(options?: {
-  onSuccess?: (data: unknown) => void;
-  onError?: (error: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
+  onError?: (error: Error) => void;
 }) {
-  return useMutation<unknown, Error, ChangeEmailData>({
+  return useMutation<JsonValue, Error, ChangeEmailData>({
     mutationFn: async (data) => {
       await getClientAuthProvider().reauthenticateAndSendEmailUpdateVerification(
         data.currentPassword,
         data.newEmail,
       );
+      return null;
     },
     onSuccess: options?.onSuccess,
     onError: options?.onError,
