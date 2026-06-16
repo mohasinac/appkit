@@ -201,7 +201,7 @@ export async function PrizeDrawDetailPageView({
           storeName: storeName ?? undefined,
         }}
       />
-      <Container size="xl" className="px-4" padding="y-lg">
+      <Container size="xl" padding="y-lg">
         {/* Breadcrumb + share */}
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <nav

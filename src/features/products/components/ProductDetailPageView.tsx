@@ -424,7 +424,7 @@ export async function ProductDetailPageView({
           storeName: product.storeName,
         }}
       />
-      <Container size="xl" className="px-4" padding="y-lg">
+      <Container size="xl" padding="y-lg">
         <ProductDetailView
           renderBreadcrumb={() => (
             <Row className="mb-4" align="center" justify="between" gap="sm" wrap>

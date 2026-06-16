@@ -302,7 +302,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
           storeName: typeof p.storeName === "string" ? p.storeName : undefined,
         }}
       />
-      <Container size="xl" className="px-4" padding="y-lg">
+      <Container size="xl" padding="y-lg">
         {/* Breadcrumb + share */}
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
