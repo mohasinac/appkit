@@ -94,17 +94,17 @@ function CapabilityTable() {
             <Table className="min-w-full" size="sm">
               <Thead>
                 <Tr className="border-b border-[var(--appkit-color-border)]">
-                  <Th className="px-6 text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">Capability</Th>
-                  <Th className="px-6 text-left font-semibold text-[var(--appkit-color-text)]" padding="xs-tall">What it unlocks</Th>
-                  <Th className="px-6 text-left font-semibold text-[var(--appkit-color-text)] w-24" padding="xs-tall">Default</Th>
+                  <Th className="text-left font-semibold text-[var(--appkit-color-text)]" padding="lg-tight">Capability</Th>
+                  <Th className="text-left font-semibold text-[var(--appkit-color-text)]" padding="lg-tight">What it unlocks</Th>
+                  <Th className="text-left font-semibold text-[var(--appkit-color-text)] w-24" padding="lg-tight">Default</Th>
                 </Tr>
               </Thead>
               <Tbody className="divide-y divide-[var(--appkit-color-border)]">
                 {items.map(({ cap, unlocks, defaultOn }) => (
                   <Tr key={cap}>
-                    <Td className="px-6 font-mono text-xs text-[var(--appkit-color-text)] align-top whitespace-nowrap" padding="xs-tall">{cap}</Td>
-                    <Td className="px-6 text-[var(--appkit-color-text-muted)] align-top" padding="xs-tall">{unlocks}</Td>
-                    <Td className="px-6 align-top" padding="xs-tall">
+                    <Td className="font-mono text-xs text-[var(--appkit-color-text)] align-top whitespace-nowrap" padding="lg-tight">{cap}</Td>
+                    <Td className="text-[var(--appkit-color-text-muted)] align-top" padding="lg-tight">{unlocks}</Td>
+                    <Td className="align-top" padding="lg-tight">
                       {defaultOn ? (
                         <Span className="inline-block bg-[var(--appkit-color-success)]/10 text-[var(--appkit-color-success)]" size="xs" weight="medium" rounded="full" padding="pill-xs">On</Span>
                       ) : (

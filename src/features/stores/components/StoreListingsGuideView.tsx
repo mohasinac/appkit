@@ -67,9 +67,9 @@ function ListingTypesTable() {
         <Thead>
           <Tr className="border-b border-[var(--appkit-color-border)]">
             {HEADERS.map((h) => (
-              <Th
+              <Th padding="lg-3" 
                 key={h}
-                className="px-6 py-3 text-left font-semibold text-[var(--appkit-color-text)]"
+                className="text-left font-semibold text-[var(--appkit-color-text)]"
               >
                 {h}
               </Th>
@@ -79,11 +79,11 @@ function ListingTypesTable() {
         <Tbody className="divide-y divide-[var(--appkit-color-border)]">
           {ROWS.map(({ label, keys }) => (
             <Tr key={label}>
-              <Td className="px-6 py-3 font-medium text-[var(--appkit-color-text-muted)] whitespace-nowrap">
+              <Td padding="lg-3" className="font-medium text-[var(--appkit-color-text-muted)] whitespace-nowrap">
                 {label}
               </Td>
               {LISTING_TYPES.map((t) => (
-                <Td key={t.type} className="px-6 py-3 text-[var(--appkit-color-text)] align-top">
+                <Td padding="lg-3" key={t.type} className="text-[var(--appkit-color-text)] align-top">
                   {t[keys[0]]}
                 </Td>
               ))}
