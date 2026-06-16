@@ -428,7 +428,7 @@ export async function ProductDetailPageView({
         <ProductDetailView
           renderBreadcrumb={() => (
             <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
-              <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
+              <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs flex-wrap" color="muted">
                 <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>
                   Home
                 </Link>
@@ -600,9 +600,9 @@ export async function ProductDetailPageView({
                   <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
                     About this product
                   </Text>
-                  <Ul className="space-y-1.5">
+                  <Ul spacing="comfortable" size="sm" color="primary">
                     {features.map((f, i) => (
-                      <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                      <Li key={i} className="flex items-start gap-2">
                         <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
                         {f}
                       </Li>
@@ -850,10 +850,10 @@ export async function ProductDetailPageView({
                         key={i}
                         className="flex gap-4 px-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="y-sm"
                       >
-                        <Dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
+                        <Dt className="w-36 flex-shrink-0" color="primary" weight="medium">
                           {s.name}
                         </Dt>
-                        <Dd className="flex-1 text-zinc-600 dark:text-zinc-400">
+                        <Dd className="flex-1" color="muted">
                           {s.value}
                           {s.unit ? ` ${s.unit}` : ""}
                         </Dd>
@@ -866,7 +866,7 @@ export async function ProductDetailPageView({
                 ingredients.length > 0 ? (
                   <Ul spacing="comfortable">
                     {ingredients.map((item, i) => (
-                      <Li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                      <Li key={i} className="flex items-start gap-2">
                         <Span className="mt-1 flex-shrink-0 h-1.5 w-1.5 bg-primary-400" rounded="full" />
                         {item}
                       </Li>
