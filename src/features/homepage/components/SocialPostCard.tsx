@@ -97,14 +97,14 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       </Row>
 
       {/* YouTube branding top-right */}
-      <Row className={`absolute right-2 top-2 px-1.5 text-xs font-medium text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
+      <Row textSize="xs" className={`absolute right-2 top-2 px-1.5 font-medium text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
         {meta.icon}
         <Span className="hidden sm:inline">{meta.label}</Span>
       </Row>
 
       {/* Channel name bottom-left */}
       {post.channelName && (
-        <Div surface="overlay-lg" className="absolute bottom-2 left-2 py-0.5 text-xs text-white backdrop-blur-sm" padding="x-xs" rounded="default">
+        <Div textSize="xs" surface="overlay-lg" className="absolute bottom-2 left-2 py-0.5 text-white backdrop-blur-sm" padding="x-xs" rounded="default">
           {post.channelName}
         </Div>
       )}
@@ -180,7 +180,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       )}
 
       {/* Platform badge */}
-      <Row className={`absolute left-2 top-2 px-1.5 text-xs font-medium text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
+      <Row textSize="xs" className={`absolute left-2 top-2 px-1.5 font-medium text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
         {meta.icon}
         <Span className="hidden sm:inline">{meta.label}</Span>
       </Row>
@@ -191,7 +191,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
           <Text color="inverse" className="mb-2 line-clamp-3" size="xs">{post.caption}</Text>
         )}
         {showStats && (
-          <Row className="text-xs text-white/80" align="center" gap="3">
+          <Row textSize="xs" className="text-white/80" align="center" gap="3">
             {post.stats.likes != null && (
               <Span layout="flex" gap="xs" >
                 <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor">

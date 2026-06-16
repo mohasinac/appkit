@@ -306,7 +306,7 @@ export function FormShell({
           >
             {previewMode && previewSlot ? (
               <>
-                <Row gap="xs" className="sticky top-0 z-10 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 text-sm text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]" padding="y-xs">
+                <Row textSize="sm" gap="xs" className="sticky top-0 z-10 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]" padding="y-xs">
                   <Eye className="w-4 h-4 flex-shrink-0" />
                   <Span>Preview — not visible to buyers until published</Span>
                 </Row>
@@ -322,7 +322,7 @@ export function FormShell({
                   {children}
                 </Div>
                 <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] ${__P.p4}`} rounded="lg">
-                  <Row gap="xs" className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+                  <Row textSize="xs" gap="xs" className="mb-3 font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
                     <Eye className="w-3.5 h-3.5" />
                     <Span>Live preview</Span>
                   </Row>

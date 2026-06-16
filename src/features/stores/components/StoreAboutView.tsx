@@ -58,7 +58,7 @@ export function StoreAboutView({
       {renderStats?.(store)}
 
       {/* Details list */}
-      <Stack className="text-sm" gap="3">
+      <Stack textSize="sm" gap="3">
         {store.location && (
           <Row gap="sm" >
             <Text className={CLS_LABEL}>

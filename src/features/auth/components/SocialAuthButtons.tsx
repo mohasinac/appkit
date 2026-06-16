@@ -18,7 +18,7 @@ export function SocialAuthButtons({
         <Row className="absolute inset-0" align="center">
           <Div className="w-full border-t border-neutral-200" />
         </Row>
-        <Row className="relative text-sm" justify="center">
+        <Row textSize="sm" className="relative" justify="center">
           <Span className="text-neutral-500" padding="x-xs" surface="default">{dividerLabel}</Span>
         </Row>
       </Div>

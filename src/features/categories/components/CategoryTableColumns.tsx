@@ -52,8 +52,8 @@ export function getCategoryTableColumns(
                 className="w-full h-full object-cover"
               />
             ) : (
-              <Row
-                className="w-full h-full text-base" align="center" justify="center"
+              <Row textSize="base" 
+                className="w-full h-full" align="center" justify="center"
                 // audit-inline-style-ok: runtime theme color
                 style={{ backgroundColor: cat.display?.color ?? "var(--appkit-color-text-faint)", color: "var(--appkit-color-text-on-primary)" }}
               >

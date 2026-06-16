@@ -70,7 +70,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
-            <Row className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-sm font-medium text-neutral-600" align="center" justify="center" rounded="full">
+            <Row textSize="sm" className="h-9 w-9 flex-shrink-0 bg-neutral-200 font-medium text-neutral-600" align="center" justify="center" rounded="full">
               {initials}
             </Row>
           )}

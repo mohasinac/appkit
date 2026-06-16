@@ -43,7 +43,7 @@ function CommissionSection() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Worked example</Text>
-        <Stack className="border border-[var(--appkit-color-border)] font-mono text-xs" gap="xs" rounded="lg" padding="md">
+        <Stack textSize="xs" className="border border-[var(--appkit-color-border)] font-mono" gap="xs" rounded="lg" padding="md">
           <Text className={MONO_MUTED}>
             Order total: ₹1,000.00
           </Text>

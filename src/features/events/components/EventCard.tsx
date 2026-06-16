@@ -119,7 +119,7 @@ export function EventCard({
           className={`mb-3 ${THEME_CONSTANTS.utilities.textClamp3} text-sm text-zinc-600 dark:text-zinc-400`}
         />
 
-        <Row className="mb-3 mt-auto text-xs text-zinc-500 dark:text-zinc-400" align="center" justify="between">
+        <Row textSize="xs" className="mb-3 mt-auto text-zinc-500 dark:text-zinc-400" align="center" justify="between">
           {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE &&
             daysLeft > 0 && <Span>⏱ {daysLeft}d remaining</Span>}
           <Span>

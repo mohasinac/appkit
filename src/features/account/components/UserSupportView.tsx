@@ -183,7 +183,7 @@ function renderTicketListArea(props: {
         </Stack>
       )}
       {error && (
-        <Div className="border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
+        <Div textSize="sm" className="border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
           Failed to load support tickets.
         </Div>
       )}
@@ -276,8 +276,8 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">Messages</Text>
               <Stack className={`max-h-72 ${__O.yAuto}`} gap="sm">
                 {(selectedTicket.messages ?? []).map((msg, i) => (
-                  <Div key={msg.id ?? i} className={`${__P.p3} text-sm ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`} rounded="lg">
-                    <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
+                  <Div textSize="sm" key={msg.id ?? i} className={`${__P.p3} ${msg.authorRole === "user" ? CLS_MSG_USER : CLS_MSG_STAFF}`} rounded="lg">
+                    <Row textSize="xs" className="mb-1 text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
                       <Span weight="medium" color="muted">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</Span>
                       {msg.createdAt && <Span>{new Date(msg.createdAt).toLocaleString()}</Span>}
                     </Row>

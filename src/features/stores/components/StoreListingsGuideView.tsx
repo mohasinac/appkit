@@ -164,7 +164,7 @@ function StandardWalkthrough() {
 
 function AuctionWalkthrough() {
   return (
-    <Stack className="text-sm text-[var(--appkit-color-text-muted)]" gap="md">
+    <Stack textSize="sm" className="text-[var(--appkit-color-text-muted)]" gap="md">
       <Div>
         <Text className={SUBHEADING}>Reserve price vs starting bid</Text>
         <Text className="leading-relaxed">
@@ -223,7 +223,7 @@ function AuctionWalkthrough() {
 
 function PreorderWalkthrough() {
   return (
-    <Stack className="text-sm text-[var(--appkit-color-text-muted)]" gap="md">
+    <Stack textSize="sm" className="text-[var(--appkit-color-text-muted)]" gap="md">
       <Div>
         <Text className={SUBHEADING}>Deposit mechanic</Text>
         <Text className="leading-relaxed">
@@ -278,12 +278,12 @@ const STATUS_NOTES = [
 function StatusLifecycle() {
   return (
     <Stack gap="md">
-      <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-xs text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
+      <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
         {STATUS_LIFECYCLE}
       </Div>
       <Stack gap="sm">
         {STATUS_NOTES.map(({ status, note }) => (
-          <Row gap="3" key={status} className="text-sm">
+          <Row textSize="sm" gap="3" key={status}>
             <Text className="shrink-0 font-mono text-[var(--appkit-color-text)] w-24" weight="semibold">{status}</Text>
             <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
           </Row>
@@ -311,7 +311,7 @@ function MediaGuide() {
   return (
     <Stack gap="3">
       {MEDIA_TIPS.map(({ label, detail }) => (
-        <Row gap="3" key={label} className="text-sm">
+        <Row textSize="sm" gap="3" key={label}>
           <Text className="shrink-0 w-28 text-[var(--appkit-color-text)]" weight="semibold">{label}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{detail}</Text>
         </Row>

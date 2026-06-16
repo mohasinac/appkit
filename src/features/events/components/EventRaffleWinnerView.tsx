@@ -100,7 +100,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           </Div>
         ) : null}
 
-        <Div className="flex flex-wrap gap-x-6 gap-y-2 text-sm" color="muted" padding="t-xs">
+        <Div textSize="sm" className="flex flex-wrap gap-x-6 gap-y-2" color="muted" padding="t-xs">
           {typeof event.raffleEntryCount === "number" ? (
             <Span>
               {l.poolLabel}:{" "}
@@ -118,7 +118,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
       </Div>
 
       {event.raffleGithubFunctionUrl ? (
-        <Div className={`${__P.p4} text-sm`} rounded="lg" border="default">
+        <Div textSize="sm" className={`${__P.p4}`} rounded="lg" border="default">
           <Text weight="medium" color="primary">
             {l.fairnessLabel}
           </Text>

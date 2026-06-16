@@ -104,9 +104,9 @@ export function Slider({
         />
       </Row>
 
-      <Row
+      <Row textSize="xs" 
         justify="between"
-        className="text-xs text-zinc-400 dark:text-zinc-400"
+        className="text-zinc-400 dark:text-zinc-400"
       >
         <Span>{formatValue ? formatValue(min) : min}</Span>
         <Span>{formatValue ? formatValue(max) : max}</Span>

@@ -83,7 +83,7 @@ export function FooterLayout({
             <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
               {visibleTrustItems.map((item, i) => (
                 <Li key={item.id ?? String(i)}>
-                  <Row gap="sm" className="text-sm min-w-[160px]">
+                  <Row textSize="sm" gap="sm" className="min-w-[160px]">
                     <Span className="flex-shrink-0 text-primary-600 dark:text-secondary-400 w-5 h-5">
                       {item.icon}
                     </Span>
@@ -203,7 +203,7 @@ export function FooterLayout({
         </Div>
 
         {/* Bottom bar */}
-        <Stack justify="between" border="default" className="mt-10 border-t dark:border-slate-800 sm:flex-row text-xs text-zinc-600 dark:text-zinc-400" padding="t-lg" align="center" gap="3">
+        <Stack textSize="xs" justify="between" border="default" className="mt-10 border-t dark:border-slate-800 sm:flex-row text-zinc-600 dark:text-zinc-400" padding="t-lg" align="center" gap="3">
           <Text size="xs" color="muted">
             {copyrightText}
           </Text>

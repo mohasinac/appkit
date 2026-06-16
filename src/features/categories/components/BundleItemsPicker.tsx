@@ -66,7 +66,7 @@ function renderBundleSelectedChips(props: {
         const meta = metadata[id];
         const label = meta?.title ?? id;
         return (
-          <Row key={id} gap="xs" align="center" className="py-1 text-xs" border="strong" padding="x-sm" surface="default" rounded="full">
+          <Row textSize="xs" key={id} gap="xs" align="center" className="py-1" border="strong" padding="x-sm" surface="default" rounded="full">
             <Text size="xs" className="max-w-[200px] truncate">{label}</Text>
             <Button variant="ghost" size="sm" aria-label={BUNDLE_COPY.picker.removeAria(label)} onClick={() => remove(id)}>×</Button>
           </Row>

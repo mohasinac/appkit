@@ -63,7 +63,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
       )}
 
       <Stack className={`flex-1 ${__P.p3} text-left`}>
-        <Row className="mb-2 h-9 w-9 bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
+        <Row textSize="sm" className="mb-2 h-9 w-9 bg-primary-100 font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image
               src={iconSrc}

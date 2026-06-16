@@ -316,7 +316,7 @@ export function CouponCard({
       )}
 
       {/* Meta row */}
-      <Row wrap gap="sm" className="text-xs opacity-60 mt-2">
+      <Row textSize="xs" wrap gap="sm" className="opacity-60 mt-2">
         {n.minOrderAmount ? (
           <Span>{labels.minOrder}: ₹{(n.minOrderAmount / 100).toFixed(0)}</Span>
         ) : null}

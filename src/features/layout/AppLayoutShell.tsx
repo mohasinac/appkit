@@ -332,7 +332,7 @@ function SidebarGuestHeader({
 }) {
   return (
     <Row align="center" justify="between">
-      <Div className="text-sm font-semibold" color="primary">{sidebarTitle}</Div>
+      <Div textSize="sm" className="font-semibold" color="primary">{sidebarTitle}</Div>
       <button
         type="button"
         aria-label="Close menu"

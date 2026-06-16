@@ -202,8 +202,8 @@ export function CharacterHotspotForm({
                   }}
                 />
               )}
-              <Row
-                className="h-8 w-8 shrink-0 text-sm font-bold" align="center" justify="center" rounded="full"
+              <Row textSize="sm" 
+                className="h-8 w-8 shrink-0 font-bold" align="center" justify="center" rounded="full"
                 style={{
                   background:
                     i < stepIndex
@@ -412,8 +412,8 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <Row
-                  className="text-xs font-bold text-white" align="center" justify="center" rounded="full"
+                <Row textSize="xs" 
+                  className="font-bold text-white" align="center" justify="center" rounded="full"
                   style={{
                     width: 24,
                     height: 24,
@@ -834,8 +834,8 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <Row
-                  className="text-xs font-bold text-white" align="center" justify="center" rounded="full"
+                <Row textSize="xs" 
+                  className="font-bold text-white" align="center" justify="center" rounded="full"
                   style={{
                     width: 28,
                     height: 28,
@@ -904,8 +904,8 @@ export function CharacterHotspotForm({
               ))}
             </Ul>
           ) : (
-            <Div
-              className="border-2 border-dashed text-center text-sm" rounded="lg" padding="xl"
+            <Div textSize="sm" 
+              className="border-2 border-dashed text-center" rounded="lg" padding="xl"
               style={{
                 borderColor: "var(--border-ink)",
                 color: "var(--color-muted)",

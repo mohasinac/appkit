@@ -800,7 +800,7 @@ export async function ProductDetailPageView({
                     { icon: "✓", label: "Verified\nSeller" },
                     { icon: "⭐", label: "Quality\nGuarantee" },
                   ].map(({ icon, label }) => (
-                    <Stack key={label} className="text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]" align="center" gap="xs">
+                    <Stack textSize="xs" key={label} className="text-zinc-500 dark:text-zinc-400 min-w-[60px]" align="center" gap="xs">
                       <Span size="base">{icon}</Span>
                       <Span className="whitespace-pre-line leading-tight">{label}</Span>
                     </Stack>

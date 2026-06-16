@@ -206,7 +206,7 @@ function VisibilityStatesSection() {
   return (
     <Stack gap="3">
       {STATES.map(({ state, note }) => (
-        <Row gap="3" key={state} className="text-sm">
+        <Row textSize="sm" gap="3" key={state}>
           <Text className="shrink-0 w-32 text-[var(--appkit-color-text)]" weight="semibold">{state}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{note}</Text>
         </Row>

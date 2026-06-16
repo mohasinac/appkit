@@ -395,7 +395,7 @@ export function SellerTemplatesView({
 
       <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
+          <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}
           </Div>
         )}
@@ -491,7 +491,7 @@ export function SellerTemplatesView({
       >
         <Stack gap="md">
           {savingError && (
-            <Div className="border border-error/20 text-sm" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
+            <Div textSize="sm" className="border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
               {savingError}
             </Div>
           )}

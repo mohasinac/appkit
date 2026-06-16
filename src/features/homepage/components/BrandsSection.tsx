@@ -77,7 +77,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
           className="h-16 w-16 rounded object-contain"
         />
       ) : (
-        <Row className="h-16 w-16 bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
+        <Row textSize="sm" className="h-16 w-16 bg-primary-100 font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
           {initial}
         </Row>
       )}

@@ -254,8 +254,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   : Boolean(cfg?.[step.checkKey]);
             return (
               <Row key={step.n} gap="sm" align="start">
-                <Row
-                  className={`flex-shrink-0 w-6 h-6 text-xs font-bold mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300" }`} align="center" justify="center" rounded="full"
+                <Row textSize="xs" 
+                  className={`flex-shrink-0 w-6 h-6 font-bold mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300" }`} align="center" justify="center" rounded="full"
                 >
                   {done ? "✓" : step.n}
                 </Row>
@@ -340,7 +340,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Row>
 
         {cfg?.lastCatalogSyncAt && (
-          <Row gap="sm" align="center" className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+          <Row textSize="xs" gap="sm" align="center" className="text-zinc-500 dark:text-zinc-400 mb-3">
             <Text>Last sync: {new Date(cfg.lastCatalogSyncAt).toLocaleString("en-IN")}</Text>
             {cfg.lastSyncCount !== undefined && <Text>· {cfg.lastSyncCount} products</Text>}
             {cfg.lastSyncStatus && (
@@ -390,7 +390,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         <Text className="mb-3" color="muted" size="xs">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
         </Text>
-        <Div className="text-sm font-mono" color="primary" surface="muted" padding="inline" rounded="lg">
+        <Div textSize="sm" className="font-mono" color="primary" surface="muted" padding="inline" rounded="lg">
           {buildPurchaseAnnouncementMessage({
             buyerName: "Ravi K.",
             firstItemName: "Charizard PSA 9",

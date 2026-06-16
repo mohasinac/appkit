@@ -88,7 +88,7 @@ export function EventPollWidget({
         )}
         <Stack gap="sm">
           {pollConfig.options.map((opt) => (
-            <Div key={opt.id} className="py-2.5 text-sm" color="muted" border="subtle" padding="x-md" rounded="lg">
+            <Div textSize="sm" key={opt.id} className="py-2.5" color="muted" border="subtle" padding="x-md" rounded="lg">
               {opt.label}
             </Div>
           ))}

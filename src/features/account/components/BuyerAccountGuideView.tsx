@@ -19,7 +19,7 @@ const SECTIONS: AccountSection[] = [
     content: (
       <Stack gap="3">
         <Text className={GC.textMuted}>Update your profile at <Span weight="bold">My Account → My Profile</Span>. Your <Span weight="bold">display name</Span> is shown to sellers on order summaries.</Text>
-        <Div className="grid sm:grid-cols-2 gap-4 text-sm">
+        <Div textSize="sm" className="grid sm:grid-cols-2 gap-4">
           <Div>
             <Text className="text-[var(--appkit-color-text)] mb-1" weight="semibold">Visible to others:</Text>
             <Ul className={GC.listDiscMuted}>
@@ -116,7 +116,7 @@ const SECTIONS: AccountSection[] = [
   {
     Icon: Flag, iconCls: "w-5 h-5 text-rose-500", title: "Reporting Issues",
     content: (
-      <Div className="grid sm:grid-cols-2 gap-6 text-sm">
+      <Div textSize="sm" className="grid sm:grid-cols-2 gap-6">
         <Div>
           <Text className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Report a seller (scam, fake item, harassment)</Text>
           <Text className={`${GC.textMuted} mb-2`}>Use the Scam Registry report form. Our Trust &amp; Safety team reviews within 48 hours.</Text>

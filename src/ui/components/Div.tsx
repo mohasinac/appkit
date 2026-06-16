@@ -2,7 +2,7 @@ import React from "react";
 import type { SurfaceProps } from "./surface-tokens";
 import { buildSurfaceClasses } from "./surface-tokens";
 
-type DivColor = "default" | "primary" | "muted" | "faint" | "success" | "warning" | "error" | "info";
+type DivColor = "default" | "primary" | "muted" | "faint" | "success" | "warning" | "error" | "info" | "inverse";
 
 const DIV_COLOR_MAP: Record<DivColor, string> = {
   default: "",
@@ -13,21 +13,34 @@ const DIV_COLOR_MAP: Record<DivColor, string> = {
   warning: "appkit-color--warning",
   error: "appkit-color--error",
   info: "appkit-color--info",
+  inverse: "appkit-color--inverse",
+};
+
+type DivTextSize = "xs" | "sm" | "base" | "lg";
+
+const DIV_TEXT_SIZE_MAP: Record<DivTextSize, string> = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
 };
 
 export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceProps {
   /** Colour variant cascaded onto Div text. Pragmatic — most Div sites wrap mixed inline content where a `<Text>` wrap would force structural change. */
   color?: DivColor;
+  /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
+  textSize?: DivTextSize;
   children?: React.ReactNode;
 }
 
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
-  ({ className = "", surface, padding, rounded, border, shadow, color, children, ...props }, ref) => (
+  ({ className = "", surface, padding, rounded, border, shadow, color, textSize, children, ...props }, ref) => (
     <div
       ref={ref}
       className={[
         buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
         color ? DIV_COLOR_MAP[color] : "",
+        textSize ? DIV_TEXT_SIZE_MAP[textSize] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}

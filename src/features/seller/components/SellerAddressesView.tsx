@@ -277,7 +277,7 @@ export function SellerAddressesView({
 
       <Div className="px-4 sm:px-6 max-w-2xl" padding="y-lg">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
+          <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}
           </Div>
         )}
@@ -379,7 +379,7 @@ export function SellerAddressesView({
       >
         <Stack gap="md" padding="y-2xs">
           {saveError && (
-            <Div className="border border-error/20 text-sm" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
+            <Div textSize="sm" className="border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
               {saveError}
             </Div>
           )}

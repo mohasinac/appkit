@@ -2536,7 +2536,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           </Row>
         </Row>
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 text-sm" color="error" surface="danger-surface" padding="inline" rounded="xl">
+          <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}
           </Div>
         )}

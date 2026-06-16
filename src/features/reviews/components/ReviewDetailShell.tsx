@@ -146,7 +146,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 style={{ backgroundImage: `url(${review.userAvatar})` }}
               />
             ) : (
-              <Row centered className="h-11 w-11 flex-shrink-0 bg-primary/10 text-base font-bold text-primary ring-2 ring-white dark:ring-zinc-800" rounded="full">
+              <Row textSize="base" centered className="h-11 w-11 flex-shrink-0 bg-primary/10 font-bold text-primary ring-2 ring-white dark:ring-zinc-800" rounded="full">
                 {initials}
               </Row>
             )}
@@ -234,7 +234,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
         {/* Helpful votes */}
         <Section className="flex items-center gap-4 border-t border-neutral-100" padding="y-md">
-          <Div className="text-sm text-neutral-500">
+          <Div textSize="sm" className="text-neutral-500">
             {helpfulCount > 0 && (
               <Span>
                 <Span color="inverse" weight="bold" className="text-neutral-900 dark:">{helpfulCount}</Span>{" "}
@@ -345,7 +345,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           </button>
 
           {/* Counter */}
-          <Div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+          <Div textSize="sm" className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70">
             {lightboxIdx + 1} / {images.length}
           </Div>
 

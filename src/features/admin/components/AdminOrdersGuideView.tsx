@@ -21,7 +21,7 @@ export function AdminOrdersGuideView() {
         {
           Icon: ShoppingBag, title: "Order Statuses",
           content: (
-            <Stack className="text-sm" gap="sm">
+            <Stack textSize="sm" gap="sm">
               {[
                 ["PENDING", "Payment received. Can still be cancelled by buyer or admin."],
                 ["PROCESSING", "Seller has acknowledged and is packing."],

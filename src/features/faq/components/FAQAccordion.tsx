@@ -46,7 +46,7 @@ function FAQAccordionItem({
         </Span>
       </Button>
       {isOpen && (
-        <Div className="text-sm text-neutral-600" padding="b-md">
+        <Div textSize="sm" className="text-neutral-600" padding="b-md">
           {faq.tags && faq.tags.length > 0 && (
             <Row wrap gap="sm" className="mb-3">
               {faq.tags.map((tag) => (

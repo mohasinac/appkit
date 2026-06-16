@@ -68,8 +68,8 @@ function StepCard({
       </Span>
 
       {/* Visible index badge */}
-      <Row
-        className={`relative z-10 w-10 h-10 ${badgeBg} text-white font-bold text-sm mb-5`} align="center" justify="center" rounded="full" shadow="md"
+      <Row textSize="sm" 
+        className={`relative z-10 w-10 h-10 ${badgeBg} text-white font-bold mb-5`} align="center" justify="center" rounded="full" shadow="md"
       >
         {step.number}
       </Row>
@@ -145,7 +145,7 @@ export function HowItWorksSection({
           }`}
         >
           {pillLabel && (
-            <Div className="inline-block mb-4 inline-flex items-center gap-2 border border-primary-500/30 bg-primary-500/10 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
+            <Div textSize="xs" className="inline-block mb-4 inline-flex items-center gap-2 border border-primary-500/30 bg-primary-500/10 py-1.5 font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
               {pillLabel}
             </Div>
           )}

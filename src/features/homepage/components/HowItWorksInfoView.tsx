@@ -101,8 +101,8 @@ export function HowItWorksInfoView({
                 key={number}
                 className={`flex gap-4 items-start`} border="default" surface="subtle" rounded="xl" padding="lg"
               >
-                <Div
-                  className={`shrink-0 w-10 h-10 ${stepAccent ?? accentClass} ${flex.center} text-sm font-bold`} rounded="xl"
+                <Div textSize="sm" 
+                  className={`shrink-0 w-10 h-10 ${stepAccent ?? accentClass} ${flex.center} font-bold`} rounded="xl"
                 >
                   <Span className={textClass}>{number}</Span>
                 </Div>

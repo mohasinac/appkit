@@ -344,7 +344,7 @@ export function AdminSupportTicketDetailView({
           )}
         </Row>
 
-        <Div className="text-sm" color="muted">
+        <Div textSize="sm" color="muted">
           From: <Span weight="medium" color="primary">{userDisplayName}</Span>
         </Div>
 
@@ -368,11 +368,11 @@ export function AdminSupportTicketDetailView({
             </Text>
             <Stack className={`max-h-64 ${__O.yAuto}`} gap="sm">
               {messages.map((msg, i) => (
-                <Div border="default" 
+                <Div textSize="sm" border="default" 
                   key={msg.id ?? i}
-                  className={`text-sm ${ msg.authorRole === "user" ? "bg-zinc-50 dark:bg-zinc-900/40 " : "bg-info-surface border-info dark:border-info" }`} rounded="lg" padding="sm"
+                  className={`${ msg.authorRole === "user" ? "bg-zinc-50 dark:bg-zinc-900/40 " : "bg-info-surface border-info dark:border-info" }`} rounded="lg" padding="sm"
                 >
-                  <Row className="mb-1 text-xs text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
+                  <Row textSize="xs" className="mb-1 text-zinc-400 dark:text-zinc-400" align="center" gap="sm">
                     <Span weight="medium" color="muted">
                       {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
                     </Span>

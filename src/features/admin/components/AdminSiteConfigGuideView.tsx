@@ -41,7 +41,7 @@ export function AdminSiteConfigGuideView() {
         </Div>
         <Stack className="py-5" padding="x-lg" gap="md">
           {SETTING_GROUPS.map(({ name, desc }) => (
-            <Row gap="3" key={name} className="text-sm">
+            <Row textSize="sm" gap="3" key={name}>
               <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{name}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{desc}</Text>
             </Row>

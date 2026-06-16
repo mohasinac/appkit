@@ -26,7 +26,7 @@ const SECTIONS: OrderSection[] = [
   {
     Icon: PackageCheck, title: "Order Lifecycle",
     content: (
-      <Stack className="text-sm" gap="md">
+      <Stack textSize="sm" gap="md">
         <Text className={GC.textMuted}>Every order on LetItRip moves through these statuses:</Text>
         <Stack gap="sm">
           {ORDER_STATUSES.map(({ status, desc }) => (

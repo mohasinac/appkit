@@ -82,7 +82,7 @@ function ListingThumb({
             loading="lazy"
           />
         ) : (
-          <Row className="w-full h-full text-zinc-400 text-xs" surface="subtle" align="center" justify="center">
+          <Row textSize="xs" className="w-full h-full text-zinc-400" surface="subtle" align="center" justify="center">
             â—¯
           </Row>
         )}

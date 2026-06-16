@@ -96,7 +96,7 @@ export function ForgotPasswordView({
         )}
 
         {renderBackLink && (
-          <Div className="text-center text-sm">{renderBackLink()}</Div>
+          <Div textSize="sm" className="text-center">{renderBackLink()}</Div>
         )}
       </Stack>
     </Row>

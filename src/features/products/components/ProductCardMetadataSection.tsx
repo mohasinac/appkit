@@ -28,7 +28,7 @@ export function ProductCardMetadataSection({ card }: ProductCardMetadataSectionP
       <Heading level={3} className="tracking-wide" color="muted" size="sm" weight="semibold" transform="uppercase">
         Card details
       </Heading>
-      <Div className="grid grid-cols-2 gap-y-1 text-sm sm:grid-cols-[140px_1fr]">
+      <Div textSize="sm" className="grid grid-cols-2 gap-y-1 sm:grid-cols-[140px_1fr]">
         {rows.map(([label, value]) => (
           <React.Fragment key={label}>
             <Text color="muted">{label}</Text>

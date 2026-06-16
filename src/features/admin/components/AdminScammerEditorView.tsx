@@ -189,7 +189,7 @@ export function AdminScammerEditorView({
         )}
 
         {/* Reporter */}
-        <Div className="text-xs" color="muted">
+        <Div textSize="xs" color="muted">
           Reported by:{" "}
           <Span weight="medium" color="muted">
             {reportedByAnon ? "Anonymous" : (reportedBy ?? "Unknown")}

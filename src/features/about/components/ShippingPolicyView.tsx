@@ -124,7 +124,7 @@ export async function ShippingPolicyView({
           </Section>
         </Stack>
 
-        <Div className={`mt-12 border-t flex gap-6 text-sm`} border="default" padding="t-xl">
+        <Div textSize="sm" className={`mt-12 border-t flex gap-6`} border="default" padding="t-xl">
           <TextLink
             href={String(ROUTES.PUBLIC.TRACK_ORDER)}
             className={CLS_FOOTER_LINK}

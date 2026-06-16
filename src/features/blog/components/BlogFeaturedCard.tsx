@@ -134,7 +134,7 @@ export function BlogFeaturedCard({
           )}
 
           {/* Footer — pushed to bottom */}
-          <Row className="mt-auto text-xs text-zinc-400 dark:text-zinc-400" gap="3" wrap>
+          <Row textSize="xs" className="mt-auto text-zinc-400 dark:text-zinc-400" gap="3" wrap>
             {post.authorName && (
               <Span>{safeDisplayName(post.authorName, "Author")}</Span>
             )}

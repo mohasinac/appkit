@@ -256,6 +256,8 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
   align?: Extract<ItemsAlign, "start" | "center" | "end" | "stretch">;
   /** Main-axis (vertical) alignment. Defaults to `"start"`. */
   justify?: JustifyContent;
+  /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
+  textSize?: "xs" | "sm" | "base" | "lg";
   /**
    * Render a themed top-border between adjacent children. `true` / `"default"`
    * uses the active theme's border colour; `"subtle"` uses border-subtle.
@@ -279,6 +281,7 @@ export function Stack({
   centered = false,
   align = "stretch",
   justify = "start",
+  textSize,
   divide,
   as,
   surface,
@@ -297,6 +300,7 @@ export function Stack({
     centered ? "appkit-stack--centered" : "",
     !centered && align !== "stretch" ? ITEMS_MAP[align] : "",
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
+    textSize ? TEXT_SIZE_MAP[textSize] : "",
     resolveDivideClass(divide, "stack"),
     buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,

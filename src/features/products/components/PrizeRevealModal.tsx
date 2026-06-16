@@ -294,7 +294,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {/* Always-visible fairness disclaimer. */}
-        <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-muted)] text-xs text-[var(--appkit-color-text-muted)]" padding="inlineSm" rounded="default">
+        <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-muted)] text-[var(--appkit-color-text-muted)]" padding="inlineSm" rounded="default">
           <Span weight="bold">
             Fairness guarantee:
           </Span>{" "}

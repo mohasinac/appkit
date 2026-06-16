@@ -118,7 +118,7 @@ export function InteractiveStoreCard({
                   loading="lazy"
                 />
               ) : (
-                <Row className="h-10 w-10 border-2 border-white bg-primary/10 dark:bg-primary/20 text-base font-bold text-primary" align="center" justify="center" rounded="lg" shadow="md">
+                <Row textSize="base" className="h-10 w-10 border-2 border-white bg-primary/10 dark:bg-primary/20 font-bold text-primary" align="center" justify="center" rounded="lg" shadow="md">
                   {initial}
                 </Row>
               )}
@@ -145,7 +145,7 @@ export function InteractiveStoreCard({
           )}
 
           {/* Stats row */}
-          <Row gap="sm" className="mt-2.5 text-xs text-zinc-500 dark:text-zinc-400" wrap>
+          <Row textSize="xs" gap="sm" className="mt-2.5 text-zinc-500 dark:text-zinc-400" wrap>
             {store.totalProducts != null && store.totalProducts > 0 && (
               <Span layout="flex" className="gap-0.5">
                 <Span aria-hidden="true">📦</Span> {store.totalProducts} {labels.products ?? "products"}

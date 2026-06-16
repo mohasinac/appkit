@@ -239,7 +239,7 @@ export function ImageCropModal({
         )}
 
         {/* Position info + reset */}
-        <Row justify="between" className="text-xs text-zinc-500 dark:text-slate-400">
+        <Row textSize="xs" justify="between" className="text-zinc-500 dark:text-slate-400">
           <Span>
             {t("cropPosition")}: {Math.round(position.x)}%, {Math.round(position.y)}%
           </Span>

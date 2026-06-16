@@ -77,12 +77,12 @@ const STATUS_ROWS = [
 function OrderLifecycle() {
   return (
     <Stack gap="md">
-      <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-xs text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
+      <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
         {STATUS_LIFECYCLE}
       </Div>
       <Stack gap="sm">
         {STATUS_ROWS.map(({ status, meaning, action }) => (
-          <Div key={status} className="border border-[var(--appkit-color-border)] text-sm" rounded="lg" padding="sm">
+          <Div textSize="sm" key={status} className="border border-[var(--appkit-color-border)]" rounded="lg" padding="sm">
             <Row className="mb-1" align="center" gap="sm">
               <Text className="font-mono text-[var(--appkit-color-text)] w-28 shrink-0" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{meaning}</Text>

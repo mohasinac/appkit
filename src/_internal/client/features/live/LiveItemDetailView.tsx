@@ -109,7 +109,7 @@ export function LiveItemDetailView({
 
           {/* Transport */}
           {transport && (
-            <Div className={`border border-border bg-muted/40 ${__P.p4} text-sm`} rounded="lg">
+            <Div textSize="sm" className={`border border-border bg-muted/40 ${__P.p4}`} rounded="lg">
               <Text weight="medium">Transport</Text>
               <Text className="text-muted-foreground">
                 Method: {transport.method}
@@ -122,7 +122,7 @@ export function LiveItemDetailView({
 
           {/* Care info */}
           {meta?.careInfo && (
-            <Div className={`border border-border bg-muted/40 ${__P.p4} text-sm`} rounded="lg">
+            <Div textSize="sm" className={`border border-border bg-muted/40 ${__P.p4}`} rounded="lg">
               <Text weight="medium">Care information</Text>
               <Text className="mt-1 text-muted-foreground">{meta.careInfo}</Text>
             </Div>

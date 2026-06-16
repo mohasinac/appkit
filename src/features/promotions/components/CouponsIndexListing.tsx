@@ -175,7 +175,7 @@ export function CouponsIndexListing({
           </Row>
 
           {/* Sort */}
-          <Row gap="xs" className="shrink-0 text-sm text-zinc-500 dark:text-zinc-400">
+          <Row textSize="sm" gap="xs" className="shrink-0 text-zinc-500 dark:text-zinc-400">
             <Span className="hidden md:inline whitespace-nowrap">Sort by</Span>
             <SortDropdown
               value={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
