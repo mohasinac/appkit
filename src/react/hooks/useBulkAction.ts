@@ -18,7 +18,7 @@ export interface BulkActionSummary {
   failed: number;
 }
 
-export interface BulkActionResult<TData = Record<string, unknown>> {
+export interface BulkActionResult<TData = unknown> {
   action: string;
   summary: BulkActionSummary;
   succeeded: string[];
@@ -38,7 +38,7 @@ export interface BulkActionPayload {
 
 export interface UseBulkActionOptions<
   TPayload extends BulkActionPayload,
-  TData = Record<string, unknown>,
+  TData = unknown,
 > {
   /**
    * Async function that POSTs to the bulk endpoint.
@@ -67,7 +67,7 @@ export interface UseBulkActionOptions<
 
 export interface UseBulkActionReturn<
   TPayload extends BulkActionPayload,
-  TData = Record<string, unknown>,
+  TData = unknown,
 > {
   execute: (payload: TPayload) => Promise<void>;
   isLoading: boolean;
@@ -91,7 +91,7 @@ export interface UseBulkActionReturn<
  */
 export function useBulkAction<
   TPayload extends BulkActionPayload = BulkActionPayload,
-  TData = Record<string, unknown>,
+  TData = unknown,
 >(
   options: UseBulkActionOptions<TPayload, TData>,
 ): UseBulkActionReturn<TPayload, TData> {
