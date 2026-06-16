@@ -40,7 +40,7 @@ export interface SuggestOptions {
  * Full-text search adapter contract.
  * Implemented by concrete provider packages (for example, Typesense or Meilisearch).
  */
-export interface ISearchProvider<T = Record<string, unknown>> {
+export interface ISearchProvider<T = unknown> {
   index(id: string, data: T): Promise<void>;
   indexBatch(items: Array<{ id: string; data: T }>): Promise<void>;
   remove(id: string): Promise<void>;

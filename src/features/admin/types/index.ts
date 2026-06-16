@@ -15,7 +15,7 @@ export { ADMIN_PRODUCT_STATUS_OPTIONS } from "./product.types";
  * Extends sieveFilter("TableColumn", SIEVE_OP.LT, "T>") from `@mohasinac/contracts` so it is compatible
  * with column arrays built from the base type.
  */
-export interface AdminTableColumn<T = Record<string, unknown>> extends Omit<
+export interface AdminTableColumn<T = unknown> extends Omit<
   TableColumn<T>,
   "render"
 > {

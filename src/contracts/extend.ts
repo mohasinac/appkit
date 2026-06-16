@@ -81,7 +81,7 @@ export interface GenericListResponse<T> {
  *   { key: "brand", header: "Brand", render: (p) => p.brand },
  * ];
  */
-export interface TableColumn<T = Record<string, unknown>> {
+export interface TableColumn<T = unknown> {
   /** Field key (used for sorting, cell lookup) */
   key: string;
   /** Column header label */

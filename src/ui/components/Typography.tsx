@@ -171,6 +171,10 @@ interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
   color?: ColorVariant;
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  smSize?: HeadingSize;
+  mdSize?: HeadingSize;
+  lgSize?: HeadingSize;
+  xlSize?: HeadingSize;
   weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   transform?: TextTransform;
   truncate?: TextTruncate;
@@ -188,6 +192,10 @@ export function Text({
   variant = "primary",
   color,
   size = "base",
+  smSize,
+  mdSize,
+  lgSize,
+  xlSize,
   weight = "normal",
   transform,
   truncate,
@@ -207,6 +215,10 @@ export function Text({
       className={[
         "appkit-text",
         TYPOGRAPHY.textSize[size],
+        responsiveSizeClass("sm:", smSize),
+        responsiveSizeClass("md:", mdSize),
+        responsiveSizeClass("lg:", lgSize),
+        responsiveSizeClass("xl:", xlSize),
         TYPOGRAPHY.textWeight[weight],
         TYPOGRAPHY.colorVariant[resolvedColor],
         ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
@@ -359,6 +371,10 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
     | "accent";
   color?: ColorVariant;
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  smSize?: HeadingSize;
+  mdSize?: HeadingSize;
+  lgSize?: HeadingSize;
+  xlSize?: HeadingSize;
   weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   transform?: TextTransform;
   truncate?: TextTruncate;
@@ -378,6 +394,10 @@ export function Span({
   variant = "inherit",
   color,
   size,
+  smSize,
+  mdSize,
+  lgSize,
+  xlSize,
   weight,
   transform,
   truncate,
@@ -397,6 +417,10 @@ export function Span({
   const classes = [
     "appkit-span",
     size ? TYPOGRAPHY.textSize[size] : "",
+    responsiveSizeClass("sm:", smSize),
+    responsiveSizeClass("md:", mdSize),
+    responsiveSizeClass("lg:", lgSize),
+    responsiveSizeClass("xl:", xlSize),
     weight ? TYPOGRAPHY.textWeight[weight] : "",
     TYPOGRAPHY.colorVariant[resolvedColor],
     ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
