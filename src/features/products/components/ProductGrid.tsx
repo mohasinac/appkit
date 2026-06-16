@@ -252,7 +252,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
       {/* Content area */}
       <Stack className={`flex-1 ${__P.p3} pt-2.5`}>
-        <Text className={`dark:text-white leading-snug`} truncate={2} size="sm" weight="semibold" color="primary">
+        <Text className={`leading-snug`} truncate={2} size="sm" weight="semibold" color="primary">
           {product.title}
         </Text>
 

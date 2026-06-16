@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
@@ -216,7 +217,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       : [];
     return items
       .map((item) => {
-        const row = (item ?? {}) as Record<string, unknown>;
+        const row = (item ?? {}) as Record<string, JsonValue>;
         const id = toStringValue(row.id);
         const name = toStringValue(row.name);
         if (!id || !name) {
@@ -308,9 +309,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   const saveSection = useApiMutation({
     mutationFn: async () => {
-      let parsedConfig: Record<string, unknown>;
+      let parsedConfig: Record<string, JsonValue>;
       try {
-        parsedConfig = JSON.parse(configJson) as Record<string, unknown>;
+        parsedConfig = JSON.parse(configJson) as Record<string, JsonValue>;
       } catch {
         throw new Error("Config must be valid JSON.");
       }
@@ -394,7 +395,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     setSectionType(selected.type as SectionType);
     setEnabled(Boolean(selected.enabled));
     setOrder(String(selected.order ?? ""));
-    const selectedConfig = (selected.config ?? {}) as unknown as Record<string, unknown>;
+    const selectedConfig = (selected.config ?? {}) as unknown as Record<string, JsonValue>;
     setConfigJson(JSON.stringify(selectedConfig, null, 2));
 
     switch (selected.type) {
