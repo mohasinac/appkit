@@ -59,6 +59,7 @@ import {
   CollectionCardEntryType,
   DEFAULT_COLLECTION_CARDS_BUILDER,
 } from "./adminSectionsTypes";
+import type { JsonObjectWithUndefined } from "../../../../schemas/types";
 
 export function parseCsvValues(value: string): string[] {
   return value
@@ -94,7 +95,7 @@ export function toStringArray(value: unknown): string[] {
     : [];
 }
 
-export function buildProductsConfig(builder: ProductsBuilderState): Record<string, unknown> {
+export function buildProductsConfig(builder: ProductsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
@@ -121,7 +122,7 @@ export function buildProductsConfig(builder: ProductsBuilderState): Record<strin
   };
 }
 
-export function buildAuctionsConfig(builder: AuctionsBuilderState): Record<string, unknown> {
+export function buildAuctionsConfig(builder: AuctionsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
@@ -146,7 +147,7 @@ export function buildAuctionsConfig(builder: AuctionsBuilderState): Record<strin
   };
 }
 
-export function buildStatsConfig(builder: StatsBuilderState): Record<string, unknown> {
+export function buildStatsConfig(builder: StatsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     stats: builder.stats.map((item, index) => {
@@ -172,7 +173,7 @@ export function buildStatsConfig(builder: StatsBuilderState): Record<string, unk
   };
 }
 
-export function buildPreOrdersConfig(builder: PreOrdersBuilderState): Record<string, unknown> {
+export function buildPreOrdersConfig(builder: PreOrdersBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
@@ -197,7 +198,7 @@ export function buildPreOrdersConfig(builder: PreOrdersBuilderState): Record<str
   };
 }
 
-export function buildStoresConfig(builder: StoresBuilderState): Record<string, unknown> {
+export function buildStoresConfig(builder: StoresBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
@@ -220,7 +221,7 @@ export function buildStoresConfig(builder: StoresBuilderState): Record<string, u
   };
 }
 
-export function buildEventsConfig(builder: EventsBuilderState): Record<string, unknown> {
+export function buildEventsConfig(builder: EventsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
@@ -243,9 +244,9 @@ export function buildEventsConfig(builder: EventsBuilderState): Record<string, u
   };
 }
 
-export function parseProductsBuilder(config: Record<string, unknown>): ProductsBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
+export function parseProductsBuilder(config: JsonObjectWithUndefined): ProductsBuilderState {
+  const filters = (config.filters ?? {}) as JsonObjectWithUndefined;
+  const resources = (config.resources ?? {}) as JsonObjectWithUndefined;
   const maxCount = toNumberValue(config.maxCount, DEFAULT_PRODUCTS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_PRODUCTS_BUILDER.title),
@@ -266,9 +267,9 @@ export function parseProductsBuilder(config: Record<string, unknown>): ProductsB
   };
 }
 
-export function parseAuctionsBuilder(config: Record<string, unknown>): AuctionsBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
+export function parseAuctionsBuilder(config: JsonObjectWithUndefined): AuctionsBuilderState {
+  const filters = (config.filters ?? {}) as JsonObjectWithUndefined;
+  const resources = (config.resources ?? {}) as JsonObjectWithUndefined;
   const maxCount = toNumberValue(config.maxCount, DEFAULT_AUCTIONS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_AUCTIONS_BUILDER.title),
@@ -287,11 +288,11 @@ export function parseAuctionsBuilder(config: Record<string, unknown>): AuctionsB
   };
 }
 
-export function parseStatsBuilder(config: Record<string, unknown>): StatsBuilderState {
+export function parseStatsBuilder(config: JsonObjectWithUndefined): StatsBuilderState {
   const statsArray = Array.isArray(config.stats) ? config.stats : [];
   const parsedStats = statsArray.slice(0, 4).map((item, index) => {
-    const row = (item ?? {}) as Record<string, unknown>;
-    const cq = (row.collectionQuery ?? {}) as Record<string, unknown>;
+    const row = (item ?? {}) as JsonObjectWithUndefined;
+    const cq = (row.collectionQuery ?? {}) as JsonObjectWithUndefined;
     const rawSource = toStringValue(row.source, "static");
     const source: StatsStatSource =
       rawSource === "live-preset" || rawSource === "live"
@@ -332,9 +333,9 @@ export function parseStatsBuilder(config: Record<string, unknown>): StatsBuilder
   };
 }
 
-export function parsePreOrdersBuilder(config: Record<string, unknown>): PreOrdersBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
+export function parsePreOrdersBuilder(config: JsonObjectWithUndefined): PreOrdersBuilderState {
+  const filters = (config.filters ?? {}) as JsonObjectWithUndefined;
+  const resources = (config.resources ?? {}) as JsonObjectWithUndefined;
   const maxCount = toNumberValue(config.maxCount, DEFAULT_PRE_ORDERS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_PRE_ORDERS_BUILDER.title),
@@ -353,9 +354,9 @@ export function parsePreOrdersBuilder(config: Record<string, unknown>): PreOrder
   };
 }
 
-export function parseStoresBuilder(config: Record<string, unknown>): StoresBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
+export function parseStoresBuilder(config: JsonObjectWithUndefined): StoresBuilderState {
+  const filters = (config.filters ?? {}) as JsonObjectWithUndefined;
+  const resources = (config.resources ?? {}) as JsonObjectWithUndefined;
   const maxCount = toNumberValue(config.maxCount, DEFAULT_STORES_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_STORES_BUILDER.title),
@@ -375,9 +376,9 @@ export function parseStoresBuilder(config: Record<string, unknown>): StoresBuild
   };
 }
 
-export function parseEventsBuilder(config: Record<string, unknown>): EventsBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
+export function parseEventsBuilder(config: JsonObjectWithUndefined): EventsBuilderState {
+  const filters = (config.filters ?? {}) as JsonObjectWithUndefined;
+  const resources = (config.resources ?? {}) as JsonObjectWithUndefined;
   const maxCount = toNumberValue(config.maxCount, DEFAULT_EVENTS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_EVENTS_BUILDER.title),
@@ -397,7 +398,7 @@ export function parseEventsBuilder(config: Record<string, unknown>): EventsBuild
   };
 }
 
-export function buildSocialFeedConfig(builder: SocialFeedBuilderState): Record<string, unknown> {
+export function buildSocialFeedConfig(builder: SocialFeedBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     subtitle: builder.subtitle || undefined,
@@ -411,7 +412,7 @@ export function buildSocialFeedConfig(builder: SocialFeedBuilderState): Record<s
   };
 }
 
-export function parseSocialFeedBuilder(config: Record<string, unknown>): SocialFeedBuilderState {
+export function parseSocialFeedBuilder(config: JsonObjectWithUndefined): SocialFeedBuilderState {
   return {
     title: toStringValue(config.title),
     subtitle: toStringValue(config.subtitle),
@@ -425,7 +426,7 @@ export function parseSocialFeedBuilder(config: Record<string, unknown>): SocialF
   };
 }
 
-export function buildWelcomeConfig(builder: WelcomeBuilderState): Record<string, unknown> {
+export function buildWelcomeConfig(builder: WelcomeBuilderState): JsonObjectWithUndefined {
   return {
     h1: builder.h1,
     subtitle: builder.subtitle || undefined,
@@ -436,7 +437,7 @@ export function buildWelcomeConfig(builder: WelcomeBuilderState): Record<string,
   };
 }
 
-export function parseWelcomeBuilder(config: Record<string, unknown>): WelcomeBuilderState {
+export function parseWelcomeBuilder(config: JsonObjectWithUndefined): WelcomeBuilderState {
   return {
     h1: toStringValue(config.h1, DEFAULT_WELCOME_BUILDER.h1),
     subtitle: toStringValue(config.subtitle, DEFAULT_WELCOME_BUILDER.subtitle),
@@ -447,7 +448,7 @@ export function parseWelcomeBuilder(config: Record<string, unknown>): WelcomeBui
   };
 }
 
-export function buildTrustIndicatorsConfig(builder: TrustIndicatorsBuilderState): Record<string, unknown> {
+export function buildTrustIndicatorsConfig(builder: TrustIndicatorsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     indicators: builder.indicators.map((ind, index) => ({
@@ -459,10 +460,10 @@ export function buildTrustIndicatorsConfig(builder: TrustIndicatorsBuilderState)
   };
 }
 
-export function parseTrustIndicatorsBuilder(config: Record<string, unknown>): TrustIndicatorsBuilderState {
+export function parseTrustIndicatorsBuilder(config: JsonObjectWithUndefined): TrustIndicatorsBuilderState {
   const indicatorsRaw = Array.isArray(config.indicators) ? config.indicators : [];
   const indicators = indicatorsRaw.map((item, index) => {
-    const row = (item ?? {}) as Record<string, unknown>;
+    const row = (item ?? {}) as JsonObjectWithUndefined;
     return {
       id: toStringValue(row.id, `ti-${index + 1}`),
       icon: toStringValue(row.icon),
@@ -476,7 +477,7 @@ export function parseTrustIndicatorsBuilder(config: Record<string, unknown>): Tr
   };
 }
 
-export function buildCategoriesConfig(builder: CategoriesBuilderState): Record<string, unknown> {
+export function buildCategoriesConfig(builder: CategoriesBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     maxCategories: builder.maxCategories,
@@ -485,7 +486,7 @@ export function buildCategoriesConfig(builder: CategoriesBuilderState): Record<s
   };
 }
 
-export function parseCategoriesBuilder(config: Record<string, unknown>): CategoriesBuilderState {
+export function parseCategoriesBuilder(config: JsonObjectWithUndefined): CategoriesBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_CATEGORIES_BUILDER.title),
     maxCategories: toNumberValue(config.maxCategories, DEFAULT_CATEGORIES_BUILDER.maxCategories),
@@ -494,7 +495,7 @@ export function parseCategoriesBuilder(config: Record<string, unknown>): Categor
   };
 }
 
-export function buildBrandsConfig(builder: BrandsBuilderState): Record<string, unknown> {
+export function buildBrandsConfig(builder: BrandsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
@@ -504,7 +505,7 @@ export function buildBrandsConfig(builder: BrandsBuilderState): Record<string, u
   };
 }
 
-export function parseBrandsBuilder(config: Record<string, unknown>): BrandsBuilderState {
+export function parseBrandsBuilder(config: JsonObjectWithUndefined): BrandsBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_BRANDS_BUILDER.title),
     subtitle: toStringValue(config.subtitle),
@@ -514,7 +515,7 @@ export function parseBrandsBuilder(config: Record<string, unknown>): BrandsBuild
   };
 }
 
-export function buildBannerConfig(builder: BannerBuilderState): Record<string, unknown> {
+export function buildBannerConfig(builder: BannerBuilderState): JsonObjectWithUndefined {
   return {
     height: builder.height,
     backgroundImage: builder.backgroundImage || undefined,
@@ -531,8 +532,8 @@ export function buildBannerConfig(builder: BannerBuilderState): Record<string, u
   };
 }
 
-export function parseBannerBuilder(config: Record<string, unknown>): BannerBuilderState {
-  const content = (config.content ?? {}) as Record<string, unknown>;
+export function parseBannerBuilder(config: JsonObjectWithUndefined): BannerBuilderState {
+  const content = (config.content ?? {}) as JsonObjectWithUndefined;
   const buttonsRaw = Array.isArray(config.buttons) ? config.buttons : [];
   const gradient = toStringValue(config.gradient);
   const [gradientFrom = "", gradientTo = ""] = gradient ? gradient.split(",") : [];
@@ -546,7 +547,7 @@ export function parseBannerBuilder(config: Record<string, unknown>): BannerBuild
     contentSubtitle: toStringValue(content.subtitle),
     contentDescription: toStringValue(content.description),
     buttons: buttonsRaw.map((btn) => {
-      const b = (btn ?? {}) as Record<string, unknown>;
+      const b = (btn ?? {}) as JsonObjectWithUndefined;
       return {
         text: toStringValue(b.text),
         link: toStringValue(b.link),
@@ -558,14 +559,14 @@ export function parseBannerBuilder(config: Record<string, unknown>): BannerBuild
   };
 }
 
-export function buildFeaturesConfig(builder: FeaturesBuilderState): Record<string, unknown> {
+export function buildFeaturesConfig(builder: FeaturesBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     features: builder.features.filter(Boolean),
   };
 }
 
-export function parseFeaturesBuilder(config: Record<string, unknown>): FeaturesBuilderState {
+export function parseFeaturesBuilder(config: JsonObjectWithUndefined): FeaturesBuilderState {
   const featuresRaw = Array.isArray(config.features) ? config.features : [];
   return {
     title: toStringValue(config.title, DEFAULT_FEATURES_BUILDER.title),
@@ -573,7 +574,7 @@ export function parseFeaturesBuilder(config: Record<string, unknown>): FeaturesB
   };
 }
 
-export function buildReviewsConfig(builder: ReviewsBuilderState): Record<string, unknown> {
+export function buildReviewsConfig(builder: ReviewsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     maxReviews: builder.maxReviews,
@@ -586,7 +587,7 @@ export function buildReviewsConfig(builder: ReviewsBuilderState): Record<string,
   };
 }
 
-export function parseReviewsBuilder(config: Record<string, unknown>): ReviewsBuilderState {
+export function parseReviewsBuilder(config: JsonObjectWithUndefined): ReviewsBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_REVIEWS_BUILDER.title),
     maxReviews: toNumberValue(config.maxReviews, DEFAULT_REVIEWS_BUILDER.maxReviews),
@@ -598,7 +599,7 @@ export function parseReviewsBuilder(config: Record<string, unknown>): ReviewsBui
   };
 }
 
-export function buildWhatsAppConfig(builder: WhatsAppBuilderState): Record<string, unknown> {
+export function buildWhatsAppConfig(builder: WhatsAppBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     description: builder.description,
@@ -610,7 +611,7 @@ export function buildWhatsAppConfig(builder: WhatsAppBuilderState): Record<strin
   };
 }
 
-export function parseWhatsAppBuilder(config: Record<string, unknown>): WhatsAppBuilderState {
+export function parseWhatsAppBuilder(config: JsonObjectWithUndefined): WhatsAppBuilderState {
   const benefitsRaw = Array.isArray(config.benefits) ? config.benefits : [];
   return {
     title: toStringValue(config.title, DEFAULT_WHATSAPP_BUILDER.title),
@@ -623,7 +624,7 @@ export function parseWhatsAppBuilder(config: Record<string, unknown>): WhatsAppB
   };
 }
 
-export function buildFAQConfig(builder: FAQBuilderState): Record<string, unknown> {
+export function buildFAQConfig(builder: FAQBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
@@ -635,7 +636,7 @@ export function buildFAQConfig(builder: FAQBuilderState): Record<string, unknown
   };
 }
 
-export function parseFAQBuilder(config: Record<string, unknown>): FAQBuilderState {
+export function parseFAQBuilder(config: JsonObjectWithUndefined): FAQBuilderState {
   const categoriesRaw = Array.isArray(config.categories) ? config.categories : [];
   const validCats = FAQ_CATEGORY_OPTIONS.map((o) => o.value);
   return {
@@ -649,7 +650,7 @@ export function parseFAQBuilder(config: Record<string, unknown>): FAQBuilderStat
   };
 }
 
-export function buildBlogConfig(builder: BlogBuilderState): Record<string, unknown> {
+export function buildBlogConfig(builder: BlogBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     maxArticles: builder.maxArticles,
@@ -659,7 +660,7 @@ export function buildBlogConfig(builder: BlogBuilderState): Record<string, unkno
   };
 }
 
-export function parseBlogBuilder(config: Record<string, unknown>): BlogBuilderState {
+export function parseBlogBuilder(config: JsonObjectWithUndefined): BlogBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_BLOG_BUILDER.title),
     maxArticles: toNumberValue(config.maxArticles, DEFAULT_BLOG_BUILDER.maxArticles),
@@ -669,7 +670,7 @@ export function parseBlogBuilder(config: Record<string, unknown>): BlogBuilderSt
   };
 }
 
-export function buildNewsletterConfig(builder: NewsletterBuilderState): Record<string, unknown> {
+export function buildNewsletterConfig(builder: NewsletterBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     description: builder.description,
@@ -680,7 +681,7 @@ export function buildNewsletterConfig(builder: NewsletterBuilderState): Record<s
   };
 }
 
-export function parseNewsletterBuilder(config: Record<string, unknown>): NewsletterBuilderState {
+export function parseNewsletterBuilder(config: JsonObjectWithUndefined): NewsletterBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_NEWSLETTER_BUILDER.title),
     description: toStringValue(config.description, DEFAULT_NEWSLETTER_BUILDER.description),
@@ -691,7 +692,7 @@ export function parseNewsletterBuilder(config: Record<string, unknown>): Newslet
   };
 }
 
-export function buildCarouselConfig(builder: CarouselBuilderState): Record<string, unknown> {
+export function buildCarouselConfig(builder: CarouselBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     height: builder.height,
@@ -702,7 +703,7 @@ export function buildCarouselConfig(builder: CarouselBuilderState): Record<strin
   };
 }
 
-export function parseCarouselBuilder(config: Record<string, unknown>): CarouselBuilderState {
+export function parseCarouselBuilder(config: JsonObjectWithUndefined): CarouselBuilderState {
   return {
     title: toStringValue(config.title),
     height: toStringValue(config.height, DEFAULT_CAROUSEL_BUILDER.height) as CarouselBuilderState["height"],
@@ -713,7 +714,7 @@ export function parseCarouselBuilder(config: Record<string, unknown>): CarouselB
   };
 }
 
-export function buildCustomCardsConfig(builder: CustomCardsBuilderState): Record<string, unknown> {
+export function buildCustomCardsConfig(builder: CustomCardsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     layout: builder.layout,
@@ -736,7 +737,7 @@ export function buildCustomCardsConfig(builder: CustomCardsBuilderState): Record
   };
 }
 
-export function parseCustomCardsBuilder(config: Record<string, unknown>): CustomCardsBuilderState {
+export function parseCustomCardsBuilder(config: JsonObjectWithUndefined): CustomCardsBuilderState {
   const cardsRaw = Array.isArray(config.cards) ? config.cards : [];
   const validBorderRadii: CustomCardsCardBuilderEntry["borderRadius"][] = ["none", "sm", "md", "lg", "xl", "full"];
   const validShadows: CustomCardsCardBuilderEntry["shadowLevel"][] = ["none", "sm", "md", "lg"];
@@ -748,7 +749,7 @@ export function parseCustomCardsBuilder(config: Record<string, unknown>): Custom
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CUSTOM_CARDS_BUILDER.autoScroll),
     scrollIntervalMs: toNumberValue(config.scrollIntervalMs, DEFAULT_CUSTOM_CARDS_BUILDER.scrollIntervalMs),
     cards: cardsRaw.map((item, index) => {
-      const c = (item ?? {}) as Record<string, unknown>;
+      const c = (item ?? {}) as JsonObjectWithUndefined;
       const br = toStringValue(c.borderRadius, "none");
       const sh = toStringValue(c.shadowLevel, "none");
       return {
@@ -768,7 +769,7 @@ export function parseCustomCardsBuilder(config: Record<string, unknown>): Custom
   };
 }
 
-export function buildGoogleReviewsConfig(builder: GoogleReviewsBuilderState): Record<string, unknown> {
+export function buildGoogleReviewsConfig(builder: GoogleReviewsBuilderState): JsonObjectWithUndefined {
   return {
     placeId: builder.placeId,
     maxReviews: builder.maxReviews,
@@ -781,7 +782,7 @@ export function buildGoogleReviewsConfig(builder: GoogleReviewsBuilderState): Re
   };
 }
 
-export function parseGoogleReviewsBuilder(config: Record<string, unknown>): GoogleReviewsBuilderState {
+export function parseGoogleReviewsBuilder(config: JsonObjectWithUndefined): GoogleReviewsBuilderState {
   return {
     placeId: toStringValue(config.placeId),
     maxReviews: toNumberValue(config.maxReviews, DEFAULT_GOOGLE_REVIEWS_BUILDER.maxReviews),
@@ -794,7 +795,7 @@ export function parseGoogleReviewsBuilder(config: Record<string, unknown>): Goog
   };
 }
 
-export function buildFeaturedBundlesConfig(builder: FeaturedBundlesBuilderState): Record<string, unknown> {
+export function buildFeaturedBundlesConfig(builder: FeaturedBundlesBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     subtitle: builder.subtitle || undefined,
@@ -806,7 +807,7 @@ export function buildFeaturedBundlesConfig(builder: FeaturedBundlesBuilderState)
   };
 }
 
-export function parseFeaturedBundlesBuilder(config: Record<string, unknown>): FeaturedBundlesBuilderState {
+export function parseFeaturedBundlesBuilder(config: JsonObjectWithUndefined): FeaturedBundlesBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_FEATURED_BUNDLES_BUILDER.title),
     subtitle: toStringValue(config.subtitle, DEFAULT_FEATURED_BUNDLES_BUILDER.subtitle),
@@ -818,7 +819,7 @@ export function parseFeaturedBundlesBuilder(config: Record<string, unknown>): Fe
   };
 }
 
-export function buildPrizeDrawsConfig(builder: PrizeDrawsBuilderState): Record<string, unknown> {
+export function buildPrizeDrawsConfig(builder: PrizeDrawsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     subtitle: builder.subtitle || undefined,
@@ -830,7 +831,7 @@ export function buildPrizeDrawsConfig(builder: PrizeDrawsBuilderState): Record<s
   };
 }
 
-export function parsePrizeDrawsBuilder(config: Record<string, unknown>): PrizeDrawsBuilderState {
+export function parsePrizeDrawsBuilder(config: JsonObjectWithUndefined): PrizeDrawsBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_PRIZE_DRAWS_BUILDER.title),
     subtitle: toStringValue(config.subtitle, DEFAULT_PRIZE_DRAWS_BUILDER.subtitle),
@@ -842,7 +843,7 @@ export function parsePrizeDrawsBuilder(config: Record<string, unknown>): PrizeDr
   };
 }
 
-export function buildEventRafflesConfig(builder: EventRafflesBuilderState): Record<string, unknown> {
+export function buildEventRafflesConfig(builder: EventRafflesBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     subtitle: builder.subtitle || undefined,
@@ -853,7 +854,7 @@ export function buildEventRafflesConfig(builder: EventRafflesBuilderState): Reco
   };
 }
 
-export function parseEventRafflesBuilder(config: Record<string, unknown>): EventRafflesBuilderState {
+export function parseEventRafflesBuilder(config: JsonObjectWithUndefined): EventRafflesBuilderState {
   return {
     title: toStringValue(config.title, DEFAULT_EVENT_RAFFLES_BUILDER.title),
     subtitle: toStringValue(config.subtitle, DEFAULT_EVENT_RAFFLES_BUILDER.subtitle),
@@ -877,7 +878,7 @@ const COLLECTION_CARD_ENTRY_TYPES: readonly CollectionCardEntryType[] = [
 ];
 
 function parseCollectionCardsEntry(raw: unknown): CollectionCardsEntryBuilderState {
-  const r = (raw ?? {}) as Record<string, unknown>;
+  const r = (raw ?? {}) as JsonObjectWithUndefined;
   const typeRaw = toStringValue(r.type, "products");
   const type = (COLLECTION_CARD_ENTRY_TYPES.includes(typeRaw as CollectionCardEntryType)
     ? typeRaw
@@ -893,7 +894,7 @@ function parseCollectionCardsEntry(raw: unknown): CollectionCardsEntryBuilderSta
   };
 }
 
-export function buildCollectionCardsConfig(builder: CollectionCardsBuilderState): Record<string, unknown> {
+export function buildCollectionCardsConfig(builder: CollectionCardsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     subtitle: builder.subtitle || undefined,
@@ -913,7 +914,7 @@ export function buildCollectionCardsConfig(builder: CollectionCardsBuilderState)
   };
 }
 
-export function parseCollectionCardsBuilder(config: Record<string, unknown>): CollectionCardsBuilderState {
+export function parseCollectionCardsBuilder(config: JsonObjectWithUndefined): CollectionCardsBuilderState {
   const rawCollections = Array.isArray(config.collections) ? config.collections : [];
   const layoutRaw = toStringValue(config.layout, DEFAULT_COLLECTION_CARDS_BUILDER.layout);
   const itemsPerRowRaw = toNumberValue(config.itemsPerRow, DEFAULT_COLLECTION_CARDS_BUILDER.itemsPerRow);

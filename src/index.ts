@@ -9588,6 +9588,7 @@ export type {
   JsonObjectWithUndefined,
   JsonPrimitive,
   JsonValue,
+  JsonValueWithUndefined,
   RegisteredApiRouteKey,
   RegisteredFirestoreCollection,
   RegisteredFormId,

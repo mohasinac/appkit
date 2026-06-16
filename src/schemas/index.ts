@@ -34,6 +34,7 @@ export type {
   JsonObjectWithUndefined,
   JsonPrimitive,
   JsonValue,
+  JsonValueWithUndefined,
   RegistryEntry,
   SchemaRegistry,
   WebhookSchemaBucket,

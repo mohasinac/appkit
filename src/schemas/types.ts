@@ -40,10 +40,20 @@ export type FirestoreValue = JsonValue | Date | undefined;
  *  Firestore-backed repositories and mapDoc helpers. */
 export type FirestoreDocument = Record<string, FirestoreValue>;
 
-/** JsonValue with undefined-tolerant index signature. `JSON.stringify` drops
- *  undefined keys; use when building objects with the `|| undefined` pattern
- *  (admin section builders, JSON-LD output, etc.). */
-export type JsonObjectWithUndefined = Record<string, JsonValue | undefined>;
+/** Recursive JSON value that admits `undefined` at every nesting level.
+ *  `JSON.stringify` drops undefined keys, so the emitted JSON is valid.
+ *  Use for builders that emit `field: value || undefined` patterns and for
+ *  JSON-LD output (matches schema.org optional-field semantics). */
+export type JsonValueWithUndefined =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | readonly JsonValueWithUndefined[]
+  | { readonly [key: string]: JsonValueWithUndefined };
+/** Record alias whose values are JsonValueWithUndefined. */
+export type JsonObjectWithUndefined = Record<string, JsonValueWithUndefined>;
 
 /** Form state values — JsonValue + Date (date pickers) + File (uploads) +
  *  undefined. Note `File` is browser-only at runtime, but its TYPE is provided
