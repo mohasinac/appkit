@@ -45,6 +45,36 @@ const ALLOWLIST_FILES = new Set(
     "appkit/src/ui/rich-text/RichText.tsx",
     "appkit/src/ui/components/RichTextEditor.tsx",
     "appkit/src/errors/normalize.ts", // normalizeError(e: unknown) signature
+    // Architectural entry-point boundaries — every `: unknown` here is the
+    // canonical "value of arbitrary shape" landing zone, sanitized/narrowed
+    // by the function body. JsonValue would force callers to pre-narrow,
+    // defeating the boundary's purpose.
+    "appkit/src/core/Logger.ts",                    // logger entry-point (data?: unknown sanitised by setSanitizer)
+    "appkit/src/core/EventBus.ts",                  // EventBus payload (...args: unknown[])
+    "appkit/src/core/server-action.ts",             // server-action error wrapper
+    "appkit/src/core/mutation-events.ts",           // mutation event payload
+    "appkit/src/contracts/field-ops.ts",            // Firestore arrayUnion/arrayRemove SDK boundary
+    "appkit/src/contracts/extend.ts",               // schema?: unknown extension point
+    "appkit/src/contracts/client-realtime.ts",      // RTDB val(): unknown
+    "appkit/src/client/api/ApiError.ts",            // ApiError.cause / issues — error chaining
+    "appkit/src/client/api/surface-error.ts",       // surfaceError(err: unknown)
+    "appkit/src/client/api/useApiQuery.ts",         // React Query callback signatures
+    "appkit/src/errors/base-error.ts",              // base-error data?: unknown
+    "appkit/src/errors/api-error.ts",
+    "appkit/src/errors/authentication-error.ts",
+    "appkit/src/errors/authorization-error.ts",
+    "appkit/src/errors/database-error.ts",
+    "appkit/src/errors/error-handler.ts",           // catch-and-classify entry-point
+    "appkit/src/errors/error-mapping.ts",           // error-shape predicates (isZodLikeError, isFirestoreLikeError)
+    "appkit/src/errors/validation-error.ts",        // ValidationError.issues from Zod
+    "appkit/src/errors/not-found-error.ts",
+    "appkit/src/errors/razorpay-unreachable.ts",
+    "appkit/src/core/newsletter.repository.ts",     // arbitrary-payload newsletter wrapper
+    "appkit/src/configs/next.ts",                   // Next.js config callbacks (webpack ctx)
+    "appkit/src/configs/tailwind.ts",               // Tailwind config (plugins?: unknown[])
+    "appkit/src/configs/postcss.ts",                // PostCSS config
+    "appkit/src/configs/eslint.ts",                 // ESLint config
+    "appkit/src/cli/index.ts",                      // CLI argv shape
   ].map((p) => p.replace(/\//g, "/")),
 );
 

@@ -10,6 +10,7 @@ import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/for
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import type { JsonValue, JsonObject } from "../../../schemas/types";
 
 const __P = {
   p3: "p-3",
@@ -391,28 +392,28 @@ export function AdminCarouselEditorView({
     queryKey: ["admin", "carousel", slideId],
     queryFn: async () => {
       const res = await apiClient.get(ADMIN_ENDPOINTS.CAROUSEL_BY_ID(slideId!));
-      return (res as { data?: unknown })?.data ?? res;
+      return (res as { data?: JsonValue })?.data ?? res;
     },
     enabled: isEdit,
   });
 
   React.useEffect(() => {
-    const d = slideQuery.data as Record<string, unknown> | undefined;
+    const d = slideQuery.data as JsonObject | undefined;
     if (!d) return;
     setTitle(String(d.title ?? ""));
     setActive(Boolean(d.active));
     setOrder(d.order !== undefined ? String(d.order) : "");
-    const s = d.settings as Record<string, unknown> | undefined;
+    const s = d.settings as JsonObject | undefined;
     setHeight((s?.height as CarouselSlideHeight) ?? "tall");
     setAutoplayDelayMs(s?.autoplayDelayMs !== undefined ? String(s.autoplayDelayMs) : "4000");
-    if (d.background) setBackground(d.background as CarouselBackground);
-    if (Array.isArray(d.cards)) setCards(d.cards as CarouselCard[]);
-    const ov = d.overlay as Record<string, unknown> | undefined;
+    if (d.background) setBackground(d.background as unknown as CarouselBackground);
+    if (Array.isArray(d.cards)) setCards(d.cards as unknown as CarouselCard[]);
+    const ov = d.overlay as JsonObject | undefined;
     if (ov) {
       setOverlayTitle(String(ov.title ?? ""));
       setOverlaySubtitle(String(ov.subtitle ?? ""));
       setOverlayDesc(String(ov.description ?? ""));
-      const btn = ov.button as Record<string, unknown> | undefined;
+      const btn = ov.button as JsonObject | undefined;
       if (btn) {
         setOverlayBtnText(String(btn.text ?? ""));
         setOverlayBtnLink(String(btn.link ?? ""));
