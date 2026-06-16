@@ -204,7 +204,7 @@ export function AdminFeatureEditorView({
       }
       return apiClient.post(createEndpoint, payload);
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id =
         (res as { data?: { id?: string } })?.data?.id ??
         (res as { id?: string })?.id ??
@@ -212,7 +212,7 @@ export function AdminFeatureEditorView({
       showToast(isEdit ? TOAST.UPDATED : TOAST.CREATED, "success");
       if (onSaved && id) onSaved(String(id));
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast(
         (err as Error)?.message ??
           (isEdit
@@ -229,7 +229,7 @@ export function AdminFeatureEditorView({
       showToast(TOAST.DELETED, "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) =>
+    onError: (err: Error) =>
       showToast(
         (err as Error)?.message ??
           ERROR_MESSAGES.PRODUCT_FEATURES.DELETE_FAILED,

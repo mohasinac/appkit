@@ -68,6 +68,6 @@ export const ApiErrors = {
   internalError: (message = "Internal server error") =>
     errorResponse(message, 500),
 
-  validationError: (details: unknown) =>
+  validationError: (details: Error) =>
     errorResponse("Validation failed", 422, details),
 };

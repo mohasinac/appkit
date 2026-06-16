@@ -141,12 +141,12 @@ export function AdminFaqEditorView({
       }
       return apiClient.post(ADMIN_ENDPOINTS.FAQS, payload);
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? faqId;
       showToast(isEdit ? "FAQ updated." : "FAQ created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save FAQ.", "error");
     },
   });
@@ -158,7 +158,7 @@ export function AdminFaqEditorView({
       showToast("FAQ deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) =>
+    onError: (err: Error) =>
       showToast((err as Error)?.message ?? "Failed to delete FAQ.", "error"),
   });
 

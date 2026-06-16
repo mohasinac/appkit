@@ -53,7 +53,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       queryClient.invalidateQueries({ queryKey: ["admin", "notifications"] });
       setDeleteTarget(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to delete notification.", "error");
     },
   });
@@ -66,7 +66,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       showToast("Notification resent.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "notifications"] });
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to resend notification.", "error");
     },
   });

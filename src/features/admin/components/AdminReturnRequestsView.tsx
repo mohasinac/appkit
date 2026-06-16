@@ -52,7 +52,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
       setApproveOpen(false);
       setSelectedRow(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to approve return.", "error");
     },
   });
@@ -68,7 +68,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
       setRejectOpen(false);
       setSelectedRow(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to reject return.", "error");
     },
   });

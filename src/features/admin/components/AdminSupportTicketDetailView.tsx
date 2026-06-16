@@ -143,7 +143,7 @@ export function AdminSupportTicketDetailView({
       invalidate();
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update ticket.", "error");
     },
   });
@@ -161,7 +161,7 @@ export function AdminSupportTicketDetailView({
       invalidate();
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to send reply.", "error");
     },
   });
@@ -194,7 +194,7 @@ export function AdminSupportTicketDetailView({
         .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to apply store change.", "error");
     },
   });
@@ -225,7 +225,7 @@ export function AdminSupportTicketDetailView({
       );
       setOrderItemsOpen(true);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to load order.", "error");
     },
   });
@@ -251,7 +251,7 @@ export function AdminSupportTicketDetailView({
         .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to lift hard ban.", "error");
     },
   });
@@ -275,7 +275,7 @@ export function AdminSupportTicketDetailView({
         .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to lift soft ban.", "error");
     },
   });
@@ -313,7 +313,7 @@ export function AdminSupportTicketDetailView({
       invalidate();
       setOrderItemsOpen(false);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update order items.", "error");
     },
   });

@@ -134,12 +134,12 @@ export function AdminBrandEditorView({
       }
       return apiClient.post(ADMIN_ENDPOINTS.BRANDS, payload);
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? brandId;
       showToast(isEdit ? "Brand updated." : "Brand created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save brand.", "error");
     },
   });
@@ -150,7 +150,7 @@ export function AdminBrandEditorView({
       showToast("Brand deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) => showToast((err as Error)?.message ?? "Failed to delete brand.", "error"),
+    onError: (err: Error) => showToast((err as Error)?.message ?? "Failed to delete brand.", "error"),
   });
 
   const { upload } = useMediaUpload();

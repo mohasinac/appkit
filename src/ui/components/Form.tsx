@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import type { ZodTypeAny } from "zod";
 import { Row } from "./Layout";
 import { buildSurfaceClasses, type SurfaceProps } from "./surface-tokens";
 import {
@@ -31,6 +32,13 @@ export interface FormProps
     | ((helpers: UseFormShellStateResult) => React.ReactNode);
   /** Vertical spacing between top-level children. */
   spacing?: FormSpacing;
+  /**
+   * Zod schema that validates the form values. When set, the render-prop
+   * helpers' `validate(values)` returns the parsed Zod result; `setFieldError`
+   * accepts the path of any Zod field. Eliminates the `useFormShellState(schema)`
+   * boilerplate per callsite.
+   */
+  schema?: ZodTypeAny;
 }
 
 export type GapToken = "none" | "xs" | "sm" | "md" | "lg" | "xl";
@@ -62,8 +70,8 @@ const GAP_MAP: Record<GapToken, string> = {
  *     )}
  *   </Form>
  */
-export function Form({ children, spacing, surface, padding, rounded, border, shadow, className = "", ...props }: FormProps) {
-  const helpers = useFormShellState();
+export function Form({ children, spacing, schema, surface, padding, rounded, border, shadow, className = "", ...props }: FormProps) {
+  const helpers = useFormShellState(schema);
   const content =
     typeof children === "function"
       ? (children as (h: UseFormShellStateResult) => React.ReactNode)(helpers)

@@ -82,7 +82,7 @@ export function AdminScammerEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "scammers"] });
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update profile.", "error");
     },
   });
@@ -96,7 +96,7 @@ export function AdminScammerEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "scammers"] });
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to delete profile.", "error");
     },
   });

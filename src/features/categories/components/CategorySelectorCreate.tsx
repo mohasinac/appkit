@@ -54,7 +54,7 @@ function CreateCategoryContent({
   });
 
   const { mutate, isPending: isLoading } = useCreateCategory({
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       showSuccess(labels.successCreated);
       onSuccess((res as { id?: string })?.id ?? "");
     },

@@ -189,7 +189,7 @@ export function AdminProductEditorView({
       }
       return apiClient.post(ADMIN_ENDPOINTS.PRODUCTS, payload);
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id =
         (res as { data?: { id?: string } })?.data?.id ??
         (res as { id?: string })?.id ??
@@ -197,7 +197,7 @@ export function AdminProductEditorView({
       showToast(isEdit ? "Product updated." : "Product created.", "success");
       if (onSaved && id) onSaved(id as string);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save product.", "error");
     },
   });
@@ -208,7 +208,7 @@ export function AdminProductEditorView({
       showToast("Product deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to delete product.", "error");
     },
   });

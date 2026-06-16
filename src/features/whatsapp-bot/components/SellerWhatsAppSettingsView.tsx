@@ -184,7 +184,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
       showToast("WhatsApp settings saved", "success");
       void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       const msg = err instanceof Error ? err.message : "Failed to save settings";
       showToast(msg, "error");
     },
@@ -193,7 +193,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   // Catalog sync mutation (push: site → WhatsApp)
   const syncMutation = useApiMutation({
     mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_SYNC, {}),
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const r = (res as any) ?? {};
       showToast(
         `Synced ${r.successCount ?? 0} product${(r.successCount ?? 0) !== 1 ? "s" : ""} to WhatsApp catalog`,
@@ -201,7 +201,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
       );
       void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       const msg = err instanceof Error ? err.message : "Sync failed";
       showToast(msg, "error");
     },
@@ -210,7 +210,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
   // Catalog import mutation (pull: WhatsApp → site)
   const importMutation = useApiMutation({
     mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_IMPORT, {}),
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const r = (res as any) ?? {};
       showToast(
         `Imported ${r.imported ?? 0} product${(r.imported ?? 0) !== 1 ? "s" : ""} from WhatsApp (${r.skipped ?? 0} already synced)`,
@@ -218,7 +218,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
       );
       void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       const msg = err instanceof Error ? err.message : "Import failed";
       showToast(msg, "error");
     },

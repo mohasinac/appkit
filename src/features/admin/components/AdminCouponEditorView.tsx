@@ -321,12 +321,12 @@ export function AdminCouponEditorView({
         createdBy: "admin",
       });
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? couponId;
       showToast(isEdit ? "Coupon updated." : "Coupon created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save coupon.", "error");
     },
   });
@@ -339,7 +339,7 @@ export function AdminCouponEditorView({
       showToast("Coupon deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) =>
+    onError: (err: Error) =>
       showToast((err as Error)?.message ?? "Failed to delete coupon.", "error"),
   });
 

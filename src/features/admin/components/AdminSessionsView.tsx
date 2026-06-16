@@ -56,7 +56,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
       queryClient.invalidateQueries({ queryKey: ["admin", "sessions"] });
       setRevokeTarget(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to revoke session.", "error");
     },
   });

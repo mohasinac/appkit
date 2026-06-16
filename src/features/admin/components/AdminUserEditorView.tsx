@@ -342,7 +342,7 @@ export function AdminUserEditorView({
       invalidate();
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update user.", "error");
     },
   });
@@ -357,7 +357,7 @@ export function AdminUserEditorView({
       setDeleteOpen(false);
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to delete user.", "error");
     },
   });
@@ -373,7 +373,7 @@ export function AdminUserEditorView({
       setHardBanReasonInput("");
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to ban user.", "error");
     },
   });
@@ -387,7 +387,7 @@ export function AdminUserEditorView({
       invalidate();
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to unban user.", "error");
     },
   });
@@ -404,7 +404,7 @@ export function AdminUserEditorView({
       setSoftBanReason("");
       setSoftBanExpiry("");
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to apply soft ban.", "error");
     },
   });
@@ -417,7 +417,7 @@ export function AdminUserEditorView({
       showToast("Soft ban lifted.", "success");
       invalidate();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to lift soft ban.", "error");
     },
   });

@@ -124,7 +124,7 @@ export function AdminStoreEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "stores"] });
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update store.", "error");
     },
   });

@@ -87,12 +87,12 @@ export function AdminSublistingCategoryEditorView({
       }
       return apiClient.post(ADMIN_ENDPOINTS.SUBLISTING_CATEGORIES, payload);
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? categoryId;
       showToast(isEdit ? "Category updated." : "Category created.", "success");
       if (onSaved && id) onSaved(String(id));
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save category.", "error");
     },
   });
@@ -104,7 +104,7 @@ export function AdminSublistingCategoryEditorView({
       showToast("Category deleted. All linked listings were unlinked.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to delete category.", "error");
     },
   });

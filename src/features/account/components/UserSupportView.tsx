@@ -133,7 +133,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
       setNewOrderId("");
       invalidate();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to create ticket.", "error");
     },
   });
@@ -150,7 +150,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
       setReplyBody("");
       invalidate();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to send reply.", "error");
     },
   });

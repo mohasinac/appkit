@@ -31,11 +31,11 @@ export function CategoryQuickCreateForm({ onSaved, onCancel }: CategoryQuickCrea
         description: description || undefined,
         isActive,
       }),
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as { data?: { id?: string } })?.data?.id ?? (res as { id?: string })?.id ?? "";
       onSaved(id as string, name);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to create category.", "error");
     },
   });

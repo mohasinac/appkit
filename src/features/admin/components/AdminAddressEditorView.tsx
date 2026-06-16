@@ -116,12 +116,12 @@ export function AdminAddressEditorView({
       }
       return apiClient.post(ADMIN_ENDPOINTS.ADDRESSES, payload);
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? addressId;
       showToast(isEdit ? "Address updated." : "Address created.", "success");
       if (onSaved && id) onSaved(String(id));
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save address.", "error");
     },
   });
@@ -133,7 +133,7 @@ export function AdminAddressEditorView({
       setDeleteOpen(false);
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) =>
+    onError: (err: Error) =>
       showToast((err as Error)?.message ?? "Failed to delete address.", "error"),
   });
 

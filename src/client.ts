@@ -267,6 +267,8 @@ export type { FieldSelectProps } from "./ui/forms";
 export { FieldSelect } from "./ui/forms";
 export type { FieldCheckboxProps } from "./ui/forms";
 export { FieldCheckbox } from "./ui/forms";
+export type { ColorPickerFieldProps } from "./ui/forms";
+export { ColorPickerField } from "./ui/forms";
 export { Select } from "./ui/components/Select";
 export type { SelectOption, SelectProps } from "./ui/components/Select";
 export { Heading } from "./ui/components/Typography";

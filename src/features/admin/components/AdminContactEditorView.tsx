@@ -50,7 +50,7 @@ export function AdminContactEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "contact"] });
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Action failed.", "error");
     },
   });

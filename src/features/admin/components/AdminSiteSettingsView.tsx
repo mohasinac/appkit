@@ -385,7 +385,7 @@ export function AdminSiteSettingsView({
         showToast(`${group} saved.`, "success");
         queryClient.invalidateQueries({ queryKey: ["admin", "site-settings"] });
       },
-      onError: (err: unknown) =>
+      onError: (err: Error) =>
         showToast((err as Error)?.message ?? `Failed to save ${group}.`, "error"),
     });
   }

@@ -52,7 +52,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
       setCancelOpen(false);
       setSelectedRow(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to cancel bid.", "error");
     },
   });

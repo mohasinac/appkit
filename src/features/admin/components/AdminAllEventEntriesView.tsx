@@ -47,7 +47,7 @@ export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEn
       showToast("Entry updated.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "event-entries"] });
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update entry.", "error");
     },
   });

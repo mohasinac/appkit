@@ -4,7 +4,7 @@
  * Generic helpers for object data operations — no external dependencies.
  */
 
-export function deepMerge<T extends Record<string, unknown>>(
+export function deepMerge<T extends object>(
   target: T,
   source: Partial<T>,
 ): T {
@@ -21,8 +21,8 @@ export function deepMerge<T extends Record<string, unknown>>(
       !Array.isArray(targetValue)
     ) {
       output[key as keyof T] = deepMerge(
-        targetValue as Record<string, unknown>,
-        sourceValue as Partial<Record<string, unknown>>,
+        targetValue as object,
+        sourceValue as Partial<object>,
       ) as T[keyof T];
     } else {
       output[key as keyof T] = sourceValue as T[keyof T];
@@ -31,7 +31,7 @@ export function deepMerge<T extends Record<string, unknown>>(
   return output;
 }
 
-export function pick<T extends Record<string, unknown>, K extends keyof T>(
+export function pick<T extends object, K extends keyof T>(
   obj: T,
   keys: K[],
 ): Pick<T, K> {
@@ -42,7 +42,7 @@ export function pick<T extends Record<string, unknown>, K extends keyof T>(
   return result;
 }
 
-export function omit<T extends Record<string, unknown>, K extends keyof T>(
+export function omit<T extends object, K extends keyof T>(
   obj: T,
   keys: K[],
 ): Omit<T, K> {
@@ -53,7 +53,7 @@ export function omit<T extends Record<string, unknown>, K extends keyof T>(
   return result as Omit<T, K>;
 }
 
-export function isEmptyObject(obj: Record<string, unknown>): boolean {
+export function isEmptyObject(obj: object): boolean {
   return Object.keys(obj).length === 0;
 }
 
@@ -87,7 +87,7 @@ export function isEqual(obj1: unknown, obj2: unknown): boolean {
   return keys1.every((key) => isEqual(first[key], second[key]));
 }
 
-export function cleanObject<T extends Record<string, unknown>>(
+export function cleanObject<T extends object>(
   obj: T,
   options: {
     removeEmpty?: boolean;

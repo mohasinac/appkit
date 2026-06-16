@@ -64,7 +64,7 @@ export function AdminContactView({
       showToast(`${action === "read" ? "Marked as read" : "Archived"}.`, "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "contact"] });
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Action failed.", "error");
     },
   });
@@ -79,7 +79,7 @@ export function AdminContactView({
       setDeleteOpen(false);
       setSelectedRow(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to delete.", "error");
     },
   });

@@ -18,3 +18,6 @@ export { FieldCheckbox } from "./FieldCheckbox";
 
 export type { FieldTextareaProps } from "./FieldTextarea";
 export { FieldTextarea } from "./FieldTextarea";
+
+export type { ColorPickerFieldProps } from "./ColorPickerField";
+export { ColorPickerField } from "./ColorPickerField";

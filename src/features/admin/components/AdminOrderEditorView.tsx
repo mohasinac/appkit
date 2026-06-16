@@ -84,7 +84,7 @@ export function AdminOrderEditorView({
       queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update order.", "error");
     },
   });

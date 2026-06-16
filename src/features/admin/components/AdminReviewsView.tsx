@@ -56,7 +56,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       showToast("Review updated.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "reviews"] });
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to update review.", "error");
     },
   });
@@ -72,7 +72,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       setReplyText("");
       setReplyTarget(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save reply.", "error");
     },
   });

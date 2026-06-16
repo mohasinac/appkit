@@ -191,12 +191,12 @@ export function AdminBlogEditorView({
         views: 0,
       });
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? postId;
       showToast(isEdit ? "Post updated." : "Post created.", "success");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save post.", "error");
     },
   });
@@ -208,7 +208,7 @@ export function AdminBlogEditorView({
       showToast("Post deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) =>
+    onError: (err: Error) =>
       showToast((err as Error)?.message ?? "Failed to delete post.", "error"),
   });
 

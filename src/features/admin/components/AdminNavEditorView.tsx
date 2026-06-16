@@ -111,7 +111,7 @@ export function AdminNavEditorView({
       onSaved();
       onClose();
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to save nav item.", "error");
     },
   });

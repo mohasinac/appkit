@@ -456,13 +456,13 @@ export function AdminCarouselEditorView({
       if (isEdit) return apiClient.put(ADMIN_ENDPOINTS.CAROUSEL_BY_ID(slideId!), payload);
       return apiClient.post(ADMIN_ENDPOINTS.CAROUSEL, payload);
     },
-    onSuccess: (res: unknown) => {
+    onSuccess: (res: JsonValue) => {
       const id = (res as { data?: { id?: string } })?.data?.id ?? slideId ?? "";
       setSuccessMsg(isEdit ? "Slide saved." : "Slide created.");
       setErrorMsg("");
       if (onSaved && id) onSaved(id);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       setErrorMsg((err as Error)?.message ?? "Failed to save slide.");
       setSuccessMsg("");
     },
@@ -474,7 +474,7 @@ export function AdminCarouselEditorView({
       setSuccessMsg("Slide deleted.");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) => setErrorMsg((err as Error)?.message ?? "Failed to delete."),
+    onError: (err: Error) => setErrorMsg((err as Error)?.message ?? "Failed to delete."),
   });
 
   const occupiedZones = cards.map((c) => c.zone);

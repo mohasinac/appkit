@@ -58,7 +58,7 @@ export function AdminNewsletterView({
       setUnsubscribeOpen(false);
       setSelectedRow(null);
     },
-    onError: (err: unknown) => {
+    onError: (err: Error) => {
       showToast((err as Error)?.message ?? "Failed to unsubscribe.", "error");
     },
   });
