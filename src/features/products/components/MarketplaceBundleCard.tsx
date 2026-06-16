@@ -157,8 +157,8 @@ export function MarketplaceBundleCard({
           <Span size="xs" weight="medium" className={CLS_BUNDLE_PILL}>
             {mergedLabels.bundleBadge}
           </Span>
-          <Span color="inverse" 
-            className={`inline-flex items-center ${ stock === "out_of_stock" ? "bg-zinc-500 " : CLS_STOCK_OK }`} rounded="full" padding="pill-xs" size="xs" weight="medium"
+          <Span layout="inline-flex" color="inverse" 
+            className={`${ stock === "out_of_stock" ? "bg-zinc-500 " : CLS_STOCK_OK }`} rounded="full" padding="pill-xs" size="xs" weight="medium"
           >
             {stock === "out_of_stock" ? mergedLabels.outOfStockBadge : mergedLabels.inStockBadge}
           </Span>

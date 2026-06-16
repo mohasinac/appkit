@@ -269,9 +269,9 @@ export function SellerCouponEditorView({
                 {draft.applicableCategories.length > 0 && (
                   <Div className="flex flex-wrap gap-2" padding="t-xs">
                     {draft.applicableCategories.map((cid) => (
-                      <Span
+                      <Span layout="inline-flex" gap="xs" 
                         key={cid}
-                        className="inline-flex items-center gap-1 border border-zinc-300 dark:border-zinc-600" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
+                        className="border border-zinc-300 dark:border-zinc-600" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
                       >
                         {cid}
                         <button

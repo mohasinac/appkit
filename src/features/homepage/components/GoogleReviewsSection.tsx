@@ -38,7 +38,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function GoogleBadge() {
   return (
-    <Span size="xs" className="inline-flex items-center gap-1" color="muted">
+    <Span layout="inline-flex" gap="xs" size="xs" color="muted">
       <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" aria-hidden="true">
         <path
           fill="#4285F4"

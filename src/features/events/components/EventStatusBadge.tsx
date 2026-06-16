@@ -20,8 +20,8 @@ export function EventStatusBadge({
 }: EventStatusBadgeProps) {
   const { label, color } = STATUS_MAP[status] ?? STATUS_MAP.draft;
   return (
-    <Span
-      className={`inline-flex items-center ${color} ${className}`} padding="pill-sm" rounded="full" size="xs" weight="medium"
+    <Span layout="inline-flex" 
+      className={`${color} ${className}`} padding="pill-sm" rounded="full" size="xs" weight="medium"
     >
       {label}
     </Span>

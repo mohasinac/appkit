@@ -86,7 +86,7 @@ export function AdminPageHeader({
           className="mb-3 flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400"
         >
           {breadcrumb.map((crumb, index) => (
-            <Span key={index} className="flex items-center gap-1">
+            <Span layout="flex" gap="xs" key={index}>
               {index > 0 && <ChevronRight className="w-3 h-3 flex-shrink-0" />}
               {crumb.href && themeConfig.TextLink ? (
                 <themeConfig.TextLink

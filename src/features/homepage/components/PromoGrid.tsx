@@ -118,8 +118,8 @@ export function PromoGrid({
                 >
                   {banner.title}
                 </Text>
-                <Span
-                  className="mt-1 inline-flex items-center gap-1 font-black uppercase" size="xs"
+                <Span layout="inline-flex" gap="xs" 
+                  className="mt-1 font-black uppercase" size="xs"
                   style={{ color: "var(--color-yellow)" }}
                 >
                   {banner.ctaLabel} →

@@ -234,12 +234,12 @@ export function SellerPayoutMethodsView({
                         <Text size="sm" weight="medium">{row.label}</Text>
                         <TypeBadge type={row.type} />
                         {row.isDefault && (
-                          <Span color="success" surface="success-surface" size="xs" weight="medium" className="inline-flex items-center" rounded="full" padding="pill-xs">
+                          <Span layout="inline-flex" color="success" surface="success-surface" size="xs" weight="medium" rounded="full" padding="pill-xs">
                             Default
                           </Span>
                         )}
-                        <Span
-                          className={`inline-flex items-center ${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
+                        <Span layout="inline-flex" 
+                          className={`${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
                         >
                           {row.isActive ? "Active" : "Inactive"}
                         </Span>

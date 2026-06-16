@@ -181,22 +181,22 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
 
           <Div className="flex flex-wrap gap-2">
             {productCount > 0 && (
-              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
+              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
                 {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
               </Span>
             )}
             {auctionCount > 0 && (
-              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="y-2xs">
+              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="y-2xs">
                 {auctionCount.toLocaleString()} {auctionCount === 1 ? "auction" : "auctions"}
               </Span>
             )}
             {preOrderCount > 0 && (
-              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" }`} rounded="full" padding="y-2xs">
+              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" }`} rounded="full" padding="y-2xs">
                 {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
               </Span>
             )}
             {storeCount > 0 && (
-              <Span color="inverse" size="xs" weight="medium" className={`inline-flex items-center gap-1 px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success" }`} rounded="full" padding="y-2xs">
+              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success" }`} rounded="full" padding="y-2xs">
                 {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
               </Span>
             )}

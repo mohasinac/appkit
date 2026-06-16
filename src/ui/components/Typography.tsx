@@ -380,6 +380,26 @@ const SPAN_BG_MAP: Record<SpanBg, string> = {
   "info-surface": "bg-[var(--appkit-color-info-surface)]",
 };
 
+type SpanLayout = "inline" | "inline-flex" | "flex" | "inline-block" | "block";
+
+const SPAN_LAYOUT_MAP: Record<SpanLayout, string> = {
+  inline: "",
+  "inline-flex": "inline-flex items-center",
+  flex: "flex items-center",
+  "inline-block": "inline-block",
+  block: "block",
+};
+
+type SpanGap = "none" | "xs" | "sm" | "md" | "lg";
+
+const SPAN_GAP_MAP: Record<SpanGap, string> = {
+  none: "",
+  xs: "gap-1",
+  sm: "gap-1.5",
+  md: "gap-2",
+  lg: "gap-3",
+};
+
 interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Colour variant. "inherit" (default) applies no colour class. */
   variant?:
@@ -390,6 +410,16 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
     | "error"
     | "success"
     | "accent";
+  /**
+   * Display + cross-axis alignment preset.
+   * - `"inline-flex"` → `inline-flex items-center` (most chip patterns)
+   * - `"flex"` → `flex items-center` (block-level flex)
+   * - `"inline-block"` / `"block"` → display only
+   * - `"inline"` (default) → no display class
+   */
+  layout?: SpanLayout;
+  /** Gap between flex children. Only takes effect when `layout` is set to a flex variant. */
+  gap?: SpanGap;
   color?: ColorVariant;
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
   smSize?: HeadingSize;
@@ -430,6 +460,8 @@ export function Span({
   rounded,
   padding,
   surface,
+  layout,
+  gap,
   className = "",
   children,
   ...props
@@ -448,6 +480,8 @@ export function Span({
     rounded ? SPAN_ROUNDED_MAP[rounded] : "",
     padding ? SPAN_PADDING_MAP[padding] : "",
     surface ? SPAN_BG_MAP[surface] : "",
+    layout ? SPAN_LAYOUT_MAP[layout] : "",
+    gap ? SPAN_GAP_MAP[gap] : "",
     className,
   ]
     .filter(Boolean)

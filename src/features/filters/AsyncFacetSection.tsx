@@ -150,16 +150,16 @@ export function AsyncFacetSection({
       {collapsed && hasValue && (
         <Div className="mt-2 flex flex-wrap gap-1">
           {selectedLabels.map((label) => (
-            <Span
+            <Span layout="inline-flex" 
               key={label}
               size="xs"
-              className="inline-flex items-center border border-zinc-200 dark:border-slate-600" rounded="full" padding="pill-xs" surface="subtle" color="muted"
+              className="border border-zinc-200 dark:border-slate-600" rounded="full" padding="pill-xs" surface="subtle" color="muted"
             >
               {label}
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span size="xs" className="inline-flex items-center" rounded="full" padding="pill-xs" color="faint">
+            <Span layout="inline-flex" size="xs" rounded="full" padding="pill-xs" color="faint">
               +{selected.length - 3} more
             </Span>
           )}

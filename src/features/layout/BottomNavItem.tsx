@@ -54,9 +54,9 @@ export function BottomNavItem({
         <Span className="relative">
           {icon}
           {badge != null && badge > 0 && (
-            <Span color="inverse" 
+            <Span layout="flex" color="inverse" 
               aria-label={`${badge} items`}
-              className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 text-[10px] bg-secondary-500 flex items-center justify-center leading-none" rounded="full" weight="bold"
+              className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 text-[10px] bg-secondary-500 justify-center leading-none" rounded="full" weight="bold"
             >
               {badge > 99 ? "99+" : badge}
             </Span>

@@ -210,7 +210,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
       <Stack gap="sm" className={`${__P.p6}`} border="default" surface="muted" rounded="2xl">
         {pub.bio && <Text className="leading-relaxed text-neutral-700" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
-          {pub.location && <Span size="sm" className="flex items-center gap-1.5 text-neutral-500"><MapPin className="w-4 h-4" />{pub.location}</Span>}
+          {pub.location && <Span layout="flex" gap="xs" size="sm" className=".5 text-neutral-500"><MapPin className="w-4 h-4" />{pub.location}</Span>}
           {pub.website && <Anchor href={pub.website} className="flex items-center gap-1.5"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></Anchor>}
         </Row>
       </Stack>

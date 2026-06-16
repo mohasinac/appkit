@@ -71,8 +71,8 @@ export function AdminContactEditorView({
         {/* Status badge */}
         <Row align="center" gap="sm">
           <Text size="xs" color="muted">Status:</Text>
-          <Span
-            className={`inline-flex items-center ${ statusColor[currentStatus ?? "new"] ?? statusColor.new }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
+          <Span layout="inline-flex" 
+            className={`${ statusColor[currentStatus ?? "new"] ?? statusColor.new }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
           >
             {currentStatus ?? "new"}
           </Span>

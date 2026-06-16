@@ -164,7 +164,7 @@ export function RangeFilter({
           className="flex flex-1 items-center justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
-          <Span className="flex items-center gap-2">
+          <Span layout="flex" gap="md" >
             {title}
             {hasValue && (
               <Span size="xs" className={CLS_BADGE_COUNT}>

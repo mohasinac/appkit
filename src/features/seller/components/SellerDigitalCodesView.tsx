@@ -55,7 +55,7 @@ const COLUMNS: AdminTableColumn<DigitalCodeRow>[] = [
     key: "deliveryMethod",
     header: "Delivery",
     render: (row) => (
-      <Span size="xs" weight="medium" className="inline-flex items-center" rounded="full" padding="pill-xs" surface="subtle" color="muted" transform="capitalize">
+      <Span layout="inline-flex" size="xs" weight="medium" rounded="full" padding="pill-xs" surface="subtle" color="muted" transform="capitalize">
         {row.deliveryMethod.replace(/-/g, " ")}
       </Span>
     ),
@@ -64,8 +64,8 @@ const COLUMNS: AdminTableColumn<DigitalCodeRow>[] = [
     key: "status",
     header: "Status",
     render: (row) => (
-      <Span
-        className={`inline-flex items-center capitalize ${ row.status === "active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
+      <Span layout="inline-flex" 
+        className={`capitalize ${ row.status === "active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
       >
         {row.status}
       </Span>

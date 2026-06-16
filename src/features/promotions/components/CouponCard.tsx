@@ -256,13 +256,13 @@ export function CouponCard({
       {/* Status + scope pills (CRUD context) */}
       {(hasAdminActions || n.scope) && (
         <Row gap="xs" wrap className="mb-2">
-          <Span
-            className={`inline-flex items-center text-[10px] uppercase tracking-wide ${ n.isActive ? "bg-success-surface text-success" : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300" }`} rounded="full" padding="pill-xs" weight="semibold"
+          <Span layout="inline-flex" 
+            className={`text-[10px] uppercase tracking-wide ${ n.isActive ? "bg-success-surface text-success" : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300" }`} rounded="full" padding="pill-xs" weight="semibold"
           >
             {n.isActive ? labels.active : labels.inactive}
           </Span>
           {n.scope && (
-            <Span weight="semibold" className="inline-flex items-center bg-zinc-200/70 text-[10px] tracking-wide dark:bg-zinc-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
+            <Span layout="inline-flex" weight="semibold" className="bg-zinc-200/70 text-[10px] tracking-wide dark:bg-zinc-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
               {n.scope}
             </Span>
           )}

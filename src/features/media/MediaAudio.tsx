@@ -38,11 +38,11 @@ export function MediaAudio({
   const resolved = src ? resolveMediaUrl(src) : undefined;
   if (!resolved) {
     return (
-      <Span
+      <Span layout="inline-flex" gap="xs" 
         role="img"
         aria-label={title ?? "Audio unavailable"}
         // audit-variant-ok: MediaAudio fallback chip — primitive owns its style.
-        className="inline-flex items-center gap-1 text-[var(--appkit-color-text-muted)]" size="xs"
+        className="text-[var(--appkit-color-text-muted)]" size="xs"
       >
         🎵 {title ?? "Audio unavailable"}
       </Span>

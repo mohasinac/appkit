@@ -23,8 +23,8 @@ interface PreorderBadgeProps {
 export function PreorderBadge({ shipDate, className }: PreorderBadgeProps) {
   const status = getPreorderStatus(shipDate);
   return (
-    <Span
-      className={`inline-flex items-center ${STATUS_COLORS[status]} ${className ?? ""}`} padding="pill-sm" rounded="full" size="xs" weight="medium"
+    <Span layout="inline-flex" 
+      className={`${STATUS_COLORS[status]} ${className ?? ""}`} padding="pill-sm" rounded="full" size="xs" weight="medium"
     >
       {STATUS_LABELS[status]}
     </Span>

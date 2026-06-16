@@ -66,7 +66,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
       <Div>
         <Text size="sm" weight="medium">{row.label}</Text>
         {row.isDefault && (
-          <Span color="success" surface="success-surface" size="xs" weight="medium" className="mt-0.5 inline-flex items-center px-1.5 py-px" rounded="full">
+          <Span layout="inline-flex" color="success" surface="success-surface" size="xs" weight="medium" className="mt-0.5 px-1.5 py-px" rounded="full">
             Default
           </Span>
         )}
@@ -77,7 +77,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "method",
     header: "Method",
     render: (row) => (
-      <Span size="xs" weight="medium" className="inline-flex items-center" rounded="full" padding="pill-xs" surface="subtle" color="muted" transform="capitalize">
+      <Span layout="inline-flex" size="xs" weight="medium" rounded="full" padding="pill-xs" surface="subtle" color="muted" transform="capitalize">
         {row.method.replace(/_/g, " ")}
       </Span>
     ),
@@ -95,8 +95,8 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "isActive",
     header: "Status",
     render: (row) => (
-      <Span
-        className={`inline-flex items-center ${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
+      <Span layout="inline-flex" 
+        className={`${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
       >
         {row.isActive ? "Active" : "Inactive"}
       </Span>

@@ -502,8 +502,8 @@ export async function ProductDetailPageView({
                   </Span>
                 </Row>
               ) : (
-                <Span
-                  className={`inline-flex w-fit items-center gap-1.5 ${ inStock ? CLS_STOCK_IN : CLS_STOCK_OUT }`} rounded="full" padding="pill-md" size="xs" weight="medium"
+                <Span layout="inline-flex" gap="xs" 
+                  className={`w-fit .5 ${ inStock ? CLS_STOCK_IN : CLS_STOCK_OUT }`} rounded="full" padding="pill-md" size="xs" weight="medium"
                 >
                   {inStock ? "✓ In Stock" : "✗ Out of Stock"}
                   {inStock && effectiveStock !== null && effectiveStock <= 10
@@ -525,7 +525,7 @@ export async function ProductDetailPageView({
                     </Link>
                   ))}
                   {subcategory && (
-                    <Span size="xs" weight="medium" className="inline-flex items-center border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted" transform="capitalize">
+                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted" transform="capitalize">
                       {subcategory}
                     </Span>
                   )}
@@ -538,7 +538,7 @@ export async function ProductDetailPageView({
                     </Link>
                   )}
                   {brand && !brandSlug && (
-                    <Span size="xs" weight="medium" className="inline-flex items-center border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
+                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800 px-2.5" rounded="full" padding="y-2xs" surface="muted" color="muted">
                       {brand}
                     </Span>
                   )}
@@ -879,7 +879,7 @@ export async function ProductDetailPageView({
                   <Ol spacing="loose">
                     {howToUse.map((step, i) => (
                       <Li key={i} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
-                        <Span size="xs" weight="bold" className="flex-shrink-0 flex h-6 w-6 items-center justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" rounded="full">
+                        <Span layout="flex" size="xs" weight="bold" className="flex-shrink-0 h-6 w-6 justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" rounded="full">
                           {i + 1}
                         </Span>
                         {step}

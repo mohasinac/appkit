@@ -185,10 +185,10 @@ export function MarketplacePrizeDrawCard({
           <Span size="xs" weight="medium" className={CLS_PRIZE_PILL}>
             {mergedLabels.prizeDrawBadge}
           </Span>
-          <Span
+          <Span layout="inline-flex" 
             size="xs"
             weight="medium"
-            className={`inline-flex items-center ${statusVariant(status)}`} rounded="full" padding="pill-xs"
+            className={`${statusVariant(status)}`} rounded="full" padding="pill-xs"
           >
             {statusLabel(status, mergedLabels)}
           </Span>

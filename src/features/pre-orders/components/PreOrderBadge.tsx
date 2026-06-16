@@ -19,8 +19,8 @@ interface PreOrderBadgeProps {
 export function PreOrderBadge({ status, className = "" }: PreOrderBadgeProps) {
   const { label, color } = STATUS_MAP[status] ?? STATUS_MAP.pending;
   return (
-    <Span
-      className={`inline-flex items-center ${color} ${className}`} padding="pill-sm" rounded="full" size="xs" weight="medium"
+    <Span layout="inline-flex" 
+      className={`${color} ${className}`} padding="pill-sm" rounded="full" size="xs" weight="medium"
     >
       {label}
     </Span>

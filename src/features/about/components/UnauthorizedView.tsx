@@ -62,7 +62,7 @@ export async function UnauthorizedView({
                     : "border border-white/40 text-white px-6 py-2.5 rounded-xl hover:bg-white/10 transition-colors"
                 }
               >
-                <Span className="inline-flex items-center gap-2">
+                <Span layout="inline-flex" gap="md" >
                   <Icon className="w-4 h-4" />
                   {label}
                 </Span>

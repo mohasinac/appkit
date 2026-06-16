@@ -90,7 +90,7 @@ export function WelcomeSection({
             {/* Pill badge */}
             {pillLabel && (
               <Div>
-                <Span size="xs" weight="medium" className="inline-flex items-center gap-2 border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
+                <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
                   <Span
                     className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
                     aria-hidden="true"
@@ -173,10 +173,10 @@ export function WelcomeSection({
                 className="mt-6 lg:justify-start" justify="center"
               >
                 {trustChips.map((chip) => (
-                  <Span
+                  <Span layout="inline-flex" gap="xs" 
                     key={chip.key}
                     size="xs" weight="medium"
-                    className="inline-flex items-center gap-1.5 border border-zinc-200 dark:border-slate-700 px-3.5 py-1.5" rounded="full" surface="subtle" color="muted"
+                    className=".5 border border-zinc-200 dark:border-slate-700 px-3.5 py-1.5" rounded="full" surface="subtle" color="muted"
                   >
                     {chip.emoji} {chip.label}
                   </Span>

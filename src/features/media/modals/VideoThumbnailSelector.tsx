@@ -120,7 +120,7 @@ export function VideoThumbnailSelector({
             disabled={isCapturing}
           >
             {isCapturing ? (
-              <Span className="flex items-center gap-2">
+              <Span layout="flex" gap="md" >
                 <Spinner size="sm" />
                 {t("thumbnailCapturing")}
               </Span>
