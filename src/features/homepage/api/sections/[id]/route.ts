@@ -37,7 +37,7 @@ export async function GET(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("homepage_sections");
+    const repo = db.getRepository<Record<string, JsonValue>>("homepage_sections");
     const section = await repo.findById(id);
 
     if (!section) {
@@ -85,7 +85,7 @@ export async function PATCH(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("homepage_sections");
+    const repo = db.getRepository<Record<string, JsonValue>>("homepage_sections");
     const updated = await repo.update(id, body);
 
     if (!updated) {
@@ -131,7 +131,7 @@ export async function DELETE(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("homepage_sections");
+    const repo = db.getRepository<Record<string, JsonValue>>("homepage_sections");
     await repo.delete(id);
 
     return NextResponse.json({

@@ -37,7 +37,7 @@ export async function GET(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>(
+    const repo = db.getRepository<Record<string, JsonValue>>(
       "corporate_inquiries",
     );
     const inquiry = await repo.findById(id);
@@ -87,7 +87,7 @@ export async function PATCH(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>(
+    const repo = db.getRepository<Record<string, JsonValue>>(
       "corporate_inquiries",
     );
     const updated = await repo.update(id, body);
@@ -135,7 +135,7 @@ export async function DELETE(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>(
+    const repo = db.getRepository<Record<string, JsonValue>>(
       "corporate_inquiries",
     );
     await repo.delete(id);

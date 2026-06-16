@@ -154,6 +154,8 @@ export interface NavProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   "aria-label": string;
   /** Vertical spacing between top-level children. */
   spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  /** Colour cascaded onto nav children. */
+  color?: "default" | "primary" | "muted" | "faint";
   children: React.ReactNode;
 }
 
@@ -166,12 +168,20 @@ const NAV_SPACING_MAP: Record<NonNullable<NavProps["spacing"]>, string> = {
   xl: "space-y-6",
 };
 
-export function Nav({ surface, padding, rounded, border, shadow, spacing, className = "", children, ...props }: NavProps) {
+const NAV_COLOR_MAP: Record<NonNullable<NavProps["color"]>, string> = {
+  default: "",
+  primary: "appkit-color--primary",
+  muted: "appkit-color--muted",
+  faint: "appkit-color--faint",
+};
+
+export function Nav({ surface, padding, rounded, border, shadow, spacing, color, className = "", children, ...props }: NavProps) {
   return (
     <nav
       className={[
         buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
         spacing ? NAV_SPACING_MAP[spacing] : "",
+        color ? NAV_COLOR_MAP[color] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}

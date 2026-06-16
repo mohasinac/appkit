@@ -38,7 +38,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("preorders");
+    const repo = db.getRepository<Record<string, JsonValue>>("preorders");
     const result = await repo.findAll({
       filters,
       sort,
@@ -81,7 +81,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         { success: false, error: "DB not configured" },
         { status: 503 },
       );
-    const repo = db.getRepository<Record<string, unknown>>("preorders");
+    const repo = db.getRepository<Record<string, JsonValue>>("preorders");
     const created = await repo.create({
       ...input,
       status: "pending",

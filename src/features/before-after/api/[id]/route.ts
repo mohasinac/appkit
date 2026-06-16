@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "../../../../schemas/types";
 
 const ERR_DB_NOT_CONFIGURED = "DB not configured";
 const ERR_INTERNAL_SERVER_ERROR = "Internal server error";
@@ -36,7 +37,7 @@ export async function GET(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("before_after");
+    const repo = db.getRepository<Record<string, JsonValue>>("before_after");
     const item = await repo.findById(id);
 
     if (!item) {
@@ -84,7 +85,7 @@ export async function PATCH(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("before_after");
+    const repo = db.getRepository<Record<string, JsonValue>>("before_after");
     const updated = await repo.update(id, body);
 
     if (!updated) {
@@ -130,7 +131,7 @@ export async function DELETE(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("before_after");
+    const repo = db.getRepository<Record<string, JsonValue>>("before_after");
     await repo.delete(id);
 
     return NextResponse.json({

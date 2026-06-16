@@ -37,7 +37,7 @@ export async function GET(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("pre_orders");
+    const repo = db.getRepository<Record<string, JsonValue>>("pre_orders");
     const preOrder = await repo.findById(id);
 
     if (!preOrder) {
@@ -85,7 +85,7 @@ export async function PATCH(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("pre_orders");
+    const repo = db.getRepository<Record<string, JsonValue>>("pre_orders");
     const updated = await repo.update(id, body);
 
     if (!updated) {
@@ -131,7 +131,7 @@ export async function DELETE(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("pre_orders");
+    const repo = db.getRepository<Record<string, JsonValue>>("pre_orders");
     await repo.delete(id);
 
     return NextResponse.json({
