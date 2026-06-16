@@ -3,10 +3,10 @@
 // main component stays under the 150-line code-quality threshold.
 
 import React from "react";
-import { Badge, Button, Div, Row, Stack, Text, TextLink } from "../../../ui";
+import { Badge, Button, Div, Grid, Row, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
-import { CARD_BORDER, CARD_BORDER_ACTIVE, CARD_GRID_CLS, CARD_LIST_CLS, KIND_BADGE_VARIANT } from "./seller-products-styles";
+import { LISTING_BADGE_VARIANT } from "../../products/utils/listing-badge-variant";
 
 const __P = {
   p3: "p-3",
@@ -53,8 +53,12 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
   onDuplicate,
   onDelete,
 }: SellerProductsCardsProps<TRow>) {
+  const Container = view === "grid" ? Grid : Stack;
+  const containerProps = view === "grid"
+    ? ({ cols: "cards", gap: "3" } as const)
+    : ({ gap: "sm" } as const);
   return (
-    <Div className={view === "grid" ? CARD_GRID_CLS : CARD_LIST_CLS}>
+    <Container {...containerProps}>
       {rows.length === 0 && !isLoading && (
         <Text className="text-[var(--appkit-color-text-muted)] col-span-full" size="sm">
           {listingKind !== "all" ? `No ${listingKind} listings found` : "No products listed yet"}
@@ -63,11 +67,10 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
       {rows.map((row) => {
         const isSelected = selectedIds.has(row.id);
         const href = buildHref(row);
-        const borderCls = isSelected ? CARD_BORDER_ACTIVE : CARD_BORDER;
         return view === "grid" ? (
           <Div
             key={row.id}
-            className={`group relative border bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow ${borderCls}`} rounded="xl"
+            className="group relative bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow" rounded="xl" border={isSelected ? "strong" : "default"}
           >
             <Div className="absolute top-2 left-2 z-10">
               <input
@@ -86,7 +89,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               <Stack className={`${__P.p3}`} gap="xs">
                 <Text className="line-clamp-1" size="sm" weight="medium">{row.primary}</Text>
                 <Row gap="sm">
-                  <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
+                  <Badge variant={LISTING_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
                   <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
                 </Row>
               </Stack>
@@ -102,7 +105,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
         ) : (
           <Row
             key={row.id}
-            className={`border bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-raised)] ${borderCls}`} align="center" gap="3" rounded="lg" padding="inlineSm"
+            className="bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-raised)]" align="center" gap="3" rounded="lg" padding="inlineSm" border={isSelected ? "strong" : "default"}
           >
             <input
               type="checkbox"
@@ -117,7 +120,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
             <TextLink href={href} className="flex-1 min-w-0">
               <Text className="line-clamp-1" size="sm" weight="medium">{row.primary}</Text>
               <Row gap="sm">
-                <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
+                <Badge variant={LISTING_BADGE_VARIANT[row.listingKind] ?? "default"}>{row.listingKind}</Badge>
                 <Text className="text-[var(--appkit-color-text-muted)] line-clamp-1" size="xs">{row.secondary}</Text>
               </Row>
             </TextLink>
@@ -131,6 +134,6 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
           </Row>
         );
       })}
-    </Div>
+    </Container>
   );
 }

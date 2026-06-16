@@ -32,7 +32,7 @@ import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 
 import { SellerProductsCards } from "./SellerProductsCards";
 import { SellerProductsFilterDrawer } from "./SellerProductsFilterDrawer";
-import { KIND_BADGE_VARIANT } from "./seller-products-styles";
+import { LISTING_BADGE_VARIANT } from "../../products/utils/listing-badge-variant";
 import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
@@ -154,7 +154,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
       <Stack gap="xs">
         <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="medium">{row.primary}</Text>
         <Row gap="sm">
-          <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>
+          <Badge variant={LISTING_BADGE_VARIANT[row.listingKind] ?? "default"}>
             {row.listingKind}
           </Badge>
           <Span size="xs" color="muted">{row.secondary}</Span>

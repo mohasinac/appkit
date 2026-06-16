@@ -1,3 +1,5 @@
+import type { JsonValue } from "../schemas/types";
+
 /**
  * IAuthVerifier — Injectable auth interface for createApiHandler.
  *
@@ -30,7 +32,7 @@ export interface AuthVerifiedUser {
   uid: string;
   email?: string;
   role?: string;
-  [key: string]: unknown;
+  [key: string]: JsonValue | undefined;
 }
 
 /**

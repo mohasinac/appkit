@@ -4,11 +4,9 @@
 
 import React from "react";
 import { Div, FilterChipGroup, ListingFilterDrawer, Row, Stack, Text } from "../../../ui";
-import { INPUT_CLS, FILTER_LABEL_CLS } from "./seller-products-styles";
+import { FieldInput, FieldSelect } from "../../../ui/forms";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
 import { BrandInlineSelect } from "./BrandInlineSelect";
-
-const HALF_INPUT_CLS = INPUT_CLS.replace("w-full", "w-1/2");
 
 const CONDITION_OPTIONS = [
   { value: "", label: "Any" },
@@ -17,7 +15,7 @@ const CONDITION_OPTIONS = [
   { value: "used", label: "Used" },
   { value: "refurbished", label: "Refurbished" },
   { value: "for-parts", label: "For parts" },
-] as const;
+];
 
 export interface SellerProductsFilterDrawerProps {
   isOpen: boolean;
@@ -49,16 +47,16 @@ export function SellerProductsFilterDrawer({
         value={pendingFilters.status ?? ""}
         onChange={(id) => patch("status", id)}
       />
-      <Stack gap="xs" className="">
-        <Text className={FILTER_LABEL_CLS}>Category</Text>
+      <Stack gap="xs">
+        <Text size="xs" weight="semibold" color="muted" transform="uppercase">Category</Text>
         <CategoryInlineSelect
           value={pendingFilters.category ?? ""}
           onChange={(v) => patch("category", v)}
           placeholder="Search categories…"
         />
       </Stack>
-      <Stack gap="xs" className="">
-        <Text className={FILTER_LABEL_CLS}>Brand</Text>
+      <Stack gap="xs">
+        <Text size="xs" weight="semibold" color="muted" transform="uppercase">Brand</Text>
         <BrandInlineSelect
           value={pendingFilters.brand ?? ""}
           onChange={(v) => patch("brand", v)}
@@ -66,59 +64,54 @@ export function SellerProductsFilterDrawer({
           allowCreate={false}
         />
       </Stack>
-      <Stack gap="xs" className="">
-        <Text className={FILTER_LABEL_CLS}>Condition</Text>
-        <select
-          value={pendingFilters.condition ?? ""}
-          onChange={(e) => patch("condition", e.target.value)}
-          className={INPUT_CLS}
-        >
-          {CONDITION_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
-          ))}
-        </select>
-      </Stack>
-      <Stack gap="xs" className="">
-        <Text className={FILTER_LABEL_CLS}>Price (₹ Rupees)</Text>
+      <FieldSelect
+        name="condition"
+        label="Condition"
+        value={pendingFilters.condition ?? ""}
+        onChange={(v) => patch("condition", v)}
+        options={CONDITION_OPTIONS}
+      />
+      <Stack gap="xs">
+        <Text size="xs" weight="semibold" color="muted" transform="uppercase">Price (₹ Rupees)</Text>
         <Row gap="sm">
-          <input
-            type="number"
-            min={0}
-            value={pendingFilters.minPrice ?? ""}
-            onChange={(e) => patch("minPrice", e.target.value)}
-            placeholder="min"
-            className={HALF_INPUT_CLS}
-          />
-          <input
-            type="number"
-            min={0}
-            value={pendingFilters.maxPrice ?? ""}
-            onChange={(e) => patch("maxPrice", e.target.value)}
-            placeholder="max"
-            className={HALF_INPUT_CLS}
-          />
+          <Div className="flex-1">
+            <FieldInput
+              name="minPrice"
+              type="number"
+              min={0}
+              value={pendingFilters.minPrice ?? ""}
+              onChange={(v) => patch("minPrice", v)}
+              placeholder="min"
+            />
+          </Div>
+          <Div className="flex-1">
+            <FieldInput
+              name="maxPrice"
+              type="number"
+              min={0}
+              value={pendingFilters.maxPrice ?? ""}
+              onChange={(v) => patch("maxPrice", v)}
+              placeholder="max"
+            />
+          </Div>
         </Row>
       </Stack>
-      <Stack gap="xs" className="">
-        <Text className={FILTER_LABEL_CLS}>Tags (comma-separated)</Text>
-        <input
-          type="text"
-          value={pendingFilters.tags ?? ""}
-          onChange={(e) => patch("tags", e.target.value)}
-          placeholder="pokemon, vintage, holo"
-          className={INPUT_CLS}
-        />
-      </Stack>
-      <Stack gap="xs" className="">
-        <Text className={FILTER_LABEL_CLS}>Badges (feature slugs)</Text>
-        <input
-          type="text"
-          value={pendingFilters.badges ?? ""}
-          onChange={(e) => patch("badges", e.target.value)}
-          placeholder="feature-free-shipping, feature-verified"
-          className={INPUT_CLS}
-        />
-      </Stack>
+      <FieldInput
+        name="tags"
+        label="Tags (comma-separated)"
+        type="text"
+        value={pendingFilters.tags ?? ""}
+        onChange={(v) => patch("tags", v)}
+        placeholder="pokemon, vintage, holo"
+      />
+      <FieldInput
+        name="badges"
+        label="Badges (feature slugs)"
+        type="text"
+        value={pendingFilters.badges ?? ""}
+        onChange={(v) => patch("badges", v)}
+        placeholder="feature-free-shipping, feature-verified"
+      />
     </ListingFilterDrawer>
   );
 }

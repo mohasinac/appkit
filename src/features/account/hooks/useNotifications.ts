@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { NOTIFICATIONS_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface BaseNotificationItem {
   id: string;
   read?: boolean;
-  [key: string]: unknown;
+  [key: string]: JsonValue | undefined;
 }
 
 export interface NotificationsResponse<TNotification = any> {

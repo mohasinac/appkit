@@ -1,6 +1,7 @@
 "use client"
 import { normalizeError } from "../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { JsonValue } from "../../schemas/types";
 import {
   getClientRealtimeProvider,
   type IClientRealtimeProvider,
@@ -40,7 +41,7 @@ export const RTDBPayloadStatus = {
 export interface RTDBEventPayload {
   status: (typeof RTDBPayloadStatus)[keyof typeof RTDBPayloadStatus];
   error?: string;
-  [key: string]: unknown;
+  [key: string]: JsonValue | undefined;
 }
 
 export interface RealtimeEventMessages {

@@ -38,7 +38,8 @@ function extractBulkResult(
 
   const result: BulkActionResult<unknown> = {
     action: raw.action,
-    summary: raw.summary as BulkActionSummary,
+    // audit-unknown-ok: TS structural escape — BulkActionSummary
+    summary: raw.summary as unknown as BulkActionSummary,
     succeeded: (raw.succeeded as string[] | undefined) ?? [],
     skipped: (raw.skipped as string[] | undefined) ?? [],
     failed: (raw.failed as BulkActionItemFailure[] | undefined) ?? [],

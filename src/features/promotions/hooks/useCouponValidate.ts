@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { PROMOTION_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { JsonValue } from "@mohasinac/appkit";
 
 interface ValidateCouponPayload {
   code: string;
@@ -19,7 +20,7 @@ interface ValidateCouponResult {
   valid: boolean;
   discountAmount?: number;
   message?: string;
-  [key: string]: unknown;
+  [key: string]: JsonValue | undefined;
 }
 
 export function useCouponValidate(options?: { endpoint?: string }) {

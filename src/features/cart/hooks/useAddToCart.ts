@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient, type ApiClientError } from "../../../http";
 import { addToGuestCart } from "../utils/guest-cart";
 import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { JsonValue } from "@mohasinac/appkit";
 
 interface AddToCartPayload {
   productId: string;
@@ -14,7 +15,7 @@ interface AddToCartPayload {
   price?: number;
   storeId?: string;
   storeName?: string;
-  [key: string]: unknown;
+  [key: string]: JsonValue | undefined;
 }
 
 interface UseAddToCartOptions {

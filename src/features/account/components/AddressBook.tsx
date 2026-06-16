@@ -1,4 +1,5 @@
 import type { UserAddress } from "../types";
+import type { JsonValue } from "@mohasinac/appkit";
 import { Button, Div, Span, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 
@@ -15,7 +16,7 @@ export interface AddressCardAddress {
   country: string;
   isDefault?: boolean;
   phone?: string;
-  [key: string]: unknown;
+  [key: string]: JsonValue | undefined;
 }
 
 export interface AddressCardProps {
