@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { AdminTableColumn } from "../types";
 import { BaseListingCard, Button, Div, Row, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";
@@ -10,7 +11,7 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
+const DEFAULT_COLUMNS: AdminTableColumn<Record<string, JsonValue>>[] = [
   {
     key: "primary",
     header: "Name",
@@ -122,7 +123,7 @@ function SelectableRow<T extends { id: string }>({
         >
           {col.render
             ? col.render(row)
-            : String((row as Record<string, unknown>)[col.key] ?? "")}
+            : String((row as Record<string, JsonValue>)[col.key] ?? "")}
         </Td>
       ))}
       {renderRowActions && (

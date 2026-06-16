@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 /**
  * Site Settings Repository
  *
@@ -71,7 +72,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
           .doc(this.SINGLETON_ID)
           .set(
             prepareForFirestore(
-              defaultSettings as unknown as Record<string, unknown>,
+              defaultSettings as unknown as Record<string, JsonValue>,
             ),
           );
 
@@ -300,7 +301,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
       .doc(this.SINGLETON_ID)
       .set(
         prepareForFirestore(
-          defaultSettings as unknown as Record<string, unknown>,
+          defaultSettings as unknown as Record<string, JsonValue>,
         ),
       );
 
