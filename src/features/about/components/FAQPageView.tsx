@@ -39,8 +39,8 @@ export async function FAQPageView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {/* Hero */}
-      <Section
-        tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl"
+      <Section color="inverse" 
+        tone="accent-banner" className="md:py-16 lg:py-20" padding="y-2-5xl"
       >
         <Container size="md" className="text-center">
           <Heading color="inverse" level={1} variant="none" className="mb-3">

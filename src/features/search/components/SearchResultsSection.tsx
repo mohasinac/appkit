@@ -100,7 +100,7 @@ export function SearchResultsSection({
     }
 
     return (
-      <Stack className="justify-center py-20 text-center" align="center" gap="3">
+      <Stack padding="y-5xl" className="justify-center text-center" align="center" gap="3">
         <Span aria-hidden="true" size="5xl">
           🔍
         </Span>

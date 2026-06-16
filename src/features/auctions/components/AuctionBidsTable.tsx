@@ -158,7 +158,7 @@ export function AuctionBidsTable({
 
   if (auctions.length === 0) {
     return (
-      <Div className="py-24 text-center">
+      <Div padding="y-6xl" className="text-center">
         <Text variant="secondary">{emptyLabel}</Text>
       </Div>
     );

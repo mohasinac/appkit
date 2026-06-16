@@ -54,6 +54,20 @@ const SECTION_TONE_MAP: Record<SectionTone, string> = {
   "accent-banner": "appkit-section--tone-accent-banner",
 };
 
+type SemanticColor = "default" | "primary" | "muted" | "faint" | "inverse" | "success" | "warning" | "error" | "info";
+
+const SEMANTIC_COLOR_MAP: Record<SemanticColor, string> = {
+  default: "",
+  primary: "appkit-color--primary",
+  muted: "appkit-color--muted",
+  faint: "appkit-color--faint",
+  inverse: "appkit-color--inverse",
+  success: "appkit-color--success",
+  warning: "appkit-color--warning",
+  error: "appkit-color--error",
+  info: "appkit-color--info",
+};
+
 export interface SectionProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /**
    * Themed background tone. Defaults to `"plain"`. Use `"page-header"` for
@@ -61,15 +75,17 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Surface
    * `"accent-banner"` for primary→secondary brand banners.
    */
   tone?: SectionTone;
+  color?: SemanticColor;
   children: React.ReactNode;
 }
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ tone = "plain", className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
+  ({ tone = "plain", color, className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
     <section
       className={[
         SECTION_TONE_MAP[tone],
         buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+        color ? SEMANTIC_COLOR_MAP[color] : "",
         className,
       ]
         .filter(Boolean)
@@ -89,12 +105,13 @@ Section.displayName = "Section";
  * Use for self-contained compositions: blog posts, product cards, reviews, forum posts.
  */
 export interface ArticleProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
+  color?: SemanticColor;
   children?: React.ReactNode;
 }
 
-export function Article({ className = "", surface, padding, rounded, border, shadow, children, ...props }: ArticleProps) {
+export function Article({ className = "", surface, padding, rounded, border, shadow, color, children, ...props }: ArticleProps) {
   return (
-    <article className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <article className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
       {children}
     </article>
   );
@@ -106,12 +123,13 @@ export function Article({ className = "", surface, padding, rounded, border, sha
  * Wraps the primary content of the document. Should appear only once per page.
  */
 export interface MainProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
+  color?: SemanticColor;
   children: React.ReactNode;
 }
 
-export function Main({ className = "", surface, padding, rounded, border, shadow, children, ...props }: MainProps) {
+export function Main({ className = "", surface, padding, rounded, border, shadow, color, children, ...props }: MainProps) {
   return (
-    <main className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <main className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
       {children}
     </main>
   );
@@ -124,12 +142,13 @@ export function Main({ className = "", surface, padding, rounded, border, shadow
  * sidebars, callout boxes, related-link panels.
  */
 export interface AsideProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
+  color?: SemanticColor;
   children: React.ReactNode;
 }
 
 export const Aside = React.forwardRef<HTMLElement, AsideProps>(
-  ({ className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
-    <aside className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} ref={ref} {...props}>
+  ({ className = "", surface, padding, rounded, border, shadow, color, children, ...props }, ref) => (
+    <aside className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} ref={ref} {...props}>
       {children}
     </aside>
   ),

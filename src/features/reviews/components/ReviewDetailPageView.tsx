@@ -20,7 +20,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
   if (!review || review.status !== "approved") {
     return (
       <Main>
-        <Section className="py-24">
+        <Section padding="y-6xl" >
           <Container size="sm">
             <Div className="text-center">
               <Text className="mb-4" size="5xl" aria-hidden="true">🔍</Text>

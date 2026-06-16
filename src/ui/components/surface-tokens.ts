@@ -78,6 +78,8 @@ export const PADDING_MAP = {
   "b-2xl": "pb-10",
   // Fill-in vertical sizes.
   "y-2-5xl": "py-14",
+  "y-5xl": "py-20",
+  "y-6xl": "py-24",
 } as const;
 
 export type PaddingKey = keyof typeof PADDING_MAP;

@@ -292,7 +292,7 @@ export function TitleBarLayout({
     >
       {/* Promo strip */}
       {promoStripText && (
-        <Section tone="accent-banner" className="text-white text-xs text-center font-medium" padding="y-2xs">
+        <Section color="inverse" tone="accent-banner" className="text-xs text-center font-medium" padding="y-2xs">
           {promoStripText}
         </Section>
       )}

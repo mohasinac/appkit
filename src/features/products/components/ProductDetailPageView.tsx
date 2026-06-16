@@ -224,7 +224,7 @@ export async function ProductDetailPageView({
   if (!product) {
     return (
       <Main>
-        <Section className="py-20">
+        <Section padding="y-5xl" >
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
               <Heading

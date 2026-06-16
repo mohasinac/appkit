@@ -58,11 +58,11 @@ export function WhatsAppCommunitySection({
       <Div className="w-full max-w-7xl mx-auto">
 
         {/* Card */}
-        <Section
+        <Section color="inverse" 
           tone="accent-banner"
           rounded="2xl"
           shadow="lg"
-          className="relative overflow-hidden text-white"
+          className="relative overflow-hidden"
         >
           {/* Subtle diagonal-line texture for depth */}
           <Div

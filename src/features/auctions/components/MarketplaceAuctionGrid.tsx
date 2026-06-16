@@ -131,10 +131,10 @@ export function MarketplaceAuctionGrid({
 
   if (auctions.length === 0) {
     return (
-      <Stack
+      <Stack padding="y-6xl" 
         align="center"
         gap="3"
-        className="justify-center py-24 text-center"
+        className="justify-center text-center"
       >
         {emptyIcon ?? <Gavel className="h-16 w-16" />}
         <Text size="xl" weight="medium" color="primary">

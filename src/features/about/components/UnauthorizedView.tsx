@@ -31,8 +31,8 @@ export async function UnauthorizedView({
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section
-        tone="accent-banner" className="text-white min-h-[60vh] flex flex-col items-center justify-center py-20 text-center"
+      <Section padding="y-5xl" color="inverse" 
+        tone="accent-banner" className="min-h-[60vh] flex flex-col items-center justify-center text-center"
       >
         <Div className={`${page.container.sm}`}>
           <Div className={`w-20 h-20 ${flex.center} mx-auto mb-6`} surface="default" rounded="2xl">

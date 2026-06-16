@@ -161,7 +161,7 @@ function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewC
 function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: string | null; memberSince: string; isSeller: boolean; storeSlug: string | null | undefined; flex: ProfileFlex; page: ProfilePage }) {
   const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page } = ctx;
   return (
-    <Section tone="accent-banner" className="text-white md:py-14" padding="y-2xl">
+    <Section color="inverse" tone="accent-banner" className="md:py-14" padding="y-2xl">
       <Div className={`${page.container.md}`}>
         <Stack className="flex-wrap sm:flex-row sm:items-end" align="center" gap="md">
           <Div className={`w-20 h-20 ${flex.center} flex-shrink-0 ${__O.hidden}`} surface="default" rounded="full">

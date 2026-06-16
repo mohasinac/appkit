@@ -67,8 +67,8 @@ export function NewsletterBanner({
   }
 
   return (
-    <Section
-      className="relative overflow-hidden py-24"
+    <Section padding="y-6xl" 
+      className="relative overflow-hidden"
       // audit-inline-style-ok: dynamic CSS
       style={{
         background:

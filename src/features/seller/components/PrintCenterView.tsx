@@ -44,7 +44,7 @@ interface PrintCenterViewProps {
 
 export function PrintCenterView({ store, brandName = "LetItRip" }: PrintCenterViewProps) {
   return (
-    <Stack className="justify-center py-24 text-center" align="center" gap="md">
+    <Stack padding="y-6xl" className="justify-center text-center" align="center" gap="md">
       <Heading level={2}>{brandName} Print Center</Heading>
       {store && <Text size="sm" variant="muted">{store.storeName}</Text>}
       <Text size="sm" variant="muted">Print center features are coming soon.</Text>

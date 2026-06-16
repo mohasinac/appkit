@@ -381,7 +381,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
   if (!product) {
     return (
       <Main>
-        <Section className="py-20">
+        <Section padding="y-5xl" >
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
               <Heading level={1} size="2xl" weight="semibold" color="primary">

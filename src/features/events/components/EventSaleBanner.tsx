@@ -41,7 +41,7 @@ export function EventSaleBanner({
     : `${ROUTES.PUBLIC.PRODUCTS}?onSale=true`;
 
   return (
-    <Section tone="accent-banner" className={`${__P.p6} text-white`} rounded="2xl" shadow="lg">
+    <Section color="inverse" tone="accent-banner" className={`${__P.p6}`} rounded="2xl" shadow="lg">
       <Stack gap="md">
         <Stack gap="xs">
           <Heading level={2} weight="bold" size="3xl">

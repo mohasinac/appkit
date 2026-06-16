@@ -53,7 +53,7 @@ export function AboutView({
 }: AboutViewProps) {
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section tone="accent-banner" className="text-white md:py-20 lg:py-24" padding="y-4xl">
+      <Section color="inverse" tone="accent-banner" className="md:py-20 lg:py-24" padding="y-4xl">
         <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
           <Heading color="inverse" level={1} variant="none" className="mb-6" mdSize="5xl" size="4xl" weight="bold">
             {labels.title}
@@ -123,7 +123,7 @@ export function AboutView({
           </Stack>
         </Section>
 
-        <Section tone="accent-banner" className={`text-center ${ctaBannerClass} ${__P.p8} md:p-12 text-white`} rounded="2xl">
+        <Section color="inverse" tone="accent-banner" className={`text-center ${ctaBannerClass} ${__P.p8} md:p-12`} rounded="2xl">
           <Heading color="inverse" level={2} variant="none" className="mb-8" size="3xl" weight="bold">
             {labels.ctaTitle}
           </Heading>
