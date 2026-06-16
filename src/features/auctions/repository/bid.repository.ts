@@ -42,7 +42,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<BidDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, JsonValue>, [
+    return decryptPiiFields(raw, [
       ...BID_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -68,8 +68,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
     };
 
     // Encrypt PII before persisting
-    const encrypted = encryptPiiFields(
-      bidData as unknown as Record<string, JsonValue>,
+    const encrypted = encryptPiiFields(bidData,
       [...BID_PII_FIELDS],
     );
 

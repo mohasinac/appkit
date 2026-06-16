@@ -7,7 +7,7 @@
  */
 
 import type { SeedCollectionName } from "./actions/demo-seed-actions";
-import type { JsonValue } from "../schemas/types";
+import type { FirestoreDocument, JsonValue } from "../schemas/types";
 import {
   payoutMethodsSeedData,
   shippingConfigsSeedData,
@@ -153,7 +153,7 @@ export const SEED_MANIFEST: SeedManifest = {
     "name",
   ),
   siteSettings: pick(
-    [siteSettingsSeedData as unknown as Record<string, JsonValue>].map((s) => ({
+    [siteSettingsSeedData as unknown as FirestoreDocument].map((s) => ({
       ...s,
       name: s.siteName ?? "global",
     })),

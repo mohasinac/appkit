@@ -72,7 +72,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
           .doc(this.SINGLETON_ID)
           .set(
             prepareForFirestore(
-              defaultSettings as unknown as Record<string, JsonValue>,
+              defaultSettings,
             ),
           );
 
@@ -301,7 +301,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
       .doc(this.SINGLETON_ID)
       .set(
         prepareForFirestore(
-          defaultSettings as unknown as Record<string, JsonValue>,
+          defaultSettings,
         ),
       );
 

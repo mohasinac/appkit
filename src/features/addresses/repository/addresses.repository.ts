@@ -1,5 +1,4 @@
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
 /**
  * AddressesRepository — SB-UNI-A 2026-05-13
  *
@@ -39,38 +38,32 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
   }
 
   private decryptAddress(doc: AddressDocument): AddressDocument {
-    return decryptPiiFields(doc as unknown as Record<string, JsonValue>, [
-      ...ADDRESS_PII_FIELDS,
-    ]) as unknown as AddressDocument;
+    return decryptPiiFields(doc, [...ADDRESS_PII_FIELDS]) as AddressDocument;
   }
 
-  private encryptAddressData<T extends Record<string, JsonValue>>(data: T): T {
+  private encryptAddressData<T extends object>(data: T): T {
     return encryptPiiFields(data, [...ADDRESS_PII_FIELDS]);
   }
 
   protected override mapDoc<D = AddressDocument>(snap: DocumentSnapshot): D {
     const raw = super.mapDoc<AddressDocument>(snap);
-    return this.decryptAddress(raw) as unknown as D;
+    return this.decryptAddress(raw) as D;
   }
 
   override async createWithId(
     id: string,
     data: Partial<AddressDocument>,
   ): Promise<AddressDocument> {
-    const encrypted = this.encryptAddressData(
-      data as unknown as Record<string, JsonValue>,
-    );
-    return super.createWithId(id, encrypted as Partial<AddressDocument>);
+    const encrypted = this.encryptAddressData(data);
+    return super.createWithId(id, encrypted);
   }
 
   override async update(
     id: string,
     data: Partial<AddressDocument>,
   ): Promise<AddressDocument> {
-    const encrypted = this.encryptAddressData(
-      data as unknown as Record<string, JsonValue>,
-    );
-    return super.update(id, encrypted as Partial<AddressDocument>);
+    const encrypted = this.encryptAddressData(data);
+    return super.update(id, encrypted);
   }
 
   async listByOwner(
@@ -156,9 +149,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
         updatedAt: now,
       };
 
-      const encrypted = this.encryptAddressData(
-        addressData as unknown as Record<string, JsonValue>,
-      );
+      const encrypted = this.encryptAddressData(addressData);
       await docRef.set(prepareForFirestore(encrypted));
 
       serverLogger.info("Address created", {

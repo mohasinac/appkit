@@ -137,7 +137,7 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
         type="button"
         variant="primary"
         onClick={openInvite}
-        className="flex items-center whitespace-nowrap"
+        className="whitespace-nowrap"
       >
         <UserPlus className="h-4 w-4" />
         Invite Employee

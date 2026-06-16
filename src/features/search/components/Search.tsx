@@ -684,7 +684,7 @@ export function Search({
             onClick={handleOverlaySearch}
             variant="primary"
             size="md"
-            className="hidden sm:flex"
+            className="hidden sm:"
           >
             <svg
               className="w-5 h-5"

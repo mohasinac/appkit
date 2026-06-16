@@ -12,7 +12,7 @@
 import { getAdminDb } from "../../../providers/db-firebase";
 import { serverLogger } from "../../../monitoring";
 import { CONVERSATION_FIELDS } from "../../../constants/field-names";
-import type { JsonValue } from "../../../schemas/types";
+import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
 import {
   CONVERSATIONS_COLLECTION,
   type ConversationDocument,
@@ -28,8 +28,8 @@ function toDate(raw: unknown): Date {
   return new Date();
 }
 
-function normaliseMessage(raw: unknown): ConversationMessage {
-  const r = (raw ?? {}) as Record<string, JsonValue>;
+function normaliseMessage(raw: JsonValue): ConversationMessage {
+  const r = (raw ?? {}) as FirestoreDocument;
   return {
     id: String(r.id ?? ""),
     senderId: String(r.senderId ?? ""),
@@ -43,24 +43,25 @@ function normaliseMessage(raw: unknown): ConversationMessage {
   };
 }
 
-function normaliseDoc(id: string, raw: Record<string, JsonValue>): ConversationDocument {
+function normaliseDoc(id: string, raw: object): ConversationDocument {
+  const r = raw as FirestoreDocument;
   return {
     id,
-    buyerId: String(raw.buyerId ?? ""),
-    buyerDisplayName: String(raw.buyerDisplayName ?? ""),
-    storeId: String(raw.storeId ?? ""),
-    storeName: String(raw.storeName ?? ""),
-    sellerDisplayName: String(raw.sellerDisplayName ?? ""),
-    productId: typeof raw.productId === "string" ? raw.productId : undefined,
-    productTitle: typeof raw.productTitle === "string" ? raw.productTitle : undefined,
-    messages: Array.isArray(raw.messages) ? raw.messages.map(normaliseMessage) : [],
-    lastMessage: String(raw.lastMessage ?? ""),
-    lastMessageAt: toDate(raw.lastMessageAt),
-    unreadBuyer: typeof raw.unreadBuyer === "number" ? raw.unreadBuyer : 0,
-    unreadSeller: typeof raw.unreadSeller === "number" ? raw.unreadSeller : 0,
-    status: (raw.status as ConversationDocument["status"]) ?? "active",
-    createdAt: toDate(raw.createdAt),
-    updatedAt: toDate(raw.updatedAt),
+    buyerId: String(r.buyerId ?? ""),
+    buyerDisplayName: String(r.buyerDisplayName ?? ""),
+    storeId: String(r.storeId ?? ""),
+    storeName: String(r.storeName ?? ""),
+    sellerDisplayName: String(r.sellerDisplayName ?? ""),
+    productId: typeof r.productId === "string" ? r.productId : undefined,
+    productTitle: typeof r.productTitle === "string" ? r.productTitle : undefined,
+    messages: Array.isArray(r.messages) ? r.messages.map(normaliseMessage) : [],
+    lastMessage: String(r.lastMessage ?? ""),
+    lastMessageAt: toDate(r.lastMessageAt),
+    unreadBuyer: typeof r.unreadBuyer === "number" ? r.unreadBuyer : 0,
+    unreadSeller: typeof r.unreadSeller === "number" ? r.unreadSeller : 0,
+    status: (r.status as ConversationDocument["status"]) ?? "active",
+    createdAt: toDate(r.createdAt),
+    updatedAt: toDate(r.updatedAt),
   };
 }
 
@@ -119,7 +120,7 @@ export class ConversationsRepository {
         updatedAt: now,
       };
       tx.set(ref, newDoc);
-      return normaliseDoc(stableId, newDoc as unknown as Record<string, JsonValue>);
+      return normaliseDoc(stableId, newDoc);
     });
   }
 
@@ -196,7 +197,7 @@ export class ConversationsRepository {
           updatedAt: now,
         };
         tx.update(ref, patch);
-        return normaliseDoc(conversationId, { ...data, ...patch } as unknown as Record<string, JsonValue>);
+        return normaliseDoc(conversationId, { ...data, ...patch });
       });
     } catch (error) {
       serverLogger.error("ConversationsRepository.appendMessage error", {

@@ -16,7 +16,7 @@ const SELLER_IDENTITY_FIELDS = [
   "ownerId",
 ] as const;
 
-export function sanitizeProductForPublic<T extends Record<string, JsonValue>>(
+export function sanitizeProductForPublic<T extends object>(
   item: T,
 ): T {
   const copy = { ...item };
@@ -26,7 +26,7 @@ export function sanitizeProductForPublic<T extends Record<string, JsonValue>>(
   return copy;
 }
 
-export function sanitizeProductsForPublic<T extends Record<string, JsonValue>>(
+export function sanitizeProductsForPublic<T extends object>(
   items: readonly T[],
 ): T[] {
   return items.map((item) => sanitizeProductForPublic(item));

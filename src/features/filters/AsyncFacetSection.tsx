@@ -104,7 +104,7 @@ export function AsyncFacetSection({
           onClick={() => setCollapsed((c) => !c)}
           variant="ghost"
           size="sm"
-          className="flex flex-1 items-center justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
+          className="flex-1 justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!collapsed}
         >
           <Row as={Span} gap="xs">

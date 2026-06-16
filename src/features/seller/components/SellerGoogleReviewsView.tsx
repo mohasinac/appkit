@@ -212,7 +212,6 @@ export function SellerGoogleReviewsView({
             onClick={handleSync}
             isLoading={syncing}
             disabled={saving || !draft.placeId.trim()}
-            className="flex items-center"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             {ACTIONS.STORE["google-reviews-sync"].label}

@@ -369,7 +369,7 @@ export function SellerTemplatesView({
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          <Button gap="sm" size="sm" onClick={openCreate} className="flex items-center">
+          <Button gap="sm" size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4" />
             <Span>New Template</Span>
           </Button>

@@ -425,7 +425,7 @@ function HotspotPin({
         onClick={() => toggle(hotspot.id)}
         aria-label={`Info about ${hotspot.name}`}
         aria-expanded={isActive}
-        className="relative flex items-center justify-center"
+        className="relative justify-center"
         style={{
           width: isMobile ? 18 : 38,
           height: isMobile ? 18 : 38,

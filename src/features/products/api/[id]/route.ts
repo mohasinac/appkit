@@ -114,7 +114,7 @@ export async function GET(
     }
 
     const sanitized = sanitizeProductForPublic(
-      item as unknown as Record<string, JsonValue>,
+      item,
     );
     return NextResponse.json({ success: true, data: sanitized });
   } catch (error) {

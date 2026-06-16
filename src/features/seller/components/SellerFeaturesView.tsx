@@ -118,7 +118,6 @@ export function SellerFeaturesView() {
           size="sm"
           onClick={openCreatePanel}
           disabled={isFull}
-          className="flex items-center"
         >
           <Plus className="h-4 w-4" />
           Add Feature

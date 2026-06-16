@@ -83,7 +83,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
                 disabled={item.quantity <= 1}
                 variant="outline"
                 size="sm"
-                className="flex h-7 w-7 items-center justify-center border border-neutral-200 dark:border-slate-600 text-sm disabled:opacity-40"
+                className="h-7 w-7 justify-center border border-neutral-200 dark:border-slate-600 text-sm disabled:opacity-40"
               >
                 −
               </Button>
@@ -94,7 +94,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
                 onClick={() => onQtyChange(item.id, item.quantity + 1)}
                 variant="outline"
                 size="sm"
-                className="flex h-7 w-7 items-center justify-center border border-neutral-200 dark:border-slate-600 text-sm"
+                className="h-7 w-7 justify-center border border-neutral-200 dark:border-slate-600 text-sm"
               >
                 +
               </Button>

@@ -191,7 +191,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     await this.db
       .collection(this.collection)
       .doc(id)
-      .set(prepareForFirestore(productData as unknown as Record<string, JsonValue>));
+      .set(prepareForFirestore(productData));
 
     const created = { id, ...productData };
     this.cacheSet(created);

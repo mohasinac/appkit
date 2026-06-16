@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonObjectWithUndefined, JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
@@ -395,7 +395,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     setSectionType(selected.type as SectionType);
     setEnabled(Boolean(selected.enabled));
     setOrder(String(selected.order ?? ""));
-    const selectedConfig = (selected.config ?? {}) as unknown as Record<string, JsonValue>;
+    const selectedConfig = (selected.config ?? {}) as JsonObjectWithUndefined;
     setConfigJson(JSON.stringify(selectedConfig, null, 2));
 
     switch (selected.type) {

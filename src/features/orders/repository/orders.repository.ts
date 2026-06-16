@@ -46,12 +46,12 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   }
 
   private decryptOrder(doc: OrderDocument): OrderDocument {
-    return decryptPiiFields(doc as unknown as Record<string, JsonValue>, [
+    return decryptPiiFields(doc, [
       ...ORDER_PII_FIELDS,
     ]) as unknown as OrderDocument;
   }
 
-  private encryptOrderData<T extends Record<string, JsonValue>>(data: T): T {
+  private encryptOrderData<T extends object>(data: T): T {
     return encryptPiiFields(data, [...ORDER_PII_FIELDS]);
   }
 
@@ -74,7 +74,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     };
 
     const encrypted = this.encryptOrderData(
-      orderData as unknown as Record<string, JsonValue>,
+      orderData,
     );
 
     await this.db

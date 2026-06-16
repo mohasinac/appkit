@@ -154,7 +154,7 @@ export function FooterLayout({
                   type="button"
                   variant="ghost"
                   onClick={() => toggleGroup(idx)}
-                  className="flex w-full items-center justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 dark:border-slate-800 dark:text-zinc-100 dark:hover:text-white lg:hidden"
+                  className="w-full justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 dark:border-slate-800 dark:text-zinc-100 dark:hover:text-white lg:hidden"
                   aria-expanded={!!openGroups[idx]}
                 >
                   {group.heading}

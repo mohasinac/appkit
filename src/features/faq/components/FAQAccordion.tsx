@@ -22,7 +22,7 @@ function FAQAccordionItem({
         variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 dark:text-zinc-100 transition hover:text-primary"
+        className="w-full justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 dark:text-zinc-100 transition hover:text-primary"
       >
         <Span>{faq.question}</Span>
         <Span

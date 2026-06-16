@@ -263,7 +263,6 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
                       openCreatePanel: panel.openCreatePanel,
                     })
                   }
-                  className="flex items-center"
                 >
                   {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
                   {config.primaryAction.label}

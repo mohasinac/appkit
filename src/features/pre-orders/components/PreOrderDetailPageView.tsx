@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 
 const __P = {
@@ -401,7 +401,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
     );
   }
 
-  const p = product as unknown as Record<string, JsonValue>;
+  const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
 
   const title = String(p.title ?? p.name ?? "Pre-Order Item");

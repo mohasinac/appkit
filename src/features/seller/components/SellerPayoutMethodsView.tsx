@@ -188,7 +188,7 @@ export function SellerPayoutMethodsView({
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          <Button gap="sm" size="sm" onClick={handleCreate} className="flex items-center">
+          <Button gap="sm" size="sm" onClick={handleCreate}>
             <Plus className="h-4 w-4" />
             <Span>New Method</Span>
           </Button>
