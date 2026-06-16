@@ -9,7 +9,7 @@
 
 import { logger } from "../core/Logger";
 import { AppError } from "../errors";
-import type { JsonValue } from "../schemas/types";
+import type { FirestoreValue, JsonValue } from "../schemas/types";
 
 export interface ClientErrorContext {
   userId?: string;
@@ -18,15 +18,15 @@ export interface ClientErrorContext {
   url?: string;
   method?: string;
   statusCode?: number;
-  [key: string]: unknown;
+  [key: string]: FirestoreValue;
 }
 
 function buildClientMeta(
   error: unknown,
   context?: ClientErrorContext,
-): Record<string, unknown> {
-  const base: Record<string, unknown> = {
-    ...context,
+): Record<string, FirestoreValue> {
+  const base: Record<string, FirestoreValue> = {
+    ...(context as Record<string, FirestoreValue> | undefined),
     timestamp: new Date().toISOString(),
     userAgent:
       typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
@@ -39,16 +39,21 @@ function buildClientMeta(
       message: error.message,
       code: error.code,
       statusCode: error.statusCode,
-      data: error.data,
+      data: error.data === undefined || error.data === null
+        ? null
+        : (JSON.parse(JSON.stringify(error.data)) as JsonValue),
     };
   } else if (error instanceof Error) {
     base.error = {
       name: error.name,
       message: error.message,
-      stack: error.stack,
+      stack: error.stack ?? null,
     };
   } else {
-    base.error = error;
+    base.error = typeof error === "string" || typeof error === "number" ||
+      typeof error === "boolean" || error === null || error === undefined
+      ? (error as FirestoreValue)
+      : (JSON.stringify(error) as string);
   }
 
   return base;
@@ -101,7 +106,7 @@ export const logApiError = async (
     endpoint,
     status: response.status,
     statusText: response.statusText,
-    responseBody,
+    responseBody: typeof responseBody === "string" ? responseBody : JSON.stringify(responseBody),
   });
 };
 

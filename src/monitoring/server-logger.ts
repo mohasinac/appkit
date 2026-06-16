@@ -1,4 +1,5 @@
 import { normalizeError } from "../errors/normalize";
+import type { FirestoreValue, JsonValue } from "../schemas/types";
 /**
  * Server-Side Error Logging Utilities
  *
@@ -54,11 +55,11 @@ export interface ServerErrorContext {
   method?: string;
   statusCode?: number;
   requestId?: string;
-  [key: string]: unknown;
+  [key: string]: FirestoreValue;
 }
 
-function serializeError(error: Error): Record<string, unknown> {
-  const serialized: Record<string, unknown> = {
+function serializeError(error: Error): Record<string, FirestoreValue> {
+  const serialized: Record<string, FirestoreValue> = {
     name: error.name,
     message: error.message,
   };
@@ -68,7 +69,15 @@ function serializeError(error: Error): Record<string, unknown> {
   }
 
   for (const [key, value] of Object.entries(error)) {
-    serialized[key] = value;
+    // Error custom properties are serialised via normalizeLogData downstream;
+    // FirestoreValue admits Date and JsonValue. Non-conforming values are
+    // dropped to "[unserializable]" placeholder.
+    serialized[key] =
+      value === null || value === undefined ||
+      typeof value === "string" || typeof value === "number" ||
+      typeof value === "boolean" || value instanceof Date
+        ? value
+        : (JSON.stringify(value) as string);
   }
 
   return serialized;
@@ -237,9 +246,9 @@ export const extractRequestMetadata = (request: NextRequest) => ({
 function buildServerMeta(
   error: unknown,
   context?: ServerErrorContext,
-): Record<string, unknown> {
-  const base: Record<string, unknown> = {
-    ...context,
+): Record<string, FirestoreValue> {
+  const base: Record<string, FirestoreValue> = {
+    ...(context as Record<string, FirestoreValue> | undefined),
     timestamp: new Date().toISOString(),
   };
 
@@ -249,16 +258,21 @@ function buildServerMeta(
       message: error.message,
       code: error.code,
       statusCode: error.statusCode,
-      data: error.data,
+      data: error.data === undefined || error.data === null
+        ? null
+        : (JSON.parse(JSON.stringify(error.data)) as JsonValue),
     };
   } else if (error instanceof Error) {
     base.error = {
       name: error.name,
       message: error.message,
-      stack: error.stack,
+      stack: error.stack ?? null,
     };
   } else {
-    base.error = error;
+    base.error = typeof error === "string" || typeof error === "number" ||
+      typeof error === "boolean" || error === null || error === undefined
+      ? (error as FirestoreValue)
+      : (JSON.stringify(error) as string);
   }
 
   return base;
