@@ -4,6 +4,7 @@ import { MoreHorizontal } from "lucide-react";
 import type { ZodType } from "zod";
 import { Button } from "../../../ui/components/Button";
 import { Div, Span } from "../../../ui";
+import type { FormValues } from "../../../schemas/types";
 import { useClickOutside, useKeyPress } from "../../../react";
 import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
 import type { QuickFieldDef } from "../../shell/QuickFormDrawer";
@@ -18,9 +19,9 @@ export interface QuickEditAction {
   formTitle?: string;
   fields?: QuickFieldDef[];
   /** Zod schema covering every field — required by audit-quick-form-drawer-schema. */
-  schema?: ZodType<Record<string, unknown>> | ZodType<unknown>;
-  defaultValues?: Record<string, unknown>;
-  onSubmit?: (values: Record<string, unknown>) => void | Promise<void>;
+  schema?: ZodType<FormValues> | ZodType<unknown>;
+  defaultValues?: FormValues;
+  onSubmit?: (values: FormValues) => void | Promise<void>;
   submitLabel?: string;
   // Plain action — used when no fields provided
   onClick?: () => void;

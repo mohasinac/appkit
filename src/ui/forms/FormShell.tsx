@@ -12,6 +12,7 @@ import React, {
 import type { ZodType } from "zod";
 import { Button } from "../components/Button";
 import { Heading, Span, Text } from "../components/Typography";
+import type { FormValues } from "../../schemas/types";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -44,12 +45,12 @@ export interface FormShellProps {
   steps: FormShellStep[];
   /** Called on debounced auto-save and "Save Draft" click */
   onSaveDraft?: (
-    values: Record<string, unknown>
+    values: FormValues
   ) => Promise<{ id?: string } | void>;
   /** Called on Publish / Save */
-  onPublish: (values: Record<string, unknown>) => Promise<void>;
+  onPublish: (values: FormValues) => Promise<void>;
   /** Current form values — caller owns state */
-  values: Record<string, unknown>;
+  values: FormValues;
   /** Zod schema for auto-validation on publish. Errors are mapped to field names. */
   schema?: ZodType;
   /** When true + schema provided, validate on every value change (not just publish). */
@@ -96,7 +97,7 @@ export interface UseFormShellStateResult {
    * supplied values, write inline errors via `setFieldError`, and return the
    * parsed value on success or null on failure.
    */
-  validate: <T = unknown>(values: Record<string, unknown>) => T | null;
+  validate: <T = unknown>(values: FormValues) => T | null;
 }
 
 /**
@@ -137,7 +138,7 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
   const clearErrors = useCallback(() => setErrors({}), []);
 
   const validate = useCallback(
-    <T = unknown,>(values: Record<string, unknown>): T | null => {
+    <T = unknown,>(values: FormValues): T | null => {
       if (!schema) return values as T;
       const parsed = schema.safeParse(values);
       if (parsed.success) {
@@ -265,12 +266,12 @@ function ErrorSummary({ errors, visible }: ErrorSummaryProps) {
 export interface FormShellProviderProps {
   children: ReactNode;
   /** Called on debounced auto-save when isDirty changes */
-  onSaveDraft?: (values: Record<string, unknown>) => Promise<void>;
+  onSaveDraft?: (values: FormValues) => Promise<void>;
   /** Whether any values differ from the persisted state — triggers auto-save */
   isDirty?: boolean;
   autoSaveDelayMs?: number;
   /** Current form values — passed into onSaveDraft on auto-save */
-  values?: Record<string, unknown>;
+  values?: FormValues;
 }
 
 export function FormShellProvider({
@@ -339,7 +340,7 @@ export function FormShellProvider({
 
 function validateSchema(
   schema: ZodType,
-  values: Record<string, unknown>,
+  values: FormValues,
   setFieldError: (name: string, error: string | null) => void,
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>,
 ): boolean {

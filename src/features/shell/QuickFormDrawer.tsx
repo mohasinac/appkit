@@ -6,6 +6,7 @@ import { Button } from "../../ui/components/Button";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
 import { Div, Row, Stack, Text } from "../../ui";
+import type { FormFieldValue, FormValues } from "../../schemas/types";
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
 
 export interface QuickFieldDef {
@@ -16,7 +17,7 @@ export interface QuickFieldDef {
   required?: boolean;
   placeholder?: string;
   helperText?: string;
-  defaultValue?: unknown;
+  defaultValue?: FormFieldValue;
 }
 
 export interface QuickFormDrawerProps {
@@ -24,8 +25,8 @@ export interface QuickFormDrawerProps {
   onClose: () => void;
   title: string;
   fields: QuickFieldDef[];
-  defaultValues?: Record<string, unknown>;
-  onSubmit: (values: Record<string, unknown>) => void | Promise<void>;
+  defaultValues?: FormValues;
+  onSubmit: (values: FormValues) => void | Promise<void>;
   submitLabel?: string;
   cancelLabel?: string;
   isLoading?: boolean;
@@ -35,19 +36,19 @@ export interface QuickFormDrawerProps {
    * truth. `audit-quick-form-drawer-schema` requires every callsite to pass
    * this prop.
    */
-  schema?: ZodType<Record<string, unknown>> | ZodType<unknown>;
+  schema?: ZodType<FormValues> | ZodType<unknown>;
   /** Extra content rendered below auto-generated fields. */
   renderExtra?: (
-    values: Record<string, unknown>,
-    onChange: (name: string, value: unknown) => void,
+    values: FormValues,
+    onChange: (name: string, value: FormFieldValue) => void,
   ) => ReactNode;
 }
 
 function initValues(
   fields: QuickFieldDef[],
-  defaults: Record<string, unknown> = {},
-): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
+  defaults: FormValues = {},
+): FormValues {
+  const out: FormValues = {};
   for (const f of fields) {
     out[f.name] =
       f.name in defaults
@@ -74,7 +75,7 @@ export function QuickFormDrawer({
   renderExtra,
 }: QuickFormDrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
-  const [values, setValues] = useState<Record<string, unknown>>(() =>
+  const [values, setValues] = useState<FormValues>(() =>
     initValues(fields, defaultValues),
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -86,7 +87,7 @@ export function QuickFormDrawer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
-  const set = (name: string, value: unknown) => {
+  const set = (name: string, value: FormFieldValue) => {
     setValues((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => { const n = { ...prev }; delete n[name]; return n; });
   };
@@ -96,7 +97,7 @@ export function QuickFormDrawer({
     // truth — manual `required` checks are skipped entirely. Falls back to
     // the manual check only when the callsite has not yet been migrated.
     if (schema) {
-      const parsed = schema.safeParse(values);
+      const parsed = (schema as ZodType<unknown>).safeParse(values);
       if (parsed.success) {
         setErrors({});
         return true;
