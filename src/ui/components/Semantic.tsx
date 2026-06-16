@@ -486,19 +486,30 @@ const TR_BORDER_MAP: Record<TrBorder, string> = {
   strong: "border-b border-[var(--appkit-color-border-strong)]",
 };
 
+type TrSurface = "none" | "default" | "muted" | "subtle";
+
+const TR_SURFACE_MAP: Record<TrSurface, string> = {
+  none: "",
+  default: "bg-[var(--appkit-color-surface)]",
+  muted: "bg-[var(--appkit-color-bg)]",
+  subtle: "bg-[var(--appkit-color-surface-elevated)]",
+};
+
 export interface TrProps extends React.HTMLAttributes<HTMLTableRowElement> {
   hover?: boolean;
   border?: TrBorder;
+  surface?: TrSurface;
   children: React.ReactNode;
 }
 
-export function Tr({ hover = false, border, className = "", children, ...props }: TrProps) {
+export function Tr({ hover = false, border, surface, className = "", children, ...props }: TrProps) {
   return (
     <tr
       className={[
         "appkit-tr",
         hover ? "appkit-tr--hover" : "",
         border ? TR_BORDER_MAP[border] : "",
+        surface ? TR_SURFACE_MAP[surface] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}
