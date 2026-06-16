@@ -187,7 +187,7 @@ function OrderDetailDrawer({
       )}
 
       {fetchError && (
-        <Div className="mx-4 mt-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="lg">
+        <Div className="mx-4 mt-4 border border-error/20 px-4 text-sm text-error" surface="danger-surface" padding="y-sm" rounded="lg">
           {fetchError}
         </Div>
       )}
@@ -255,7 +255,7 @@ function OrderDetailDrawer({
               <Input label="Carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="e.g. Delhivery, Bluedart" />
               <Input label="Tracking URL (optional)" value={trackingUrl} onChange={(e) => setTrackingUrl(e.target.value)} placeholder="https://..." type="url" />
               {saveError && (
-                <Div className="border border-error/20 bg-error-surface px-3 text-xs text-error" padding="y-xs" rounded="lg">
+                <Div className="border border-error/20 px-3 text-xs text-error" surface="danger-surface" padding="y-xs" rounded="lg">
                   {saveError}
                 </Div>
               )}
@@ -578,7 +578,7 @@ export function SellerOrdersView({
 
       <Div className="px-3 sm:px-4" padding="y-md">
         {errorMessage && (
-          <Div className="mb-4 border border-error/20 bg-error-surface px-4 text-sm text-error" padding="y-sm" rounded="xl">
+          <Div className="mb-4 border border-error/20 px-4 text-sm text-error" surface="danger-surface" padding="y-sm" rounded="xl">
             {errorMessage}
           </Div>
         )}

@@ -216,7 +216,7 @@ export function FAQSection({
                   }`}
                 >
                   <Div className={`${__O.hidden}`}>
-                    <Div className="px-5 pb-5 pt-0">
+                    <Div className="pb-5 pt-0" padding="x-md">
                       {isHtml(faq.answer) ? (
                         <RichText
                           html={faq.answer}

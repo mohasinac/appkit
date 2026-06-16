@@ -118,7 +118,7 @@ export async function FAQPageView({
                       <Span>{item.question}</Span>
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
                     </Summary>
-                    <Div className="px-5 pb-5 pt-1">
+                    <Div className="pb-5 pt-1" padding="x-md">
                       <RichTextRenderer
                         html={item.answer}
                         proseClass="prose prose-sm max-w-none dark:prose-invert"

@@ -93,7 +93,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
 
       {/* Content */}
       <Stack
-        className="relative justify-end px-5 pb-16 sm:px-12 sm:pb-24 lg:px-20"
+        className="relative justify-end pb-16 sm:px-12 sm:pb-24 lg:px-20" padding="x-md"
         style={{
           minHeight: "100svh",
           zIndex: 10,

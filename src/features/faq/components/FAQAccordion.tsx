@@ -100,7 +100,7 @@ export function FAQAccordion({
   return (
     <Div
       surface="card"
-      className={`divide-y divide-neutral-100 dark:divide-slate-700 px-5 ${className}`}
+      className={`divide-y divide-neutral-100 dark:divide-slate-700 ${className}`} padding="x-md"
     >
       {faqs.map((faq) => (
         <FAQAccordionItem

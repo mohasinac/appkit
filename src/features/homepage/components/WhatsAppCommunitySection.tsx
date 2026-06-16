@@ -58,8 +58,11 @@ export function WhatsAppCommunitySection({
       <Div className="w-full max-w-7xl mx-auto">
 
         {/* Card */}
-        <div
-          className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary via-cobalt to-primary/80 dark:from-primary/90 dark:via-cobalt/90 dark:to-primary/70 text-white shadow-xl"
+        <Section
+          tone="accent-banner"
+          rounded="2xl"
+          shadow="lg"
+          className="relative overflow-hidden text-white"
         >
           {/* Subtle diagonal-line texture for depth */}
           <Div
@@ -148,7 +151,7 @@ export function WhatsAppCommunitySection({
               </Button>
             )}
           </Div>
-        </div>
+        </Section>
 
       </Div>
     </Section>

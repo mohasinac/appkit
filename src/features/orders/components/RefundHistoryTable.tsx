@@ -90,7 +90,7 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
   return (
     <Div className={`dark:border-zinc-800 ${className}`} rounded="xl" surface="default" border="default">
       {order.contestable === false && (
-        <Div className="rounded-t-xl bg-warning-surface px-4" padding="y-sm">
+        <Div className="rounded-t-xl px-4" surface="warning-surface" padding="y-sm">
           <Row gap="sm" align="center">
             <WarningIcon />
             <Text size="sm" weight="semibold" className="text-warning">

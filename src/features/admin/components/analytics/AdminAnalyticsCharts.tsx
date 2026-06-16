@@ -73,7 +73,7 @@ function ChartCard({
         }}
         aria-hidden="true"
       />
-      <Div className={`${__P.p4} sm:${__P.p6} pt-5 sm:pt-7`}>
+      <Div className={`${__P.p4} sm:${__P.p6} sm:pt-7`} padding="t-md">
         {title && (
           <Heading level={3} className="text-[var(--appkit-color-text)] mb-4" size="sm" weight="semibold">
             {title}

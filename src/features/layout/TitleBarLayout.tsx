@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { Avatar, BlockHeader, Button, Div, Row, SiteLogo, Span } from "../../ui";
+import { Avatar, BlockHeader, Button, Div, Row, Section, SiteLogo, Span } from "../../ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {
