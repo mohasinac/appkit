@@ -163,26 +163,26 @@ export function SearchResultsSection({
           })
         ) : (
           <Row align="center" justify="center" gap="sm" padding="t-md">
-            <Button
+            <Button rounded="lg" 
               type="button"
               variant="outline"
               size="sm"
               onClick={() => onPageChange(urlPage - 1)}
               disabled={urlPage <= 1}
-              className="px-4 py-2 rounded-lg border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
             >
               {L.prevPage}
             </Button>
             <Span size="sm" className="tabular-nums" color="muted">
               {urlPage} / {totalPages}
             </Span>
-            <Button
+            <Button rounded="lg" 
               type="button"
               variant="outline"
               size="sm"
               onClick={() => onPageChange(urlPage + 1)}
               disabled={urlPage >= totalPages}
-              className="px-4 py-2 rounded-lg border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
             >
               {L.nextPage}
             </Button>

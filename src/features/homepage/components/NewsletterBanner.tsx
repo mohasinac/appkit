@@ -105,11 +105,11 @@ export function NewsletterBanner({
               required
               className="flex-1"
             />
-            <Button
+            <Button rounded="xl" 
               type="submit"
               disabled={loading}
               variant="primary"
-              className="shrink-0 rounded-xl px-5 py-3 text-sm font-bold transition-opacity disabled:opacity-60"
+              className="shrink-0 px-5 py-3 text-sm font-bold transition-opacity disabled:opacity-60"
               // audit-inline-style-ok: dynamic CSS
               style={{
                 background: "var(--color-yellow, #FFE500)",

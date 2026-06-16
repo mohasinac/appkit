@@ -91,11 +91,11 @@ export function BottomSheet({
             </Span>
           )}
 
-          <Button
+          <Button rounded="lg" 
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="ml-auto mt-2 p-1.5 rounded-lg text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="ml-auto mt-2 p-1.5 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
             {/* ✕ */}
             <svg

@@ -1,12 +1,14 @@
 // --- Payment Shared Types -----------------------------------------------------
 
+import type { JsonValue } from "../schemas/types";
+
 export interface PaymentOrder {
   id: string;
   amount: number;
   currency: string;
   status: "created" | "attempted" | "paid" | "failed";
   receipt?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, JsonValue>;
   createdAt: string; // ISO-8601
 }
 

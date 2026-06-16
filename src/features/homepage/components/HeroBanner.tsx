@@ -159,12 +159,12 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
       {/* Prev / Next arrows */}
       {banners.length > 1 && (
         <>
-          <Button
+          <Button rounded="full" 
             onClick={prev}
             aria-label="Previous slide"
             variant="ghost"
             size="sm"
-            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition-all hover:scale-105"
+            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 flex items-center justify-center transition-all hover:scale-105"
             style={{
               zIndex: 15,
               width: 40,
@@ -190,12 +190,12 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               />
             </svg>
           </Button>
-          <Button
+          <Button rounded="full" 
             onClick={next}
             aria-label="Next slide"
             variant="ghost"
             size="sm"
-            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition-all hover:scale-105"
+            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex items-center justify-center transition-all hover:scale-105"
             style={{
               zIndex: 15,
               width: 40,

@@ -1,5 +1,7 @@
 // --- Auth Shared Types --------------------------------------------------------
 
+import type { JsonValue } from "../schemas/types";
+
 export interface AuthPayload {
   uid: string;
   email: string | null;
@@ -13,7 +15,7 @@ export interface AuthPayload {
   /** Phone number from the auth provider */
   phoneNumber?: string | null;
   /** Any extra custom claims stored on the token */
-  claims?: Record<string, unknown>;
+  claims?: Record<string, JsonValue>;
   /** RBAC permission keys granted to this user. */
   permissions?: string[];
 }

@@ -664,22 +664,22 @@ export function MediaUploadField({
           )}
 
           {showCamera && !isCameraSupported && (
-            <Button
+            <Button rounded="xl" 
               type="button"
               onClick={() => mobileCaptureRef.current?.click()}
               variant="ghost"
-              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl text-sm text-zinc-500 dark:text-zinc-400"
+              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 text-sm text-zinc-500 dark:text-zinc-400"
             >
               {t("switchToCamera")}
             </Button>
           )}
 
           {showFileInput && (
-            <Button
+            <Button rounded="xl" 
               type="button"
               onClick={() => fileInputRef.current?.click()}
               variant="ghost"
-              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl text-sm text-zinc-500 dark:text-zinc-400"
+              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 text-sm text-zinc-500 dark:text-zinc-400"
             >
               {value ? tUpload("replaceFile") : tUpload("chooseFile")}
             </Button>

@@ -88,12 +88,12 @@ export function SearchFiltersRow({
             placeholder={L.maxPrice}
             className="w-28 rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
           />
-          <Button
+          <Button rounded="lg" 
             type="button"
             variant="primary"
             size="sm"
             onClick={() => onPriceFilter(minPrice, maxPrice)}
-            className="h-10 px-4 rounded-lg bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors"
+            className="h-10 px-4 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors"
           >
             {L.apply}
           </Button>
@@ -102,12 +102,12 @@ export function SearchFiltersRow({
 
       {/* Clear filters */}
       {showClear && (
-        <Button
+        <Button rounded="lg" 
           type="button"
           variant="outline"
           size="sm"
           onClick={onClearFilters}
-          className="h-10 px-4 rounded-lg border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+          className="h-10 px-4 border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
         >
           {L.clearFilters}
         </Button>

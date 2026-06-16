@@ -183,13 +183,13 @@ export function ImageEditor({
               { label: "16:9", ratio: 16 / 9 },
               { label: "3:2", ratio: 3 / 2 },
             ].map((preset) => (
-              <Button
+              <Button rounded="lg" 
                 key={preset.label}
                 type="button"
                 variant="ghost"
                 size="sm"
                 onClick={() => applyAspectRatio(preset.ratio)}
-                className="px-3 py-1 text-xs rounded-lg bg-zinc-100 dark:bg-slate-800"
+                className="px-3 py-1 text-xs bg-zinc-100 dark:bg-slate-800"
               >
                 {preset.label}
               </Button>

@@ -418,11 +418,11 @@ export function Search({
             className="w-full rounded-lg border border-zinc-300 bg-white pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
           />
           {query && (
-            <Button
+            <Button rounded="full" 
               type="button"
               variant="ghost"
               onClick={handleClear}
-              className="absolute right-3 p-0.5 rounded-full text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+              className="absolute right-3 p-0.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
               aria-label={labels.clearAriaLabel}
             >
               <svg
@@ -457,12 +457,12 @@ export function Search({
           </select>
         )}
         {deferred && (
-          <Button
+          <Button rounded="lg" 
             type="button"
             variant="primary"
             onClick={handleDeferredSubmit}
             aria-label={labels.ariaLabel}
-            className="flex-shrink-0 px-3 py-2 rounded-lg"
+            className="flex-shrink-0 px-3 py-2"
           >
             <svg
               className="w-4 h-4"
@@ -702,10 +702,10 @@ export function Search({
             {labels.title}
           </Button>
 
-          <Button
+          <Button rounded="xl" 
             variant="ghost"
             onClick={() => onClose?.()}
-            className="p-2.5 md:p-3 rounded-xl transition-colors text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-slate-800 dark:hover:text-zinc-200 flex-shrink-0"
+            className="p-2.5 md:p-3 transition-colors text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-slate-800 dark:hover:text-zinc-200 flex-shrink-0"
             aria-label={labels.closeAriaLabel}
           >
             <svg

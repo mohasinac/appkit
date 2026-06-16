@@ -418,14 +418,14 @@ function HotspotPin({
           }}
         />
       )}
-      <Button
+      <Button rounded="full" 
         type="button"
         variant="ghost"
         size="sm"
         onClick={() => toggle(hotspot.id)}
         aria-label={`Info about ${hotspot.name}`}
         aria-expanded={isActive}
-        className="relative flex items-center justify-center rounded-full"
+        className="relative flex items-center justify-center"
         style={{
           width: isMobile ? 18 : 38,
           height: isMobile ? 18 : 38,

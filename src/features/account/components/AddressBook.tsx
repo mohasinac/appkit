@@ -139,10 +139,10 @@ export function AddressBook({
         ))}
       </Div>
       {onAdd && (
-        <Button
+        <Button rounded="lg" 
           onClick={onAdd}
           variant="outline"
-          className="mt-2 rounded-lg border border-dashed border-neutral-300 dark:border-slate-600 px-4 py-3 text-sm font-medium text-neutral-500 dark:text-zinc-400 transition hover:border-neutral-400 dark:hover:border-slate-500 hover:text-neutral-700 dark:hover:text-zinc-200"
+          className="mt-2 border border-dashed border-neutral-300 dark:border-slate-600 px-4 py-3 text-sm font-medium text-neutral-500 dark:text-zinc-400 transition hover:border-neutral-400 dark:hover:border-slate-500 hover:text-neutral-700 dark:hover:text-zinc-200"
         >
           + {addLabel}
         </Button>

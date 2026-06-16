@@ -128,10 +128,10 @@ export function EventCard({
         </Row>
 
         {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE && onParticipate ? (
-          <Button
+          <Button rounded="lg" 
             type="button"
             onClick={() => onParticipate(event)}
-            className="w-full rounded-lg bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
+            className="w-full bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
           >
             {labels.participate ?? "Participate"}
           </Button>

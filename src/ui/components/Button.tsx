@@ -53,6 +53,18 @@ const BUTTON_GAP_MAP: Record<ButtonGap, string> = {
   lg: "gap-3",
 };
 
+type ButtonRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
+const BUTTON_ROUNDED_MAP: Record<ButtonRounded, string> = {
+  none: "",
+  default: "rounded",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+  xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+  full: "rounded-full",
+};
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof UI_BUTTON.variants;
   size?: keyof typeof UI_BUTTON.sizes;
@@ -60,6 +72,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   children?: React.ReactNode;
   /** Gap between flex children (icon + label). Defaults to no extra gap. */
   gap?: ButtonGap;
+  /** Border radius override. */
+  rounded?: ButtonRounded;
   /** Render as the child element (e.g. next/link) with button styling applied */
   asChild?: boolean;
   /**
@@ -88,6 +102,7 @@ export function Button({
   disabled,
   children,
   gap,
+  rounded,
   asChild = false,
   action,
   ...props
@@ -104,6 +119,7 @@ export function Button({
     UI_BUTTON.variants[resolvedVariant],
     UI_BUTTON.sizes[size],
     gap ? BUTTON_GAP_MAP[gap] : "",
+    rounded ? BUTTON_ROUNDED_MAP[rounded] : "",
     className,
   );
 

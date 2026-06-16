@@ -149,21 +149,19 @@ export function FAQSection({
         {/* Category Tabs — appkit Button with ghost variant */}
         {showTabs && (
           <Row align="center" justify="center" gap="sm" wrap className={`mb-8`}>
-            <Button
+            <Button rounded="full" 
               variant={activeTab === "all" ? "primary" : "ghost"}
               size="sm"
               onClick={() => setActiveTab("all")}
-              className="rounded-full"
             >
               All
             </Button>
             {derivedTabs.map((tab) => (
-              <Button
+              <Button rounded="full" 
                 key={tab.value}
                 variant={activeTab === tab.value ? "primary" : "ghost"}
                 size="sm"
                 onClick={() => setActiveTab(tab.value)}
-                className="rounded-full"
               >
                 {tab.label}
               </Button>

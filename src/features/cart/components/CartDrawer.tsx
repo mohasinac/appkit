@@ -78,23 +78,23 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
           </Text>
           {onQtyChange && !isOutOfStock && (
             <Row gap="sm">
-              <Button
+              <Button rounded="full" 
                 onClick={() => onQtyChange(item.id, item.quantity - 1)}
                 disabled={item.quantity <= 1}
                 variant="outline"
                 size="sm"
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 dark:border-slate-600 text-sm disabled:opacity-40"
+                className="flex h-7 w-7 items-center justify-center border border-neutral-200 dark:border-slate-600 text-sm disabled:opacity-40"
               >
                 −
               </Button>
               <Span size="sm" className="min-w-[1.5rem]" align="center">
                 {item.quantity}
               </Span>
-              <Button
+              <Button rounded="full" 
                 onClick={() => onQtyChange(item.id, item.quantity + 1)}
                 variant="outline"
                 size="sm"
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 dark:border-slate-600 text-sm"
+                className="flex h-7 w-7 items-center justify-center border border-neutral-200 dark:border-slate-600 text-sm"
               >
                 +
               </Button>
@@ -206,10 +206,10 @@ export function CartDrawer({
               </Span>
             </Row>
             {onCheckout && (
-              <Button
+              <Button rounded="xl" 
                 onClick={onCheckout}
                 variant="primary"
-                className="w-full rounded-xl bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+                className="w-full bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
               >
                 {labels.checkout ?? ACTIONS.CART["checkout"].label}
               </Button>

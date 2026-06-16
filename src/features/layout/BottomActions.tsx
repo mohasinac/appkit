@@ -265,11 +265,11 @@ export default function BottomActions() {
         {isBulkMode && bulk ? (
           <>
             {/* Selection count pill — tap to clear ----------------------- */}
-            <Button gap="xs" 
+            <Button rounded="full" gap="xs" 
               type="button"
               variant="ghost"
               onClick={dispatchBulkClear}
-              className="inline-flex items-center .5 flex-shrink-0 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 dark:bg-primary-950/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
+              className="inline-flex items-center .5 flex-shrink-0 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 dark:bg-primary-950/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
               aria-label="Clear selection"
             >
               <X className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />

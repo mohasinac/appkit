@@ -217,13 +217,13 @@ export function ImageCropModal({
           {/* Zoom presets */}
           <Row gap="sm" >
             {[0.5, 1, 1.5, 2].map((preset) => (
-              <Button
+              <Button rounded="lg" 
                 key={preset}
                 type="button"
                 variant="ghost"
                 size="sm"
                 onClick={() => setZoom(preset)}
-                className="px-3 py-1 text-xs rounded-lg bg-zinc-100 dark:bg-slate-800"
+                className="px-3 py-1 text-xs bg-zinc-100 dark:bg-slate-800"
               >
                 {preset * 100}%
               </Button>

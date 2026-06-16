@@ -194,7 +194,7 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
           {product.title}
         </TextLink>
         {wishlistActions ? (
-          <Button type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="shrink-0 rounded-full p-1">
+          <Button rounded="full" type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="shrink-0 p-1">
             <Heart className={`h-3.5 w-3.5 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
           </Button>
         ) : null}
@@ -226,7 +226,7 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
           {product.title}
         </TextLink>
         {wishlistActions ? (
-          <Button type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="-mt-0.5 rounded-full p-1">
+          <Button rounded="full" type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="-mt-0.5 p-1">
             <Heart className={`h-4 w-4 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
           </Button>
         ) : null}
