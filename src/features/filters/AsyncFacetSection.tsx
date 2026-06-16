@@ -148,7 +148,7 @@ export function AsyncFacetSection({
 
       {/* Selected chips — visible when collapsed */}
       {collapsed && hasValue && (
-        <Div className="mt-2 flex flex-wrap gap-1">
+        <Row gap="xs" className="mt-2 flex-wrap">
           {selectedLabels.map((label) => (
             <Span layout="inline-flex" 
               key={label}
@@ -163,7 +163,7 @@ export function AsyncFacetSection({
               +{selected.length - 3} more
             </Span>
           )}
-        </Div>
+        </Row>
       )}
 
       {/* Search — always visible (auto-expands on type) */}

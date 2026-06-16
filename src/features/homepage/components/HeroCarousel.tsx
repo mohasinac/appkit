@@ -472,7 +472,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
       {/* Navigation Dots */}
       {slides.length > 1 && (
-        <Div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        <Row gap="sm" className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
           {slides.map((_, index) => (
             <Button
               key={index}
@@ -493,12 +493,12 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               )}
             </Button>
           ))}
-        </Div>
+        </Row>
       )}
 
       {/* Navigation Arrows */}
       {slides.length > 1 && (
-        <Div className="absolute bottom-4 right-4 z-20 flex gap-2">
+        <Row gap="sm" className="absolute bottom-4 right-4 z-20">
           <Button
             variant="ghost"
             className={`p-0 ${HERO_CAROUSEL_ARROW}`}
@@ -519,7 +519,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </Button>
-        </Div>
+        </Row>
       )}
     </Section>
   );

@@ -461,9 +461,9 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 specs.length > 0 ? (
                   <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden">
                     {specs.map((s, i) => (
-                      <Div
+                      <Row gap="md" 
                         key={i}
-                        className="flex gap-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="inline"
+                        className="even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="inline"
                       >
                         <Dt className="w-36 flex-shrink-0" color="primary" weight="medium">
                           {s.name}
@@ -471,7 +471,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                         <Dd className="flex-1" color="muted">
                           {s.value}{s.unit ? ` ${s.unit}` : ""}
                         </Dd>
-                      </Div>
+                      </Row>
                     ))}
                   </Dl>
                 ) : undefined

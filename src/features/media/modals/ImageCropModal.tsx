@@ -215,7 +215,7 @@ export function ImageCropModal({
             </Button>
           </Row>
           {/* Zoom presets */}
-          <Div className="flex gap-2">
+          <Row gap="sm" >
             {[0.5, 1, 1.5, 2].map((preset) => (
               <Button
                 key={preset}
@@ -228,7 +228,7 @@ export function ImageCropModal({
                 {preset * 100}%
               </Button>
             ))}
-          </Div>
+          </Row>
         </Stack>
 
         {/* Zoom warning */}
@@ -255,14 +255,14 @@ export function ImageCropModal({
         </Row>
 
         {/* Actions */}
-        <Div className="flex gap-2" padding="t-xs">
+        <Row gap="sm" padding="t-xs">
           <Button onClick={handleSave} variant="primary" className="flex-1">
             {t("cropSave")}
           </Button>
           <Button onClick={onClose} variant="secondary" className="flex-1">
             {t("cropCancel")}
           </Button>
-        </Div>
+        </Row>
       </Stack>
     </Modal>
   );

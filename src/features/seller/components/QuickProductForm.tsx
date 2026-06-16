@@ -1,4 +1,5 @@
 "use client";
+import { Row } from "@mohasinac/appkit/ui";
 import React, { useState } from "react";
 import { Alert, Button, Div, FormField, Stack, Text } from "../../../ui";
 import type { SellerProductDraft, SellerProductShellProps } from "./SellerProductShell";
@@ -172,7 +173,7 @@ export function QuickProductForm({
       />
 
       <Stack gap="3" padding="t-xs">
-        <Div className="flex gap-3">
+        <Row gap="3" >
           <Button
             variant="primary"
             onClick={handlePublish}
@@ -188,7 +189,7 @@ export function QuickProductForm({
           >
             Save Draft
           </Button>
-        </Div>
+        </Row>
         <Button
           variant="ghost"
           size="sm"

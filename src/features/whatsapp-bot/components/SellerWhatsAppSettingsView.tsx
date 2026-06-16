@@ -356,7 +356,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           Batches of up to 50 products per call.
         </Text>
 
-        <Div className="flex gap-3">
+        <Row gap="3" >
           <Button
             onClick={() => syncMutation.mutate()}
             isLoading={syncMutation.isPending}
@@ -373,7 +373,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           >
             {importMutation.isPending ? "Importing…" : ACTIONS.STORE["whatsapp-catalog-import"].label}
           </Button>
-        </Div>
+        </Row>
 
         <Text className="mt-3" color="faint" size="xs">
           <Span weight="bold">Push</Span> sends your published standard products to WhatsApp.{" "}

@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Dd, Div, Dl, Dt, RichText, Stack, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -24,9 +25,9 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
       {fields.length > 0 && (
         <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden">
           {fields.map((f, i) => (
-            <Div
+            <Row gap="md" 
               key={i}
-              className="flex gap-4 even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="inline"
+              className="even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="inline"
             >
               <Dt className="w-36 flex-shrink-0 font-medium capitalize" color="primary">
                 {f.key}
@@ -45,7 +46,7 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
                   renderFieldValue(f)
                 )}
               </Dd>
-            </Div>
+            </Row>
           ))}
         </Dl>
       )}

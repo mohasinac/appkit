@@ -106,7 +106,7 @@ export function getCategoryTableColumns(
       },
     ],
     actions: (cat: Category) => (
-      <Div className="flex gap-2">
+      <Row gap="sm" >
         <Button
           variant="ghost"
           onClick={(e) => {
@@ -127,7 +127,7 @@ export function getCategoryTableColumns(
         >
           {L.actionDelete}
         </Button>
-      </Div>
+      </Row>
     ),
   };
 }

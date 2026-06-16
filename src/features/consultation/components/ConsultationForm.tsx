@@ -108,7 +108,7 @@ export function ConsultationForm({
           ))}
         </Row>
       )}
-      <Div className="flex gap-3">
+      <Row gap="3" >
         <FieldInput
           name="preferredDate"
           type="date"
@@ -123,7 +123,7 @@ export function ConsultationForm({
           options={TIME_SLOTS.map((t) => ({ value: t, label: t }))}
           className="flex-1"
         />
-      </Div>
+      </Row>
       <Select
         value={form.mode}
         onValueChange={(value) => handleValueChange("mode", value)}

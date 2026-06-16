@@ -204,7 +204,7 @@ export function AvatarUpload({
                 <Text variant="secondary" className="text-primary" size="xs">
                   {t.readyToSave}
                 </Text>
-                <Div className="flex gap-3">
+                <Row gap="3" >
                   <Button type="button" onClick={handleConfirmSave} size="sm">
                     {t.saveAvatar}
                   </Button>
@@ -216,12 +216,12 @@ export function AvatarUpload({
                   >
                     {t.cancelChange}
                   </Button>
-                </Div>
+                </Row>
               </Stack>
             ) : null}
 
             {!hasPending && !isUploading ? (
-              <Div className="flex gap-3">
+              <Row gap="3" >
                 <Button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -239,7 +239,7 @@ export function AvatarUpload({
                     {t.removePhoto}
                   </Button>
                 ) : null}
-              </Div>
+              </Row>
             ) : null}
 
             <Input

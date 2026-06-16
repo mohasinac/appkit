@@ -170,7 +170,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
   ];
 
   const actions = (product: T) => (
-    <Div className="flex gap-2">
+    <Row gap="sm" >
       <Button
         variant="ghost"
         type="button"
@@ -193,7 +193,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       >
         {labels.delete}
       </Button>
-    </Div>
+    </Row>
   );
 
   return { columns, actions };

@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
@@ -129,7 +129,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Active
         </Text>
-        <Div className="flex flex-wrap gap-2">
+        <Row gap="sm" className="flex-wrap">
           {[
             { label: "All", value: "" },
             { label: "Active", value: "true" },
@@ -150,13 +150,13 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
               {opt.label}
             </button>
           ))}
-        </Div>
+        </Row>
       </Stack>
       <Stack gap="sm">
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Featured
         </Text>
-        <Div className="flex flex-wrap gap-2">
+        <Row gap="sm" className="flex-wrap">
           {[
             { label: "All", value: "" },
             { label: "Featured only", value: "true" },
@@ -176,7 +176,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
               {opt.label}
             </button>
           ))}
-        </Div>
+        </Row>
       </Stack>
     </>
   ),

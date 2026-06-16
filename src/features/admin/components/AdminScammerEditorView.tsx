@@ -130,7 +130,7 @@ export function AdminScammerEditorView({
             <Text className="mb-1 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
               Names / Aliases
             </Text>
-            <Div className="flex flex-wrap gap-1">
+            <Row gap="xs" className="flex-wrap">
               {displayNames.map((name, i) => (
                 <Span
                   key={i}
@@ -138,7 +138,7 @@ export function AdminScammerEditorView({
                   {name}
                 </Span>
               ))}
-            </Div>
+            </Row>
           </Div>
         )}
 
@@ -150,13 +150,13 @@ export function AdminScammerEditorView({
                 <Text className={CLS_SECTION_LABEL}>
                   Phone numbers
                 </Text>
-                <Div className="flex flex-wrap gap-1">
+                <Row gap="xs" className="flex-wrap">
                   {phones.map((p, i) => (
                     <Code key={i} size="xs" rounded="default" padding="sm" surface="subtle">
                       {p}
                     </Code>
                   ))}
-                </Div>
+                </Row>
               </Div>
             )}
             {upiIds.length > 0 && (
@@ -164,13 +164,13 @@ export function AdminScammerEditorView({
                 <Text className={CLS_SECTION_LABEL}>
                   UPI IDs
                 </Text>
-                <Div className="flex flex-wrap gap-1">
+                <Row gap="xs" className="flex-wrap">
                   {upiIds.map((u, i) => (
                     <Code key={i} size="xs" rounded="default" padding="sm" surface="subtle">
                       {u}
                     </Code>
                   ))}
-                </Div>
+                </Row>
               </>
             )}
           </Div>

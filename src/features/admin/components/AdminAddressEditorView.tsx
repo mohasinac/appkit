@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -186,7 +187,7 @@ export function AdminAddressEditorView({
       <Card variant="outlined" padding="lg">
         <SectionHeading>Ownership</SectionHeading>
         <Stack gap="md">
-          <Div className="flex gap-6">
+          <Row gap="lg" >
             {(["user", "store"] as AddressOwnerType[]).map((type) => (
               <label
                 key={type}
@@ -208,7 +209,7 @@ export function AdminAddressEditorView({
                 </Span>
               </label>
             ))}
-          </Div>
+          </Row>
           <Input
             label={form.ownerType === "user" ? "User ID" : "Store ID (slug)"}
             value={form.ownerId}
@@ -320,7 +321,7 @@ export function AdminAddressEditorView({
       </Card>
 
       {/* Mobile action buttons */}
-      <Div className="flex gap-3 lg:hidden">
+      <Row gap="3" className="lg:hidden">
         <Button
           type="submit"
           isLoading={isSubmitting}
@@ -338,7 +339,7 @@ export function AdminAddressEditorView({
             Delete address
           </Button>
         )}
-      </Div>
+      </Row>
     </Form>
   );
 

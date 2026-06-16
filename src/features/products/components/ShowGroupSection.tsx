@@ -185,7 +185,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
 
         {open && (
           <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
-            <Div className="flex gap-3 min-w-0">
+            <Row gap="3" className="min-w-0">
               {/* Parent first */}
               {[...members]
                 .sort((a, b) => (b.isGroupParent ? 1 : 0) - (a.isGroupParent ? 1 : 0))
@@ -196,7 +196,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
                     isCurrent={m.slug === currentSlug || m.id === currentSlug}
                   />
                 ))}
-            </Div>
+            </Row>
           </Div>
         )}
       </Div>

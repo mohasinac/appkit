@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, ListingLayout, Text } from "../../../ui";
@@ -122,7 +122,7 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
       <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
         Status
       </Text>
-      <Div className="flex flex-wrap gap-2">
+      <Row gap="sm" className="flex-wrap">
         {[
           { label: "All", value: "" },
           { label: "Active", value: "true" },
@@ -143,7 +143,7 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
             {opt.label}
           </button>
         ))}
-      </Div>
+      </Row>
     </Stack>
   ),
   renderEditor: ({ editId, closePanel }) => (

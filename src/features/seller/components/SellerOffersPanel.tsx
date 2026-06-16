@@ -147,7 +147,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       </Row>
 
       {/* Amounts */}
-      <Div className="flex gap-4 flex-wrap">
+      <Row gap="md" className="flex-wrap">
         <Div>
           <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Listed</Text>
           <Text size="sm" weight="medium" color="muted">{formatRupees(offer.listedPrice)}</Text>
@@ -162,7 +162,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             <Text className="text-info" size="sm" weight="medium">{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
-      </Div>
+      </Row>
 
       {offer.buyerNote && (
         <Text className="italic" color="muted" size="xs">
@@ -172,13 +172,13 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
 
       {/* Actions */}
       {isPendingOffer && uiState === "idle" && (
-        <Div className="flex gap-2 flex-wrap">
+        <Row gap="sm" className="flex-wrap">
           <Button size="sm" variant="primary" onClick={toAccepting} disabled={isPending}>Accept</Button>
           <Button size="sm" variant="ghost" onClick={toCountering} disabled={isPending}
             className="border border-zinc-300 dark:border-zinc-600">Counter</Button>
           <Button size="sm" variant="ghost" onClick={toDeclining} disabled={isPending}
             className="text-error border border-error/20">Decline</Button>
-        </Div>
+        </Row>
       )}
 
       {/* Accept confirmation */}
@@ -190,12 +190,12 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerNote(e.target.value)}
             disabled={isPending}
           />
-          <Div className="flex gap-2">
+          <Row gap="sm" >
             <Button size="sm" variant="primary" onClick={handleAccept} disabled={isPending}>
               {isPending ? "Accepting…" : "Confirm Accept"}
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
-          </Div>
+          </Row>
         </Stack>
       )}
 
@@ -208,13 +208,13 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerNote(e.target.value)}
             disabled={isPending}
           />
-          <Div className="flex gap-2">
+          <Row gap="sm" >
             <Button size="sm" variant="ghost" onClick={handleDecline} disabled={isPending}
               className="text-error border border-error/20">
               {isPending ? "Declining…" : "Confirm Decline"}
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
-          </Div>
+          </Row>
         </Stack>
       )}
 
@@ -237,12 +237,12 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerNote(e.target.value)}
             disabled={isPending}
           />
-          <Div className="flex gap-2">
+          <Row gap="sm" >
             <Button size="sm" variant="secondary" onClick={handleCounter} disabled={isPending}>
               {isPending ? "Sending…" : "Send Counter"}
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
-          </Div>
+          </Row>
         </Stack>
       )}
 
@@ -327,7 +327,7 @@ export function SellerOffersPanel({
       </Row>
 
       {/* Filter tabs */}
-      <Div className="flex gap-1 flex-wrap">
+      <Row gap="xs" className="flex-wrap">
         {STATUS_FILTERS.map((f) => (
           <Button
             key={f.value}
@@ -339,7 +339,7 @@ export function SellerOffersPanel({
             {f.label}
           </Button>
         ))}
-      </Div>
+      </Row>
 
       {fetchError && <Alert variant="error"><Text size="sm">{fetchError}</Text></Alert>}
 

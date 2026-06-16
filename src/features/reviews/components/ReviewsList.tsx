@@ -203,13 +203,13 @@ export function ReviewsList({
             key={i}
             className="border border-neutral-200 p-5" rounded="xl"
           >
-            <Div className="flex gap-3">
+            <Row gap="3" >
               <Skeleton className="h-9 w-9 rounded-full" />
               <Stack gap="sm" className="flex-1">
                 <Skeleton className="h-4 w-24 rounded" />
                 <Skeleton className="h-3 w-16 rounded" />
               </Stack>
-            </Div>
+            </Row>
             <Stack gap="xs" className="mt-3">
               <Skeleton className="h-3 w-full rounded" />
               <Skeleton className="h-3 w-3/4 rounded" />

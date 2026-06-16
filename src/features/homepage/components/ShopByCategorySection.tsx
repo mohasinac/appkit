@@ -180,7 +180,7 @@ export function ShopByCategorySection({
 
         {/* Filter chips */}
         {hasFilters && !isLoading && (
-          <Div className="mb-4 flex flex-wrap gap-2">
+          <Row gap="sm" className="mb-4 flex-wrap">
             <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
             {rootIds.slice(0, 5).map((id) => {
               const cat = allCategories.find((c) => c.id === id);
@@ -194,7 +194,7 @@ export function ShopByCategorySection({
                 />
               );
             })}
-          </Div>
+          </Row>
         )}
 
         {isLoading ? (

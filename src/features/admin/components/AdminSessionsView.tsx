@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState } from "react";
@@ -134,7 +134,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Status
         </Text>
-        <Div className="flex flex-wrap gap-2">
+        <Row gap="sm" className="flex-wrap">
           {[
             { label: "All", value: "" },
             { label: "Active only", value: "true" },
@@ -152,7 +152,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
               {opt.label}
             </button>
           ))}
-        </Div>
+        </Row>
       </Stack>
     ),
   };

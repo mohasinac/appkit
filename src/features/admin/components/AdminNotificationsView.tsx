@@ -1,7 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -142,7 +142,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Type
         </Text>
-        <Div className="flex flex-wrap gap-2">
+        <Row gap="sm" className="flex-wrap">
           {NOTIF_TYPES.map((opt) => (
             <button
               key={opt}
@@ -157,7 +157,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
               {opt}
             </button>
           ))}
-        </Div>
+        </Row>
       </Stack>
     ),
   };

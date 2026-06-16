@@ -79,13 +79,13 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
           <Heading level={3} className="tracking-wide" color="muted" size="sm" weight="semibold" transform="uppercase">
             Subgrades & attributes
           </Heading>
-          <Div className="flex flex-wrap gap-2">
+          <Row gap="sm" className="flex-wrap">
             {Object.entries(grading.attributes).map(([key, value]) => (
               <Badge key={key} variant="default">
                 {key}: {value}
               </Badge>
             ))}
-          </Div>
+          </Row>
         </Stack>
       ) : null}
     </Stack>

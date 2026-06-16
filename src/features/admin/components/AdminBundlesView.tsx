@@ -1,6 +1,6 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { Badge, Button, Div, Stack, Text, TextLink, useToast } from "../../../ui";
@@ -209,7 +209,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
           <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
             Status
           </Text>
-          <Div className="flex flex-wrap gap-2">
+          <Row gap="sm" className="flex-wrap">
             {[
               { label: "All", value: "" },
               { label: "Active", value: "true" },
@@ -228,13 +228,13 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
                 {opt.label}
               </button>
             ))}
-          </Div>
+          </Row>
         </Stack>
         <Stack gap="sm">
           <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
             Stock
           </Text>
-          <Div className="flex flex-wrap gap-2">
+          <Row gap="sm" className="flex-wrap">
             {[
               { label: "All", value: "" },
               { label: "Sold out", value: "out_of_stock" },
@@ -254,7 +254,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
                 {opt.label}
               </button>
             ))}
-          </Div>
+          </Row>
         </Stack>
       </>
     ),

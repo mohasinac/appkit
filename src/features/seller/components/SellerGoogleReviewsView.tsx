@@ -167,7 +167,7 @@ export function SellerGoogleReviewsView({
         {(draft.averageRating !== undefined || draft.totalReviews !== undefined) && (
           <Section>
             <Heading level={3} className="mb-3">Review Stats</Heading>
-            <Div className="flex flex-wrap gap-6">
+            <Row gap="lg" className="flex-wrap">
               {draft.averageRating !== undefined && (
                 <Div>
                   <Text className="text-[var(--appkit-color-text-muted)] tracking-wide" size="xs" transform="uppercase">
@@ -194,7 +194,7 @@ export function SellerGoogleReviewsView({
                 </Text>
                 <Text size="sm">{formattedLastSync}</Text>
               </Div>
-            </Div>
+            </Row>
           </Section>
         )}
 

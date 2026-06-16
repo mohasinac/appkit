@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -165,7 +166,7 @@ export function AdminSublistingCategoryEditorView({
             onChange={setCoverImage}
           />
 
-          <Div className="flex gap-3" padding="t-xs">
+          <Row gap="3" padding="t-xs">
             <Button
               type="submit"
               isLoading={isSubmitting}
@@ -183,7 +184,7 @@ export function AdminSublistingCategoryEditorView({
                 Delete
               </Button>
             )}
-          </Div>
+          </Row>
         </Form>
         </FormShellContext.Provider>,
       ]}

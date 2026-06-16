@@ -31,10 +31,10 @@ export function AdminOrdersGuideView() {
                 ["REFUNDED", "Return accepted and refund issued via Razorpay."],
                 ["CANCELLED", "Cancelled before shipping. Payment returned."],
               ].map(([status, note]) => (
-                <Div key={status} className="flex gap-3">
+                <Row gap="3" key={status}>
                   <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{status}</Text>
                   <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
-                </Div>
+                </Row>
               ))}
               <Text className="text-[var(--appkit-color-text-muted)] pt-2" size="sm">Admin-only transitions: force-cancel (any status before DELIVERED), force-refund (post-DELIVERED dispute).</Text>
             </Stack>

@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Div, Heading, HorizontalScroller, Section, Stack, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
@@ -93,7 +94,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
         )}
 
         {card.buttons && card.buttons.length > 0 && (
-          <Div className="flex flex-wrap gap-2 mt-2">
+          <Row gap="sm" className="flex-wrap mt-2">
             {card.buttons.map((btn, i) => (
               <a
                 key={i}
@@ -105,7 +106,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
                 {btn.label}
               </a>
             ))}
-          </Div>
+          </Row>
         )}
 
         {card.formEmbed && (

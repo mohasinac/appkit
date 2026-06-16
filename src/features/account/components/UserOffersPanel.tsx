@@ -94,7 +94,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         </Badge>
       </Row>
 
-      <Div className="flex gap-4 flex-wrap">
+      <Row gap="md" className="flex-wrap">
         <Div>
           <Text className="tracking-wide" color="faint" size="xs" transform="uppercase">Listed</Text>
           <Text size="sm" weight="medium" color="muted">{formatRupees(offer.listedPrice)}</Text>
@@ -115,7 +115,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
             <Text className="text-success" size="sm" weight="semibold">{formatRupees(offer.lockedPrice)}</Text>
           </Div>
         )}
-      </Div>
+      </Row>
 
       {offer.sellerNote && (
         <Text className="italic" color="muted" size="xs">
@@ -129,7 +129,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
           <Text className="text-info" size="xs" weight="medium">
             Seller countered at {formatRupees(offer.counterAmount)}. Accept or withdraw your offer.
           </Text>
-          <Div className="flex gap-2 flex-wrap">
+          <Row gap="sm" className="flex-wrap">
             <Button size="sm" variant="primary"
               onClick={() => act(() => onAcceptCounter(offer.id), { status: "accepted", lockedPrice: offer.counterAmount })}
               disabled={isPending}>
@@ -141,7 +141,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
               className="text-error border border-error/20">
               Withdraw
             </Button>
-          </Div>
+          </Row>
         </Stack>
       )}
 
@@ -166,7 +166,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
 
       {/* Withdraw confirmation */}
       {confirming === "withdraw" && (
-        <Div className="flex gap-2">
+        <Row gap="sm" >
           <Button size="sm" variant="ghost"
             onClick={() => act(() => onWithdraw(offer.id), { status: "withdrawn" })}
             disabled={isPending}
@@ -174,7 +174,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
             {isPending ? "Withdrawing…" : "Confirm Withdraw"}
           </Button>
           <Button size="sm" variant="ghost" onClick={() => setConfirming(null)} disabled={isPending}>Cancel</Button>
-        </Div>
+        </Row>
       )}
 
       {error && <Alert variant="error"><Text size="xs">{error}</Text></Alert>}

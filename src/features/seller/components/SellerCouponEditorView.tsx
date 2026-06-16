@@ -267,7 +267,7 @@ export function SellerCouponEditorView({
                   placeholder="Add a category…"
                 />
                 {draft.applicableCategories.length > 0 && (
-                  <Div className="flex flex-wrap gap-2" padding="t-xs">
+                  <Row gap="sm" className="flex-wrap" padding="t-xs">
                     {draft.applicableCategories.map((cid) => (
                       <Span layout="inline-flex" gap="xs" 
                         key={cid}
@@ -286,7 +286,7 @@ export function SellerCouponEditorView({
                         </button>
                       </Span>
                     ))}
-                  </Div>
+                  </Row>
                 )}
               </Div>
               <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">

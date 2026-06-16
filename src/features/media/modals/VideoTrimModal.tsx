@@ -154,7 +154,7 @@ export function VideoTrimModal({
 
             <Stack gap="xs">
               <Text size="sm">{t("trimQuality")}</Text>
-              <Div className="flex gap-2">
+              <Row gap="sm" >
                 {(["low", "medium", "high"] as const).map((q) => (
                   <Button
                     key={q}
@@ -167,7 +167,7 @@ export function VideoTrimModal({
                     {qualityLabels[q]}
                   </Button>
                 ))}
-              </Div>
+              </Row>
             </Stack>
           </>
         )}

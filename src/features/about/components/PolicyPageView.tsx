@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Heading, Text, Section, Stack } from "../../../ui";
@@ -119,7 +120,7 @@ export async function PolicyPageView({
             >
               {t("relatedTitle")}
             </Heading>
-            <Div className="flex flex-wrap gap-4">
+            <Row gap="md" className="flex-wrap">
               {relatedLinks.map((l) => (
                 <TextLink
                   key={l.href}
@@ -128,7 +129,7 @@ export async function PolicyPageView({
                   {l.label}
                 </TextLink>
               ))}
-            </Div>
+            </Row>
           </Div>
         )}
       </Div>

@@ -279,7 +279,7 @@ export function FilterFacetSection({
 
       {/* Selected chips — visible when collapsed */}
       {isCollapsed && hasValue && (
-        <Div className="mt-2 flex flex-wrap gap-1">
+        <Row gap="xs" className="mt-2 flex-wrap">
           {selectedLabels.map((label) => (
             <Span layout="inline-flex" 
               key={label}
@@ -294,7 +294,7 @@ export function FilterFacetSection({
               +{selected.length - 3} more
             </Span>
           )}
-        </Div>
+        </Row>
       )}
 
       {/* Search input — always visible when searchable */}

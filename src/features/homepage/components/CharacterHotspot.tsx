@@ -547,7 +547,7 @@ function MobileHotspotSheet({
           <Text className="leading-relaxed mb-5" size="sm" style={{ color: "#374151" }}>
             {active.description}
           </Text>
-          <Div className="flex gap-3">
+          <Row gap="3" >
             <Link
               href={active.href}
               onClick={onClose}
@@ -573,7 +573,7 @@ function MobileHotspotSheet({
             >
               Close
             </Button>
-          </Div>
+          </Row>
         </Div>
       </Div>
     </Row>

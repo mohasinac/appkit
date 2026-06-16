@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useMemo } from "react";
 import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
@@ -143,7 +143,7 @@ export function AdminFaqsView({
           <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
             Status
           </Text>
-          <Div className="flex flex-wrap gap-2">
+          <Row gap="sm" className="flex-wrap">
             {[
               { label: "All", value: "" },
               { label: "Published", value: "true" },
@@ -164,7 +164,7 @@ export function AdminFaqsView({
                 {opt.label}
               </button>
             ))}
-          </Div>
+          </Row>
         </Stack>
       ),
       renderEditor: ({ editId, closePanel }) => (

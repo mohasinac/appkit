@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -246,7 +247,7 @@ export function AdminFaqEditorView({
             <Toggle label="Show in footer FAQ links" checked={showInFooter} onChange={setShowInFooter} />
           </Stack>
 
-          <Div className="flex gap-3" padding="t-xs">
+          <Row gap="3" padding="t-xs">
             <Button
               type="submit"
               isLoading={isSubmitting}
@@ -264,7 +265,7 @@ export function AdminFaqEditorView({
                 Delete FAQ
               </Button>
             )}
-          </Div>
+          </Row>
     </Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal

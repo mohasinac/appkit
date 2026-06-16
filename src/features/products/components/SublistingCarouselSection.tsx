@@ -157,7 +157,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
 
       {open && (
         <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
-          <Div className="flex gap-3 min-w-0">
+          <Row gap="3" className="min-w-0">
             {listings.map((listing) => (
               <ListingThumb
                 key={listing.id}
@@ -165,7 +165,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
                 isCurrent={listing.id === currentListingId}
               />
             ))}
-          </Div>
+          </Row>
         </Div>
       )}
     </Div>

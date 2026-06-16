@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -381,7 +382,7 @@ export function AdminProductEditorView({
       </Card>
 
       {/* Mobile-only action buttons */}
-      <Div className="flex gap-3 lg:hidden">
+      <Row gap="3" className="lg:hidden">
         <Button
           type="submit"
           isLoading={isSubmitting}
@@ -399,7 +400,7 @@ export function AdminProductEditorView({
             Delete product
           </Button>
         )}
-      </Div>
+      </Row>
     </Form>
   );
 

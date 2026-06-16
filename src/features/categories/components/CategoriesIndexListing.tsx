@@ -222,7 +222,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     <Div className="min-h-screen">
       {/* ── Tab bar — only shown on the combined /categories page ──────── */}
       {!brandsOnly && (
-        <Div border="default" className="flex gap-1 border-b mb-2">
+        <Row gap="xs" border="default" className="border-b mb-2">
           {TABS.map((tab) => (
             <button
               key={tab.key}
@@ -238,7 +238,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
               {tab.label}
             </button>
           ))}
-        </Div>
+        </Row>
       )}
 
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}

@@ -198,7 +198,7 @@ export function ImageEditor({
         )}
 
         {/* Actions */}
-        <Div className="flex gap-2" padding="t-xs">
+        <Row gap="sm" padding="t-xs">
           <Button
             onClick={handleSave}
             variant="primary"
@@ -210,7 +210,7 @@ export function ImageEditor({
           <Button onClick={onClose} variant="secondary" className="flex-1">
             {t("cropCancel")}
           </Button>
-        </Div>
+        </Row>
       </Stack>
     </Modal>
   );

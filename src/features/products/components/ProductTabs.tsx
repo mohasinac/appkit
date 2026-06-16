@@ -1,4 +1,5 @@
 "use client"
+import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Div } from "../../../ui/components/Div";
 
@@ -61,7 +62,7 @@ export function ProductTabs({
       {renderTabBar ? (
         renderTabBar(activeTab, setActiveTab, tabs)
       ) : (
-        <Div className="flex gap-4 border-b mb-4">
+        <Row gap="md" className="border-b mb-4">
           {tabs.map((t) => (
             <button
               key={t.value}
@@ -75,7 +76,7 @@ export function ProductTabs({
               {t.label}
             </button>
           ))}
-        </Div>
+        </Row>
       )}
       {activeTab === "description" && renderDescription?.()}
       {activeTab === "specs" && renderSpecs?.()}

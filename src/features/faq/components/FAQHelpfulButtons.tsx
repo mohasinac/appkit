@@ -1,4 +1,5 @@
 "use client"
+import { Row } from "@mohasinac/appkit/ui";
 import { useState } from "react";
 import { Button, Div, Span, Text } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
@@ -73,7 +74,7 @@ export function FAQHelpfulButtons({
           : (labels?.wasThisHelpful ?? "Was this helpful?")}
       </Text>
 
-      <Div className="flex gap-3">
+      <Row gap="3" >
         <Button
           variant="ghost"
           onClick={() => handleVote(true)}
@@ -109,7 +110,7 @@ export function FAQHelpfulButtons({
             ({notHelpful})
           </Span>
         </Button>
-      </Div>
+      </Row>
     </Div>
   );
 }

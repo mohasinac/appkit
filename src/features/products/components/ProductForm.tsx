@@ -1,4 +1,5 @@
 "use client"
+import { Row } from "@mohasinac/appkit/ui";
 import React, { useRef } from "react";
 import { useTranslations } from "next-intl";
 import {
@@ -254,7 +255,7 @@ export function ProductForm({
           {t("formBrand")}
         </Text>
         {/* Mode selector */}
-        <Div className="flex gap-3 flex-wrap">
+        <Row gap="3" className="flex-wrap">
           {(["single", "unbranded", "mixed"] as const).map((mode) => (
             <Label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none" color="primary" size="sm">
               <input
@@ -277,7 +278,7 @@ export function ProductForm({
               {mode === "single" ? "Single Brand" : mode === "unbranded" ? "Unbranded" : "Mixed Brands"}
             </Label>
           ))}
-        </Div>
+        </Row>
         {/* Help text for unbranded / mixed */}
         {(product.brandMode === "unbranded") && (
           <Text size="xs" color="muted">

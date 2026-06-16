@@ -7,6 +7,8 @@
  * Use on every public GET response that returns products. Admin/seller-scoped
  * routes must NOT sanitize — they legitimately surface owner identity.
  */
+import type { JsonValue } from "../../../schemas/types";
+
 const SELLER_IDENTITY_FIELDS = [
   "sellerId",
   "sellerName",
@@ -14,17 +16,17 @@ const SELLER_IDENTITY_FIELDS = [
   "ownerId",
 ] as const;
 
-export function sanitizeProductForPublic<T extends Record<string, unknown>>(
+export function sanitizeProductForPublic<T extends Record<string, JsonValue>>(
   item: T,
 ): T {
   const copy = { ...item };
   for (const field of SELLER_IDENTITY_FIELDS) {
-    delete (copy as Record<string, unknown>)[field];
+    delete (copy as Record<string, JsonValue>)[field];
   }
   return copy;
 }
 
-export function sanitizeProductsForPublic<T extends Record<string, unknown>>(
+export function sanitizeProductsForPublic<T extends Record<string, JsonValue>>(
   items: readonly T[],
 ): T[] {
   return items.map((item) => sanitizeProductForPublic(item));

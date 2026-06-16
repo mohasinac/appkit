@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -273,7 +274,7 @@ export function AdminCategoryEditorView({
       </Card>
 
       {/* Mobile-only action buttons */}
-      <Div className="flex gap-3 lg:hidden">
+      <Row gap="3" className="lg:hidden">
         <Button type="submit" isLoading={isSubmitting} disabled={!name || isSubmitting}>
           {isEdit ? "Save changes" : "Create category"}
         </Button>
@@ -287,7 +288,7 @@ export function AdminCategoryEditorView({
             Delete category
           </Button>
         )}
-      </Div>
+      </Row>
     </Form>
     </FormShellContext.Provider>
   );

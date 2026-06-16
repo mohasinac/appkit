@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Caption, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
@@ -128,7 +129,7 @@ export async function TrackOrderView({
               {t("needHelpText")}
             </Text>
           </Div>
-          <Div className="flex gap-3 flex-shrink-0">
+          <Row gap="3" className="flex-shrink-0">
             <TextLink
               href={String(ROUTES.PUBLIC.HELP)}
               className={`${themed.textSecondary} hover:text-primary underline underline-offset-4 transition-colors`} size="sm"
@@ -141,7 +142,7 @@ export async function TrackOrderView({
             >
               {t("contactSupport")}
             </TextLink>
-          </Div>
+          </Row>
         </Section>
       </Div>
     </Div>

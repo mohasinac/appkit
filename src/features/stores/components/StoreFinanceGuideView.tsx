@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Alert, Code, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
@@ -95,10 +96,10 @@ function PayoutCycleSection() {
         <Text className={SUBHEADING}>Payout statuses</Text>
         <Stack gap="sm">
           {PAYOUT_STATUSES.map(({ status, note }) => (
-            <Div key={status} className="flex gap-3">
+            <Row gap="3" key={status}>
               <Text className="shrink-0 font-mono text-[var(--appkit-color-text)] w-24" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
-            </Div>
+            </Row>
           ))}
         </Stack>
       </Div>
@@ -182,10 +183,10 @@ function CouponsSection() {
         <Text className={SUBHEADING}>Coupon field reference</Text>
         <Stack gap="3">
           {COUPON_FIELDS.map(({ field, detail }) => (
-            <Div key={field} className="flex gap-3">
+            <Row gap="3" key={field}>
               <Text className="shrink-0 w-32 text-[var(--appkit-color-text)]" size="sm" weight="semibold">{field}</Text>
               <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed" size="sm">{detail}</Text>
-            </Div>
+            </Row>
           ))}
         </Stack>
       </Div>

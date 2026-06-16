@@ -1,6 +1,6 @@
 "use client";
 
-import { sortBy } from "@mohasinac/appkit";
+import { Row, sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Badge, Button, Div, Span } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
@@ -139,14 +139,14 @@ export function SellerGroupedListingsView({
         ]
       : undefined,
     renderRowActions: (row) => (
-      <Div className="flex gap-1">
+      <Row gap="xs" >
         <Button size="sm" variant="ghost" onClick={() => onEditClick?.(row.id)}>
           {ACTIONS.STORE["edit-listing"].label}
         </Button>
         <Button size="sm" variant="ghost" onClick={() => onDeleteClick?.(row.id)}>
           {ACTIONS.STORE["delete-listing"].label}
         </Button>
-      </Div>
+      </Row>
     ),
   };
 

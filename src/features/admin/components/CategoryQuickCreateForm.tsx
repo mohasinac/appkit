@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 
@@ -60,14 +61,14 @@ export function CategoryQuickCreateForm({ onSaved, onCancel }: CategoryQuickCrea
         placeholder="Optional brief description"
       />
       <Toggle label="Active" checked={isActive} onChange={setIsActive} />
-      <Div className="flex gap-3" padding="t-xs">
+      <Row gap="3" padding="t-xs">
         <Button type="submit" isLoading={mutation.isPending} disabled={!name || mutation.isPending}>
           Create category
         </Button>
         <Button type="button" variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
-      </Div>
+      </Row>
     </Form>
   );
 }

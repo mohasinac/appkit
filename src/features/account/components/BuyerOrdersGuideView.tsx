@@ -30,10 +30,10 @@ const SECTIONS: OrderSection[] = [
         <Text className={GC.textMuted}>Every order on LetItRip moves through these statuses:</Text>
         <Stack gap="sm">
           {ORDER_STATUSES.map(({ status, desc }) => (
-            <Div key={status} className="flex gap-3">
+            <Row gap="3" key={status}>
               <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-36" size="xs" weight="semibold">{status}</Text>
               <Text className={GC.textMuted}>{desc}</Text>
-            </Div>
+            </Row>
           ))}
         </Stack>
       </Stack>

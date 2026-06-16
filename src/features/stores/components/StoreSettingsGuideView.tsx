@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Alert, Code, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
@@ -205,10 +206,10 @@ function VisibilityStatesSection() {
   return (
     <Stack gap="3">
       {STATES.map(({ state, note }) => (
-        <Div key={state} className="flex gap-3 text-sm">
+        <Row gap="3" key={state} className="text-sm">
           <Text className="shrink-0 w-32 text-[var(--appkit-color-text)]" weight="semibold">{state}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{note}</Text>
-        </Div>
+        </Row>
       ))}
     </Stack>
   );

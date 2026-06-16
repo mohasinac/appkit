@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -316,7 +317,7 @@ export function AdminFeatureEditorView({
 
         <Div>
           <Text className={FIELD_LABEL_CLASS}>Applies to</Text>
-          <Div className="flex flex-wrap gap-2 mt-2">
+          <Row gap="sm" className="flex-wrap mt-2">
             {PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS.map((opt) => {
               const checked = productTypes.includes(opt.value);
               const pillClass = `${PILL_BASE_CLASS} ${checked ? PILL_CHECKED_CLASS : PILL_UNCHECKED_CLASS}`;
@@ -332,7 +333,7 @@ export function AdminFeatureEditorView({
                 </Label>
               );
             })}
-          </Div>
+          </Row>
         </Div>
 
         {!fixedScope && (
@@ -359,7 +360,7 @@ export function AdminFeatureEditorView({
 
         <Toggle label="Active" checked={isActive} onChange={setIsActive} />
 
-        <Div className="flex gap-3" padding="t-xs">
+        <Row gap="3" padding="t-xs">
           <Button type="submit" isLoading={isSubmitting} disabled={isDisabled}>
             {isEdit ? "Save changes" : "Create feature"}
           </Button>
@@ -373,7 +374,7 @@ export function AdminFeatureEditorView({
               Delete
             </Button>
           )}
-        </Div>
+        </Row>
       </Stack>
     </Form>
   );

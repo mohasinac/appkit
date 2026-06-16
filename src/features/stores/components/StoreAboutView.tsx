@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Div, Heading, RichText, Stack, Text } from "../../../ui";
 const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
@@ -59,23 +60,23 @@ export function StoreAboutView({
       {/* Details list */}
       <Stack className="text-sm" gap="3">
         {store.location && (
-          <Div className="flex gap-2">
+          <Row gap="sm" >
             <Text className={CLS_LABEL}>
               {labels.locationLabel ?? "Location"}
             </Text>
             <Text className="">{store.location}</Text>
-          </Div>
+          </Row>
         )}
         {joinDate && (
-          <Div className="flex gap-2">
+          <Row gap="sm" >
             <Text className={CLS_LABEL}>
               {labels.memberSinceLabel ?? "Member since"}
             </Text>
             <Text className="">{joinDate}</Text>
-          </Div>
+          </Row>
         )}
         {store.website && (
-          <Div className="flex gap-2">
+          <Row gap="sm" >
             <Text className={CLS_LABEL}>
               {labels.websiteLabel ?? "Website"}
             </Text>
@@ -87,7 +88,7 @@ export function StoreAboutView({
             >
               {store.website}
             </a>
-          </Div>
+          </Row>
         )}
       </Stack>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -122,7 +122,7 @@ export function SellerCouponsView({
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
           Status
         </Text>
-        <Div className="flex flex-wrap gap-2">
+        <Row gap="sm" className="flex-wrap">
           {[
             { label: "All", value: "" },
             { label: "Active", value: "true" },
@@ -141,7 +141,7 @@ export function SellerCouponsView({
               {opt.label}
             </button>
           ))}
-        </Div>
+        </Row>
       </Stack>
     ),
     renderCards: (rows, _view, _selection, isLoading) =>

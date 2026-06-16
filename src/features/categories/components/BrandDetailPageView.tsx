@@ -173,7 +173,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           </Row>
 
           {/* Item count chips */}
-          <Div className="flex flex-wrap gap-2 mt-3">
+          <Row gap="sm" className="flex-wrap mt-3">
             {counts.products > 0 && (
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`px-2.5 ${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="y-2xs">
                 {counts.products.toLocaleString()} {counts.products === 1 ? "product" : "products"}
@@ -194,7 +194,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 No items listed yet
               </Span>
             )}
-          </Div>
+          </Row>
         </Div>
       </Section>
 

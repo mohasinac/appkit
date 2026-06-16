@@ -1,5 +1,6 @@
 "use client";
 
+import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -493,7 +494,7 @@ export function AdminCouponEditorView({
               placeholder="Add a category…"
             />
             {applicableCategories.length > 0 && (
-              <Div className="flex flex-wrap gap-2" padding="t-2xs">
+              <Row gap="sm" className="flex-wrap" padding="t-2xs">
                 {applicableCategories.map((cid) => (
                   <Span layout="inline-flex" gap="xs" 
                     key={cid}
@@ -512,7 +513,7 @@ export function AdminCouponEditorView({
                     </button>
                   </Span>
                 ))}
-              </Div>
+              </Row>
             )}
             <Text size="xs" color="muted">
               Leave empty to apply the coupon to every category.
@@ -520,7 +521,7 @@ export function AdminCouponEditorView({
           </Stack>
 
           {/* Actions */}
-          <Div className="flex gap-3" padding="t-xs">
+          <Row gap="3" padding="t-xs">
             <Button
               type="submit"
               isLoading={isSubmitting}
@@ -538,7 +539,7 @@ export function AdminCouponEditorView({
                 Delete coupon
               </Button>
             )}
-          </Div>
+          </Row>
     </Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal

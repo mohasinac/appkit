@@ -1,3 +1,4 @@
+import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Alert, Div, Heading, Li, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
@@ -282,10 +283,10 @@ function StatusLifecycle() {
       </Div>
       <Stack gap="sm">
         {STATUS_NOTES.map(({ status, note }) => (
-          <Div key={status} className="flex gap-3 text-sm">
+          <Row gap="3" key={status} className="text-sm">
             <Text className="shrink-0 font-mono text-[var(--appkit-color-text)] w-24" weight="semibold">{status}</Text>
             <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
-          </Div>
+          </Row>
         ))}
       </Stack>
       <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
@@ -310,10 +311,10 @@ function MediaGuide() {
   return (
     <Stack gap="3">
       {MEDIA_TIPS.map(({ label, detail }) => (
-        <Div key={label} className="flex gap-3 text-sm">
+        <Row gap="3" key={label} className="text-sm">
           <Text className="shrink-0 w-28 text-[var(--appkit-color-text)]" weight="semibold">{label}</Text>
           <Text className="text-[var(--appkit-color-text-muted)] leading-relaxed">{detail}</Text>
-        </Div>
+        </Row>
       ))}
     </Stack>
   );

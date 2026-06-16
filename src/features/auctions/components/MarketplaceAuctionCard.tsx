@@ -128,14 +128,14 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
         </Div>
       ) : null}
       {images.length > 1 ? (
-        <Div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
+        <Row gap="xs" className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2">
           {images.map((_, index) => (
             <Span
               key={`${product.id}-image-${index}`}
               className={`transition-all duration-200 ${index === imageIndex ? "h-1.5 w-3 bg-white" : "h-1.5 w-1.5 bg-white/60"}`} rounded="full"
             />
           ))}
-        </Div>
+        </Row>
       ) : null}
       {product.featured ? (
         <Div className="pointer-events-none absolute left-2 top-2 z-10">
