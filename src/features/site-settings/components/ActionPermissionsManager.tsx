@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useTransition, useMemo } from "react";
-import { Toggle, Badge, Text, Div, Stack, Row, Input, Span, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
+import { Badge, Code, Div, Input, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
 import { ACTION_META, ACTION_ID } from "../../products/constants/action-defs";
 import type { ActionId } from "../../products/constants/action-defs";
 import { useToast } from "../../../ui";
@@ -169,9 +169,9 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                   </Td>
                   <Td padding="md">
                     {meta.requiredPermission ? (
-                      <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
+                      <Code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
                         {meta.requiredPermission}
-                      </code>
+                      </Code>
                     ) : (
                       <Text size="xs" color="faint">—</Text>
                     )}

@@ -247,7 +247,7 @@ export { SORT_DIR, sortBy } from "./constants/sort";
 export { SIEVE_OP, sieveFilter, sieveAnd, sieveMultiEq } from "./utils/sieve-builder";
 export { Container, Grid, Row, Stack } from "./ui/components/Layout";
 export { Div } from "./ui/components/Div";
-export { Main, Section, Nav, Ul, Ol, Li, Table, Thead, Tbody, Tr, Th, Td } from "./ui/components/Semantic";
+export { Main, Section, Nav, Ul, Ol, Li, Table, Thead, Tbody, Tr, Th, Td, Code, Pre, Blockquote } from "./ui/components/Semantic";
 export { Badge } from "./ui/components/Badge";
 export { Button } from "./ui/components/Button";
 export { ClaimCouponButton } from "./ui/components/ClaimCouponButton";

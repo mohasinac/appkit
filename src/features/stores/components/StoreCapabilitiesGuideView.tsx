@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
+import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -38,8 +38,8 @@ function WhatAreCapabilitiesSection() {
       </Text>
       <Text className="leading-relaxed">
         Two capabilities are enabled for every store at creation by default:
-        <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">suggest_brands</code> and
-        <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">create_coupons</code>.
+        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">suggest_brands</Code> and
+        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">create_coupons</Code>.
         All others must be requested. Some require contractual agreements before they can be granted.
       </Text>
     </Div>
@@ -227,7 +227,7 @@ function MultipleStoresSection() {
     <Div className={SECTION_BODY}>
       <Text className="leading-relaxed">
         By default, each owner account can only create one store. The
-        <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">multiple_stores</code>
+        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">multiple_stores</Code>
         capability allows the same owner to create and manage additional stores under the same account.
       </Text>
       <Alert variant="info" title="Each store is independent">

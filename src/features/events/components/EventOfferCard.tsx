@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Code, Div, Heading, Row, Stack, Text } from "../../../ui";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -61,9 +61,9 @@ export function EventOfferCard({
         </Stack>
 
         <Row className="px-4" surface="muted" padding="y-sm" align="center" gap="3" rounded="lg">
-          <code className="flex-1 font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
+          <Code className="flex-1 font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
             {couponCode}
-          </code>
+          </Code>
           <Button type="button" variant="outline" onClick={copyCode}>
             {copied ? "Copied!" : "Copy code"}
           </Button>

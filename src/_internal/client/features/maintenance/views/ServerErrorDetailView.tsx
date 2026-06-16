@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Anchor, Div, Heading, Li, Section, Text, Ul } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Li, Pre, Section, Text, Ul } from "@mohasinac/appkit";
 import type { ServerErrorDocument } from "../../../../../features/server-errors/schemas/firestore";
 
 export interface ServerErrorDetailViewProps {
@@ -59,18 +59,18 @@ export function ServerErrorDetailView({
       {doc.stack ? (
         <Section style={{ marginTop: "1.25rem" }}>
           <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.5rem" }}>Stack</Heading>
-          <pre style={{ fontFamily: "monospace", fontSize: "0.78rem", background: "var(--appkit-color-text)", color: "var(--appkit-color-border)", padding: "0.75rem", borderRadius: 4, overflowX: "auto" }}>
+          <Pre style={{ fontFamily: "monospace", fontSize: "0.78rem", background: "var(--appkit-color-text)", color: "var(--appkit-color-border)", padding: "0.75rem", borderRadius: 4, overflowX: "auto" }}>
             {doc.stack}
-          </pre>
+          </Pre>
         </Section>
       ) : null}
 
       {doc.componentStack ? (
         <Section style={{ marginTop: "1.25rem" }}>
           <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.5rem" }}>Component stack</Heading>
-          <pre style={{ fontFamily: "monospace", fontSize: "0.78rem", background: "var(--appkit-color-text)", color: "var(--appkit-color-border)", padding: "0.75rem", borderRadius: 4, overflowX: "auto" }}>
+          <Pre style={{ fontFamily: "monospace", fontSize: "0.78rem", background: "var(--appkit-color-text)", color: "var(--appkit-color-border)", padding: "0.75rem", borderRadius: 4, overflowX: "auto" }}>
             {doc.componentStack}
-          </pre>
+          </Pre>
         </Section>
       ) : null}
 

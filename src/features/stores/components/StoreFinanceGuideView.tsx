@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Code, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -211,7 +211,7 @@ function PromotedSection() {
         <Text className="leading-relaxed">
           Featured listings get a "Featured" badge on their listing card and receive priority ordering
           in search results and category pages. Like isPromoted, this is admin-controlled for most stores.
-          Stores with the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">manage_promoted_listings</code> capability
+          Stores with the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">manage_promoted_listings</Code> capability
           can self-promote from their dashboard.
         </Text>
       </Div>

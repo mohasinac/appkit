@@ -1,6 +1,6 @@
 import React from "react";
 import { ShoppingBag, Hash, Scale, Wallet, RotateCcw, DollarSign, Gavel } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminOrdersGuideView() {
@@ -45,10 +45,10 @@ export function AdminOrdersGuideView() {
           content: (
             <>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
-                Format: <code className="text-xs bg-[var(--appkit-color-border)] px-1 py-0.5 rounded">order-&#123;itemCount&#125;-&#123;YYYYMMDD&#125;-&#123;rand6&#125;</code>
+                Format: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 py-0.5 rounded">order-&#123;itemCount&#125;-&#123;YYYYMMDD&#125;-&#123;rand6&#125;</Code>
               </Text>
               <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-                The item count in the ID enables quick triage — a <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">order-8-...</code> is a large multi-item order that needs more careful handling than a <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">order-1-...</code>. Search by order ID in the admin panel using the full ID string.
+                The item count in the ID enables quick triage — a <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">order-8-...</Code> is a large multi-item order that needs more careful handling than a <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">order-1-...</Code>. Search by order ID in the admin panel using the full ID string.
               </Text>
             </>
           ),
@@ -69,7 +69,7 @@ export function AdminOrdersGuideView() {
             <Ul className={GC.listMuted}>
               <Li><Span weight="bold">Payout cycle</Span>: Weekly. All DELIVERED orders (minus platform commission) are batched into a single payout per store.</Li>
               <Li><Span weight="bold">Status flow</Span>: PENDING → PROCESSING → PAID / FAILED.</Li>
-              <Li><Span weight="bold">FAILED payout</Span>: Check the store&apos;s <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">payoutDetails</code> — UPI VPA or bank details may be stale. Contact the seller via their store email before retrying.</Li>
+              <Li><Span weight="bold">FAILED payout</Span>: Check the store&apos;s <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">payoutDetails</Code> — UPI VPA or bank details may be stale. Contact the seller via their store email before retrying.</Li>
               <Li><Span weight="bold">ordersIncluded</Span>: Array of order IDs bundled in this payout batch — use to audit which orders are covered.</Li>
             </Ul>
           ),
@@ -88,8 +88,8 @@ export function AdminOrdersGuideView() {
           Icon: DollarSign, title: "Commission & Settlement Math",
           content: (
             <Ul className={GC.listMuted}>
-              <Li><Span weight="bold">platformFee</Span>: Set in <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings.fees.platformFee</code> (percentage). Applied to the order&apos;s item subtotal.</Li>
-              <Li><Span weight="bold">customCommissionRate</Span>: Stored on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">StoreDocument</code> for stores with the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">lower_commission_rate</code> capability. Overrides the platform default for that store.</Li>
+              <Li><Span weight="bold">platformFee</Span>: Set in <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings.fees.platformFee</Code> (percentage). Applied to the order&apos;s item subtotal.</Li>
+              <Li><Span weight="bold">customCommissionRate</Span>: Stored on <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">StoreDocument</Code> for stores with the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">lower_commission_rate</Code> capability. Overrides the platform default for that store.</Li>
               <Li>Payout = order subtotal × (1 − commission rate). Shipping fees are passed through to the seller at cost.</Li>
             </Ul>
           ),
@@ -100,7 +100,7 @@ export function AdminOrdersGuideView() {
             <Ul className={GC.listMuted}>
               <Li>When an auction ends and the winner does not pay within 48 hours: the order auto-cancels and the system notifies the next-highest bidder.</Li>
               <Li>If the auto-cancel system fails (rare), admin can manually cancel from the order detail page and trigger the next-bidder flow via a support action.</Li>
-              <Li>Repeat non-paying winners can receive a <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</code> soft ban from the Trust &amp; Safety section.</Li>
+              <Li>Repeat non-paying winners can receive a <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</Code> soft ban from the Trust &amp; Safety section.</Li>
             </Ul>
           ),
         },

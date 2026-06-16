@@ -1,6 +1,6 @@
 import React from "react";
 import { PackageCheck, Truck, Camera, RotateCcw, Clock, Headphones, Scale } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
@@ -100,7 +100,7 @@ const SECTIONS: OrderSection[] = [
         </Ul>
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">What to include:</Text>
         <Ul className={GC.listDiscMuted}>
-          <Li>Your order ID (e.g. <code className={GC.code}>order-2-20260508-a1b2c3</code>)</Li>
+          <Li>Your order ID (e.g. <Code className={GC.code}>order-2-20260508-a1b2c3</Code>)</Li>
           <Li>Photos of the item and packaging</Li>
           <Li>A clear timeline of events</Li>
         </Ul>

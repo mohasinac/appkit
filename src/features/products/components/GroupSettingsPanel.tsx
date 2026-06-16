@@ -2,25 +2,7 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import React, { useState } from "react";
-import {
-  Button,
-  ConfirmDeleteModal,
-  Div,
-  FormField,
-  Heading,
-  Modal,
-  Row,
-  Select,
-  SideDrawer,
-  Span,
-  Stack,
-  Text,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  useToast,
-} from "../../../ui";
+import { Button, Code, ConfirmDeleteModal, Div, FormField, Heading, Modal, Row, Select, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 
@@ -404,7 +386,7 @@ export function GroupSettingsPanel({
                 </Span>
               </Text>
               <Text size="xs" color="muted">
-                Parent listing: <code className="font-mono">{groupParentSlug}</code>
+                Parent listing: <Code className="font-mono">{groupParentSlug}</Code>
               </Text>
               <Button
                 type="button"

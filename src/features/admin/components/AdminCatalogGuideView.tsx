@@ -1,6 +1,6 @@
 import React from "react";
 import { Package, FolderTree, Tag, Star, AlertTriangle } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 const CLS_CODE = "text-xs bg-amber-100 dark:bg-amber-900/30 px-1 rounded";
@@ -24,11 +24,11 @@ export function AdminCatalogGuideView() {
           Icon: Package, title: "Product Management",
           content: (
             <Ul className={GC.listMuted}>
-              <Li><Span weight="bold">Listing types</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">standard</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">product-</code>), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction-</code>), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pre-order</code> (prefix <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">preorder-</code>).</Li>
+              <Li><Span weight="bold">Listing types</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">standard</Code> (prefix <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">product-</Code>), <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction</Code> (prefix <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction-</Code>), <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pre-order</Code> (prefix <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">preorder-</Code>).</Li>
               <Li><Span weight="bold">Admin vs store creation</Span>: Admins can create products on behalf of any store via the store picker in AdminProductEditorView.</Li>
               <Li><Span weight="bold">Status lifecycle</Span>: DRAFT → PUBLISHED → ARCHIVED. Published products appear in search. Archived products are hidden but not deleted.</Li>
-              <Li><Span weight="bold">J13 rule</Span>: Always use <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">listingType</code> field — the legacy <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isAuction</code>/<code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isPreOrder</code> booleans have been removed. All queries use <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">where(&quot;listingType&quot;, &quot;==&quot;, x)</code>.</Li>
-              <Li><Span weight="bold">Media URLs</Span>: Never write raw Firebase Storage URLs to Firestore. All product image URLs must use the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/[slug]</code> proxy format.</Li>
+              <Li><Span weight="bold">J13 rule</Span>: Always use <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">listingType</Code> field — the legacy <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isAuction</Code>/<Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isPreOrder</Code> booleans have been removed. All queries use <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">where(&quot;listingType&quot;, &quot;==&quot;, x)</Code>.</Li>
+              <Li><Span weight="bold">Media URLs</Span>: Never write raw Firebase Storage URLs to Firestore. All product image URLs must use the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/[slug]</Code> proxy format.</Li>
             </Ul>
           ),
         },
@@ -37,10 +37,10 @@ export function AdminCatalogGuideView() {
           content: (
             <Ul className={GC.listMuted}>
               <Li><Span weight="bold">3-tier system</Span>: Root (tier 1) → Subcategory (tier 2) → Leaf (tier 3). Only leaf categories can be assigned to products.</Li>
-              <Li><Span weight="bold">Key fields</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">parentId</code> points to the direct parent; <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">rootId</code> always points to the tier-1 root; <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">path</code> stores the full hierarchy path.</Li>
-              <Li><Span weight="bold">isLeaf</Span>: Must be <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">true</code> on any category that can be selected in the product form. Tier-1 and tier-2 categories must have <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isLeaf: false</code>.</Li>
-              <Li><Span weight="bold">Slug prefix</Span>: All category slugs start with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">category-</code>.</Li>
-              <Li><Span weight="bold">Adding a new root</Span>: Rare. Requires: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">display.icon</code>, decision on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">showOnHomepage</code>, and a senior admin sign-off.</Li>
+              <Li><Span weight="bold">Key fields</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">parentId</Code> points to the direct parent; <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">rootId</Code> always points to the tier-1 root; <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">path</Code> stores the full hierarchy path.</Li>
+              <Li><Span weight="bold">isLeaf</Span>: Must be <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">true</Code> on any category that can be selected in the product form. Tier-1 and tier-2 categories must have <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isLeaf: false</Code>.</Li>
+              <Li><Span weight="bold">Slug prefix</Span>: All category slugs start with <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">category-</Code>.</Li>
+              <Li><Span weight="bold">Adding a new root</Span>: Rare. Requires: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">display.icon</Code>, decision on <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">showOnHomepage</Code>, and a senior admin sign-off.</Li>
             </Ul>
           ),
         },
@@ -48,10 +48,10 @@ export function AdminCatalogGuideView() {
           Icon: Tag, title: "Brands",
           content: (
             <Ul className={GC.listMuted}>
-              <Li><Span weight="bold">Slug prefix</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">brand-</code>. Slugs are immutable after products reference them.</Li>
+              <Li><Span weight="bold">Slug prefix</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">brand-</Code>. Slugs are immutable after products reference them.</Li>
               <Li><Span weight="bold">displayOrder</Span>: Controls the sort order on public brand pages. Lower numbers appear first.</Li>
               <Li><Span weight="bold">isActive: false</Span>: Hides the brand from public discovery but preserves historical product links. Use this instead of deleting a brand.</Li>
-              <Li><Span weight="bold">logoURL / bannerURL</Span>: Must use the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/</code> proxy — never raw Storage URLs.</Li>
+              <Li><Span weight="bold">logoURL / bannerURL</Span>: Must use the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/</Code> proxy — never raw Storage URLs.</Li>
             </Ul>
           ),
         },
@@ -72,8 +72,8 @@ export function AdminCatalogGuideView() {
             <Alert variant="warning">
               <Ul className="space-y-1 text-sm">
                 <Li>✗ Publishing a product with no images — buyers cannot evaluate it.</Li>
-                <Li>✗ Creating a subcategory without setting <code className={CLS_CODE}>rootId</code> — category tree breaks.</Li>
-                <Li>✗ Setting <code className={CLS_CODE}>parentId</code> of a root category to anything other than <code className={CLS_CODE}>null</code> — creates circular hierarchy.</Li>
+                <Li>✗ Creating a subcategory without setting <Code className={CLS_CODE}>rootId</Code> — category tree breaks.</Li>
+                <Li>✗ Setting <Code className={CLS_CODE}>parentId</Code> of a root category to anything other than <Code className={CLS_CODE}>null</Code> — creates circular hierarchy.</Li>
                 <Li>✗ Duplicating brand slugs — Firestore document ID collision, second write silently overwrites the first.</Li>
                 <Li>✗ Writing raw Firebase Storage URLs to Firestore — breaks the media watermark proxy and CDN caching.</Li>
               </Ul>

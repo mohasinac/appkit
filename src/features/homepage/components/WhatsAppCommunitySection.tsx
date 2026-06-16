@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Div, Heading, RichText, Row, Section, Span, Text } from "../../../ui";
+import { Blockquote, Button, Div, Heading, RichText, Row, Section, Span, Text } from "../../../ui";
 import { Users } from "lucide-react";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 
@@ -125,11 +125,11 @@ export function WhatsAppCommunitySection({
 
             {/* Testimonial */}
             {testimonial && (
-              <blockquote className="border-l-2 border-white/30 pl-4 mb-8 max-w-xl">
+              <Blockquote className="border-l-2 border-white/30 pl-4 mb-8 max-w-xl">
                 <Text variant="none" className="text-white/75 italic leading-relaxed" size="sm">
                   &ldquo;{testimonial}&rdquo;
                 </Text>
-              </blockquote>
+              </Blockquote>
             )}
 
             {/* CTA */}

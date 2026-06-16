@@ -1,6 +1,6 @@
 import React from "react";
 import { Users, Shield } from "lucide-react";
-import { Alert, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 export function AdminTeamGuideView() {
   const PERMISSION_GROUPS = [
     { name: "content_manager", desc: "Blog, FAQs, Events, Carousel, Sections, Ads, Newsletter read + write." },
@@ -32,13 +32,13 @@ export function AdminTeamGuideView() {
           content: (
             <>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
-                <Span weight="bold">Role</Span> (<code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.role</code>) is a coarse-grained classification: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">seller</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">moderator</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">employee</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</code>.
+                <Span weight="bold">Role</Span> (<Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.role</Code>) is a coarse-grained classification: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">seller</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">moderator</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">employee</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</Code>.
               </Text>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
-                <Span weight="bold">Permissions</Span> (<code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.permissions[]</code>) are fine-grained capabilities: e.g. <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:orders:read</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:products:write</code>.
+                <Span weight="bold">Permissions</Span> (<Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.permissions[]</Code>) are fine-grained capabilities: e.g. <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:orders:read</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:products:write</Code>.
               </Text>
               <Alert variant="info">
-                <code className="text-xs">role: "admin"</code> bypasses all RBAC permission checks — it&apos;s a superuser flag. <code className="text-xs">role: "employee"</code> is governed entirely by <code className="text-xs">user.permissions[]</code>.
+                <Code className="text-xs">role: "admin"</Code> bypasses all RBAC permission checks — it&apos;s a superuser flag. <Code className="text-xs">role: "employee"</Code> is governed entirely by <Code className="text-xs">user.permissions[]</Code>.
               </Alert>
             </>
           ),
@@ -64,9 +64,9 @@ export function AdminTeamGuideView() {
           content: (
             <Ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)]">
               <Li>Go to <Span weight="bold">Admin → Team → Invite Employee</Span>. Enter the person&apos;s email and select their permission group.</Li>
-              <Li>They receive an invitation email with a sign-up link. On first login, their Firestore profile is created with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</code> and the selected permissions array.</Li>
+              <Li>They receive an invitation email with a sign-up link. On first login, their Firestore profile is created with <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</Code> and the selected permissions array.</Li>
               <Li>To update permissions later: edit the employee in the Team section. Changes take effect on their next login (session tokens carry the old permissions until refreshed).</Li>
-              <Li>To offboard: use <Span weight="bold">Revoke Access</Span> in Team — sets <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isDisabled: true</code> on their Auth account and clears all permissions.</Li>
+              <Li>To offboard: use <Span weight="bold">Revoke Access</Span> in Team — sets <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isDisabled: true</Code> on their Auth account and clears all permissions.</Li>
             </Ul>
           ),
         },
@@ -74,9 +74,9 @@ export function AdminTeamGuideView() {
           Icon: Shield, title: "The 85+ Permission System",
           content: (
             <>
-              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Permissions follow the pattern <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:&#123;resource&#125;:&#123;action&#125;</code>. Actions: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">read</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">delete</code>, <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">view</code>.</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Permissions follow the pattern <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:&#123;resource&#125;:&#123;action&#125;</Code>. Actions: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">read</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">delete</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">view</Code>.</Text>
               <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-                The full permission list is defined in <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">appkit/src/features/auth/schemas/firestore.ts</code>. Custom roles (specific permission combinations) can be created at <Span weight="bold">Admin → Custom Roles</Span> — use these when a predefined group is too broad or too narrow for a hire.
+                The full permission list is defined in <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">appkit/src/features/auth/schemas/firestore.ts</Code>. Custom roles (specific permission combinations) can be created at <Span weight="bold">Admin → Custom Roles</Span> — use these when a predefined group is too broad or too narrow for a hire.
               </Text>
             </>
           ),

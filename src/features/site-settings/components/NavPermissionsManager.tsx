@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useTransition } from "react";
-import { Toggle, Text, Div, Stack, Input, Table, Thead, Tbody, Tr, Th, Td } from "../../../ui";
+import { Code, Div, Input, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
 import { useToast } from "../../../ui";
 
 const __O = {
@@ -88,13 +88,13 @@ export function NavPermissionsManager({
                         </Div>
                       </Td>
                       <Td padding="md">
-                        <code className="text-xs text-zinc-500 dark:text-zinc-400">{item.href}</code>
+                        <Code className="text-xs text-zinc-500 dark:text-zinc-400">{item.href}</Code>
                       </Td>
                       <Td padding="md">
                         {item.requiredPermission ? (
-                          <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
+                          <Code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
                             {item.requiredPermission}
-                          </code>
+                          </Code>
                         ) : (
                           <Text size="xs" color="faint">—</Text>
                         )}

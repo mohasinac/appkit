@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { Code, useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
@@ -430,12 +430,12 @@ export function AdminUserEditorView({
         <Stack gap="xs" className="text-zinc-700 dark:text-zinc-300">
           <Text size="xs">
             <Span weight="semibold">Owner ID (Firebase UID):</Span>{" "}
-            <code className="select-all font-mono">{userId}</code>
+            <Code className="select-all font-mono">{userId}</Code>
           </Text>
           {ownedStoreId && (
             <Text size="xs">
               <Span weight="semibold">Owns store:</Span>{" "}
-              <code className="select-all font-mono">{ownedStoreId}</code>
+              <Code className="select-all font-mono">{ownedStoreId}</Code>
               {ownedStoreName ? ` — ${ownedStoreName}` : ""}
             </Text>
           )}

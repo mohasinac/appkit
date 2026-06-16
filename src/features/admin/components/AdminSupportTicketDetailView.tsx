@@ -1,6 +1,6 @@
 "use client";
 
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { Code, useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Toggle, useToast } from "../../../ui";
@@ -568,7 +568,7 @@ function OrderItemsPanel(props: {
       {linkedOrderId ? (
         <>
           <Text size="xs" color="muted">
-            Editing order: <code className="font-mono">{linkedOrderId}</code>
+            Editing order: <Code className="font-mono">{linkedOrderId}</Code>
           </Text>
           {!orderItemsOpen ? (
             <Button
@@ -681,7 +681,7 @@ function StoreChangePanel(props: {
       {linkedStoreId ? (
         <>
           <Text size="xs" color="muted">
-            Editing store: <code className="font-mono">{linkedStoreId}</code>
+            Editing store: <Code className="font-mono">{linkedStoreId}</Code>
           </Text>
           <Select
             label="Store status"
@@ -747,7 +747,7 @@ function UnbanRequestPanel(props: {
       {linkedUserId ? (
         <>
           <Text size="xs" color="muted">
-            Appellant: <code className="font-mono">{linkedUserId}</code>
+            Appellant: <Code className="font-mono">{linkedUserId}</Code>
           </Text>
           <Text size="xs" color="muted">
             Resolves the ticket and appends an audit note on success.

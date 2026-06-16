@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
+import { Alert, Code, Div, Heading, Li, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -105,7 +105,7 @@ function ReturnPolicySection() {
         <Text className="leading-relaxed">
           The default return window is <Span weight="bold">7 days</Span> from the
           DELIVERED date. Stores with the
-          <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">extended_return_window</code>
+          <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">extended_return_window</Code>
           capability can offer 30 days. The return window is displayed on every product detail page in the Returns tab.
         </Text>
       </Div>
@@ -165,7 +165,7 @@ function WhatsAppSection() {
       <Text className="leading-relaxed">
         The WhatsApp integration allows your customers to contact you via WhatsApp from your store profile
         and lets you sync your product catalog to your WhatsApp Business Catalog (requires the
-        <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">whatsapp_catalog_sync</code> capability).
+        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">whatsapp_catalog_sync</Code> capability).
       </Text>
       <Text className="leading-relaxed">
         Full settings and the catalog sync toggle are at{" "}

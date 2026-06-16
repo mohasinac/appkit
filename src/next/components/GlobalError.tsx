@@ -12,7 +12,7 @@
  */
 
 import { useEffect } from "react";
-import { Button, Heading, Text } from "../../ui";
+import { Button, Heading, Pre, Text } from "../../ui";
 import {
   trackError,
   ErrorCategory,
@@ -54,7 +54,7 @@ export function GlobalError({ error, reset }: GlobalErrorProps) {
           A critical error occurred. We&apos;re working on it.
         </Text>
         {process.env.NODE_ENV === "development" && (
-          <pre
+          <Pre
             style={{
               fontSize: "0.75rem",
               padding: "1rem",
@@ -68,7 +68,7 @@ export function GlobalError({ error, reset }: GlobalErrorProps) {
           >
             {error.message}
             {error.digest ? `\n(digest: ${error.digest})` : ""}
-          </pre>
+          </Pre>
         )}
         <Button onClick={reset} type="button">
           Try again
