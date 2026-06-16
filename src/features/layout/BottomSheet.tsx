@@ -64,8 +64,8 @@ export function BottomSheet({
   return (
     <Div className="fixed inset-0 z-50 lg:hidden" role="presentation">
       {/* Backdrop */}
-      <Div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+      <Div surface="overlay-sm" 
+        className="absolute inset-0 backdrop-blur-sm"
         aria-hidden="true"
         onClick={onClose}
       />

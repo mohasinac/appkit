@@ -161,7 +161,7 @@ export function PrizeDrawItemsEditor({
               className={`relative border border-[var(--appkit-color-border)] ${ locked ? "opacity-60" : "" }`} rounded="lg" padding="md"
             >
               {locked ? (
-                <Row className="absolute inset-0 z-10 bg-black/10 dark:bg-black/40 pointer-events-none" align="center" justify="center" rounded="lg">
+                <Row surface="overlay-xs" className="absolute inset-0 z-10 bg-black/10 dark: pointer-events-none" align="center" justify="center" rounded="lg">
                   <Text className={CLS_WON_BADGE}>
                     Won — locked
                   </Text>

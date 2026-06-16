@@ -155,9 +155,9 @@ export function CartDrawer({
 
   return (
     <>
-      <Div
+      <Div surface="overlay-xs" 
         role="presentation"
-        className="fixed inset-0 z-40 bg-black/40"
+        className="fixed inset-0 z-40"
         onClick={onClose}
       />
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white dark:bg-slate-900 shadow-xl">

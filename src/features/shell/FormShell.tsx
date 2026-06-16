@@ -169,8 +169,8 @@ export function FormShell({
   return (
     <>
       {/* Backdrop */}
-      <Div
-        className="fixed inset-0 bg-black/50 backdrop-blur-[2px]"
+      <Div surface="overlay-sm" 
+        className="fixed inset-0 backdrop-blur-[2px]"
         // audit-inline-style-ok: z-index token
         style={{ zIndex: "calc(var(--appkit-z-modal) - 1)" }}
         aria-hidden="true"
@@ -376,8 +376,8 @@ export function FormShell({
       {/* Unsaved changes dialog */}
       {showUnsaved && (
         <>
-          <Div
-            className="fixed inset-0 bg-black/60"
+          <Div surface="overlay-lg" 
+            className="fixed inset-0"
             // audit-inline-style-ok: z-index token
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
             onClick={() => setShowUnsaved(false)}

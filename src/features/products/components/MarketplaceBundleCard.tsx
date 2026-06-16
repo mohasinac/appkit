@@ -129,7 +129,7 @@ export function MarketplaceBundleCard({
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                   {i === collageTiles.length - 1 && overflow > 0 && (
-                    <Row className="absolute inset-0 bg-black/55 text-sm font-semibold text-white" align="center" justify="center">
+                    <Row surface="overlay-md" className="absolute inset-0 text-sm font-semibold text-white" align="center" justify="center">
                       +{overflow}
                     </Row>
                   )}
@@ -165,7 +165,7 @@ export function MarketplaceBundleCard({
         </Stack>
 
         {stock === "out_of_stock" && (
-          <Row className="absolute inset-0 bg-black/40" align="center" justify="center">
+          <Row surface="overlay-xs" className="absolute inset-0" align="center" justify="center">
             <Span color="inverse" size="xs" weight="bold" className="bg-zinc-900/80 tracking-wider" rounded="default" padding="pill-md" transform="uppercase">
               {mergedLabels.outOfStockBadge}
             </Span>

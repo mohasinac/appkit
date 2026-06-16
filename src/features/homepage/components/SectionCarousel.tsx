@@ -187,7 +187,7 @@ export function SectionCarousel<T = unknown>({
           <Div className={`absolute inset-0 ${__O.hidden}`}>
             <MediaImage src={backgroundImage} alt="" size="hero" />
           </Div>
-          <Div className="absolute inset-0 bg-black/55" />
+          <Div surface="overlay-md" className="absolute inset-0" />
         </>
       )}
 

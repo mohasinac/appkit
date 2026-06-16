@@ -131,7 +131,7 @@ function DrawerPanel({
 }) {
   return (
     <Div className="hidden md:block">
-      <Div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <Div surface="overlay-xs" className="fixed inset-0 z-40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <Stack border="default" 
         role="dialog"
         aria-modal="true"
@@ -205,8 +205,8 @@ export function AdminSidebar({
       <>
         {/* Desktop backdrop */}
         {desktopOpen && (
-          <Div
-            className="hidden md:block fixed inset-0 bg-black/40 backdrop-blur-[2px] z-30"
+          <Div surface="overlay-xs" 
+            className="hidden md:block fixed inset-0 backdrop-blur-[2px] z-30"
             onClick={handleToggle}
             aria-hidden="true"
           />

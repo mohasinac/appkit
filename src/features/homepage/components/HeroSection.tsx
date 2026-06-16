@@ -21,7 +21,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
           : undefined
       }
     >
-      <Div className="absolute inset-0 bg-black/40" />
+      <Div surface="overlay-xs" className="absolute inset-0" />
       <Div className="relative mx-auto max-w-7xl px-4 text-center text-white sm:px-6 lg:px-8" padding="y-4xl">
         {content?.title && (
           <Heading

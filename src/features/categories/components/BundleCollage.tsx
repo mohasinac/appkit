@@ -92,7 +92,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                   </Row>
                 )}
 
-                <Div className="absolute left-2 top-2 bg-black/70 px-1.5 py-0.5 text-xs font-semibold text-white" rounded="default">
+                <Div surface="overlay-xl" className="absolute left-2 top-2 px-1.5 py-0.5 text-xs font-semibold text-white" rounded="default">
                   #{idx + 1}
                 </Div>
               </button>

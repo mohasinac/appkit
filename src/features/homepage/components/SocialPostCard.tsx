@@ -104,14 +104,14 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Channel name bottom-left */}
       {post.channelName && (
-        <Div className="absolute bottom-2 left-2 bg-black/60 py-0.5 text-xs text-white backdrop-blur-sm" padding="x-xs" rounded="default">
+        <Div surface="overlay-lg" className="absolute bottom-2 left-2 py-0.5 text-xs text-white backdrop-blur-sm" padding="x-xs" rounded="default">
           {post.channelName}
         </Div>
       )}
 
       {/* Caption hover overlay */}
       {showCaption && post.caption && (
-        <Stack className={`absolute inset-0 justify-end bg-black/60 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
+        <Stack surface="overlay-lg" className={`absolute inset-0 justify-end ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
           <Text color="inverse" className="line-clamp-2" size="xs">{post.caption}</Text>
         </Stack>
       )}
@@ -159,7 +159,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       {/* Video play overlay */}
       {post.mediaType === "video" && (
         <Row className="pointer-events-none absolute inset-0" align="center" justify="center">
-          <Row className="h-12 w-12 bg-black/50 backdrop-blur-sm" align="center" justify="center" rounded="full">
+          <Row surface="overlay-sm" className="h-12 w-12 backdrop-blur-sm" align="center" justify="center" rounded="full">
             <svg className="ml-1 h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5v14l11-7z" />
             </svg>
@@ -170,7 +170,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       {/* Carousel indicator */}
       {post.mediaType === "carousel" && (
         <Div className="pointer-events-none absolute right-2 top-2">
-          <Row className="h-6 w-6 bg-black/50 backdrop-blur-sm" rounded="default" align="center" justify="center">
+          <Row surface="overlay-sm" className="h-6 w-6 backdrop-blur-sm" rounded="default" align="center" justify="center">
             <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="2" y="3" width="15" height="15" rx="2" />
               <path d="M7 8h14M7 12h14M7 16h14" />
@@ -186,7 +186,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       </Row>
 
       {/* Hover overlay — caption + stats */}
-      <Stack className={`pointer-events-none absolute inset-0 justify-end bg-black/70 ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
+      <Stack surface="overlay-xl" className={`pointer-events-none absolute inset-0 justify-end ${__P.p3} opacity-0 transition-opacity duration-200 group-hover:opacity-100`}>
         {showCaption && post.caption && (
           <Text color="inverse" className="mb-2 line-clamp-3" size="xs">{post.caption}</Text>
         )}

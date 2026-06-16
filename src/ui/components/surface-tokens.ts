@@ -24,6 +24,14 @@ export const SURFACE_MAP = {
   "danger-surface": "bg-[var(--appkit-color-error-surface)]",
   "warning-surface": "bg-[var(--appkit-color-warning-surface)]",
   "info-surface": "bg-[var(--appkit-color-info-surface)]",
+  // Dark overlay scrim presets — used for image dimming, modal backdrops,
+  // hover overlays. Backdrop-blur should be paired separately via className
+  // when needed (backdrop-blur is not a colour utility, not in audit scope).
+  "overlay-xs": "bg-black/40",
+  "overlay-sm": "bg-black/50",
+  "overlay-md": "bg-black/55",
+  "overlay-lg": "bg-black/60",
+  "overlay-xl": "bg-black/70",
 } as const;
 
 export type SurfaceKey = keyof typeof SURFACE_MAP;

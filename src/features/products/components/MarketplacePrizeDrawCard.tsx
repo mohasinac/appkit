@@ -195,7 +195,7 @@ export function MarketplacePrizeDrawCard({
         </Stack>
 
         {status === "closed" ? (
-          <Row className="absolute inset-0 bg-black/40" align="center" justify="center">
+          <Row surface="overlay-xs" className="absolute inset-0" align="center" justify="center">
             <Span color="inverse" size="xs" weight="bold" className="bg-zinc-900/80 tracking-wider" rounded="default" padding="pill-md" transform="uppercase">
               {mergedLabels.closedBadge}
             </Span>

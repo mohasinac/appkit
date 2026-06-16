@@ -142,7 +142,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${coverImage})` }}
             />
-            <Div className="absolute inset-0 bg-black/55" />
+            <Div surface="overlay-md" className="absolute inset-0" />
           </>
         )}
 

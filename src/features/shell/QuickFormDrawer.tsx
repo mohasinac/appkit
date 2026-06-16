@@ -172,8 +172,8 @@ export function QuickFormDrawer({
   return (
     <>
       {/* Backdrop */}
-      <Div
-        className="fixed inset-0 bg-black/40 backdrop-blur-[2px]"
+      <Div surface="overlay-xs" 
+        className="fixed inset-0 backdrop-blur-[2px]"
         // audit-inline-style-ok: z-index token
         style={{ zIndex: "calc(var(--appkit-z-modal) + 1)" }}
         aria-hidden="true"

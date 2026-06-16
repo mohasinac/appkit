@@ -185,8 +185,8 @@ function LightboxThumbnailStrip({
   L: Required<LightboxLabels>;
 }) {
   return (
-    <Row
-      className="bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0" padding="inline" justify="center" gap="sm"
+    <Row surface="overlay-xl" 
+      className="backdrop-blur-sm overflow-x-auto shrink-0" padding="inline" justify="center" gap="sm"
       // audit-inline-style-ok: safe-area inset
       style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
     >
