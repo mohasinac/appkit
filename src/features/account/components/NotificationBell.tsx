@@ -3,7 +3,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { Button, Div, Heading, Li, Row, Span, Spinner, Stack, Text, TextLink, Ul } from "../../../ui";
 import { useClickOutside, useMessage } from "../../../react";
 import { formatRelativeTime } from "../../../utils";
-import { THEME_CONSTANTS } from "../../../tokens";
+
 import { useNotifications } from "../hooks/useNotifications";
 
 const __O = {

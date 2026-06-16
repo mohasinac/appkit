@@ -10,7 +10,6 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-white";
 import { BaseListingCard, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 export type MarketplacePrizeDrawCardData = ProductItem;
 

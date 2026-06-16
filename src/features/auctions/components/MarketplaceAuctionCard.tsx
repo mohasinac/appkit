@@ -10,7 +10,6 @@ import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 const CLS_STAR_ICON = "h-5 w-5 fill-warning text-warning";
 const CLS_LIVE_BADGE = "rounded-full bg-error-surface px-2 py-0.5 text-white";

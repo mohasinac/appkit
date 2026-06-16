@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Div, Row, Span, Stack, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
+
 import type { CategoryItem } from "../types";
 
 const __P = {

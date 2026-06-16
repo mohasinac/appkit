@@ -1,6 +1,5 @@
 import type { CategoryItem } from "../types";
 import { Button, Div, Heading, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 interface ConcernCardProps {
   concern: CategoryItem;

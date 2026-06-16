@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Article, BaseListingCard, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
+
 import type { BlogPost, BlogPostCategory } from "../types";
 import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";

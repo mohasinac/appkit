@@ -1,7 +1,6 @@
 import { Button, Div, Stack, Text } from "../../../ui";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 const CLS_REMOVE_BTN = "self-start text-zinc-400 dark:text-zinc-400 transition hover:text-error";
 

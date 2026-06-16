@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { ROUTES } from "../../../next";
-import { THEME_CONSTANTS } from "../../../tokens";
+
 import { SectionCarousel } from "../../homepage/components/SectionCarousel";
 import type { ProductItem } from "../types";
 import { ProductCard } from "./ProductGrid";

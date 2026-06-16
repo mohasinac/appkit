@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import { BaseListingCard, Button, Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
-import { THEME_CONSTANTS } from "../../../tokens";
+
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";

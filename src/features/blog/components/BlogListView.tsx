@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { Article, Button, Div, Heading, Pagination, Row, Span, Stack, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
+
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
 import { safeDisplayName } from "../../../security";

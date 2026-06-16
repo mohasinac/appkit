@@ -1,6 +1,6 @@
 import React from "react";
 import { Div, Heading, Text, TextLink } from "../../../ui";
-import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
+import { LAYOUT } from "../../../tokens";
 import type { CollectionListItem } from "../types";
 
 const CLS_PLACEHOLDER = "w-full";

@@ -1,6 +1,5 @@
 import React from "react";
 import { Div, Heading, Span, Stack } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface MessagesViewLabels {
   title?: string;

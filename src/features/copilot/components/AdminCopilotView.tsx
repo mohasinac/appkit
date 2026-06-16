@@ -6,7 +6,6 @@ import { Alert, Button, Div, Heading, Input, Row, Span, Stack, StackedViewShell,
 import { apiClient } from "../../../http";
 import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 const __P = {
   p3: "p-3",

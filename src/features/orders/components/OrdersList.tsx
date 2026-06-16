@@ -2,7 +2,6 @@ import { Div, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 const CLS_PRIZE_BADGE = "inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300";
 

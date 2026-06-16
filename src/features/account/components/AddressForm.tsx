@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Button, Checkbox, Div, FormField, FormGroup, Row } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import type { AddressFormData } from "../hooks/useAddresses";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface AddressFormLabels {
   label: string;
