@@ -12,6 +12,7 @@
  */
 
 import type { PaginatedSelectOption, AsyncPage } from "../../../../ui/components/PaginatedSelect";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { FacetOption } from "../../../../features/filters/FilterFacetSection";
 
 export type LoadOptionsFn<T = PaginatedSelectOption> = (
@@ -33,7 +34,7 @@ function buildUrl(base: string, q: string, page: number, extra?: Record<string, 
 
 async function fetchPage<T>(
   url: string,
-  mapItem: (item: Record<string, unknown>) => T,
+  mapItem: (item: Record<string, JsonValue>) => T,
 ): Promise<AsyncPage<T>> {
   const res = await fetch(url);
   if (!res.ok) return { items: [], hasMore: false };
@@ -47,7 +48,7 @@ async function fetchPage<T>(
   const raw = json.data?.items ?? [];
   const hasMore = json.data?.hasMore ?? false;
   return {
-    items: (raw as Record<string, unknown>[]).map(mapItem),
+    items: (raw as Record<string, JsonValue>[]).map(mapItem),
     hasMore,
   };
 }

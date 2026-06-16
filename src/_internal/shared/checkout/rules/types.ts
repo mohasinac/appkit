@@ -12,6 +12,7 @@
  */
 
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type { OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 import type { OrderType } from "../../../../features/orders/utils/order-splitter";
@@ -108,7 +109,7 @@ export interface ListingCheckoutRule {
    *
    * Prize-draw bumps `prizeCurrentEntries`. Pre-order bumps `preOrderCurrentCount`.
    */
-  stockDecrementExtras(product: ProductDocument, quantity: number): Record<string, unknown>;
+  stockDecrementExtras(product: ProductDocument, quantity: number): Record<string, JsonValue>;
 
   /**
    * Transform a raw order-line input (built from cart item data) before it
@@ -125,7 +126,7 @@ export interface ListingCheckoutRule {
   decorateOrderDoc(
     groupFirstItem: CartItemDocument,
     groupFirstProduct: ProductDocument,
-  ): Record<string, unknown>;
+  ): Record<string, JsonValue>;
 }
 
 /**
