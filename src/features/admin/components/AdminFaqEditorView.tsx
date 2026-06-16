@@ -172,9 +172,7 @@ export function AdminFaqEditorView({
             clearErrors();
             if (!question.trim()) { setFieldError("question", "Question is required"); return; }
             saveMutation.mutate();
-          }}
-          className="space-y-5"
-        >
+          }} spacing="md">
           <FieldInput
             name="question"
             label="Question"

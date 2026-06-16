@@ -133,9 +133,7 @@ export function AdminNavEditorView({
         onSubmit={(e) => {
           e.preventDefault();
           saveMutation.mutate();
-        }}
-        className="p-4" spacing="md"
-      >
+        }} spacing="md" padding="md">
         <Input
           label="Label"
           value={label}

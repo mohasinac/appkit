@@ -611,9 +611,7 @@ export function AdminUserEditorView({
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
-          }}
-          className="p-4"
-        >
+          }} padding="md">
           <StackedViewShell
             portal="admin"
             className="space-y-4"

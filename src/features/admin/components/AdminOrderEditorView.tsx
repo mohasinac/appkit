@@ -99,9 +99,7 @@ export function AdminOrderEditorView({
         onSubmit={(e) => {
           e.preventDefault();
           saveMutation.mutate();
-        }}
-        className="p-4" spacing="md"
-      >
+        }} spacing="md" padding="md">
         <Select
           label="Order status"
           options={STATUS_OPTIONS}

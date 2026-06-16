@@ -931,7 +931,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑫ Legal Policies */}
           <TabsContent value="legal">
-            <Form onSubmit={(e) => { e.preventDefault(); legalMutation.mutate(); }} className="space-y-5 pt-4">
+            <Form onSubmit={(e) => { e.preventDefault(); legalMutation.mutate(); }} className="pt-4" spacing="md">
               {[
                 ["Terms of Service", termsHtml, setTermsHtml],
                 ["Privacy Policy", privacyHtml, setPrivacyHtml],

@@ -364,9 +364,7 @@ export function AdminCouponEditorView({
             clearErrors();
             if (!name.trim()) { setFieldError("name", "Campaign name is required"); return; }
             saveMutation.mutate();
-          }}
-          className="space-y-5"
-        >
+          }} spacing="md">
           {/* Basic info */}
           <Select
             label="Coupon type"
