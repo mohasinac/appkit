@@ -31,7 +31,7 @@ export function AdminSiteConfigGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="md:text-3xl text-[var(--appkit-color-text)] mb-2" size="2xl" weight="bold">Site Configuration</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">All site settings are stored in a single Firestore document at <Code className="text-xs">site_settings/global</Code>. Changes take effect on the next page render (ISR or cache revalidation).</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">All site settings are stored in a single Firestore document at <Code size="xs">site_settings/global</Code>. Changes take effect on the next page render (ISR or cache revalidation).</Text>
       </Section>
 
       <Section className={GC.sectionWrap}>
@@ -56,7 +56,7 @@ export function AdminSiteConfigGuideView() {
         </Div>
         <Div className="py-5" padding="x-lg">
           <Alert variant="warning">
-            API keys in <Code className="text-xs">integrations</Code> are stored encrypted. They are masked in the admin UI — you see <Code className="text-xs">••••••••</Code> by design. To rotate a key: paste the new value into the field and save. The old key is immediately invalidated on your payment/shipping provider&apos;s side — test in staging first. Never paste API keys into Slack, email, or any external service.
+            API keys in <Code size="xs">integrations</Code> are stored encrypted. They are masked in the admin UI — you see <Code size="xs">••••••••</Code> by design. To rotate a key: paste the new value into the field and save. The old key is immediately invalidated on your payment/shipping provider&apos;s side — test in staging first. Never paste API keys into Slack, email, or any external service.
           </Alert>
         </Div>
       </Section>
@@ -67,11 +67,11 @@ export function AdminSiteConfigGuideView() {
           <Heading level={2} className={GC.sectionTitle}>Feature Flags</Heading>
         </Div>
         <Stack className="py-5" padding="x-lg" gap="3">
-          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings</Code>. They control platform-wide features without a code deploy:</Text>
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <Code size="xs" padding="xs" rounded="default" surface="subtle">siteSettings</Code>. They control platform-wide features without a code deploy:</Text>
           <Ul className="list-disc list-inside space-y-1 text-sm text-[var(--appkit-color-text-muted)]">
-            <Li><Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enableAuctions</Code> — globally enable/disable all auction listings.</Li>
-            <Li><Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">enablePreOrders</Code> — globally enable/disable pre-order creation.</Li>
-            <Li><Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">maintenanceMode</Code> — shows a maintenance banner and blocks non-admin access.</Li>
+            <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">enableAuctions</Code> — globally enable/disable all auction listings.</Li>
+            <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">enablePreOrders</Code> — globally enable/disable pre-order creation.</Li>
+            <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">maintenanceMode</Code> — shows a maintenance banner and blocks non-admin access.</Li>
           </Ul>
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Flags are evaluated per-request via ISR cache — a change may take up to the revalidation interval (3600s default) to propagate to all pages.</Text>
         </Stack>

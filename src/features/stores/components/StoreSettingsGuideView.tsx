@@ -105,7 +105,7 @@ function ReturnPolicySection() {
         <Text className="leading-relaxed">
           The default return window is <Span weight="bold">7 days</Span> from the
           DELIVERED date. Stores with the
-          <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">extended_return_window</Code>
+          <Code className="mx-1" size="xs" padding="xs" rounded="default" surface="subtle">extended_return_window</Code>
           capability can offer 30 days. The return window is displayed on every product detail page in the Returns tab.
         </Text>
       </Div>
@@ -165,7 +165,7 @@ function WhatsAppSection() {
       <Text className="leading-relaxed">
         The WhatsApp integration allows your customers to contact you via WhatsApp from your store profile
         and lets you sync your product catalog to your WhatsApp Business Catalog (requires the
-        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">whatsapp_catalog_sync</Code> capability).
+        <Code className="mx-1" size="xs" padding="xs" rounded="default" surface="subtle">whatsapp_catalog_sync</Code> capability).
       </Text>
       <Text className="leading-relaxed">
         Full settings and the catalog sync toggle are at{" "}

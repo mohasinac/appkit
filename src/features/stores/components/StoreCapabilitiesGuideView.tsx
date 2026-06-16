@@ -38,8 +38,8 @@ function WhatAreCapabilitiesSection() {
       </Text>
       <Text className="leading-relaxed">
         Two capabilities are enabled for every store at creation by default:
-        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">suggest_brands</Code> and
-        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">create_coupons</Code>.
+        <Code className="mx-1" size="xs" padding="xs" rounded="default" surface="subtle">suggest_brands</Code> and
+        <Code className="mx-1" size="xs" padding="xs" rounded="default" surface="subtle">create_coupons</Code>.
         All others must be requested. Some require contractual agreements before they can be granted.
       </Text>
     </Div>
@@ -227,7 +227,7 @@ function MultipleStoresSection() {
     <Div className={SECTION_BODY}>
       <Text className="leading-relaxed">
         By default, each owner account can only create one store. The
-        <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">multiple_stores</Code>
+        <Code className="mx-1" size="xs" padding="xs" rounded="default" surface="subtle">multiple_stores</Code>
         capability allows the same owner to create and manage additional stores under the same account.
       </Text>
       <Alert variant="info" title="Each store is independent">

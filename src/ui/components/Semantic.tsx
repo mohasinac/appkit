@@ -545,8 +545,17 @@ export function Td({ align, size, weight, padding, color, className = "", childr
 
 // --- Code / Pre ---------------------------------------------------------------
 
+type CodeSize = "xs" | "sm" | "base";
+type CodePadding = "none" | "xs" | "sm" | "inline";
+type CodeRounded = "none" | "default" | "sm" | "md" | "lg";
+type CodeSurface = "none" | "muted" | "subtle" | "default";
+
 export interface CodeProps extends React.HTMLAttributes<HTMLElement> {
   color?: "default" | "primary" | "error" | "success";
+  size?: CodeSize;
+  padding?: CodePadding;
+  rounded?: CodeRounded;
+  surface?: CodeSurface;
   children: React.ReactNode;
 }
 
@@ -557,9 +566,48 @@ const CODE_COLOR_MAP: Record<NonNullable<CodeProps["color"]>, string> = {
   success: "appkit-code--success",
 };
 
-export function Code({ color = "default", className = "", children, ...props }: CodeProps) {
+const CODE_SIZE_MAP: Record<CodeSize, string> = {
+  xs: "appkit-text--xs",
+  sm: "appkit-text--sm",
+  base: "appkit-text--base",
+};
+
+const CODE_PADDING_MAP: Record<CodePadding, string> = {
+  none: "",
+  xs: "px-1",
+  sm: "px-1.5 py-0.5",
+  inline: "px-1 py-0.5",
+};
+
+const CODE_ROUNDED_MAP: Record<CodeRounded, string> = {
+  none: "",
+  default: "rounded",
+  sm: "rounded-sm",
+  md: "rounded-md",
+  lg: "rounded-lg",
+};
+
+const CODE_SURFACE_MAP: Record<CodeSurface, string> = {
+  none: "",
+  muted: "bg-[var(--appkit-color-bg)]",
+  subtle: "bg-[var(--appkit-color-border-subtle)]",
+  default: "bg-[var(--appkit-color-surface)]",
+};
+
+export function Code({ color = "default", size, padding, rounded, surface, className = "", children, ...props }: CodeProps) {
   return (
-    <code className={["appkit-code", CODE_COLOR_MAP[color], className].filter(Boolean).join(" ")} {...props}>
+    <code
+      className={[
+        "appkit-code",
+        CODE_COLOR_MAP[color],
+        size ? CODE_SIZE_MAP[size] : "",
+        padding ? CODE_PADDING_MAP[padding] : "",
+        rounded ? CODE_ROUNDED_MAP[rounded] : "",
+        surface ? CODE_SURFACE_MAP[surface] : "",
+        className,
+      ].filter(Boolean).join(" ")}
+      {...props}
+    >
       {children}
     </code>
   );

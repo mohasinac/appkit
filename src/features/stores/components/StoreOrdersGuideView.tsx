@@ -217,7 +217,7 @@ function ReturnsSection() {
         <Text className={SUBHEADING}>When a buyer can raise a return</Text>
         <Text className="leading-relaxed">
           Buyers can open a return request within the <Span weight="bold">return window</Span> after the order is marked DELIVERED.
-          The default return window is 7 days. Stores with the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">extended_return_window</Code> capability can offer 30 days.
+          The default return window is 7 days. Stores with the <Code size="xs" padding="xs" rounded="default" surface="subtle">extended_return_window</Code> capability can offer 30 days.
         </Text>
       </Div>
       <Div>

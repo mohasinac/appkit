@@ -49,7 +49,8 @@ function StatCard({
       <Heading
         level={2}
         variant="none"
-        className="mb-1 font-display font-black bg-gradient-to-r from-primary to-secondary dark:from-primary dark:to-cobalt-400 bg-clip-text text-transparent md:text-5xl" size="4xl"
+        gradient="brand"
+        className="mb-1 font-display font-black md:text-5xl" size="4xl"
       >
         {stat.value}
       </Heading>

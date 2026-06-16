@@ -22,8 +22,8 @@ export function AdminStoresGuideView() {
           Icon: Store, title: "Store Lifecycle",
           content: (
             <Ul className={GC.listMuted}>
-              <Li><Span weight="bold">Creation</Span>: Seller registers → completes onboarding wizard → admin reviews → store goes <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">active</Code>.</Li>
-              <Li><Span weight="bold">Status values</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">active</Code> (visible and selling), <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">suspended</Code> (hidden, not selling), <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pending_review</Code> (awaiting admin approval).</Li>
+              <Li><Span weight="bold">Creation</Span>: Seller registers → completes onboarding wizard → admin reviews → store goes <Code size="xs" padding="xs" rounded="default" surface="subtle">active</Code>.</Li>
+              <Li><Span weight="bold">Status values</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">active</Code> (visible and selling), <Code size="xs" padding="xs" rounded="default" surface="subtle">suspended</Code> (hidden, not selling), <Code size="xs" padding="xs" rounded="default" surface="subtle">pending_review</Code> (awaiting admin approval).</Li>
               <Li><Span weight="bold">isVerified badge</Span>: Awarded when the store has a consistent track record (≥20 delivered orders, ≥4.0 rating, 3+ months active). Click the toggle in AdminStoreEditorView after reviewing the store&apos;s history.</Li>
             </Ul>
           ),
@@ -33,13 +33,13 @@ export function AdminStoresGuideView() {
           content: (
             <>
               <Alert variant="info" title="Critical rule — read before editing any store or order.">
-                <Code className="text-xs">storeId = storeSlug</Code> (public-facing, used in all product and order references).<br />
-                <Code className="text-xs">ownerId = Firebase Auth UID</Code> (internal only — never exposed in API responses).
+                <Code size="xs">storeId = storeSlug</Code> (public-facing, used in all product and order references).<br />
+                <Code size="xs">ownerId = Firebase Auth UID</Code> (internal only — never exposed in API responses).
               </Alert>
               <Ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)] mt-4">
                 <Li><Span weight="bold">Why separate?</Span> Allows future store ownership transfer without rewriting all product/order documents.</Li>
-                <Li><Span weight="bold">Two-step lookup</Span>: To find a store by owner, query <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">stores where ownerId == uid</Code>. Never join products by ownerId directly.</Li>
-                <Li><Span weight="bold">Anti-patterns to reject</Span>: PRs that filter <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">products where ownerId ==</Code> — the correct field is <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">storeId</Code>.</Li>
+                <Li><Span weight="bold">Two-step lookup</Span>: To find a store by owner, query <Code size="xs" padding="xs" rounded="default" surface="subtle">stores where ownerId == uid</Code>. Never join products by ownerId directly.</Li>
+                <Li><Span weight="bold">Anti-patterns to reject</Span>: PRs that filter <Code size="xs" padding="xs" rounded="default" surface="subtle">products where ownerId ==</Code> — the correct field is <Code size="xs" padding="xs" rounded="default" surface="subtle">storeId</Code>.</Li>
               </Ul>
             </>
           ),
@@ -50,7 +50,7 @@ export function AdminStoresGuideView() {
             <Ul className={GC.listMuted}>
               <Li><Span weight="bold">storeName / storeDescription</Span>: Public-facing. Shown on the store profile page.</Li>
               <Li><Span weight="bold">ownerId</Span>: Read-only after store creation. Changing ownership requires engineering involvement.</Li>
-              <Li><Span weight="bold">status Select</Span>: Suspend a store with <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">suspended</Code>; this hides all listings and shows a banner on the store profile.</Li>
+              <Li><Span weight="bold">status Select</Span>: Suspend a store with <Code size="xs" padding="xs" rounded="default" surface="subtle">suspended</Code>; this hides all listings and shows a banner on the store profile.</Li>
               <Li><Span weight="bold">payoutDetails</Span>: UPI VPA and bank account details. Treated as PII — masked in the UI and encrypted in Firestore. Always verify details with the seller before issuing payouts.</Li>
             </Ul>
           ),
@@ -70,8 +70,8 @@ export function AdminStoresGuideView() {
           Icon: MapPin, title: "Store Addresses (Pickup Locations)",
           content: (
             <Ul className={GC.listMuted}>
-              <Li>Stored in the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">storeAddresses</Code> collection. <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">storeId</Code> must exactly match the store&apos;s slug (e.g. <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">store-pokemon-palace</Code>).</Li>
-              <Li><Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isPickupLocation: true</Code> flags this address as a buyer pickup option during checkout.</Li>
+              <Li>Stored in the <Code size="xs" padding="xs" rounded="default" surface="subtle">storeAddresses</Code> collection. <Code size="xs" padding="xs" rounded="default" surface="subtle">storeId</Code> must exactly match the store&apos;s slug (e.g. <Code size="xs" padding="xs" rounded="default" surface="subtle">store-pokemon-palace</Code>).</Li>
+              <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">isPickupLocation: true</Code> flags this address as a buyer pickup option during checkout.</Li>
               <Li>Convention: no more than 3 active pickup locations per store.</Li>
             </Ul>
           ),
@@ -80,7 +80,7 @@ export function AdminStoresGuideView() {
           Icon: Ban, title: "Suspending a Store",
           content: (
             <Ul className={GC.listMuted}>
-              <Li><Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">status: "suspended"</Code> — hides all the store&apos;s products from search; the store profile shows "Currently Unavailable"; the seller receives an in-app notification.</Li>
+              <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">status: "suspended"</Code> — hides all the store&apos;s products from search; the store profile shows "Currently Unavailable"; the seller receives an in-app notification.</Li>
               <Li>Suspension does NOT cancel pending orders — those must be handled separately.</Li>
               <Li><Span weight="bold">Hard-banning the owner</Span> is a separate, more severe action — see the Trust &amp; Safety guide. A hard ban cascades to suspend the store automatically.</Li>
             </Ul>

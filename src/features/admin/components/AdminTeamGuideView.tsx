@@ -32,13 +32,13 @@ export function AdminTeamGuideView() {
           content: (
             <>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
-                <Span weight="bold">Role</Span> (<Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.role</Code>) is a coarse-grained classification: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">seller</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">moderator</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">employee</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</Code>.
+                <Span weight="bold">Role</Span> (<Code size="xs" padding="xs" rounded="default" surface="subtle">user.role</Code>) is a coarse-grained classification: <Code size="xs" padding="xs" rounded="default" surface="subtle">user</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">seller</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">moderator</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">employee</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">admin</Code>.
               </Text>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">
-                <Span weight="bold">Permissions</Span> (<Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">user.permissions[]</Code>) are fine-grained capabilities: e.g. <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:orders:read</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:products:write</Code>.
+                <Span weight="bold">Permissions</Span> (<Code size="xs" padding="xs" rounded="default" surface="subtle">user.permissions[]</Code>) are fine-grained capabilities: e.g. <Code size="xs" padding="xs" rounded="default" surface="subtle">admin:orders:read</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">admin:products:write</Code>.
               </Text>
               <Alert variant="info">
-                <Code className="text-xs">role: "admin"</Code> bypasses all RBAC permission checks — it&apos;s a superuser flag. <Code className="text-xs">role: "employee"</Code> is governed entirely by <Code className="text-xs">user.permissions[]</Code>.
+                <Code size="xs">role: "admin"</Code> bypasses all RBAC permission checks — it&apos;s a superuser flag. <Code size="xs">role: "employee"</Code> is governed entirely by <Code size="xs">user.permissions[]</Code>.
               </Alert>
             </>
           ),
@@ -64,9 +64,9 @@ export function AdminTeamGuideView() {
           content: (
             <Ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)]">
               <Li>Go to <Span weight="bold">Admin → Team → Invite Employee</Span>. Enter the person&apos;s email and select their permission group.</Li>
-              <Li>They receive an invitation email with a sign-up link. On first login, their Firestore profile is created with <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</Code> and the selected permissions array.</Li>
+              <Li>They receive an invitation email with a sign-up link. On first login, their Firestore profile is created with <Code size="xs" padding="xs" rounded="default" surface="subtle">role: "employee"</Code> and the selected permissions array.</Li>
               <Li>To update permissions later: edit the employee in the Team section. Changes take effect on their next login (session tokens carry the old permissions until refreshed).</Li>
-              <Li>To offboard: use <Span weight="bold">Revoke Access</Span> in Team — sets <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isDisabled: true</Code> on their Auth account and clears all permissions.</Li>
+              <Li>To offboard: use <Span weight="bold">Revoke Access</Span> in Team — sets <Code size="xs" padding="xs" rounded="default" surface="subtle">isDisabled: true</Code> on their Auth account and clears all permissions.</Li>
             </Ul>
           ),
         },
@@ -74,9 +74,9 @@ export function AdminTeamGuideView() {
           Icon: Shield, title: "The 85+ Permission System",
           content: (
             <>
-              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Permissions follow the pattern <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin:&#123;resource&#125;:&#123;action&#125;</Code>. Actions: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">read</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">delete</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">view</Code>.</Text>
+              <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">Permissions follow the pattern <Code size="xs" padding="xs" rounded="default" surface="subtle">admin:&#123;resource&#125;:&#123;action&#125;</Code>. Actions: <Code size="xs" padding="xs" rounded="default" surface="subtle">read</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">write</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">delete</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">view</Code>.</Text>
               <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-                The full permission list is defined in <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">appkit/src/features/auth/schemas/firestore.ts</Code>. Custom roles (specific permission combinations) can be created at <Span weight="bold">Admin → Custom Roles</Span> — use these when a predefined group is too broad or too narrow for a hire.
+                The full permission list is defined in <Code size="xs" padding="xs" rounded="default" surface="subtle">appkit/src/features/auth/schemas/firestore.ts</Code>. Custom roles (specific permission combinations) can be created at <Span weight="bold">Admin → Custom Roles</Span> — use these when a predefined group is too broad or too narrow for a hire.
               </Text>
             </>
           ),

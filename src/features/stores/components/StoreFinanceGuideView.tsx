@@ -211,7 +211,7 @@ function PromotedSection() {
         <Text className="leading-relaxed">
           Featured listings get a "Featured" badge on their listing card and receive priority ordering
           in search results and category pages. Like isPromoted, this is admin-controlled for most stores.
-          Stores with the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">manage_promoted_listings</Code> capability
+          Stores with the <Code size="xs" padding="xs" rounded="default" surface="subtle">manage_promoted_listings</Code> capability
           can self-promote from their dashboard.
         </Text>
       </Div>

@@ -24,11 +24,11 @@ export function AdminCatalogGuideView() {
           Icon: Package, title: "Product Management",
           content: (
             <Ul className={GC.listMuted}>
-              <Li><Span weight="bold">Listing types</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">standard</Code> (prefix <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">product-</Code>), <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction</Code> (prefix <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">auction-</Code>), <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pre-order</Code> (prefix <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">preorder-</Code>).</Li>
+              <Li><Span weight="bold">Listing types</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">standard</Code> (prefix <Code size="xs" padding="xs" rounded="default" surface="subtle">product-</Code>), <Code size="xs" padding="xs" rounded="default" surface="subtle">auction</Code> (prefix <Code size="xs" padding="xs" rounded="default" surface="subtle">auction-</Code>), <Code size="xs" padding="xs" rounded="default" surface="subtle">pre-order</Code> (prefix <Code size="xs" padding="xs" rounded="default" surface="subtle">preorder-</Code>).</Li>
               <Li><Span weight="bold">Admin vs store creation</Span>: Admins can create products on behalf of any store via the store picker in AdminProductEditorView.</Li>
               <Li><Span weight="bold">Status lifecycle</Span>: DRAFT → PUBLISHED → ARCHIVED. Published products appear in search. Archived products are hidden but not deleted.</Li>
-              <Li><Span weight="bold">J13 rule</Span>: Always use <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">listingType</Code> field — the legacy <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isAuction</Code>/<Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isPreOrder</Code> booleans have been removed. All queries use <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">where(&quot;listingType&quot;, &quot;==&quot;, x)</Code>.</Li>
-              <Li><Span weight="bold">Media URLs</Span>: Never write raw Firebase Storage URLs to Firestore. All product image URLs must use the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/[slug]</Code> proxy format.</Li>
+              <Li><Span weight="bold">J13 rule</Span>: Always use <Code size="xs" padding="xs" rounded="default" surface="subtle">listingType</Code> field — the legacy <Code size="xs" padding="xs" rounded="default" surface="subtle">isAuction</Code>/<Code size="xs" padding="xs" rounded="default" surface="subtle">isPreOrder</Code> booleans have been removed. All queries use <Code size="xs" padding="xs" rounded="default" surface="subtle">where(&quot;listingType&quot;, &quot;==&quot;, x)</Code>.</Li>
+              <Li><Span weight="bold">Media URLs</Span>: Never write raw Firebase Storage URLs to Firestore. All product image URLs must use the <Code size="xs" padding="xs" rounded="default" surface="subtle">/api/media/[slug]</Code> proxy format.</Li>
             </Ul>
           ),
         },
@@ -37,10 +37,10 @@ export function AdminCatalogGuideView() {
           content: (
             <Ul className={GC.listMuted}>
               <Li><Span weight="bold">3-tier system</Span>: Root (tier 1) → Subcategory (tier 2) → Leaf (tier 3). Only leaf categories can be assigned to products.</Li>
-              <Li><Span weight="bold">Key fields</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">parentId</Code> points to the direct parent; <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">rootId</Code> always points to the tier-1 root; <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">path</Code> stores the full hierarchy path.</Li>
-              <Li><Span weight="bold">isLeaf</Span>: Must be <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">true</Code> on any category that can be selected in the product form. Tier-1 and tier-2 categories must have <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">isLeaf: false</Code>.</Li>
-              <Li><Span weight="bold">Slug prefix</Span>: All category slugs start with <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">category-</Code>.</Li>
-              <Li><Span weight="bold">Adding a new root</Span>: Rare. Requires: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">display.icon</Code>, decision on <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">showOnHomepage</Code>, and a senior admin sign-off.</Li>
+              <Li><Span weight="bold">Key fields</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">parentId</Code> points to the direct parent; <Code size="xs" padding="xs" rounded="default" surface="subtle">rootId</Code> always points to the tier-1 root; <Code size="xs" padding="xs" rounded="default" surface="subtle">path</Code> stores the full hierarchy path.</Li>
+              <Li><Span weight="bold">isLeaf</Span>: Must be <Code size="xs" padding="xs" rounded="default" surface="subtle">true</Code> on any category that can be selected in the product form. Tier-1 and tier-2 categories must have <Code size="xs" padding="xs" rounded="default" surface="subtle">isLeaf: false</Code>.</Li>
+              <Li><Span weight="bold">Slug prefix</Span>: All category slugs start with <Code size="xs" padding="xs" rounded="default" surface="subtle">category-</Code>.</Li>
+              <Li><Span weight="bold">Adding a new root</Span>: Rare. Requires: <Code size="xs" padding="xs" rounded="default" surface="subtle">display.icon</Code>, decision on <Code size="xs" padding="xs" rounded="default" surface="subtle">showOnHomepage</Code>, and a senior admin sign-off.</Li>
             </Ul>
           ),
         },
@@ -48,10 +48,10 @@ export function AdminCatalogGuideView() {
           Icon: Tag, title: "Brands",
           content: (
             <Ul className={GC.listMuted}>
-              <Li><Span weight="bold">Slug prefix</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">brand-</Code>. Slugs are immutable after products reference them.</Li>
+              <Li><Span weight="bold">Slug prefix</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">brand-</Code>. Slugs are immutable after products reference them.</Li>
               <Li><Span weight="bold">displayOrder</Span>: Controls the sort order on public brand pages. Lower numbers appear first.</Li>
               <Li><Span weight="bold">isActive: false</Span>: Hides the brand from public discovery but preserves historical product links. Use this instead of deleting a brand.</Li>
-              <Li><Span weight="bold">logoURL / bannerURL</Span>: Must use the <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">/api/media/</Code> proxy — never raw Storage URLs.</Li>
+              <Li><Span weight="bold">logoURL / bannerURL</Span>: Must use the <Code size="xs" padding="xs" rounded="default" surface="subtle">/api/media/</Code> proxy — never raw Storage URLs.</Li>
             </Ul>
           ),
         },

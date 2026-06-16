@@ -88,11 +88,11 @@ export function NavPermissionsManager({
                         </Div>
                       </Td>
                       <Td padding="md">
-                        <Code className="text-xs text-zinc-500 dark:text-zinc-400">{item.href}</Code>
+                        <Code className="text-zinc-500 dark:text-zinc-400" size="xs">{item.href}</Code>
                       </Td>
                       <Td padding="md">
                         {item.requiredPermission ? (
-                          <Code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
+                          <Code className="bg-zinc-100 px-1.5 py-0.5 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300" size="xs" rounded="default">
                             {item.requiredPermission}
                           </Code>
                         ) : (

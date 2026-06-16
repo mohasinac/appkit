@@ -134,7 +134,8 @@ export function FAQSection({
           <Heading
             level={2}
             variant="none"
-            className="bg-gradient-to-r from-primary to-cobalt bg-clip-text text-transparent md:text-4xl mb-3" size="3xl" weight="bold"
+            gradient="brand"
+            className="md:text-4xl mb-3" size="3xl" weight="bold"
           >
             {title}
           </Heading>

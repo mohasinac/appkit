@@ -154,10 +154,12 @@ export function SectionCarousel<T = unknown>({
 
   const { themed, flex } = THEME_CONSTANTS;
 
+  const headingGradient: "none" | "brand" =
+    !useLightText && headingVariant === "gradient" ? "brand" : "none";
   const headingClass = useLightText
     ? "text-white"
     : headingVariant === "gradient"
-      ? "bg-gradient-to-r from-primary to-cobalt bg-clip-text text-transparent"
+      ? ""
       : themed.textPrimary;
 
   const descVariant = useLightText ? "text-white/80" : themed.textSecondary;
@@ -213,6 +215,7 @@ export function SectionCarousel<T = unknown>({
           <Heading
             level={2}
             variant="none"
+            gradient={headingGradient}
             className={[
               "text-3xl md:text-4xl font-bold mb-2",
               headingVariant === "editorial" ? "font-display text-4xl" : "",

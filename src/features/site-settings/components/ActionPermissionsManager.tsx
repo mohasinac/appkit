@@ -169,7 +169,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                   </Td>
                   <Td padding="md">
                     {meta.requiredPermission ? (
-                      <Code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-slate-700 dark:text-zinc-300">
+                      <Code className="bg-zinc-100 px-1.5 py-0.5 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300" size="xs" rounded="default">
                         {meta.requiredPermission}
                       </Code>
                     ) : (

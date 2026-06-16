@@ -65,7 +65,7 @@ export function AdminUsersGuideView() {
             <>
               <Text className="text-[var(--appkit-color-text-muted)] mb-3" size="sm">The AdminUserEditorView opens in a side drawer. Fields:</Text>
               <Ul className={GC.listMuted}>
-                <Li><Span weight="bold">role Select</Span> — changing to <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</Code> bypasses all RBAC checks. Only do this with explicit senior approval.</Li>
+                <Li><Span weight="bold">role Select</Span> — changing to <Code size="xs" padding="xs" rounded="default" surface="subtle">admin</Code> bypasses all RBAC checks. Only do this with explicit senior approval.</Li>
                 <Li><Span weight="bold">emailVerified toggle</Span> — manually mark an email as verified (e.g. after manual ID check).</Li>
                 <Li><Span weight="bold">isDisabled</Span> — disables Firebase Auth login without a full hard ban. User sees "account suspended" on login.</Li>
                 <Li><Span weight="bold">PII note</Span> — email and phone are HMAC-indexed. The UI shows the hashed index, not the plaintext value. Never store plaintext in Firestore.</Li>
@@ -88,8 +88,8 @@ export function AdminUsersGuideView() {
           content: (
             <Ul className={GC.listMuted}>
               <Li>Create employee accounts via <Span weight="bold">Admin → Team</Span>, not by manually writing to Firestore.</Li>
-              <Li><Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</Code> has no elevated Firestore rules by default — access is governed entirely by the permission group assigned to them.</Li>
-              <Li><Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "admin"</Code> bypasses all RBAC — use sparingly. One admin account per real person maximum.</Li>
+              <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">role: "employee"</Code> has no elevated Firestore rules by default — access is governed entirely by the permission group assigned to them.</Li>
+              <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">role: "admin"</Code> bypasses all RBAC — use sparingly. One admin account per real person maximum.</Li>
             </Ul>
           ),
         },

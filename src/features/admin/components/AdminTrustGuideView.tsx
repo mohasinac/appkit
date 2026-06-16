@@ -52,7 +52,7 @@ export function AdminTrustGuideView() {
                 </Table>
               </Div>
               <Text className="text-[var(--appkit-color-text-muted)] mt-3" size="sm">
-                <Span weight="bold">Soft ban scopes</Span>: <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">place_bids</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">write_reviews</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">create_listings</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">open_tickets</Code>, <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">join_events</Code>. Multiple scopes can be combined.
+                <Span weight="bold">Soft ban scopes</Span>: <Code size="xs" padding="xs" rounded="default" surface="subtle">place_bids</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">write_reviews</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">create_listings</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">open_tickets</Code>, <Code size="xs" padding="xs" rounded="default" surface="subtle">join_events</Code>. Multiple scopes can be combined.
               </Text>
             </>
           ),
@@ -62,7 +62,7 @@ export function AdminTrustGuideView() {
           content: (
             <Ul className={GC.listMuted}>
               <Li><Span weight="bold">27 scam types</Span>: Documented in the registry, covering fake payments, empty-box shipping, counterfeit graded cards, and more.</Li>
-              <Li><Span weight="bold">Scammer profile</Span>: Stored with slug prefix <Code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">scammer-</Code>. Includes phone, UPI VPA, and social handles as identifiers.</Li>
+              <Li><Span weight="bold">Scammer profile</Span>: Stored with slug prefix <Code size="xs" padding="xs" rounded="default" surface="subtle">scammer-</Code>. Includes phone, UPI VPA, and social handles as identifiers.</Li>
               <Li><Span weight="bold">Report review</Span>: All community-submitted reports go through a review queue before publishing. Require at least 2 corroborating reports or 1 strong piece of evidence (payment screenshot, police complaint).</Li>
               <Li><Span weight="bold">Takedown requests</Span>: Route to senior admin with legal involvement. Preserve evidence before any deletion.</Li>
             </Ul>

@@ -108,7 +108,8 @@ export function WelcomeSection({
             <Heading
               level={1}
               variant="none"
-              className="mt-4 font-display md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-primary-700 via-cobalt to-secondary-400 dark:from-primary dark:via-cobalt-400 dark:to-primary-300 bg-clip-text text-transparent leading-[1.1] tracking-tight" size="5xl"
+              gradient="brand-tri"
+              className="mt-4 font-display md:text-6xl lg:text-7xl xl:text-8xl leading-[1.1] tracking-tight" size="5xl"
             >
               {title}
             </Heading>

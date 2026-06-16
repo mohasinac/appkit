@@ -154,7 +154,7 @@ export function AdminScammerEditorView({
                 </Text>
                 <Div className="flex flex-wrap gap-1">
                   {phones.map((p, i) => (
-                    <Code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
+                    <Code key={i} className="bg-zinc-200 px-1.5 py-0.5 dark:bg-zinc-700" size="xs" rounded="default">
                       {p}
                     </Code>
                   ))}
@@ -168,7 +168,7 @@ export function AdminScammerEditorView({
                 </Text>
                 <Div className="flex flex-wrap gap-1">
                   {upiIds.map((u, i) => (
-                    <Code key={i} className="rounded bg-zinc-200 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
+                    <Code key={i} className="bg-zinc-200 px-1.5 py-0.5 dark:bg-zinc-700" size="xs" rounded="default">
                       {u}
                     </Code>
                   ))}
