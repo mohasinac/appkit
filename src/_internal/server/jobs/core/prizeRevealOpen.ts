@@ -2,6 +2,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 import { PRODUCT_FIELDS, ORDER_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
+import type { JsonValue } from "@mohasinac/appkit";
 
 const PRODUCT_COLLECTION = "products";
 const ORDER_COLLECTION = "orders";
@@ -50,7 +51,7 @@ export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
     for (const orderDoc of orders.docs) {
       const order = orderDoc.data() as {
         userId?: string;
-        prizeWon?: unknown;
+        prizeWon?: JsonValue;
       };
       if (!order.userId || order.prizeWon) continue;
       try {

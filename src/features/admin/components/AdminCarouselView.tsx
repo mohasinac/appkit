@@ -31,7 +31,7 @@ export interface AdminCarouselViewProps extends ListingLayoutProps {
 }
 
 interface AdminCarouselResponse {
-  data?: unknown;
+  data?: JsonValue;
   items?: JsonArray;
   total?: number;
 }

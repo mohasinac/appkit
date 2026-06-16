@@ -92,7 +92,7 @@ interface OrderDetail {
   carrier?: string;
   trackingUrl?: string;
   paymentMethod?: string;
-  createdAt?: unknown;
+  createdAt?: JsonValue;
 }
 
 interface SellerOrdersResponse {

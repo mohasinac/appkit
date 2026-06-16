@@ -202,10 +202,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     pageSize: 50,
   });
 
-  const categoriesQuery = useQuery<{ items?: unknown[] }>({
+  const categoriesQuery = useQuery<{ items?: JsonValue[] }>({
     queryKey: ["admin", "sections", "categories", "options"],
     queryFn: () =>
-      apiClient.get<{ items?: unknown[] }>(
+      apiClient.get<{ items?: JsonValue[] }>(
         `${ADMIN_ENDPOINTS.CATEGORIES}?page=1&pageSize=100&sorts=name`,
       ),
     staleTime: 60_000,

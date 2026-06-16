@@ -32,7 +32,7 @@ export type AnalyticsEvent =
   (typeof ANALYTICS_EVENTS)[keyof typeof ANALYTICS_EVENTS];
 
 export async function initializeAnalytics(params: {
-  app: unknown;
+  app: JsonValue;
   enabled?: boolean;
   currency?: string;
 }): Promise<void> {

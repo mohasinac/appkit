@@ -1,4 +1,4 @@
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -36,7 +36,7 @@ export function useCurrentProfile(options?: {
 }
 
 export function useUpdateCurrentProfile(options?: {
-  onSuccess?: (data: unknown) => void;
+  onSuccess?: (data: JsonValue) => void;
   onError?: (error: Error) => void;
   endpoint?: string;
 }) {

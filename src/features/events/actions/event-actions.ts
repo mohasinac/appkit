@@ -75,11 +75,11 @@ export interface CreateEventInput {
     thumbnailUrl?: string;
   }>;
   tags?: string[];
-  saleConfig?: unknown;
-  offerConfig?: unknown;
-  pollConfig?: unknown;
-  surveyConfig?: unknown;
-  feedbackConfig?: unknown;
+  saleConfig?: JsonValue;
+  offerConfig?: JsonValue;
+  pollConfig?: JsonValue;
+  surveyConfig?: JsonValue;
+  feedbackConfig?: JsonValue;
 }
 
 export type UpdateEventInput = Partial<CreateEventInput>;

@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { useGuestCart } from "./useGuestCart";
 import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { JsonValue } from "@mohasinac/appkit";
 
 interface CartCountResponse {
   itemCount: number;
-  cart?: unknown;
+  cart?: JsonValue;
   subtotal?: number;
 }
 

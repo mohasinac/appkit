@@ -78,7 +78,7 @@ import { createFirebaseAdapter } from "@mohasinac/sievejs/adapters/firebase";
 
 interface AdapterCondition {
   field: string;
-  value: unknown;
+  value: JsonValue;
   parsedOperator: string;
   operatorIsNegated: boolean;
   operatorIsCaseInsensitive: boolean;
@@ -130,6 +130,7 @@ import {
   type SieveFilterAlias,
   type SieveFilterAliases,
 } from "./filter-aliases";
+import type { JsonValue } from "@mohasinac/appkit";
 
 // Re-export the pure alias helper + types so consumers that already imported
 // from `./sieve` keep working. Anyone who only needs the alias machinery

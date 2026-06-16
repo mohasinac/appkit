@@ -2,6 +2,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 import { ORDER_FIELDS, PRODUCT_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
+import type { JsonValue } from "@mohasinac/appkit";
 
 const ORDER_COLLECTION = "orders";
 
@@ -29,7 +30,7 @@ export async function runPrizeRevealExpiry(ctx: JobContext): Promise<void> {
   for (const doc of snap.docs) {
     const order = doc.data() as {
       userId?: string;
-      prizeWon?: unknown;
+      prizeWon?: JsonValue;
       productTitle?: string;
       prizeDrawProductId?: string;
     };
