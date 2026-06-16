@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "../../../../schemas/types";
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
@@ -32,7 +33,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("loyalty_balance");
+    const repo = db.getRepository<Record<string, JsonValue>>("loyalty_balance");
     const result = await repo.findAll({
       filters: `userId==${userId}`,
       perPage: 1,

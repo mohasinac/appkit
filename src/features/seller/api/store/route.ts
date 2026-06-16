@@ -16,6 +16,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
+import type { JsonValue } from "../../../../schemas/types";
 
 export const GET = createRouteHandler({
   roles: ["seller", "admin", "moderator"],
@@ -27,7 +28,7 @@ export const GET = createRouteHandler({
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("stores");
+    const repo = db.getRepository<Record<string, JsonValue>>("stores");
     const result = await repo.findAll({
       filters: `ownerId==${user!.uid}`,
       perPage: 1,

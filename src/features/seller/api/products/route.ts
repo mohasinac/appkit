@@ -17,6 +17,7 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import { storeRepository } from "../../../stores/repository/store.repository";
+import type { JsonValue } from "../../../../schemas/types";
 
 function numParam(url: URL, key: string, fallback: number): number {
   const v = url.searchParams.get(key);
@@ -53,7 +54,7 @@ export const GET = createRouteHandler({
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("products");
+    const repo = db.getRepository<Record<string, JsonValue>>("products");
     const result = await repo.findAll({
       filters: combinedFilters,
       sort,

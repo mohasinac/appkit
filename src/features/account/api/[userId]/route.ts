@@ -14,6 +14,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "../../../../schemas/types";
 
 export async function GET(
   request: Request,
@@ -35,7 +36,7 @@ export async function GET(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("users");
+    const repo = db.getRepository<Record<string, JsonValue>>("users");
     const user = await repo.findById(userId);
 
     if (!user) {
@@ -83,7 +84,7 @@ export async function PATCH(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("users");
+    const repo = db.getRepository<Record<string, JsonValue>>("users");
     const updated = await repo.update(userId, body);
 
     if (!updated) {

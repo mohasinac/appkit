@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "../../../../schemas/types";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -25,7 +26,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
 
     // Update message status in database
-    const repo = db.getRepository<Record<string, unknown>>(
+    const repo = db.getRepository<Record<string, JsonValue>>(
       "whatsapp_message_status",
     );
     const updated = await repo.create({

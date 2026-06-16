@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../../contracts";
 import { normalizeError } from "../../../../../errors/normalize";
+import type { JsonValue } from "../../../../../schemas/types";
 
 function numParam(url: URL, key: string, fallback: number): number {
   const v = url.searchParams.get(key);
@@ -52,7 +53,7 @@ export async function GET(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("addresses");
+    const repo = db.getRepository<Record<string, JsonValue>>("addresses");
     const result = await repo.findAll({
       filters,
       sort,
@@ -107,7 +108,7 @@ export async function POST(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("addresses");
+    const repo = db.getRepository<Record<string, JsonValue>>("addresses");
     const created = await repo.create({
       ...body,
       userId,

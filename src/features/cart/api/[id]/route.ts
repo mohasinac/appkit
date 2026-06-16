@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonValue } from "../../../../schemas/types";
 
 export async function PATCH(
   request: Request,
@@ -35,7 +36,7 @@ export async function PATCH(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("carts");
+    const repo = db.getRepository<Record<string, JsonValue>>("carts");
     const updated = await repo.update(id, body);
 
     if (!updated) {
@@ -81,7 +82,7 @@ export async function DELETE(
         { status: 503 },
       );
 
-    const repo = db.getRepository<Record<string, unknown>>("carts");
+    const repo = db.getRepository<Record<string, JsonValue>>("carts");
     await repo.delete(id);
 
     return NextResponse.json({
