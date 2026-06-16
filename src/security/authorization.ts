@@ -12,6 +12,7 @@
 import { AuthenticationError, AuthorizationError } from "../errors";
 import { ERROR_MESSAGES } from "../errors/messages";
 import type { UserRole } from "../features/auth/types";
+import type { JsonValue } from "../schemas/types";
 
 export type { UserRole };
 
@@ -30,7 +31,7 @@ export function requireAuth(user: unknown): void {
 }
 
 export function requireRole(
-  user: Record<string, unknown> | null | undefined,
+  user: Record<string, JsonValue> | null | undefined,
   roles: UserRole | UserRole[],
 ): void {
   if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
@@ -42,7 +43,7 @@ export function requireRole(
 }
 
 export function requireOwnership(
-  user: Record<string, unknown> | null | undefined,
+  user: Record<string, JsonValue> | null | undefined,
   resourceOwnerId: string,
 ): void {
   if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
@@ -52,14 +53,14 @@ export function requireOwnership(
 }
 
 export function requireEmailVerified(
-  user: Record<string, unknown> | null | undefined,
+  user: Record<string, JsonValue> | null | undefined,
 ): void {
   if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
   if (!user.emailVerified) throw new AuthorizationError(ERROR_MESSAGES.AUTH.EMAIL_NOT_VERIFIED);
 }
 
 export function requireActiveAccount(
-  user: Record<string, unknown> | null | undefined,
+  user: Record<string, JsonValue> | null | undefined,
 ): void {
   if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
   if (user.disabled) throw new AuthorizationError(ERROR_MESSAGES.AUTH.ACCOUNT_DISABLED);

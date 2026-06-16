@@ -7,6 +7,7 @@
  */
 
 import type { SeedCollectionName } from "./actions/demo-seed-actions";
+import type { JsonValue } from "../schemas/types";
 import {
   payoutMethodsSeedData,
   shippingConfigsSeedData,
@@ -69,12 +70,12 @@ export interface SeedManifestEntry {
 
 export type SeedManifest = Record<SeedCollectionName, SeedManifestEntry[]>;
 
-function asArr(items: unknown): Array<Record<string, unknown>> {
-  return (items as unknown as Array<Record<string, unknown>>) ?? [];
+function asArr(items: unknown): Array<Record<string, JsonValue>> {
+  return (items as unknown as Array<Record<string, JsonValue>>) ?? [];
 }
 
 function pick(items: unknown[], nameKey = "name"): SeedManifestEntry[] {
-  return (items as Array<Record<string, unknown>>)
+  return (items as Array<Record<string, JsonValue>>)
     .filter((item) => Boolean(item.id))
     .map((item) => ({
       id: String(item.id),
@@ -152,7 +153,7 @@ export const SEED_MANIFEST: SeedManifest = {
     "name",
   ),
   siteSettings: pick(
-    [siteSettingsSeedData as unknown as Record<string, unknown>].map((s) => ({
+    [siteSettingsSeedData as unknown as Record<string, JsonValue>].map((s) => ({
       ...s,
       name: s.siteName ?? "global",
     })),
