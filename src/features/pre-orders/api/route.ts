@@ -75,7 +75,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 // --- POST /api/pre-orders --------------------------------------------------
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const input = (await request.json()) as Record<string, unknown>;
+    const input = (await request.json()) as Record<string, JsonValue>;
     const { db } = getProviders();
     if (!db)
       return NextResponse.json(

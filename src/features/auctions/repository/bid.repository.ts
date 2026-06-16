@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 /**
  * Bid Repository
  *
@@ -41,7 +42,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
     snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<BidDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
+    return decryptPiiFields(raw as unknown as Record<string, JsonValue>, [
       ...BID_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -68,7 +69,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
 
     // Encrypt PII before persisting
     const encrypted = encryptPiiFields(
-      bidData as unknown as Record<string, unknown>,
+      bidData as unknown as Record<string, JsonValue>,
       [...BID_PII_FIELDS],
     );
 

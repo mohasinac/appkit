@@ -1,18 +1,19 @@
 "use client";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import type { JsonValue } from "@mohasinac/appkit";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
 import { Div, Nav, Row, Span, Stack, Text, useToast } from "../../ui";
 import { normalizeError } from "../../errors/normalize";
-export interface StepDef<T extends object = Record<string, unknown>> {
+export interface StepDef<T extends object = Record<string, JsonValue>> {
   label: string;
   render: (props: { values: T; onChange: (partial: Partial<T>) => void; errors: Record<string, string> }) => ReactNode;
   /** Returns an error message string if invalid, or null/undefined if valid. */
   validate?: (values: T) => string | null | undefined;
 }
 
-export interface StepFormProps<T extends object = Record<string, unknown>> {
+export interface StepFormProps<T extends object = Record<string, JsonValue>> {
   steps: StepDef<T>[];
   values: T;
   onChange: (partial: Partial<T>) => void;
@@ -156,7 +157,7 @@ export function StepIndicator({
   );
 }
 
-export function StepForm<T extends object = Record<string, unknown>>({
+export function StepForm<T extends object = Record<string, JsonValue>>({
   steps,
   values,
   onChange,

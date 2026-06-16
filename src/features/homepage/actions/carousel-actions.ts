@@ -6,6 +6,7 @@
  */
 
 import { carouselRepository } from "../repository/carousel.repository";
+import type { JsonValue } from "@mohasinac/appkit";
 import { NotFoundError, ValidationError } from "../../../errors/index";
 import { serverLogger } from "../../../monitoring/index";
 import type {
@@ -25,8 +26,8 @@ export interface CarouselSlideInput {
   };
   link?: { url: string; openInNewTab: boolean };
   mobileMedia?: { type: "image" | "video"; url: string; alt: string };
-  cards?: Record<string, unknown>[];
-  overlay?: Record<string, unknown>;
+  cards?: Record<string, JsonValue>[];
+  overlay?: Record<string, JsonValue>;
 }
 
 export type CarouselSlideUpdateInput = Partial<CarouselSlideInput>;

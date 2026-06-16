@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import { BaseRepository } from "../../../providers/db-firebase";
@@ -28,7 +29,7 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
     snap: DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<EmailVerificationTokenDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
+    return decryptPiiFields(raw as unknown as Record<string, JsonValue>, [
       ...TOKEN_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -37,17 +38,17 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
     data: Partial<EmailVerificationTokenDocument>,
   ): Promise<EmailVerificationTokenDocument> {
     let encrypted = encryptPiiFields(
-      data as unknown as Record<string, unknown>,
+      data as unknown as Record<string, JsonValue>,
       [...TOKEN_PII_FIELDS],
     );
     encrypted = addPiiIndices(
-      data as unknown as Record<string, unknown>,
+      data as unknown as Record<string, JsonValue>,
       TOKEN_PII_INDEX_MAP,
     );
     const merged = {
       ...encrypted,
       ...addPiiIndices(
-        data as unknown as Record<string, unknown>,
+        data as unknown as Record<string, JsonValue>,
         TOKEN_PII_INDEX_MAP,
       ),
     };
@@ -137,7 +138,7 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
     snap: DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<PasswordResetTokenDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
+    return decryptPiiFields(raw as unknown as Record<string, JsonValue>, [
       ...TOKEN_PII_FIELDS,
     ]) as unknown as D;
   }
@@ -146,13 +147,13 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
     data: Partial<PasswordResetTokenDocument>,
   ): Promise<PasswordResetTokenDocument> {
     let encrypted = encryptPiiFields(
-      data as unknown as Record<string, unknown>,
+      data as unknown as Record<string, JsonValue>,
       [...TOKEN_PII_FIELDS],
     );
     encrypted = {
       ...encrypted,
       ...addPiiIndices(
-        data as unknown as Record<string, unknown>,
+        data as unknown as Record<string, JsonValue>,
         TOKEN_PII_INDEX_MAP,
       ),
     };

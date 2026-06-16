@@ -3,6 +3,7 @@
  */
 
 import { createHmac, randomInt } from "crypto";
+import type { JsonValue } from "@mohasinac/appkit";
 import { getAdminDb } from "../../providers/db-firebase";
 import { AuthorizationError } from "../../errors";
 import { escapeHtml, resolveDate } from "../../utils";
@@ -123,7 +124,7 @@ export async function enforceConsentOtpRateLimit(uid: string): Promise<void> {
 export async function saveConsentOtp(
   uid: string,
   addressId: string,
-  data: Record<string, unknown>,
+  data: Record<string, JsonValue>,
 ): Promise<void> {
   const db = getAdminDb();
   await consentOtpRef(db, uid, addressId).set(data);
@@ -144,7 +145,7 @@ export async function readConsentOtp(
 export async function patchConsentOtp(
   uid: string,
   addressId: string,
-  data: Record<string, unknown>,
+  data: Record<string, JsonValue>,
 ): Promise<void> {
   const db = getAdminDb();
   await consentOtpRef(db, uid, addressId).update(data);

@@ -6,6 +6,7 @@
  */
 
 import { sortBy } from "@mohasinac/appkit";
+import type { JsonValue } from "@mohasinac/appkit";
 import {
   AuthorizationError,
   NotFoundError,
@@ -114,7 +115,7 @@ export async function updateReview(
   }
 
   const { videoUrl, images: rawImages, ...rest } = input;
-  const updatePayload: Record<string, unknown> = { ...rest };
+  const updatePayload: Record<string, JsonValue> = { ...rest };
 
   if (rawImages !== undefined) {
     updatePayload.images = await finalizeStagedMediaArray(rawImages);
@@ -176,7 +177,7 @@ export async function adminUpdateReview(
   });
 
   const { videoUrl, images: rawImages, ...rest } = input;
-  const updatePayload: Record<string, unknown> = { ...rest };
+  const updatePayload: Record<string, JsonValue> = { ...rest };
 
   if (rawImages !== undefined) {
     updatePayload.images = await finalizeStagedMediaArray(rawImages);

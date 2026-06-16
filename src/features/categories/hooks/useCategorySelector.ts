@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import type { JsonValue } from "@mohasinac/appkit";
 import { apiClient } from "../../../http";
 import type { CategoryItem } from "../types";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -30,7 +31,7 @@ export function useCategorySelector(options?: UseCategorySelectorOptions) {
   const { mutate: createCategory, isPending: isCreating } = useMutation<
     CategoryItem,
     Error,
-    Record<string, unknown>
+    Record<string, JsonValue>
   >({
     mutationFn: (data) =>
       apiClient.post<CategoryItem>(createCategoryEndpoint, data),
@@ -68,7 +69,7 @@ export function useCreateCategory(options?: {
   onError?: (err: Error) => void;
 }) {
   const endpoint = options?.endpoint ?? CATEGORY_ENDPOINTS.LIST;
-  return useMutation<CategoryItem, Error, Record<string, unknown>>({
+  return useMutation<CategoryItem, Error, Record<string, JsonValue>>({
     mutationFn: (data) => apiClient.post<CategoryItem>(endpoint, data),
     onSuccess: options?.onSuccess,
     onError: options?.onError,

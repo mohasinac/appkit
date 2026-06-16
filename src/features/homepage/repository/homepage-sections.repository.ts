@@ -5,6 +5,7 @@
  */
 
 import { DatabaseError } from "../../../errors";
+import type { JsonValue } from "@mohasinac/appkit";
 import { HOMEPAGE_SECTION_FIELDS } from "../../../constants/field-names";
 import {
   BaseRepository,
@@ -200,7 +201,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
   async updateSectionConfig(
     sectionId: string,
-    config: Record<string, unknown>,
+    config: Record<string, JsonValue>,
   ): Promise<HomepageSectionDocument> {
     try {
       await this.db.collection(this.collection).doc(sectionId).update({
@@ -244,7 +245,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
 
   async resetSectionToDefault(
     sectionId: string,
-    defaultConfig: Record<string, unknown>,
+    defaultConfig: Record<string, JsonValue>,
   ): Promise<HomepageSectionDocument> {
     try {
       await this.db.collection(this.collection).doc(sectionId).update({

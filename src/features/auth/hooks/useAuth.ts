@@ -1,5 +1,6 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
+import type { JsonValue } from "@mohasinac/appkit";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getClientAuthProvider } from "../../../contracts/client-auth";
@@ -255,7 +256,7 @@ export function useRegister(options?: {
   return useMutation<unknown, Error, RegisterData>({
     mutationFn: async (data) => {
       // Create the user account on the server
-      const response = await apiClient.post<Record<string, unknown>>(
+      const response = await apiClient.post<Record<string, JsonValue>>(
         AUTH_ENDPOINTS.REGISTER,
         {
           email: data.email.trim(),
