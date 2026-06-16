@@ -1,4 +1,5 @@
 import type { SocialPost, SocialPlatform, SocialPostType } from "../schemas";
+import type { JsonValue } from "../../../schemas/types";
 
 // --- Helpers ------------------------------------------------------------------
 
@@ -32,7 +33,7 @@ export async function fetchInstagramPosts(
 
   return items
     .filter((item) => {
-      const m = item as Record<string, unknown>;
+      const m = item as Record<string, JsonValue>;
       if (postType === "images") return m.media_type === "IMAGE";
       if (isVideoOrReels(postType)) return m.media_type === "VIDEO";
       return true;
@@ -80,11 +81,11 @@ export async function fetchFacebookPosts(
 
   return items
     .filter((item) => {
-      const m = item as Record<string, unknown>;
+      const m = item as Record<string, JsonValue>;
       if (!m.full_picture) return false;
-      const attachType = (m as Record<string, Record<string, unknown[]> | undefined>)
+      const attachType = (m as Record<string, Record<string, JsonValue[]> | undefined>)
         .attachments?.data?.[0];
-      const mtype = (attachType as Record<string, unknown> | undefined)?.media_type as
+      const mtype = (attachType as Record<string, JsonValue> | undefined)?.media_type as
         | string
         | undefined;
       if (postType === "images") return mtype !== "video";
@@ -93,8 +94,8 @@ export async function fetchFacebookPosts(
     })
     .slice(0, count)
     .map((item) => {
-      const m = item as Record<string, unknown>;
-      const likesObj = m.likes as Record<string, unknown> | undefined;
+      const m = item as Record<string, JsonValue>;
+      const likesObj = m.likes as Record<string, JsonValue> | undefined;
       return {
         id: String(m.id ?? ""),
         platform: "facebook" as SocialPlatform,
@@ -104,7 +105,7 @@ export async function fetchFacebookPosts(
         mediaType: "image" as const,
         stats: {
           likes: likesObj?.summary
-            ? Number((likesObj.summary as Record<string, unknown>).total_count ?? 0)
+            ? Number((likesObj.summary as Record<string, JsonValue>).total_count ?? 0)
             : undefined,
         },
         publishedAt: String(m.created_time ?? ""),
@@ -146,7 +147,7 @@ export async function fetchTikTokPosts(
   const items: unknown[] = json.data?.videos ?? [];
 
   return items.slice(0, count).map((item) => {
-    const v = item as Record<string, unknown>;
+    const v = item as Record<string, JsonValue>;
     return {
       id: String(v.id ?? ""),
       platform: "tiktok" as SocialPlatform,
@@ -205,8 +206,8 @@ export async function fetchDeviantArtPosts(
   const items: unknown[] = json.results ?? [];
 
   return items.slice(0, count).map((item) => {
-    const d = item as Record<string, unknown>;
-    const thumbs = d.thumbs as Array<Record<string, unknown>> | undefined;
+    const d = item as Record<string, JsonValue>;
+    const thumbs = d.thumbs as Array<Record<string, JsonValue>> | undefined;
     const bestThumb = thumbs?.sort(
       (a, b) => Number(b.width ?? 0) - Number(a.width ?? 0),
     )[0];
@@ -219,10 +220,10 @@ export async function fetchDeviantArtPosts(
       mediaType: "image" as const,
       stats: {
         views: d.stats
-          ? Number((d.stats as Record<string, unknown>).views ?? 0)
+          ? Number((d.stats as Record<string, JsonValue>).views ?? 0)
           : undefined,
         likes: d.stats
-          ? Number((d.stats as Record<string, unknown>).favourites ?? 0)
+          ? Number((d.stats as Record<string, JsonValue>).favourites ?? 0)
           : undefined,
       },
       publishedAt: d.published_time ? String(d.published_time) : "",

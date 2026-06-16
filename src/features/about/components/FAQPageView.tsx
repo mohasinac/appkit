@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Aside, Details, Div, Heading, Nav, RichTextRenderer, Section, Span, Stack, Summary, Text } from "../../../ui";
+import { Aside, Container, Details, Div, Heading, Nav, RichTextRenderer, Section, Span, Stack, Summary, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
 
@@ -42,17 +42,17 @@ export async function FAQPageView({
       <Section
         tone="accent-banner" className="text-white md:py-16 lg:py-20" padding="y-2-5xl"
       >
-        <Div className={`${page.container.md} text-center`}>
+        <Container size="md" className="text-center">
           <Heading level={1} variant="none" className="mb-3 text-white">
             {activeCategory ? activeCategory.label : t("title")}
           </Heading>
           <Text variant="none" className="text-white/80 max-w-2xl mx-auto">
             {t("subtitle")}
           </Text>
-        </Div>
+        </Container>
       </Section>
 
-      <Div className={`${page.container.md} md:py-12 lg:py-16`} padding="y-2xl">
+      <Container size="md" padding="y-2xl" className="md:py-12 lg:py-16">
         <Stack className="md:flex-row" gap="xl">
           {/* Category sidebar */}
           {categories.length > 0 && (
@@ -110,7 +110,8 @@ export async function FAQPageView({
                 {visibleItems.map((item, i) => (
                   <Details
                     key={i}
-                    className={`group rounded-xl border ${themed.border} ${themed.bgPrimary} overflow-hidden`}
+                    tone="card"
+                    className="group overflow-hidden"
                   >
                     <Summary
                       className={`flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none font-medium text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors`}
