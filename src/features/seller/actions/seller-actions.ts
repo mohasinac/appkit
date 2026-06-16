@@ -21,6 +21,7 @@ import {
 } from "../../../errors";
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
+import type { JsonValue } from "../../../schemas/types";
 import { productRepository } from "../../products/repository/products.repository";
 import { ProductStatusValues } from "../../products/schemas";
 import { orderRepository } from "../../orders/repository/orders.repository";
@@ -134,7 +135,7 @@ export interface SellerListParams {
 // --- Helper -------------------------------------------------------------------
 
 async function finalizeProductMediaReferences<
-  T extends Record<string, unknown>,
+  T extends Record<string, JsonValue>,
 >(data: T): Promise<T> {
   const finalized = { ...data } as T & {
     mainImage?: string;
@@ -540,7 +541,7 @@ export async function createSellerProduct(
   userId: string,
   userName: string,
   userEmail: string,
-  input: Record<string, unknown>,
+  input: Record<string, JsonValue>,
 ): Promise<void> {
   const finalizedData = await finalizeProductMediaReferences(input);
   await productRepository.create({
@@ -712,7 +713,7 @@ export async function sellerUpdateProduct(
   userId: string,
   userRole: string,
   productId: string,
-  input: Record<string, unknown>,
+  input: Record<string, JsonValue>,
 ): Promise<ProductDocument> {
   const existing = await productRepository.findById(productId);
   if (!existing) throw new NotFoundError("Product not found");
