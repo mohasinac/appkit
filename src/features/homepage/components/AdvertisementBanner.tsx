@@ -94,7 +94,7 @@ export function AdvertisementBanner({
                 <Heading
                   level={2}
                   variant="none"
-                  className="md:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-tight" size="3xl"
+                  className="font-extrabold text-white mb-4 leading-tight" mdSize="4xl" lgSize="5xl" size="3xl"
                 >
                   {title}
                 </Heading>
@@ -189,7 +189,7 @@ export function AdvertisementBanner({
               <Heading
                 level={2}
                 variant="none"
-                className="md:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg leading-tight" size="3xl"
+                className="lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg leading-tight" mdSize="5xl" size="3xl"
               >
                 {title}
               </Heading>

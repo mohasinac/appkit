@@ -124,7 +124,7 @@ export function FAQPageContent({
   return (
     <Div padding="y-3xl">
       <Div className="mb-12 text-center">
-        <Heading level={1} className="mb-4 sm:text-4xl" size="3xl" weight="bold">
+        <Heading level={1} className="mb-4" smSize="4xl" size="3xl" weight="bold">
           {labels.title}
         </Heading>
         <Text className="mx-auto max-w-2xl" color="muted">

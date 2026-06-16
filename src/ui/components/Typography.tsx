@@ -82,12 +82,29 @@ function shapingClasses(opts: {
   return out;
 }
 
+type HeadingSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+
+function responsiveSizeClass(prefix: "sm:" | "md:" | "lg:" | "xl:", size: HeadingSize | undefined): string {
+  if (!size) return "";
+  // Use raw Tailwind text-* utilities (which support responsive prefixes) rather
+  // than the custom .appkit-text--N classes (which don't).
+  return `${prefix}text-${size}`;
+}
+
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   variant?: "primary" | "secondary" | "muted" | "none";
   color?: ColorVariant;
   /** Optional size override — defaults to the level's heading size. */
-  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  size?: HeadingSize;
+  /** Responsive size override at the sm breakpoint and up. */
+  smSize?: HeadingSize;
+  /** Responsive size override at the md breakpoint and up. */
+  mdSize?: HeadingSize;
+  /** Responsive size override at the lg breakpoint and up. */
+  lgSize?: HeadingSize;
+  /** Responsive size override at the xl breakpoint and up. */
+  xlSize?: HeadingSize;
   /** Optional weight override — defaults to the level's heading weight. */
   weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   transform?: TextTransform;
@@ -105,6 +122,10 @@ export function Heading({
   variant = "primary",
   color,
   size,
+  smSize,
+  mdSize,
+  lgSize,
+  xlSize,
   weight,
   transform,
   truncate,
@@ -127,6 +148,10 @@ export function Heading({
         TYPOGRAPHY.headingLevel[level],
         TYPOGRAPHY.colorVariant[resolvedColor],
         size ? TYPOGRAPHY.textSize[size] : "",
+        responsiveSizeClass("sm:", smSize),
+        responsiveSizeClass("md:", mdSize),
+        responsiveSizeClass("lg:", lgSize),
+        responsiveSizeClass("xl:", xlSize),
         weight ? TYPOGRAPHY.textWeight[weight] : "",
         ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
         className,

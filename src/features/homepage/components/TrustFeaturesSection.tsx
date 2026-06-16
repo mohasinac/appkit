@@ -141,9 +141,7 @@ export function TrustFeaturesSection({
         {title && (
           <Div className="text-center mb-8">
             <Heading
-              level={2}
-              className="md:text-4xl" color="primary" size="3xl" weight="bold"
-            >
+              level={2} color="primary" size="3xl" weight="bold" mdSize="4xl">
               {title}
             </Heading>
           </Div>

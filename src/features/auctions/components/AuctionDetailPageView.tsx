@@ -103,7 +103,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
             <Span size="xs" weight="medium" className="inline-block bg-success-surface px-2.5 py-0.5 text-success" rounded="full">Active</Span>
           )}
         </Row>
-        <Heading level={1} className="leading-snug sm:text-2xl" color="primary" size="xl" weight="bold">{title}</Heading>
+        <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">{title}</Heading>
       </Div>
       <Div>
         <Text className="mb-0.5" color="muted" size="xs">Current bid</Text>

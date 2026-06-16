@@ -13,7 +13,7 @@ export function AdminUsersGuideView() {
           </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
-        <Heading level={1} className="md:text-3xl text-[var(--appkit-color-text)] mb-2" size="2xl" weight="bold">Users &amp; Accounts</Heading>
+        <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Users &amp; Accounts</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Managing users, roles, sessions, and employee accounts on LetItRip.</Text>
       </Section>
 

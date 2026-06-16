@@ -52,7 +52,7 @@ export function NewsletterSection({
 
         <Heading
           level={2}
-          className="sm:text-3xl mb-3" color="primary" size="2xl" weight="bold"
+          className="mb-3" smSize="3xl" color="primary" size="2xl" weight="bold"
         >
           {title}
         </Heading>

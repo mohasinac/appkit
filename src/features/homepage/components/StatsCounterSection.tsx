@@ -50,7 +50,7 @@ function StatCard({
         level={2}
         variant="none"
         gradient="brand"
-        className="mb-1 font-display font-black md:text-5xl" size="4xl"
+        className="mb-1 font-display font-black" mdSize="5xl" size="4xl"
       >
         {stat.value}
       </Heading>

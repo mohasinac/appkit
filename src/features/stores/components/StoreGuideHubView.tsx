@@ -136,7 +136,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               Seller Guide
             </Text>
           </Row>
-          <Heading level={1} className="md:text-3xl text-white mb-2" size="2xl" weight="bold">
+          <Heading level={1} className="text-white mb-2" mdSize="3xl" size="2xl" weight="bold">
             {storeName}
           </Heading>
           <Text className="text-white/80" size="base">

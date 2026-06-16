@@ -26,7 +26,7 @@ export function CTABannerSection({
         <Span className="mb-4 inline-block" size="2xl" aria-hidden="true">
           ✨
         </Span>
-        <Heading level={2} className="text-white md:text-3xl lg:text-4xl" size="2xl" weight="bold">
+        <Heading level={2} className="text-white" mdSize="3xl" lgSize="4xl" size="2xl" weight="bold">
           {title}
         </Heading>
         {subtitle && (

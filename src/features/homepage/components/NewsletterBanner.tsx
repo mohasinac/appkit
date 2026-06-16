@@ -85,7 +85,7 @@ export function NewsletterBanner({
         </Span>
         <Heading
           level={2}
-          className="text-white sm:text-4xl" size="3xl" weight="bold"
+          className="text-white" smSize="4xl" size="3xl" weight="bold"
         >
           {heading}
         </Heading>

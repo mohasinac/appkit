@@ -135,7 +135,7 @@ export function FAQSection({
             level={2}
             variant="none"
             gradient="brand"
-            className="md:text-4xl mb-3" size="3xl" weight="bold"
+            className="mb-3" mdSize="4xl" size="3xl" weight="bold"
           >
             {title}
           </Heading>

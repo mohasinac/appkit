@@ -124,7 +124,7 @@ export function BuyerShoppingGuideView() {
           </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Buyer Guide</Text>
         </Row>
-        <Heading level={1} className="md:text-3xl text-[var(--appkit-color-text)] mb-2" size="2xl" weight="bold">
+        <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">
           Shopping &amp; Checkout
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">

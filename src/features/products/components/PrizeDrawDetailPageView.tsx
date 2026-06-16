@@ -257,7 +257,7 @@ export async function PrizeDrawDetailPageView({
                 </Row>
                 <Heading
                   level={1}
-                  className="leading-snug sm:text-2xl" color="primary" size="xl" weight="bold"
+                  className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold"
                 >
                   {title}
                 </Heading>

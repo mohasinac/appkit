@@ -22,7 +22,7 @@ export function AdminTeamGuideView() {
           </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
-        <Heading level={1} className="md:text-3xl text-[var(--appkit-color-text)] mb-2" size="2xl" weight="bold">Team &amp; Permissions</Heading>
+        <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Team &amp; Permissions</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">How roles, permissions, and employee accounts work on LetItRip.</Text>
       </Section>
 
