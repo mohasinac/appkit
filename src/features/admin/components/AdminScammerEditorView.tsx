@@ -134,9 +134,7 @@ export function AdminScammerEditorView({
               {displayNames.map((name, i) => (
                 <Span
                   key={i}
-                  size="xs"
-                  className="px-2.5 py-0.5" rounded="full" surface="subtle"
-                >
+                  size="xs" rounded="full" surface="subtle" padding="pill-sm">
                   {name}
                 </Span>
               ))}

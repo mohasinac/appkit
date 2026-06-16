@@ -201,7 +201,7 @@ function renderTicketListArea(props: {
                   <Text className="truncate" color="primary" weight="medium">{ticket.subject}</Text>
                   <Text size="xs" color="muted">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
                 </Div>
-                <Span size="xs" weight="medium" className={`shrink-0 inline-flex px-2.5 py-0.5 ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`} rounded="full">{ticket.status.replace(/_/g, " ")}</Span>
+                <Span size="xs" weight="medium" className={`shrink-0 inline-flex ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`} padding="pill-sm" rounded="full">{ticket.status.replace(/_/g, " ")}</Span>
               </Row>
             </Button>
           </Li>

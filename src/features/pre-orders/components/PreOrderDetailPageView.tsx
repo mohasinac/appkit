@@ -126,7 +126,7 @@ function PreOrderInfoSection({
             Pre-Order
           </Span>
           {productionStatus && (
-            <Span size="xs" weight="medium" className="inline-block px-2.5 py-0.5" rounded="full" surface="subtle" color="muted">
+            <Span size="xs" weight="medium" className="inline-block" padding="pill-sm" rounded="full" surface="subtle" color="muted">
               {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
             </Span>
           )}

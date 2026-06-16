@@ -240,12 +240,12 @@ export async function PrizeDrawDetailPageView({
                   <Span
                     size="xs"
                     weight="semibold"
-                    className={`inline-block px-2.5 py-0.5 ${statusClass(revealStatus)}`} rounded="full"
+                    className={`inline-block ${statusClass(revealStatus)}`} padding="pill-sm" rounded="full"
                   >
                     {statusLabel(revealStatus)}
                   </Span>
                   {maxPerUser !== null && (
-                    <Span size="xs" weight="medium" className="inline-block px-2.5 py-0.5" rounded="full" surface="subtle" color="muted">
+                    <Span size="xs" weight="medium" className="inline-block" padding="pill-sm" rounded="full" surface="subtle" color="muted">
                       Limit: {maxPerUser} entries per customer
                     </Span>
                   )}

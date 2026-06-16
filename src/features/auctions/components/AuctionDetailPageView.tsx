@@ -98,9 +98,9 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Row gap="xs" wrap className="mb-2">
           <Span size="xs" weight="semibold" className={CLS_LIVE_BADGE}>🏷️ Live Auction</Span>
           {isEnded ? (
-            <Span size="xs" weight="medium" className="inline-block bg-error-surface px-2.5 py-0.5 text-error" rounded="full">Ended</Span>
+            <Span size="xs" weight="medium" className="inline-block bg-error-surface text-error" padding="pill-sm" rounded="full">Ended</Span>
           ) : (
-            <Span size="xs" weight="medium" className="inline-block bg-success-surface px-2.5 py-0.5 text-success" rounded="full">Active</Span>
+            <Span size="xs" weight="medium" className="inline-block bg-success-surface text-success" padding="pill-sm" rounded="full">Active</Span>
           )}
         </Row>
         <Heading level={1} className="leading-snug" smSize="2xl" color="primary" size="xl" weight="bold">{title}</Heading>

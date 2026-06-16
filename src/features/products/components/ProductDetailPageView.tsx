@@ -462,7 +462,7 @@ export async function ProductDetailPageView({
               {/* Title + condition badge */}
               <Div>
                 {condition && (
-                  <Span size="xs" weight="medium" className="mb-2 inline-block px-2.5 py-0.5" rounded="full" surface="subtle" color="muted" transform="capitalize">
+                  <Span size="xs" weight="medium" className="mb-2 inline-block" padding="pill-sm" rounded="full" surface="subtle" color="muted" transform="capitalize">
                     {condition === "new"
                       ? "Brand New"
                       : condition === "like_new"
@@ -493,7 +493,7 @@ export async function ProductDetailPageView({
                   <Span
                     size="xs"
                     weight="medium"
-                    className={`ml-auto px-2.5 py-0.5 ${ inStock ? "bg-success-surface text-success" : "bg-error-surface text-error" }`} rounded="full"
+                    className={`ml-auto ${ inStock ? "bg-success-surface text-success" : "bg-error-surface text-error" }`} padding="pill-sm" rounded="full"
                   >
                     {inStock ? "✓ In Stock" : "✗ Out of Stock"}
                     {inStock && effectiveStock !== null && effectiveStock <= 10
