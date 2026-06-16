@@ -151,7 +151,7 @@ export async function FAQPageView({
             </Section>
           </Div>
         </Stack>
-      </Div>
+      </Container>
     </Div>
   );
 }
