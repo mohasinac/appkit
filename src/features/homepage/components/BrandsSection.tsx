@@ -118,7 +118,7 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
       <Div className="mx-auto max-w-7xl">
         <Row className="mb-6" align="center" justify="between">
           <>
-            <Heading level={2} className={`md:text-3xl ${themed.textPrimary}`} size="2xl" weight="bold">
+            <Heading level={2} className={themed.textPrimary} size="2xl" mdSize="3xl" weight="bold">
               {title}
             </Heading>
             {subtitle && (

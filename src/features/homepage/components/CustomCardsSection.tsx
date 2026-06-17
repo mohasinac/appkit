@@ -94,7 +94,7 @@ function CardItem({ card }: { card: CustomCardsCard }) {
         )}
 
         {card.buttons && card.buttons.length > 0 && (
-          <Row gap="sm" className="flex-wrap mt-2">
+          <Row gap="sm" wrap className="mt-2">
             {card.buttons.map((btn, i) => (
               <a
                 key={i}

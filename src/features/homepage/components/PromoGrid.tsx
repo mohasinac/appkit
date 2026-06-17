@@ -23,6 +23,7 @@ export function PromoGrid({
   if (banners.length === 0) return null;
 
   return (
+    // audit-variant-ok: section — base paddingY=y-2xl + sm:py-16 responsive bump
     <Section
       className="sm:py-16" padding="y-2xl"
       style={{

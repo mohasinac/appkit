@@ -102,6 +102,7 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
         ) : null}
       </Div>
       {creative.ctaLabel ? (
+        // audit-variant-ok: CTA pill — bg-primary + py-1.5 (between Span padding map keys)
         <Span color="inverse" size="xs" weight="semibold" className="flex-shrink-0 bg-primary py-1.5" rounded="md" padding="x-sm">
           {creative.ctaLabel}
         </Span>

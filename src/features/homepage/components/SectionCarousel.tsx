@@ -229,8 +229,8 @@ const headingGradient: "none" | "brand" =
 
           {/* Editorial ornament */}
           {headingVariant === "editorial" && (
-            <Row align="center" justify="center" gap="sm" textSize="xs" 
-              className={`mt-1 text-zinc-400 dark:text-zinc-400 select-none`}
+            <Row align="center" justify="center" gap="sm" textSize="xs" color="faint"
+              className="mt-1 select-none"
               aria-hidden="true"
             >
               <Span className="h-px w-6 bg-current" />

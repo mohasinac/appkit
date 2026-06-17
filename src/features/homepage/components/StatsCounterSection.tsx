@@ -41,6 +41,7 @@ function StatCard({
       style={{ transitionDelay: `${delay}ms` }}
     >
       {stat.renderIcon && (
+        // audit-variant-ok: icon container — fixed h-14/w-14 + bg-primary-50 + border-primary-100 themed icon-box
         <Row className="mb-4 h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30" align="center" justify="center" rounded="2xl">
           {stat.renderIcon({ className: "w-7 h-7" })}
         </Row>
