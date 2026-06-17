@@ -104,6 +104,7 @@ const sectionRef = useRef<HTMLElement>(null);
         {/* Header */}
         <Div className="text-center mb-10">
           {pillLabel && (
+            // audit-variant-ok: eyebrow pill — primary-500/30 border + primary-500/10 bg + tracking-[0.2em] + backdrop-blur-sm
             <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
               {pillLabel}
             </Span>
@@ -122,6 +123,7 @@ const sectionRef = useRef<HTMLElement>(null);
         </Div>
 
         {/* Cards grid */}
+        {/* audit-variant-ok: cards grid — gap-5 between grid items; Grid.gap lacks "5" key */}
         <Grid
           gap="none"
           className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5"

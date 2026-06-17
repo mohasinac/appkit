@@ -52,6 +52,7 @@ return (
         </Div>
 
         {/* Features Grid */}
+        {/* audit-variant-ok: features grid — base gap=lg + md:gap-8 responsive bump */}
         <Grid
           gap="lg"
           className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-8"
@@ -62,6 +63,7 @@ return (
               className="p-6 text-center hover:shadow-lg transition-all group rounded-2xl bg-white dark:bg-slate-900 border border-zinc-100 dark:border-slate-800"
             >
               {/* Icon */}
+              {/* audit-variant-ok: feature icon — text-6xl + group-hover:scale-110 transition */}
               <Div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
                 {feature.icon}
               </Div>
