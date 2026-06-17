@@ -174,7 +174,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
 
           {/* Title + metrics */}
           {/* audit-variant-ok: category H1 — responsive md:text-4xl on top of size="3xl" + conditional fallback color when no cover */}
-          <Heading color="inverse" level={1} className={`md:text-4xl mb-2 ${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" weight="bold">
+          <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" mdSize="4xl" weight="bold">
             {category?.name ?? slug}
           </Heading>
 

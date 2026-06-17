@@ -165,7 +165,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
             )}
             <>
               {/* audit-variant-ok: brand H1 — responsive md:text-4xl on top of size="3xl" + conditional fallback color when no cover */}
-              <Heading color="inverse" level={1} className={`md:text-4xl ${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" weight="bold">
+              <Heading color="inverse" level={1} className={`${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" mdSize="4xl" weight="bold">
                 {brand?.name ?? slug}
               </Heading>
               {/* audit-variant-ok: brand description — conditional muted-zinc fallback when no cover; inverse default keeps over-image legibility */}

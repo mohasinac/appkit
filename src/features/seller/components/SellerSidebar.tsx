@@ -196,7 +196,7 @@ function DrawerPanel({ title, onClose, children }: { title: string; onClose: () 
         aria-label={title}
         className="fixed top-0 right-0 z-50 h-full w-64 border-l shadow-2xl" surface="default"
       >
-        <Row border="subtle" className="py-3.5 border-b shrink-0" padding="x-md" align="center" justify="between">
+        <Row border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
           <button
             type="button"

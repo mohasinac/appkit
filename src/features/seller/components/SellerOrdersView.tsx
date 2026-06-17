@@ -264,7 +264,7 @@ function OrderDetailDrawer({
           </Stack>
 
           {/* Footer */}
-          <Row className="border-t border-[var(--appkit-color-border)] py-3.5" padding="x-md" align="center" justify="end" gap="3">
+          <Row border="top" paddingY="y-sm-tall" padding="x-md" align="center" justify="end" gap="3">
             <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
             <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
           </Row>
