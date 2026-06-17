@@ -494,9 +494,9 @@ export function AdminCouponEditorView({
             {applicableCategories.length > 0 && (
               <Row wrap gap="sm" padding="t-2xs">
                 {applicableCategories.map((cid) => (
-                  <Span layout="inline-flex" gap="xs" 
+                  <Span layout="inline-flex" gap="xs"
                     key={cid}
-                    className="border border-zinc-300 dark:border-zinc-600" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
+                    border="strong" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
                   >
                     {cid}
                     <button
