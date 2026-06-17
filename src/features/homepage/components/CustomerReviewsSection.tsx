@@ -1,5 +1,6 @@
 import React from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
+import { SKELETON as skeleton } from "../../../_internal/shared/styles/skeleton";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 import {
   Div,
@@ -45,9 +46,8 @@ export function CustomerReviewsSection<T = unknown>({
   keyExtractor,
   className = "",
 }: CustomerReviewsSectionProps<T>) {
-  const { themed, skeleton } = THEME_CONSTANTS;
-
-  if (isLoading) {
+const themed = { textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
+if (isLoading) {
     return (
       <Section className={`${__P.p8} ${className}`} surface="muted">
         <Div className="w-full max-w-7xl mx-auto">

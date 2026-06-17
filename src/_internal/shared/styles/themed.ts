@@ -14,6 +14,7 @@ export const THEMED_BORDER_STRONG = "border-zinc-300 dark:border-slate-600";
 export const THEMED_TEXT_PRIMARY = "text-zinc-900 dark:text-zinc-50";
 export const THEMED_TEXT_SECONDARY = "text-zinc-500 dark:text-zinc-400";
 export const THEMED_TEXT_TERTIARY = "text-zinc-400 dark:text-zinc-500";
+export const THEMED_TEXT_MUTED = "text-zinc-400 dark:text-zinc-400";
 // audit-semantic-color-ok: these constants ARE the semantic token definitions
 export const THEMED_TEXT_SUCCESS = "text-emerald-600 dark:text-emerald-400";
 // audit-semantic-color-ok: these constants ARE the semantic token definitions

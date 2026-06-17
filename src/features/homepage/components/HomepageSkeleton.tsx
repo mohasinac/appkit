@@ -1,4 +1,5 @@
-import { THEME_CONSTANTS } from "../../../tokens";
+import { FLEX_BETWEEN } from "../../../_internal/shared/styles/themed";
+import { SKELETON } from "../../../_internal/shared/styles/skeleton";
 import { Div, Grid, Row, Section, Stack } from "../../../ui";
 
 const __P = {
@@ -11,9 +12,9 @@ const __O = {
 
 /** Full-page skeleton shown while homepage data loads. */
 export function HomepageSkeleton() {
-  const { skeleton, flex, themed } = THEME_CONSTANTS;
-
-  // Hardcoded clamp values (extended THEME_CONSTANTS keys not in @mohasinac/tokens)
+const flex = { between: FLEX_BETWEEN };
+const skeleton = SKELETON;
+// Hardcoded clamp values (extended THEME_CONSTANTS keys not in @mohasinac/tokens)
   const heroSkeletonH = "h-[clamp(420px,72vh,680px)]";
   const trustCardH = "h-[clamp(120px,18vh,170px)]";
   const categoryTileH = "h-[clamp(112px,16vh,160px)]";

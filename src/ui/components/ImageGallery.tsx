@@ -5,9 +5,25 @@ import { Button } from "./Button";
 import { HorizontalScroller } from "./HorizontalScroller";
 import { useSwipe, useGesture } from "../../react";
 import { MediaImage } from "../../features/media/MediaImage";
-import { THEME_CONSTANTS } from "../../tokens";
+import {
+  FLEX_CENTER,
+  THEMED_BG_SECONDARY,
+  THEMED_BG_TERTIARY,
+  THEMED_BORDER,
+  THEMED_TEXT_MUTED,
+  THEMED_TEXT_PRIMARY,
+  THEMED_TEXT_SECONDARY,
+} from "../../_internal/shared/styles/themed";
 
-const { themed, flex } = THEME_CONSTANTS;
+const themed = {
+  bgSecondary: THEMED_BG_SECONDARY,
+  bgTertiary: THEMED_BG_TERTIARY,
+  border: THEMED_BORDER,
+  textMuted: THEMED_TEXT_MUTED,
+  textPrimary: THEMED_TEXT_PRIMARY,
+  textSecondary: THEMED_TEXT_SECONDARY,
+};
+const flex = { center: FLEX_CENTER };
 
 export interface GalleryImage {
   src: string;

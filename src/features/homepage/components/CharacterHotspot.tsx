@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { GRID_COLS_6_LG } from "../../../_internal/shared/styles/grid";
 import { useMediaQuery } from "../../../react";
 import { Button, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin as HotspotPinData } from "../types";
@@ -586,7 +586,7 @@ function UniverseBrowseRow({
 }) {
   return (
     <Div gap="3" 
-      className={`mx-auto max-w-7xl ${THEME_CONSTANTS.grid.cols6Lg}`} paddingY="y-lg" paddingX="x-md"
+      className={`mx-auto max-w-7xl ${GRID_COLS_6_LG}`} paddingY="y-lg" paddingX="x-md"
       style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
     >
       {universeLinks.map(({ label, href, color, icon }) => (

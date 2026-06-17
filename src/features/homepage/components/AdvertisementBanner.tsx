@@ -1,5 +1,5 @@
 import React from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { CARD_ASPECT_BANNER, GRID_COLS_2_MD } from "../../../_internal/shared/styles/grid";
 import { Button, Div, Grid, Heading, Row, Scrim, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -67,9 +67,9 @@ export function AdvertisementBanner({
       <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
           <Div className={`relative ${__O.hidden} bg-zinc-900`} rounded="2xl" shadow="xl">
-            <Grid className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`}>
+            <Grid className={`${GRID_COLS_2_MD} min-h-[clamp(300px,40vh,420px)]`}>
               {/* Left: image */}
-              <Div className={`relative ${THEME_CONSTANTS.card.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`}>
+              <Div className={`relative ${CARD_ASPECT_BANNER} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`}>
                 <MediaImage
                   src={backgroundImage}
                   alt={title}

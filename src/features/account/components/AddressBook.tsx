@@ -1,7 +1,6 @@
 import type { UserAddress } from "../types";
 import type { JsonValue } from "@mohasinac/appkit";
 import { Button, Div, Span, Stack, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface AddressCardAddress {
   id: string;
@@ -78,7 +77,7 @@ export function AddressCard({
       {address.phone && (
         <Text className="mt-1 text-neutral-500 dark:text-neutral-400" size="sm">{address.phone}</Text>
       )}
-      <Div layout="flex" className={`mt-3 ${THEME_CONSTANTS.spacing.gap.xs}`}>
+      <Div layout="flex" className="mt-3 gap-1">
         {onEdit && (
           <Button
             onClick={() => onEdit(address)}
@@ -128,7 +127,7 @@ export function AddressBook({
       {addresses.length === 0 && (
         <Text className="text-neutral-500 dark:text-neutral-400" size="sm">{emptyLabel}</Text>
       )}
-      <Div className={`grid ${THEME_CONSTANTS.spacing.gap.md} sm:grid-cols-2`}>
+      <Div className="grid gap-4 sm:grid-cols-2">
         {addresses.map((addr) => (
           <AddressCard
             key={addr.id}

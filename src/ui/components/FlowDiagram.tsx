@@ -1,8 +1,16 @@
 import type { ReactNode } from "react";
 import { Text, Span } from "./Typography";
-import { THEME_CONSTANTS } from "../../tokens";
+import {
+  THEMED_BG_PRIMARY,
+  THEMED_BG_SECONDARY,
+  THEMED_BORDER,
+} from "../../_internal/shared/styles/themed";
 
-const { themed, flex } = THEME_CONSTANTS;
+const themed = {
+  bgPrimary: THEMED_BG_PRIMARY,
+  bgSecondary: THEMED_BG_SECONDARY,
+  border: THEMED_BORDER,
+};
 
 export interface FlowStep {
   emoji: string;

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { Div, Heading, HorizontalScroller, Row, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopBrands } from "../hooks/useTopBrands";
@@ -99,8 +99,8 @@ export function BrandsSection({
   cta,
   filters,
 }: BrandsSectionProps) {
-  const { themed } = THEME_CONSTANTS;
-  const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: initialItems });
+const themed = { textPrimary: THEMED_TEXT_PRIMARY };
+const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: initialItems });
   const [activeFilter, setActiveFilter] = useState<string>("all");
 
   // Available filter chips: "All" + "Featured" when featuredOnly filter is configured

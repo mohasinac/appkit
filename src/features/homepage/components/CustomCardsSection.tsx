@@ -1,7 +1,7 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Div, Heading, HorizontalScroller, Section, Stack, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
@@ -128,8 +128,8 @@ function CardItem({ card }: { card: CustomCardsCard }) {
 // --- Section Header ----------------------------------------------------------
 
 function SectionHeader({ title }: { title?: string }) {
-  const { themed } = THEME_CONSTANTS;
-  if (!title) return null;
+const themed = { textPrimary: THEMED_TEXT_PRIMARY };
+if (!title) return null;
   return (
     <Div className="mb-6">
       <Heading level={2} className={themed.textPrimary}>
@@ -145,9 +145,8 @@ export type CustomCardsSectionProps = CustomCardsSectionConfig;
 
 export function CustomCardsSection(config: CustomCardsSectionProps) {
   const { title, layout, columns = 3, cards, autoScroll, scrollIntervalMs } = config;
-  const { themed } = THEME_CONSTANTS;
-
-  if (!cards?.length) return null;
+const themed = { textPrimary: THEMED_TEXT_PRIMARY };
+if (!cards?.length) return null;
 
   // autoScroll: wrap all cards in SectionCarousel (client carousel)
   if (autoScroll) {

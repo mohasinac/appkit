@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { Div, Grid, Heading, Row, Section, Span, Text, TextLink } from "../../../ui";
 // --- Types -------------------------------------------------------------------
 
@@ -75,8 +75,8 @@ export function SecurityHighlightsSection({
   learnMoreLabel = "Learn more →",
   className = "",
 }: SecurityHighlightsSectionProps) {
-  const { themed } = THEME_CONSTANTS;
-  const sectionRef = useRef<HTMLElement>(null);
+const themed = { textPrimary: THEMED_TEXT_PRIMARY };
+const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

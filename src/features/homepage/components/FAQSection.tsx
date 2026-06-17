@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useMemo } from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_BG_PRIMARY, THEMED_BG_TERTIARY, THEMED_BORDER, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY, FLEX_BETWEEN } from "../../../_internal/shared/styles/themed";
 import { Button, Div, Heading, RichText, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
 
@@ -76,9 +76,9 @@ export function FAQSection({
   moreCount = 0,
   className = "",
 }: FAQSectionProps) {
-  const { themed, flex } = THEME_CONSTANTS;
-
-  // Derive tabs from items when not explicitly provided
+const themed = { bgPrimary: THEMED_BG_PRIMARY, bgTertiary: THEMED_BG_TERTIARY, border: THEMED_BORDER, textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
+const flex = { between: FLEX_BETWEEN };
+// Derive tabs from items when not explicitly provided
   const derivedTabs = useMemo<FAQTab[]>(() => {
     if (!showCategoryTabs) return [];
     if (tabsProp && tabsProp.length > 0) return tabsProp;

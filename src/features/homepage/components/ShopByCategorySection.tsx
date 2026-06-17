@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopCategories } from "../hooks/useTopCategories";
@@ -135,8 +135,8 @@ export function ShopByCategorySection({
   cta,
   filters,
 }: ShopByCategorySectionProps) {
-  const { themed } = THEME_CONSTANTS;
-  const { data: allCategories = [], isLoading } = useTopCategories(limit, { initialData: initialItems });
+const themed = { textPrimary: THEMED_TEXT_PRIMARY };
+const { data: allCategories = [], isLoading } = useTopCategories(limit, { initialData: initialItems });
   const [activeFilter, setActiveFilter] = useState<string>("all");
 
   // Build client-side filter chip options from root-level parent IDs

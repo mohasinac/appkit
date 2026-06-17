@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { Button, Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 // --- Constants ---------------------------------------------------------------
 
@@ -88,12 +88,12 @@ function StepCard({
       {/* Text */}
       <Heading
         level={3}
-        className={`relative z-10 ${THEME_CONSTANTS.themed.textPrimary} mb-2`} size="base" weight="semibold"
+        className={`relative z-10 ${THEMED_TEXT_PRIMARY} mb-2`} size="base" weight="semibold"
       >
         {step.title}
       </Heading>
       <Text
-        className={`relative z-10 ${THEME_CONSTANTS.themed.textSecondary} leading-relaxed`} size="sm"
+        className={`relative z-10 ${THEMED_TEXT_SECONDARY} leading-relaxed`} size="sm"
       >
         {step.desc}
       </Text>
@@ -112,8 +112,8 @@ export function HowItWorksSection({
   steps,
   className = "",
 }: HowItWorksSectionProps) {
-  const { themed } = THEME_CONSTANTS;
-  const sectionRef = useRef<HTMLElement>(null);
+const themed = { textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
+const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

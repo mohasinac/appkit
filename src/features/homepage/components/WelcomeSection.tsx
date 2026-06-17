@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_SECONDARY, FLEX_CENTER } from "../../../_internal/shared/styles/themed";
 import { Button, Div, Grid, Heading, Row, Section, SiteLogo, Span, Stack, Text, TextLink } from "../../../ui";
 
 // --- Props -------------------------------------------------------------------
@@ -46,9 +46,9 @@ export function WelcomeSection({
   brandLogoText = "",
   className = "",
 }: WelcomeSectionProps) {
-  const { themed, flex } = THEME_CONSTANTS;
-
-  if (isLoading) {
+const themed = { textSecondary: THEMED_TEXT_SECONDARY };
+const flex = { center: FLEX_CENTER };
+if (isLoading) {
     return (
       <Section
         className={`relative overflow-hidden md:py-24 ${className}`} paddingY="y-4xl" paddingX="x-md"

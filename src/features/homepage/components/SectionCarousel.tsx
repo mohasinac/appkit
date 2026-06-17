@@ -1,5 +1,6 @@
 import React from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_BG_SECONDARY, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
+import { SKELETON as skeleton } from "../../../_internal/shared/styles/skeleton";
 import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text, TextLink, type PerViewConfig } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
@@ -106,8 +107,8 @@ export interface SectionCarouselProps<T = unknown> {
 // --- Skeleton ----------------------------------------------------------------
 
 function CarouselSkeleton({ count }: { count: number }) {
-  const { skeleton } = THEME_CONSTANTS;
-  return (
+const themed = { bgSecondary: THEMED_BG_SECONDARY, textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
+return (
     <Div layout="flex" gap="4" className={`${__O.hidden}`} padding="x-md">
       {Array.from({ length: count }).map((_, i) => (
         <Stack
@@ -152,10 +153,8 @@ export function SectionCarousel<T = unknown>({
 
   const hasBg = Boolean(backgroundImage);
   const useLightText = lightText ?? hasBg;
-
-  const { themed, flex } = THEME_CONSTANTS;
-
-  const headingGradient: "none" | "brand" =
+const themed = { bgSecondary: THEMED_BG_SECONDARY, textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
+const headingGradient: "none" | "brand" =
     !useLightText && headingVariant === "gradient" ? "brand" : "none";
   const headingClass = useLightText
     ? "text-white"

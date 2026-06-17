@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_BG_SECONDARY, THEMED_BORDER } from "../../../_internal/shared/styles/themed";
+import { SPACING_STACK } from "../../../_internal/shared/styles/grid";
 import { Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 
 // --- Types -------------------------------------------------------------------
@@ -56,9 +57,9 @@ export function HowItWorksInfoView({
   accentClass = "bg-info-surface dark:bg-info-surface text-info dark:text-info",
   className = "",
 }: HowItWorksInfoViewProps) {
-  const { themed, flex, spacing } = THEME_CONSTANTS;
-
-  return (
+const themed = { bgSecondary: THEMED_BG_SECONDARY, border: THEMED_BORDER };
+const spacing = { stack: SPACING_STACK };
+return (
     <Div
       className={`-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10 ${className}`}
     >

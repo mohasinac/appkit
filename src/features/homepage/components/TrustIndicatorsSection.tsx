@@ -1,5 +1,5 @@
 import React from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
 const __P = {
@@ -26,9 +26,8 @@ export function TrustIndicatorsSection({
   items,
   className = "",
 }: TrustIndicatorsSectionProps) {
-  const { themed } = THEME_CONSTANTS;
-
-  return (
+const themed = { textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
+return (
     <Section className={`${__P.p6} ${className}`} surface="subtle">
       <Div className="w-full">
         <Grid
