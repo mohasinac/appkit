@@ -5,7 +5,7 @@
  * W1-29 — pairs with the new GET /api/admin/grouped-listings endpoint.
  */
 
-import { sortBy, type JsonArray } from "@mohasinac/appkit";
+import { sortBy, type JsonArray, type JsonValue } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
@@ -149,8 +149,8 @@ export function AdminGroupedListingsView({
               setReassign({
                 groupId: row.id,
                 groupTitle: row.primary,
-                currentProductIds: Array.isArray((row as { _raw?: { productIds?: unknown } })._raw?.productIds)
-                  ? ((row as { _raw?: { productIds?: unknown[] } })._raw?.productIds ?? []).map(String)
+                currentProductIds: Array.isArray((row as { _raw?: { productIds?: JsonValue } })._raw?.productIds)
+                  ? ((row as { _raw?: { productIds?: JsonArray } })._raw?.productIds ?? []).map(String)
                   : [],
               })
             }

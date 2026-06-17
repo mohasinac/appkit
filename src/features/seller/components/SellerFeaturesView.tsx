@@ -23,6 +23,7 @@ import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { AdminFeatureEditorView } from "../../admin/components/AdminFeatureEditorView";
 import { MAX_STORE_CUSTOM_FEATURES } from "../../products/schemas/product-features";
 import type { ProductFeatureDocument } from "../../products/schemas/product-features";
+import type { JsonValue } from "@mohasinac/appkit";
 
 const TOAST = {
   ENABLED: "Feature enabled.",
@@ -47,7 +48,7 @@ interface SellerFeaturesResponse {
 
 // audit-unknown-ok: callback entry point — accepts arbitrary payload value
 function unwrap(res: unknown): SellerFeaturesResponse {
-  return ((res as { data?: unknown })?.data ?? res) as SellerFeaturesResponse;
+  return ((res as { data?: JsonValue })?.data ?? res) as SellerFeaturesResponse;
 }
 
 export function SellerFeaturesView() {

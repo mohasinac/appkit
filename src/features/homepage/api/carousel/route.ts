@@ -16,6 +16,7 @@ import type { CarouselSlide } from "../../types/index";
 
 /** Read `__session` cookie from request headers (HTTP cookie string). */
 import { normalizeError } from "../../../../errors/normalize";
+import type { JsonArray } from "@mohasinac/appkit";
 function getSessionCookie(request: Request): string | null {
   const cookieHeader = request.headers.get("cookie") ?? "";
   const match = cookieHeader.match(/(?:^|;\s*)__session=([^;]+)/);
@@ -180,7 +181,7 @@ export const carouselPOST = createRouteHandler({
       ...(body as object),
       order: (body as { order?: number }).order ?? maxOrder + 1,
       active: incoming.active ?? false,
-      cards: (body as { cards?: unknown[] }).cards ?? [],
+      cards: (body as { cards?: JsonArray }).cards ?? [],
       createdAt: now,
       updatedAt: now,
     // audit-unknown-ok: TS structural escape — CarouselSlide

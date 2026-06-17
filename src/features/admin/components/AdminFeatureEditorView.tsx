@@ -138,7 +138,7 @@ export function AdminFeatureEditorView({
     queryKey: ["admin", "feature", featureId],
     queryFn: async () => {
       const res = await apiClient.get(byIdEndpoint(featureId!));
-      return (res as { data?: unknown })?.data ?? res;
+      return (res as { data?: JsonValue })?.data ?? res;
     },
     enabled: isEdit,
   });
@@ -149,7 +149,7 @@ export function AdminFeatureEditorView({
       const res = await apiClient.get(
         `${ADMIN_ENDPOINTS.STORES}?pageSize=200&sorts=storeName`,
       );
-      const body = (res as { data?: unknown })?.data ?? res;
+      const body = (res as { data?: JsonValue })?.data ?? res;
       return (body as { items?: StoreOption[] })?.items ?? [];
     },
     enabled: scope === "store" && !fixedStoreId,

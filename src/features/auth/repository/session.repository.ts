@@ -17,6 +17,7 @@ import {
   type SessionDocument,
   type SessionUpdateInput,
 } from "../schemas";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export class SessionRepository extends BaseRepository<SessionDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
@@ -104,7 +105,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
       // still holds the cookie. Firestore Admin throws `5 NOT_FOUND` in that
       // case — swallow it so the activity ping is best-effort, not a 500.
       // Any other error is rethrown so genuine failures still surface.
-      const code = (err as { code?: unknown })?.code;
+      const code = (err as { code?: JsonValue })?.code;
       const msg = (err as { message?: string })?.message ?? "";
       const isNotFound =
         code === 5 ||

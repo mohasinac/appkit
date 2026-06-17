@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { JsonValue, JsonArray } from "@mohasinac/appkit";
 
 /**
  * Custom Zod v4 error map that replaces machine-y messages with human-friendly strings.
@@ -14,7 +15,7 @@ export function zodErrorMap(
   const code = issue.code as string;
 
   if (code === "invalid_type") {
-    const inp = (issue as { input?: unknown }).input;
+    const inp = (issue as { input?: JsonValue }).input;
     if (inp === undefined || inp === null) {
       return { message: "This field is required" };
     }
@@ -66,7 +67,7 @@ export function zodErrorMap(
   }
 
   if (code === "invalid_value") {
-    const opts = (issue as { values?: unknown[] }).values;
+    const opts = (issue as { values?: JsonArray }).values;
     if (opts?.length) {
       return { message: `Invalid value. Expected one of: ${opts.join(", ")}` };
     }

@@ -3,7 +3,7 @@ import type {
   DocumentData,
   Query,
 } from "firebase-admin/firestore";
-import type { FirestoreDocument, FirestoreValue } from "../../schemas/types";
+import type { FirestoreDocument, FirestoreValue, JsonValue } from "../../schemas/types";
 
 /**
  * Firestore serialisation helpers.
@@ -85,7 +85,7 @@ export function deserializeTimestamps<T>(obj: T): T {
   if (
     typeof obj === "object" &&
     !(obj instanceof Date) &&
-    typeof (obj as { toDate?: unknown }).toDate === "function"
+    typeof (obj as { toDate?: JsonValue }).toDate === "function"
   ) {
     // audit-unknown-ok: TS structural escape — generic param
     return (obj as unknown as { toDate(): Date }).toDate() as unknown as T;

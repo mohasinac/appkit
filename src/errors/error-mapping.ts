@@ -5,6 +5,7 @@ import { AuthenticationError } from "./authentication-error";
 import { AuthorizationError } from "./authorization-error";
 import { NotFoundError } from "./not-found-error";
 import { DatabaseError } from "./database-error";
+import type { JsonValue } from "@mohasinac/appkit";
 
 /**
  * Codes emitted by the wire that are not present in the AppError-class enums.
@@ -56,7 +57,7 @@ function isZodLikeError(err: unknown): err is ZodLikeError {
     typeof err === "object" &&
     err !== null &&
     "issues" in err &&
-    Array.isArray((err as { issues: unknown }).issues)
+    Array.isArray((err as { issues: JsonValue }).issues)
   );
 }
 
@@ -68,7 +69,7 @@ interface FirestoreLikeError {
 // audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isFirestoreLikeError(err: unknown): err is FirestoreLikeError {
   if (typeof err !== "object" || err === null) return false;
-  const codeVal = (err as { code?: unknown }).code;
+  const codeVal = (err as { code?: JsonValue }).code;
   return typeof codeVal === "number" || typeof codeVal === "string";
 }
 
@@ -208,7 +209,7 @@ export function mapToHttpError(
 
   // Object with explicit { status, message } shape (legacy throw-with-status)
   if (typeof err === "object" && err !== null) {
-    const e = err as { status?: unknown; statusCode?: unknown; message?: unknown };
+    const e = err as { status?: JsonValue; statusCode?: unknown; message?: unknown };
     const status =
       typeof e.statusCode === "number"
         ? e.statusCode
