@@ -15,6 +15,7 @@ import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";
 import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
+import { extractVideoPosterFrame, posterBlobAsFile } from "./video-poster";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -95,6 +96,19 @@ export interface MediaUploadFieldProps {
   multiple?: boolean;
   /** Called with each successfully uploaded URL when `multiple` is true. */
   onAddUrl?: (url: string) => void;
+  /**
+   * Phase-D (2026-06-17). When `true` (the default), every uploaded video
+   * has its first frame extracted client-side via `extractVideoPosterFrame()`,
+   * uploaded via the same `onUpload` callback, and surfaced as a poster
+   * (`thumbnailUrl` on the `MediaField` callback, + `onThumbnailChange`).
+   *
+   * Set `false` to opt out — e.g. when the consumer prefers to source a
+   * poster from another origin or skip posters entirely.
+   *
+   * No-op when the source is not a video. No-op when extraction fails
+   * (browser codec gap, IO error). Never blocks the video upload.
+   */
+  autoCapturePoster?: boolean;
 }
 
 function isVideo(url: string): boolean {
@@ -320,6 +334,7 @@ export function MediaUploadField({
   isPersisted = false,
   multiple = false,
   onAddUrl,
+  autoCapturePoster = true,
 }: MediaUploadFieldProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -439,11 +454,17 @@ export function MediaUploadField({
         ? "image/*,video/*"
         : "image/*";
 
-  const afterUpload = (url: string, fileType: string) => {
+  const afterUpload = (
+    url: string,
+    fileType: string,
+    autoPosterUrl?: string,
+  ) => {
     onChangeField?.({
       url,
       type: inferMediaTypeFromMime(fileType, url),
+      ...(autoPosterUrl ? { thumbnailUrl: autoPosterUrl } : {}),
     });
+    if (autoPosterUrl) onThumbnailChange?.(autoPosterUrl);
 
     const isVideoFile = fileType.startsWith("video/");
     if (isVideoFile && enableTrim) {
@@ -504,6 +525,33 @@ export function MediaUploadField({
     return { url, type: file.type };
   };
 
+  /**
+   * Client-side first-frame extraction for video uploads. Runs after the
+   * video has uploaded so we never block the canonical path. Errors are
+   * swallowed by `extractVideoPosterFrame` (returns null) so a codec gap or
+   * canvas taint silently degrades to "no poster" rather than failing the
+   * whole upload.
+   */
+  const maybeCaptureVideoPoster = async (
+    file: File,
+  ): Promise<string | null> => {
+    if (!autoCapturePoster) return null;
+    if (!file.type.startsWith("video/")) return null;
+    try {
+      const poster = await extractVideoPosterFrame(file);
+      if (!poster) return null;
+      const posterFile = posterBlobAsFile(poster, file.name);
+      const posterUrl = await onUpload(posterFile);
+      stageUrl(posterUrl);
+      return posterUrl;
+    } catch (err) {
+      // The upload-poster step is best-effort. Log via normalizeError so any
+      // observability hook still fires, then swallow.
+      void normalizeError(err);
+      return null;
+    }
+  };
+
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -518,7 +566,10 @@ export function MediaUploadField({
         }
       } else {
         const result = await uploadSingleFile(files[0]);
-        if (result) afterUpload(result.url, result.type);
+        if (result) {
+          const posterUrl = (await maybeCaptureVideoPoster(files[0])) ?? undefined;
+          afterUpload(result.url, result.type, posterUrl);
+        }
       }
     } catch (err) {
       void normalizeError(err);
@@ -559,7 +610,8 @@ export function MediaUploadField({
     try {
       const url = await onUpload(file);
       stageUrl(url);
-      afterUpload(url, blob.type);
+      const posterUrl = (await maybeCaptureVideoPoster(file)) ?? undefined;
+      afterUpload(url, blob.type || mimeType, posterUrl);
     } catch (err) {
       void normalizeError(err);
       setError(err instanceof Error ? err.message : "Upload failed");
