@@ -150,10 +150,10 @@ export function AsyncFacetSection({
       {collapsed && hasValue && (
         <Row wrap gap="xs" className="mt-2">
           {selectedLabels.map((label) => (
-            <Span layout="inline-flex" 
+            <Span layout="inline-flex"
               key={label}
               size="xs"
-              className="border border-zinc-200 dark:border-slate-600" rounded="full" padding="pill-xs" surface="subtle" color="muted"
+              border="default" rounded="full" padding="pill-xs" surface="subtle" color="muted"
             >
               {label}
             </Span>
@@ -190,6 +190,7 @@ export function AsyncFacetSection({
                   aria-label={opt.label}
                   className="flex-shrink-0 w-4 h-4 rounded border-zinc-300 dark:border-slate-600 cursor-pointer text-primary-600 dark:text-secondary-500"
                 />
+                {/* audit-variant-ok: facet option label — group-hover state override; Span lacks group-hover variant */}
                 <Span size="sm" className="flex-1 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate" color="muted">
                   {opt.label}
                 </Span>
@@ -203,23 +204,26 @@ export function AsyncFacetSection({
           })}
 
           {options.length === 0 && !loading && (
-            <Text className="py-1" color="faint" size="xs">
+            <Text paddingY="2xs" color="faint" size="xs">
               No results
             </Text>
           )}
 
           {loading && (
-            <Text className="py-1 animate-pulse" color="faint" size="xs">
+            <Text paddingY="2xs" className="animate-pulse" color="faint" size="xs">
               Loading…{/* audit-spinner-defaults-ok — inline facet-loader; structural skeleton would mis-fit a single-line dropdown row */}
             </Text>
           )}
 
           {hasMore && !loading && (
+            // audit-variant-ok: facet load-more button — text-left + group-hover state override; Button lacks text-left / hover-shade variants
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="w-full text-xs text-left text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 py-1"
+              textSize="xs"
+              textColor="faint"
+              className="w-full text-left hover:text-zinc-600 dark:hover:text-zinc-300 py-1"
               onClick={() => void load(query, page + 1)}
             >
               Load more…

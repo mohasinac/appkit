@@ -168,9 +168,10 @@ export function Heading({
 
 // --- Text ---------------------------------------------------------------------
 
-type TextPaddingY = "none" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+type TextPaddingY = "none" | "2xs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
 const TEXT_PADDING_Y_MAP: Record<TextPaddingY, string> = {
   none: "",
+  "2xs": "py-1",
   xs: "py-2",
   sm: "py-3",
   md: "py-4",
