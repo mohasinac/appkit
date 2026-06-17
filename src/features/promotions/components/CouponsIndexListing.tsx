@@ -228,12 +228,12 @@ export function CouponsIndexListing({
         {isLoading ? (
           <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Stack border="subtle" 
+              <Stack border="skeleton"
                 key={i}
                 gap="sm"
                 rounded="xl"
                 padding="md"
-                className="border-2 dark:border-slate-700 animate-pulse"
+                className="animate-pulse"
               >
                 <Div className="h-6 w-2/3" surface="subtle" rounded="default" />
                 <Div className="h-4 w-full" surface="subtle" rounded="default" />

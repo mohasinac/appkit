@@ -53,9 +53,9 @@ export function CustomFieldsEditor({
   return (
     <Stack gap="xs">
       {fields.map((field, i) => (
-        <Div layout="grid" gap="2" 
+        <Div layout="grid" gap="2" align="start"
           key={i}
-          className="grid-cols-[1fr_140px_1fr_auto] items-start"
+          className="grid-cols-[1fr_140px_1fr_auto]"
         >
           {/* Key */}
           <Input

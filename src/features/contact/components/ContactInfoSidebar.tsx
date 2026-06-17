@@ -60,7 +60,7 @@ export function ContactInfoSidebar({
       </Div>
 
       {(labels.businessHoursLabel || labels.responseTimeLabel) && (
-        <Stack gap="sm" className={`border border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800/60 ${__P.p4}`} rounded="xl">
+        <Stack gap="sm" border="default" surface="muted" className={__P.p4} rounded="xl">
           {labels.businessHoursLabel && labels.businessHoursValue && (
             <Div>
               <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">

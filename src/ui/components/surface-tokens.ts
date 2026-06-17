@@ -126,6 +126,8 @@ export const BORDER_MAP = {
   "bottom-subtle": "border-b border-zinc-100 dark:border-slate-800/60",
   top: "border-t border-zinc-200 dark:border-slate-700",
   "top-subtle": "border-t border-zinc-100 dark:border-slate-800/60",
+  /** 2px border for skeleton placeholder cards. */
+  "skeleton": "border-2 border-zinc-100 dark:border-slate-700",
 } as const;
 
 export type BorderKey = keyof typeof BORDER_MAP;

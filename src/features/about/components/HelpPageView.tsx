@@ -113,7 +113,7 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: { row: string }, topics: Top
             <Row align="center" justify="center" className={`w-10 h-10 mb-3`} surface="default" rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
             </Row>
-            <Div className={`${flex.row} justify-between items-start`}>
+            <Div layout="flex" justify="between" align="start" className={flex.row}>
               <Div>
                 <Text className="mb-1" weight="semibold">{title}</Text>
                 <Text variant="secondary" className="leading-relaxed" size="sm">{desc}</Text>

@@ -144,9 +144,9 @@ export function AdminCouponsView({
       isLoading ? (
         <Div gap="3" className="fluid-grid-card">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Stack border="subtle" 
+            <Stack border="skeleton"
               key={i}
-              className="border-2 dark:border-slate-700 animate-pulse" gap="3" rounded="xl" padding="md"
+              className="animate-pulse" gap="3" rounded="xl" padding="md"
             >
               <Div className="h-6 w-2/3" surface="subtle" rounded="default" />
               <Div className="h-4 w-full" surface="subtle" rounded="default" />

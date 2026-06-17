@@ -121,8 +121,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
     <Stack gap="xl" padding="b-2xl">
       {/* Welcome banner */}
       <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
-        <Div
-          className="px-6 md:px-10" padding="y-xl"
+        <Div paddingX="x-md-xl" paddingY="y-xl"
           style={{
             background:
               "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 60%,var(--appkit-color-secondary-400) 100%)",
