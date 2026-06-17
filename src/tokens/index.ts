@@ -820,110 +820,12 @@ const RATING = {
   empty: "text-zinc-300 dark:text-zinc-600",
 } as const;
 
-/**
- * THEME_CONSTANTS
- *
- * The complete, responsive-first design system constant map.
- * Import in your project's `constants/theme.ts` and extend with
- * brand-specific values (accentBanner gradients, badge role variants, etc.).
- *
- * @example
- * ```ts
- * // In your project constants/theme.ts:
- * import { THEME_CONSTANTS } from "./";
- *
- * export { THEME_CONSTANTS };        // re-export as-is
- *
- * // or merge with project-specific extensions:
- * export const THEME_CONSTANTS = {
- *   ...baseTheme,
- *   accentBanner: { ... },           // project-specific
- * };
- * ```
- */
-export const THEME_CONSTANTS = {
-  themed: THEMED,
-  layout: LAYOUT,
-  typography: TYPOGRAPHY,
-  spacing: SPACING,
-  grid: GRID,
-  page: PAGE,
-  input: INPUT,
-  card: CARD,
-  flex: FLEX,
-  position: POSITION,
-  states: STATES,
-  transitions: TRANSITIONS,
-  skeleton: SKELETON,
-  motion: MOTION,
-  text: TEXT,
-  touch: TOUCH,
-  fluidGrid: FLUID_GRID,
-  /** Form layout tokens — pair with FormGrid / FormField components */
-  form: {
-    grid: "flex flex-wrap gap-4",
-    field: "flex-1 min-w-[280px] flex flex-col gap-1.5",
-    fieldWide: "w-full flex flex-col gap-1.5",
-    fieldHalf: "w-1/2 min-w-[280px] flex flex-col gap-1.5",
-    label: "text-sm font-medium text-zinc-700 dark:text-zinc-300",
-    hint: "text-xs text-zinc-500 dark:text-zinc-400",
-    error: "text-xs text-red-600 dark:text-red-400",
-    section: "space-y-6",
-    sectionHead:
-      "text-base font-semibold text-zinc-900 dark:text-zinc-100 border-b pb-2 mb-2 border-zinc-200 dark:border-zinc-700",
-  } as const,
-  /** Tooltip bubble styles — used by the <Tooltip> component. */
-  tooltip: {
-    content:
-      "z-50 px-2 py-1 text-xs font-medium rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm",
-    arrow: "fill-zinc-900 dark:fill-zinc-100",
-  } as const,
-  utilities: UTILITIES,
-  patterns: PATTERNS,
-  icon: ICON,
-  tab: TAB,
-  rating: RATING,
-  /** Breakpoints for reference (matches Tailwind defaults). */
-  breakpoints: {
-    sm: "640px",
-    md: "768px",
-    lg: "1024px",
-    xl: "1280px",
-    "2xl": "1536px",
-    "3xl": "1920px",
-  },
-  /** Global body/html base classes. */
-  base: {
-    body: 'bg-white dark:bg-slate-950 text-zinc-900 dark:text-zinc-100 antialiased font-[Inter,ui-sans-serif,system-ui,-apple-system,"Segoe_UI",Roboto,"Helvetica_Neue",Arial,sans-serif]',
-    html: "scroll-smooth",
-  },
-  /** Hero / homepage section layout tokens. */
-  homepage: {
-    heroMinH: "min-h-[clamp(420px,72vh,680px)]" as const,
-    heroMinHMobile: "min-h-[clamp(120px,14vh,200px)]" as const,
-  },
-  /** Carousel navigation tokens — shared by HeroCarousel and SectionCarousel. */
-  carousel: {
-    /** Standard responsive per-view configs for carousels */
-    perView: {
-      /** Default: 1 on mobile, 2 on sm, 3 on md+ */
-      default: { base: 1, sm: 2, md: 3 } as const,
-      /** Standard: 1 on mobile, 3 on md, 4 on lg+ — the canonical homepage carousel preset */
-      standard: { base: 1, md: 3, lg: 4 } as const,
-      /** Cards: 1 on mobile, 2 on sm, 3 on md, 4 on lg+ */
-      cards: { base: 1, sm: 2, md: 3, lg: 4 } as const,
-      /** Compact cards: 1 on mobile, 2 on sm, 4 on md, 5 on xl+ */
-      compact: { base: 1, sm: 2, md: 4, xl: 5 } as const,
-      /** Reviews: 1 on mobile, 2 on sm, 3 on md/lg, 4 on 2xl+ */
-      reviews: { base: 1, sm: 2, md: 3, lg: 3, "2xl": 4 } as const,
-      /** Events: 1 on mobile, 2 on sm, 3 on md/lg */
-      events: { base: 1, sm: 2, md: 3, lg: 3 } as const,
-    } as const,
-    arrow:
-      "w-10 h-10 rounded-2xl bg-white/85 dark:bg-slate-800/90 backdrop-blur-sm shadow-lg border border-zinc-300/70 dark:border-slate-600 text-zinc-800 dark:text-zinc-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-xl hover:border-zinc-400 dark:hover:border-slate-500 active:scale-95 transition-all duration-200 flex items-center justify-center" as const,
-    dotActive:
-      "w-8 h-2 !min-h-0 rounded-full bg-white shadow-sm transition-all duration-500" as const,
-    dotInactive:
-      "w-2 h-2 !min-h-0 rounded-full bg-white/55 shadow-sm transition-all duration-500" as const,
-  },
-} as const;
+// THEME_CONSTANTS deleted 2026-06-17 in Phase 8 of the Three-Layer Style
+// System refactor. Use primitive variant props (<Card>, <Section>, <Stack>,
+// <Text>, <Heading>, <Badge>, …) for every styling intent. The handful of
+// legacy raw-className tokens still needed live in typed feature files
+// under `_internal/shared/styles/{page,themed,grid,skeleton}.ts`. The
+// individual token groups (THEMED, LAYOUT, TYPOGRAPHY, SPACING, GRID, PAGE,
+// INPUT, CARD, FLEX, POSITION, STATES, TRANSITIONS, SKELETON, MOTION, TEXT,
+// TOUCH, FLUID_GRID, UTILITIES, PATTERNS, ICON, TAB, RATING) remain exported
+// individually above for any caller that still needs a slice of the old map.

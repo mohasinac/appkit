@@ -19,9 +19,6 @@ export { RADIUS } from "./tokens/index";
 // SHADOWS - Constant used across modules.
 export { SHADOWS } from "./tokens/index";
 // [CONFIG]-Application configuration constant â€" route path, API endpoint, design token, or feature flag.
-// THEME_CONSTANTS - Constant used across modules.
-export { THEME_CONSTANTS } from "./tokens/index";
-// [CONFIG]-Application configuration constant â€" route path, API endpoint, design token, or feature flag.
 // TOKENS - Constant used across modules.
 export { TOKENS } from "./tokens/index";
 // [CONFIG]-Application configuration constant â€" route path, API endpoint, design token, or feature flag.
