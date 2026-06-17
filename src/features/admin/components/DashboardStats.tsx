@@ -41,7 +41,7 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         aria-hidden="true"
       />
 
-      <Row paddingX="x-5" className="pb-5" padding="t-lg" align="start" justify="between" gap="3">
+      <Row paddingX="x-5" paddingY="b-md-lg" padding="t-lg" align="start" justify="between" gap="3">
         {/* Text block */}
         <Div className={`min-w-0 flex-1 ${__O.hidden}`}>
           <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)] truncate" weight="semibold" transform="uppercase">
