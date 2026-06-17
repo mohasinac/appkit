@@ -179,8 +179,8 @@ function AuctionWalkthrough() {
           <Table className="min-w-[320px]" size="sm">
             <Thead>
               <Tr className="border-b border-[var(--appkit-color-border)]">
-                <Th weight="semibold" className="pr-4 text-left text-[var(--appkit-color-text)]" padding="xs-tall">Current high bid</Th>
-                <Th weight="semibold" className="text-left text-[var(--appkit-color-text)]" padding="xs-tall">Minimum increment</Th>
+                <Th weight="semibold" align="left" paddingSide="pr-md" className="text-[var(--appkit-color-text)]" padding="xs-tall">Current high bid</Th>
+                <Th weight="semibold" align="left" className="text-[var(--appkit-color-text)]" padding="xs-tall">Minimum increment</Th>
               </Tr>
             </Thead>
             <Tbody className="divide-y divide-[var(--appkit-color-border)]">

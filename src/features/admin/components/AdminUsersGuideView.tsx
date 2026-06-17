@@ -26,7 +26,7 @@ export function AdminUsersGuideView() {
                 <Thead>
                   <Tr className="border-b border-[var(--appkit-color-border)]">
                     {["Role", "What they can do", "How assigned"].map((h) => (
-                      <Th key={h} className="text-left pr-4 text-[var(--appkit-color-text)]" padding="xs-tall" weight="semibold">{h}</Th>
+                      <Th key={h} align="left" paddingSide="pr-md" className="text-[var(--appkit-color-text)]" padding="xs-tall" weight="semibold">{h}</Th>
                     ))}
                   </Tr>
                 </Thead>

@@ -29,7 +29,7 @@ export function AdminTrustGuideView() {
                   <Thead>
                     <Tr className="border-b border-[var(--appkit-color-border)]">
                       {["", "Soft Ban", "Hard Ban"].map((h) => (
-                        <Th key={h} className="text-left pr-4 text-[var(--appkit-color-text)]" padding="xs-tall" weight="semibold">{h}</Th>
+                        <Th key={h} align="left" paddingSide="pr-md" className="text-[var(--appkit-color-text)]" padding="xs-tall" weight="semibold">{h}</Th>
                       ))}
                     </Tr>
                   </Thead>
