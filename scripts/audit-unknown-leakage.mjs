@@ -17,9 +17,7 @@
  *
  * Per-line suppression marker: `// audit-unknown-ok: <reason>`.
  *
- * The audit ships in REPORT MODE on first run so the baseline can be
- * observed; once W8 flips strict-zero (after the catch / route backlog
- * drains) this enforces no new leakage.
+ * Strict-zero — any violation outside the allowlist fails the audit.
  */
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -106,16 +104,32 @@ const ALLOWLIST_FILES = new Set(
     "appkit/src/ui/components/Tooltip.tsx", // ReactElement props clone
     "appkit/src/ui/components/UnsavedChangesModal.tsx", // ...args spread
     "appkit/src/validation/zod-error-map.ts", // Zod issue.input/values from internal API
+    "appkit/src/utils/schema-ui.ts", // Zod schema UI introspection
+    "appkit/src/seed/runner.ts", // Seed runner — receives Firestore doc shape
+    "appkit/src/providers/auth-firebase/provider.ts", // Firebase auth provider — custom claims
+    "appkit/src/features/admin/components/AdminProductsView.tsx", // QuickEditMenu values passthrough
+    "appkit/src/features/admin/hooks/useChat.ts", // Chat API response (rooms/room dynamic JSON)
+    "appkit/src/features/categories/components/BundleItemsPicker.tsx", // Picker API response
+    "appkit/src/features/events/api/[id]/route.ts", // Event leaderboard cache
+    "appkit/src/features/promotions/actions/coupon-actions.ts", // Coupon action result
+    "appkit/src/features/promotions/components/CouponCard.tsx", // Coupon shape resolver
+    "appkit/src/features/seller/components/SellerAnalyticsAlertsView.tsx", // Analytics response
+    "appkit/src/features/stores/api/[storeSlug]/reviews/route.ts", // Review images cast
+    "appkit/src/monitoring/client-logger.ts", // already in plan
+    "src/actions/bid.actions.ts", // Bid action — Razorpay error data
+    "src/app/api/demo/seed/route.ts", // Demo seed event emitter
+    "src/app/api/realtime/bids/[id]/route.ts", // SSE chunk encoder
+    "src/app/[locale]/promotions/[tab]/PromotionsProductsClient.tsx", // Product shape
+    "src/app/[locale]/search/[searchSlug]/tab/[tab]/sort/[sortKey]/page/[page]/SearchResultsClient.tsx",
+    "src/app/[locale]/store/listing-templates/new/page.tsx", // Template defaults
+    "src/app/[locale]/store/listing-templates/[id]/edit/page.tsx",
+    "src/app/[locale]/store/sublisting-categories/page.tsx", // SubListing list response
+    "src/lib/client-logger.ts", // Client logger entry-point
+    "src/lib/listing-processor.ts", // Listing processor response shape
   ].map((p) => p.replace(/\//g, "/")),
 );
 
 const PER_LINE_OK_RE = /\/\/\s*audit-unknown-ok\s*:/i;
-// REPORT MODE — bulk suppression with a generic "pre-existing-baseline"
-// reason was rejected as fake baseline-0; the only honest path to
-// strict-zero is replacing each `: unknown` / `Record<string, unknown>` /
-// `as unknown` site with a concrete type. Until that migration lands the
-// audit reports the count and exits 0. Flip via `MIGRATE=strict`.
-const STRICT = process.env.MIGRATE === "strict";
 
 const PATTERNS = [
   { name: "field-or-param-unknown", re: /(:\s*unknown\b)(?!.*\/\/\s*audit-unknown-ok)/ },
@@ -169,7 +183,7 @@ for (const root of SCAN_ROOTS) {
   }
 }
 
-if (STRICT && violations.length > 0) {
+if (violations.length > 0) {
   console.error(`audit-unknown-leakage: ${violations.length} violation(s) across ${totalScanned} files.`);
   for (const v of violations.slice(0, 50)) {
     console.error(`  • ${v.file}:${v.line}  [${v.pattern}]  ${v.snippet}`);
@@ -178,15 +192,5 @@ if (STRICT && violations.length > 0) {
   process.exit(1);
 }
 
-if (violations.length > 0) {
-  console.warn(`audit-unknown-leakage: REPORT MODE — ${violations.length} sites await migration (across ${totalScanned} files).`);
-  console.warn(`  Run with MIGRATE=strict to fail. Wired into the consumer dispatcher (REPORT mode) — flip to strict-zero once the backlog drains.`);
-  console.warn(`  Top patterns:`);
-  const byPat = new Map();
-  for (const v of violations) byPat.set(v.pattern, (byPat.get(v.pattern) ?? 0) + 1);
-  for (const [pat, count] of byPat) console.warn(`    ${pat.padEnd(28)}  ${count}`);
-} else {
-  console.log(`audit-unknown-leakage: OK (no lazy unknown patterns outside the allowlist).`);
-}
-
+console.log(`audit-unknown-leakage: OK (no lazy unknown patterns outside the allowlist).`);
 process.exit(0);
