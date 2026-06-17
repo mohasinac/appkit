@@ -497,6 +497,7 @@ export async function ProductDetailPageView({
                     {avgRating.toFixed(1)}
                     {reviewCount ? ` (${reviewCount} reviews)` : ""}
                   </Span>
+                  {/* audit-variant-ok: stock badge — conditional bg-success-surface vs bg-error-surface; Span lacks status-tinted variant */}
                   <Span
                     size="xs"
                     weight="medium"

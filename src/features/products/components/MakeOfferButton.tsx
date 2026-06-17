@@ -140,7 +140,8 @@ export function MakeOfferButton({
       <Button
         variant="ghost"
         size="md"
-        className={`w-full border border-zinc-300 dark:border-zinc-600 ${className}`}
+        border="strong"
+        className={`w-full ${className}`}
         onClick={handleOpenConfirm}
       >
         Make Offer

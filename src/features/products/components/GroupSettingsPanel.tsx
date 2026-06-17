@@ -510,6 +510,7 @@ function AddChildContent({
               onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
               options={CONDITION_OPTIONS}
             />
+            {/* audit-variant-ok: form hint Text — dark:text-zinc-400/80 translucent dark shade over color="faint" */}
             <Text className="dark:text-zinc-400/80" color="faint" size="xs">
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.

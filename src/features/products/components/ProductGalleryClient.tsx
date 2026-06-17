@@ -43,6 +43,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
   if (images.length === 0) {
     return (
       <Div className={`${__O.hidden}`} border="subtle" rounded="xl" surface="muted">
+        {/* audit-variant-ok: gallery placeholder Row — aspect-square + text-zinc-300 fainter-than-faint shade for placeholder svg */}
         <Row className="aspect-square text-zinc-300 dark:text-zinc-700" align="center" justify="center">
           <PlaceholderSvg />
         </Row>

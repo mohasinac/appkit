@@ -70,7 +70,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
   return (
     <Main>
       {/* Page header */}
-      <Section border="subtle" className="pb-4 border-b" padding="t-xl">
+      <Section border="bottom-subtle" paddingY="b-md" padding="t-xl">
         <Container size="xl">
           <Heading level={1} size="3xl" weight="bold" color="primary">
             Products

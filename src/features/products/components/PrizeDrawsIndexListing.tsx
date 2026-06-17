@@ -158,6 +158,7 @@ export function PrizeDrawsIndexListing({
  showClosed ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
  }`}
             >
+              {/* audit-variant-ok: toggle thumb Span — fixed w-3.5/h-3.5 + dynamic translate-x for on/off + shadow-sm */}
               <Span
                 className={`inline-block h-3.5 w-3.5 transform shadow-sm transition-transform duration-200 ${ showClosed ? "translate-x-[19px]" : "translate-x-[3px]" }`} rounded="full" surface="default"
               />

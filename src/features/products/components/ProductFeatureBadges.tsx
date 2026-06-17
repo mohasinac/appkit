@@ -177,7 +177,8 @@ export function ProductFeatureBadges({
   return (
     <Row wrap gap="sm">
       {badges.map((badge) => (
-        <Span layout="inline-flex" gap="xs" 
+        // audit-variant-ok: feature badge Span — dynamic badge.bgClass + colorClass + py-1.5 between pad map keys
+        <Span layout="inline-flex" gap="xs"
           key={badge.key}
           className={`.5 border py-1.5 ${badge.bgClass} ${badge.colorClass}`} rounded="lg" padding="x-sm" size="xs" weight="medium"
         >

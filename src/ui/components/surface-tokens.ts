@@ -185,7 +185,7 @@ export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
 type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page";
-type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "b-md-lg" | "b-lg";
+type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "t-md" | "b-md" | "b-md-lg" | "b-lg";
 
 const X_ONLY_MAP: Record<XPaddingKey, string> = {
   none: "",
@@ -234,6 +234,8 @@ const Y_ONLY_MAP: Record<YPaddingKey, string> = {
   "b-xs": "pb-2",
   "t-sm": "pt-3",
   "b-sm": "pb-3",
+  "t-md": "pt-4",
+  "b-md": "pb-4",
   "b-md-lg": "pb-5",
   "b-lg": "pb-6",
 };
