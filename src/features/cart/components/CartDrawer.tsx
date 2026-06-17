@@ -27,7 +27,7 @@ interface CartItemRowProps {
 export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
     <Div layout="flex" gap="4" surface="card" padding="sm" className={`transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
-      <Div className={`h-20 w-20 flex-shrink-0 ${__O.hidden} bg-neutral-100 dark:bg-slate-800`} rounded="lg">
+      <Div surface="muted" className={`h-20 w-20 flex-shrink-0 ${__O.hidden}`} rounded="lg">
         {item.meta.image && (
           <Div
             role="img"
@@ -159,17 +159,20 @@ export function CartDrawer({
         className="fixed inset-0 z-40"
         onClick={onClose}
       />
+      {/* audit-variant-ok: cart drawer Aside — fixed-position panel + flex-col + shadow + explicit light/dark bg; Aside lacks panel/shadow/layout variants */}
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white dark:bg-slate-900 shadow-xl">
         <Row justify="between" border="bottom" className={__P.p4}>
           <Heading level={2} size="lg" weight="semibold">
             {labels.title ?? "Cart"}
           </Heading>
+          {/* audit-variant-ok: close-cart Button — hover state shade override; Button lacks hover-textColor variant */}
           <Button
             onClick={onClose}
             variant="ghost"
             size="sm"
             aria-label="Close cart"
-            className="text-neutral-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-zinc-100"
+            textColor="faint"
+            className="hover:text-neutral-900 dark:hover:text-zinc-100"
           >
             ✕
           </Button>
@@ -205,10 +208,12 @@ export function CartDrawer({
               </Span>
             </Row>
             {onCheckout && (
-              <Button rounded="xl" 
+              // audit-variant-ok: checkout CTA — bespoke dark surface bg-neutral-900 + py-3 + font-semibold; Button.variant lacks dark/charcoal tone
+              <Button rounded="xl"
                 onClick={onCheckout}
                 variant="primary"
-                className="w-full bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+                textSize="sm"
+                className="w-full bg-neutral-900 py-3 font-semibold text-white transition hover:bg-neutral-800"
               >
                 {labels.checkout ?? ACTIONS.CART["checkout"].label}
               </Button>

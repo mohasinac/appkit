@@ -41,6 +41,7 @@ export type SurfaceKey = keyof typeof SURFACE_MAP;
 
 export const PADDING_MAP = {
   none: "",
+  "2xs": "p-1",
   xs: "p-2",
   sm: "p-3",
   md: "p-4",

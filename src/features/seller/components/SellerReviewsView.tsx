@@ -322,6 +322,7 @@ export function SellerReviewsView({
 
                         {/* Existing reply */}
                         {review.sellerReply && (
+                          // audit-variant-ok: seller reply — left-border accent + pl-3; Div lacks borderSide variant
                           <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
                             <Text className="text-[var(--appkit-color-text-muted)]" size="xs">Store reply:</Text>
                             <Text size="sm">{review.sellerReply}</Text>
@@ -434,7 +435,7 @@ export function SellerReviewsView({
           </Row>
         }
       >
-        <Stack gap="md" className="p-1">
+        <Stack gap="md" padding="2xs">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             The same reply will be posted on all selected reviews.
           </Text>
@@ -462,7 +463,7 @@ export function SellerReviewsView({
           </Row>
         }
       >
-        <Stack gap="md" className="p-1">
+        <Stack gap="md" padding="2xs">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Flag this review for admin investigation. Provide a clear reason — fake, abusive, off-topic, etc.
           </Text>
@@ -489,7 +490,7 @@ export function SellerReviewsView({
           </Row>
         }
       >
-        <Stack gap="md" className="p-1">
+        <Stack gap="md" padding="2xs">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Private message sent to the buyer's notification inbox. Does not appear on the public review.
           </Text>
