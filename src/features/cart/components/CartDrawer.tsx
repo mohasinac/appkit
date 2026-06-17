@@ -1,7 +1,6 @@
 import type { CartItem } from "../types";
 import { Aside, Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const __P = {
@@ -46,7 +45,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`font-medium text-neutral-900 dark:text-neutral-100 dark:text-zinc-100 hover:underline underline-offset-2 ${THEME_CONSTANTS.utilities.textClamp2}`}
+              className="font-medium text-neutral-900 dark:text-neutral-100 dark:text-zinc-100 hover:underline underline-offset-2 line-clamp-2"
             >
               {item.meta.title}
             </a>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Article, BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
-import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
+import { LAYOUT } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EVENT_FIELDS } from "../schemas";
@@ -116,7 +116,7 @@ export function EventCard({
         <RichText
           html={normalizeRichTextHtml(event.description ?? "")}
           proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-          className={`mb-3 ${THEME_CONSTANTS.utilities.textClamp3} text-sm text-zinc-600 dark:text-zinc-400`}
+          className="mb-3 line-clamp-3 text-sm text-zinc-600 dark:text-zinc-400"
         />
 
         <Row color="muted" textSize="xs" className="mb-3 mt-auto" align="center" justify="between">

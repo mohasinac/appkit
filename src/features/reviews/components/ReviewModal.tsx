@@ -4,7 +4,7 @@ import { Button, Div, Heading, IconButton, Modal, RichText, Row, Stack, Text } f
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { maskName } from "../../../security";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_SUCCESS } from "../../../_internal/shared/styles/themed";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
@@ -62,7 +62,7 @@ export function ViewReviewModal({
                 {displayName}
               </Text>
               {review.verified && (
-                <Text className={`${THEME_CONSTANTS.themed.textSuccess}`} size="xs">
+                <Text className={THEMED_TEXT_SUCCESS} size="xs">
                   ✓ Verified purchase
                 </Text>
               )}

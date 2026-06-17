@@ -16,7 +16,6 @@ const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-
 const CLS_LIMITED_BADGE = "rounded-full bg-info-surface px-2 py-0.5 text-xs font-bold text-white";
 import { BaseListingCard, Button, Div, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { PreorderBadge } from "./PreorderCard";
 
 export type MarketplacePreorderCardData = ProductItem;
@@ -237,7 +236,7 @@ export function MarketplacePreorderCard({
               <RichText
                 html={normalizeRichTextHtml(product.description)}
                 proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500 dark:text-zinc-400`}
+                className="line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400"
               />
             ) : null}
             <Row justify="between" className="mt-1" gap="sm">

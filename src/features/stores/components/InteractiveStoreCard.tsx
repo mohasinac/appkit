@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { StoreListItem } from "../types";
 import { BaseListingCard, Div, Heading, RichText, Row, Scrim, Span, Stack } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
@@ -138,7 +137,7 @@ export function InteractiveStoreCard({
             <RichText
               html={normalizeRichTextHtml(store.storeDescription)}
               proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-              className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500 dark:text-zinc-400 flex-1`}
+              className="mt-1 line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400 flex-1"
             />
           ) : (
             <Div className="flex-1" />

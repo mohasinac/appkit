@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Div, Heading, Row, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { THEMED_TEXT_SUCCESS } from "../../../_internal/shared/styles/themed";
 
 const CLS_SUCCESS_CIRCLE = "w-12 h-12 rounded-full bg-success-surface flex items-center justify-center mx-auto mb-6";
 const CLS_ERROR_CIRCLE = "w-12 h-12 rounded-full bg-error-surface flex items-center justify-center mx-auto mb-6";
@@ -54,7 +54,7 @@ export function VerifyEmailView({
           <>
             <Div className={CLS_SUCCESS_CIRCLE}>
               <svg
-                className={`w-6 h-6 ${THEME_CONSTANTS.themed.textSuccess}`}
+                className={`w-6 h-6 ${THEMED_TEXT_SUCCESS}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
