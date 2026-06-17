@@ -111,8 +111,8 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
   }));
 
   const commitSearch = useCallback(() => {
+    // table.set("q", v) already resets page to 1 — see root-cause #13.
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const wishlistActions = {

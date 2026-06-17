@@ -292,7 +292,7 @@ export function AdminEventEntriesView({
           <Stack gap="none" key={key} className="">
             <Text size="xs" weight="medium" color="muted">{key}</Text>
             <Text className="whitespace-pre-wrap break-words" color="primary" size="sm">
-              // audit-unknown-ok: TS structural escape
+              {/* audit-unknown-ok: TS structural escape */}
               {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}
             </Text>
           </Stack>
