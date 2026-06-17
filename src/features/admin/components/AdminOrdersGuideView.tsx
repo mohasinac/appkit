@@ -110,7 +110,7 @@ export function AdminOrdersGuideView() {
             <Icon className="w-5 h-5 text-[var(--appkit-color-primary)]" />
             <Heading level={2} size="base" weight="semibold">{title}</Heading>
           </Row>
-          <Div className="py-5" padding="x-lg">{content}</Div>
+          <Div paddingY="y-md-lg" padding="x-lg">{content}</Div>
         </Section>
       ))}
     </Stack>

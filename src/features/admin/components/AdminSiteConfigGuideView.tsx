@@ -54,7 +54,7 @@ export function AdminSiteConfigGuideView() {
           <Settings className={CLS_HEADER_ICON} />
           <Heading level={2} className={GC.sectionTitle}>API Keys &amp; Integrations</Heading>
         </Div>
-        <Div className="py-5" padding="x-lg">
+        <Div paddingY="y-md-lg" padding="x-lg">
           <Alert variant="warning">
             API keys in <Code size="xs">integrations</Code> are stored encrypted. They are masked in the admin UI — you see <Code size="xs">••••••••</Code> by design. To rotate a key: paste the new value into the field and save. The old key is immediately invalidated on your payment/shipping provider&apos;s side — test in staging first. Never paste API keys into Slack, email, or any external service.
           </Alert>

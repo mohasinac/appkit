@@ -175,7 +175,7 @@ export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
 type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-page";
-type YPaddingKey = "none" | "y-2xs" | "y-xs" | "y-sm" | "y-md" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl";
+type YPaddingKey = "none" | "y-2xs" | "y-xs" | "y-sm" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl";
 
 const X_ONLY_MAP: Record<XPaddingKey, string> = {
   none: "",
@@ -198,6 +198,7 @@ const Y_ONLY_MAP: Record<YPaddingKey, string> = {
   "y-xs": "py-2",
   "y-sm": "py-3",
   "y-md": "py-4",
+  "y-md-lg": "py-5",
   "y-lg": "py-6",
   "y-xl": "py-8",
   "y-2xl": "py-10",
