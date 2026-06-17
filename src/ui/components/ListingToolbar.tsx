@@ -173,7 +173,7 @@ export function ListingToolbar({
               }
               {allSelected ? l.deselectAll : l.selectAll(bulkTotalCount)}
             </button>
-            <Span size="sm" className="text-zinc-500 dark:text-zinc-400">
+            <Span size="sm" color="muted">
               {l.selected(bulkSelectedCount)}
             </Span>
             <button
