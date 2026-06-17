@@ -302,12 +302,14 @@ export function Text({
 
 // --- Label --------------------------------------------------------------------
 
-type LabelLayout = "inline" | "inline-flex" | "flex";
+type LabelLayout = "inline" | "inline-flex" | "flex" | "flex-start";
 
 const LABEL_LAYOUT_MAP: Record<LabelLayout, string> = {
   inline: "",
   "inline-flex": CLS_INLINE_FLEX,
   flex: CLS_FLEX,
+  /** Flex container with `items-start` cross-axis alignment — for checkbox + multi-line description rows. */
+  "flex-start": "flex items-start",
 };
 
 type LabelGap = "none" | "xs" | "sm" | "md" | "lg";

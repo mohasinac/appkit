@@ -177,9 +177,9 @@ export interface MainProps extends React.HTMLAttributes<HTMLElement>, SurfacePro
   children: React.ReactNode;
 }
 
-export function Main({ className = "", surface, padding, rounded, border, shadow, color, children, ...props }: MainProps) {
+export function Main({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, children, ...props }: MainProps) {
   return (
-    <main className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
+    <main className={[buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
       {children}
     </main>
   );
