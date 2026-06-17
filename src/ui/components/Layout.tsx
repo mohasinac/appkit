@@ -259,7 +259,7 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
   /** Main-axis (vertical) alignment. Defaults to `"start"`. */
   justify?: JustifyContent;
   /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
-  textSize?: "xs" | "sm" | "base" | "lg";
+  textSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
   /** Cascade font-weight to children. Use sparingly — prefer wrapping in `<Text weight=…>`. */
   textWeight?: TextWeightKey;
   /** Cascade text color to children. Use sparingly — prefer wrapping in `<Text color=…>`. */
@@ -370,7 +370,7 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   /** Main-axis (horizontal) distribution. Defaults to `"start"`. */
   justify?: JustifyContent;
   /** Cascade font-size to children. Use sparingly — prefer wrapping in `<Text size=…>`. */
-  textSize?: "xs" | "sm" | "base" | "lg";
+  textSize?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
   /** Cascade font-weight to children. Use sparingly — prefer wrapping in `<Text weight=…>`. */
   textWeight?: TextWeightKey;
   /** Cascade text color to children. Use sparingly — prefer wrapping in `<Text color=…>`. */
@@ -398,6 +398,8 @@ const TEXT_SIZE_MAP = {
   sm: "text-sm",
   base: "text-base",
   lg: "text-lg",
+  xl: "text-xl",
+  "2xl": "text-2xl",
 } as const;
 
 const TEXT_WEIGHT_MAP = {

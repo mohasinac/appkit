@@ -141,7 +141,7 @@ function renderAuctionStepsSection(t: AuctionT, steps: AuctionStep[]) {
       <Stack gap="5">
         {steps.map(({ number, icon, title, text }) => (
           <Row key={number} className={`${__P.p5}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
-            <Row align="center" justify="center" className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15 text-xl`} rounded="full">{icon}</Row>
+            <Row align="center" justify="center" textSize="xl" className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15`} rounded="full">{icon}</Row>
             <Div>
               <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
               <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>

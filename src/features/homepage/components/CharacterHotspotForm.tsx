@@ -263,7 +263,8 @@ export function CharacterHotspotForm({
             will place pins on it in the next step.
           </Text>
 
-          <Label layout="flex" gap="md" 
+          {/* audit-variant-ok: file-dropzone Label — flex-col layout + p-8 + dashed border + hover opacity transition */}
+          <Label layout="flex" gap="md"
             className="cursor-pointer flex-col justify-center rounded-lg border-2 border-dashed p-8 transition-colors hover:opacity-80"
             style={{ borderColor: "var(--border-ink)" }}
           >
@@ -425,7 +426,8 @@ export function CharacterHotspotForm({
                   +
                 </Row>
                 {pin.name && (
-                  <Div textWeight="bold" 
+                  // audit-variant-ok: absolute-positioned pin tooltip — px-1.5 py-0.5 outside PADDING_MAP scale + arbitrary text-[9px]
+                  <Div textWeight="bold"
                     className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] text-white" rounded="default"
                     style={{ background: "#0D0D0D" }}
                   >
@@ -467,7 +469,8 @@ export function CharacterHotspotForm({
                 >
                   ★
                 </Row>
-                <Div textWeight="bold" 
+                {/* audit-variant-ok: absolute-positioned hover tooltip — py-0.5 single-axis padding + arbitrary text-[10px] */}
+                <Div textWeight="bold"
                   className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap py-0.5 text-[10px]" padding="x-xs" rounded="default"
                   style={{
                     background: "var(--color-black)",
@@ -847,7 +850,8 @@ export function CharacterHotspotForm({
                   +
                 </Row>
                 {pin.name && (
-                  <Div textWeight="bold" 
+                  // audit-variant-ok: absolute-positioned pin tooltip — px-1.5 py-0.5 outside PADDING_MAP scale + arbitrary text-[9px]
+                  <Div textWeight="bold"
                     className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] text-white" rounded="default"
                     style={{ background: "#0D0D0D" }}
                   >
@@ -860,12 +864,15 @@ export function CharacterHotspotForm({
 
           {/* Pin list */}
           {pins.length > 0 ? (
+            // audit-variant-ok: bordered list with divide-y between rows; Ul lacks divide variant
             <Ul
               className="divide-y rounded-lg border"
               style={{ borderColor: "var(--border-ink)" }}
             >
               {pins.map((pin, i) => (
-                <Li key={pin.id} className="px-4 py-3">
+                // audit-variant-ok: list-row padding px-4 py-3 outside PADDING_MAP scale
+                <Li
+                  key={pin.id} className="px-4 py-3">
                   <Row gap="sm">
                     <Span layout="flex-center" color="inverse" 
                       className="h-6 w-6 shrink-0" rounded="full" size="xs" weight="bold"
@@ -916,15 +923,18 @@ export function CharacterHotspotForm({
           )}
 
           {/* Image settings */}
+          {/* audit-variant-ok: Details container — rounded-lg border p-3; Details lacks padding/border variant */}
           <Details
             className="rounded-lg border p-3"
             style={{ borderColor: "var(--border-ink)" }}
           >
+            {/* audit-variant-ok: Summary clickable header — cursor-pointer + size/weight; Summary lacks size/weight variants */}
             <Summary className="cursor-pointer text-sm font-medium">
               Image Settings
             </Summary>
             <Stack className="mt-3" gap="3">
-              <Label layout="inline-flex" gap="md" 
+              {/* audit-variant-ok: file-replace Label — px-3 py-1.5 outside PADDING_MAP scale + dashed border + hover */}
+              <Label layout="inline-flex" gap="md"
                 className="cursor-pointer rounded border-2 border-dashed px-3 py-1.5 transition-colors hover:opacity-80" size="sm" weight="medium"
                 style={{ borderColor: "var(--border-ink)" }}
               >
@@ -984,6 +994,7 @@ export function CharacterHotspotForm({
             >
               + Add Another Pin
             </Button>
+            {/* audit-variant-ok: bespoke save button — overrides Button visuals with inline style (black bg + yellow text) for theme parity */}
             <Button
               type="button"
               onClick={handleSave}
