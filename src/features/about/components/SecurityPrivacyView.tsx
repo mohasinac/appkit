@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -27,7 +27,7 @@ export interface SecurityPrivacyViewProps {
 
 export async function SecurityPrivacyView({
 }: SecurityPrivacyViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("securityPage");
 
@@ -173,12 +173,12 @@ export async function SecurityPrivacyView({
           <Heading level={2} className="mb-3">{t("overviewTitle")}</Heading>
           <Text variant="secondary" className="max-w-2xl mx-auto">{t("overviewText")}</Text>
         </Section>
-        {renderSecurityCardsSection(flex, SECTIONS)}
+        {renderSecurityCardsSection(SECTIONS)}
         <Section>
           <FlowDiagram title={`🛡️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
         <Text variant="secondary" size="sm" align="center">{t("lastUpdated")}</Text>
-        {renderSecurityCtaSection(t, themed, flex)}
+        {renderSecurityCtaSection(t)}
       </Stack>
     </Div>
   );
@@ -188,7 +188,7 @@ type SecurityT = Awaited<ReturnType<typeof import("next-intl/server").getTransla
  
 type SecurityCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 
-function renderSecurityCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: SecurityCard[]) {
+function renderSecurityCardsSection(cards: SecurityCard[]) {
   return (
     <Section>
       <Div layout="grid" gap="5" className="md:grid-cols-2">
@@ -206,7 +206,7 @@ function renderSecurityCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], card
   );
 }
 
-function renderSecurityCtaSection(t: SecurityT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+function renderSecurityCtaSection(t: SecurityT) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>

@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -11,7 +11,7 @@ export interface ShippingPolicyViewProps {
 
 export async function ShippingPolicyView({
 }: ShippingPolicyViewProps = {}) {
-  const { themed, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("shippingPolicy");
 

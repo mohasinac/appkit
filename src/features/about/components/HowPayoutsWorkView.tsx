@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -16,7 +16,7 @@ export interface HowPayoutsWorkViewProps {
 
 export async function HowPayoutsWorkView({
 }: HowPayoutsWorkViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howPayoutsWork");
 
@@ -118,12 +118,12 @@ export async function HowPayoutsWorkView({
         </Div>
       </Section>
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderPayoutsStepsSection(t, themed, flex, STEPS)}
+        {renderPayoutsStepsSection(t, STEPS)}
         <Section>
           <FlowDiagram title={`💸 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-        {renderPayoutsInfoCardsSection(flex, INFO_CARDS)}
-        {renderPayoutsCtaSection(t, themed, flex)}
+        {renderPayoutsInfoCardsSection(INFO_CARDS)}
+        {renderPayoutsCtaSection(t)}
       </Stack>
     </Div>
   );
@@ -134,7 +134,7 @@ type PayoutsT = Awaited<ReturnType<typeof import("next-intl/server").getTranslat
 type PayoutsInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type PayoutsStep = { number: number; icon: string; title: string; text: string };
 
-function renderPayoutsStepsSection(t: PayoutsT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"], steps: PayoutsStep[]) {
+function renderPayoutsStepsSection(t: PayoutsT, steps: PayoutsStep[]) {
   return (
     <Section>
       <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
@@ -153,7 +153,7 @@ function renderPayoutsStepsSection(t: PayoutsT, themed: (typeof THEME_CONSTANTS)
   );
 }
 
-function renderPayoutsInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: PayoutsInfoCard[]) {
+function renderPayoutsInfoCardsSection(cards: PayoutsInfoCard[]) {
   return (
     <Section>
       <Div layout="grid" gap="5" className="md:grid-cols-2">
@@ -171,7 +171,7 @@ function renderPayoutsInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], c
   );
 }
 
-function renderPayoutsCtaSection(t: PayoutsT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+function renderPayoutsCtaSection(t: PayoutsT) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>

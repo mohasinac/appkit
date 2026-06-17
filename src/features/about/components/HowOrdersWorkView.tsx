@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -17,7 +17,7 @@ export interface HowOrdersWorkViewProps {
 
 export async function HowOrdersWorkView({
 }: HowOrdersWorkViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howOrdersWork");
 
@@ -169,12 +169,12 @@ export async function HowOrdersWorkView({
         </Div>
       </Section>
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderOrderStatusesSection(t, themed, ORDER_STATUSES)}
+        {renderOrderStatusesSection(t, ORDER_STATUSES)}
         <Section>
           <FlowDiagram title={`📦 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-        {renderOrderInfoCardsSection(flex, INFO_CARDS)}
-        {renderOrdersCtaSection(t, themed, flex)}
+        {renderOrderInfoCardsSection(INFO_CARDS)}
+        {renderOrdersCtaSection(t)}
       </Stack>
     </Div>
   );
@@ -185,7 +185,7 @@ type OrdersT = Awaited<ReturnType<typeof import("next-intl/server").getTranslati
 type OrderInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type OrderStatus = { status: string; icon: string; badge: string; desc: string };
 
-function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)["themed"], statuses: OrderStatus[]) {
+function renderOrderStatusesSection(t: OrdersT, statuses: OrderStatus[]) {
   return (
     <Section>
       <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
@@ -204,7 +204,7 @@ function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)
   );
 }
 
-function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: OrderInfoCard[]) {
+function renderOrderInfoCardsSection(cards: OrderInfoCard[]) {
   return (
     <Section>
       <Div layout="grid" gap="5" className="md:grid-cols-2">
@@ -222,7 +222,7 @@ function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], car
   );
 }
 
-function renderOrdersCtaSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+function renderOrdersCtaSection(t: OrdersT) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>

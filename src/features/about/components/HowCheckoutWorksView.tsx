@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -16,7 +16,7 @@ export interface HowCheckoutWorksViewProps {
 
 export async function HowCheckoutWorksView({
 }: HowCheckoutWorksViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howCheckoutWorks");
 
@@ -103,12 +103,12 @@ export async function HowCheckoutWorksView({
         </Div>
       </Section>
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderCheckoutStepsSection(t, themed, flex, STEPS)}
+        {renderCheckoutStepsSection(t, STEPS)}
         <Section>
           <FlowDiagram title={`🗺️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-        {renderPaymentMethodsSection(t, flex, PAYMENT_METHODS)}
-        {renderCheckoutCtaSection(t, themed, flex)}
+        {renderPaymentMethodsSection(t, PAYMENT_METHODS)}
+        {renderCheckoutCtaSection(t)}
       </Stack>
     </Div>
   );
@@ -119,7 +119,7 @@ type CheckoutT = Awaited<ReturnType<typeof import("next-intl/server").getTransla
 type CheckoutMethod = { icon: any; title: string; text: string; color: string; iconColor: string };
 type CheckoutStep = { number: number; icon: string; title: string; text: string };
 
-function renderCheckoutStepsSection(t: CheckoutT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"], steps: CheckoutStep[]) {
+function renderCheckoutStepsSection(t: CheckoutT, steps: CheckoutStep[]) {
   return (
     <Section>
       <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
@@ -138,7 +138,7 @@ function renderCheckoutStepsSection(t: CheckoutT, themed: (typeof THEME_CONSTANT
   );
 }
 
-function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS)["flex"], methods: CheckoutMethod[]) {
+function renderPaymentMethodsSection(t: CheckoutT, methods: CheckoutMethod[]) {
   return (
     <Section>
       <Heading level={2} className="mb-3" align="center">{t("paymentMethodsTitle")}</Heading>
@@ -158,7 +158,7 @@ function renderPaymentMethodsSection(t: CheckoutT, flex: (typeof THEME_CONSTANTS
   );
 }
 
-function renderCheckoutCtaSection(t: CheckoutT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+function renderCheckoutCtaSection(t: CheckoutT) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>

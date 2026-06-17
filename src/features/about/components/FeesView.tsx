@@ -1,5 +1,6 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
+import { THEMED_BG_PRIMARY, THEMED_BG_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { Caption, Div, Heading, Row, Section, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 const __P = {
   p5: "p-5",
@@ -17,7 +18,8 @@ export interface FeesViewProps {
 
 export async function FeesView({
 }: FeesViewProps = {}) {
-  const { themed, page } = THEME_CONSTANTS;
+  const themed = { bgPrimary: THEMED_BG_PRIMARY, bgSecondary: THEMED_BG_SECONDARY };
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("fees");
 
@@ -88,7 +90,7 @@ export async function FeesView({
 }
 
 type TranslateFn = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-type ThemedTokens = (typeof THEME_CONSTANTS)["themed"];
+type ThemedTokens = { bgPrimary: string; bgSecondary: string };
 type FeeRow = { category: string; rate: string; who: string; note: string };
 type PayoutRow = { label: string; example: string; highlight?: boolean };
 

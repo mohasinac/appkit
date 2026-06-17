@@ -2,7 +2,8 @@ import Link from "next/link";
 import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews, getReviewsAuthoredBy } from "../../auth/actions/profile-actions";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
+import { FLEX_CENTER } from "../../../_internal/shared/styles/themed";
 import { Anchor, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ProductCard } from "../../products/components/ProductGrid";
@@ -18,7 +19,7 @@ const __P = {
   p6: "p-6",
 } as const;
 
-const CLS_EMPTY_ICON = "w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600";
+const CLS_EMPTY_ICON = "w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600 dark:text-neutral-400";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -68,7 +69,8 @@ function getProductHref(p: ProductDocument): string {
 export async function PublicProfileView({
   userId,
 }: PublicProfileViewProps) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
+  const flex = { center: FLEX_CENTER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("publicProfile");
 
@@ -114,14 +116,14 @@ export async function PublicProfileView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {renderProfileHero(t, profileHeroCtx)}
       <Stack gap="2xl" className={`${page.container.md} md:py-12`} padding="y-2xl">
-        {renderProfileStatsRow(themed, flex, statItems)}
-        {renderProfileBioSection(themed, pub)}
-        {renderStoreDescriptionSection(themed, isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
-        {renderProfileListingsSection(t, themed, products, storeSlug ?? null)}
-        {renderAuthoredReviewsSection(t, themed, reviewsAuthored, displayName)}
-        {isSeller && storeSlug && renderProfileReviewsSection(t, themed, reviewsReceived, storeSlug)}
+        {renderProfileStatsRow(flex, statItems)}
+        {renderProfileBioSection(pub)}
+        {renderStoreDescriptionSection(isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
+        {renderProfileListingsSection(t, products, storeSlug ?? null)}
+        {renderAuthoredReviewsSection(t, reviewsAuthored, displayName)}
+        {isSeller && storeSlug && renderProfileReviewsSection(t, reviewsReceived, storeSlug)}
         <Row justify="center" padding="t-xs">
-          <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
+          <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:text-neutral-400 dark:hover:text-zinc-300">
             ← {t("backHome")}
           </Link>
         </Row>
@@ -131,9 +133,8 @@ export async function PublicProfileView({
 }
 
 type ProfileT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-type ProfileThemed = (typeof THEME_CONSTANTS)["themed"];
-type ProfileFlex = (typeof THEME_CONSTANTS)["flex"];
-type ProfilePage = (typeof THEME_CONSTANTS)["page"];
+type ProfileFlex = { center: string };
+type ProfilePage = { container: typeof PAGE_CONTAINER };
  
 type PubProfile = any;
  
@@ -168,6 +169,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
             {photoURL ? <MediaImage src={photoURL} alt={displayName} size="avatar" fallback="👤" /> : <User className="w-10 h-10 text-white/60" />}
           </Row>
           <Stack gap="xs" className="text-center sm:text-left">
+            {/* audit-inline-style-ok: sm:justify-start is a responsive override; Row.justify only supports single value */}
             <Row className="sm:justify-start" justify="center" gap="xs" wrap>
               <Heading color="inverse" level={1} variant="none" className="mb-0">{displayName}</Heading>
               {isSeller && <Span color="inverse" size="xs" weight="semibold" className="bg-white/20 /90" padding="pill-sm" rounded="full">{t("roleSeller")}</Span>}
@@ -189,7 +191,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
 }
 
  
-function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statItems: { icon: any; label: string; value: string }[]) {
+function renderProfileStatsRow(flex: ProfileFlex, statItems: { icon: any; label: string; value: string }[]) {
   return (
     <Grid gap="md" className="grid-cols-2 sm:grid-cols-4">
       {statItems.map(({ icon: Icon, label, value }) => (
@@ -203,14 +205,14 @@ function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statIte
   );
 }
 
-function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
+function renderProfileBioSection(pub: PubProfile) {
   if (!pub?.bio && !pub?.location && !pub?.website) return null;
   return (
     <Section>
       <Stack gap="sm" className={`${__P.p6}`} border="default" surface="muted" rounded="2xl">
         {pub.bio && <Text className="leading-relaxed text-neutral-700" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
-          {pub.location && <Span layout="flex" gap="xs" size="sm" className="text-neutral-500"><MapPin className="w-4 h-4" />{pub.location}</Span>}
+          {pub.location && <Span layout="flex" gap="xs" size="sm" className="text-neutral-500 dark:text-neutral-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
           {pub.website && <Anchor href={pub.website} className="flex items-center gap-1.5"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></Anchor>}
         </Row>
       </Stack>
@@ -218,7 +220,7 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
   );
 }
 
-function renderStoreDescriptionSection(themed: ProfileThemed, isSeller: boolean, storeSlug: string | null, storeDescription: string | null, storeName: string, t: ProfileT) {
+function renderStoreDescriptionSection(isSeller: boolean, storeSlug: string | null, storeDescription: string | null, storeName: string, t: ProfileT) {
   if (!isSeller || !storeSlug || !storeDescription) return null;
   return (
     <Section>
@@ -231,7 +233,7 @@ function renderStoreDescriptionSection(themed: ProfileThemed, isSeller: boolean,
   );
 }
 
-function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, products: ProfileProduct[], storeSlug: string | null) {
+function renderProfileListingsSection(t: ProfileT, products: ProfileProduct[], storeSlug: string | null) {
   return (
     <Section>
       <Heading level={2} className="mb-4">{t("listingsTitle")}</Heading>
@@ -254,7 +256,7 @@ function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, produc
   );
 }
 
-function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews: ProfileReview[], storeSlug: string | null) {
+function renderProfileReviewsSection(t: ProfileT, reviews: ProfileReview[], storeSlug: string | null) {
   return (
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsReceivedTitle")}</Heading>
@@ -277,7 +279,7 @@ function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews
   );
 }
 
-function renderAuthoredReviewsSection(t: ProfileT, themed: ProfileThemed, reviews: ProfileReview[], displayName: string) {
+function renderAuthoredReviewsSection(t: ProfileT, reviews: ProfileReview[], displayName: string) {
   return (
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsAuthoredTitle", { name: displayName })}</Heading>

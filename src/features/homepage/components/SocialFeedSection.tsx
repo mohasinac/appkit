@@ -1,6 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
 import { Div, Heading, Row, Section, Stack, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { SocialPostCard } from "./SocialPostCard";
 import {
   fetchInstagramPosts,
@@ -121,7 +120,6 @@ export type SocialFeedSectionProps = SocialFeedSectionConfig;
 
 export async function SocialFeedSection(config: SocialFeedSectionProps) {
   const { title, subtitle, platform, handle, layout, showCaption, showStats, count } = config;
-  const { themed } = THEME_CONSTANTS;
   const { posts, error } = await loadPosts(config);
   const profileUrl = handle ? platformProfileUrl(platform, handle) : null;
 

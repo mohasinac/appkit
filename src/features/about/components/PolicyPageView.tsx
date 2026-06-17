@@ -1,6 +1,6 @@
 import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, Heading, Text, Section, Stack } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { siteSettingsRepository } from "../../../repositories";
@@ -28,7 +28,7 @@ const firestoreFieldMap: Record<PolicyPageViewProps["policy"], string> = {
 export async function PolicyPageView({
   policy,
 }: PolicyPageViewProps) {
-  const { themed, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
 
   const t = await getTranslations(namespaceMap[policy]);

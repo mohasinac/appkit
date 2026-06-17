@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShieldAlert, Home, LogIn } from "lucide-react";
@@ -10,7 +10,7 @@ export interface UnauthorizedViewProps {
 
 export async function UnauthorizedView({
 }: UnauthorizedViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("unauthorized");
 

@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -16,7 +16,7 @@ export interface HowAuctionsWorkViewProps {
 
 export async function HowAuctionsWorkView({
 }: HowAuctionsWorkViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howAuctionsWork");
 
@@ -118,12 +118,12 @@ export async function HowAuctionsWorkView({
         </Div>
       </Section>
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderAuctionStepsSection(t, themed, flex, STEPS)}
+        {renderAuctionStepsSection(t, STEPS)}
         <Section>
           <FlowDiagram title={`🔨 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-        {renderAuctionInfoCardsSection(flex, INFO_CARDS)}
-        {renderAuctionCtaSection(t, themed, flex)}
+        {renderAuctionInfoCardsSection(INFO_CARDS)}
+        {renderAuctionCtaSection(t)}
       </Stack>
     </Div>
   );
@@ -134,7 +134,7 @@ type AuctionT = Awaited<ReturnType<typeof import("next-intl/server").getTranslat
 type AuctionInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type AuctionStep = { number: number; icon: string; title: string; text: string };
 
-function renderAuctionStepsSection(t: AuctionT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"], steps: AuctionStep[]) {
+function renderAuctionStepsSection(t: AuctionT, steps: AuctionStep[]) {
   return (
     <Section>
       <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
@@ -153,7 +153,7 @@ function renderAuctionStepsSection(t: AuctionT, themed: (typeof THEME_CONSTANTS)
   );
 }
 
-function renderAuctionInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: AuctionInfoCard[]) {
+function renderAuctionInfoCardsSection(cards: AuctionInfoCard[]) {
   return (
     <Section>
       <Div layout="grid" gap="5" className="md:grid-cols-2">
@@ -171,7 +171,7 @@ function renderAuctionInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], c
   );
 }
 
-function renderAuctionCtaSection(t: AuctionT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+function renderAuctionCtaSection(t: AuctionT) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>

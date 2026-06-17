@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -15,7 +15,7 @@ export interface HowOffersWorkViewProps {
 
 export async function HowOffersWorkView({
 }: HowOffersWorkViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howOffersWork");
 
@@ -86,12 +86,12 @@ export async function HowOffersWorkView({
         </Div>
       </Section>
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderOffersStepsSection(t, themed, flex, STEPS)}
+        {renderOffersStepsSection(t, STEPS)}
         <Section>
           <FlowDiagram title={`🤝 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-        {renderOffersRulesSection(t, themed, RULES)}
-        {renderOffersCtaSection(t, themed, flex)}
+        {renderOffersRulesSection(t, RULES)}
+        {renderOffersCtaSection(t)}
       </Stack>
     </Div>
   );
@@ -100,7 +100,7 @@ export async function HowOffersWorkView({
 type OffersT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
 type OffersStep = { number: number; icon: string; title: string; text: string };
 
-function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"], steps: OffersStep[]) {
+function renderOffersStepsSection(t: OffersT, steps: OffersStep[]) {
   return (
     <Section>
       <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
@@ -119,7 +119,7 @@ function renderOffersStepsSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
   );
 }
 
-function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["themed"], rules: string[]) {
+function renderOffersRulesSection(t: OffersT, rules: string[]) {
   return (
     <Section className={`${__P.p6}`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-4">{t("rulesTitle")}</Heading>
@@ -135,7 +135,7 @@ function renderOffersRulesSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["
   );
 }
 
-function renderOffersCtaSection(t: OffersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+function renderOffersCtaSection(t: OffersT) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>

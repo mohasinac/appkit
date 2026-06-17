@@ -1,4 +1,3 @@
-import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Heading, HorizontalScroller, Row, Section, Span, Text } from "../../../ui";
 import { BeforeAfterCard } from "./BeforeAfterCard";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
@@ -33,8 +32,6 @@ export function FeaturedResultsSection({
   items,
   className = "",
 }: FeaturedResultsSectionProps) {
-  const { flex } = THEME_CONSTANTS;
-
   const pillCls =
     "inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-primary-700 backdrop-blur-sm dark:text-primary-400";
 

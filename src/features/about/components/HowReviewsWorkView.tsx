@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -16,7 +16,7 @@ export interface HowReviewsWorkViewProps {
 
 export async function HowReviewsWorkView({
 }: HowReviewsWorkViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howReviewsWork");
 
@@ -100,12 +100,12 @@ export async function HowReviewsWorkView({
         </Div>
       </Section>
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderReviewsStepsSection(t, themed, flex, STEPS)}
+        {renderReviewsStepsSection(t, STEPS)}
         <Section>
           <FlowDiagram title={`⭐ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-        {renderReviewsInfoCardsSection(flex, INFO_CARDS)}
-        {renderReviewsCtaSection(t, themed, flex)}
+        {renderReviewsInfoCardsSection(INFO_CARDS)}
+        {renderReviewsCtaSection(t)}
       </Stack>
     </Div>
   );
@@ -116,7 +116,7 @@ type ReviewsT = Awaited<ReturnType<typeof import("next-intl/server").getTranslat
 type ReviewsInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type ReviewsStep = { number: number; icon: string; title: string; text: string };
 
-function renderReviewsStepsSection(t: ReviewsT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"], steps: ReviewsStep[]) {
+function renderReviewsStepsSection(t: ReviewsT, steps: ReviewsStep[]) {
   return (
     <Section>
       <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
@@ -135,7 +135,7 @@ function renderReviewsStepsSection(t: ReviewsT, themed: (typeof THEME_CONSTANTS)
   );
 }
 
-function renderReviewsInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: ReviewsInfoCard[]) {
+function renderReviewsInfoCardsSection(cards: ReviewsInfoCard[]) {
   return (
     <Section>
       <Div layout="grid" gap="5" className="md:grid-cols-3">
@@ -153,7 +153,7 @@ function renderReviewsInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], c
   );
 }
 
-function renderReviewsCtaSection(t: ReviewsT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+function renderReviewsCtaSection(t: ReviewsT) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>

@@ -1,6 +1,7 @@
 import { ROUTES } from "../../../constants";
 import type { JsonValue } from "@mohasinac/appkit";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
+import { FLEX_ROW } from "../../../_internal/shared/styles/themed";
 import { Aside, Container, Details, Div, Heading, Nav, RichTextRenderer, Row, Section, Span, Stack, Summary, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
@@ -14,7 +15,8 @@ export interface FAQPageViewProps {
 export async function FAQPageView({
   category,
 }: FAQPageViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
+  const flex = { row: FLEX_ROW };
   const { getTranslations, getMessages } = await import("next-intl/server");
   const t = await getTranslations("faqs");
   const messages = await getMessages();
@@ -67,7 +69,7 @@ export async function FAQPageView({
               <Nav aria-label="FAQ categories" spacing="xs">
                 <TextLink rounded="lg" 
                   href={String(ROUTES.PUBLIC.FAQS)}
-                  className={`flex items-center justify-between px-3 py-2 transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
+                  className={`flex items-center justify-between px-3 py-2 transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
                 >
                   <Span className={`${flex.row} gap-2`}>
                     <HelpCircle className="w-4 h-4" />
@@ -79,7 +81,7 @@ export async function FAQPageView({
                   <TextLink rounded="lg" 
                     key={cat.slug}
                     href={String(ROUTES.PUBLIC.FAQ_CATEGORY(cat.slug))}
-                    className={`flex items-center justify-between px-3 py-2 transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:hover:bg-neutral-800" }`} size="sm"
+                    className={`flex items-center justify-between px-3 py-2 transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
                   >
                     <Span className={`${flex.row} gap-2`}>
                       <Span>{cat.icon}</Span>
@@ -98,7 +100,7 @@ export async function FAQPageView({
               <Section
                 className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="y-4xl"
               >
-                <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-zinc-600" />
+                <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-zinc-600 dark:text-zinc-400" />
                 <Heading level={3} className="mb-2" size="base">
                   {t("emptyTitle")}
                 </Heading>

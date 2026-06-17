@@ -1,6 +1,5 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 // --- Types -------------------------------------------------------------------
 
@@ -96,7 +95,6 @@ export function TrustFeaturesSection({
   variant = "cards",
   className = "",
 }: TrustFeaturesSectionProps) {
-  const { themed } = THEME_CONSTANTS;
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 

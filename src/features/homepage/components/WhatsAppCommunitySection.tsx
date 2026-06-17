@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { Blockquote, Button, Div, Heading, RichText, Row, Section, Span, Text } from "../../../ui";
 import { Users } from "lucide-react";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -35,8 +34,6 @@ export function WhatsAppCommunitySection({
   isLoading = false,
   className = "",
 }: WhatsAppCommunitySectionProps) {
-  const { themed, flex } = THEME_CONSTANTS;
-
   if (isLoading) {
     return (
       <Section className={`px-4 sm:px-8 ${className}`} surface="subtle" padding="y-4xl">

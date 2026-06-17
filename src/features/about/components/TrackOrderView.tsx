@@ -1,6 +1,13 @@
 import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
+import {
+  THEMED_BG_PRIMARY,
+  THEMED_BG_SECONDARY,
+  THEMED_BORDER,
+  THEMED_TEXT_PRIMARY,
+  THEMED_TEXT_SECONDARY,
+} from "../../../_internal/shared/styles/themed";
 import { Caption, Div, Grid, Heading, Section, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShoppingBag, Truck, MapPin, CheckCircle2 } from "lucide-react";
@@ -11,7 +18,14 @@ export interface TrackOrderViewProps {
 
 export async function TrackOrderView({
 }: TrackOrderViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const themed = {
+    bgPrimary: THEMED_BG_PRIMARY,
+    bgSecondary: THEMED_BG_SECONDARY,
+    border: THEMED_BORDER,
+    textPrimary: THEMED_TEXT_PRIMARY,
+    textSecondary: THEMED_TEXT_SECONDARY,
+  };
+  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("trackOrder");
 

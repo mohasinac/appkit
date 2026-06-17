@@ -1,5 +1,6 @@
 import { ROUTES } from "../../../constants";
-import { THEME_CONSTANTS } from "../../../tokens";
+import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
+import { FLEX_ROW } from "../../../_internal/shared/styles/themed";
 import { Alert, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import {
@@ -24,7 +25,8 @@ export interface HelpPageViewProps {
 
 export async function HelpPageView({
 }: HelpPageViewProps = {}) {
-  const { themed, flex, page } = THEME_CONSTANTS;
+  const page = { container: PAGE_CONTAINER };
+  const flex = { row: FLEX_ROW };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("helpPage");
 
@@ -90,20 +92,18 @@ export async function HelpPageView({
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
         {renderTopicsGrid(t, flex, TOPICS)}
         {renderScamAwarenessAlert(t)}
-        {renderTrackOrderSection(t, themed)}
-        {renderContactCtaSection(t, themed)}
+        {renderTrackOrderSection(t)}
+        {renderContactCtaSection(t)}
       </Stack>
     </Div>
   );
 }
 
 type HelpTranslateFn = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
-type HelpThemedTokens = (typeof THEME_CONSTANTS)["themed"];
-type HelpFlexTokens = (typeof THEME_CONSTANTS)["flex"];
  
 type TopicItem = { icon: any; title: string; desc: string; href: string; color: string; iconColor: string };
 
-function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: TopicItem[]) {
+function renderTopicsGrid(t: HelpTranslateFn, flex: { row: string }, topics: TopicItem[]) {
   return (
     <Section>
       <Heading level={2} className="mb-6" align="center">{t("browseTopics")}</Heading>
@@ -138,7 +138,7 @@ function renderScamAwarenessAlert(t: HelpTranslateFn) {
   );
 }
 
-function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
+function renderTrackOrderSection(t: HelpTranslateFn) {
   return (
     <Section className={`${__P.p6} flex flex-col sm:flex-row items-center gap-4`} border="default" surface="subtle" rounded="2xl">
       <Div className="flex-1">
@@ -150,7 +150,7 @@ function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
   );
 }
 
-function renderContactCtaSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
+function renderContactCtaSection(t: HelpTranslateFn) {
   return (
     <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
       <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />

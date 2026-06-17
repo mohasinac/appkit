@@ -1,6 +1,5 @@
 import React from "react";
 import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
-import { THEME_CONSTANTS } from "../../../tokens";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
 import type { GoogleReview } from "../lib/google-reviews-fetcher";
@@ -160,9 +159,6 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
     linkToGoogleMaps = true,
     googleMapsUrl,
   } = config;
-
-  const { themed } = THEME_CONSTANTS;
-
   // Get credentials from site settings
   const credentials = await siteSettingsRepository
     .getDecryptedCredentials()
