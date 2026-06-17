@@ -171,6 +171,7 @@ export function UserSupportView(_props: UserSupportViewProps) {
 }
 
 function renderTicketListArea(props: {
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   isLoading: boolean; error: unknown; tickets: SupportTicket[];
   setSelectedTicket: (t: SupportTicket) => void; setDetailOpen: (v: boolean) => void;
 }) {

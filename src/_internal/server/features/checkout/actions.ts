@@ -176,6 +176,7 @@ function emitOrderPlacedNotifications(args: {
       relatedType: "order",
       actionUrl: `/user/orders/view/${orderId}`,
     } as never)
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     .catch((err: unknown) =>
       serverLogger.warn("Failed to create buyer order_placed notification", {
         err: err instanceof Error ? err.message : String(err),
@@ -196,6 +197,7 @@ function emitOrderPlacedNotifications(args: {
           relatedType: "order",
           actionUrl: `/store/orders/${orderId}/view`,
         } as never)
+        // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
         .catch((err: unknown) =>
           serverLogger.warn("Failed to create seller order_placed notification", {
             err: err instanceof Error ? err.message : String(err),
@@ -331,6 +333,7 @@ function grantConsentOtpBypassCredit(
         { merge: true },
       );
     })
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     .catch((err: unknown) =>
       serverLogger.warn("Failed to grant consent OTP bypass credit", { err }),
     );
@@ -341,6 +344,7 @@ function dispatchOrderConfirmationEmails(
 ): void {
   if (emailsToSend.length === 0) return;
   Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     (err: unknown) => serverLogger.error("Order confirmation email error:", err),
   );
 }
@@ -589,6 +593,7 @@ export async function createCheckoutOrderAction(
 
       return { available: availableItems, unavailable: unavailableItems, emailOtpUsed };
     });
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   } catch (err: unknown) {
     void normalizeError(err);
     const reason =
@@ -1369,6 +1374,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
 
   if (emailsToSend.length > 0) {
     Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
+      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       (err: unknown) => serverLogger.error("Order confirmation email error:", err),
     );
   }
@@ -1380,6 +1386,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
   getAdminRealtimeDb()
     .ref(`${RTDB_PATHS.PAYMENT_EVENTS}/${razorpay_order_id}`)
     .update({ status: "success", orderIds, updatedAt: Date.now() })
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     .catch((err: unknown) =>
       serverLogger.warn("Payment event RTDB signal failed (non-critical)", { err }),
     );

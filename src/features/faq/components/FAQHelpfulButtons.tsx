@@ -23,6 +23,7 @@ interface FAQHelpfulButtonsProps {
     thanksForFeedback?: string;
     voteFailed?: string;
   };
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   onVoteError?: (message: string, error: unknown) => void;
 }
 

@@ -87,6 +87,7 @@ export function PlaceBidFormClient({
       setSuccess(true);
       setBidAmount(String(amount + minBidIncrement));
       setStepMul(1);
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (err: unknown) {
       void normalizeError(err);
       if (isAuthError(err)) {
@@ -124,6 +125,7 @@ export function PlaceBidFormClient({
           return;
         }
         setSuccess(true);
+      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       } catch (err: unknown) {
         void normalizeError(err);
         if (isAuthError(err)) setShowLoginModal(true);

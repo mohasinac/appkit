@@ -56,6 +56,7 @@ export function handleApiError(error: unknown): NextResponse {
  * replace with your structured logger if needed.
  */
 export function logError(
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: Record<string, JsonValue>,
 ): void {

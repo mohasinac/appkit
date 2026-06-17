@@ -36,6 +36,7 @@ export interface ApiErrorHandlerOptions<TAppError> {
    * Type guard — returns true when the thrown value is your app's AppError
    * (or any subclass) that has statusCode / toJSON methods.
    */
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   isAppError(err: unknown): err is TAppError;
 
   /** Extract the HTTP status code from your AppError. */
@@ -75,6 +76,7 @@ export function createApiErrorHandler<TAppError>(
     internalErrorMessage = "An internal server error occurred",
   } = options;
 
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   return function handleApiError(error: unknown): NextResponse {
     // Known AppError subclass — structured response
     if (isAppError(error)) {

@@ -10,6 +10,7 @@ export interface UseEntityDeleteOptions {
   successMessage?: string;
   errorMessage?: string;
   onSuccess?: (id: string) => void;
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   onError?: (id: string, error: unknown) => void;
   fetchOptions?: Omit<RequestInit, "method">;
 }

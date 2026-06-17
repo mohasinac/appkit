@@ -17,6 +17,7 @@ export interface UseBulkEventOptions<TData = unknown> {
   rtdbPath: string;
   timeoutMs?: number;
   messages?: RealtimeEventMessages;
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   onLogError?: (message: string, error: unknown) => void;
   extractData?: (raw: RTDBEventPayload) => BulkActionResult<TData> | null;
 }

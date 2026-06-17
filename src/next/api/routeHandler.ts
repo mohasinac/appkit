@@ -368,6 +368,7 @@ export function createRouteHandler<
       }
 
       return response;
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (err: unknown) {
       void normalizeError(err);
       const mapped = mapToHttpError(err, {

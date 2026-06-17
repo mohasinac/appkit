@@ -23,6 +23,7 @@ interface WrapOptions {
   payloadMaxBytes?: number;
 }
 
+// audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
 async function persist(name: string, err: unknown, ctxLike?: { now?: Date }): Promise<void> {
   const mapped = mapToHttpError(err);
   try {

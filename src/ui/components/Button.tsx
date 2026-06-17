@@ -146,6 +146,7 @@ export function Button({
           throw err;
         }
         if (returned && typeof (returned as Promise<unknown>).then === "function") {
+          // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
           (returned as Promise<unknown>).catch((err: unknown) => {
             if (toast) {
               surfaceError(err, { showToast: toast.showToast });

@@ -113,6 +113,7 @@ export interface ApiHandlerFactoryDeps<TRole, TRateLimitConfig, TUser> {
     status: number,
     issues?: unknown,
   ) => Response;
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   handleApiError: (error: unknown) => Response;
   getRateLimitExceededMessage: () => string;
   logTiming: (entry: {

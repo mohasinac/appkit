@@ -39,6 +39,7 @@ export function PreOrderActionsClient({
       try {
         await onReserveNow(productId);
         setSuccess(true);
+      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       } catch (err: unknown) {
         void normalizeError(err);
         if (isAuthError(err)) {

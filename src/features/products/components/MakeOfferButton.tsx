@@ -92,6 +92,7 @@ export function MakeOfferButton({
       try {
         await onMakeOffer(productId, offerAmount, buyerNote || undefined);
         setState("success");
+      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       } catch (err: unknown) {
         void normalizeError(err);
         handleOfferError(err);

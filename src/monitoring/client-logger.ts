@@ -22,6 +22,7 @@ export interface ClientErrorContext {
 }
 
 function buildClientMeta(
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: ClientErrorContext,
 ): Record<string, FirestoreValue> {
@@ -61,6 +62,7 @@ function buildClientMeta(
 
 export const logClientError = (
   message: string,
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: ClientErrorContext,
 ): void => {
@@ -124,6 +126,7 @@ export const logValidationError = (
 
 export const logNavigationError = (
   route: string,
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: ClientErrorContext,
 ): void => {
@@ -136,6 +139,7 @@ export const logNavigationError = (
 
 export const logAuthError = (
   operation: string,
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: ClientErrorContext,
 ): void => {
@@ -148,6 +152,7 @@ export const logAuthError = (
 
 export const logUploadError = (
   fileName: string,
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: ClientErrorContext,
 ): void => {
@@ -160,6 +165,7 @@ export const logUploadError = (
 
 export const logPaymentError = (
   transactionId: string,
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: ClientErrorContext,
 ): void => {
@@ -173,6 +179,7 @@ export const logPaymentError = (
 export const logApplicationError = (
   category: string,
   message: string,
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: ClientErrorContext,
 ): void => {

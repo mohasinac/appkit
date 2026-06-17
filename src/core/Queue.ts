@@ -52,6 +52,7 @@ export class Queue<T = unknown> {
         .then((result) => {
           this.results.set(task.id, result);
         })
+        // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
         .catch((error: unknown) => {
           this.errors.set(task.id, error as Error);
         })
@@ -59,6 +60,7 @@ export class Queue<T = unknown> {
           this.running--;
           this.process();
         })
+        // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
         .catch((err: unknown) => {
           qLogger.error("Queue.process error in finally", { err });
         });

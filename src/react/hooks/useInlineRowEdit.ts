@@ -7,6 +7,7 @@ export interface InlineEditOptions<TValue> {
   field: string;
   initialValue: TValue;
   save: (rowId: string, field: string, value: TValue) => Promise<unknown>;
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   onError?: (err: unknown, previous: TValue) => void;
 }
 

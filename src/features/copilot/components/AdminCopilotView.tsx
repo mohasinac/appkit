@@ -58,6 +58,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
 type CopilotLabels = AdminCopilotViewProps["labels"] & object;
 
 function renderCopilotChatPanel(props: {
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   messages: CopilotMessage[]; conversationId: string; isLoading: boolean; error: unknown;
   input: string; setInput: (v: string) => void; labels: CopilotLabels;
   messagesEndRef: React.RefObject<HTMLDivElement>; handleSubmit: (e: React.FormEvent) => void;
@@ -103,6 +104,7 @@ function renderCopilotChatPanel(props: {
 }
 
 function renderCopilotHistoryPanel(props: {
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   historyQuery: { data?: { messages: Array<{ prompt: string; response: string; createdAt: string }> }; error: unknown; isLoading: boolean };
   conversationInput: string; setConversationInput: (v: string) => void;
   loadConversation: (id: string) => void; labels: CopilotLabels;

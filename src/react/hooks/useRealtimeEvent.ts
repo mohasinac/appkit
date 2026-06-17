@@ -59,6 +59,7 @@ export interface UseRealtimeEventConfig<TData = undefined> {
   timeoutMs?: number;
   extractData?: (raw: RTDBEventPayload) => TData | null;
   messages?: RealtimeEventMessages;
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   onLogError?: (message: string, error: unknown) => void;
 }
 

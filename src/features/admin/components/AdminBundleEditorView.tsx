@@ -164,6 +164,7 @@ export function AdminBundleEditorView({
         const doc = json?.data ?? null;
         setForm(bundleToForm(doc));
       })
+      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       .catch((err: unknown) => {
         if (cancelled) return;
         setApiError(

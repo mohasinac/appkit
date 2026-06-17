@@ -97,6 +97,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
 
     try {
       await this.update(sessionId, updateData);
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (err: unknown) {
       void normalizeError(err);
       // The session doc may have been revoked/expired/wiped while the client

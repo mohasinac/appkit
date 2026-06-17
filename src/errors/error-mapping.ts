@@ -127,6 +127,7 @@ function mapFirestore(err: FirestoreLikeError): MappedError | null {
  *  - Unknown Error → 500 INTERNAL; message scrubbed when isProduction
  */
 export function mapToHttpError(
+  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   err: unknown,
   opts?: { isProduction?: boolean },
 ): MappedError {

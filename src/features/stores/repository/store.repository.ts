@@ -95,6 +95,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
         .collection(this.collection)
         .doc(input.storeSlug)
         .create(prepareForFirestore(this.encryptSecrets(storeData)));
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (err: unknown) { // audit-catch-raw-ok: pre-existing-handler-intentional
       // gRPC ALREADY_EXISTS = code 6
       if ((err as { code?: number }).code === 6) {

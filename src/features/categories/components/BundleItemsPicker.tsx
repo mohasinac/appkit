@@ -157,6 +157,7 @@ export function BundleItemsPicker({
           return next;
         });
       })
+      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       .catch((err: unknown) => {
         if (cancelled) return;
         const msg = err instanceof Error ? err.message : "Search failed";

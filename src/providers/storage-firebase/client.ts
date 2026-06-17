@@ -98,6 +98,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
       });
       const url = await getDownloadURL(uploadResult.ref);
       return { url, ref: uploadResult.ref, uploadResult };
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (error: unknown) {
       void normalizeError(error);
       const msg =
@@ -161,6 +162,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
   async function getFileUrl(path: string): Promise<string> {
     try {
       return await getDownloadURL(ref(storage, path));
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (error: unknown) {
       void normalizeError(error);
       const msg =
@@ -172,6 +174,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
   async function deleteFile(path: string): Promise<void> {
     try {
       await deleteObject(ref(storage, path));
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (error: unknown) {
       void normalizeError(error);
       const msg =
@@ -188,6 +191,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
     try {
       const result = await listAll(ref(storage, folderPath));
       return result.items;
+    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (error: unknown) {
       void normalizeError(error);
       const msg =
