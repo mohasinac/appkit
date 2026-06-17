@@ -172,7 +172,7 @@ const flex = { between: FLEX_BETWEEN };
         {/* FAQ Accordion */}
         <Stack gap="sm">
           {visibleItems.length === 0 && (
-            <Text className={`text-center py-12 ${themed.textSecondary}`}>
+            <Text paddingY="3xl" align="center" className={themed.textSecondary}>
               No FAQs in this category yet.
             </Text>
           )}
@@ -186,6 +186,7 @@ const flex = { between: FLEX_BETWEEN };
  }`}
               >
                 {/* Question trigger */}
+                {/* audit-variant-ok: FAQ question button — w-full text-left + flex.between + gap-4 + hover-shade dynamic; Button.variant ghost lacks text-left + dynamic-hover composition */}
                 <Button
                   variant="ghost"
                   className={`w-full text-left px-5 py-4 ${flex.between} gap-4 hover:${themed.bgTertiary} transition-colors rounded-none`}
@@ -214,7 +215,7 @@ const flex = { between: FLEX_BETWEEN };
  }`}
                 >
                   <Div className={`${__O.hidden}`}>
-                    <Div className="pb-5 pt-0" padding="x-md">
+                    <Div paddingY="b-md-lg" padding="x-md">
                       {isHtml(faq.answer) ? (
                         <RichText
                           html={faq.answer}
