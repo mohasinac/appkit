@@ -288,10 +288,10 @@ export function ListingToolbar({
                   aria-checked={t.active}
                   onClick={() => t.onChange(!t.active)}
                   className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
-                    t.active
-                      ? "border-transparent bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
-                      : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-                  }`}
+ t.active
+ ? "border-transparent bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
+ : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ }`}
                 >
                   {t.label}
                 </button>

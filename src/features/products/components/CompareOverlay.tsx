@@ -414,10 +414,10 @@ export function CompareOverlay({
                       aria-label={`Show item ${idx + 1}`}
                       onClick={() => setActiveIndex(idx)}
                       className={`h-2 w-2 rounded-full transition-colors ${
-                        idx === activeIndex
-                          ? "bg-primary"
-                          : "bg-zinc-300 dark:bg-zinc-700"
-                      }`}
+ idx === activeIndex
+ ? "bg-primary"
+ : "bg-zinc-300 dark:bg-zinc-700"
+ }`}
                     />
                   ))}
                 </Row>

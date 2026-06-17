@@ -100,7 +100,7 @@ function applyTheme(theme: ThemeRecord): void {
 export interface ThemeProviderProps {
   /**
    * Theme registry — typically `{ themes: [...BUILT_IN_THEMES, ...siteSettings.theme.themes],
-   * defaultLightThemeId, defaultDarkThemeId }`.
+ * defaultLightThemeId, defaultDarkThemeId }`.
    *
    * If omitted, ships with just the two built-ins.
    */

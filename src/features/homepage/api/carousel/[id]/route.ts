@@ -5,7 +5,7 @@
  * ```ts
  * // app/api/carousel/[id]/route.ts
  * export { carouselItemGET as GET, carouselItemPATCH as PATCH, carouselItemDELETE as DELETE }
- *   from "@mohasinac/feat-homepage";
+ * from "@mohasinac/feat-homepage";
  * ```
  */
 

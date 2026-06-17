@@ -42,8 +42,8 @@ export interface UseKeyPressOptions extends KeyModifiers {
  *
  * // Key combination (Ctrl+S)
  * useKeyPress('s', handleSave, {
- *   ctrl: true,
- *   preventDefault: true,
+ * ctrl: true,
+ * preventDefault: true,
  * });
  *
  * // Multiple keys

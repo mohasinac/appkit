@@ -9,7 +9,7 @@
  * import { firebaseStorageProvider } from "@mohasinac/storage-firebase";
  *
  * const result = await firebaseStorageProvider.upload(
- *   buffer, "products/image.jpg", { contentType: "image/jpeg" }
+ * buffer, "products/image.jpg", { contentType: "image/jpeg" }
  * );
  * ```
  */

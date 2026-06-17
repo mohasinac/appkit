@@ -114,9 +114,9 @@ export interface IDbProvider {
  * import { setRepositoryHooks } from "@mohasinac/appkit/contracts";
  *
  * setRepositoryHooks("products", {
- *   afterRead: (item) => { console.log("read product", item.id); },
- *   beforeCreate: (data) => ({ ...data, source: "letitrip" }),
- *   afterUpdate: (item) => myCache.invalidate(`product:${item.id}`),
+ * afterRead: (item) => { console.log("read product", item.id); },
+ * beforeCreate: (data) => ({ ...data, source: "letitrip" }),
+ * afterUpdate: (item) => myCache.invalidate(`product:${item.id}`),
  * });
  * ```
  */

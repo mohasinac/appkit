@@ -31,8 +31,8 @@ export const ORDER_MESSAGES = {
   SHIPPED_TITLE: "Your order has shipped 📦",
   SHIPPED_MESSAGE: (productTitle: string, trackingNumber?: string): string =>
     `Your order for "${productTitle}" is on its way!${
-      trackingNumber ? ` Tracking: ${trackingNumber}` : ""
-    }`,
+ trackingNumber ? ` Tracking: ${trackingNumber}` : ""
+ }`,
   DELIVERED_TITLE: "Order delivered 🎉",
   DELIVERED_MESSAGE: (productTitle: string): string =>
     `Your order for "${productTitle}" has been delivered. Enjoy!`,

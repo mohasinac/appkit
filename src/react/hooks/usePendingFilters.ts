@@ -45,20 +45,20 @@ export interface UsePendingFiltersReturn {
  *
  * @example
  * ```ts
- * const table   = useUrlTable({ defaults: { pageSize: '25' } });
+ * const table = useUrlTable({ defaults: { pageSize: '25' } });
  * const filters = usePendingFilters({ table, keys: ['status', 'category'] });
  *
  * <FilterDrawer
- *   onApply={() => { filters.apply(); setDrawerOpen(false); }}
- *   onReset={() => filters.clear()}
- *   activeCount={filters.appliedCount}
+ * onApply={() => { filters.apply(); setDrawerOpen(false); }}
+ * onReset={() => filters.clear()}
+ * activeCount={filters.appliedCount}
  * >
- *   <FilterFacetSection
- *     title="Status"
- *     options={STATUS_OPTIONS}
- *     selected={filters.pending['status'] ?? []}
- *     onChange={(v) => filters.set('status', v)}
- *   />
+ * <FilterFacetSection
+ * title="Status"
+ * options={STATUS_OPTIONS}
+ * selected={filters.pending['status'] ?? []}
+ * onChange={(v) => filters.set('status', v)}
+ * />
  * </FilterDrawer>
  * ```
  */

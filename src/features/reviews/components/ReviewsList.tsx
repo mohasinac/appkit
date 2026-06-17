@@ -109,7 +109,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           <RichText
             html={normalizeRichTextHtml(review.comment)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 dark:text-zinc-400"
+            className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-zinc-400"
           />
         )}
 
@@ -150,7 +150,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProductLink && (
             <Link
               href={productHref!}
-              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
+              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
               <Span aria-hidden="true">📦</Span>
               <Span truncate>
@@ -162,7 +162,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProfileLink && (
             <Link
               href={profileHref!}
-              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
+              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
               <Span aria-hidden="true">👤</Span>
               <Span truncate>{displayName}</Span>

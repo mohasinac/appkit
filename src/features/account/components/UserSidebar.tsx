@@ -54,10 +54,10 @@ function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boo
     onClick?.();
   };
   const linkClass = `flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
-    isActive
-      ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
-      : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100"
-  }`;
+ isActive
+ ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
+ : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100"
+ }`;
   return (
     <>
       <Link href={item.href} onClick={handleClick} className={linkClass}>
@@ -140,10 +140,10 @@ function DrawerContent({
               type="button"
               onClick={() => toggle(group.title)}
               className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
-                hasActive && !isOpen
-                  ? "text-primary-600 dark:text-primary-400"
-                  : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
-              }`}
+ hasActive && !isOpen
+ ? "text-primary-600 dark:text-primary-400"
+ : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+ }`}
             >
               <Span>{group.title}</Span>
               <svg

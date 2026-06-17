@@ -146,11 +146,11 @@ export function SpinWheelView({
           <Text size="4xl">🎁</Text>
         </Row>
         <style>{`
-          @keyframes lir-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(2160deg); }
-          }
-        `}</style>
+ @keyframes lir-spin {
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(2160deg); }
+ }
+ `}</style>
       </Div>
 
       {wonPrize ? (

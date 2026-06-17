@@ -216,8 +216,8 @@ export function BottomNavbar({
           href={cartHref}
           variant="none"
           className={`${slotClassName} ${
-            pathname === cartHref ? activeClassName : inactiveClassName
-          }`}
+ pathname === cartHref ? activeClassName : inactiveClassName
+ }`}
           aria-label={labels.cart}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -238,8 +238,8 @@ export function BottomNavbar({
             href={profileHref}
             variant="none"
             className={`${slotClassName} ${
-              pathname === profileHref ? activeClassName : inactiveClassName
-            }`}
+ pathname === profileHref ? activeClassName : inactiveClassName
+ }`}
             aria-label={labels.profile}
           >
             <AvatarDisplay

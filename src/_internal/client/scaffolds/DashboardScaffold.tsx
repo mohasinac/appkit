@@ -67,8 +67,8 @@ export function DashboardScaffold({
       {nav ? (
         <div
           className={`fixed inset-0 z-40 transition-transform md:block lg:hidden ${
-            drawerOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+ drawerOpen ? "translate-x-0" : "-translate-x-full"
+ }`}
           data-dashboard-slot="drawer"
           aria-hidden={!drawerOpen}
         >

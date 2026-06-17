@@ -40,9 +40,9 @@ interface BrowsedFile {
  * @example
  * ```tsx
  * <MediaPickerModal
- *   isOpen={open}
- *   onClose={() => setOpen(false)}
- *   onSelect={(url) => form.setValue("imageUrl", url)}
+ * isOpen={open}
+ * onClose={() => setOpen(false)}
+ * onSelect={(url) => form.setValue("imageUrl", url)}
  * />
  * ```
  */

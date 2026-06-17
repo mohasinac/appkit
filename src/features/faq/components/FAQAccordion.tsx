@@ -22,7 +22,7 @@ function FAQAccordionItem({
         variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="w-full justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 dark:text-neutral-100 dark:text-zinc-100 transition hover:text-primary"
+        className="w-full justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 dark:text-zinc-100 transition hover:text-primary"
       >
         <Span>{faq.question}</Span>
         <Span
@@ -132,7 +132,7 @@ export function FAQCategoryTabs({
     <Row wrap gap="sm" className="scrollbar-none">
       <Button
         onClick={() => onSelect(null)}
-        className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+        className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
       >
         {labels.all ?? "All"}
       </Button>
@@ -140,7 +140,7 @@ export function FAQCategoryTabs({
         <Button
           key={cat}
           onClick={() => onSelect(cat)}
-          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
         >
           {labels[cat] ?? cat.replace(/_/g, " ")}
         </Button>

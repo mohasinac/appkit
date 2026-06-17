@@ -59,17 +59,17 @@ export function WishlistToggleButton({
         aria-label={label}
         title={label}
         className={`
-          flex items-center justify-center rounded-full
-          transition-all duration-150
-          ${
-            inWishlist
-              ? "bg-error-surface text-error hover:bg-error-surface"
-              : "bg-white/80 text-zinc-400 hover:text-error"
-          }
-          ${sizeClasses[size]}
-          ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-          ${className}
-        `}
+ flex items-center justify-center rounded-full
+ transition-all duration-150
+ ${
+ inWishlist
+ ? "bg-error-surface text-error hover:bg-error-surface"
+ : "bg-white/80 text-zinc-400 hover:text-error"
+ }
+ ${sizeClasses[size]}
+ ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+ ${className}
+ `}
       >
         <svg
           className="w-4/6 h-4/6"

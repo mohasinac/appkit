@@ -32,13 +32,13 @@ export interface CharacterHotspotFormProps {
    * Upload an image and return its public URL.
    * Implement however suits your storage backend:
    * ```ts
-   * onUploadImage={async (file) => {
-   *   const storage = getStorage(getFirebaseApp());
-   *   const storageRef = ref(storage, `character-hotspot/${Date.now()}_${file.name}`);
-   *   await uploadBytes(storageRef, file);
-   *   return getDownloadURL(storageRef);
-   * }}
-   * ```
+ * onUploadImage={async (file) => {
+ * const storage = getStorage(getFirebaseApp());
+ * const storageRef = ref(storage, `character-hotspot/${Date.now()}_${file.name}`);
+ * await uploadBytes(storageRef, file);
+ * return getDownloadURL(storageRef);
+ * }}
+ * ```
    */
   onUploadImage: (file: File) => Promise<string>;
   /**

@@ -18,8 +18,8 @@ export interface DescriptionFieldProps {
  * @example
  * ```tsx
  * <Row as="dl" wrap gap="md">
- *   <DescriptionField label="Store name" value="My Amazing Store" />
- *   <DescriptionField label="Description" value={longDescription} />
+ * <DescriptionField label="Store name" value="My Amazing Store" />
+ * <DescriptionField label="Description" value={longDescription} />
  * </Row>
  * ```
  */

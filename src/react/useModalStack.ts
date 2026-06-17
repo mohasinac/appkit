@@ -23,7 +23,7 @@ export interface ModalEntry<T = unknown> {
  * // open a modal with optional payload:
  * <Button onClick={() => open("review-modal", review)}>Write Review</Button>
  *
- * const active = peek();          // { id: "review-modal", data: review }
+ * const active = peek(); // { id: "review-modal", data: review }
  * const visible = isOpen("review-modal");
  * ```
  */

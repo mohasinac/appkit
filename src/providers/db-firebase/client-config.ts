@@ -24,15 +24,15 @@ export function normalizeFirebaseConfigValue(
   value: string | undefined,
 ): string | undefined {
   const normalized = value?.trim().replace(/^['\"]|['\"]$/g, "");
-  return normalized ? normalized : undefined;
+ return normalized ? normalized : undefined;
 }
 
 export function buildFirebaseClientConfig(
-  env?: Record<string, string | undefined>,
+ env?: Record<string, string | undefined>,
 ): FirebaseClientConfig {
-  const resolvedEnv =
-    env ??
-    (typeof process !== "undefined"
+ const resolvedEnv =
+ env ??
+ (typeof process !== "undefined"
       ? (process.env as Record<string, string | undefined>)
       : {});
 

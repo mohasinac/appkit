@@ -61,8 +61,8 @@ export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
           priority: "high",
           title: "Your reveal is ready!",
           message: `Reveal your prize for "${product.title ?? "draw"}". You have ${
-            product.prizeRevealDeadlineDays ?? 3
-          } days to claim it.`,
+ product.prizeRevealDeadlineDays ?? 3
+ } days to claim it.`,
           relatedId: orderDoc.id,
           relatedType: "order",
           actionUrl: `/user/orders/view/${orderDoc.id}`,

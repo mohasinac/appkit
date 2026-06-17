@@ -26,7 +26,7 @@ export function WishlistCard({
             ? (e) => e.key === "Enter" && onProductClick(item)
             : undefined
         }
-        className={`h-20 w-20 flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800 ${onProductClick ? "cursor-pointer" : ""}`} rounded="lg"
+        className={`h-20 w-20 flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-slate-800 ${onProductClick ? "cursor-pointer" : ""}`} rounded="lg"
       >
         {item.productImage && (
           <Div

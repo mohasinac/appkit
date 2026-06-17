@@ -32,9 +32,9 @@ export function resolveEndpoint(
  * @example
  * ```ts
  * const url = resolveEndpointFn(
- *   API_ENDPOINTS.ACCOUNT.BY_ID,
- *   userId,
- *   options?.accountEndpoint,
+ * API_ENDPOINTS.ACCOUNT.BY_ID,
+ * userId,
+ * options?.accountEndpoint,
  * );
  * ```
  */

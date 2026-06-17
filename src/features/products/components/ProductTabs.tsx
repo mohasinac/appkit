@@ -68,10 +68,10 @@ export function ProductTabs({
               key={t.value}
               onClick={() => setActiveTab(t.value)}
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === t.value
-                  ? "border-current text-current"
-                  : "border-transparent text-zinc-500 dark:text-zinc-400"
-              }`}
+ activeTab === t.value
+ ? "border-current text-current"
+ : "border-transparent text-zinc-500 dark:text-zinc-400"
+ }`}
             >
               {t.label}
             </button>

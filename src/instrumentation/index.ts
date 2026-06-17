@@ -29,9 +29,9 @@
  * import { createInstrumentation } from "./";
  *
  * const { register } = createInstrumentation({
- *   onNodeServer: async () => {
- *     await import("./src/providers.config");
- *   },
+ * onNodeServer: async () => {
+ * await import("./src/providers.config");
+ * },
  * });
  *
  * export { register };

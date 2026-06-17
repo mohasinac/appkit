@@ -37,9 +37,9 @@ export interface FormFieldProps {
  * @example
  * ```tsx
  * <FormGrid>
- *   <FormField><Label>First name</Label><Input name="firstName" /></FormField>
- *   <FormField><Label>Last name</Label><Input name="lastName" /></FormField>
- *   <FormField span="full"><Label>Bio</Label><Textarea name="bio" /></FormField>
+ * <FormField><Label>First name</Label><Input name="firstName" /></FormField>
+ * <FormField><Label>Last name</Label><Input name="lastName" /></FormField>
+ * <FormField span="full"><Label>Bio</Label><Textarea name="bio" /></FormField>
  * </FormGrid>
  * ```
  */

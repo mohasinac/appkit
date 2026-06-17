@@ -10,7 +10,7 @@
  * import type { Product } from "@/types";
  *
  * export class ProductRepository extends FirebaseRepository<Product> {
- *   constructor() { super("products"); }
+ * constructor() { super("products"); }
  * }
  * ```
  *

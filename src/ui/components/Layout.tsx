@@ -194,8 +194,8 @@ type JustifyContent = keyof typeof JUSTIFY_MAP;
  *
  * @example
  * ```tsx
- * <Container>...</Container>                   // max-w-7xl (default)
- * <Container size="lg">...</Container>         // max-w-5xl
+ * <Container>...</Container> // max-w-7xl (default)
+ * <Container size="lg">...</Container> // max-w-5xl
  * <Container size="full" as="main">...</Container>
  * ```
  */
@@ -239,13 +239,13 @@ export function Container({
  * @example
  * ```tsx
  * <Stack gap="sm">
- *   <Text>Line one</Text>
- *   <Text>Line two</Text>
+ * <Text>Line one</Text>
+ * <Text>Line two</Text>
  * </Stack>
  *
  * // As a list
  * <Stack as="ul" gap="xs">
- *   <Li>Item</Li>
+ * <Li>Item</Li>
  * </Stack>
  * ```
  */
@@ -332,13 +332,13 @@ export function Stack({
  * @example
  * ```tsx
  * <Row gap="sm" justify="between">
- *   <Heading level={3}>Title</Heading>
- *   <Button>Action</Button>
+ * <Heading level={3}>Title</Heading>
+ * <Button>Action</Button>
  * </Row>
  *
  * <Row gap="xs" wrap>
- *   <Badge>tag</Badge>
- *   <Badge>other</Badge>
+ * <Badge>tag</Badge>
+ * <Badge>other</Badge>
  * </Row>
  * ```
  */
@@ -456,13 +456,13 @@ export function Row({
  * @example
  * ```tsx
  * <Grid cols={3} gap="md">
- *   <ProductCard />
- *   <ProductCard />
+ * <ProductCard />
+ * <ProductCard />
  * </Grid>
  *
  * <Grid cols="sidebar" gap="lg">
- *   <Aside>Filters</Aside>
- *   <Main>Results</Main>
+ * <Aside>Filters</Aside>
+ * <Main>Results</Main>
  * </Grid>
  * ```
  */

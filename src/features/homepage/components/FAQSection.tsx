@@ -182,8 +182,8 @@ const flex = { between: FLEX_BETWEEN };
               <div
                 key={faq.id}
                 className={`${themed.bgPrimary} rounded-xl overflow-hidden border transition-all duration-200 ${
-                  isOpen ? "border-primary/40 shadow-sm" : `${themed.border}`
-                }`}
+ isOpen ? "border-primary/40 shadow-sm" : `${themed.border}`
+ }`}
               >
                 {/* Question trigger */}
                 <Button
@@ -195,23 +195,23 @@ const flex = { between: FLEX_BETWEEN };
                   <Span
                     size="sm" weight="medium"
                     className={`flex-1 leading-snug ${
-                      isOpen ? "text-primary" : themed.textPrimary
-                    }`}
+ isOpen ? "text-primary" : themed.textPrimary
+ }`}
                   >
                     {faq.question}
                   </Span>
                   <ChevronDown
                     className={`w-4 h-4 flex-shrink-0 transition-transform duration-250 ${
-                      isOpen ? "rotate-180 text-primary" : themed.textSecondary
-                    }`}
+ isOpen ? "rotate-180 text-primary" : themed.textSecondary
+ }`}
                   />
                 </Button>
 
                 {/* Answer — CSS grid expand/collapse animation */}
                 <Div layout="grid" 
                   className={`transition-all duration-300 ease-out ${
-                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                  }`}
+ isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+ }`}
                 >
                   <Div className={`${__O.hidden}`}>
                     <Div className="pb-5 pt-0" padding="x-md">

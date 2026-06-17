@@ -71,16 +71,16 @@ export interface CreateApiMiddlewareConfig<TCtx extends BaseRequestContext> {
  * ```ts
  * // Simple route with scrubber only
  * export const GET = createApiMiddleware({})(async (_input, _ctx, req) => {
- *   const data = await getProducts();
- *   return NextResponse.json({ data });
+ * const data = await getProducts();
+ * return NextResponse.json({ data });
  * });
  *
  * // Route with auth context + custom middleware
  * export const GET = createApiMiddleware({
- *   middlewares: [myCustomMiddleware],
+ * middlewares: [myCustomMiddleware],
  * })(async (_input, ctx, _req) => {
- *   // ctx is AuthRequestContext
- *   return NextResponse.json({ uid: ctx.user.uid });
+ * // ctx is AuthRequestContext
+ * return NextResponse.json({ uid: ctx.user.uid });
  * });
  * ```
  */

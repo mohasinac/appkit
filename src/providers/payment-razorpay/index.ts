@@ -10,11 +10,11 @@
  * import { registerProviders } from "../../contracts";
  *
  * registerProviders({
- *   payment: new RazorpayProvider({
- *     keyId: process.env.RAZORPAY_KEY_ID!,
- *     keySecret: process.env.RAZORPAY_KEY_SECRET!,
- *     webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET,
- *   }),
+ * payment: new RazorpayProvider({
+ * keyId: process.env.RAZORPAY_KEY_ID!,
+ * keySecret: process.env.RAZORPAY_KEY_SECRET!,
+ * webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET,
+ * }),
  * });
  * ```
  */

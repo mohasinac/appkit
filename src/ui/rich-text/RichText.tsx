@@ -200,14 +200,14 @@ export interface RichTextProps {
    *
    * @example
    * ```tsx
-   * import hljs from "highlight.js";
-   * <RichText
-   *   html={post.body}
-   *   highlightCode={(code, lang) =>
-   *     hljs.highlight(code, { language: lang || "plaintext", ignoreIllegals: true }).value
-   *   }
-   * />
-   * ```
+ * import hljs from "highlight.js";
+ * <RichText
+ * html={post.body}
+ * highlightCode={(code, lang) =>
+ * hljs.highlight(code, { language: lang || "plaintext", ignoreIllegals: true }).value
+ * }
+ * />
+ * ```
    */
   highlightCode?: (code: string, lang: string) => string;
 }

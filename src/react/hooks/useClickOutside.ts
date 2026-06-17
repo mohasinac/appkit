@@ -31,10 +31,10 @@ const EMPTY_REFS: RefObject<HTMLElement | null>[] = [];
  * const triggerRef = useRef<HTMLButtonElement>(null);
  *
  * useClickOutside(dropdownRef, () => {
- *   setIsOpen(false);
+ * setIsOpen(false);
  * }, {
- *   additionalRefs: [triggerRef],
- *   enabled: isOpen,
+ * additionalRefs: [triggerRef],
+ * enabled: isOpen,
  * });
  * ```
  */

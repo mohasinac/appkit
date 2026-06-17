@@ -156,10 +156,10 @@ export function AdminFaqsView({
                   setPendingFilters((p) => ({ ...p, isActive: opt.value }))
                 }
                 className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                  (pendingFilters.isActive || "") === opt.value
-                    ? "bg-primary text-white border-primary"
-                    : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-                }`}
+ (pendingFilters.isActive || "") === opt.value
+ ? "bg-primary text-white border-primary"
+ : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ }`}
               >
                 {opt.label}
               </button>

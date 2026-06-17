@@ -155,8 +155,8 @@ export function PrizeDrawsIndexListing({
               aria-checked={showClosed}
               onClick={() => table.set("showClosed", showClosed ? "" : "true")}
               className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
-                showClosed ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
-              }`}
+ showClosed ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
+ }`}
             >
               <Span
                 className={`inline-block h-3.5 w-3.5 transform shadow-sm transition-transform duration-200 ${ showClosed ? "translate-x-[19px]" : "translate-x-[3px]" }`} rounded="full" surface="default"

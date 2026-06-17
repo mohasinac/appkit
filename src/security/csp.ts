@@ -5,7 +5,7 @@
  * @example
  * ```ts
  * const nonce = generateNonce();
- * const csp   = buildCSP(nonce);
+ * const csp = buildCSP(nonce);
  * response.headers.set("Content-Security-Policy", csp);
  * requestHeaders.set("x-nonce", nonce);
  * ```

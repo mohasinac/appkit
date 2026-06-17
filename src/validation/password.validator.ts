@@ -40,21 +40,21 @@ export function meetsPasswordRequirements(
   if (
     requirements.requireSpecialChars &&
     !/[!@#$%^&*(),.?":{}|<>]/.test(password)
-  )
-    missing.push("One special character");
-  return { valid: missing.length === 0, missing };
+ )
+ missing.push("One special character");
+ return { valid: missing.length === 0, missing };
 }
 
 export function calculatePasswordStrength(password: string): PasswordStrength {
-  let score = 0;
-  const feedback: string[] = [];
+ let score = 0;
+ const feedback: string[] = [];
 
-  if (password.length >= 8) score++;
-  if (password.length >= 12) score++;
-  if (password.length < 8) feedback.push("Password is too short");
-  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
-  if (/\d/.test(password)) score++;
-  if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
+ if (password.length >= 8) score++;
+ if (password.length >= 12) score++;
+ if (password.length < 8) feedback.push("Password is too short");
+ if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+ if (/\d/.test(password)) score++;
+ if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
 
   if (/(.)\1{2,}/.test(password)) {
     score = Math.max(0, score - 1);

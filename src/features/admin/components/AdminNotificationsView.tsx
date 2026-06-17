@@ -149,10 +149,10 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
               type="button"
               onClick={() => setPendingFilters((p) => ({ ...p, type: opt === "All" ? "" : opt }))}
               className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                (pendingFilters.type || "All") === opt
-                  ? "bg-primary text-white border-primary"
-                  : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-              }`}
+ (pendingFilters.type || "All") === opt
+ ? "bg-primary text-white border-primary"
+ : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ }`}
             >
               {opt}
             </button>

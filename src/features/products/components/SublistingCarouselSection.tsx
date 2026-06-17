@@ -68,10 +68,10 @@ function ListingThumb({
     >
       <div
         className={`w-14 h-14 rounded-full overflow-hidden border-2 transition-all ${
-          isCurrent
-            ? "border-[var(--appkit-color-primary)] ring-2 ring-[var(--appkit-color-primary)]/30"
-            : "border-zinc-200 dark:border-zinc-700 group-hover:border-[var(--appkit-color-primary)]"
-        }`}
+ isCurrent
+ ? "border-[var(--appkit-color-primary)] ring-2 ring-[var(--appkit-color-primary)]/30"
+ : "border-zinc-200 dark:border-zinc-700 group-hover:border-[var(--appkit-color-primary)]"
+ }`}
       >
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element

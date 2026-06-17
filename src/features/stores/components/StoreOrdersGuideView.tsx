@@ -30,10 +30,10 @@ function GuideSection({
 
 const STATUS_LIFECYCLE = `
 PENDING ──► PROCESSING ──► SHIPPED ──► DELIVERED
-   │              │              │
-   └──► CANCELLED │              └──► RETURN_REQUESTED ──► REFUNDED
-                  │
-                  └──► CANCELLED
+ │ │ │
+ └──► CANCELLED │ └──► RETURN_REQUESTED ──► REFUNDED
+ │
+ └──► CANCELLED
 `;
 
 const STATUS_ROWS = [

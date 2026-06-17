@@ -12,15 +12,15 @@ import { Button, Div } from "@mohasinac/appkit/ui";
  * @example
  * ```tsx
  * <AdminFilterBar 
- *   deferred 
- *   onApply={filters.apply} 
- *   onReset={filters.reset} 
- *   pendingCount={filters.pendingCount}
- *   labels={{ apply: "Apply", reset: "Reset", applyCount: "Apply" }}
- *   themeConfig={{ cardPadding: "p-4", flexEnd: "flex justify-end" }}
+ * deferred 
+ * onApply={filters.apply} 
+ * onReset={filters.reset} 
+ * pendingCount={filters.pendingCount}
+ * labels={{ apply: "Apply", reset: "Reset", applyCount: "Apply" }}
+ * themeConfig={{ cardPadding: "p-4", flexEnd: "flex justify-end" }}
  * >
- *   <Input placeholder="Search users..." />
- *   <Select>...</Select>
+ * <Input placeholder="Search users..." />
+ * <Select>...</Select>
  * </AdminFilterBar>
  * ```
  */

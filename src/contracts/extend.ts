@@ -22,12 +22,12 @@
  * interface ProductDocument extends ProductItem { brand: string }
  *
  * export const productExt: FeatureExtension<ProductItem, ProductDocument> = {
- *   schema: productItemSchema.extend({ brand: z.string() }),
- *   columns: buildProductColumns<ProductDocument>({
- *     extras: [{ key: "brand", header: "Brand", render: (p) => p.brand }],
- *   }),
- *   slots: { renderCard: (p) => <MyBrandCard product={p} /> },
- *   transform: (raw) => ({ ...raw, brand: raw.attributes?.brand ?? "" }),
+ * schema: productItemSchema.extend({ brand: z.string() }),
+ * columns: buildProductColumns<ProductDocument>({
+ * extras: [{ key: "brand", header: "Brand", render: (p) => p.brand }],
+ * }),
+ * slots: { renderCard: (p) => <MyBrandCard product={p} /> },
+ * transform: (raw) => ({ ...raw, brand: raw.attributes?.brand ?? "" }),
  * };
  *
  * // 2. Hook
@@ -170,12 +170,12 @@ export interface LayoutSlots<T> {
  * interface ProductDocument extends ProductItem { brand: string }
  *
  * export const productExt: FeatureExtension<ProductItem, ProductDocument> = {
- *   schema: productItemSchema.extend({ brand: z.string() }),
- *   columns: buildProductColumns<ProductDocument>({
- *     extras: [{ key: "brand", header: "Brand", render: (p) => p.brand }],
- *   }),
- *   slots: { renderCard: (p) => <MyBrandCard product={p} /> },
- *   transform: (raw) => ({ ...raw, brand: raw.attributes?.brand ?? "" }),
+ * schema: productItemSchema.extend({ brand: z.string() }),
+ * columns: buildProductColumns<ProductDocument>({
+ * extras: [{ key: "brand", header: "Brand", render: (p) => p.brand }],
+ * }),
+ * slots: { renderCard: (p) => <MyBrandCard product={p} /> },
+ * transform: (raw) => ({ ...raw, brand: raw.attributes?.brand ?? "" }),
  * };
  * ```
  */
@@ -207,17 +207,17 @@ export interface FeatureExtension<
  * @example
  * ```tsx
  * const extraFilters: FilterDefinition[] = [
- *   {
- *     key: "brand",
- *     label: "Brand",
- *     type: "select",
- *     options: [{ value: "nike", label: "Nike" }, { value: "adidas", label: "Adidas" }],
- *   },
- *   {
- *     key: "hsn",
- *     label: "HSN Code",
- *     type: "text",
- *   },
+ * {
+ * key: "brand",
+ * label: "Brand",
+ * type: "select",
+ * options: [{ value: "nike", label: "Nike" }, { value: "adidas", label: "Adidas" }],
+ * },
+ * {
+ * key: "hsn",
+ * label: "HSN Code",
+ * type: "text",
+ * },
  * ];
  *
  * <ProductsView extraFilters={extraFilters} />
@@ -267,8 +267,8 @@ export interface FilterDefinition {
  * @example
  * ```tsx
  * const extraSorts: SortDefinition[] = [
- *   { value: "brand", label: "Brand A→Z" },
- *   { value: "-brand", label: "Brand Z→A" },
+ * { value: "brand", label: "Brand A→Z" },
+ * { value: "-brand", label: "Brand Z→A" },
  * ];
  * <ProductsView extraSorts={extraSorts} />
  * ```

@@ -183,8 +183,8 @@ export { useSwipe } from "./react/hooks/useSwipe";
 // useInfiniteScroll - IntersectionObserver primitive for cursor-based listings (Q6 — S13).
 export { useInfiniteScroll } from "./react/hooks/useInfiniteScroll";
 export type {
-  UseInfiniteScrollOptions,
-  UseInfiniteScrollResult,
+ UseInfiniteScrollOptions,
+ UseInfiniteScrollResult,
 } from "./react/hooks/useInfiniteScroll";
 // useTheme — exported above alongside the registry-aware ThemeProvider.
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.

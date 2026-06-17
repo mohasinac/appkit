@@ -119,9 +119,9 @@ function formatLogEntry(entry: LogEntry): string {
   let dataStr = "";
   if (sanitized !== undefined) {
     try {
-      dataStr = `\n  Data: ${JSON.stringify(sanitized, null, 2)}`;
+      dataStr = `\n Data: ${JSON.stringify(sanitized, null, 2)}`;
     } catch {
-      dataStr = `\n  Data: [non-serializable — ${typeof sanitized}]`;
+      dataStr = `\n Data: [non-serializable — ${typeof sanitized}]`;
     }
   }
   return `[${entry.level.toUpperCase()}] ${entry.timestamp} - ${entry.message}${dataStr}\n\n`;

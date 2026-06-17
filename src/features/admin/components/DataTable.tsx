@@ -184,7 +184,7 @@ export function DataTable<T extends { id: string }>({
                   onClick={
                     col.sortable && onSort ? () => onSort(col.key) : undefined
                   }
-                  className={`text-left text-neutral-900 dark:text-neutral-100 dark:text-zinc-100 ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} padding="md" weight="semibold"
+                  className={`text-left text-neutral-900 dark:text-zinc-100 ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} padding="md" weight="semibold"
                 >
                   {col.header}
                   {col.sortable && sortKey === col.key && (
@@ -213,7 +213,7 @@ export function DataTable<T extends { id: string }>({
               <Tr>
                 <Td
                   colSpan={columns.length + (selectionEnabled ? 1 : 0) + (renderRowActions ? 1 : 0)}
-                  className="px-4 py-12 text-center text-neutral-500 dark:text-neutral-400 dark:text-zinc-400"
+                  className="px-4 py-12 text-center text-neutral-500 dark:text-zinc-400"
                 >
                   {emptyLabel}
                 </Td>
@@ -244,7 +244,7 @@ export function DataTable<T extends { id: string }>({
               onClick={() => onPageChange(p)}
               variant={p === currentPage ? "primary" : "ghost"}
               size="sm"
-              className={`h-8 w-8 rounded text-xs font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "text-neutral-600 dark:text-neutral-400 dark:text-zinc-300 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-slate-800"}`}
+              className={`h-8 w-8 rounded text-xs font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "text-neutral-600 dark:text-zinc-300 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-slate-800"}`}
             >
               {p}
             </Button>

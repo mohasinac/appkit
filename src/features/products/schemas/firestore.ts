@@ -212,7 +212,7 @@ export interface ProductDocument {
   // this ProductDocument is a "seller offer" linked to a shared
   // CatalogProductDocument row. The PDP aggregates all offers with the same
   // catalogProductId at /catalog/{slug}. Migration + admin "Promote to
-  // catalog" flow lands in Phase 4 cohort 2.
+ // catalog" flow lands in Phase 4 cohort 2.
   catalogProductId?: string;
   preOrderDeliveryDate?: Date;
   preOrderDepositPercent?: number;

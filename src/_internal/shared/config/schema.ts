@@ -11,11 +11,11 @@ import type { FirestoreDocument } from "@mohasinac/appkit";
  * // appkit.config.ts
  * import type { AppkitConfig } from "@mohasinac/appkit";
  * const config: AppkitConfig = {
- *   baseUrl: "http://localhost:3000",
- *   locales: ["en"],
- *   routes: {
- *     smoke: [{ path: "/", expect: ["MyBrand"] }],
- *   },
+ * baseUrl: "http://localhost:3000",
+ * locales: ["en"],
+ * routes: {
+ * smoke: [{ path: "/", expect: ["MyBrand"] }],
+ * },
  * };
  * export default config;
  * ```

@@ -15,7 +15,7 @@ import { createCronJob } from "../registry";
  *
  * const { db } = getProviders();
  * export const auctionExpiry = createAuctionExpiryJob(
- *   db!.getRepository("auctions")
+ * db!.getRepository("auctions")
  * );
  * ```
  */

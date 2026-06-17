@@ -46,10 +46,10 @@ export function StoreNavTabs({
             role="tab"
             aria-selected={activeValue === tab.value}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
-              activeValue === tab.value
-                ? "border-primary text-primary"
-                : "border-transparent text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-800 dark:hover:text-zinc-200"
-            }`}
+ activeValue === tab.value
+ ? "border-primary text-primary"
+ : "border-transparent text-neutral-500 dark:text-zinc-400 hover:text-neutral-800 dark:hover:text-zinc-200"
+ }`}
           >
             {tab.label}
           </a>
@@ -61,10 +61,10 @@ export function StoreNavTabs({
             aria-selected={activeValue === tab.value}
             onClick={() => handleChange(tab.value)}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
-              activeValue === tab.value
-                ? "border-primary text-primary"
-                : "border-transparent text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-800 dark:hover:text-zinc-200"
-            }`}
+ activeValue === tab.value
+ ? "border-primary text-primary"
+ : "border-transparent text-neutral-500 dark:text-zinc-400 hover:text-neutral-800 dark:hover:text-zinc-200"
+ }`}
           >
             {tab.label}
           </button>

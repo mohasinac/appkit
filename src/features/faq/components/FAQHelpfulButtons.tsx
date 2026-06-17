@@ -81,12 +81,12 @@ export function FAQHelpfulButtons({
           onClick={() => handleVote(true)}
           disabled={isPending || userVote !== null}
           className={`flex-1 gap-2 rounded-lg p-4 transition-all ${
-            userVote === "helpful"
-              ? "bg-green-600 text-white"
-              : userVote
-                ? "cursor-not-allowed bg-zinc-200 text-zinc-500 opacity-50 dark:bg-slate-600 dark:text-zinc-400"
-                : "bg-white text-zinc-800 hover:bg-green-50 dark:bg-slate-800 dark:text-zinc-100 dark:hover:bg-green-900/20"
-          }`}
+ userVote === "helpful"
+ ? "bg-green-600 text-white"
+ : userVote
+ ? "cursor-not-allowed bg-zinc-200 text-zinc-500 opacity-50 dark:bg-slate-600 dark:text-zinc-400"
+ : "bg-white text-zinc-800 hover:bg-green-50 dark:bg-slate-800 dark:text-zinc-100 dark:hover:bg-green-900/20"
+ }`}
         >
           <Span size="sm">{labels?.yes ?? "Yes"}</Span>
           <Span size="sm" color="muted">
@@ -99,12 +99,12 @@ export function FAQHelpfulButtons({
           onClick={() => handleVote(false)}
           disabled={isPending || userVote !== null}
           className={`flex-1 gap-2 rounded-lg p-4 transition-all ${
-            userVote === "not-helpful"
-              ? "bg-red-600 text-white"
-              : userVote
-                ? "cursor-not-allowed bg-zinc-200 text-zinc-500 opacity-50 dark:bg-slate-600 dark:text-zinc-400"
-                : "bg-white text-zinc-800 hover:bg-red-50 dark:bg-slate-800 dark:text-zinc-100 dark:hover:bg-red-900/20"
-          }`}
+ userVote === "not-helpful"
+ ? "bg-red-600 text-white"
+ : userVote
+ ? "cursor-not-allowed bg-zinc-200 text-zinc-500 opacity-50 dark:bg-slate-600 dark:text-zinc-400"
+ : "bg-white text-zinc-800 hover:bg-red-50 dark:bg-slate-800 dark:text-zinc-100 dark:hover:bg-red-900/20"
+ }`}
         >
           <Span size="sm">{labels?.no ?? "No"}</Span>
           <Span size="sm" color="muted">

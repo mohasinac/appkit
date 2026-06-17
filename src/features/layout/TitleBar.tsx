@@ -38,26 +38,26 @@ export interface TitleBarProps
  * dashboard nav button in nested admin/seller/user routes.
  */
 export function TitleBar({
-  suppressDashboardNav,
-  onBeforeToggleDashboardNav,
-  userId,
-  ...rest
+ suppressDashboardNav,
+ onBeforeToggleDashboardNav,
+ userId,
+ ...rest
 }: TitleBarProps) {
-  const cartCount = useCartCount(!!rest.user);
-  const wishlistCount = useWishlistCount(userId);
-  const { unreadCount } = useNotifications(1);
-  const { hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } =
-    useDashboardNav();
+ const cartCount = useCartCount(!!rest.user);
+ const wishlistCount = useWishlistCount(userId);
+ const { unreadCount } = useNotifications(1);
+ const { hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } =
+ useDashboardNav();
 
-  return (
-    <TitleBarLayout
-      {...rest}
-      cartCount={cartCount}
-      wishlistCount={wishlistCount}
-      unreadNotificationCount={rest.user ? unreadCount : 0}
-      // Default the bell to the user notifications page when the user is
-      // authenticated — consumers can override by passing their own
-      // `notificationsHref` through `...rest`.
+ return (
+ <TitleBarLayout
+ {...rest}
+ cartCount={cartCount}
+ wishlistCount={wishlistCount}
+ unreadNotificationCount={rest.user ? unreadCount : 0}
+ // Default the bell to the user notifications page when the user is
+ // authenticated — consumers can override by passing their own
+ // `notificationsHref` through `...rest`.
       notificationsHref={
         rest.notificationsHref ??
         (rest.user ? String(ROUTES.USER.NOTIFICATIONS) : undefined)

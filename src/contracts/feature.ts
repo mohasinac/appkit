@@ -51,9 +51,9 @@ export interface FeatureManifest {
  * @example
  * ```ts
  * export default {
- *   auth: true,
- *   events: true,
- *   auctions: false,
+ * auth: true,
+ * events: true,
+ * auctions: false,
  * } satisfies FeaturesConfig;
  * ```
  */

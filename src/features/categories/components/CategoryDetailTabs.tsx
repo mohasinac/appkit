@@ -97,10 +97,10 @@ export function CategoryDetailTabs({
             type="button"
             onClick={() => setActiveTab(t.id as CategoryTabId)}
             className={`px-5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors -mb-px border-b-2 ${
-              activeTab === t.id
-                ? "border-primary text-primary"
-                : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
-            }`}
+ activeTab === t.id
+ ? "border-primary text-primary"
+ : "border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+ }`}
           >
             {tabLabel(t.label, countFor(t.id as CategoryTabId))}
           </button>

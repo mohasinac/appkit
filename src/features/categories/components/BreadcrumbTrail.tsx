@@ -45,9 +45,9 @@ export interface BreadcrumbTrailProps {
  * @example
  * ```tsx
  * <BreadcrumbTrail
- *   category={category}
- *   rootHref="/categories"
- *   basePath="/categories"
+ * category={category}
+ * rootHref="/categories"
+ * basePath="/categories"
  * />
  * ```
  */

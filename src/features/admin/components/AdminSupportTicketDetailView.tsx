@@ -305,9 +305,9 @@ export function AdminSupportTicketDetailView({
           internalNotes:
             (notes ? notes + "\n" : "") +
             `[${new Date().toISOString()}] Modified order ${linkedOrderId} items: ${orderItems
-              .filter((it) => it.quantity > 0)
-              .map((it) => `${it.productId}x${it.quantity}`)
-              .join(", ")}`,
+ .filter((it) => it.quantity > 0)
+ .map((it) => `${it.productId}x${it.quantity}`)
+ .join(", ")}`,
         })
         .catch(() => {}); // audit-silent-catch-ok: ticket-note metadata; primary admin action already succeeded
       invalidate();

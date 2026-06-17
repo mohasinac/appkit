@@ -29,7 +29,7 @@ export interface BottomSheetProps {
  * @example
  * ```tsx
  * <BottomSheet open={isOpen} onClose={() => setIsOpen(false)} title="Filters">
- *   <FilterPanel />
+ * <FilterPanel />
  * </BottomSheet>
  * ```
  */

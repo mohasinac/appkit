@@ -19,22 +19,22 @@
  * import { registerFormFields } from "@mohasinac/appkit/contracts";
  *
  * registerFormFields("product", [
- *   {
- *     key: "hsn",
- *     position: "after:price",
- *     render: ({ value, onChange, disabled }) => (
- *       <FormField label="HSN Code">
- *         <input value={value ?? ""} onChange={(e) => onChange(e.target.value)} disabled={disabled} />
- *       </FormField>
- *     ),
- *   },
+ * {
+ * key: "hsn",
+ * position: "after:price",
+ * render: ({ value, onChange, disabled }) => (
+ * <FormField label="HSN Code">
+ * <input value={value ?? ""} onChange={(e) => onChange(e.target.value)} disabled={disabled} />
+ * </FormField>
+ * ),
+ * },
  * ]);
  *
  * // Or pass directly via prop:
  * <ProductForm
- *   product={product}
- *   onChange={setProduct}
- *   extraFields={[{ key: "hsn", render: ({ value, onChange }) => <HsnField ... /> }]}
+ * product={product}
+ * onChange={setProduct}
+ * extraFields={[{ key: "hsn", render: ({ value, onChange }) => <HsnField ... /> }]}
  * />
  * ```
  */

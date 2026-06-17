@@ -191,8 +191,8 @@ function emitOrderPlacedNotifications(args: {
           priority: "high",
           title: "New order received",
           message: `${paid ? "New paid order" : "New order"} from ${
-            buyerName || "a buyer"
-          } for ${productLabel}.`,
+ buyerName || "a buyer"
+ } for ${productLabel}.`,
           relatedId: orderId,
           relatedType: "order",
           actionUrl: `/store/orders/${orderId}/view`,

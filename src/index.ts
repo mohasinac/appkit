@@ -1679,10 +1679,10 @@ export { couponsRepository } from "./repositories/index";
 export { claimedCouponsRepository, ClaimedCouponsRepository } from "./repositories/index";
 export type { ClaimedCouponCreateInput } from "./repositories/index";
 export type {
-  ClaimedCouponDocument,
-  ClaimedCouponStatus,
-  ClaimedCouponSource,
-  ClaimedCouponSnapshot,
+ ClaimedCouponDocument,
+ ClaimedCouponStatus,
+ ClaimedCouponSource,
+ ClaimedCouponSnapshot,
 } from "./features/promotions/schemas";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // emailVerificationTokenRepository - Shared export for email verification token repository.
@@ -1742,22 +1742,22 @@ export { scammerRepository } from "./repositories/index";
 // supportRepository - Server-only repository for support tickets (BAN1).
 export { supportRepository, SupportRepository } from "./repositories/index";
 export type {
-  SupportTicketDocument,
-  SupportTicketCreateInput,
-  SupportTicketUpdateInput,
-  TicketMessage,
-  TicketCategory,
-  TicketStatus,
-  TicketPriority,
+ SupportTicketDocument,
+ SupportTicketCreateInput,
+ SupportTicketUpdateInput,
+ TicketMessage,
+ TicketCategory,
+ TicketStatus,
+ TicketPriority,
 } from "./repositories/index";
 export {
-  ELIGIBLE_ORDER_STATUSES_FOR_TICKET,
-  SUPPORT_TICKET_COLLECTION,
-  ACTIVE_TICKET_STATUSES,
-  SUPPORT_TICKET_FIELDS,
-  TicketCategoryValues,
-  TicketStatusValues,
-  TicketPriorityValues,
+ ELIGIBLE_ORDER_STATUSES_FOR_TICKET,
+ SUPPORT_TICKET_COLLECTION,
+ ACTIVE_TICKET_STATUSES,
+ SUPPORT_TICKET_FIELDS,
+ TicketCategoryValues,
+ TicketStatusValues,
+ TicketPriorityValues,
 } from "./features/support/schemas/firestore";
 // Support tickets â€" seed data
 export { supportTicketsSeedData } from "./seed/index";
@@ -2747,9 +2747,9 @@ export type { RazorpayRefundResult } from "./providers/payment-razorpay/index";
 export { SHIPROCKET_TOKEN_TTL_MS } from "./providers/shipping-shiprocket/index";
 // SHIPROCKET_TRACKING_URL_BASE / buildShiprocketTrackingUrl / SHIPROCKET_STATUS_PICKUP_SCHEDULED â€" pure helpers, see O5.
 export {
-  SHIPROCKET_TRACKING_URL_BASE,
-  buildShiprocketTrackingUrl,
-  SHIPROCKET_STATUS_PICKUP_SCHEDULED,
+ SHIPROCKET_TRACKING_URL_BASE,
+ buildShiprocketTrackingUrl,
+ SHIPROCKET_STATUS_PICKUP_SCHEDULED,
 } from "./providers/shipping-shiprocket/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ShiprocketProvider - Component for shiprocket provider.
@@ -5877,11 +5877,11 @@ export type { SwitchFilterProps } from "./features/filters/index";
 export type { UrlTable } from "./features/filters/index";
 export type { UsePendingFiltersOptions, UsePendingFiltersResult } from "./features/filters/index";
 export {
-  parseRouteFilterSegments,
-  serializeRouteFilterSegments,
-  buildFilterUrl,
-  extractFilterStateFromParams,
-  mergeFilterUpdate,
+ parseRouteFilterSegments,
+ serializeRouteFilterSegments,
+ buildFilterUrl,
+ extractFilterStateFromParams,
+ mergeFilterUpdate,
 } from "./features/filters/index";
 export type { RouteFilterState } from "./features/filters/index";
 
@@ -7114,9 +7114,9 @@ export type { PrizeDrawsIndexListingProps } from "./features/products/index";
 // [CLIENT]-Marketplace card for prize draws (SB4-F).
 export { MarketplacePrizeDrawCard } from "./features/products/index";
 export type {
-  MarketplacePrizeDrawCardProps,
-  MarketplacePrizeDrawCardData,
-  MarketplacePrizeDrawCardLabels,
+ MarketplacePrizeDrawCardProps,
+ MarketplacePrizeDrawCardData,
+ MarketplacePrizeDrawCardLabels,
 } from "./features/products/index";
 // [SERVER-RSC]-Public detail page for a prize-draw product (SB4-G).
 export type { PrizeDrawDetailPageViewProps } from "./features/products/components/PrizeDrawDetailPageView";
@@ -7196,14 +7196,14 @@ export { getProductTableColumns } from "./features/products/index";
 // normalizeListingType + predicate helpers â€" canonical SB1-G accessors.
 // SB-UNI-F 2026-05-13 â€" Phase 2 predicates added (classified/digital-code/live).
 export {
-  normalizeListingType,
-  isAuctionListing,
-  isPreOrderListing,
-  isStandardListing,
-  isPrizeDrawListing,
-  isClassifiedListing,
-  isDigitalCodeListing,
-  isLiveListing,
+ normalizeListingType,
+ isAuctionListing,
+ isPreOrderListing,
+ isStandardListing,
+ isPrizeDrawListing,
+ isClassifiedListing,
+ isDigitalCodeListing,
+ isLiveListing,
 } from "./features/products/index";
 // SB-UNI-X4 2026-05-13 â€" per-type feature-flag helpers.
 export {
@@ -7214,11 +7214,11 @@ export {
 } from "./_internal/shared/listing-types/feature-flags";
 // SB-UNI-X5 2026-05-13 â€" action telemetry sink.
 export {
-  actionTracker,
-  setActionTrackerSink,
-  resetActionTrackerSink,
-  type ActionEvent,
-  type ActionTrackerSink,
+ actionTracker,
+ setActionTrackerSink,
+ resetActionTrackerSink,
+ type ActionEvent,
+ type ActionTrackerSink,
 } from "./_internal/shared/listing-types/action-tracker";
 // SB-UNI-S 2026-05-13 â€" cart-level shipping-requirement helpers.
 export {
@@ -7228,17 +7228,17 @@ export {
 } from "./_internal/shared/listing-types/cart-shipping";
 // SB-UNI-W-1 2026-05-13 â€" CTA action registry shell.
 export {
-  ACTIONS,
-  action,
-  act,
-  canPerformAction,
-  actionsForListingType,
-  actionLabel,
-  type ActionDef,
-  type ActionKind,
-  type ActionResource,
-  type ActionTree,
-  type ActionConfirmation,
+ ACTIONS,
+ action,
+ act,
+ canPerformAction,
+ actionsForListingType,
+ actionLabel,
+ type ActionDef,
+ type ActionKind,
+ type ActionResource,
+ type ActionTree,
+ type ActionConfirmation,
 } from "./_internal/shared/actions/action-registry";
 export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
 // User-role predicates â€" SB-UNI-E 2026-05-13.
@@ -9067,9 +9067,9 @@ export { SUCCESS_MESSAGES } from "./values/index";
 export { splitCartIntoOrderGroups } from "./features/orders/index";
 // S-SBUNI-5 2026-05-13 â€" bundle-aware order item grouping for receipts.
 export {
-  groupOrderItemsByBundle,
-  type BundleOrderGroup,
-  type OrderItemForBundleGrouping,
+ groupOrderItemsByBundle,
+ type BundleOrderGroup,
+ type OrderItemForBundleGrouping,
 } from "./features/orders/index";
 
 // -- Missing utils
@@ -9103,9 +9103,9 @@ export {
 export type { SendMessageInput } from "./features/messages/server";
 // Messages realtime channel â€" shared between client + server (D5 + VC7)
 export {
-  conversationPingPath,
-  userConversationsPingPath,
-  buildConversationPingPaths,
+ conversationPingPath,
+ userConversationsPingPath,
+ buildConversationPingPaths,
 } from "./features/messages/realtime";
 export type { ConversationPingTargets } from "./features/messages/realtime";
 // SB-UNI-B â€" SublistingCategoryDocument deleted; sublistings are CategoryDocument with categoryType:"sublisting".
@@ -9129,17 +9129,17 @@ export type {
 } from "./features/products/schemas/product-features";
 // Product features zod validators (S8 refactor â€" shared by admin + store API routes)
 export {
-  productFeatureAdminCreateSchema,
-  productFeatureStoreCreateSchema,
-  productFeatureUpdateSchema,
-  PRODUCT_FEATURE_PRODUCT_TYPE_ENUM,
-  PRODUCT_FEATURE_CATEGORY_ENUM,
-  PRODUCT_FEATURE_SCOPE_ENUM,
+ productFeatureAdminCreateSchema,
+ productFeatureStoreCreateSchema,
+ productFeatureUpdateSchema,
+ PRODUCT_FEATURE_PRODUCT_TYPE_ENUM,
+ PRODUCT_FEATURE_CATEGORY_ENUM,
+ PRODUCT_FEATURE_SCOPE_ENUM,
 } from "./features/products/schemas/product-features.validators";
 export type {
-  ProductFeatureAdminCreatePayload,
-  ProductFeatureStoreCreatePayload,
-  ProductFeatureUpdatePayload,
+ ProductFeatureAdminCreatePayload,
+ ProductFeatureStoreCreatePayload,
+ ProductFeatureUpdatePayload,
 } from "./features/products/schemas/product-features.validators";
 // parseListingParams / serializeListingParams â€" short-name URL params (Q2 / S12)
 export {
@@ -9151,66 +9151,66 @@ export {
 export type { ListingParams } from "./utils/listing-params";
 // Product features UI option lists (S8 refactor â€" shared by editor + selector)
 export {
-  PRODUCT_FEATURE_CATEGORY_OPTIONS,
-  PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS,
-  PRODUCT_FEATURE_SCOPE_OPTIONS,
-  PRODUCT_FEATURE_ICON_COLOR_OPTIONS,
-  PRODUCT_FEATURE_SCOPE_TABS,
-  PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
-  PRODUCT_FEATURE_CARD_MAX_VISIBLE,
-  PRODUCT_FEATURE_QUERY_STALE_MS,
+ PRODUCT_FEATURE_CATEGORY_OPTIONS,
+ PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS,
+ PRODUCT_FEATURE_SCOPE_OPTIONS,
+ PRODUCT_FEATURE_ICON_COLOR_OPTIONS,
+ PRODUCT_FEATURE_SCOPE_TABS,
+ PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
+ PRODUCT_FEATURE_CARD_MAX_VISIBLE,
+ PRODUCT_FEATURE_QUERY_STALE_MS,
 } from "./features/products/constants/product-features.constants";
 // SB10-A listing tab constants
 export {
-  CATEGORY_PAGE_TABS,
-  STORE_PAGE_TABS,
-  SELLER_LISTING_TABS,
-  SEARCH_RESULT_TABS,
+ CATEGORY_PAGE_TABS,
+ STORE_PAGE_TABS,
+ SELLER_LISTING_TABS,
+ SEARCH_RESULT_TABS,
 } from "./features/products/constants/listing-tabs";
 export type {
-  ListingTab,
-  CategoryTabId,
-  StoreTabId,
-  SellerListingTabId,
-  SearchTabId,
+ ListingTab,
+ CategoryTabId,
+ StoreTabId,
+ SellerListingTabId,
+ SearchTabId,
 } from "./features/products/constants/listing-tabs";
 export {
-  STANDARD_SORT_OPTIONS,
-  STANDARD_PUBLIC_SORT_OPTIONS,
-  AUCTION_SORT_OPTIONS,
-  AUCTION_PUBLIC_SORT_OPTIONS,
-  PREORDER_SORT_OPTIONS,
-  BUNDLE_SORT_OPTIONS,
-  PRIZE_DRAW_SORT_OPTIONS,
-  SORT_OPTIONS_BY_LISTING_TYPE,
+ STANDARD_SORT_OPTIONS,
+ STANDARD_PUBLIC_SORT_OPTIONS,
+ AUCTION_SORT_OPTIONS,
+ AUCTION_PUBLIC_SORT_OPTIONS,
+ PREORDER_SORT_OPTIONS,
+ BUNDLE_SORT_OPTIONS,
+ PRIZE_DRAW_SORT_OPTIONS,
+ SORT_OPTIONS_BY_LISTING_TYPE,
 } from "./features/products/constants/sieve";
 export type { SortOption } from "./features/products/constants/sieve";
 // SB10-C admin + seller filter-chip tab sets (S8 2026-05-13)
 export {
-  ALL_TAB,
-  EMPTY_TAB,
-  ADMIN_PRODUCT_STATUS_TABS,
-  ADMIN_PRODUCT_LISTING_TYPE_TABS,
-  ADMIN_BLOG_STATUS_TABS,
-  ADMIN_USER_STATUS_TABS,
-  ADMIN_USER_ROLE_TABS,
-  ADMIN_STORE_STATUS_TABS,
-  ADMIN_PAYOUT_STATUS_TABS,
-  ADMIN_ORDER_STATUS_TABS,
-  ADMIN_REVIEW_STATUS_TABS,
-  ADMIN_REVIEW_RATING_TABS,
-  ADMIN_BID_STATUS_TABS,
-  ADMIN_CONTACT_STATUS_TABS,
-  ADMIN_NEWSLETTER_STATUS_TABS,
-  ADMIN_EVENT_ENTRY_STATUS_TABS,
-  ADMIN_EVENT_STATUS_TABS,
-  ADMIN_CART_OWNERSHIP_TABS,
-  ADMIN_COUPON_TYPE_TABS,
-  SELLER_PRODUCT_STATUS_TABS,
-  SELLER_AUCTION_STATUS_TABS,
-  SELLER_ORDER_STATUS_TABS,
-  SELLER_OFFER_STATUS_TABS,
-  SELLER_BID_STATUS_TABS,
+ ALL_TAB,
+ EMPTY_TAB,
+ ADMIN_PRODUCT_STATUS_TABS,
+ ADMIN_PRODUCT_LISTING_TYPE_TABS,
+ ADMIN_BLOG_STATUS_TABS,
+ ADMIN_USER_STATUS_TABS,
+ ADMIN_USER_ROLE_TABS,
+ ADMIN_STORE_STATUS_TABS,
+ ADMIN_PAYOUT_STATUS_TABS,
+ ADMIN_ORDER_STATUS_TABS,
+ ADMIN_REVIEW_STATUS_TABS,
+ ADMIN_REVIEW_RATING_TABS,
+ ADMIN_BID_STATUS_TABS,
+ ADMIN_CONTACT_STATUS_TABS,
+ ADMIN_NEWSLETTER_STATUS_TABS,
+ ADMIN_EVENT_ENTRY_STATUS_TABS,
+ ADMIN_EVENT_STATUS_TABS,
+ ADMIN_CART_OWNERSHIP_TABS,
+ ADMIN_COUPON_TYPE_TABS,
+ SELLER_PRODUCT_STATUS_TABS,
+ SELLER_AUCTION_STATUS_TABS,
+ SELLER_ORDER_STATUS_TABS,
+ SELLER_OFFER_STATUS_TABS,
+ SELLER_BID_STATUS_TABS,
 } from "./features/admin/constants/filter-tabs";
 export type { AdminFilterTab } from "./features/admin/constants/filter-tabs";
 // Grouped listings feature schemas
@@ -9232,19 +9232,19 @@ export {
 } from "./_internal/shared/features/categories/bundle-config";
 // S-SBUNI-4 follow-up â€" shared bundle UI copy + stock-badge variant map.
 export {
-  BUNDLE_COPY,
-  BUNDLE_STOCK_VARIANT,
+ BUNDLE_COPY,
+ BUNDLE_STOCK_VARIANT,
 } from "./_internal/shared/features/categories/bundle-copy";
 // S-SBUNI-RULES 2026-05-13 â€" shared copy for refund / shipping / sibling-payment UI.
 export { REFUND_COPY } from "./_internal/shared/features/orders/refund-copy";
 // S-SBUNI-4 follow-up â€" shared admin bundle zod schemas.
 export {
-  bundleCreateSchema,
-  bundleUpdateSchema,
-  bundleQueryRuleSchema,
-  bundleDisplaySchema,
-  type BundleCreateBody,
-  type BundleUpdateBody,
+ bundleCreateSchema,
+ bundleUpdateSchema,
+ bundleQueryRuleSchema,
+ bundleDisplaySchema,
+ type BundleCreateBody,
+ type BundleUpdateBody,
 } from "./_internal/shared/features/categories/bundle-schemas";
 
 export type { GroupedListingDocument, GroupTheme, GroupVisibility } from "./features/grouped/schemas/firestore";
@@ -9305,19 +9305,19 @@ export type {
 
 // Scam registry â€" scam type definitions
 export {
-  SCAM_TYPES,
-  SCAM_CATEGORIES,
-  SCAM_TYPE_LABELS,
-  SCAM_CATEGORY_LABELS,
-  getScamType,
-  getScamTypesByCategory,
-  getCategoryForScamType,
+ SCAM_TYPES,
+ SCAM_CATEGORIES,
+ SCAM_TYPE_LABELS,
+ SCAM_CATEGORY_LABELS,
+ getScamType,
+ getScamTypesByCategory,
+ getCategoryForScamType,
 } from "./features/scams/constants/scam-types";
 export type {
-  ScamType,
-  ScamCategory,
-  ScamTypeDefinition,
-  ScamCategoryDefinition,
+ ScamType,
+ ScamCategory,
+ ScamTypeDefinition,
+ ScamCategoryDefinition,
 } from "./features/scams/constants/scam-types";
 
 // Scam Registry view components (SCAM3â€"SCAM4)
@@ -9412,24 +9412,24 @@ export type { ListingTypePlugin } from "./_internal/shared/listing-types/_regist
 
 // Checkout rule registry â€" pure TS, safe in both client and server bundles.
 export {
-  getListingRule,
-  getCategoryRule,
-  pickOrderType,
-  getSplitKey,
-  runSyncPreflight,
-  CHECKOUT_RULES,
-  CATEGORY_CHECKOUT_RULES,
-  CHECKOUT_MAX_ORDERS_PER_TX,
-  PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
-  BUNDLE_MAX_QTY_PER_TX,
-  STANDARD_MAX_QTY_PER_LINE,
+ getListingRule,
+ getCategoryRule,
+ pickOrderType,
+ getSplitKey,
+ runSyncPreflight,
+ CHECKOUT_RULES,
+ CATEGORY_CHECKOUT_RULES,
+ CHECKOUT_MAX_ORDERS_PER_TX,
+ PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
+ BUNDLE_MAX_QTY_PER_TX,
+ STANDARD_MAX_QTY_PER_LINE,
 } from "./_internal/shared/checkout/rules";
 export type {
-  ListingCheckoutRule,
-  CategoryCheckoutRule,
-  CartItemProductPair,
-  OrderItemInput,
-  RefundPolicy,
+ ListingCheckoutRule,
+ CategoryCheckoutRule,
+ CartItemProductPair,
+ OrderItemInput,
+ RefundPolicy,
 } from "./_internal/shared/checkout/rules";
 
 // Media upload limits â€" pure constants, safe in both client and server bundles.

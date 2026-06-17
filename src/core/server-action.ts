@@ -16,22 +16,22 @@ import { normalizeError } from "../errors/normalize";
  * ```ts
  * // In a feature action file:
  * export const createProduct = createServerAction({
- *   schema: productCreateSchema,
- *   handler: async ({ input }) => {
- *     const product = await productRepository.create(input);
- *     return product;
- *   },
+ * schema: productCreateSchema,
+ * handler: async ({ input }) => {
+ * const product = await productRepository.create(input);
+ * return product;
+ * },
  * });
  *
  * // In a consumer's providers.config.ts — extend via actionMiddleware:
  * import { setActionMiddleware } from "@mohasinac/appkit/core";
  * setActionMiddleware({
- *   beforeAction: async ({ actionName, input }) => {
- *     console.log("[audit]", actionName, input);
- *   },
- *   afterAction: async ({ actionName, result }) => {
- *     if (result.ok) myCache.invalidate(actionName);
- *   },
+ * beforeAction: async ({ actionName, input }) => {
+ * console.log("[audit]", actionName, input);
+ * },
+ * afterAction: async ({ actionName, result }) => {
+ * if (result.ok) myCache.invalidate(actionName);
+ * },
  * });
  * ```
  */

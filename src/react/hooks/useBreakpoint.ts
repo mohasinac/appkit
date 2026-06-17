@@ -18,7 +18,7 @@ import { useMediaQuery } from "./useMediaQuery";
  * const { isMobile, isTablet, isDesktop, breakpoint } = useBreakpoint();
  *
  * if (isMobile) {
- *   return <MobileView />;
+ * return <MobileView />;
  * }
  * return <DesktopView />;
  * ```

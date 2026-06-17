@@ -13,7 +13,7 @@
  * ```ts
  * // functions/src/index.ts
  * import { scheduler } from "firebase-functions/v2/scheduler";
- * import { pubsub }    from "firebase-functions/v2/pubsub";
+ * import { pubsub } from "firebase-functions/v2/pubsub";
  * import { wrapScheduled, wrapPubSub } from "@mohasinac/appkit/cron";
  * import { auctionExpiryJob } from "@mohasinac/appkit/cron/jobs/auction-expiry.job";
  *

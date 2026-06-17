@@ -260,10 +260,10 @@ function PreorderWalkthrough() {
 
 const STATUS_LIFECYCLE = `
 DRAFT ──────────────────────────────────► PUBLISHED
-  │                                           │
-  │    (seller publishes)        (seller archives / auto-archive)
-  │                                           │
-  └──────────────────────────────────────► ARCHIVED
+ │ │
+ │ (seller publishes) (seller archives / auto-archive)
+ │ │
+ └──────────────────────────────────────► ARCHIVED
 
 PUBLISHED ──► (buyer places bid / buys) ──► SOLD (auction only)
 `;

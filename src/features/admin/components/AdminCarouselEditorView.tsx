@@ -375,6 +375,12 @@ export function AdminCarouselEditorView({
 
   const [cards, setCards] = React.useState<CarouselCard[]>([]);
 
+  const handleAddCard = React.useCallback(() => {
+    const usedZones = cards.map((c) => c.zone);
+    const freeZone = ([1, 2, 3, 4, 5, 6] as const).find((z) => !usedZones.includes(z)) ?? 1;
+    setCards([...cards, makeCard(freeZone)]);
+  }, [cards]);
+
   const [overlayTitle, setOverlayTitle] = React.useState("");
   const [overlaySubtitle, setOverlaySubtitle] = React.useState("");
   const [overlayDesc, setOverlayDesc] = React.useState("");
@@ -556,11 +562,7 @@ export function AdminCarouselEditorView({
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => {
-                    const usedZones = cards.map((c) => c.zone);
-                    const freeZone = ([1, 2, 3, 4, 5, 6] as const).find((z) => !usedZones.includes(z)) ?? 1;
-                    setCards([...cards, makeCard(freeZone)]);
-                  }}
+                  onClick={handleAddCard}
                 >
                   + Add card
                 </Button>

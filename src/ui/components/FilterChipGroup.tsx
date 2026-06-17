@@ -17,10 +17,10 @@ import { Text } from "./Typography";
  * @example
  * ```tsx
  * <FilterChipGroup
- *   label="Status"
- *   tabs={ADMIN_ORDER_STATUS_TABS}
- *   value={pendingFilters.status}
- *   onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+ * label="Status"
+ * tabs={ADMIN_ORDER_STATUS_TABS}
+ * value={pendingFilters.status}
+ * onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
  * />
  * ```
  */

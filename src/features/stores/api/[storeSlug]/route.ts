@@ -5,7 +5,7 @@
  *
  * ```ts
  * // app/api/stores/[storeSlug]/route.ts
- * export { GET } from "@mohasinac/feat-stores";   // re-exported as storeSlugGET
+ * export { GET } from "@mohasinac/feat-stores"; // re-exported as storeSlugGET
  * ```
  *
  * Returns StoreDetail directly (no outer `{ store }` wrapper) so

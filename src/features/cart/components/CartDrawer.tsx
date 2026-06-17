@@ -27,7 +27,7 @@ interface CartItemRowProps {
 export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
     <Div layout="flex" gap="4" surface="card" padding="sm" className={`transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
-      <Div className={`h-20 w-20 flex-shrink-0 ${__O.hidden} bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800`} rounded="lg">
+      <Div className={`h-20 w-20 flex-shrink-0 ${__O.hidden} bg-neutral-100 dark:bg-slate-800`} rounded="lg">
         {item.meta.image && (
           <Div
             role="img"
@@ -45,7 +45,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-neutral-900 dark:text-neutral-100 dark:text-zinc-100 hover:underline underline-offset-2 line-clamp-2"
+              className="font-medium text-neutral-900 dark:text-zinc-100 hover:underline underline-offset-2 line-clamp-2"
             >
               {item.meta.title}
             </a>
@@ -169,7 +169,7 @@ export function CartDrawer({
             variant="ghost"
             size="sm"
             aria-label="Close cart"
-            className="text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-900 dark:text-neutral-100 dark:hover:text-zinc-100"
+            className="text-neutral-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-zinc-100"
           >
             ✕
           </Button>

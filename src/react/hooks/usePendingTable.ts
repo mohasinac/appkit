@@ -48,7 +48,7 @@ export interface UsePendingTableReturn {
  * @example
  * ```tsx
  * const { pendingTable, filterActiveCount, onFilterApply, onFilterClear } =
- *   usePendingTable(table, ['status', 'category', 'minPrice', 'maxPrice']);
+ * usePendingTable(table, ['status', 'category', 'minPrice', 'maxPrice']);
  *
  * // Pass pendingTable directly to any *Filters component:
  * filterContent={<ProductFilters table={pendingTable} showStatus />}

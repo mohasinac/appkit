@@ -79,6 +79,6 @@ export function categoriesToFacetOptions(
     label:
       (cat.tier ?? 0) === 0
         ? cat.name
-        : `${"  ".repeat(cat.tier ?? 1)}↳ ${cat.name}`,
+        : `${" ".repeat(cat.tier ?? 1)}↳ ${cat.name}`,
   }));
 }

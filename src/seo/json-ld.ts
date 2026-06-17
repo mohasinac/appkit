@@ -7,8 +7,8 @@
  * ```tsx
  * import { productJsonLd } from "./";
  * <script
- *   type="application/ld+json"
- *   dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd(product)) }}
+ * type="application/ld+json"
+ * dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd(product)) }}
  * />
  * ```
  */

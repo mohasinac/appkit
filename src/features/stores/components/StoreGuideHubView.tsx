@@ -219,10 +219,10 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   href={done ? "#" : href}
                   aria-disabled={done}
                   className={`flex items-center gap-3 px-5 py-3.5 text-sm transition-colors ${
-                    done
-                      ? "cursor-default"
-                      : "hover:bg-[var(--appkit-color-border)]/30"
-                  }`}
+ done
+ ? "cursor-default"
+ : "hover:bg-[var(--appkit-color-border)]/30"
+ }`}
                 >
                   {done ? (
                     <CheckCircle2 className={CLS_CHECK_ICON} />
@@ -231,10 +231,10 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   )}
                   <Text
                     className={`leading-snug ${
-                      done
-                        ? "line-through text-[var(--appkit-color-text-muted)]"
-                        : "text-[var(--appkit-color-text)]"
-                    }`}
+ done
+ ? "line-through text-[var(--appkit-color-text-muted)]"
+ : "text-[var(--appkit-color-text)]"
+ }`}
                   >
                     {label}
                   </Text>

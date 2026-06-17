@@ -39,23 +39,23 @@ export type ProductSortValue =
  * import type { ProductDocument } from "@/db/schema/product.schema";
  *
  * const columns: AdminTableColumn<ProductDocument>[] = [
- *   // keep base columns (cast is safe because ProductDocument extends ProductItem)
- *   ...(productAdminColumns as AdminTableColumn<ProductDocument>[]),
- *   // add app-specific column
- *   {
- *     key: "brand",
- *     header: "Brand",
- *     render: (p) => p.brand ?? "—",
- *   },
+ * // keep base columns (cast is safe because ProductDocument extends ProductItem)
+ * ...(productAdminColumns as AdminTableColumn<ProductDocument>[]),
+ * // add app-specific column
+ * {
+ * key: "brand",
+ * header: "Brand",
+ * render: (p) => p.brand ?? "—",
+ * },
  * ];
  * ```
  *
  * @example — replace a single column's renderer
  * ```ts
  * const columns = productAdminColumns.map((col) =>
- *   col.key === "title"
- *     ? { ...col, render: (p: ProductDocument) => <Link href={p.slug}>{p.title}</Link> }
- *     : col
+ * col.key === "title"
+ * ? { ...col, render: (p: ProductDocument) => <Link href={p.slug}>{p.title}</Link> }
+ * : col
  * );
  * ```
  */

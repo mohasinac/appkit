@@ -281,10 +281,10 @@ export function SellerAnalyticsAlertsView({
                     type="button"
                     onClick={() => toggleChannel(ch.value)}
                     className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      draft.notifyChannels.includes(ch.value)
-                        ? "bg-[var(--appkit-color-primary)] text-white border-transparent"
-                        : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700"
-                    }`}
+ draft.notifyChannels.includes(ch.value)
+ ? "bg-[var(--appkit-color-primary)] text-white border-transparent"
+ : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700"
+ }`}
                   >
                     {ch.label}
                   </button>

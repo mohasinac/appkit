@@ -28,14 +28,14 @@ export interface UsePullToRefreshReturn {
  * @example
  * ```tsx
  * const { containerRef, isPulling, progress } = usePullToRefresh(async () => {
- *   await refetchOrders();
+ * await refetchOrders();
  * });
  *
  * return (
- *   <div ref={containerRef} className="overflow-y-auto">
- *     {isPulling && <PullIndicator progress={progress} />}
- *     {…}
- *   </div>
+ * <div ref={containerRef} className="overflow-y-auto">
+ * {isPulling && <PullIndicator progress={progress} />}
+ * {…}
+ * </div>
  * );
  * ```
  */

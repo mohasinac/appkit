@@ -34,11 +34,11 @@ export interface UseContainerGridResult {
  * const { containerRef, cols } = useContainerGrid({ minItemWidth: 220 });
  *
  * return (
- *   <ul ref={containerRef as React.RefObject<HTMLUListElement>} className="fluid-grid-card gap-4">
- *     {isLoading
- *       ? Array.from({ length: cols * 2 }).map((_, i) => <li key={i}><Skeleton /></li>)
- *       : items.map((item) => <li key={item.id}><ProductCard product={item} /></li>)}
- *   </ul>
+ * <ul ref={containerRef as React.RefObject<HTMLUListElement>} className="fluid-grid-card gap-4">
+ * {isLoading
+ * ? Array.from({ length: cols * 2 }).map((_, i) => <li key={i}><Skeleton /></li>)
+ * : items.map((item) => <li key={item.id}><ProductCard product={item} /></li>)}
+ * </ul>
  * );
  * ```
  */

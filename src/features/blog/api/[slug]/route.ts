@@ -5,7 +5,7 @@
  *
  * ```ts
  * // app/api/blog/[slug]/route.ts
- * export { GET } from "@mohasinac/feat-blog";   // re-exported as blogSlugGET
+ * export { GET } from "@mohasinac/feat-blog"; // re-exported as blogSlugGET
  * ```
  */
 

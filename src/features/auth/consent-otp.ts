@@ -175,13 +175,13 @@ export function buildConsentOtpEmail(
   return {
     subject: `${siteName}: Consent verification code - shipping to ${recipientName}`,
     html: `
-      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
-        <h2 style="margin-bottom:8px">Third-Party Shipping Consent</h2>
-        <p style="color:#555">You are about to place an order that will be shipped to <strong>${escapeHtml(recipientName)}</strong>.</p>
-        <p style="color:#555">Enter this code to confirm your consent:</p>
-        <div style="font-size:36px;font-weight:bold;letter-spacing:8px;text-align:center;margin:24px 0;padding:16px;background:#f3f4f6;border-radius:8px">${code}</div>
-        <p style="color:#888;font-size:12px">This code expires in ${CONSENT_OTP_EXPIRY_MINUTES} minutes. If you did not request this, please ignore this email.</p>
-      </div>
-    `,
+ <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
+ <h2 style="margin-bottom:8px">Third-Party Shipping Consent</h2>
+ <p style="color:#555">You are about to place an order that will be shipped to <strong>${escapeHtml(recipientName)}</strong>.</p>
+ <p style="color:#555">Enter this code to confirm your consent:</p>
+ <div style="font-size:36px;font-weight:bold;letter-spacing:8px;text-align:center;margin:24px 0;padding:16px;background:#f3f4f6;border-radius:8px">${code}</div>
+ <p style="color:#888;font-size:12px">This code expires in ${CONSENT_OTP_EXPIRY_MINUTES} minutes. If you did not request this, please ignore this email.</p>
+ </div>
+ `,
   };
 }

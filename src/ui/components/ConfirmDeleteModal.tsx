@@ -60,11 +60,11 @@ const VARIANT_STYLES = {
  * @example
  * ```tsx
  * <ConfirmDeleteModal
- *   isOpen={isOpen}
- *   onClose={() => setOpen(false)}
- *   onConfirm={handleDelete}
- *   title="Delete product?"
- *   variant="danger"
+ * isOpen={isOpen}
+ * onClose={() => setOpen(false)}
+ * onConfirm={handleDelete}
+ * title="Delete product?"
+ * variant="danger"
  * />
  * ```
  */

@@ -52,10 +52,10 @@ function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: bo
       href={item.href}
       onClick={onClick}
       className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
-        isActive
-          ? "bg-zinc-100 dark:bg-slate-800 text-zinc-900 dark:text-zinc-100"
-          : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800/60 hover:text-zinc-800 dark:hover:text-zinc-200"
-      }`}
+ isActive
+ ? "bg-zinc-100 dark:bg-slate-800 text-zinc-900 dark:text-zinc-100"
+ : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800/60 hover:text-zinc-800 dark:hover:text-zinc-200"
+ }`}
     >
       {item.icon && <Span size="base" className="shrink-0 opacity-60">{item.icon}</Span>}
       <Span className="flex-1 truncate">{item.label}</Span>
@@ -91,10 +91,10 @@ function GroupsContent({
               type="button"
               onClick={() => toggle(group.title)}
               className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
-                hasActive && !isOpen
-                  ? "text-zinc-700 dark:text-zinc-200"
-                  : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
-              }`}
+ hasActive && !isOpen
+ ? "text-zinc-700 dark:text-zinc-200"
+ : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+ }`}
             >
               <Span>{group.title}</Span>
               <svg

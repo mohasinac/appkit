@@ -20,16 +20,16 @@ const registry: CronRegistry = new Map();
  * @example
  * ```ts
  * export const auctionExpiryJob = createCronJob(
- *   {
- *     name: "auctions_expire",
- *     description: "Close live auctions whose endTime has passed.",
- *     schedule: "every 5 minutes",
- *     timezone: "Asia/Kolkata",
- *   },
- *   async (ctx) => {
- *     // ... implementation
- *     return { summary: "Done", processed: 12, errors: 0 };
- *   },
+ * {
+ * name: "auctions_expire",
+ * description: "Close live auctions whose endTime has passed.",
+ * schedule: "every 5 minutes",
+ * timezone: "Asia/Kolkata",
+ * },
+ * async (ctx) => {
+ * // ... implementation
+ * return { summary: "Done", processed: 12, errors: 0 };
+ * },
  * );
  * ```
  */
@@ -95,7 +95,7 @@ export function _resetCronRegistry(): void {
  * @example
  * ```ts
  * const result = await runJob("auctions_expire", {
- *   scheduleTime: new Date().toISOString(),
+ * scheduleTime: new Date().toISOString(),
  * });
  * ```
  */

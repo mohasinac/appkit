@@ -478,10 +478,10 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               key={index}
               variant="ghost"
               className={`relative overflow-hidden rounded-full transition-all duration-500 p-0 !min-h-0 ${
-                index === currentSlide
-                  ? HERO_CAROUSEL_DOT_ACTIVE
-                  : `${HERO_CAROUSEL_DOT_INACTIVE} hover:bg-white/75`
-              }`}
+ index === currentSlide
+ ? HERO_CAROUSEL_DOT_ACTIVE
+ : `${HERO_CAROUSEL_DOT_INACTIVE} hover:bg-white/75`
+ }`}
               onClick={() => goToSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
             >

@@ -198,7 +198,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   type="button"
                   onClick={() => setLightboxIdx(i)}
                   aria-label={`View photo ${i + 1}`}
-                  className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-100 dark:bg-neutral-800 dark:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-100 dark:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <Div
                     className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
@@ -247,10 +247,10 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             onClick={handleVote}
             disabled={voted || voting}
             className={`ml-auto flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
-              voted
-                ? CLS_HELPFUL_ACTIVE
-                : "border-neutral-300 dark:border-zinc-600 text-neutral-700 dark:text-zinc-200 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
-            }`}
+ voted
+ ? CLS_HELPFUL_ACTIVE
+ : "border-neutral-300 dark:border-zinc-600 text-neutral-700 dark:text-zinc-200 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
+ }`}
           >
             <Span aria-hidden="true">{voted ? "✓" : "👍"}</Span>
             {voted ? "Marked helpful" : voting ? "Saving…" : "Helpful?"}
@@ -396,10 +396,10 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   onClick={(e) => { e.stopPropagation(); setLightboxIdx(i); }}
                   aria-label={`Go to image ${i + 1}`}
                   className={`h-12 w-12 flex-shrink-0 rounded-md bg-center bg-cover border-2 transition-all ${
-                    i === lightboxIdx
-                      ? "border-white scale-110"
-                      : "border-transparent opacity-60 hover:opacity-100"
-                  }`}
+ i === lightboxIdx
+ ? "border-white scale-110"
+ : "border-transparent opacity-60 hover:opacity-100"
+ }`}
                   // audit-inline-style-ok: dynamic image URL
                   style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                 />

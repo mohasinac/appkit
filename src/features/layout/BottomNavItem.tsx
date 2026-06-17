@@ -20,12 +20,12 @@ export interface BottomNavItemProps {
  * @example
  * ```tsx
  * <BottomNavLayout ariaLabel="Main navigation">
- *   <BottomNavItem
- *     href="/products"
- *     icon={<ShoppingBagIcon className="w-6 h-6" />}
- *     label="Shop"
- *     isActive={pathname === "/products"}
- *   />
+ * <BottomNavItem
+ * href="/products"
+ * icon={<ShoppingBagIcon className="w-6 h-6" />}
+ * label="Shop"
+ * isActive={pathname === "/products"}
+ * />
  * </BottomNavLayout>
  * ```
  */
@@ -46,10 +46,10 @@ export function BottomNavItem({
         aria-label={label}
         aria-current={isActive ? "page" : undefined}
         className={`relative flex flex-col items-center justify-center gap-0.5 h-full w-full min-h-[44px] transition-colors ${
-          isActive
-            ? "text-primary-600 dark:text-secondary-400"
-            : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
-        }${className ? ` ${className}` : ""}`}
+ isActive
+ ? "text-primary-600 dark:text-secondary-400"
+ : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+ }${className ? ` ${className}` : ""}`}
       >
         <Span className="relative">
           {icon}

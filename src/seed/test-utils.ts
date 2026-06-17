@@ -89,8 +89,8 @@ export interface TestSeedHandles {
  * ```ts
  * // jest.setup.ts
  * beforeAll(async () => {
- *   const handles = await seedForTest();
- *   globalThis.__testUsers = handles.users;
+ * const handles = await seedForTest();
+ * globalThis.__testUsers = handles.users;
  * });
  * ```
  */

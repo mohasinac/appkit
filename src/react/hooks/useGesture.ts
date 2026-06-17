@@ -44,9 +44,9 @@ export interface UseGestureOptions {
  * const ref = useRef<HTMLDivElement>(null);
  *
  * useGesture(ref, {
- *   onTap: (x, y) => console.log('Tapped at', x, y),
- *   onDoubleTap: () => console.log('Double tapped'),
- *   onPinch: (scale) => console.log('Pinch scale', scale),
+ * onTap: (x, y) => console.log('Tapped at', x, y),
+ * onDoubleTap: () => console.log('Double tapped'),
+ * onPinch: (scale) => console.log('Pinch scale', scale),
  * });
  *
  * return <div ref={ref}>Touch me!</div>;

@@ -43,10 +43,10 @@ export function escapeHtml(str: string): string {
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
-    "'": "&#x27;",
-    "/": "&#x2F;",
-  };
-  return str.replace(/[&<>"'/]/g, (char) => map[char]);
+ "'": "&#x27;",
+ "/": "&#x2F;",
+ };
+ return str.replace(/[&<>"'/]/g, (char) => map[char]);
 }
 
 export function slugify(str: string): string {
@@ -116,7 +116,7 @@ function applyMark(text: string, mark: ProseMirrorMark): string {
     const safe = /^(https?:\/\/|mailto:|\/|#)/i.test(rawHref) ? rawHref : "#";
     const href = safe.replace(
       /[&"<>]/g,
-      (c) => ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[c] ?? c,
+ (c) => ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[c] ?? c,
     );
     return `<a href="${href}" rel="noopener noreferrer">${text}</a>`;
   }

@@ -82,10 +82,10 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
               type="button"
               onClick={() => setActiveIndex(i)}
               className={`flex-shrink-0 h-16 w-16 overflow-hidden rounded-lg border-2 transition-all${
-                i === activeIndex
-                  ? " border-primary-500"
-                  : " border-transparent opacity-60 hover:opacity-100"
-              }`}
+ i === activeIndex
+ ? " border-primary-500"
+ : " border-transparent opacity-60 hover:opacity-100"
+ }`}
               aria-label={`View image ${i + 1}`}
               aria-current={i === activeIndex ? "true" : undefined}
             >

@@ -31,7 +31,7 @@ export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
  * @example
  * ```tsx
  * <Tooltip label="Add to wishlist">
- *   <IconButton aria-label="Add to wishlist" icon={<HeartIcon />} onClick={handleWishlist} />
+ * <IconButton aria-label="Add to wishlist" icon={<HeartIcon />} onClick={handleWishlist} />
  * </Tooltip>
  * ```
  */

@@ -150,7 +150,7 @@ export function CategoryForm({
           { value: "", label: L.noneRoot },
           ...flattenCategories(allCategories).map((cat) => ({
             value: cat.id,
-            label: `${"  ".repeat(cat.tier)}${cat.name}`,
+            label: `${" ".repeat(cat.tier)}${cat.name}`,
             disabled: cat.id === category.id,
           })),
         ]}

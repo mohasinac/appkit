@@ -58,13 +58,13 @@ function redactObject(
  * @example
  * ```ts
  * const userListRedactor = createPiiRedactorMiddleware([
- *   { fields: ["email", "phone"], mask: true,  unless: "admin:users:pii" },
- *   { fields: ["bankAccount"],    mask: false, unless: "admin:payouts" },
+ * { fields: ["email", "phone"], mask: true, unless: "admin:users:pii" },
+ * { fields: ["bankAccount"], mask: false, unless: "admin:payouts" },
  * ]);
  *
  * export const GET = createApiMiddleware({
- *   permission: "admin:users",
- *   middlewares: [userListRedactor],
+ * permission: "admin:users",
+ * middlewares: [userListRedactor],
  * })(async (input, ctx) => { ... });
  * ```
  */

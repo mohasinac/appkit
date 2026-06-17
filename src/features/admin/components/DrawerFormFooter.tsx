@@ -68,8 +68,8 @@ export function DrawerFormFooter({
   return (
     <div
       className={`flex items-center gap-3${
-        variant === "inline" ? ` pt-4 ${themeConfig.borderClass}` : ""
-      } ${className}`}
+ variant === "inline" ? ` pt-4 ${themeConfig.borderClass}` : ""
+ } ${className}`}
     >
       {onDelete && (
         <Button

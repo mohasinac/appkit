@@ -541,7 +541,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Thumbnail */}
-      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-neutral-800 dark:bg-zinc-800`} rounded="lg">
+      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-zinc-800`} rounded="lg">
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}
@@ -592,10 +592,10 @@ function ProductListRow<T extends ProductItem = ProductItem>({
               <Span
                 weight="medium"
                 className={`text-[11px] ${
-                  low
-                    ? "text-warning"
-                    : "text-zinc-400 dark:text-zinc-400"
-                }`}
+ low
+ ? "text-warning"
+ : "text-zinc-400 dark:text-zinc-400"
+ }`}
               >
                 {low ? `Only ${stock} left` : `${stock} in stock`}
               </Span>

@@ -15,10 +15,10 @@ import type { JsonValue } from "../schemas/types";
  * import { getAdminAuth } from '@/lib/firebase/admin';
  *
  * export const firebaseAuthVerifier: IAuthVerifier = {
- *   async verify(sessionCookie) {
- *     const decoded = await getAdminAuth().verifySessionCookie(sessionCookie, true);
- *     return { uid: decoded.uid, role: decoded.role as string | undefined };
- *   },
+ * async verify(sessionCookie) {
+ * const decoded = await getAdminAuth().verifySessionCookie(sessionCookie, true);
+ * return { uid: decoded.uid, role: decoded.role as string | undefined };
+ * },
  * };
  * ```
  */

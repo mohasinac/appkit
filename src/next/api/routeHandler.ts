@@ -21,10 +21,10 @@ import { normalizeError } from "../../errors/normalize";
  * @example
  * ```ts
  * export const POST = createRouteHandler({
- *   auth: true,
- *   roles: ["admin"],
- *   schema: mySchema,
- *   handler: async ({ user, body }) => { ... },
+ * auth: true,
+ * roles: ["admin"],
+ * schema: mySchema,
+ * handler: async ({ user, body }) => { ... },
  * });
  * ```
  */

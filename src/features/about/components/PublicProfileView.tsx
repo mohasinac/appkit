@@ -19,7 +19,7 @@ const __P = {
   p6: "p-6",
 } as const;
 
-const CLS_EMPTY_ICON = "w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600 dark:text-neutral-400";
+const CLS_EMPTY_ICON = "w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600 ";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -123,7 +123,7 @@ export async function PublicProfileView({
         {renderAuthoredReviewsSection(t, reviewsAuthored, displayName)}
         {isSeller && storeSlug && renderProfileReviewsSection(t, reviewsReceived, storeSlug)}
         <Row justify="center" padding="t-xs">
-          <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:text-neutral-400 dark:hover:text-zinc-300">
+          <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
             ← {t("backHome")}
           </Link>
         </Row>

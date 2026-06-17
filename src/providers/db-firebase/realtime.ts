@@ -11,7 +11,7 @@
  * Usage:
  * ```ts
  * class PresenceRepository extends FirebaseRealtimeRepository<PresenceEntry> {
- *   constructor() { super("presence"); }
+ * constructor() { super("presence"); }
  * }
  * ```
  */

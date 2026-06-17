@@ -159,8 +159,8 @@ import {
  * import { LOCALE_CONFIG } from "@mohasinac/appkit/tokens";
  *
  * const price = new Intl.NumberFormat(LOCALE_CONFIG.defaultLocale, {
- *   style: "currency",
- *   currency: LOCALE_CONFIG.defaultCurrency,
+ * style: "currency",
+ * currency: LOCALE_CONFIG.defaultCurrency,
  * }).format(1299);
  * // => "\u20b91,299.00"
  * ```
@@ -667,11 +667,11 @@ const TRANSITIONS = {
  * - `shimmer` — left-to-right highlight sweep. Requires `animate-shimmer`
  *   keyframe defined in tailwind.config.js:
  *   ```js
- *   // tailwind.config.js
- *   theme: { extend: { animation: { shimmer: "shimmer 1.5s infinite" },
- *     keyframes: { shimmer: { "0%": { backgroundPosition: "-400% 0" },
- *                              "100%": { backgroundPosition: "400% 0" } } } } }
- *   ```
+ * // tailwind.config.js
+ * theme: { extend: { animation: { shimmer: "shimmer 1.5s infinite" },
+ * keyframes: { shimmer: { "0%": { backgroundPosition: "-400% 0" },
+ * "100%": { backgroundPosition: "400% 0" } } } } }
+ * ```
  */
 const SKELETON = {
   // - Pulse (fade) variant ----------------------------------------------------------------

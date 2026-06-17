@@ -16,7 +16,7 @@
  *
  *  - `cartIsChatOnly(items)` — does EVERY line have
  *    `canAddToCart === false`? Lets the cart UI surface "this product
- *    can only be reached via chat" when classified items somehow make it
+ * can only be reached via chat" when classified items somehow make it
  *    through (defence-in-depth — addToCart already rejects them).
  *
  * Used by both checkout server actions (skip address validation when

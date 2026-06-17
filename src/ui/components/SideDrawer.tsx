@@ -84,7 +84,7 @@ function handleFocusTrap(
  * @example
  * ```tsx
  * <SideDrawer isOpen={open} onClose={() => setOpen(false)} title="Edit product" mode="edit" isDirty={isDirty}>
- *   <MyForm />
+ * <MyForm />
  * </SideDrawer>
  * ```
  */

@@ -56,8 +56,8 @@ export function AdminSublistingCategoriesView({
         secondary: [
           item.itemCode ? `Code: ${item.itemCode}` : "",
           `${typeof item.productCount === "number" ? item.productCount : 0} listing${
-            item.productCount === 1 ? "" : "s"
-          }`,
+ item.productCount === 1 ? "" : "s"
+ }`,
         ]
           .filter(Boolean)
           .join(" · "),

@@ -15,24 +15,24 @@
  * @example — product detail page
  * ```tsx
  * useBottomActions({
- *   actions: [
- *     { id: "wishlist", icon: <Heart className="w-4 h-4" />, label: t("wishlist"), variant: "ghost", grow: false, onClick: handleWishlist },
- *     { id: "cart",    label: t("addToCart"), variant: "outline", onClick: handleAddToCart },
- *     { id: "buy",     label: t("buyNow"),    variant: "primary", onClick: handleBuyNow },
- *   ],
+ * actions: [
+ * { id: "wishlist", icon: <Heart className="w-4 h-4" />, label: t("wishlist"), variant: "ghost", grow: false, onClick: handleWishlist },
+ * { id: "cart", label: t("addToCart"), variant: "outline", onClick: handleAddToCart },
+ * { id: "buy", label: t("buyNow"), variant: "primary", onClick: handleBuyNow },
+ * ],
  * });
  * ```
  *
  * @example — admin listing with bulk select
  * ```tsx
  * useBottomActions({
- *   bulk: {
- *     selectedCount: selectedIds.length,
- *     onClearSelection: () => setSelectedIds([]),
- *     actions: [
- *       { id: "delete", label: t("bulkDelete", { count: selectedIds.length }), variant: "danger", onClick: handleBulkDelete },
- *     ],
- *   },
+ * bulk: {
+ * selectedCount: selectedIds.length,
+ * onClearSelection: () => setSelectedIds([]),
+ * actions: [
+ * { id: "delete", label: t("bulkDelete", { count: selectedIds.length }), variant: "danger", onClick: handleBulkDelete },
+ * ],
+ * },
  * });
  * ```
  */

@@ -13,12 +13,12 @@
  * import { serverLogger } from '@/lib/server-logger';
  *
  * export const handleApiError = createApiErrorHandler({
- *   isAppError: (e): e is AppError => e instanceof AppError,
- *   getStatusCode: (e) => e.statusCode,
- *   toJSON: (e) => e.toJSON(),
- *   logger: serverLogger,
- *   internalErrorCode: 'GEN_INTERNAL_ERROR',
- *   internalErrorMessage: 'An internal server error occurred',
+ * isAppError: (e): e is AppError => e instanceof AppError,
+ * getStatusCode: (e) => e.statusCode,
+ * toJSON: (e) => e.toJSON(),
+ * logger: serverLogger,
+ * internalErrorCode: 'GEN_INTERNAL_ERROR',
+ * internalErrorMessage: 'An internal server error occurred',
  * });
  * ```
  */

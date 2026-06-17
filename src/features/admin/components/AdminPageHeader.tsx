@@ -16,15 +16,15 @@ const __P = {
  * @example
  * ```tsx
  * <AdminPageHeader
- *   title="User Management"
- *   subtitle="Manage user accounts and permissions"
- *   actionLabel="Add User"
- *   onAction={() => setShowUserDrawer(true)}
- *   themeConfig={{
- *     gradient: "bg-info-surface",
- *     titleClass: "text-3xl font-bold",
- *     subtitleClass: "text-lg text-gray-600"
- *   }}
+ * title="User Management"
+ * subtitle="Manage user accounts and permissions"
+ * actionLabel="Add User"
+ * onAction={() => setShowUserDrawer(true)}
+ * themeConfig={{
+ * gradient: "bg-info-surface",
+ * titleClass: "text-3xl font-bold",
+ * subtitleClass: "text-lg text-gray-600"
+ * }}
  * />
  * ```
  */

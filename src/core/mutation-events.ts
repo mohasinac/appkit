@@ -14,7 +14,7 @@
  * import { onMutation, MUTATION_EVENTS } from "@mohasinac/appkit/core";
  *
  * onMutation(MUTATION_EVENTS.PRODUCT.CREATED, (payload) => {
- *   queryClient.invalidateQueries({ queryKey: ["products"] });
+ * queryClient.invalidateQueries({ queryKey: ["products"] });
  * });
  *
  * // Emit — in a custom action:

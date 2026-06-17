@@ -13,8 +13,8 @@ export type RefundStatus = "pending" | "processing" | "completed" | "rejected";
 
 /** Runtime-accessible shipping method values â€" use instead of bare string literals. */
 export const ShippingMethodValues = {
-  CUSTOM: "custom",
-  SHIPROCKET: "shiprocket",
+ CUSTOM: "custom",
+ SHIPROCKET: "shiprocket",
 } as const satisfies Record<string, ShippingMethod>;
 
 /** Runtime-accessible order status values â€" use instead of bare string literals. */
@@ -32,12 +32,12 @@ export const OrderStatusValues = {
 
 /** Runtime-accessible payment status values â€" use instead of bare string literals. */
 export const PaymentStatusValues = {
-  PENDING: "pending",
-  PROCESSING: "processing",
-  PAID: "paid",
-  FAILED: "failed",
-  REFUNDED: "refunded",
-  PARTIAL_REFUND: "partial_refund",
+ PENDING: "pending",
+ PROCESSING: "processing",
+ PAID: "paid",
+ FAILED: "failed",
+ REFUNDED: "refunded",
+ PARTIAL_REFUND: "partial_refund",
 } as const satisfies Record<string, PaymentStatus>;
 
 /** Runtime-accessible payment method values â€" use instead of bare string literals. */
@@ -51,10 +51,10 @@ export const PaymentMethodValues = {
 
 /** Runtime-accessible refund status values â€" use instead of bare string literals. */
 export const RefundStatusValues = {
-  PENDING: "pending",
-  PROCESSING: "processing",
-  COMPLETED: "completed",
-  REJECTED: "rejected",
+ PENDING: "pending",
+ PROCESSING: "processing",
+ COMPLETED: "completed",
+ REJECTED: "rejected",
 } as const satisfies Record<string, RefundStatus>;
 
 /** Firestore storage shape for an order line item â€" distinct from the API display model OrderItem */
@@ -65,12 +65,12 @@ export interface OrderDocumentItem {
   unitPrice: number;
   totalPrice: number;
   /** SB8-F â€" set when the item is a prize-draw entry; drives the reveals badge. */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
-  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
+ listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
+ /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** SB8-F â€" ISO timestamp; deadline by which the buyer must claim the prize. */
-  prizeRevealDeadline?: string;
-  /** SB8-F â€" set after the reveal API picks a winner. */
+ prizeRevealDeadline?: string;
+ /** SB8-F â€" set after the reveal API picks a winner. */
   revealedItemNumber?: number;
 }
 
@@ -179,12 +179,12 @@ export interface OrderDocument {
   /** Deadline for the buyer to claim the won prize (typically 7 days). */
   prizeRevealDeadline?: Date;
   /** True once `prizeRevealDeadline` passes without a claim â€" auto-forfeit. */
-  prizeRevealExpired?: boolean;
-  /** Source product id when the order came from a prize-draw entry. */
-  prizeDrawProductId?: string;
-  /** True for prize-draw entries and bundle purchases that bypass refund. */
-  isNonRefundable?: boolean;
-  /** Set when the order came from a bundle â€" points back to `bundles/{id}`. */
+ prizeRevealExpired?: boolean;
+ /** Source product id when the order came from a prize-draw entry. */
+ prizeDrawProductId?: string;
+ /** True for prize-draw entries and bundle purchases that bypass refund. */
+ isNonRefundable?: boolean;
+ /** Set when the order came from a bundle â€" points back to `bundles/{id}`. */
   bundleId?: string;
 
   // ── Multi-order payment batch (S-SBUNI-RULES 2026-05-13) ────────────────

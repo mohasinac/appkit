@@ -29,13 +29,13 @@ export interface TabStripProps {
  * @example
  * ```tsx
  * <TabStrip
- *   tabs={[
- *     { key: "all", label: "All" },
- *     { key: "active", label: "Active", badge: 3 },
- *     { key: "archived", label: "Archived", disabled: true },
- *   ]}
- *   activeKey={activeTab}
- *   onChange={setActiveTab}
+ * tabs={[
+ * { key: "all", label: "All" },
+ * { key: "active", label: "Active", badge: 3 },
+ * { key: "archived", label: "Archived", disabled: true },
+ * ]}
+ * activeKey={activeTab}
+ * onChange={setActiveTab}
  * />
  * ```
  */

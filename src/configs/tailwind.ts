@@ -12,7 +12,7 @@
  * // tailwind.config.js
  * const { defineTailwindConfig } = require("@mohasinac/appkit/configs");
  * module.exports = defineTailwindConfig({
- *   content: ["./src/**\/*.{ts,tsx}"],
+ * content: ["./src/**\/*.{ts,tsx}"],
  * });
  * ```
  */

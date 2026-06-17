@@ -10,9 +10,9 @@
  * @example
  * ```ts
  * import {
- *   shiprocketAuthenticate,
- *   shiprocketCreateOrder,
- *   shiprocketTrackByAWB,
+ * shiprocketAuthenticate,
+ * shiprocketCreateOrder,
+ * shiprocketTrackByAWB,
  * } from "@mohasinac/shipping-shiprocket";
  *
  * const { token } = await shiprocketAuthenticate({ email, password });

@@ -254,10 +254,10 @@ export default function ImageGallery({
               variant="ghost"
               onClick={() => goToIndex(index)}
               className={`appkit-image-gallery__thumbnail ${
-                index === currentIndex
-                  ? "appkit-image-gallery__thumbnail--active"
-                  : themed.border
-              }`}
+ index === currentIndex
+ ? "appkit-image-gallery__thumbnail--active"
+ : themed.border
+ }`}
               aria-label={`View image ${index + 1}`}
             >
               <MediaImage

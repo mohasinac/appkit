@@ -142,10 +142,10 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
                 setPendingFilters((p) => ({ ...p, isActive: opt.value }))
               }
               className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                (pendingFilters.isActive || "") === opt.value
-                  ? "bg-primary text-white border-primary"
-                  : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-              }`}
+ (pendingFilters.isActive || "") === opt.value
+ ? "bg-primary text-white border-primary"
+ : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ }`}
             >
               {opt.label}
             </button>
@@ -168,10 +168,10 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
                 setPendingFilters((p) => ({ ...p, isFeatured: opt.value }))
               }
               className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                (pendingFilters.isFeatured || "") === opt.value
-                  ? "bg-primary text-white border-primary"
-                  : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-              }`}
+ (pendingFilters.isFeatured || "") === opt.value
+ ? "bg-primary text-white border-primary"
+ : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ }`}
             >
               {opt.label}
             </button>

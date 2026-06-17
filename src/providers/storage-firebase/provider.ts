@@ -12,9 +12,9 @@
  * import { firebaseStorageProvider } from "@mohasinac/storage-firebase";
  *
  * const file = await firebaseStorageProvider.upload(
- *   buffer,
- *   "products/abc123.jpg",
- *   { contentType: "image/jpeg" }
+ * buffer,
+ * "products/abc123.jpg",
+ * { contentType: "image/jpeg" }
  * );
  * console.log(file.url); // Public download URL
  * ```

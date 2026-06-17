@@ -22,8 +22,8 @@ import type { FirestoreDocument } from "@mohasinac/appkit";
  * import { deriveFormFields } from "@mohasinac/appkit/utils";
  *
  * const extended = productCreateSchema.extend({
- *   hsn: z.string().describe("HSN Code"),
- *   origin: z.enum(["domestic", "imported"]).describe("Product Origin"),
+ * hsn: z.string().describe("HSN Code"),
+ * origin: z.enum(["domestic", "imported"]).describe("Product Origin"),
  * });
  *
  * const fields = deriveFormFields(extended);

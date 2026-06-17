@@ -77,10 +77,10 @@ export function BackgroundRenderer({
             playsInline
             onLoadedData={() => setIsVideoLoaded(true)}
             className={`appkit-bg-renderer__video ${
-              isVideoLoaded
-                ? "appkit-bg-renderer__video--loaded"
-                : "appkit-bg-renderer__video--loading"
-            }`}
+ isVideoLoaded
+ ? "appkit-bg-renderer__video--loaded"
+ : "appkit-bg-renderer__video--loading"
+ }`}
           >
             <source src={config.value} type="video/mp4" />
             Your browser does not support the video tag.

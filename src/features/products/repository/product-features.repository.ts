@@ -164,7 +164,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
   /**
    * Hard-delete. Throws ValidationError if any product references this feature
    * in product.features[]. Admin/store UIs should surface a "this feature is in
-   * use" message instead of silently unlinking.
+ * use" message instead of silently unlinking.
    */
   async delete(id: string): Promise<void> {
     try {

@@ -141,8 +141,8 @@ const sectionRef = useRef<HTMLElement>(null);
         {/* Header */}
         <Div
           className={`text-center mb-12 transition-all duration-700 ${
-            visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
-          }`}
+ visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
+ }`}
         >
           {pillLabel && (
             <Div layout="inline-flex" gap="2" textWeight="medium" textSize="xs" className="inline-block mb-4 items-center border border-primary-500/30 bg-primary-500/10 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
@@ -184,8 +184,8 @@ const sectionRef = useRef<HTMLElement>(null);
         {ctaLabel && onCtaClick && (
           <Div
             className={`text-center transition-all duration-700 delay-500 ${
-              visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
-            }`}
+ visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
+ }`}
           >
             <Button variant="primary" size="lg" onClick={onCtaClick}>
               {ctaLabel}

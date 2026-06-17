@@ -5,7 +5,7 @@
  * ```ts
  * // app/api/reviews/[id]/route.ts
  * export { reviewItemGET as GET, reviewItemPATCH as PATCH, reviewItemDELETE as DELETE }
- *   from "@mohasinac/feat-reviews";
+ * from "@mohasinac/feat-reviews";
  * ```
  */
 

@@ -18,11 +18,11 @@
  * const table = useUrlTable({ defaults: { pageSize: '25', sort: '-createdAt' } });
  *
  * // Read
- * table.get('status')        // string | ''
+ * table.get('status') // string | ''
  * table.getNumber('page', 1) // number
  *
  * // Write
- * table.set('status', 'active')   // resets page → 1
+ * table.set('status', 'active') // resets page → 1
  * table.setPage(3)
  * table.setSort('-price')
  * table.setMany({ status: 'active', role: 'seller' })

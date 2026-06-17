@@ -113,8 +113,8 @@ export function MarketplaceBundleCard({
           {showCollage ? (
             <Div layout="grid" 
               className={`h-full w-full gap-0.5 bg-[var(--appkit-color-surface-muted)] ${
-                collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
-              }`}
+ collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
+ }`}
             >
               {collageTiles.map((tile, i) => (
                 <Div

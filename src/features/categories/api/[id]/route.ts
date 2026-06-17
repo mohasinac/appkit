@@ -5,7 +5,7 @@
  * ```ts
  * // app/api/categories/[id]/route.ts
  * export { categoryItemGET as GET, categoryItemPATCH as PATCH, categoryItemDELETE as DELETE }
- *   from "@mohasinac/feat-categories";
+ * from "@mohasinac/feat-categories";
  * ```
  */
 

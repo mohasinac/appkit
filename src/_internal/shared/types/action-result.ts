@@ -32,10 +32,10 @@ export type ActionResult<T> =
  * ```ts
  * "use server";
  * export async function placeBidAction(input: BidInput): Promise<ActionResult<BidPlaced>> {
- *   return wrapAction(async () => {
- *     const parsed = bidSchema.parse(input);
- *     return await bidRepository.place(parsed);
- *   });
+ * return wrapAction(async () => {
+ * const parsed = bidSchema.parse(input);
+ * return await bidRepository.place(parsed);
+ * });
  * }
  * ```
  *

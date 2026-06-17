@@ -135,10 +135,10 @@ export function CouponsIndexListing({
             type="button"
             onClick={openFilters}
             className={`flex shrink-0 items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
-              hasActiveFilters
-                ? "border-primary bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
-                : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800"
-            }`}
+ hasActiveFilters
+ ? "border-primary bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+ : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ }`}
           >
             <SlidersHorizontal className="h-4 w-4" />
             <Span className="hidden sm:inline">Filters{hasActiveFilters ? " •" : ""}</Span>

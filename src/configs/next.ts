@@ -75,7 +75,7 @@ export interface NextConfigOverride {
  * // next.config.js
  * const { defineNextConfig } = require("@mohasinac/appkit/configs");
  * module.exports = defineNextConfig({
- *   images: { domains: ["lh3.googleusercontent.com"] }
+ * images: { domains: ["lh3.googleusercontent.com"] }
  * });
  * ```
  */

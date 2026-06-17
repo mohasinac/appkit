@@ -6,8 +6,8 @@
  * @example
  * ```ts
  * export const GET = withCache(
- *   async (request) => { ... return NextResponse.json(data); },
- *   { ttl: 5 * 60 * 1000 }
+ * async (request) => { ... return NextResponse.json(data); },
+ * { ttl: 5 * 60 * 1000 }
  * );
  * ```
  */

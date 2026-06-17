@@ -6,7 +6,7 @@
  * ```ts
  * // app/api/products/[id]/route.ts
  * export { productItemGET as GET, productItemPATCH as PATCH, productItemDELETE as DELETE }
- *   from "@mohasinac/feat-products";
+ * from "@mohasinac/feat-products";
  * ```
  */
 

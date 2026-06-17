@@ -143,10 +143,10 @@ export function FooterLayout({
 
           {/* Link groups — desktop: columns, mobile: accordions */}
           <Div className={`lg:col-span-3 grid grid-cols-1 gap-0 lg:gap-8 ${
-            linkGroups.length <= 3 ? "lg:grid-cols-3" :
-            linkGroups.length === 4 ? "lg:grid-cols-4" :
-            "lg:grid-cols-5"
-          }`}>
+ linkGroups.length <= 3 ? "lg:grid-cols-3" :
+ linkGroups.length === 4 ? "lg:grid-cols-4" :
+ "lg:grid-cols-5"
+ }`}>
             {linkGroups.map((group, idx) => (
               <Div key={idx}>
                 {/* Mobile accordion header */}

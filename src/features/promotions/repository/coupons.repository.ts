@@ -625,13 +625,13 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
    *
    * @example
    * ```ts
-   * const page = await couponsRepository.list({
-   *   filters:  'type==percentage,validity.isActive==true',
-   *   sorts:    '-createdAt',
-   *   page:     1,
-   *   pageSize: 50,
-   * });
-   * ```
+ * const page = await couponsRepository.list({
+ * filters: 'type==percentage,validity.isActive==true',
+ * sorts: '-createdAt',
+ * page: 1,
+ * pageSize: 50,
+ * });
+ * ```
    */
   async list(model: SieveModel): Promise<FirebaseSieveResult<CouponDocument>> {
     return this.sieveQuery<CouponDocument>(

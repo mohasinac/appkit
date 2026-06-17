@@ -14,7 +14,7 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
   cancelled: "bg-error-surface text-error",
   refunded: "bg-warning-surface text-warning",
   return_requested: "bg-warning-surface text-warning",
-  returned: "bg-neutral-100 text-neutral-600 dark:text-neutral-400 dark:bg-neutral-800 dark:text-neutral-300",
+  returned: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
 };
 
 interface OrderCardProps {

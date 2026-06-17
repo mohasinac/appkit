@@ -9,11 +9,11 @@
  * Usage in subclasses:
  * ```ts
  * async list(model: SieveModel, baseQuery?: CollectionReference | Query) {
- *   return this.sieveQuery<ProductDocument>(model, {
- *     title:     { canFilter: true, canSort: true },
- *     price:     { canFilter: true, canSort: true },
- *     createdAt: { canFilter: true, canSort: true },
- *   }, { baseQuery });
+ * return this.sieveQuery<ProductDocument>(model, {
+ * title: { canFilter: true, canSort: true },
+ * price: { canFilter: true, canSort: true },
+ * createdAt: { canFilter: true, canSort: true },
+ * }, { baseQuery });
  * }
  * ```
  *

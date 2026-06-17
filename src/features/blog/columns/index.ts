@@ -15,8 +15,8 @@ import type { BlogPost } from "../types";
  * import { buildBlogColumns } from "@mohasinac/feat-blog";
  *
  * const columns = buildBlogColumns<MyPost>({
- *   overrides: { title: { render: (p) => <Link href={p.slug}>{p.title}</Link> } },
- *   extras: [{ key: "series", header: "Series", render: (p) => p.series ?? "—" }],
+ * overrides: { title: { render: (p) => <Link href={p.slug}>{p.title}</Link> } },
+ * extras: [{ key: "series", header: "Series", render: (p) => p.series ?? "—" }],
  * });
  * ```
  */

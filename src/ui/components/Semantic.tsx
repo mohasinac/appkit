@@ -20,16 +20,16 @@ import { buildSurfaceClasses } from "./surface-tokens";
  * import { Section, Article, Main, Aside, Nav, Ul, Ol, Li } from '..';
  *
  * <Main className="max-w-7xl mx-auto px-4">
- *   <Section className="py-12">
- *     <Article>...</Article>
- *   </Section>
- *   <Aside className="w-64 shrink-0">...</Aside>
+ * <Section className="py-12">
+ * <Article>...</Article>
+ * </Section>
+ * <Aside className="w-64 shrink-0">...</Aside>
  * </Main>
  *
  * <Nav aria-label="Main navigation">
- *   <Ul className="flex gap-4">
- *     <Li>Products</Li>
- *   </Ul>
+ * <Ul className="flex gap-4">
+ * <Li>Products</Li>
+ * </Ul>
  * </Nav>
  * ```
  */
@@ -218,9 +218,9 @@ export function Nav({ surface, padding, rounded, border, shadow, spacing, color,
  * @example
  * ```tsx
  * <Article>
- *   <BlockHeader className="mb-4">
- *     <Heading level={2}>Post title</Heading>
- *   </BlockHeader>
+ * <BlockHeader className="mb-4">
+ * <Heading level={2}>Post title</Heading>
+ * </BlockHeader>
  * </Article>
  * ```
  */
@@ -278,8 +278,8 @@ export function BlockFooter({
  * @example
  * ```tsx
  * <Ul className="space-y-2">
- *   <Li>Item one</Li>
- *   <Li>Item two</Li>
+ * <Li>Item one</Li>
+ * <Li>Item two</Li>
  * </Ul>
  * ```
  */
@@ -374,8 +374,8 @@ Ul.displayName = "Ul";
  * @example
  * ```tsx
  * <Ol className="list-decimal pl-4 space-y-1">
- *   <Li>Step one</Li>
- *   <Li>Step two</Li>
+ * <Li>Step one</Li>
+ * <Li>Step two</Li>
  * </Ol>
  * ```
  */

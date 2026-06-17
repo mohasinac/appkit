@@ -6,9 +6,9 @@
  * @example
  * ```ts
  * buildSieveFilters(
- *   ["status==", statusFilter],
- *   ["totalPrice>=", minAmount],
- *   ["title@=*", searchTerm],
+ * ["status==", statusFilter],
+ * ["totalPrice>=", minAmount],
+ * ["title@=*", searchTerm],
  * );
  * // → "status==pending,totalPrice>=100,title@=*shoes"
  * ```

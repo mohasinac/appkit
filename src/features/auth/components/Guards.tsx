@@ -30,11 +30,11 @@ export interface AuthRouteConfig {
  * @example
  * ```tsx
  * <RoleGate
- *   user={currentUser}
- *   allowedRoles="admin"
- *   fallback={<div data-section="guards-div-259">Not authorized</div>}
+ * user={currentUser}
+ * allowedRoles="admin"
+ * fallback={<div data-section="guards-div-259">Not authorized</div>}
  * >
- *   <AdminPanel />
+ * <AdminPanel />
  * </RoleGate>
  * ```
  */
@@ -76,14 +76,14 @@ export function RoleGate({
  * @example
  * ```tsx
  * <ProtectedRoute
- *   user={user}
- *   loading={isLoading}
- *   requireAuth
- *   requireRole="admin"
- *   onNavigate={(path) => router.push(path)}
- *   routes={{ loginPath: "/auth/login", unauthorizedPath: "/errors/403" }}
+ * user={user}
+ * loading={isLoading}
+ * requireAuth
+ * requireRole="admin"
+ * onNavigate={(path) => router.push(path)}
+ * routes={{ loginPath: "/auth/login", unauthorizedPath: "/errors/403" }}
  * >
- *   <AdminDashboard />
+ * <AdminDashboard />
  * </ProtectedRoute>
  * ```
  */

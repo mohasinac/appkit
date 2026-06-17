@@ -51,9 +51,9 @@ export interface UseSwipeOptions {
  * const ref = useRef<HTMLDivElement>(null);
  *
  * useSwipe(ref, {
- *   onSwipeLeft: () => console.log('Swiped left'),
- *   onSwipeRight: () => console.log('Swiped right'),
- *   minSwipeDistance: 100,
+ * onSwipeLeft: () => console.log('Swiped left'),
+ * onSwipeRight: () => console.log('Swiped right'),
+ * minSwipeDistance: 100,
  * });
  *
  * return <div ref={ref}>Swipe me!</div>;
