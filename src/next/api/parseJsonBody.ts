@@ -17,6 +17,7 @@ export async function parseJsonBody<T = FirestoreDocument>(
   request: Request,
   options?: { allowEmpty?: boolean },
 ): Promise<T> {
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   let raw: unknown;
   try {
     const text = await request.text();

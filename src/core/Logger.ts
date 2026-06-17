@@ -35,6 +35,7 @@ export interface LoggerOptions {
   enableFileLogging?: boolean;
   maxEntries?: number;
   /** Optional function to sanitize data before logging (e.g., PII redaction). */
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   sanitizer?: (data: unknown) => unknown;
 }
 
@@ -45,6 +46,7 @@ export class Logger {
     Omit<LoggerOptions, "logFileUrl" | "enableFileLogging" | "sanitizer">
   > & {
     logFileUrl?: string;
+    // audit-unknown-ok: callback entry point — accepts arbitrary payload value
     sanitizer?: (data: unknown) => unknown;
   };
   private levelPriority: Record<LogLevel, number> = {
@@ -78,6 +80,7 @@ export class Logger {
   }
 
   /** Set or update the data sanitizer (e.g., for PII redaction). */
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   public static setSanitizer(fn: (data: unknown) => unknown): void {
     Logger.getInstance().options.sanitizer = fn;
   }

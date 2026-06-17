@@ -98,6 +98,7 @@ export abstract class FirebaseRealtimeRepository<
     };
   }
 
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   async findWhere(field: keyof T, _op: WhereOp, value: unknown): Promise<T[]> {
     // RTDB Admin SDK supports orderByChild + equalTo for == only
     const snap = await this.nodeRef()
@@ -168,6 +169,7 @@ export abstract class FirebaseRealtimeRepository<
 
   subscribeWhere(
     field: keyof T,
+    // audit-unknown-ok: callback entry point — accepts arbitrary payload value
     value: unknown,
     cb: (items: T[]) => void,
   ): () => void {

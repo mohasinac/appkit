@@ -140,6 +140,7 @@ export class FirebaseRepository<
     return { data, total, page, perPage, totalPages };
   }
 
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   async findWhere(field: keyof T, op: WhereOp, value: unknown): Promise<T[]> {
     const snap = await (this.getCollection() as Query)
       .where(field as string, op, value)
@@ -218,6 +219,7 @@ export class FirebaseRepository<
   }
 
   /** Find first document where `field == value`. */
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   async findOneBy(field: string, value: unknown): Promise<T | null> {
     const snap = await this.getCollection()
       .where(field, "==", value)

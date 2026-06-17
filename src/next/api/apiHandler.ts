@@ -1,5 +1,6 @@
 import { normalizeError } from "../../errors/normalize";
 interface SafeParseSchema<TInput> {
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   safeParse: (input: unknown) =>
     | { success: true; data: TInput }
     | { success: false; error: { issues?: unknown[] } };

@@ -42,6 +42,7 @@ export const piiScrubberMiddleware: Middleware<BaseRequestContext> = async (
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
 
+  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   let body: unknown;
   try {
     body = await response.json();

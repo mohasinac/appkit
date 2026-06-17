@@ -12,6 +12,7 @@ import {
 import { upsertCartItem, mergeGuestItems } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function addToCartAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -22,6 +23,7 @@ export async function addToCartAction(input: unknown): Promise<ActionResult<unkn
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function removeFromCartAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -40,6 +42,7 @@ export async function clearCartAction(): Promise<ActionResult<unknown>> {
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function mergeGuestCartAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);

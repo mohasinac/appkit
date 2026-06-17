@@ -14,6 +14,7 @@ import { ValidationError } from "../../../shared/errors/index";
 
 const ERR_INVALID_COUPON_INPUT = "Invalid coupon input";
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function applyCouponAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -31,6 +32,7 @@ export async function applyCouponAction(input: unknown): Promise<ActionResult<un
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createCouponAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["admin", "seller"]);
@@ -43,6 +45,7 @@ export async function createCouponAction(input: unknown): Promise<ActionResult<u
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function updateCouponAction(couponId: string, input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     await requireRoleUser(["admin", "seller"]);

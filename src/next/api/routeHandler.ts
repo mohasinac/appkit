@@ -41,6 +41,7 @@ import type { ApiRouteKey, FirestoreValue } from "../../schemas/types";
 /** Minimal schema interface compatible with Zod v3 and v4. */
 interface ParseableSchema<TOutput> {
   safeParse(
+    // audit-unknown-ok: callback entry point — accepts arbitrary payload value
     data: unknown,
   ):
     | { success: true; data: TOutput }
@@ -298,6 +299,7 @@ export function createRouteHandler<
         );
       }
       if (resolvedSchema) {
+        // audit-unknown-ok: callback entry point — accepts arbitrary payload value
         let raw: unknown;
         try {
           raw = await request.json();

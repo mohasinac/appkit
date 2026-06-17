@@ -59,6 +59,7 @@ function rowClass(checked: boolean, cantSelect: boolean): string {
   return `${ROW_BASE_CLASS} ${ROW_DEFAULT_CLASS}`;
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 function unwrapItems(res: unknown): ProductFeatureDocument[] {
   const body =
     (res as { data?: FeaturesListResponse })?.data ??

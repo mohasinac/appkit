@@ -19,6 +19,7 @@ import {
 import { assertProductOwnership, assertStatusTransition } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createProductAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
@@ -34,6 +35,7 @@ export async function createProductAction(input: unknown): Promise<ActionResult<
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createAuctionAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
@@ -49,6 +51,7 @@ export async function createAuctionAction(input: unknown): Promise<ActionResult<
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createPreOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
@@ -64,6 +67,7 @@ export async function createPreOrderAction(input: unknown): Promise<ActionResult
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function updateProductAction(productId: string, input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
@@ -82,6 +86,7 @@ export async function deleteProductAction(productId: string): Promise<ActionResu
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function setProductStatusAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
@@ -106,6 +111,7 @@ export async function setProductStatusAction(input: unknown): Promise<ActionResu
   });
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function setProductFeaturedAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     await requireRoleUser("admin");

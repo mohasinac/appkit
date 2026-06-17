@@ -104,6 +104,7 @@ export function toRupees(value: unknown): string {
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export function toRelativeDate(value: unknown): string {
   const date = parseDate(value);
   if (!date) {

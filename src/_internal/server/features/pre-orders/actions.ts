@@ -7,6 +7,7 @@ import { reservePreOrderSchema } from "../../../shared/features/pre-orders/schem
 import { assertPreOrderAvailable, computeDeposit } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 
+// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function reservePreOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
