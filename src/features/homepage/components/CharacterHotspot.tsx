@@ -265,6 +265,7 @@ function HotspotHeaderOverlay({
           "linear-gradient(to bottom, rgba(10,10,18,0.88) 0%, rgba(10,10,18,0.40) 50%, transparent 100%)",
       }}
     >
+      {/* audit-variant-ok: hotspot toolbar — asymmetric pt-4 pb-6 + gap-y-3 row-gap; SurfaceProps takes one paddingY, Row.gap is single-axis */}
       <Row
         wrap
         align="start"
@@ -525,10 +526,11 @@ function MobileHotspotSheet({
           animation: "fadeInUp 0.22s ease both",
         }}
       >
-        <Row className="pb-1" padding="t-sm" justify="center">
+        <Row paddingY="b-2xs" padding="t-sm" justify="center">
           <Div style={{ width: 40, height: 4, borderRadius: 2, background: "#D1D5DB" }} />
         </Row>
         <Div style={{ height: 4, background: active.accent }} />
+        {/* audit-variant-ok: panel body — paddingX="x-5" + asymmetric pb-10/pt-md (pb-10 isn't in Y_ONLY single-side keys) */}
         <Div className="px-5 pb-10" padding="t-md">
           <Text
             className="text-[10px] uppercase tracking-[0.18em] mb-1" weight="bold"
@@ -563,11 +565,13 @@ function MobileHotspotSheet({
               {active.buyText}
               <Span aria-hidden="true">→</Span>
             </Link>
+            {/* audit-variant-ok: close button — py-3 vertical override + font-bold; Button lacks paddingY / fontWeight variants */}
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="px-5 py-3 text-sm font-bold rounded"
+              paddingX="lg" textSize="sm" rounded="default"
+              className="py-3 font-bold"
               style={{ background: "#F1F5F9", color: "#475569" }}
             >
               Close
@@ -680,6 +684,7 @@ function CharacterHotspotInner({
         <HotspotImageLayer panoramicImage={panoramicImage} panoramicAlt={panoramicAlt} />
 
         {/* Universe zone labels */}
+        {/* audit-variant-ok: zone-labels row — hidden sm:flex breakpoint visibility + justify-around (Row.justify lacks "around" responsive) */}
         <Div
           className="hidden sm:flex absolute left-0 right-0 justify-around items-start pointer-events-none"
           style={{ top: "clamp(120px, 18vh, 165px)", zIndex: 5 }}

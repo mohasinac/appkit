@@ -186,10 +186,19 @@ type TextLayout = "default" | "inline-flex" | "flex" | "inline-block";
 type TextGap = "none" | "1" | "1.5" | "2" | "3";
 type TextShadow = "none" | "sm" | "md" | "lg" | "2xl";
 
+/**
+ * Shared layout class strings — referenced from TEXT_LAYOUT_MAP,
+ * LABEL_LAYOUT_MAP, and SPAN_LAYOUT_MAP below. Extracting them as constants
+ * keeps `audit-code-quality/REPEATED_STRING` at strict-zero (the audit fires
+ * when the same human-readable className appears ≥3 times across the file).
+ */
+const CLS_INLINE_FLEX = "inline-flex items-center";
+const CLS_FLEX = "flex items-center";
+
 const TEXT_LAYOUT_MAP: Record<TextLayout, string> = {
   default: "",
-  "inline-flex": "inline-flex items-center",
-  flex: "flex items-center",
+  "inline-flex": CLS_INLINE_FLEX,
+  flex: CLS_FLEX,
   "inline-block": "inline-block",
 };
 
@@ -297,8 +306,8 @@ type LabelLayout = "inline" | "inline-flex" | "flex";
 
 const LABEL_LAYOUT_MAP: Record<LabelLayout, string> = {
   inline: "",
-  "inline-flex": "inline-flex items-center",
-  flex: "flex items-center",
+  "inline-flex": CLS_INLINE_FLEX,
+  flex: CLS_FLEX,
 };
 
 type LabelGap = "none" | "xs" | "sm" | "md" | "lg";
@@ -482,10 +491,10 @@ type SpanLayout = "inline" | "inline-flex" | "flex" | "inline-flex-center" | "fl
 
 const SPAN_LAYOUT_MAP: Record<SpanLayout, string> = {
   inline: "",
-  "inline-flex": "inline-flex items-center",
-  flex: "flex items-center",
-  "inline-flex-center": "inline-flex items-center justify-center",
-  "flex-center": "flex items-center justify-center",
+  "inline-flex": CLS_INLINE_FLEX,
+  flex: CLS_FLEX,
+  "inline-flex-center": `${CLS_INLINE_FLEX} justify-center`,
+  "flex-center": `${CLS_FLEX} justify-center`,
   "inline-block": "inline-block",
   block: "block",
 };

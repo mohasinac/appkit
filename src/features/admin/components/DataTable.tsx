@@ -92,6 +92,7 @@ function SelectableRow<T extends { id: string }>({
     : undefined;
   const isInteractive = Boolean(onRowClick ?? rowHref);
   return (
+    // audit-variant-ok: data-table row — hover + conditional selected-row tint; Tr lacks hover-state / selected-state variants
     <Tr
       data-testid="data-table-row"
       onClick={handleClick}
@@ -119,7 +120,7 @@ function SelectableRow<T extends { id: string }>({
       {columns.map((col) => (
         <Td
           key={col.key}
-          className={`text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`} padding="md"
+          color="muted" className={col.className ?? ""} padding="md"
         >
           {col.render
             ? col.render(row)
@@ -162,6 +163,7 @@ export function DataTable<T extends { id: string }>({
       <Div className={`${__O.xAuto}`}>
         <Table data-testid="data-table" size="sm">
           <Thead>
+            {/* audit-variant-ok: table header row — neutral-50/slate-800 explicit tint; Tr.surface=muted maps to a different token */}
             <Tr className="bg-neutral-50 dark:bg-slate-800" border="default">
               {selectionEnabled && (
                 <Th padding="xs-3" scope="col" className="w-10">
@@ -213,7 +215,7 @@ export function DataTable<T extends { id: string }>({
               <Tr>
                 <Td
                   colSpan={columns.length + (selectionEnabled ? 1 : 0) + (renderRowActions ? 1 : 0)}
-                  className="px-4 py-12 text-center text-neutral-500 dark:text-zinc-400"
+                  align="center" color="faint" paddingX="md" paddingY="md"
                 >
                   {emptyLabel}
                 </Td>
