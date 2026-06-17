@@ -178,7 +178,8 @@ export function FormShell({
       />
 
       {/* Panel */}
-      <Div layout="flex" 
+      {/* audit-variant-ok: form-shell panel — fixed-position modal with responsive lg-margin + flex-col + shadow-2xl + surface bg */}
+      <Div layout="flex"
         ref={panelRef}
         role="dialog"
         aria-modal="true"
@@ -282,6 +283,7 @@ export function FormShell({
 
           {/* Mobile horizontal section strip */}
           {sections && sections.length > 0 && !previewMode && (
+            // audit-variant-ok: mobile section strip — fixed below topbar at lg:hidden + bespoke px-5 + surface bg + bottom border
             <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-5 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`} padding="y-xs">
               {sections.map((sec) => (
                 <button
@@ -317,7 +319,9 @@ export function FormShell({
             ) : splitPreview && previewSlot ? (
               // S-STORE-3-D — desktop 60/40 split: form left, preview right.
               // Below `lg`, falls back to single-column form (preview-as-modal via existing toggle).
+              // audit-variant-ok: split-preview wrapper — lg:grid 3fr_2fr custom grid-cols + lg:px/py + max-w/mx-auto responsive layout
               <Div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:px-6 lg:py-6 lg:max-w-[1400px] lg:mx-auto">
+                {/* audit-variant-ok: form column — base px-5 + sm:px-6 + lg:max-w-none/px-0/py-0 reset for split mode */}
                 <Div className="max-w-3xl mx-auto px-5 sm:px-6 lg:max-w-none lg:px-0 lg:py-0" padding="y-lg">
                   {children}
                 </Div>
@@ -330,6 +334,7 @@ export function FormShell({
                 </Div>
               </Div>
             ) : (
+              // audit-variant-ok: form single-column wrapper — px-5 + sm:px-6 + max-w-3xl mx-auto centering
               <Div className="max-w-3xl mx-auto px-5 sm:px-6" padding="y-lg">
                 {children}
               </Div>
@@ -382,6 +387,7 @@ export function FormShell({
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
             onClick={() => setShowUnsaved(false)}
           />
+          {/* audit-variant-ok: unsaved-changes modal — fixed-center transform layout + surface bg + shadow-2xl over rounded="xl" */}
           <Div
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)] shadow-2xl" rounded="xl" padding="lg"
             // audit-inline-style-ok: z-index token
