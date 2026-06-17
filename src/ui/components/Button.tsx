@@ -99,6 +99,23 @@ const BUTTON_BORDER_MAP: Record<ButtonBorder, string> = {
   strong: "border border-zinc-300 dark:border-slate-600",
 };
 
+type ButtonPaddingY = "none" | "xs" | "sm" | "md" | "lg";
+const BUTTON_PADDING_Y_MAP: Record<ButtonPaddingY, string> = {
+  none: "",
+  xs: "py-1",
+  sm: "py-2",
+  md: "py-3",
+  lg: "py-4",
+};
+
+type ButtonWeight = "normal" | "medium" | "semibold" | "bold";
+const BUTTON_WEIGHT_MAP: Record<ButtonWeight, string> = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+  bold: "font-bold",
+};
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof UI_BUTTON.variants;
   size?: keyof typeof UI_BUTTON.sizes;
@@ -110,6 +127,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   textSize?: ButtonTextSize;
   /** Override horizontal padding separately from button `size` (use for chip / icon-only buttons). */
   paddingX?: ButtonPaddingX;
+  /** Override vertical padding separately from button `size`. */
+  paddingY?: ButtonPaddingY;
+  /** Override font weight separately from default semibold. */
+  weight?: ButtonWeight;
   /** Override text colour separately from `variant`. Use for ghost-style buttons that need a muted label. */
   textColor?: ButtonTextColor;
   /** Border override. */
@@ -146,6 +167,8 @@ export function Button({
   gap,
   textSize,
   paddingX,
+  paddingY,
+  weight,
   textColor,
   border,
   rounded,
@@ -167,6 +190,8 @@ export function Button({
     gap ? BUTTON_GAP_MAP[gap] : "",
     textSize ? BUTTON_TEXT_SIZE_MAP[textSize] : "",
     paddingX ? BUTTON_PADDING_X_MAP[paddingX] : "",
+    paddingY ? BUTTON_PADDING_Y_MAP[paddingY] : "",
+    weight ? BUTTON_WEIGHT_MAP[weight] : "",
     textColor ? BUTTON_TEXT_COLOR_MAP[textColor] : "",
     border ? BUTTON_BORDER_MAP[border] : "",
     rounded ? BUTTON_ROUNDED_MAP[rounded] : "",
