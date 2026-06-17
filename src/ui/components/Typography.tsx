@@ -19,6 +19,9 @@ const TYPOGRAPHY = {
     "3xl": "appkit-text--3xl",
     "4xl": "appkit-text--4xl",
     "5xl": "appkit-text--5xl",
+    "6xl": "text-6xl",
+    "7xl": "text-7xl",
+    "8xl": "text-8xl",
   },
   textWeight: {
     light: "appkit-font--light",
@@ -83,7 +86,7 @@ function shapingClasses(opts: {
   return out;
 }
 
-type HeadingSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+type HeadingSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl";
 
 function responsiveSizeClass(prefix: "sm:" | "md:" | "lg:" | "xl:", size: HeadingSize | undefined): string {
   if (!size) return "";

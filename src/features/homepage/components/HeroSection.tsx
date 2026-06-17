@@ -9,8 +9,9 @@ interface HeroSectionProps {
 export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
   const { content } = section;
   return (
-    <Section
-      className="relative flex min-h-[60vh] items-center overflow-hidden bg-neutral-900"
+    // audit-variant-ok: hero section — min-h-[60vh] custom + bg-neutral-900 dark surface (Section.tone lacks hero-dark variant); flex+items-center handled by layout/align
+    <Section layout="flex" align="center"
+      className="relative min-h-[60vh] overflow-hidden bg-neutral-900"
       style={
         content?.imageUrl
           ? {
@@ -26,7 +27,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
         {content?.title && (
           <Heading
             level={1}
-            className="leading-tight lg:text-6xl" smSize="5xl" size="4xl" weight="bold"
+            className="leading-tight" smSize="5xl" size="4xl" lgSize="6xl" weight="bold"
           >
             {content.title}
           </Heading>
@@ -37,9 +38,11 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
           </Text>
         )}
         {content?.ctaLabel && (
-          <Button rounded="full" 
+          // audit-variant-ok: hero CTA Button — bespoke white-on-dark CTA + zinc-900 text + hover-neutral; Button.variant lacks light-tone-on-dark
+          <Button rounded="full"
             onClick={onCtaClick}
-            className="mt-8 inline-block bg-white px-8 py-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition hover:bg-neutral-100 dark:bg-neutral-800"
+            paddingX="xl" paddingY="md" textSize="sm" weight="semibold"
+            className="mt-8 inline-block bg-white text-zinc-900 dark:text-zinc-100 transition hover:bg-neutral-100 dark:bg-neutral-800"
           >
             {content.ctaLabel}
           </Button>
