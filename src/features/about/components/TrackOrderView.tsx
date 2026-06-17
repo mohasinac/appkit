@@ -87,7 +87,7 @@ export async function TrackOrderView({
           <Heading level={2} className="mb-3">
             {t("signInPrompt")}
           </Heading>
-          <Stack justify="center" className="sm:flex-row mt-6" gap="3">
+          <Stack direction="sm-row" justify="center" className="mt-6" gap="3">
             <TextLink rounded="lg" 
               href={String(ROUTES.AUTH.LOGIN)}
               className={`inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 transition-colors`} weight="medium"

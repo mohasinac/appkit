@@ -104,7 +104,7 @@ export function AdminPageHeader({
           ))}
         </Nav>
       )}
-      <Stack align="center" justify="between" className="sm:flex-row sm: sm:" gap="md">
+      <Stack direction="sm-row" align="center" justify="between" gap="md">
         <Div className={themeConfig.spacingClass}>
           <Row gap="sm" wrap>
             <Heading level={2} className={themeConfig.titleClass}>

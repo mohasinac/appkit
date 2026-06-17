@@ -331,6 +331,26 @@ const LIST_COLOR_MAP: Record<ListColor, string> = {
   faint: "appkit-color--faint",
 };
 
+type UlPaddingX = "none" | "x-xs" | "x-sm" | "x-md" | "x-lg";
+type UlPaddingY = "none" | "y-2xs" | "y-xs" | "y-sm" | "y-md" | "y-lg" | "y-bottom-xs";
+
+const UL_PADDING_X_MAP: Record<UlPaddingX, string> = {
+  none: "",
+  "x-xs": "px-2",
+  "x-sm": "px-3",
+  "x-md": "px-4",
+  "x-lg": "px-6",
+};
+const UL_PADDING_Y_MAP: Record<UlPaddingY, string> = {
+  none: "",
+  "y-2xs": "py-1",
+  "y-xs": "py-2",
+  "y-sm": "py-3",
+  "y-md": "py-4",
+  "y-lg": "py-6",
+  "y-bottom-xs": "pb-1",
+};
+
 export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
   /** Marker style — replaces consumer `list-disc`/`list-none` className. */
   marker?: ListMarker;
@@ -338,6 +358,10 @@ export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
   spacing?: ListSpacing;
   /** Left padding — replaces consumer `pl-N`. */
   indent?: ListIndent;
+  /** Horizontal padding — replaces consumer `px-N` className on list shells. */
+  paddingX?: UlPaddingX;
+  /** Vertical padding — replaces consumer `py-N`/`pb-N` className on list shells. */
+  paddingY?: UlPaddingY;
   /** Typography size cascaded onto list items. */
   size?: ListSize;
   /** Colour variant cascaded onto list items. */
@@ -346,13 +370,15 @@ export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
 }
 
 export const Ul = React.forwardRef<HTMLUListElement, UlProps>(
-  ({ marker, spacing, indent, size, color, className = "", children, ...props }, ref) => (
+  ({ marker, spacing, indent, paddingX, paddingY, size, color, className = "", children, ...props }, ref) => (
     <ul
       ref={ref}
       className={[
         marker ? LIST_MARKER_MAP[marker] : "",
         spacing ? LIST_SPACING_MAP[spacing] : "",
         indent ? LIST_INDENT_MAP[indent] : "",
+        paddingX ? UL_PADDING_X_MAP[paddingX] : "",
+        paddingY ? UL_PADDING_Y_MAP[paddingY] : "",
         size ? LIST_SIZE_MAP[size] : "",
         color ? LIST_COLOR_MAP[color] : "",
         className,

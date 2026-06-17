@@ -59,7 +59,7 @@ export function CheckoutView({
         </Heading>
       )}
       {renderStepIndicator?.(step, totalSteps, setStep)}
-      <Stack className="lg:flex-row lg:gap-8" gap="lg">
+      <Stack direction="lg-row" className="lg:gap-8" gap="lg">
         <Div className="flex-1">
           {renderStep(step, setStep)}
           <AdSlot id="checkout-upsell" className="mt-6" />

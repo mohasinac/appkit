@@ -112,6 +112,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
   return (
     <Main>
       {/* ── Brand Hero ──────────────────────────────────────────────────── */}
+      {/* audit-variant-ok: brand hero — conditional min-h cover sizing OR muted zinc bg fallback; Section lacks min-h variant */}
       <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
         {hasCover && (
           <>

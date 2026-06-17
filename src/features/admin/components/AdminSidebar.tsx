@@ -105,7 +105,7 @@ function GroupsContent({
               </svg>
             </button>
             {isOpen && (
-              <Ul className="space-y-0.5 px-3 pb-1">
+              <Ul paddingX="x-sm" paddingY="y-bottom-xs" className="space-y-0.5">
                 {group.items.map((item) => (
                   <Li key={item.href}>
                     <NavLink item={item} isActive={isNavItemActive(item, activePath)} onClick={onItemClick} />

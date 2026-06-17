@@ -95,7 +95,7 @@ function FlatContent({
         </Row>
       )}
       <Nav aria-label="Store navigation" padding="y-sm">
-        <Ul className="space-y-0.5 px-3">
+        <Ul paddingX="x-sm" className="space-y-0.5">
           {items.map((item) => {
             const isActive = activeHref === item.href;
             return (
@@ -170,7 +170,7 @@ function GroupsContent({
                 </svg>
               </button>
               {isOpen && (
-                <Ul className="space-y-0.5 px-3 pb-1">
+                <Ul paddingX="x-sm" paddingY="y-bottom-xs" className="space-y-0.5">
                   {group.items.map((item) => (
                     <Li key={item.href}>
                       <NavLink item={item} isActive={isNavItemActive(item, activeHref)} onClick={onItemClick} />
