@@ -368,7 +368,8 @@ export function AdminSupportTicketDetailView({
             </Text>
             <Stack className={`max-h-64 ${__O.yAuto}`} gap="sm">
               {messages.map((msg, i) => (
-                <Div textSize="sm" border="default" 
+                // audit-variant-ok: message bubble — conditional bg-zinc-50 (user) vs bg-info-surface + border-info (system); Div lacks role-bubble variant
+                <Div textSize="sm" border="default"
                   key={msg.id ?? i}
                   className={`${ msg.authorRole === "user" ? "bg-zinc-50 dark:bg-zinc-900/40 " : "bg-info-surface border-info dark:border-info" }`} rounded="lg" padding="sm"
                 >
@@ -558,6 +559,7 @@ function OrderItemsPanel(props: {
     );
   };
   return (
+    // audit-variant-ok: info panel — bg-info-surface/40 + border-info/40 translucent tint; Stack.surface=info-surface is fully opaque
     <Stack
       padding="sm"
       className="border border-info/40 bg-info-surface/40" gap="sm" rounded="lg"
@@ -671,6 +673,7 @@ function StoreChangePanel(props: {
     applyStoreChange,
   } = props;
   return (
+    // audit-variant-ok: warning panel — bg-warning-surface/40 + border-warning/40 translucent tint; Stack.surface=warning-surface is fully opaque
     <Stack
       padding="sm"
       className="border border-warning/40 bg-warning-surface/40" gap="sm" rounded="lg"

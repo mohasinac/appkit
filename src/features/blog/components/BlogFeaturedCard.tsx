@@ -61,6 +61,7 @@ export function BlogFeaturedCard({
     : "";
 
   return (
+    // audit-variant-ok: blog card Article — flex-col + hover-shadow-md transition + conditional ring-2 selected outline; Article lacks card-with-hover-state variant
     <Article
       className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-200 ${isSelected ? "ring-2 ring-primary outline outline-2 outline-primary" : ""} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
@@ -78,6 +79,7 @@ export function BlogFeaturedCard({
           className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
         />
       )}
+      {/* audit-variant-ok: card body TextLink — flex h-full flex-col fills card; TextLink lacks layout/sizing variants */}
       <TextLink href={href} className="flex h-full flex-col">
         {/* Cover image — aspect-video like EventCard */}
         <Div className={`aspect-video ${__O.hidden} flex-shrink-0`}>
@@ -103,6 +105,7 @@ export function BlogFeaturedCard({
         <Stack className={`flex-1 ${__P.p4}`}>
           {/* Category + featured badges */}
           <Row gap="xs" className="mb-2" wrap>
+            {/* audit-variant-ok: category badge — dynamic CATEGORY_BADGE class lookup with fallback zinc tones; Span lacks dynamic-tone variant */}
             <Span
               size="xs" weight="medium"
               className={`inline-block capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`} rounded="full" padding="pill-xs"
