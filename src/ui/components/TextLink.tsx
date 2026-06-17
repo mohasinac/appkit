@@ -68,6 +68,23 @@ const LINK_ROUNDED_MAP: Record<LinkRounded, string> = {
   full: "rounded-full",
 };
 
+type LinkPaddingX = "none" | "sm" | "md" | "lg" | "xl";
+const LINK_PADDING_X_MAP: Record<LinkPaddingX, string> = {
+  none: "",
+  sm: "px-3",
+  md: "px-4",
+  lg: "px-5",
+  xl: "px-6",
+};
+
+type LinkPaddingY = "none" | "xs" | "sm" | "md";
+const LINK_PADDING_Y_MAP: Record<LinkPaddingY, string> = {
+  none: "",
+  xs: "py-2",
+  sm: "py-2.5",
+  md: "py-3",
+};
+
 export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
@@ -80,6 +97,10 @@ export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
   truncate?: LinkTruncate;
   /** Border radius for card-style links. */
   rounded?: LinkRounded;
+  /** Horizontal padding — for button-shaped links (e.g. CTA pills). */
+  paddingX?: LinkPaddingX;
+  /** Vertical padding — for button-shaped links. */
+  paddingY?: LinkPaddingY;
   /**
    * Force external rendering (`<a target="_blank" rel="noopener noreferrer">`).
    * Auto-detected when `href` starts with http/https/mailto/tel.
@@ -110,6 +131,8 @@ export function TextLink({
   weight,
   truncate,
   rounded,
+  paddingX,
+  paddingY,
   external,
   className = "",
   ...props
@@ -120,6 +143,8 @@ export function TextLink({
     weight ? LINK_WEIGHT_MAP[weight] : "",
     truncateClass(truncate),
     rounded ? LINK_ROUNDED_MAP[rounded] : "",
+    paddingX ? LINK_PADDING_X_MAP[paddingX] : "",
+    paddingY ? LINK_PADDING_Y_MAP[paddingY] : "",
     className,
   );
   const shouldBeExternal = external ?? isExternalUrl(href);

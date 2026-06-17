@@ -79,6 +79,14 @@ const DIV_JUSTIFY_MAP: Record<DivJustify, string> = {
   evenly: "justify-evenly",
 };
 
+const DIV_LG_ALIGN_MAP: Record<DivAlign, string> = {
+  start: "lg:items-start",
+  center: "lg:items-center",
+  end: "lg:items-end",
+  baseline: "lg:items-baseline",
+  stretch: "lg:items-stretch",
+};
+
 export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceProps {
   /** Colour variant cascaded onto Div text. Pragmatic — most Div sites wrap mixed inline content where a `<Text>` wrap would force structural change. */
   color?: DivColor;
@@ -92,13 +100,15 @@ export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceP
   gap?: DivGap;
   /** Cross-axis alignment (CSS `items-*`). Only takes effect when `layout` is `flex`/`inline-flex`/`grid`. */
   align?: DivAlign;
+  /** Responsive cross-axis alignment at the `lg` breakpoint. Used for editor 2-column grids that align tops at lg+. */
+  lgAlign?: DivAlign;
   /** Main-axis alignment (CSS `justify-*`). Only takes effect when `layout` is `flex`/`inline-flex`/`grid`. */
   justify?: DivJustify;
   children?: React.ReactNode;
 }
 
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
-  ({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, textSize, textWeight, layout, gap, align, justify, children, ...props }, ref) => (
+  ({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, textSize, textWeight, layout, gap, align, lgAlign, justify, children, ...props }, ref) => (
     <div
       ref={ref}
       className={[
@@ -109,6 +119,7 @@ export const Div = React.forwardRef<HTMLDivElement, DivProps>(
         layout ? DIV_LAYOUT_MAP[layout] : "",
         gap ? DIV_GAP_MAP[gap] : "",
         align ? DIV_ALIGN_MAP[align] : "",
+        lgAlign ? DIV_LG_ALIGN_MAP[lgAlign] : "",
         justify ? DIV_JUSTIFY_MAP[justify] : "",
         className,
       ].filter(Boolean).join(" ")}

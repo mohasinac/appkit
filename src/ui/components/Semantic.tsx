@@ -68,6 +68,44 @@ const SEMANTIC_COLOR_MAP: Record<SemanticColor, string> = {
   info: "appkit-color--info",
 };
 
+type SectionLayout = "default" | "flex" | "flex-col" | "flex-sm-row" | "flex-sm-row-between";
+type SectionGap = "none" | "xs" | "sm" | "md" | "lg";
+type SectionAlign = "start" | "center" | "end" | "stretch" | "baseline";
+type SectionJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
+
+const SECTION_LAYOUT_MAP: Record<SectionLayout, string> = {
+  default: "",
+  flex: "flex",
+  "flex-col": "flex flex-col",
+  "flex-sm-row": "flex flex-col sm:flex-row",
+  "flex-sm-row-between": "flex flex-col sm:flex-row sm:items-center sm:justify-between",
+};
+
+const SECTION_GAP_MAP: Record<SectionGap, string> = {
+  none: "",
+  xs: "gap-2",
+  sm: "gap-3",
+  md: "gap-4",
+  lg: "gap-6",
+};
+
+const SECTION_ALIGN_MAP: Record<SectionAlign, string> = {
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+  stretch: "items-stretch",
+  baseline: "items-baseline",
+};
+
+const SECTION_JUSTIFY_MAP: Record<SectionJustify, string> = {
+  start: "justify-start",
+  center: "justify-center",
+  end: "justify-end",
+  between: "justify-between",
+  around: "justify-around",
+  evenly: "justify-evenly",
+};
+
 export interface SectionProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /**
    * Themed background tone. Defaults to `"plain"`. Use `"page-header"` for
@@ -76,16 +114,28 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Surface
    */
   tone?: SectionTone;
   color?: SemanticColor;
+  /** Layout preset. `flex-sm-row` is the canonical "mobile column, sm+ row" pattern. */
+  layout?: SectionLayout;
+  /** Gap between flex/grid children. Only takes effect when `layout` is set. */
+  gap?: SectionGap;
+  /** Cross-axis alignment. Only takes effect when `layout` is set. */
+  align?: SectionAlign;
+  /** Main-axis justification. Only takes effect when `layout` is set. */
+  justify?: SectionJustify;
   children: React.ReactNode;
 }
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ tone = "plain", color, className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
+  ({ tone = "plain", color, layout, gap, align, justify, className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
     <section
       className={[
         SECTION_TONE_MAP[tone],
         buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
         color ? SEMANTIC_COLOR_MAP[color] : "",
+        layout ? SECTION_LAYOUT_MAP[layout] : "",
+        gap ? SECTION_GAP_MAP[gap] : "",
+        align ? SECTION_ALIGN_MAP[align] : "",
+        justify ? SECTION_JUSTIFY_MAP[justify] : "",
         className,
       ]
         .filter(Boolean)
@@ -664,6 +714,35 @@ const CELL_PADDING_MAP: Record<CellPadding, string> = {
   compact: "px-2 py-1.5",
 };
 
+type CellPaddingX = "none" | "xs" | "sm" | "md" | "lg";
+type CellPaddingY = "none" | "2xs" | "xs" | "sm" | "md";
+type CellPaddingSide = "none" | "pr-md" | "pl-md" | "pr-lg" | "pl-lg" | "pt-md" | "pb-md";
+
+const CELL_PADDING_X_MAP: Record<CellPaddingX, string> = {
+  none: "",
+  xs: "px-2",
+  sm: "px-3",
+  md: "px-4",
+  lg: "px-6",
+  // alias: leave open
+};
+const CELL_PADDING_Y_MAP: Record<CellPaddingY, string> = {
+  none: "",
+  "2xs": "py-1",
+  xs: "py-1.5",
+  sm: "py-2",
+  md: "py-3",
+};
+const CELL_PADDING_SIDE_MAP: Record<CellPaddingSide, string> = {
+  none: "",
+  "pr-md": "pr-4",
+  "pl-md": "pl-4",
+  "pr-lg": "pr-6",
+  "pl-lg": "pl-6",
+  "pt-md": "pt-4",
+  "pb-md": "pb-4",
+};
+
 const CELL_COLOR_MAP: Record<CellColor, string> = {
   default: "",
   primary: "appkit-color--primary",
@@ -680,6 +759,12 @@ export interface ThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   size?: CellTypographySize;
   weight?: CellTypographyWeight;
   padding?: CellPadding;
+  /** X-only padding override. Use when `padding` doesn't fit (e.g. dense table needs `px-3` only). */
+  paddingX?: CellPaddingX;
+  /** Y-only padding override. */
+  paddingY?: CellPaddingY;
+  /** One-sided padding (right/left/top/bottom only) — for asymmetric table cells. */
+  paddingSide?: CellPaddingSide;
   color?: CellColor;
   children?: React.ReactNode;
 }
@@ -700,7 +785,7 @@ const CELL_WEIGHT_MAP: Record<CellTypographyWeight, string> = {
   bold: "appkit-font--bold",
 };
 
-export function Th({ align, size, weight, padding, color, className = "", children, ...props }: ThProps) {
+export function Th({ align, size, weight, padding, paddingX, paddingY, paddingSide, color, className = "", children, ...props }: ThProps) {
   return (
     <th
       className={[
@@ -709,6 +794,9 @@ export function Th({ align, size, weight, padding, color, className = "", childr
         size ? CELL_SIZE_MAP[size] : "",
         weight ? CELL_WEIGHT_MAP[weight] : "",
         padding ? CELL_PADDING_MAP[padding] : "",
+        paddingX ? CELL_PADDING_X_MAP[paddingX] : "",
+        paddingY ? CELL_PADDING_Y_MAP[paddingY] : "",
+        paddingSide ? CELL_PADDING_SIDE_MAP[paddingSide] : "",
         color ? CELL_COLOR_MAP[color] : "",
         className,
       ].filter(Boolean).join(" ")}
@@ -724,11 +812,17 @@ export interface TdProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   size?: CellTypographySize;
   weight?: CellTypographyWeight;
   padding?: CellPadding;
+  /** X-only padding override. */
+  paddingX?: CellPaddingX;
+  /** Y-only padding override. */
+  paddingY?: CellPaddingY;
+  /** One-sided padding (right/left/top/bottom only) — for asymmetric table cells. */
+  paddingSide?: CellPaddingSide;
   color?: CellColor;
   children?: React.ReactNode;
 }
 
-export function Td({ align, size, weight, padding, color, className = "", children, ...props }: TdProps) {
+export function Td({ align, size, weight, padding, paddingX, paddingY, paddingSide, color, className = "", children, ...props }: TdProps) {
   return (
     <td
       className={[
@@ -737,6 +831,9 @@ export function Td({ align, size, weight, padding, color, className = "", childr
         size ? CELL_SIZE_MAP[size] : "",
         weight ? CELL_WEIGHT_MAP[weight] : "",
         padding ? CELL_PADDING_MAP[padding] : "",
+        paddingX ? CELL_PADDING_X_MAP[paddingX] : "",
+        paddingY ? CELL_PADDING_Y_MAP[paddingY] : "",
+        paddingSide ? CELL_PADDING_SIDE_MAP[paddingSide] : "",
         color ? CELL_COLOR_MAP[color] : "",
         className,
       ].filter(Boolean).join(" ")}

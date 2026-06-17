@@ -136,6 +136,7 @@ export const SHADOW_MAP = {
   md: "shadow-md",
   lg: "shadow-lg",
   xl: "shadow-xl",
+  "2xl": "shadow-2xl",
 } as const;
 
 export type ShadowKey = keyof typeof SHADOW_MAP;
@@ -176,8 +177,8 @@ export type GapPresetKey = keyof typeof GAP_PRESETS;
 export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
-type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-page";
-type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl";
+type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-page";
+type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "b-md-lg" | "b-lg";
 
 const X_ONLY_MAP: Record<XPaddingKey, string> = {
   none: "",
@@ -193,6 +194,8 @@ const X_ONLY_MAP: Record<XPaddingKey, string> = {
   "x-sm-lg-md": "px-3 lg:px-4",
   /** Responsive: `px-4 sm:px-6` — narrow container horizontal padding. */
   "x-md-lg": "px-4 sm:px-6",
+  /** Responsive: `px-6 md:px-10` — guide hub / store-extension container padding. */
+  "x-md-xl": "px-6 md:px-10",
   /** Responsive: `px-4 sm:px-6 lg:px-8` — canonical page-container horizontal padding. */
   "x-page": "px-4 sm:px-6 lg:px-8",
 };
@@ -215,6 +218,15 @@ const Y_ONLY_MAP: Record<YPaddingKey, string> = {
   "y-4xl": "py-16",
   "y-5xl": "py-20",
   "y-6xl": "py-24",
+  // Asymmetric top/bottom one-sided values (for sites that pad just one edge).
+  "t-2xs": "pt-1",
+  "b-2xs": "pb-1",
+  "t-xs": "pt-2",
+  "b-xs": "pb-2",
+  "t-sm": "pt-3",
+  "b-sm": "pb-3",
+  "b-md-lg": "pb-5",
+  "b-lg": "pb-6",
 };
 
 export interface SurfaceProps {

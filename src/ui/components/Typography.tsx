@@ -181,6 +181,32 @@ const TEXT_PADDING_Y_MAP: Record<TextPaddingY, string> = {
   "4xl": "py-16",
 };
 
+type TextLayout = "default" | "inline-flex" | "flex" | "inline-block";
+type TextGap = "none" | "1" | "2" | "3";
+type TextShadow = "none" | "sm" | "md" | "lg" | "2xl";
+
+const TEXT_LAYOUT_MAP: Record<TextLayout, string> = {
+  default: "",
+  "inline-flex": "inline-flex items-center",
+  flex: "flex items-center",
+  "inline-block": "inline-block",
+};
+
+const TEXT_GAP_MAP: Record<TextGap, string> = {
+  none: "",
+  "1": "gap-1",
+  "2": "gap-2",
+  "3": "gap-3",
+};
+
+const TEXT_SHADOW_MAP: Record<TextShadow, string> = {
+  none: "",
+  sm: "drop-shadow-sm",
+  md: "drop-shadow-md",
+  lg: "drop-shadow-lg",
+  "2xl": "drop-shadow-2xl",
+};
+
 interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
   color?: ColorVariant;
@@ -199,6 +225,12 @@ interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   gradient?: TextGradient;
   /** Vertical padding — used for empty-state Text wrappers. */
   paddingY?: TextPaddingY;
+  /** Layout — `inline-flex` / `flex` for icon + label compositions. */
+  layout?: TextLayout;
+  /** Flex gap between children (only when `layout` is `inline-flex` / `flex`). */
+  gap?: TextGap;
+  /** Drop-shadow preset for over-image / hero-section text. */
+  shadow?: TextShadow;
   /** Override the rendered element. Defaults to `p`. */
   as?: React.ElementType;
   children: React.ReactNode;
@@ -221,6 +253,9 @@ export function Text({
   align,
   gradient,
   paddingY,
+  layout,
+  gap,
+  shadow,
   className = "",
   as: Tag = "p",
   children,
@@ -240,6 +275,9 @@ export function Text({
         TYPOGRAPHY.colorVariant[resolvedColor],
         ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
         paddingY ? TEXT_PADDING_Y_MAP[paddingY] : "",
+        layout ? TEXT_LAYOUT_MAP[layout] : "",
+        gap ? TEXT_GAP_MAP[gap] : "",
+        shadow ? TEXT_SHADOW_MAP[shadow] : "",
         className,
       ]
         .filter(Boolean)

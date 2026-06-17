@@ -377,6 +377,8 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   color?: TextColorKey;
   /** Allow children to wrap onto multiple lines. */
   wrap?: boolean;
+  /** Zebra-stripe pattern when this Row is a repeating list element (rendered with `even:bg-*`). */
+  oddEven?: "none" | "zebra";
   /**
    * Render a themed left-border between adjacent children. `true` / `"default"`
    * uses the active theme's border colour; `"subtle"` uses border-subtle.
@@ -425,6 +427,11 @@ const TEXT_COLOR_MAP = {
 
 type TextColorKey = keyof typeof TEXT_COLOR_MAP;
 
+const ROW_ODD_EVEN_MAP = {
+  none: "",
+  zebra: "even:bg-[var(--appkit-color-surface-input)] dark:even:bg-[var(--appkit-color-bg)]",
+} as const;
+
 export function Row({
   gap = "md",
   centered = false,
@@ -434,10 +441,13 @@ export function Row({
   textWeight,
   color,
   wrap = false,
+  oddEven,
   divide,
   as,
   surface,
   padding,
+  paddingX,
+  paddingY,
   rounded,
   border,
   shadow,
@@ -452,11 +462,12 @@ export function Row({
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],
     wrap ? "appkit-row--wrap" : "",
+    oddEven && oddEven !== "none" ? ROW_ODD_EVEN_MAP[oddEven] : "",
     textSize ? TEXT_SIZE_MAP[textSize] : "",
     textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
     color ? TEXT_COLOR_MAP[color] : "",
     resolveDivideClass(divide, "row"),
-    buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+    buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
     className,
   ]
     .filter(Boolean)

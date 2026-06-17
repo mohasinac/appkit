@@ -73,6 +73,32 @@ const BUTTON_ROUNDED_MAP: Record<ButtonRounded, string> = {
   full: "rounded-full",
 };
 
+type ButtonPaddingX = "none" | "xs" | "sm" | "md" | "lg" | "xl";
+const BUTTON_PADDING_X_MAP: Record<ButtonPaddingX, string> = {
+  none: "",
+  xs: "px-2",
+  sm: "px-3",
+  md: "px-4",
+  lg: "px-5",
+  xl: "px-6",
+};
+
+type ButtonTextColor = "default" | "muted" | "faint" | "primary";
+const BUTTON_TEXT_COLOR_MAP: Record<ButtonTextColor, string> = {
+  default: "",
+  muted: "text-[var(--appkit-color-text-muted)]",
+  faint: "text-[var(--appkit-color-text-faint)]",
+  primary: "text-[var(--appkit-color-primary)]",
+};
+
+type ButtonBorder = "none" | "default" | "subtle" | "strong";
+const BUTTON_BORDER_MAP: Record<ButtonBorder, string> = {
+  none: "",
+  default: "border border-zinc-200 dark:border-slate-700",
+  subtle: "border border-zinc-100 dark:border-slate-800/60",
+  strong: "border border-zinc-300 dark:border-slate-600",
+};
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof UI_BUTTON.variants;
   size?: keyof typeof UI_BUTTON.sizes;
@@ -82,6 +108,12 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   gap?: ButtonGap;
   /** Override text size separately from button `size`. Use sparingly — for small chip-buttons in card grids. */
   textSize?: ButtonTextSize;
+  /** Override horizontal padding separately from button `size` (use for chip / icon-only buttons). */
+  paddingX?: ButtonPaddingX;
+  /** Override text colour separately from `variant`. Use for ghost-style buttons that need a muted label. */
+  textColor?: ButtonTextColor;
+  /** Border override. */
+  border?: ButtonBorder;
   /** Border radius override. */
   rounded?: ButtonRounded;
   /** Render as the child element (e.g. next/link) with button styling applied */
@@ -113,6 +145,9 @@ export function Button({
   children,
   gap,
   textSize,
+  paddingX,
+  textColor,
+  border,
   rounded,
   asChild = false,
   action,
@@ -131,6 +166,9 @@ export function Button({
     UI_BUTTON.sizes[size],
     gap ? BUTTON_GAP_MAP[gap] : "",
     textSize ? BUTTON_TEXT_SIZE_MAP[textSize] : "",
+    paddingX ? BUTTON_PADDING_X_MAP[paddingX] : "",
+    textColor ? BUTTON_TEXT_COLOR_MAP[textColor] : "",
+    border ? BUTTON_BORDER_MAP[border] : "",
     rounded ? BUTTON_ROUNDED_MAP[rounded] : "",
     className,
   );
