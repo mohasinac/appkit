@@ -39,7 +39,7 @@ export function AdminSiteConfigGuideView() {
           <Settings className="w-5 h-5 text-[var(--appkit-color-primary)]" />
           <Heading level={2} className={GC.sectionTitle}>Settings Groups</Heading>
         </Div>
-        <Stack className="py-5" padding="x-lg" gap="md">
+        <Stack paddingY="y-md-lg" padding="x-lg" gap="md">
           {SETTING_GROUPS.map(({ name, desc }) => (
             <Row textSize="sm" gap="3" key={name}>
               <Text className="flex-shrink-0 font-mono text-[var(--appkit-color-primary)] w-40" size="xs" weight="semibold">{name}</Text>

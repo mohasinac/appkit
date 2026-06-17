@@ -118,6 +118,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           const checked = domainPerms.filter((p) => permissions.has(p)).length;
           return (
             <Details key={domain.prefix} className="group">
+              {/* audit-variant-ok: permission group Summary — flex header + bespoke text-zinc-600 + bg-zinc-50 hover + select-none; Summary lacks accordion-header composite */}
               <Summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
                 <Span size="xs">{domain.label}</Span>
                 <Span size="xs" weight="normal" className="normal-case" color="faint">
@@ -264,6 +265,7 @@ export function AdminEmployeeEditorView({
         onClose={onClose}
         title={mode === "invite" ? "Invite Employee" : `Edit — ${displayName ?? "Employee"}`}
       >
+        {/* audit-variant-ok: invite form — flex flex-col + gap-5; Form lacks layout/gap variants */}
         <Form onSubmit={handleSubmit} className="flex flex-col gap-5" padding="md">
           {mode === "invite" && (
             <Stack gap="xs" className="">

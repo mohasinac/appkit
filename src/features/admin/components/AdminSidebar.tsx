@@ -224,12 +224,13 @@ export function AdminSidebar({
           }}
         >
           {/* Nav panel */}
+          {/* audit-variant-ok: nav panel Stack — border-r right side accent + dark:border-slate-800 explicit dark token */}
           <Stack border="default" surface="sidePanel" className={`flex-1 border-r dark:border-slate-800 ${__O.hidden}`} shadow="xl">
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               {renderHeader ? renderHeader() : <Span size="xs" weight="semibold" transform="uppercase" color="muted">Admin Panel</Span>}
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
-            {renderFooter && <Div border="default" className="border-t dark:border-slate-800" padding="inline">{renderFooter()}</Div>}
+            {renderFooter && <Div border="top" padding="inline">{renderFooter()}</Div>}
           </Stack>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
