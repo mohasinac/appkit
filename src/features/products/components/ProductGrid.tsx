@@ -290,7 +290,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Span>
               )}
               {product.brand && (
-                <Span padding="pill-2xs" layout="inline-flex" className="gap-0.5 text-[10px] truncate max-w-[90px]" rounded="full" surface="subtle" color="muted">
+                <Span padding="pill-2xs" layout="inline-flex" gap="2xs" className="text-[10px] truncate max-w-[90px]" rounded="full" surface="subtle" color="muted">
                   <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                   </svg>
@@ -571,7 +571,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             <Span weight="bold" className={CLS_DISCOUNT_TEXT_BARE}>-{discount}%</Span>
           )}
           {product.rating !== undefined && (
-            <Span layout="flex" className="text-[11px] gap-0.5" color="faint">
+            <Span layout="flex" gap="2xs" className="text-[11px]" color="faint">
               <Span className={CLS_STAR_BARE}>★</Span>
               {product.rating.toFixed(1)}
             </Span>

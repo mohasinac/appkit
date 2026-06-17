@@ -146,12 +146,12 @@ export function InteractiveStoreCard({
           {/* Stats row */}
           <Row color="muted" textSize="xs" gap="sm" className="mt-2.5" wrap>
             {store.totalProducts != null && store.totalProducts > 0 && (
-              <Span layout="flex" className="gap-0.5">
+              <Span layout="flex" gap="2xs">
                 <Span aria-hidden="true">📦</Span> {store.totalProducts} {labels.products ?? "products"}
               </Span>
             )}
             {store.itemsSold != null && store.itemsSold > 0 && (
-              <Span layout="flex" className="gap-0.5">
+              <Span layout="flex" gap="2xs">
                 <Span aria-hidden="true">🛍️</Span> {store.itemsSold} {labels.sold ?? "sold"}
               </Span>
             )}

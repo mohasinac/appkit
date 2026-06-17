@@ -450,10 +450,11 @@ const SPAN_LAYOUT_MAP: Record<SpanLayout, string> = {
   block: "block",
 };
 
-type SpanGap = "none" | "xs" | "sm" | "md" | "lg";
+type SpanGap = "none" | "2xs" | "xs" | "sm" | "md" | "lg";
 
 const SPAN_GAP_MAP: Record<SpanGap, string> = {
   none: "",
+  "2xs": "gap-0.5",
   xs: "gap-1",
   sm: "gap-1.5",
   md: "gap-2",

@@ -50,6 +50,7 @@ const themed = { textSecondary: THEMED_TEXT_SECONDARY };
 const flex = { center: FLEX_CENTER };
 if (isLoading) {
     return (
+      // audit-variant-ok: responsive md:py-24 override on top of y-4xl base; relative+overflow-hidden are decorative layout
       <Section
         className={`relative overflow-hidden md:py-24 ${className}`} paddingY="y-4xl" paddingX="x-md"
       >
@@ -67,8 +68,9 @@ if (isLoading) {
   }
 
   return (
+    // audit-variant-ok: responsive md:py-28 override on top of y-5xl base; relative+overflow-hidden are decorative layout
     <Section
-      className={`relative overflow-hidden py-20 md:py-28 ${className}`} padding="x-md"
+      className={`relative overflow-hidden md:py-28 ${className}`} paddingY="y-5xl" paddingX="x-md"
     >
       {/* Decorative ambient glows */}
       <Div
@@ -90,6 +92,7 @@ if (isLoading) {
             {/* Pill badge */}
             {pillLabel && (
               <Div>
+                {/* audit-variant-ok: decorative pill — primary-tinted border/bg + custom tracking + backdrop-blur; px-5 py-1.5 outside PADDING_MAP scale */}
                 <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
                   <Span
                     className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
@@ -105,6 +108,7 @@ if (isLoading) {
             )}
 
             {/* H1 */}
+            {/* audit-variant-ok: hero H1 with responsive size ladder md→xl beyond Heading.size scale; tight leading + tracking are display-typography */}
             <Heading
               level={1}
               variant="none"
@@ -125,13 +129,15 @@ if (isLoading) {
 
             {/* CTAs */}
             {showCTA && (
+              // audit-variant-ok: lg:justify-start responsive override on top of center default; Row.justify only supports single value
               <Row
                 wrap
                 gap="md"
                 className="mt-8 lg:justify-start" justify="center"
               >
                 {ctaHref ? (
-                  <TextLink rounded="xl" 
+                  // audit-variant-ok: button-styled link — inline-flex layout + !bg-primary override + btn-glow utility; TextLink lacks button variant
+                  <TextLink rounded="xl"
                     href={ctaHref}
                     className="inline-flex items-center justify-center px-8 py-3.5 !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]" size="base" weight="bold"
                   >
@@ -147,7 +153,8 @@ if (isLoading) {
                   </Button>
                 )}
                 {secondaryCtaHref ? (
-                  <TextLink rounded="xl" 
+                  // audit-variant-ok: button-styled link — inline-flex layout + cobalt outline tokens; TextLink lacks outline button variant
+                  <TextLink rounded="xl"
                     href={secondaryCtaHref}
                     className="inline-flex items-center justify-center border-2 border-cobalt/40 dark:border-cobalt-400/40 px-8 py-3.5 text-cobalt-700 dark:text-cobalt-300 hover:bg-cobalt-50 dark:hover:bg-cobalt-900/20 transition-all hover:scale-[1.02]" size="base" weight="semibold"
                   >
@@ -167,13 +174,15 @@ if (isLoading) {
 
             {/* Trust chips */}
             {trustChips.length > 0 && (
+              // audit-variant-ok: lg:justify-start responsive override on top of center default; Row.justify only supports single value
               <Row
                 wrap
                 gap="sm"
                 className="mt-6 lg:justify-start" justify="center"
               >
                 {trustChips.map((chip) => (
-                  <Span layout="inline-flex" gap="xs" 
+                  // audit-variant-ok: chip with px-3.5 py-1.5 padding outside PADDING_MAP scale + explicit zinc/slate border tokens for theme contrast
+                  <Span layout="inline-flex" gap="xs"
                     key={chip.key}
                     size="xs" weight="medium"
                     className="border border-zinc-200 dark:border-slate-700 px-3.5 py-1.5" rounded="full" surface="subtle" color="muted"
@@ -187,10 +196,12 @@ if (isLoading) {
 
           {/* Right: brand logo (desktop only) */}
           <Div className="hidden lg:block">
+            {/* audit-variant-ok: hero panel — aspect-[4/3] + mesh gradient + shadow-2xl (outside SHADOW_MAP xl ceiling) */}
             <Div
               className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)] shadow-2xl`} border="default" rounded="3xl"
             >
               <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
+              {/* audit-variant-ok: absolute-positioned hero logo container; px-10 outside PADDING_MAP scale */}
               <Row centered className={`absolute inset-0 ${flex.center} px-10`}>
                 <SiteLogo
                   title={brandLogoText || "LetItRip.in"}
