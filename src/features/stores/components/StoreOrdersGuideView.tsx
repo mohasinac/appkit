@@ -87,6 +87,7 @@ function OrderLifecycle() {
               <Text className="font-mono text-[var(--appkit-color-text)] w-28 shrink-0" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{meaning}</Text>
             </Row>
+            {/* audit-variant-ok: action hint Text — pl-30 (arbitrary 7.5rem left indent) + italic + muted */}
             <Text className="pl-30 text-[var(--appkit-color-text-muted)] italic" size="xs">
               → {action}
             </Text>

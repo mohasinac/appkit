@@ -104,7 +104,7 @@ export function SellerFeaturesView() {
   };
 
   return (
-    <Stack gap="md" className="min-h-screen px-3 sm:px-4" padding="y-md">
+    <Stack gap="md" paddingX="x-sm-md" className="min-h-screen" padding="y-md">
       <Row align="center" justify="between">
         <Div>
           <Heading

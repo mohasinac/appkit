@@ -34,9 +34,10 @@ export function StoreNavTabs({
   }
 
   return (
-    <Div layout="flex" gap="2" 
+    <Div layout="flex" gap="2"
       role="tablist"
-      className={`border-b border-neutral-200 dark:border-slate-700 overflow-x-auto ${className}`}
+      border="bottom"
+      className={`overflow-x-auto ${className}`}
     >
       {tabs.map((tab) =>
         tab.href ? (

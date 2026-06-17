@@ -214,6 +214,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
                 <Div className="aspect-video" surface="subtle" />
+                {/* audit-variant-ok: skeleton body — space-y-2.5 between Ul spacing map keys */}
                 <Div className={`${__P.p4} space-y-2.5`}>
                   <Row align="center" gap="sm">
                     <Div className="h-10 w-10" surface="subtle" rounded="lg" />

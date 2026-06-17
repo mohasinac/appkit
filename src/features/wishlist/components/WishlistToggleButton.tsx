@@ -52,6 +52,7 @@ export function WishlistToggleButton({
         onClose={() => setShowLoginModal(false)}
         message="You need to be signed in to save items to your wishlist. Please log in or create an account."
       />
+      {/* audit-variant-ok: wishlist toggle Button — conditional bg-error-surface (saved) vs bg-white/80 (idle) + dynamic sizeClasses + icon-only round button */}
       <Button
         type="button"
         onClick={handleClick}

@@ -1213,6 +1213,7 @@ export function SellerProductShell({
               </Div>
             )}
             {stepError && (
+              // audit-variant-ok: step error Text — px-5 horizontal + pb-3 bottom-only + error CSS-var
               <Text className="px-5 pb-3 text-[var(--appkit-color-error)]" size="sm">{stepError}</Text>
             )}
           </Div>

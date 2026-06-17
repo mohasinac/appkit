@@ -41,7 +41,7 @@ export function NotFoundView({
 }: NotFoundViewProps) {
   return (
     <Stack justify="center" className="min-h-[60vh] text-center" padding="x-xl" align="center">
-      <Heading level={1} variant="primary" className="text-7xl mb-2" weight="bold">
+      <Heading level={1} variant="primary" size="7xl" className="mb-2" weight="bold">
         404
       </Heading>
       <Heading level={2} className="mb-3">

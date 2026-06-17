@@ -62,7 +62,8 @@ const COLUMNS: AdminTableColumn<LiveRow>[] = [
     key: "vendorVerified",
     header: "Verified",
     render: (row) => (
-      <Span layout="inline-flex" 
+      // audit-variant-ok: vendor status badge — conditional bg-success-surface vs bg-warning-surface
+      <Span layout="inline-flex"
         className={`${ row.vendorVerified ? "bg-success-surface text-success" : "bg-warning-surface text-warning" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
       >
         {row.vendorVerified ? "Verified" : "Pending"}

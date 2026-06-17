@@ -102,7 +102,7 @@ function CapabilityTable() {
               <Tbody className="divide-y divide-[var(--appkit-color-border)]">
                 {items.map(({ cap, unlocks, defaultOn }) => (
                   <Tr key={cap}>
-                    <Td className="font-mono text-xs text-[var(--appkit-color-text)] align-top whitespace-nowrap" padding="lg-tight">{cap}</Td>
+                    <Td size="xs" className="font-mono text-[var(--appkit-color-text)] align-top whitespace-nowrap" padding="lg-tight">{cap}</Td>
                     <Td className="text-[var(--appkit-color-text-muted)] align-top" padding="lg-tight">{unlocks}</Td>
                     <Td className="align-top" padding="lg-tight">
                       {defaultOn ? (

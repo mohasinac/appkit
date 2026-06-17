@@ -68,6 +68,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
       <Div>
         <Text size="sm" weight="medium">{row.label}</Text>
         {row.isDefault && (
+          // audit-variant-ok: Default badge Span — px-1.5/py-px micro padding outside Span padding map
           <Span layout="inline-flex" color="success" surface="success-surface" size="xs" weight="medium" className="mt-0.5 px-1.5 py-px" rounded="full">
             Default
           </Span>

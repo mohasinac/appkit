@@ -96,7 +96,7 @@ export function StepIndicator({
   stepErrors?: boolean[];
 }) {
   return (
-    <Nav aria-label="Form steps" className="flex items-center gap-0 mb-6 overflow-x-auto">
+    <Nav aria-label="Form steps" layout="flex" gap="none" className="mb-6 overflow-x-auto">
       {steps.map((step, i) => {
         const isDone = i < currentStep;
         const isActive = i === currentStep;

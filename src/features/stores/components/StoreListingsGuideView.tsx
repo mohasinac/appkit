@@ -147,6 +147,7 @@ function StandardWalkthrough() {
       {STANDARD_STEPS.map(({ step, items }) => (
         <Div key={step}>
           <Text className="mb-2 text-[var(--appkit-color-text)]" weight="semibold">{step}</Text>
+          {/* audit-variant-ok: instruction Ul — space-y-1.5 between Ul spacing map keys */}
           <Ul className="space-y-1.5" indent="lg">
             {items.map((item) => (
               <Li key={item} textSize="sm" color="muted" className={LIST_DISC}>
