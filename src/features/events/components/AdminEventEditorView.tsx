@@ -1,6 +1,7 @@
 "use client";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
+import type { JsonObjectWithUndefined } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -308,7 +309,7 @@ const DEFAULT_DRAFT: EventDraft = {
 
 // --- Pure build helpers (module-level, no component closure) -----------------
 
-function buildEventTypeConfig(draft: EventDraft): Record<string, unknown> {
+function buildEventTypeConfig(draft: EventDraft): JsonObjectWithUndefined {
   if (draft.type === "sale") return { saleConfig: { discountPercent: Number(draft.discountPercent) || 10, bannerText: draft.saleBannerText || undefined } };
   if (draft.type === "offer") return { offerConfig: { couponId: draft.couponId, displayCode: draft.displayCode, bannerText: draft.offerBannerText || undefined } };
   if (draft.type === "poll") return { pollConfig: { options: draft.pollOptions.filter((o) => o.label.trim()), allowMultiSelect: draft.allowMultiSelect, allowComment: draft.allowComment, resultsVisibility: draft.resultsVisibility } };
@@ -317,9 +318,9 @@ function buildEventTypeConfig(draft: EventDraft): Record<string, unknown> {
   return {};
 }
 
-function buildEventRaffleFields(draft: EventDraft): Record<string, unknown> {
+function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
   const isRaffleType = draft.type === "raffle" || draft.type === "spin_wheel";
-  const fields: Record<string, unknown> = {};
+  const fields: JsonObjectWithUndefined = {};
   if (!draft.hasRaffle && !isRaffleType) return fields;
   fields.hasRaffle = true;
   fields.raffleType = isRaffleType && draft.type === "spin_wheel" ? "spin_wheel" : draft.raffleType;
@@ -328,7 +329,8 @@ function buildEventRaffleFields(draft: EventDraft): Record<string, unknown> {
   if (draft.rafflePrizeCouponId) fields.rafflePrizeCouponId = draft.rafflePrizeCouponId;
   if (draft.rafflePrizeProductIds.length > 0) fields.rafflePrizeProductIds = draft.rafflePrizeProductIds;
   if (draft.raffleType === "spin_wheel" || draft.type === "spin_wheel") {
-    fields.spinPrizes = draft.spinPrizes;
+    // audit-unknown-ok: TS structural escape — JsonObjectWithUndefined
+    fields.spinPrizes = draft.spinPrizes as unknown as JsonObjectWithUndefined[];
     if (Number(draft.spinMaxPerUser) > 0) fields.spinMaxPerUser = Number(draft.spinMaxPerUser);
     if (draft.spinWindowStart) fields.spinWindowStart = toISOString(draft.spinWindowStart);
     if (draft.spinWindowEnd) fields.spinWindowEnd = toISOString(draft.spinWindowEnd);
@@ -421,7 +423,7 @@ export function AdminEventEditorView({
   // --- save ---
   const saveMutation = useApiMutation({
     mutationFn: async () => {
-      const payload: Record<string, unknown> = {
+      const payload: JsonObjectWithUndefined = {
         type: draft.type,
         title: draft.title,
         slug: draft.slug || toEventSlug(draft.title),

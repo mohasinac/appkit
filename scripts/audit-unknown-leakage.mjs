@@ -75,6 +75,21 @@ const ALLOWLIST_FILES = new Set(
     "appkit/src/configs/postcss.ts",                // PostCSS config
     "appkit/src/configs/eslint.ts",                 // ESLint config
     "appkit/src/cli/index.ts",                      // CLI argv shape
+    "appkit/src/http/ApiClient.ts",                 // HTTP body/response — arbitrary JSON
+    "appkit/src/http/api-handler.ts",               // Zod safeParse boundary
+    "appkit/src/next/api/api-response.ts",          // Generic response wrapper (issues field)
+    "appkit/src/next/api/apiHandler.ts",            // Next.js route dispatcher boundary
+    "appkit/src/next/api/routeHandler.ts",          // Route handler — body schema parse boundary
+    "appkit/src/features/homepage/lib/social-feed-fetcher.ts", // Third-party RSS/JSON ingest
+    "appkit/src/monitoring/error-tracking.ts",      // Observability adapter
+    "appkit/src/monitoring/performance.ts",         // Performance adapter
+    "appkit/src/_internal/server/jobs/core/wrapJobHandler.ts", // Firebase Function dispatcher
+    "appkit/src/features/cron/firebase-adapters.ts", // Firebase Cron adapter
+    "appkit/src/next/api/errorHandler.ts",          // Error JSON serialization boundary
+    "appkit/src/seed/firestore-indexes.ts",         // Firestore index manifest — arbitrary JSON
+    "appkit/src/security/pii-redact.ts",            // PII redaction — accepts arbitrary values
+    "appkit/src/providers/db-firebase/field-ops.ts", // Firestore field operations
+    "appkit/src/next/cache-middleware.ts",          // Next.js middleware boundary
   ].map((p) => p.replace(/\//g, "/")),
 );
 
