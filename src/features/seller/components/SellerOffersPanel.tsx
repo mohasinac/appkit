@@ -142,7 +142,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             {relativeTime(offer.createdAt)} · {isPendingOffer ? expiresIn(offer.expiresAt) : ""}
           </Text>
         </Div>
-        <Badge variant={statusVariant(offer.status)} className="shrink-0 capitalize text-xs">
+        <Badge variant={statusVariant(offer.status)} size="xs" className="shrink-0 capitalize">
           {offer.status}
         </Badge>
       </Row>
@@ -176,7 +176,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
         <Row wrap gap="sm">
           <Button size="sm" variant="primary" onClick={toAccepting} disabled={isPending}>Accept</Button>
           <Button size="sm" variant="ghost" onClick={toCountering} disabled={isPending}
-            className="border border-zinc-300 dark:border-zinc-600">Counter</Button>
+            border="strong">Counter</Button>
           <Button size="sm" variant="ghost" onClick={toDeclining} disabled={isPending}
             className="text-error border border-error/20">Decline</Button>
         </Row>
@@ -322,7 +322,7 @@ export function SellerOffersPanel({
           )}
         </Div>
         <Button size="sm" variant="ghost" onClick={loadOffers} disabled={loading}
-          className="border border-zinc-300 dark:border-zinc-600 text-xs">
+          border="strong" textSize="xs">
           {loading ? "Refreshing…" : ACTIONS.STORE["refresh-offers"].label}
         </Button>
       </Row>

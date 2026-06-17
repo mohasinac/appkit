@@ -150,6 +150,7 @@ export function MarketplacePrizeDrawCard({
       <BaseListingCard.Hero aspect="square" variant={variant}>
         <TextLink href={String(detailHref)} className="absolute inset-0 block">
           {thumbItems.length > 0 ? (
+            // audit-variant-ok: prize-draw item collage — fixed 2x2 grid + gap-0.5 between tiles
             <Div layout="grid" className="grid-cols-2 grid-rows-2 gap-0.5 h-full w-full bg-[var(--appkit-color-surface-muted)]">
               {Array.from({ length: 4 }).map((_, i) => {
                 const it = thumbItems[i];
@@ -196,6 +197,7 @@ export function MarketplacePrizeDrawCard({
 
         {status === "closed" ? (
           <Row surface="overlay-xs" className="absolute inset-0" align="center" justify="center">
+            {/* audit-variant-ok: closed overlay badge — bg-zinc-900/80 translucent + tracking-wider */}
             <Span color="inverse" size="xs" weight="bold" className="bg-zinc-900/80 tracking-wider" rounded="default" padding="pill-md" transform="uppercase">
               {mergedLabels.closedBadge}
             </Span>
@@ -246,7 +248,8 @@ export function MarketplacePrizeDrawCard({
           type="button"
           variant="primary"
           size="sm"
-          className="mt-2 w-full text-xs"
+          textSize="xs"
+          className="mt-2 w-full"
           onClick={handleNavigate}
           disabled={status === "closed" || remaining === 0}
         >
