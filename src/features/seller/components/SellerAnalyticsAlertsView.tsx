@@ -229,6 +229,7 @@ export function SellerAnalyticsAlertsView({
       </Text>
 
       {showForm && (
+        // audit-variant-ok: form Section — space-y-4 vertical rhythm; Section lacks space-y variant
         <Section className={`${__P.p5} space-y-4`} rounded="xl" border="default">
           <Heading level={3} size="sm" weight="semibold" color="primary">
             Create Alert

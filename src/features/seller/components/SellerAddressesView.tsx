@@ -339,6 +339,7 @@ export function SellerAddressesView({
                   </Thead>
                   <Tbody>
                     {addresses.map((addr) => (
+                      // audit-variant-ok: address Tr — border-top + conditional opacity-50 (deleting state)
                       <Tr
                         key={addr.id}
                         className={`border-t border-zinc-100 dark:border-slate-700 ${deletingId === addr.id ? "opacity-50" : ""}`}

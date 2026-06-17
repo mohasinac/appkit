@@ -58,6 +58,7 @@ export function SellerRevenueChart({
   const hasRevenue = data.some((item) => item.revenue > 0);
 
   return (
+    // audit-variant-ok: card container — sm:p-6 responsive bump over base padding=md
     <Div
       className={`border border-neutral-200 dark:border-neutral-800 sm:p-6 ${className}`} rounded="xl" padding="md" surface="default"
     >

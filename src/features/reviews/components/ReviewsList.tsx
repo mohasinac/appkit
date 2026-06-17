@@ -55,7 +55,8 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
   const hasFooter = showStoreLink || showProductLink || showProfileLink;
 
   return (
-    <Stack padding="5" 
+    // audit-variant-ok: review card Stack — h-full + hover-shadow-md transition + border-neutral-200 over surface=default
+    <Stack padding="5"
       className={`group h-full border border-neutral-200 transition-shadow hover:shadow-md ${className}`} rounded="xl" surface="default"
     >
       {/* Clicking the main body navigates to the review detail */}

@@ -102,12 +102,14 @@ export function SearchFiltersRow({
 
       {/* Clear filters */}
       {showClear && (
-        <Button rounded="lg" 
+        // audit-variant-ok: clear filters Button — bespoke h-10 + text-zinc-700 + hover-bg-zinc-100 ghost-outline composition
+        <Button rounded="lg"
           type="button"
           variant="outline"
           size="sm"
           onClick={onClearFilters}
-          className="h-10 px-4 border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+          paddingX="md" textSize="sm"
+          className="h-10 border border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
         >
           {L.clearFilters}
         </Button>

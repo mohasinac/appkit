@@ -261,6 +261,7 @@ export function CouponCard({
             {n.isActive ? labels.active : labels.inactive}
           </Badge>
           {n.scope && (
+            // audit-variant-ok: scope chip — translucent bg-zinc-200/70 + text-[10px] under-10
             <Span layout="inline-flex" weight="semibold" className="bg-zinc-200/70 text-[10px] tracking-wide dark:bg-zinc-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
               {n.scope}
             </Span>

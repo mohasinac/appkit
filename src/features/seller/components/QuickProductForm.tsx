@@ -193,8 +193,9 @@ export function QuickProductForm({
         <Button
           variant="ghost"
           size="sm"
+          textSize="xs"
           onClick={onSwitchToFull}
-          className="self-center text-xs"
+          className="self-center"
         >
           Show all fields (advanced)
         </Button>
