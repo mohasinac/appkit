@@ -255,7 +255,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   : Boolean(cfg?.[step.checkKey]);
             return (
               <Row key={step.n} gap="sm" align="start">
-                <Row textWeight="bold" textSize="xs" 
+                {/* audit-variant-ok: step indicator — conditional bg-success (done) vs bg-zinc-200 (pending) + fixed w-6/h-6 size */}
+                <Row textWeight="bold" textSize="xs"
                   className={`flex-shrink-0 w-6 h-6 mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300" }`} align="center" justify="center" rounded="full"
                 >
                   {done ? "✓" : step.n}
@@ -412,6 +413,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Text>
 
         {/* Simulated WhatsApp catalog tile grid */}
+        {/* audit-variant-ok: WhatsApp catalog preview — branded #ECE5DD bg (WhatsApp chat green) over dark:bg-zinc-800 */}
         <Div className={`${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`} rounded="xl" border="default">
           <Row gap="sm" align="center" className="mb-3">
             <Row className="w-8 h-8 bg-[#25D366]" align="center" justify="center" rounded="full">
