@@ -63,8 +63,8 @@ export function AdminStatCard({
         </Div>
 
         {icon && (
-          <Row
-            className="flex-shrink-0 w-10 h-10 text-xl" align="center" justify="center" rounded="lg"
+          <Row textSize="xl"
+            className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="lg"
             // audit-inline-style-ok: dynamic CSS
             style={{ background: resolvedGradient }}
           >

@@ -128,6 +128,7 @@ function AuctionRow({
               style={{ gridTemplateColumns: portal === "buyer" ? "1fr auto auto" : "1fr 1fr auto auto" }}
             >
               {portal !== "buyer" && (
+                // audit-variant-ok: bidder name Text — truncate + pr-3 right-only padding for column separation
                 <Text className="text-[var(--appkit-color-text)] truncate pr-3" size="sm">
                   {bid.userName || bid.userId}
                 </Text>

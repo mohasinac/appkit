@@ -24,12 +24,14 @@ export function SocialAuthButtons({
       </Div>
 
       <Div layout="grid" gap="3" className="grid-cols-1">
-        <Button rounded="md" 
+        {/* audit-variant-ok: Google OAuth Button — bespoke white bg + neutral-300 border + hover-bg-neutral-50 OAuth-style composition */}
+        <Button rounded="md"
           type="button"
           onClick={onGoogle}
           disabled={disabled}
           variant="outline"
-          className="inline- justify-center border border-neutral-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-medium text-neutral-900 dark:text-zinc-100 hover:bg-neutral-50 dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          paddingX="md" paddingY="sm" textSize="sm" weight="medium"
+          className="inline- justify-center border border-neutral-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-neutral-900 dark:text-zinc-100 hover:bg-neutral-50 dark:hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
             <path

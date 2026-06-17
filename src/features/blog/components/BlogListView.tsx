@@ -50,6 +50,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       onClick={onClick && !href ? () => onClick(post) : undefined}
       className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition hover:shadow-md ${isInteractive ? "cursor-pointer" : ""} ${className}`}
     >
+      {/* audit-variant-ok: cover placeholder Div — bg-neutral-100 + aspect-video while image loads */}
       <Div className={`aspect-video w-full ${__O.hidden} bg-neutral-100 dark:bg-slate-800 flex-shrink-0`}>
         {coverImageUrl ? (
           <Div

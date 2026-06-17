@@ -73,6 +73,7 @@ function ChartCard({
         }}
         aria-hidden="true"
       />
+      {/* audit-variant-ok: chart card body — base p-4 + sm:p-6 + sm:pt-7 asymmetric responsive padding ladder */}
       <Div className={`${__P.p4} sm:${__P.p6} sm:pt-7`} padding="t-md">
         {title && (
           <Heading level={3} className="text-[var(--appkit-color-text)] mb-4" size="sm" weight="semibold">

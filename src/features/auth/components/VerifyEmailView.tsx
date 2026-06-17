@@ -106,9 +106,10 @@ export function VerifyEmailView({
                 "The verification link may have expired."}
             </Text>
             {onRetry && (
-              <Button rounded="lg" 
+              <Button rounded="lg"
                 onClick={onRetry}
-                className="mt-4 bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 transition-colors"
+                paddingX="md" paddingY="sm" textSize="sm" weight="semibold"
+                className="mt-4 bg-primary text-white hover:bg-primary/90 transition-colors"
               >
                 {labels.retryLabel ?? "Try again"}
               </Button>
