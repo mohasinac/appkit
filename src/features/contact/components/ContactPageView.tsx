@@ -22,6 +22,7 @@ export function ContactPageView() {
   return (
     <Main>
       <Section padding="y-2xl">
+        {/* audit-variant-ok: contact page Container — space-y-8 vertical rhythm; Container lacks vertical-spacing variant */}
         <Container size="xl" className="space-y-8">
           <Stack gap="3">
             <Heading level={1} size="3xl" weight="semibold" color="primary">

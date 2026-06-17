@@ -84,6 +84,7 @@ export function Checkbox({
           </Row>
 
         {(label || suffix) && (
+          // audit-variant-ok: checkbox label Span — group-hover state override; Span lacks group-hover variant
           <Span layout="flex" gap="md" size="sm" className="group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors" color="muted">
             {label}
             {suffix}

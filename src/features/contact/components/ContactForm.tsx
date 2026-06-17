@@ -96,7 +96,7 @@ export function ContactForm({
   if (submitted) {
     return (
       <Div className={`text-center ${className}`} padding="y-3xl">
-        <Div className="text-5xl mb-4">✅</Div>
+        <Div textSize="5xl" className="mb-4">✅</Div>
         <Heading level={2} className="mb-2">
           {labels.successTitle ?? "Message Sent!"}
         </Heading>

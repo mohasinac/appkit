@@ -62,6 +62,7 @@ function renderBundleSelectedChips(props: {
   const { value, metadata, remove } = props;
   if (value.length === 0) return null;
   return (
+    // audit-variant-ok: chips row — flex-wrap layout; Div.layout=flex doesn't auto-wrap
     <Div layout="flex" gap="2" className={`flex-wrap ${__P.p3}`} rounded="lg" surface="muted" border="default">
       {value.map((id) => {
         const meta = metadata[id];

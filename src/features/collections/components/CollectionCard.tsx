@@ -12,7 +12,8 @@ interface CollectionCardProps {
 
 export function CollectionCard({ collection, href }: CollectionCardProps) {
   return (
-    <TextLink rounded="xl" 
+    // audit-variant-ok: collection card TextLink — bg-gray-100 placeholder + hover:shadow-lg card composition
+    <TextLink rounded="xl"
       href={href}
       className="group relative block overflow-hidden bg-gray-100 dark:bg-slate-800 transition-shadow hover:shadow-lg"
     >

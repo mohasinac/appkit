@@ -61,6 +61,7 @@ export function EventOfferCard({
         </Stack>
 
         <Row surface="muted" padding="inline" align="center" gap="3" rounded="lg">
+          {/* audit-variant-ok: coupon code Code — flex-1 + font-bold; Code lacks layout/weight variants */}
           <Code className="flex-1 font-bold" size="base" color="primary">
             {couponCode}
           </Code>

@@ -168,8 +168,8 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               <Heading color="inverse" level={1} className={`${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" mdSize="4xl" weight="bold">
                 {brand?.name ?? slug}
               </Heading>
-              {/* audit-variant-ok: brand description — conditional muted-zinc fallback when no cover; inverse default keeps over-image legibility */}
               {brand?.description && typeof brand.description === "string" && !brand.description.startsWith("{") && (
+                // audit-variant-ok: brand description — conditional muted-zinc fallback when no cover; inverse default keeps over-image legibility
                 <Text color="inverse" className={`max-w-2xl mt-1 ${hasCover ? "/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
                   {brand.description}
                 </Text>

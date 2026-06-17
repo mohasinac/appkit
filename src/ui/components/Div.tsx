@@ -16,7 +16,7 @@ const DIV_COLOR_MAP: Record<DivColor, string> = {
   inverse: "appkit-color--inverse",
 };
 
-type DivTextSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+type DivTextSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl";
 
 const DIV_TEXT_SIZE_MAP: Record<DivTextSize, string> = {
   xs: "text-xs",
@@ -25,6 +25,11 @@ const DIV_TEXT_SIZE_MAP: Record<DivTextSize, string> = {
   lg: "text-lg",
   xl: "text-xl",
   "2xl": "text-2xl",
+  "3xl": "text-3xl",
+  "4xl": "text-4xl",
+  "5xl": "text-5xl",
+  "6xl": "text-6xl",
+  "7xl": "text-7xl",
 };
 
 type DivTextWeight = "normal" | "medium" | "semibold" | "bold";

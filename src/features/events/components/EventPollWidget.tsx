@@ -82,7 +82,7 @@ export function EventPollWidget({
 
   if (isEnded) {
     return (
-      <Stack className={`px-5 ${className}`} gap="3" rounded="xl" padding="y-md" border="default">
+      <Stack paddingX="x-5" className={className} gap="3" rounded="xl" padding="y-md" border="default">
         <Text size="sm" weight="medium" color="muted">This poll has closed.</Text>
         {totalEntries !== undefined && (
           <Text size="sm" color="faint">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
