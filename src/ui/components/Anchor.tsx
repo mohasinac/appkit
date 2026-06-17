@@ -21,6 +21,14 @@ export type AnchorTone =
   | "inverse";
 
 export type AnchorUnderline = "none" | "hover" | "always";
+export type AnchorSize = "xs" | "sm" | "base" | "lg";
+
+const ANCHOR_SIZE_CLS: Record<AnchorSize, string> = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+};
 
 export interface AnchorProps
   extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -30,6 +38,8 @@ export interface AnchorProps
   tone?: AnchorTone;
   /** Underline behaviour. Defaults to `"hover"`. */
   underline?: AnchorUnderline;
+  /** Typography size. */
+  size?: AnchorSize;
   /**
    * Treat as an external link. Default is auto-detected from the href shape:
    *   - `http(s)://` → external
@@ -77,6 +87,7 @@ export function Anchor({
   children,
   tone = "brand",
   underline = "hover",
+  size,
   external,
   rel,
   target,
@@ -98,7 +109,7 @@ export function Anchor({
       // audit-variant-ok: Anchor is the catalogued primitive for external
       // links. Tone + underline come from typed enums; className is the
       // escape hatch for behaviour-coupled utility classes only.
-      className={`${TONE_CLS[tone]} ${UNDERLINE_CLS[underline]} transition-colors${className ? ` ${className}` : ""}`}
+      className={`${TONE_CLS[tone]} ${UNDERLINE_CLS[underline]} ${size ? ANCHOR_SIZE_CLS[size] : ""} transition-colors${className ? ` ${className}` : ""}`}
       {...rest}
     >
       {children}

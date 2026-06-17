@@ -82,7 +82,7 @@ function ListingThumb({
             loading="lazy"
           />
         ) : (
-          <Row textSize="xs" className="w-full h-full text-zinc-400" surface="subtle" align="center" justify="center">
+          <Row textSize="xs" color="faint" className="w-full h-full" surface="subtle" align="center" justify="center">
             â—¯
           </Row>
         )}
@@ -156,6 +156,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
       </button>
 
       {open && (
+        // audit-variant-ok: pb-4 pt-1 are asymmetric single-axis paddings; no t/b combo token in PADDING_MAP
         <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
           <Row gap="3" className="min-w-0">
             {listings.map((listing) => (

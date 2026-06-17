@@ -63,8 +63,8 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
  }`}
       >
         <MediaImage src={image} alt={member.title} size="card" />
-        {/* audit-variant-ok: corner badge — absolute-positioned + primary CSS-var bg + arbitrary text-[8px] + rounded-tl (corner-only radius) */}
         {member.isGroupParent && (
+          // audit-variant-ok: corner badge — absolute-positioned + primary CSS-var bg + arbitrary text-[8px] + rounded-tl (corner-only radius)
           <Span color="inverse" className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-[8px] leading-none px-1 py-0.5 rounded-tl">
             Set
           </Span>
@@ -193,8 +193,8 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
           </Button>
         </button>
 
-        {/* audit-variant-ok: pb-4 pt-1 are asymmetric single-axis paddings; no t/b combo token in PADDING_MAP */}
         {open && (
+          // audit-variant-ok: pb-4 pt-1 are asymmetric single-axis paddings; no t/b combo token in PADDING_MAP
           <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
             <Row gap="3" className="min-w-0">
               {/* Parent first */}

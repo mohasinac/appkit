@@ -32,10 +32,12 @@ export function ReviewSummary({
   const stars = [5, 4, 3, 2, 1];
 
   return (
-    <Stack align="center" 
+    // audit-variant-ok: review summary Stack — base flex-col + sm:flex-row + sm:gap-8 responsive direction
+    <Stack align="center"
       className={`sm:flex-row sm: sm:gap-8 ${className}`} gap="md"
     >
       {/* Score block */}
+      {/* audit-variant-ok: score Stack — base items-center + sm:items-start responsive cross-axis flip */}
       <Stack className="sm:items-start" align="center" gap="xs">
         <Span color="inverse" weight="bold" className="leading-none text-neutral-900 dark:text-neutral-100 dark:" size="5xl">
           {averageRating.toFixed(1)}
