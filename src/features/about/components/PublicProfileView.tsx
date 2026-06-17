@@ -166,7 +166,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
     <Section color="inverse" tone="accent-banner" className="md:py-14" padding="y-2xl"> {/* audit-variant-ok: responsive padding override md:py-14 alongside y-2xl base */}
       <Div className={`${page.container.md}`}>
         {/* audit-variant-ok: responsive layout override — flex-wrap sm:flex-row sm:items-end has no single variant prop */}
-        <Stack className="flex-wrap sm:flex-row sm:items-end" align="center" gap="md">
+        <Stack direction="sm-row" className="flex-wrap sm:items-end" align="center" gap="md">
           <Row align="center" justify="center" className={`w-20 h-20 flex-shrink-0 ${__O.hidden}`} surface="default" rounded="full">
             {photoURL ? <MediaImage src={photoURL} alt={displayName} size="avatar" fallback="👤" /> : <User className="w-10 h-10 text-white/60" />}
           </Row>

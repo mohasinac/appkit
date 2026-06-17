@@ -170,7 +170,7 @@ function LockedFeatureGuide() {
           </Row>
           <Div>
             <Text className="text-[var(--appkit-color-text-muted)] mb-1" size="xs" weight="semibold">What you are missing:</Text>
-            <Ul className="space-y-0.5" indent="md">
+            <Ul spacing="2xs" indent="md">
               {missing.map((item) => (
                 <Li key={item} className={`text-sm text-[var(--appkit-color-text-muted)] ${LIST_DISC}`}>{item}</Li>
               ))}

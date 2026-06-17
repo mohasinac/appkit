@@ -113,7 +113,7 @@ function DrawerContent({
   if (!groups || groups.length === 0) {
     return (
       <Nav aria-label="User navigation" padding="y-sm">
-        <Ul paddingX="x-sm" className="space-y-0.5">
+        <Ul paddingX="x-sm" spacing="2xs">
           {items.map((item) => {
             const isActive = activeHref === item.href || activeHref.startsWith(item.href + "/");
             return (
@@ -154,7 +154,7 @@ function DrawerContent({
               </svg>
             </button>
             {isOpen && (
-              <Ul paddingX="x-sm" paddingY="y-bottom-xs" className="space-y-0.5">
+              <Ul paddingX="x-sm" paddingY="y-bottom-xs" spacing="2xs">
                 {group.items.map((item) => (
                   <Li key={item.href}>
                     <NavLink item={item} isActive={isNavItemActive(item, activeHref)} onClick={onItemClick} />

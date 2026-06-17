@@ -286,7 +286,7 @@ export function BlockFooter({
 /** Marker presets for `<Ul>` / `<Ol>`. */
 export type ListMarker = "disc" | "decimal" | "none" | "check" | "arrow";
 /** Spacing between list items. */
-export type ListSpacing = "tight" | "comfortable" | "loose" | "none";
+export type ListSpacing = "none" | "2xs" | "tight" | "comfortable" | "loose";
 /** Indent (left padding) applied to the list for marker visibility. */
 export type ListIndent = "none" | "sm" | "md" | "lg" | "xl";
 /** Typography size cascaded onto list items. */
@@ -304,6 +304,7 @@ const LIST_MARKER_MAP: Record<ListMarker, string> = {
 
 const LIST_SPACING_MAP: Record<ListSpacing, string> = {
   none: "",
+  "2xs": "space-y-0.5",
   tight: "appkit-list--spacing-tight",
   comfortable: "appkit-list--spacing-comfortable",
   loose: "appkit-list--spacing-loose",

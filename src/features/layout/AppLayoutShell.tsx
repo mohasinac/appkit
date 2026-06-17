@@ -201,7 +201,7 @@ function CollapsibleSidebarSection({
 
   if (!hasTitle) {
     return (
-      <Ul className="space-y-0.5">
+      <Ul spacing="2xs">
         {section.items.map((item) => (
           <Li key={`${item.href}-${item.label}`}>
             <TextLink href={item.href} variant="none" className={navItemClass}>
@@ -237,7 +237,7 @@ function CollapsibleSidebarSection({
         </svg>
       </button>
       {open && (
-        <Ul className="space-y-0.5">
+        <Ul spacing="2xs">
           {section.items.map((item) => (
             <Li key={`${item.href}-${item.label}`}>
               <TextLink href={item.href} variant="none" className={navItemClass}>
@@ -442,7 +442,7 @@ function SidebarContent({
 
       {isAuthenticated && (
         <CollapsibleNavGroup title={labels.sectionTitle}>
-          <Ul className="space-y-0.5">
+          <Ul spacing="2xs">
             <Li>
               <TextLink href={profileHref} variant="none" className={navItemClass}>{labels.profile}</TextLink>
             </Li>
@@ -490,7 +490,7 @@ function SidebarContent({
 
       {isAuthenticated && isAdminOrSeller && (adminHref || resolvedStoreHref) && (
         <CollapsibleNavGroup title={labels.dashboardSectionTitle}>
-          <Ul className="space-y-0.5">
+          <Ul spacing="2xs">
             {adminHref && role === "admin" && (
               <Li>
                 <TextLink href={adminHref} variant="none" className={navItemClass}>{labels.adminDashboard}</TextLink>

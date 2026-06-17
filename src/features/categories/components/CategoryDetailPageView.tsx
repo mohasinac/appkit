@@ -205,6 +205,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               </Span>
             )}
             {storeCount > 0 && (
+              // audit-variant-ok: count chip — conditional translucent-white (cover) OR success surface (no cover); compound bg cannot use Span.surface
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success" }`} rounded="full" padding="pill-sm-tall">
                 {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
               </Span>

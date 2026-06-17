@@ -163,6 +163,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Span>
               )}
               {typeBadge && (
+                // audit-variant-ok: listingType badge — typeBadge.cls drives bg/text per listing type; arbitrary text-[10px] + shadow-sm
                 <Span weight="bold" className={`text-[10px] shadow-sm ${typeBadge.cls}`} rounded="full" padding="pill-xs">
                   {typeBadge.label}
                 </Span>
@@ -251,6 +252,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Content area */}
+      {/* audit-variant-ok: card content Stack — flex-1 fill + pt-2.5 to overlap negative-margin of hero; PADDING_MAP lacks pt-2.5 */}
       <Stack className={`flex-1 ${__P.p3} pt-2.5`}>
         <Text className={`leading-snug`} truncate={2} size="sm" weight="semibold" color="primary">
           {product.title}
@@ -270,7 +272,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           return (
             <Row className="mt-1" gap="xs" wrap>
               {visible.map((name) => (
-                <Span padding="pill-2xs" layout="inline-flex" 
+                // audit-variant-ok: category chip — gap-0.5 below gap.2xs scale + arbitrary text-[10px] + max-w-[100px] truncation
+                <Span padding="pill-2xs" layout="inline-flex"
                   key={name}
                   className="gap-0.5 text-[10px] truncate max-w-[100px]" rounded="full" surface="subtle" color="muted"
                 >
@@ -346,6 +349,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             }
             const low = stock <= 5;
             return (
+              // audit-variant-ok: stock label — conditional warning vs muted-zinc + arbitrary text-[11px]; color depends on runtime stock state
               <Text
                 className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-zinc-500 dark:text-zinc-400" }`} weight="medium"
               >
@@ -541,6 +545,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Thumbnail */}
+      {/* audit-variant-ok: list-row thumbnail — fixed responsive sizing w-16/w-20 + neutral fallback bg; Div lacks size variant */}
       <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-zinc-800`} rounded="lg">
         {product.mainImage ? (
           <MediaImage
@@ -554,6 +559,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Content */}
+      {/* audit-variant-ok: list-row content Stack — gap-0.5 below gap.2xs scale + min-w-0 for truncation */}
       <Stack className="flex-1 min-w-0 gap-0.5">
         <Text size="sm" weight="medium" color="primary" truncate={2}>
           {product.title}
@@ -589,6 +595,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             }
             const low = stock <= 5;
             return (
+              // audit-variant-ok: list-row stock label — conditional warning vs muted-zinc + arbitrary text-[11px]; color depends on runtime stock state
               <Span
                 weight="medium"
                 className={`text-[11px] ${
