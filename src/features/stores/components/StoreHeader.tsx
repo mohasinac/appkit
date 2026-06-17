@@ -42,8 +42,9 @@ export function StoreHeader({
   className = "",
 }: StoreHeaderProps) {
   return (
-    <Section surface="default" className={`border-b border-gray-200 dark:border-slate-700 ${className}`}>
+    <Section surface="default" border="bottom" className={className}>
       {store.storeBannerURL && (
+          // audit-variant-ok: banner Div — h-40/md:h-56 responsive height ladder + bg-gray-100 placeholder while banner loads
           <Div className={`h-40 md:h-56 ${__O.hidden} bg-gray-100 dark:bg-slate-800`}>
           <Div
             role="img"

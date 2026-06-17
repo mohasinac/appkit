@@ -194,6 +194,7 @@ function OrderDetailDrawer({
       )}
 
       {order && !loading && (
+        // audit-variant-ok: order detail Stack — explicit flex flex-col over Stack base styling
         <Stack gap="none" className="flex flex-col">
           <Stack className={`flex-1 ${__O.yAuto}`} gap="5" padding="md">
             {/* Status row */}
@@ -212,7 +213,7 @@ function OrderDetailDrawer({
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
                 <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 border border-[var(--appkit-color-border)]" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
-                    <Row key={i} className="py-2.5" padding="x-sm" align="center" justify="between" gap="3">
+                    <Row key={i} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
                       <Div className="min-w-0">
                         <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
                         <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>

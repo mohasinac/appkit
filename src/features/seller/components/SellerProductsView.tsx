@@ -108,7 +108,7 @@ function TypeDropdown({
     flags.live && { value: "live", label: "Live" },
   ].filter(Boolean) as { value: ListingKind; label: string }[];
   return (
-    <Row className="px-3 lg:px-4 border-b border-[var(--appkit-color-border)]" padding="y-xs" gap="sm">
+    <Row paddingX="x-sm-lg-md" border="bottom" padding="y-xs" gap="sm">
       <Text className="tracking-wide text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
         Listing type
       </Text>
@@ -471,6 +471,7 @@ export function SellerProductsView({
         <TypeDropdown active={listingKind} onChange={handleKindChange} />
 
         {totalPages > 1 && (
+          // audit-variant-ok: sticky pagination — translucent /95 bg + backdrop-blur-sm + py-1.5 (between paddingY map keys)
           <Row
             className="sticky z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] py-1.5" padding="x-sm" justify="center"
             // audit-inline-style-ok: sticky header offset

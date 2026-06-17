@@ -418,6 +418,7 @@ export function Search({
             className="w-full rounded-lg border border-zinc-300 bg-white pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
           />
           {query && (
+            // audit-variant-ok: clear Button — absolute-positioned right-3 + p-0.5 micro padding + hover-shade
             <Button rounded="full" textColor="faint"
               type="button"
               variant="ghost"
@@ -457,12 +458,12 @@ export function Search({
           </select>
         )}
         {deferred && (
-          <Button rounded="lg" paddingX="sm"
+          <Button rounded="lg" paddingX="sm" paddingY="sm"
             type="button"
             variant="primary"
             onClick={handleDeferredSubmit}
             aria-label={labels.ariaLabel}
-            className="flex-shrink-0 py-2"
+            className="flex-shrink-0"
           >
             <svg
               className="w-4 h-4"
