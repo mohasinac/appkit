@@ -532,7 +532,7 @@ export async function ProductDetailPageView({
                     </Link>
                   ))}
                   {subcategory && (
-                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted" transform="capitalize">
+                    <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted" transform="capitalize">
                       {subcategory}
                     </Span>
                   )}
@@ -545,7 +545,7 @@ export async function ProductDetailPageView({
                     </Link>
                   )}
                   {brand && !brandSlug && (
-                    <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
+                    <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
                       {brand}
                     </Span>
                   )}

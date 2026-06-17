@@ -186,7 +186,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {!category && categoryName && (
-            <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
+            <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
               {categoryName}
             </Span>
           )}
@@ -199,7 +199,7 @@ function PreOrderInfoSection({
             </Link>
           )}
           {brand && !brandSlug && (
-            <Span layout="inline-flex" size="xs" weight="medium" className="border border-zinc-100 dark:border-zinc-800" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
+            <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">
               {brand}
             </Span>
           )}

@@ -384,7 +384,15 @@ export function Caption({
  */
 /** Inline-decorations allowed on Span (pill chips, code-like wraps, etc). */
 type SpanRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
+type SpanBorder = "none" | "default" | "subtle" | "strong";
 type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-2xs" | "pill-xs" | "pill-sm" | "pill-sm-tall" | "pill-md" | "pill-lg";
+
+const SPAN_BORDER_MAP: Record<SpanBorder, string> = {
+  none: "",
+  default: "border border-zinc-200 dark:border-slate-700",
+  subtle: "border border-zinc-100 dark:border-zinc-800",
+  strong: "border border-zinc-300 dark:border-slate-600",
+};
 type SpanBg = "none" | "muted" | "subtle" | "default" | "success-surface" | "danger-surface" | "warning-surface" | "info-surface" | "overlay-xs" | "overlay-sm" | "overlay-md" | "overlay-lg" | "overlay-xl";
 
 const SPAN_ROUNDED_MAP: Record<SpanRounded, string> = {
@@ -490,6 +498,7 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   rounded?: SpanRounded;
   padding?: SpanPadding;
   surface?: SpanBg;
+  border?: SpanBorder;
   children?: React.ReactNode;
 }
 
@@ -512,6 +521,7 @@ export function Span({
   rounded,
   padding,
   surface,
+  border,
   layout,
   gap,
   className = "",
@@ -532,6 +542,7 @@ export function Span({
     rounded ? SPAN_ROUNDED_MAP[rounded] : "",
     padding ? SPAN_PADDING_MAP[padding] : "",
     surface ? SPAN_BG_MAP[surface] : "",
+    border ? SPAN_BORDER_MAP[border] : "",
     layout ? SPAN_LAYOUT_MAP[layout] : "",
     gap ? SPAN_GAP_MAP[gap] : "",
     className,
