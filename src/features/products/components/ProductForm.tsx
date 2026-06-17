@@ -416,11 +416,30 @@ export function ProductForm({
               video: url
                 ? {
                     url,
-                    thumbnailUrl: url,
+                    // Fallback when autoCapturePoster fails (codec gap etc.):
+                    // keep any previously-persisted thumbnail rather than
+                    // overwrite with the video URL.
+                    thumbnailUrl: product.video?.thumbnailUrl,
                   }
                 : undefined,
             })
           }
+          onChangeField={(media) => {
+            if (!media) {
+              update({ video: undefined });
+              return;
+            }
+            // Phase D auto-capture: when the upload was a video, MediaUploadField
+            // populates `thumbnailUrl` from the captured first-frame poster.
+            // Persist it alongside the video URL so the player has a real
+            // still to render before play.
+            update({
+              video: {
+                url: media.url,
+                thumbnailUrl: media.thumbnailUrl,
+              },
+            });
+          }}
           onUpload={handleVideoUpload}
           accept="video/*"
           maxSizeMB={50}
