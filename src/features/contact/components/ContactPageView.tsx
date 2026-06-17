@@ -5,6 +5,7 @@ import { Container, Div, Heading, Main, Section, Stack, Text } from "../../../ui
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ContactForm } from "./ContactForm";
 import { ContactInfoSidebar } from "./ContactInfoSidebar";
+import { apiClient } from "../../../http";
 
 type ContactSubmitInput = {
   name: string;
@@ -14,15 +15,7 @@ type ContactSubmitInput = {
 };
 
 async function submitContact(data: ContactSubmitInput): Promise<void> {
-  const response = await fetch("/api/contact", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error("Contact submit failed");
-  }
+  await apiClient.post("/api/contact", data);
 }
 
 export function ContactPageView() {

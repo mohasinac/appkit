@@ -34,6 +34,7 @@ import {
 } from "../../../ui";
 import { FieldInput } from "../../../ui/forms";
 import type { UseFormShellStateResult } from "../../../ui/forms/FormShell";
+import { apiClient } from "../../../http";
 import { BundleDynamicRuleEditor } from "../../categories/components/BundleDynamicRuleEditor";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
@@ -161,11 +162,11 @@ export function AdminBundleEditorView({
     if (!bundleId) return;
     let cancelled = false;
     setLoading(true);
-    fetch(`/api/admin/bundles/${encodeURIComponent(bundleId)}`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`Failed to load bundle: ${res.status}`);
-        const json = (await res.json()) as { data?: CategoryDocument };
+    apiClient
+      .get(`/api/admin/bundles/${encodeURIComponent(bundleId)}`)
+      .then((res) => {
         if (cancelled) return;
+        const json = res as { data?: CategoryDocument };
         const doc = json?.data ?? null;
         setForm(bundleToForm(doc));
       })
@@ -231,28 +232,17 @@ export function AdminBundleEditorView({
       };
 
       if (isEdit && bundleId) {
-        const res = await fetch(
+        await apiClient.put(
           `/api/admin/bundles/${encodeURIComponent(bundleId)}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-          },
+          body,
         );
-        if (!res.ok) throw new Error(`Update failed: ${res.status}`);
         showToast("Bundle saved.", "success");
         onSaved?.(bundleId);
       } else {
-        const res = await fetch(`/api/admin/bundles`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        if (!res.ok) {
-          throw new Error(await parseResponseError(res));
-        }
-        const json = (await res.json()) as { data?: CategoryDocument };
-        const newId = json?.data?.id;
+        const res = (await apiClient.post(`/api/admin/bundles`, body)) as {
+          data?: CategoryDocument;
+        };
+        const newId = res?.data?.id;
         showToast("Bundle created.", "success");
         if (newId) onSaved?.(newId);
       }
@@ -271,11 +261,9 @@ export function AdminBundleEditorView({
     setDeleting(true);
     setApiError(null);
     try {
-      const res = await fetch(
+      await apiClient.delete(
         `/api/admin/bundles/${encodeURIComponent(bundleId)}`,
-        { method: "DELETE" },
       );
-      if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
       showToast("Bundle deleted.", "success");
       setDeleteConfirmOpen(false);
       onDeleted?.();
