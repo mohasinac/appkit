@@ -154,6 +154,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     getRowHref: getEditHref,
     toolbarExtra: (
       <Button asChild size="sm" variant="primary">
+        {/* audit-variant-ok: New button TextLink — flex items-center gap-1.5 layout; TextLink lacks flex layout variant */}
         <TextLink href={newHref} className="flex items-center gap-1.5">
           + {BUNDLE_COPY.adminList.newButton}
         </TextLink>

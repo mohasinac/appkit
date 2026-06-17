@@ -36,6 +36,7 @@ export function AdminOrdersGuideView() {
                   <Text className="text-[var(--appkit-color-text-muted)]">{note}</Text>
                 </Row>
               ))}
+              {/* audit-variant-ok: admin note Text — pt-2 top-only padding + muted shade */}
               <Text className="text-[var(--appkit-color-text-muted)] pt-2" size="sm">Admin-only transitions: force-cancel (any status before DELIVERED), force-refund (post-DELIVERED dispute).</Text>
             </Stack>
           ),

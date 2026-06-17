@@ -83,9 +83,9 @@ export function AdminPageHeader({
       {breadcrumb && breadcrumb.length > 0 && (
         <Nav
           aria-label="Breadcrumb"
-          layout="flex" gap="xs"
+          layout="flex" gap="xs" textSize="sm"
           color="muted"
-          className="mb-3 text-sm"
+          className="mb-3"
         >
           {breadcrumb.map((crumb, index) => (
             <Span layout="flex" gap="xs" key={index}>

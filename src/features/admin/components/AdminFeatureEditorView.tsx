@@ -317,7 +317,7 @@ export function AdminFeatureEditorView({
 
         <Div>
           <Text className={FIELD_LABEL_CLASS}>Applies to</Text>
-          <Row gap="sm" className="flex-wrap mt-2">
+          <Row gap="sm" wrap className="mt-2">
             {PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS.map((opt) => {
               const checked = productTypes.includes(opt.value);
               const pillClass = `${PILL_BASE_CLASS} ${checked ? PILL_CHECKED_CLASS : PILL_UNCHECKED_CLASS}`;

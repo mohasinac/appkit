@@ -2593,9 +2593,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         ) : (
           <Stack gap="sm">
             {reorderDraft.map((item, index) => (
-              <Div layout="grid" gap="2" 
+              <Div layout="grid" gap="2" align="center"
                 key={`reorder-${item.id}`}
-                className="grid-cols-[auto_1fr_auto_auto_auto] items-center" rounded="md" padding="xs" border="default"
+                className="grid-cols-[auto_1fr_auto_auto_auto]" rounded="md" padding="xs" border="default"
                 draggable
                 onDragStart={() => setDragIndex(index)}
                 onDragOver={(event) => event.preventDefault()}

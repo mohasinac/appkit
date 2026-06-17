@@ -41,6 +41,7 @@ function NavItemRow({
 }: NavItemRowProps) {
   return (
     <Row surface="default" padding="inline" align="center" gap="3">
+      {/* audit-variant-ok: move-controls Stack — gap-0.5 between up/down arrows; Stack.gap lacks 0.5 key */}
       <Stack className="gap-0.5 shrink-0">
         <Button variant="ghost" type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>

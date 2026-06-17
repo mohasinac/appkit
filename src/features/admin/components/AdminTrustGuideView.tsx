@@ -33,6 +33,7 @@ export function AdminTrustGuideView() {
                       ))}
                     </Tr>
                   </Thead>
+                  {/* audit-variant-ok: ban-comparison Tbody — text-sm + muted shade cascade to td children; Tbody lacks cascading text variants */}
                   <Tbody className="text-[var(--appkit-color-text-muted)] text-sm">
                     {[
                       ["Login", STILL_ALLOWED, "✗ Blocked"],
