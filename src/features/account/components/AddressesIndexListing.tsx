@@ -116,6 +116,7 @@ export function AddressesIndexListing({
       />
 
       {/* ── Address list ────────────────────────────────────────────────── */}
+      {/* audit-variant-ok: list wrapper — base px-sm + sm:px-4 responsive bump (paddingX lacks responsive sm-up bump for these values) */}
       <Div className="sm:px-4" padding="x-sm">
         {isLoading ? (
           <Div layout="grid" gap="4" className="sm:grid-cols-2">

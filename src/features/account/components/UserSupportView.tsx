@@ -196,6 +196,7 @@ function renderTicketListArea(props: {
       <Ul spacing="loose">
         {tickets.map((ticket) => (
           <Li key={ticket.id}>
+            {/* audit-variant-ok: ticket card Button — bespoke white-bg + border + shadow-sm + p-4 ghost+outline composite over text-left */}
             <Button rounded="xl" variant="ghost" type="button" className="w-full border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
               <Row align="start" justify="between" gap="sm">
                 <Div className="min-w-0 flex-1">

@@ -248,6 +248,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           }}
         >
           {/* Nav panel */}
+          {/* audit-variant-ok: nav panel Stack — border-r right side accent + dark:border-slate-800 explicit dark token */}
           <Stack border="default" surface="default" className={`flex-1 border-r dark:border-slate-800 ${__O.hidden}`} shadow="xl">
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               <Span size="xs" weight="semibold" transform="uppercase" color="muted">My Account</Span>

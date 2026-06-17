@@ -38,6 +38,7 @@ export function ChatWindow({
       >
         <Row gap="xs">
           {labels.title && <Heading level={4}>{labels.title}</Heading>}
+          {/* audit-variant-ok: connection indicator — fixed w-2/h-2 + conditional bg-zinc-400 (offline) vs CLS_DOT_ON (online) */}
           <Span
             className={`w-2 h-2 ${isConnected ? CLS_DOT_ON : "bg-zinc-400"}`} rounded="full"
             aria-label={isConnected ? labels.connected : labels.disconnected}
