@@ -126,7 +126,7 @@ const flex = { between: FLEX_BETWEEN };
   }, [items, showTabs, activeTab]);
 
   return (
-    <Section className={`px-4 sm:px-8 ${className}`} surface="subtle" padding="y-4xl">
+    <Section paddingX="x-md-2xl" className={className} surface="subtle" paddingY="y-4xl">
       <Div className="w-full max-w-4xl mx-auto">
 
         {/* Section Header */}

@@ -133,7 +133,7 @@ export function TrustFeaturesSection({
   return (
     <Section
       ref={sectionRef}
-      className={`py-14 ${className}`} padding="x-md" surface="muted"
+      paddingY="y-2-5xl" className={className} paddingX="x-md" surface="muted"
     >
       <Div className="max-w-6xl mx-auto">
         {title && (

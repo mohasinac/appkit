@@ -36,7 +36,7 @@ export function WhatsAppCommunitySection({
 }: WhatsAppCommunitySectionProps) {
   if (isLoading) {
     return (
-      <Section className={`px-4 sm:px-8 ${className}`} surface="subtle" padding="y-4xl">
+      <Section paddingX="x-md-2xl" className={className} surface="subtle" paddingY="y-4xl">
         <Div className="w-full max-w-7xl mx-auto">
           <Div className="h-72 animate-pulse" surface="subtle" rounded="2xl" />
         </Div>
@@ -51,7 +51,7 @@ export function WhatsAppCommunitySection({
   };
 
   return (
-    <Section className={`px-4 sm:px-8 ${className}`} surface="subtle" padding="y-4xl">
+    <Section paddingX="x-md-2xl" className={className} surface="subtle" paddingY="y-4xl">
       <Div className="w-full max-w-7xl mx-auto">
 
         {/* Card */}

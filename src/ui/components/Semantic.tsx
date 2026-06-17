@@ -126,11 +126,11 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Surface
 }
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ tone = "plain", color, layout, gap, align, justify, className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
+  ({ tone = "plain", color, layout, gap, align, justify, className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, children, ...props }, ref) => (
     <section
       className={[
         SECTION_TONE_MAP[tone],
-        buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+        buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
         color ? SEMANTIC_COLOR_MAP[color] : "",
         layout ? SECTION_LAYOUT_MAP[layout] : "",
         gap ? SECTION_GAP_MAP[gap] : "",

@@ -98,7 +98,7 @@ const sectionRef = useRef<HTMLElement>(null);
   return (
     <Section
       ref={sectionRef}
-      className={`py-14 ${className}`} surface="muted" padding="x-md"
+      paddingY="y-2-5xl" className={className} surface="muted" paddingX="x-md"
     >
       <Div className="max-w-6xl mx-auto">
         {/* Header */}

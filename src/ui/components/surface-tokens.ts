@@ -183,7 +183,7 @@ export type GapPresetKey = keyof typeof GAP_PRESETS;
 export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
-type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-page";
+type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page";
 type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "b-md-lg" | "b-lg";
 
 const X_ONLY_MAP: Record<XPaddingKey, string> = {
@@ -202,6 +202,8 @@ const X_ONLY_MAP: Record<XPaddingKey, string> = {
   "x-md-lg": "px-4 sm:px-6",
   /** Responsive: `px-6 md:px-10` — guide hub / store-extension container padding. */
   "x-md-xl": "px-6 md:px-10",
+  /** Responsive: `px-4 sm:px-8` — section header container padding. */
+  "x-md-2xl": "px-4 sm:px-8",
   /** Responsive: `px-4 sm:px-6 lg:px-8` — canonical page-container horizontal padding. */
   "x-page": "px-4 sm:px-6 lg:px-8",
 };
