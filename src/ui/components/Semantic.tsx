@@ -466,6 +466,8 @@ export function Ol({ marker = "decimal", spacing, indent, size, color, className
  */
 type LiLayout = "default" | "flex" | "flex-start" | "flex-center";
 type LiGap = "none" | "1" | "2" | "3" | "4";
+type LiTextSize = "xs" | "sm" | "base" | "lg";
+type LiColor = "default" | "muted" | "faint";
 
 const LI_LAYOUT_MAP: Record<LiLayout, string> = {
   default: "",
@@ -482,18 +484,37 @@ const LI_GAP_MAP: Record<LiGap, string> = {
   "4": "gap-4",
 };
 
+const LI_TEXT_SIZE_MAP: Record<LiTextSize, string> = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+};
+
+const LI_COLOR_MAP: Record<LiColor, string> = {
+  default: "",
+  muted: "text-[var(--appkit-color-text-muted)]",
+  faint: "text-[var(--appkit-color-text-faint)]",
+};
+
 export interface LiProps extends React.LiHTMLAttributes<HTMLLIElement> {
   /** Layout / alignment preset. Replaces raw `flex items-center` / `flex items-start` className. */
   layout?: LiLayout;
   /** Gap between children (for `layout="flex*"`). */
   gap?: LiGap;
+  /** Cascaded typography size. */
+  textSize?: LiTextSize;
+  /** Cascaded text colour. */
+  color?: LiColor;
   children: React.ReactNode;
 }
 
-export function Li({ layout, gap, className = "", children, ...props }: LiProps) {
+export function Li({ layout, gap, textSize, color, className = "", children, ...props }: LiProps) {
   const classes = [
     layout ? LI_LAYOUT_MAP[layout] : "",
     gap ? LI_GAP_MAP[gap] : "",
+    textSize ? LI_TEXT_SIZE_MAP[textSize] : "",
+    color ? LI_COLOR_MAP[color] : "",
     className,
   ].filter(Boolean).join(" ");
   return (

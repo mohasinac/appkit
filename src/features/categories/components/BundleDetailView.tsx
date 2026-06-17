@@ -150,6 +150,7 @@ export function BundleDetailView({
               ) : (
                 <Ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {members.map((p, i) => (
+                    // audit-variant-ok: bundle-member row — Li composite (flex+border+px+py+text-sm) is a Card pattern Li doesn't yet expose; defer to Li.surfaceProps extension
                     <Li key={p.id} className="flex items-center gap-2 rounded-lg border border-zinc-100 dark:border-zinc-800 px-3 py-2 text-sm">
                       <Span size="xs" weight="semibold" className="w-5" color="faint">#{i + 1}</Span>
                       <Link

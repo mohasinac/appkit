@@ -149,7 +149,7 @@ function StandardWalkthrough() {
           <Text className="mb-2 text-[var(--appkit-color-text)]" weight="semibold">{step}</Text>
           <Ul className="space-y-1.5" indent="lg">
             {items.map((item) => (
-              <Li key={item} className="list-disc text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
+              <Li key={item} textSize="sm" color="muted" className="list-disc leading-relaxed">
                 {item}
               </Li>
             ))}
@@ -336,7 +336,7 @@ function CommonMistakes() {
     <Alert variant="warning" title="Common mistakes to avoid">
       <Ul className="mt-2" spacing="comfortable" indent="md">
         {MISTAKES.map((m) => (
-          <Li key={m} className="list-disc text-sm leading-relaxed">
+          <Li key={m} textSize="sm" className="list-disc leading-relaxed">
             {m}
           </Li>
         ))}

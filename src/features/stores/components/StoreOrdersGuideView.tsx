@@ -113,7 +113,7 @@ function ProcessingWalkthrough() {
   return (
     <Ol spacing="loose" indent="lg">
       {PROCESSING_STEPS.map((step, i) => (
-        <Li key={i} className="list-decimal text-sm text-[var(--appkit-color-text-muted)] leading-relaxed">
+        <Li key={i} textSize="sm" color="muted" className="list-decimal leading-relaxed">
           {step}
         </Li>
       ))}

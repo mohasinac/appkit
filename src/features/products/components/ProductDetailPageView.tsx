@@ -884,7 +884,7 @@ export async function ProductDetailPageView({
                 howToUse.length > 0 ? (
                   <Ol spacing="loose">
                     {howToUse.map((step, i) => (
-                      <Li key={i} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+                      <Li key={i} layout="flex-start" gap="3" textSize="sm" color="muted">
                         <Span layout="flex-center" size="xs" weight="bold" className="flex-shrink-0 h-6 w-6 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300" rounded="full">
                           {i + 1}
                         </Span>
