@@ -65,7 +65,7 @@ return (
     >
       {/* Header */}
       <Section color="inverse" tone="accent-banner" className={`${heroClass} md:py-16 lg:py-20`} padding="y-2-5xl">
-        <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
+        <Div paddingX="x-page" className="max-w-4xl mx-auto text-center">
           <Heading color="inverse" level={1} variant="none" className="mb-4">
             {title}
           </Heading>

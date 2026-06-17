@@ -79,7 +79,7 @@ export function FooterLayout({
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (
               <Div border="subtle" className="border-b" padding="y-xl">
-          <Div className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px]" padding="x-md">
+          <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
             <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
               {visibleTrustItems.map((item, i) => (
                 <Li key={item.id ?? String(i)}>

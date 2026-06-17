@@ -54,7 +54,7 @@ export function PromotionsHero({
 }: PromotionsHeroProps) {
   return (
     <Section color="inverse" tone="accent-banner" className={`${heroBannerClass}`} padding="y-2-5xl">
-      <Div className="max-w-5xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
+      <Div paddingX="x-page" className="max-w-5xl mx-auto text-center">
         <Text color="inverse" className="mb-2 tracking-widest" size="sm" weight="medium" transform="uppercase">
           🎉 {labels.exclusiveOffersBadge}
         </Text>

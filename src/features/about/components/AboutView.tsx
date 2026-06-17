@@ -54,7 +54,7 @@ export function AboutView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       <Section color="inverse" tone="accent-banner" className="md:py-20 lg:py-24" padding="y-4xl">
-        <Div className="max-w-4xl mx-auto sm:px-6 lg:px-8 text-center" padding="x-md">
+        <Div paddingX="x-page" className="max-w-4xl mx-auto text-center">
           <Heading color="inverse" level={1} variant="none" className="mb-6" mdSize="5xl" size="4xl" weight="bold">
             {labels.title}
           </Heading>
