@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Alert, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Toggle } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -122,12 +122,12 @@ function ZonePicker({
               disabled={isDisabled}
               onClick={() => !isDisabled && onChange(z)}
               className={`rounded text-xs font-mono py-2 border transition-colors ${
-                selected === z
-                  ? "bg-primary text-white border-primary"
-                  : isDisabled
-                  ? "bg-zinc-100 text-zinc-300 border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 cursor-not-allowed"
-                  : "bg-white border-zinc-300 text-zinc-700 hover:border-primary dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-200"
-              }`}
+ selected === z
+ ? "bg-primary text-white border-primary"
+ : isDisabled
+ ? "bg-zinc-100 text-zinc-300 border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 cursor-not-allowed"
+ : "bg-white border-zinc-300 text-zinc-700 hover:border-primary dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-200"
+ }`}
             >
               {z}
             </button>
@@ -386,7 +386,6 @@ export function AdminCarouselEditorView({
   const [errorMsg, setErrorMsg] = React.useState("");
   const [successMsg, setSuccessMsg] = React.useState("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(carouselSlideSchema);
 
   const slideQuery = useQuery({
     queryKey: ["admin", "carousel", slideId],
@@ -490,15 +489,13 @@ export function AdminCarouselEditorView({
         errorMsg ? <Alert key="err" variant="error">{errorMsg}</Alert> : null,
         successMsg ? <Alert key="ok" variant="success">{successMsg}</Alert> : null,
 
-        <FormShellContext.Provider value={shellCtx}>
         <Form
           key="slide-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            clearErrors();
-            if (!title.trim()) { setFieldError("title", "Title is required"); return; }
-            saveMutation.mutate();
-          }} spacing="lg">
+          schema={carouselSlideSchema}
+          onSubmit={(e) => e.preventDefault()}
+          spacing="lg"
+        >{({ setFieldError, clearErrors }) => (
+          <>
           {/* ── 1. Slide Info ───────────────────────────────────────────── */}
           <Div className={CLS_PANEL}>
             <Heading level={3} className={CLS_SECTION_HEADING}>Slide info</Heading>
@@ -586,7 +583,16 @@ export function AdminCarouselEditorView({
 
           {/* ── Actions ──────────────────────────────────────────────────── */}
           <FormActions>
-            <Button type="submit" isLoading={saveMutation.isPending} disabled={!title || saveMutation.isPending}>
+            <Button
+              type="submit"
+              isLoading={saveMutation.isPending}
+              disabled={!title || saveMutation.isPending}
+              onClick={() => {
+                clearErrors();
+                if (!title.trim()) { setFieldError("title", "Title is required"); return; }
+                saveMutation.mutate();
+              }}
+            >
               {isEdit ? "Save changes" : "Create slide"}
             </Button>
             {onCancel && (
@@ -613,8 +619,8 @@ export function AdminCarouselEditorView({
               </>
             )}
           </FormActions>
-        </Form>
-        </FormShellContext.Provider>,
+          </>
+        )}</Form>,
       ]}
     />
   );

@@ -10,7 +10,7 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms";
 
 const categoryFormSchema = z.object({
   name: z.string().min(1, "Category name is required").max(120),
@@ -86,7 +86,6 @@ export function AdminCategoryEditorView({
   const [isActive, setIsActive] = React.useState(true);
   const [showInMenu, setShowInMenu] = React.useState(true);
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(categoryFormSchema);
 
   const categoryQuery = useQuery({
     queryKey: ["admin", "category", categoryId],
@@ -185,16 +184,14 @@ export function AdminCategoryEditorView({
   );
 
   const formContent = (
-    <FormShellContext.Provider value={shellCtx}>
     <Form
       id="category-editor-form"
       key="cat-form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        clearErrors();
-        if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
-        saveMutation.mutate();
-      }} spacing="lg">
+      schema={categoryFormSchema}
+      onSubmit={(e) => e.preventDefault()}
+      spacing="lg"
+    >{({ setFieldError, clearErrors }) => (
+      <>
       {/* ── Identity ── */}
       <Card variant="outlined" padding="lg">
         <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
@@ -275,7 +272,16 @@ export function AdminCategoryEditorView({
 
       {/* Mobile-only action buttons */}
       <Row gap="3" className="lg:hidden">
-        <Button type="submit" isLoading={isSubmitting} disabled={!name || isSubmitting}>
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          disabled={!name || isSubmitting}
+          onClick={() => {
+            clearErrors();
+            if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
+            saveMutation.mutate();
+          }}
+        >
           {isEdit ? "Save changes" : "Create category"}
         </Button>
         {isEdit && (
@@ -289,8 +295,8 @@ export function AdminCategoryEditorView({
           </Button>
         )}
       </Row>
-    </Form>
-    </FormShellContext.Provider>
+      </>
+    )}</Form>
   );
 
   if (embedded) {

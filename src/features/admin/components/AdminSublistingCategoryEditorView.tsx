@@ -15,7 +15,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms";
 
 const sublistingCategoryFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(120),
@@ -111,7 +111,6 @@ export function AdminSublistingCategoryEditorView({
 
   const { upload } = useMediaUpload();
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(sublistingCategoryFormSchema);
 
   return (
     <>
@@ -120,15 +119,13 @@ export function AdminSublistingCategoryEditorView({
       {...rest}
       title={isEdit ? "Edit Sub-listing Category" : "New Sub-listing Category"}
       sections={[
-        <FormShellContext.Provider key="sc-ctx" value={shellCtx}>
         <Form
           key="sc-editor-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            clearErrors();
-            if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
-            saveMutation.mutate();
-          }} spacing="md">
+          schema={sublistingCategoryFormSchema}
+          onSubmit={(e) => e.preventDefault()}
+          spacing="md"
+        >{({ setFieldError, clearErrors }) => (
+          <>
           <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <FieldInput
               name="name"
@@ -171,6 +168,11 @@ export function AdminSublistingCategoryEditorView({
               type="submit"
               isLoading={isSubmitting}
               disabled={!name || isSubmitting}
+              onClick={() => {
+                clearErrors();
+                if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
+                saveMutation.mutate();
+              }}
             >
               {isEdit ? "Save changes" : "Create category"}
             </Button>
@@ -185,8 +187,8 @@ export function AdminSublistingCategoryEditorView({
               </Button>
             )}
           </Row>
-        </Form>
-        </FormShellContext.Provider>,
+          </>
+        )}</Form>,
       ]}
     />
     {deleteConfirmOpen && (

@@ -21,6 +21,7 @@ import {
   Checkbox,
   ConfirmDeleteModal,
   Container,
+  Form,
   Heading,
   Input,
   Row,
@@ -31,7 +32,8 @@ import {
   Textarea,
   useToast,
 } from "../../../ui";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms";
+import type { UseFormShellStateResult } from "../../../ui/forms/FormShell";
 import { BundleDynamicRuleEditor } from "../../categories/components/BundleDynamicRuleEditor";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
@@ -148,7 +150,10 @@ export function AdminBundleEditorView({
   const [deleting, setDeleting] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(bundleFormSchema);
+  const formHelpersRef = React.useRef<UseFormShellStateResult | null>(null);
+  const setFieldError = (path: string, message: string) =>
+    formHelpersRef.current?.setFieldError(path, message);
+  const clearErrors = () => formHelpersRef.current?.clearErrors();
   const { showToast } = useToast();
 
   // Load existing bundle on mount when editing
@@ -295,7 +300,9 @@ export function AdminBundleEditorView({
   }
 
   return (
-    <FormShellContext.Provider value={shellCtx}>
+    <Form schema={bundleFormSchema} onSubmit={(e) => e.preventDefault()}>{(helpers) => {
+      formHelpersRef.current = helpers;
+      return (
       <Section padding="y-2xl">
         <Container size="lg">
           <Stack gap="lg">
@@ -469,6 +476,7 @@ export function AdminBundleEditorView({
           </Stack>
         </Container>
       </Section>
-    </FormShellContext.Provider>
+      );
+    }}</Form>
   );
 }

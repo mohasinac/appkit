@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button, ConfirmDeleteModal, Div, Form, Input, Label, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { CouponType } from "../../promotions/types";
@@ -233,7 +233,6 @@ export function AdminCouponEditorView({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(couponFormSchema);
 
   // --- load existing data (edit mode) ---
   const couponQuery = useQuery({
@@ -357,15 +356,14 @@ export function AdminCouponEditorView({
         : "Discount value";
 
   const formSection = (
-    <FormShellContext.Provider value={shellCtx}>
+    <>
     <Form
       key="coupon-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            clearErrors();
-            if (!name.trim()) { setFieldError("name", "Campaign name is required"); return; }
-            saveMutation.mutate();
-          }} spacing="md">
+      schema={couponFormSchema}
+      onSubmit={(e) => e.preventDefault()}
+      spacing="md"
+    >{({ setFieldError, clearErrors }) => (
+      <>
           {/* Basic info */}
           <Select
             label="Coupon type"
@@ -526,6 +524,11 @@ export function AdminCouponEditorView({
               type="submit"
               isLoading={isSubmitting}
               disabled={!canSave || isSubmitting}
+              onClick={() => {
+                clearErrors();
+                if (!name.trim()) { setFieldError("name", "Campaign name is required"); return; }
+                saveMutation.mutate();
+              }}
             >
               {isEdit ? "Save changes" : "Create coupon"}
             </Button>
@@ -540,7 +543,8 @@ export function AdminCouponEditorView({
               </Button>
             )}
           </Row>
-    </Form>
+      </>
+    )}</Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal
         isOpen
@@ -551,7 +555,7 @@ export function AdminCouponEditorView({
         isDeleting={deleteMutation.isPending}
       />
     )}
-    </FormShellContext.Provider>
+    </>
   );
 
   if (embedded) {

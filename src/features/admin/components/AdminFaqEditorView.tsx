@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button, ConfirmDeleteModal, Div, Form, Input, RichTextEditor, Select, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -86,7 +86,6 @@ export function AdminFaqEditorView({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(faqFormSchema);
 
   // --- load existing FAQ (edit mode) ---
   const faqQuery = useQuery({
@@ -166,15 +165,14 @@ export function AdminFaqEditorView({
   const canSave = Boolean(question.trim()) && Boolean(answer.trim());
 
   const formSection = (
-    <FormShellContext.Provider value={shellCtx}>
+    <>
     <Form
       key="faq-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            clearErrors();
-            if (!question.trim()) { setFieldError("question", "Question is required"); return; }
-            saveMutation.mutate();
-          }} spacing="md">
+      schema={faqFormSchema}
+      onSubmit={(e) => e.preventDefault()}
+      spacing="md"
+    >{({ setFieldError, clearErrors }) => (
+      <>
           <FieldInput
             name="question"
             label="Question"
@@ -253,6 +251,11 @@ export function AdminFaqEditorView({
               type="submit"
               isLoading={isSubmitting}
               disabled={!canSave || isSubmitting}
+              onClick={() => {
+                clearErrors();
+                if (!question.trim()) { setFieldError("question", "Question is required"); return; }
+                saveMutation.mutate();
+              }}
             >
               {isEdit ? "Save changes" : "Create FAQ"}
             </Button>
@@ -267,7 +270,8 @@ export function AdminFaqEditorView({
               </Button>
             )}
           </Row>
-    </Form>
+      </>
+    )}</Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal
         isOpen
@@ -278,7 +282,7 @@ export function AdminFaqEditorView({
         isDeleting={deleteMutation.isPending}
       />
     )}
-    </FormShellContext.Provider>
+    </>
   );
 
   if (embedded) {

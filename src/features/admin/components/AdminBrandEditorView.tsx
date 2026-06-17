@@ -16,7 +16,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
+import { FieldInput } from "../../../ui/forms";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -87,7 +87,6 @@ export function AdminBrandEditorView({
   const [displayOrder, setDisplayOrder] = React.useState<string>("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
   const { showToast } = useToast();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(brandFormSchema);
 
   const brandQuery = useQuery({
     queryKey: ["admin", "brand", brandId],
@@ -158,15 +157,14 @@ export function AdminBrandEditorView({
   const isSubmitting = saveMutation.isPending || brandQuery.isLoading;
 
   const formSection = (
-    <FormShellContext.Provider value={shellCtx}>
+    <>
     <Form
       key="brand-form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        clearErrors();
-        if (!name.trim()) { setFieldError("name", "Brand name is required"); return; }
-        saveMutation.mutate();
-      }} spacing="md">
+      schema={brandFormSchema}
+      onSubmit={(e) => e.preventDefault()}
+      spacing="md"
+    >{({ setFieldError, clearErrors }) => (
+      <>
           <Div layout="grid" gap="4" className="sm:grid-cols-2">
             <FieldInput
               name="name"
@@ -242,6 +240,11 @@ export function AdminBrandEditorView({
               type="submit"
               isLoading={isSubmitting}
               disabled={!name || isSubmitting}
+              onClick={() => {
+                clearErrors();
+                if (!name.trim()) { setFieldError("name", "Brand name is required"); return; }
+                saveMutation.mutate();
+              }}
             >
               {isEdit ? "Save changes" : "Create brand"}
             </Button>
@@ -255,7 +258,8 @@ export function AdminBrandEditorView({
               </Button>
             )}
           </Row>
-    </Form>
+      </>
+    )}</Form>
     {deleteConfirmOpen && (
       <ConfirmDeleteModal
         isOpen
@@ -266,7 +270,7 @@ export function AdminBrandEditorView({
         isDeleting={deleteMutation.isPending}
       />
     )}
-    </FormShellContext.Provider>
+    </>
   );
 
   if (embedded) {
