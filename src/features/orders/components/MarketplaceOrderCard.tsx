@@ -148,14 +148,14 @@ export function MarketplaceOrderCard({
                 {order.productTitle ?? shortId}
               </Text>
             </TextLink>
-            <Caption className="font-mono text-xs">
+            <Caption className="font-mono">
               {mergedLabels.orderNumber} {shortId}
             </Caption>
-            <Caption className="text-xs">
+            <Caption>
               {mergedLabels.placedOn} {formatDate(order.orderDate)}
             </Caption>
             {itemCount > 1 && (
-              <Caption className="text-xs">
+              <Caption>
                 {mergedLabels.items}: <Span weight="medium">{itemCount}</Span>
               </Caption>
             )}

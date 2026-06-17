@@ -196,6 +196,7 @@ export function MarketplacePreorderCard({
                 </Text>
               </TextLink>
               {wishlistActions && (
+                // audit-variant-ok: wishlist toggle Button — conditional text-primary (in-wishlist) vs text-zinc-400 + leading-none icon-only
                 <Button
                   type="button"
                   variant="ghost"
@@ -218,7 +219,8 @@ export function MarketplacePreorderCard({
               type="button"
               variant="primary"
               size="sm"
-              className="self-start text-xs mt-0.5"
+              textSize="xs"
+              className="self-start mt-0.5"
               onClick={handleNavigate}
             >
               {mergedLabels.reserveNow}
@@ -261,6 +263,7 @@ export function MarketplacePreorderCard({
                 </Button>
               ) : null}
               {wishlistActions ? (
+                // audit-variant-ok: wishlist Button — conditional text-primary (in-wishlist) vs text-zinc-500; text-base icon
                 <Button
                   type="button"
                   variant="ghost"

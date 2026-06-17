@@ -97,6 +97,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       </Row>
 
       {/* YouTube branding top-right */}
+      {/* audit-variant-ok: brand badge — absolute-positioned + px-1.5 between-key + dynamic meta.colorClass */}
       <Row textWeight="medium" textSize="xs" className={`absolute right-2 top-2 px-1.5 text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
         {meta.icon}
         <Span className="hidden sm:inline">{meta.label}</Span>
@@ -104,6 +105,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
 
       {/* Channel name bottom-left */}
       {post.channelName && (
+        // audit-variant-ok: channel badge — absolute-positioned + py-0.5 between-key + backdrop-blur-sm
         <Div textSize="xs" surface="overlay-lg" className="absolute bottom-2 left-2 py-0.5 text-white backdrop-blur-sm" padding="x-xs" rounded="default">
           {post.channelName}
         </Div>
@@ -180,6 +182,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       )}
 
       {/* Platform badge */}
+      {/* audit-variant-ok: brand badge — absolute-positioned + px-1.5 between-key + dynamic meta.colorClass */}
       <Row textWeight="medium" textSize="xs" className={`absolute left-2 top-2 px-1.5 text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
         {meta.icon}
         <Span className="hidden sm:inline">{meta.label}</Span>
