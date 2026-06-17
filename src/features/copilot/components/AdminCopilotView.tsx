@@ -66,7 +66,7 @@ function renderCopilotChatPanel(props: {
   const { messages, conversationId, isLoading, error, input, setInput, labels, messagesEndRef, handleSubmit } = props;
   return (
     <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
-      <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
+      <Div border="bottom" className={__P.p3}>
         <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
@@ -89,7 +89,7 @@ function renderCopilotChatPanel(props: {
         {error ? <Text className={CLS_ERROR_TEXT}>{labels?.errorLabel ?? "An error occurred. Please try again."}</Text> : null}
         <Div ref={messagesEndRef} />
       </Stack>
-      <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
+      <Div border="top" className={__P.p3}>
         {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
         <form onSubmit={handleSubmit} className="flex gap-2">
           {/* audit-raw-form-input-ok: chat input */}
@@ -197,7 +197,7 @@ export function AdminCopilotView({
         ),
         <Div layout="grid" gap="4" className="grid-cols-1 lg:grid-cols-[2fr,1fr]">
           <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
-            <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
+            <Div border="bottom" className={__P.p3}>
               <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
               </Text>
@@ -230,7 +230,7 @@ export function AdminCopilotView({
               <Div ref={messagesEndRef} />
             </Stack>
 
-            <Div className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
+            <Div border="top" className={__P.p3}>
               {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
               <form onSubmit={handleSubmit} className="flex gap-2">
                 {/* audit-raw-form-input-ok: chat input */}

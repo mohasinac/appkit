@@ -95,7 +95,7 @@ function AdsSettingsPanel({
   currentConsentRequired, settingsMessage, onSave,
 }: AdsSettingsPanelProps) {
   return (
-    <Stack className={`border border-neutral-200 dark:border-slate-700 ${__P.p3}`} gap="3" rounded="lg">
+    <Stack border="default" className={__P.p3} gap="3" rounded="lg">
       <Text size="sm" weight="semibold">Provider and publish settings</Text>
       <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
         Save provider credentials here before publishing AdSense or third-party inventory.

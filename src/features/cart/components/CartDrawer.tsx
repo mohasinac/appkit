@@ -195,7 +195,7 @@ export function CartDrawer({
           )}
         </Stack>
         {items.length > 0 && (
-          <Stack className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p4}`} gap="md">
+          <Stack border="top" className={__P.p4} gap="md">
             <Row textSize="sm" justify="between">
               <Span className="text-neutral-600 dark:text-neutral-400">
                 {labels.subtotal ?? "Subtotal"}
