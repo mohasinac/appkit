@@ -60,7 +60,7 @@ export function NavPermissionsManager({
           <Div className={`${__O.hidden}`} rounded="xl" border="default">
             <Table size="sm">
               <Thead>
-                <Tr className="bg-zinc-50 dark:bg-slate-800" border="default">
+                <Tr surface="subtle" border="default">
                   <Th className="text-left" padding="md" color="primary" weight="semibold">Nav Item</Th>
                   <Th className="text-left" padding="md" color="primary" weight="semibold">Route</Th>
                   <Th className="text-left" padding="md" color="primary" weight="semibold">Permission</Th>

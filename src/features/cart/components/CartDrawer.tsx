@@ -160,7 +160,7 @@ export function CartDrawer({
         onClick={onClose}
       />
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white dark:bg-slate-900 shadow-xl">
-        <Row justify="between" className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p4}`}>
+        <Row justify="between" border="bottom" className={__P.p4}>
           <Heading level={2} size="lg" weight="semibold">
             {labels.title ?? "Cart"}
           </Heading>

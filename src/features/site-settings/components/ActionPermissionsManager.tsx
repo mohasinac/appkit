@@ -125,7 +125,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
       <Div className={`${__O.hidden}`} rounded="xl" border="default">
         <Table size="sm">
           <Thead>
-            <Tr className="bg-zinc-50 dark:bg-slate-800" border="default">
+            <Tr surface="subtle" border="default">
               <Th className="text-left" padding="md" color="primary" weight="semibold">Action</Th>
               <Th className="text-left" padding="md" color="primary" weight="semibold">Category</Th>
               <Th className="text-left" padding="md" color="primary" weight="semibold">Auth</Th>
