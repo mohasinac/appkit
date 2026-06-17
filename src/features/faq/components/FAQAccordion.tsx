@@ -18,6 +18,7 @@ function FAQAccordionItem({
 }: FAQAccordionItemProps) {
   return (
     <Div className="border-b border-neutral-200 last:border-0">
+      {/* audit-variant-ok: accordion question Button — w-full text-left + py-4 vertical + font-medium + dynamic hover-primary */}
       <Button
         variant="ghost"
         onClick={onToggle}
@@ -50,6 +51,7 @@ function FAQAccordionItem({
           {faq.tags && faq.tags.length > 0 && (
             <Row wrap gap="sm" className="mb-3">
               {faq.tags.map((tag) => (
+                // audit-variant-ok: tag chip — bg-neutral-100/800 + py-1 (between Span padding map keys)
                 <Span
                   key={tag}
                   className="bg-neutral-100 dark:bg-neutral-800 py-1 text-neutral-600 dark:text-neutral-400" rounded="md" padding="x-xs" size="xs"

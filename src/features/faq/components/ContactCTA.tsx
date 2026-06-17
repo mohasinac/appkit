@@ -28,6 +28,7 @@ export function ContactCTA({
   labels,
 }: ContactCTAProps) {
   return (
+    // audit-variant-ok: contact CTA Card — text-center + dark:bg-slate-800/60 explicit dark tint over Card.variant outlined
     <Card
       variant="outlined"
       padding="lg"
@@ -99,7 +100,8 @@ export function ContactCTA({
         </TextLink>
       </Div>
 
-      <TextLink rounded="xl" 
+      {/* audit-variant-ok: contact TextLink — bg-primary CTA fill + p-6 + icon-text composition */}
+      <TextLink rounded="xl"
         href={contactHref}
         className="inline-flex items-center gap-2 bg-primary p-6 text-white transition-colors hover:bg-primary/90" weight="medium"
       >

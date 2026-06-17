@@ -60,6 +60,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
   }
 
   return (
+    // audit-variant-ok: raffle winner Article — space-y-4 vertical rhythm between children; Article lacks spacing variant
     <Article className="space-y-4">
       <Heading
         level={2} size="xl" weight="semibold" color="primary">
@@ -100,6 +101,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           </Div>
         ) : null}
 
+        {/* audit-variant-ok: meta row — flex-wrap + asymmetric gap-x-6/gap-y-2; Div.gap is single-axis */}
         <Div layout="flex" textSize="sm" className="flex-wrap gap-x-6 gap-y-2" color="muted" padding="t-xs">
           {typeof event.raffleEntryCount === "number" ? (
             <Span>
