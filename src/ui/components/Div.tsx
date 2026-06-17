@@ -58,6 +58,25 @@ const DIV_GAP_MAP: Record<DivGap, string> = {
   "8": "gap-8",
 };
 
+type DivAlign = "start" | "center" | "end" | "baseline" | "stretch";
+type DivJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
+
+const DIV_ALIGN_MAP: Record<DivAlign, string> = {
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+  baseline: "items-baseline",
+  stretch: "items-stretch",
+};
+const DIV_JUSTIFY_MAP: Record<DivJustify, string> = {
+  start: "justify-start",
+  center: "justify-center",
+  end: "justify-end",
+  between: "justify-between",
+  around: "justify-around",
+  evenly: "justify-evenly",
+};
+
 export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceProps {
   /** Colour variant cascaded onto Div text. Pragmatic — most Div sites wrap mixed inline content where a `<Text>` wrap would force structural change. */
   color?: DivColor;
@@ -69,20 +88,26 @@ export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceP
   layout?: DivLayout;
   /** Gap between children (CSS gap). Only takes effect when `layout` is `flex`/`inline-flex`/`grid`. */
   gap?: DivGap;
+  /** Cross-axis alignment (CSS `items-*`). Only takes effect when `layout` is `flex`/`inline-flex`/`grid`. */
+  align?: DivAlign;
+  /** Main-axis alignment (CSS `justify-*`). Only takes effect when `layout` is `flex`/`inline-flex`/`grid`. */
+  justify?: DivJustify;
   children?: React.ReactNode;
 }
 
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
-  ({ className = "", surface, padding, rounded, border, shadow, color, textSize, textWeight, layout, gap, children, ...props }, ref) => (
+  ({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, textSize, textWeight, layout, gap, align, justify, children, ...props }, ref) => (
     <div
       ref={ref}
       className={[
-        buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+        buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
         color ? DIV_COLOR_MAP[color] : "",
         textSize ? DIV_TEXT_SIZE_MAP[textSize] : "",
         textWeight ? DIV_TEXT_WEIGHT_MAP[textWeight] : "",
         layout ? DIV_LAYOUT_MAP[layout] : "",
         gap ? DIV_GAP_MAP[gap] : "",
+        align ? DIV_ALIGN_MAP[align] : "",
+        justify ? DIV_JUSTIFY_MAP[justify] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}

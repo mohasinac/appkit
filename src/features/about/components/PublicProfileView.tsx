@@ -172,6 +172,7 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
           </Row>
           <Stack gap="xs" className="text-center sm:text-left">
             {/* audit-variant-ok: sm:justify-start is a responsive override; Row.justify only supports single value */}
+            {/* audit-inline-style-ok: sm:justify-start is a responsive override; Row.justify only supports single value */}
             <Row className="sm:justify-start" justify="center" gap="xs" wrap>
               <Heading color="inverse" level={1} variant="none" className="mb-0">{displayName}</Heading>
               {/* audit-variant-ok: translucent-white badge over inverse hero background — no white overlay surface variant exists */}

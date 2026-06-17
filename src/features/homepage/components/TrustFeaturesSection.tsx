@@ -69,7 +69,7 @@ function TrustFeatureCard({
 
 function TrustStripItem({ item }: { item: TrustFeatureItem }) {
   return (
-    <Div layout="inline-flex" gap="2" className="flex-shrink-0 items-center" padding="x-lg">
+    <Div layout="inline-flex" gap="2" align="center" className="flex-shrink-0" padding="x-lg">
       {item.renderIcon ? (
         item.renderIcon({ className: "w-5 h-5" })
       ) : (

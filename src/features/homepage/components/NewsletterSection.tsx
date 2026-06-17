@@ -46,7 +46,7 @@ export function NewsletterSection({
 
       <Div className="relative z-10 max-w-2xl mx-auto text-center">
         {/* Icon badge */}
-        <Div layout="inline-flex" className="items-center justify-center w-14 h-14 bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-5 mx-auto" rounded="2xl">
+        <Div layout="inline-flex" align="center" justify="center" className=" w-14 h-14 bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-5 mx-auto" rounded="2xl">
           <Mail className="w-7 h-7 text-primary" />
         </Div>
 
