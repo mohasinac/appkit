@@ -115,6 +115,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
+        // audit-variant-ok: buy-now panel — primary-200/800 border + primary-50/900 bg; Row.surface lacks primary-tinted variant
         <Row align="center" gap="sm" className="border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
           <Span size="xs" color="muted">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
@@ -134,7 +135,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Div border="subtle" surface="muted" padding="inline" rounded="xl">
           <Text className="mb-2 tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">About this item</Text>
           <Ul spacing="comfortable" size="sm" color="primary">
-            {features.map((f, i) => <Li key={i} className="flex items-start gap-2"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
+            {features.map((f, i) => <Li key={i} layout="flex-start" gap="2"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</Li>)}
           </Ul>
         </Div>
       )}

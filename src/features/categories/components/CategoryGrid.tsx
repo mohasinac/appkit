@@ -54,7 +54,7 @@ export function CategoryCard({
         ) : null}
         {/* Icon overlay */}
         {category.display?.icon && (
-          <Row className="absolute inset-0 text-4xl" align="center" justify="center">
+          <Row textSize="4xl" className="absolute inset-0" align="center" justify="center">
             {category.display.icon}
           </Row>
         )}
@@ -80,7 +80,8 @@ export function CategoryCard({
           <Text size="xs" color="faint">
             {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
           </Text>
-          <Span layout="inline-flex" gap="xs" size="xs" weight="medium" className="border border-zinc-200 dark:border-zinc-700 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors" rounded="md" padding="pill-sm-tall" color="muted">
+          {/* audit-variant-ok: Browse pill — group-hover state transitions to primary bg/border/text; Span lacks group-hover variant */}
+          <Span layout="inline-flex" gap="xs" size="xs" weight="medium" border="default" className="group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors" rounded="md" padding="pill-sm-tall" color="muted">
             Browse <ArrowRight className="h-3 w-3" />
           </Span>
         </Row>
