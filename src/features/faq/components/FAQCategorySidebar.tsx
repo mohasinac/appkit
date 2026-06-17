@@ -40,6 +40,7 @@ export function FAQCategorySidebar({
   );
 
   return (
+    // audit-variant-ok: sidebar Card — dark:bg-slate-800/60 explicit dark tint over Card.variant outlined
     <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
       <Heading level={2} className="mb-6" size="lg" weight="semibold">
         {labels?.title ?? "Categories"}
@@ -101,7 +102,8 @@ export function FAQCategorySidebar({
           <Text className="mb-3" color="muted" size="sm">
             {labels?.stillHaveQuestions ?? "Still have questions?"}
           </Text>
-          <TextLink rounded="lg" 
+          {/* audit-variant-ok: contact CTA TextLink — block + bg-primary + p-4 + text-center + hover */}
+          <TextLink rounded="lg"
             href={contactHref}
             className="block bg-primary p-4 text-center text-white transition-colors hover:bg-primary/90" weight="medium"
           >

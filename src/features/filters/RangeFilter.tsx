@@ -155,6 +155,7 @@ export function RangeFilter({
       )}
     >
       <Row align="center" gap="sm">
+        {/* audit-variant-ok: collapse-toggle Button — flex-1 + bespoke text-zinc-900/50 + py-1 + hover-opacity */}
         <Button
           type="button"
           id={`rf-${title}`}
@@ -258,6 +259,7 @@ export function RangeFilter({
               </Div>
             </Div>
 
+            {/* audit-variant-ok: range separator — pb-1.5 between Span padding map keys */}
             <Span size="xs" className="flex-shrink-0 pb-1.5" color="faint">
               -
             </Span>

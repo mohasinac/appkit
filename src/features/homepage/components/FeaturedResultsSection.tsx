@@ -38,6 +38,7 @@ export function FeaturedResultsSection({
   if (!items.length) return null;
 
   return (
+    // audit-variant-ok: section — base paddingY=y-4xl + md:py-20 responsive bump (PADDING_MAP lacks responsive md-up ladder)
     <Section className={`md:py-20 ${className}`} paddingY="y-4xl" paddingX="x-md">
       <Div className="mb-12 text-center">
         {pillLabel && (
@@ -57,8 +58,8 @@ export function FeaturedResultsSection({
           {title}
         </Heading>
 
-        <Row align="center" justify="center" gap="sm" 
-          className={`mt-3 text-zinc-400 dark:text-zinc-400`}
+        <Row align="center" justify="center" gap="sm" color="faint"
+          className="mt-3"
           aria-hidden="true"
         >
           <Span className="h-px w-6 bg-current" />
