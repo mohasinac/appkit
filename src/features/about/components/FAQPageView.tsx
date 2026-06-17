@@ -67,10 +67,12 @@ export async function FAQPageView({
                 {t("categoriesLabel")}
               </Heading>
               <Nav aria-label="FAQ categories" spacing="xs">
-                <TextLink rounded="lg" 
+                {/* audit-variant-ok: nav item — conditional active (primary-tinted) vs hover bg; TextLink lacks active-state variant */}
+                <TextLink rounded="lg"
                   href={String(ROUTES.PUBLIC.FAQS)}
                   className={`flex items-center justify-between px-3 py-2 transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
                 >
+                  {/* audit-variant-ok: icon+label inline group — flex.row + gap-2 layout (Span lacks gap-2 chip variant for this use) */}
                   <Span className={`${flex.row} gap-2`}>
                     <HelpCircle className="w-4 h-4" />
                     {t("allCategories")}
@@ -78,11 +80,13 @@ export async function FAQPageView({
                   <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                 </TextLink>
                 {categories.map((cat) => (
-                  <TextLink rounded="lg" 
+                  // audit-variant-ok: nav item — conditional active (primary-tinted) vs hover bg; TextLink lacks active-state variant
+                  <TextLink rounded="lg"
                     key={cat.slug}
                     href={String(ROUTES.PUBLIC.FAQ_CATEGORY(cat.slug))}
                     className={`flex items-center justify-between px-3 py-2 transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
                   >
+                    {/* audit-variant-ok: icon+label inline group — flex.row + gap-2 layout (Span lacks gap-2 chip variant for this use) */}
                     <Span className={`${flex.row} gap-2`}>
                       <Span>{cat.icon}</Span>
                       {cat.label}
@@ -116,12 +120,14 @@ export async function FAQPageView({
                     tone="card"
                     className="group overflow-hidden"
                   >
+                    {/* audit-variant-ok: Summary header — flex justify-between layout + px-5 py-4 outside PADDING_MAP scale; Summary lacks layout variant */}
                     <Summary
                       className={`flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none font-medium text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors`}
                     >
                       <Span>{item.question}</Span>
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
                     </Summary>
+                    {/* audit-variant-ok: Details body — asymmetric pb-5 pt-1 (different top/bottom); PADDING_MAP lacks asymmetric Y combo */}
                     <Div className="pb-5 pt-1" padding="x-md">
                       <RichTextRenderer
                         html={item.answer}
