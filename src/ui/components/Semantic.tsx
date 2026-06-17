@@ -173,6 +173,10 @@ export interface NavProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   "aria-label": string;
   /** Vertical spacing between top-level children. */
   spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
+  /** Flex gap between flex-row children (use with `layout="flex"`). */
+  gap?: "none" | "2xs" | "xs" | "sm" | "md" | "lg";
+  /** Optional layout — `flex` lays out children in a row with the configured `gap`. */
+  layout?: "default" | "flex";
   /** Colour cascaded onto nav children. */
   color?: "default" | "primary" | "muted" | "faint";
   children: React.ReactNode;
@@ -187,6 +191,20 @@ const NAV_SPACING_MAP: Record<NonNullable<NavProps["spacing"]>, string> = {
   xl: "space-y-6",
 };
 
+const NAV_GAP_MAP: Record<NonNullable<NavProps["gap"]>, string> = {
+  none: "",
+  "2xs": "gap-1.5",
+  xs: "gap-1",
+  sm: "gap-2",
+  md: "gap-3",
+  lg: "gap-4",
+};
+
+const NAV_LAYOUT_MAP: Record<NonNullable<NavProps["layout"]>, string> = {
+  default: "",
+  flex: "flex items-center",
+};
+
 const NAV_COLOR_MAP: Record<NonNullable<NavProps["color"]>, string> = {
   default: "",
   primary: "appkit-color--primary",
@@ -194,12 +212,14 @@ const NAV_COLOR_MAP: Record<NonNullable<NavProps["color"]>, string> = {
   faint: "appkit-color--faint",
 };
 
-export function Nav({ surface, padding, rounded, border, shadow, spacing, color, className = "", children, ...props }: NavProps) {
+export function Nav({ surface, padding, rounded, border, shadow, spacing, gap, layout, color, className = "", children, ...props }: NavProps) {
   return (
     <nav
       className={[
         buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
         spacing ? NAV_SPACING_MAP[spacing] : "",
+        gap ? NAV_GAP_MAP[gap] : "",
+        layout ? NAV_LAYOUT_MAP[layout] : "",
         color ? NAV_COLOR_MAP[color] : "",
         className,
       ].filter(Boolean).join(" ")}

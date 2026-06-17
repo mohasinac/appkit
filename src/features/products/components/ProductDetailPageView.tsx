@@ -435,7 +435,7 @@ export async function ProductDetailPageView({
         <ProductDetailView
           renderBreadcrumb={() => (
             <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
-              <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs flex-wrap" color="muted">
+              <Nav aria-label="Breadcrumb" layout="flex" gap="2xs" className="text-xs flex-wrap" color="muted">
                 <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>
                   Home
                 </Link>

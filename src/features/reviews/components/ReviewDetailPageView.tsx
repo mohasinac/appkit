@@ -47,7 +47,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
     <Main>
       {/* Breadcrumb */}
       <Div paddingY="y-xs-tall" className="border-b border-neutral-100 bg-neutral-50" padding="x-md">
-        <Nav className="mx-auto max-w-3xl flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-400" aria-label="Breadcrumb">
+        <Nav layout="flex" gap="2xs" color="faint" className="mx-auto max-w-3xl text-xs" aria-label="Breadcrumb">
           <Link href={String(ROUTES.HOME)} className="hover:text-primary transition-colors">
             Home
           </Link>

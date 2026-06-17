@@ -10,7 +10,7 @@ interface CheckoutStepperProps {
 export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
   const currentIdx = steps.findIndex((s) => s.id === current);
   return (
-    <Nav aria-label="Checkout steps" className="flex items-center gap-1">
+    <Nav aria-label="Checkout steps" layout="flex" gap="xs">
       {steps.map((step, idx) => {
         const isDone = idx < currentIdx;
         const isActive = step.id === current;

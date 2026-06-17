@@ -308,7 +308,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
       <Container size="xl" padding="y-lg">
         {/* Breadcrumb + share */}
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
-          <Nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs flex-wrap" color="muted">
+          <Nav aria-label="Breadcrumb" layout="flex" gap="2xs" className="text-xs flex-wrap" color="muted">
             <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
             <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className={CLS_BREADCRUMB_LINK}>Auctions</Link>
