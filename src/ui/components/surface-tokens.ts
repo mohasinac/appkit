@@ -57,6 +57,8 @@ export const PADDING_MAP = {
   inline: "px-4 py-3",
   inlineSm: "px-3 py-2",
   inlineLg: "px-6 py-4",
+  /** Tiny pill chip — `px-1.5 py-0.5`. Used by Bundle/PrizeDraw badge labels. */
+  "chip-2xs": "px-1.5 py-0.5",
   // Vertical-only presets — the variant-catalogue codemod migrates raw
   // `py-N` / `py-N md:py-M` className tokens into these names.
   "y-2xs": "py-1",

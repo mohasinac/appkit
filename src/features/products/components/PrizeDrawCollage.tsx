@@ -131,7 +131,7 @@ export function PrizeDrawCollage({
                   </Row>
                 )}
 
-                <Div textWeight="semibold" textSize="xs" surface="overlay-xl" className="absolute left-2 top-2 px-1.5 py-0.5 text-white" rounded="default">
+                <Div textWeight="semibold" textSize="xs" surface="overlay-xl" padding="chip-2xs" className="absolute left-2 top-2 text-white" rounded="default">
                   #{it.itemNumber}
                 </Div>
 
