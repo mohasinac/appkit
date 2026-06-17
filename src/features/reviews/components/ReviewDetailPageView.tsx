@@ -24,10 +24,10 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
           <Container size="sm">
             <Div className="text-center">
               <Text className="mb-4" size="5xl" aria-hidden="true">🔍</Text>
-              <Heading color="inverse" level={1} className="text-neutral-900 dark: mb-2" size="2xl" weight="bold">
+              <Heading color="inverse" level={1} className="text-neutral-900 dark:text-neutral-100 dark: mb-2" size="2xl" weight="bold">
                 Review not found
               </Heading>
-              <Text className="text-neutral-500 mb-6" size="sm">
+              <Text className="text-neutral-500 dark:text-neutral-400 mb-6" size="sm">
                 This review may have been removed or is no longer available.
               </Text>
               <Link

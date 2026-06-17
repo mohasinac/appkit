@@ -70,13 +70,13 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
-            <Row textWeight="medium" textSize="sm" className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-neutral-600" align="center" justify="center" rounded="full">
+            <Row textWeight="medium" textSize="sm" className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-neutral-600 dark:text-neutral-400" align="center" justify="center" rounded="full">
               {initials}
             </Row>
           )}
           <Div className="flex-1 min-w-0">
             <Row wrap gap="sm">
-              <Span color="inverse" weight="medium" className="text-neutral-900 dark:">
+              <Span color="inverse" weight="medium" className="text-neutral-900 dark:text-neutral-100 dark:">
                 {displayName}
               </Span>
               {review.verified && (
@@ -99,7 +99,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
         {review.title && (
           <Heading color="inverse" 
             level={4}
-            className="mt-3 text-neutral-900 dark:" weight="semibold"
+            className="mt-3 text-neutral-900 dark:text-neutral-100 dark:" weight="semibold"
           >
             {review.title}
           </Heading>
@@ -109,7 +109,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           <RichText
             html={normalizeRichTextHtml(review.comment)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-zinc-400"
+            className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 dark:text-zinc-400"
           />
         )}
 
@@ -150,7 +150,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProductLink && (
             <Link
               href={productHref!}
-              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
+              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
               <Span aria-hidden="true">📦</Span>
               <Span truncate>
@@ -162,7 +162,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProfileLink && (
             <Link
               href={profileHref!}
-              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
+              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
             >
               <Span aria-hidden="true">👤</Span>
               <Span truncate>{displayName}</Span>
@@ -222,7 +222,7 @@ export function ReviewsList({
 
   if (reviews.length === 0) {
     return (
-      <Text paddingY="3xl" className="text-neutral-500" size="sm" align="center">
+      <Text paddingY="3xl" className="text-neutral-500 dark:text-neutral-400" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

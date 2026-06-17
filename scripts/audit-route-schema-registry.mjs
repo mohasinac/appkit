@@ -95,9 +95,15 @@ for (const file of walkApi(CONSUMER_API)) {
     if (!VERBS.includes(verb)) continue;
     totalVerbs++;
 
-    // Suppression marker on this line or the line above.
+    // Suppression marker on this line OR any contiguous comment line above.
     if (SUPPRESSION.test(line)) continue;
-    if (i > 0 && SUPPRESSION.test(lines[i - 1])) continue;
+    let suppressed = false;
+    for (let j = i - 1; j >= 0; j--) {
+      const prev = lines[j];
+      if (SUPPRESSION.test(prev)) { suppressed = true; break; }
+      if (!/^\s*\/\//.test(prev)) break; // stop at first non-comment line
+    }
+    if (suppressed) continue;
 
     const key = `${verb} ${apiPath}`;
     if (!registered.has(key)) {

@@ -65,6 +65,7 @@ export function Details({
       name={name}
       // audit-variant-ok: Details is the catalogued primitive for <details>.
       className={`${TONE_CLS[tone]} ${PADDING_CLS[padding]}${className ? ` ${className}` : ""}`.trim()}
+      // audit-inline-style-ok: style is a pass-through prop for the catalogued <details> primitive
       style={style}
     >
       {children}

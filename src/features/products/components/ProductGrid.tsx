@@ -39,7 +39,7 @@ const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-error";
 const CLS_STAR_BARE = "text-warning";
 const CLS_BID_TEXT = "text-[11px] text-error";
 const CLS_HEART_ROSE_ACTIVE = "text-error";
-const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-zinc-600 hover:text-error";
+const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-zinc-600 dark:text-zinc-400 hover:text-error";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -541,7 +541,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Thumbnail */}
-      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-zinc-800`} rounded="lg">
+      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-neutral-800 dark:bg-zinc-800`} rounded="lg">
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}

@@ -52,13 +52,13 @@ export function ViewReviewModal({
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
-            <Row textWeight="medium" textSize="sm" className="h-10 w-10 flex-shrink-0 bg-neutral-200 text-neutral-600" align="center" justify="center" rounded="full">
+            <Row textWeight="medium" textSize="sm" className="h-10 w-10 flex-shrink-0 bg-neutral-200 text-neutral-600 dark:text-neutral-400" align="center" justify="center" rounded="full">
               {displayName.charAt(0).toUpperCase()}
             </Row>
           )}
           <Div>
             <Row gap="sm">
-              <Text color="inverse" className="text-neutral-900 dark:" weight="medium">
+              <Text color="inverse" className="text-neutral-900 dark:text-neutral-100 dark:" weight="medium">
                 {displayName}
               </Text>
               {review.verified && (
@@ -82,7 +82,7 @@ export function ViewReviewModal({
         {review.title && (
           <Heading color="inverse" 
             level={4}
-            className="text-neutral-900 dark:" weight="semibold"
+            className="text-neutral-900 dark:text-neutral-100 dark:" weight="semibold"
           >
             {review.title}
           </Heading>
@@ -91,7 +91,7 @@ export function ViewReviewModal({
           <RichText
             html={normalizeRichTextHtml(review.comment)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="text-sm leading-relaxed text-neutral-600 dark:text-zinc-400"
+            className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 dark:text-zinc-400"
           />
         )}
 

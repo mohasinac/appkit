@@ -65,18 +65,18 @@ export function AddressCard({
         </Span>
       )}
       {address.label && (
-        <Text className="mb-1 tracking-wide text-neutral-500" size="xs" weight="semibold" transform="uppercase">
+        <Text className="mb-1 tracking-wide text-neutral-500 dark:text-neutral-400" size="xs" weight="semibold" transform="uppercase">
           {address.label}
         </Text>
       )}
-      <Text className="text-neutral-900" size="sm">{line1}</Text>
-      {line2 && <Text className="text-neutral-900" size="sm">{line2}</Text>}
-      <Text className="text-neutral-900" size="sm">
+      <Text className="text-neutral-900 dark:text-neutral-100" size="sm">{line1}</Text>
+      {line2 && <Text className="text-neutral-900 dark:text-neutral-100" size="sm">{line2}</Text>}
+      <Text className="text-neutral-900 dark:text-neutral-100" size="sm">
         {address.city}, {address.state} {address.postalCode}
       </Text>
-      <Text className="text-neutral-900" size="sm">{address.country}</Text>
+      <Text className="text-neutral-900 dark:text-neutral-100" size="sm">{address.country}</Text>
       {address.phone && (
-        <Text className="mt-1 text-neutral-500" size="sm">{address.phone}</Text>
+        <Text className="mt-1 text-neutral-500 dark:text-neutral-400" size="sm">{address.phone}</Text>
       )}
       <Div layout="flex" className={`mt-3 ${THEME_CONSTANTS.spacing.gap.xs}`}>
         {onEdit && (
@@ -126,7 +126,7 @@ export function AddressBook({
   return (
     <Stack gap="md">
       {addresses.length === 0 && (
-        <Text className="text-neutral-500" size="sm">{emptyLabel}</Text>
+        <Text className="text-neutral-500 dark:text-neutral-400" size="sm">{emptyLabel}</Text>
       )}
       <Div className={`grid ${THEME_CONSTANTS.spacing.gap.md} sm:grid-cols-2`}>
         {addresses.map((addr) => (
@@ -143,7 +143,7 @@ export function AddressBook({
         <Button rounded="lg" 
           onClick={onAdd}
           variant="outline"
-          className="mt-2 border border-dashed border-neutral-300 dark:border-slate-600 px-4 py-3 text-sm font-medium text-neutral-500 dark:text-zinc-400 transition hover:border-neutral-400 dark:hover:border-slate-500 hover:text-neutral-700 dark:hover:text-zinc-200"
+          className="mt-2 border border-dashed border-neutral-300 dark:border-slate-600 px-4 py-3 text-sm font-medium text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 transition hover:border-neutral-400 dark:hover:border-slate-500 hover:text-neutral-700 dark:hover:text-zinc-200"
         >
           + {addLabel}
         </Button>

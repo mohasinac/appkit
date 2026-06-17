@@ -46,7 +46,7 @@ const ALLOWLIST_FILES = new Set(
   ].map((p) => p.replace(/\//g, "/")),
 );
 
-const PER_LINE_OK_RE = /\/\/\s*audit-unknown-ok\s*:/i;
+const PER_LINE_OK_RE = /(?:\/\/|\{?\/\*)\s*audit-unknown-ok\s*:/i;
 
 const PATTERNS = [
   { name: "field-or-param-unknown", re: /(:\s*unknown\b)(?!.*\/\/\s*audit-unknown-ok)/ },

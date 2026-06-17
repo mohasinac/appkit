@@ -50,7 +50,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       onClick={onClick && !href ? () => onClick(post) : undefined}
       className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition hover:shadow-md ${isInteractive ? "cursor-pointer" : ""} ${className}`}
     >
-      <Div className={`aspect-video w-full ${__O.hidden} bg-neutral-100 dark:bg-slate-800 flex-shrink-0`}>
+      <Div className={`aspect-video w-full ${__O.hidden} bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800 flex-shrink-0`}>
         {coverImageUrl ? (
           <Div
             role="img"
@@ -106,7 +106,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
               {post.authorName.charAt(0).toUpperCase()}
             </Row>
           ) : null}
-          <Text className="text-neutral-500 min-w-0" size="xs">
+          <Text className="text-neutral-500 dark:text-neutral-400 min-w-0" size="xs">
             {post.authorName && (
               <Span weight="medium" className="text-neutral-700">
                 {safeDisplayName(post.authorName, "Author")}
@@ -148,7 +148,7 @@ export function BlogCategoryTabs({
         onClick={() => onSelect(null)}
         variant={!active ? "primary" : "ghost"}
         size="sm"
-        className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+        className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
       >
         {labels.all ?? "All"}
       </Button>
@@ -158,7 +158,7 @@ export function BlogCategoryTabs({
           onClick={() => onSelect(cat)}
           variant={active === cat ? "primary" : "ghost"}
           size="sm"
-          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800 text-neutral-600 dark:text-neutral-400 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
         >
           {labels[cat] ?? cat}
         </Button>
@@ -197,7 +197,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden border border-neutral-200 bg-neutral-100" rounded="xl"
+            className="animate-pulse overflow-hidden border border-neutral-200 bg-neutral-100 dark:bg-neutral-800" rounded="xl"
           >
             <Div className="aspect-video bg-neutral-200" />
             <Stack className={`${__P.p5}`} gap="sm">

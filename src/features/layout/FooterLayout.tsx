@@ -203,7 +203,7 @@ export function FooterLayout({
         </Div>
 
         {/* Bottom bar */}
-        <Stack color="muted" textSize="xs" justify="between" border="default" className="mt-10 border-t dark:border-slate-800 sm:flex-row text-zinc-600 dark:" padding="t-lg" align="center" gap="3">
+        <Stack color="muted" textSize="xs" justify="between" border="default" className="mt-10 border-t dark:border-slate-800 sm:flex-row text-zinc-600 dark:text-zinc-400" padding="t-lg" align="center" gap="3">
           <Text size="xs" color="muted">
             {copyrightText}
           </Text>

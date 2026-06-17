@@ -97,7 +97,7 @@ function AdsSettingsPanel({
   return (
     <Stack className={`border border-neutral-200 dark:border-slate-700 ${__P.p3}`} gap="3" rounded="lg">
       <Text size="sm" weight="semibold">Provider and publish settings</Text>
-      <Text className="text-neutral-500" size="xs">
+      <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
         Save provider credentials here before publishing AdSense or third-party inventory.
       </Text>
       {serverCredentialIssues.length > 0 ? (
@@ -119,7 +119,7 @@ function AdsSettingsPanel({
           placeholder={providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
         />
       </Div>
-      <Text className="text-neutral-500" size="xs">
+      <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
         Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
       </Text>
       <Row align="center" justify="between" gap="3">
@@ -284,7 +284,7 @@ export function AdminAdsView({
       render: (row) => (
         <Div>
           <Text weight="medium">{row.name}</Text>
-          <Text className="text-neutral-500" size="xs">{row.id}</Text>
+          <Text className="text-neutral-500 dark:text-neutral-400" size="xs">{row.id}</Text>
         </Div>
       ),
     },
@@ -309,7 +309,7 @@ export function AdminAdsView({
       key: "placementIds",
       header: "Placements",
       render: (row) => (
-        <Text className="text-neutral-500" size="xs">{row.placementIds.join(", ")}</Text>
+        <Text className="text-neutral-500 dark:text-neutral-400" size="xs">{row.placementIds.join(", ")}</Text>
       ),
     },
     {
@@ -389,7 +389,7 @@ export function AdminAdsView({
           <Text variant="secondary">Manage ad inventory, placement mapping, and publishing state.</Text>
           <a
             href={createHref}
-            className="inline-flex h-9 items-center rounded-md bg-neutral-900 px-3 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+            className="inline-flex h-9 items-center rounded-md bg-neutral-900 px-3 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900 dark:text-zinc-100"
           >
             New ad
           </a>

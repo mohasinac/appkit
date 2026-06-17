@@ -41,7 +41,7 @@ export function AdminTopProductsTable({
           >
             <Div className="flex-1 min-w-0">
               <Text className="truncate" weight="medium">{product.title}</Text>
-              <Text className="text-neutral-500" size="sm">
+              <Text className="text-neutral-500 dark:text-neutral-400" size="sm">
                 {product.orders} {labels.orders ?? "orders"}
               </Text>
             </Div>

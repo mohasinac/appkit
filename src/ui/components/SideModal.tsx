@@ -119,7 +119,7 @@ export function SideModal({
                 <Heading
                   level={2}
                   id={titleId.current}
-                  className="text-base font-semibold text-neutral-900 dark:text-white truncate"
+                  className="text-base font-semibold text-neutral-900 dark:text-neutral-100 dark:text-white truncate"
                 >
                   {title}
                 </Heading>

@@ -130,7 +130,7 @@ export function CategoryTree({
 
   if (roots.length === 0) {
     return (
-      <Text paddingY="md" className="text-neutral-500" size="sm" align="center">
+      <Text paddingY="md" className="text-neutral-500 dark:text-neutral-400" size="sm" align="center">
         No categories
       </Text>
     );

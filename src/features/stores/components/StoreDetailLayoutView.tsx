@@ -129,7 +129,7 @@ export async function StoreDetailLayoutView({
 
   return (
     <Main>
-      // audit-unknown-ok: TS structural escape — StoreDetail
+      {/* audit-unknown-ok: TS structural escape — StoreDetail */}
       <StoreHeader store={store as unknown as StoreDetail} />
       <Container size="xl" className="mt-6">
         <StoreNavTabs tabs={tabs} activeValue={activeTab} />

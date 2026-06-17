@@ -144,7 +144,7 @@ function PreOrderInfoSection({
       </Div>
 
       {deliveryDate && (
-        <Row color="muted" textSize="sm" align="center" gap="xs" className="text-zinc-600 dark:">
+        <Row color="muted" textSize="sm" align="center" gap="xs" className="text-zinc-600 dark:text-zinc-400">
           <Span>📅</Span>
           <Span>Estimated delivery:</Span>
           <Span weight="medium">

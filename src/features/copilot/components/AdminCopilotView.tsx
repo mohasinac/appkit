@@ -44,7 +44,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
   return (
     <Div layout="flex" className={`${isUser ? "justify-end" : "justify-start"}`}>
       <Div textSize="sm" 
-        className={`max-w-[80%] py-2.5 ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} padding="x-md" rounded="2xl"
+        className={`max-w-[80%] py-2.5 ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} padding="x-md" rounded="2xl"
       >
         <Text className="whitespace-pre-wrap leading-relaxed" size="sm">{msg.content}</Text>
         {msg.durationMs ? (
@@ -67,7 +67,7 @@ function renderCopilotChatPanel(props: {
   return (
     <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
       <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
-        <Text className="text-neutral-500" size="xs" weight="medium">
+        <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
       </Div>
@@ -81,7 +81,7 @@ function renderCopilotChatPanel(props: {
         {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
         {isLoading ? (
           <Row justify="start">
-            <Div className="rounded-tl-sm bg-neutral-100 py-2.5" padding="x-md" rounded="2xl">
+            <Div className="rounded-tl-sm bg-neutral-100 dark:bg-neutral-800 py-2.5" padding="x-md" rounded="2xl">
               <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
             </Div>
           </Row>
@@ -124,7 +124,7 @@ function renderCopilotHistoryPanel(props: {
       <Stack className={`max-h-72 ${__O.yAuto}`} gap="sm">
         {(historyQuery.data?.messages ?? []).map((log, index) => (
           <Div key={`${log.createdAt}-${index}`} className="border border-neutral-200" rounded="lg" padding="xs">
-            <Text className="text-neutral-500" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
+            <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
             <Text className={`mt-1`} truncate={3} size="sm">Q: {log.prompt}</Text>
             <Text className={`mt-1`} color="muted" truncate={3} size="sm">A: {log.response}</Text>
           </Div>
@@ -198,7 +198,7 @@ export function AdminCopilotView({
         <Div layout="grid" gap="4" className="grid-cols-1 lg:grid-cols-[2fr,1fr]">
           <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
             <Div className={`border-b border-neutral-200 dark:border-slate-700 ${__P.p3}`}>
-              <Text className="text-neutral-500" size="xs" weight="medium">
+              <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
               </Text>
             </Div>
@@ -217,7 +217,7 @@ export function AdminCopilotView({
               ))}
               {isLoading ? (
                 <Row justify="start">
-                  <Div className="rounded-tl-sm bg-neutral-100 py-2.5" padding="x-md" rounded="2xl">
+                  <Div className="rounded-tl-sm bg-neutral-100 dark:bg-neutral-800 py-2.5" padding="x-md" rounded="2xl">
                     <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
                   </Div>
                 </Row>
@@ -289,7 +289,7 @@ export function AdminCopilotView({
                   key={`${log.createdAt}-${index}`}
                   className="border border-neutral-200" rounded="lg" padding="xs"
                 >
-                  <Text className="text-neutral-500" size="xs" weight="medium">
+                  <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
                     {new Date(log.createdAt).toLocaleString()}
                   </Text>
                   <Text className={`mt-1`} truncate={3} size="sm">Q: {log.prompt}</Text>

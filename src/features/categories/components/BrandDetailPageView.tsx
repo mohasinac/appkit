@@ -185,7 +185,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               </Span>
             )}
             {counts.preOrders > 0 && (
-              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400" }`} rounded="full" padding="pill-sm-tall">
+              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-info-surface text-info dark:bg-info-surface dark:text-info" }`} rounded="full" padding="pill-sm-tall">
                 {counts.preOrders.toLocaleString()} {counts.preOrders === 1 ? "pre-order" : "pre-orders"}
               </Span>
             )}

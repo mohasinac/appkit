@@ -28,7 +28,7 @@ interface CartItemRowProps {
 export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
     <Div layout="flex" gap="4" surface="card" padding="sm" className={`transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
-      <Div className={`h-20 w-20 flex-shrink-0 ${__O.hidden} bg-neutral-100 dark:bg-slate-800`} rounded="lg">
+      <Div className={`h-20 w-20 flex-shrink-0 ${__O.hidden} bg-neutral-100 dark:bg-neutral-800 dark:bg-slate-800`} rounded="lg">
         {item.meta.image && (
           <Div
             role="img"
@@ -46,7 +46,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`font-medium text-neutral-900 dark:text-zinc-100 hover:underline underline-offset-2 ${THEME_CONSTANTS.utilities.textClamp2}`}
+              className={`font-medium text-neutral-900 dark:text-neutral-100 dark:text-zinc-100 hover:underline underline-offset-2 ${THEME_CONSTANTS.utilities.textClamp2}`}
             >
               {item.meta.title}
             </a>
@@ -63,14 +63,14 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
         </Row>
         {item.meta.attributes &&
           Object.keys(item.meta.attributes).length > 0 && (
-            <Text className="text-neutral-500" size="xs">
+            <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
               {Object.entries(item.meta.attributes)
                 .map(([k, v]) => `${k}: ${v}`)
                 .join(", ")}
             </Text>
           )}
         <Row justify="between">
-          <Text className="text-neutral-900" weight="semibold">
+          <Text className="text-neutral-900 dark:text-neutral-100" weight="semibold">
             {formatCurrency(
               item.meta.price * item.quantity,
               item.meta.currency,
@@ -170,7 +170,7 @@ export function CartDrawer({
             variant="ghost"
             size="sm"
             aria-label="Close cart"
-            className="text-neutral-500 dark:text-zinc-400 hover:text-neutral-900 dark:hover:text-zinc-100"
+            className="text-neutral-500 dark:text-neutral-400 dark:text-zinc-400 hover:text-neutral-900 dark:text-neutral-100 dark:hover:text-zinc-100"
           >
             ✕
           </Button>
@@ -181,7 +181,7 @@ export function CartDrawer({
               <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
             </Row>
           ) : items.length === 0 ? (
-            <Text paddingY="3xl" className="text-neutral-500" size="sm" align="center">
+            <Text paddingY="3xl" className="text-neutral-500 dark:text-neutral-400" size="sm" align="center">
               {labels.empty ?? "Your cart is empty"}
             </Text>
           ) : (
@@ -198,7 +198,7 @@ export function CartDrawer({
         {items.length > 0 && (
           <Stack className={`border-t border-neutral-200 dark:border-slate-700 ${__P.p4}`} gap="md">
             <Row textSize="sm" justify="between">
-              <Span className="text-neutral-600">
+              <Span className="text-neutral-600 dark:text-neutral-400">
                 {labels.subtotal ?? "Subtotal"}
               </Span>
               <Span weight="semibold">

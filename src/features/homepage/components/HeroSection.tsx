@@ -39,7 +39,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
         {content?.ctaLabel && (
           <Button rounded="full" 
             onClick={onCtaClick}
-            className="mt-8 inline-block bg-white px-8 py-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition hover:bg-neutral-100"
+            className="mt-8 inline-block bg-white px-8 py-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition hover:bg-neutral-100 dark:bg-neutral-800"
           >
             {content.ctaLabel}
           </Button>

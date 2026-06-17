@@ -179,7 +179,7 @@ export function BlogPostView({
               <Link
                 key={tag}
                 href={`${String(ROUTES.PUBLIC.BLOG)}?tags=${encodeURIComponent(tag)}`}
-                className="inline-block px-3 py-1 rounded-full bg-neutral-100 dark:bg-zinc-800 hover:bg-primary/10 text-zinc-600 dark:text-zinc-400 hover:text-primary text-xs font-medium transition-colors"
+                className="inline-block px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 dark:bg-zinc-800 hover:bg-primary/10 text-zinc-600 dark:text-zinc-400 hover:text-primary text-xs font-medium transition-colors"
               >
                 #{tag}
               </Link>

@@ -41,7 +41,7 @@ export function ForgotPasswordView({
           <Heading level={1} className="font-extrabold" size="3xl">
             {labels.title ?? "Forgot Password"}
           </Heading>
-          <Text className="mt-2 text-neutral-600" size="sm">
+          <Text className="mt-2 text-neutral-600 dark:text-neutral-400" size="sm">
             {labels.description ??
               "Enter your email and we'll send you a reset link."}
           </Text>

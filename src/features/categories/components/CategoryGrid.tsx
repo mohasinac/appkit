@@ -68,7 +68,7 @@ export function CategoryCard({
 
       {/* Content */}
       <Stack className={`flex-1 ${__P.p3}.5`}>
-        <Text color="inverse" className={`leading-snug text-neutral-900 dark:`} truncate={2} size="sm" weight="semibold">
+        <Text color="inverse" className={`leading-snug text-neutral-900 dark:text-neutral-100 dark:`} truncate={2} size="sm" weight="semibold">
           {category.name}
         </Text>
         {category.description && (
@@ -134,7 +134,7 @@ export function CategoryGrid({
 }: CategoryGridProps) {
   if (categories.length === 0) {
     return (
-      <Text paddingY="3xl" className="text-neutral-500" size="sm" align="center">
+      <Text paddingY="3xl" className="text-neutral-500 dark:text-neutral-400" size="sm" align="center">
         {emptyLabel}
       </Text>
     );

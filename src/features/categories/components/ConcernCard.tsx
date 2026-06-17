@@ -31,7 +31,7 @@ export function ConcernCard({
       <Div>
         <Heading
           level={3}
-          className="text-neutral-900 group-hover:text-primary dark:group-hover:text-primary-400" size="sm" weight="semibold"
+          className="text-neutral-900 dark:text-neutral-100 group-hover:text-primary dark:group-hover:text-primary-400" size="sm" weight="semibold"
         >
           {concern.name}
         </Heading>

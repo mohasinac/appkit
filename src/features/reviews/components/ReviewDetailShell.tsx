@@ -11,7 +11,7 @@ const __O = {
 
 const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all";
 const CLS_RELATED_LABEL = "text-xs text-zinc-400 dark:text-zinc-400 mb-0.5";
-const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors";
+const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-neutral-100 dark:text-white truncate group-hover:text-primary transition-colors";
 const CLS_RATING_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface px-3 py-1 text-warning dark:bg-warning-surface dark:text-warning";
 const CLS_HELPFUL_ACTIVE = "border-success bg-success-surface text-success dark:border-success cursor-default";
 const CLS_ICON_ORANGE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-warning-surface dark:bg-warning-surface text-xl";
@@ -114,7 +114,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {/* Star rating — large */}
           <Row gap="sm" className="mb-4">
             <StarRating value={review.rating} size="lg" readOnly />
-            <Span color="inverse" weight="bold" className="text-neutral-900 dark:" size="2xl">
+            <Span color="inverse" weight="bold" className="text-neutral-900 dark:text-neutral-100 dark:" size="2xl">
               {review.rating}.0
             </Span>
             {review.verified && (
@@ -130,7 +130,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           </Row>
 
           {review.title && (
-            <Heading color="inverse" level={1} className="text-neutral-900 dark: mb-4 leading-snug" size="2xl" weight="bold">
+            <Heading color="inverse" level={1} className="text-neutral-900 dark:text-neutral-100 dark: mb-4 leading-snug" size="2xl" weight="bold">
               {review.title}
             </Heading>
           )}
@@ -154,12 +154,12 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               {reviewerHref ? (
                 <Link
                   href={reviewerHref}
-                  className="text-sm font-semibold text-neutral-900 dark:text-white hover:text-primary transition-colors"
+                  className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 dark:text-white hover:text-primary transition-colors"
                 >
                   {displayName}
                 </Link>
               ) : (
-                <Span color="inverse" size="sm" weight="semibold" className="text-neutral-900 dark:">
+                <Span color="inverse" size="sm" weight="semibold" className="text-neutral-900 dark:text-neutral-100 dark:">
                   {review.isAnonymous ? "Anonymous" : displayName}
                 </Span>
               )}
@@ -198,7 +198,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   type="button"
                   onClick={() => setLightboxIdx(i)}
                   aria-label={`View photo ${i + 1}`}
-                  className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-100 dark:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-100 dark:bg-neutral-800 dark:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <Div
                     className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
@@ -234,10 +234,10 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
         {/* Helpful votes */}
         <Section className="flex items-center gap-4 border-t border-neutral-100" padding="y-md">
-          <Div textSize="sm" className="text-neutral-500">
+          <Div textSize="sm" className="text-neutral-500 dark:text-neutral-400">
             {helpfulCount > 0 && (
               <Span>
-                <Span color="inverse" weight="bold" className="text-neutral-900 dark:">{helpfulCount}</Span>{" "}
+                <Span color="inverse" weight="bold" className="text-neutral-900 dark:text-neutral-100 dark:">{helpfulCount}</Span>{" "}
                 {helpfulCount === 1 ? "person" : "people"} found this helpful
               </Span>
             )}
@@ -315,7 +315,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </Span>
               <Div className="min-w-0">
                 <Span size="xs" className="block mb-0.5" color="faint">Reviewer</Span>
-                <Span color="inverse" size="sm" weight="medium" className="block text-neutral-900 dark: truncate">
+                <Span color="inverse" size="sm" weight="medium" className="block text-neutral-900 dark:text-neutral-100 dark: truncate">
                   Anonymous
                 </Span>
               </Div>
