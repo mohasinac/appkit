@@ -224,7 +224,7 @@ const TEXT_SHADOW_MAP: Record<TextShadow, string> = {
 interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
   color?: ColorVariant;
-  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl";
   smSize?: HeadingSize;
   mdSize?: HeadingSize;
   lgSize?: HeadingSize;
@@ -328,7 +328,7 @@ const LABEL_GAP_MAP: Record<LabelGap, string> = {
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
   /** Optional size override — defaults to `sm` (the existing label sizing). */
-  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl";
   /** Optional weight override — defaults to the label's medium weight. */
   weight?: "light" | "normal" | "medium" | "semibold" | "bold";
   color?: ColorVariant;
@@ -536,7 +536,7 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Gap between flex children. Only takes effect when `layout` is set to a flex variant. */
   gap?: SpanGap;
   color?: ColorVariant;
-  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl";
   smSize?: HeadingSize;
   mdSize?: HeadingSize;
   lgSize?: HeadingSize;

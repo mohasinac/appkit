@@ -59,9 +59,11 @@ function StepCard({
       style={{ transitionDelay: `${delay}ms` }}
      data-section="howitworkssection-div-340">
       {/* Step number watermark */}
+      {/* audit-variant-ok: step-number watermark — absolute position + opacity-10 + leading-none + select-none decorative composite */}
       <Span
         gradient="brand"
-        className="absolute top-4 right-5 font-display text-7xl opacity-10 select-none pointer-events-none leading-none"
+        size="7xl" family="display"
+        className="absolute top-4 right-5 opacity-10 select-none pointer-events-none leading-none"
         aria-hidden="true"
       >
         {step.number}
@@ -76,6 +78,7 @@ function StepCard({
 
       {/* Icon */}
       {step.renderIcon && (
+        // audit-variant-ok: icon container — bespoke white/80 + dark slate border + dynamic iconBg + fixed w-14/h-14 size
         <Row
           className={`relative z-10 w-14 h-14 ${iconBg} mb-4 border border-white/80 dark:border-slate-700/50`} align="center" justify="center" rounded="2xl"
         >
@@ -145,7 +148,8 @@ const sectionRef = useRef<HTMLElement>(null);
  }`}
         >
           {pillLabel && (
-            <Div layout="inline-flex" gap="2" textWeight="medium" textSize="xs" className="inline-block mb-4 items-center border border-primary-500/30 bg-primary-500/10 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
+            // audit-variant-ok: eyebrow pill — primary-500/30 border + primary-500/10 bg + tracking-[0.2em] + backdrop-blur-sm bespoke composite
+            <Div layout="inline-flex" gap="2" align="center" textWeight="medium" textSize="xs" className="mb-4 border border-primary-500/30 bg-primary-500/10 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
               {pillLabel}
             </Div>
           )}
