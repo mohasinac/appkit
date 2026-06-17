@@ -246,7 +246,7 @@ export function MarketplacePreorderCard({
               {shipDate && <PreorderBadge shipDate={shipDate} />}
             </Row>
             <Row justify="between" className="mt-2" gap="sm">
-              <Button type="button" variant="primary" size="sm" className="flex-1 text-xs" onClick={handleNavigate}>
+              <Button type="button" variant="primary" size="sm" textSize="xs" className="flex-1" onClick={handleNavigate}>
                 {mergedLabels.reserveNow}
               </Button>
               {onAddToCart ? (
@@ -254,7 +254,7 @@ export function MarketplacePreorderCard({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="flex-1 text-xs"
+                  textSize="xs" className="flex-1"
                   onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
                 >
                   {mergedLabels.addToCart}

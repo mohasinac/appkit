@@ -191,7 +191,7 @@ export function AdminStoreEditorView({
                   {checked}/{group.caps.length}
                 </Span>
               </Summary>
-              <Div layout="grid" className="grid-cols-2 gap-x-2 gap-y-1.5 py-2.5" surface="muted" padding="x-sm">
+              <Div layout="grid" paddingY="y-xs-tall" className="grid-cols-2 gap-x-2 gap-y-1.5" surface="muted" padding="x-sm">
                 {group.caps.map((cap) => (
                   <label
                     key={cap.key}

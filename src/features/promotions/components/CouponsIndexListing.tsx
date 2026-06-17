@@ -128,7 +128,7 @@ export function CouponsIndexListing({
   return (
     <Div className="min-h-[40vh]">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <Div border="default" className="sticky top-[var(--header-height,0px)] z-20 border-b backdrop-blur-sm py-2.5" surface="default" padding="x-md">
+      <Div border="default" paddingY="y-xs-tall" className="sticky top-[var(--header-height,0px)] z-20 border-b backdrop-blur-sm" surface="default" padding="x-md">
         <Row gap="xs" className="max-w-full">
           {/* Filters button */}
           <button
