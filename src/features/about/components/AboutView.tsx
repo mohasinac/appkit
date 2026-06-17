@@ -64,7 +64,7 @@ export function AboutView({
         </Div>
       </Section>
 
-      <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 md:py-20 space-y-16 md:space-y-20" padding="y-4xl">
+      <Div paddingX="x-page" className="max-w-5xl mx-auto md:py-20 space-y-16 md:space-y-20" padding="y-4xl">
         <Section className="text-center max-w-3xl mx-auto">
           <Heading level={2} className="mb-4">{labels.missionTitle}</Heading>
           <Text size="lg" variant="secondary" className="leading-relaxed">

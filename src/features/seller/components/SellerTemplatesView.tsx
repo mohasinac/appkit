@@ -394,7 +394,7 @@ export function SellerTemplatesView({
         />
       )}
 
-      <Div className="px-3 sm:px-4" padding="y-md">
+      <Div paddingX="x-sm-md" padding="y-md">
         {errorMessage && (
           <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}

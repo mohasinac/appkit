@@ -77,7 +77,7 @@ return (
         </Div>
       </Section>
 
-      <Div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" padding="content-banner">
+      <Div paddingX="x-page" className="max-w-4xl mx-auto" padding="content-banner">
         {/* Optional diagram slot */}
         {renderDiagram?.()}
 

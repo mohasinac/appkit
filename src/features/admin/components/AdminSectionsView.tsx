@@ -2520,7 +2520,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   return (
     <>
-      <Div className="px-3 sm:px-4" padding="y-md">
+      <Div paddingX="x-sm-md" padding="y-md">
         <Row className="mb-4" align="center" justify="between" gap="3">
           <Div>
             <Text size="base" weight="semibold" color="primary">Homepage Sections</Text>

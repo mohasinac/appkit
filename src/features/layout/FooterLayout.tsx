@@ -105,7 +105,7 @@ export function FooterLayout({
         </Div>
       )}
 
-      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] lg:py-14" padding="y-2xl">
+      <Div paddingX="x-page" className="container mx-auto max-w-[1920px] lg:py-14" padding="y-2xl">
         <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
           <Stack className="lg:col-span-2" gap="md">

@@ -174,7 +174,7 @@ export type GapPresetKey = keyof typeof GAP_PRESETS;
 export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
-type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-lg" | "x-xl";
+type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-page";
 type YPaddingKey = "none" | "y-2xs" | "y-xs" | "y-sm" | "y-md" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl";
 
 const X_ONLY_MAP: Record<XPaddingKey, string> = {
@@ -184,6 +184,12 @@ const X_ONLY_MAP: Record<XPaddingKey, string> = {
   "x-md": "px-4",
   "x-lg": "px-6",
   "x-xl": "px-8",
+  /** Responsive: `px-3 sm:px-4` — the canonical mobile-tight container. */
+  "x-sm-md": "px-3 sm:px-4",
+  /** Responsive: `px-3 lg:px-4` — the canonical mobile-tight wide container. */
+  "x-sm-lg-md": "px-3 lg:px-4",
+  /** Responsive: `px-4 sm:px-6 lg:px-8` — canonical page-container horizontal padding. */
+  "x-page": "px-4 sm:px-6 lg:px-8",
 };
 
 const Y_ONLY_MAP: Record<YPaddingKey, string> = {
