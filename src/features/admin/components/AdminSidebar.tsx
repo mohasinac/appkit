@@ -225,7 +225,7 @@ export function AdminSidebar({
         >
           {/* Nav panel */}
           <Stack border="default" surface="sidePanel" className={`flex-1 border-r dark:border-slate-800 ${__O.hidden}`} shadow="xl">
-            <Div border="subtle" className="py-3.5 border-b shrink-0" padding="x-md">
+            <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               {renderHeader ? renderHeader() : <Span size="xs" weight="semibold" transform="uppercase" color="muted">Admin Panel</Span>}
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>

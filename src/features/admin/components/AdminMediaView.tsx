@@ -243,7 +243,7 @@ function MediaUploaderPanel({
           {galleryAssets.map((asset, i) => (
             <Row
               key={i}
-              className="py-1" padding="x-xs" surface="muted" rounded="default" align="center" gap="sm" border="default"
+              paddingY="y-2xs" padding="x-xs" surface="muted" rounded="default" align="center" gap="sm" border="default"
             >
               <Text className="flex-1 truncate font-mono" color="muted" size="xs">
                 {asset.url}

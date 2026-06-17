@@ -271,7 +271,7 @@ export function StoreSidebar({
         >
           {/* Nav panel */}
           <Stack border="default" surface="sidePanel" className={`flex-1 border-r ${__O.hidden}`} shadow="xl">
-            <Div border="subtle" className="py-3.5 border-b shrink-0" padding="x-md">
+            <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               <Row className="min-w-0" align="center" gap="3">
                 {storeLogoURL ? (
                   // audit-inline-style-ok: dynamic image URL
