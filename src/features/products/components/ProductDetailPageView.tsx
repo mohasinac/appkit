@@ -609,7 +609,7 @@ export async function ProductDetailPageView({
                   </Text>
                   <Ul spacing="comfortable" size="sm" color="primary">
                     {features.map((f, i) => (
-                      <Li key={i} className="flex items-start gap-2">
+                      <Li key={i} layout="flex-start" gap="2">
                         <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
                         {f}
                       </Li>
@@ -872,7 +872,7 @@ export async function ProductDetailPageView({
                 ingredients.length > 0 ? (
                   <Ul spacing="comfortable">
                     {ingredients.map((item, i) => (
-                      <Li key={i} className="flex items-start gap-2">
+                      <Li key={i} layout="flex-start" gap="2">
                         <Span className="mt-1 flex-shrink-0 h-1.5 w-1.5 bg-primary-400" rounded="full" />
                         {item}
                       </Li>

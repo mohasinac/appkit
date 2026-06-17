@@ -217,7 +217,7 @@ function PreOrderInfoSection({
           </Text>
           <Ul spacing="comfortable" size="sm" color="primary">
             {features.map((f, i) => (
-              <Li key={i} className="flex items-start gap-2">
+              <Li key={i} layout="flex-start" gap="2">
                 <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
                 {f}
               </Li>

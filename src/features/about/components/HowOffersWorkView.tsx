@@ -125,7 +125,7 @@ function renderOffersRulesSection(t: OffersT, rules: string[]) {
       <Heading level={2} className="mb-4">{t("rulesTitle")}</Heading>
       <Ul spacing="comfortable">
         {rules.map((rule) => (
-          <Li key={rule} className="flex items-start gap-2 text-sm">
+          <Li key={rule} layout="flex-start" gap="2" className="text-sm">
             <Span color="primary" className="mt-0.5">•</Span>
             <Text variant="secondary">{rule}</Text>
           </Li>

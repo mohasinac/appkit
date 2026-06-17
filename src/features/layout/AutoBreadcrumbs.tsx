@@ -114,7 +114,7 @@ export function AutoBreadcrumbs({
             {allCrumbs.map((crumb, index) => {
               const isLast = index === allCrumbs.length - 1;
               return (
-                <Li key={crumb.href} className="flex items-center gap-2">
+                <Li key={crumb.href} layout="flex-center" gap="2">
                   {isLast ? (
                     <Span
                       aria-current="page" color="primary">

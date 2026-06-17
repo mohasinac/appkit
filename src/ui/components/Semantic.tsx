@@ -417,13 +417,40 @@ export function Ol({ marker = "decimal", spacing, indent, size, color, className
 /**
  * Semantic `<li>` (list item) element. Use inside `Ul` or `Ol`.
  */
+type LiLayout = "default" | "flex" | "flex-start" | "flex-center";
+type LiGap = "none" | "1" | "2" | "3" | "4";
+
+const LI_LAYOUT_MAP: Record<LiLayout, string> = {
+  default: "",
+  flex: "flex",
+  "flex-start": "flex items-start",
+  "flex-center": "flex items-center",
+};
+
+const LI_GAP_MAP: Record<LiGap, string> = {
+  none: "",
+  "1": "gap-1",
+  "2": "gap-2",
+  "3": "gap-3",
+  "4": "gap-4",
+};
+
 export interface LiProps extends React.LiHTMLAttributes<HTMLLIElement> {
+  /** Layout / alignment preset. Replaces raw `flex items-center` / `flex items-start` className. */
+  layout?: LiLayout;
+  /** Gap between children (for `layout="flex*"`). */
+  gap?: LiGap;
   children: React.ReactNode;
 }
 
-export function Li({ className = "", children, ...props }: LiProps) {
+export function Li({ layout, gap, className = "", children, ...props }: LiProps) {
+  const classes = [
+    layout ? LI_LAYOUT_MAP[layout] : "",
+    gap ? LI_GAP_MAP[gap] : "",
+    className,
+  ].filter(Boolean).join(" ");
   return (
-    <li className={className} {...props}>
+    <li className={classes} {...props}>
       {children}
     </li>
   );
