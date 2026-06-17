@@ -271,10 +271,24 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
    * className pattern (which bypasses theme tokens).
    */
   divide?: boolean | "default" | "subtle";
+  /**
+   * Optional responsive direction switch — Stack defaults to column. Use
+   * `sm-row` / `md-row` / `lg-row` to flip to row at the matching breakpoint
+   * (mobile-first columns, row on larger screens). Replaces raw
+   * `className="sm:flex-row"` etc.
+   */
+  direction?: "col" | "sm-row" | "md-row" | "lg-row";
   /** Render as a different element. Defaults to `"div"`. */
   as?: React.ElementType;
   children?: React.ReactNode;
 }
+
+const STACK_DIRECTION_MAP: Record<NonNullable<StackProps["direction"]>, string> = {
+  col: "",
+  "sm-row": "sm:flex-row",
+  "md-row": "md:flex-row",
+  "lg-row": "lg:flex-row",
+};
 
 function resolveDivideClass(divide: StackProps["divide"], axis: "stack" | "row"): string {
   if (!divide) return "";
@@ -291,9 +305,12 @@ export function Stack({
   textWeight,
   color,
   divide,
+  direction,
   as,
   surface,
   padding,
+  paddingX,
+  paddingY,
   rounded,
   border,
   shadow,
@@ -311,8 +328,9 @@ export function Stack({
     textSize ? TEXT_SIZE_MAP[textSize] : "",
     textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
     color ? TEXT_COLOR_MAP[color] : "",
+    direction ? STACK_DIRECTION_MAP[direction] : "",
     resolveDivideClass(divide, "stack"),
-    buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+    buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
     className,
   ]
     .filter(Boolean)

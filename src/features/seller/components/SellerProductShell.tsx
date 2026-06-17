@@ -1201,7 +1201,7 @@ export function SellerProductShell({
                 mandatory fields. The product persists with status:"draft" and
                 can be resumed later from /store/products. */}
             {currentStep === 0 && (
-              <Div className="px-5" padding="b-sm">
+              <Div paddingX="x-5" padding="b-sm">
                 <Button
                   variant="ghost"
                   size="sm"

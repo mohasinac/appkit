@@ -56,7 +56,7 @@ export function StepFormActions({
   const nextStepLabel = `Next →`;
 
   return (
-    <Row className="px-5 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm" align="center" justify="between" gap="sm">
+    <Row paddingX="x-5" className="border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm" align="center" justify="between" gap="sm">
       <>
         {!isFirst && onPrev && (
           <Button variant="outline" size="sm" onClick={onPrev} disabled={disabled || isLoading}>

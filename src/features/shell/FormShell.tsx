@@ -188,7 +188,7 @@ export function FormShell({
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
         {/* ── Top bar ─────────────────────────────────────── */}
-        <Row gap="sm" className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5" padding="y-sm">
+        <Row gap="sm" paddingX="x-5" className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm">
           {previewMode ? (
             <button
               type="button"
@@ -341,7 +341,7 @@ export function FormShell({
         {!previewMode && renderBottomBar ? (
           renderBottomBar()
         ) : !previewMode && (onSaveDraft || onPublish) ? (
-          <Row justify="between" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5" padding="y-sm">
+          <Row justify="between" paddingX="x-5" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm">
             <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
               {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
             </Button>

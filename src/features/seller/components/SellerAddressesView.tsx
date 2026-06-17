@@ -275,7 +275,7 @@ export function SellerAddressesView({
         </Button>
       </Row>
 
-      <Div className="px-4 sm:px-6 max-w-2xl" padding="y-lg">
+      <Div paddingX="x-md-lg" className="max-w-2xl" padding="y-lg">
         {errorMessage && (
           <Div textSize="sm" className="mb-4 border border-error/20" color="error" surface="danger-surface" padding="inline" rounded="xl">
             {errorMessage}

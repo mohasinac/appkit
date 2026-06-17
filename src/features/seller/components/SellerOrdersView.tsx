@@ -571,7 +571,7 @@ export function SellerOrdersView({
       )}
 
       {selection.selectedIds.length > 0 && (
-        <Div border="default" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 backdrop-blur-sm border-b" surface="default" padding="y-xs">
+        <Div border="default" paddingX="x-sm-md" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 backdrop-blur-sm border-b" surface="default" padding="y-xs">
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}

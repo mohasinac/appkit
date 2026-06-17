@@ -129,7 +129,7 @@ export function SellerGoogleReviewsView({
     : "Never";
 
   return (
-    <Div className="px-3 sm:px-4 max-w-2xl" padding="y-md">
+    <Div paddingX="x-sm-md" className="max-w-2xl" padding="y-md">
       <Stack gap="lg">
         {/* Settings */}
         <Section>

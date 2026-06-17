@@ -56,7 +56,7 @@ export async function FAQPageView({
       </Section>
 
       <Container size="md" padding="content-banner">
-        <Stack className="md:flex-row" gap="xl">
+        <Stack direction="md-row" gap="xl">
           {/* Category sidebar */}
           {categories.length > 0 && (
             <Aside className="md:w-56 flex-shrink-0">

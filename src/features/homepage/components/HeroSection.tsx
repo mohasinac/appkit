@@ -22,7 +22,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
       }
     >
       <Div surface="overlay-xs" className="absolute inset-0" />
-      <Div className="relative mx-auto max-w-7xl px-4 text-center text-white sm:px-6 lg:px-8" padding="y-4xl">
+      <Div paddingX="x-page" className="relative mx-auto max-w-7xl text-center text-white" padding="y-4xl">
         {content?.title && (
           <Heading
             level={1}

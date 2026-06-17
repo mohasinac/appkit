@@ -53,7 +53,7 @@ export function CartView({
       {labels.title && (
         <Heading level={1} className="mb-6" size="2xl" weight="bold">{labels.title}</Heading>
       )}
-      <Stack className="lg:flex-row lg:gap-8" gap="lg">
+      <Stack direction="lg-row" className="lg:gap-8" gap="lg">
         <Div className="flex-1">
           {renderGroups ? renderGroups(groups, isLoading) : renderItems(isLoading)}
           {!renderGroups && renderPromoCode?.()}

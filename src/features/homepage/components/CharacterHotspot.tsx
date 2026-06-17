@@ -463,7 +463,7 @@ function HotspotPin({
           }}
         >
           <Div style={{ height: 4, background: hotspot.accent }} />
-          <Div className="px-5" padding="y-md">
+          <Div paddingX="x-5" padding="y-md">
             <Text
               className="text-[10px] uppercase tracking-[0.18em] mb-1" weight="bold"
               style={{ color: hotspot.accent === "#FFE500" ? "#b08800" : hotspot.accent }}
