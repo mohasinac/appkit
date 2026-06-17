@@ -1,6 +1,6 @@
 "use client";
 
-import { Row, Span, Stack, sortBy, type JsonArray } from "@mohasinac/appkit";
+import { Badge, Row, Span, Stack, sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
@@ -83,11 +83,9 @@ const COLUMNS: DataTableColumn<CategoryRow>[] = [
     key: "isActive",
     header: "Status",
     render: (row) => (
-      <Span layout="inline-flex" 
-        className={`${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
-      >
+      <Badge variant={row.isActive ? "active" : "inactive"} size="xs">
         {row.isActive ? "Active" : "Hidden"}
-      </Span>
+      </Badge>
     ),
   },
 ];

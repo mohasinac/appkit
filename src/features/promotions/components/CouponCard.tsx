@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
-import { BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Stack, Text } from "../../../ui";
+import { Badge, BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Stack, Text } from "../../../ui";
 import type { JsonValue } from "../../../schemas/types";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
@@ -257,11 +257,9 @@ export function CouponCard({
       {/* Status + scope pills (CRUD context) */}
       {(hasAdminActions || n.scope) && (
         <Row gap="xs" wrap className="mb-2">
-          <Span layout="inline-flex" 
-            className={`text-[10px] uppercase tracking-wide ${ n.isActive ? "bg-success-surface text-success" : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300" }`} rounded="full" padding="pill-xs" weight="semibold"
-          >
+          <Badge variant={n.isActive ? "active" : "inactive"} size="xs" className="text-[10px] uppercase tracking-wide">
             {n.isActive ? labels.active : labels.inactive}
-          </Span>
+          </Badge>
           {n.scope && (
             <Span layout="inline-flex" weight="semibold" className="bg-zinc-200/70 text-[10px] tracking-wide dark:bg-zinc-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
               {n.scope}

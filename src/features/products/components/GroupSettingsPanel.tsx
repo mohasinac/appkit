@@ -268,6 +268,7 @@ export function GroupSettingsPanel({
         <Heading level={3} size="sm" weight="semibold" color="muted">
           Group Settings
         </Heading>
+        {/* audit-variant-ok: chevron — group-hover state-override on parent button group; Span lacks group-hover variant */}
         <Span size="xs" className="group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors" color="faint">
           {open ? "▲" : "▼"}
         </Span>

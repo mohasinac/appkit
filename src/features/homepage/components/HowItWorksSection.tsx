@@ -152,7 +152,7 @@ const sectionRef = useRef<HTMLElement>(null);
 
           <Heading
             level={2}
-            className={`md:text-4xl ${themed.textPrimary} mb-3`} size="3xl" weight="bold"
+            className={`${themed.textPrimary} mb-3`} size="3xl" mdSize="4xl" weight="bold"
           >
             {title}
           </Heading>

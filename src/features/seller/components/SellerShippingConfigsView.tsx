@@ -11,6 +11,7 @@ import {
   Button,
   ConfirmDeleteModal,
   DataTable,
+  Badge,
   Div,
   ListingToolbar,
   RowActionMenu,
@@ -96,11 +97,9 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
     key: "isActive",
     header: "Status",
     render: (row) => (
-      <Span layout="inline-flex" 
-        className={`${ row.isActive ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
-      >
+      <Badge variant={row.isActive ? "active" : "inactive"} size="xs">
         {row.isActive ? "Active" : "Inactive"}
-      </Span>
+      </Badge>
     ),
   },
 ];

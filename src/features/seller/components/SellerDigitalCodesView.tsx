@@ -4,7 +4,7 @@ import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
+import { Badge, ConfirmDeleteModal, RowActionMenu, Span, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -65,11 +65,9 @@ const COLUMNS: AdminTableColumn<DigitalCodeRow>[] = [
     key: "status",
     header: "Status",
     render: (row) => (
-      <Span layout="inline-flex" 
-        className={`capitalize ${ row.status === "active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
-      >
+      <Badge variant={row.status === "active" ? "active" : "inactive"} size="xs" className="capitalize">
         {row.status}
-      </Span>
+      </Badge>
     ),
   },
   {

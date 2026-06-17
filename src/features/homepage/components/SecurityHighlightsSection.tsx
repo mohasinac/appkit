@@ -110,7 +110,7 @@ const sectionRef = useRef<HTMLElement>(null);
           )}
           <Heading
             level={2}
-            className={`mt-4 md:text-4xl ${themed.textPrimary}`} size="3xl" weight="bold"
+            className={`mt-4 ${themed.textPrimary}`} size="3xl" mdSize="4xl" weight="bold"
           >
             {title}
           </Heading>

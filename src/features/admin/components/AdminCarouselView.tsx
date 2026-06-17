@@ -4,7 +4,7 @@ import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -191,9 +191,9 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       key: "status",
       header: "Status",
       render: (row) => (
-        <Span layout="inline-flex" size="xs" weight="medium" className={`${row.status === "Active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`} rounded="full" padding="pill-xs">
+        <Badge variant={row.status === "Active" ? "active" : "inactive"} size="xs">
           {row.status}
-        </Span>
+        </Badge>
       ),
     },
     {

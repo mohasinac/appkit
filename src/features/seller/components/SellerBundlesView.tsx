@@ -1,6 +1,6 @@
 "use client";
 
-import { Span, sortBy, type JsonArray } from "@mohasinac/appkit";
+import { Badge, Span, sortBy, type JsonArray } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
@@ -50,11 +50,9 @@ const COLUMNS: AdminTableColumn<BundleRow>[] = [
     key: "status",
     header: "Status",
     render: (row) => (
-      <Span layout="inline-flex" 
-        className={`capitalize ${ row.status === "active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400" }`} size="xs" weight="medium" rounded="full" padding="pill-xs"
-      >
+      <Badge variant={row.status === "active" ? "active" : "inactive"} size="xs" className="capitalize">
         {row.status}
-      </Span>
+      </Badge>
     ),
   },
   {
