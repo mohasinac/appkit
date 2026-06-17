@@ -128,11 +128,13 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                     loading="lazy"
                   />
                 ) : (
-                  <Text className="px-2 break-all" align="center">
+                  // audit-variant-ok: file label — px-2 horizontal nudge + break-all; Text lacks paddingX variant
+                  <Text align="center" className="px-2 break-all">
                     {f.contentType ?? "file"}
                   </Text>
                 )}
               </Row>
+              {/* audit-variant-ok: file row inner padding — p-1.5 between PADDING_MAP.2xs (p-1) and xs (p-2) */}
               <Div className="p-1.5">
                 <Text className="truncate text-[10px] font-mono" color="muted">
                   {f.name.split("/").pop()}
@@ -140,7 +142,8 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="mt-1 w-full text-xs"
+                  textSize="xs"
+                  className="mt-1 w-full"
                   onClick={() => onCopy(f.downloadURL)}
                 >
                   {ACTIONS.MEDIA["copy-url"].label}

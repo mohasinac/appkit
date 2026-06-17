@@ -77,7 +77,7 @@ export function AddressCard({
       {address.phone && (
         <Text className="mt-1 text-neutral-500 dark:text-neutral-400" size="sm">{address.phone}</Text>
       )}
-      <Div layout="flex" className="mt-3 gap-1">
+      <Div layout="flex" gap="1" className="mt-3">
         {onEdit && (
           <Button
             onClick={() => onEdit(address)}
@@ -127,7 +127,7 @@ export function AddressBook({
       {addresses.length === 0 && (
         <Text className="text-neutral-500 dark:text-neutral-400" size="sm">{emptyLabel}</Text>
       )}
-      <Div className="grid gap-4 sm:grid-cols-2">
+      <Div layout="grid" gap="4" className="sm:grid-cols-2">
         {addresses.map((addr) => (
           <AddressCard
             key={addr.id}
@@ -139,10 +139,12 @@ export function AddressBook({
         ))}
       </Div>
       {onAdd && (
-        <Button rounded="lg" 
+        // audit-variant-ok: add-address Button — dashed border + hover-shade transitions; Button.border lacks dashed variant + hover state
+        <Button rounded="lg"
           onClick={onAdd}
           variant="outline"
-          className="mt-2 border border-dashed border-neutral-300 dark:border-slate-600 px-4 py-3 text-sm font-medium text-neutral-500 dark:text-zinc-400 transition hover:border-neutral-400 dark:hover:border-slate-500 hover:text-neutral-700 dark:hover:text-zinc-200"
+          paddingX="md" paddingY="md" textSize="sm" weight="medium"
+          className="mt-2 border border-dashed border-neutral-300 dark:border-slate-600 text-neutral-500 dark:text-zinc-400 transition hover:border-neutral-400 dark:hover:border-slate-500 hover:text-neutral-700 dark:hover:text-zinc-200"
         >
           + {addLabel}
         </Button>
