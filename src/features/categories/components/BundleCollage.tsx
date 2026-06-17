@@ -87,7 +87,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                     loading="lazy"
                   />
                 ) : (
-                  <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)] text-3xl" align="center" justify="center">
+                  <Row textSize="3xl" surface="muted" className="absolute inset-0" align="center" justify="center">
                     {PLACEHOLDER_EMOJI}
                   </Row>
                 )}

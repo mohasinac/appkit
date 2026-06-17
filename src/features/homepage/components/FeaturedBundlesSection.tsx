@@ -111,7 +111,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
               loading="lazy"
             />
           ) : (
-            <Row className="h-full w-full text-3xl" align="center" justify="center">
+            <Row textSize="3xl" className="h-full w-full" align="center" justify="center">
               {PLACEHOLDER_EMOJI}
             </Row>
           )}
