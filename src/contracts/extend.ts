@@ -188,6 +188,7 @@ export interface FeatureExtension<
    * Typed as `unknown` here so contracts stays Zod-free; at runtime it is a
    * `ZodObject` or `ZodEffects`.
    */
+  // audit-unknown-ok: extension point — schema is caller-defined
   schema?: unknown;
   /** Merged admin table columns. Use the package's `buildXxxColumns()` helper. */
   columns?: TableColumn<TExtended>[];

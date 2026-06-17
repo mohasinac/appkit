@@ -40,6 +40,7 @@ async function fetchPage<T>(
   if (!res.ok) return { items: [], hasMore: false };
   const json = (await res.json()) as {
     data?: {
+      // audit-unknown-ok: filter facet loader — items arbitrary shape
       items?: unknown[];
       hasMore?: boolean;
       total?: number;

@@ -22,8 +22,10 @@ export interface IFieldOps {
   /** Atomic numeric increment */
   increment(n: number): FieldSentinel;
   /** Atomic array union (add elements if not present) */
+  // audit-unknown-ok: Firestore arrayUnion/arrayRemove SDK boundary — accepts any FirestoreValue
   arrayUnion(...elements: unknown[]): FieldSentinel;
   /** Atomic array remove */
+  // audit-unknown-ok: Firestore arrayUnion/arrayRemove SDK boundary — accepts any FirestoreValue
   arrayRemove(...elements: unknown[]): FieldSentinel;
   /** Delete a field */
   deleteField(): FieldSentinel;
@@ -54,10 +56,12 @@ export function increment(n: number): FieldSentinel {
   return getOps().increment(n);
 }
 
+// audit-unknown-ok: Firestore arrayUnion/arrayRemove SDK boundary — accepts any FirestoreValue
 export function arrayUnion(...elements: unknown[]): FieldSentinel {
   return getOps().arrayUnion(...elements);
 }
 
+// audit-unknown-ok: Firestore arrayUnion/arrayRemove SDK boundary — accepts any FirestoreValue
 export function arrayRemove(...elements: unknown[]): FieldSentinel {
   return getOps().arrayRemove(...elements);
 }

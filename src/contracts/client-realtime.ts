@@ -9,6 +9,7 @@
 /** Snapshot returned by a realtime subscription */
 export interface RealtimeSnapshot {
   exists(): boolean;
+  // audit-unknown-ok: RTDB val() return — JSON shape varies by path
   val(): unknown;
 }
 

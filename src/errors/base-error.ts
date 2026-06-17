@@ -3,6 +3,7 @@ export class AppError extends Error {
     public statusCode: number,
     public message: string,
     public code: string,
+    // audit-unknown-ok: base-error data — accepts arbitrary serialisable values
     public data?: unknown,
   ) {
     super(message);
@@ -17,6 +18,7 @@ export class AppError extends Error {
     error: string;
     code: string;
     statusCode: number;
+    // audit-unknown-ok: base-error data — accepts arbitrary serialisable values
     data?: unknown;
   } {
     return {

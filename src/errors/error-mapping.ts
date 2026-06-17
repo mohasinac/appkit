@@ -44,10 +44,12 @@ export interface MappedError {
   status: number;
   code: string;
   message: string;
+  // audit-unknown-ok: error-shape predicates (isZodLikeError, etc.) — TS requires unknown for type-guard params
   issues?: unknown[];
 }
 
 interface ZodLikeError {
+  // audit-unknown-ok: error-shape predicates (isZodLikeError, etc.) — TS requires unknown for type-guard params
   issues: unknown[];
 }
 
@@ -209,6 +211,7 @@ export function mapToHttpError(
 
   // Object with explicit { status, message } shape (legacy throw-with-status)
   if (typeof err === "object" && err !== null) {
+    // audit-unknown-ok: error-shape predicates (isZodLikeError, etc.) — TS requires unknown for type-guard params
     const e = err as { status?: JsonValue; statusCode?: unknown; message?: unknown };
     const status =
       typeof e.statusCode === "number"

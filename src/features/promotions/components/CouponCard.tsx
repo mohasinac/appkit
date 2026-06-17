@@ -47,6 +47,7 @@ interface Normalized {
 function pick<T = unknown>(obj: CouponLike, ...keys: string[]): T | undefined {
   for (const k of keys) {
     const parts = k.split(".");
+    // audit-unknown-ok: Coupon shape resolver — accepts flat or nested input
     let cur: unknown = obj;
     for (const p of parts) {
       if (cur && typeof cur === "object") cur = (cur as Record<string, JsonValue>)[p];

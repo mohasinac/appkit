@@ -111,6 +111,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
   );
 
   const handleQuickEdit = useCallback(
+    // audit-unknown-ok: QuickEditMenu values passthrough
     async (id: string, values: Record<string, unknown>) => {
       const prev = overrides[id];
       setOverrides((o) => ({ ...o, [id]: { ...o[id], ...values } }));

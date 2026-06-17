@@ -248,6 +248,7 @@ const TOKEN_TO_OP: Record<string, FirebaseFirestore.WhereFilterOp> = {
 };
 
 /** Best-effort scalar coercion for sieve filter values. */
+// audit-unknown-ok: Base repository coerceValue — accepts any cell value
 function coerceValue(raw: string): unknown {
   if (raw === "true") return true;
   if (raw === "false") return false;

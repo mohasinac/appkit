@@ -27,6 +27,7 @@ import { NextResponse } from "next/server.js";
 
 /** Minimal logger interface — satisfied by Winston, Pino, or console. */
 export interface IApiErrorLogger {
+  // audit-unknown-ok: error JSON serialization boundary
   error(message: string, meta?: Record<string, unknown>): void;
 }
 
@@ -43,6 +44,7 @@ export interface ApiErrorHandlerOptions<TAppError> {
   getStatusCode(err: TAppError): number;
 
   /** Serialise the error to a JSON-safe shape for the response body. */
+  // audit-unknown-ok: error JSON serialization boundary
   toJSON(err: TAppError): unknown;
 
   /** Logger used for 5xx and unexpected errors. */
@@ -83,6 +85,7 @@ export function createApiErrorHandler<TAppError>(
       const status = getStatusCode(error);
       if (status >= 500) {
         logger.error("API Error", {
+          // audit-unknown-ok: error JSON serialization boundary
           body: toJSON(error) as Record<string, unknown>,
         });
       }
@@ -94,6 +97,7 @@ export function createApiErrorHandler<TAppError>(
       error !== null &&
       typeof error === "object" &&
       "issues" in error &&
+      // audit-unknown-ok: error JSON serialization boundary
       Array.isArray((error as Record<string, unknown>).issues)
     ) {
       return NextResponse.json(

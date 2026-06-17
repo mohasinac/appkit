@@ -35,6 +35,7 @@ function toAuthPayload(decoded: {
   email?: string | null;
   role?: string;
   email_verified?: boolean;
+  // audit-unknown-ok: Firebase auth provider — custom claims arbitrary
   [k: string]: unknown;
 }): AuthPayload {
   return {

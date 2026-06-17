@@ -134,6 +134,7 @@ export function Button({
     (fn: ((e: React.MouseEvent<HTMLButtonElement>) => unknown) | undefined) =>
       (event: React.MouseEvent<HTMLButtonElement>) => {
         if (!fn) return;
+        // audit-unknown-ok: ReactElement props — generic component props
         let returned: unknown;
         try {
           returned = fn(event);
@@ -185,6 +186,7 @@ export function Button({
   );
 
   if (asChild && React.isValidElement(resolvedChildren)) {
+    // audit-unknown-ok: ReactElement props — generic component props
     const child = resolvedChildren as React.ReactElement<Record<string, unknown>>;
     return React.cloneElement(child, {
       ...props,

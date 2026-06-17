@@ -235,9 +235,12 @@ export async function defaultBundleItemsFetch(
     throw new Error(`Search failed: ${res.status}`);
   }
   const data = (await res.json()) as {
+    // audit-unknown-ok: picker API response items
     data?: { items?: unknown[] };
+    // audit-unknown-ok: picker API response items
     items?: unknown[];
   };
+  // audit-unknown-ok: picker API response items
   const rawItems: unknown[] = data?.data?.items ?? data?.items ?? [];
   return rawItems
     .map((r): BundleItemSearchResult | null => {

@@ -14,6 +14,7 @@
  */
 
 export interface PostcssConfigOverride {
+  // audit-unknown-ok: PostCSS config — third-party shape
   plugins?: Record<string, unknown>;
 }
 

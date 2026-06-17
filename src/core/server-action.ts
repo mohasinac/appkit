@@ -87,6 +87,7 @@ interface SafeParseSchema<TInput> {
         success: false;
         error: {
           flatten?: () => { fieldErrors: Record<string, string[]> };
+          // audit-unknown-ok: server-action error wrapper
           issues?: unknown[];
         };
       };

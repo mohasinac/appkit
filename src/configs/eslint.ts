@@ -13,6 +13,7 @@
  */
 
 export interface EslintConfigOverride {
+  // audit-unknown-ok: ESLint config — third-party shape
   rules?: Record<string, unknown>;
   ignores?: string[];
 }

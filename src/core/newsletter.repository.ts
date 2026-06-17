@@ -155,6 +155,7 @@ export class NewsletterRepository {
     };
 
     const encrypted = encryptPiiFields(
+      // audit-unknown-ok: arbitrary payload — newsletter wrapper
       plaintext as Record<string, unknown>,
       NEWSLETTER_PII_FIELDS,
     ) as Omit<NewsletterSubscriberDocument, "id" | "createdAt" | "updatedAt">;

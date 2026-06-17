@@ -69,6 +69,7 @@ function getTracker(): ErrorTrackerFn {
 
 /** Override the default console-based tracker with a custom implementation. */
 export function setErrorTracker(fn: ErrorTrackerFn): void {
+  // audit-unknown-ok: observability adapter — global type augmentation
   (globalThis as Record<string, unknown>)[TRACKER_KEY] = fn;
 }
 

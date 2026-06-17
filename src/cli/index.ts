@@ -26,6 +26,7 @@ export type { FeaturesConfig };
 
 export interface NextConfig {
   transpilePackages?: string[];
+  // audit-unknown-ok: CLI argv — argument shape varies per command
   [key: string]: unknown;
 }
 

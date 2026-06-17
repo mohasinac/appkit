@@ -16,6 +16,7 @@ export interface LogEntry {
   level: LogLevel;
   message: string;
   timestamp: Date;
+  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   data?: unknown;
 }
 
@@ -91,6 +92,7 @@ export class Logger {
     );
   }
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   private addLog(level: LogLevel, message: string, data?: unknown): void {
     if (!this.shouldLog(level)) return;
 
@@ -168,18 +170,22 @@ export class Logger {
     }
   }
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public debug(message: string, data?: unknown): void {
     this.addLog("debug", message, data);
   }
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public info(message: string, data?: unknown): void {
     this.addLog("info", message, data);
   }
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public warn(message: string, data?: unknown): void {
     this.addLog("warn", message, data);
   }
 
+  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public error(message: string, data?: unknown): void {
     this.addLog("error", message, data);
   }

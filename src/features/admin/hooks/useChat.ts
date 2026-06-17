@@ -134,6 +134,7 @@ export function useChatRooms() {
     queryKey: ["chat", "rooms"],
     queryFn: () =>
       apiClient
+        // audit-unknown-ok: chat rooms/room dynamic JSON response
         .get<{ rooms: unknown[] }>(CHAT_ENDPOINTS.LIST)
         .then((r) => r.rooms),
   });
@@ -143,6 +144,7 @@ export function useCreateChatRoom() {
   return useApiMutation({
     mutationFn: (data: { orderId: string; ownerId: string }) =>
       apiClient
+        // audit-unknown-ok: chat rooms/room dynamic JSON response
         .post<{ room: unknown }>(CHAT_ENDPOINTS.LIST, data)
         .then((r) => r.room),
   });

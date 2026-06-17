@@ -19,6 +19,7 @@ interface SafeParseSchema<TInput> {
     input: unknown,
   ) =>
     | { success: true; data: TInput }
+    // audit-unknown-ok: Zod safeParse boundary
     | { success: false; error: { issues?: unknown[] } };
 }
 

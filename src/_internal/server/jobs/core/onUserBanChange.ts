@@ -16,12 +16,14 @@ export interface HandleUserBanChangeInput {
     isDisabled?: boolean;
     hardBanReason?: string;
     hardBannedBy?: string;
+    // audit-unknown-ok: Firebase event payload — softBans array shape from Firestore
     softBans?: unknown[];
   } | null;
   after: {
     isDisabled?: boolean;
     hardBanReason?: string;
     hardBannedBy?: string;
+    // audit-unknown-ok: Firebase event payload — softBans array shape from Firestore
     softBans?: unknown[];
   } | null;
 }

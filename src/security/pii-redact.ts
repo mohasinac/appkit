@@ -123,7 +123,9 @@ export function redactPii(data: unknown, depth = 0): unknown {
     return data.map((item) => redactPii(item, depth + 1));
   }
 
+  // audit-unknown-ok: PII redaction — accepts arbitrary values, narrows by typeof
   const result: Record<string, unknown> = {};
+  // audit-unknown-ok: PII redaction — accepts arbitrary values, narrows by typeof
   for (const [key, value] of Object.entries(data as Record<string, unknown>)) {
     if (typeof value === "string") {
       result[key] = redactStringValue(key, value);

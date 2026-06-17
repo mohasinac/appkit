@@ -10,6 +10,7 @@ import { Logger } from "./Logger";
 
 const logger = Logger.getInstance();
 
+// audit-unknown-ok: EventBus variadic payload — caller-defined event shapes
 type EventCallback = (...args: unknown[]) => void;
 
 export interface EventSubscription {
@@ -38,6 +39,7 @@ export class EventBus {
   }
 
   public once(event: string, callback: EventCallback): EventSubscription {
+    // audit-unknown-ok: EventBus variadic payload — caller-defined event shapes
     const wrapped = (...args: unknown[]) => {
       callback(...args);
       this.off(event, wrapped);
@@ -53,6 +55,7 @@ export class EventBus {
     if (callbacks.length === 0) this.events.delete(event);
   }
 
+  // audit-unknown-ok: EventBus variadic payload — caller-defined event shapes
   public emit(event: string, ...args: unknown[]): void {
     const callbacks = this.events.get(event);
     if (!callbacks) return;

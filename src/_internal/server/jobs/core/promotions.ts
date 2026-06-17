@@ -3,8 +3,11 @@ import { ProductStatusValues } from "../../../../features/products/schemas/fires
 import type { JobContext } from "../runtime/types";
 
 export interface PromotionsCallableResult {
+  // audit-unknown-ok: Promotions cron payload — admin-curated arbitrary lists
   promotedProducts: unknown[];
+  // audit-unknown-ok: Promotions cron payload — admin-curated arbitrary lists
   featuredProducts: unknown[];
+  // audit-unknown-ok: Promotions cron payload — admin-curated arbitrary lists
   activeCoupons: unknown[];
   partial?: boolean;
 }

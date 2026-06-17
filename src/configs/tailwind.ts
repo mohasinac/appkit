@@ -19,9 +19,13 @@
 
 export interface TailwindConfigOverride {
   content?: string[];
+  // audit-unknown-ok: Tailwind config — third-party shape, plugins can be functions
   theme?: Record<string, unknown>;
+  // audit-unknown-ok: Tailwind config — third-party shape, plugins can be functions
   plugins?: unknown[];
+  // audit-unknown-ok: Tailwind config — third-party shape, plugins can be functions
   safelist?: unknown[];
+  // audit-unknown-ok: Tailwind config — third-party shape, plugins can be functions
   [key: string]: unknown;
 }
 
@@ -81,6 +85,7 @@ export function defineTailwindConfig(override: TailwindConfigOverride = {}) {
             surface: "var(--appkit-color-info-surface)",
           },
         },
+        // audit-unknown-ok: Tailwind config — third-party shape, plugins can be functions
         ...((consumerTheme.extend as Record<string, unknown>) ?? {}),
       },
       ...Object.fromEntries(

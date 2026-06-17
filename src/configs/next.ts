@@ -60,7 +60,9 @@ export interface NextConfigOverride {
   experimental?: Record<string, JsonValue>;
   outputFileTracingIncludes?: Record<string, string[]>;
   images?: Record<string, JsonValue>;
+  // audit-unknown-ok: Next.js config callback — third-party shape
   webpack?: (config: unknown, ctx: unknown) => unknown;
+  // audit-unknown-ok: Next.js config callback — third-party shape
   [key: string]: unknown;
 }
 
@@ -214,6 +216,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
 
    
   function mergedWebpack(config: any, ctx: any): any {
+    // audit-unknown-ok: Next.js config callback — third-party shape
     const { isServer, webpack } = ctx as { isServer: boolean; webpack: { IgnorePlugin: new (opts: unknown) => unknown; NormalModuleReplacementPlugin: new (regex: RegExp, fn: (resource: { request: string }) => void) => unknown } };
 
     // Deduplicate firebase client SDK across the monorepo.

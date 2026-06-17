@@ -155,6 +155,7 @@ export function SellerAnalyticsAlertsView({
     queryKey: ["seller", "analytics-alerts"],
     queryFn: async () => {
       const res = await apiClient.get(SELLER_ENDPOINTS.ANALYTICS_ALERTS);
+      // audit-unknown-ok: analytics API response items
       return ((res as Record<string, unknown>)?.items ?? []) as AnalyticsAlertDocument[];
     },
   });

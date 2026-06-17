@@ -48,6 +48,7 @@ interface PubSubOptions {
 type PubSubFn = (
   options: PubSubOptions,
   handler: (event: {
+    // audit-unknown-ok: Firebase Cron adapter — message payload
     data: { message: { json?: unknown; data?: string } };
   }) => Promise<void>,
 ) => unknown;
@@ -63,6 +64,7 @@ type PubSubFn = (
 export function wrapScheduled(
   schedulerApi: { onSchedule: SchedulerFn },
   job: CronJobDefinition,
+// audit-unknown-ok: Firebase Cron adapter — message payload
 ): unknown {
   return schedulerApi.onSchedule(
     {
@@ -95,6 +97,7 @@ export function wrapPubSub(
   topic: string,
   handler: PubSubJobFn,
   options?: { memory?: string; timeoutSeconds?: number },
+// audit-unknown-ok: Firebase Cron adapter — message payload
 ): unknown {
   return pubsubApi.onMessagePublished(
     {

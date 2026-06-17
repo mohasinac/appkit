@@ -45,6 +45,7 @@ interface ParseableSchema<TOutput> {
     data: unknown,
   ):
     | { success: true; data: TOutput }
+    // audit-unknown-ok: Route handler body schema parse boundary
     | { success: false; error: { issues?: unknown[] } };
 }
 
@@ -204,6 +205,7 @@ function errorJson(
   code: string,
   message: string,
   requestId: string,
+  // audit-unknown-ok: Route handler body schema parse boundary
   issues?: unknown[],
 ): Response {
   return NextResponse.json(

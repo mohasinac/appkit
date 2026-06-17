@@ -120,6 +120,7 @@ export const assignSpinPrize = defineFunction({
 
 interface GatewayInput {
   readonly action?: string;
+  // audit-unknown-ok: HTTPS function dispatcher — action-shape varies per route
   readonly [key: string]: unknown;
 }
 

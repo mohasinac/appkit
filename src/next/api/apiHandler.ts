@@ -3,6 +3,7 @@ interface SafeParseSchema<TInput> {
   // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   safeParse: (input: unknown) =>
     | { success: true; data: TInput }
+    // audit-unknown-ok: Next.js route dispatcher boundary
     | { success: false; error: { issues?: unknown[] } };
 }
 
@@ -46,7 +47,9 @@ export interface ApiHandlerOptions<
 async function validateSchema<TInput>(
   request: Request,
   schema: SafeParseSchema<TInput>,
+// audit-unknown-ok: Next.js route dispatcher boundary
 ): Promise<{ validationError: false; data: TInput } | { validationError: true; issues: unknown[] | undefined }> {
+  // audit-unknown-ok: Next.js route dispatcher boundary
   if (typeof (schema as { safeParse?: unknown }).safeParse === "function") {
     const body = await request.json();
     const result = schema.safeParse(body);
@@ -112,6 +115,7 @@ export interface ApiHandlerFactoryDeps<TRole, TRateLimitConfig, TUser> {
   errorResponse: (
     message: string,
     status: number,
+    // audit-unknown-ok: Next.js route dispatcher boundary
     issues?: unknown,
   ) => Response;
   // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
@@ -143,6 +147,7 @@ async function applyRateLimitCheck<TRateLimitConfig>(
 async function applySchemaValidation<TInput>(
   request: Request,
   schema: SafeParseSchema<TInput>,
+  // audit-unknown-ok: Next.js route dispatcher boundary
   errorResponse: (message: string, status: number, issues?: unknown) => Response,
 ): Promise<{ invalid: true; response: Response } | { invalid: false; data: TInput }> {
   const schemaResult = await validateSchema<TInput>(request, schema);

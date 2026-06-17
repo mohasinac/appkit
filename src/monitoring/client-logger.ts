@@ -95,6 +95,7 @@ export const logApiError = async (
   response: Response,
   context?: ClientErrorContext,
 ): Promise<void> => {
+  // audit-unknown-ok: client logger — accepts arbitrary serialisable values
   let responseBody: unknown;
 
   try {
