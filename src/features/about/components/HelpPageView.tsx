@@ -140,7 +140,7 @@ function renderScamAwarenessAlert(t: HelpTranslateFn) {
 
 function renderTrackOrderSection(t: HelpTranslateFn) {
   return (
-    <Section className={`${__P.p6} flex flex-col sm:flex-row items-center gap-4`} border="default" surface="subtle" rounded="2xl">
+    <Section layout="flex-sm-row" align="center" gap="md" className={__P.p6} border="default" surface="subtle" rounded="2xl">
       <Div className="flex-1">
         <Heading level={3} className="mb-1" size="base">{t("trackOrderTitle")}</Heading>
         <Text variant="secondary" size="sm">{t("trackOrderText")}</Text>

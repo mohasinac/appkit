@@ -182,7 +182,7 @@ const TEXT_PADDING_Y_MAP: Record<TextPaddingY, string> = {
 };
 
 type TextLayout = "default" | "inline-flex" | "flex" | "inline-block";
-type TextGap = "none" | "1" | "2" | "3";
+type TextGap = "none" | "1" | "1.5" | "2" | "3";
 type TextShadow = "none" | "sm" | "md" | "lg" | "2xl";
 
 const TEXT_LAYOUT_MAP: Record<TextLayout, string> = {
@@ -195,6 +195,7 @@ const TEXT_LAYOUT_MAP: Record<TextLayout, string> = {
 const TEXT_GAP_MAP: Record<TextGap, string> = {
   none: "",
   "1": "gap-1",
+  "1.5": "gap-1.5",
   "2": "gap-2",
   "3": "gap-3",
 };

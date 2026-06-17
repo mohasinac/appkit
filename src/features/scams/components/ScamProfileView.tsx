@@ -135,15 +135,15 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
         </Row>
 
         <Row gap="md" wrap>
-          <Text variant="secondary" className="flex items-center gap-1.5" size="sm">
+          <Text variant="secondary" layout="flex" gap="1.5" size="sm">
             <Eye className="h-4 w-4" />
             {scammer.views} views
           </Text>
-          <Text variant="secondary" className="flex items-center gap-1.5" size="sm">
+          <Text variant="secondary" layout="flex" gap="1.5" size="sm">
             <Users className="h-4 w-4" />
             {scammer.incidentCount + 1} victim{scammer.incidentCount !== 0 ? "s" : ""} reported
           </Text>
-          <Text variant="secondary" className="flex items-center gap-1.5" size="sm">
+          <Text variant="secondary" layout="flex" gap="1.5" size="sm">
             <Calendar className="h-4 w-4" />
             Reported {formatDate(scammer.createdAt)}
           </Text>

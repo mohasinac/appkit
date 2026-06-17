@@ -34,6 +34,7 @@ export function AdminStatCard({
   const resolvedGradient = GRADIENTS[gradient as keyof typeof GRADIENTS] ?? gradient;
 
   return (
+    // audit-variant-ok: stat card — static shadow-sm + hover-shadow-md transition combo; Div.shadow accepts only one value, so the hover layer needs raw className
     <Div
       className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow ${className}`} rounded="xl" shadow="sm"
     >

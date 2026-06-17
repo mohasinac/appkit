@@ -25,9 +25,9 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
       {fields.length > 0 && (
         <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden">
           {fields.map((f, i) => (
-            <Row gap="md" 
+            <Row gap="md" oddEven="zebra"
               key={i}
-              className="even:bg-zinc-50 dark:even:bg-zinc-800/50" surface="default" padding="inline"
+              surface="default" padding="inline"
             >
               <Dt className="w-36 flex-shrink-0 font-medium capitalize" color="primary">
                 {f.key}

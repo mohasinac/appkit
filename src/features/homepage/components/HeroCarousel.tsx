@@ -219,12 +219,12 @@ function CarouselCardRenderer({
             className={`${POSITION_FILL} md:p-6 ${textAlignClass}`} padding="xs"
           >
           {card.content?.eyebrow && (
-            <Text color="inverse" className="text-[10px] !/70 mb-0.5 tracking-wider drop-shadow-sm" mdSize="xs" transform="uppercase">
+            <Text color="inverse" shadow="sm" className="text-[10px] !/70 mb-0.5 tracking-wider" mdSize="xs" transform="uppercase">
               {card.content.eyebrow}
             </Text>
           )}
           {card.content?.subtitle && (
-            <Text color="inverse" className="hidden md:block !/90 mb-0.5 md:mb-2 drop-shadow-sm" mdSize="sm" size="xs">
+            <Text color="inverse" shadow="sm" className="hidden md:block !/90 mb-0.5 md:mb-2" mdSize="sm" size="xs">
               {card.content.subtitle}
             </Text>
           )}
@@ -238,8 +238,8 @@ function CarouselCardRenderer({
             </Heading>
           )}
           {card.content?.description && (
-            <Text color="inverse" 
-              className={`text-[10px] md:text-sm !/80 mb-1 md:mb-4 drop-shadow-sm`} truncate
+            <Text color="inverse" shadow="sm"
+              className={`text-[10px] md:text-sm !/80 mb-1 md:mb-4`} truncate
             >
               {card.content.description}
             </Text>
@@ -408,7 +408,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 {slide.overlay && (
                   <Div className={`${POSITION_FILL} ${FLEX_CENTER} flex-col text-center md:px-16 lg:px-32`} padding="x-lg">
                     {slide.overlay.subtitle && (
-                      <Text color="inverse" className="stagger-1 !/80 mb-1 md:mb-2 drop-shadow-sm tracking-widest" mdSize="sm" size="xs" transform="uppercase">
+                      <Text color="inverse" shadow="sm" className="stagger-1 !/80 mb-1 md:mb-2 tracking-widest" mdSize="sm" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}
                       </Text>
                     )}
@@ -421,7 +421,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                       </Heading>
                     )}
                     {slide.overlay.description && (
-                      <Text color="inverse" className="stagger-3 !/90 mb-4 md:mb-8 drop-shadow-sm max-w-2xl mx-auto" mdSize="lg" lgSize="xl" size="sm">
+                      <Text color="inverse" shadow="sm" className="stagger-3 !/90 mb-4 md:mb-8 max-w-2xl mx-auto" mdSize="lg" lgSize="xl" size="sm">
                         {slide.overlay.description}
                       </Text>
                     )}

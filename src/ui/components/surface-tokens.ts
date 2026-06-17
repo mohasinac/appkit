@@ -137,6 +137,10 @@ export const SHADOW_MAP = {
   lg: "shadow-lg",
   xl: "shadow-xl",
   "2xl": "shadow-2xl",
+  /** No static shadow; transitions to shadow-md on hover. Used for interactive card surfaces. */
+  "hover-md": "hover:shadow-md transition-shadow",
+  /** No static shadow; transitions to shadow-lg on hover. */
+  "hover-lg": "hover:shadow-lg transition-shadow",
 } as const;
 
 export type ShadowKey = keyof typeof SHADOW_MAP;

@@ -39,8 +39,8 @@ export function AdminUsersGuideView() {
                     ["admin", "Full access to all admin sections, bypasses RBAC checks", "Manual via Firebase console"],
                   ].map(([role, can, how]) => (
                     <Tr key={role} className="border-b border-[var(--appkit-color-border)]/50">
-                      <Td className="pr-4 font-mono text-[var(--appkit-color-primary)]" padding="xs-tall" size="xs">{role}</Td>
-                      <Td className="pr-4" padding="xs-tall">{can}</Td>
+                      <Td paddingSide="pr-md" className="font-mono text-[var(--appkit-color-primary)]" padding="xs-tall" size="xs">{role}</Td>
+                      <Td paddingSide="pr-md" padding="xs-tall">{can}</Td>
                       <Td padding="xs-tall">{how}</Td>
                     </Tr>
                   ))}

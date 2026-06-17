@@ -192,7 +192,7 @@ function AuctionWalkthrough() {
                 ["₹50,000+", "₹1,000"],
               ].map(([range, inc]) => (
                 <Tr key={range}>
-                  <Td className="pr-4" padding="xs-tall">{range}</Td>
+                  <Td paddingSide="pr-md" padding="xs-tall">{range}</Td>
                   <Td padding="xs-tall">{inc}</Td>
                 </Tr>
               ))}

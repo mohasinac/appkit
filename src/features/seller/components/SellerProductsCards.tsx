@@ -68,6 +68,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
         const isSelected = selectedIds.has(row.id);
         const href = buildHref(row);
         return view === "grid" ? (
+          // audit-variant-ok: seller product card — hover-shadow-md transition; Div.shadow lacks hover-state combos
           <Div
             key={row.id}
             className="group relative bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow" rounded="xl" border={isSelected ? "strong" : "default"}

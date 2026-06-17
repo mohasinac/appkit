@@ -100,7 +100,7 @@ return (
             }) => (
               <Section
                 key={number}
-                className={`flex gap-4 items-start`} border="default" surface="subtle" rounded="xl" padding="lg"
+                layout="flex" gap="md" align="start" border="default" surface="subtle" rounded="xl" padding="lg"
               >
                 <Row textWeight="bold" align="center" justify="center" textSize="sm" 
                   className={`shrink-0 w-10 h-10 ${stepAccent ?? accentClass}`} rounded="xl"

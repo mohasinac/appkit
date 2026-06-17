@@ -31,6 +31,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCardProps) {
   return (
+    // audit-variant-ok: stat card — static shadow-sm + hover-shadow-md transition combo; Div.shadow accepts only one value
     <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} hover:shadow-md transition-shadow`} rounded="xl" shadow="sm">
       {/* 3-px gradient top accent */}
       <Div

@@ -43,8 +43,8 @@ export function AdminTrustGuideView() {
                       ["Duration", "Set expiry date", "Permanent until admin lifts"],
                     ].map(([action, soft, hard]) => (
                       <Tr key={action} className="border-b border-[var(--appkit-color-border)]/50">
-                        <Td className="pr-4 text-[var(--appkit-color-text)]" padding="xs-tall" weight="medium">{action}</Td>
-                        <Td className="pr-4" padding="xs-tall">{soft}</Td>
+                        <Td paddingSide="pr-md" className="text-[var(--appkit-color-text)]" padding="xs-tall" weight="medium">{action}</Td>
+                        <Td paddingSide="pr-md" padding="xs-tall">{soft}</Td>
                         <Td padding="xs-tall">{hard}</Td>
                       </Tr>
                     ))}

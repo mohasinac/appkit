@@ -80,17 +80,17 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
           {/* Contact identifiers rendered as plaintext for SEO */}
           <Stack gap="xs">
             {scammer.phones.slice(0, 2).map((p) => (
-              <Text key={p} variant="secondary" className="flex items-center gap-1" size="xs">
+              <Text key={p} variant="secondary" layout="flex" gap="1" size="xs">
                 <Phone className={CLS_ICON_SM} /> {p}
               </Text>
             ))}
             {scammer.upiIds.slice(0, 1).map((u) => (
-              <Text key={u} variant="secondary" className="flex items-center gap-1" size="xs">
+              <Text key={u} variant="secondary" layout="flex" gap="1" size="xs">
                 <Wallet className={CLS_ICON_SM} /> {u}
               </Text>
             ))}
             {scammer.emails.slice(0, 1).map((e) => (
-              <Text key={e} variant="secondary" className="flex items-center gap-1" size="xs">
+              <Text key={e} variant="secondary" layout="flex" gap="1" size="xs">
                 <Mail className={CLS_ICON_SM} /> {e}
               </Text>
             ))}
