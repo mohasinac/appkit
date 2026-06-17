@@ -418,11 +418,11 @@ export function Search({
             className="w-full rounded-lg border border-zinc-300 bg-white pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
           />
           {query && (
-            <Button rounded="full" 
+            <Button rounded="full" textColor="faint"
               type="button"
               variant="ghost"
               onClick={handleClear}
-              className="absolute right-3 p-0.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+              className="absolute right-3 p-0.5 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
               aria-label={labels.clearAriaLabel}
             >
               <svg
@@ -457,12 +457,12 @@ export function Search({
           </select>
         )}
         {deferred && (
-          <Button rounded="lg" 
+          <Button rounded="lg" paddingX="sm"
             type="button"
             variant="primary"
             onClick={handleDeferredSubmit}
             aria-label={labels.ariaLabel}
-            className="flex-shrink-0 px-3 py-2"
+            className="flex-shrink-0 py-2"
           >
             <svg
               className="w-4 h-4"
@@ -650,8 +650,10 @@ export function Search({
   if (!isOpen) return null;
 
   return (
-    <Div border="default" className="border-b dark:border-slate-800 animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
+    <Div border="bottom-subtle" className="animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
+      {/* audit-variant-ok: search container — md:py-4 responsive vertical padding only at md+; paddingY token doesn't have y-?-only-md-up */}
       <Div className="container mx-auto md:py-4 relative" padding="inline">
+        {/* audit-variant-ok: search row — md:gap-3 responsive gap only at md+; Row.gap doesn't have responsive md form */}
         <Row gap="sm" className="md:gap-3">
           <Div className="flex-1 relative">
             <Input
@@ -725,6 +727,7 @@ export function Search({
         </Row>
 
         {(filteredSiteLinks.length > 0 || query) && (
+          // audit-variant-ok: dropdown panel — asymmetric pt-2/pb-4; SurfaceProps only takes one paddingY
           <Stack className="absolute top-full left-0 right-0 pt-2 pb-4 z-50" padding="x-md" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
               <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
