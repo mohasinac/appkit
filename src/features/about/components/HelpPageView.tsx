@@ -109,6 +109,7 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: { row: string }, topics: Top
       <Heading level={2} className="mb-6" align="center">{t("browseTopics")}</Heading>
       <Div layout="grid" gap="4" className="sm:grid-cols-2 lg:grid-cols-3">
         {topics.map(({ icon: Icon, title, desc, href, color, iconColor }) => (
+          // audit-variant-ok: topic card TextLink — border + p-5 + hover-shadow-md transition + dynamic color class
           <TextLink rounded="xl" key={href} href={href} className={`group border p-5 transition-shadow hover:shadow-md ${color} no-underline`}>
             <Row align="center" justify="center" className={`w-10 h-10 mb-3`} surface="default" rounded="lg">
               <Icon className={`w-5 h-5 ${iconColor}`} />
@@ -156,7 +157,7 @@ function renderContactCtaSection(t: HelpTranslateFn) {
       <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />
       <Heading level={2} className="mb-3">{t("contactTitle")}</Heading>
       <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("contactText")}</Text>
-      <Row justify="center" gap="sm" className="flex-wrap gap-4">
+      <Row justify="center" gap="lg" wrap>
         <TextLink href={String(ROUTES.PUBLIC.CONTACT)}>{t("contactCta")}</TextLink>
         <TextLink href={String(ROUTES.PUBLIC.FAQS)} variant="muted">{t("faqCta")}</TextLink>
       </Row>

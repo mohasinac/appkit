@@ -31,8 +31,9 @@ export async function UnauthorizedView({
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section padding="y-5xl" color="inverse" 
-        tone="accent-banner" className="min-h-[60vh] flex flex-col items-center justify-center text-center"
+      {/* audit-variant-ok: unauthorized hero — min-h-[60vh] custom + text-center; Section.layout doesn't compose with text-align */}
+      <Section padding="y-5xl" color="inverse" layout="flex-col" align="center" justify="center"
+        tone="accent-banner" className="min-h-[60vh] text-center"
       >
         <Div className={`${page.container.sm}`}>
           <Row align="center" justify="center" className={`w-20 h-20 mx-auto mb-6`} surface="default" rounded="2xl">
@@ -82,7 +83,7 @@ export async function UnauthorizedView({
           <Text variant="secondary" className="mb-3" size="sm">
             {t("helpText")}
           </Text>
-          <Row justify="center" gap="sm" className="flex-wrap gap-4">
+          <Row justify="center" gap="lg" wrap>
             <TextLink
               href={String(ROUTES.PUBLIC.HELP)}
               variant="muted" size="sm">

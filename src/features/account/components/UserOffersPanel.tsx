@@ -90,7 +90,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
             {relativeTime(offer.createdAt)}
           </Text>
         </Div>
-        <Badge variant={statusVariant(offer.status)} className="shrink-0 capitalize text-xs">
+        <Badge variant={statusVariant(offer.status)} size="xs" className="shrink-0 capitalize">
           {offer.status}
         </Badge>
       </Row>
@@ -234,7 +234,7 @@ export function UserOffersPanel({
           My Offers
         </Heading>
         <Button size="sm" variant="ghost" onClick={loadOffers} disabled={loading}
-          className="border border-zinc-300 dark:border-zinc-600 text-xs">
+          border="strong" textSize="xs">
           {loading ? "Refreshing…" : ACTIONS.USER["refresh-offers"].label}
         </Button>
       </Row>

@@ -189,7 +189,9 @@ export function NotificationPreferencesPanel({
               Always on — displayed in the notification bell and inbox
             </Text>
           </Div>
+          {/* audit-variant-ok: always-on indicator — fixed h-5/w-9 + bg-[primary] + px-0.5 thumb-inset; Row lacks toggle-indicator variant */}
           <Row className="h-5 w-9 bg-[var(--appkit-color-primary)] px-0.5" align="center" justify="end" rounded="full" aria-label="Always on">
+            {/* audit-variant-ok: toggle thumb Span — fixed h-4/w-4 + shadow (Tailwind default shadow utility) */}
             <Span className="h-4 w-4 shadow" rounded="full" surface="default" />
           </Row>
         </Row>
