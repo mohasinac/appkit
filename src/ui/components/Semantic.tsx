@@ -225,12 +225,21 @@ export interface NavProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
   /** Flex gap between flex-row children (use with `layout="flex"`). */
   gap?: "none" | "2xs" | "xs" | "sm" | "md" | "lg";
-  /** Optional layout — `flex` lays out children in a row with the configured `gap`. */
-  layout?: "default" | "flex";
+  /** Optional layout — `flex` lays out children in a row with the configured `gap`; `flex-wrap` adds `flex-wrap`. */
+  layout?: "default" | "flex" | "flex-wrap";
   /** Colour cascaded onto nav children. */
   color?: "default" | "primary" | "muted" | "faint";
+  /** Cascaded text size for nav children. */
+  textSize?: "xs" | "sm" | "base" | "lg";
   children: React.ReactNode;
 }
+
+const NAV_TEXT_SIZE_MAP: Record<NonNullable<NavProps["textSize"]>, string> = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+};
 
 const NAV_SPACING_MAP: Record<NonNullable<NavProps["spacing"]>, string> = {
   none: "",
@@ -253,6 +262,7 @@ const NAV_GAP_MAP: Record<NonNullable<NavProps["gap"]>, string> = {
 const NAV_LAYOUT_MAP: Record<NonNullable<NavProps["layout"]>, string> = {
   default: "",
   flex: "flex items-center",
+  "flex-wrap": "flex items-center flex-wrap",
 };
 
 const NAV_COLOR_MAP: Record<NonNullable<NavProps["color"]>, string> = {
@@ -262,7 +272,7 @@ const NAV_COLOR_MAP: Record<NonNullable<NavProps["color"]>, string> = {
   faint: "appkit-color--faint",
 };
 
-export function Nav({ surface, padding, rounded, border, shadow, spacing, gap, layout, color, className = "", children, ...props }: NavProps) {
+export function Nav({ surface, padding, rounded, border, shadow, spacing, gap, layout, color, textSize, className = "", children, ...props }: NavProps) {
   return (
     <nav
       className={[
@@ -271,6 +281,7 @@ export function Nav({ surface, padding, rounded, border, shadow, spacing, gap, l
         gap ? NAV_GAP_MAP[gap] : "",
         layout ? NAV_LAYOUT_MAP[layout] : "",
         color ? NAV_COLOR_MAP[color] : "",
+        textSize ? NAV_TEXT_SIZE_MAP[textSize] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}
