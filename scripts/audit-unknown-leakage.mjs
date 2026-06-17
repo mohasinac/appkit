@@ -90,6 +90,22 @@ const ALLOWLIST_FILES = new Set(
     "appkit/src/security/pii-redact.ts",            // PII redaction — accepts arbitrary values
     "appkit/src/providers/db-firebase/field-ops.ts", // Firestore field operations
     "appkit/src/next/cache-middleware.ts",          // Next.js middleware boundary
+    "appkit/src/_internal/server/jobs/core/listingProcessor.ts", // Job listing processor (sieve dispatch)
+    "appkit/src/_internal/server/jobs/core/onUserBanChange.ts", // Ban change job — receives Firebase event payload
+    "appkit/src/_internal/server/jobs/handlers/onUserBanChange.ts",
+    "appkit/src/_internal/server/jobs/core/promotions.ts", // Promotions cron — arbitrary payload
+    "appkit/src/_internal/server/functions/https.ts", // HTTPS function dispatcher
+    "appkit/src/_internal/shared/types/action-result.ts", // Generic Zod issues field
+    "appkit/src/_internal/client/features/filters/filter-load-options.ts", // Filter facet loader
+    "appkit/src/providers/db-firebase/admin.ts", // Admin SDK init — global type
+    "appkit/src/providers/db-firebase/base.ts", // Base repository — coerceValue boundary
+    "appkit/src/providers/db-firebase/helpers.ts", // Timestamp narrowing
+    "appkit/src/providers/shipping-shiprocket/index.ts", // Third-party HTTP response
+    "appkit/src/ui/components/Button.tsx", // React.ReactElement props typed as unknown
+    "appkit/src/ui/components/Motion.tsx", // Motion props passthrough
+    "appkit/src/ui/components/Tooltip.tsx", // ReactElement props clone
+    "appkit/src/ui/components/UnsavedChangesModal.tsx", // ...args spread
+    "appkit/src/validation/zod-error-map.ts", // Zod issue.input/values from internal API
   ].map((p) => p.replace(/\//g, "/")),
 );
 
