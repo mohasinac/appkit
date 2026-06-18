@@ -1578,8 +1578,120 @@ export type { UserRole } from "./security/index";
 // AddressesRepository - unified top-level addresses collection (SB-UNI-A 2026-05-13).
 export { AddressesRepository } from "./repositories/index";
 // S-STORE foundation — 14 schemas + 14 repositories + RBAC.
-// store-extensions barrel: named-export expansion would be ~200 lines.
-export * from "./features/store-extensions/index";
+export {
+  // Schemas — payout methods
+  type PayoutMethodType,
+  type PayoutMethodDocument,
+  PAYOUT_METHODS_COLLECTION,
+  PAYOUT_METHOD_INDEXED_FIELDS,
+  DEFAULT_PAYOUT_METHOD_DATA,
+  // Schemas — shipping configs
+  type ShippingMethod,
+  type ShippingConfigDocument,
+  SHIPPING_CONFIGS_COLLECTION,
+  SHIPPING_CONFIG_INDEXED_FIELDS,
+  DEFAULT_SHIPPING_CONFIG_DATA,
+  // Schemas — analytics cards
+  type AnalyticsScope,
+  type AnalyticsCardType,
+  type AnalyticsCardDocument,
+  ANALYTICS_CARDS_COLLECTION,
+  ANALYTICS_CARD_INDEXED_FIELDS,
+  DEFAULT_ANALYTICS_CARD_DATA,
+  // Schemas — analytics alerts
+  type AlertOperator,
+  type AnalyticsAlertDocument,
+  ANALYTICS_ALERTS_COLLECTION,
+  ANALYTICS_ALERT_INDEXED_FIELDS,
+  DEFAULT_ANALYTICS_ALERT_DATA,
+  // Schemas — store categories
+  type StoreCategoryDocument,
+  STORE_CATEGORIES_COLLECTION,
+  STORE_CATEGORY_INDEXED_FIELDS,
+  DEFAULT_STORE_CATEGORY_DATA,
+  // Schemas — listing templates
+  type ListingTemplateType,
+  type ListingTemplateDocument,
+  LISTING_TEMPLATES_COLLECTION,
+  LISTING_TEMPLATE_INDEXED_FIELDS,
+  DEFAULT_LISTING_TEMPLATE_DATA,
+  // Schemas — moderation queue
+  type ModerationStatus,
+  type ModerationMediaType,
+  type ModerationQueueDocument,
+  MODERATION_QUEUE_COLLECTION,
+  MODERATION_QUEUE_INDEXED_FIELDS,
+  DEFAULT_MODERATION_QUEUE_DATA,
+  // Schemas — reports
+  type ReportEntityType,
+  type ReportStatus,
+  type ReportReason,
+  type ReportDocument,
+  REPORTS_COLLECTION,
+  REPORT_INDEXED_FIELDS,
+  DEFAULT_REPORT_DATA,
+  // Schemas — admin notifications
+  type AdminNotificationCategory,
+  type AdminNotificationDocument,
+  ADMIN_NOTIFICATIONS_COLLECTION,
+  ADMIN_NOTIFICATION_INDEXED_FIELDS,
+  DEFAULT_ADMIN_NOTIFICATION_DATA,
+  // Schemas — item requests
+  type ItemRequestStatus,
+  type ItemRequestReply,
+  type ItemRequestDocument,
+  ITEM_REQUESTS_COLLECTION,
+  ITEM_REQUEST_INDEXED_FIELDS,
+  DEFAULT_ITEM_REQUEST_DATA,
+  // Schemas — store integrations
+  type StoreGoogleConfigDocument,
+  STORE_GOOGLE_CONFIG_COLLECTION,
+  STORE_GOOGLE_CONFIG_INDEXED_FIELDS,
+  DEFAULT_STORE_GOOGLE_CONFIG_DATA,
+  type StoreWhatsAppConfigDocument,
+  STORE_WHATSAPP_CONFIG_COLLECTION,
+  STORE_WHATSAPP_CONFIG_INDEXED_FIELDS,
+  DEFAULT_STORE_WHATSAPP_CONFIG_DATA,
+  // Schemas — RBAC
+  type CustomRoleDocument,
+  CUSTOM_ROLES_COLLECTION,
+  CUSTOM_ROLE_INDEXED_FIELDS,
+  DEFAULT_CUSTOM_ROLE_DATA,
+  type RoleOverrideDocument,
+  ROLE_OVERRIDES_COLLECTION,
+  ROLE_OVERRIDE_INDEXED_FIELDS,
+  DEFAULT_ROLE_OVERRIDE_DATA,
+  // Repositories — classes
+  PayoutMethodsRepository,
+  ShippingConfigsRepository,
+  AnalyticsCardsRepository,
+  AnalyticsAlertsRepository,
+  StoreCategoriesRepository,
+  ListingTemplatesRepository,
+  ModerationQueueRepository,
+  ReportsRepository,
+  AdminNotificationsRepository,
+  ItemRequestsRepository,
+  StoreGoogleConfigRepository,
+  StoreWhatsAppConfigRepository,
+  CustomRolesRepository,
+  RoleOverridesRepository,
+  // Repositories — singletons
+  payoutMethodsRepository,
+  shippingConfigsRepository,
+  analyticsCardsRepository,
+  analyticsAlertsRepository,
+  storeCategoriesRepository,
+  listingTemplatesRepository,
+  moderationQueueRepository,
+  reportsRepository,
+  adminNotificationsRepository,
+  itemRequestsRepository,
+  storeGoogleConfigRepository,
+  storeWhatsAppConfigRepository,
+  customRolesRepository,
+  roleOverridesRepository,
+} from "./features/store-extensions/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // BaseRepository - Shared export for base repository.
 export { BaseRepository } from "./repositories/index";

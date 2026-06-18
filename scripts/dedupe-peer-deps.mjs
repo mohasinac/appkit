@@ -46,6 +46,16 @@ const TRANSITIVE_RUNTIME_DUPS = [
   "@tanstack/query-core",
 ];
 
+// Peer deps that have NO React context / module-scope singleton and that the
+// consumer may not install at the root (e.g. firebase-functions ships only in
+// the Firebase Cloud Functions deploy, not the Next.js consumer). Keeping them
+// in appkit/node_modules lets `tsc -p appkit` resolve their types when the
+// consumer-root copy is absent. The dual-instance crash (2026-06-10) cannot
+// occur here because none of these packages own a top-level React context.
+const SAFE_TO_KEEP = new Set([
+  "firebase-functions",
+]);
+
 const removed = [];
 
 function removeIfPresent(absPath, label) {
@@ -56,6 +66,7 @@ function removeIfPresent(absPath, label) {
 }
 
 for (const dep of [...peers, ...TRANSITIVE_RUNTIME_DUPS]) {
+  if (SAFE_TO_KEEP.has(dep)) continue;
   removeIfPresent(resolve(here, "..", "node_modules", dep), dep);
 }
 
