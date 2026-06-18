@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -124,7 +124,10 @@
     "scripts/init-config.mjs",
     "scripts/labels-extract.mjs",
     "scripts/seed-cli.mjs",
-    "scripts/seed-cli-loader.mjs"
+    "scripts/seed-cli-loader.mjs",
+    "scripts/dedupe-peer-deps.mjs",
+    "scripts/copy-assets.mjs",
+    "scripts/bundle-css.mjs"
   ],
   "bin": {
     "appkit-sieve-audit": "./scripts/sieve-audit.mjs",
