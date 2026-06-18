@@ -1586,7 +1586,7 @@ export {
   PAYOUT_METHOD_INDEXED_FIELDS,
   DEFAULT_PAYOUT_METHOD_DATA,
   // Schemas — shipping configs
-  type ShippingMethod,
+  type ShippingMethod as ShippingConfigMethod,
   type ShippingConfigDocument,
   SHIPPING_CONFIGS_COLLECTION,
   SHIPPING_CONFIG_INDEXED_FIELDS,
