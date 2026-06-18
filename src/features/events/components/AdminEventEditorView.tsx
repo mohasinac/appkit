@@ -85,20 +85,22 @@ const EVENT_STATUS_OPTIONS = [
   { label: "Ended", value: "ended" },
 ];
 
-const FORM_FIELD_TYPE_OPTIONS = [
-  { label: "Short text", value: "text" },
-  { label: "Long text", value: "textarea" },
-  { label: "Email", value: "email" },
-  { label: "Phone", value: "phone" },
-  { label: "Number", value: "number" },
-  { label: "Dropdown (select)", value: "select" },
-  { label: "Multi-select", value: "multiselect" },
-  { label: "Checkbox", value: "checkbox" },
-  { label: "Radio", value: "radio" },
-  { label: "Date", value: "date" },
-  { label: "Rating (1–5)", value: "rating" },
-  { label: "File upload", value: "file" },
-];
+const FORM_FIELD_TYPE_OPTIONS: { label: string; value: FormFieldType }[] = (
+  [
+    ["text", "Short text"],
+    ["textarea", "Long text"],
+    ["email", "Email"],
+    ["phone", "Phone"],
+    ["number", "Number"],
+    ["select", "Dropdown (select)"],
+    ["multiselect", "Multi-select"],
+    ["checkbox", "Checkbox"],
+    ["radio", "Radio"],
+    ["date", "Date"],
+    ["rating", "Rating (1–5)"],
+    ["file", "File upload"],
+  ] as const
+).map(([value, label]) => ({ label, value: value as FormFieldType }));
 
 const FIELD_TYPES_WITH_OPTIONS: FormFieldType[] = ["select", "multiselect", "radio", "checkbox"];
 
