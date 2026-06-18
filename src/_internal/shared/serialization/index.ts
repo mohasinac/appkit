@@ -17,17 +17,14 @@ export function toClient<T>(value: T): T {
   // Firestore Timestamp duck-type — `.toDate()` returns a JS Date.
   const maybeTs = value as { toDate?: () => Date };
   if (typeof maybeTs.toDate === "function") {
-    // audit-unknown-ok: TS structural escape — generic param
     return maybeTs.toDate().toISOString() as unknown as T;
   }
 
   if (value instanceof Date) {
-    // audit-unknown-ok: TS structural escape — generic param
     return value.toISOString() as unknown as T;
   }
 
   if (Array.isArray(value)) {
-    // audit-unknown-ok: TS structural escape — generic param
     return value.map((v) => toClient(v)) as unknown as T;
   }
 
@@ -36,7 +33,6 @@ export function toClient<T>(value: T): T {
     if (v === undefined) continue;
     out[k] = toClient(v);
   }
-  // audit-unknown-ok: TS structural escape — generic param
   return out as unknown as T;
 }
 

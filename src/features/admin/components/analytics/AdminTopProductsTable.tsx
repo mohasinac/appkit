@@ -25,7 +25,6 @@ export function AdminTopProductsTable({
   className = "",
 }: AdminTopProductsTableProps) {
   return (
-    // audit-variant-ok: card container — border + sm:p-6 responsive bump (PADDING_MAP lacks responsive sm-up ladder)
     <Div
       className={`border border-neutral-200 dark:border-neutral-800 sm:p-6 ${className}`} rounded="xl" padding="md" surface="default"
     >

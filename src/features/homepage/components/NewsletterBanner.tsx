@@ -69,7 +69,6 @@ export function NewsletterBanner({
   return (
     <Section padding="y-6xl" 
       className="relative overflow-hidden"
-      // audit-inline-style-ok: dynamic CSS
       style={{
         background:
           "var(--newsletter-bg, linear-gradient(135deg, var(--color-primary, #1e40af) 0%, var(--color-secondary, #7c3aed) 100%))",
@@ -79,7 +78,6 @@ export function NewsletterBanner({
       <Div className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 border border-white/[0.06]" rounded="full" />
       <Div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 border border-dashed border-white/[0.08]" rounded="full" />
 
-      {/* audit-variant-ok: banner inner — base padding=x-md + sm:px-6 responsive bump (PADDING_MAP has no x-md→x-lg sm-up ladder yet) */}
       <Div className="relative mx-auto max-w-2xl text-center sm:px-6" padding="x-md">
         <Span color="inverse" size="xs" weight="semibold" className="mb-4 inline-flex border border-white/20 tracking-widest /70" rounded="full" padding="pill-md" transform="uppercase">
           {eyebrow}
@@ -92,12 +90,10 @@ export function NewsletterBanner({
         <Text color="inverse" className="mt-4 /60">{subheading}</Text>
 
         {success ? (
-          // audit-variant-ok: newsletter success message — translucent white/20 border + bg-white/10 over inverse background; Text lacks bg/rounded/border variants on top of color="inverse"
           <Text paddingY="md" color="inverse" className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6" size="sm" weight="semibold">
             {successMessage}
           </Text>
         ) : (
-          // audit-variant-ok: newsletter form — flex+gap-3 layout; Form lacks layout/gap variants (FormShell is the typed alternative for multi-step)
           <Form onSubmit={handleSubmit} className="mt-8 flex gap-3">
             <FieldInput
               name="email"
@@ -108,14 +104,12 @@ export function NewsletterBanner({
               required
               className="flex-1"
             />
-            {/* audit-variant-ok: newsletter submit Button — px-5/py-3 + font-bold + yellow inline style; Button lacks paddingY + fontWeight variants */}
             <Button rounded="xl"
               type="submit"
               disabled={loading}
               variant="primary"
               paddingX="lg" textSize="sm"
               className="shrink-0 py-3 font-bold transition-opacity disabled:opacity-60"
-              // audit-inline-style-ok: dynamic CSS
               style={{
                 background: "var(--color-yellow, #FFE500)",
                 color: "#0D0D0D",

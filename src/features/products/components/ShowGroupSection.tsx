@@ -64,7 +64,6 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
       >
         <MediaImage src={image} alt={member.title} size="card" />
         {member.isGroupParent && (
-          // audit-variant-ok: corner badge — absolute-positioned + primary CSS-var bg + arbitrary text-[8px] + rounded-tl (corner-only radius)
           <Span color="inverse" className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-[8px] leading-none px-1 py-0.5 rounded-tl">
             Set
           </Span>
@@ -85,24 +84,20 @@ function GroupTableRow({ member }: { member: GroupMember }) {
 
   return (
     <Tr className="last:border-0" border="subtle">
-      {/* audit-variant-ok: pr-3 is right-only padding; PADDING_MAP only has bi-axis tokens for the X axis */}
       <Td className="pr-3" padding="xs-tall">
         <Div className={`w-10 h-10 ${__O.hidden}`} rounded="full" border="default">
           <MediaImage src={image} alt={member.title} size="thumbnail" />
         </Div>
       </Td>
-      {/* audit-variant-ok: pr-3 is right-only padding; PADDING_MAP only has bi-axis tokens for the X axis */}
       <Td className="pr-3" padding="xs-tall">
         <Text className="line-clamp-2" color="primary" size="sm" weight="medium">{member.title}</Text>
         {member.isGroupParent && (
           <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary)]">Parent</Span>
         )}
       </Td>
-      {/* audit-variant-ok: pr-3 is right-only padding; PADDING_MAP only has bi-axis tokens for the X axis */}
       <Td className="pr-3" padding="xs-tall">
         <Text size="sm" color="muted">{price}</Text>
       </Td>
-      {/* audit-variant-ok: pr-3 is right-only padding; PADDING_MAP only has bi-axis tokens for the X axis */}
       <Td className="pr-3" padding="xs-tall">
         <Text size="xs" transform="capitalize" color="muted">{member.condition ?? "â€”"}</Text>
       </Td>
@@ -130,7 +125,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
     fetch(`/api/products/group/${encodeURIComponent(groupId)}`)
       .then((r) => r.json())
       .then((res: ApiResponse) => setMembers(res.data?.items ?? []))
-      .catch(() => {}) // audit-silent-catch-ok: group section is supplementary; main PDP renders without it
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [groupId]);
 
@@ -145,15 +140,10 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
       <Table className="text-left min-w-[400px]">
         <Thead>
           <Tr border="default">
-            {/* audit-variant-ok: pb-2 pr-3 are single-axis table header paddings; PADDING_MAP only has bi-axis X tokens */}
             <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Image</Th>
-            {/* audit-variant-ok: pb-2 pr-3 are single-axis table header paddings; PADDING_MAP only has bi-axis X tokens */}
             <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Name</Th>
-            {/* audit-variant-ok: pb-2 pr-3 are single-axis table header paddings; PADDING_MAP only has bi-axis X tokens */}
             <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Price</Th>
-            {/* audit-variant-ok: pb-2 pr-3 are single-axis table header paddings; PADDING_MAP only has bi-axis X tokens */}
             <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Condition</Th>
-            {/* audit-variant-ok: pb-2 single-axis table header padding */}
             <Th className="pb-2" color="muted" size="xs" weight="semibold"></Th>
           </Tr>
         </Thead>
@@ -194,7 +184,6 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
         </button>
 
         {open && (
-          // audit-variant-ok: pb-4 pt-1 are asymmetric single-axis paddings; no t/b combo token in PADDING_MAP
           <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
             <Row gap="3" className="min-w-0">
               {/* Parent first */}

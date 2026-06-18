@@ -30,10 +30,7 @@ const SCAN_ROOTS = [
   join(REPO_ROOT, "src", "schemas"),
 ];
 
-const ALLOWLIST_PATHS = new Set([
-  // RTDB channel payloads — kept dynamic until the per-channel schemas land.
-  // (No entries today; placeholder for future allowlist.)
-]);
+const ALLOWLIST_PATHS = new Set([]);
 
 const PER_LINE_OK_RE = /\/\/\s*audit-z-any-ok\s*:/i;
 const VIOLATION_RE = /\bz\s*\.\s*(any|unknown)\s*\(/g;

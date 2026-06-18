@@ -24,7 +24,6 @@ export function renderAuctionOg(
   const endDate = doc?.auctionEndDate
     ? doc.auctionEndDate instanceof Date
       ? doc.auctionEndDate
-      // audit-unknown-ok: TS structural escape — primitive cast
       : new Date(doc.auctionEndDate as unknown as string)
     : null;
   const endsLabel = endDate

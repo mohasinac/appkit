@@ -496,7 +496,6 @@ export function ScamProfileView({
                   <Heading level={2} size="base" weight="semibold">Evidence</Heading>
                   <Row gap="sm" wrap>
                     {scammer.evidence.map((url, i) => (
-                      // audit-variant-ok: evidence thumbnail Anchor — h-32/w-32 fixed size + border + shadow-sm card composition
                       <Anchor key={i} href={url} underline="none" className="block h-32 w-32 rounded-lg overflow-hidden border shadow-sm hover:opacity-90">
                         <MediaImage src={url} alt={`Evidence ${i + 1}`} size="thumbnail" />
                       </Anchor>

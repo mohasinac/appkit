@@ -103,7 +103,6 @@ function SlideBackground({
   const src = mobileUrl ?? effectiveBg?.url ?? "";
 
   if (!effectiveBg) {
-    // audit-variant-ok: slide placeholder — bg-zinc-900 over POSITION_FILL; brand placeholder when no slide image
     return <Div className={`${POSITION_FILL} bg-zinc-900`} />;
   }
 
@@ -216,7 +215,6 @@ function CarouselCardRenderer({
       {!card.isButtonOnly && (
         <>
           <Scrim direction="bottom-up" intensity="strong" className={POSITION_FILL} />
-          {/* audit-variant-ok: card content stack — POSITION_FILL + md:p-6 responsive bump + dynamic text-align class */}
           <Stack justify="end"
             className={`${POSITION_FILL} md:p-6 ${textAlignClass}`} padding="xs"
           >
@@ -231,7 +229,6 @@ function CarouselCardRenderer({
             </Text>
           )}
           {card.content?.title && (
-            // audit-variant-ok: card title — arbitrary text-[11px] base + md:text-2xl lg:text-3xl ladder + drop-shadow-md
             <Heading
               level={2}
               className={`text-[11px] md:text-2xl lg:text-3xl mb-0.5 md:mb-3 drop-shadow-md`} truncate={2} weight="bold"
@@ -241,7 +238,6 @@ function CarouselCardRenderer({
             </Heading>
           )}
           {card.content?.description && (
-            // audit-variant-ok: card description — arbitrary text-[10px] base + md:text-sm responsive bump
             <Text color="inverse" shadow="sm"
               className={`text-[10px] md:text-sm !/80 mb-1 md:mb-4`} truncate
             >
@@ -249,7 +245,6 @@ function CarouselCardRenderer({
             </Text>
           )}
           {(card.buttons?.length ?? 0) > 0 && (
-            // audit-variant-ok: button row — md:gap-2 responsive gap bump (Row.gap is single-axis)
             <Row wrap gap="xs" className="md:gap-2">
               {(card.buttons ?? []).map((btn, i) => {
                 const variant = btn.variant === "link" || btn.variant === "ghost"
@@ -272,7 +267,6 @@ function CarouselCardRenderer({
         </>
       )}
       {card.isButtonOnly && card.buttons?.[0] && (
-        // audit-variant-ok: button-only card overlay — POSITION_FILL + FLEX_CENTER + hover black/20 overlay
         <Button
           variant="ghost"
           className={`${POSITION_FILL} ${FLEX_CENTER} font-semibold text-white hover:bg-black/20 transition-colors rounded-none p-0`}
@@ -357,10 +351,8 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (!slides || slides.length === 0) {
     return (
-      // audit-variant-ok: empty-state hero — min-h responsive + gradient bg + FLEX_CENTER + flex-col
       <Div gap="4" className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${FLEX_CENTER} flex-col`}>
         <Heading level={2} className="text-primary" size="2xl" weight="bold">Coming Soon</Heading>
-        {/* audit-variant-ok: empty-state description — px-4 inline horizontal nudge */}
         <Text variant="secondary" className="max-w-md px-4" align="center">
           Amazing deals are on their way. Stay tuned!
         </Text>
@@ -397,7 +389,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             const slideHeightClass = getSlideHeightClass(slide.settings?.height);
             const hasCards = slide.cards && slide.cards.length > 0;
             return (
-              // audit-variant-ok: slide container — bg-zinc-900 brand placeholder + snap/flex layout
               <Div
                 key={slide.id}
                 className={`snap-start flex-none w-full relative self-stretch bg-zinc-900 ${slideHeightClass}`}
@@ -415,7 +406,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
                 {/* Overlay text (no cards, or overlay present) */}
                 {slide.overlay && (
-                  // audit-variant-ok: overlay container — POSITION_FILL + FLEX_CENTER + responsive px-lg/16/32 ladder
                   <Div className={`${POSITION_FILL} ${FLEX_CENTER} flex-col text-center md:px-16 lg:px-32`} padding="x-lg">
                     {slide.overlay.subtitle && (
                       <Text color="inverse" shadow="sm" className="stagger-1 !/80 mb-1 md:mb-2 tracking-widest" mdSize="sm" size="xs" transform="uppercase">
@@ -423,7 +413,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                       </Text>
                     )}
                     {slide.overlay.title && (
-                      // audit-variant-ok: hero title — responsive md:text-6xl lg:text-8xl + drop-shadow-2xl over Heading size="4xl" base
                       <Heading color="inverse"
                         level={1}
                         className="stagger-2 font-display md:text-6xl lg:text-8xl ! drop-shadow-2xl mb-2 md:mb-4" size="4xl"
@@ -456,7 +445,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
                 {/* Cards grid */}
                 {hasCards && (
-                  // audit-variant-ok: cards grid — POSITION_FILL + base padding=md + responsive gap-2 md:gap-4 + md:p-8
                   <Div
                     className={`${POSITION_FILL} grid gap-2 md:gap-4 md:p-8`} padding="md"
                     style={{
@@ -498,7 +486,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               aria-label={`Go to slide ${index + 1}`}
             >
               {index === currentSlide && (
-                // audit-variant-ok: progress-fill bar — absolute positioned bg-black/20 progress animation
                 <Span
                   className="absolute inset-y-0 left-0 bg-black/20 animate-[progress-fill_4s_linear_forwards]" rounded="full"
                   aria-hidden="true"
@@ -512,7 +499,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       {/* Navigation Arrows */}
       {slides.length > 1 && (
         <Row gap="sm" className="absolute bottom-4 right-4 z-20">
-          {/* audit-variant-ok: previous-slide arrow — HERO_CAROUSEL_ARROW shared style + p-0 to clear button padding */}
           <Button
             variant="ghost"
             className={`p-0 ${HERO_CAROUSEL_ARROW}`}
@@ -523,7 +509,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
           </Button>
-          {/* audit-variant-ok: next-slide arrow — HERO_CAROUSEL_ARROW shared style + p-0 to clear button padding */}
           <Button
             variant="ghost"
             className={`p-0 ${HERO_CAROUSEL_ARROW}`}

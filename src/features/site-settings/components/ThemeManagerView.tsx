@@ -477,7 +477,6 @@ export function ThemeManagerView({
             <iframe
               title="Theme preview"
               src={previewSrc}
-              // audit-variant-ok: ThemeManagerView preview iframe — height is
               // fixed; primitive Iframe doesn't carry a static numeric height variant.
               className="block w-full h-[600px] rounded-lg"
             />

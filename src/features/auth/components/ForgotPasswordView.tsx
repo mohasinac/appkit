@@ -79,7 +79,6 @@ export function ForgotPasswordView({
                   disabled={isLoading}
                   className="w-full"
                   onClick={async () => {
-                    // toast-handled-by-hook: onSubmit prop's mutation hook owns toast UX
                     clearErrors();
                     const parsed = forgotPasswordSchema.safeParse({ email });
                     if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);

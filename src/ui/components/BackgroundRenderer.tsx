@@ -64,7 +64,6 @@ export function BackgroundRenderer({
     <>
       <div
         className="appkit-bg-renderer"
-        // audit-inline-style-ok: computed style fn
         style={getBackgroundStyle()}
         data-section="backgroundrenderer-div-456"
       >
@@ -90,7 +89,6 @@ export function BackgroundRenderer({
 
       <div
         className="appkit-bg-renderer__overlay"
-        // audit-inline-style-ok: pass-through style prop
         style={overlayStyle}
       />
     </>

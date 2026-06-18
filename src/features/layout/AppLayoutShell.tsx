@@ -290,7 +290,6 @@ function SidebarUserHeader({
           {user.role && !isBuyerUser(user) && (
             <Row textWeight="bold" 
               className="absolute -bottom-0.5 -right-0.5 w-4 h-4 border-2 border-white text-white text-[9px] leading-none select-none" align="center" justify="center" rounded="full"
-              // audit-inline-style-ok: runtime brand gradient
               style={{ background: ROLE_DOT_COLORS[user.role] ?? "var(--appkit-color-text-muted)" }}
               title={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               aria-label={user.role}

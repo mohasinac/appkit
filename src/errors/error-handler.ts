@@ -7,7 +7,6 @@ import { ERROR_CODES, ERROR_MESSAGES_BY_CODE } from "./error-codes";
  * Handle API errors with consistent response format.
  * Use in Next.js API route catch blocks.
  */
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function handleApiError(error: unknown): NextResponse {
   if (error instanceof AppError) {
     if (error.statusCode >= 500) {
@@ -56,7 +55,6 @@ export function handleApiError(error: unknown): NextResponse {
  * replace with your structured logger if needed.
  */
 export function logError(
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   error: unknown,
   context?: Record<string, JsonValue>,
 ): void {
@@ -72,7 +70,6 @@ export function logError(
 /**
  * Type guard — check if a value is an AppError instance.
  */
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function isAppError(error: unknown): error is AppError {
   return error instanceof AppError;
 }

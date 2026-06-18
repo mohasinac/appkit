@@ -27,7 +27,6 @@ import { NextResponse } from "next/server.js";
 
 /** Minimal logger interface — satisfied by Winston, Pino, or console. */
 export interface IApiErrorLogger {
-  // audit-unknown-ok: error JSON serialization boundary
   error(message: string, meta?: Record<string, unknown>): void;
 }
 
@@ -37,14 +36,12 @@ export interface ApiErrorHandlerOptions<TAppError> {
    * Type guard — returns true when the thrown value is your app's AppError
    * (or any subclass) that has statusCode / toJSON methods.
    */
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   isAppError(err: unknown): err is TAppError;
 
   /** Extract the HTTP status code from your AppError. */
   getStatusCode(err: TAppError): number;
 
   /** Serialise the error to a JSON-safe shape for the response body. */
-  // audit-unknown-ok: error JSON serialization boundary
   toJSON(err: TAppError): unknown;
 
   /** Logger used for 5xx and unexpected errors. */
@@ -78,14 +75,12 @@ export function createApiErrorHandler<TAppError>(
     internalErrorMessage = "An internal server error occurred",
   } = options;
 
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   return function handleApiError(error: unknown): NextResponse {
     // Known AppError subclass — structured response
     if (isAppError(error)) {
       const status = getStatusCode(error);
       if (status >= 500) {
         logger.error("API Error", {
-          // audit-unknown-ok: error JSON serialization boundary
           body: toJSON(error) as Record<string, unknown>,
         });
       }
@@ -97,7 +92,6 @@ export function createApiErrorHandler<TAppError>(
       error !== null &&
       typeof error === "object" &&
       "issues" in error &&
-      // audit-unknown-ok: error JSON serialization boundary
       Array.isArray((error as Record<string, unknown>).issues)
     ) {
       return NextResponse.json(

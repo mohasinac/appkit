@@ -67,7 +67,6 @@ export interface PreOrderDetailPageViewProps {
   productFeatures?: ProductFeatureDocument[];
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function toDescriptionHtml(raw: unknown): string {
   if (!raw) return "";
   const s = typeof raw === "string" ? raw : JSON.stringify(raw);
@@ -302,7 +301,6 @@ function PreOrderBuyBarPanel({
           <Div className={`h-2 w-full ${__O.hidden}`} rounded="full" surface="subtle">
             <Div
               className="h-full bg-primary transition-all" rounded="full"
-              // audit-inline-style-ok: computed percentage
               style={{ width: `${progressPct}%` }}
             />
           </Div>
@@ -402,7 +400,6 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
     );
   }
 
-  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
 

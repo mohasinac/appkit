@@ -68,7 +68,6 @@ export function parseCsvValues(value: string): string[] {
     .filter(Boolean);
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof
 export function toNumberValue(value: unknown, fallback: number): number {
   if (typeof value === "number" && Number.isFinite(value)) {
     return value;
@@ -82,17 +81,14 @@ export function toNumberValue(value: unknown, fallback: number): number {
   return fallback;
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value
 export function toStringValue(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value
 export function toBooleanValue(value: unknown, fallback = false): boolean {
   return typeof value === "boolean" ? value : fallback;
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value
 export function toStringArray(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === "string")
@@ -881,7 +877,6 @@ const COLLECTION_CARD_ENTRY_TYPES: readonly CollectionCardEntryType[] = [
   "categories",
 ];
 
-// audit-unknown-ok: parses arbitrary saved Firestore section config
 function parseCollectionCardsEntry(raw: unknown): CollectionCardsEntryBuilderState {
   const r = (raw ?? {}) as JsonObjectWithUndefined;
   const typeRaw = toStringValue(r.type, "products");

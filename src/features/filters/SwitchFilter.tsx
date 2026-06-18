@@ -47,7 +47,6 @@ export function SwitchFilter({
       )}
     >
       <Row gap="sm">
-        {/* audit-variant-ok: collapse-toggle Button — flex-1 + bespoke text-zinc-900/50 + py-1 + hover-opacity */}
         <Button
           type="button"
           id={`sf-${title}`}

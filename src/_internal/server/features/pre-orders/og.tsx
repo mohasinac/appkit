@@ -22,7 +22,6 @@ export function renderPreOrderOg(
 ): ReactElement {
   const locale = opts.locale ?? "en-IN";
   const release = doc?.preOrderReleaseDate
-    // audit-unknown-ok: TS structural escape — primitive cast
     ? new Date(doc.preOrderReleaseDate as unknown as string)
     : null;
   const releaseDateLabel = release

@@ -52,7 +52,7 @@ export function SellerGoogleReviewsView({
           lastSyncedAt: data.lastSyncedAt ? String(data.lastSyncedAt) : undefined,
         });
       })
-      .catch(() => {}) // audit-silent-catch-ok: empty form is safe fallback; user can still connect
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 

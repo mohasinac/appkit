@@ -31,12 +31,10 @@ interface StatCardProps {
 
 function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCardProps) {
   return (
-    // audit-variant-ok: stat card — static shadow-sm + hover-shadow-md transition combo; Div.shadow accepts only one value
     <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} hover:shadow-md transition-shadow`} rounded="xl" shadow="sm">
       {/* 3-px gradient top accent */}
       <Div
         className="absolute top-0 left-0 right-0 h-[3px]"
-        // audit-inline-style-ok: runtime theme gradient
         style={{ background: gradient }}
         aria-hidden="true"
       />
@@ -58,7 +56,6 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         {/* Icon pill */}
         <Row
           className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="lg"
-          // audit-inline-style-ok: runtime theme gradient
           style={{ background: gradient, opacity: 0.92 }}
         >
           <Icon className="w-5 h-5 text-white drop-shadow-sm" />

@@ -85,7 +85,6 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   protected override mapDoc<D = UserDocument>(snap: DocumentSnapshot): D {
     const raw = super.mapDoc<UserDocument>(snap);
-    // audit-unknown-ok: TS structural escape — generic param
     return this.decryptUser(raw) as unknown as D;
   }
 

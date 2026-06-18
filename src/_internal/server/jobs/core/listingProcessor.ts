@@ -47,7 +47,6 @@ export interface ListingRequestBody {
 }
 
 export interface ListingResponseBody {
-  // audit-unknown-ok: Job listing processor — sieve dispatch over arbitrary collections
   items: unknown[];
   total: number;
   page: number;
@@ -58,7 +57,6 @@ export interface ListingResponseBody {
 }
 
 interface SieveLikeResult {
-  // audit-unknown-ok: Job listing processor — sieve dispatch over arbitrary collections
   items: unknown[];
   total: number;
   page: number;

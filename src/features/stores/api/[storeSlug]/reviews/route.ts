@@ -165,7 +165,6 @@ export async function GET(
     // Apply hasImages filter
     if (hasImages) {
       filtered = filtered.filter((r) => {
-        // audit-unknown-ok: review images cast — Firestore array shape
         const imgs = (r as ReviewEntity & { images?: unknown[] }).images;
         return Array.isArray(imgs) && imgs.length > 0;
       });

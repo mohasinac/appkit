@@ -220,7 +220,6 @@ export function AddressForm({
           disabled={isLoading}
           isLoading={isLoading}
           onClick={async () => {
-            // toast-handled-by-hook: onSubmit prop's mutation hook owns toast UX
             clearErrors();
             const errs: Record<string, string> = {};
             if (!formData.fullName.trim()) errs["fullName"] = "Full name is required";

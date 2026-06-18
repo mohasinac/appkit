@@ -77,7 +77,6 @@ export function SiteLogo({
         alt={title}
         size="thumbnail"
         objectFit="contain"
-        // audit-variant-ok: SiteLogo uses a fixed-height responsive class set
         // backed by the catalogued `size` enum; no consumer-provided overrides.
         className={`block w-auto ${heightCls}`}
       />
@@ -94,7 +93,6 @@ export function SiteLogo({
       role="img"
       aria-label={title}
       data-testid="site-logo"
-      // audit-variant-ok: SiteLogo uses a fixed-height responsive class set
       // backed by the catalogued `size` enum; no consumer-provided overrides.
       className={`block w-auto ${heightCls}`}
     >
@@ -106,17 +104,14 @@ export function SiteLogo({
           <linearGradient id={GRADIENT_ID} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop
               offset="0%"
-              // audit-inline-style-ok: SVG gradient stop must be inline
               style={{ stopColor: "var(--appkit-color-primary-700)" }}
             />
             <stop
               offset="55%"
-              // audit-inline-style-ok: SVG gradient stop must be inline
               style={{ stopColor: "var(--appkit-color-primary-500)" }}
             />
             <stop
               offset="100%"
-              // audit-inline-style-ok: SVG gradient stop must be inline
               style={{ stopColor: "var(--appkit-color-secondary-400)" }}
             />
           </linearGradient>

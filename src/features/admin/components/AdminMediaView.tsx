@@ -128,13 +128,11 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                     loading="lazy"
                   />
                 ) : (
-                  // audit-variant-ok: file label — px-2 horizontal nudge + break-all; Text lacks paddingX variant
                   <Text align="center" className="px-2 break-all">
                     {f.contentType ?? "file"}
                   </Text>
                 )}
               </Row>
-              {/* audit-variant-ok: file row inner padding — p-1.5 between PADDING_MAP.2xs (p-1) and xs (p-2) */}
               <Div className="p-1.5">
                 <Text className="truncate text-[10px] font-mono" color="muted">
                   {f.name.split("/").pop()}

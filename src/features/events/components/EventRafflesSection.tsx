@@ -38,7 +38,6 @@ export async function EventRafflesSection({
       sorts: sortBy("startsAt", "DESC"),
       pageSize: limit,
     });
-    // audit-unknown-ok: TS structural escape — EventItem
     events = (result.items ?? []) as unknown as EventItem[];
   } catch {
     events = [];

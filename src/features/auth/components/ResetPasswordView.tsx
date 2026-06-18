@@ -105,7 +105,6 @@ export function ResetPasswordView({
                   disabled={isLoading}
                   className="w-full"
                   onClick={async () => {
-                    // toast-handled-by-hook: onSubmit prop's mutation hook owns toast UX
                     clearErrors();
                     const parsed = resetClientSchema.safeParse({ password, confirmPassword });
                     if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);

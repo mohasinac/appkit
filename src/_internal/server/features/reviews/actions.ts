@@ -20,7 +20,6 @@ import {
   getReviewOrThrow,
 } from "./service";
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createReviewAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -55,7 +54,6 @@ export async function createReviewAction(input: unknown): Promise<ActionResult<u
   });
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function replyToReviewAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
@@ -76,7 +74,6 @@ export async function replyToReviewAction(input: unknown): Promise<ActionResult<
   });
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function deleteReviewAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);

@@ -33,7 +33,6 @@ function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
   return out;
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createBrandAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     await requireRoleUser("admin");
@@ -79,7 +78,6 @@ export async function createBrandAction(input: unknown): Promise<ActionResult<un
   });
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function updateBrandAction(brandId: string, input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     await requireRoleUser("admin");

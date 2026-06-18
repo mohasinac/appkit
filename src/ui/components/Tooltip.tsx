@@ -96,10 +96,8 @@ export function Tooltip({
   }, [mobileOpen]);
 
   // Clone child to inject aria-label + mouse/focus/touch handlers
-  // audit-unknown-ok: ReactElement props clone — children props arbitrary
   const existingProps = children.props as Record<string, unknown>;
   const child = React.cloneElement(
-    // audit-unknown-ok: ReactElement props clone — children props arbitrary
     children as React.ReactElement<Record<string, unknown>>,
     {
       "aria-label":

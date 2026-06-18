@@ -276,10 +276,8 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
     batch: WriteBatch,
     input: NotificationCreateInput,
   ): DocumentReference {
-    // audit-unknown-ok: TS structural escape — Firebase SDK type
     const ref = this.getCollection().doc() as unknown as DocumentReference;
     batch.create(
-      // audit-unknown-ok: TS structural escape — Firebase SDK type
       ref as unknown as FirebaseFirestore.DocumentReference,
       prepareForFirestore({
         id: ref.id,

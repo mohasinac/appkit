@@ -15,7 +15,6 @@ export type ActionResult<T> =
       /** Stable error code from ERROR_DISPLAY_MAP. Optional for compat with the legacy core/server-action envelope. */
       code?: string;
       error: string;
-      // audit-unknown-ok: generic Zod issues field — caller-defined schema
       issues?: unknown[];
       /** Legacy server-action shape — kept for compat. */
       fieldErrors?: Record<string, string[]>;

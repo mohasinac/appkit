@@ -22,7 +22,7 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
         await Promise.all(
           staleAuthIds.flatMap((id) => [
             rtdb.ref(`auth_events/${id}`).remove(),
-            auth.deleteUser(`auth_event_${id}`).catch(() => {}), // audit-silent-catch-ok: idempotent cleanup; absent records are fine
+            auth.deleteUser(`auth_event_${id}`).catch(() => {}),
           ]),
         );
         ctx.logger.info("Auth events removed", { count: staleAuthIds.length });

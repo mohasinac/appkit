@@ -23,7 +23,6 @@ export function Quote({ children, cite, tone = "default", block = false }: Quote
     return (
       <blockquote
         cite={cite}
-        // audit-variant-ok: Quote(block) is the catalogued primitive for
         // <blockquote>. tone comes from typed enum.
         className={`border-l-4 border-[var(--appkit-color-border)] pl-4 italic ${TONE_CLS[tone]}`}
       >
@@ -34,7 +33,6 @@ export function Quote({ children, cite, tone = "default", block = false }: Quote
   return (
     <q
       cite={cite}
-      // audit-variant-ok: Quote is the catalogued primitive for <q>.
       className={TONE_CLS[tone]}
     >
       {children}

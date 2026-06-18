@@ -57,7 +57,6 @@ export function PhysicalLocationModal({ count, onSave, onClose }: PhysicalLocati
       }
     >
       <Div
-        // audit-inline-style-ok: dynamic CSS
         style={{ display: "flex", flexDirection: "column", gap: "12px" }}
       >
         <Text variant="muted">Assign a physical storage location to the selected items. All fields are optional.</Text>

@@ -48,7 +48,6 @@ export function ViewReviewModal({
               role="img"
               aria-label={displayName}
               className="h-10 w-10 flex-shrink-0 bg-center bg-cover" rounded="full"
-              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
@@ -105,7 +104,6 @@ export function ViewReviewModal({
                 onClick={() => setLightboxIdx(i)}
                 variant="ghost"
                 className={`h-20 w-20 rounded-lg border bg-center bg-cover transition hover:opacity-80 p-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 dark:border-zinc-700"}`}
-                // audit-inline-style-ok: dynamic CSS
                 style={{
                   backgroundImage: `url(${img.thumbnailUrl ?? img.url})`,
                 }}

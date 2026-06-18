@@ -30,7 +30,6 @@ const themed = { textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SE
 return (
     <Section className={`${__P.p6} ${className}`} surface="subtle">
       <Div className="w-full">
-        {/* audit-variant-ok: trust grid — base gap=md + md:gap-8 responsive bump */}
         <Grid
           gap="md"
           className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 md:gap-8"
@@ -40,7 +39,6 @@ return (
               key={index}
               className="text-center p-4 rounded-2xl bg-white dark:bg-slate-900 border border-zinc-100 dark:border-slate-800 hover:shadow-md transition-shadow"
             >
-              {/* audit-variant-ok: indicator icon — base text-4xl + md:text-5xl responsive bump */}
               <Div className="text-4xl md:text-5xl mb-2 md:mb-3">
                 {indicator.icon}
               </Div>

@@ -29,7 +29,6 @@ function slugify(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-// audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
 function failureMessage(prefix: string, error: unknown): string {
   return `${prefix}: ${error instanceof Error ? error.message : "Unknown error"}`;
 }

@@ -74,7 +74,6 @@ export function Slider({
           <Div className="w-full h-1.5" surface="subtle" rounded="full">
             <Div
               className="h-full bg-primary-500 dark:bg-secondary-500 transition-all" rounded="full"
-              // audit-inline-style-ok: computed percentage
               style={{ width: `${pct}%` }}
             />
           </Div>

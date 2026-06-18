@@ -88,12 +88,10 @@ export function NavPermissionsManager({
                         </Div>
                       </Td>
                       <Td padding="md">
-                        {/* audit-variant-ok: Code muted shade; Code.color enum lacks muted/faint */}
                         <Code className="text-zinc-500 dark:text-zinc-400" size="xs">{item.href}</Code>
                       </Td>
                       <Td padding="md">
                         {item.requiredPermission ? (
-                          // audit-variant-ok: permission badge Code — bg-zinc-100 + px-1.5/py-0.5 micro padding; CODE_PADDING_MAP keys don't quite match
                           <Code className="bg-zinc-100 px-1.5 py-0.5 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300" size="xs" rounded="default">
                             {item.requiredPermission}
                           </Code>

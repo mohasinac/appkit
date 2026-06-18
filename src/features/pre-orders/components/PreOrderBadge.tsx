@@ -40,7 +40,6 @@ export function PreOrderTag({
   className = "",
 }: PreOrderTagProps) {
   return (
-    // audit-variant-ok: inline-flex-col Div — inline-flex with column direction; Div.layout=inline-flex defaults to row
     <Div layout="inline-flex" className={`flex-col ${className}`}>
       <Span size="xs" weight="bold" className={CLS_NEW_BADGE}>
         {label}

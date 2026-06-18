@@ -16,7 +16,6 @@ export interface UseGuestCartMergeOptions {
   onNavigate?: (url: string) => void;
   mergeFn?: (items: GuestCartItem[]) => Promise<void>;
   onMerged?: (count: number) => void;
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   onMergeFailed?: (error: unknown) => void;
 }
 

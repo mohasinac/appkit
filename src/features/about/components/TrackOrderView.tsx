@@ -76,7 +76,6 @@ export async function TrackOrderView({
         </Div>
       </Section>
 
-      {/* audit-variant-ok: page container — responsive md:py-16 ladder beyond y-2-5xl base + space-y between sections; Container lacks space-y variant */}
       <Div className={`${page.container.md} md:py-16 space-y-14 md:space-y-16`} padding="y-2-5xl">
         {/* Sign-in prompt */}
         <Section
@@ -89,14 +88,12 @@ export async function TrackOrderView({
             {t("signInPrompt")}
           </Heading>
           <Stack direction="sm-row" justify="center" className="mt-6" gap="3">
-            {/* audit-variant-ok: primary-fill button-as-link — bg-primary CTA fill + flex-icon; TextLink lacks button-tone variant */}
             <TextLink rounded="lg" paddingX="xl" paddingY="md"
               href={String(ROUTES.AUTH.LOGIN)}
               className={`inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white transition-colors`} weight="medium"
             >
               {t("signIn")}
             </TextLink>
-            {/* audit-variant-ok: outline button-as-link — themed bg/border/text composite + flex-icon; TextLink lacks themed button-tone variant */}
             <TextLink rounded="lg" paddingX="xl" paddingY="md"
               href={String(ROUTES.USER.ORDERS)}
               className={`inline-flex items-center gap-2 ${themed.bgPrimary} border ${themed.border} ${themed.textPrimary} hover:opacity-80 transition-opacity`} weight="medium"
@@ -153,7 +150,6 @@ export async function TrackOrderView({
             >
               {t("helpCenter")}
             </TextLink>
-            {/* audit-variant-ok: contact-support button-as-link — primary fill; TextLink lacks themed button-tone variant */}
             <TextLink rounded="lg" paddingX="md" paddingY="xs"
               href={String(ROUTES.PUBLIC.CONTACT)}
               className="bg-primary hover:bg-primary/90 text-white transition-colors" size="sm"

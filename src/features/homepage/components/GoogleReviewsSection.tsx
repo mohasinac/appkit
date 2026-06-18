@@ -17,7 +17,6 @@ const CLS_GMAPS_LINK = "shrink-0 text-sm font-medium text-blue-600 dark:text-blu
 
 function StarRating({ rating }: { rating: number }) {
   return (
-    // audit-variant-ok: star rating Row — gap-0.5 between stars; Row.gap lacks 0.5 key
     <Row className="gap-0.5" align="center" aria-label={`${rating} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((star) => (
         <svg

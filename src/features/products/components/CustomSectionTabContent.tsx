@@ -29,7 +29,6 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
               key={i}
               surface="default" padding="inline"
             >
-              {/* audit-variant-ok: spec key Dt — fixed w-36 + font-medium + capitalize key column */}
               <Dt className="w-36 flex-shrink-0 font-medium capitalize" color="primary">
                 {f.key}
               </Dt>

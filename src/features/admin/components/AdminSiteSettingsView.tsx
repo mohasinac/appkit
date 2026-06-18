@@ -267,7 +267,6 @@ export function AdminSiteSettingsView({
         }
       | undefined;
     setThemeRegistry({
-      // audit-unknown-ok: TS structural escape — ThemeManagerValue
       themes: (themeBlock?.themes ?? []) as unknown as ThemeManagerValue["themes"],
       defaultLightThemeId:
         themeBlock?.defaultLightThemeId ?? DEFAULT_LIGHT_THEME.id,
@@ -401,7 +400,6 @@ export function AdminSiteSettingsView({
   }));
   const themeMutation = useSave("Themes", () => ({
     theme: {
-      // audit-unknown-ok: TS structural escape — domain document type lacks index signature
       themes: themeRegistry.themes as unknown as FirestoreDocument[],
       defaultLightThemeId: themeRegistry.defaultLightThemeId,
       defaultDarkThemeId: themeRegistry.defaultDarkThemeId,
@@ -652,7 +650,6 @@ export function AdminSiteSettingsView({
               </Grid>
               <Input label="Physical address" value={supportAddress} onChange={(e) => setSupportAddress(e.target.value)} placeholder="Mumbai, Maharashtra, India" />
               <Input label="Support hours" value={supportHours} onChange={(e) => setSupportHours(e.target.value)} placeholder="Mon–Fri, 10 AM – 6 PM IST" />
-              {/* audit-variant-ok: section subheader — top-only pt-2; Text lacks paddingSide variant */}
               <Text className="pt-2" color="muted" size="sm" weight="medium">Social links</Text>
               <Grid cols={2} gap="md">
                 <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/letitrip" />
@@ -686,11 +683,9 @@ export function AdminSiteSettingsView({
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Text size="xs" color="muted">Preview (text watermark only)</Text>
                 <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">
-                  {/* audit-variant-ok: watermark preview Span — all-sides p-2 padding; SPAN_PADDING_MAP only has x-only/y-only keys */}
                   <Span
                     weight="medium"
                     className="select-none p-2" color="faint"
-                    // audit-inline-style-ok: computed pixel offset
                     style={{ fontSize: `${Math.max(10, watermarkSize / 5)}px`, opacity: watermarkOpacity / 100 }}
                   >
                     {watermarkText}
@@ -879,7 +874,6 @@ export function AdminSiteSettingsView({
                       value={notifEmailMinPriority}
                       onValueChange={setNotifEmailMinPriority}
                     />
-                    {/* audit-variant-ok: subheader Text — top-only pt-1; Text lacks paddingSide variant */}
                     <Text size="xs" weight="medium" color="muted" className="pt-1">Resend API (for transactional email)</Text>
                     <MaskedInput label="Resend API Key" value={resendApiKey} onChange={setResendApiKey} placeholder="re_live_…" helperText="Get your key at resend.com — used for all transactional notifications." />
                     <Grid cols={2} gap="md">

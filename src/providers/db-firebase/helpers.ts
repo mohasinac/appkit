@@ -21,10 +21,8 @@ import type { FirestoreDocument, FirestoreValue, JsonValue } from "../../schemas
  * FieldValue sentinels (increment, arrayUnion, deleteField, etc.) are not
  * stripped.
  */
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isPlainObject(v: unknown): v is Record<string, FirestoreValue> {
   if (v === null || typeof v !== "object" || Array.isArray(v)) return false;
-  // audit-unknown-ok: TS structural escape
   const proto = Object.getPrototypeOf(v) as unknown;
   return proto === Object.prototype || proto === null;
 }
@@ -87,12 +85,10 @@ export function deserializeTimestamps<T>(obj: T): T {
     !(obj instanceof Date) &&
     typeof (obj as { toDate?: JsonValue }).toDate === "function"
   ) {
-    // audit-unknown-ok: TS structural escape — generic param
     return (obj as unknown as { toDate(): Date }).toDate() as unknown as T;
   }
 
   if (Array.isArray(obj)) {
-    // audit-unknown-ok: TS structural escape — generic param
     return obj.map(deserializeTimestamps) as unknown as T;
   }
 
@@ -102,7 +98,6 @@ export function deserializeTimestamps<T>(obj: T): T {
         k,
         deserializeTimestamps(v),
       ]),
-    // audit-unknown-ok: TS structural escape — generic param
     ) as unknown as T;
   }
 

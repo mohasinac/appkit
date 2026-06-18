@@ -190,7 +190,6 @@ export function AsyncFacetSection({
                   aria-label={opt.label}
                   className="flex-shrink-0 w-4 h-4 rounded border-zinc-300 dark:border-slate-600 cursor-pointer text-primary-600 dark:text-secondary-500"
                 />
-                {/* audit-variant-ok: facet option label — group-hover state override; Span lacks group-hover variant */}
                 <Span size="sm" className="flex-1 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate" color="muted">
                   {opt.label}
                 </Span>
@@ -216,7 +215,6 @@ export function AsyncFacetSection({
           )}
 
           {hasMore && !loading && (
-            // audit-variant-ok: facet load-more button — text-left + group-hover state override; Button lacks text-left / hover-shade variants
             <Button
               type="button"
               variant="ghost"

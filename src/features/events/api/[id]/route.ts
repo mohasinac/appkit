@@ -93,7 +93,6 @@ export async function GET(
     }
 
     // For survey events with leaderboard: top-10 approved entries, PII stripped
-    // audit-unknown-ok: event leaderboard cache items
     let leaderboard: unknown[] = [];
     if (event.type === "survey" && event.surveyConfig?.hasLeaderboard) {
       const leaderboardResult = await entriesRepo.findAll({

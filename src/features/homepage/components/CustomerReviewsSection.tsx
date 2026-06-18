@@ -69,7 +69,6 @@ if (isLoading) {
 
   return (
     <Section className={`${className}`} surface="muted" padding="y-3xl">
-      {/* audit-variant-ok: section container — base padding=x-md + md:px-8 responsive bump */}
       <Div className="w-full max-w-7xl mx-auto md:px-8" padding="x-md">
         {/* Section Header */}
         <Div className="text-center mb-10">

@@ -92,7 +92,6 @@ function SelectableRow<T extends { id: string }>({
     : undefined;
   const isInteractive = Boolean(onRowClick ?? rowHref);
   return (
-    // audit-variant-ok: data-table row — hover + conditional selected-row tint; Tr lacks hover-state / selected-state variants
     <Tr
       data-testid="data-table-row"
       onClick={handleClick}
@@ -163,7 +162,6 @@ export function DataTable<T extends { id: string }>({
       <Div className={`${__O.xAuto}`}>
         <Table data-testid="data-table" size="sm">
           <Thead>
-            {/* audit-variant-ok: table header row — neutral-50/slate-800 explicit tint; Tr.surface=muted maps to a different token */}
             <Tr className="bg-neutral-50 dark:bg-slate-800" border="default">
               {selectionEnabled && (
                 <Th padding="xs-3" scope="col" className="w-10">

@@ -80,14 +80,12 @@ export function _resetActionMiddleware(): void {
 // --- Schema helper type -------------------------------------------------------
 
 interface SafeParseSchema<TInput> {
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   safeParse: (input: unknown) =>
     | { success: true; data: TInput }
     | {
         success: false;
         error: {
           flatten?: () => { fieldErrors: Record<string, string[]> };
-          // audit-unknown-ok: server-action error wrapper
           issues?: unknown[];
         };
       };

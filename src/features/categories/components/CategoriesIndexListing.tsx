@@ -144,7 +144,6 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     buildSieveParams: () => "",
     buildSearchParams: () => "",
     params: new URLSearchParams(),
-  // audit-unknown-ok: TS structural escape — table-state type
   }), [pendingFilters]) as unknown as UrlTable;
 
   const openFilters = useCallback(() => {

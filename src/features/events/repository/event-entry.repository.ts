@@ -43,7 +43,6 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     const raw = super.mapDoc<EventEntryDocument>(snap);
     return decryptPiiFields(raw, [
       ...EVENT_ENTRY_PII_FIELDS,
-    // audit-unknown-ok: TS structural escape — generic param
     ]) as unknown as D;
   }
 
@@ -147,7 +146,6 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
         const raw = decryptPiiFields(
           { id: doc.id, ...doc.data() } as FirestoreDocument,
           [...EVENT_ENTRY_PII_FIELDS],
-        // audit-unknown-ok: TS structural escape — domain document type lacks index signature
         ) as unknown as EventEntryDocument;
         if (!raw.userId) continue;
         const existing = byUser.get(raw.userId);

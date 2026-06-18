@@ -15,7 +15,6 @@ export async function assertEventActive(eventId: string) {
   if (status !== "active" && status !== "upcoming") throw new EventNotActiveError(status ?? "unknown");
 
   const endsAt = (event as any).endsAt
-    // audit-unknown-ok: TS structural escape — primitive cast
     ? new Date((event as any).endsAt as unknown as string)
     : null;
   if (endsAt && endsAt.getTime() < Date.now()) throw new EventEndedError(eventId);
@@ -30,7 +29,6 @@ export async function assertEventActive(eventId: string) {
 export function isEventAcceptingRegistrations(event: Record<string, JsonValue>): boolean {
   const status = event.status as string | undefined;
   if (status !== "active" && status !== "upcoming") return false;
-  // audit-unknown-ok: TS structural escape — primitive cast
   const endsAt = event.endsAt ? new Date(event.endsAt as unknown as string) : null;
   return !endsAt || endsAt.getTime() > Date.now();
 }

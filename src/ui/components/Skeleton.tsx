@@ -47,7 +47,6 @@ export function Skeleton({
   return (
     <div
       className={`appkit-skeleton ${variantClass} ${animationClass} ${className}`}
-      // audit-inline-style-ok: pass-through style prop
       style={style}
       role="status"
       aria-label="Loading"

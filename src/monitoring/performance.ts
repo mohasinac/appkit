@@ -28,7 +28,6 @@ declare global {
 
 /** Register a concrete performance backend (call once in instrumentation). */
 export function setPerformanceProvider(provider: PerformanceProvider): void {
-  // audit-unknown-ok: performance adapter — global type augmentation
   (globalThis as Record<string, unknown>)[PROVIDER_KEY] = provider;
 }
 

@@ -48,7 +48,6 @@ export function HorizontalRule({
     <hr
       role={role}
       aria-orientation={ariaOrientation}
-      // audit-variant-ok: HorizontalRule is the catalogued primitive for <hr>.
       // tone + spacing + dashed come from typed enums.
       className={`${TONE_CLS[tone]}${dashedCls} ${SPACING_CLS[spacing]}`}
     />

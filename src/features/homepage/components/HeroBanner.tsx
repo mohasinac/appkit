@@ -92,7 +92,6 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
       />
 
       {/* Content */}
-      {/* audit-variant-ok: hero content stack — pb-16 sm:pb-24 asymmetric responsive bottom + sm:px-12 lg:px-20 ladder */}
       <Stack justify="end"
         className="relative pb-16 sm:px-12 sm:pb-24 lg:px-20" padding="x-md"
         style={{
@@ -160,7 +159,6 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
       {/* Prev / Next arrows */}
       {banners.length > 1 && (
         <>
-          {/* audit-variant-ok: previous arrow Button — absolute-positioned + translucent backdrop blur over Button.variant ghost */}
           <Button rounded="full"
             onClick={prev}
             aria-label="Previous slide"
@@ -192,7 +190,6 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               />
             </svg>
           </Button>
-          {/* audit-variant-ok: next arrow Button — absolute-positioned + translucent backdrop blur over Button.variant ghost */}
           <Button rounded="full"
             onClick={next}
             aria-label="Next slide"

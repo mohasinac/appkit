@@ -17,7 +17,6 @@ export async function assertPreOrderAvailable(preOrderId: string, requestedQty =
   const current = product.preOrderCurrentCount ?? 0;
   if (current + requestedQty > maxQty) throw new PreOrderSoldOutError(preOrderId);
 
-  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   return product as unknown as ProductDocument;
 }
 

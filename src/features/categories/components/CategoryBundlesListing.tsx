@@ -156,7 +156,6 @@ export function CategoryBundlesListing({
               <Stack key={bundle.id}>
                 <MarketplaceBundleCard bundle={bundle} />
                 {onBuyNow && (
-                  // audit-variant-ok: card footer CTA wrapper — explicit border-top reset + rounded-b-xl asymmetric corner; Div lacks asymmetric corner/border variants
                   <Div border="default" surface="default" className="border-t border-zinc-100 pt-2 pb-3 -mt-px rounded-b-xl border-t-0 dark:border-zinc-800" padding="x-sm">
                     <BundleBuyNowCta
                       bundleSlug={bundle.slug}
@@ -182,7 +181,6 @@ export function CategoryBundlesListing({
         hideTrigger
       >
         <Stack className={`${__P.p4}`} gap="md">
-          {/* audit-variant-ok: toggle Label — justify-between layout; Label.layout is single-axis cross-align only */}
           <Label layout="flex" gap="lg" className="justify-between cursor-pointer">
             <Span size="sm" weight="medium" color="muted">Show out-of-stock bundles</Span>
             <button
@@ -194,7 +192,6 @@ export function CategoryBundlesListing({
  pendingShowOutOfStock ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
  }`}
             >
-              {/* audit-variant-ok: toggle thumb Span — fixed w-3.5/h-3.5 + dynamic translate-x for on/off + shadow-sm */}
               <Span
                 className={`inline-block h-3.5 w-3.5 transform shadow-sm transition-transform duration-200 ${ pendingShowOutOfStock ? "translate-x-[19px]" : "translate-x-[3px]" }`} rounded="full" surface="default"
               />

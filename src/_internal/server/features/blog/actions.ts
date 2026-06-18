@@ -8,7 +8,6 @@ import { assertBlogPostExists, assertBlogSlugUnique, computeReadTime } from "./s
 import { ValidationError } from "../../../shared/errors/index";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createBlogPostAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["admin", "moderator"]);
@@ -27,7 +26,6 @@ export async function createBlogPostAction(input: unknown): Promise<ActionResult
   });
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function updateBlogPostAction(postId: string, input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     await requireRoleUser(["admin", "moderator"]);

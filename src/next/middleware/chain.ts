@@ -100,7 +100,6 @@ export function createApiMiddleware<
         ...middlewares,
         // Apply PII scrubber last (wraps all other middleware output)
         ...(scrubPii
-          // audit-unknown-ok: TS structural escape — Middleware
           ? [piiScrubberMiddleware as unknown as Middleware<TCtx>]
           : []),
       ];

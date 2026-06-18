@@ -34,14 +34,12 @@ export function AdminStatCard({
   const resolvedGradient = GRADIENTS[gradient as keyof typeof GRADIENTS] ?? gradient;
 
   return (
-    // audit-variant-ok: stat card — static shadow-sm + hover-shadow-md transition combo; Div.shadow accepts only one value, so the hover layer needs raw className
     <Div
       className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow ${className}`} rounded="xl" shadow="sm"
     >
       {/* 3-px gradient top accent */}
       <div
         className="absolute top-0 left-0 right-0 h-[3px]"
-        // audit-inline-style-ok: dynamic CSS
         style={{ background: resolvedGradient }}
         aria-hidden="true"
       />
@@ -65,7 +63,6 @@ export function AdminStatCard({
         {icon && (
           <Row textSize="xl"
             className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="lg"
-            // audit-inline-style-ok: dynamic CSS
             style={{ background: resolvedGradient }}
           >
             {icon}

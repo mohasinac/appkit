@@ -159,7 +159,6 @@ export function FilterFacetSection({
               {filtered.map((option) => {
                 const isSelected = selected.includes(option.value);
                 return (
-                  // audit-variant-ok: option row — py-1.5 below PADDING_MAP scale + hover zinc-50/slate-800 + mx-1 negative offset
                   <Row
                     key={option.value}
                     gap="xs"
@@ -185,12 +184,10 @@ export function FilterFacetSection({
                 );
               })}
               {filtered.length === 0 && (
-                // audit-variant-ok: empty-state Text — px-3 to mirror dropdown content padding
                 <Text paddingY="xs" className="px-3" color="faint" size="xs">No results</Text>
               )}
             </Div>
             {hasValue && (
-              // audit-variant-ok: dropdown footer — top divider + tight p-1 padding below PADDING_MAP scale
               <Div border="subtle" className="border-t p-1">
                 <Button
                   type="button"
@@ -219,7 +216,6 @@ export function FilterFacetSection({
     >
       {/* Header */}
       <Row gap="xs">
-        {/* audit-variant-ok: section header Button — justify-between + bold + zinc-900 (over Button.variant ghost); py-1 below scale */}
         <Button
           type="button"
           onClick={handleToggle}
@@ -285,7 +281,6 @@ export function FilterFacetSection({
       {isCollapsed && hasValue && (
         <Row wrap gap="xs" className="mt-2">
           {selectedLabels.map((label) => (
-            // audit-variant-ok: selected chip — explicit zinc/slate border tokens for theme contrast against surface=subtle
             <Span layout="inline-flex"
               key={label}
               size="xs"
@@ -350,7 +345,6 @@ export function FilterFacetSection({
                     )}
                   />
                 )}
-                {/* audit-variant-ok: option label — group-hover color shift relies on parent Row hover state; no group-hover variant on Span */}
                 <Span size="sm" className="flex-1 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate" color="muted">
                   {option.label}
                 </Span>
@@ -363,7 +357,6 @@ export function FilterFacetSection({
             );
           })}
           {filtered.length === 0 && (
-            // audit-variant-ok: accordion empty-state Text — py-1 below PADDING_MAP scale
             <Text className="py-1" color="faint" size="xs">
               No results
             </Text>

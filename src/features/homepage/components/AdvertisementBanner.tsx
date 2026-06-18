@@ -66,7 +66,6 @@ export function AdvertisementBanner({
     return (
       <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
-          {/* audit-variant-ok: ad container — bg-zinc-900 fallback under MediaImage; no semantic surface for "dark scrim base" */}
           <Div className={`relative ${__O.hidden} bg-zinc-900`} rounded="2xl" shadow="xl">
             <Grid className={`${GRID_COLS_2_MD} min-h-[clamp(300px,40vh,420px)]`}>
               {/* Left: image */}
@@ -81,14 +80,12 @@ export function AdvertisementBanner({
               </Div>
 
               {/* Right: content */}
-              {/* audit-variant-ok: ad content Stack — responsive px-{8,12} md:py-14 ladder; mixed responsive padding not in PADDING_MAP */}
               <Stack justify="center" className="relative px-8 md:px-12 md:py-14" padding="y-2xl">
                 <Div
                   className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,_white_1px,_transparent_1px)] bg-[length:12px_12px]"
                   aria-hidden
                 />
                 {tagLabel && (
-                  // audit-variant-ok: translucent-white tag pill over dark ad — no white-overlay surface variant + wide tracking + backdrop-blur
                   <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="semibold" className="self-start bg-white/10 /80 tracking-widest mb-5 backdrop-blur-sm" rounded="full" padding="pill-md" transform="uppercase">
                     <Sparkles className="w-3.5 h-3.5" />
                     {tagLabel}
@@ -110,7 +107,6 @@ export function AdvertisementBanner({
                   </Text>
                 )}
                 {ctaLabel && onCtaClick && (
-                  // audit-variant-ok: white CTA pill over dark ad — bg-white + dark-mode preserved zinc tones override Button.variant secondary
                   <Button gap="md"
                     variant="secondary"
                     size="lg"
@@ -141,7 +137,6 @@ export function AdvertisementBanner({
               ? "h-[clamp(112px,16vh,160px)]"
               : "min-h-[clamp(240px,34vh,360px)]",
           ].join(" ")}
-          // audit-inline-style-ok: optional inline color
           style={backgroundColor ? { backgroundColor } : undefined}
         >
           {/* Gradient background */}
@@ -183,16 +178,13 @@ export function AdvertisementBanner({
               )}
             </Row>
           ) : (
-            // audit-variant-ok: gradient banner content — responsive md:py-16 ladder beyond y-3xl base
             <Div className="relative z-10 w-full max-w-4xl mx-auto md:py-16 text-center" paddingY="y-3xl" paddingX="x-lg">
               {tagLabel && (
-                // audit-variant-ok: translucent-white tag pill over gradient ad — no white-overlay surface variant + shadow-sm + backdrop-blur
                 <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="semibold" className="bg-white/15 /90 tracking-widest mb-5 backdrop-blur-sm shadow-sm" rounded="full" padding="pill-lg" transform="uppercase">
                   <Sparkles className="w-3.5 h-3.5" />
                   {tagLabel}
                 </Span>
               )}
-              {/* audit-variant-ok: gradient-banner H2 — lg:text-6xl + drop-shadow-lg beyond Heading.size scale + display weight extrabold */}
               <Heading color="inverse"
                 level={2}
                 variant="none"

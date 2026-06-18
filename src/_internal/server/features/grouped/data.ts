@@ -16,7 +16,6 @@ import {
 
 function mapDoc(doc: FirebaseFirestore.QueryDocumentSnapshot): GroupedListingDocument {
   const data = doc.data() as Record<string, JsonValue>;
-  // audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
   const ts = (v: unknown): Date => {
     const d = (v as { toDate?: () => Date } | undefined)?.toDate?.();
     return d ?? (v instanceof Date ? v : new Date());
@@ -76,7 +75,6 @@ export const getGroupedListingForDetail = cache(
       if (snap.empty) {
         const byId = await db.collection(GROUPED_LISTINGS_COLLECTION).doc(slug).get();
         if (!byId.exists) return null;
-        // audit-unknown-ok: TS structural escape — Firebase SDK type
         return mapDoc(byId as unknown as FirebaseFirestore.QueryDocumentSnapshot);
       }
       return mapDoc(snap.docs[0]);

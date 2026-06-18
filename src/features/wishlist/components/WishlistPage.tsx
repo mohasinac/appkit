@@ -33,7 +33,6 @@ export function WishlistCard({
             role="img"
             aria-label={item.productTitle ?? ""}
             className="h-full w-full bg-center bg-cover"
-            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${item.productImage})` }}
           />
         )}

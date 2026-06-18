@@ -162,7 +162,6 @@ export const POST = createRouteHandler({
       enabled: (body as { enabled?: boolean }).enabled ?? true,
       createdAt: now,
       updatedAt: now,
-    // audit-unknown-ok: TS structural escape — HomepageSection
     } as unknown as HomepageSection);
 
     return NextResponse.json({ success: true, data: created }, { status: 201 });

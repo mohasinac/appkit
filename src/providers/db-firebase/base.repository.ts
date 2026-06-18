@@ -41,7 +41,6 @@ export abstract class BaseRepository<T extends DocumentData> {
     return deserializeTimestamps({
       id: snap.id,
       ...(snap.data() ?? {}),
-    // audit-unknown-ok: TS structural escape — generic param
     }) as unknown as D;
   }
 
@@ -70,7 +69,6 @@ export abstract class BaseRepository<T extends DocumentData> {
     return doc;
   }
 
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   async findBy(field: string, value: unknown): Promise<T[]> {
     try {
       const snapshot = await this.getCollection()
@@ -84,7 +82,6 @@ export abstract class BaseRepository<T extends DocumentData> {
     }
   }
 
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   async findOneBy(field: string, value: unknown): Promise<T | null> {
     try {
       const snapshot = await this.getCollection()

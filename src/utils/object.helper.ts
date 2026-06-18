@@ -60,7 +60,6 @@ export function isEmptyObject(obj: object): boolean {
 export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== "object") return obj;
   if (Array.isArray(obj))
-    // audit-unknown-ok: TS structural escape — generic param
     return obj.map((item) => deepClone(item)) as unknown as T;
   const cloned = {} as T;
   const objectRecord = obj as Record<string, unknown>;
@@ -70,7 +69,6 @@ export function deepClone<T>(obj: T): T {
   return cloned;
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function isEqual(obj1: unknown, obj2: unknown): boolean {
   if (obj1 === obj2) return true;
   if (

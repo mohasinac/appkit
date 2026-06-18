@@ -60,7 +60,6 @@ export function MakeOfferButton({
     if (!isNaN(parsed)) setOfferAmount(parsed);
   }
 
-  // audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
   function handleOfferError(err: unknown) {
     if (isAuthError(err)) {
       setState("idle");
@@ -92,7 +91,6 @@ export function MakeOfferButton({
       try {
         await onMakeOffer(productId, offerAmount, buyerNote || undefined);
         setState("success");
-      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       } catch (err: unknown) {
         void normalizeError(err);
         handleOfferError(err);

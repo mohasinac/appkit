@@ -16,7 +16,6 @@ export interface LogEntry {
   level: LogLevel;
   message: string;
   timestamp: Date;
-  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   data?: unknown;
 }
 
@@ -36,7 +35,6 @@ export interface LoggerOptions {
   enableFileLogging?: boolean;
   maxEntries?: number;
   /** Optional function to sanitize data before logging (e.g., PII redaction). */
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   sanitizer?: (data: unknown) => unknown;
 }
 
@@ -47,7 +45,6 @@ export class Logger {
     Omit<LoggerOptions, "logFileUrl" | "enableFileLogging" | "sanitizer">
   > & {
     logFileUrl?: string;
-    // audit-unknown-ok: callback entry point — accepts arbitrary payload value
     sanitizer?: (data: unknown) => unknown;
   };
   private levelPriority: Record<LogLevel, number> = {
@@ -81,7 +78,6 @@ export class Logger {
   }
 
   /** Set or update the data sanitizer (e.g., for PII redaction). */
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   public static setSanitizer(fn: (data: unknown) => unknown): void {
     Logger.getInstance().options.sanitizer = fn;
   }
@@ -92,7 +88,6 @@ export class Logger {
     );
   }
 
-  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   private addLog(level: LogLevel, message: string, data?: unknown): void {
     if (!this.shouldLog(level)) return;
 
@@ -170,22 +165,18 @@ export class Logger {
     }
   }
 
-  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public debug(message: string, data?: unknown): void {
     this.addLog("debug", message, data);
   }
 
-  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public info(message: string, data?: unknown): void {
     this.addLog("info", message, data);
   }
 
-  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public warn(message: string, data?: unknown): void {
     this.addLog("warn", message, data);
   }
 
-  // audit-unknown-ok: logger entry-point — accepts arbitrary serialisable values
   public error(message: string, data?: unknown): void {
     this.addLog("error", message, data);
   }

@@ -13,7 +13,6 @@ import { ValidationError } from "../../../shared/errors/index";
 import { OrderNotFoundError, OrderOwnershipError } from "../../../shared/features/orders/errors";
 import { isAdminUser } from "../../../../features/auth/role-predicates";
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function createOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -27,7 +26,6 @@ export async function createOrderAction(input: unknown): Promise<ActionResult<un
   });
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function cancelOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -38,7 +36,6 @@ export async function cancelOrderAction(input: unknown): Promise<ActionResult<un
   });
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function requestReturnAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
@@ -49,7 +46,6 @@ export async function requestReturnAction(input: unknown): Promise<ActionResult<
   });
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function updateOrderStatusAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);

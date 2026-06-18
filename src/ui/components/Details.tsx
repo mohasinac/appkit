@@ -63,9 +63,7 @@ export function Details({
         if (onToggle) onToggle((event.currentTarget as HTMLDetailsElement).open);
       }}
       name={name}
-      // audit-variant-ok: Details is the catalogued primitive for <details>.
       className={`${TONE_CLS[tone]} ${PADDING_CLS[padding]}${className ? ` ${className}` : ""}`.trim()}
-      // audit-inline-style-ok: style is a pass-through prop for the catalogued <details> primitive
       style={style}
     >
       {children}
@@ -76,7 +74,6 @@ export function Details({
 export function Summary({ children, className }: SummaryProps) {
   return (
     <summary
-      // audit-variant-ok: Summary is the catalogued primitive for <summary>.
       className={`cursor-pointer select-none font-medium text-[var(--appkit-color-text)] list-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-focus-ring)] rounded${className ? ` ${className}` : ""}`}
     >
       {children}

@@ -131,7 +131,6 @@ export function SellerPayoutMethodsView({
   });
 
   const handleDelete = useCallback(async (id: string) => {
-    // toast-handled-by-hook (useEntityDelete)
     await performDelete(id);
     setDeleteTargetId(null);
   }, [performDelete]);

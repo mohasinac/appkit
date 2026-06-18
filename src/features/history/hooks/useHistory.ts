@@ -99,7 +99,6 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
   const trackTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   const loadItems = useCallback(async () => {
-    // toast-intentionally-silent — silent fallback to empty list on error
     try {
       if (isAuth) {
         setItems(await fetchAuthHistory());

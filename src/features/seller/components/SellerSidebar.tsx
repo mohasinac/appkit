@@ -84,7 +84,6 @@ function FlatContent({
       {storeName && (
         <Row border="bottom-subtle" gap="3" padding="inline">
           {storeLogoURL ? (
-            // audit-inline-style-ok: dynamic image URL
             <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
           ) : (
             <Div className={CLS_STORE_FALLBACK}>
@@ -136,7 +135,6 @@ function GroupsContent({
       {storeName && (
         <Row border="bottom-subtle" gap="3" padding="inline">
           {storeLogoURL ? (
-            // audit-inline-style-ok: dynamic image URL
             <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
           ) : (
             <Div className={CLS_STORE_FALLBACK}>
@@ -261,7 +259,6 @@ export function StoreSidebar({
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
         <Div
           className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
-          // audit-inline-style-ok: dynamic CSS
           style={{
             top: "var(--header-height, 3.5rem)",
             height: "calc(100vh - var(--header-height, 3.5rem))",
@@ -274,7 +271,6 @@ export function StoreSidebar({
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               <Row className="min-w-0" align="center" gap="3">
                 {storeLogoURL ? (
-                  // audit-inline-style-ok: dynamic image URL
                   <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
                 ) : (
                   <Div className={CLS_STORE_FALLBACK}>

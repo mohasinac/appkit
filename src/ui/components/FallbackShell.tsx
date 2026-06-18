@@ -59,7 +59,6 @@ export function FallbackShell({
   return (
     <div
       role="alert"
-      // audit-inline-style-ok: FallbackShell ships its own critical CSS so it renders before/without Tailwind. Source-of-truth fallback surface.
       style={{
         minHeight: "100vh",
         display: "flex",
@@ -74,11 +73,9 @@ export function FallbackShell({
       }}
     >
       <div
-        // audit-inline-style-ok: FallbackShell critical-CSS container — see parent above.
         style={{ maxWidth: "32rem", width: "100%" }}
       >
         <h1
-          // audit-inline-style-ok: FallbackShell critical CSS — see container above.
           style={{
             margin: 0,
             fontSize: "1.875rem",
@@ -92,7 +89,6 @@ export function FallbackShell({
         </h1>
         {description ? (
           <p
-            // audit-inline-style-ok: FallbackShell critical CSS — see container above.
             style={{
               margin: "0.75rem 0 0",
               fontSize: "1rem",
@@ -104,7 +100,6 @@ export function FallbackShell({
         ) : null}
         {details ? (
           <pre
-            // audit-inline-style-ok: FallbackShell critical CSS — see container above.
             style={{
               margin: "1.25rem 0 0",
               padding: "0.75rem 1rem",
@@ -125,7 +120,6 @@ export function FallbackShell({
         ) : null}
         {actions ? (
           <div
-            // audit-inline-style-ok: FallbackShell critical CSS — see container above.
             style={{
               marginTop: "1.5rem",
               display: "flex",

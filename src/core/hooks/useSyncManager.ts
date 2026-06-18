@@ -38,11 +38,11 @@ async function replayCartOps(): Promise<void> {
           productId: op.productId,
           quantity: op.quantity ?? 1,
         })
-        .catch(() => {}); // audit-silent-catch-ok: offline-replay; failed ops stay queued for next sync tick
+        .catch(() => {});
     } else if (op.op === "remove") {
       await apiClient
         .delete(`/api/cart/${op.productId}`)
-        .catch(() => {}); // audit-silent-catch-ok: offline-replay; failed ops stay queued for next sync tick
+        .catch(() => {});
     }
   }
   clearCartOps();
@@ -57,11 +57,11 @@ async function replayWishlistOps(): Promise<void> {
     if (op.op === "add") {
       await apiClient
         .post("/api/user/wishlist", { productId: op.itemId })
-        .catch(() => {}); // audit-silent-catch-ok: offline-replay; failed ops stay queued for next sync tick
+        .catch(() => {});
     } else if (op.op === "remove") {
       await apiClient
         .delete(`/api/user/wishlist/${op.itemId}`)
-        .catch(() => {}); // audit-silent-catch-ok: offline-replay; failed ops stay queued for next sync tick
+        .catch(() => {});
     }
   }
   clearWishlistOps();

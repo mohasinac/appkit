@@ -33,7 +33,6 @@ export async function GET(
       );
     }
     return NextResponse.json({ success: true, data: info });
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   } catch (err: unknown) {
     void normalizeError(err);
     const message =

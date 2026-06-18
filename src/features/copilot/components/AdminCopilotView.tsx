@@ -43,7 +43,6 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
   const isUser = msg.role === "user";
   return (
     <Div layout="flex" justify={isUser ? "end" : "start"}>
-      {/* audit-variant-ok: chat bubble — conditional bg + rounded-corner asymmetry + py-2.5; Div lacks state-bubble variant */}
       <Div textSize="sm"
         className={`max-w-[80%] py-2.5 ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} padding="x-md" rounded="2xl"
       >
@@ -59,7 +58,6 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
 type CopilotLabels = AdminCopilotViewProps["labels"] & object;
 
 function renderCopilotChatPanel(props: {
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   messages: CopilotMessage[]; conversationId: string; isLoading: boolean; error: unknown;
   input: string; setInput: (v: string) => void; labels: CopilotLabels;
   messagesEndRef: React.RefObject<HTMLDivElement>; handleSubmit: (e: React.FormEvent) => void;
@@ -82,7 +80,6 @@ function renderCopilotChatPanel(props: {
         {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
         {isLoading ? (
           <Row justify="start">
-            {/* audit-variant-ok: thinking bubble — rounded-tl-sm asymmetric corner; rounded variant maps all corners */}
             <Div paddingY="y-xs-tall" surface="muted" className="rounded-tl-sm" padding="x-md" rounded="2xl">
               <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
             </Div>
@@ -106,7 +103,6 @@ function renderCopilotChatPanel(props: {
 }
 
 function renderCopilotHistoryPanel(props: {
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   historyQuery: { data?: { messages: Array<{ prompt: string; response: string; createdAt: string }> }; error: unknown; isLoading: boolean };
   conversationInput: string; setConversationInput: (v: string) => void;
   loadConversation: (id: string) => void; labels: CopilotLabels;
@@ -219,7 +215,6 @@ export function AdminCopilotView({
               ))}
               {isLoading ? (
                 <Row justify="start">
-                  {/* audit-variant-ok: thinking bubble — rounded-tl-sm asymmetric corner; rounded variant maps all corners */}
             <Div paddingY="y-xs-tall" surface="muted" className="rounded-tl-sm" padding="x-md" rounded="2xl">
                     <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
                   </Div>

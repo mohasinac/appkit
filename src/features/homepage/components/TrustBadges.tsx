@@ -115,11 +115,9 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
         borderBottom: "var(--section-border)",
       }}
     >
-      {/* audit-variant-ok: section wrapper — base paddingY=y-lg + sm:py-10 responsive bump */}
       <Div className="mx-auto max-w-7xl sm:py-10" paddingY="y-lg" paddingX="x-md">
         <Div layout="grid" gap="6" className="grid-cols-2 sm:grid-cols-4">
           {items.map((badge) => (
-            // audit-variant-ok: badge Stack — base flex-col + sm:flex-row + sm:gap-4 responsive direction + text-align flip
             <Stack
               key={badge.id}
               className="text-center sm:flex-row sm:items-center sm:text-left sm:gap-4" align="center" gap="sm"

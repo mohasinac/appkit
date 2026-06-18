@@ -102,7 +102,6 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
                 : "countered",
         });
         setUiState("idle");
-      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       } catch (err: unknown) {
         void normalizeError(err);
         if (isAuthError(err)) {
@@ -264,7 +263,6 @@ export function SellerOffersPanel({
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const loadOffers = useCallback(async () => {
-    // toast-intentionally-silent — error rendered inline via setFetchError()
     setLoading(true);
     setFetchError("");
     try {

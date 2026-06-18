@@ -10,14 +10,12 @@ export const onUserBanChangeHandler: FirestoreTriggerHandler<
     isDisabled?: boolean;
     hardBanReason?: string;
     hardBannedBy?: string;
-    // audit-unknown-ok: Firebase event payload — softBans array shape from Firestore
     softBans?: unknown[];
   } | null;
   const after = event.after as {
     isDisabled?: boolean;
     hardBanReason?: string;
     hardBannedBy?: string;
-    // audit-unknown-ok: Firebase event payload — softBans array shape from Firestore
     softBans?: unknown[];
   } | null;
 

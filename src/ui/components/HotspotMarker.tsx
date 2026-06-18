@@ -117,7 +117,6 @@ export function HotspotMarker({
       aria-label={rest["aria-label"]}
       data-shape={shape}
       data-tone={tone}
-      // audit-inline-style-ok: HotspotMarker is the catalogued primitive for dynamic xPct/yPct positioning. Consumer code uses this primitive instead of authoring its own `style={{ left, top }}`.
       style={{
         position: positionMode,
         left: `${clampPct(xPct)}%`,

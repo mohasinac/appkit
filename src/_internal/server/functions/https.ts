@@ -120,7 +120,6 @@ export const assignSpinPrize = defineFunction({
 
 interface GatewayInput {
   readonly action?: string;
-  // audit-unknown-ok: HTTPS function dispatcher — action-shape varies per route
   readonly [key: string]: unknown;
 }
 
@@ -130,17 +129,11 @@ type GatewayHandler = (
 ) => Promise<unknown>;
 
 const GATEWAY_HANDLERS: Record<string, GatewayHandler> = {
-  // audit-unknown-ok: TS structural escape — GatewayHandler
   listingProcessor: listingProcessorHandler as unknown as GatewayHandler,
-  // audit-unknown-ok: TS structural escape — GatewayHandler
   adminAnalytics: adminAnalyticsHandler as unknown as GatewayHandler,
-  // audit-unknown-ok: TS structural escape — GatewayHandler
   storeAnalytics: storeAnalyticsHandler as unknown as GatewayHandler,
-  // audit-unknown-ok: TS structural escape — GatewayHandler
   promotionsApi: promotionsHandler as unknown as GatewayHandler,
-  // audit-unknown-ok: TS structural escape — GatewayHandler
   triggerEventRaffle: triggerEventRaffleHandler as unknown as GatewayHandler,
-  // audit-unknown-ok: TS structural escape — GatewayHandler
   assignSpinPrize: assignSpinPrizeHandler as unknown as GatewayHandler,
 };
 

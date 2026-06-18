@@ -176,7 +176,6 @@ function emitOrderPlacedNotifications(args: {
       relatedType: "order",
       actionUrl: `/user/orders/view/${orderId}`,
     } as never)
-    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     .catch((err: unknown) =>
       serverLogger.warn("Failed to create buyer order_placed notification", {
         err: err instanceof Error ? err.message : String(err),
@@ -197,7 +196,6 @@ function emitOrderPlacedNotifications(args: {
           relatedType: "order",
           actionUrl: `/store/orders/${orderId}/view`,
         } as never)
-        // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
         .catch((err: unknown) =>
           serverLogger.warn("Failed to create seller order_placed notification", {
             err: err instanceof Error ? err.message : String(err),
@@ -333,7 +331,6 @@ function grantConsentOtpBypassCredit(
         { merge: true },
       );
     })
-    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     .catch((err: unknown) =>
       serverLogger.warn("Failed to grant consent OTP bypass credit", { err }),
     );
@@ -344,7 +341,6 @@ function dispatchOrderConfirmationEmails(
 ): void {
   if (emailsToSend.length === 0) return;
   Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
-    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     (err: unknown) => serverLogger.error("Order confirmation email error:", err),
   );
 }
@@ -410,7 +406,7 @@ export async function createCheckoutOrderAction(
     if (!addressId) {
       failedCheckoutRepository
         .logCheckout(uid, "address_not_found", "Address required for physical cart", { addressId: "", paymentMethod })
-        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+        .catch(() => {});
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     const addressDoc = await unitOfWork.addresses.findById(addressId);
@@ -421,7 +417,7 @@ export async function createCheckoutOrderAction(
     if (!resolvedAddress) {
       failedCheckoutRepository
         .logCheckout(uid, "address_not_found", "Address not found", { addressId, paymentMethod })
-        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+        .catch(() => {});
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     shippingAddress = formatShippingAddress(resolvedAddress);
@@ -593,7 +589,6 @@ export async function createCheckoutOrderAction(
 
       return { available: availableItems, unavailable: unavailableItems, emailOtpUsed };
     });
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   } catch (err: unknown) {
     void normalizeError(err);
     const reason =
@@ -607,7 +602,7 @@ export async function createCheckoutOrderAction(
         addressId,
         paymentMethod,
       })
-      .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+      .catch(() => {});
     throw err;
   }
   const { available, unavailable, emailOtpUsed } = stockResult;
@@ -619,7 +614,7 @@ export async function createCheckoutOrderAction(
         paymentMethod,
         cartItemCount: cartItems.length,
       })
-      .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+      .catch(() => {});
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
   }
 
@@ -951,7 +946,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
         gatewayPaymentId: razorpay_payment_id,
         addressId,
       })
-      .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+      .catch(() => {});
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
   }
 
@@ -1006,7 +1001,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+        .catch(() => {});
       throw new ApiError(
         403,
         "Order verification required. Please complete OTP verification and retry.",
@@ -1079,7 +1074,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+        .catch(() => {});
       throw new ValidationError(
         exists
           ? ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK
@@ -1120,7 +1115,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+        .catch(() => {});
       throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
     }
   }
@@ -1369,12 +1364,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
   });
   if (!isDigitalCartRazorpay && addressId) {
     const otpRefForDelete = consentOtpRef(db, uid, addressId);
-    otpRefForDelete.delete().catch(() => {}); // audit-silent-catch-ok: fire-and-forget side effect must not abort checkout
+    otpRefForDelete.delete().catch(() => {});
   }
 
   if (emailsToSend.length > 0) {
     Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
-      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       (err: unknown) => serverLogger.error("Order confirmation email error:", err),
     );
   }
@@ -1386,7 +1380,6 @@ export async function verifyAndPlaceRazorpayOrderAction(
   getAdminRealtimeDb()
     .ref(`${RTDB_PATHS.PAYMENT_EVENTS}/${razorpay_order_id}`)
     .update({ status: "success", orderIds, updatedAt: Date.now() })
-    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     .catch((err: unknown) =>
       serverLogger.warn("Payment event RTDB signal failed (non-critical)", { err }),
     );

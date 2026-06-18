@@ -164,7 +164,6 @@ function MediaVideoWatermarkLayer({ config }: { config: MediaVideoWatermark }) {
     return (
       <Div
         className="z-10"
-        // audit-inline-style-ok: dynamic size + opacity from runtime site-settings
         style={containerStyle}
         aria-hidden="true"
       >
@@ -180,13 +179,11 @@ function MediaVideoWatermarkLayer({ config }: { config: MediaVideoWatermark }) {
   return (
     <Div
       className="z-10"
-      // audit-inline-style-ok: dynamic size + opacity from runtime site-settings
       style={containerStyle}
       aria-hidden="true"
     >
       <Span
         className="block text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]"
-        // audit-inline-style-ok: width-relative font-size so the text scales with the container
         style={{ fontSize: "0.8em", fontWeight: 700, textAlign: "right" }}
       >
         {config.text ?? "letitrip.in"}

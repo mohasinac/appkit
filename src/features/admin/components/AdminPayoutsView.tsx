@@ -75,7 +75,6 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
 
   const handleExportCsv = async () => {
     try {
-      // audit-form-mutation-hook-ok: CSV download — returns binary blob, not a form submit
       const res = await fetch(ADMIN_ENDPOINTS.PAYOUTS_EXPORT);
       if (!res.ok) throw new Error("Export failed");
       const blob = await res.blob();

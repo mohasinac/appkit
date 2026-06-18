@@ -950,7 +950,7 @@ export function SellerProductShell({
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     autoSaveTimer.current = setTimeout(() => {
       const result = onSaveRef.current(draftRef.current);
-      if (result && typeof (result as Promise<void>).catch === "function") (result as Promise<void>).catch(() => {}); // audit-silent-catch-ok: autosave is best-effort; manual Save shows real errors
+      if (result && typeof (result as Promise<void>).catch === "function") (result as Promise<void>).catch(() => {});
     }, 2000);
     return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
   }, [draft, isDirty, mode]);
@@ -1213,7 +1213,6 @@ export function SellerProductShell({
               </Div>
             )}
             {stepError && (
-              // audit-variant-ok: step error Text — px-5 horizontal + pb-3 bottom-only + error CSS-var
               <Text className="px-5 pb-3 text-[var(--appkit-color-error)]" size="sm">{stepError}</Text>
             )}
           </Div>

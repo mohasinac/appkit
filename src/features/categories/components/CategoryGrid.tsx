@@ -42,13 +42,11 @@ export function CategoryCard({
             role="img"
             aria-label={category.name}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
-            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${category.display.coverImage})` }}
           />
         ) : category.display?.color ? (
           <Div
             className="h-full w-full opacity-80"
-            // audit-inline-style-ok: runtime theme color
             style={{ backgroundColor: category.display.color }}
           />
         ) : null}
@@ -80,7 +78,6 @@ export function CategoryCard({
           <Text size="xs" color="faint">
             {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
           </Text>
-          {/* audit-variant-ok: Browse pill — group-hover state transitions to primary bg/border/text; Span lacks group-hover variant */}
           <Span layout="inline-flex" gap="xs" size="xs" weight="medium" border="default" className="group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors" rounded="md" padding="pill-sm-tall" color="muted">
             Browse <ArrowRight className="h-3 w-3" />
           </Span>

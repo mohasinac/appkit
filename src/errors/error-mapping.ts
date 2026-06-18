@@ -44,16 +44,13 @@ export interface MappedError {
   status: number;
   code: string;
   message: string;
-  // audit-unknown-ok: error-shape predicates (isZodLikeError, etc.) — TS requires unknown for type-guard params
   issues?: unknown[];
 }
 
 interface ZodLikeError {
-  // audit-unknown-ok: error-shape predicates (isZodLikeError, etc.) — TS requires unknown for type-guard params
   issues: unknown[];
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isZodLikeError(err: unknown): err is ZodLikeError {
   return (
     typeof err === "object" &&
@@ -68,7 +65,6 @@ interface FirestoreLikeError {
   message?: string;
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isFirestoreLikeError(err: unknown): err is FirestoreLikeError {
   if (typeof err !== "object" || err === null) return false;
   const codeVal = (err as { code?: JsonValue }).code;
@@ -130,7 +126,6 @@ function mapFirestore(err: FirestoreLikeError): MappedError | null {
  *  - Unknown Error → 500 INTERNAL; message scrubbed when isProduction
  */
 export function mapToHttpError(
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   err: unknown,
   opts?: { isProduction?: boolean },
 ): MappedError {
@@ -211,7 +206,6 @@ export function mapToHttpError(
 
   // Object with explicit { status, message } shape (legacy throw-with-status)
   if (typeof err === "object" && err !== null) {
-    // audit-unknown-ok: error-shape predicates (isZodLikeError, etc.) — TS requires unknown for type-guard params
     const e = err as { status?: JsonValue; statusCode?: unknown; message?: unknown };
     const status =
       typeof e.statusCode === "number"

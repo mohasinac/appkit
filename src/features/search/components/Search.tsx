@@ -418,7 +418,6 @@ export function Search({
             className="w-full rounded-lg border border-zinc-300 bg-white pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
           />
           {query && (
-            // audit-variant-ok: clear Button — absolute-positioned right-3 + p-0.5 micro padding + hover-shade
             <Button rounded="full" textColor="faint"
               type="button"
               variant="ghost"
@@ -485,7 +484,6 @@ export function Search({
         {isInlineOpen && (filteredQuickLinks.length > 0 || query) && (
           <div
             className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
-            // audit-inline-style-ok: z-index token
             style={{ zIndex: "var(--appkit-z-dropdown)" }}
             onMouseDown={(event) => event.preventDefault()}
           >
@@ -652,9 +650,7 @@ export function Search({
 
   return (
     <Div border="bottom-subtle" className="animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
-      {/* audit-variant-ok: search container — md:py-4 responsive vertical padding only at md+; paddingY token doesn't have y-?-only-md-up */}
       <Div className="container mx-auto md:py-4 relative" padding="inline">
-        {/* audit-variant-ok: search row — md:gap-3 responsive gap only at md+; Row.gap doesn't have responsive md form */}
         <Row gap="sm" className="md:gap-3">
           <Div className="flex-1 relative">
             <Input
@@ -728,7 +724,6 @@ export function Search({
         </Row>
 
         {(filteredSiteLinks.length > 0 || query) && (
-          // audit-variant-ok: dropdown panel — asymmetric pt-2/pb-4; SurfaceProps only takes one paddingY
           <Stack className="absolute top-full left-0 right-0 pt-2 pb-4 z-50" padding="x-md" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
               <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">

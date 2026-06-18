@@ -17,7 +17,6 @@ export interface UseBulkEventOptions<TData = unknown> {
   rtdbPath: string;
   timeoutMs?: number;
   messages?: RealtimeEventMessages;
-  // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
   onLogError?: (message: string, error: unknown) => void;
   extractData?: (raw: RTDBEventPayload) => BulkActionResult<TData> | null;
 }
@@ -39,7 +38,6 @@ function extractBulkResult(
 
   const result: BulkActionResult<unknown> = {
     action: raw.action,
-    // audit-unknown-ok: TS structural escape — BulkActionSummary
     summary: raw.summary as unknown as BulkActionSummary,
     succeeded: (raw.succeeded as string[] | undefined) ?? [],
     skipped: (raw.skipped as string[] | undefined) ?? [],

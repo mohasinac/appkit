@@ -49,7 +49,6 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
         (item) =>
           decryptPiiFields(item, [
             ...REVIEW_PII_FIELDS,
-          // audit-unknown-ok: TS structural escape — domain document type lacks index signature
           ]) as unknown as ReviewDocument,
       ),
     };
@@ -57,7 +56,6 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
 
   private encryptReviewData<T extends object>(data: T): T {
     let encrypted = encryptPiiFields(data, [...REVIEW_PII_FIELDS]);
-    // audit-unknown-ok: TS structural escape — generic param
     encrypted = addPiiIndices(data, REVIEW_PII_INDEX_MAP) as unknown as T;
     encrypted = {
       ...encryptPiiFields(data, [...REVIEW_PII_FIELDS]),
@@ -72,7 +70,6 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     const raw = super.mapDoc<ReviewDocument>(snap);
     return decryptPiiFields(raw, [
       ...REVIEW_PII_FIELDS,
-    // audit-unknown-ok: TS structural escape — generic param
     ]) as unknown as D;
   }
 

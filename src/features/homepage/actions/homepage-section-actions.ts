@@ -36,7 +36,6 @@ export async function createHomepageSection(
   createdBy: string,
 ): Promise<HomepageSectionDocument> {
   const section = await homepageSectionsRepository.create(
-    // audit-unknown-ok: TS structural escape — HomepageSectionCreateInput
     input as unknown as HomepageSectionCreateInput,
   );
   serverLogger.info("createHomepageSection", {

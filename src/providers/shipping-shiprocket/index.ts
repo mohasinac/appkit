@@ -278,7 +278,6 @@ async function shiprocketFetch<T>(
   });
 
   const text = await response.text();
-  // audit-unknown-ok: Shiprocket HTTP response — third-party JSON
   let json: unknown;
   try {
     json = JSON.parse(text);

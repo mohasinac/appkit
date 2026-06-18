@@ -151,7 +151,6 @@ export function onMutation<T = unknown>(
   eventName: string,
   handler: (payload: MutationEventPayload<T>) => void | Promise<void>,
 ): EventSubscription {
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   return eventBus.on(eventName, handler as (payload: unknown) => void);
 }
 

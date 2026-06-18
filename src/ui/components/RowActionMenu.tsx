@@ -69,7 +69,6 @@ export function RowActionMenu({
             ref={dropdownRef}
             role="menu"
             className="appkit-row-action-menu__dropdown"
-            // audit-inline-style-ok: dynamic CSS
             style={{
               position: "fixed",
               zIndex: "var(--appkit-z-modal)",

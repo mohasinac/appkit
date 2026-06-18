@@ -112,7 +112,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
         setCategory(res.data?.category ?? null);
         setListings(res.data?.listings ?? []);
       })
-      .catch(() => {}) // audit-silent-catch-ok: sublisting carousel is supplementary; main PDP renders without it
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [sublistingCategoryId]);
 
@@ -156,7 +156,6 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
       </button>
 
       {open && (
-        // audit-variant-ok: pb-4 pt-1 are asymmetric single-axis paddings; no t/b combo token in PADDING_MAP
         <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
           <Row gap="3" className="min-w-0">
             {listings.map((listing) => (

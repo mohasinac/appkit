@@ -119,7 +119,6 @@ export interface CompareOverlayProps {
 
 const OVERLAY_CLASS =
   "fixed inset-0 flex flex-col bg-white dark:bg-zinc-950 overflow-hidden";
-// audit-unknown-ok: TS structural escape — primitive cast
 const OVERLAY_STYLE: React.CSSProperties = { zIndex: "var(--appkit-z-modal, 60)" as unknown as number };
 const HEADER_CLASS =
   "flex items-center justify-between gap-3 border-b border-zinc-200 dark:border-zinc-800 px-4 py-3";
@@ -345,7 +344,6 @@ export function CompareOverlay({
   if (!isOpen) return null;
 
   return (
-    // audit-inline-style-ok: pass-through style prop
     <Div className={OVERLAY_CLASS} style={OVERLAY_STYLE} role="dialog" aria-modal="true" aria-label={labels.title}>
       <Row justify="between" align="center" className={HEADER_CLASS}>
         <Heading level={2} size="base" weight="semibold">
@@ -375,7 +373,6 @@ export function CompareOverlay({
             {/* Desktop / tablet â€” grid of columns */}
             <Div layout="grid" gap="4" 
               className="hidden md:"
-              // audit-inline-style-ok: dynamic CSS
               style={{
                 gridTemplateColumns: `repeat(${trimmed.length}, minmax(0, 1fr))`,
               }}

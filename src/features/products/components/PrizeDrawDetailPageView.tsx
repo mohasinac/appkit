@@ -52,7 +52,6 @@ export interface PrizeDrawDetailPageViewProps {
   currentUserId?: string;
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function toDescriptionHtml(raw: unknown): string {
   if (!raw) return "";
   const s = typeof raw === "string" ? raw : JSON.stringify(raw);
@@ -134,7 +133,6 @@ export async function PrizeDrawDetailPageView({
     );
   }
 
-  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
   const title = String(p.title ?? p.name ?? "Prize Draw");

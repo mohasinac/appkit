@@ -105,7 +105,7 @@ export function useWishlistCount(userId: string | null | undefined) {
           });
         }
       })
-      .catch(() => {}) // audit-silent-catch-ok: badge count refetches on next route change
+      .catch(() => {})
       .finally(finish);
   }, [userId, queryClient]);
 

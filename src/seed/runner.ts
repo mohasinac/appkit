@@ -18,7 +18,6 @@ const DEFAULT_MAX_ATTEMPTS = 2;
  * surface a canonical "retryable" flag — we match the error message against
  * known-transient patterns (DEADLINE_EXCEEDED, UNAVAILABLE, network resets).
  */
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function isRetryableError(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err);
   return (
@@ -61,7 +60,6 @@ export async function runSeed(config: SeedConfig): Promise<SeedResult> {
 
     // P31-A: per-doc validation gate. Invalid docs are pulled out of the
     // write set before we touch Firestore. Strict mode aborts on first error.
-    // audit-unknown-ok: Seed runner — receives Firestore doc shape from seed files
     const validDocs: unknown[] = [];
     const skipped: string[] = [];
     for (const rawDoc of data) {

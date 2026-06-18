@@ -33,7 +33,6 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             role="img"
             aria-label={item.meta.title}
             className="h-full w-full bg-center bg-cover"
-            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${item.meta.image})` }}
           />
         )}
@@ -159,13 +158,11 @@ export function CartDrawer({
         className="fixed inset-0 z-40"
         onClick={onClose}
       />
-      {/* audit-variant-ok: cart drawer Aside — fixed-position panel + flex-col + shadow + explicit light/dark bg; Aside lacks panel/shadow/layout variants */}
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white dark:bg-slate-900 shadow-xl">
         <Row justify="between" border="bottom" className={__P.p4}>
           <Heading level={2} size="lg" weight="semibold">
             {labels.title ?? "Cart"}
           </Heading>
-          {/* audit-variant-ok: close-cart Button — hover state shade override; Button lacks hover-textColor variant */}
           <Button
             onClick={onClose}
             variant="ghost"
@@ -208,7 +205,6 @@ export function CartDrawer({
               </Span>
             </Row>
             {onCheckout && (
-              // audit-variant-ok: checkout CTA — bespoke dark surface bg-neutral-900 + py-3 + font-semibold; Button.variant lacks dark/charcoal tone
               <Button rounded="xl"
                 onClick={onCheckout}
                 variant="primary"

@@ -101,7 +101,6 @@ export function TabStrip({
           aria-selected={tab.key === activeKey}
           aria-disabled={tab.disabled}
           onClick={() => !tab.disabled && onChange(tab.key)}
-          // audit-inline-style-ok: computed pixel offset
           style={{ minWidth: `${minTabWidth}px` }}
           className={[
             "appkit-tab-strip__tab",

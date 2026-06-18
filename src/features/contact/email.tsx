@@ -57,7 +57,6 @@ export async function sendEmail(
           ? (opts.headers as Record<string, string>)
           : undefined,
     });
-    // audit-unknown-ok: TS structural escape — JsonValue
     return { data: data as unknown as JsonValue, error: null };
   } catch (error) {
     void normalizeError(error);

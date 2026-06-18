@@ -29,7 +29,6 @@ export function TestimonialsCarousel({
         paddingBlock: "clamp(3rem, 6vh, 5rem)",
       }}
     >
-      {/* audit-variant-ok: container Stack — base padding=x-lg + sm:px-8 bump; PADDING_MAP lacks responsive sm-up ladder */}
       <Stack
         className="mx-auto w-full max-w-7xl sm:px-8" padding="x-lg"
         style={{ minHeight: 0 }}
@@ -57,7 +56,6 @@ export function TestimonialsCarousel({
         </Div>
 
         {/* 2-row masonry grid — wraps into 2 rows, scrolls horizontally on overflow */}
-        {/* audit-variant-ok: masonry Stack — flex-wrap + overflow-x-auto + scrollbar-none for 2-row horizontal scroll layout */}
         <Stack
           className="flex-wrap overflow-x-auto scrollbar-none" gap="md"
           style={{ maxHeight: "50svh", alignContent: "flex-start" }}

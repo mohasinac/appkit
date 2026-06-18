@@ -87,7 +87,6 @@ export function PlaceBidFormClient({
       setSuccess(true);
       setBidAmount(String(amount + minBidIncrement));
       setStepMul(1);
-    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (err: unknown) {
       void normalizeError(err);
       if (isAuthError(err)) {
@@ -101,7 +100,6 @@ export function PlaceBidFormClient({
     }
   }
 
-  // audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
   function bidErrorMessage(result: unknown): string | null {
     if (!result || typeof result !== "object" || !("ok" in result)) return null;
     const r = result as { ok: boolean; error?: string; code?: string };
@@ -125,7 +123,6 @@ export function PlaceBidFormClient({
           return;
         }
         setSuccess(true);
-      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       } catch (err: unknown) {
         void normalizeError(err);
         if (isAuthError(err)) setShowLoginModal(true);

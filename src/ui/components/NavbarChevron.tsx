@@ -10,7 +10,6 @@ export interface NavbarChevronProps {
   onClick: () => void;
 }
 
-// audit-variant-ok: NavbarChevron is the catalogued primitive for the
 // navbar's overflow-scroll fade — the gradient classes implement the
 // edge-fade affordance, not consumer styling.
 const BASE_CLS =

@@ -14,7 +14,6 @@ import {
 import { ValidationError } from "../../../shared/errors/index";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 export async function placeBidAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);

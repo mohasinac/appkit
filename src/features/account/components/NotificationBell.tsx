@@ -123,7 +123,6 @@ export function NotificationBell({
   const emitError = onMarkAllReadError ?? showError;
 
   const handleMarkAllRead = useCallback(async () => {
-    // toast-intentionally-silent — uses emitError(labels.error) callback for feedback
     try {
       await markAllRead(undefined);
       refetch();
@@ -179,7 +178,6 @@ function renderBellButton(props: {
 }) {
   const { hideOnMobile, buttonClassName, labels, unreadCount, handleToggle, isOpen } = props;
   return (
-    // audit-variant-ok: bell trigger Button — responsive p-2.5/p-3 + conditional hidden/visible + explicit hover/dark token pairs; Button.variant ghost lacks this composition
     <Button
       onClick={handleToggle}
       className={`${hideOnMobile ? "hidden md:flex" : "flex"} p-2.5 md:p-3 rounded-xl transition-colors relative text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-white ${buttonClassName}`}
@@ -208,16 +206,13 @@ function renderNotificationDropdown(props: {
 }) {
   const { dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead, isLoading, notifications, notificationIcons, handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref, setIsOpen } = props;
   return (
-    // audit-variant-ok: floating dropdown panel — responsive width w-80→sm:w-96 + shadow-2xl beyond SHADOW_MAP xl ceiling
     <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 shadow-2xl z-50 ${__O.hidden} ${dropdownClassName}`} rounded="xl" surface="default" border="default">
-      {/* audit-variant-ok: dropdown header — explicit dark:border-slate-800 token pair for theme contrast on top of border="default" */}
       <Row border="default" justify="between" gap="none" className="border-b dark:border-slate-800" padding="inline">
         <Heading level={3} weight="semibold" color="primary">
           {labels.title}
           {unreadCount > 0 && <Span size="xs" weight="medium" className={CLS_UNREAD_PILL}>{unreadCount} {labels.unread}</Span>}
         </Heading>
         {unreadCount > 0 && (
-          // audit-variant-ok: mark-all-read text link styled as Button — primary text + underline-on-hover; Button.variant link would lose disabled opacity
           <Button onClick={handleMarkAllRead} disabled={isMarkingAll} className="text-xs text-primary hover:underline font-medium disabled:opacity-50">
             {isMarkingAll ? labels.loading : labels.markAllRead}
           </Button>
@@ -227,7 +222,6 @@ function renderNotificationDropdown(props: {
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
       </Div>
       {viewAllHref && (
-        // audit-variant-ok: dropdown footer — explicit dark:border-slate-800 token pair for theme contrast on top of border="default"
         <Div border="default" className="border-t dark:border-slate-800 text-center" padding="inline">
           {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-sm text-primary hover:underline font-medium", children: labels.viewAll })}
         </Div>
@@ -256,7 +250,6 @@ function renderNotificationListContent(props: {
   return (
     <Ul>
       {notifications.map((notification) => (
-        // audit-variant-ok: notification row — flex items-start gap-3 + px-4 py-3 padding + divider + conditional unread bg-primary tint; Li lacks composite variant
         <Li key={notification.id} className={`group flex items-start gap-3 px-4 py-3 border-b border-zinc-200 dark:border-slate-800 last:border-0 transition-colors hover:bg-zinc-50 dark:hover:bg-slate-900 ${!notification.isRead ? "bg-primary/5 dark:bg-primary/10" : ""}`}>
           <Span size="xl" className="flex-shrink-0 mt-0.5">{notificationIcons[notification.type] ?? "🔔"}</Span>
           <Div className="flex-1 min-w-0">

@@ -55,7 +55,6 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
   const hasFooter = showStoreLink || showProductLink || showProfileLink;
 
   return (
-    // audit-variant-ok: review card Stack — h-full + hover-shadow-md transition + border-neutral-200 over surface=default
     <Stack padding="5"
       className={`group h-full border border-neutral-200 transition-shadow hover:shadow-md ${className}`} rounded="xl" surface="default"
     >
@@ -67,7 +66,6 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
               role="img"
               aria-label={displayName}
               className="h-9 w-9 flex-shrink-0 bg-center bg-cover" rounded="full"
-              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
@@ -122,7 +120,6 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
                 role="img"
                 aria-label={`Review image ${i + 1}`}
                 className="h-16 w-16 bg-center bg-cover border border-neutral-100" rounded="lg"
-                // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
               />
             ))}

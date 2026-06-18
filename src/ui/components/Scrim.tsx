@@ -44,7 +44,6 @@ export function Scrim({
   multiply = false,
   className = "",
 }: ScrimProps) {
-  // audit-variant-ok: Scrim is the catalogued primitive for dark fade overlays.
   // direction + intensity come from typed enums; the gradient classes are the
   // primitive's internal CSS, not consumer-authored utilities.
   return (

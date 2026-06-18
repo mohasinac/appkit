@@ -240,7 +240,6 @@ const DEFAULT_OMIT = ["id", "createdAt", "updatedAt", "deletedAt"];
  * @returns        Array of `DerivedField` descriptors, one per schema property.
  */
 export function deriveFormFields(
-  // audit-unknown-ok: Zod schema UI introspection — schema is caller-defined
   schema: unknown,
   options: DeriveFormFieldsOptions = {},
 ): DerivedField[] {

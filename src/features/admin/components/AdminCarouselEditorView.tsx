@@ -110,7 +110,6 @@ function ZonePicker({
       <Text className="mb-1" color="muted" size="xs">Zone (row × col grid)</Text>
       <div
         className="grid gap-1"
-        // audit-inline-style-ok: dynamic CSS
         style={{ gridTemplateRows: "repeat(2, 1fr)", gridTemplateColumns: "repeat(3, 1fr)", width: 150 }}
       >
         {zones.map((z) => {
@@ -411,9 +410,7 @@ export function AdminCarouselEditorView({
     const s = d.settings as JsonObject | undefined;
     setHeight((s?.height as CarouselSlideHeight) ?? "tall");
     setAutoplayDelayMs(s?.autoplayDelayMs !== undefined ? String(s.autoplayDelayMs) : "4000");
-    // audit-unknown-ok: TS structural escape — CarouselBackground
     if (d.background) setBackground(d.background as unknown as CarouselBackground);
-    // audit-unknown-ok: TS structural escape — CarouselCard
     if (Array.isArray(d.cards)) setCards(d.cards as unknown as CarouselCard[]);
     const ov = d.overlay as JsonObject | undefined;
     if (ov) {

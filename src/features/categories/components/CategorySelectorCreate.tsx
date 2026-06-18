@@ -99,7 +99,6 @@ export function CategorySelectorCreate({
   const L = { ...DEFAULT_LABELS, ...labels };
 
   const { categories: rawCategories, isLoading, refetch } = useCategories();
-  // audit-unknown-ok: TS structural escape — Category
   const categories = rawCategories as unknown as Category[];
   const flat = flattenCategories(categories);
 

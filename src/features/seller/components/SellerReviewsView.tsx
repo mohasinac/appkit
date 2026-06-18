@@ -165,7 +165,6 @@ export function SellerReviewsView({
   );
 
   const fetchReviews = useCallback(async () => {
-    // toast-intentionally-silent — error stored in setError() for UI inline render
     setLoading(true);
     setError(null);
     try {
@@ -322,7 +321,6 @@ export function SellerReviewsView({
 
                         {/* Existing reply */}
                         {review.sellerReply && (
-                          // audit-variant-ok: seller reply — left-border accent + pl-3; Div lacks borderSide variant
                           <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
                             <Text className="text-[var(--appkit-color-text-muted)]" size="xs">Store reply:</Text>
                             <Text size="sm">{review.sellerReply}</Text>

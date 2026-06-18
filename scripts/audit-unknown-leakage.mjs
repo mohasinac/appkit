@@ -36,15 +36,8 @@ const EXCLUDED_DIRS = new Set([
   "node_modules", "dist", ".next", "out", "__tests__", "__mocks__",
 ]);
 
-const ALLOWLIST_FILES = new Set(
-  [
-    "appkit/src/utils/object.helper.ts",
-    "appkit/src/schemas/types.ts",
-    "appkit/src/ui/rich-text/RichText.tsx",
-    "appkit/src/ui/components/RichTextEditor.tsx",
-    "appkit/src/errors/normalize.ts", // normalizeError(e: unknown) signature
-  ].map((p) => p.replace(/\//g, "/")),
-);
+// Phase H2c — allowlist emptied per user directive (literal full purge).
+const ALLOWLIST_FILES = new Set([]);
 
 const PER_LINE_OK_RE = /(?:\/\/|\{?\/\*)\s*audit-unknown-ok\s*:/i;
 

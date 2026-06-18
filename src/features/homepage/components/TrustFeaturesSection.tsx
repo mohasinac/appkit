@@ -35,11 +35,9 @@ function TrustFeatureCard({
         "transition-all duration-500",
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
-      // audit-inline-style-ok: computed timing
       style={{ transitionDelay: `${delay}ms` }}
      data-section="trustfeaturessection-div-373">
       {/* Icon box */}
-      {/* audit-variant-ok: icon container — fixed h-14/w-14 + bg-primary-50 + border-primary-100 themed icon-box */}
       <Row className="h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30 flex-shrink-0" align="center" justify="center" rounded="2xl">
         {item.renderIcon ? (
           item.renderIcon({ className: "w-7 h-7" })

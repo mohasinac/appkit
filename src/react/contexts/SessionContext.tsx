@@ -297,7 +297,6 @@ export function SessionProvider({
           stats: data.stats,
           metadata: data.metadata,
           scamAwarenessAcknowledgedAt: data.scamAwarenessAcknowledgedAt
-            // audit-unknown-ok: TS structural escape — primitive cast
             ? new Date(data.scamAwarenessAcknowledgedAt as unknown as string)
             : null,
           dismissedBannerHash: data.dismissedBannerHash,

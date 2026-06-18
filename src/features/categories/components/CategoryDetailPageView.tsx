@@ -118,7 +118,6 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       itemsSold: s.stats?.itemsSold,
       totalReviews: s.stats?.totalReviews,
       averageRating: s.stats?.averageRating,
-      // audit-unknown-ok: TS structural escape — primitive cast
       createdAt: s.createdAt as unknown as string,
     }));
 
@@ -135,23 +134,19 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   return (
     <Main>
       {/* ── Hero / Banner ───────────────────────────────────────────────── */}
-      {/* audit-variant-ok: category hero — conditional min-h cover sizing OR muted zinc bg fallback; Section lacks min-h variant */}
       <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
         {hasCover && (
           <>
             <div
               className="absolute inset-0 bg-center bg-cover"
-              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${coverImage})` }}
             />
             <Div surface="overlay-md" className="absolute inset-0" />
           </>
         )}
 
-        {/* audit-variant-ok: hero container — dynamic py-{12,8} based on hasCover; PADDING_MAP lacks conditional ladder */}
         <Div className={`relative z-10 max-w-7xl mx-auto ${hasCover ? "py-12" : "py-8"}`} padding="x-md">
           {/* Breadcrumb */}
-          {/* audit-variant-ok: Nav breadcrumb — flex items-center gap-1.5; Nav lacks layout/gap variants */}
           <Nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
             <Link
               href={String(ROUTES.HOME)}
@@ -173,13 +168,11 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </Nav>
 
           {/* Title + metrics */}
-          {/* audit-variant-ok: category H1 — responsive md:text-4xl on top of size="3xl" + conditional fallback color when no cover */}
           <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" mdSize="4xl" weight="bold">
             {category?.name ?? slug}
           </Heading>
 
           {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
-            // audit-variant-ok: category description — conditional muted-zinc fallback when no cover; inverse default keeps over-image legibility
             <Text color="inverse" className={`max-w-2xl mb-4 ${hasCover ? "/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
               {category.description}
             </Text>
@@ -187,25 +180,21 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
 
           <Row wrap gap="sm">
             {productCount > 0 && (
-              // audit-variant-ok: count chip — conditional translucent-white (cover) OR tinted primary (no cover); no white-overlay surface variant
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="pill-sm-tall">
                 {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
               </Span>
             )}
             {auctionCount > 0 && (
-              // audit-variant-ok: count chip — conditional translucent-white (cover) OR warning surface (no cover); compound bg cannot use Span.surface
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="pill-sm-tall">
                 {auctionCount.toLocaleString()} {auctionCount === 1 ? "auction" : "auctions"}
               </Span>
             )}
             {preOrderCount > 0 && (
-              // audit-variant-ok: count chip — conditional translucent-white (cover) OR info surface (no cover); compound bg cannot use Span.surface
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-info-surface text-info dark:bg-info-surface dark:text-info" }`} rounded="full" padding="pill-sm-tall">
                 {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
               </Span>
             )}
             {storeCount > 0 && (
-              // audit-variant-ok: count chip — conditional translucent-white (cover) OR success surface (no cover); compound bg cannot use Span.surface
               <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success" }`} rounded="full" padding="pill-sm-tall">
                 {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
               </Span>
@@ -220,7 +209,6 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           <Div className="max-w-7xl mx-auto" padding="inline">
             <Div layout="flex" gap="2" 
               className={`.5 ${__O.xAuto}`} padding="b-2xs"
-              // audit-inline-style-ok: dynamic CSS
               style={{ scrollbarWidth: "none" }}
             >
               {childCategories.map((child) => (

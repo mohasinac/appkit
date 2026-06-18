@@ -329,7 +329,6 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
           config.renderCards(rows, view as "grid" | "list", selectionContext, isLoading)
         ) : (
           <AdminViewCards
-            // audit-unknown-ok: TS structural escape — extracted function type
             rows={rows as unknown as Parameters<typeof AdminViewCards>[0]["rows"]}
             view={view}
             isLoading={isLoading}

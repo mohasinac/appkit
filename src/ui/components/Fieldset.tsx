@@ -47,7 +47,6 @@ export function Fieldset({
       disabled={disabled}
       form={form}
       name={name}
-      // audit-variant-ok: Fieldset is the catalogued primitive for <fieldset>.
       className={`rounded-lg ${TONE_BORDER[tone]} ${PADDING_CLS[padding]}`}
     >
       {children}
@@ -58,7 +57,6 @@ export function Fieldset({
 export function Legend({ children, srOnly = false }: LegendProps) {
   return (
     <legend
-      // audit-variant-ok: Legend is the catalogued primitive for <legend>.
       className={
         srOnly
           ? "sr-only"

@@ -25,7 +25,6 @@ const EXPECTED_AUTH_CODES = new Set([
   "auth/user-not-found",
 ]);
 
-// audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
 function isExpectedAuthError(err: unknown): boolean {
   return EXPECTED_AUTH_CODES.has((err as { code?: string }).code ?? "");
 }
@@ -35,7 +34,6 @@ function toAuthPayload(decoded: {
   email?: string | null;
   role?: string;
   email_verified?: boolean;
-  // audit-unknown-ok: Firebase auth provider — custom claims arbitrary
   [k: string]: unknown;
 }): AuthPayload {
   return {

@@ -130,7 +130,6 @@ export function Card({
     return (
       <motion.div
         className={cls}
-        // audit-inline-style-ok: pass-through style prop
         style={style}
         onClick={onClick}
         whileHover={whileHover}
@@ -146,7 +145,6 @@ export function Card({
   return (
     <div
       className={cls}
-      // audit-inline-style-ok: pass-through style prop
       style={style}
       onClick={onClick}
       data-section="card-div-463"

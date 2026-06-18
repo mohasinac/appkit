@@ -70,13 +70,10 @@ export interface SeedManifestEntry {
 
 export type SeedManifest = Record<SeedCollectionName, SeedManifestEntry[]>;
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function asArr(items: unknown): Array<Record<string, JsonValue>> {
-  // audit-unknown-ok: TS structural escape — Array
   return (items as unknown as Array<Record<string, JsonValue>>) ?? [];
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function pick(items: unknown[], nameKey = "name"): SeedManifestEntry[] {
   return (items as Array<Record<string, JsonValue>>)
     .filter((item) => Boolean(item.id))
@@ -156,7 +153,6 @@ export const SEED_MANIFEST: SeedManifest = {
     "name",
   ),
   siteSettings: pick(
-    // audit-unknown-ok: TS structural escape — domain document type lacks index signature
     [siteSettingsSeedData as unknown as FirestoreDocument].map((s) => ({
       ...s,
       name: s.siteName ?? "global",

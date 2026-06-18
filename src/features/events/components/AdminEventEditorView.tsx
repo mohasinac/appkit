@@ -96,7 +96,7 @@ const FORM_FIELD_TYPE_OPTIONS = [
   { label: "Checkbox", value: "checkbox" },
   { label: "Radio", value: "radio" },
   { label: "Date", value: "date" },
-  { label: "Rating (1–5)", value: "rating" }, // audit-sieve-views-ok — form field type, not sort key
+  { label: "Rating (1–5)", value: "rating" },
   { label: "File upload", value: "file" },
 ];
 
@@ -329,7 +329,6 @@ function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
   if (draft.rafflePrizeCouponId) fields.rafflePrizeCouponId = draft.rafflePrizeCouponId;
   if (draft.rafflePrizeProductIds.length > 0) fields.rafflePrizeProductIds = draft.rafflePrizeProductIds;
   if (draft.raffleType === "spin_wheel" || draft.type === "spin_wheel") {
-    // audit-unknown-ok: TS structural escape — JsonObjectWithUndefined
     fields.spinPrizes = draft.spinPrizes as unknown as JsonObjectWithUndefined[];
     if (Number(draft.spinMaxPerUser) > 0) fields.spinMaxPerUser = Number(draft.spinMaxPerUser);
     if (draft.spinWindowStart) fields.spinWindowStart = toISOString(draft.spinWindowStart);

@@ -99,7 +99,6 @@ export function BeforeAfterCard({
         {/* Before image — clipped to left of divider */}
         <Div
           className="absolute inset-0 overflow-hidden"
-          // audit-inline-style-ok: computed percentage
           style={{ width: `${position}%` }}
         >
           <Image
@@ -114,7 +113,6 @@ export function BeforeAfterCard({
         {/* Divider */}
         <Div
           className="absolute top-0 bottom-0 z-10 w-0.5 bg-card" shadow="md"
-          // audit-inline-style-ok: computed percentage
           style={{ left: `${position}%` }}
         >
           <Row className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-card" align="center" justify="center" rounded="full" shadow="lg">

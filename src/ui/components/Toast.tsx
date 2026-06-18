@@ -174,7 +174,6 @@ function ToastRow({
       <span
         aria-hidden="true"
         className="inline-block animate-spin"
-        // audit-inline-style-ok: built-in CSS spinner geometry, no Tailwind class produces the equivalent border-right-transparent ring without extra config.
         style={{ width: "1em", height: "1em", border: "2px solid currentColor", borderRightColor: "transparent", borderRadius: "9999px" }}
       />
     ),

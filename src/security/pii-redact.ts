@@ -113,7 +113,6 @@ function redactStringValue(key: string, value: string): string {
  * Returns a new object with sensitive fields masked — the original is
  * never mutated.
  */
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function redactPii(data: unknown, depth = 0): unknown {
   if (depth > MAX_DEPTH) return "[MAX_DEPTH]";
   if (data === null || data === undefined) return data;
@@ -123,9 +122,7 @@ export function redactPii(data: unknown, depth = 0): unknown {
     return data.map((item) => redactPii(item, depth + 1));
   }
 
-  // audit-unknown-ok: PII redaction — accepts arbitrary values, narrows by typeof
   const result: Record<string, unknown> = {};
-  // audit-unknown-ok: PII redaction — accepts arbitrary values, narrows by typeof
   for (const [key, value] of Object.entries(data as Record<string, unknown>)) {
     if (typeof value === "string") {
       result[key] = redactStringValue(key, value);

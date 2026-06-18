@@ -15,11 +15,9 @@ import type { UserRole } from "../features/auth/types";
 
 interface SafeParseSchema<TInput> {
   safeParse: (
-    // audit-unknown-ok: callback entry point — accepts arbitrary payload value
     input: unknown,
   ) =>
     | { success: true; data: TInput }
-    // audit-unknown-ok: Zod safeParse boundary
     | { success: false; error: { issues?: unknown[] } };
 }
 

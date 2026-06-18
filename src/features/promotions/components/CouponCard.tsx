@@ -47,7 +47,6 @@ interface Normalized {
 function pick<T = unknown>(obj: CouponLike, ...keys: string[]): T | undefined {
   for (const k of keys) {
     const parts = k.split(".");
-    // audit-unknown-ok: Coupon shape resolver — accepts flat or nested input
     let cur: unknown = obj;
     for (const p of parts) {
       if (cur && typeof cur === "object") cur = (cur as Record<string, JsonValue>)[p];
@@ -189,7 +188,7 @@ export function CouponCard({
 
   const handleCopy = () => {
     if (!n.code) return;
-    navigator.clipboard.writeText(n.code).catch(() => {}); // audit-silent-catch-ok: clipboard denial is non-fatal; "Copied" UI simply won't toggle
+    navigator.clipboard.writeText(n.code).catch(() => {});
     setCopied(true);
     onCopy?.(n.code);
     setTimeout(() => setCopied(false), 2000);
@@ -261,7 +260,6 @@ export function CouponCard({
             {n.isActive ? labels.active : labels.inactive}
           </Badge>
           {n.scope && (
-            // audit-variant-ok: scope chip — translucent bg-zinc-200/70 + text-[10px] under-10
             <Span layout="inline-flex" weight="semibold" className="bg-zinc-200/70 text-[10px] tracking-wide dark:bg-zinc-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
               {n.scope}
             </Span>

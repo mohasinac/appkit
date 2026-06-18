@@ -46,7 +46,6 @@ interface SellerFeaturesResponse {
   isFull?: boolean;
 }
 
-// audit-unknown-ok: callback entry point — accepts arbitrary payload value
 function unwrap(res: unknown): SellerFeaturesResponse {
   return ((res as { data?: JsonValue })?.data ?? res) as SellerFeaturesResponse;
 }

@@ -252,7 +252,6 @@ export function encryptPayoutDetails<T extends object>(
       ["accountNumber"],
     ) as FirestoreValue;
   }
-  // audit-unknown-ok: TS structural escape — generic param
   return result as unknown as T;
 }
 
@@ -274,7 +273,6 @@ export function decryptPayoutDetails<T extends object>(
       ["accountNumber"],
     ) as FirestoreValue;
   }
-  // audit-unknown-ok: TS structural escape — generic param
   return result as unknown as T;
 }
 
@@ -297,7 +295,6 @@ export function encryptShippingConfig<T extends object>(
       ["phone", "email", "address", "address2"],
     ) as FirestoreValue;
   }
-  // audit-unknown-ok: TS structural escape — generic param
   return result as unknown as T;
 }
 
@@ -319,7 +316,6 @@ export function decryptShippingConfig<T extends object>(
       ["phone", "email", "address", "address2"],
     ) as FirestoreValue;
   }
-  // audit-unknown-ok: TS structural escape — generic param
   return result as unknown as T;
 }
 

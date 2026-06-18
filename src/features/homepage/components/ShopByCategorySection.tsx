@@ -85,7 +85,6 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Text className="mt-1" color="muted" size="xs">
           {productCount.toLocaleString()} items
         </Text>
-        {/* audit-variant-ok: bottom CTA — top-only pt-3 + dark:text-primary-400 explicit shade; Text lacks paddingSide variant */}
         <Text className="mt-auto pt-3 text-primary dark:text-primary-400" size="xs" weight="medium">
           Browse category →
         </Text>
@@ -166,7 +165,6 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
   if (!isLoading && allCategories.length === 0) return null;
 
   return (
-    // audit-variant-ok: section — base paddingY=y-2xl + md:py-12 responsive bump (paddingY ladder lacks responsive md-up form)
     <Section className={`md:py-12 ${className}`} surface="subtle" paddingY="y-2xl" paddingX="x-md">
       <Div className="mx-auto max-w-7xl">
         <Div className="mb-6 text-center">
@@ -200,7 +198,6 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
         )}
 
         {isLoading ? (
-          // audit-variant-ok: loading-row carousel — px-1 nudge spacing; PADDING_MAP x-only lacks px-1
           <Div layout="flex" gap="3" className={`${__O.hidden} px-1`}>
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse" surface="subtle" rounded="xl" />

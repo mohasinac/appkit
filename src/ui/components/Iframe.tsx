@@ -56,7 +56,6 @@ export function Iframe({
       title={title}
       loading={loading}
       sandbox={sandbox}
-      // audit-variant-ok: Iframe is the catalogued primitive for embedded
       // third-party content. Aspect + rounded come from typed enums.
       className={`block w-full border-0 ${ASPECT_CLS[aspect]} ${ROUNDED_CLS[rounded]}`}
       {...rest}

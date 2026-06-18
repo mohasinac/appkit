@@ -41,11 +41,9 @@ import type { ApiRouteKey, FirestoreValue } from "../../schemas/types";
 /** Minimal schema interface compatible with Zod v3 and v4. */
 interface ParseableSchema<TOutput> {
   safeParse(
-    // audit-unknown-ok: callback entry point — accepts arbitrary payload value
     data: unknown,
   ):
     | { success: true; data: TOutput }
-    // audit-unknown-ok: Route handler body schema parse boundary
     | { success: false; error: { issues?: unknown[] } };
 }
 
@@ -188,7 +186,6 @@ function resolveBodySchema<T>(
   if (typeof schema !== "string") return schema;
   const entry = SCHEMAS.api[schema as RegisteredApiRouteKey];
   if (!entry || !("body" in entry) || !entry.body) return null;
-  // audit-unknown-ok: TS structural escape — ParseableSchema
   return entry.body as unknown as ParseableSchema<T>;
 }
 
@@ -205,7 +202,6 @@ function errorJson(
   code: string,
   message: string,
   requestId: string,
-  // audit-unknown-ok: Route handler body schema parse boundary
   issues?: unknown[],
 ): Response {
   return NextResponse.json(
@@ -301,7 +297,6 @@ export function createRouteHandler<
         );
       }
       if (resolvedSchema) {
-        // audit-unknown-ok: callback entry point — accepts arbitrary payload value
         let raw: unknown;
         try {
           raw = await request.json();
@@ -372,7 +367,6 @@ export function createRouteHandler<
       }
 
       return response;
-    // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
     } catch (err: unknown) {
       void normalizeError(err);
       const mapped = mapToHttpError(err, {

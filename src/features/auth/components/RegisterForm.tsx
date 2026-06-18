@@ -165,7 +165,6 @@ export function RegisterForm({
                 disabled={isLoading}
                 className="w-full"
                 onClick={async () => {
-                  // toast-handled-by-hook: onSubmit prop's mutation hook owns toast UX
                   clearErrors();
                   const parsed = registerClientSchema.safeParse(values);
                   if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);

@@ -471,10 +471,8 @@ export function SellerProductsView({
         <TypeDropdown active={listingKind} onChange={handleKindChange} />
 
         {totalPages > 1 && (
-          // audit-variant-ok: sticky pagination — translucent /95 bg + backdrop-blur-sm + py-1.5 (between paddingY map keys)
           <Row
             className="sticky z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] py-1.5" padding="x-sm" justify="center"
-            // audit-inline-style-ok: sticky header offset
             style={{ top: "calc(var(--header-height, 0px) + 44px)" }}
           >
             <Pagination
@@ -487,7 +485,6 @@ export function SellerProductsView({
 
         {selection.selectedIds.length > 0 && (
           <Div paddingX="x-sm-lg-md" className="sticky z-20 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]" padding="y-xs"
-            // audit-inline-style-ok: sticky header offset
             style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
             <BulkActionBar
               selectedCount={selection.selectedIds.length}

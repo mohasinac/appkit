@@ -74,7 +74,6 @@ export function Dialog({
         if (!closeOnBackdrop) return;
         if (event.target === dialogRef.current) onClose();
       }}
-      // audit-variant-ok: Dialog is the catalogued primitive for <dialog>.
       // padding comes from the typed enum.
       className={`rounded-xl bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] shadow-xl border border-[var(--appkit-color-border)] ${PADDING_CLS[padding]} backdrop:bg-black/40 backdrop:backdrop-blur-sm`}
     >

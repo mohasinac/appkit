@@ -111,7 +111,6 @@ export function MarketplaceBundleCard({
       <BaseListingCard.Hero aspect="square" variant={variant}>
         <TextLink href={String(detailHref)} className="absolute inset-0 block">
           {showCollage ? (
-            // audit-variant-ok: bundle collage grid — gap-0.5 between tiles + dynamic grid-cols/rows based on tile count
             <Div layout="grid"
               className={`h-full w-full gap-0.5 bg-[var(--appkit-color-surface-muted)] ${
  collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
@@ -158,7 +157,6 @@ export function MarketplaceBundleCard({
           <Span size="xs" weight="medium" className={CLS_BUNDLE_PILL}>
             {mergedLabels.bundleBadge}
           </Span>
-          {/* audit-variant-ok: stock badge — conditional bg-zinc-500 (out-of-stock) vs CLS_STOCK_OK shared style */}
           <Span layout="inline-flex" color="inverse"
             className={`${ stock === "out_of_stock" ? "bg-zinc-500 " : CLS_STOCK_OK }`} rounded="full" padding="pill-xs" size="xs" weight="medium"
           >
@@ -168,7 +166,6 @@ export function MarketplaceBundleCard({
 
         {stock === "out_of_stock" && (
           <Row surface="overlay-xs" className="absolute inset-0" align="center" justify="center">
-            {/* audit-variant-ok: out-of-stock overlay badge — bg-zinc-900/80 translucent + tracking-wider */}
             <Span color="inverse" size="xs" weight="bold" className="bg-zinc-900/80 tracking-wider" rounded="default" padding="pill-md" transform="uppercase">
               {mergedLabels.outOfStockBadge}
             </Span>

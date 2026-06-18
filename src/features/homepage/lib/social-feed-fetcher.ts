@@ -28,9 +28,7 @@ export async function fetchInstagramPosts(
 
   const res = await fetch(url.toString(), { next: { revalidate: 300 } });
   if (!res.ok) throw new Error(`Instagram API error: ${await res.text()}`);
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const json = (await res.json()) as { data?: unknown[] };
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const items: unknown[] = Array.isArray(json.data) ? json.data : [];
 
   return items
@@ -78,9 +76,7 @@ export async function fetchFacebookPosts(
 
   const res = await fetch(url.toString(), { next: { revalidate: 300 } });
   if (!res.ok) throw new Error(`Facebook API error: ${await res.text()}`);
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const json = (await res.json()) as { data?: unknown[] };
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const items: unknown[] = Array.isArray(json.data) ? json.data : [];
 
   return items
@@ -147,9 +143,7 @@ export async function fetchTikTokPosts(
     next: { revalidate: 300 },
   });
   if (!res.ok) throw new Error(`TikTok API error: ${await res.text()}`);
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const json = (await res.json()) as { data?: { videos?: unknown[] } };
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const items: unknown[] = json.data?.videos ?? [];
 
   return items.slice(0, count).map((item) => {
@@ -208,9 +202,7 @@ export async function fetchDeviantArtPosts(
 
   const res = await fetch(url.toString(), { next: { revalidate: 300 } });
   if (!res.ok) throw new Error(`DeviantArt API error: ${await res.text()}`);
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const json = (await res.json()) as { results?: unknown[] };
-  // audit-unknown-ok: Third-party RSS/JSON ingest — feed shapes vary
   const items: unknown[] = json.results ?? [];
 
   return items.slice(0, count).map((item) => {

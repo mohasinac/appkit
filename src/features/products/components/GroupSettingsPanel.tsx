@@ -268,7 +268,6 @@ export function GroupSettingsPanel({
         <Heading level={3} size="sm" weight="semibold" color="muted">
           Group Settings
         </Heading>
-        {/* audit-variant-ok: chevron — group-hover state-override on parent button group; Span lacks group-hover variant */}
         <Span size="xs" className="group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors" color="faint">
           {open ? "▲" : "▼"}
         </Span>
@@ -510,7 +509,6 @@ function AddChildContent({
               onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
               options={CONDITION_OPTIONS}
             />
-            {/* audit-variant-ok: form hint Text — dark:text-zinc-400/80 translucent dark shade over color="faint" */}
             <Text className="dark:text-zinc-400/80" color="faint" size="xs">
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.

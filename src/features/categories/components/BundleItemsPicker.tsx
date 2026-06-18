@@ -62,7 +62,6 @@ function renderBundleSelectedChips(props: {
   const { value, metadata, remove } = props;
   if (value.length === 0) return null;
   return (
-    // audit-variant-ok: chips row — flex-wrap layout; Div.layout=flex doesn't auto-wrap
     <Div layout="flex" gap="2" className={`flex-wrap ${__P.p3}`} rounded="lg" surface="muted" border="default">
       {value.map((id) => {
         const meta = metadata[id];
@@ -158,7 +157,6 @@ export function BundleItemsPicker({
           return next;
         });
       })
-      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       .catch((err: unknown) => {
         if (cancelled) return;
         const msg = err instanceof Error ? err.message : "Search failed";
@@ -236,12 +234,9 @@ export async function defaultBundleItemsFetch(
     throw new Error(`Search failed: ${res.status}`);
   }
   const data = (await res.json()) as {
-    // audit-unknown-ok: picker API response items
     data?: { items?: unknown[] };
-    // audit-unknown-ok: picker API response items
     items?: unknown[];
   };
-  // audit-unknown-ok: picker API response items
   const rawItems: unknown[] = data?.data?.items ?? data?.items ?? [];
   return rawItems
     .map((r): BundleItemSearchResult | null => {

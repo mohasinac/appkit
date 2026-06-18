@@ -186,7 +186,6 @@ const flex = { between: FLEX_BETWEEN };
  }`}
               >
                 {/* Question trigger */}
-                {/* audit-variant-ok: FAQ question button — w-full text-left + flex.between + gap-4 + hover-shade dynamic; Button.variant ghost lacks text-left + dynamic-hover composition */}
                 <Button
                   variant="ghost"
                   className={`w-full text-left px-5 py-4 ${flex.between} gap-4 hover:${themed.bgTertiary} transition-colors rounded-none`}
@@ -237,7 +236,6 @@ const flex = { between: FLEX_BETWEEN };
         {/* View More */}
         {viewMoreHref && (
           <Div className="text-center mt-10">
-            {/* audit-variant-ok: view-more pill — primary-tint bg + hover state composite; TextLink lacks themed button-tone variant */}
             <TextLink rounded="full" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
               className="inline-flex items-center gap-2 bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"

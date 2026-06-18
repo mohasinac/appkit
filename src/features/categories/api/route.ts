@@ -250,7 +250,6 @@ export const POST = createRouteHandler({
       ...(body as object),
       createdAt: now,
       updatedAt: now,
-    // audit-unknown-ok: TS structural escape — CategoryItem
     } as unknown as CategoryItem);
 
     return NextResponse.json({ success: true, data: created }, { status: 201 });

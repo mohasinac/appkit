@@ -172,7 +172,6 @@ function BaseListingCardCheckbox({
       role="checkbox"
       onClick={(e) => {
         e.stopPropagation();
-        // audit-unknown-ok: TS structural escape — MouseEvent
         onSelect?.(e as unknown as MouseEvent<HTMLButtonElement>);
       }}
       className={[

@@ -106,7 +106,6 @@ export function Anchor({
       href={href}
       target={computedTarget}
       rel={computedRel}
-      // audit-variant-ok: Anchor is the catalogued primitive for external
       // links. Tone + underline come from typed enums; className is the
       // escape hatch for behaviour-coupled utility classes only.
       className={`${TONE_CLS[tone]} ${UNDERLINE_CLS[underline]} ${size ? ANCHOR_SIZE_CLS[size] : ""} transition-colors${className ? ` ${className}` : ""}`}

@@ -53,7 +53,6 @@ export function CartView({
       {labels.title && (
         <Heading level={1} className="mb-6" size="2xl" weight="bold">{labels.title}</Heading>
       )}
-      {/* audit-variant-ok: cart layout — base gap=lg + lg:gap-8 responsive bump; Stack.gap is single-axis */}
       <Stack direction="lg-row" className="lg:gap-8" gap="lg">
         <Div className="flex-1">
           {renderGroups ? renderGroups(groups, isLoading) : renderItems(isLoading)}

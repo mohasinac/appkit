@@ -62,7 +62,6 @@ export function EventCard({
   const detailHref = String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
 
   return (
-    // audit-variant-ok: event card Article — flex-col + hover-shadow transition + conditional selected outline
     <Article border="default"
       className={`group relative flex h-full ${LAYOUT.cardHeight.event} flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900 ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
@@ -87,7 +86,6 @@ export function EventCard({
               role="img"
               aria-label={safeTitle}
               className="h-full w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${event.coverImageUrl})` }}
             />
           </Div>
@@ -137,7 +135,6 @@ export function EventCard({
             {labels.participate ?? "Participate"}
           </Button>
         ) : (
-          // audit-variant-ok: details TextLink — border+hover bg-zinc-100 transition + inline-flex full-width centered CTA
           <TextLink rounded="lg" paddingX="sm" paddingY="xs"
             href={detailHref}
             className="inline-flex w-full items-center justify-center gap-1.5 border border-zinc-300 transition-colors hover:bg-zinc-100 dark:border-slate-600 dark:hover:bg-slate-800" color="primary" size="sm" weight="medium"

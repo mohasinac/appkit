@@ -46,7 +46,6 @@ function CategoryTreeNode({
           onSelect?.(item);
         }}
         className={`cursor-pointer py-1.5 transition select-none ${isActive ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} align="center" gap="xs" padding="x-xs" rounded="md"
-        // audit-inline-style-ok: computed pixel offset
         style={{ paddingLeft: `${8 + indent}px` }}
       >
         {hasChildren && (

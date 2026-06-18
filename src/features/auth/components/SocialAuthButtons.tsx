@@ -24,7 +24,6 @@ export function SocialAuthButtons({
       </Div>
 
       <Div layout="grid" gap="3" className="grid-cols-1">
-        {/* audit-variant-ok: Google OAuth Button — bespoke white bg + neutral-300 border + hover-bg-neutral-50 OAuth-style composition */}
         <Button rounded="md"
           type="button"
           onClick={onGoogle}

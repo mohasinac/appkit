@@ -59,7 +59,6 @@ export function CheckoutView({
         </Heading>
       )}
       {renderStepIndicator?.(step, totalSteps, setStep)}
-      {/* audit-variant-ok: checkout layout — base gap=lg + lg:gap-8 responsive bump; Stack.gap is single-axis */}
       <Stack direction="lg-row" className="lg:gap-8" gap="lg">
         <Div className="flex-1">
           {renderStep(step, setStep)}

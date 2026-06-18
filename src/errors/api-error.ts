@@ -1,7 +1,6 @@
 import { AppError } from "./base-error";
 
 export class ApiError extends AppError {
-  // audit-unknown-ok: ApiError subclass — cause/issues canonical
   constructor(statusCode: number, message: string, data?: unknown) {
     super(statusCode, message, "API_ERROR", data);
   }

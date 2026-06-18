@@ -19,7 +19,6 @@ export function RelatedFAQs({
   }
 
   return (
-    // audit-variant-ok: related FAQs Card — dark:bg-slate-800/60 explicit dark tint over Card.variant outlined
     <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
       <Heading level={3} className="mb-4" size="lg" weight="semibold">
         {labels?.title ?? "Related Questions"}
@@ -27,7 +26,6 @@ export function RelatedFAQs({
 
       <Stack gap="3">
         {relatedFAQs.map((faq) => (
-          // audit-variant-ok: related FAQ TextLink — block + bg-zinc-100 + p-4 + hover-bg-zinc-200
           <TextLink rounded="lg"
             key={faq.id}
             href={hrefForFaq ? hrefForFaq(faq) : `/faqs#${faq.id}`}

@@ -31,7 +31,6 @@ export async function UnauthorizedView({
 
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      {/* audit-variant-ok: unauthorized hero — min-h-[60vh] custom + text-center; Section.layout doesn't compose with text-align */}
       <Section padding="y-5xl" color="inverse" layout="flex-col" align="center" justify="center"
         tone="accent-banner" className="min-h-[60vh] text-center"
       >

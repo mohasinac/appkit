@@ -215,7 +215,6 @@ export function AdminSidebar({
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
         <Div
           className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
-          // audit-inline-style-ok: dynamic CSS
           style={{
             top: "var(--header-height, 3.5rem)",
             height: "calc(100vh - var(--header-height, 3.5rem))",
@@ -224,7 +223,6 @@ export function AdminSidebar({
           }}
         >
           {/* Nav panel */}
-          {/* audit-variant-ok: nav panel Stack — border-r right side accent + dark:border-slate-800 explicit dark token */}
           <Stack border="default" surface="sidePanel" className={`flex-1 border-r dark:border-slate-800 ${__O.hidden}`} shadow="xl">
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               {renderHeader ? renderHeader() : <Span size="xs" weight="semibold" transform="uppercase" color="muted">Admin Panel</Span>}

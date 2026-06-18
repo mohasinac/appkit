@@ -130,7 +130,6 @@ function renderAuctionCardHero(props: AuctionCardHeroProps) {
       {images.length > 1 ? (
         <Row gap="xs" className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2">
           {images.map((_, index) => (
-            // audit-variant-ok: carousel page indicator — h-1.5 w-{1.5,3} sized dot; white-translucent has no surface variant
             <Span
               key={`${product.id}-image-${index}`}
               className={`transition-all duration-200 ${index === imageIndex ? "h-1.5 w-3 bg-white" : "h-1.5 w-1.5 bg-white/60"}`} rounded="full"
@@ -195,7 +194,6 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
           {product.title}
         </TextLink>
         {wishlistActions ? (
-          // audit-variant-ok: compact heart icon button — p-1 outside PADDING_MAP scale, shrink-0 layout
           <Button rounded="full" type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="shrink-0 p-1">
             <Heart className={`h-3.5 w-3.5 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
           </Button>
@@ -203,7 +201,6 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
       </Row>
       <Row align="center" gap="sm" wrap>
         <Text className="text-primary" size="sm" weight="bold">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
-        {/* audit-variant-ok: list-mode countdown pill — arbitrary text-[11px] + py-0.5 outside PADDING_MAP scale */}
         <Div layout="inline-flex" gap="1" textWeight="semibold" className={`items-center py-0.5 text-[11px] ${countdownClass}`} padding="x-xs" rounded="full">
           <Clock className="h-2.5 w-2.5" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
@@ -211,7 +208,6 @@ function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
         {bidCount > 0 && <Caption className="text-[11px]">{mergedLabels.totalBids(bidCount)}</Caption>}
       </Row>
       {!isEnded && (
-        // audit-variant-ok: compact place-bid button — px-2.5 outside PADDING_MAP scale + self-start alignment
         <Button gap="xs" type="button" variant="warning" size="sm" textSize="xs" className="self-start px-2.5 mt-0.5" onClick={handleNavigate}>
           <Gavel className="h-3 w-3" />
           <Span>{mergedLabels.placeBid}</Span>
@@ -230,7 +226,6 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
           {product.title}
         </TextLink>
         {wishlistActions ? (
-          // audit-variant-ok: grid-mode heart icon button — p-1 outside PADDING_MAP scale + negative margin for alignment
           <Button rounded="full" type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="-mt-0.5 p-1">
             <Heart className={`h-4 w-4 ${inWishlist ? CLS_HEART_ON : CLS_HEART_OFF}`} />
           </Button>
@@ -246,7 +241,6 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
         )}
       </Div>
       <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">
-        {/* audit-variant-ok: countdown pill — items-center alignment + dynamic countdownClass tone */}
         <Div layout="inline-flex" gap="1" textWeight="semibold" textSize="xs" className={`items-center ${countdownClass}`} paddingY="y-2xs" paddingX="x-xs" rounded="full">
           <Clock className="h-3 w-3" />
           <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
@@ -255,19 +249,16 @@ function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
       </Row>
       <Row wrap gap="xs" className="mt-auto">
         {isEnded ? (
-          // audit-variant-ok: ended-state full-width disabled button — flex-1 + px-2 + opacity dim
           <Button gap="xs" type="button" variant="ghost" size="sm" textSize="xs" className="flex-1 cursor-not-allowed px-2 opacity-60" disabled>
             <Span>{mergedLabels.ended}</Span>
           </Button>
         ) : (
           <>
-            {/* audit-variant-ok: flex-1 split-action button — px-2 to fit dual-button row */}
             <Button gap="xs" type="button" variant="warning" size="sm" textSize="xs" className="flex-1 px-2" onClick={handleNavigate}>
               <Gavel className="h-3 w-3" />
               <Span>{mergedLabels.placeBid}</Span>
             </Button>
             {resolvedBuyoutPrice ? (
-              // audit-variant-ok: flex-1 split-action button — px-2 to fit dual-button row
               <Button gap="xs" type="button" variant="danger" size="sm" textSize="xs" className="flex-1 px-2" onClick={handleNavigate}>
                 <ShoppingBag className="h-3 w-3" />
                 <Span>{mergedLabels.buyout}</Span>

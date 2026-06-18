@@ -67,7 +67,6 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         await fn();
         onUpdate(offer.id, patch);
         setConfirming(null);
-      // audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
       } catch (err: unknown) {
         void normalizeError(err);
         if (isAuthError(err)) {
@@ -196,7 +195,6 @@ export function UserOffersPanel({
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const loadOffers = useCallback(async () => {
-    // toast-intentionally-silent — error rendered inline via setFetchError()
     setLoading(true);
     setFetchError("");
     try {

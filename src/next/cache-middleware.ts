@@ -48,14 +48,12 @@ function isCacheable(request: NextRequest, config: CacheConfig): boolean {
 
 type Handler = (
   request: NextRequest,
-  // audit-unknown-ok: Next.js middleware boundary
   ...args: unknown[]
 ) => Promise<NextResponse>;
 
 export function withCache(handler: Handler, config: CacheConfig = {}): Handler {
   return async (
     request: NextRequest,
-    // audit-unknown-ok: Next.js middleware boundary
     ...args: unknown[]
   ): Promise<NextResponse> => {
     if (!isCacheable(request, config)) {

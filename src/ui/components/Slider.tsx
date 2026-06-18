@@ -84,7 +84,6 @@ export function Slider({
               "h-full rounded-full bg-lime-600 dark:bg-pink-500",
               SIZE_CLASSES[size],
             ].join(" ")}
-            // audit-inline-style-ok: computed percentage
             style={{ width: `${Math.max(0, Math.min(100, percentage))}%` }}
           />
         </div>

@@ -72,7 +72,6 @@ export function StickyToolbar({
   return (
     <div
       role={role}
-      // audit-sticky-offset-ok: StickyToolbar is the catalogued primitive
       // for the translucent sticky-toolbar pattern. The header offset is
       // sourced from --header-height (set by AppLayoutShell at runtime).
       className={`sticky ${offsetCls} ${zCls} ${TONE_CLS[tone]} ${borderCls} ${PADDING_CLS[padding]}`}

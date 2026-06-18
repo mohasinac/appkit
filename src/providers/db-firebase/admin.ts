@@ -102,7 +102,6 @@ function get<T>(key: keyof typeof globalThis): T | null {
   return (globalThis[key] as T | null | undefined) ?? null;
 }
 function set<T>(key: keyof typeof globalThis, value: T): void {
-  // audit-unknown-ok: Admin SDK init — global type augmentation
   (globalThis as Record<string, unknown>)[key] = value;
 }
 

@@ -63,7 +63,6 @@ export class FirebaseRepository<
     return deserializeTimestamps({
       id: snap.id,
       ...(snap.data() ?? {}),
-    // audit-unknown-ok: TS structural escape — generic param
     }) as unknown as D;
   }
 
@@ -140,7 +139,6 @@ export class FirebaseRepository<
     return { data, total, page, perPage, totalPages };
   }
 
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   async findWhere(field: keyof T, op: WhereOp, value: unknown): Promise<T[]> {
     const snap = await (this.getCollection() as Query)
       .where(field as string, op, value)
@@ -219,7 +217,6 @@ export class FirebaseRepository<
   }
 
   /** Find first document where `field == value`. */
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   async findOneBy(field: string, value: unknown): Promise<T | null> {
     const snap = await this.getCollection()
       .where(field, "==", value)
@@ -248,7 +245,6 @@ const TOKEN_TO_OP: Record<string, FirebaseFirestore.WhereFilterOp> = {
 };
 
 /** Best-effort scalar coercion for sieve filter values. */
-// audit-unknown-ok: Base repository coerceValue — accepts any cell value
 function coerceValue(raw: string): unknown {
   if (raw === "true") return true;
   if (raw === "false") return false;

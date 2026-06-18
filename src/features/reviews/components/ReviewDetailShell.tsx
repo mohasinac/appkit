@@ -109,7 +109,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
   return (
     <>
       {/* ── Hero: rating + title ──────────────────────────────────────────── */}
-      {/* audit-variant-ok: review hero — asymmetric pt-10/pb-xl padding (different top/bottom); border-bottom divider */}
       <Div surface="default" className="border-b border-neutral-200 pt-10" padding="b-xl">
         <Div className="mx-auto max-w-3xl" padding="x-md">
           {/* Star rating — large */}
@@ -143,7 +142,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 role="img"
                 aria-label={displayName}
                 className="h-11 w-11 flex-shrink-0 bg-center bg-cover ring-2 ring-white dark:ring-zinc-800" rounded="full"
-                // audit-inline-style-ok: dynamic image URL
                 style={{ backgroundImage: `url(${review.userAvatar})` }}
               />
             ) : (
@@ -203,10 +201,8 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 >
                   <Div
                     className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
-                    // audit-inline-style-ok: dynamic image URL
                     style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                   />
-                  {/* audit-variant-ok: hover-zoom overlay — absolute scrim over thumbnail with group-hover opacity transition */}
                   <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
                     <Span color="inverse" size="xl">🔍</Span>
                   </Row>
@@ -222,7 +218,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="tracking-wide mb-3" color="faint" size="sm" weight="semibold" transform="uppercase">
               Video
             </Heading>
-            {/* audit-variant-ok: video frame — bg-black under aspect-video player; explicit neutral/zinc border tokens */}
             <Div className={`${__O.hidden} border border-neutral-200 dark:border-zinc-700 bg-black aspect-video`} rounded="xl">
               <video
                 src={review.video.url}
@@ -236,7 +231,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         )}
 
         {/* Helpful votes */}
-        {/* audit-variant-ok: helpful-votes Section — flex items-center gap-4 layout + top divider; Section lacks layout/gap variants */}
         <Section className="flex items-center gap-4 border-t border-neutral-100" padding="y-md">
           <Div textSize="sm" className="text-neutral-500 dark:text-neutral-400">
             {helpfulCount > 0 && (
@@ -262,7 +256,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         </Section>
 
         {/* Links: Product / Seller / Reviewer */}
-        {/* audit-variant-ok: links Section — responsive grid sm:grid-cols-3 with gap-3; Section lacks grid layout variant */}
         <Section className="grid gap-3 sm:grid-cols-3">
           {productHref && (
             <Link
@@ -314,7 +307,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </Div>
             </Link>
           ) : (
-            // audit-variant-ok: anonymous reviewer fallback Row — explicit neutral/zinc border tokens + p-4 padding constant
             <Row surface="default" gap="sm" className={`border border-neutral-200 dark:border-zinc-700 ${__P.p4}`} rounded="xl">
               <Span size="xl" className={CLS_ICON_PURPLE_BARE}>
                 👤
@@ -332,7 +324,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
       {/* ── Lightbox ────────────────────────────────────────────────────────── */}
       {lightboxIdx !== null && currentImage && (
-        // audit-variant-ok: lightbox modal scrim — fixed inset-0 + bg-black/95 (denser than overlay-xl preset); z-50 for full-screen overlay
         <Row
           centered
           className="fixed inset-0 z-50 bg-black/95"
@@ -407,7 +398,6 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
  ? "border-white scale-110"
  : "border-transparent opacity-60 hover:opacity-100"
  }`}
-                  // audit-inline-style-ok: dynamic image URL
                   style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                 />
               ))}

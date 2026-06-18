@@ -23,7 +23,7 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
       }
     }
 
-    navigator.clipboard.writeText(url).catch(() => {}); // audit-silent-catch-ok: clipboard denial is non-fatal; "Copied" toast simply won't show
+    navigator.clipboard.writeText(url).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

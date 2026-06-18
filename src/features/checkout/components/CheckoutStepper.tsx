@@ -17,13 +17,11 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
         return (
           <React.Fragment key={step.id}>
             <Row gap="2.5">
-              {/* audit-variant-ok: step indicator — conditional bg per state (success/active/inactive) + h-6/w-6 fixed size */}
               <Span layout="flex" color="inverse"
                 className={`h-6 w-6 justify-center ${ isDone ? "bg-success " : isActive ? "bg-neutral-900 " : "bg-neutral-200 dark:bg-slate-700 text-neutral-500 dark:text-zinc-400" }`} rounded="full" size="xs" weight="semibold"
               >
                 {isDone ? "✓" : idx + 1}
               </Span>
-              {/* audit-variant-ok: step label — conditional text shade per state (active/done/inactive); Span lacks dynamic color enum */}
               <Span
                 className={`${isActive ? "text-neutral-900 dark:text-zinc-100" : isDone ? "text-neutral-500 dark:text-zinc-400" : "text-zinc-400 dark:text-zinc-400"}`} size="sm" weight="medium"
               >

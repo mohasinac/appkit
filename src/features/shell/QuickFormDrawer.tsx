@@ -175,7 +175,6 @@ export function QuickFormDrawer({
       {/* Backdrop */}
       <Div surface="overlay-xs" 
         className="fixed inset-0 backdrop-blur-[2px]"
-        // audit-inline-style-ok: z-index token
         style={{ zIndex: "calc(var(--appkit-z-modal) + 1)" }}
         aria-hidden="true"
         onClick={handleClose}
@@ -188,7 +187,6 @@ export function QuickFormDrawer({
         aria-modal="true"
         aria-label={title}
         className="fixed inset-y-0 right-0 flex flex-col bg-[var(--appkit-color-surface)] shadow-2xl w-full lg:w-[40%]"
-        // audit-inline-style-ok: z-index token
         style={{ zIndex: "calc(var(--appkit-z-modal) + 2)" }}
       >
         {/* Header */}

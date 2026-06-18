@@ -22,12 +22,10 @@ export async function assertAuctionActive(auctionId: string): Promise<ProductDoc
   const endDate = product.auctionEndDate instanceof Date
     ? product.auctionEndDate
     : product.auctionEndDate
-      // audit-unknown-ok: TS structural escape — primitive cast
       ? new Date(product.auctionEndDate as unknown as string)
       : null;
 
   if (!endDate || endDate.getTime() <= Date.now()) throw new AuctionEndedError(auctionId);
-  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   return product as unknown as ProductDocument;
 }
 
@@ -55,7 +53,6 @@ export function shouldAutoExtend(product: ProductDocument): boolean {
   const endDate = (product as any).auctionEndDate instanceof Date
     ? (product as any).auctionEndDate
     : (product as any).auctionEndDate
-      // audit-unknown-ok: TS structural escape — primitive cast
       ? new Date((product as any).auctionEndDate as unknown as string)
       : null;
   if (!endDate) return false;
@@ -67,7 +64,6 @@ export function shouldAutoExtend(product: ProductDocument): boolean {
 export function computeExtendedEndDate(product: ProductDocument): Date {
   const current = (product as any).auctionEndDate instanceof Date
     ? (product as any).auctionEndDate
-    // audit-unknown-ok: TS structural escape — primitive cast
     : new Date((product as any).auctionEndDate as unknown as string);
   const extensionMs = ((product as any).auctionExtensionMinutes ?? AUCTION_DEFAULT_EXTENSION_MINUTES) * 60 * 1000;
   return new Date(current.getTime() + extensionMs);

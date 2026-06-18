@@ -139,7 +139,6 @@ export function AddressBook({
         ))}
       </Div>
       {onAdd && (
-        // audit-variant-ok: add-address Button — dashed border + hover-shade transitions; Button.border lacks dashed variant + hover state
         <Button rounded="lg"
           onClick={onAdd}
           variant="outline"

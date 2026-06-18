@@ -23,7 +23,6 @@ export class ApiClientError extends Error {
   constructor(
     message: string,
     public readonly status: number,
-    // audit-unknown-ok: HTTP body/response — arbitrary JSON
     public readonly data?: unknown,
   ) {
     super(message);
@@ -187,7 +186,6 @@ export class ApiClient {
 
   async post<T = JsonValue>(
     endpoint: string,
-    // audit-unknown-ok: HTTP body/response — arbitrary JSON
     data?: unknown,
     config?: RequestConfig,
   ): Promise<T> {
@@ -200,7 +198,6 @@ export class ApiClient {
 
   async put<T = JsonValue>(
     endpoint: string,
-    // audit-unknown-ok: HTTP body/response — arbitrary JSON
     data?: unknown,
     config?: RequestConfig,
   ): Promise<T> {
@@ -213,7 +210,6 @@ export class ApiClient {
 
   async patch<T = JsonValue>(
     endpoint: string,
-    // audit-unknown-ok: HTTP body/response — arbitrary JSON
     data?: unknown,
     config?: RequestConfig,
   ): Promise<T> {

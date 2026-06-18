@@ -75,7 +75,6 @@ export function BundleDetailView({
       <Section padding="y-2xl">
         <Container size="xl">
           <Stack gap="lg">
-            {/* audit-variant-ok: hero row — base flex-col + md:flex-row responsive direction; Row defaults to row + Row.direction doesn't exist */}
             <Row gap="lg" align="start" className="flex-col md:flex-row">
               <Div className="w-full md:w-2/5">
                 {members.length > 0 ? (
@@ -149,10 +148,8 @@ export function BundleDetailView({
               {members.length === 0 ? (
                 <Text color="muted">{BUNDLE_COPY.detail.emptyMembers}</Text>
               ) : (
-                // audit-variant-ok: members grid Ul — grid grid-cols-1 sm:grid-cols-2 + gap-2 responsive grid layout; Ul lacks grid layout variant
                 <Ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {members.map((p, i) => (
-                    // audit-variant-ok: bundle-member row — Li composite (flex+border+px+py+text-sm) is a Card pattern Li doesn't yet expose; defer to Li.surfaceProps extension
                     <Li key={p.id} className="flex items-center gap-2 rounded-lg border border-zinc-100 dark:border-zinc-800 px-3 py-2 text-sm">
                       <Span size="xs" weight="semibold" className="w-5" color="faint">#{i + 1}</Span>
                       <Link

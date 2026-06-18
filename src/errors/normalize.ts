@@ -136,19 +136,16 @@ type CodedError = Error & { code: string };
 
 function isFirebaseAuthErrorShape(e: Error): e is CodedError {
   if (!hasStringProp(e, "code")) return false;
-  // audit-unknown-ok: TS structural escape — CodedError
   return (e as unknown as CodedError).code.startsWith("auth/");
 }
 
 function isFirebaseStorageErrorShape(e: Error): e is CodedError {
   if (!hasStringProp(e, "code")) return false;
-  // audit-unknown-ok: TS structural escape — CodedError
   return (e as unknown as CodedError).code.startsWith("storage/");
 }
 
 function isFirebaseFirestoreErrorShape(e: Error): e is CodedError {
   if (!hasStringProp(e, "code")) return false;
-  // audit-unknown-ok: TS structural escape — CodedError
   const code = (e as unknown as CodedError).code;
   // Firestore codes are bare strings: "permission-denied", "not-found", etc.
   return (
@@ -187,7 +184,6 @@ function isNetworkErrorShape(e: Error): boolean {
 // normalizeError — the single funnel for every `catch (e: unknown)`.
 // ---------------------------------------------------------------------------
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 export function normalizeError(e: unknown): NormalizedError {
   // ApiError (client-side API failure with stable code + status).
   if (e instanceof ApiError) {

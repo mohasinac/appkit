@@ -28,7 +28,6 @@ const TONE_CLS: Record<KbdTone, string> = {
 export function Kbd({ children, size = "sm", tone = "default" }: KbdProps) {
   return (
     <kbd
-      // audit-variant-ok: Kbd is the catalogued primitive for <kbd>.
       // size + tone come from typed enums.
       className={`inline-flex items-center font-mono font-semibold border shadow-sm ${SIZE_CLS[size]} ${TONE_CLS[tone]}`}
     >

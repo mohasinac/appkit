@@ -12,7 +12,6 @@ interface CollectionCardProps {
 
 export function CollectionCard({ collection, href }: CollectionCardProps) {
   return (
-    // audit-variant-ok: collection card TextLink — bg-gray-100 placeholder + hover:shadow-lg card composition
     <TextLink rounded="xl"
       href={href}
       className="group relative block overflow-hidden bg-gray-100 dark:bg-slate-800 transition-shadow hover:shadow-lg"
@@ -22,7 +21,6 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
           role="img"
           aria-label={collection.title}
           className={`${LAYOUT.cardHeight.md} w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105`}
-          // audit-inline-style-ok: dynamic image URL
           style={{ backgroundImage: `url(${collection.image})` }}
         />
       ) : (

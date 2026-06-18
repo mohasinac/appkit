@@ -466,7 +466,6 @@ export function AdminBlogEditorView({
       {...rest}
       title={isEdit ? "Edit Post" : "New Blog Post"}
       sections={[
-        // audit-variant-ok: split layout — lg:grid 3fr_2fr custom grid-cols + lg:gap-6
         <Div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
           <Div>{formContent}</Div>
           <Div className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start">

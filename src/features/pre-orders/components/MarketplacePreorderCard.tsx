@@ -196,7 +196,6 @@ export function MarketplacePreorderCard({
                 </Text>
               </TextLink>
               {wishlistActions && (
-                // audit-variant-ok: wishlist toggle Button — conditional text-primary (in-wishlist) vs text-zinc-400 + leading-none icon-only
                 <Button
                   type="button"
                   variant="ghost"
@@ -263,7 +262,6 @@ export function MarketplacePreorderCard({
                 </Button>
               ) : null}
               {wishlistActions ? (
-                // audit-variant-ok: wishlist Button — conditional text-primary (in-wishlist) vs text-zinc-500; text-base icon
                 <Button
                   type="button"
                   variant="ghost"

@@ -53,7 +53,6 @@ export function AboutView({
 }: AboutViewProps) {
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      {/* audit-variant-ok: responsive md:py-20 lg:py-24 override on y-4xl base; PADDING_MAP lacks responsive ladder past y-4xl */}
       <Section color="inverse" tone="accent-banner" className="md:py-20 lg:py-24" padding="y-4xl">
         <Div paddingX="x-page" className="max-w-4xl mx-auto text-center">
           <Heading color="inverse" level={1} variant="none" className="mb-6" mdSize="5xl" size="4xl" weight="bold">
@@ -65,7 +64,6 @@ export function AboutView({
         </Div>
       </Section>
 
-      {/* audit-variant-ok: page-wrapper Div — md:py-20 responsive override + space-y-{16,20} between sections (Div has no space-y variant) */}
       <Div paddingX="x-page" className="max-w-5xl mx-auto md:py-20 space-y-16 md:space-y-20" padding="y-4xl">
         <Section className="text-center max-w-3xl mx-auto">
           <Heading level={2} className="mb-4">{labels.missionTitle}</Heading>
@@ -76,14 +74,12 @@ export function AboutView({
 
         <Section>
           <Heading level={2} className="mb-12" align="center">{labels.howItWorksTitle}</Heading>
-          {/* audit-variant-ok: responsive grid — md:grid-cols-3 + responsive gap-{6,8}; Div lacks responsive grid layout variants */}
           <Div className="grid md:grid-cols-3 gap-6 md:gap-8">
             {howItems.map(({ title, text, icon, tone }) => (
               <Card
                 key={title}
                 variant={`gradient-${tone ?? "indigo"}`}
                 padding="md" spacing="sm">
-                {/* audit-variant-ok: emoji icon — text-4xl typography scale on a Div container; Div lacks size variant */}
                 <Div className="text-4xl">{icon}</Div>
                 <Heading level={3}>{title}</Heading>
                 <Text size="sm" variant="secondary" className="leading-relaxed">
@@ -96,14 +92,12 @@ export function AboutView({
 
         <Section>
           <Heading level={2} className="mb-12" align="center">{labels.valuesTitle}</Heading>
-          {/* audit-variant-ok: responsive grid — md:grid-cols-3 + responsive gap-{5,6}; Div lacks responsive grid layout variants */}
           <Div className="grid md:grid-cols-3 gap-5 md:gap-6">
             {valueItems.map(({ title, text, icon }) => (
               <div
                 key={title}
                 className="bg-white dark:bg-slate-800 rounded-xl p-6 space-y-3 border border-neutral-200 dark:border-slate-700"
               >
-                {/* audit-variant-ok: emoji icon — text-3xl typography scale on a Div container; Div lacks size variant */}
                 <Div className="text-3xl">{icon}</Div>
                 <Heading level={3}>{title}</Heading>
                 <Text size="sm" variant="secondary" className="leading-relaxed">
@@ -116,7 +110,6 @@ export function AboutView({
 
         <Section>
           <Heading level={2} className="mb-10" align="center">{labels.milestonesTitle}</Heading>
-          {/* audit-variant-ok: timeline with left-only border-l-2 + pl-8; PADDING_MAP has no left-only token + Stack lacks left-border variant */}
           <Stack className="relative border-l-2 border-primary/30 pl-8 max-w-2xl mx-auto" gap="xl">
             {milestones.map(({ year, text }) => (
               <Div key={year} className="relative">
@@ -130,7 +123,6 @@ export function AboutView({
           </Stack>
         </Section>
 
-        {/* audit-variant-ok: CTA banner — p-8 → md:p-12 responsive override on PADDING_MAP scale; dynamic ctaBannerClass slot */}
         <Section color="inverse" tone="accent-banner" className={`text-center ${ctaBannerClass} ${__P.p8} md:p-12`} rounded="2xl">
           <Heading color="inverse" level={2} variant="none" className="mb-8" size="3xl" weight="bold">
             {labels.ctaTitle}

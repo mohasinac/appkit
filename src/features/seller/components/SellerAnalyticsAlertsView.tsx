@@ -155,7 +155,6 @@ export function SellerAnalyticsAlertsView({
     queryKey: ["seller", "analytics-alerts"],
     queryFn: async () => {
       const res = await apiClient.get(SELLER_ENDPOINTS.ANALYTICS_ALERTS);
-      // audit-unknown-ok: analytics API response items
       return ((res as Record<string, unknown>)?.items ?? []) as AnalyticsAlertDocument[];
     },
   });
@@ -229,7 +228,6 @@ export function SellerAnalyticsAlertsView({
       </Text>
 
       {showForm && (
-        // audit-variant-ok: form Section — space-y-4 vertical rhythm; Section lacks space-y variant
         <Section className={`${__P.p5} space-y-4`} rounded="xl" border="default">
           <Heading level={3} size="sm" weight="semibold" color="primary">
             Create Alert

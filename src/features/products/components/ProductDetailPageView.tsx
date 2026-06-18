@@ -174,7 +174,6 @@ function toReview(doc: FirestoreDocument): Review {
   };
 }
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function toDescriptionHtml(raw: unknown): string {
   if (!raw) return "";
   const s =
@@ -250,7 +249,6 @@ export async function ProductDetailPageView({
     );
   }
 
-  // audit-unknown-ok: TS structural escape — Record
   const p = product as unknown as FirestoreDocument;
   const currency =
     (p.currency as string | undefined) || getDefaultCurrency();
@@ -378,12 +376,9 @@ export async function ProductDetailPageView({
   const [reviewDocs, relatedDocs] = await Promise.all([
     reviewRepository
       .findApprovedByProduct(product.id)
-      // audit-unknown-ok: TS structural escape
       .catch(() => [] as unknown[]),
     category
-      // audit-unknown-ok: TS structural escape
       ? productRepository.findByCategory(category).catch(() => [] as unknown[])
-      // audit-unknown-ok: TS structural escape
       : Promise.resolve([] as unknown[]),
   ]);
 
@@ -403,7 +398,6 @@ export async function ProductDetailPageView({
       if (r.listingType === "auction" && r.auctionEndDate) {
         const end = r.auctionEndDate;
         const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
-          // audit-unknown-ok: TS structural escape
           ? (end as unknown as { toDate: () => Date }).toDate()
           : end instanceof Date ? end : new Date(String(end));
         if (endDate <= _now) return false;
@@ -497,7 +491,6 @@ export async function ProductDetailPageView({
                     {avgRating.toFixed(1)}
                     {reviewCount ? ` (${reviewCount} reviews)` : ""}
                   </Span>
-                  {/* audit-variant-ok: stock badge — conditional bg-success-surface vs bg-error-surface; Span lacks status-tinted variant */}
                   <Span
                     size="xs"
                     weight="medium"

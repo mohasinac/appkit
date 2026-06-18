@@ -2,9 +2,7 @@ import fs from "fs";
 import path from "path";
 
 export interface FirestoreIndexConfig {
-  // audit-unknown-ok: Firestore index manifest — arbitrary JSON
   indexes: unknown[];
-  // audit-unknown-ok: Firestore index manifest — arbitrary JSON
   fieldOverrides: unknown[];
 }
 

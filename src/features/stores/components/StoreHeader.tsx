@@ -44,13 +44,11 @@ export function StoreHeader({
   return (
     <Section surface="default" border="bottom" className={className}>
       {store.storeBannerURL && (
-          // audit-variant-ok: banner Div — h-40/md:h-56 responsive height ladder + bg-gray-100 placeholder while banner loads
           <Div className={`h-40 md:h-56 ${__O.hidden} bg-gray-100 dark:bg-slate-800`}>
           <Div
             role="img"
             aria-label={`${store.storeName} banner`}
             className="h-full w-full bg-center bg-cover"
-            // audit-inline-style-ok: dynamic image URL
             style={{ backgroundImage: `url(${store.storeBannerURL})` }}
           />
         </Div>
@@ -62,7 +60,6 @@ export function StoreHeader({
               role="img"
               aria-label={store.storeName}
               className="-mt-8 h-16 w-16 border-2 border-white bg-center bg-cover" rounded="xl" shadow="sm"
-              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${store.storeLogoURL})` }}
             />
           ) : (

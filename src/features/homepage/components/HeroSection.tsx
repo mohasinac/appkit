@@ -9,7 +9,6 @@ interface HeroSectionProps {
 export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
   const { content } = section;
   return (
-    // audit-variant-ok: hero section — min-h-[60vh] custom + bg-neutral-900 dark surface (Section.tone lacks hero-dark variant); flex+items-center handled by layout/align
     <Section layout="flex" align="center"
       className="relative min-h-[60vh] overflow-hidden bg-neutral-900"
       style={
@@ -38,7 +37,6 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
           </Text>
         )}
         {content?.ctaLabel && (
-          // audit-variant-ok: hero CTA Button — bespoke white-on-dark CTA + zinc-900 text + hover-neutral; Button.variant lacks light-tone-on-dark
           <Button rounded="full"
             onClick={onCtaClick}
             paddingX="xl" paddingY="md" textSize="sm" weight="semibold"

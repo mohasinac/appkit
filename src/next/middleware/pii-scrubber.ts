@@ -6,7 +6,6 @@ import type { BaseRequestContext, Middleware } from "./types";
 
 const ENC_PREFIX = "enc:v1:";
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function scrubValue(value: unknown): unknown {
   if (typeof value === "string" && value.startsWith(ENC_PREFIX)) {
     return "[encrypted]";
@@ -42,7 +41,6 @@ export const piiScrubberMiddleware: Middleware<BaseRequestContext> = async (
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
 
-  // audit-unknown-ok: callback entry point — accepts arbitrary payload value
   let body: unknown;
   try {
     body = await response.json();

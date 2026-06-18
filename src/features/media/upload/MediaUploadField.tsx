@@ -268,7 +268,6 @@ function MediaPreviewPanel({
         <Stack gap="sm">
           <Div
             className={`relative w-full ${__O.hidden}`} rounded="lg" border="default"
-            // audit-inline-style-ok: dynamic CSS
             style={{ height: 280 }}
           >
             <iframe

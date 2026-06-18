@@ -37,11 +37,9 @@ function StatCard({
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
         !isLast ? "border-r border-zinc-200 dark:border-slate-700" : "",
       ].join(" ")}
-      // audit-inline-style-ok: computed timing
       style={{ transitionDelay: `${delay}ms` }}
     >
       {stat.renderIcon && (
-        // audit-variant-ok: icon container — fixed h-14/w-14 + bg-primary-50 + border-primary-100 themed icon-box
         <Row className="mb-4 h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30" align="center" justify="center" rounded="2xl">
           {stat.renderIcon({ className: "w-7 h-7" })}
         </Row>

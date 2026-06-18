@@ -161,7 +161,6 @@ export function BlogPostView({
               role="img"
               aria-label={post.title}
               className="h-full w-full bg-cover bg-center"
-              // audit-inline-style-ok: dynamic image URL
               style={{ backgroundImage: `url(${coverImageUrl})` }}
             />
           )}

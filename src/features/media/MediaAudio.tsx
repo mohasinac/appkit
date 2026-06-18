@@ -41,7 +41,6 @@ export function MediaAudio({
       <Span layout="inline-flex" gap="xs" 
         role="img"
         aria-label={title ?? "Audio unavailable"}
-        // audit-variant-ok: MediaAudio fallback chip — primitive owns its style.
         className="text-[var(--appkit-color-text-muted)]" size="xs"
       >
         🎵 {title ?? "Audio unavailable"}
@@ -59,7 +58,6 @@ export function MediaAudio({
       autoPlay={autoPlay}
       muted={muted}
       preload={preload}
-      // audit-variant-ok: MediaAudio is the catalogued primitive for <audio>.
       className="block w-full"
     />
   );

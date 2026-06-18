@@ -67,7 +67,6 @@ export function WhatsAppCommunitySection({
             aria-hidden
           />
 
-          {/* audit-variant-ok: card body responsive padding ladder */}
           <Div className="relative z-10 px-6 sm:px-10 sm:py-12" padding="y-2xl">
 
             {/* Top row — WhatsApp icon + member pill */}
@@ -113,7 +112,6 @@ export function WhatsAppCommunitySection({
               <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2 mb-8 max-w-2xl">
                 {benefits.slice(0, 4).map((benefit, i) => (
                   <Row key={i} align="start" gap="2.5">
-                    {/* audit-variant-ok: check chip translucent white bg */}
                     <Span layout="flex-center" className="mt-0.5 flex-shrink-0 w-5 h-5 bg-white/20" rounded="full">
                       <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -127,7 +125,6 @@ export function WhatsAppCommunitySection({
 
             {/* Testimonial */}
             {testimonial && (
-              // audit-variant-ok: testimonial Blockquote left-border accent + pl-4
               <Blockquote className="border-l-2 border-white/30 pl-4 mb-8 max-w-xl">
                 <Text color="inverse" variant="none" className="/75 italic leading-relaxed" size="sm">
                   &ldquo;{testimonial}&rdquo;
@@ -137,7 +134,6 @@ export function WhatsAppCommunitySection({
 
             {/* CTA */}
             {groupLink && (
-              // audit-variant-ok: join-whatsapp Button branded #25D366 fill
               <Button gap="md"
                 variant="primary"
                 size="lg"

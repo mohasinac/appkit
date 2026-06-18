@@ -144,7 +144,6 @@ export function BottomNavbar({
       {/* 1 — Home */}
       <Li
         className="flex-1"
-        // audit-inline-style-ok: pass-through style prop
         style={itemStyle}
       >
         <NavItem
@@ -167,7 +166,6 @@ export function BottomNavbar({
       {/* 2 — Shop */}
       <Li
         className="flex-1"
-        // audit-inline-style-ok: pass-through style prop
         style={itemStyle}
       >
         <NavItem
@@ -190,7 +188,6 @@ export function BottomNavbar({
       {/* 3 — Search */}
       <Li
         className="flex-1"
-        // audit-inline-style-ok: pass-through style prop
         style={itemStyle}
       >
         <button
@@ -209,7 +206,6 @@ export function BottomNavbar({
       {/* 4 — Cart */}
       <Li
         className="flex-1"
-        // audit-inline-style-ok: pass-through style prop
         style={itemStyle}
       >
         <TextLink
@@ -230,7 +226,6 @@ export function BottomNavbar({
       {/* 5 — Profile / Login */}
       <Li
         className="flex-1"
-        // audit-inline-style-ok: pass-through style prop
         style={itemStyle}
       >
         {user ? (

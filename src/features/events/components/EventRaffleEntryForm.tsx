@@ -93,7 +93,6 @@ export function EventRaffleEntryForm({
           You&apos;ve used all {maxEntriesPerUser} entry slot{maxEntriesPerUser === 1 ? "" : "s"} for this raffle.
         </Div>
       ) : (
-        // audit-variant-ok: entry Form — space-y-3 vertical rhythm; Form lacks spacing variant
         <Form onSubmit={handleSubmit} className="space-y-3">
           <FieldTextarea
             name="message"

@@ -230,7 +230,6 @@ export async function createRazorpayOrder(
     receipt: opts.receipt ?? `rcpt_${Date.now()}`,
     notes: opts.notes,
   });
-  // audit-unknown-ok: TS structural escape — RazorpayOrder
   return order as unknown as RazorpayOrder;
 }
 
@@ -244,7 +243,6 @@ export async function fetchRazorpayOrder(
 ): Promise<RazorpayOrder> {
   const razorpay = await getRazorpayInstance();
   const order = await razorpay.orders.fetch(orderId);
-  // audit-unknown-ok: TS structural escape — RazorpayOrder
   return order as unknown as RazorpayOrder;
 }
 
@@ -302,6 +300,5 @@ export async function createRazorpayRefund(
     paymentId,
     opts as Parameters<typeof razorpay.payments.refund>[1],
   );
-  // audit-unknown-ok: TS structural escape — RazorpayRefundResult
   return refund as unknown as RazorpayRefundResult;
 }

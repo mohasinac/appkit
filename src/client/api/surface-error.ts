@@ -32,7 +32,6 @@ export interface SurfaceErrorOptions {
   }) => void;
 }
 
-// audit-unknown-ok: error-handler entry point — accepts thrown values of any shape
 export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
   const { showToast, setFieldError, translate, report } = opts;
 

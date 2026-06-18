@@ -38,7 +38,6 @@ type BundleRow = {
   updatedAt: string;
 };
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function formatPrice(paise: unknown): string {
   if (typeof paise !== "number" || paise <= 0) return "—";
   return `₹${Math.round(paise / 100).toLocaleString("en-IN")}`;
@@ -154,7 +153,6 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     getRowHref: getEditHref,
     toolbarExtra: (
       <Button asChild size="sm" variant="primary">
-        {/* audit-variant-ok: New button TextLink — flex items-center gap-1.5 layout; TextLink lacks flex layout variant */}
         <TextLink href={newHref} className="flex items-center gap-1.5">
           + {BUNDLE_COPY.adminList.newButton}
         </TextLink>

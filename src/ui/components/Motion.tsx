@@ -16,9 +16,7 @@ export const AnimatePresence = MotionAnimatePresence;
 // ── Reduced motion helper ────────────────────────────────────────────────────
 
 function useMotionProps(
-  // audit-unknown-ok: Motion props passthrough — framer-motion props arbitrary
   props: Record<string, unknown>,
-// audit-unknown-ok: Motion props passthrough — framer-motion props arbitrary
 ): Record<string, unknown> {
   const reduced = useReducedMotion();
   if (!reduced) return props;

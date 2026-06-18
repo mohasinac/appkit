@@ -39,7 +39,6 @@ export async function createCarouselSlide(
   const slide = await carouselRepository.create({
     ...input,
     createdBy: adminId,
-  // audit-unknown-ok: TS structural escape — CarouselSlideCreateInput
   } as unknown as CarouselSlideCreateInput);
   serverLogger.info("createCarouselSlide", { adminId, slideId: slide.id });
   return slide;

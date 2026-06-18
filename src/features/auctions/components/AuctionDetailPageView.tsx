@@ -115,7 +115,6 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
-        // audit-variant-ok: buy-now panel — primary-200/800 border + primary-50/900 bg; Row.surface lacks primary-tinted variant
         <Row align="center" gap="sm" className="border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
           <Span size="xs" color="muted">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
@@ -195,7 +194,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     ? await listBidsByProduct(String(product.id), { pageSize: 20 }).catch(() => null)
     : null;
 
-  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   const storeId = (product as unknown as FirestoreDocument)?.storeId as string | undefined;
   const storeReviews: ReviewDocument[] = storeId
     ? await listReviewsBySeller(storeId).catch(() => [])
@@ -223,7 +221,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
     );
   }
 
-  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
 
@@ -508,7 +505,6 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 const end = r.auctionEndDate;
                 if (!end) return true;
                 const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
-                  // audit-unknown-ok: TS structural escape
                   ? (end as unknown as { toDate: () => Date }).toDate()
                   : end instanceof Date ? end : new Date(String(end));
                 return endDate > now;

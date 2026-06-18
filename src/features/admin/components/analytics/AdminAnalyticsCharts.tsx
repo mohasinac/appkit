@@ -66,14 +66,12 @@ function ChartCard({
       {/* brand gradient top accent */}
       <div
         className="absolute top-0 left-0 right-0 h-[3px]"
-        // audit-inline-style-ok: dynamic CSS
         style={{
           background:
             "linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-cobalt) 55%, var(--appkit-color-secondary-400) 100%)",
         }}
         aria-hidden="true"
       />
-      {/* audit-variant-ok: chart card body — base p-4 + sm:p-6 + sm:pt-7 asymmetric responsive padding ladder */}
       <Div className={`${__P.p4} sm:${__P.p6} sm:pt-7`} padding="t-md">
         {title && (
           <Heading level={3} className="text-[var(--appkit-color-text)] mb-4" size="sm" weight="semibold">

@@ -1579,7 +1579,6 @@ export type { UserRole } from "./security/index";
 export { AddressesRepository } from "./repositories/index";
 // S-STORE foundation — 14 schemas + 14 repositories + RBAC.
 // store-extensions barrel: named-export expansion would be ~200 lines.
-// reexport-from-internal-ok
 export * from "./features/store-extensions/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // BaseRepository - Shared export for base repository.

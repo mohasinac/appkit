@@ -18,7 +18,6 @@ export interface ApiSuccessResponse<T = unknown> {
 export interface ApiErrorResponse {
   success: false;
   error: string;
-  // audit-unknown-ok: Generic response wrapper — issues field arbitrary
   details?: unknown;
 }
 
@@ -42,7 +41,6 @@ export function successResponse<T>(
 export function errorResponse(
   error: string,
   status: number = 400,
-  // audit-unknown-ok: Generic response wrapper — issues field arbitrary
   details?: unknown,
 ): NextResponse<ApiErrorResponse> {
   return NextResponse.json(
@@ -64,7 +62,6 @@ export const ApiErrors = {
   notFound: (resource = "Resource") =>
     errorResponse(`${resource} not found`, 404),
 
-  // audit-unknown-ok: Generic response wrapper — issues field arbitrary
   badRequest: (message = "Bad request", details?: unknown) =>
     errorResponse(message, 400, details),
 

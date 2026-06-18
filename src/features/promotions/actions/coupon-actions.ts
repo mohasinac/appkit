@@ -17,7 +17,6 @@ export interface CouponCartValidationResult {
   eligibleProductIds?: string[];
   scope?: "admin" | "seller";
   storeId?: string;
-  // audit-unknown-ok: Coupon action result wrapper
   coupon?: unknown;
   error?: string;
 }

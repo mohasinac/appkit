@@ -33,7 +33,6 @@ export function UnsavedChangesModal({ labels = {} }: UnsavedChangesModalProps) {
   useEffect(() => {
     const subscription = eventBus.on(
       UNSAVED_CHANGES_EVENT,
-      // audit-unknown-ok: ...args spread — caller-defined handler signature
       (...args: unknown[]) => {
         const resolveFn = args[0] as UnsavedChangesResolve;
         setResolve(() => resolveFn);

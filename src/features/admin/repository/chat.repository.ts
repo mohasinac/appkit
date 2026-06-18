@@ -49,7 +49,6 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
     const raw = super.mapDoc<ChatRoomDocument>(snap);
     return decryptPiiFields(raw, [
       ...CHAT_PII_FIELDS,
-    // audit-unknown-ok: TS structural escape — generic param
     ]) as unknown as D;
   }
 
@@ -160,7 +159,6 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
             decryptPiiFields(
               { id: d.id, ...data },
               [...CHAT_PII_FIELDS],
-            // audit-unknown-ok: TS structural escape — domain document type lacks index signature
             ) as unknown as ChatRoomDocument,
           );
         }

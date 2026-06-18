@@ -72,10 +72,8 @@ function decryptNewsletterDoc(
   doc: NewsletterSubscriberDocument,
 ): NewsletterSubscriberDocument {
   return decryptPiiFields(
-    // audit-unknown-ok: TS structural escape — Record
     doc as unknown as Record<string, unknown>,
     NEWSLETTER_PII_FIELDS,
-  // audit-unknown-ok: TS structural escape — domain document type lacks index signature
   ) as unknown as NewsletterSubscriberDocument;
 }
 
@@ -155,7 +153,6 @@ export class NewsletterRepository {
     };
 
     const encrypted = encryptPiiFields(
-      // audit-unknown-ok: arbitrary payload — newsletter wrapper
       plaintext as Record<string, unknown>,
       NEWSLETTER_PII_FIELDS,
     ) as Omit<NewsletterSubscriberDocument, "id" | "createdAt" | "updatedAt">;

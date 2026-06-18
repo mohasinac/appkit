@@ -246,7 +246,6 @@ export const trimDataSchema = z
 
 export function validateRequestBody<T>(
  schema: z.ZodSchema<T>,
- // audit-unknown-ok: callback entry point — accepts arbitrary payload value
  body: unknown,
 ): { success: true; data: T } | { success: false; errors: z.ZodError } {
  const result = schema.safeParse(body);

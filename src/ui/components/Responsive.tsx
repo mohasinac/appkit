@@ -93,7 +93,6 @@ export function Show({ children, above, below, inline = false }: ShowProps) {
   const Tag = inline ? "span" : "div";
   return (
     <Tag
-      // audit-variant-ok: Show is the catalogued primitive for responsive
       // conditional render. above/below come from typed enums.
       className={buildShowClass(above, below, inline)}
     >
@@ -106,7 +105,6 @@ export function Hide({ children, above, below, inline = false }: HideProps) {
   const Tag = inline ? "span" : "div";
   return (
     <Tag
-      // audit-variant-ok: Hide is the catalogued primitive for responsive
       // conditional render. above/below come from typed enums.
       className={buildHideClass(above, below, inline)}
     >

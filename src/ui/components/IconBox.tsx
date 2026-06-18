@@ -78,7 +78,6 @@ export function IconBox({
   return (
     <Tag
       aria-label={rest["aria-label"]}
-      // audit-variant-ok: IconBox is the catalogued primitive for the
       // square-icon-container pattern. size + tone + rounded come from typed enums.
       className={`inline-flex flex-shrink-0 items-center justify-center ${SIZE_CLS[size]} ${ROUNDED_CLS[rounded]} ${TONE_CLS[tone]}`}
     >

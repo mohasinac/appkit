@@ -161,7 +161,6 @@ export function MediaImage({
             alt={alt}
             loading={loading ?? (priority ? "eager" : "lazy")}
             decoding="async"
-            // audit-variant-ok: art-directed <picture> branch — MediaImage is the
             // catalogued primitive for media (variant catalogue allows the inner
             // <img> here). Object-fit + className come from typed props.
             className={`absolute inset-0 w-full h-full ${fitClass}`}

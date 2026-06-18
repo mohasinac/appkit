@@ -19,7 +19,6 @@ import {
   type ConversationMessage,
 } from "../schemas/firestore";
 
-// audit-unknown-ok: type-narrowing entry point — accepts any value, narrows by typeof/Array.isArray
 function toDate(raw: unknown): Date {
   if (raw instanceof Date) return raw;
   if (raw && typeof (raw as { toDate?: () => Date }).toDate === "function") {

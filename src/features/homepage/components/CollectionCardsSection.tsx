@@ -76,7 +76,6 @@ export async function CollectionCardsSection({
           {showTabs ? (
             <Row gap="sm" wrap>
               {collections.slice(0, 3).map((entry, idx) => (
-                // audit-variant-ok: filter tab Text — pill chip with border-zinc-300 + px-3/py-1 micro padding
                 <Text
                   key={`${entry.type}-${idx}`}
                   className="rounded-full border border-zinc-300 px-3 py-1 dark:border-slate-600" color="muted" size="xs" weight="medium"

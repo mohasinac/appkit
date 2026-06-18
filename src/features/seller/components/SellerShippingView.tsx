@@ -74,7 +74,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
             : "",
         });
       })
-      .catch(() => {}) // audit-silent-catch-ok: blank form is safe fallback; save round-trip will surface persistent errors
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [apiBase]);
 

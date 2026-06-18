@@ -55,7 +55,7 @@ export function SellerPayoutRequestView({
         setSummary(payoutsJson?.data?.summary ?? null);
         setPayoutDetails(settingsJson?.data?.payoutDetails ?? null);
       })
-      .catch(() => {}) // audit-silent-catch-ok: empty state is safe fallback; UI shows "no payout history yet"
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [payoutsApiBase, payoutSettingsApiBase]);
 

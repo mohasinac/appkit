@@ -239,7 +239,6 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   // Apply filters + sorts once; count without reading docs.
   const filteredQ = processor.apply(effective, baseQuery, {
     applyPagination: false,
-  // audit-unknown-ok: TS structural escape — Firebase SDK type
   } as never) as unknown as Query;
   const total = await getFirestoreCount(filteredQ);
 
@@ -249,7 +248,6 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   const snap = await pagedQ.get();
 
   const items = snap.docs.map(
-    // audit-unknown-ok: TS structural escape — generic param
     (d) => deserializeTimestamps({ id: d.id, ...d.data() }) as unknown as T,
   );
 
@@ -303,7 +301,6 @@ export abstract class FirebaseSieveRepository<
     // Apply filters + sorts once; count without reading docs.
     const filteredQ = processor.apply(effective, base, {
       applyPagination: false,
-    // audit-unknown-ok: TS structural escape — Firebase SDK type
     } as never) as unknown as Query;
     const total = await getFirestoreCount(filteredQ);
 
@@ -314,7 +311,6 @@ export abstract class FirebaseSieveRepository<
 
     const items = snap.docs.map(
       (d) =>
-        // audit-unknown-ok: TS structural escape — TResult
         deserializeTimestamps({ id: d.id, ...d.data() }) as unknown as TResult,
     );
 

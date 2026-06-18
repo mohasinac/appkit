@@ -44,7 +44,6 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
     <Div ref={ref}>
       <ins
         className="adsbygoogle"
-        // audit-inline-style-ok: dynamic CSS
         style={{ display: "block" }}
         data-ad-client={config.adsenseClient ?? ""}
         data-ad-slot={config.adsenseSlot ?? ""}
@@ -65,7 +64,6 @@ function ThirdPartyAd({ config }: { config: AdSlotConfig }) {
         scrolling="no"
         frameBorder="0"
         title="Advertisement"
-        // audit-inline-style-ok: dynamic CSS
         style={{ border: 0, overflow: "hidden" }}
         loading="lazy"
       />
@@ -102,7 +100,6 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
         ) : null}
       </Div>
       {creative.ctaLabel ? (
-        // audit-variant-ok: CTA pill — bg-primary + py-1.5 (between Span padding map keys)
         <Span color="inverse" size="xs" weight="semibold" className="flex-shrink-0 bg-primary py-1.5" rounded="md" padding="x-sm">
           {creative.ctaLabel}
         </Span>

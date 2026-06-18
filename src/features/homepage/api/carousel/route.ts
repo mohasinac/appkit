@@ -184,7 +184,6 @@ export const carouselPOST = createRouteHandler({
       cards: (body as { cards?: JsonArray }).cards ?? [],
       createdAt: now,
       updatedAt: now,
-    // audit-unknown-ok: TS structural escape — CarouselSlide
     } as unknown as CarouselSlide);
 
     return NextResponse.json({ success: true, data: created }, { status: 201 });

@@ -90,7 +90,6 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
   return (
     <Div className={`${className}`} rounded="xl" surface="default" border="default">
       {order.contestable === false && (
-        // audit-variant-ok: warning banner — rounded-t-xl asymmetric corner; Div.rounded sets all corners
         <Div className="rounded-t-xl" surface="warning-surface" padding="inline">
           <Row gap="sm" align="center">
             <WarningIcon />
