@@ -396,13 +396,13 @@ export function createRouteHandler<
 
       // -- console-side surface ---------------------------------------------
       if (mapped.status >= 500) {
-        // eslint-disable-next-line no-console
+         
         console.error(
           `[createRouteHandler] ${request.method} ${new URL(request.url).pathname} failed [${requestId}]`,
           err,
         );
       } else if (mapped.status >= 400 && mapped.status !== 401 && mapped.status !== 403) {
-        // eslint-disable-next-line no-console
+         
         console.warn(
           `[createRouteHandler] ${request.method} ${new URL(request.url).pathname} failed (${mapped.status}) [${requestId}]`,
           mapped.code,

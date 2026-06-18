@@ -64,8 +64,6 @@ export class ServerErrorsRepository extends BaseRepository<ServerErrorDocument> 
       await ref.set(doc);
     } catch (err) {
       void normalizeError(err);
-      // Logging a failure to log must never propagate.
-      // eslint-disable-next-line no-console
       console.error("[serverErrors.record] failed to persist", err);
     }
   }

@@ -229,7 +229,7 @@ export function Button({
               return;
             }
             // No toast provider mounted — let the error bubble.
-            // eslint-disable-next-line no-console
+             
             console.error("[Button] unhandled async onClick rejection", err);
           });
         }

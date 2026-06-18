@@ -190,7 +190,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           </Heading>
           <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="xl">
             {/* Progress bar */}
-            // audit-variant-ok: progress-bar wrapper Div — asymmetric pt-5 + paddingY=b-md + px-5 + border-b composition
+            {/* audit-variant-ok: progress-bar wrapper Div — asymmetric pt-5 + paddingY=b-md + px-5 + border-b composition */}
             <Div className="px-5 pt-5 border-b border-[var(--appkit-color-border)]" padding="b-md">
               <Row className="mb-2" align="center" justify="between">
                 <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">

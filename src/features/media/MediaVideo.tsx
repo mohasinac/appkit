@@ -168,7 +168,7 @@ function MediaVideoWatermarkLayer({ config }: { config: MediaVideoWatermark }) {
         style={containerStyle}
         aria-hidden="true"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements -- watermark image is already proxied via resolveMediaUrl; <MediaImage> would impose aspect-ratio + lazy-load that hurt the overlay */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- watermark image is already proxied via resolveMediaUrl; <MediaImage> would impose aspect-ratio + lazy-load that hurt the overlay */}
         <img
           src={resolveMediaUrl(config.imageUrl)}
           alt=""
