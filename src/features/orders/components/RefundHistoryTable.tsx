@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * RefundHistoryTable — read-only list of OrderRefundEvent entries on an order.
  *

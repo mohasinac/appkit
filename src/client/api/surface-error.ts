@@ -1,5 +1,3 @@
-"use client";
-
 import { ApiError, isApiError } from "./ApiError";
 import { getErrorDisplay } from "../../errors/error-display-map";
 

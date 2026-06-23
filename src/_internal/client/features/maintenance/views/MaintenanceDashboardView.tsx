@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Anchor, Div, Heading, Li, Nav, Section, Span, Text, Ul } from "@mohasinac/appkit";
 import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";

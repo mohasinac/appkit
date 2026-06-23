@@ -1,5 +1,3 @@
-"use client";
-
 type FilterableItem = { id?: string; requiredPermission?: string };
 
 /**

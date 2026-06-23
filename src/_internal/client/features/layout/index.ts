@@ -1,5 +1,3 @@
-"use client";
-
 /** Layout feature — client islands barrel. */
 
 export { DashboardLayoutClient } from "./DashboardLayoutClient";

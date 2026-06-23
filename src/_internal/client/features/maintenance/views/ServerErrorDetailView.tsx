@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { Anchor, Div, Heading, Li, Pre, Section, Text, Ul } from "@mohasinac/appkit";
 import type { ServerErrorDocument } from "../../../../../features/server-errors/schemas/firestore";

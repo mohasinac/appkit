@@ -1,4 +1,3 @@
-"use client"
 /**
  * filter-load-options.ts
  *

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { Div, Heading, Stack, Text } from "../../../ui";
 import type { ProductCardMetadata } from "../schemas/firestore";

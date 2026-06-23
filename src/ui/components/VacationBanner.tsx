@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { Alert } from "./Alert";
 import { Div } from "./Div";

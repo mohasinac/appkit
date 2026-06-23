@@ -1,5 +1,3 @@
-"use client";
-
 import type { SocialPost, SocialPlatform } from "../schemas";
 import { Div, Row, Span, Stack, Text } from "../../../ui";
 const __P = {
