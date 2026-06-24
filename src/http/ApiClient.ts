@@ -227,6 +227,24 @@ export class ApiClient {
     return this.request<T>(endpoint, { ...config, method: "DELETE" });
   }
 
+  async blob(endpoint: string, config?: RequestConfig): Promise<Blob> {
+    const { params, timeout = this.defaultTimeout, headers: customHeaders, ...fetchConfig } = config ?? {};
+    const url = this.buildURL(endpoint, params);
+    const headers = await this.getHeaders("GET", customHeaders as HeadersInit | undefined);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(url, { ...fetchConfig, headers, signal: controller.signal, credentials: "include" });
+      clearTimeout(timeoutId);
+      if (!response.ok) throw new ApiClientError(`Download failed with status ${response.status}`, response.status);
+      return response.blob();
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof ApiClientError) throw error;
+      throw new ApiClientError(error instanceof Error ? error.message : "Download failed", 0);
+    }
+  }
+
   async upload<T = JsonValue>(
     endpoint: string,
     formData: FormData,

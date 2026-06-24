@@ -75,9 +75,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
 
   const handleExportCsv = async () => {
     try {
-      const res = await fetch(ADMIN_ENDPOINTS.PAYOUTS_EXPORT);
-      if (!res.ok) throw new Error("Export failed");
-      const blob = await res.blob();
+      const blob = await apiClient.blob(ADMIN_ENDPOINTS.PAYOUTS_EXPORT);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
