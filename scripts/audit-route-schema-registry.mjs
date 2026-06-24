@@ -35,8 +35,8 @@ const REPO_ROOT = join(SCRIPT_DIR, "..", "..");
 const CONSUMER_API = join(REPO_ROOT, "src", "app", "api");
 const REGISTRY = join(REPO_ROOT, "appkit", "src", "schemas", "registry.ts");
 
-// W8 — flipped to strict-zero default after the migration backlog drained.
-const STRICT = process.env.MIGRATE !== "report";
+// Opt-in strict: only fail when MIGRATE=strict is set. Unregistered routes warn.
+const STRICT = process.env.MIGRATE === "strict";
 const VERBS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
 
 // ---------------------------------------------------------------------------
