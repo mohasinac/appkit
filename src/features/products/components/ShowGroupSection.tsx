@@ -125,7 +125,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
     fetch(`/api/products/group/${encodeURIComponent(groupId)}`)
       .then((r) => r.json())
       .then((res: ApiResponse) => setMembers(res.data?.items ?? []))
-      .catch(() => {})
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, [groupId]);
 

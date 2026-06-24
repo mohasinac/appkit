@@ -112,7 +112,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
         setCategory(res.data?.category ?? null);
         setListings(res.data?.listings ?? []);
       })
-      .catch(() => {})
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, [sublistingCategoryId]);
 

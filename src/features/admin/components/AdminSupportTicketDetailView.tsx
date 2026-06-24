@@ -191,7 +191,7 @@ export function AdminSupportTicketDetailView({
             (notes ? notes + "\n" : "") +
             `[${new Date().toISOString()}] Applied store change to ${linkedStoreId}: status=${storeStatus}, verified=${storeIsVerified}, featured=${storeIsFeatured}`,
         })
-        .catch(() => {});
+        .catch(console.error);
       invalidate();
     },
     onError: (err: Error) => {
@@ -248,7 +248,7 @@ export function AdminSupportTicketDetailView({
             `[${new Date().toISOString()}] Lifted hard ban for ${linkedUserId}`,
           status: "resolved",
         })
-        .catch(() => {});
+        .catch(console.error);
       invalidate();
     },
     onError: (err: Error) => {
@@ -272,7 +272,7 @@ export function AdminSupportTicketDetailView({
             `[${new Date().toISOString()}] Lifted create_support_tickets soft ban for ${linkedUserId}`,
           status: "resolved",
         })
-        .catch(() => {});
+        .catch(console.error);
       invalidate();
     },
     onError: (err: Error) => {
@@ -309,7 +309,7 @@ export function AdminSupportTicketDetailView({
  .map((it) => `${it.productId}x${it.quantity}`)
  .join(", ")}`,
         })
-        .catch(() => {});
+        .catch(console.error);
       invalidate();
       setOrderItemsOpen(false);
     },

@@ -105,7 +105,7 @@ export function useWishlistCount(userId: string | null | undefined) {
           });
         }
       })
-      .catch(() => {})
+      .catch(console.error)
       .finally(finish);
   }, [userId, queryClient]);
 

@@ -406,7 +406,7 @@ export async function createCheckoutOrderAction(
     if (!addressId) {
       failedCheckoutRepository
         .logCheckout(uid, "address_not_found", "Address required for physical cart", { addressId: "", paymentMethod })
-        .catch(() => {});
+        .catch(console.error);
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     const addressDoc = await unitOfWork.addresses.findById(addressId);
@@ -417,7 +417,7 @@ export async function createCheckoutOrderAction(
     if (!resolvedAddress) {
       failedCheckoutRepository
         .logCheckout(uid, "address_not_found", "Address not found", { addressId, paymentMethod })
-        .catch(() => {});
+        .catch(console.error);
       throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
     }
     shippingAddress = formatShippingAddress(resolvedAddress);
@@ -602,7 +602,7 @@ export async function createCheckoutOrderAction(
         addressId,
         paymentMethod,
       })
-      .catch(() => {});
+      .catch(console.error);
     throw err;
   }
   const { available, unavailable, emailOtpUsed } = stockResult;
@@ -614,7 +614,7 @@ export async function createCheckoutOrderAction(
         paymentMethod,
         cartItemCount: cartItems.length,
       })
-      .catch(() => {});
+      .catch(console.error);
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
   }
 
@@ -946,7 +946,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
         gatewayPaymentId: razorpay_payment_id,
         addressId,
       })
-      .catch(() => {});
+      .catch(console.error);
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
   }
 
@@ -1001,7 +1001,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {});
+        .catch(console.error);
       throw new ApiError(
         403,
         "Order verification required. Please complete OTP verification and retry.",
@@ -1074,7 +1074,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {});
+        .catch(console.error);
       throw new ValidationError(
         exists
           ? ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK
@@ -1115,7 +1115,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             addressId,
           },
         )
-        .catch(() => {});
+        .catch(console.error);
       throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
     }
   }
@@ -1364,7 +1364,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
   });
   if (!isDigitalCartRazorpay && addressId) {
     const otpRefForDelete = consentOtpRef(db, uid, addressId);
-    otpRefForDelete.delete().catch(() => {});
+    otpRefForDelete.delete().catch(console.error);
   }
 
   if (emailsToSend.length > 0) {

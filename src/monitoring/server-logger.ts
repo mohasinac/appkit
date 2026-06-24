@@ -205,7 +205,7 @@ export const serverLogger = {
       data: sanitized as FirestoreValue,
     };
     console.info(`[INFO] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch(() => {});
+    if (isFileLoggingEnabled) writeLog(entry).catch((err) => { process.stderr.write(String(err) + "\n"); });
   },
 
   warn(message: string, data?: unknown): void {
@@ -217,7 +217,7 @@ export const serverLogger = {
       data: sanitized as FirestoreValue,
     };
     console.warn(`[WARN] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch(() => {});
+    if (isFileLoggingEnabled) writeLog(entry).catch((err) => { process.stderr.write(String(err) + "\n"); });
   },
 
   error(message: string, data?: unknown): void {
@@ -229,7 +229,7 @@ export const serverLogger = {
       data: sanitized as FirestoreValue,
     };
     console.error(`[ERROR] ${message}`, sanitized);
-    if (isFileLoggingEnabled) writeLog(entry).catch(() => {});
+    if (isFileLoggingEnabled) writeLog(entry).catch((err) => { process.stderr.write(String(err) + "\n"); });
   },
 };
 

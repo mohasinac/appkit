@@ -188,7 +188,7 @@ export function CouponCard({
 
   const handleCopy = () => {
     if (!n.code) return;
-    navigator.clipboard.writeText(n.code).catch(() => {});
+    navigator.clipboard.writeText(n.code).catch(console.error);
     setCopied(true);
     onCopy?.(n.code);
     setTimeout(() => setCopied(false), 2000);

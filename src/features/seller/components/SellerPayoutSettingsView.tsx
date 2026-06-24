@@ -91,7 +91,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
             : "",
         });
       })
-      .catch(() => {})
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, [apiBase]);
 

@@ -55,7 +55,7 @@ export function SellerPayoutRequestView({
         setSummary(payoutsJson?.data?.summary ?? null);
         setPayoutDetails(settingsJson?.data?.payoutDetails ?? null);
       })
-      .catch(() => {})
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, [payoutsApiBase, payoutSettingsApiBase]);
 

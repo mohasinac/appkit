@@ -125,7 +125,7 @@ export function NotificationPreferencesPanel({
         if (prefs?.channels) setChannels((prev) => ({ ...prev, ...prefs.channels }));
         if (prefs?.types)    setTypes((prev)    => ({ ...prev, ...prefs.types }));
       })
-      .catch(() => {})
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, [fetchUrl]);
 

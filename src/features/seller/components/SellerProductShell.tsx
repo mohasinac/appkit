@@ -950,7 +950,7 @@ export function SellerProductShell({
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     autoSaveTimer.current = setTimeout(() => {
       const result = onSaveRef.current(draftRef.current);
-      if (result && typeof (result as Promise<void>).catch === "function") (result as Promise<void>).catch(() => {});
+      if (result && typeof (result as Promise<void>).catch === "function") (result as Promise<void>).catch(console.error);
     }, 2000);
     return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
   }, [draft, isDirty, mode]);

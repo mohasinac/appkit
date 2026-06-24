@@ -73,7 +73,7 @@ export const actionTracker = {
       const result = currentSink(event);
       // Swallow promise rejections so the caller path is never affected.
       if (result && typeof (result as Promise<void>).catch === "function") {
-        (result as Promise<void>).catch(() => {});
+        (result as Promise<void>).catch(console.error);
       }
     } catch {
       // Intentionally swallowed — telemetry must never break callers.

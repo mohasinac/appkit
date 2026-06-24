@@ -52,7 +52,7 @@ export function SellerGoogleReviewsView({
           lastSyncedAt: data.lastSyncedAt ? String(data.lastSyncedAt) : undefined,
         });
       })
-      .catch(() => {})
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 

@@ -23,7 +23,7 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
       }
     }
 
-    navigator.clipboard.writeText(url).catch(() => {});
+    navigator.clipboard.writeText(url).catch(console.error);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

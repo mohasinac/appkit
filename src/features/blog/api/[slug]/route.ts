@@ -49,7 +49,7 @@ export async function GET(
     }
 
     // Increment view count fire-and-forget — must not block response
-    blogRepository.incrementViews(post.id).catch(() => {});
+    blogRepository.incrementViews(post.id).catch(console.error);
 
     // Related posts: same category, latest 3, excluding current
     const related = (

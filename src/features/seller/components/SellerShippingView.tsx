@@ -74,7 +74,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
             : "",
         });
       })
-      .catch(() => {})
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, [apiBase]);
 

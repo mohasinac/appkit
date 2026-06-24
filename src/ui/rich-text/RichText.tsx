@@ -172,7 +172,7 @@ function attachCopyButtons(container: HTMLDivElement) {
             btn.textContent = "Copy";
           }, 1800);
         })
-        .catch(() => {});
+        .catch(console.error);
     });
 
     pre.appendChild(btn);
