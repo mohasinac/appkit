@@ -182,6 +182,7 @@ export function SellerAddressesView({
       const data = (json?.data?.addresses ?? json?.addresses ?? []) as AddressDoc[];
       setAddresses(data);
     } catch {
+      // toast-intentionally-silent: data load, error surfaced via errorMessage state
       setErrorMessage("Could not load addresses. Please try again.");
     } finally {
       setIsLoading(false);

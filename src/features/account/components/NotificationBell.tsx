@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useRef, useState } from "react";
-import { Button, Div, Heading, Li, Row, Span, Spinner, Stack, Text, TextLink, Ul } from "../../../ui";
+import { Button, Div, Heading, Li, Row, Span, Spinner, Stack, Text, TextLink, Ul, useToast } from "../../../ui";
 import { useClickOutside, useMessage } from "../../../react";
 import { formatRelativeTime } from "../../../utils";
 
@@ -91,6 +91,7 @@ export function NotificationBell({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { showSuccess, showError } = useMessage();
+  const { showToast } = useToast();
   const {
     notifications,
     unreadCount,
@@ -113,10 +114,14 @@ export function NotificationBell({
 
   const handleMarkRead = useCallback(
     async (id: string) => {
-      await markRead(id);
-      refetch();
+      try {
+        await markRead(id);
+        refetch();
+      } catch (err) {
+        showToast(err instanceof Error ? err.message : "Failed to mark notification as read", "error");
+      }
     },
-    [markRead, refetch],
+    [markRead, refetch, showToast],
   );
 
   const emitSuccess = onMarkAllReadSuccess ?? showSuccess;
@@ -127,16 +132,21 @@ export function NotificationBell({
       await markAllRead(undefined);
       refetch();
       emitSuccess(labels.markAllRead);
-    } catch {
-      emitError(labels.error);
+    } catch (err) {
+      if (onMarkAllReadError) {
+        onMarkAllReadError(labels.error);
+      } else {
+        showToast(err instanceof Error ? err.message : labels.error, "error");
+      }
     }
   }, [
-    emitError,
+    onMarkAllReadError,
     emitSuccess,
     labels.error,
     labels.markAllRead,
     markAllRead,
     refetch,
+    showToast,
   ]);
 
   const handleMarkReadAndClose = useCallback(

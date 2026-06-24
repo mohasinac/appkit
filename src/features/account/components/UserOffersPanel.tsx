@@ -207,6 +207,7 @@ export function UserOffersPanel({
       const items = Array.isArray(json) ? json : ((json as { items?: OfferDocument[] }).items ?? []);
       setOffers(items);
     } catch (err) {
+      // toast-intentionally-silent: data load, error surfaced via fetchError state
       void normalizeError(err);
       setFetchError(err instanceof Error ? err.message : "Failed to load offers.");
     } finally {

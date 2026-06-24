@@ -277,6 +277,7 @@ export function SellerOffersPanel({
       const json = (await res.json()) as { items?: OfferRow[]; offers?: OfferRow[] };
       setOffers(json.items ?? json.offers ?? []);
     } catch (err) {
+      // toast-intentionally-silent: data load, error surfaced via fetchError state
       void normalizeError(err);
       setFetchError(err instanceof Error ? err.message : "Failed to load offers.");
     } finally {

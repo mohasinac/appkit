@@ -106,7 +106,7 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
         setItems(getGuestHistory());
       }
     } catch {
-      // Data loading — silent fallback to empty
+      // toast-intentionally-silent: data loading — silent fallback to empty
     }
   }, [isAuth]);
 

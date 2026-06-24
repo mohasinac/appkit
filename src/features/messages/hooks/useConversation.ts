@@ -71,6 +71,7 @@ export function useConversation(conversationId: string | null): UseConversationR
     try {
       setConversation(await fetchDetail(conversationId));
     } catch (e) {
+      // toast-intentionally-silent: background refetch, error surfaced via error state
       void normalizeError(e);
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
@@ -137,7 +138,7 @@ export function useConversation(conversationId: string | null): UseConversationR
       });
       await refetch();
     } catch {
-      // best-effort
+      // toast-intentionally-silent: read-receipt is best-effort, non-critical
     }
   }, [conversationId, refetch]);
 

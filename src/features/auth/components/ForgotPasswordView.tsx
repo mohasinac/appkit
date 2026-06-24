@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { Alert, Button, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
@@ -33,6 +33,7 @@ export function ForgotPasswordView({
   className = "",
 }: ForgotPasswordViewProps) {
   const [email, setEmail] = useState("");
+  const { showToast } = useToast();
 
   return (
     <Row className={`min-h-[60vh] ${className}`} align="center" justify="center" padding="x-md">
@@ -82,7 +83,11 @@ export function ForgotPasswordView({
                     clearErrors();
                     const parsed = forgotPasswordSchema.safeParse({ email });
                     if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
-                    await onSubmit(parsed.data.email);
+                    try {
+                      await onSubmit(parsed.data.email);
+                    } catch (err) {
+                      showToast(err instanceof Error ? err.message : "Failed to send reset link", "error");
+                    }
                   }}
                 >
                   {isLoading

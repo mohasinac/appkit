@@ -178,6 +178,7 @@ export function SellerReviewsView({
       setReviews(json?.data?.reviews ?? []);
       setMeta(json?.data?.meta ?? null);
     } catch (err) {
+      // toast-intentionally-silent: data load, error surfaced via error state
       void normalizeError(err);
       setError((err as Error).message);
     } finally {

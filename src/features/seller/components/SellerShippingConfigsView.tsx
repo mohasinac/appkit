@@ -159,9 +159,13 @@ export function SellerShippingConfigsView({
   });
 
   const handleDelete = useCallback(async (id: string) => {
-    await performDelete(id);
+    try {
+      await performDelete(id);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete shipping config", "error");
+    }
     setDeleteTargetId(null);
-  }, [performDelete]);
+  }, [performDelete, showToast]);
 
   const handleSetDefault = useCallback(async (id: string) => {
     setSettingDefaultId(id);

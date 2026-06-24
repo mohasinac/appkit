@@ -296,9 +296,13 @@ export function SellerTemplatesView({
   }, [draft, drawerMode, editingId, closeDrawer, refetch, showToast]);
 
   const handleDelete = useCallback(async (id: string) => {
-    await performDelete(id);
+    try {
+      await performDelete(id);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete template", "error");
+    }
     setDeleteTargetId(null);
-  }, [performDelete]);
+  }, [performDelete, showToast]);
 
   const handleDuplicate = useCallback(async (row: TemplateRow) => {
     setDuplicatingId(row.id);

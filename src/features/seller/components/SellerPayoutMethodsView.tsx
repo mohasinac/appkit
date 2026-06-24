@@ -131,9 +131,13 @@ export function SellerPayoutMethodsView({
   });
 
   const handleDelete = useCallback(async (id: string) => {
-    await performDelete(id);
+    try {
+      await performDelete(id);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete payout method", "error");
+    }
     setDeleteTargetId(null);
-  }, [performDelete]);
+  }, [performDelete, showToast]);
 
   const handleSetDefault = useCallback(async (id: string) => {
     setSettingDefaultId(id);

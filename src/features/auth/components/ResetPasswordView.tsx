@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { z } from "zod";
-import { Alert, Button, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
@@ -46,6 +46,7 @@ export function ResetPasswordView({
   renderLoginLink,
   className = "",
 }: ResetPasswordViewProps) {
+  const { showToast } = useToast();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -108,7 +109,11 @@ export function ResetPasswordView({
                     clearErrors();
                     const parsed = resetClientSchema.safeParse({ password, confirmPassword });
                     if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
-                    await onSubmit(oobCode, parsed.data.password);
+                    try {
+                      await onSubmit(oobCode, parsed.data.password);
+                    } catch (err) {
+                      showToast(err instanceof Error ? err.message : "Password reset failed", "error");
+                    }
                   }}
                 >
                   {isLoading

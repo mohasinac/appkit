@@ -17,6 +17,7 @@ import {
   Pagination,
   RowActionMenu,
   Text,
+  useToast,
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
 import { useBottomActions } from "../../layout";
@@ -98,6 +99,7 @@ export function SellerStoreCategoriesView({
   onBulkActivate,
   onBulkDeactivate,
 }: SellerStoreCategoriesViewProps) {
+  const { showToast } = useToast();
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
@@ -147,9 +149,13 @@ export function SellerStoreCategoriesView({
 
   const handleDelete = useCallback(async (id: string) => {
     if (!onDelete) return;
-    await performDelete(id);
+    try {
+      await performDelete(id);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete category", "error");
+    }
     setDeleteTargetId(null);
-  }, [onDelete, performDelete]);
+  }, [onDelete, performDelete, showToast]);
 
   const bulkActions: BulkActionItem[] = [
     ...(onBulkDelete ? [buildBulkAction(ACTIONS.STORE["delete-listing"], async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); refetch?.(); })] : []),

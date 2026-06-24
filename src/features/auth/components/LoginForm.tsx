@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { Alert, Button, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
@@ -50,6 +50,7 @@ export function LoginForm({
   renderForgotPasswordLink,
   className = "",
 }: LoginFormProps) {
+  const { showToast } = useToast();
   const [values, setValues] = useState<LoginFormValues>({
     email: "",
     password: "",
@@ -119,7 +120,11 @@ export function LoginForm({
                   clearErrors();
                   const parsed = loginSchema.safeParse(values);
                   if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
-                  await onSubmit(values);
+                  try {
+                    await onSubmit(values);
+                  } catch (err) {
+                    showToast(err instanceof Error ? err.message : "Sign in failed", "error");
+                  }
                 }}
               >
                 {isLoading

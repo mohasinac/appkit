@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { z } from "zod";
-import { Alert, Button, Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
@@ -67,6 +67,7 @@ export function RegisterForm({
   renderPasswordStrength,
   className = "",
 }: RegisterFormProps) {
+  const { showToast } = useToast();
   const [values, setValues] = useState<RegisterFormValues>({
     email: "",
     password: "",
@@ -168,7 +169,11 @@ export function RegisterForm({
                   clearErrors();
                   const parsed = registerClientSchema.safeParse(values);
                   if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
-                  await onSubmit(values);
+                  try {
+                    await onSubmit(values);
+                  } catch (err) {
+                    showToast(err instanceof Error ? err.message : "Registration failed", "error");
+                  }
                 }}
               >
                 {isLoading

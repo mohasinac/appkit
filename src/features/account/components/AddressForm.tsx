@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Checkbox, Div, FormField, FormGroup, Row } from "../../../ui";
+import { Button, Checkbox, Div, FormField, FormGroup, Row, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
 import type { AddressFormData } from "../hooks/useAddresses";
 
@@ -81,6 +81,7 @@ export function AddressForm({
   labels,
   placeholders,
 }: AddressFormProps) {
+  const { showToast } = useToast();
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
   const mergedPlaceholders = { ...DEFAULT_PLACEHOLDERS, ...placeholders };
   const effectiveSubmitLabel = submitLabel ?? mergedLabels.save;
@@ -232,7 +233,11 @@ export function AddressForm({
               Object.entries(errs).forEach(([k, v]) => setFieldError(k, v));
               return;
             }
-            await onSubmit(formData);
+            try {
+              await onSubmit(formData);
+            } catch (err) {
+              showToast(err instanceof Error ? err.message : "Failed to save address", "error");
+            }
           }}
         >
           {isLoading ? mergedLabels.loading : effectiveSubmitLabel}
