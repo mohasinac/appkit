@@ -5,7 +5,7 @@ import { cn } from "./filterUtils";
 import type { FacetOption } from "./FilterFacetSection";
 import type { AsyncPage } from "../../ui/components/PaginatedSelect";
 
-const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-emerald-600/20 dark:ring-emerald-400/20";
+const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
 const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error hover:bg-zinc-100 dark:hover:bg-slate-700 transition-colors rounded-full";
 
 export interface AsyncFacetSectionProps {
@@ -190,7 +190,7 @@ export function AsyncFacetSection({
                   aria-label={opt.label}
                   className="flex-shrink-0 w-4 h-4 rounded border-zinc-300 dark:border-slate-600 cursor-pointer text-primary-600 dark:text-secondary-500"
                 />
-                <Span size="sm" className="flex-1 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate" color="muted">
+                <Span size="sm" className="flex-1 group-hover:text-[var(--appkit-color-text)] transition-colors truncate" color="muted">
                   {opt.label}
                 </Span>
                 {opt.count !== undefined && (
@@ -221,7 +221,7 @@ export function AsyncFacetSection({
               size="sm"
               textSize="xs"
               textColor="faint"
-              className="w-full text-left hover:text-zinc-600 dark:hover:text-zinc-300 py-1"
+              className="w-full text-left hover:text-[var(--appkit-color-text)] py-[0.25rem]"
               onClick={() => void load(query, page + 1)}
             >
               Load more…

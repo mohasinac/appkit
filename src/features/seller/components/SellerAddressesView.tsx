@@ -261,8 +261,7 @@ export function SellerAddressesView({
       {/* Header */}
       <Row border="default" 
         justify="between"
-        className="sticky z-10 backdrop-blur-sm border-b" surface="default" padding="inline"
-        style={{ top: "var(--header-height, 0px)" }}
+        className="sticky top-[var(--header-height,0px)] z-10 backdrop-blur-sm border-b" surface="default" padding="inline"
       >
         <Stack gap="none">
           <Heading level={2} size="base" weight="semibold" color="primary">Pickup Addresses</Heading>
@@ -340,7 +339,7 @@ export function SellerAddressesView({
                     {addresses.map((addr) => (
                       <Tr
                         key={addr.id}
-                        className={`border-t border-zinc-100 dark:border-slate-700 ${deletingId === addr.id ? "opacity-50" : ""}`}
+                        className={`border-t border-[var(--appkit-color-border)] ${deletingId === addr.id ? "opacity-50" : ""}`}
                       >
                         <Td padding="sm">{addr.label}</Td>
                         <Td padding="sm">{addr.fullName}</Td>

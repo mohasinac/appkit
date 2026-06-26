@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState } from "react";
 import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
@@ -34,6 +35,23 @@ export function ForgotPasswordView({
 }: ForgotPasswordViewProps) {
   const [email, setEmail] = useState("");
   const { showToast } = useToast();
+
+  function buildClickHandler(
+    setFieldError: (field: string, msg: string | null) => void,
+    clearErrors: () => void,
+  ) {
+    return async () => {
+      clearErrors();
+      const parsed = forgotPasswordSchema.safeParse({ email });
+      if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
+      try {
+        await onSubmit(parsed.data.email);
+      } catch (err) {
+        void normalizeError(err);
+        showToast(err instanceof Error ? err.message : "Failed to send reset link", "error");
+      }
+    };
+  }
 
   return (
     <Row className={`min-h-[60vh] ${className}`} align="center" justify="center" padding="x-md">
@@ -79,16 +97,7 @@ export function ForgotPasswordView({
                   isLoading={isLoading}
                   disabled={isLoading}
                   className="w-full"
-                  onClick={async () => {
-                    clearErrors();
-                    const parsed = forgotPasswordSchema.safeParse({ email });
-                    if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
-                    try {
-                      await onSubmit(parsed.data.email);
-                    } catch (err) {
-                      showToast(err instanceof Error ? err.message : "Failed to send reset link", "error");
-                    }
-                  }}
+                  onClick={buildClickHandler(setFieldError, clearErrors)}
                 >
                   {isLoading
                     ? (labels.submittingLabel ?? "Sending…")

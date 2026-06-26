@@ -68,7 +68,7 @@ const COLUMNS: DataTableColumn<ShippingConfigRow>[] = [
       <Div>
         <Text size="sm" weight="medium">{row.label}</Text>
         {row.isDefault && (
-          <Span layout="inline-flex" color="success" surface="success-surface" size="xs" weight="medium" className="mt-0.5 px-1.5 py-px" rounded="full">
+          <Span layout="inline-flex" color="success" surface="success-surface" size="xs" weight="medium" className="mt-[0.125rem] px-[0.375rem] py-[1px]" rounded="full">
             Default
           </Span>
         )}
@@ -162,6 +162,7 @@ export function SellerShippingConfigsView({
     try {
       await performDelete(id);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to delete shipping config", "error");
     }
     setDeleteTargetId(null);

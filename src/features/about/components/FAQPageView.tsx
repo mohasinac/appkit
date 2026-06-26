@@ -69,9 +69,12 @@ export async function FAQPageView({
               <Nav aria-label="FAQ categories" spacing="xs">
                 <TextLink rounded="lg"
                   href={String(ROUTES.PUBLIC.FAQS)}
-                  className={`flex items-center justify-between px-3 py-2 transition-colors ${ !category ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
+                  paddingX="sm" paddingY="xs"
+                  layout="flex" align="center" justify="between"
+                  weight={!category ? "semibold" : undefined}
+                  className={`transition-colors ${ !category ? "bg-primary/10 text-primary" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
                 >
-                  <Span className={`${flex.row} gap-2`}>
+                  <Span className={`${flex.row}`} gap="md">
                     <HelpCircle className="w-4 h-4" />
                     {t("allCategories")}
                   </Span>
@@ -81,9 +84,12 @@ export async function FAQPageView({
                   <TextLink rounded="lg"
                     key={cat.slug}
                     href={String(ROUTES.PUBLIC.FAQ_CATEGORY(cat.slug))}
-                    className={`flex items-center justify-between px-3 py-2 transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary font-semibold" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
+                    paddingX="sm" paddingY="xs"
+                    layout="flex" align="center" justify="between"
+                    weight={category === cat.slug ? "semibold" : undefined}
+                    className={`transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
                   >
-                    <Span className={`${flex.row} gap-2`}>
+                    <Span className={`${flex.row}`} gap="md">
                       <Span>{cat.icon}</Span>
                       {cat.label}
                     </Span>
@@ -117,12 +123,15 @@ export async function FAQPageView({
                     className="group overflow-hidden"
                   >
                     <Summary
-                      className={`flex items-center justify-between px-5 py-4 cursor-pointer list-none select-none font-medium text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors`}
+                      paddingX="x-5" paddingY="y-md"
+                      size="sm" weight="medium"
+                      layout="flex" align="center" justify="between"
+                      className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
                     >
                       <Span>{item.question}</Span>
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
                     </Summary>
-                    <Div className="pb-5 pt-1" padding="x-md">
+                    <Div padding="x-md" paddingY="b-md-lg" className="pt-[0.25rem]">
                       <RichTextRenderer
                         html={item.answer}
                         proseClass="prose prose-sm max-w-none dark:prose-invert"

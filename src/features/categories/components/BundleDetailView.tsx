@@ -75,7 +75,7 @@ export function BundleDetailView({
       <Section padding="y-2xl">
         <Container size="xl">
           <Stack gap="lg">
-            <Row gap="lg" align="start" className="flex-col md:flex-row">
+            <Stack gap="lg" direction="md-row" align="start">
               <Div className="w-full md:w-2/5">
                 {members.length > 0 ? (
                   <BundleCollage members={members} />
@@ -137,7 +137,7 @@ export function BundleDetailView({
                   </Div>
                 )}
               </Stack>
-            </Row>
+            </Stack>
 
             <Stack gap="md">
               <Heading
@@ -148,9 +148,9 @@ export function BundleDetailView({
               {members.length === 0 ? (
                 <Text color="muted">{BUNDLE_COPY.detail.emptyMembers}</Text>
               ) : (
-                <Ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <Ul gap="2" className="grid grid-cols-1 sm:grid-cols-2">
                   {members.map((p, i) => (
-                    <Li key={p.id} className="flex items-center gap-2 rounded-lg border border-zinc-100 dark:border-zinc-800 px-3 py-2 text-sm">
+                    <Li key={p.id} layout="flex-center" gap="2" rounded="lg" border="subtle" padding="inlineSm" textSize="sm">
                       <Span size="xs" weight="semibold" className="w-5" color="faint">#{i + 1}</Span>
                       <Link
                         href={String(ROUTES.PUBLIC.PRODUCT_DETAIL?.(p.slug ?? p.id) ?? "#")}

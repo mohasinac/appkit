@@ -119,7 +119,7 @@ export function BuyerShoppingGuideView() {
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
-          <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: GC.pageHeaderGradient }}>
+          <Row className={`flex-shrink-0 w-10 h-10 ${GC.iconBg}`} align="center" justify="center" rounded="xl">
             <ShoppingBag className="w-5 h-5 text-white" />
           </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Buyer Guide</Text>

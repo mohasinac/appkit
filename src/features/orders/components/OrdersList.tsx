@@ -91,11 +91,10 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         {order.items.slice(0, 3).map((item, i) => (
           <Row key={i} gap="sm">
             {item.image && (
-              <Div
-                role="img"
-                aria-label={item.title}
-                className="h-10 w-10 bg-center bg-cover" rounded="lg"
-                style={{ backgroundImage: `url(${item.image})` }}
+              <img
+                src={item.image}
+                alt={item.title}
+                className="h-10 w-10 object-cover rounded-lg"
               />
             )}
             <Div>

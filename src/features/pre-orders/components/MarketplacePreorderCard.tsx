@@ -200,7 +200,7 @@ export function MarketplacePreorderCard({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className={`shrink-0 p-1 text-base leading-none ${inWishlist ? "text-primary" : "text-zinc-400"}`}
+                  className={`shrink-0 p-[0.25rem] leading-none ${inWishlist ? "text-primary" : "text-[var(--appkit-color-text-faint)]"}`}
                   onClick={handleWishlist}
                   aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
                 >
@@ -266,7 +266,7 @@ export function MarketplacePreorderCard({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className={`text-base ${inWishlist ? "text-primary" : "text-zinc-500 dark:text-zinc-400"}`}
+                  className={`${inWishlist ? "text-primary" : "text-[var(--appkit-color-text-muted)]"}`}
                   onClick={handleWishlist}
                   aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
                 >

@@ -3,6 +3,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Button, Details, Div, Heading, Input, Label, Li, Row, Span, Stack, Summary, Text, Textarea, Ul } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
+import { DEFAULT_ACCENT_HEX } from "../lib/franchise-colors";
 
 type WizardStep = "image" | "place" | "details" | "review";
 
@@ -74,7 +75,7 @@ export function CharacterHotspotForm({
   const [draftHref, setDraftHref] = useState("");
   const [draftBuyText, setDraftBuyText] = useState("Shop Now");
   const [draftBadge, setDraftBadge] = useState("");
-  const [draftAccent, setDraftAccent] = useState("#E8001C");
+  const [draftAccent, setDraftAccent] = useState(DEFAULT_ACCENT_HEX);
 
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -142,7 +143,7 @@ export function CharacterHotspotForm({
     setDraftHref("");
     setDraftBuyText("Shop Now");
     setDraftBadge("");
-    setDraftAccent("#E8001C");
+    setDraftAccent(DEFAULT_ACCENT_HEX);
   }
 
   function deletePin(id: string) {
@@ -263,8 +264,8 @@ export function CharacterHotspotForm({
             will place pins on it in the next step.
           </Text>
 
-          <Label layout="flex" gap="md"
-            className="cursor-pointer flex-col justify-center rounded-lg border-2 border-dashed p-8 transition-colors hover:opacity-80"
+          <Label layout="flex-col-center" gap="md" rounded="lg" padding="xl"
+            className="cursor-pointer border-2 border-dashed transition-colors hover:opacity-80"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Span size="3xl">🖼</Span>
@@ -354,7 +355,7 @@ export function CharacterHotspotForm({
               onClick={() => setStep("place")}
               disabled={!imageUrl || uploading}
               variant="primary"
-              className="px-4 py-2 text-sm font-bold rounded transition-opacity disabled:opacity-50"
+              className="px-[1rem] py-[0.5rem] text-[0.875rem] font-[700] rounded-[0.25rem] transition-opacity disabled:opacity-50"
               style={{
                 background: "var(--color-black)",
                 color: "var(--color-yellow)",
@@ -389,7 +390,7 @@ export function CharacterHotspotForm({
             style={{
               paddingTop: "56.25%",
               cursor: "crosshair",
-              background: "#111",
+              background: "black",
             }}
             onClick={handleImageClick}
           >
@@ -417,7 +418,7 @@ export function CharacterHotspotForm({
                   style={{
                     width: 24,
                     height: 24,
-                    background: pin.accent || "#E8001C",
+                    background: pin.accent || DEFAULT_ACCENT_HEX,
                     border: "2px solid white",
                     boxShadow: "0 1px 4px rgba(0,0,0,0.5)",
                   }}
@@ -426,8 +427,7 @@ export function CharacterHotspotForm({
                 </Row>
                 {pin.name && (
                   <Div textWeight="bold"
-                    className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] text-white" rounded="default"
-                    style={{ background: "#0D0D0D" }}
+                    className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap text-[9px] text-white" rounded="default" style={{ paddingInline: "0.375rem", paddingBlock: "0.125rem", background: "black" }}
                   >
                     {pin.name}
                   </Div>
@@ -468,11 +468,7 @@ export function CharacterHotspotForm({
                   ★
                 </Row>
                 <Div textWeight="bold"
-                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap py-0.5 text-[10px]" padding="x-xs" rounded="default"
-                  style={{
-                    background: "var(--color-black)",
-                    color: "var(--color-yellow)",
-                  }}
+                  className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px]" padding="x-xs" rounded="default" style={{ paddingBlock: "0.125rem", background: "var(--color-black)", color: "var(--color-yellow)" }}
                 >
                   NEW PIN
                 </Div>
@@ -573,7 +569,7 @@ export function CharacterHotspotForm({
                 onClick={() => setStep("details")}
                 disabled={!draftPos}
                 variant="primary"
-                className="px-4 py-2 text-sm font-bold rounded transition-opacity disabled:opacity-50"
+                className="px-[1rem] py-[0.5rem] text-[0.875rem] font-[700] rounded-[0.25rem] transition-opacity disabled:opacity-50"
                 style={{
                   background: "var(--color-black)",
                   color: "var(--color-yellow)",
@@ -719,7 +715,7 @@ export function CharacterHotspotForm({
                 type="text"
                 value={draftAccent}
                 onChange={(e) => setDraftAccent(e.target.value)}
-                placeholder="#E8001C"
+                placeholder={DEFAULT_ACCENT_HEX}
                 className={CLS_INPUT}
                 style={{
                   borderColor: "var(--border-ink)",
@@ -761,7 +757,7 @@ export function CharacterHotspotForm({
                   setStep("review");
                 }}
                 variant="outline"
-                className="px-4 py-2 text-sm font-bold rounded transition-opacity disabled:opacity-50"
+                className="px-[1rem] py-[0.5rem] text-[0.875rem] font-[700] rounded-[0.25rem] transition-opacity disabled:opacity-50"
                 style={{
                   background: "var(--surface-warm)",
                   color: "var(--color-black)",
@@ -778,7 +774,7 @@ export function CharacterHotspotForm({
                   setStep("place");
                 }}
                 variant="primary"
-                className="px-4 py-2 text-sm font-bold rounded transition-opacity disabled:opacity-50"
+                className="px-[1rem] py-[0.5rem] text-[0.875rem] font-[700] rounded-[0.25rem] transition-opacity disabled:opacity-50"
                 style={{
                   background: "var(--color-black)",
                   color: "var(--color-yellow)",
@@ -814,7 +810,7 @@ export function CharacterHotspotForm({
           {/* Preview image */}
           <Div
             className={CLS_IMG_WRAP}
-            style={{ paddingTop: "56.25%", background: "#111" }}
+            style={{ paddingTop: "56.25%", background: "black" }}
           >
             <Image
               src={imageUrl}
@@ -839,7 +835,7 @@ export function CharacterHotspotForm({
                   style={{
                     width: 28,
                     height: 28,
-                    background: pin.accent || "#E8001C",
+                    background: pin.accent || DEFAULT_ACCENT_HEX,
                     border: "2px solid white",
                     boxShadow: "0 2px 6px rgba(0,0,0,0.55)",
                   }}
@@ -848,8 +844,7 @@ export function CharacterHotspotForm({
                 </Row>
                 {pin.name && (
                   <Div textWeight="bold"
-                    className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap px-1.5 py-0.5 text-[9px] text-white" rounded="default"
-                    style={{ background: "#0D0D0D" }}
+                    className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap text-[9px] text-white" rounded="default" style={{ paddingInline: "0.375rem", paddingBlock: "0.125rem", background: "black" }}
                   >
                     {pin.name}
                   </Div>
@@ -860,17 +855,17 @@ export function CharacterHotspotForm({
 
           {/* Pin list */}
           {pins.length > 0 ? (
-            <Ul
-              className="divide-y rounded-lg border"
+            <Ul rounded="lg"
+              className="divide-y border"
               style={{ borderColor: "var(--border-ink)" }}
             >
               {pins.map((pin, i) => (
                 <Li
-                  key={pin.id} className="px-4 py-3">
+                  key={pin.id} padding="inline">
                   <Row gap="sm">
                     <Span layout="flex-center" color="inverse" 
                       className="h-6 w-6 shrink-0" rounded="full" size="xs" weight="bold"
-                      style={{ background: pin.accent || "#E8001C" }}
+                      style={{ background: pin.accent || DEFAULT_ACCENT_HEX }}
                     >
                       {i + 1}
                     </Span>
@@ -917,16 +912,16 @@ export function CharacterHotspotForm({
           )}
 
           {/* Image settings */}
-          <Details
-            className="rounded-lg border p-3"
+          <Details rounded="lg" padding="md"
+            className="border"
             style={{ borderColor: "var(--border-ink)" }}
           >
-            <Summary className="cursor-pointer text-sm font-medium">
+            <Summary size="sm" weight="medium">
               Image Settings
             </Summary>
             <Stack className="mt-3" gap="3">
-              <Label layout="inline-flex" gap="md"
-                className="cursor-pointer rounded border-2 border-dashed px-3 py-1.5 transition-colors hover:opacity-80" size="sm" weight="medium"
+              <Label layout="inline-flex" gap="md" rounded="default" padding="toolbar"
+                className="cursor-pointer border-2 border-dashed transition-colors hover:opacity-80" size="sm" weight="medium"
                 style={{ borderColor: "var(--border-ink)" }}
               >
                 {uploading ? "Uploading…" : "Replace Image"}
@@ -989,8 +984,9 @@ export function CharacterHotspotForm({
               type="button"
               onClick={handleSave}
               disabled={!imageUrl || saving || pins.length === 0}
+              rounded="default"
               variant="primary"
-              className="px-4 py-2 text-sm font-bold rounded transition-opacity disabled:opacity-50"
+              className="px-[1rem] py-[0.5rem] text-[0.875rem] font-[700] transition-opacity disabled:opacity-50"
               style={{
                 background: "var(--color-black)",
                 color: "var(--color-yellow)",

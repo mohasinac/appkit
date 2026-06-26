@@ -70,7 +70,7 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
         return view === "grid" ? (
           <Div
             key={row.id}
-            className="group relative bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow" rounded="xl" border={isSelected ? "strong" : "default"}
+            className="group relative bg-[var(--appkit-color-surface)] overflow-hidden" shadow="hover-md" rounded="xl" border={isSelected ? "strong" : "default"}
           >
             <Div className="absolute top-2 left-2 z-10">
               <input

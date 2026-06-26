@@ -19,6 +19,7 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
+import { ProgressBarFill } from "../../../ui/components/ProgressBarFill";
 import {
   Button,
   Container,
@@ -299,10 +300,7 @@ function PreOrderBuyBarPanel({
             </Span>
           </Row>
           <Div className={`h-2 w-full ${__O.hidden}`} rounded="full" surface="subtle">
-            <Div
-              className="h-full bg-primary transition-all" rounded="full"
-              style={{ width: `${progressPct}%` }}
-            />
+            <ProgressBarFill pct={progressPct} className="h-full bg-primary transition-all rounded-full" />
           </Div>
         </Stack>
       )}

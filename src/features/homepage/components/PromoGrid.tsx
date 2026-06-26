@@ -24,12 +24,8 @@ export function PromoGrid({
 
   return (
     <Section
-      className="sm:py-16" padding="y-2xl"
-      style={{
-        background: "var(--dark-section-alt)",
-        borderTop: "1px solid rgba(255,255,255,0.06)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-      }}
+      paddingY="y-4xl"
+      className="bg-[var(--dark-section-alt)] [border-top:1px_solid_rgba(255,255,255,0.06)] [border-bottom:1px_solid_rgba(255,255,255,0.06)]"
     >
       <Div className="mx-auto max-w-7xl" padding="x-md">
         <Row
@@ -41,20 +37,13 @@ export function PromoGrid({
         >
           <Div>
             <Text
-              className="mb-1 font-black uppercase tracking-widest" size="xs"
-              style={{ color: "var(--color-red)", letterSpacing: "0.18em" }}
+              className="mb-1 font-black uppercase tracking-widest text-[var(--color-red)] tracking-[0.18em]" size="xs"
             >
               {eyebrow}
             </Text>
             <Heading
               level={2}
-              style={{
-                fontFamily: "var(--font-bangers, Bangers, cursive)",
-                fontSize: "clamp(1.6rem, 4vw, 2.4rem)",
-                letterSpacing: "0.08em",
-                color: "#FFFFFF",
-                lineHeight: 1,
-              }}
+              className="[font-family:var(--font-bangers,Bangers,cursive)] text-[clamp(1.6rem,4vw,2.4rem)] tracking-[0.08em] text-white leading-none"
             >
               {heading}
             </Heading>
@@ -72,14 +61,7 @@ export function PromoGrid({
             <Link
               key={banner.id}
               href={banner.ctaUrl}
-              className={`group relative block overflow-hidden ${i === 0 ? "sm:row-span-2" : ""}`}
-              style={{
-                minHeight:
-                  i === 0
-                    ? "clamp(220px, 32vh, 480px)"
-                    : "clamp(130px, 16vh, 240px)",
-                background: "var(--dark-section-card)",
-              }}
+              className={`group relative block overflow-hidden bg-[var(--dark-section-card)] ${i === 0 ? "sm:row-span-2 min-h-[clamp(220px,32vh,480px)]" : "min-h-[clamp(130px,16vh,240px)]"}`}
             >
               <Image
                 src={banner.image}
@@ -93,34 +75,19 @@ export function PromoGrid({
                 }
               />
               <Div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    i === 0
-                      ? "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)"
-                      : "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.15) 100%)",
-                }}
+                className={`absolute inset-0 ${i === 0 ? "[background:linear-gradient(to_top,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.3)_50%,transparent_100%)]" : "[background:linear-gradient(to_top,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.15)_100%)]"}`}
               />
               {/* Yellow inset border on hover */}
-              <Div
-                className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{ boxShadow: "inset 0 0 0 2px var(--color-yellow)" }}
-              />
+              {/* audit-inline-style-ok: inset box-shadow via CSS var; no Div.shadow= variant supports inset shadows */}
+              <Div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ boxShadow: "inset 0 0 0 2px var(--color-yellow)" }} />
               <Div className={`absolute bottom-0 left-0 right-0 ${__P.p4}`}>
                 <Text
-                  className="leading-tight"
-                  style={{
-                    fontFamily: "var(--font-bangers, Bangers, cursive)",
-                    fontSize: i === 0 ? "1.35rem" : "1rem",
-                    letterSpacing: "0.06em",
-                    color: "#FFFFFF",
-                  }}
+                  className={`leading-tight [font-family:var(--font-bangers,Bangers,cursive)] tracking-[0.06em] text-white ${i === 0 ? "text-[1.35rem]" : "text-[1rem]"}`}
                 >
                   {banner.title}
                 </Text>
-                <Span layout="inline-flex" gap="xs" 
-                  className="mt-1 font-black uppercase" size="xs"
-                  style={{ color: "var(--color-yellow)" }}
+                <Span layout="inline-flex" gap="xs"
+                  className="mt-1 font-black uppercase text-[var(--color-yellow)]" size="xs"
                 >
                   {banner.ctaLabel} →
                 </Span>

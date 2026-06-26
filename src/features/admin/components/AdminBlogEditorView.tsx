@@ -466,7 +466,7 @@ export function AdminBlogEditorView({
       {...rest}
       title={isEdit ? "Edit Post" : "New Blog Post"}
       sections={[
-        <Div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
+        <Div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-[1.5rem]">
           <Div>{formContent}</Div>
           <Div className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start">
             {previewSection}

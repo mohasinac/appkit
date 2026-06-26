@@ -23,16 +23,20 @@ export interface SecurityHighlightsSectionProps {
   className?: string;
 }
 
+// --- Constants ---------------------------------------------------------------
+
+const CARD_DELAYS = ["delay-0", "delay-100", "delay-200", "delay-300", "delay-[400ms]", "delay-500"] as const;
+
 // --- Single card -------------------------------------------------------------
 
 function SecurityCard({
   item,
   visible,
-  delay,
+  delayClass,
 }: {
   item: SecurityHighlightItem;
   visible: boolean;
-  delay: number;
+  delayClass: string;
 }) {
   const colorClass =
     item.colorClass ??
@@ -44,9 +48,9 @@ function SecurityCard({
       className={[
         "rounded-xl border p-5 transition-all duration-500",
         colorClass,
+        delayClass,
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
-      style={{ transitionDelay: `${delay}ms` }}
      data-section="securityhighlightssection-div-357">
       {item.renderIcon && (
         <Row className="w-10 h-10 mb-3" surface="default" align="center" justify="center" rounded="lg">
@@ -103,7 +107,7 @@ const sectionRef = useRef<HTMLElement>(null);
         {/* Header */}
         <Div className="text-center mb-10">
           {pillLabel && (
-            <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
+            <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-[500]/30 bg-primary-500/10 px-[1.25rem] py-[0.375rem] tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
               {pillLabel}
             </Span>
           )}
@@ -122,15 +126,15 @@ const sectionRef = useRef<HTMLElement>(null);
 
         {/* Cards grid */}
         <Grid
-          gap="none"
-          className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5"
+          gap="xl"
+          className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
         >
           {items.map((item, index) => (
             <SecurityCard
               key={item.key}
               item={item}
               visible={visible}
-              delay={index * 100}
+              delayClass={CARD_DELAYS[Math.min(index, CARD_DELAYS.length - 1)]}
             />
           ))}
         </Grid>

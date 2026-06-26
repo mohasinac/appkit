@@ -85,7 +85,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Text className="mt-1" color="muted" size="xs">
           {productCount.toLocaleString()} items
         </Text>
-        <Text className="mt-auto pt-3 text-primary dark:text-primary-400" size="xs" weight="medium">
+        <Text className="mt-auto text-primary dark:text-primary-400 pt-[0.75rem]" size="xs" weight="medium">
           Browse category →
         </Text>
       </Stack>
@@ -165,7 +165,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
   if (!isLoading && allCategories.length === 0) return null;
 
   return (
-    <Section className={`md:py-12 ${className}`} surface="subtle" paddingY="y-2xl" paddingX="x-md">
+    <Section className={`md:py-[3rem] ${className}`} surface="subtle" paddingY="y-2xl" paddingX="x-md">
       <Div className="mx-auto max-w-7xl">
         <Div className="mb-6 text-center">
           <Heading level={2} className={themed.textPrimary} size="2xl" mdSize="3xl" weight="bold">
@@ -198,7 +198,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
         )}
 
         {isLoading ? (
-          <Div layout="flex" gap="3" className={`${__O.hidden} px-1`}>
+          <Div layout="flex" gap="3" className={`${__O.hidden} px-[0.25rem]`}>
             {Array.from({ length: 6 }).map((_, i) => (
               <Div key={i} className="flex-none h-[104px] w-[108px] animate-pulse" surface="subtle" rounded="xl" />
             ))}

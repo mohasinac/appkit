@@ -4,6 +4,7 @@ import {
   Heading,
   Row,
   Section,
+  Span,
   Stack,
   Text,
 } from "../../../ui";
@@ -76,12 +77,12 @@ export async function CollectionCardsSection({
           {showTabs ? (
             <Row gap="sm" wrap>
               {collections.slice(0, 3).map((entry, idx) => (
-                <Text
+                <Span
                   key={`${entry.type}-${idx}`}
-                  className="rounded-full border border-zinc-300 px-3 py-1 dark:border-slate-600" color="muted" size="xs" weight="medium"
+                  border="default" padding="x-sm" className="py-[0.25rem]" rounded="full" color="muted" size="xs" weight="medium"
                 >
                   {entryLabel(entry)}
-                </Text>
+                </Span>
               ))}
             </Row>
           ) : null}

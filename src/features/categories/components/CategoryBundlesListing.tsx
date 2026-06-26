@@ -156,7 +156,8 @@ export function CategoryBundlesListing({
               <Stack key={bundle.id}>
                 <MarketplaceBundleCard bundle={bundle} />
                 {onBuyNow && (
-                  <Div border="default" surface="default" className="border-t border-zinc-100 pt-2 pb-3 -mt-px rounded-b-xl border-t-0 dark:border-zinc-800" padding="x-sm">
+                  // audit-inline-style-ok: asymmetric border-radius (bottom corners only); no appkit rounded= variant covers partial corners
+                  <Div border="default" surface="default" className="-mt-px border-t border-t-0 border-[var(--appkit-color-border)] pt-[0.5rem] pb-[0.75rem]" padding="x-sm" style={{ borderBottomLeftRadius: "0.75rem", borderBottomRightRadius: "0.75rem" }}>
                     <BundleBuyNowCta
                       bundleSlug={bundle.slug}
                       outOfStock={bundle.bundleStockStatus === "out_of_stock"}
@@ -181,7 +182,7 @@ export function CategoryBundlesListing({
         hideTrigger
       >
         <Stack className={`${__P.p4}`} gap="md">
-          <Label layout="flex" gap="lg" className="justify-between cursor-pointer">
+          <Label layout="flex" gap="lg" className="justify-[space-between] cursor-pointer">
             <Span size="sm" weight="medium" color="muted">Show out-of-stock bundles</Span>
             <button
               type="button"
@@ -193,7 +194,7 @@ export function CategoryBundlesListing({
  }`}
             >
               <Span
-                className={`inline-block h-3.5 w-3.5 transform shadow-sm transition-transform duration-200 ${ pendingShowOutOfStock ? "translate-x-[19px]" : "translate-x-[3px]" }`} rounded="full" surface="default"
+                className={`inline-block h-3.5 w-3.5 transform transition-transform duration-200 ${ pendingShowOutOfStock ? "translate-x-[19px]" : "translate-x-[3px]" }`} rounded="full" surface="default" shadow="sm"
               />
             </button>
           </Label>

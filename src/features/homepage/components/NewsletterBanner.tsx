@@ -8,6 +8,7 @@ import {
   Span,
   Text,
 } from "../../../ui";
+import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 
@@ -67,18 +68,15 @@ export function NewsletterBanner({
   }
 
   return (
-    <Section padding="y-6xl" 
-      className="relative overflow-hidden"
-      style={{
-        background:
-          "var(--newsletter-bg, linear-gradient(135deg, var(--color-primary, #1e40af) 0%, var(--color-secondary, #7c3aed) 100%))",
-      }}
+    <DynamicBgDiv
+      background="var(--newsletter-bg, linear-gradient(135deg, var(--appkit-color-primary) 0%, var(--appkit-color-secondary) 100%))"
+      className="py-24 relative overflow-hidden"
     >
       {/* Decorative rings */}
       <Div className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 border border-white/[0.06]" rounded="full" />
       <Div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 border border-dashed border-white/[0.08]" rounded="full" />
 
-      <Div className="relative mx-auto max-w-2xl text-center sm:px-6" padding="x-md">
+      <Div className="relative mx-auto max-w-2xl text-center sm:px-[1.5rem]" padding="x-md">
         <Span color="inverse" size="xs" weight="semibold" className="mb-4 inline-flex border border-white/20 tracking-widest /70" rounded="full" padding="pill-md" transform="uppercase">
           {eyebrow}
         </Span>
@@ -90,11 +88,11 @@ export function NewsletterBanner({
         <Text color="inverse" className="mt-4 /60">{subheading}</Text>
 
         {success ? (
-          <Text paddingY="md" color="inverse" className="mt-8 rounded-xl border border-white/20 bg-white/10 px-6" size="sm" weight="semibold">
+          <Text paddingY="md" color="inverse" className="mt-8 border border-white/20 bg-[rgba(255,255,255,0.1)]" paddingX="x-lg" size="sm" weight="semibold" rounded="xl">
             {successMessage}
           </Text>
         ) : (
-          <Form onSubmit={handleSubmit} className="mt-8 flex gap-3">
+          <Form onSubmit={handleSubmit} className="mt-8 flex gap-[0.75rem]">
             <FieldInput
               name="email"
               type="email"
@@ -109,11 +107,7 @@ export function NewsletterBanner({
               disabled={loading}
               variant="primary"
               paddingX="lg" textSize="sm"
-              className="shrink-0 py-3 font-bold transition-opacity disabled:opacity-60"
-              style={{
-                background: "var(--color-yellow, #FFE500)",
-                color: "#0D0D0D",
-              }}
+              className="shrink-0 py-[0.75rem] font-[700] transition-opacity disabled:opacity-60 bg-[var(--color-yellow)] text-black"
             >
               {loading ? "…" : ctaLabel}
             </Button>
@@ -128,6 +122,6 @@ export function NewsletterBanner({
           No spam, ever. Unsubscribe anytime.
         </Text>
       </Div>
-    </Section>
+    </DynamicBgDiv>
   );
 }

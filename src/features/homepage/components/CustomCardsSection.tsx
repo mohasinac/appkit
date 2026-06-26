@@ -1,6 +1,8 @@
+"use client";
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Div, Heading, HorizontalScroller, Section, Stack, Text } from "../../../ui";
+import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
@@ -60,14 +62,11 @@ function CardItem({ card }: { card: CustomCardsCard }) {
   const radiusClass = RADIUS_CLASS[card.borderRadius ?? "lg"] ?? "rounded-lg";
   const shadowClass = SHADOW_CLASS[card.shadowLevel ?? "sm"] ?? "shadow-sm";
 
-  const cardStyle: React.CSSProperties = {};
-  if (card.backgroundColor) cardStyle.backgroundColor = card.backgroundColor;
-  if (card.textColor) cardStyle.color = card.textColor;
-
   return (
-    <Stack
-      className={`overflow-hidden ${radiusClass} ${shadowClass} bg-[var(--appkit-color-surface)]`}
-      style={cardStyle}
+    <DynamicBgDiv
+      color={card.backgroundColor}
+      textColor={card.textColor}
+      className={`flex flex-col overflow-hidden ${radiusClass} ${shadowClass} bg-[var(--appkit-color-surface)]`}
     >
       {card.image && (
         <Div className={`relative w-full aspect-video ${__O.hidden}`}>
@@ -113,13 +112,12 @@ function CardItem({ card }: { card: CustomCardsCard }) {
             src={card.formEmbed}
             sandbox="allow-forms allow-scripts"
             loading="lazy"
-            className="w-full mt-3 border-0 rounded-md"
-            style={{ minHeight: "200px" }}
+            className="w-full mt-3 border-0 rounded-md min-h-[200px]"
             title="Embedded form"
           />
         )}
       </Stack>
-    </Stack>
+    </DynamicBgDiv>
   );
 }
 

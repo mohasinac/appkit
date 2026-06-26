@@ -62,7 +62,8 @@ export function BlogFeaturedCard({
 
   return (
     <Article
-      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-200 ${isSelected ? "ring-2 ring-primary outline outline-2 outline-primary" : ""} ${className}`}
+      rounded="xl" shadow="hover-md"
+      className={`group relative h-full overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${isSelected ? "ring-2 ring-primary outline outline-2 outline-primary" : ""} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -78,15 +79,14 @@ export function BlogFeaturedCard({
           className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
         />
       )}
-      <TextLink href={href} className="flex h-full flex-col">
+      <TextLink href={href} layout="flex-col" className="h-full">
         {/* Cover image — aspect-video like EventCard */}
         <Div className={`aspect-video ${__O.hidden} flex-shrink-0`}>
           {coverImageUrl ? (
-            <Div
-              role="img"
-              aria-label={safeTitle}
-              className="h-full w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-              style={{ backgroundImage: `url(${coverImageUrl})` }}
+            <img
+              src={coverImageUrl}
+              alt={safeTitle}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <Div
@@ -104,7 +104,7 @@ export function BlogFeaturedCard({
           <Row gap="xs" className="mb-2" wrap>
             <Span
               size="xs" weight="medium"
-              className={`inline-block capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`} rounded="full" padding="pill-xs"
+              className={`inline-block capitalize ${CATEGORY_BADGE[post.category] ?? "bg-[var(--appkit-color-bg)] text-[var(--appkit-color-text-muted)]"}`} rounded="full" padding="pill-xs"
             >
               {post.category}
             </Span>

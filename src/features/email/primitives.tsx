@@ -350,6 +350,11 @@ export interface EmailFooterProps {
   unsubscribeUrl?: string;
 }
 
+/** Inline bold span for email bodies — uses inline fontWeight because email clients ignore CSS classes. */
+export function EmailBold({ children }: { children: React.ReactNode }) {
+  return <span style={{ fontWeight: 700 }}>{children}</span>;
+}
+
 export function EmailFooter({
   copyright,
   contactEmail,

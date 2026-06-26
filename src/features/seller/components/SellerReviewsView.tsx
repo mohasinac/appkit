@@ -322,7 +322,7 @@ export function SellerReviewsView({
 
                         {/* Existing reply */}
                         {review.sellerReply && (
-                          <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
+                          <Div className="mt-2 pl-[0.75rem] border-l-2 border-[var(--appkit-color-primary)]">
                             <Text className="text-[var(--appkit-color-text-muted)]" size="xs">Store reply:</Text>
                             <Text size="sm">{review.sellerReply}</Text>
                           </Div>

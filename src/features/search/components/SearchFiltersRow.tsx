@@ -108,7 +108,7 @@ export function SearchFiltersRow({
           size="sm"
           onClick={onClearFilters}
           paddingX="md" textSize="sm"
-          className="h-10 border border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+          className="h-10 border border-[var(--appkit-color-border)] text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
         >
           {L.clearFilters}
         </Button>

@@ -368,9 +368,10 @@ export function AdminSupportTicketDetailView({
             </Text>
             <Stack className={`max-h-64 ${__O.yAuto}`} gap="sm">
               {messages.map((msg, i) => (
-                <Div textSize="sm" border="default"
+                <Div textSize="sm"
                   key={msg.id ?? i}
-                  className={`${ msg.authorRole === "user" ? "bg-zinc-50 dark:bg-zinc-900/40 " : "bg-info-surface border-info dark:border-info" }`} rounded="lg" padding="sm"
+                  surface={msg.authorRole === "user" ? "default" : "info-surface"}
+                  className={msg.authorRole === "user" ? "border border-zinc-200 dark:border-slate-700" : "border border-[var(--appkit-color-info)]"} rounded="lg" padding="sm"
                 >
                   <Row color="muted" textSize="xs" className="mb-1" align="center" gap="sm">
                     <Span weight="medium" color="muted">
@@ -560,7 +561,7 @@ function OrderItemsPanel(props: {
   return (
     <Stack
       padding="sm"
-      className="border border-info/40 bg-info-surface/40" gap="sm" rounded="lg"
+      className="border border-info/40 bg-[var(--appkit-color-info-surface)]/40" gap="sm" rounded="lg"
     >
       <Text className="text-info tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Modify order items
@@ -673,7 +674,7 @@ function StoreChangePanel(props: {
   return (
     <Stack
       padding="sm"
-      className="border border-warning/40 bg-warning-surface/40" gap="sm" rounded="lg"
+      className="border border-warning/40 bg-[var(--appkit-color-warning-surface)]/40" gap="sm" rounded="lg"
     >
       <Text className="text-warning tracking-wide" size="xs" weight="semibold" transform="uppercase">
         Apply store change

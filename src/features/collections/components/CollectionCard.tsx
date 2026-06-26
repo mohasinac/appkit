@@ -14,15 +14,17 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
   return (
     <TextLink rounded="xl"
       href={href}
-      className="group relative block overflow-hidden bg-gray-100 dark:bg-slate-800 transition-shadow hover:shadow-lg"
+      shadow="hover-lg"
+      className="group relative block overflow-hidden bg-gray-100 dark:bg-[var(--appkit-color-surface-elevated)] transition"
     >
       {collection.image ? (
-        <Div
-          role="img"
-          aria-label={collection.title}
-          className={`${LAYOUT.cardHeight.md} w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105`}
-          style={{ backgroundImage: `url(${collection.image})` }}
-        />
+        <Div className={`${LAYOUT.cardHeight.md} w-full`} overflow="hidden">
+          <img
+            src={collection.image}
+            alt={collection.title}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </Div>
       ) : (
         <Div surface="muted" className={`${LAYOUT.cardHeight.md} ${CLS_PLACEHOLDER}`} />
       )}

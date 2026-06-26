@@ -29,11 +29,10 @@ export function WishlistCard({
         className={`h-20 w-20 flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-slate-800 ${onProductClick ? "cursor-pointer" : ""}`} rounded="lg"
       >
         {item.productImage && (
-          <Div
-            role="img"
-            aria-label={item.productTitle ?? ""}
-            className="h-full w-full bg-center bg-cover"
-            style={{ backgroundImage: `url(${item.productImage})` }}
+          <img
+            src={item.productImage}
+            alt={item.productTitle ?? ""}
+            className="h-full w-full object-cover"
           />
         )}
       </Div>

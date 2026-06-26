@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState } from "react";
 import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
@@ -123,6 +124,7 @@ export function LoginForm({
                   try {
                     await onSubmit(values);
                   } catch (err) {
+                    void normalizeError(err);
                     showToast(err instanceof Error ? err.message : "Sign in failed", "error");
                   }
                 }}

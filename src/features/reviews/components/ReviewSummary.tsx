@@ -1,6 +1,7 @@
 import React from "react";
 import { Div, Row, Span, Stack, Text } from "../../../ui";
 import { StarRating } from "../../../ui";
+import { ProgressBarFill } from "../../../ui/components/ProgressBarFill";
 
 const CLS_STAR = "text-warning";
 const CLS_BAR = "h-full rounded-full bg-warning-surface transition-all duration-300";
@@ -33,10 +34,10 @@ export function ReviewSummary({
 
   return (
     <Stack align="center"
-      className={`sm:flex-row sm: sm:gap-8 ${className}`} gap="md"
+      className={`sm:[flex-direction:row] sm: sm:gap-[2rem] ${className}`} gap="md"
     >
       {/* Score block */}
-      <Stack className="sm:items-start" align="center" gap="xs">
+      <Stack className="sm:items-[flex-start]" align="center" gap="xs">
         <Span color="inverse" weight="bold" className="leading-none text-neutral-900 dark:text-neutral-100 dark:" size="5xl">
           {averageRating.toFixed(1)}
         </Span>
@@ -66,10 +67,7 @@ export function ReviewSummary({
                 aria-valuemax={100}
                 aria-label={`${star} star: ${pct}%`}
               >
-                <Div
-                  className={CLS_BAR}
-                  style={{ width: `${pct}%` }}
-                />
+                <ProgressBarFill pct={pct} className={CLS_BAR} />
               </Div>
               <Span size="xs" className="w-8 tabular-nums" color="faint" align="end">
                 {pct}%

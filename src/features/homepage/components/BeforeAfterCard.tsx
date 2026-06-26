@@ -26,6 +26,8 @@ export function BeforeAfterCard({
   afterLabel = "After",
 }: BeforeAfterCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const beforeClipRef = useRef<HTMLDivElement>(null);
+  const dividerRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState(50);
   const [dragging, setDragging] = useState(false);
 
@@ -37,6 +39,11 @@ export function BeforeAfterCard({
     const pct = Math.max(0, Math.min(100, (x / rect.width) * 100));
     setPosition(pct);
   }, []);
+
+  useEffect(() => {
+    if (beforeClipRef.current) beforeClipRef.current.style.width = `${position}%`;
+    if (dividerRef.current) dividerRef.current.style.left = `${position}%`;
+  }, [position]);
 
   useEffect(() => {
     if (!dragging) return;
@@ -97,9 +104,9 @@ export function BeforeAfterCard({
         />
 
         {/* Before image — clipped to left of divider */}
-        <Div
+        <div
+          ref={beforeClipRef}
           className="absolute inset-0 overflow-hidden"
-          style={{ width: `${position}%` }}
         >
           <Image
             src={item.beforeImage}
@@ -108,12 +115,12 @@ export function BeforeAfterCard({
             sizes="(max-width: 640px) 100vw, 50vw"
             className="object-cover"
           />
-        </Div>
+        </div>
 
         {/* Divider */}
-        <Div
-          className="absolute top-0 bottom-0 z-10 w-0.5 bg-card" shadow="md"
-          style={{ left: `${position}%` }}
+        <div
+          ref={dividerRef}
+          className="absolute top-0 bottom-0 z-10 w-0.5 bg-[var(--appkit-color-surface)] shadow-md"
         >
           <Row className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-card" align="center" justify="center" rounded="full" shadow="lg">
             <svg
@@ -132,7 +139,7 @@ export function BeforeAfterCard({
               />
             </svg>
           </Row>
-        </Div>
+        </div>
 
         {/* Labels */}
         <Span surface="overlay-sm" color="inverse" size="xs" weight="medium" className="absolute top-3 left-3 z-10" padding="pill-sm" rounded="full">

@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState } from "react";
 import { z } from "zod";
 import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
@@ -172,6 +173,7 @@ export function RegisterForm({
                   try {
                     await onSubmit(values);
                   } catch (err) {
+                    void normalizeError(err);
                     showToast(err instanceof Error ? err.message : "Registration failed", "error");
                   }
                 }}

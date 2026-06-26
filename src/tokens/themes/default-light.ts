@@ -62,6 +62,9 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-error-surface": "#fef2f2",
     "appkit-color-info": "#0284c7",
     "appkit-color-info-surface": "#f0f9ff",
+    "appkit-color-star": "#facc15",
+    "appkit-color-whatsapp-light": "#1ebe5d",
+    "appkit-color-whatsapp-bg": "#ECE5DD",
 
     "appkit-color-focus-ring": "#3570fc",
 

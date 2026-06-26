@@ -115,7 +115,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         {endDate && <Text className="mt-1.5" color="muted" size="sm">{isEnded ? "Ended" : "Ends"} <Span weight="medium" color="muted">{endDate.toLocaleString()}</Span></Text>}
       </Div>
       {buyNowPrice !== null && !isEnded && (
-        <Row align="center" gap="sm" className="border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
+        <Row align="center" gap="sm" className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)] bg-primary-50 dark:bg-primary-900/20" padding="inlineSm" rounded="lg">
           <Span size="xs" color="muted">Buy Now:</Span>
           <Span size="base" weight="bold" className="text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
         </Row>

@@ -195,7 +195,7 @@ function renderTicketListArea(props: {
       <Ul spacing="loose">
         {tickets.map((ticket) => (
           <Li key={ticket.id}>
-            <Button rounded="xl" variant="ghost" type="button" className="w-full border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
+            <Button rounded="xl" variant="ghost" type="button" shadow="sm" border="default" paddingX="md" paddingY="md" className="w-full bg-[var(--appkit-color-surface)] text-left hover:border-[var(--appkit-color-primary-300)] transition-colors" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
               <Row align="start" justify="between" gap="sm">
                 <Div className="min-w-0 flex-1">
                   <Text className="truncate" color="primary" weight="medium">{ticket.subject}</Text>

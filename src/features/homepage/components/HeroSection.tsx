@@ -40,7 +40,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
           <Button rounded="full"
             onClick={onCtaClick}
             paddingX="xl" paddingY="md" textSize="sm" weight="semibold"
-            className="mt-8 inline-block bg-white text-zinc-900 dark:text-zinc-100 transition hover:bg-neutral-100 dark:bg-neutral-800"
+            className="mt-8 inline-block bg-[rgba(255,255,255,1)] text-neutral-900 dark:text-neutral-100 transition hover:bg-neutral-100 dark:bg-neutral-800"
           >
             {content.ctaLabel}
           </Button>

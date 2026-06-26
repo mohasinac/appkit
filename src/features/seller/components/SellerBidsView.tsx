@@ -273,8 +273,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       )}
 
       {selection.selectedIds.length > 0 && (
-        <Div border="default" paddingX="x-sm-md" className="sticky z-20 backdrop-blur-sm border-b" surface="default" padding="y-xs"
-          style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
+        <Div border="default" paddingX="x-sm-md" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 backdrop-blur-sm border-b" surface="default" padding="y-xs">
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}

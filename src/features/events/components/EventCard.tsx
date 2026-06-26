@@ -63,7 +63,8 @@ export function EventCard({
 
   return (
     <Article border="default"
-      className={`group relative flex h-full ${LAYOUT.cardHeight.event} flex-col overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900 ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
+      rounded="xl" shadow="hover-md"
+      className={`group relative h-full ${LAYOUT.cardHeight.event} overflow-hidden bg-[var(--appkit-color-surface)] ${isSelected ? "border-primary outline outline-2 outline-primary" : " "} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -82,11 +83,10 @@ export function EventCard({
       <Link href={detailHref} className="block flex-shrink-0">
         {event.coverImageUrl ? (
           <Div className={`aspect-video ${__O.hidden}`}>
-            <Div
-              role="img"
-              aria-label={safeTitle}
-              className="h-full w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-              style={{ backgroundImage: `url(${event.coverImageUrl})` }}
+            <img
+              src={event.coverImageUrl}
+              alt={safeTitle}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </Div>
         ) : (
@@ -137,7 +137,8 @@ export function EventCard({
         ) : (
           <TextLink rounded="lg" paddingX="sm" paddingY="xs"
             href={detailHref}
-            className="inline-flex w-full items-center justify-center gap-1.5 border border-zinc-300 transition-colors hover:bg-zinc-100 dark:border-slate-600 dark:hover:bg-slate-800" color="primary" size="sm" weight="medium"
+            layout="inline-flex" align="center" justify="center" gap="xs"
+            className="w-full border border-[var(--appkit-color-border)] transition-colors hover:bg-[var(--appkit-color-bg)]" color="primary" size="sm" weight="medium"
           >
             {labels.viewDetails ?? "View details"} →
           </TextLink>

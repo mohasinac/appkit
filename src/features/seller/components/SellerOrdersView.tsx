@@ -194,7 +194,7 @@ function OrderDetailDrawer({
       )}
 
       {order && !loading && (
-        <Stack gap="none" className="flex flex-col">
+        <Stack gap="none">
           <Stack className={`flex-1 ${__O.yAuto}`} gap="5" padding="md">
             {/* Status row */}
             <Row align="center" justify="between">

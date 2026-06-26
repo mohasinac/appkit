@@ -1,6 +1,7 @@
 import React from "react";
 import { CARD_ASPECT_BANNER, GRID_COLS_2_MD } from "../../../_internal/shared/styles/grid";
 import { Button, Div, Grid, Heading, Row, Scrim, Section, Span, Stack, Text } from "../../../ui";
+import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -66,7 +67,7 @@ export function AdvertisementBanner({
     return (
       <Section className={`${__P.p8} ${wrapClass} ${className}`}>
         <Div className={CLS_CONTAINER}>
-          <Div className={`relative ${__O.hidden} bg-zinc-900`} rounded="2xl" shadow="xl">
+          <Div className={`relative ${__O.hidden} bg-neutral-900`} rounded="2xl" shadow="xl">
             <Grid className={`${GRID_COLS_2_MD} min-h-[clamp(300px,40vh,420px)]`}>
               {/* Left: image */}
               <Div className={`relative ${CARD_ASPECT_BANNER} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`}>
@@ -80,13 +81,13 @@ export function AdvertisementBanner({
               </Div>
 
               {/* Right: content */}
-              <Stack justify="center" className="relative px-8 md:px-12 md:py-14" padding="y-2xl">
+              <Stack justify="center" className="relative" paddingX="x-xl" padding="y-2xl">
                 <Div
                   className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,_white_1px,_transparent_1px)] bg-[length:12px_12px]"
                   aria-hidden
                 />
                 {tagLabel && (
-                  <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="semibold" className="self-start bg-white/10 /80 tracking-widest mb-5 backdrop-blur-sm" rounded="full" padding="pill-md" transform="uppercase">
+                  <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="semibold" className="self-start bg-[rgba(255,255,255,0.1)] /80 tracking-widest mb-5 backdrop-blur-sm" rounded="full" padding="pill-md" transform="uppercase">
                     <Sparkles className="w-3.5 h-3.5" />
                     {tagLabel}
                   </Span>
@@ -111,7 +112,8 @@ export function AdvertisementBanner({
                     variant="secondary"
                     size="lg"
                     onClick={onCtaClick}
-                    className="self-start bg-white text-zinc-900 hover:bg-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 font-semibold shadow-lg"
+                    className="self-start bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] hover:bg-neutral-100 dark:bg-neutral-100 dark:text-[var(--appkit-color-text)] dark:hover:bg-neutral-200 font-[600]"
+                    shadow="lg"
                   >
                     {ctaLabel}
                     <ArrowRight className="w-4 h-4" />
@@ -129,15 +131,14 @@ export function AdvertisementBanner({
   return (
     <Section className={`${__P.p8} ${wrapClass} ${className}`}>
       <Div className={CLS_CONTAINER}>
-        <Row
-          align="center"
+        <DynamicBgDiv
+          color={backgroundColor}
           className={[
-            "relative overflow-hidden rounded-2xl",
+            "flex items-center relative overflow-hidden rounded-2xl",
             compact
               ? "h-[clamp(112px,16vh,160px)]"
               : "min-h-[clamp(240px,34vh,360px)]",
           ].join(" ")}
-          style={backgroundColor ? { backgroundColor } : undefined}
         >
           {/* Gradient background */}
           {!backgroundColor && (
@@ -178,9 +179,9 @@ export function AdvertisementBanner({
               )}
             </Row>
           ) : (
-            <Div className="relative z-10 w-full max-w-4xl mx-auto md:py-16 text-center" paddingY="y-3xl" paddingX="x-lg">
+            <Div className="relative z-10 w-full max-w-4xl mx-auto md:py-[4rem] text-center" paddingY="y-3xl" paddingX="x-lg">
               {tagLabel && (
-                <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="semibold" className="bg-white/15 /90 tracking-widest mb-5 backdrop-blur-sm shadow-sm" rounded="full" padding="pill-lg" transform="uppercase">
+                <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="semibold" className="bg-[rgba(255,255,255,0.15)] /90 tracking-widest mb-5 backdrop-blur-sm" shadow="sm" rounded="full" padding="pill-lg" transform="uppercase">
                   <Sparkles className="w-3.5 h-3.5" />
                   {tagLabel}
                 </Span>
@@ -188,7 +189,7 @@ export function AdvertisementBanner({
               <Heading color="inverse"
                 level={2}
                 variant="none"
-                className="lg:text-6xl font-extrabold mb-4 drop-shadow-lg leading-tight" mdSize="5xl" size="3xl"
+                className="font-extrabold mb-4 leading-tight" mdSize="5xl" lgSize="6xl" size="3xl" shadow="lg"
               >
                 {title}
               </Heading>
@@ -213,7 +214,7 @@ export function AdvertisementBanner({
               )}
             </Div>
           )}
-        </Row>
+        </DynamicBgDiv>
       </Div>
     </Section>
   );

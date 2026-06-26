@@ -6,6 +6,8 @@ import { Loader2 } from "lucide-react";
 import type { ActionDef } from "../../_internal/shared/actions/action-registry";
 import { surfaceError } from "../../client/api/surface-error";
 import { useToastSafe } from "./Toast";
+import { SHADOW_MAP } from "./surface-tokens";
+import type { ShadowKey } from "./surface-tokens";
 
 function spawnRipple(host: HTMLElement, clientX: number, clientY: number) {
   const rect = host.getBoundingClientRect();
@@ -99,11 +101,13 @@ const BUTTON_BORDER_MAP: Record<ButtonBorder, string> = {
   strong: "border border-zinc-300 dark:border-slate-600",
 };
 
-type ButtonPaddingY = "none" | "xs" | "sm" | "md" | "lg";
+type ButtonPaddingY = "none" | "xs" | "y-xs-tall" | "sm" | "y-sm-tall" | "md" | "lg";
 const BUTTON_PADDING_Y_MAP: Record<ButtonPaddingY, string> = {
   none: "",
   xs: "py-1",
+  "y-xs-tall": "py-2.5",
   sm: "py-2",
+  "y-sm-tall": "py-3.5",
   md: "py-3",
   lg: "py-4",
 };
@@ -137,6 +141,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   border?: ButtonBorder;
   /** Border radius override. */
   rounded?: ButtonRounded;
+  /** Box shadow override — replaces raw `className="shadow-*"` tokens. */
+  shadow?: ShadowKey;
   /** Render as the child element (e.g. next/link) with button styling applied */
   asChild?: boolean;
   /**
@@ -172,6 +178,7 @@ export function Button({
   textColor,
   border,
   rounded,
+  shadow,
   asChild = false,
   action,
   ...props
@@ -195,6 +202,7 @@ export function Button({
     textColor ? BUTTON_TEXT_COLOR_MAP[textColor] : "",
     border ? BUTTON_BORDER_MAP[border] : "",
     rounded ? BUTTON_ROUNDED_MAP[rounded] : "",
+    shadow ? SHADOW_MAP[shadow] : "",
     className,
   );
 

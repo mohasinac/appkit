@@ -1,4 +1,5 @@
 import React from "react";
+import { ROUNDED_MAP, PADDING_MAP, X_ONLY_MAP, type RoundedKey, type PaddingKey, type XPaddingKey } from "./surface-tokens";
 
 const TYPOGRAPHY = {
   headingLevel: {
@@ -59,6 +60,24 @@ export type TextGradient = "none" | "brand" | "brand-tri" | "accent";
 /** Multi-line ellipsis: `true` = 1 line; pass `2`, `3`, or `4` for line-clamp. */
 export type TextTruncate = boolean | 1 | 2 | 3 | 4;
 
+/** Drop-shadow preset shared by Heading and Text (over-image/hero text). */
+export type DropShadowPreset = "none" | "sm" | "md" | "lg" | "2xl";
+
+const DROP_SHADOW_MAP: Record<DropShadowPreset, string> = {
+  none: "",
+  sm: "drop-shadow-sm",
+  md: "drop-shadow-md",
+  lg: "drop-shadow-lg",
+  "2xl": "drop-shadow-2xl",
+};
+
+/** CSS text-shadow preset for hero headings where filter drop-shadow is insufficient. */
+export type HeadingTextShadow = "soft-dark";
+
+const HEADING_TEXT_SHADOW_MAP: Record<HeadingTextShadow, string> = {
+  "soft-dark": "[text-shadow:0_4px_32px_rgba(0,0,0,0.5)]",
+};
+
 function shapingClasses(opts: {
   transform?: TextTransform;
   truncate?: TextTruncate;
@@ -118,6 +137,10 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   family?: FontFamily;
   align?: TextAlign;
   gradient?: TextGradient;
+  /** Drop-shadow filter preset for over-image / hero-section headings. */
+  shadow?: DropShadowPreset;
+  /** CSS text-shadow preset — use instead of wrapping children in a native `<span style>`. */
+  textShadow?: HeadingTextShadow;
   children: React.ReactNode;
 }
 
@@ -138,6 +161,8 @@ export function Heading({
   family,
   align,
   gradient,
+  shadow,
+  textShadow,
   className = "",
   children,
   ...props
@@ -158,6 +183,8 @@ export function Heading({
         responsiveSizeClass("xl:", xlSize),
         weight ? TYPOGRAPHY.textWeight[weight] : "",
         ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
+        shadow ? DROP_SHADOW_MAP[shadow] : "",
+        textShadow ? HEADING_TEXT_SHADOW_MAP[textShadow] : "",
         className,
       ]
         .filter(Boolean)
@@ -213,13 +240,7 @@ const TEXT_GAP_MAP: Record<TextGap, string> = {
   "3": "gap-3",
 };
 
-const TEXT_SHADOW_MAP: Record<TextShadow, string> = {
-  none: "",
-  sm: "drop-shadow-sm",
-  md: "drop-shadow-md",
-  lg: "drop-shadow-lg",
-  "2xl": "drop-shadow-2xl",
-};
+const TEXT_SHADOW_MAP: Record<TextShadow, string> = DROP_SHADOW_MAP;
 
 interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
@@ -239,6 +260,10 @@ interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   gradient?: TextGradient;
   /** Vertical padding — used for empty-state Text wrappers. */
   paddingY?: TextPaddingY;
+  /** Horizontal padding — use instead of raw `px-*` className. */
+  paddingX?: XPaddingKey;
+  /** Border radius — use instead of raw `rounded-*` className. */
+  rounded?: RoundedKey;
   /** Layout — `inline-flex` / `flex` for icon + label compositions. */
   layout?: TextLayout;
   /** Flex gap between children (only when `layout` is `inline-flex` / `flex`). */
@@ -267,6 +292,8 @@ export function Text({
   align,
   gradient,
   paddingY,
+  paddingX,
+  rounded,
   layout,
   gap,
   shadow,
@@ -289,6 +316,8 @@ export function Text({
         TYPOGRAPHY.colorVariant[resolvedColor],
         ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
         paddingY ? TEXT_PADDING_Y_MAP[paddingY] : "",
+        paddingX ? X_ONLY_MAP[paddingX] : "",
+        rounded ? ROUNDED_MAP[rounded] : "",
         layout ? TEXT_LAYOUT_MAP[layout] : "",
         gap ? TEXT_GAP_MAP[gap] : "",
         shadow ? TEXT_SHADOW_MAP[shadow] : "",
@@ -305,7 +334,7 @@ export function Text({
 
 // --- Label --------------------------------------------------------------------
 
-type LabelLayout = "inline" | "inline-flex" | "flex" | "flex-start";
+type LabelLayout = "inline" | "inline-flex" | "flex" | "flex-start" | "flex-col-center";
 
 const LABEL_LAYOUT_MAP: Record<LabelLayout, string> = {
   inline: "",
@@ -313,6 +342,8 @@ const LABEL_LAYOUT_MAP: Record<LabelLayout, string> = {
   flex: CLS_FLEX,
   /** Flex container with `items-start` cross-axis alignment — for checkbox + multi-line description rows. */
   "flex-start": "flex items-start",
+  /** Flex column with center cross-axis + main-axis alignment — for upload drop-zone labels. */
+  "flex-col-center": "flex flex-col items-center justify-center",
 };
 
 type LabelGap = "none" | "xs" | "sm" | "md" | "lg";
@@ -338,6 +369,10 @@ interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   layout?: LabelLayout;
   /** Gap between children. Only takes effect when `layout` is set to a flex variant. */
   gap?: LabelGap;
+  /** Border radius — replaces consumer `rounded-*` className. */
+  rounded?: RoundedKey;
+  /** Padding — replaces consumer `p-*` className. */
+  padding?: PaddingKey;
   children: React.ReactNode;
 }
 
@@ -350,6 +385,8 @@ export function Label({
   align,
   layout,
   gap,
+  rounded,
+  padding,
   className = "",
   children,
   ...props
@@ -365,6 +402,8 @@ export function Label({
         align ? `appkit-text--align-${align}` : "",
         layout ? LABEL_LAYOUT_MAP[layout] : "",
         gap ? LABEL_GAP_MAP[gap] : "",
+        rounded ? ROUNDED_MAP[rounded] : "",
+        padding ? PADDING_MAP[padding] : "",
         className,
       ]
         .filter(Boolean)
@@ -439,7 +478,7 @@ export function Caption({
 /** Inline-decorations allowed on Span (pill chips, code-like wraps, etc). */
 type SpanRounded = "none" | "default" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 type SpanBorder = "none" | "default" | "subtle" | "strong";
-type SpanPadding = "none" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-2xs" | "pill-xs" | "pill-sm" | "pill-sm-tall" | "pill-md" | "pill-lg";
+type SpanPadding = "none" | "2xs" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" | "y-sm" | "inline-sm" | "inline" | "pill-2xs" | "pill-xs" | "pill-sm" | "pill-sm-tall" | "pill-md" | "pill-lg";
 
 const SPAN_BORDER_MAP: Record<SpanBorder, string> = {
   none: "",
@@ -461,6 +500,7 @@ const SPAN_ROUNDED_MAP: Record<SpanRounded, string> = {
 };
 const SPAN_PADDING_MAP: Record<SpanPadding, string> = {
   none: "",
+  "2xs": "p-2",
   "x-xs": "px-2",
   "x-sm": "px-3",
   "x-md": "px-4",
@@ -515,6 +555,17 @@ const SPAN_GAP_MAP: Record<SpanGap, string> = {
   lg: "gap-3",
 };
 
+type SpanShadow = "none" | "sm" | "md" | "lg" | "2xl" | "default";
+
+const SPAN_SHADOW_MAP: Record<SpanShadow, string> = {
+  none: "",
+  default: "shadow",
+  sm: "shadow-sm",
+  md: "shadow-md",
+  lg: "shadow-lg",
+  "2xl": "shadow-2xl",
+};
+
 interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Colour variant. "inherit" (default) applies no colour class. */
   variant?:
@@ -554,10 +605,12 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
   padding?: SpanPadding;
   surface?: SpanBg;
   border?: SpanBorder;
+  /** Box shadow preset for Span overlays (e.g. toggle thumb). */
+  shadow?: SpanShadow;
   children?: React.ReactNode;
 }
 
-export function Span({
+export const Span = React.forwardRef<HTMLSpanElement, SpanProps>(function Span({
   variant = "inherit",
   color,
   size,
@@ -579,10 +632,11 @@ export function Span({
   border,
   layout,
   gap,
+  shadow,
   className = "",
   children,
   ...props
-}: SpanProps) {
+}: SpanProps, ref) {
   const resolvedColor = color ?? variant;
   const classes = [
     "appkit-span",
@@ -600,14 +654,15 @@ export function Span({
     border ? SPAN_BORDER_MAP[border] : "",
     layout ? SPAN_LAYOUT_MAP[layout] : "",
     gap ? SPAN_GAP_MAP[gap] : "",
+    shadow ? SPAN_SHADOW_MAP[shadow] : "",
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <span className={classes} {...props}>
+    <span ref={ref} className={classes} {...props}>
       {children}
     </span>
   );
-}
+});

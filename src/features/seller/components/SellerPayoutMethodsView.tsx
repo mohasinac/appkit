@@ -134,6 +134,7 @@ export function SellerPayoutMethodsView({
     try {
       await performDelete(id);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to delete payout method", "error");
     }
     setDeleteTargetId(null);

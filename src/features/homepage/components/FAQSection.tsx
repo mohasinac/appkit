@@ -188,7 +188,8 @@ const flex = { between: FLEX_BETWEEN };
                 {/* Question trigger */}
                 <Button
                   variant="ghost"
-                  className={`w-full text-left px-5 py-4 ${flex.between} gap-4 hover:${themed.bgTertiary} transition-colors rounded-none`}
+                  rounded="none"
+                  className={`w-full text-left px-[1.25rem] py-[1rem] ${flex.between} gap-[1rem] hover:${themed.bgTertiary} transition-colors`}
                   onClick={() => toggle(faq.id)}
                   aria-expanded={isOpen}
                 >
@@ -238,7 +239,7 @@ const flex = { between: FLEX_BETWEEN };
           <Div className="text-center mt-10">
             <TextLink rounded="full" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
-              className="inline-flex items-center gap-2 bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"
+              className="inline-flex items-[center] gap-[0.5rem] bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"
             >
               {viewMoreLabel}
               {hasMore && moreCount > 0 && (

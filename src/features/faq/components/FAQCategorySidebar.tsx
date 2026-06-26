@@ -40,7 +40,7 @@ export function FAQCategorySidebar({
   );
 
   return (
-    <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
+    <Card variant="outlined" padding="lg">
       <Heading level={2} className="mb-6" size="lg" weight="semibold">
         {labels?.title ?? "Categories"}
       </Heading>
@@ -103,7 +103,7 @@ export function FAQCategorySidebar({
           </Text>
           <TextLink rounded="lg"
             href={contactHref}
-            className="block bg-primary p-4 text-center text-white transition-colors hover:bg-primary/90" weight="medium"
+            className="block bg-primary p-[1rem] text-center text-white transition-colors hover:bg-primary/90" weight="medium"
           >
             {labels?.contactSupport ?? "Contact Support"}
           </TextLink>

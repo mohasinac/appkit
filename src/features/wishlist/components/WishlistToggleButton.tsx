@@ -58,13 +58,14 @@ export function WishlistToggleButton({
         disabled={isLoading}
         aria-label={label}
         title={label}
+        rounded="full"
         className={`
- flex items-center justify-center rounded-full
+ flex items-[center] justify-[center]
  transition-all duration-150
  ${
  inWishlist
  ? "bg-error-surface text-error hover:bg-error-surface"
- : "bg-white/80 text-zinc-400 hover:text-error"
+ : "bg-[rgba(255,255,255,0.8)] text-[var(--appkit-color-text-faint)] hover:text-error"
  }
  ${sizeClasses[size]}
  ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}

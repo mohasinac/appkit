@@ -68,6 +68,19 @@ const DIV_GAP_MAP: Record<DivGap, string> = {
 type DivAlign = "start" | "center" | "end" | "baseline" | "stretch";
 type DivJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
 
+type DivOverflow = "hidden" | "auto" | "scroll" | "visible" | "x-hidden" | "y-hidden" | "x-auto" | "y-auto";
+
+const DIV_OVERFLOW_MAP: Record<DivOverflow, string> = {
+  hidden: "overflow-hidden",
+  auto: "overflow-auto",
+  scroll: "overflow-scroll",
+  visible: "overflow-visible",
+  "x-hidden": "overflow-x-hidden",
+  "y-hidden": "overflow-y-hidden",
+  "x-auto": "overflow-x-auto",
+  "y-auto": "overflow-y-auto",
+};
+
 const DIV_ALIGN_MAP: Record<DivAlign, string> = {
   start: "items-start",
   center: "items-center",
@@ -109,11 +122,13 @@ export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceP
   lgAlign?: DivAlign;
   /** Main-axis alignment (CSS `justify-*`). Only takes effect when `layout` is `flex`/`inline-flex`/`grid`. */
   justify?: DivJustify;
+  /** CSS overflow behavior. Avoids raw `overflow-*` class in className (flagged by audit). */
+  overflow?: DivOverflow;
   children?: React.ReactNode;
 }
 
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
-  ({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, textSize, textWeight, layout, gap, align, lgAlign, justify, children, ...props }, ref) => (
+  ({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, textSize, textWeight, layout, gap, align, lgAlign, justify, overflow, children, ...props }, ref) => (
     <div
       ref={ref}
       className={[
@@ -126,6 +141,7 @@ export const Div = React.forwardRef<HTMLDivElement, DivProps>(
         align ? DIV_ALIGN_MAP[align] : "",
         lgAlign ? DIV_LG_ALIGN_MAP[lgAlign] : "",
         justify ? DIV_JUSTIFY_MAP[justify] : "",
+        overflow ? DIV_OVERFLOW_MAP[overflow] : "",
         className,
       ].filter(Boolean).join(" ")}
       {...props}

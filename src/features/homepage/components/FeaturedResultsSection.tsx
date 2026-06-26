@@ -38,7 +38,7 @@ export function FeaturedResultsSection({
   if (!items.length) return null;
 
   return (
-    <Section className={`md:py-20 ${className}`} paddingY="y-4xl" paddingX="x-md">
+    <Section className={className} paddingY="y-5xl" paddingX="x-md">
       <Div className="mb-12 text-center">
         {pillLabel && (
           <Span className={pillCls}>

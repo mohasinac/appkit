@@ -61,7 +61,7 @@ export function EventOfferCard({
         </Stack>
 
         <Row surface="muted" padding="inline" align="center" gap="3" rounded="lg">
-          <Code className="flex-1 font-bold" size="base" color="primary">
+          <Code className="flex-1" weight="bold" size="base" color="primary">
             {couponCode}
           </Code>
           <Button type="button" variant="outline" onClick={copyCode}>

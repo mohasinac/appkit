@@ -16,17 +16,21 @@ export interface StatsCounterSectionProps {
   className?: string;
 }
 
+// --- Constants ---------------------------------------------------------------
+
+const STAT_DELAYS = ["delay-0", "delay-[120ms]", "delay-[240ms]", "delay-[360ms]"] as const;
+
 // --- Smngle stat mtem ---------------------------------------------------------
 
 function StatCard({
   stat,
   visible,
-  delay,
+  delayClass,
   isLast,
 }: {
   stat: StatItem;
   visible: boolean;
-  delay: number;
+  delayClass: string;
   isLast: boolean;
 }) {
   return (
@@ -34,13 +38,13 @@ function StatCard({
       className={[
         "relative flex flex-col items-center px-6 py-8 text-center",
         "transition-all duration-700",
+        delayClass,
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
         !isLast ? "border-r border-zinc-200 dark:border-slate-700" : "",
       ].join(" ")}
-      style={{ transitionDelay: `${delay}ms` }}
     >
       {stat.renderIcon && (
-        <Row className="mb-4 h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30" align="center" justify="center" rounded="2xl">
+        <Row className="mb-4 h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-[var(--appkit-color-primary-100)] dark:border-[var(--appkit-color-primary-900)]/30" align="center" justify="center" rounded="2xl">
           {stat.renderIcon({ className: "w-7 h-7" })}
         </Row>
       )}
@@ -106,7 +110,7 @@ export function StatsCounterSection({
               key={stat.key}
               stat={stat}
               visible={visible}
-              delay={i * 120}
+              delayClass={STAT_DELAYS[Math.min(i, STAT_DELAYS.length - 1)]}
               isLast={i === stats.length - 1}
             />
           ))}

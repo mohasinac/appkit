@@ -1,8 +1,5 @@
 import React from "react";
 import { Card, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
-const __P = {
-  p8: "p-8",
-} as const;
 
 export interface AboutHowItem {
   title: string;
@@ -53,7 +50,7 @@ export function AboutView({
 }: AboutViewProps) {
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      <Section color="inverse" tone="accent-banner" className="md:py-20 lg:py-24" padding="y-4xl">
+      <Section color="inverse" tone="accent-banner" padding="y-4xl">
         <Div paddingX="x-page" className="max-w-4xl mx-auto text-center">
           <Heading color="inverse" level={1} variant="none" className="mb-6" mdSize="5xl" size="4xl" weight="bold">
             {labels.title}
@@ -64,7 +61,7 @@ export function AboutView({
         </Div>
       </Section>
 
-      <Div paddingX="x-page" className="max-w-5xl mx-auto md:py-20 space-y-16 md:space-y-20" padding="y-4xl">
+      <Div paddingX="x-page" className="max-w-5xl mx-auto" padding="y-4xl">
         <Section className="text-center max-w-3xl mx-auto">
           <Heading level={2} className="mb-4">{labels.missionTitle}</Heading>
           <Text size="lg" variant="secondary" className="leading-relaxed">
@@ -74,13 +71,13 @@ export function AboutView({
 
         <Section>
           <Heading level={2} className="mb-12" align="center">{labels.howItWorksTitle}</Heading>
-          <Div className="grid md:grid-cols-3 gap-6 md:gap-8">
+          <Div className="grid md:grid-cols-3" gap="6">
             {howItems.map(({ title, text, icon, tone }) => (
               <Card
                 key={title}
                 variant={`gradient-${tone ?? "indigo"}`}
                 padding="md" spacing="sm">
-                <Div className="text-4xl">{icon}</Div>
+                <Div><Span size="4xl">{icon}</Span></Div>
                 <Heading level={3}>{title}</Heading>
                 <Text size="sm" variant="secondary" className="leading-relaxed">
                   {text}
@@ -92,13 +89,13 @@ export function AboutView({
 
         <Section>
           <Heading level={2} className="mb-12" align="center">{labels.valuesTitle}</Heading>
-          <Div className="grid md:grid-cols-3 gap-5 md:gap-6">
+          <Div className="grid md:grid-cols-3" gap="5">
             {valueItems.map(({ title, text, icon }) => (
               <div
                 key={title}
                 className="bg-white dark:bg-slate-800 rounded-xl p-6 space-y-3 border border-neutral-200 dark:border-slate-700"
               >
-                <Div className="text-3xl">{icon}</Div>
+                <Div><Span size="3xl">{icon}</Span></Div>
                 <Heading level={3}>{title}</Heading>
                 <Text size="sm" variant="secondary" className="leading-relaxed">
                   {text}
@@ -110,7 +107,7 @@ export function AboutView({
 
         <Section>
           <Heading level={2} className="mb-10" align="center">{labels.milestonesTitle}</Heading>
-          <Stack className="relative border-l-2 border-primary/30 pl-8 max-w-2xl mx-auto" gap="xl">
+          <Stack className="relative border-l-2 border-primary/30 max-w-2xl mx-auto pl-[2rem]" gap="xl">
             {milestones.map(({ year, text }) => (
               <Div key={year} className="relative">
                 <Div className="absolute -left-10 top-1 w-4 h-4 bg-primary border-2 border-white" rounded="full" />
@@ -123,7 +120,7 @@ export function AboutView({
           </Stack>
         </Section>
 
-        <Section color="inverse" tone="accent-banner" className={`text-center ${ctaBannerClass} ${__P.p8} md:p-12`} rounded="2xl">
+        <Section color="inverse" tone="accent-banner" className={`text-center ${ctaBannerClass}`} padding="xl" rounded="2xl">
           <Heading color="inverse" level={2} variant="none" className="mb-8" size="3xl" weight="bold">
             {labels.ctaTitle}
           </Heading>

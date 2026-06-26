@@ -8,7 +8,7 @@ export function AdminUsersGuideView() {
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
-          <Row className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="xl" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)" }}>
+          <Row className="flex-shrink-0 w-10 h-10 [background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_100%)]" align="center" justify="center" rounded="xl">
             <Users className="w-5 h-5 text-white" />
           </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
@@ -21,7 +21,7 @@ export function AdminUsersGuideView() {
         {
           Icon: Users, title: "User Roles Overview",
           content: (
-            <Div className="overflow-x-auto">
+            <Div overflow="x-auto">
               <Table size="sm">
                 <Thead>
                   <Tr className="border-b border-[var(--appkit-color-border)]">
@@ -102,7 +102,7 @@ export function AdminUsersGuideView() {
           ),
         },
       ].map(({ Icon, title, content }) => (
-        <Section key={title} className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="2xl">
+        <Section key={title} overflow="hidden" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl">
           <Row className="border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-2,var(--appkit-color-border))]/20" padding="inlineLg" align="center" gap="3">
             <Icon className="w-5 h-5 text-[var(--appkit-color-primary)]" />
             <Heading level={2} size="base" weight="semibold">{title}</Heading>

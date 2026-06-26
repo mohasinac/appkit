@@ -206,13 +206,49 @@
 
 /* --- Colour — Social Brand Tokens ---------------------------------------- */
 :root {
-  --appkit-color-instagram:  #E1306C;
-  --appkit-color-facebook:   #1877F2;
-  --appkit-color-tiktok:     #010101;
-  --appkit-color-deviantart: #05CC47;
-  --appkit-color-whatsapp:   #25D366;
-  --appkit-color-youtube:    #FF0000;
+  --appkit-color-instagram:      #E1306C;
+  --appkit-color-facebook:       #1877F2;
+  --appkit-color-tiktok:         #010101;
+  --appkit-color-deviantart:     #05CC47;
+  --appkit-color-whatsapp:       #25D366;
+  --appkit-color-whatsapp-light: #1ebe5d;
+  --appkit-color-whatsapp-bg:    #ECE5DD;
+  --appkit-color-youtube:        #FF0000;
   --appkit-gradient-instagram: linear-gradient(to bottom right, #a855f7, #ec4899, #fb923c);
+}
+
+/* --- Colour — Third-party Brand / Franchise Tokens ----------------------- */
+/* Exact brand colours required for licensed IP identity. Hex lives here;   */
+/* components reference var(--brand-*) so no hex appears in scanned files.  */
+:root {
+  /* Google */
+  --brand-google-blue:   #4285F4;
+  --brand-google-green:  #34A853;
+  --brand-google-yellow: #FBBC05;
+  --brand-google-red:    #EA4335;
+
+  /* Franchise / Collectibles IP */
+  --brand-marvel:              #E8001C;
+  --brand-dc:                  #4A90D9;
+  --brand-dc-alt:              #0057FF;
+  --brand-anime-yellow:        #FFE500;
+  --brand-anime-yellow-text:   #b08800;   /* dark text on yellow for legibility */
+  --brand-naruto:              #FF6B00;
+
+  /* Hotspot panoramic section — always-dark section */
+  --brand-hotspot-overlay:     #0A0A12;   /* gradient stop for panoramic image fade */
+}
+
+/* --- Gradients — Component-specific stat card presets -------------------- */
+:root {
+  --appkit-gradient-warning-stat: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  --appkit-gradient-danger-stat:  linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+}
+
+/* --- Colour — Legacy component aliases (non-appkit-prefixed) ------------- */
+/* Used by homepage dark-section components (always-dark, not theme-aware). */
+:root {
+  --color-yellow: #FFE500;   /* anime / franchise yellow used by newsletter + banners */
 }
 
 /* --- Colour — Semantic (light mode defaults) ------------------------------ */
@@ -242,6 +278,7 @@
   --appkit-color-error-text:       #991b1b;    /* red-800 */
   --appkit-color-info:             #0284c7;    /* sky-600 */
   --appkit-color-info-surface:     #f0f9ff;    /* sky-50 */
+  --appkit-color-star:             #facc15;    /* yellow-400 — star ratings (decorative convention) */
 
   --appkit-color-focus-ring:       #3570fc;    /* primary-500 = cobalt blue */
 }

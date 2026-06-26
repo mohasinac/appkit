@@ -93,7 +93,7 @@ export function EventRaffleEntryForm({
           You&apos;ve used all {maxEntriesPerUser} entry slot{maxEntriesPerUser === 1 ? "" : "s"} for this raffle.
         </Div>
       ) : (
-        <Form onSubmit={handleSubmit} className="space-y-3">
+        <Form onSubmit={handleSubmit} className="space-y-[0.75rem]">
           <FieldTextarea
             name="message"
             label="Message"

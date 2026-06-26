@@ -5,6 +5,7 @@ import { Button, Div, Grid, Heading, Row, Section, Span, Text } from "../../../u
 // --- Constants ---------------------------------------------------------------
 
 const CLS_VISIBLE = "opacity-100 translate-y-0";
+const STEP_DELAYS = ["delay-0", "delay-150", "delay-300", "delay-[450ms]"] as const;
 
 // --- Types -------------------------------------------------------------------
 
@@ -34,11 +35,11 @@ export interface HowItWorksSectionProps {
 function StepCard({
   step,
   visible,
-  delay,
+  delayClass,
 }: {
   step: HowItWorksStep;
   visible: boolean;
-  delay: number;
+  delayClass: string;
 }) {
   const {
     badgeBg = "bg-primary",
@@ -53,9 +54,9 @@ function StepCard({
         "bg-white dark:bg-slate-900",
         "shadow-md group hover:-translate-y-2 hover:shadow-xl",
         "transition-all duration-300",
+        delayClass,
         visible ? CLS_VISIBLE : "opacity-0 translate-y-8",
       ].join(" ")}
-      style={{ transitionDelay: `${delay}ms` }}
      data-section="howitworkssection-div-340">
       {/* Step number watermark */}
       <Span
@@ -77,7 +78,7 @@ function StepCard({
       {/* Icon */}
       {step.renderIcon && (
         <Row
-          className={`relative z-10 w-14 h-14 ${iconBg} mb-4 border border-white/80 dark:border-slate-700/50`} align="center" justify="center" rounded="2xl"
+          className={`relative z-10 w-14 h-14 ${iconBg} mb-4 border border-white/80 dark:border-[var(--appkit-color-border)]`} align="center" justify="center" rounded="2xl"
         >
           <Span className={`${iconColor}`} aria-hidden="true">
             {step.renderIcon({ className: "w-6 h-6" })}
@@ -145,7 +146,7 @@ const sectionRef = useRef<HTMLElement>(null);
  }`}
         >
           {pillLabel && (
-            <Div layout="inline-flex" gap="2" align="center" textWeight="medium" textSize="xs" className="mb-4 border border-primary-500/30 bg-primary-500/10 py-1.5 tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
+            <Div layout="inline-flex" gap="2" align="center" textWeight="medium" textSize="xs" className="mb-4 border border-primary-[500]/30 bg-primary-500/10 py-[0.375rem] tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm" padding="x-md" rounded="full">
               {pillLabel}
             </Div>
           )}
@@ -175,7 +176,7 @@ const sectionRef = useRef<HTMLElement>(null);
               key={step.number}
               step={step}
               visible={visible}
-              delay={i * 150}
+              delayClass={STEP_DELAYS[Math.min(i, STEP_DELAYS.length - 1)]}
             />
           ))}
         </Grid>

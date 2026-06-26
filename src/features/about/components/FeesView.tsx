@@ -134,7 +134,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
         <Heading level={3} className="mb-4" size="base">{t("payoutExampleProduct")}</Heading>
         <Stack gap="sm">
           {rows.map((row, i) => (
-            <Row textWeight="bold" textSize="sm" key={i} className={`${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-2 " : ""}`} justify="between">
+            <Row textWeight="bold" textSize="sm" key={i} className={`${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 mt-2" : ""}`} paddingY={row.highlight ? "t-xs" : undefined} justify="between">
               <Text className={row.highlight ? "font-bold" : "text-neutral-600 dark:text-neutral-400"}>{row.label}</Text>
               <Text className={row.highlight ? CLS_HIGHLIGHT : ""}>{row.example}</Text>
             </Row>

@@ -103,7 +103,7 @@ function SelectableRow<T extends { id: string }>({
       onMouseLeave={selectionEnabled && !isSelected ? longPress.onMouseLeave : undefined}
       onTouchStart={selectionEnabled && !isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={selectionEnabled && !isSelected ? longPress.onTouchEnd : undefined}
-      className={`hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`} border="default"
+      className={`hover:bg-[var(--appkit-color-bg)] dark:hover:bg-[var(--appkit-color-bg)] ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`} border="default"
     >
       {selectionEnabled && (
         <Td padding="xs-3" className="relative w-10" onClick={(e) => e.stopPropagation()}>
@@ -162,7 +162,7 @@ export function DataTable<T extends { id: string }>({
       <Div className={`${__O.xAuto}`}>
         <Table data-testid="data-table" size="sm">
           <Thead>
-            <Tr className="bg-neutral-50 dark:bg-slate-800" border="default">
+            <Tr className="bg-[var(--appkit-color-bg)] dark:bg-[var(--appkit-color-surface-elevated)]" border="default">
               {selectionEnabled && (
                 <Th padding="xs-3" scope="col" className="w-10">
                   {onToggleSelectAll && (

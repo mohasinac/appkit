@@ -1,6 +1,8 @@
 import React from "react";
 import type { JsonValue } from "@mohasinac/appkit";
 import Link from "next/link";
+import { SHADOW_MAP } from "./surface-tokens";
+import type { ShadowKey } from "./surface-tokens";
 import { twMerge } from "tailwind-merge";
 
 const VARIANTS = {
@@ -85,6 +87,45 @@ const LINK_PADDING_Y_MAP: Record<LinkPaddingY, string> = {
   md: "py-3",
 };
 
+/** Display layout for button-style / nav-style links. */
+type LinkLayout = "flex" | "inline-flex" | "flex-col";
+const LINK_LAYOUT_MAP: Record<LinkLayout, string> = {
+  flex: "flex",
+  "inline-flex": "inline-flex",
+  "flex-col": "flex flex-col",
+};
+
+/** Cross-axis alignment — only takes effect when `layout` is set. */
+type LinkAlign = "center" | "start" | "end" | "stretch" | "baseline";
+const LINK_ALIGN_MAP: Record<LinkAlign, string> = {
+  center: "items-center",
+  start: "items-start",
+  end: "items-end",
+  stretch: "items-stretch",
+  baseline: "items-baseline",
+};
+
+/** Main-axis distribution — only takes effect when `layout` is set. */
+type LinkJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
+const LINK_JUSTIFY_MAP: Record<LinkJustify, string> = {
+  start: "justify-start",
+  center: "justify-center",
+  end: "justify-end",
+  between: "justify-between",
+  around: "justify-around",
+  evenly: "justify-evenly",
+};
+
+/** Gap between flex children — only takes effect when `layout` is set. */
+type LinkGap = "none" | "xs" | "sm" | "md" | "lg";
+const LINK_GAP_MAP: Record<LinkGap, string> = {
+  none: "",
+  xs: "gap-1",
+  sm: "gap-2",
+  md: "gap-3",
+  lg: "gap-4",
+};
+
 export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
@@ -101,6 +142,32 @@ export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
   paddingX?: LinkPaddingX;
   /** Vertical padding — for button-shaped links. */
   paddingY?: LinkPaddingY;
+  /**
+   * Display layout. Use `"flex"` or `"inline-flex"` to turn the link into a
+   * flex container (e.g. nav items that need icon + label side by side).
+   * Replaces raw `className="flex"` / `"inline-flex"` tokens.
+   */
+  layout?: LinkLayout;
+  /**
+   * Cross-axis alignment. Only takes effect when `layout` is set.
+   * Replaces raw `className="items-center"` etc.
+   */
+  align?: LinkAlign;
+  /**
+   * Main-axis distribution. Only takes effect when `layout` is set.
+   * Replaces raw `className="justify-between"` etc.
+   */
+  justify?: LinkJustify;
+  /**
+   * Gap between flex children. Only takes effect when `layout` is set.
+   * Replaces raw `className="gap-2"` etc.
+   */
+  gap?: LinkGap;
+  /**
+   * Box shadow variant — replaces raw `className="shadow-*"` / `hover:shadow-*`.
+   * Uses the same `SHADOW_MAP` as layout primitives.
+   */
+  shadow?: ShadowKey;
   /**
    * Force external rendering (`<a target="_blank" rel="noopener noreferrer">`).
    * Auto-detected when `href` starts with http/https/mailto/tel.
@@ -133,6 +200,11 @@ export function TextLink({
   rounded,
   paddingX,
   paddingY,
+  layout,
+  align,
+  justify,
+  gap,
+  shadow,
   external,
   className = "",
   ...props
@@ -145,6 +217,11 @@ export function TextLink({
     rounded ? LINK_ROUNDED_MAP[rounded] : "",
     paddingX ? LINK_PADDING_X_MAP[paddingX] : "",
     paddingY ? LINK_PADDING_Y_MAP[paddingY] : "",
+    layout ? LINK_LAYOUT_MAP[layout] : "",
+    align ? LINK_ALIGN_MAP[align] : "",
+    justify ? LINK_JUSTIFY_MAP[justify] : "",
+    gap ? LINK_GAP_MAP[gap] : "",
+    shadow ? SHADOW_MAP[shadow] : "",
     className,
   );
   const shouldBeExternal = external ?? isExternalUrl(href);

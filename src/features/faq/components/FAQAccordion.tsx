@@ -22,7 +22,7 @@ function FAQAccordionItem({
         variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="w-full justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 dark:text-zinc-100 transition hover:text-primary"
+        className="w-full justify-[space-between] gap-[1rem] py-[1rem] text-left text-[0.875rem] font-[500] text-neutral-900 dark:text-[var(--appkit-color-text)] transition hover:text-primary"
       >
         <Span>{faq.question}</Span>
         <Span
@@ -52,7 +52,7 @@ function FAQAccordionItem({
               {faq.tags.map((tag) => (
                 <Span
                   key={tag}
-                  className="bg-neutral-100 dark:bg-neutral-800 py-1 text-neutral-600 dark:text-neutral-400" rounded="md" padding="x-xs" size="xs"
+                  className="bg-neutral-100 dark:bg-neutral-800 py-[0.25rem] text-neutral-600 dark:text-neutral-400" rounded="md" padding="x-xs" size="xs"
                 >
                   {tag}
                 </Span>
@@ -132,7 +132,7 @@ export function FAQCategoryTabs({
     <Row wrap gap="sm" className="scrollbar-none">
       <Button
         onClick={() => onSelect(null)}
-        className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+        className={`rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
       >
         {labels.all ?? "All"}
       </Button>
@@ -140,7 +140,7 @@ export function FAQCategoryTabs({
         <Button
           key={cat}
           onClick={() => onSelect(cat)}
-          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+          className={`whitespace-nowrap rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
         >
           {labels[cat] ?? cat.replace(/_/g, " ")}
         </Button>

@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button, Div, Heading, Row, Span, Stack } from "../../../ui";
@@ -16,6 +16,7 @@ export interface HeroBannerProps {
 export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   const goTo = useCallback(
     (idx: number) => {
@@ -41,24 +42,27 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
     return () => clearInterval(id);
   }, [next, banners.length, autoplayMs]);
 
-  if (banners.length === 0) return null;
-
+  // Apply dynamic user-configured colors via CSS custom properties (avoids inline style={{ }})
   const banner = banners[current]!;
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    el.style.setProperty("--hero-bg", banner.backgroundColor ?? "var(--dark-section-deep)");
+    el.style.setProperty("--hero-text", banner.textColor ?? "white");
+  }, [banner.backgroundColor, banner.textColor]);
+
+  if (banners.length === 0) return null;
 
   return (
     <Div
-      className="relative overflow-hidden"
-      style={{
-        minHeight: "100svh",
-        background: banner.backgroundColor ?? "var(--dark-section-deep)",
-      }}
+      ref={rootRef}
+      className="relative overflow-hidden min-h-svh [background:var(--hero-bg,var(--dark-section-deep))]"
     >
       {/* Background images — cross-fade between slides */}
       {banners.map((b, i) => (
         <Div
           key={b.id}
-          className="absolute inset-0 transition-opacity duration-700"
-          style={{ opacity: i === current ? 1 : 0, zIndex: 1 }}
+          className={`absolute inset-0 transition-opacity duration-700 z-[1] ${i === current ? "opacity-100" : "opacity-0"}`}
         >
           {b.backgroundImage && (
             <Image
@@ -75,41 +79,20 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
 
       {/* Cinematic gradient overlays */}
       <Div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(110deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.18) 100%)",
-          zIndex: 2,
-        }}
+        className="absolute inset-0 z-[2] [background:linear-gradient(110deg,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.45)_55%,rgba(0,0,0,0.18)_100%)]"
       />
       <Div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, transparent 30%, rgba(0,0,0,0.55) 100%)",
-          zIndex: 3,
-        }}
+        className="absolute inset-0 z-[3] [background:linear-gradient(to_bottom,rgba(0,0,0,0.08)_0%,transparent_30%,rgba(0,0,0,0.55)_100%)]"
       />
 
       {/* Content */}
       <Stack justify="end"
-        className="relative pb-16 sm:px-12 sm:pb-24 lg:px-20" padding="x-md"
-        style={{
-          minHeight: "100svh",
-          zIndex: 10,
-          paddingTop: "var(--header-height, 4rem)",
-        }}
+        className="relative pb-[4rem] sm:px-[3rem] sm:pb-[6rem] lg:px-[5rem] min-h-svh z-[10] pt-[var(--header-height,4rem)]" padding="x-md"
       >
         {banner.subtitle && (
           <Div className="mb-3">
             <Span
-              className="inline-block font-black uppercase tracking-[0.18em]" padding="pill-md" size="xs"
-              style={{
-                background: "var(--color-red)",
-                color: "#FFFFFF",
-                fontFamily: FONT_BANGERS,
-                letterSpacing: "0.16em",
-              }}
+              className="inline-block font-black uppercase tracking-[0.18em] bg-[var(--color-red)] text-white [font-family:var(--font-bangers,Bangers,cursive)] tracking-[0.16em]" padding="pill-md" size="xs"
             >
               {banner.subtitle}
             </Span>
@@ -118,14 +101,8 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
 
         <Heading
           level={2}
-          className="mb-5 max-w-xl leading-none"
-          style={{
-            fontFamily: FONT_BANGERS,
-            fontSize: "clamp(3rem, 9vw, 6.5rem)",
-            letterSpacing: "0.04em",
-            color: banner.textColor ?? "#FFFFFF",
-            textShadow: "0 4px 32px rgba(0,0,0,0.5)",
-          }}
+          textShadow="soft-dark"
+          className="mb-5 max-w-xl leading-none [font-family:var(--font-bangers,Bangers,cursive)] text-[clamp(3rem,9vw,6.5rem)] tracking-[0.04em] text-[var(--hero-text,white)]"
         >
           {banner.title}
         </Heading>
@@ -134,15 +111,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
           <Row wrap gap="md">
             <Link
               href={banner.ctaUrl}
-              className="inline-flex items-center gap-2 sm:gap-3 px-5 py-3 sm:px-8 sm:py-3.5 font-black uppercase transition-all hover:-translate-y-0.5"
-              style={{
-                fontFamily: FONT_BANGERS,
-                letterSpacing: "0.1em",
-                fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)",
-                background: "var(--color-yellow)",
-                color: "#1A1A1A",
-                boxShadow: "0 4px 24px rgba(255,229,0,0.35)",
-              }}
+              className="inline-flex items-center gap-2 sm:gap-3 px-5 py-3 sm:px-8 sm:py-3.5 font-black uppercase transition-all hover:-translate-y-0.5 [font-family:var(--font-bangers,Bangers,cursive)] tracking-[0.1em] text-[clamp(0.85rem,2.5vw,1.1rem)] bg-[var(--color-yellow)] text-[var(--appkit-color-text)] [box-shadow:0_4px_24px_rgba(255,229,0,0.35)]"
             >
               {banner.ctaLabel}
               <Span
@@ -164,16 +133,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             aria-label="Previous slide"
             variant="ghost"
             size="sm"
-            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 justify-center transition-all hover:scale-105"
-            style={{
-              zIndex: 15,
-              width: 40,
-              height: 40,
-              background: "rgba(255,255,255,0.12)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              color: "#ffffff",
-              backdropFilter: "blur(6px)",
-            }}
+            className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 justify-[center] transition-all hover:scale-105 z-[15] w-10 h-10 bg-[rgba(255,255,255,0.12)] border border-white/20 text-white backdrop-blur-sm"
           >
             <svg
               className="h-4 w-4 sm:h-5 sm:w-5"
@@ -195,16 +155,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             aria-label="Next slide"
             variant="ghost"
             size="sm"
-            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 justify-center transition-all hover:scale-105"
-            style={{
-              zIndex: 15,
-              width: 40,
-              height: 40,
-              background: "rgba(255,255,255,0.12)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              color: "#ffffff",
-              backdropFilter: "blur(6px)",
-            }}
+            className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 justify-[center] transition-all hover:scale-105 z-[15] w-10 h-10 bg-[rgba(255,255,255,0.12)] border border-white/20 text-white backdrop-blur-sm"
           >
             <svg
               className="h-4 w-4 sm:h-5 sm:w-5"
@@ -227,16 +178,10 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
       {/* Dot indicator + counter */}
       {banners.length > 1 && (
         <Row
-          className="absolute bottom-8 right-6 sm:right-12" gap="3"
-          style={{ zIndex: 15 }}
+          className="absolute bottom-8 right-6 sm:right-12 z-[15]" gap="3"
         >
           <Span
-            className="font-black tabular-nums" size="xs"
-            style={{
-              color: "rgba(255,255,255,0.6)",
-              fontFamily: FONT_BANGERS,
-              letterSpacing: "0.1em",
-            }}
+            className="font-black tabular-nums text-white/60 [font-family:var(--font-bangers,Bangers,cursive)] tracking-[0.1em]" size="xs"
           >
             {String(current + 1).padStart(2, "0")} /{" "}
             {String(banners.length).padStart(2, "0")}
@@ -249,16 +194,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
                 aria-label={`Go to slide ${i + 1}`}
                 variant="ghost"
                 size="sm"
-                className="transition-all"
-                style={{
-                  height: 3,
-                  width: i === current ? 28 : 10,
-                  borderRadius: 2,
-                  background:
-                    i === current
-                      ? "var(--color-yellow)"
-                      : "rgba(255,255,255,0.35)",
-                }}
+                className={`transition-all h-[3px] rounded-[2px] ${i === current ? "w-7 bg-[var(--color-yellow)]" : "w-2.5 bg-white/35"}`}
               />
             ))}
           </Row>
@@ -267,16 +203,11 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
 
       {/* Scroll-down hint */}
       <Stack
-        className="absolute bottom-6 left-1/2 -translate-x-1/2" align="center" gap="xs"
-        style={{ zIndex: 15, opacity: 0.5 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[15] opacity-50" align="center" gap="xs"
         aria-hidden="true"
       >
         <Div
-          className="h-8 w-px"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.8))",
-          }}
+          className="h-8 w-px [background:linear-gradient(to_bottom,rgba(255,255,255,0),rgba(255,255,255,0.8))]"
         />
       </Stack>
     </Div>

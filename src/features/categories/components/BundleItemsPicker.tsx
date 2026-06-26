@@ -62,7 +62,7 @@ function renderBundleSelectedChips(props: {
   const { value, metadata, remove } = props;
   if (value.length === 0) return null;
   return (
-    <Div layout="flex" gap="2" className={`flex-wrap ${__P.p3}`} rounded="lg" surface="muted" border="default">
+    <Row gap="sm" padding="sm" rounded="lg" surface="muted" border="default" wrap>
       {value.map((id) => {
         const meta = metadata[id];
         const label = meta?.title ?? id;
@@ -73,7 +73,7 @@ function renderBundleSelectedChips(props: {
           </Row>
         );
       })}
-    </Div>
+    </Row>
   );
 }
 

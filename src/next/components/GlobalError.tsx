@@ -58,7 +58,7 @@ export function GlobalError({ error, reset }: GlobalErrorProps) {
             style={{
               fontSize: "0.75rem",
               padding: "1rem",
-              background: "#f3f4f6",
+              background: "var(--appkit-color-zinc-100)",
               borderRadius: "0.5rem",
               textAlign: "left",
               maxWidth: "40rem",

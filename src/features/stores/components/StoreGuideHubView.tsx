@@ -10,7 +10,7 @@ import {
   Circle,
   BookOpen,
 } from "lucide-react";
-import { Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Div, Heading, Progress, Row, Section, Stack, Text } from "../../../ui";
 import type { StoreDocument } from "../schemas";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -120,12 +120,9 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
   return (
     <Stack gap="xl" padding="b-2xl">
       {/* Welcome banner */}
-      <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
+      <Section overflow="hidden" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div paddingX="x-md-xl" paddingY="y-xl"
-          style={{
-            background:
-              "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 60%,var(--appkit-color-secondary-400) 100%)",
-          }}
+          className="[background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_60%,var(--appkit-color-secondary-400)_100%)]"
         >
           <Row className="mb-3" align="center" gap="3">
             <Row className="flex-shrink-0 w-10 h-10" surface="default" align="center" justify="center" rounded="xl">
@@ -160,11 +157,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
               >
                 <Row align="center" gap="3">
                   <Row
-                    className="flex-shrink-0 w-9 h-9" align="center" justify="center" rounded="lg"
-                    style={{
-                      background:
-                        "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",
-                    }}
+                    className="flex-shrink-0 w-9 h-9 [background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_100%)]" align="center" justify="center" rounded="lg"
                   >
                     <Icon className="w-4 h-4 text-white" />
                   </Row>
@@ -188,9 +181,9 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           <Heading level={2} className="text-[var(--appkit-color-text)]" size="lg" weight="semibold">
             Getting started
           </Heading>
-          <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden" rounded="xl">
+          <Div overflow="hidden" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="xl">
             {/* Progress bar */}
-            <Div className="px-5 pt-5 border-b border-[var(--appkit-color-border)]" padding="b-md">
+            <Div className="px-[1.25rem] pt-[1.25rem] border-b border-[var(--appkit-color-border)]" padding="b-md">
               <Row className="mb-2" align="center" justify="between">
                 <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
                   {completedCount} of {steps.length} complete
@@ -199,16 +192,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   {Math.round((completedCount / steps.length) * 100)}%
                 </Text>
               </Row>
-              <Div className="h-1.5 bg-[var(--appkit-color-border)]" rounded="full">
-                <Div
-                  className="h-full transition-all" rounded="full"
-                  style={{
-                    width: `${Math.round((completedCount / steps.length) * 100)}%`,
-                    background:
-                      "linear-gradient(90deg,var(--appkit-color-primary-700),var(--appkit-color-cobalt))",
-                  }}
-                />
-              </Div>
+              <Progress value={completedCount} max={steps.length} size="sm" variant="gradient" />
             </Div>
             {/* Steps */}
             <Div className="divide-y divide-[var(--appkit-color-border)]">

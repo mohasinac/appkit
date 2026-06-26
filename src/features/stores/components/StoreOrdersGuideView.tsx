@@ -77,7 +77,7 @@ const STATUS_ROWS = [
 function OrderLifecycle() {
   return (
     <Stack gap="md">
-      <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
+      <Div textSize="xs" overflow="x-auto" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-[var(--appkit-color-text-muted)] whitespace-pre" rounded="lg" padding="md">
         {STATUS_LIFECYCLE}
       </Div>
       <Stack gap="sm">
@@ -87,7 +87,7 @@ function OrderLifecycle() {
               <Text className="font-mono text-[var(--appkit-color-text)] w-28 shrink-0" weight="semibold">{status}</Text>
               <Text className="text-[var(--appkit-color-text-muted)]">{meaning}</Text>
             </Row>
-            <Text className="pl-30 text-[var(--appkit-color-text-muted)] italic" size="xs">
+            <Text className="pl-[7.5rem] text-[var(--appkit-color-text-muted)] italic" size="xs">
               → {action}
             </Text>
           </Div>
@@ -140,7 +140,7 @@ function CarriersSection() {
         Any carrier is accepted — enter the tracking number manually in the order detail.
         Buyers receive the tracking number as entered; they look it up on the carrier's website.
       </Text>
-      <Div className="overflow-x-auto -mx-6">
+      <Div overflow="x-auto" className="-mx-6">
         <Table className="min-w-full" size="sm">
           <Thead>
             <Tr className="border-b border-[var(--appkit-color-border)]">

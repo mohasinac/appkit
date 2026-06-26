@@ -182,7 +182,7 @@ export function FormShell({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed top-0 bottom-0 left-0 right-0 lg:left-[10%] lg:right-[10%] flex-col bg-[var(--appkit-color-surface)] shadow-2xl"
+        className="fixed top-0 bottom-0 left-0 right-0 lg:left-[10%] lg:right-[10%] [flex-direction:column] bg-[var(--appkit-color-surface)]" shadow="2xl"
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
         {/* ── Top bar ─────────────────────────────────────── */}
@@ -280,7 +280,7 @@ export function FormShell({
 
           {/* Mobile horizontal section strip */}
           {sections && sections.length > 0 && !previewMode && (
-            <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-5 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`} padding="y-xs">
+            <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-[1.25rem] bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`} padding="y-xs">
               {sections.map((sec) => (
                 <button
                   key={sec.id}
@@ -315,8 +315,8 @@ export function FormShell({
             ) : splitPreview && previewSlot ? (
               // S-STORE-3-D — desktop 60/40 split: form left, preview right.
               // Below `lg`, falls back to single-column form (preview-as-modal via existing toggle).
-              <Div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:px-6 lg:py-6 lg:max-w-[1400px] lg:mx-auto">
-                <Div className="max-w-3xl mx-auto px-5 sm:px-6 lg:max-w-none lg:px-0 lg:py-0" padding="y-lg">
+              <Div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-[1.5rem] lg:px-[1.5rem] lg:py-[1.5rem] lg:max-w-[1400px] lg:mx-auto">
+                <Div className="max-w-3xl mx-auto px-[1.25rem] sm:px-[1.5rem] lg:max-w-none lg:px-[0] lg:py-[0]" padding="y-lg">
                   {children}
                 </Div>
                 <Div className={`hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] ${__O.yAuto} border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] ${__P.p4}`} rounded="lg">
@@ -328,7 +328,7 @@ export function FormShell({
                 </Div>
               </Div>
             ) : (
-              <Div className="max-w-3xl mx-auto px-5 sm:px-6" padding="y-lg">
+              <Div className="max-w-3xl mx-auto px-[1.25rem] sm:px-[1.5rem]" padding="y-lg">
                 {children}
               </Div>
             )}
@@ -380,7 +380,7 @@ export function FormShell({
             onClick={() => setShowUnsaved(false)}
           />
           <Div
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)] shadow-2xl" rounded="xl" padding="lg"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)]" shadow="2xl" rounded="xl" padding="lg"
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
           >
             <Row gap="sm" align="start" className="mb-4">

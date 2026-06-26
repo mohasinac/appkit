@@ -66,7 +66,7 @@ export function BeforeAfterSlider({
         className="absolute inset-y-0 w-1 -translate-x-1/2 cursor-ew-resize" align="center"
         style={{ left: `${position}%` }}
       >
-        <Div className="h-full w-0.5 shadow" surface="default" />
+        <Div className="h-full w-0.5" surface="default" style={{ boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)" }} />
         <Div className="absolute h-8 w-8 border-2 border-white" surface="default" rounded="full" shadow="md" />
       </Stack>
 

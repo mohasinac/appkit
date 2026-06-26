@@ -134,20 +134,21 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   return (
     <Main>
       {/* ── Hero / Banner ───────────────────────────────────────────────── */}
-      <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
+      <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
         {hasCover && (
           <>
-            <div
-              className="absolute inset-0 bg-center bg-cover"
-              style={{ backgroundImage: `url(${coverImage})` }}
+            <img
+              src={coverImage}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
             />
             <Div surface="overlay-md" className="absolute inset-0" />
           </>
         )}
 
-        <Div className={`relative z-10 max-w-7xl mx-auto ${hasCover ? "py-12" : "py-8"}`} padding="x-md">
+        <Div className="relative z-10 max-w-7xl mx-auto" paddingY={hasCover ? "y-3xl" : "y-xl"} padding="x-md">
           {/* Breadcrumb */}
-          <Nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
+          <Nav layout="flex" gap="2xs" textSize="sm" className="mb-4" aria-label="Breadcrumb">
             <Link
               href={String(ROUTES.HOME)}
               className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
@@ -168,34 +169,34 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </Nav>
 
           {/* Title + metrics */}
-          <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-zinc-900 dark:text-zinc-50"}`} size="3xl" mdSize="4xl" weight="bold">
+          <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
             {category?.name ?? slug}
           </Heading>
 
           {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
-            <Text color="inverse" className={`max-w-2xl mb-4 ${hasCover ? "/80" : "text-zinc-600 dark:text-zinc-400"}`} size="base">
+            <Text color={hasCover ? "inverse" : "muted"} className={`max-w-2xl mb-4 ${hasCover ? "/80" : ""}`} size="base">
               {category.description}
             </Text>
           )}
 
           <Row wrap gap="sm">
             {productCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="pill-sm-tall">
+              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"} rounded="full" padding="pill-sm-tall">
                 {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
               </Span>
             )}
             {auctionCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" }`} rounded="full" padding="pill-sm-tall">
+              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
                 {auctionCount.toLocaleString()} {auctionCount === 1 ? "auction" : "auctions"}
               </Span>
             )}
             {preOrderCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-info-surface text-info dark:bg-info-surface dark:text-info" }`} rounded="full" padding="pill-sm-tall">
+              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "info"} surface={hasCover ? undefined : "info-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
                 {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
               </Span>
             )}
             {storeCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-white/20 backdrop-blur-sm" : "bg-success-surface text-success dark:bg-success-surface dark:text-success" }`} rounded="full" padding="pill-sm-tall">
+              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "success"} surface={hasCover ? undefined : "success-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
                 {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
               </Span>
             )}
@@ -207,9 +208,8 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       {childCategories.length > 0 && (
         <Section border="subtle" surface="default" className="border-b">
           <Div className="max-w-7xl mx-auto" padding="inline">
-            <Div layout="flex" gap="2" 
-              className={`.5 ${__O.xAuto}`} padding="b-2xs"
-              style={{ scrollbarWidth: "none" }}
+            <Div layout="flex" gap="2"
+              className={`.5 ${__O.xAuto} [scrollbar-width:none]`} padding="b-2xs"
             >
               {childCategories.map((child) => (
                 <Link

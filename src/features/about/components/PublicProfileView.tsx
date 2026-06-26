@@ -115,7 +115,7 @@ export async function PublicProfileView({
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {renderProfileHero(t, profileHeroCtx)}
-      <Stack gap="2xl" className={`${page.container.md} md:py-12`} padding="y-2xl">
+      <Stack gap="2xl" className={`${page.container.md}`} paddingY="y-3xl">
         {renderProfileStatsRow(flex, statItems)}
         {renderProfileBioSection(pub)}
         {renderStoreDescriptionSection(isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
@@ -162,16 +162,16 @@ function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewC
 function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: string | null; memberSince: string; isSeller: boolean; storeSlug: string | null | undefined; flex: ProfileFlex; page: ProfilePage }) {
   const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page } = ctx;
   return (
-    <Section color="inverse" tone="accent-banner" className="md:py-14" padding="y-2xl">
+    <Section color="inverse" tone="accent-banner" paddingY="y-2-5xl">
       <Div className={`${page.container.md}`}>
-        <Stack direction="sm-row" className="flex-wrap sm:items-end" align="center" gap="md">
+        <Stack direction="sm-row" wrap align="center" smAlign="end" gap="md">
           <Row align="center" justify="center" className={`w-20 h-20 flex-shrink-0 ${__O.hidden}`} surface="default" rounded="full">
             {photoURL ? <MediaImage src={photoURL} alt={displayName} size="avatar" fallback="👤" /> : <User className="w-10 h-10 text-white/60" />}
           </Row>
           <Stack gap="xs" className="text-center sm:text-left">
-            <Row className="sm:justify-start" justify="center" gap="xs" wrap>
+            <Row justify="start" gap="xs" wrap>
               <Heading color="inverse" level={1} variant="none" className="mb-0">{displayName}</Heading>
-              {isSeller && <Span color="inverse" size="xs" weight="semibold" className="bg-white/20" padding="pill-sm" rounded="full">{t("roleSeller")}</Span>}
+              {isSeller && <Span color="inverse" size="xs" weight="semibold" className="bg-[white]/20" padding="pill-sm" rounded="full">{t("roleSeller")}</Span>}
             </Row>
             <Text color="inverse" variant="none" size="sm">{memberSince}</Text>
           </Stack>
@@ -212,7 +212,7 @@ function renderProfileBioSection(pub: PubProfile) {
         {pub.bio && <Text className="leading-relaxed text-neutral-700" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
           {pub.location && <Span layout="flex" gap="xs" size="sm" className="text-neutral-500 dark:text-neutral-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
-          {pub.website && <Anchor href={pub.website} className="flex items-center gap-1.5"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></Anchor>}
+          {pub.website && <Anchor href={pub.website} layout="inline-flex" className="gap-[0.375rem]"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></Anchor>}
         </Row>
       </Stack>
     </Section>
@@ -237,7 +237,7 @@ function renderProfileListingsSection(t: ProfileT, products: ProfileProduct[], s
     <Section>
       <Heading level={2} className="mb-4">{t("listingsTitle")}</Heading>
       {products.length === 0 ? (
-        <Div rounded="2xl" className={`p-12 text-center`} border="default" surface="subtle">
+        <Div rounded="2xl" padding="3xl" className="text-center" border="default" surface="subtle">
           <ShoppingBag className={CLS_EMPTY_ICON} />
           <Text variant="secondary" size="sm">{t("noListings")}</Text>
         </Div>
@@ -260,7 +260,7 @@ function renderProfileReviewsSection(t: ProfileT, reviews: ProfileReview[], stor
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsReceivedTitle")}</Heading>
       {reviews.length === 0 ? (
-        <Div rounded="2xl" className={`p-12 text-center`} border="default" surface="subtle">
+        <Div rounded="2xl" padding="3xl" className="text-center" border="default" surface="subtle">
           <Star className={CLS_EMPTY_ICON} />
           <Text variant="secondary" size="sm">{t("noReviewsReceived")}</Text>
         </Div>
@@ -283,7 +283,7 @@ function renderAuthoredReviewsSection(t: ProfileT, reviews: ProfileReview[], dis
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsAuthoredTitle", { name: displayName })}</Heading>
       {reviews.length === 0 ? (
-        <Div rounded="2xl" className={`p-12 text-center`} border="default" surface="subtle">
+        <Div rounded="2xl" padding="3xl" className="text-center" border="default" surface="subtle">
           <Star className={CLS_EMPTY_ICON} />
           <Text variant="secondary" size="sm">{t("noReviewsAuthored", { name: displayName })}</Text>
         </Div>

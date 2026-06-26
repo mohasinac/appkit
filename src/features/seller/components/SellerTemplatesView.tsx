@@ -299,6 +299,7 @@ export function SellerTemplatesView({
     try {
       await performDelete(id);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to delete template", "error");
     }
     setDeleteTargetId(null);

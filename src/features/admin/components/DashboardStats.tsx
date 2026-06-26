@@ -4,6 +4,7 @@ import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-rea
 import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
 import { Div, Grid, Row, Stack, Text } from "../../../ui";
+import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
@@ -26,16 +27,15 @@ interface StatCardProps {
   sub?: string;
   icon: LucideIcon;
   gradient: string;       // CSS gradient string for the top strip + icon bg
-  iconColor: string;      // icon fill color
 }
 
-function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCardProps) {
+function StatCard({ label, value, sub, icon: Icon, gradient }: StatCardProps) {
   return (
-    <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} hover:shadow-md transition-shadow`} rounded="xl" shadow="sm">
+    <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`} rounded="xl" shadow="sm-hover-md">
       {/* 3-px gradient top accent */}
-      <Div
+      <DynamicBgDiv
+        background={gradient}
         className="absolute top-0 left-0 right-0 h-[3px]"
-        style={{ background: gradient }}
         aria-hidden="true"
       />
 
@@ -54,12 +54,12 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
         </Div>
 
         {/* Icon pill */}
-        <Row
-          className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="lg"
-          style={{ background: gradient, opacity: 0.92 }}
+        <DynamicBgDiv
+          background={gradient}
+          className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg opacity-[0.92]"
         >
           <Icon className="w-5 h-5 text-white drop-shadow-sm" />
-        </Row>
+        </DynamicBgDiv>
       </Row>
     </Div>
   );
@@ -105,8 +105,8 @@ export function DashboardStatsGrid({
   const brandGrad   = `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 55%, ${BRAND_TO} 100%)`;
   const blueGrad    = `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 100%)`;
   const greenGrad   = `linear-gradient(135deg, ${BRAND_MID} 0%, ${BRAND_TO} 100%)`;
-  const amberGrad   = "linear-gradient(135deg, #f59e0b 0%, #f97316 100%)";
-  const roseGrad    = "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)";
+  const amberGrad   = "var(--appkit-gradient-warning-stat)";
+  const roseGrad    = "var(--appkit-gradient-danger-stat)";
 
   return (
     <Grid cols="statTiles">
@@ -115,28 +115,24 @@ export function DashboardStatsGrid({
         value={stats.totalOrders ?? 0}
         icon={ShoppingBag}
         gradient={brandGrad}
-        iconColor="#fff"
       />
       <StatCard
         label={labels.totalRevenue ?? "Total Revenue"}
         value={formatCurrency(stats.totalRevenue ?? 0, currency)}
         icon={TrendingUp}
         gradient={greenGrad}
-        iconColor="#fff"
       />
       <StatCard
         label={labels.totalUsers ?? "Total Users"}
         value={stats.totalUsers ?? 0}
         icon={Users}
         gradient={blueGrad}
-        iconColor="#fff"
       />
       <StatCard
         label={labels.totalProducts ?? "Total Products"}
         value={stats.totalProducts ?? 0}
         icon={Package}
         gradient={brandGrad}
-        iconColor="#fff"
       />
       {stats.pendingOrders !== undefined && (
         <StatCard
@@ -144,8 +140,7 @@ export function DashboardStatsGrid({
           value={stats.pendingOrders}
           icon={Clock}
           gradient={amberGrad}
-          iconColor="#fff"
-        />
+          />
       )}
       {stats.pendingReviews !== undefined && (
         <StatCard
@@ -153,8 +148,7 @@ export function DashboardStatsGrid({
           value={stats.pendingReviews}
           icon={Star}
           gradient={roseGrad}
-          iconColor="#fff"
-        />
+          />
       )}
     </Grid>
   );

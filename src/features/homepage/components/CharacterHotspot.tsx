@@ -18,6 +18,15 @@ const FALLBACK_IMAGE = "/animevssuperhero.jpg";
 const FALLBACK_IMAGE_ALT = "DC, Marvel and Anime characters";
 const FONT_BANGERS = "var(--font-bangers, Bangers, cursive)";
 
+/* -- Franchise brand colour references — hex lives in tokens.css (exempt) -- */
+const BRAND_MARVEL          = "var(--brand-marvel)";
+const BRAND_DC              = "var(--brand-dc)";
+const BRAND_DC_ALT          = "var(--brand-dc-alt)";
+const BRAND_ANIME_YELLOW    = "var(--brand-anime-yellow)";
+const BRAND_ANIME_YELLOW_TEXT = "var(--brand-anime-yellow-text)";
+const BRAND_NARUTO          = "var(--brand-naruto)";
+const BRAND_HOTSPOT_OVERLAY = "var(--brand-hotspot-overlay)";
+
 const DEFAULT_HOTSPOTS: HotspotPinData[] = [
   {
     id: "spiderman",
@@ -28,7 +37,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/marvel",
     xPct: 8,
     yPct: 22,
-    accent: "#E8001C",
+    accent: BRAND_MARVEL,
     badge: "MARVEL",
     buyText: "Get Spider-Man Figures",
   },
@@ -41,7 +50,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/marvel",
     xPct: 18,
     yPct: 58,
-    accent: "#E8001C",
+    accent: BRAND_MARVEL,
     badge: "MARVEL",
     buyText: "Get Iron Man Figures",
   },
@@ -54,7 +63,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/dc-comics",
     xPct: 28,
     yPct: 18,
-    accent: "#4A90D9",
+    accent: BRAND_DC,
     badge: "DC",
     buyText: "Get Robin Figures",
   },
@@ -67,7 +76,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/dc-comics",
     xPct: 36,
     yPct: 42,
-    accent: "#4A90D9",
+    accent: BRAND_DC,
     badge: "DC",
     buyText: "Get Batman Figures",
   },
@@ -80,7 +89,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/marvel",
     xPct: 12,
     yPct: 76,
-    accent: "#0057FF",
+    accent: BRAND_DC_ALT,
     badge: "MARVEL",
     buyText: "Get Cap Figures",
   },
@@ -93,7 +102,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/dc-comics",
     xPct: 44,
     yPct: 68,
-    accent: "#0057FF",
+    accent: BRAND_DC_ALT,
     badge: "DC",
     buyText: "Get Superman Figures",
   },
@@ -106,7 +115,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/dragon-ball",
     xPct: 51,
     yPct: 36,
-    accent: "#FFE500",
+    accent: BRAND_ANIME_YELLOW,
     badge: "ANIME",
     buyText: "Get Goku Figures",
   },
@@ -119,7 +128,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/naruto",
     xPct: 57,
     yPct: 78,
-    accent: "#FF6B00",
+    accent: BRAND_NARUTO,
     badge: "ANIME",
     buyText: "Get Naruto Figures",
   },
@@ -132,7 +141,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/bleach",
     xPct: 70,
     yPct: 20,
-    accent: "#4A90D9",
+    accent: BRAND_DC,
     badge: "ANIME",
     buyText: "Get Ichigo Figures",
   },
@@ -145,7 +154,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/one-piece",
     xPct: 80,
     yPct: 50,
-    accent: "#FFE500",
+    accent: BRAND_ANIME_YELLOW,
     badge: "ANIME",
     buyText: "Get Luffy Figures",
   },
@@ -158,7 +167,7 @@ const DEFAULT_HOTSPOTS: HotspotPinData[] = [
     href: "/franchise/one-punch-man",
     xPct: 91,
     yPct: 50,
-    accent: "#FFE500",
+    accent: BRAND_ANIME_YELLOW,
     badge: "ANIME",
     buyText: "Get Saitama Figures",
   },
@@ -225,27 +234,12 @@ interface InnerProps {
 }
 
 const DEFAULT_UNIVERSE_LINKS: InnerProps["universeLinks"] = [
-  { label: "MARVEL", href: "/franchise/marvel", color: "#E8001C", icon: "⚡" },
-  {
-    label: "DC COMICS",
-    href: "/franchise/dc-comics",
-    color: "#4A90D9",
-    icon: "🦇",
-  },
-  {
-    label: "DRAGON BALL",
-    href: "/franchise/dragon-ball",
-    color: "#FFE500",
-    icon: "✦",
-  },
-  { label: "NARUTO", href: "/franchise/naruto", color: "#FF6B00", icon: "🍃" },
-  {
-    label: "ONE PIECE",
-    href: "/franchise/one-piece",
-    color: "#FFE500",
-    icon: "⚓",
-  },
-  { label: "BLEACH", href: "/franchise/bleach", color: "#4A90D9", icon: "⚔" },
+  { label: "MARVEL",      href: "/franchise/marvel",      color: BRAND_MARVEL,       icon: "⚡" },
+  { label: "DC COMICS",   href: "/franchise/dc-comics",   color: BRAND_DC,           icon: "🦇" },
+  { label: "DRAGON BALL", href: "/franchise/dragon-ball", color: BRAND_ANIME_YELLOW, icon: "✦" },
+  { label: "NARUTO",      href: "/franchise/naruto",      color: BRAND_NARUTO,       icon: "🍃" },
+  { label: "ONE PIECE",   href: "/franchise/one-piece",   color: BRAND_ANIME_YELLOW, icon: "⚓" },
+  { label: "BLEACH",      href: "/franchise/bleach",      color: BRAND_DC,           icon: "⚔" },
 ];
 
 function HotspotHeaderOverlay({
@@ -270,7 +264,7 @@ function HotspotHeaderOverlay({
         align="start"
         justify="between"
         gap="sm"
-        className="pointer-events-auto mx-auto max-w-7xl pt-4 pb-6 gap-y-3" padding="x-md"
+        className="pointer-events-auto mx-auto max-w-7xl gap-y-3" paddingX="x-md" paddingY="t-md-b-lg"
       >
         <Div>
           <Text
@@ -285,7 +279,7 @@ function HotspotHeaderOverlay({
               fontFamily: FONT_BANGERS,
               fontSize: "clamp(1.8rem, 4.5vw, 3rem)",
               letterSpacing: "0.07em",
-              color: "#FFFFFF",
+              color: "white",
               lineHeight: 1,
             }}
           >
@@ -307,7 +301,7 @@ function HotspotHeaderOverlay({
               <Span layout="inline-flex-center" rounded="full" weight="light"
                 style={{
                   background: "rgba(255,255,255,0.92)",
-                  color: "#111111",
+                  color: "var(--appkit-color-text)",
                   width: 18,
                   height: 18,
                   border: "1.5px solid rgba(0,0,0,0.18)",
@@ -330,7 +324,7 @@ function HotspotHeaderOverlay({
             fontFamily: FONT_BANGERS,
             letterSpacing: "0.1em",
             background: "var(--color-red)",
-            color: "#FFFFFF",
+            color: "white",
             border: "3px solid var(--border-ink)",
             boxShadow: "4px 4px 0px var(--border-ink)",
           }}
@@ -376,7 +370,7 @@ function HotspotImageLayer({
       <Div
         className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
         style={{
-          background: "linear-gradient(to bottom, transparent, #0A0A12)",
+          background: `linear-gradient(to bottom, transparent, ${BRAND_HOTSPOT_OVERLAY})`,
         }}
       />
     </Div>
@@ -436,7 +430,7 @@ function HotspotPin({
           padding: 0,
           transition: "transform 0.2s ease, opacity 0.2s ease",
           transform: isActive ? "scale(1.2) rotate(45deg)" : "scale(1)",
-          color: isMobile ? "#FFFFFF" : isActive ? "#FFFFFF" : "#111111",
+          color: isMobile ? "white" : isActive ? "white" : "var(--appkit-color-text)",
           fontSize: isMobile ? 18 : 22,
           fontWeight: 200,
           lineHeight: 1,
@@ -466,18 +460,18 @@ function HotspotPin({
           <Div paddingX="x-5" padding="y-md">
             <Text
               className="text-[10px] uppercase tracking-[0.18em] mb-1" weight="bold"
-              style={{ color: hotspot.accent === "#FFE500" ? "#b08800" : hotspot.accent }}
+              style={{ color: hotspot.accent === BRAND_ANIME_YELLOW ? BRAND_ANIME_YELLOW_TEXT : hotspot.accent }}
             >
               {hotspot.universe}
             </Text>
             <Heading
               level={3}
               className="font-black leading-tight mb-3"
-              style={{ fontFamily: FONT_BANGERS, fontSize: "1.45rem", letterSpacing: "0.06em", color: "#111111" }}
+              style={{ fontFamily: FONT_BANGERS, fontSize: "1.45rem", letterSpacing: "0.06em", color: "var(--appkit-color-text)" }}
             >
               {hotspot.name}
             </Heading>
-            <Text className="leading-relaxed mb-4" size="xs" style={{ color: "#374151" }}>
+            <Text className="leading-relaxed mb-4" size="xs" style={{ color: "var(--appkit-color-slate-700)" }}>
               {hotspot.description}
             </Text>
             <Link
@@ -488,7 +482,7 @@ function HotspotPin({
                 fontFamily: FONT_BANGERS,
                 letterSpacing: "0.1em",
                 background: hotspot.accent,
-                color: hotspot.accent === "#FFE500" ? "#0D0D0D" : "#FFFFFF",
+                color: hotspot.accent === BRAND_ANIME_YELLOW ? "black" : "white",
                 borderRadius: 2,
               }}
             >
@@ -526,24 +520,24 @@ function MobileHotspotSheet({
         }}
       >
         <Row paddingY="b-2xs" padding="t-sm" justify="center">
-          <Div style={{ width: 40, height: 4, borderRadius: 2, background: "#D1D5DB" }} />
+          <Div style={{ width: 40, height: 4, borderRadius: 2, background: "var(--appkit-color-zinc-300)" }} />
         </Row>
         <Div style={{ height: 4, background: active.accent }} />
-        <Div className="px-5 pb-10" padding="t-md">
+        <Div padding="t-md" style={{ paddingInline: "1.25rem", paddingBottom: "2.5rem" }}>
           <Text
             className="text-[10px] uppercase tracking-[0.18em] mb-1" weight="bold"
-            style={{ color: active.accent === "#FFE500" ? "#b08800" : active.accent }}
+            style={{ color: active.accent === BRAND_ANIME_YELLOW ? BRAND_ANIME_YELLOW_TEXT : active.accent }}
           >
             {active.universe}
           </Text>
           <Heading
             level={3}
             className="font-black leading-tight mb-2"
-            style={{ fontFamily: FONT_BANGERS, fontSize: "clamp(1.5rem, 6vw, 2rem)", letterSpacing: "0.06em", color: "#111111" }}
+            style={{ fontFamily: FONT_BANGERS, fontSize: "clamp(1.5rem, 6vw, 2rem)", letterSpacing: "0.06em", color: "var(--appkit-color-text)" }}
           >
             {active.name}
           </Heading>
-          <Text className="leading-relaxed mb-5" size="sm" style={{ color: "#374151" }}>
+          <Text className="leading-relaxed mb-5" size="sm" style={{ color: "var(--appkit-color-slate-700)" }}>
             {active.description}
           </Text>
           <Row gap="3" >
@@ -556,7 +550,7 @@ function MobileHotspotSheet({
                 letterSpacing: "0.1em",
                 fontSize: "0.9rem",
                 background: active.accent,
-                color: active.accent === "#FFE500" ? "#0D0D0D" : "#FFFFFF",
+                color: active.accent === BRAND_ANIME_YELLOW ? "black" : "white",
                 borderRadius: 4,
               }}
             >
@@ -568,8 +562,8 @@ function MobileHotspotSheet({
               variant="outline"
               onClick={onClose}
               paddingX="lg" textSize="sm" rounded="default"
-              className="py-3 font-bold"
-              style={{ background: "#F1F5F9", color: "#475569" }}
+              className="py-[0.75rem] font-[700]"
+              style={{ background: "var(--appkit-color-slate-100)", color: "var(--appkit-color-slate-600)" }}
             >
               Close
             </Button>
@@ -613,11 +607,11 @@ function UniverseBrowseRow({
           <Span
             size="xs"
             className="font-black uppercase tracking-wide"
-            style={{ fontFamily: FONT_BANGERS, letterSpacing: "0.1em", color: "#E2E8F0" }}
+            style={{ fontFamily: FONT_BANGERS, letterSpacing: "0.1em", color: "var(--appkit-color-slate-200)" }}
           >
             {label}
           </Span>
-          <Span size="xs" className="ml-auto" style={{ color: "#475569", transition: "color 0.15s" }}>
+          <Span size="xs" className="ml-auto" style={{ color: "var(--appkit-color-slate-600)", transition: "color 0.15s" }}>
             →
           </Span>
         </Link>
@@ -682,14 +676,14 @@ function CharacterHotspotInner({
 
         {/* Universe zone labels */}
         <Div
-          className="hidden sm:flex absolute left-0 right-0 justify-around items-start pointer-events-none"
+          className="hidden sm:flex absolute left-0 right-0 justify-[space-around] items-[flex-start] pointer-events-none"
           style={{ top: "clamp(120px, 18vh, 165px)", zIndex: 5 }}
         >
           {(
             [
-              { label: "MARVEL", color: "#E8001C" },
-              { label: "DC COMICS", color: "#4A90D9" },
-              { label: "ANIME", color: "#FFE500" },
+              { label: "MARVEL",   color: BRAND_MARVEL },
+              { label: "DC COMICS", color: BRAND_DC },
+              { label: "ANIME",    color: BRAND_ANIME_YELLOW },
             ] as { label: string; color: string }[]
           ).map(({ label, color }) => (
             <Stack key={label} align="center">
@@ -697,7 +691,7 @@ function CharacterHotspotInner({
                 className="text-[10px] font-black uppercase tracking-[0.18em]" smSize="xs" rounded="sm" padding="pill-md"
                 style={{
                   background: color,
-                  color: color === "#FFE500" ? "#0D0D0D" : "#FFFFFF",
+                  color: color === BRAND_ANIME_YELLOW ? "black" : "white",
                   boxShadow: "2px 2px 0px rgba(0,0,0,0.6)",
                   fontFamily: FONT_BANGERS,
                   letterSpacing: "0.16em",

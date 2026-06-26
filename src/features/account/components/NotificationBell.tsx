@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useCallback, useRef, useState } from "react";
 import { Button, Div, Heading, Li, Row, Span, Spinner, Stack, Text, TextLink, Ul, useToast } from "../../../ui";
 import { useClickOutside, useMessage } from "../../../react";
@@ -118,6 +119,7 @@ export function NotificationBell({
         await markRead(id);
         refetch();
       } catch (err) {
+        void normalizeError(err);
         showToast(err instanceof Error ? err.message : "Failed to mark notification as read", "error");
       }
     },
@@ -133,6 +135,7 @@ export function NotificationBell({
       refetch();
       emitSuccess(labels.markAllRead);
     } catch (err) {
+      void normalizeError(err);
       if (onMarkAllReadError) {
         onMarkAllReadError(labels.error);
       } else {
@@ -190,7 +193,8 @@ function renderBellButton(props: {
   return (
     <Button
       onClick={handleToggle}
-      className={`${hideOnMobile ? "hidden md:flex" : "flex"} p-2.5 md:p-3 rounded-xl transition-colors relative text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-white ${buttonClassName}`}
+      rounded="xl"
+      className={`${hideOnMobile ? "hidden md:flex" : "flex"} p-[0.625rem] md:p-[0.75rem] transition-colors relative text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-bg)] hover:text-[var(--appkit-color-text)] ${buttonClassName}`}
       aria-label={labels.title}
       aria-expanded={isOpen}
     >
@@ -216,14 +220,14 @@ function renderNotificationDropdown(props: {
 }) {
   const { dropdownClassName, labels, unreadCount, isMarkingAll, handleMarkAllRead, isLoading, notifications, notificationIcons, handleMarkRead, handleMarkReadAndClose, renderActionLink, viewAllHref, setIsOpen } = props;
   return (
-    <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 shadow-2xl z-50 ${__O.hidden} ${dropdownClassName}`} rounded="xl" surface="default" border="default">
-      <Row border="default" justify="between" gap="none" className="border-b dark:border-slate-800" padding="inline">
+    <Div className={`absolute right-0 top-full mt-2 w-80 sm:w-96 z-50 ${__O.hidden} ${dropdownClassName}`} rounded="xl" surface="default" border="default" shadow="2xl">
+      <Row border="default" justify="between" gap="none" className="border-b border-[var(--appkit-color-border)]" padding="inline">
         <Heading level={3} weight="semibold" color="primary">
           {labels.title}
           {unreadCount > 0 && <Span size="xs" weight="medium" className={CLS_UNREAD_PILL}>{unreadCount} {labels.unread}</Span>}
         </Heading>
         {unreadCount > 0 && (
-          <Button onClick={handleMarkAllRead} disabled={isMarkingAll} className="text-xs text-primary hover:underline font-medium disabled:opacity-50">
+          <Button onClick={handleMarkAllRead} disabled={isMarkingAll} textSize="xs" weight="medium" className="text-primary hover:underline disabled:opacity-50">
             {isMarkingAll ? labels.loading : labels.markAllRead}
           </Button>
         )}
@@ -232,7 +236,7 @@ function renderNotificationDropdown(props: {
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
       </Div>
       {viewAllHref && (
-        <Div border="default" className="border-t dark:border-slate-800 text-center" padding="inline">
+        <Div border="default" className="border-t border-[var(--appkit-color-border)] text-center" padding="inline">
           {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-sm text-primary hover:underline font-medium", children: labels.viewAll })}
         </Div>
       )}
@@ -260,7 +264,7 @@ function renderNotificationListContent(props: {
   return (
     <Ul>
       {notifications.map((notification) => (
-        <Li key={notification.id} className={`group flex items-start gap-3 px-4 py-3 border-b border-zinc-200 dark:border-slate-800 last:border-0 transition-colors hover:bg-zinc-50 dark:hover:bg-slate-900 ${!notification.isRead ? "bg-primary/5 dark:bg-primary/10" : ""}`}>
+        <Li key={notification.id} layout="flex-start" gap="3" padding="inline" className={`group border-b border-[var(--appkit-color-border)] last:border-0 transition-colors hover:bg-[var(--appkit-color-bg)] dark:hover:bg-[var(--appkit-color-surface-elevated)] ${!notification.isRead ? "bg-primary/5 dark:bg-primary/10" : ""}`}>
           <Span size="xl" className="flex-shrink-0 mt-0.5">{notificationIcons[notification.type] ?? "🔔"}</Span>
           <Div className="flex-1 min-w-0">
             <Row align="start" justify="between" gap="xs">

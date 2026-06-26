@@ -143,7 +143,7 @@ export function AddressBook({
           onClick={onAdd}
           variant="outline"
           paddingX="md" paddingY="md" textSize="sm" weight="medium"
-          className="mt-2 border border-dashed border-neutral-300 dark:border-slate-600 text-neutral-500 dark:text-zinc-400 transition hover:border-neutral-400 dark:hover:border-slate-500 hover:text-neutral-700 dark:hover:text-zinc-200"
+          className="mt-2 border border-dashed border-neutral-300 dark:border-[var(--appkit-color-border)] text-neutral-500 dark:text-[var(--appkit-color-text-muted)] transition hover:border-neutral-400 dark:hover:border-[var(--appkit-color-border-subtle)] hover:text-neutral-700 dark:hover:text-[var(--appkit-color-text)]"
         >
           + {addLabel}
         </Button>

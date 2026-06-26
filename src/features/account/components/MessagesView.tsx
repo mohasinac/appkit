@@ -47,7 +47,7 @@ export function MessagesView({
           {renderChatWindow?.()}
         </Stack>
       ) : (
-        <Div className="hidden md:flex items-center justify-center text-zinc-400 dark:text-zinc-400 border border-dashed border-neutral-200 dark:border-neutral-700" rounded="xl">
+        <Div className="hidden md:flex text-[var(--appkit-color-text-faint)] border border-dashed border-neutral-200 dark:border-neutral-700" align="center" justify="center" rounded="xl">
           {renderEmptyState?.() ?? (
             <Span>{labels.selectRoom ?? "Select a conversation"}</Span>
           )}

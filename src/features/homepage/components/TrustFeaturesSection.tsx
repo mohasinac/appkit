@@ -17,28 +17,32 @@ export interface TrustFeaturesSectionProps {
   className?: string;
 }
 
+// --- Constants ---------------------------------------------------------------
+
+const CARD_DELAYS = ["delay-0", "delay-100", "delay-200", "delay-300", "delay-[400ms]", "delay-500"] as const;
+
 // --- Single cards-variant card -----------------------------------------------
 
 function TrustFeatureCard({
   item,
   visible,
-  delay,
+  delayClass,
 }: {
   item: TrustFeatureItem;
   visible: boolean;
-  delay: number;
+  delayClass: string;
 }) {
   return (
     <div
       className={[
         "flex flex-col items-center text-center p-4",
         "transition-all duration-500",
+        delayClass,
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
-      style={{ transitionDelay: `${delay}ms` }}
      data-section="trustfeaturessection-div-373">
       {/* Icon box */}
-      <Row className="h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30 flex-shrink-0" align="center" justify="center" rounded="2xl">
+      <Row className="h-14 w-14 bg-primary-50 dark:bg-primary-950/40 border border-[var(--appkit-color-primary-100)] dark:border-[var(--appkit-color-primary-900)]/30 flex-shrink-0" align="center" justify="center" rounded="2xl">
         {item.renderIcon ? (
           item.renderIcon({ className: "w-7 h-7" })
         ) : (
@@ -152,7 +156,7 @@ export function TrustFeaturesSection({
               key={item.iconName}
               item={item}
               visible={visible}
-              delay={index * 100}
+              delayClass={CARD_DELAYS[Math.min(index, CARD_DELAYS.length - 1)]}
             />
           ))}
         </Grid>

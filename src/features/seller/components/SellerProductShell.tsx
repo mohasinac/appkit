@@ -1213,7 +1213,7 @@ export function SellerProductShell({
               </Div>
             )}
             {stepError && (
-              <Text className="px-5 pb-3 text-[var(--appkit-color-error)]" size="sm">{stepError}</Text>
+              <Text className="text-[var(--appkit-color-error)] px-[1.25rem] pb-[0.75rem]" size="sm">{stepError}</Text>
             )}
           </Div>
         )}

@@ -43,9 +43,8 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
   const isUser = msg.role === "user";
   return (
     <Div layout="flex" justify={isUser ? "end" : "start"}>
-      <Div textSize="sm"
-        className={`max-w-[80%] py-2.5 ${ isUser ? "bg-primary text-white rounded-tr-sm" : "bg-neutral-100 dark:bg-slate-700 text-neutral-900 dark:text-neutral-100 rounded-tl-sm" }`} padding="x-md" rounded="2xl"
-      >
+      {/* audit-inline-style-ok: asymmetric chat-bubble border-radius; no appkit rounded= variant covers per-corner values */}
+      <Div textSize="sm" className={`max-w-[80%] py-[0.625rem] ${ isUser ? "bg-primary text-white" : "bg-neutral-100 dark:bg-[var(--appkit-color-surface-elevated)] text-neutral-900 dark:text-neutral-100" }`} padding="x-md" style={{ borderRadius: isUser ? "1.5rem 0.125rem 1.5rem 1.5rem" : "0.125rem 1.5rem 1.5rem 1.5rem" }}>
         <Text className="whitespace-pre-wrap leading-relaxed" size="sm">{msg.content}</Text>
         {msg.durationMs ? (
           <Span size="xs" className="mt-1 block opacity-60">{(msg.durationMs / 1000).toFixed(1)}s</Span>
@@ -80,7 +79,8 @@ function renderCopilotChatPanel(props: {
         {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
         {isLoading ? (
           <Row justify="start">
-            <Div paddingY="y-xs-tall" surface="muted" className="rounded-tl-sm" padding="x-md" rounded="2xl">
+            {/* audit-inline-style-ok: asymmetric chat-bubble border-radius; no appkit rounded= variant covers per-corner values */}
+            <Div paddingY="y-xs-tall" surface="muted" className="" padding="x-md" style={{ borderRadius: "0.125rem 1.5rem 1.5rem 1.5rem" }}>
               <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
             </Div>
           </Row>
@@ -215,7 +215,8 @@ export function AdminCopilotView({
               ))}
               {isLoading ? (
                 <Row justify="start">
-            <Div paddingY="y-xs-tall" surface="muted" className="rounded-tl-sm" padding="x-md" rounded="2xl">
+            {/* audit-inline-style-ok: asymmetric chat-bubble border-radius; no appkit rounded= variant covers per-corner values */}
+            <Div paddingY="y-xs-tall" surface="muted" className="" padding="x-md" style={{ borderRadius: "0.125rem 1.5rem 1.5rem 1.5rem" }}>
                     <Span size="sm" className="opacity-60 animate-pulse">Thinking...</Span>
                   </Div>
                 </Row>

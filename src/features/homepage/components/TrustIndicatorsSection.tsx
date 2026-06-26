@@ -31,15 +31,15 @@ return (
     <Section className={`${__P.p6} ${className}`} surface="subtle">
       <Div className="w-full">
         <Grid
-          gap="md"
-          className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 md:gap-8"
+          gap="section"
+          className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4"
         >
           {items.map((indicator, index) => (
             <div
               key={index}
               className="text-center p-4 rounded-2xl bg-white dark:bg-slate-900 border border-zinc-100 dark:border-slate-800 hover:shadow-md transition-shadow"
             >
-              <Div className="text-4xl md:text-5xl mb-2 md:mb-3">
+              <Div className="text-[2.25rem] md:text-[3rem] mb-2 md:mb-3">
                 {indicator.icon}
               </Div>
               <Heading

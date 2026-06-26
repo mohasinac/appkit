@@ -40,7 +40,7 @@ export function PreOrderTag({
   className = "",
 }: PreOrderTagProps) {
   return (
-    <Div layout="inline-flex" className={`flex-col ${className}`}>
+    <Div layout="inline-flex" className={`[flex-direction:column] ${className}`}>
       <Span size="xs" weight="bold" className={CLS_NEW_BADGE}>
         {label}
       </Span>

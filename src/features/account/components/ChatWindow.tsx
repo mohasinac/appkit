@@ -39,7 +39,7 @@ export function ChatWindow({
         <Row gap="xs">
           {labels.title && <Heading level={4}>{labels.title}</Heading>}
           <Span
-            className={`w-2 h-2 ${isConnected ? CLS_DOT_ON : "bg-zinc-400"}`} rounded="full"
+            className={`w-2 h-2 ${isConnected ? CLS_DOT_ON : "bg-[var(--appkit-color-text-faint)]"}`} rounded="full"
             aria-label={isConnected ? labels.connected : labels.disconnected}
           />
         </Row>

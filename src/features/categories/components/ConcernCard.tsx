@@ -20,11 +20,10 @@ export function ConcernCard({
       className={`group flex flex-col items-center gap-3 rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 text-center shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
     >
       {concern.display?.coverImage && (
-        <Div
-          role="img"
-          aria-label={concern.name}
-          className="h-16 w-16 bg-center bg-cover" rounded="full"
-          style={{ backgroundImage: `url(${concern.display.coverImage})` }}
+        <img
+          src={concern.display.coverImage}
+          alt={concern.name}
+          className="h-16 w-16 object-cover rounded-full"
         />
       )}
       <Div>

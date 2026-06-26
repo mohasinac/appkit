@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Div, Row, Span, Text } from "../../ui";
 import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
 
@@ -42,6 +42,10 @@ export function Slider({
   const value = controlledValue !== undefined ? controlledValue : internalValue;
   const sliderId = id ?? React.useId();
   const pct = ((value - min) / (max - min)) * 100;
+  const fillRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (fillRef.current) fillRef.current.style.width = `${pct}%`;
+  }, [pct]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVal = Number(e.target.value);
@@ -72,9 +76,9 @@ export function Slider({
         {/* Track background */}
         <Row className="absolute inset-y-0 w-full" align="center">
           <Div className="w-full h-1.5" surface="subtle" rounded="full">
-            <Div
-              className="h-full bg-primary-500 dark:bg-secondary-500 transition-all" rounded="full"
-              style={{ width: `${pct}%` }}
+            <div
+              ref={fillRef}
+              className="h-full bg-primary-500 dark:bg-secondary-500 transition-all rounded-full"
             />
           </Div>
         </Row>

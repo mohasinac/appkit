@@ -128,12 +128,12 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                     loading="lazy"
                   />
                 ) : (
-                  <Text align="center" className="px-2 break-all">
+                  <Text align="center" paddingX="x-xs" className="break-all">
                     {f.contentType ?? "file"}
                   </Text>
                 )}
               </Row>
-              <Div className="p-1.5">
+              <Div className="p-[0.375rem]">
                 <Text className="truncate text-[10px] font-mono" color="muted">
                   {f.name.split("/").pop()}
                 </Text>

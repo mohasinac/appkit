@@ -44,11 +44,10 @@ export function ViewReviewModal({
         {/* Author + rating */}
         <Row gap="3">
           {review.userAvatar ? (
-            <Div
-              role="img"
-              aria-label={displayName}
-              className="h-10 w-10 flex-shrink-0 bg-center bg-cover" rounded="full"
-              style={{ backgroundImage: `url(${review.userAvatar})` }}
+            <img
+              src={review.userAvatar}
+              alt={displayName}
+              className="h-10 w-10 flex-shrink-0 object-cover rounded-full"
             />
           ) : (
             <Row textWeight="medium" textSize="sm" className="h-10 w-10 flex-shrink-0 bg-neutral-200 text-neutral-600 dark:text-neutral-400" align="center" justify="center" rounded="full">
@@ -98,17 +97,15 @@ export function ViewReviewModal({
         {review.images && review.images.length > 0 && (
           <Row wrap gap="sm">
             {review.images.map((img, i) => (
-              <IconButton
+              <button
                 key={i}
+                type="button"
                 aria-label={`View image ${i + 1}`}
                 onClick={() => setLightboxIdx(i)}
-                variant="ghost"
-                className={`h-20 w-20 rounded-lg border bg-center bg-cover transition hover:opacity-80 p-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 dark:border-zinc-700"}`}
-                style={{
-                  backgroundImage: `url(${img.thumbnailUrl ?? img.url})`,
-                }}
-                icon={<Div />}
-              />
+                className={`h-20 w-20 rounded-lg border overflow-hidden transition hover:opacity-80 p-0 flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 dark:border-zinc-700"}`}
+              >
+                <img src={img.thumbnailUrl ?? img.url} alt={`Review thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+              </button>
             ))}
           </Row>
         )}

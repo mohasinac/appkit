@@ -95,14 +95,14 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       </Row>
 
       {/* YouTube branding top-right */}
-      <Row textWeight="medium" textSize="xs" className={`absolute right-2 top-2 px-1.5 text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
+      <Row textWeight="medium" textSize="xs" className={`absolute right-2 top-2 text-white px-[0.375rem] ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
         {meta.icon}
         <Span className="hidden sm:inline">{meta.label}</Span>
       </Row>
 
       {/* Channel name bottom-left */}
       {post.channelName && (
-        <Div textSize="xs" surface="overlay-lg" className="absolute bottom-2 left-2 py-0.5 text-white backdrop-blur-sm" padding="x-xs" rounded="default">
+        <Div textSize="xs" surface="overlay-lg" className="absolute bottom-2 left-2 py-[0.125rem] text-white backdrop-blur-sm" padding="x-xs" rounded="default">
           {post.channelName}
         </Div>
       )}
@@ -178,7 +178,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       )}
 
       {/* Platform badge */}
-      <Row textWeight="medium" textSize="xs" className={`absolute left-2 top-2 px-1.5 text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
+      <Row textWeight="medium" textSize="xs" className={`absolute left-2 top-2 px-[0.375rem] text-white ${meta.colorClass}`} padding="y-2xs" align="center" gap="xs" rounded="default">
         {meta.icon}
         <Span className="hidden sm:inline">{meta.label}</Span>
       </Row>

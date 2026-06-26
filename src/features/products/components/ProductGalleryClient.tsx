@@ -43,7 +43,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
   if (images.length === 0) {
     return (
       <Div className={`${__O.hidden}`} border="subtle" rounded="xl" surface="muted">
-        <Row className="aspect-square text-zinc-300 dark:text-zinc-700" align="center" justify="center">
+        <Row className="aspect-square text-[var(--appkit-color-border)] dark:text-[var(--appkit-color-border-subtle)]" align="center" justify="center">
           <PlaceholderSvg />
         </Row>
       </Div>

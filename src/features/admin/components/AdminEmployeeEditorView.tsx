@@ -118,7 +118,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           const checked = domainPerms.filter((p) => permissions.has(p)).length;
           return (
             <Details key={domain.prefix} className="group">
-              <Summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
+              <Summary paddingX="x-sm" paddingY="y-xs" weight="semibold" color="muted" layout="flex" align="center" justify="between" className="uppercase tracking-wide hover:bg-[var(--appkit-color-bg)] transition-colors">
                 <Span size="xs">{domain.label}</Span>
                 <Span size="xs" weight="normal" className="normal-case" color="faint">
                   {checked}/{domainPerms.length}
@@ -264,7 +264,7 @@ export function AdminEmployeeEditorView({
         onClose={onClose}
         title={mode === "invite" ? "Invite Employee" : `Edit — ${displayName ?? "Employee"}`}
       >
-        <Form onSubmit={handleSubmit} className="flex flex-col gap-5" padding="md">
+        <Form onSubmit={handleSubmit} spacing="lg" padding="md">
           {mode === "invite" && (
             <Stack gap="xs" className="">
               <Label size="sm" weight="medium" color="primary">

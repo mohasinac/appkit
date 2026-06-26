@@ -11,7 +11,7 @@ const __O = {
 const CLS_OPTION_SELECTED = "border-success bg-success-surface text-success dark:border-success/60 dark:bg-success-surface dark:text-success";
 const CLS_OPTION_DOT = "inline-flex h-4 w-4 items-center justify-center rounded-full bg-success-surface text-[10px] text-white";
 const CLS_CLEAR_BTN = "w-full py-1 text-xs text-zinc-400 transition-colors hover:text-error";
-const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-emerald-600/20 dark:ring-emerald-400/20";
+const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
 const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error hover:bg-zinc-100 dark:hover:bg-slate-700 transition-colors rounded-full";
 
 export interface FacetOption extends FilterOption {
@@ -162,7 +162,7 @@ export function FilterFacetSection({
                   <Row
                     key={option.value}
                     gap="xs"
-                    className="cursor-pointer py-1.5 hover:bg-zinc-50 dark:hover:bg-slate-800 mx-1" padding="x-sm" rounded="lg"
+                    className="cursor-pointer py-[0.375rem] hover:bg-[var(--appkit-color-bg)] mx-1" padding="x-sm" rounded="lg"
                     onClick={() => toggle(option.value)}
                   >
                     <input
@@ -184,11 +184,11 @@ export function FilterFacetSection({
                 );
               })}
               {filtered.length === 0 && (
-                <Text paddingY="xs" className="px-3" color="faint" size="xs">No results</Text>
+                <Text paddingY="xs" paddingX="x-sm" color="faint" size="xs">No results</Text>
               )}
             </Div>
             {hasValue && (
-              <Div border="subtle" className="border-t p-1">
+              <Div border="subtle" className="border-t p-[0.25rem]">
                 <Button
                   type="button"
                   variant="ghost"
@@ -221,7 +221,7 @@ export function FilterFacetSection({
           onClick={handleToggle}
           variant="ghost"
           size="sm"
-          className="flex-1 justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
+          className="flex-1 justify-[space-between] text-[0.875rem] font-[600] text-[var(--appkit-color-text)] py-[0.25rem] hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
           <Row as={Span} gap="xs">
@@ -284,7 +284,7 @@ export function FilterFacetSection({
             <Span layout="inline-flex"
               key={label}
               size="xs"
-              className="border border-zinc-200 dark:border-slate-600" rounded="full" padding="pill-xs" surface="subtle" color="muted"
+              className="border border-[var(--appkit-color-border)]" rounded="full" padding="pill-xs" surface="subtle" color="muted"
             >
               {label}
             </Span>
@@ -345,7 +345,7 @@ export function FilterFacetSection({
                     )}
                   />
                 )}
-                <Span size="sm" className="flex-1 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors truncate" color="muted">
+                <Span size="sm" className="flex-1 group-hover:text-[var(--appkit-color-text)] transition-colors truncate" color="muted">
                   {option.label}
                 </Span>
                 {option.count !== undefined && (
@@ -357,7 +357,7 @@ export function FilterFacetSection({
             );
           })}
           {filtered.length === 0 && (
-            <Text className="py-1" color="faint" size="xs">
+            <Text paddingY="2xs" color="faint" size="xs">
               No results
             </Text>
           )}

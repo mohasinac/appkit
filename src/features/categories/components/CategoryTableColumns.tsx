@@ -1,6 +1,8 @@
+"use client";
 import { Button, Div, Row, Span, StatusBadge } from "../../../ui";
 import type { Category } from "../types";
 import { MediaImage } from "../../media";
+import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -18,6 +20,8 @@ export interface CategoryTableColumnsLabels {
   actionEdit?: string;
   actionDelete?: string;
 }
+
+const TIER_PL = ["pl-0", "pl-5", "pl-10", "pl-[60px]"] as const;
 
 const DEFAULT_LABELS: Required<CategoryTableColumnsLabels> = {
   colName: "Name",
@@ -52,12 +56,12 @@ export function getCategoryTableColumns(
                 className="w-full h-full object-cover"
               />
             ) : (
-              <Row textSize="base" 
-                className="w-full h-full" align="center" justify="center"
-                style={{ backgroundColor: cat.display?.color ?? "var(--appkit-color-text-faint)", color: "var(--appkit-color-text-on-primary)" }}
+              <DynamicBgDiv
+                color={cat.display?.color ?? "var(--appkit-color-text-faint)"}
+                className="w-full h-full flex items-center justify-center text-base text-[var(--appkit-color-text-on-primary)]"
               >
                 {cat.display?.icon ?? "🗂️"}
-              </Row>
+              </DynamicBgDiv>
             )}
           </Div>
         ),
@@ -67,7 +71,7 @@ export function getCategoryTableColumns(
         header: L.colName,
         sortable: true,
         render: (cat: Category) => (
-          <Div style={{ paddingLeft: `${cat.tier * 20}px` }}>
+          <Div className={TIER_PL[Math.min(cat.tier, 3)]}>
             {cat.name}
             {cat.tier > 0 && (
               <Span size="xs" className="ml-2" color="faint">

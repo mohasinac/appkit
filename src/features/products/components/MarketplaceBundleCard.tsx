@@ -112,7 +112,7 @@ export function MarketplaceBundleCard({
         <TextLink href={String(detailHref)} className="absolute inset-0 block">
           {showCollage ? (
             <Div layout="grid"
-              className={`h-full w-full gap-0.5 bg-[var(--appkit-color-surface-muted)] ${
+              className={`h-full w-full gap-[0.125rem] bg-[var(--appkit-color-surface-muted)] ${
  collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
  }`}
             >
@@ -158,7 +158,7 @@ export function MarketplaceBundleCard({
             {mergedLabels.bundleBadge}
           </Span>
           <Span layout="inline-flex" color="inverse"
-            className={`${ stock === "out_of_stock" ? "bg-zinc-500 " : CLS_STOCK_OK }`} rounded="full" padding="pill-xs" size="xs" weight="medium"
+            className={`${ stock === "out_of_stock" ? "bg-neutral-500 " : CLS_STOCK_OK }`} rounded="full" padding="pill-xs" size="xs" weight="medium"
           >
             {stock === "out_of_stock" ? mergedLabels.outOfStockBadge : mergedLabels.inStockBadge}
           </Span>
@@ -166,7 +166,7 @@ export function MarketplaceBundleCard({
 
         {stock === "out_of_stock" && (
           <Row surface="overlay-xs" className="absolute inset-0" align="center" justify="center">
-            <Span color="inverse" size="xs" weight="bold" className="bg-zinc-900/80 tracking-wider" rounded="default" padding="pill-md" transform="uppercase">
+            <Span color="inverse" size="xs" weight="bold" className="bg-neutral-900/80 tracking-wider" rounded="default" padding="pill-md" transform="uppercase">
               {mergedLabels.outOfStockBadge}
             </Span>
           </Row>

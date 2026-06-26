@@ -52,14 +52,13 @@ export type ErrorTrackerFn = (
 
 const TRACKER_KEY = "__mohasinac_error_tracker__" as const;
 
-declare global {
-   
-  var __mohasinac_error_tracker__: ErrorTrackerFn | undefined;
-}
+type GlobalWithTracker = typeof globalThis & {
+  [key: string]: ErrorTrackerFn | undefined;
+};
 
 function getTracker(): ErrorTrackerFn {
   return (
-    globalThis.__mohasinac_error_tracker__ ??
+    (globalThis as GlobalWithTracker)[TRACKER_KEY] ??
     ((error, category, severity, context) => {
       const msg = error instanceof Error ? error.message : error;
       console.error(`[${severity.toUpperCase()}][${category}] ${msg}`, context);

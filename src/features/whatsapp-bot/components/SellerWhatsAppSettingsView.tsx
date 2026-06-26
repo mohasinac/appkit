@@ -256,7 +256,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             return (
               <Row key={step.n} gap="sm" align="start">
                 <Row textWeight="bold" textSize="xs"
-                  className={`flex-shrink-0 w-6 h-6 mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300" }`} align="center" justify="center" rounded="full"
+                  className={`flex-shrink-0 w-6 h-6 mt-0.5 ${ done ? "bg-[var(--appkit-color-success)] text-white" : "bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)]" }`} align="center" justify="center" rounded="full"
                 >
                   {done ? "✓" : step.n}
                 </Row>
@@ -412,9 +412,9 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Text>
 
         {/* Simulated WhatsApp catalog tile grid */}
-        <Div className={`${__O.hidden} bg-[#ECE5DD] dark:bg-zinc-800 ${__P.p3}`} rounded="xl" border="default">
+        <Div className={`${__O.hidden} bg-[var(--appkit-color-whatsapp-bg)] dark:bg-neutral-800 ${__P.p3}`} rounded="xl" border="default">
           <Row gap="sm" align="center" className="mb-3">
-            <Row className="w-8 h-8 bg-[#25D366]" align="center" justify="center" rounded="full">
+            <Row className="w-8 h-8 bg-[var(--appkit-color-whatsapp)]" align="center" justify="center" rounded="full">
               <Text color="inverse" size="xs" weight="bold">W</Text>
             </Row>
             <Div>
@@ -435,7 +435,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   <Text className="line-clamp-2 leading-tight" color="primary" size="xs" weight="medium">
                     {item.name}
                   </Text>
-                  <Text className="text-[#25D366] mt-0.5" size="xs" weight="semibold">
+                  <Text className="text-[var(--appkit-color-whatsapp)] mt-0.5" size="xs" weight="semibold">
                     {item.price}
                   </Text>
                 </Div>

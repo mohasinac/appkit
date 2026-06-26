@@ -84,7 +84,7 @@ export function Checkbox({
           </Row>
 
         {(label || suffix) && (
-          <Span layout="flex" gap="md" size="sm" className="group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors" color="muted">
+          <Span layout="flex" gap="md" size="sm" className="group-hover:text-[var(--appkit-color-text)] transition-colors" color="muted">
             {label}
             {suffix}
           </Span>

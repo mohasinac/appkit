@@ -278,6 +278,17 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
    * `className="sm:flex-row"` etc.
    */
   direction?: "col" | "sm-row" | "md-row" | "lg-row";
+  /**
+   * Allow children to wrap onto multiple lines when `direction` switches to row.
+   * Replaces raw `className="flex-wrap"`. Mostly useful with `direction="sm-row"`.
+   */
+  wrap?: boolean;
+  /**
+   * Cross-axis alignment at the `sm` breakpoint. Use with `direction="sm-row"` to
+   * align children differently once the Stack flips to a row. Replaces raw
+   * `className="sm:items-end"` etc.
+   */
+  smAlign?: Extract<ItemsAlign, "start" | "center" | "end" | "stretch">;
   /** Render as a different element. Defaults to `"div"`. */
   as?: React.ElementType;
   children?: React.ReactNode;
@@ -288,6 +299,13 @@ const STACK_DIRECTION_MAP: Record<NonNullable<StackProps["direction"]>, string> 
   "sm-row": "sm:flex-row",
   "md-row": "md:flex-row",
   "lg-row": "lg:flex-row",
+};
+
+const STACK_SM_ALIGN_MAP: Record<Extract<ItemsAlign, "start" | "center" | "end" | "stretch">, string> = {
+  start: "sm:items-start",
+  center: "sm:items-center",
+  end: "sm:items-end",
+  stretch: "sm:items-stretch",
 };
 
 function resolveDivideClass(divide: StackProps["divide"], axis: "stack" | "row"): string {
@@ -306,6 +324,8 @@ export function Stack({
   color,
   divide,
   direction,
+  wrap = false,
+  smAlign,
   as,
   surface,
   padding,
@@ -329,6 +349,8 @@ export function Stack({
     textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
     color ? TEXT_COLOR_MAP[color] : "",
     direction ? STACK_DIRECTION_MAP[direction] : "",
+    wrap ? "flex-wrap" : "",
+    smAlign ? STACK_SM_ALIGN_MAP[smAlign] : "",
     resolveDivideClass(divide, "stack"),
     buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
     className,

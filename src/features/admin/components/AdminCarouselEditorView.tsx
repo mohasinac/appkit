@@ -108,10 +108,7 @@ function ZonePicker({
   return (
     <Div>
       <Text className="mb-1" color="muted" size="xs">Zone (row × col grid)</Text>
-      <div
-        className="grid gap-1"
-        style={{ gridTemplateRows: "repeat(2, 1fr)", gridTemplateColumns: "repeat(3, 1fr)", width: 150 }}
-      >
+      <Div layout="grid" gap="1" className="grid-rows-2 grid-cols-3 w-[150px]">
         {zones.map((z) => {
           const isDisabled = disabled?.(z) ?? false;
           return (
@@ -132,7 +129,7 @@ function ZonePicker({
             </button>
           );
         })}
-      </div>
+      </Div>
       <Text className="text-[10px] mt-1" color="faint">Row 1 = zones 1–3 · Row 2 = zones 4–6</Text>
     </Div>
   );

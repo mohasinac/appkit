@@ -65,14 +65,10 @@ function ChartCard({
     >
       {/* brand gradient top accent */}
       <div
-        className="absolute top-0 left-0 right-0 h-[3px]"
-        style={{
-          background:
-            "linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-cobalt) 55%, var(--appkit-color-secondary-400) 100%)",
-        }}
+        className="absolute top-0 left-0 right-0 h-[3px] [background:linear-gradient(to_right,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_55%,var(--appkit-color-secondary-400)_100%)]"
         aria-hidden="true"
       />
-      <Div className={`${__P.p4} sm:${__P.p6} sm:pt-7`} padding="t-md">
+      <Div className={`${__P.p4} sm:${__P.p6} sm:pt-[1.75rem]`} padding="t-md">
         {title && (
           <Heading level={3} className="text-[var(--appkit-color-text)] mb-4" size="sm" weight="semibold">
             {title}
@@ -101,13 +97,13 @@ export function AdminRevenueChart({
         <AreaChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
           <defs>
             <linearGradient id="revenueGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stopColor="#1343de" />
-              <stop offset="55%"  stopColor="#3570fc" />
-              <stop offset="100%" stopColor="#84e122" />
+              <stop offset="0%"   stopColor="var(--appkit-color-primary-700)" />
+              <stop offset="55%"  stopColor="var(--appkit-color-primary)" />
+              <stop offset="100%" stopColor="var(--appkit-color-secondary-400)" />
             </linearGradient>
             <linearGradient id="revenueAreaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%"  stopColor="#3570fc" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#3570fc" stopOpacity={0} />
+              <stop offset="5%"  stopColor="var(--appkit-color-primary)" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="var(--appkit-color-primary)" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
@@ -144,7 +140,7 @@ export function AdminRevenueChart({
             fillOpacity={1}
             fill="url(#revenueAreaGrad)"
             dot={false}
-            activeDot={{ r: 4, fill: "#3570fc" }}
+            activeDot={<circle r={4} fill="var(--appkit-color-primary)" />}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -169,8 +165,8 @@ export function AdminOrdersChart({
         <BarChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }} barSize={20}>
           <defs>
             <linearGradient id="ordersBarGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor="#3570fc" stopOpacity={0.9} />
-              <stop offset="100%" stopColor="#84e122" stopOpacity={0.7} />
+              <stop offset="0%"   stopColor="var(--appkit-color-primary)" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="var(--appkit-color-secondary-400)" stopOpacity={0.7} />
             </linearGradient>
           </defs>
           <CartesianGrid

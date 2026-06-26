@@ -1,4 +1,5 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { ROUNDED_MAP, type RoundedKey, SHADOW_MAP, type ShadowKey } from "./surface-tokens";
 
 /**
  * Anchor — primitive for **external** links, `mailto:`, and `tel:` URLs.
@@ -48,6 +49,12 @@ export interface AnchorProps
    * Pass `external={false}` to render an in-app anchor (e.g. `<a href="#…">`).
    */
   external?: boolean;
+  /** Border radius — replaces consumer `rounded-*` className. */
+  rounded?: RoundedKey;
+  /** Box shadow — replaces consumer `shadow-*` className. */
+  shadow?: ShadowKey;
+  /** Display layout. `"inline-flex"` and `"flex"` include `items-center` automatically. */
+  layout?: "inline-flex" | "flex";
   /**
    * Escape hatch for behaviour-coupled utility classes (layout overrides,
    * state-driven classes like `group`, structural card-link styling).
@@ -82,12 +89,20 @@ function isHttpProtocol(href: string): boolean {
   return /^https?:/i.test(href);
 }
 
+const ANCHOR_LAYOUT_CLS: Record<"inline-flex" | "flex", string> = {
+  "inline-flex": "inline-flex items-center",
+  flex: "flex items-center",
+};
+
 export function Anchor({
   href,
   children,
   tone = "brand",
   underline = "hover",
   size,
+  rounded,
+  shadow,
+  layout,
   external,
   rel,
   target,
@@ -108,7 +123,16 @@ export function Anchor({
       rel={computedRel}
       // links. Tone + underline come from typed enums; className is the
       // escape hatch for behaviour-coupled utility classes only.
-      className={`${TONE_CLS[tone]} ${UNDERLINE_CLS[underline]} ${size ? ANCHOR_SIZE_CLS[size] : ""} transition-colors${className ? ` ${className}` : ""}`}
+      className={[
+        TONE_CLS[tone],
+        UNDERLINE_CLS[underline],
+        size ? ANCHOR_SIZE_CLS[size] : "",
+        rounded ? ROUNDED_MAP[rounded] : "",
+        shadow ? SHADOW_MAP[shadow] : "",
+        layout ? ANCHOR_LAYOUT_CLS[layout] : "",
+        "transition-colors",
+        className ?? "",
+      ].filter(Boolean).join(" ")}
       {...rest}
     >
       {children}

@@ -51,7 +51,7 @@ const flex = { center: FLEX_CENTER };
 if (isLoading) {
     return (
       <Section
-        className={`relative overflow-hidden md:py-24 ${className}`} paddingY="y-4xl" paddingX="x-md"
+        className={`relative overflow-hidden md:py-[6rem] ${className}`} paddingY="y-4xl" paddingX="x-md"
       >
         <Div className="animate-pulse max-w-4xl mx-auto text-center">
           <Div className="h-6 w-52 mx-auto mb-6" surface="subtle" rounded="full" />
@@ -68,7 +68,7 @@ if (isLoading) {
 
   return (
     <Section
-      className={`relative overflow-hidden md:py-28 ${className}`} paddingY="y-5xl" paddingX="x-md"
+      className={`relative overflow-hidden md:py-[7rem] ${className}`} paddingY="y-5xl" paddingX="x-md"
     >
       {/* Decorative ambient glows */}
       <Div
@@ -90,7 +90,7 @@ if (isLoading) {
             {/* Pill badge */}
             {pillLabel && (
               <Div>
-                <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
+                <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-[500]/30 bg-primary-500/10 px-[1.25rem] py-[0.375rem] tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
                   <Span
                     className="w-1.5 h-1.5 bg-primary-500 inline-block" rounded="full"
                     aria-hidden="true"
@@ -109,7 +109,7 @@ if (isLoading) {
               level={1}
               variant="none"
               gradient="brand-tri"
-              className="mt-4 font-display md:text-6xl lg:text-7xl xl:text-8xl leading-[1.1] tracking-tight" size="5xl"
+              className="mt-4 font-display leading-[1.1] tracking-tight" size="5xl" mdSize="6xl" lgSize="7xl" xlSize="8xl"
             >
               {title}
             </Heading>
@@ -128,12 +128,12 @@ if (isLoading) {
               <Row
                 wrap
                 gap="md"
-                className="mt-8 lg:justify-start" justify="center"
+                className="mt-8 lg:justify-[flex-start]" justify="center"
               >
                 {ctaHref ? (
                   <TextLink rounded="xl"
                     href={ctaHref}
-                    className="inline-flex items-center justify-center px-8 py-3.5 !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]" size="base" weight="bold"
+                    className="inline-flex items-[center] justify-[center] px-[2rem] py-[0.875rem] !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]" size="base" weight="bold"
                   >
                     {ctaLabel}
                   </TextLink>
@@ -149,7 +149,7 @@ if (isLoading) {
                 {secondaryCtaHref ? (
                   <TextLink rounded="xl"
                     href={secondaryCtaHref}
-                    className="inline-flex items-center justify-center border-2 border-cobalt/40 dark:border-cobalt-400/40 px-8 py-3.5 text-cobalt-700 dark:text-cobalt-300 hover:bg-cobalt-50 dark:hover:bg-cobalt-900/20 transition-all hover:scale-[1.02]" size="base" weight="semibold"
+                    className="inline-flex items-[center] justify-[center] border-2 border-cobalt/40 dark:border-cobalt-400/40 px-[2rem] py-[0.875rem] text-cobalt-700 dark:text-cobalt-300 hover:bg-cobalt-50 dark:hover:bg-cobalt-900/20 transition-all hover:scale-[1.02]" size="base" weight="semibold"
                   >
                     {secondaryCtaLabel}
                   </TextLink>
@@ -170,13 +170,13 @@ if (isLoading) {
               <Row
                 wrap
                 gap="sm"
-                className="mt-6 lg:justify-start" justify="center"
+                className="mt-6 lg:justify-[flex-start]" justify="center"
               >
                 {trustChips.map((chip) => (
                   <Span layout="inline-flex" gap="xs"
                     key={chip.key}
                     size="xs" weight="medium"
-                    className="border border-zinc-200 dark:border-slate-700 px-3.5 py-1.5" rounded="full" surface="subtle" color="muted"
+                    className="border border-zinc-[200] dark:border-slate-[700] px-[0.875rem] py-[0.375rem]" rounded="full" surface="subtle" color="muted"
                   >
                     {chip.emoji} {chip.label}
                   </Span>
@@ -188,10 +188,10 @@ if (isLoading) {
           {/* Right: brand logo (desktop only) */}
           <Div className="hidden lg:block">
             <Div
-              className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)] shadow-2xl`} border="default" rounded="3xl"
+              className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)]`} shadow="2xl" border="default" rounded="3xl"
             >
               <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
-              <Row centered className={`absolute inset-0 ${flex.center} px-10`}>
+              <Row centered className={`absolute inset-0 ${flex.center} px-[2.5rem]`}>
                 <SiteLogo
                   title={brandLogoText || "LetItRip.in"}
                   size="hero"

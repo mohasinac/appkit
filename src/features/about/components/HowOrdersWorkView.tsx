@@ -192,7 +192,7 @@ function renderOrderStatusesSection(t: OrdersT, statuses: OrderStatus[]) {
       <Stack gap="3">
         {statuses.map(({ status, icon, badge, desc }) => (
           <Row key={status} className={`${__P.p4}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
-            <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
+            <Row align="center" gap="sm" className="flex-shrink-0 pt-[0.125rem]">
               <Span size="xl">{icon}</Span>
               <Span size="xs" weight="semibold" className={`${badge}`} rounded="full" padding="pill-xs">{status}</Span>
             </Row>

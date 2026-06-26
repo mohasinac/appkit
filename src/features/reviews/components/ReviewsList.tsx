@@ -56,17 +56,16 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
 
   return (
     <Stack padding="5"
-      className={`group h-full border border-neutral-200 transition-shadow hover:shadow-md ${className}`} rounded="xl" surface="default"
+      shadow="hover-md" className={`group h-full border border-neutral-200 transition ${className}`} rounded="xl" surface="default"
     >
       {/* Clicking the main body navigates to the review detail */}
       <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">
         <Row align="start" gap="3">
           {review.userAvatar ? (
-            <Div
-              role="img"
-              aria-label={displayName}
-              className="h-9 w-9 flex-shrink-0 bg-center bg-cover" rounded="full"
-              style={{ backgroundImage: `url(${review.userAvatar})` }}
+            <img
+              src={review.userAvatar}
+              alt={displayName}
+              className="h-9 w-9 flex-shrink-0 object-cover rounded-full"
             />
           ) : (
             <Row textWeight="medium" textSize="sm" className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-neutral-600 dark:text-neutral-400" align="center" justify="center" rounded="full">
@@ -115,12 +114,11 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
         {review.images && review.images.length > 0 && (
           <Row wrap gap="sm" className="mt-3">
             {review.images.map((img, i) => (
-              <Div
+              <img
                 key={i}
-                role="img"
-                aria-label={`Review image ${i + 1}`}
-                className="h-16 w-16 bg-center bg-cover border border-neutral-100" rounded="lg"
-                style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
+                src={img.thumbnailUrl ?? img.url}
+                alt={`Review image ${i + 1}`}
+                className="h-16 w-16 object-cover rounded-lg border border-neutral-100"
               />
             ))}
           </Row>

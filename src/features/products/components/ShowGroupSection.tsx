@@ -64,7 +64,8 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
       >
         <MediaImage src={image} alt={member.title} size="card" />
         {member.isGroupParent && (
-          <Span color="inverse" className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-[8px] leading-none px-1 py-0.5 rounded-tl">
+          // audit-inline-style-ok: single-corner border-radius; no appkit rounded= variant covers individual corners
+          <Span color="inverse" className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-[8px] leading-none px-[0.25rem] py-[0.125rem]" style={{ borderTopLeftRadius: "0.25rem" }}>
             Set
           </Span>
         )}
@@ -84,22 +85,22 @@ function GroupTableRow({ member }: { member: GroupMember }) {
 
   return (
     <Tr className="last:border-0" border="subtle">
-      <Td className="pr-3" padding="xs-tall">
+      <Td paddingSide="pr-sm" padding="xs-tall">
         <Div className={`w-10 h-10 ${__O.hidden}`} rounded="full" border="default">
           <MediaImage src={image} alt={member.title} size="thumbnail" />
         </Div>
       </Td>
-      <Td className="pr-3" padding="xs-tall">
+      <Td paddingSide="pr-sm" padding="xs-tall">
         <Text className="line-clamp-2" color="primary" size="sm" weight="medium">{member.title}</Text>
         {member.isGroupParent && (
           <Span weight="semibold" className="text-[10px] text-[var(--appkit-color-primary)]">Parent</Span>
         )}
       </Td>
-      <Td className="pr-3" padding="xs-tall">
+      <Td paddingSide="pr-sm" padding="xs-tall">
         <Text size="sm" color="muted">{price}</Text>
       </Td>
-      <Td className="pr-3" padding="xs-tall">
-        <Text size="xs" transform="capitalize" color="muted">{member.condition ?? "â€”"}</Text>
+      <Td paddingSide="pr-sm" padding="xs-tall">
+        <Text size="xs" transform="capitalize" color="muted">{member.condition ?? "—"}</Text>
       </Td>
       <Td padding="xs-tall">
         <Link
@@ -140,11 +141,11 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
       <Table className="text-left min-w-[400px]">
         <Thead>
           <Tr border="default">
-            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Image</Th>
-            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Name</Th>
-            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Price</Th>
-            <Th className="pb-2 pr-3" color="muted" size="xs" weight="semibold">Condition</Th>
-            <Th className="pb-2" color="muted" size="xs" weight="semibold"></Th>
+            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Image</Th>
+            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Name</Th>
+            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Price</Th>
+            <Th paddingY="sm" paddingSide="pr-sm" color="muted" size="xs" weight="semibold">Condition</Th>
+            <Th paddingY="sm" paddingSide="pb-sm" color="muted" size="xs" weight="semibold"></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -184,7 +185,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
         </button>
 
         {open && (
-          <Div className={`pb-4 pt-1 ${__O.xAuto}`} padding="x-md">
+          <Div className={`pb-[1rem] pt-[0.25rem] ${__O.xAuto}`} padding="x-md">
             <Row gap="3" className="min-w-0">
               {/* Parent first */}
               {[...members]

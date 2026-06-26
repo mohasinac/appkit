@@ -48,6 +48,7 @@ export const PADDING_MAP = {
   "5": "p-5",
   lg: "p-6",
   xl: "p-8",
+  "3xl": "p-12",
   card: "p-5 sm:p-6 lg:p-8",
   "card-tight": "p-3 sm:p-4",
   section: "py-10 sm:py-14 xl:py-20",
@@ -144,6 +145,10 @@ export const SHADOW_MAP = {
   "hover-md": "hover:shadow-md transition-shadow",
   /** No static shadow; transitions to shadow-lg on hover. */
   "hover-lg": "hover:shadow-lg transition-shadow",
+  /** Resting shadow-sm that lifts to shadow-md on hover. */
+  "sm-hover-md": "shadow-sm hover:shadow-md transition-shadow",
+  /** Themed card shadow via --card-shadow CSS variable. */
+  card: "shadow-[var(--card-shadow)]",
 } as const;
 
 export type ShadowKey = keyof typeof SHADOW_MAP;
@@ -184,10 +189,10 @@ export type GapPresetKey = keyof typeof GAP_PRESETS;
 export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
-type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page";
-type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "t-md" | "b-md" | "b-md-lg" | "b-lg";
+export type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page";
+type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "t-md" | "b-md" | "b-md-lg" | "b-lg" | "t-md-b-lg";
 
-const X_ONLY_MAP: Record<XPaddingKey, string> = {
+export const X_ONLY_MAP: Record<XPaddingKey, string> = {
   none: "",
   "x-xs": "px-2",
   "x-sm": "px-3",
@@ -238,6 +243,21 @@ const Y_ONLY_MAP: Record<YPaddingKey, string> = {
   "b-md": "pb-4",
   "b-md-lg": "pb-5",
   "b-lg": "pb-6",
+  /** Asymmetric: `pt-4 pb-6` — hotspot control bar with tighter top than bottom. */
+  "t-md-b-lg": "pt-4 pb-6",
+};
+
+export type OverflowKey = "auto" | "hidden" | "scroll" | "visible" | "x-auto" | "x-hidden" | "y-auto" | "y-hidden";
+
+const OVERFLOW_MAP: Record<OverflowKey, string> = {
+  auto: "overflow-auto",
+  hidden: "overflow-hidden",
+  scroll: "overflow-scroll",
+  visible: "overflow-visible",
+  "x-auto": "overflow-x-auto",
+  "x-hidden": "overflow-x-hidden",
+  "y-auto": "overflow-y-auto",
+  "y-hidden": "overflow-y-hidden",
 };
 
 export interface SurfaceProps {
@@ -250,6 +270,8 @@ export interface SurfaceProps {
   rounded?: RoundedKey;
   border?: BorderKey;
   shadow?: ShadowKey;
+  /** Overflow behaviour — replaces consumer `overflow-*` className. */
+  overflow?: OverflowKey;
 }
 
 export function buildSurfaceClasses(props: SurfaceProps): string {
@@ -261,6 +283,7 @@ export function buildSurfaceClasses(props: SurfaceProps): string {
     props.rounded ? ROUNDED_MAP[props.rounded] : "",
     props.border ? BORDER_MAP[props.border] : "",
     props.shadow ? SHADOW_MAP[props.shadow] : "",
+    props.overflow ? OVERFLOW_MAP[props.overflow] : "",
   ]
     .filter(Boolean)
     .join(" ");

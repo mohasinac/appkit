@@ -50,13 +50,12 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
       onClick={onClick && !href ? () => onClick(post) : undefined}
       className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition hover:shadow-md ${isInteractive ? "cursor-pointer" : ""} ${className}`}
     >
-      <Div className={`aspect-video w-full ${__O.hidden} bg-neutral-100 dark:bg-slate-800 flex-shrink-0`}>
+      <Div className={`aspect-video w-full ${__O.hidden} bg-neutral-100 dark:bg-[var(--appkit-color-surface-elevated)] flex-shrink-0`}>
         {coverImageUrl ? (
-          <Div
-            role="img"
-            aria-label={post.title}
-            className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
-            style={{ backgroundImage: `url(${coverImageUrl})` }}
+          <img
+            src={coverImageUrl}
+            alt={post.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <Row surface="muted" className="h-full w-full" align="center" justify="center">
@@ -93,11 +92,10 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
         )}
         <Row className="mt-auto" padding="t-sm" gap="3">
           {post.authorAvatar ? (
-            <Div
-              role="img"
-              aria-label={post.authorName ?? "author"}
-              className="h-7 w-7 flex-shrink-0 bg-center bg-cover" rounded="full"
-              style={{ backgroundImage: `url(${post.authorAvatar})` }}
+            <img
+              src={post.authorAvatar}
+              alt={post.authorName ?? "author"}
+              className="h-7 w-7 flex-shrink-0 object-cover rounded-full"
             />
           ) : post.authorName ? (
             <Row textWeight="bold" textSize="xs" className="h-7 w-7 flex-shrink-0 bg-primary/10 text-primary" align="center" justify="center" rounded="full">

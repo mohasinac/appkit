@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState } from "react";
 import { z } from "zod";
 import { Alert, Button, Div, Heading, Row, Stack, Text, useToast } from "../../../ui";
@@ -49,6 +50,23 @@ export function ResetPasswordView({
   const { showToast } = useToast();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  function buildClickHandler(
+    setFieldError: (field: string, msg: string | null) => void,
+    clearErrors: () => void,
+  ) {
+    return async () => {
+      clearErrors();
+      const parsed = resetClientSchema.safeParse({ password, confirmPassword });
+      if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
+      try {
+        await onSubmit(oobCode, parsed.data.password);
+      } catch (err) {
+        void normalizeError(err);
+        showToast(err instanceof Error ? err.message : "Password reset failed", "error");
+      }
+    };
+  }
 
   return (
     <Row className={`min-h-[60vh] ${className}`} align="center" justify="center" padding="x-md">
@@ -105,16 +123,7 @@ export function ResetPasswordView({
                   isLoading={isLoading}
                   disabled={isLoading}
                   className="w-full"
-                  onClick={async () => {
-                    clearErrors();
-                    const parsed = resetClientSchema.safeParse({ password, confirmPassword });
-                    if (!parsed.success) return applyZodIssues(parsed.error.issues, setFieldError);
-                    try {
-                      await onSubmit(oobCode, parsed.data.password);
-                    } catch (err) {
-                      showToast(err instanceof Error ? err.message : "Password reset failed", "error");
-                    }
-                  }}
+                  onClick={buildClickHandler(setFieldError, clearErrors)}
                 >
                   {isLoading
                     ? (labels.submittingLabel ?? "Resetting…")

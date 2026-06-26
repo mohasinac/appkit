@@ -109,12 +109,9 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
   return (
     <Stack gap="xl" padding="b-2xl">
       {/* Welcome banner */}
-      <Section className="overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
+      <Section overflow="hidden" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
         <Div paddingX="x-md-xl" paddingY="y-xl"
-          style={{
-            background:
-              "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 60%,var(--appkit-color-secondary-400) 100%)",
-          }}
+          className="[background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_60%,var(--appkit-color-secondary-400)_100%)]"
         >
           <Row className="mb-3" align="center" gap="3">
             <Row className="flex-shrink-0 w-10 h-10" surface="default" align="center" justify="center" rounded="xl">
@@ -160,11 +157,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
               >
                 <Row align="center" gap="3">
                   <Row
-                    className="flex-shrink-0 w-9 h-9" align="center" justify="center" rounded="lg"
-                    style={{
-                      background:
-                        "linear-gradient(135deg,var(--appkit-color-primary-700) 0%,var(--appkit-color-cobalt) 100%)",
-                    }}
+                    className="flex-shrink-0 w-9 h-9 [background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_100%)]" align="center" justify="center" rounded="lg"
                   >
                     <Icon className="w-4 h-4 text-white" />
                   </Row>

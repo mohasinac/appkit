@@ -11,7 +11,7 @@ import { Span } from "./Typography";
 export interface ProgressProps {
   value: number;
   max?: number;
-  variant?: "primary" | "success" | "warning" | "error";
+  variant?: "primary" | "success" | "warning" | "error" | "gradient";
   size?: "sm" | "md" | "lg";
   label?: string;
   showValue?: boolean;
@@ -43,6 +43,7 @@ export function Progress({
     success: "appkit-progress__bar--success",
     warning: "appkit-progress__bar--warning",
     error: "appkit-progress__bar--error",
+    gradient: "appkit-progress__bar--gradient",
   };
 
   return (

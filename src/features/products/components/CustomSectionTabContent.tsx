@@ -29,7 +29,7 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
               key={i}
               surface="default" padding="inline"
             >
-              <Dt className="w-36 flex-shrink-0 font-medium capitalize" color="primary">
+              <Dt weight="medium" className="w-36 flex-shrink-0 capitalize" color="primary">
                 {f.key}
               </Dt>
               <Dd className="flex-1" color="muted">

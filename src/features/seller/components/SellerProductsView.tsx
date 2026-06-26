@@ -472,8 +472,7 @@ export function SellerProductsView({
 
         {totalPages > 1 && (
           <Row
-            className="sticky z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] py-1.5" padding="x-sm" justify="center"
-            style={{ top: "calc(var(--header-height, 0px) + 44px)" }}
+            className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] py-[0.375rem]" padding="x-sm" justify="center"
           >
             <Pagination
               currentPage={currentPage}
@@ -484,8 +483,7 @@ export function SellerProductsView({
         )}
 
         {selection.selectedIds.length > 0 && (
-          <Div paddingX="x-sm-lg-md" className="sticky z-20 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]" padding="y-xs"
-            style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
+          <Div paddingX="x-sm-lg-md" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]" padding="y-xs">
             <BulkActionBar
               selectedCount={selection.selectedIds.length}
               onClearSelection={selection.clearSelection}

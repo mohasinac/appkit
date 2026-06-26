@@ -137,14 +137,11 @@ export function BottomNavbar({
     );
   }
 
-  const itemStyle = { width: "20%" } as const;
-
   return (
     <BottomNavLayout ariaLabel={labels.mobileNav}>
       {/* 1 — Home */}
       <Li
-        className="flex-1"
-        style={itemStyle}
+        className="flex-1 w-1/5"
       >
         <NavItem
           href={homeHref}
@@ -166,7 +163,6 @@ export function BottomNavbar({
       {/* 2 — Shop */}
       <Li
         className="flex-1"
-        style={itemStyle}
       >
         <NavItem
           href={shopHref}
@@ -188,7 +184,6 @@ export function BottomNavbar({
       {/* 3 — Search */}
       <Li
         className="flex-1"
-        style={itemStyle}
       >
         <button
           type="button"
@@ -206,7 +201,6 @@ export function BottomNavbar({
       {/* 4 — Cart */}
       <Li
         className="flex-1"
-        style={itemStyle}
       >
         <TextLink
           href={cartHref}
@@ -226,7 +220,6 @@ export function BottomNavbar({
       {/* 5 — Profile / Login */}
       <Li
         className="flex-1"
-        style={itemStyle}
       >
         {user ? (
           <TextLink

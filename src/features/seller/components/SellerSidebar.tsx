@@ -84,7 +84,7 @@ function FlatContent({
       {storeName && (
         <Row border="bottom-subtle" gap="3" padding="inline">
           {storeLogoURL ? (
-            <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
+            <img src={storeLogoURL} alt={storeName} className={`${CLS_STORE_AVATAR} object-cover`} />
           ) : (
             <Div className={CLS_STORE_FALLBACK}>
               {storeName[0]?.toUpperCase()}
@@ -135,7 +135,7 @@ function GroupsContent({
       {storeName && (
         <Row border="bottom-subtle" gap="3" padding="inline">
           {storeLogoURL ? (
-            <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
+            <img src={storeLogoURL} alt={storeName} className={`${CLS_STORE_AVATAR} object-cover`} />
           ) : (
             <Div className={CLS_STORE_FALLBACK}>
               {storeName[0]?.toUpperCase()}
@@ -258,20 +258,14 @@ export function StoreSidebar({
 
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
         <Div
-          className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
-          style={{
-            top: "var(--header-height, 3.5rem)",
-            height: "calc(100vh - var(--header-height, 3.5rem))",
-            width: "18rem",
-            transform: desktopOpen ? "translateX(0)" : "translateX(calc(-100% + 1.25rem))",
-          }}
+          className={`hidden md:flex fixed left-0 z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[18rem] ${desktopOpen ? "translate-x-0" : "-translate-x-[calc(100%-1.25rem)]"}`}
         >
           {/* Nav panel */}
           <Stack border="default" surface="sidePanel" className={`flex-1 border-r ${__O.hidden}`} shadow="xl">
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               <Row className="min-w-0" align="center" gap="3">
                 {storeLogoURL ? (
-                  <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
+                  <img src={storeLogoURL} alt={storeName} className={`${CLS_STORE_AVATAR} object-cover`} />
                 ) : (
                   <Div className={CLS_STORE_FALLBACK}>
                     {storeName?.[0]?.toUpperCase()}

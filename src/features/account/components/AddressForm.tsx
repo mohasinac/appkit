@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import { useState } from "react";
 import { Button, Checkbox, Div, FormField, FormGroup, Row, useToast } from "../../../ui";
 import { Form } from "../../../ui/components/Form";
@@ -236,6 +237,7 @@ export function AddressForm({
             try {
               await onSubmit(formData);
             } catch (err) {
+              void normalizeError(err);
               showToast(err instanceof Error ? err.message : "Failed to save address", "error");
             }
           }}

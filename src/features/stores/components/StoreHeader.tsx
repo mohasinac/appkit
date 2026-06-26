@@ -44,24 +44,24 @@ export function StoreHeader({
   return (
     <Section surface="default" border="bottom" className={className}>
       {store.storeBannerURL && (
-          <Div className={`h-40 md:h-56 ${__O.hidden} bg-gray-100 dark:bg-slate-800`}>
-          <Div
-            role="img"
-            aria-label={`${store.storeName} banner`}
-            className="h-full w-full bg-center bg-cover"
-            style={{ backgroundImage: `url(${store.storeBannerURL})` }}
+          <Div className={`h-40 md:h-56 ${__O.hidden} bg-gray-100 dark:bg-neutral-800`}>
+          <img
+            src={store.storeBannerURL}
+            alt={`${store.storeName} banner`}
+            className="h-full w-full object-cover"
           />
         </Div>
       )}
       <Div paddingX="x-page" className="max-w-7xl mx-auto" padding="y-md">
         <Row align="end" gap="md">
           {store.storeLogoURL ? (
-            <Div
-              role="img"
-              aria-label={store.storeName}
-              className="-mt-8 h-16 w-16 border-2 border-white bg-center bg-cover" rounded="xl" shadow="sm"
-              style={{ backgroundImage: `url(${store.storeLogoURL})` }}
-            />
+            <Div className="-mt-8 h-16 w-16 border-2 border-white" rounded="xl" shadow="sm" overflow="hidden">
+              <img
+                src={store.storeLogoURL}
+                alt={store.storeName}
+                className="w-full h-full object-cover"
+              />
+            </Div>
           ) : (
             <Div className={CLS_AVATAR}>
               {store.storeName[0]?.toUpperCase()}

@@ -163,7 +163,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Span>
               )}
               {typeBadge && (
-                <Span weight="bold" className={`text-[10px] shadow-sm ${typeBadge.cls}`} rounded="full" padding="pill-xs">
+                <Span weight="bold" className={`text-[10px] ${typeBadge.cls}`} rounded="full" padding="pill-xs" shadow="sm">
                   {typeBadge.label}
                 </Span>
               )}
@@ -251,7 +251,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Content area */}
-      <Stack className={`flex-1 ${__P.p3} pt-2.5`}>
+      <Stack className={`flex-1 ${__P.p3} pt-[0.625rem]`}>
         <Text className={`leading-snug`} truncate={2} size="sm" weight="semibold" color="primary">
           {product.title}
         </Text>
@@ -272,7 +272,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {visible.map((name) => (
                 <Span padding="pill-2xs" layout="inline-flex"
                   key={name}
-                  className="gap-0.5 text-[10px] truncate max-w-[100px]" rounded="full" surface="subtle" color="muted"
+                  className="gap-[0.125rem] text-[10px] truncate max-w-[100px]" rounded="full" surface="subtle" color="muted"
                 >
                   <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
@@ -347,7 +347,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             const low = stock <= 5;
             return (
               <Text
-                className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-zinc-500 dark:text-zinc-400" }`} weight="medium"
+                className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-[var(--appkit-color-text-faint)]" }`} weight="medium"
               >
                 {low ? `Only ${stock} left` : `${stock} in stock`}
               </Text>
@@ -366,7 +366,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
           {/* Action buttons */}
           {(onAddToCart || onBuyNow) && (
-            <Div layout="grid" gap="1" className="mt-2" style={{ gridTemplateColumns: onBuyNow && onAddToCart ? "1fr 1fr" : "1fr" }}>
+            <Div layout="grid" gap="1" className={`mt-2 ${onBuyNow && onAddToCart ? "grid-cols-2" : "grid-cols-1"}`}>
               {onBuyNow && (
                 <Button gap="sm" 
                   type="button"
@@ -540,7 +540,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         .join(" ")}
     >
       {/* Thumbnail */}
-      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-zinc-800`} rounded="lg">
+      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-neutral-800`} rounded="lg">
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}
@@ -553,7 +553,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Content */}
-      <Stack className="flex-1 min-w-0 gap-0.5">
+      <Stack className="flex-1 min-w-0 gap-[2px]">
         <Text size="sm" weight="medium" color="primary" truncate={2}>
           {product.title}
         </Text>
@@ -593,7 +593,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
                 className={`text-[11px] ${
  low
  ? "text-warning"
- : "text-zinc-400 dark:text-zinc-400"
+ : "text-[var(--appkit-color-text-faint)]"
  }`}
               >
                 {low ? `Only ${stock} left` : `${stock} in stock`}

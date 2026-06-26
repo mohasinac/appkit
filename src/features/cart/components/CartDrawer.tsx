@@ -29,11 +29,10 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
     <Div layout="flex" gap="4" surface="card" padding="sm" className={`transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
       <Div surface="muted" className={`h-20 w-20 flex-shrink-0 ${__O.hidden}`} rounded="lg">
         {item.meta.image && (
-          <Div
-            role="img"
-            aria-label={item.meta.title}
-            className="h-full w-full bg-center bg-cover"
-            style={{ backgroundImage: `url(${item.meta.image})` }}
+          <img
+            src={item.meta.image}
+            alt={item.meta.title}
+            className="h-full w-full object-cover"
           />
         )}
       </Div>
@@ -158,7 +157,8 @@ export function CartDrawer({
         className="fixed inset-0 z-40"
         onClick={onClose}
       />
-      <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white dark:bg-slate-900 shadow-xl">
+      <Aside surface="sidePanel" shadow="xl" className="fixed inset-y-0 right-0 z-50 w-full max-w-sm">
+        <Stack className="h-full">
         <Row justify="between" border="bottom" className={__P.p4}>
           <Heading level={2} size="lg" weight="semibold">
             {labels.title ?? "Cart"}
@@ -169,7 +169,7 @@ export function CartDrawer({
             size="sm"
             aria-label="Close cart"
             textColor="faint"
-            className="hover:text-neutral-900 dark:hover:text-zinc-100"
+            className="hover:text-neutral-900 dark:hover:text-[var(--appkit-color-text)]"
           >
             ✕
           </Button>
@@ -209,13 +209,14 @@ export function CartDrawer({
                 onClick={onCheckout}
                 variant="primary"
                 textSize="sm"
-                className="w-full bg-neutral-900 py-3 font-semibold text-white transition hover:bg-neutral-800"
+                className="w-full bg-neutral-900 py-[0.75rem] font-[600] text-white transition hover:bg-neutral-800"
               >
                 {labels.checkout ?? ACTIONS.CART["checkout"].label}
               </Button>
             )}
           </Stack>
         )}
+        </Stack>
       </Aside>
     </>
   );

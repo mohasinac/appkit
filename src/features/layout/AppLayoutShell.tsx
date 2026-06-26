@@ -6,14 +6,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 // The actual 2.8.8 SSR crash was a peer-dep duplicate fixed by the
 // scripts/dedupe-peer-deps.mjs postinstall hook (see scripts/ and CLAUDE.md #19).
 import { AvatarDisplay, BackgroundRenderer, Div, Li, Main, Row, Span, Stack, Text, TextLink, Ul, UnsavedChangesModal } from "../../ui";
-// Role indicator dots — distinct hues per role tier. Brand-decorative palette
-// kept inline so a future tokens.css "role" namespace can replace this in one
-// edit. The audit allows these as static role markers.
-const ROLE_DOT_COLORS: Record<string, string> = {
-  admin:     "#9333ea", // audit-hex-tokens-ok: role indicator (purple-600)
-  moderator: "#0ea5e9", // audit-hex-tokens-ok: role indicator (sky-500)
-  seller:    "#0d9488", // audit-hex-tokens-ok: role indicator (teal-600)
-  employee:  "#f59e0b", // audit-hex-tokens-ok: role indicator (amber-500)
+// Role indicator dots — distinct hues per role tier.
+const ROLE_DOT_BG_CLASS: Record<string, string> = {
+  admin: "bg-purple-600",
+  moderator: "bg-sky-500",
+  seller: "bg-teal-600",
+  employee: "bg-amber-500",
 };
 import { useTheme } from "../../_internal/client/theme";
 import { useAuth } from "../../react/contexts/SessionContext";
@@ -288,9 +286,8 @@ function SidebarUserHeader({
             email={user.email}
           />
           {user.role && !isBuyerUser(user) && (
-            <Row textWeight="bold" 
-              className="absolute -bottom-0.5 -right-0.5 w-4 h-4 border-2 border-white text-white text-[9px] leading-none select-none" align="center" justify="center" rounded="full"
-              style={{ background: ROLE_DOT_COLORS[user.role] ?? "var(--appkit-color-text-muted)" }}
+            <Row textWeight="bold"
+              className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 border-2 border-white text-white text-[9px] leading-none select-none ${ROLE_DOT_BG_CLASS[user.role] ?? "bg-[var(--appkit-color-text-muted)]"}`} align="center" justify="center" rounded="full"
               title={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               aria-label={user.role}
             >

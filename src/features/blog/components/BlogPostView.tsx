@@ -157,11 +157,10 @@ export function BlogPostView({
           {renderImage ? (
             renderImage(post)
           ) : (
-            <Div
-              role="img"
-              aria-label={post.title}
-              className="h-full w-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${coverImageUrl})` }}
+            <img
+              src={coverImageUrl}
+              alt={post.title}
+              className="h-full w-full object-cover"
             />
           )}
           <Scrim direction="bottom-up" intensity="subtle" className="absolute inset-0" />

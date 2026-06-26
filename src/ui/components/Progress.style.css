@@ -48,6 +48,7 @@
 }
 
 .appkit-progress__bar--primary { background: var(--appkit-color-secondary-600); }
+.appkit-progress__bar--gradient { background: linear-gradient(90deg, var(--appkit-color-primary-700), var(--appkit-color-cobalt)); }
 .appkit-progress__bar--success { background: var(--appkit-color-success); }
 .appkit-progress__bar--warning { background: var(--appkit-color-warning); }
 .appkit-progress__bar--error { background: var(--appkit-color-error); }

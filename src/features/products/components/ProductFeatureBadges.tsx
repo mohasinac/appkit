@@ -179,7 +179,7 @@ export function ProductFeatureBadges({
       {badges.map((badge) => (
         <Span layout="inline-flex" gap="xs"
           key={badge.key}
-          className={`.5 border py-1.5 ${badge.bgClass} ${badge.colorClass}`} rounded="lg" padding="x-sm" size="xs" weight="medium"
+          className={`.5 border py-[0.375rem] ${badge.bgClass} ${badge.colorClass}`} rounded="lg" padding="x-sm" size="xs" weight="medium"
         >
           <Span aria-hidden="true">{badge.icon}</Span>
           {badge.label}

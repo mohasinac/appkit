@@ -1,6 +1,6 @@
 import React from "react";
-import type { SurfaceProps } from "./surface-tokens";
-import { buildSurfaceClasses } from "./surface-tokens";
+import type { SurfaceProps, RoundedKey, PaddingKey, BorderKey, SurfaceKey } from "./surface-tokens";
+import { buildSurfaceClasses, ROUNDED_MAP, PADDING_MAP, BORDER_MAP, SURFACE_MAP } from "./surface-tokens";
 
 /**
  * Semantic HTML Wrapper Components
@@ -433,6 +433,17 @@ const UL_PADDING_Y_MAP: Record<UlPaddingY, string> = {
   "y-bottom-xs": "pb-1",
 };
 
+type UlGap = "none" | "1" | "2" | "3" | "4" | "6";
+
+const UL_GAP_MAP: Record<UlGap, string> = {
+  none: "",
+  "1": "gap-1",
+  "2": "gap-2",
+  "3": "gap-3",
+  "4": "gap-4",
+  "6": "gap-6",
+};
+
 export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
   /** Marker style — replaces consumer `list-disc`/`list-none` className. */
   marker?: ListMarker;
@@ -448,11 +459,15 @@ export interface UlProps extends React.HTMLAttributes<HTMLUListElement> {
   size?: ListSize;
   /** Colour variant cascaded onto list items. */
   color?: ListColor;
+  /** Border radius — replaces consumer `rounded-*` className. */
+  rounded?: RoundedKey;
+  /** Gap between items (for grid/flex list shells). */
+  gap?: UlGap;
   children: React.ReactNode;
 }
 
 export const Ul = React.forwardRef<HTMLUListElement, UlProps>(
-  ({ marker, spacing, indent, paddingX, paddingY, size, color, className = "", children, ...props }, ref) => (
+  ({ marker, spacing, indent, paddingX, paddingY, size, color, rounded, gap, className = "", children, ...props }, ref) => (
     <ul
       ref={ref}
       className={[
@@ -463,6 +478,8 @@ export const Ul = React.forwardRef<HTMLUListElement, UlProps>(
         paddingY ? UL_PADDING_Y_MAP[paddingY] : "",
         size ? LIST_SIZE_MAP[size] : "",
         color ? LIST_COLOR_MAP[color] : "",
+        rounded ? ROUNDED_MAP[rounded] : "",
+        gap ? UL_GAP_MAP[gap] : "",
         className,
       ]
         .filter(Boolean)
@@ -567,15 +584,27 @@ export interface LiProps extends React.LiHTMLAttributes<HTMLLIElement> {
   textSize?: LiTextSize;
   /** Cascaded text colour. */
   color?: LiColor;
+  /** Padding — replaces consumer `p-*` / `px-* py-*` className. */
+  padding?: PaddingKey;
+  /** Border radius — replaces consumer `rounded-*` className. */
+  rounded?: RoundedKey;
+  /** Border style — replaces consumer `border border-*` className. */
+  border?: BorderKey;
+  /** Background surface — replaces consumer `bg-*` className. */
+  surface?: SurfaceKey;
   children: React.ReactNode;
 }
 
-export function Li({ layout, gap, textSize, color, className = "", children, ...props }: LiProps) {
+export function Li({ layout, gap, textSize, color, padding, rounded, border, surface, className = "", children, ...props }: LiProps) {
   const classes = [
     layout ? LI_LAYOUT_MAP[layout] : "",
     gap ? LI_GAP_MAP[gap] : "",
     textSize ? LI_TEXT_SIZE_MAP[textSize] : "",
     color ? LI_COLOR_MAP[color] : "",
+    padding ? PADDING_MAP[padding] : "",
+    rounded ? ROUNDED_MAP[rounded] : "",
+    border ? BORDER_MAP[border] : "",
+    surface ? SURFACE_MAP[surface] : "",
     className,
   ].filter(Boolean).join(" ");
   return (
@@ -651,12 +680,16 @@ export function Thead({ surface, className = "", children, ...props }: TheadProp
 }
 
 export interface TbodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+  /** Cascaded typography size for all cells in this tbody. */
+  size?: CellTypographySize;
+  /** Cascaded text colour for all cells in this tbody. */
+  color?: CellColor;
   children: React.ReactNode;
 }
 
-export function Tbody({ className = "", children, ...props }: TbodyProps) {
+export function Tbody({ className = "", size, color, children, ...props }: TbodyProps) {
   return (
-    <tbody className={["appkit-tbody", className].filter(Boolean).join(" ")} {...props}>
+    <tbody className={["appkit-tbody", size ? CELL_SIZE_MAP[size] : "", color ? CELL_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
       {children}
     </tbody>
   );
@@ -727,7 +760,7 @@ const CELL_PADDING_MAP: Record<CellPadding, string> = {
 
 type CellPaddingX = "none" | "xs" | "sm" | "md" | "lg";
 type CellPaddingY = "none" | "2xs" | "xs" | "sm" | "md";
-type CellPaddingSide = "none" | "pr-md" | "pl-md" | "pr-lg" | "pl-lg" | "pt-md" | "pb-md";
+type CellPaddingSide = "none" | "pr-sm" | "pb-sm" | "pr-md" | "pl-md" | "pr-lg" | "pl-lg" | "pt-md" | "pb-md";
 
 const CELL_PADDING_X_MAP: Record<CellPaddingX, string> = {
   none: "",
@@ -746,6 +779,8 @@ const CELL_PADDING_Y_MAP: Record<CellPaddingY, string> = {
 };
 const CELL_PADDING_SIDE_MAP: Record<CellPaddingSide, string> = {
   none: "",
+  "pr-sm": "pr-3",
+  "pb-sm": "pb-2",
   "pr-md": "pr-4",
   "pl-md": "pl-4",
   "pr-lg": "pr-6",
@@ -862,8 +897,18 @@ type CodePadding = "none" | "xs" | "sm" | "inline";
 type CodeRounded = "none" | "default" | "sm" | "md" | "lg";
 type CodeSurface = "none" | "muted" | "subtle" | "default";
 
+type CodeWeight = "normal" | "medium" | "semibold" | "bold";
+
+const CODE_WEIGHT_MAP: Record<CodeWeight, string> = {
+  normal: "appkit-font--normal",
+  medium: "appkit-font--medium",
+  semibold: "appkit-font--semibold",
+  bold: "appkit-font--bold",
+};
+
 export interface CodeProps extends React.HTMLAttributes<HTMLElement> {
-  color?: "default" | "primary" | "error" | "success";
+  color?: "default" | "primary" | "error" | "success" | "muted" | "faint";
+  weight?: CodeWeight;
   size?: CodeSize;
   padding?: CodePadding;
   rounded?: CodeRounded;
@@ -876,6 +921,8 @@ const CODE_COLOR_MAP: Record<NonNullable<CodeProps["color"]>, string> = {
   primary: "appkit-code--primary",
   error: "appkit-code--error",
   success: "appkit-code--success",
+  muted: "appkit-color--muted",
+  faint: "appkit-color--faint",
 };
 
 const CODE_SIZE_MAP: Record<CodeSize, string> = {
@@ -906,12 +953,13 @@ const CODE_SURFACE_MAP: Record<CodeSurface, string> = {
   default: "bg-[var(--appkit-color-surface)]",
 };
 
-export function Code({ color = "default", size, padding, rounded, surface, className = "", children, ...props }: CodeProps) {
+export function Code({ color = "default", weight, size, padding, rounded, surface, className = "", children, ...props }: CodeProps) {
   return (
     <code
       className={[
         "appkit-code",
         CODE_COLOR_MAP[color],
+        weight ? CODE_WEIGHT_MAP[weight] : "",
         size ? CODE_SIZE_MAP[size] : "",
         padding ? CODE_PADDING_MAP[padding] : "",
         rounded ? CODE_ROUNDED_MAP[rounded] : "",
@@ -951,9 +999,9 @@ const BLOCKQUOTE_COLOR_MAP: Record<NonNullable<BlockquoteProps["color"]>, string
   warning: "appkit-blockquote--warning",
 };
 
-export function Blockquote({ color = "default", className = "", surface, padding, rounded, border, shadow, children, ...props }: BlockquoteProps) {
+export function Blockquote({ color = "default", className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, children, ...props }: BlockquoteProps) {
   return (
-    <blockquote className={["appkit-blockquote", BLOCKQUOTE_COLOR_MAP[color], buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <blockquote className={["appkit-blockquote", BLOCKQUOTE_COLOR_MAP[color], buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </blockquote>
   );

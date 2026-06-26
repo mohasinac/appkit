@@ -185,7 +185,7 @@ export function AdminStoreEditorView({
           const checked = group.caps.filter((c) => capabilities.has(c.key)).length;
           return (
             <Details key={group.label} className="group">
-              <Summary className="flex cursor-pointer items-center justify-between px-3 py-2 font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
+              <Summary paddingX="x-sm" paddingY="y-xs" weight="semibold" color="muted" layout="flex" align="center" justify="between" className="uppercase tracking-wide hover:bg-[var(--appkit-color-bg)] transition-colors">
                 <Span size="xs">{group.label}</Span>
                 <Span size="xs" weight="normal" className="normal-case" color="faint">
                   {checked}/{group.caps.length}

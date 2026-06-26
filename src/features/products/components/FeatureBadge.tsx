@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef } from "react";
 import {
   BadgeCheck,
   CalendarCheck,
@@ -90,12 +91,20 @@ export interface FeatureBadgeProps {
 
 export function FeatureBadge({ featureId, features }: FeatureBadgeProps) {
   const f = features.find((x) => x.id === featureId);
+  const spanRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = spanRef.current;
+    if (!el || !f?.iconColor) return;
+    const v = `var(${f.iconColor})`;
+    el.style.color = v;
+    el.style.borderColor = v;
+  }, [f?.iconColor]);
   if (!f) return null;
   return (
     <Span
+      ref={spanRef}
       title={f.description ?? undefined}
       className={BADGE_BASE_CLASS}
-      style={colorStyleFor(f.iconColor)}
     >
       <FeatureIcon icon={f.icon} />
       {f.label}

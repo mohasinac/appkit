@@ -103,7 +103,7 @@ function SlideBackground({
   const src = mobileUrl ?? effectiveBg?.url ?? "";
 
   if (!effectiveBg) {
-    return <Div className={`${POSITION_FILL} bg-zinc-900`} />;
+    return <Div className={`${POSITION_FILL} bg-neutral-900`} />;
   }
 
   if (effectiveBg.type === "color") {
@@ -216,7 +216,7 @@ function CarouselCardRenderer({
         <>
           <Scrim direction="bottom-up" intensity="strong" className={POSITION_FILL} />
           <Stack justify="end"
-            className={`${POSITION_FILL} md:p-6 ${textAlignClass}`} padding="xs"
+            className={`${POSITION_FILL} md:p-[1.5rem] ${textAlignClass}`} padding="xs"
           >
           {card.content?.eyebrow && (
             <Text color="inverse" shadow="sm" className="text-[10px] !/70 mb-0.5 tracking-wider" mdSize="xs" transform="uppercase">
@@ -231,21 +231,21 @@ function CarouselCardRenderer({
           {card.content?.title && (
             <Heading
               level={2}
-              className={`text-[11px] md:text-2xl lg:text-3xl mb-0.5 md:mb-3 drop-shadow-md`} truncate={2} weight="bold"
-              style={{ color: card.content.textColor ?? "#ffffff" }}
+              className={`text-[11px] mb-0.5 md:mb-3`} truncate={2} weight="bold" shadow="md" mdSize="2xl" lgSize="3xl"
+              style={{ color: card.content.textColor ?? "white" }}
             >
               {card.content.title}
             </Heading>
           )}
           {card.content?.description && (
             <Text color="inverse" shadow="sm"
-              className={`text-[10px] md:text-sm !/80 mb-1 md:mb-4`} truncate
+              className={`text-[10px] md:text-[0.875rem] !/80 mb-1 md:mb-4`} truncate
             >
               {card.content.description}
             </Text>
           )}
           {(card.buttons?.length ?? 0) > 0 && (
-            <Row wrap gap="xs" className="md:gap-2">
+            <Row wrap gap="xs" className="md:gap-[0.5rem]">
               {(card.buttons ?? []).map((btn, i) => {
                 const variant = btn.variant === "link" || btn.variant === "ghost"
                   ? "ghost"
@@ -269,7 +269,8 @@ function CarouselCardRenderer({
       {card.isButtonOnly && card.buttons?.[0] && (
         <Button
           variant="ghost"
-          className={`${POSITION_FILL} ${FLEX_CENTER} font-semibold text-white hover:bg-black/20 transition-colors rounded-none p-0`}
+          rounded="none"
+          className={`${POSITION_FILL} ${FLEX_CENTER} font-[600] text-white hover:bg-[rgba(0,0,0,0.2)] transition-colors p-[0]`}
           onClick={makeButtonClickHandler(card.buttons[0].href, card.buttons[0].openInNewTab, push)}
         >
           <Span size="lg" mdSize="2xl">{card.buttons[0].text}</Span>
@@ -351,9 +352,9 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (!slides || slides.length === 0) {
     return (
-      <Div gap="4" className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${FLEX_CENTER} flex-col`}>
+      <Div gap="4" className={`relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] ${FLEX_CENTER} [flex-direction:column]`}>
         <Heading level={2} className="text-primary" size="2xl" weight="bold">Coming Soon</Heading>
-        <Text variant="secondary" className="max-w-md px-4" align="center">
+        <Text variant="secondary" className="max-w-md" style={{ paddingInline: "1rem" }} align="center">
           Amazing deals are on their way. Stay tuned!
         </Text>
       </Div>
@@ -391,7 +392,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             return (
               <Div
                 key={slide.id}
-                className={`snap-start flex-none w-full relative self-stretch bg-zinc-900 ${slideHeightClass}`}
+                className={`snap-start flex-none w-full relative self-stretch bg-neutral-900 ${slideHeightClass}`}
               >
                 {/* Background */}
                 <Div className={POSITION_FILL}>
@@ -406,7 +407,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
                 {/* Overlay text (no cards, or overlay present) */}
                 {slide.overlay && (
-                  <Div className={`${POSITION_FILL} ${FLEX_CENTER} flex-col text-center md:px-16 lg:px-32`} padding="x-lg">
+                  <Div className={`${POSITION_FILL} ${FLEX_CENTER} [flex-direction:column] text-center md:px-[4rem] lg:px-[8rem]`} padding="x-lg">
                     {slide.overlay.subtitle && (
                       <Text color="inverse" shadow="sm" className="stagger-1 !/80 mb-1 md:mb-2 tracking-widest" mdSize="sm" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}
@@ -415,7 +416,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                     {slide.overlay.title && (
                       <Heading color="inverse"
                         level={1}
-                        className="stagger-2 font-display md:text-6xl lg:text-8xl ! drop-shadow-2xl mb-2 md:mb-4" size="4xl"
+                        className="stagger-2 font-display ! mb-2 md:mb-4" size="4xl" shadow="2xl" mdSize="6xl" lgSize="8xl"
                       >
                         {slide.overlay.title}
                       </Heading>
@@ -446,7 +447,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 {/* Cards grid */}
                 {hasCards && (
                   <Div
-                    className={`${POSITION_FILL} grid gap-2 md:gap-4 md:p-8`} padding="md"
+                    className={`${POSITION_FILL} grid gap-[0.5rem] md:gap-[1rem] md:p-[2rem]`} padding="md"
                     style={{
                       gridTemplateRows: "repeat(2, 1fr)",
                       gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
@@ -487,7 +488,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             >
               {index === currentSlide && (
                 <Span
-                  className="absolute inset-y-0 left-0 bg-black/20 animate-[progress-fill_4s_linear_forwards]" rounded="full"
+                  className="absolute inset-y-0 left-0 bg-[rgba(0,0,0,0.2)] animate-[progress-fill_4s_linear_forwards]" rounded="full"
                   aria-hidden="true"
                 />
               )}
@@ -501,7 +502,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
         <Row gap="sm" className="absolute bottom-4 right-4 z-20">
           <Button
             variant="ghost"
-            className={`p-0 ${HERO_CAROUSEL_ARROW}`}
+            className={`p-[0] ${HERO_CAROUSEL_ARROW}`}
             onClick={goPrev}
             aria-label="Previous slide"
           >
@@ -511,7 +512,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
           </Button>
           <Button
             variant="ghost"
-            className={`p-0 ${HERO_CAROUSEL_ARROW}`}
+            className={`p-[0] ${HERO_CAROUSEL_ARROW}`}
             onClick={goNext}
             aria-label="Next slide"
           >

@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Div, Row, Span, Stack, Text } from "../../../ui";
+import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 
 import type { CategoryItem } from "../types";
 
@@ -38,17 +39,13 @@ export function CategoryCard({
       {/* Image area — fixed aspect ratio */}
       <Div surface="muted" className={`relative aspect-[4/3] w-full ${__O.hidden} flex-shrink-0`}>
         {category.display?.coverImage ? (
-          <Div
-            role="img"
-            aria-label={category.name}
-            className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
-            style={{ backgroundImage: `url(${category.display.coverImage})` }}
+          <img
+            src={category.display.coverImage}
+            alt={category.name}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : category.display?.color ? (
-          <Div
-            className="h-full w-full opacity-80"
-            style={{ backgroundColor: category.display.color }}
-          />
+          <DynamicBgDiv color={category.display.color} className="h-full w-full opacity-80" />
         ) : null}
         {/* Icon overlay */}
         {category.display?.icon && (

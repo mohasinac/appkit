@@ -39,6 +39,8 @@ export interface FormProps
    * boilerplate per callsite.
    */
   schema?: ZodTypeAny;
+  /** Cross-axis alignment of flex/grid children. Replaces raw `items-*` className. */
+  align?: "start" | "center" | "end" | "stretch";
 }
 
 export type GapToken = "none" | "xs" | "sm" | "md" | "lg" | "xl";
@@ -70,7 +72,14 @@ const GAP_MAP: Record<GapToken, string> = {
  *     )}
  *   </Form>
  */
-export function Form({ children, spacing, schema, surface, padding, rounded, border, shadow, className = "", ...props }: FormProps) {
+const FORM_ALIGN_MAP: Record<"start" | "center" | "end" | "stretch", string> = {
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+  stretch: "items-stretch",
+};
+
+export function Form({ children, spacing, schema, align, surface, padding, rounded, border, shadow, className = "", ...props }: FormProps) {
   const helpers = useFormShellState(schema);
   const content =
     typeof children === "function"
@@ -82,6 +91,7 @@ export function Form({ children, spacing, schema, surface, padding, rounded, bor
         className={[
           "appkit-form",
           spacing ? FORM_SPACING_MAP[spacing] : "",
+          align ? FORM_ALIGN_MAP[align] : "",
           buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
           className,
         ].filter(Boolean).join(" ")}

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Div, Input, Row, Slider, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
-const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-emerald-600/20";
+const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
 const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error rounded-full transition-colors";
 
 interface DualSliderProps {
@@ -161,7 +161,7 @@ export function RangeFilter({
           onClick={handleToggle}
           variant="ghost"
           size="sm"
-          className="flex-1 justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
+          className="flex-1 justify-[space-between] text-[0.875rem] font-[600] text-[var(--appkit-color-text)] py-[0.25rem] hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
           <Span layout="flex" gap="md" >
@@ -258,7 +258,7 @@ export function RangeFilter({
               </Div>
             </Div>
 
-            <Span size="xs" className="flex-shrink-0 pb-1.5" color="faint">
+            <Span size="xs" className="flex-shrink-0 pb-[0.375rem]" color="faint">
               -
             </Span>
 

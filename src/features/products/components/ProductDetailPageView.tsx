@@ -494,7 +494,8 @@ export async function ProductDetailPageView({
                   <Span
                     size="xs"
                     weight="medium"
-                    className={`ml-auto ${ inStock ? "bg-success-surface text-success" : "bg-error-surface text-error" }`} padding="pill-sm" rounded="full"
+                    surface={inStock ? "success-surface" : "danger-surface"}
+                    className={`ml-auto ${ inStock ? "text-success" : "text-error" }`} padding="pill-sm" rounded="full"
                   >
                     {inStock ? "✓ In Stock" : "✗ Out of Stock"}
                     {inStock && effectiveStock !== null && effectiveStock <= 10

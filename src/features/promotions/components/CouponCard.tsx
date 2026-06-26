@@ -260,7 +260,7 @@ export function CouponCard({
             {n.isActive ? labels.active : labels.inactive}
           </Badge>
           {n.scope && (
-            <Span layout="inline-flex" weight="semibold" className="bg-zinc-200/70 text-[10px] tracking-wide dark:bg-zinc-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
+            <Span layout="inline-flex" weight="semibold" className="bg-neutral-200/70 text-[10px] tracking-wide dark:bg-neutral-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
               {n.scope}
             </Span>
           )}

@@ -274,7 +274,7 @@ const headingGradient: "none" | "brand" =
           <Row className="mt-6" justify="center">
             <TextLink rounded="lg" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
-              className={`inline-flex items-center gap-1.5 border transition-colors ${ useLightText ? "border-white/40 text-white hover:bg-white/10" : "border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800" }`} size="sm" weight="medium"
+              className={`inline-flex items-[center] gap-[0.375rem] border transition-colors ${ useLightText ? "border-white/40 text-white hover:bg-[rgba(255,255,255,0.1)]" : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]" }`} size="sm" weight="medium"
             >
               {viewMoreLabel}
             </TextLink>

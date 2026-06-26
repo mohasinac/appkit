@@ -41,7 +41,7 @@ function NavItemRow({
 }: NavItemRowProps) {
   return (
     <Row surface="default" padding="inline" align="center" gap="3">
-      <Stack className="gap-0.5 shrink-0">
+      <Stack className="shrink-0 gap-[0.125rem]">
         <Button variant="ghost" type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
           className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>
         <Button variant="ghost" type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}

@@ -158,6 +158,13 @@ export function AdminSiteSettingsView({
   const [watermarkImageUrl, setWatermarkImageUrl] = React.useState("");
   const [watermarkSize, setWatermarkSize] = React.useState(30);
   const [watermarkOpacity, setWatermarkOpacity] = React.useState(20);
+  const watermarkPreviewRef = React.useRef<HTMLSpanElement>(null);
+  React.useEffect(() => {
+    const el = watermarkPreviewRef.current;
+    if (!el) return;
+    el.style.fontSize = `${Math.max(10, watermarkSize / 5)}px`;
+    el.style.opacity = String(watermarkOpacity / 100);
+  }, [watermarkSize, watermarkOpacity]);
 
   // ⑦ Fees — all read/written under commissions key
   const [platformFeePercent, setPlatformFeePercent] = React.useState(5);
@@ -650,7 +657,7 @@ export function AdminSiteSettingsView({
               </Grid>
               <Input label="Physical address" value={supportAddress} onChange={(e) => setSupportAddress(e.target.value)} placeholder="Mumbai, Maharashtra, India" />
               <Input label="Support hours" value={supportHours} onChange={(e) => setSupportHours(e.target.value)} placeholder="Mon–Fri, 10 AM – 6 PM IST" />
-              <Text className="pt-2" color="muted" size="sm" weight="medium">Social links</Text>
+              <Text className="pt-[0.5rem]" color="muted" size="sm" weight="medium">Social links</Text>
               <Grid cols={2} gap="md">
                 <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/letitrip" />
                 <Input label="Twitter / X URL" value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/letitrip" />
@@ -683,13 +690,12 @@ export function AdminSiteSettingsView({
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Text size="xs" color="muted">Preview (text watermark only)</Text>
                 <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">
-                  <Span
-                    weight="medium"
-                    className="select-none p-2" color="faint"
-                    style={{ fontSize: `${Math.max(10, watermarkSize / 5)}px`, opacity: watermarkOpacity / 100 }}
+                  <span
+                    ref={watermarkPreviewRef}
+                    className="select-none font-medium p-1 text-[var(--appkit-color-text-faint)]"
                   >
                     {watermarkText}
-                  </Span>
+                  </span>
                 </Row>
               </Stack>
               <GroupSaveButton isPending={watermarkMutation.isPending} />
@@ -874,7 +880,7 @@ export function AdminSiteSettingsView({
                       value={notifEmailMinPriority}
                       onValueChange={setNotifEmailMinPriority}
                     />
-                    <Text size="xs" weight="medium" color="muted" className="pt-1">Resend API (for transactional email)</Text>
+                    <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Resend API (for transactional email)</Text>
                     <MaskedInput label="Resend API Key" value={resendApiKey} onChange={setResendApiKey} placeholder="re_live_…" helperText="Get your key at resend.com — used for all transactional notifications." />
                     <Grid cols={2} gap="md">
                       <Input label="From email" value={notifFromEmail} onChange={(e) => setNotifFromEmail(e.target.value)} placeholder="noreply@letitrip.in" type="email" />

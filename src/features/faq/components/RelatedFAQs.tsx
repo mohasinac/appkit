@@ -19,7 +19,7 @@ export function RelatedFAQs({
   }
 
   return (
-    <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
+    <Card variant="outlined" padding="lg">
       <Heading level={3} className="mb-4" size="lg" weight="semibold">
         {labels?.title ?? "Related Questions"}
       </Heading>
@@ -29,7 +29,7 @@ export function RelatedFAQs({
           <TextLink rounded="lg"
             key={faq.id}
             href={hrefForFaq ? hrefForFaq(faq) : `/faqs#${faq.id}`}
-            className="group block bg-zinc-100 p-4 transition-colors hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600"
+            className="group block bg-[var(--appkit-color-surface-elevated)] p-[1rem] transition-colors hover:bg-[var(--appkit-color-border-subtle)]"
           >
             <Row align="start" gap="3">
               <svg

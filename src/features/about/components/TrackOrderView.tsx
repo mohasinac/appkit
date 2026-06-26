@@ -76,7 +76,8 @@ export async function TrackOrderView({
         </Div>
       </Section>
 
-      <Div className={`${page.container.md} md:py-16 space-y-14 md:space-y-16`} padding="y-2-5xl">
+      <Div className={page.container.md} padding="y-4xl">
+        <Stack gap="hero">
         {/* Sign-in prompt */}
         <Section
           className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="xl"
@@ -88,15 +89,15 @@ export async function TrackOrderView({
             {t("signInPrompt")}
           </Heading>
           <Stack direction="sm-row" justify="center" className="mt-6" gap="3">
-            <TextLink rounded="lg" paddingX="xl" paddingY="md"
+            <TextLink rounded="lg" paddingX="xl" paddingY="md" layout="inline-flex" align="center" justify="center" gap="sm"
               href={String(ROUTES.AUTH.LOGIN)}
-              className={`inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white transition-colors`} weight="medium"
+              className={`bg-primary hover:bg-primary/90 text-white transition-colors`} weight="medium"
             >
               {t("signIn")}
             </TextLink>
-            <TextLink rounded="lg" paddingX="xl" paddingY="md"
+            <TextLink rounded="lg" paddingX="xl" paddingY="md" layout="inline-flex" align="center" justify="center" gap="sm"
               href={String(ROUTES.USER.ORDERS)}
-              className={`inline-flex items-center gap-2 ${themed.bgPrimary} border ${themed.border} ${themed.textPrimary} hover:opacity-80 transition-opacity`} weight="medium"
+              className={`${themed.bgPrimary} border ${themed.border} ${themed.textPrimary} hover:opacity-80 transition-opacity`} weight="medium"
             >
               {t("viewOrders")}
             </TextLink>
@@ -158,6 +159,7 @@ export async function TrackOrderView({
             </TextLink>
           </Row>
         </Section>
+        </Stack>
       </Div>
     </Div>
   );

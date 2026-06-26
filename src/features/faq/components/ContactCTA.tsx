@@ -31,7 +31,7 @@ export function ContactCTA({
     <Card
       variant="outlined"
       padding="lg"
-      className="text-center dark:bg-slate-800/60"
+      className="text-center"
     >
       <Row className="mb-6" justify="center">
         <Div className={`bg-primary/10 ${__P.p8}`} rounded="full">
@@ -101,7 +101,8 @@ export function ContactCTA({
 
       <TextLink rounded="xl"
         href={contactHref}
-        className="inline-flex items-center gap-2 bg-primary p-6 text-white transition-colors hover:bg-primary/90" weight="medium"
+        layout="inline-flex" align="center" gap="sm"
+        className="bg-primary p-[1.5rem] text-white transition-colors hover:bg-primary/90" weight="medium"
       >
         <Span>{labels?.contactTeam ?? "Contact Team"}</Span>
         <svg

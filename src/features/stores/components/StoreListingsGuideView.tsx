@@ -62,7 +62,7 @@ function ListingTypesTable() {
   ] as const;
 
   return (
-    <Div className="overflow-x-auto -mx-6">
+    <Div overflow="x-auto" className="-mx-6">
       <Table className="min-w-full" size="sm">
         <Thead>
           <Tr className="border-b border-[var(--appkit-color-border)]">
@@ -147,7 +147,7 @@ function StandardWalkthrough() {
       {STANDARD_STEPS.map(({ step, items }) => (
         <Div key={step}>
           <Text className="mb-2 text-[var(--appkit-color-text)]" weight="semibold">{step}</Text>
-          <Ul className="space-y-1.5" indent="lg">
+          <Ul className="space-y-[0.375rem]" indent="lg">
             {items.map((item) => (
               <Li key={item} textSize="sm" color="muted" className={LIST_DISC}>
                 {item}
@@ -175,7 +175,7 @@ function AuctionWalkthrough() {
       </Div>
       <Div>
         <Text className={SUBHEADING}>Bid increment</Text>
-        <Div className="overflow-x-auto">
+        <Div overflow="x-auto">
           <Table className="min-w-[320px]" size="sm">
             <Thead>
               <Tr className="border-b border-[var(--appkit-color-border)]">
@@ -278,7 +278,7 @@ const STATUS_NOTES = [
 function StatusLifecycle() {
   return (
     <Stack gap="md">
-      <Div textSize="xs" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-[var(--appkit-color-text-muted)] overflow-x-auto whitespace-pre" rounded="lg" padding="md">
+      <Div textSize="xs" overflow="x-auto" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-subtle,var(--appkit-color-border))/20] font-mono text-[var(--appkit-color-text-muted)] whitespace-pre" rounded="lg" padding="md">
         {STATUS_LIFECYCLE}
       </Div>
       <Stack gap="sm">

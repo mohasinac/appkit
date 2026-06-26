@@ -1,6 +1,6 @@
 "use client";
 /**
- * CompareOverlay â€” BK3
+ * CompareOverlay â€" BK3
  *
  * Fullscreen comparison overlay triggered by the Compare bulk action on
  * Products / Auctions / Pre-orders listings.
@@ -118,8 +118,7 @@ export interface CompareOverlayProps {
 }
 
 const OVERLAY_CLASS =
-  "fixed inset-0 flex flex-col bg-white dark:bg-zinc-950 overflow-hidden";
-const OVERLAY_STYLE: React.CSSProperties = { zIndex: "var(--appkit-z-modal, 60)" as unknown as number };
+  "fixed inset-0 flex flex-col bg-white dark:bg-zinc-950 overflow-hidden z-[var(--appkit-z-modal,60)]";
 const HEADER_CLASS =
   "flex items-center justify-between gap-3 border-b border-zinc-200 dark:border-zinc-800 px-4 py-3";
 const FIELD_LABEL_CLASS =
@@ -141,7 +140,7 @@ function detailHref(item: CompareProductLike, type: CompareOverlayProps["product
 }
 
 function priceLabel(item: CompareProductLike): string {
-  if (typeof item.price !== "number") return "â€”";
+  if (typeof item.price !== "number") return "—";
   return formatCurrency(item.price, item.currency ?? "INR");
 }
 
@@ -215,11 +214,11 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <FieldRow label={labels.field.condition}>
-        <Text>{item.condition ? <Span className={CHIP_CLASS}>{item.condition}</Span> : "â€”"}</Text>
+        <Text>{item.condition ? <Span className={CHIP_CLASS}>{item.condition}</Span> : "—"}</Text>
       </FieldRow>
 
       <FieldRow label={labels.field.brand}>
-        <Text>{item.brand ? <Span className={CHIP_CLASS}>{item.brand}</Span> : "â€”"}</Text>
+        <Text>{item.brand ? <Span className={CHIP_CLASS}>{item.brand}</Span> : "—"}</Text>
       </FieldRow>
 
       <FieldRow label={labels.field.category}>
@@ -227,14 +226,14 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
           {(Array.isArray(item.categoryNames) ? item.categoryNames[0] : item.categoryName) || (Array.isArray(item.categorySlugs) ? item.categorySlugs[0] : item.category) ? (
             <Span className={CHIP_CLASS}>{(Array.isArray(item.categoryNames) ? item.categoryNames[0] : item.categoryName) ?? (Array.isArray(item.categorySlugs) ? item.categorySlugs[0] : item.category)}</Span>
           ) : (
-            "â€”"
+            "—"
           )}
         </Text>
       </FieldRow>
 
       <FieldRow label={labels.field.store}>
         <Text size="sm" color="muted">
-          {item.storeName ?? "â€”"}
+          {item.storeName ?? "—"}
         </Text>
       </FieldRow>
 
@@ -328,6 +327,12 @@ export function CompareOverlay({
   }, [isOpen, onClose]);
 
   const swipeRef = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (gridRef.current) {
+      gridRef.current.style.gridTemplateColumns = `repeat(${trimmed.length}, minmax(0, 1fr))`;
+    }
+  }, [trimmed.length]);
   useSwipe(swipeRef as React.RefObject<HTMLElement>, {
     onSwipeLeft: () =>
       setActiveIndex((i) => Math.min(trimmed.length - 1, i + 1)),
@@ -344,7 +349,7 @@ export function CompareOverlay({
   if (!isOpen) return null;
 
   return (
-    <Div className={OVERLAY_CLASS} style={OVERLAY_STYLE} role="dialog" aria-modal="true" aria-label={labels.title}>
+    <Div className={OVERLAY_CLASS} role="dialog" aria-modal="true" aria-label={labels.title}>
       <Row justify="between" align="center" className={HEADER_CLASS}>
         <Heading level={2} size="base" weight="semibold">
           {labels.title}
@@ -370,13 +375,8 @@ export function CompareOverlay({
           </Text>
         ) : (
           <>
-            {/* Desktop / tablet â€” grid of columns */}
-            <Div layout="grid" gap="4" 
-              className="hidden md:"
-              style={{
-                gridTemplateColumns: `repeat(${trimmed.length}, minmax(0, 1fr))`,
-              }}
-            >
+            {/* Desktop / tablet — grid of columns */}
+            <Div ref={gridRef} gap="4" className="hidden md:grid">
               {trimmed.map((item) => (
                 <CompareColumn
                   key={item.id}
@@ -389,7 +389,7 @@ export function CompareOverlay({
               ))}
             </Div>
 
-            {/* Mobile â€” swipeable single card + dots */}
+            {/* Mobile — swipeable single card + dots */}
             <Div className="md:hidden">
               <Div ref={swipeRef} className="touch-pan-y">
                 {trimmed[activeIndex] && (

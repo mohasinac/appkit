@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Heading, Row, Text } from "../../../../ui";
+import { DynamicBgDiv } from "../../../../ui/components/DynamicBgDiv";
 const BRAND_FROM = "var(--appkit-color-primary-700)";
 const BRAND_MID  = "var(--appkit-color-cobalt)";
 const BRAND_TO   = "var(--appkit-color-secondary-400)";
@@ -8,8 +9,8 @@ const GRADIENTS: Record<string, string> = {
   brand:  `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 55%, ${BRAND_TO} 100%)`,
   blue:   `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 100%)`,
   green:  `linear-gradient(135deg, ${BRAND_MID} 0%, ${BRAND_TO} 100%)`,
-  amber:  "linear-gradient(135deg, #f59e0b 0%, #f97316 100%)",
-  rose:   "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)",
+  amber:  "var(--appkit-gradient-warning-stat)",
+  rose:   "var(--appkit-gradient-danger-stat)",
 };
 
 export interface AdminStatCardProps {
@@ -35,12 +36,12 @@ export function AdminStatCard({
 
   return (
     <Div
-      className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden hover:shadow-md transition-shadow ${className}`} rounded="xl" shadow="sm"
+      className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden ${className}`} rounded="xl" shadow="sm-hover-md"
     >
       {/* 3-px gradient top accent */}
-      <div
+      <DynamicBgDiv
+        background={resolvedGradient}
         className="absolute top-0 left-0 right-0 h-[3px]"
-        style={{ background: resolvedGradient }}
         aria-hidden="true"
       />
 
@@ -61,12 +62,12 @@ export function AdminStatCard({
         </Div>
 
         {icon && (
-          <Row textSize="xl"
-            className="flex-shrink-0 w-10 h-10" align="center" justify="center" rounded="lg"
-            style={{ background: resolvedGradient }}
+          <DynamicBgDiv
+            background={resolvedGradient}
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-xl"
           >
             {icon}
-          </Row>
+          </DynamicBgDiv>
         )}
       </Row>
     </Div>

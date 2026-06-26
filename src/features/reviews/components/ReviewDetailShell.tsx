@@ -109,7 +109,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
   return (
     <>
       {/* ── Hero: rating + title ──────────────────────────────────────────── */}
-      <Div surface="default" className="border-b border-neutral-200 pt-10" padding="b-xl">
+      <Div surface="default" className="border-b border-neutral-200 pt-[2.5rem]" padding="b-xl">
         <Div className="mx-auto max-w-3xl" padding="x-md">
           {/* Star rating — large */}
           <Row gap="sm" className="mb-4">
@@ -138,11 +138,10 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {/* Reviewer row */}
           <Row gap="sm">
             {review.userAvatar ? (
-              <Div
-                role="img"
-                aria-label={displayName}
-                className="h-11 w-11 flex-shrink-0 bg-center bg-cover ring-2 ring-white dark:ring-zinc-800" rounded="full"
-                style={{ backgroundImage: `url(${review.userAvatar})` }}
+              <img
+                src={review.userAvatar}
+                alt={displayName}
+                className="h-11 w-11 flex-shrink-0 object-cover rounded-full ring-2 ring-white dark:ring-zinc-800"
               />
             ) : (
               <Row textWeight="bold" textSize="base" centered className="h-11 w-11 flex-shrink-0 bg-primary/10 text-primary ring-2 ring-white dark:ring-zinc-800" rounded="full">
@@ -199,11 +198,12 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   aria-label={`View photo ${i + 1}`}
                   className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-100 dark:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
-                  <Div
-                    className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
-                    style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
+                  <img
+                    src={img.thumbnailUrl ?? img.url}
+                    alt={`Review image ${i + 1}`}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
+                  <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[rgba(0,0,0,0.3)]">
                     <Span color="inverse" size="xl">🔍</Span>
                   </Row>
                 </button>
@@ -218,7 +218,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="tracking-wide mb-3" color="faint" size="sm" weight="semibold" transform="uppercase">
               Video
             </Heading>
-            <Div className={`${__O.hidden} border border-neutral-200 dark:border-zinc-700 bg-black aspect-video`} rounded="xl">
+            <Div className={`${__O.hidden} border border-neutral-200 dark:border-neutral-700 bg-[rgb(0,0,0)] aspect-video`} rounded="xl">
               <video
                 src={review.video.url}
                 poster={review.video.thumbnailUrl}
@@ -231,7 +231,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         )}
 
         {/* Helpful votes */}
-        <Section className="flex items-center gap-4 border-t border-neutral-100" padding="y-md">
+        <Section className="flex items-[center] gap-[1rem] border-t border-neutral-100" padding="y-md">
           <Div textSize="sm" className="text-neutral-500 dark:text-neutral-400">
             {helpfulCount > 0 && (
               <Span>
@@ -256,7 +256,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         </Section>
 
         {/* Links: Product / Seller / Reviewer */}
-        <Section className="grid gap-3 sm:grid-cols-3">
+        <Section className="grid gap-[0.75rem] sm:grid-cols-3">
           {productHref && (
             <Link
               href={productHref}
@@ -307,7 +307,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </Div>
             </Link>
           ) : (
-            <Row surface="default" gap="sm" className={`border border-neutral-200 dark:border-zinc-700 ${__P.p4}`} rounded="xl">
+            <Row surface="default" gap="sm" className={`border border-neutral-200 dark:border-[var(--appkit-color-border)] ${__P.p4}`} rounded="xl">
               <Span size="xl" className={CLS_ICON_PURPLE_BARE}>
                 👤
               </Span>
@@ -326,7 +326,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
       {lightboxIdx !== null && currentImage && (
         <Row
           centered
-          className="fixed inset-0 z-50 bg-black/95"
+          className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.95)]"
           onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
@@ -393,13 +393,14 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setLightboxIdx(i); }}
                   aria-label={`Go to image ${i + 1}`}
-                  className={`h-12 w-12 flex-shrink-0 rounded-md bg-center bg-cover border-2 transition-all ${
+                  className={`h-12 w-12 flex-shrink-0 rounded-md overflow-hidden border-2 transition-all ${
  i === lightboxIdx
  ? "border-white scale-110"
  : "border-transparent opacity-60 hover:opacity-100"
  }`}
-                  style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
-                />
+                >
+                  <img src={img.thumbnailUrl ?? img.url} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+                </button>
               ))}
             </Row>
           )}

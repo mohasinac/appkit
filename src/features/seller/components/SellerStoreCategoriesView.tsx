@@ -1,5 +1,6 @@
 "use client";
 
+import { normalizeError } from "../../../errors/normalize";
 import { Badge, Row, Span, Stack, sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
@@ -152,6 +153,7 @@ export function SellerStoreCategoriesView({
     try {
       await performDelete(id);
     } catch (err) {
+      void normalizeError(err);
       showToast(err instanceof Error ? err.message : "Failed to delete category", "error");
     }
     setDeleteTargetId(null);

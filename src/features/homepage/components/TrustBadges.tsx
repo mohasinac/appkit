@@ -109,38 +109,28 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
 
   return (
     <Section
-      style={{
-        background: "var(--section-bg)",
-        borderTop: "var(--section-border)",
-        borderBottom: "var(--section-border)",
-      }}
+      className="bg-[var(--section-bg)] [border-top:var(--section-border)] [border-bottom:var(--section-border)]"
     >
-      <Div className="mx-auto max-w-7xl sm:py-10" paddingY="y-lg" paddingX="x-md">
+      <Div className="mx-auto max-w-7xl sm:py-[2.5rem]" paddingY="y-lg" paddingX="x-md">
         <Div layout="grid" gap="6" className="grid-cols-2 sm:grid-cols-4">
           {items.map((badge) => (
             <Stack
               key={badge.id}
-              className="text-center sm:flex-row sm:items-center sm:text-left sm:gap-4" align="center" gap="sm"
+              className="text-center sm:[flex-direction:row] sm:items-[center] sm:text-left sm:gap-[1rem]" align="center" gap="sm"
             >
               <Row
-                className="h-12 w-12 shrink-0" align="center" justify="center" rounded="full"
-                style={{
-                  background: "rgba(240,196,23,0.12)",
-                  color: "var(--color-red)",
-                  border: "2px solid var(--border-ink)",
-                }}
+                className="h-12 w-12 shrink-0 bg-[rgba(240,196,23,0.12)] text-[var(--color-red)] [border:2px_solid_var(--border-ink)]" align="center" justify="center" rounded="full"
               >
                 {BADGE_ICONS[badge.iconKey]}
               </Row>
               <Div>
                 <Text
-                  className="font-black uppercase tracking-wide" size="sm"
-                  style={{ color: "var(--section-title-color)" }}
+                  className="font-black uppercase tracking-wide text-[var(--section-title-color)]" size="sm"
                 >
                   {badge.title}
                 </Text>
                 <Text
-                  style={{ color: "var(--color-muted)" }} size="xs" weight="medium">
+                  className="text-[var(--color-muted)]" size="xs" weight="medium">
                   {badge.sub}
                 </Text>
               </Div>

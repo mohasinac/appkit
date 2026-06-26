@@ -43,8 +43,7 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
   return (
     <Div ref={ref}>
       <ins
-        className="adsbygoogle"
-        style={{ display: "block" }}
+        className="adsbygoogle block"
         data-ad-client={config.adsenseClient ?? ""}
         data-ad-slot={config.adsenseSlot ?? ""}
         data-ad-format={config.adsenseFormat ?? "auto"}
@@ -64,7 +63,7 @@ function ThirdPartyAd({ config }: { config: AdSlotConfig }) {
         scrolling="no"
         frameBorder="0"
         title="Advertisement"
-        style={{ border: 0, overflow: "hidden" }}
+        className="border-0 overflow-hidden"
         loading="lazy"
       />
     );
@@ -100,7 +99,7 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
         ) : null}
       </Div>
       {creative.ctaLabel ? (
-        <Span color="inverse" size="xs" weight="semibold" className="flex-shrink-0 bg-primary py-1.5" rounded="md" padding="x-sm">
+        <Span color="inverse" size="xs" weight="semibold" className="flex-shrink-0 bg-primary py-[0.375rem]" rounded="md" padding="x-sm">
           {creative.ctaLabel}
         </Span>
       ) : null}

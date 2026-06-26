@@ -214,16 +214,10 @@ export function AdminSidebar({
 
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
         <Div
-          className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
-          style={{
-            top: "var(--header-height, 3.5rem)",
-            height: "calc(100vh - var(--header-height, 3.5rem))",
-            width: "18rem",
-            transform: desktopOpen ? "translateX(0)" : "translateX(calc(-100% + 1.25rem))",
-          }}
+          className={`hidden md:flex fixed left-0 z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[18rem] ${desktopOpen ? "translate-x-0" : "-translate-x-[calc(100%-1.25rem)]"}`}
         >
           {/* Nav panel */}
-          <Stack border="default" surface="sidePanel" className={`flex-1 border-r dark:border-slate-800 ${__O.hidden}`} shadow="xl">
+          <Stack border="default" surface="sidePanel" className={`flex-1 border-r dark:border-[var(--appkit-color-border)] ${__O.hidden}`} shadow="xl">
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               {renderHeader ? renderHeader() : <Span size="xs" weight="semibold" transform="uppercase" color="muted">Admin Panel</Span>}
             </Div>

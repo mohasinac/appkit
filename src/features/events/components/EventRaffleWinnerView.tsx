@@ -1,4 +1,4 @@
-import { Article, ClaimCouponButton, Div, Heading, Span, Text, TextLink } from "../../../ui";
+import { Article, ClaimCouponButton, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 
 const __P = {
   p4: "p-4",
@@ -60,7 +60,8 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
   }
 
   return (
-    <Article className="space-y-4">
+    <Article>
+      <Stack gap="lg">
       <Heading
         level={2} size="xl" weight="semibold" color="primary">
         🎟️ {l.heading}
@@ -100,7 +101,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           </Div>
         ) : null}
 
-        <Div layout="flex" textSize="sm" className="flex-wrap gap-x-6 gap-y-2" color="muted" padding="t-xs">
+        <Row wrap textSize="sm" className="gap-x-6 gap-y-2" color="muted" padding="t-xs">
           {typeof event.raffleEntryCount === "number" ? (
             <Span>
               {l.poolLabel}:{" "}
@@ -114,7 +115,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
               {new Date(event.raffleTriggeredAt).toLocaleString()}
             </Span>
           ) : null}
-        </Div>
+        </Row>
       </Div>
 
       {event.raffleGithubFunctionUrl ? (
@@ -130,6 +131,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
           </TextLink>
         </Div>
       ) : null}
+      </Stack>
     </Article>
   );
 }

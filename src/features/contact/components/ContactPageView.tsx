@@ -22,7 +22,8 @@ export function ContactPageView() {
   return (
     <Main>
       <Section padding="y-2xl">
-        <Container size="xl" className="space-y-8">
+        <Container size="xl">
+          <Stack gap="section">
           <Stack gap="3">
             <Heading level={1} size="3xl" weight="semibold" color="primary">
               Contact Us
@@ -76,6 +77,7 @@ export function ContactPageView() {
           </Div>
 
           <AdSlot id="detail-below-price" />
+          </Stack>
         </Container>
       </Section>
     </Main>

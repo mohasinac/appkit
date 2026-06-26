@@ -422,7 +422,7 @@ export function Search({
               type="button"
               variant="ghost"
               onClick={handleClear}
-              className="absolute right-3 p-0.5 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+              className="absolute right-3 p-[0.125rem] hover:text-[var(--appkit-color-text-muted)] dark:hover:text-[var(--appkit-color-text)] transition-colors"
               aria-label={labels.clearAriaLabel}
             >
               <svg
@@ -483,8 +483,7 @@ export function Search({
 
         {isInlineOpen && (filteredQuickLinks.length > 0 || query) && (
           <div
-            className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
-            style={{ zIndex: "var(--appkit-z-dropdown)" }}
+            className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900 [z-index:var(--appkit-z-dropdown)]"
             onMouseDown={(event) => event.preventDefault()}
           >
             {filteredQuickLinks.length > 0 && (
@@ -650,8 +649,8 @@ export function Search({
 
   return (
     <Div border="bottom-subtle" className="animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
-      <Div className="container mx-auto md:py-4 relative" padding="inline">
-        <Row gap="sm" className="md:gap-3">
+      <Div className="container mx-auto md:py-[1rem] relative" padding="inline">
+        <Row gap="sm" className="md:gap-[0.75rem]">
           <Div className="flex-1 relative">
             <Input
               ref={inputRef}
@@ -724,7 +723,7 @@ export function Search({
         </Row>
 
         {(filteredSiteLinks.length > 0 || query) && (
-          <Stack className="absolute top-full left-0 right-0 pt-2 pb-4 z-50" padding="x-md" gap="sm">
+          <Stack className="absolute top-full left-0 right-0 z-50 pt-[0.5rem] pb-[1rem]" padding="x-md" gap="sm">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
               <Div className={`${__O.hidden}`} rounded="xl" shadow="lg" surface="default" border="default">
                 <Div border="default" className="border-b" paddingY="y-xs" paddingX="x-md">

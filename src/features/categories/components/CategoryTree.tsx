@@ -25,11 +25,12 @@ function CategoryTreeNode({
   const isActive = item.id === activeId;
   const [expanded, setExpanded] = useState(true);
 
-  const indent = depth * 16;
+  const DEPTH_PL = ["pl-2", "pl-6", "pl-10", "pl-14", "pl-[72px]"] as const;
+  const depthPl = DEPTH_PL[Math.min(depth, 4)];
 
   return (
     <Div>
-      <Row textWeight="semibold" textSize="sm" 
+      <Row textWeight="semibold" textSize="sm"
         role="treeitem"
         aria-expanded={hasChildren ? expanded : undefined}
         aria-selected={isActive}
@@ -45,8 +46,7 @@ function CategoryTreeNode({
           if (hasChildren) setExpanded((p) => !p);
           onSelect?.(item);
         }}
-        className={`cursor-pointer py-1.5 transition select-none ${isActive ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} align="center" gap="xs" padding="x-xs" rounded="md"
-        style={{ paddingLeft: `${8 + indent}px` }}
+        className={`cursor-pointer py-1.5 transition select-none ${depthPl} ${isActive ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} align="center" gap="xs" padding="x-xs" rounded="md"
       >
         {hasChildren && (
           <Span

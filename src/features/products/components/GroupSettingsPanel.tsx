@@ -268,7 +268,7 @@ export function GroupSettingsPanel({
         <Heading level={3} size="sm" weight="semibold" color="muted">
           Group Settings
         </Heading>
-        <Span size="xs" className="group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors" color="faint">
+        <Span size="xs" className="group-hover:text-[var(--appkit-color-text-muted)] dark:group-hover:text-[var(--appkit-color-text-faint)] transition-colors" color="faint">
           {open ? "▲" : "▼"}
         </Span>
       </button>
@@ -509,7 +509,7 @@ function AddChildContent({
               onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
               options={CONDITION_OPTIONS}
             />
-            <Text className="dark:text-zinc-400/80" color="faint" size="xs">
+            <Text className="dark:text-[var(--appkit-color-text-faint)]/80" color="faint" size="xs">
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.
             </Text>

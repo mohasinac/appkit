@@ -24,6 +24,7 @@ import {
   nowMs,
 } from "../../utils";
 import {
+  EmailBold,
   EmailButton,
   EmailContainer,
   EmailDivider,
@@ -201,7 +202,7 @@ function renderOrderItems(
         {items.map((item, idx) => (
           <p key={item.productId ?? idx} style={PARA_STYLE}>
             {item.productTitle} × {item.quantity} —{" "}
-            <strong>{formatCurrency(item.totalPrice, currency)}</strong>
+            <EmailBold>{formatCurrency(item.totalPrice, currency)}</EmailBold>
           </p>
         ))}
       </>
@@ -386,7 +387,7 @@ export async function sendDigitalCodeClaimedEmail(params: {
         <EmailRow>
           <p style={PARA_STYLE}>Hi {userName},</p>
           <p style={PARA_STYLE}>
-            Your digital code for <strong>{productTitle}</strong> has been
+            Your digital code for <EmailBold>{productTitle}</EmailBold> has been
             assigned to your order and is ready to reveal.
           </p>
           <p style={PARA_STYLE}>
@@ -448,7 +449,7 @@ export async function sendSiteSettingsChangedEmail(params: {
         <EmailHeader brandName={siteName}>Site Settings Changed ⚙️</EmailHeader>
         <EmailRow>
           <p style={PARA_STYLE}>
-            <strong>{changedByEmail}</strong> has updated the following site
+            <EmailBold>{changedByEmail}</EmailBold> has updated the following site
             settings:
           </p>
           <p style={PARA_STYLE}>
