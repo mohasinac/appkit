@@ -3,18 +3,26 @@
  * server's stable `code`, the HTTP status, and any Zod issues so wrappers
  * can route the failure (toast vs inline field error vs error boundary).
  */
+
+/** Serialised Zod-issue shape as it arrives over the wire from the server. */
+export interface ApiIssue {
+  message: string;
+  path?: (string | number)[];
+  code?: string;
+}
+
 export class ApiError extends Error {
   readonly code: string;
   readonly status: number;
-  readonly issues?: unknown[];
+  readonly issues?: ApiIssue[];
   readonly requestId?: string;
-  readonly cause?: unknown;
+  readonly cause?: Error;
 
   constructor(
     code: string,
     message: string,
     status: number,
-    options?: { issues?: unknown[]; requestId?: string; cause?: unknown },
+    options?: { issues?: ApiIssue[]; requestId?: string; cause?: Error },
   ) {
     super(message);
     this.name = "ApiError";
