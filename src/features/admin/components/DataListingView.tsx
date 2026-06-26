@@ -48,6 +48,7 @@ export interface AdminListingScaffoldRow {
   isPromoted?: boolean;
   isOnSale?: boolean;
   isSold?: boolean;
+  barcodeId?: string;
 }
 
 export interface ListingSortOption {

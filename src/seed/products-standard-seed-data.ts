@@ -76,6 +76,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-topper-tin-2004",
     slug: "product-topper-tin-2004",
+    barcodeId: "LIR-TIN20001",
     title: "2004 Collector Tin",
     description: "Vintage 2004 YGO collector tin with bonus cards and playmat.",
     categorySlugs: ["category-sealed-products", "category-collector-tins"],
@@ -99,6 +100,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-topper-tin-2005",
     slug: "product-topper-tin-2005",
+    barcodeId: "LIR-TIN20002",
     title: "2005 Collector Tin",
     description: "2005 edition tin with premium foil cards.",
     categorySlugs: ["category-sealed-products", "category-collector-tins"],
@@ -122,6 +124,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-duel-disk-replica",
     slug: "product-duel-disk-replica",
+    barcodeId: "LIR-DUAL0001",
     title: "Duel Disk Replica (Premium)",
     description: "Deluxe replica of the iconic Duel Disk from the anime with light-up features.",
     categorySlugs: ["category-sealed-products"],
@@ -145,6 +148,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-millennium-puzzle-model",
     slug: "product-millennium-puzzle-model",
+    barcodeId: "LIR-MILP0001",
     title: "Millennium Puzzle Model Kit",
     description: "Detailed model kit of Yugi's iconic Millennium Puzzle. Requires assembly.",
     categorySlugs: ["category-sealed-products"],
@@ -168,6 +172,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-yugi-plush-20cm",
     slug: "product-yugi-plush-20cm",
+    barcodeId: "LIR-YUGI0001",
     title: "Yugi Muto Plush (20cm)",
     description: "Soft plush toy of Yugi Muto. Perfect for collectors.",
     categorySlugs: ["category-sealed-products"],
@@ -191,6 +196,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-kaiba-figure-15cm",
     slug: "product-kaiba-figure-15cm",
+    barcodeId: "LIR-KAIB0001",
     title: "Seto Kaiba Figure (15cm)",
     description: "Detailed PVC figure of Seto Kaiba in his classic suit.",
     categorySlugs: ["category-sealed-products"],
@@ -214,6 +220,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-dark-magician-figure",
     slug: "product-dark-magician-figure",
+    barcodeId: "LIR-DARK0001",
     title: "Dark Magician Figure (Deluxe)",
     description: "Premium figure of the Dark Magician with intricate details and base display.",
     categorySlugs: ["category-sealed-products"],
@@ -237,6 +244,7 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-exodia-art-print",
     slug: "product-exodia-art-print",
+    barcodeId: "LIR-EXOD0001",
     title: "Exodia Art Print (A3)",
     description: "High-quality A3 art print of the complete Exodia set.",
     categorySlugs: ["category-sealed-products"],

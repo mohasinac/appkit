@@ -197,6 +197,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
           isPromoted: Boolean(item.isPromoted),
           isOnSale: Boolean(item.isOnSale),
           isSold: Boolean(item.isSold),
+          barcodeId: typeof item.barcodeId === "string" ? item.barcodeId : undefined,
         };
         return overrides[id] ? { ...base, ...overrides[id] } : base;
       }),
@@ -283,11 +284,13 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
               },
               { name: "featured", label: "Featured", type: "toggle" },
               { name: "isPromoted", label: "Promoted", type: "toggle" },
+              { name: "barcodeId", label: "Barcode ID", type: "text" },
             ],
             defaultValues: {
               status: row.status,
               featured: row.featured,
               isPromoted: row.isPromoted,
+              barcodeId: String(row.barcodeId ?? ""),
             },
             onSubmit: (vals) => handleQuickEdit(row.id, vals),
             submitLabel: "Save",

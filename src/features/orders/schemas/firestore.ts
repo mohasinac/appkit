@@ -226,6 +226,13 @@ export interface OrderDocument {
     bin: string;
   };
 
+  /** UID of the employee or seller assigned to fulfil this order. */
+  assignedWorkerId?: string;
+  /** Timestamp when all items in this order were physically confirmed picked. */
+  pickedAt?: Date;
+  /** Timestamp when the order was packed and ready for courier handoff. */
+  packedAt?: Date;
+
   createdAt: Date;
   updatedAt: Date;
 }

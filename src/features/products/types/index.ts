@@ -187,6 +187,8 @@ export interface ProductItem {
     shelf: string;
     bin: string;
   };
+  /** Scannable barcode ID linking this listing to a physical stickered item. */
+  barcodeId?: string;
 }
 
 export interface ProductListResponse {

@@ -31,9 +31,11 @@ import { GroupSettingsPanel } from "../../products/components/GroupSettingsPanel
 import { GroupInlineSelect } from "../../seller/components/GroupInlineSelect";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { BrandQuickCreateForm } from "./BrandQuickCreateForm";
+import { BarcodeField } from "../../seller/components/BarcodeField";
 
 const __P = {
   p4: "p-4",
+  sectionLabel: "tracking-widest mb-4",
 } as const;
 
 const __O = {
@@ -256,7 +258,7 @@ export function AdminProductEditorView({
       }} spacing="lg">
       {/* ── Listing type ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
+        <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
           Listing Type
         </Text>
         <Tabs value={mode} onChange={handleModeChange}>
@@ -279,7 +281,7 @@ export function AdminProductEditorView({
 
       {/* ── Classification (store + category + brand) ── */}
       <Card variant="outlined" padding="lg">
-        <Text className="tracking-widest mb-4" color="muted" size="xs" weight="semibold" transform="uppercase">
+        <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
           Classification
         </Text>
         <Stack gap="md">
@@ -379,6 +381,19 @@ export function AdminProductEditorView({
             )}
           />
         </Stack>
+      </Card>
+
+      {/* ── Inventory / Barcode ── */}
+      <Card variant="outlined" padding="lg">
+        <Text className={__P.sectionLabel} color="muted" size="xs" weight="semibold" transform="uppercase">
+          Inventory
+        </Text>
+        <BarcodeField
+          value={product.barcodeId ?? ""}
+          onChange={(v) => setProduct((prev) => ({ ...prev, barcodeId: v || undefined }))}
+          onScan={(v) => setProduct((prev) => ({ ...prev, barcodeId: v }))}
+          helperText="Leave blank to auto-generate. Scan a pre-printed sticker to link it."
+        />
       </Card>
 
       {/* Mobile-only action buttons */}

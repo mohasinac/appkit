@@ -317,6 +317,11 @@ export interface ProductDocument {
     bin: string;
   };
 
+  /** Scannable barcode identifier linking this listing to a physical stickered item.
+   *  Auto-generated as `LIR-{8-char-hex}` on product creation when not supplied.
+   *  Override by scanning a pre-printed sticker during the create/edit flow. */
+  barcodeId?: string;
+
   searchTokens?: string[];
 
   createdAt: Date;
@@ -513,6 +518,7 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "groupParentSlug",
   "groupChildSlugs",
   "groupTitle",
+  "barcodeId",
 ] as const;
 
 export type ProductCreateInput = Omit<

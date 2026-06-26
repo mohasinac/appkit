@@ -11,6 +11,7 @@ import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
 import { QuickProductForm } from "./QuickProductForm";
+import { BarcodeField } from "./BarcodeField";
 
 import { normalizeError } from "../../../errors/normalize";
 export type ProductListingMode =
@@ -91,6 +92,8 @@ export interface SellerProductDraft {
   liveHandlingFee?: number;
   liveJurisdictions?: string[];
   liveCites?: boolean;
+  /** Barcode ID of the physical sticker on this item. Auto-generated on save if blank. */
+  barcodeId?: string;
 }
 
 const sellerProductSchema = z.object({
@@ -248,6 +251,12 @@ function StepBasic({
           onChange({ tags: v.split(",").map((t) => t.trim()).filter(Boolean) })
         }
         placeholder="pokemon, psa9, charizard, holo"
+      />
+      <BarcodeField
+        value={values.barcodeId ?? ""}
+        onChange={(v) => onChange({ barcodeId: v || undefined })}
+        onScan={(v) => onChange({ barcodeId: v })}
+        helperText="Leave blank to auto-generate. Scan a pre-printed sticker to link it."
       />
     </Stack>
   );

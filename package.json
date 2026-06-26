@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -168,6 +168,7 @@
   },
   "dependencies": {
     "@mohasinac/sievejs": "^1.0.0",
+    "jsbarcode": "^3.12.3",
     "motion": "^12.40.0",
     "react-advanced-cropper": "^0.20.1",
     "tailwind-merge": "^3.3.0",

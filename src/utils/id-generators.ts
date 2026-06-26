@@ -703,3 +703,22 @@ export function validateMediaFilename(filename: string): boolean {
   if (filename.includes("..") || filename.includes("/") || filename.includes("\\")) return false;
   return MEDIA_FILENAME_REGEX.test(filename);
 }
+
+/**
+ * Generates a scannable barcode identifier for a product listing.
+ * Returns `LIR-XXXXXXXX` (8 uppercase hex chars) derived from a SHA-1
+ * hash of the productId. Deterministic and stateless — calling it twice
+ * with the same productId returns the same result.
+ * Uses `globalThis.crypto.subtle` available in Node ≥18 and modern browsers.
+ */
+export async function generateBarcodeId(productId: string): Promise<string> {
+  const buf = await globalThis.crypto.subtle.digest(
+    "SHA-1",
+    new TextEncoder().encode(productId),
+  );
+  const hex = Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return `LIR-${hex.slice(0, 8).toUpperCase()}`;
+}
+

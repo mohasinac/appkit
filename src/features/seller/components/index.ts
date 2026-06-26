@@ -134,3 +134,8 @@ export { SellerDigitalCodesView } from "./SellerDigitalCodesView";
 export type { SellerDigitalCodesViewProps } from "./SellerDigitalCodesView";
 export { SellerLiveView } from "./SellerLiveView";
 export type { SellerLiveViewProps } from "./SellerLiveView";
+
+export { BarcodeField } from "./BarcodeField";
+export type { BarcodeFieldProps } from "./BarcodeField";
+export { FulfillmentView } from "./FulfillmentView";
+export type { FulfillmentViewProps } from "./FulfillmentView";

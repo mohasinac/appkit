@@ -117,6 +117,39 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     });
   }
 
+  async assignWorker(orderId: string, workerId: string): Promise<OrderDocument> {
+    return this.update(orderId, { assignedWorkerId: workerId, updatedAt: new Date() });
+  }
+
+  async unassignWorker(orderId: string): Promise<OrderDocument> {
+    return this.update(orderId, { assignedWorkerId: undefined, updatedAt: new Date() });
+  }
+
+  async markPicked(orderId: string): Promise<OrderDocument> {
+    const order = await this.findById(orderId);
+    if (!order) throw new NotFoundError(`Order ${orderId} not found`);
+    const nextStatus =
+      order.status === "confirmed" ? ("processing" as OrderStatus) : (order.status as OrderStatus);
+    return this.update(orderId, { pickedAt: new Date(), status: nextStatus, updatedAt: new Date() });
+  }
+
+  async markPacked(orderId: string): Promise<OrderDocument> {
+    return this.update(orderId, { packedAt: new Date(), updatedAt: new Date() });
+  }
+
+  async findFulfillmentQueue(storeId: string): Promise<OrderDocument[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(ORDER_FIELDS.STORE_ID, "==", storeId)
+      .where(ORDER_FIELDS.STATUS, "in", ["confirmed", "processing"])
+      .orderBy(ORDER_FIELDS.CREATED_AT, "asc")
+      .limit(200)
+      .get();
+    return snap.docs.map((doc) =>
+      this.decryptOrder({ id: doc.id, ...doc.data() } as OrderDocument),
+    );
+  }
+
   async updatePaymentStatus(
     orderId: string,
     paymentStatus: PaymentStatus,

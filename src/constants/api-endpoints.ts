@@ -173,6 +173,7 @@ export const ADMIN_ENDPOINTS = {
   ADDRESS_BY_ID: (id: string) => `/api/admin/addresses/${id}`,
   GROUPED_LISTINGS: "/api/admin/grouped-listings",
   GROUPED_LISTING_BY_ID: (id: string) => `/api/admin/grouped-listings/${id}`,
+  ADMIN_FULFILLMENT: (storeId: string) => `/api/store/fulfillment?storeId=${encodeURIComponent(storeId)}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -436,6 +437,10 @@ export const SELLER_ENDPOINTS = {
   SHIPPING_CONFIG_BY_ID: (id: string) => `/api/store/shipping-configs/${id}`,
   GOOGLE_REVIEWS: "/api/store/google-reviews",
   GOOGLE_REVIEWS_SYNC: "/api/store/google-reviews/sync",
+  PRODUCTS_SCAN: (barcode: string) =>
+    `/api/store/products/scan?barcode=${encodeURIComponent(barcode)}`,
+  ORDERS_FULFILLMENT: "/api/store/fulfillment",
+  ORDERS_ASSIGN: (orderId: string) => `/api/store/orders/${orderId}/assign`,
 } as const;
 
 // ---------------------------------------------------------------------------

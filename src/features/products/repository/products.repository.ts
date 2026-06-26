@@ -12,7 +12,7 @@ import {
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { cacheManager } from "../../../core";
-import { generateUniqueId, slugify, buildSearchTokens, tokenizeQuery } from "../../../utils";
+import { generateUniqueId, slugify, buildSearchTokens, tokenizeQuery, generateBarcodeId } from "../../../utils";
 import {
   PRODUCT_COLLECTION,
   createAuctionId,
@@ -179,8 +179,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       },
     );
 
+    const barcodeId = input.barcodeId ?? await generateBarcodeId(id);
     const productData: Omit<ProductDocument, "id"> = {
       ...input,
+      barcodeId,
       slug: id,
       availableQuantity: input.stockQuantity,
       searchTokens: buildProductSearchTokens(input),
@@ -215,6 +217,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       .where(PRODUCT_FIELDS.CATEGORY_SLUGS, "array-contains", category)
       .get();
     return snap.docs.map((d) => this.mapDoc<ProductDocument>(d));
+  }
+
+  async findByBarcodeId(barcodeId: string): Promise<ProductDocument | null> {
+    const docs = await this.findBy("barcodeId", barcodeId);
+    return docs[0] ?? null;
   }
 
   async findBySlug(slug: string): Promise<ProductDocument | undefined> {

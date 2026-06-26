@@ -201,6 +201,7 @@ export const DEFAULT_ROUTE_MAP = {
     LIVE_ITEMS_EDIT: (id: string) => `/store/live/${id}/edit`,
     PRINT_CENTER: "/store/print-center",
     INVENTORY_PRINT: "/store/inventory/print",
+    FULFILLMENT: "/store/fulfillment",
     // S-STORE Tier — new extension routes
     PAYOUT_METHODS: "/store/payout-methods",
     PAYOUT_METHODS_NEW: "/store/payout-methods/new",
@@ -314,6 +315,7 @@ export const DEFAULT_ROUTE_MAP = {
     SETTINGS_ACTIONS: "/admin/settings/actions",
     SETTINGS_NAVIGATION: "/admin/settings/navigation",
     PRINT_CENTER: "/admin/print-center",
+    FULFILLMENT: "/admin/fulfillment",
     // S-STORE Tier — admin moderation + reports + item requests
     MODERATION: "/admin/moderation",
     MODERATION_DETAIL: (id: string) => `/admin/moderation/${id}`,
