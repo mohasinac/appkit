@@ -1,5 +1,5 @@
-// SB-UNI X2 — placeholder for live-listing schema fragment.
-// SB-UNI-K (Phase 3) adds liveItem.{species, ageMonths?, sex, careInfo,
-// transport: {method, handlingFeeInPaise?, insuranceIncluded},
-// jurisdictionAllowed[], vendorVerified, cites?} onto ProductDocument.
-export {};
+import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+
+export function isLiveItemProduct(doc: ProductDocument): boolean {
+  return doc.listingType === "live";
+}

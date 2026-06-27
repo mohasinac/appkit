@@ -1,4 +1,5 @@
 import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 /**
  * S-STORE Extensions — Firestore Document Types
  *
@@ -24,8 +25,7 @@ import type { FirestoreDocument } from "@mohasinac/appkit";
 
 export type PayoutMethodType = "upi" | "bank" | "card" | "other";
 
-export interface PayoutMethodDocument {
-  id: string;
+export interface PayoutMethodDocument extends BaseDocument {
   sellerId: string;
   storeId: string;
   type: PayoutMethodType;
@@ -41,8 +41,6 @@ export interface PayoutMethodDocument {
   bankName?: string;
   // Card / other
   details?: Record<string, string>;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const PAYOUT_METHODS_COLLECTION = "payoutMethods" as const;
@@ -69,8 +67,7 @@ export type ShippingMethod =
   | "pickup"
   | "custom";
 
-export interface ShippingConfigDocument {
-  id: string;
+export interface ShippingConfigDocument extends BaseDocument {
   storeId: string;
   label: string;
   method: ShippingMethod;
@@ -82,8 +79,6 @@ export interface ShippingConfigDocument {
   expressSurchargeInPaise?: number;
   estimatedDays?: number;
   zones?: string[];
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const SHIPPING_CONFIGS_COLLECTION = "shippingConfigs" as const;
@@ -110,8 +105,7 @@ export type AnalyticsCardType =
   | "table"
   | "custom";
 
-export interface AnalyticsCardDocument {
-  id: string;
+export interface AnalyticsCardDocument extends BaseDocument {
   scope: AnalyticsScope;
   ownerId: string;
   title: string;
@@ -121,8 +115,6 @@ export interface AnalyticsCardDocument {
   position: number;
   isBuiltIn: boolean;
   isVisible: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const ANALYTICS_CARDS_COLLECTION = "analyticsCards" as const;
@@ -144,8 +136,7 @@ export const DEFAULT_ANALYTICS_CARD_DATA: Partial<AnalyticsCardDocument> = {
 
 export type AlertOperator = ">" | "<" | ">=" | "<=" | "==" | "!=";
 
-export interface AnalyticsAlertDocument {
-  id: string;
+export interface AnalyticsAlertDocument extends BaseDocument {
   scope: AnalyticsScope;
   ownerId: string;
   label: string;
@@ -156,8 +147,6 @@ export interface AnalyticsAlertDocument {
   isActive: boolean;
   notifyChannels: Array<"in-app" | "email" | "whatsapp">;
   lastTriggeredAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const ANALYTICS_ALERTS_COLLECTION = "analyticsAlerts" as const;
@@ -176,8 +165,7 @@ export const DEFAULT_ANALYTICS_ALERT_DATA: Partial<AnalyticsAlertDocument> = {
 
 // 5. ───── storeCategories ────────────────────────────────────────────────
 
-export interface StoreCategoryDocument {
-  id: string;
+export interface StoreCategoryDocument extends BaseDocument {
   storeId: string;
   label: string;
   slug: string;
@@ -186,8 +174,6 @@ export interface StoreCategoryDocument {
   isActive: boolean;
   description?: string;
   coverImageUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const STORE_CATEGORIES_COLLECTION = "storeCategories" as const;
@@ -216,8 +202,7 @@ export type ListingTemplateType =
   | "digital-code"
   | "live";
 
-export interface ListingTemplateDocument {
-  id: string;
+export interface ListingTemplateDocument extends BaseDocument {
   storeId: string;
   ownerId: string;
   name: string;
@@ -228,8 +213,6 @@ export interface ListingTemplateDocument {
   isShared: boolean;
   isActive: boolean;
   usageCount: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const LISTING_TEMPLATES_COLLECTION = "listingTemplates" as const;
@@ -257,8 +240,7 @@ export type ModerationStatus =
   | "auto-approved";
 export type ModerationMediaType = "video" | "image" | "rich-text";
 
-export interface ModerationQueueDocument {
-  id: string;
+export interface ModerationQueueDocument extends BaseDocument {
   mediaType: ModerationMediaType;
   mediaUrl?: string;
   thumbnailUrl?: string;
@@ -271,8 +253,6 @@ export interface ModerationQueueDocument {
   reviewerId?: string;
   reviewedAt?: Date;
   submittedAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const MODERATION_QUEUE_COLLECTION = "moderationQueue" as const;
@@ -315,8 +295,7 @@ export type ReportReason =
   | "ip-violation"
   | "other";
 
-export interface ReportDocument {
-  id: string;
+export interface ReportDocument extends BaseDocument {
   entityType: ReportEntityType;
   entityId: string;
   reporterId: string;
@@ -328,8 +307,6 @@ export interface ReportDocument {
   assignedTo?: string;
   resolution?: string;
   resolvedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const REPORTS_COLLECTION = "reports" as const;
@@ -356,6 +333,7 @@ export type ItemRequestStatus =
   | "rejected";
 
 export interface ItemRequestReply {
+  // audit-schema-base-ok: embedded sub-document stored inside ItemRequestDocument.replies[], not a top-level collection root
   id: string;
   authorId: string;
   authorName?: string;
@@ -364,8 +342,7 @@ export interface ItemRequestReply {
   createdAt: Date;
 }
 
-export interface ItemRequestDocument {
-  id: string;
+export interface ItemRequestDocument extends BaseDocument {
   opUserId: string;
   opDisplayName: string;
   title: string;
@@ -381,8 +358,6 @@ export interface ItemRequestDocument {
   approvedAt?: Date;
   approvedBy?: string;
   closedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const ITEM_REQUESTS_COLLECTION = "itemRequests" as const;
@@ -401,8 +376,7 @@ export const DEFAULT_ITEM_REQUEST_DATA: Partial<ItemRequestDocument> = {
 
 // 10. ───── storeWhatsAppConfig ──────────────────────────────────────────
 
-export interface StoreWhatsAppConfigDocument {
-  id: string;
+export interface StoreWhatsAppConfigDocument extends BaseDocument {
   storeId: string;
   isConnected: boolean;
   isPaid: boolean;
@@ -413,8 +387,6 @@ export interface StoreWhatsAppConfigDocument {
   welcomeMessage?: string;
   /** Status of pending WhatsApp Business onboarding (Meta Cloud API). */
   onboardingStatus?: "pending" | "approved" | "rejected";
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const STORE_WHATSAPP_CONFIG_COLLECTION =
@@ -431,8 +403,7 @@ export const DEFAULT_STORE_WHATSAPP_CONFIG_DATA: Partial<StoreWhatsAppConfigDocu
 
 // 11. ───── storeGoogleConfig ────────────────────────────────────────────
 
-export interface StoreGoogleConfigDocument {
-  id: string;
+export interface StoreGoogleConfigDocument extends BaseDocument {
   storeId: string;
   isConnected: boolean;
   placeId?: string;
@@ -441,8 +412,6 @@ export interface StoreGoogleConfigDocument {
   totalReviews?: number;
   lastSyncedAt?: Date;
   oauthRefreshToken?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const STORE_GOOGLE_CONFIG_COLLECTION = "storeGoogleConfig" as const;

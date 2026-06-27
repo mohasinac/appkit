@@ -5,6 +5,7 @@
 import { generateBlogPostId } from "../../../utils/id-generators";
 import type { MediaFieldInput, MediaField } from "../../media/types";
 import type { BlogPostStatus, BlogPostCategory } from "../types";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 /** Runtime-accessible blog post status values — use instead of bare string literals. */
 export const BlogPostStatusValues = {
@@ -13,8 +14,7 @@ export const BlogPostStatusValues = {
   ARCHIVED: "archived" as BlogPostStatus,
 } as const;
 
-export interface BlogPostDocument {
-  id: string;
+export interface BlogPostDocument extends BaseDocument {
   title: string;
   slug: string;
   excerpt: string;
@@ -34,8 +34,6 @@ export interface BlogPostDocument {
   views: number;
   metaTitle?: string;
   metaDescription?: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const BLOG_POSTS_COLLECTION = "blogPosts" as const;

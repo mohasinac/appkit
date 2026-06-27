@@ -47,6 +47,9 @@ export { StoreAuctionsPageView } from "./features/stores/components/StoreAuction
 export { StorePreOrdersPageView } from "./features/stores/components/StorePreOrdersPageView";
 export { StorePrizeDrawsPageView } from "./features/stores/components/StorePrizeDrawsPageView";
 export { StoreBundlesPageView } from "./features/stores/components/StoreBundlesPageView";
+export { StoreClassifiedsPageView } from "./features/stores/components/StoreClassifiedsPageView";
+export { StoreDigitalCodesPageView } from "./features/stores/components/StoreDigitalCodesPageView";
+export { StoreLiveItemsPageView } from "./features/stores/components/StoreLiveItemsPageView";
 
 // S2: products data layer — deduped via React.cache()
 export {

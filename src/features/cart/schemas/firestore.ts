@@ -6,6 +6,7 @@
  */
 
 // -- Cart Document ------------------------------------------------------------
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export interface CartItemDocument {
   itemId: string;
@@ -81,16 +82,13 @@ export interface CartAppliedCoupon {
   combineWithSellerCoupons?: boolean;
 }
 
-export interface CartDocument {
-  id: string; // = userId
+export interface CartDocument extends BaseDocument {
   userId: string;
   items: CartItemDocument[];
   /** Multiple coupons/deals applied at cart level */
   appliedCoupons?: CartAppliedCoupon[];
   /** Item IDs the user has selected for the next checkout (undefined = all items) */
   selectedItemIds?: string[];
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const CART_COLLECTION = "carts" as const;

@@ -6,6 +6,7 @@ import {
   generatePayoutId,
   type GeneratePayoutIdInput,
 } from "../../../utils/id-generators";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export interface PayoutBankAccount {
   accountHolderName: string;
@@ -42,8 +43,7 @@ export const PayoutStatusValues = {
 
 export type PayoutPaymentMethod = "bank_transfer" | "upi";
 
-export interface PayoutDocument {
-  id: string;
+export interface PayoutDocument extends BaseDocument {
   storeId: string;
   sellerName: string;
   sellerEmail: string;
@@ -76,8 +76,6 @@ export interface PayoutDocument {
   netAmount?: number;
   requestedAt: Date;
   processedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const PAYOUT_COLLECTION = "payouts" as const;

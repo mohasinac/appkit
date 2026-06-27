@@ -26,6 +26,7 @@
  */
 
 import type { ScamType } from "../constants/scam-types";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 // ============================================================================
 // ENUMS — SCAMMER PROFILE
@@ -113,8 +114,7 @@ export interface ScammerSocialMedia {
   url?: string;
 }
 
-export interface ScammerDocument {
-  id: string;
+export interface ScammerDocument extends BaseDocument {
   /** URL-safe slug — used in /scams/[slug]. Same as id. */
   seoSlug: string;
 
@@ -213,9 +213,6 @@ export interface ScammerDocument {
    * Reset to false when all contests are reviewed.
    */
   isContested?: boolean;
-
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 // ============================================================================
@@ -231,7 +228,7 @@ export interface ScammerDocument {
  */
 export interface ScammerIncidentDocument {
   /** Firestore auto-ID — incidents never get semantic slugs. */
-  id: string;
+  id: string; // audit-schema-base-ok: subcollection of scammerProfiles, not a collection root
   /** Parent ScammerDocument id. */
   scammerId: string;
 
@@ -311,7 +308,7 @@ export const DEFAULT_SCAMMER_INCIDENT_DATA: Partial<ScammerIncidentDocument> = {
  */
 export interface ScammerCommentDocument {
   /** Firestore auto-ID. */
-  id: string;
+  id: string; // audit-schema-base-ok: subcollection of scammerProfiles, not a collection root
   scammerId: string;
 
   authorId: string;
@@ -393,7 +390,7 @@ export const MAX_COMMENT_BODY_LENGTH = 500;
  */
 export interface ScammerContestDocument {
   /** Firestore auto-ID. */
-  id: string;
+  id: string; // audit-schema-base-ok: subcollection of scammerProfiles, not a collection root
   scammerId: string;
 
   contestType: ContestType;

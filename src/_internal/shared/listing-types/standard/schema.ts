@@ -1,4 +1,6 @@
-// SB-UNI X2 — placeholder for standard-listing-specific schema fragment.
-// Today the standard listing reuses ProductDocument as-is. Phase 3 will
-// extract a standard-specific delta (Amazon-style catalog/offer split, L).
-export {};
+import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+
+// Standard is the default — any product without an explicit listingType is treated as standard.
+export function isStandardProduct(doc: ProductDocument): boolean {
+  return doc.listingType === "standard" || doc.listingType == null;
+}

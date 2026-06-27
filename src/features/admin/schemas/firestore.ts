@@ -35,10 +35,11 @@ export type NotificationType =
   | "prize_reveal_expired"
   | "prize_reveal_reminder";
 
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+
 export type NotificationPriority = "low" | "normal" | "high";
 
-export interface NotificationDocument {
-  id: string;
+export interface NotificationDocument extends BaseDocument {
   userId: string;
   type: NotificationType;
   priority: NotificationPriority;
@@ -60,8 +61,6 @@ export interface NotificationDocument {
     | "offer"
     | "support_ticket"
     | "scammer";
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const NOTIFICATIONS_COLLECTION = "notifications" as const;
@@ -163,8 +162,7 @@ export const notificationQueryHelpers = {
 
 // --- Chat Rooms ---------------------------------------------------------------
 
-export interface ChatRoomDocument {
-  id: string;
+export interface ChatRoomDocument extends BaseDocument {
   buyerId: string;
   ownerId: string;
   orderId: string;
@@ -174,8 +172,6 @@ export interface ChatRoomDocument {
   ownerName: string;
   lastMessage?: string;
   lastMessageAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
   /** UIDs of participants who soft-deleted this room on their side. */
   deletedBy: string[];
   /** True for admin-created group chats (> 2 participants). */
@@ -390,6 +386,7 @@ export function meetsMinPriority(
  * applied when the user's mode preference resolves to that mode.
  */
 export interface SiteSettingsThemeRecord {
+  // audit-schema-base-ok: theme record stored as an array element inside SiteSettingsDocument, not a top-level collection root
   id: string;
   name: string;
   mode: "light" | "dark";
@@ -411,7 +408,7 @@ export interface SiteSettingsTheme {
 }
 
 export interface SiteSettingsDocument {
-  id: "global";
+  id: "global"; // audit-schema-base-ok: singleton document — id is always "global", not a dynamic collection key
   siteName: string;
   motto: string;
   logo: {
@@ -486,6 +483,7 @@ export interface SiteSettingsDocument {
     ogImage: string;
   };
   features: {
+    // audit-schema-base-ok: inline anonymous object type inside SiteSettingsDocument, not a named collection root interface
     id: string;
     name: string;
     description: string;
@@ -631,7 +629,7 @@ export interface SiteSettingsDocument {
    * opt-in and require the corresponding credentials to be set.
    */
   notificationChannels?: NotificationChannelConfig;
-  createdAt: Date;
+  createdAt: Date; // audit-schema-base-ok: SiteSettingsDocument is a singleton with id="global", not extending BaseDocument
   updatedAt: Date;
 }
 

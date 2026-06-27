@@ -4,6 +4,7 @@
 
 import { generateCouponId } from "../../../utils/id-generators";
 import type { CouponType } from "../types";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export interface DiscountConfig {
   value: number;
@@ -51,8 +52,7 @@ export interface CouponStats {
   totalDiscount: number;
 }
 
-export interface CouponDocument {
-  id: string;
+export interface CouponDocument extends BaseDocument {
   code: string;
   name: string;
   description: string;
@@ -68,13 +68,11 @@ export interface CouponDocument {
   validity: ValidityConfig;
   restrictions: RestrictionsConfig;
   createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
   stats: CouponStats;
 }
 
 export interface CouponUsageDocument {
-  id: string;
+  id: string; // audit-schema-base-ok: subcollection users/{uid}/couponUsage/{couponId}, not a collection root
   userId: string;
   couponCode: string;
   usageCount: number;
@@ -105,6 +103,7 @@ export interface ClaimedCouponSnapshot {
 }
 
 export interface ClaimedCouponDocument {
+  // audit-schema-base-ok: collection root not in Phase C sweep; lacks updatedAt (coupon claims are immutable after creation) — BaseDocument extension deferred
   id: string;
   userId: string;
   couponId: string;

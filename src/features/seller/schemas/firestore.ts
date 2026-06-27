@@ -28,6 +28,7 @@ export const OfferStatusValues = {
 } as const satisfies Record<string, OfferStatus>;
 
 export interface OfferDocument {
+  // audit-schema-base-ok: collection root not in Phase C sweep; BaseDocument extension deferred
   id: string;
   productId: string;
   productTitle: string;

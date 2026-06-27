@@ -6,6 +6,7 @@ import {
   generateBidId,
   type GenerateBidIdInput,
 } from "../../../utils/id-generators";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export type BidStatus = "active" | "outbid" | "won" | "lost" | "cancelled";
 
@@ -18,8 +19,7 @@ export const BidStatusValues = {
   CANCELLED: "cancelled",
 } as const satisfies Record<string, BidStatus>;
 
-export interface BidDocument {
-  id: string;
+export interface BidDocument extends BaseDocument {
   productId: string;
   productTitle: string;
   userId: string;
@@ -32,8 +32,6 @@ export interface BidDocument {
   previousBidAmount?: number;
   bidDate: Date;
   autoMaxBid?: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const BID_COLLECTION = "bids" as const;

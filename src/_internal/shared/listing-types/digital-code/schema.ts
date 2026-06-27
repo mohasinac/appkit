@@ -1,5 +1,10 @@
-// SB-UNI X2 — placeholder for digital-code listing schema fragment.
-// SB-UNI-J (Phase 3) will add digitalCode.{codeDeliveryMethod, codePoolSize,
-// codesAvailable, redemptionInstructions, expiresAt?} onto ProductDocument
-// plus the encrypted products/{id}/codes/{codeId} subcollection.
-export {};
+import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+
+export function isDigitalCodeProduct(doc: ProductDocument): boolean {
+  return doc.listingType === "digital-code";
+}
+
+// True when there are codes remaining — gates the Buy Now CTA.
+export function hasCodesAvailable(doc: ProductDocument): boolean {
+  return isDigitalCodeProduct(doc) && (doc.digitalCode?.codesAvailable ?? 0) > 0;
+}

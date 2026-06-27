@@ -11,6 +11,7 @@ import {
   type GeneratePreOrderIdInput,
 } from "../../../utils/id-generators";
 import type { ProductStatus, ListingType } from "../types";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export interface ProductVideoField {
   url: string;
@@ -39,6 +40,7 @@ export const MAX_CUSTOM_FIELDS = 50;
 export const MAX_CUSTOM_SECTIONS = 3;
 
 export interface CustomSection {
+  // audit-schema-base-ok: embedded sub-document stored inside ProductDocument.customSections[], not a top-level collection root
   id: string;
   title: string;
   text?: string;
@@ -135,8 +137,7 @@ export interface ProductLiveItemMeta {
   cites?: string;
 }
 
-export interface ProductDocument {
-  id: string;
+export interface ProductDocument extends BaseDocument {
   title: string;
   description: string;
   slug?: string;
@@ -323,9 +324,6 @@ export interface ProductDocument {
   barcodeId?: string;
 
   searchTokens?: string[];
-
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 /**
@@ -365,6 +363,7 @@ export const PRODUCT_INDEXED_FIELDS = [
   "isSold",
   "searchTokens",
   "createdAt",
+  "barcodeId",
 ] as const;
 
 export const DEFAULT_PRODUCT_DATA: Partial<ProductDocument> = {
@@ -548,7 +547,7 @@ export const PRODUCT_CODES_SUBCOLLECTION = "codes" as const;
 export type ProductCodeStatus = "available" | "claimed" | "revoked";
 
 export interface ProductCodeDocument {
-  id: string;
+  id: string; // audit-schema-base-ok: subcollection document, not a collection root
   productId: string;
   code: string;
   status: ProductCodeStatus;

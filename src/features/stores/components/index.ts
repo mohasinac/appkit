@@ -33,6 +33,18 @@ export type { StorePreOrdersPageViewProps } from "./StorePreOrdersPageView";
 export type { StorePrizeDrawsPageViewProps } from "./StorePrizeDrawsPageView";
 // StoreBundlesPageView is an RSC — exported directly from src/index.ts, NOT here
 export type { StoreBundlesPageViewProps } from "./StoreBundlesPageView";
+export { StoreClassifiedsListing } from "./StoreClassifiedsListing";
+export type { StoreClassifiedsListingProps } from "./StoreClassifiedsListing";
+// StoreClassifiedsPageView is an RSC — exported directly from src/index.ts, NOT here
+export type { StoreClassifiedsPageViewProps } from "./StoreClassifiedsPageView";
+export { StoreDigitalCodesListing } from "./StoreDigitalCodesListing";
+export type { StoreDigitalCodesListingProps } from "./StoreDigitalCodesListing";
+// StoreDigitalCodesPageView is an RSC — exported directly from src/index.ts, NOT here
+export type { StoreDigitalCodesPageViewProps } from "./StoreDigitalCodesPageView";
+export { StoreLiveItemsListing } from "./StoreLiveItemsListing";
+export type { StoreLiveItemsListingProps } from "./StoreLiveItemsListing";
+// StoreLiveItemsPageView is an RSC — exported directly from src/index.ts, NOT here
+export type { StoreLiveItemsPageViewProps } from "./StoreLiveItemsPageView";
 export { StoreGuideHubView } from "./StoreGuideHubView";
 export type { StoreGuideHubViewProps } from "./StoreGuideHubView";
 export { StoreListingsGuideView } from "./StoreListingsGuideView";

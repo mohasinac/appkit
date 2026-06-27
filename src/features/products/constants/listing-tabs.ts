@@ -29,6 +29,9 @@ export const CATEGORY_PAGE_TABS = [
   { id: "pre-orders", label: "Pre-Orders", listingType: "pre-order" },
   { id: "prize-draws", label: "Prize Draws", listingType: "prize-draw" },
   { id: "bundles", label: "Bundles", collection: "bundles" },
+  { id: "classifieds", label: "Classifieds", listingType: "classified" },
+  { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
+  { id: "live", label: "Live Items", listingType: "live" },
   { id: "stores", label: "Stores", entity: "stores" },
 ] as const satisfies readonly ListingTab[];
 
@@ -41,6 +44,9 @@ export const STORE_PAGE_TABS = [
   { id: "pre-orders", label: "Pre-Orders", listingType: "pre-order" },
   { id: "prize-draws", label: "Prize Draws", listingType: "prize-draw" },
   { id: "bundles", label: "Bundles", collection: "bundles" },
+  { id: "classifieds", label: "Classifieds", listingType: "classified" },
+  { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
+  { id: "live", label: "Live Items", listingType: "live" },
 ] as const satisfies readonly ListingTab[];
 
 export type StoreTabId = (typeof STORE_PAGE_TABS)[number]["id"];
@@ -52,6 +58,9 @@ export const SELLER_LISTING_TABS = [
   { id: "auctions", label: "Auctions", listingType: "auction" },
   { id: "pre-orders", label: "Pre-Orders", listingType: "pre-order" },
   { id: "prize-draws", label: "Prize Draws", listingType: "prize-draw" },
+  { id: "classifieds", label: "Classifieds", listingType: "classified" },
+  { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
+  { id: "live", label: "Live Items", listingType: "live" },
 ] as const;
 
 export type SellerListingTabId = (typeof SELLER_LISTING_TABS)[number]["id"];
@@ -64,6 +73,9 @@ export const SEARCH_RESULT_TABS = [
   { id: "pre-orders", label: "Pre-Orders", listingType: "pre-order" },
   { id: "prize-draws", label: "Prize Draws", listingType: "prize-draw" },
   { id: "bundles", label: "Bundles", collection: "bundles" },
+  { id: "classifieds", label: "Classifieds", listingType: "classified" },
+  { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
+  { id: "live", label: "Live Items", listingType: "live" },
 ] as const;
 
 export type SearchTabId = (typeof SEARCH_RESULT_TABS)[number]["id"];

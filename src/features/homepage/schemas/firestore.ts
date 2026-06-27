@@ -7,6 +7,7 @@ import {
   generateCarouselId,
   generateHomepageSectionId,
 } from "../../../utils/id-generators";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 // --- Carousel Slides ----------------------------------------------------------
 
@@ -36,6 +37,7 @@ export type CarouselHoverEffect = "scale" | "color" | "glow" | "none";
 
 /** A content card placed in one of 6 grid zones (2 rows × 3 cols). */
 export interface CarouselCard {
+  // audit-schema-base-ok: embedded card sub-document stored inside CarouselSlideDocument.cards[], not a top-level collection root
   id: string;
   /** Zone 1–6: row 1 = zones 1–3, row 2 = zones 4–6 */
   zone: 1 | 2 | 3 | 4 | 5 | 6;
@@ -51,6 +53,7 @@ export interface CarouselCard {
     textAlign?: "left" | "center" | "right";
   };
   buttons?: Array<{
+    // audit-schema-base-ok: inline anonymous object type inside an array, not a named collection root interface
     id?: string;
     text: string;
     href: string;
@@ -72,14 +75,11 @@ export interface CarouselCard {
 export type GridCardCreateInput = Omit<CarouselCard, "id">;
 
 /** A named carousel that holds up to MAX_SLIDES_PER_CAROUSEL slide references. */
-export interface CarouselDocument {
-  id: string;
+export interface CarouselDocument extends BaseDocument {
   name: string;
   status: "active" | "draft";
   /** Ordered slide IDs (max MAX_SLIDES_PER_CAROUSEL). */
   slideIds: string[];
-  createdAt: Date;
-  updatedAt: Date;
   createdBy: string;
 }
 
@@ -93,8 +93,7 @@ export class TooManySlidesError extends Error {
   }
 }
 
-export interface CarouselSlideDocument {
-  id: string;
+export interface CarouselSlideDocument extends BaseDocument {
   /**
    * Reference to a named CarouselDocument (EX2).
    * null = default hero carousel (backward-compat with pre-EX2 slides).
@@ -146,8 +145,6 @@ export interface CarouselSlideDocument {
     views: number;
     lastViewed?: Date;
   };
-  createdAt: Date;
-  updatedAt: Date;
   createdBy: string;
 }
 
@@ -255,6 +252,7 @@ export interface WelcomeSectionConfig {
 export interface TrustIndicatorsSectionConfig {
   title: string;
   indicators: Array<{
+    // audit-schema-base-ok: inline anonymous object type inside an array within a section config, not a collection root
     id: string;
     icon: string;
     title: string;
@@ -504,6 +502,7 @@ export type SocialFeedLayout = "grid" | "masonry" | "carousel";
  * Do NOT store raw YouTube CDN thumbnail URLs in Firestore (they may expire).
  */
 export interface StaticSocialPost {
+  // audit-schema-base-ok: embedded sub-document inside SocialFeedSectionConfig.posts[], not a top-level collection root
   id: string;
   platform: SocialPlatform;
   /** YouTube video ID (e.g. "dQw4w9WgXcQ"). Required when platform is "youtube". */
@@ -534,6 +533,7 @@ export interface SocialFeedSectionConfig {
 
 /** Normalised social post returned by /api/social-feed */
 export interface SocialPost {
+  // audit-schema-base-ok: API DTO shape returned by /api/social-feed, not a Firestore collection root
   id: string;
   platform: SocialPlatform;
   imageUrl?: string;
@@ -585,6 +585,7 @@ export interface BannerSectionConfig {
 }
 
 export interface CustomCardsCard {
+  // audit-schema-base-ok: embedded card sub-document inside CustomCardsSectionConfig.cards[], not a top-level collection root
   id: string;
   image?: string;
   imageAlt?: string;
@@ -741,14 +742,11 @@ export type SectionConfig =
   | EventRafflesSectionConfig
   | CollectionCardsSectionConfig;
 
-export interface HomepageSectionDocument {
-  id: string;
+export interface HomepageSectionDocument extends BaseDocument {
   type: SectionType;
   order: number;
   enabled: boolean;
   config: SectionConfig;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const HOMEPAGE_SECTIONS_COLLECTION = "homepageSections" as const;

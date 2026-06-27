@@ -479,7 +479,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       price: number;
       quantity: number;
       /** Canonical listing-kind snapshot (SB1-G Phase 4). */
-      listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
+      listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
     }>,
   ): Promise<{
     valid: boolean;

@@ -52,14 +52,18 @@ export interface AdminProductEditorViewProps
   enabledListingTypes?: string[];
 }
 
-type ProductMode = "standard" | "auction" | "preorder";
+type ProductMode = "standard" | "auction" | "preorder" | "prize-draw" | "classified" | "digital-code" | "live";
 
 function modeFromProduct(product: ProductFormValue): ProductMode {
   const lt = normalizeListingType(
     product as { listingType?: import("../../products/types").ListingType },
   );
-  if (lt === "auction") return "auction";
-  if (lt === "pre-order") return "preorder";
+  if (lt === "auction")       return "auction";
+  if (lt === "pre-order")     return "preorder";
+  if (lt === "prize-draw")    return "prize-draw";
+  if (lt === "classified")    return "classified";
+  if (lt === "digital-code")  return "digital-code";
+  if (lt === "live")          return "live";
   return "standard";
 }
 
@@ -68,15 +72,16 @@ function modeFromProduct(product: ProductFormValue): ProductMode {
  * `listingType` discriminator. Nothing else needs to be written for the mode flip.
  */
 function applyMode(product: ProductFormValue, mode: ProductMode): ProductFormValue {
-  return {
-    ...product,
-    listingType:
-      mode === "auction"
-        ? "auction"
-        : mode === "preorder"
-          ? "pre-order"
-          : "standard",
+  const map: Record<ProductMode, import("../../products/types").ListingType> = {
+    standard:       "standard",
+    auction:        "auction",
+    preorder:       "pre-order",
+    "prize-draw":   "prize-draw",
+    classified:     "classified",
+    "digital-code": "digital-code",
+    live:           "live",
   };
+  return { ...product, listingType: map[mode] };
 }
 
 interface StoreOption {
@@ -272,10 +277,26 @@ export function AdminProductEditorView({
             {(!enabledListingTypes || enabledListingTypes.includes("pre-order")) && (
               <TabsTrigger value="preorder">Pre-order</TabsTrigger>
             )}
+            {(!enabledListingTypes || enabledListingTypes.includes("prize-draw")) && (
+              <TabsTrigger value="prize-draw">Prize Draw</TabsTrigger>
+            )}
+            {(!enabledListingTypes || enabledListingTypes.includes("classified")) && (
+              <TabsTrigger value="classified">Classified</TabsTrigger>
+            )}
+            {(!enabledListingTypes || enabledListingTypes.includes("digital-code")) && (
+              <TabsTrigger value="digital-code">Digital Code</TabsTrigger>
+            )}
+            {(!enabledListingTypes || enabledListingTypes.includes("live")) && (
+              <TabsTrigger value="live">Live Item</TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value="standard" />
           <TabsContent value="auction" />
           <TabsContent value="preorder" />
+          <TabsContent value="prize-draw" />
+          <TabsContent value="classified" />
+          <TabsContent value="digital-code" />
+          <TabsContent value="live" />
         </Tabs>
       </Card>
 

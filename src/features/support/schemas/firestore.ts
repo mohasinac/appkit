@@ -15,6 +15,8 @@
  *  - No new ticket in the same category while existing one is waiting_on_user
  */
 
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+
 // ============================================================================
 // ENUMS
 // ============================================================================
@@ -84,7 +86,7 @@ export const ELIGIBLE_ORDER_STATUSES_FOR_TICKET = [
 // ============================================================================
 
 export interface TicketMessage {
-  id: string;
+  id: string; // audit-schema-base-ok: embedded array element inside SupportTicketDocument, not a collection root
   authorId: string;
   authorRole: "user" | "support" | "admin";
   /** Plain text or safe HTML body. */
@@ -116,8 +118,7 @@ export interface TicketRelatedParties {
 // SUPPORT TICKET DOCUMENT
 // ============================================================================
 
-export interface SupportTicketDocument {
-  id: string;
+export interface SupportTicketDocument extends BaseDocument {
   userId: string;
   /** Denormalized — for admin table display. */
   userEmail: string;
@@ -157,8 +158,6 @@ export interface SupportTicketDocument {
 
   resolvedAt?: Date;
   closedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 // ============================================================================

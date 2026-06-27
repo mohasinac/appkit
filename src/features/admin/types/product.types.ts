@@ -55,7 +55,7 @@ export interface AdminProduct {
   insuranceCost?: number;
   shippingPaidBy?: "seller" | "buyer";
   /** Canonical listing-kind discriminator (SB1-G Phase 4 â€” booleans removed). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
   // Auction fields
   auctionEndDate?: string;
   startingBid?: number;

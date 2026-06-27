@@ -5,6 +5,7 @@
 import type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 export type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 import { generateFAQId } from "../../../utils/id-generators";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export interface FAQSEO {
   slug: string;
@@ -12,8 +13,7 @@ export interface FAQSEO {
   metaDescription?: string;
 }
 
-export interface FAQDocument {
-  id: string;
+export interface FAQDocument extends BaseDocument {
   question: string;
   answer: FAQAnswer;
   category: FAQCategory;
@@ -31,8 +31,6 @@ export interface FAQDocument {
   seo: FAQSEO;
   isActive: boolean;
   createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const FAQS_COLLECTION = "faqs" as const;

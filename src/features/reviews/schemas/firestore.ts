@@ -4,6 +4,7 @@
 
 import { generateReviewId } from "../../../utils/id-generators";
 import type { ReviewStatus } from "../types";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 /** Runtime-accessible review status values — use instead of bare string literals. */
 export const ReviewStatusValues = {
@@ -20,8 +21,7 @@ export interface ReviewVideoField {
   trimEnd?: number;
 }
 
-export interface ReviewDocument {
-  id: string;
+export interface ReviewDocument extends BaseDocument {
   productId: string;
   productTitle: string;
   storeId?: string;
@@ -49,8 +49,6 @@ export interface ReviewDocument {
   isAnonymous?: boolean;
   sellerReply?: string;
   sellerRepliedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
   approvedAt?: Date;
   rejectedAt?: Date;
 }

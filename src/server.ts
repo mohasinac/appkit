@@ -1596,13 +1596,12 @@ export { getSiteSettingsGlobal } from "./features/admin/utils/getSiteSettingsGlo
 export { updateActionConfigDomain, updateNavConfigDomain } from "./_internal/server/features/site-settings/actions";
 
 // ── Classified listing — data + adapters + metadata + OG ─────────────────────
-export { getClassifiedForDetail, type ClassifiedDataOptions } from "./_internal/server/features/classified/data";
+export { getClassifiedForDetail } from "./_internal/server/features/classified/data";
 // OG-coverage-followup 2026-05-23 — prize-draws OG renderer.
 export {
   getPrizeDrawForDetail,
   renderPrizeDrawOg,
   renderPrizeDrawOgImage,
-  type PrizeDrawDataOptions,
   type PrizeDrawOgData,
 } from "./_internal/server/features/prize-draws/index";
 // OG-coverage-followup 2026-05-23 — item-requests OG renderer.
@@ -1618,13 +1617,13 @@ export { buildClassifiedMetadata, type ClassifiedMetadataOptions } from "./_inte
 export { renderClassifiedOg, renderClassifiedOgImage, renderClassifiedOgFromDoc, type ClassifiedOgData } from "./_internal/server/features/classified/og";
 
 // ── Digital-code listing — data + adapters + metadata + OG ───────────────────
-export { getDigitalCodeForDetail, type DigitalCodeDataOptions } from "./_internal/server/features/digital-code/data";
+export { getDigitalCodeForDetail } from "./_internal/server/features/digital-code/data";
 export { toClientDigitalCode, type DigitalCodeClientShape } from "./_internal/server/features/digital-code/adapters";
 export { buildDigitalCodeMetadata, type DigitalCodeMetadataOptions } from "./_internal/server/features/digital-code/metadata";
 export { renderDigitalCodeOg, renderDigitalCodeOgImage, renderDigitalCodeOgFromDoc, type DigitalCodeOgData } from "./_internal/server/features/digital-code/og";
 
 // ── Live-item listing — data + adapters + metadata + OG ──────────────────────
-export { getLiveItemForDetail, type LiveDataOptions } from "./_internal/server/features/live/data";
+export { getLiveItemForDetail } from "./_internal/server/features/live/data";
 export { toClientLiveItem, type LiveItemClientShape } from "./_internal/server/features/live/adapters";
 export { buildLiveItemMetadata, type LiveItemMetadataOptions } from "./_internal/server/features/live/metadata";
 export { renderLiveItemOg, renderLiveItemOgImage, renderLiveItemOgFromDoc, type LiveItemOgData } from "./_internal/server/features/live/og";

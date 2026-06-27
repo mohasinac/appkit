@@ -13,6 +13,7 @@ import type {
   CategoryMetrics,
   CategoryDisplay,
 } from "../types";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export type { CategoryAncestor, CategoryMetrics };
 
@@ -94,8 +95,7 @@ export interface CategoryDocumentMetrics {
   lastUpdated: Date;
 }
 
-export interface CategoryDocument {
-  id: string;
+export interface CategoryDocument extends BaseDocument {
   name: string;
   slug: string;
   description?: string;
@@ -186,8 +186,6 @@ export interface CategoryDocument {
   createdByStoreId?: string;
   /** Display name of the store that requested this category. */
   createdByStoreName?: string;
-  createdAt: Date;
-  updatedAt: Date;
 
   ancestors: CategoryAncestor[];
 }

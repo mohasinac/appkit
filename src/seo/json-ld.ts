@@ -49,7 +49,7 @@ export interface ProductJsonLdInput {
   status?: string;
   auctionEndDate?: Date;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw"; // audit-listing-type-inline-ok: pre-existing 4-value union; pending ListingType import and extension to all 7 types
 }
 
 export interface ReviewJsonLdInput {

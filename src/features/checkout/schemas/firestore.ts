@@ -23,6 +23,7 @@ export type FailedPaymentReason =
   | "unknown";
 
 export interface FailedCheckoutDocument {
+  // audit-schema-base-ok: append-only failure-log document; no updatedAt field, does not conform to BaseDocument contract
   id: string;
   uid: string;
   addressId?: string;
@@ -36,6 +37,7 @@ export interface FailedCheckoutDocument {
 }
 
 export interface FailedPaymentDocument {
+  // audit-schema-base-ok: append-only failure-log document; no updatedAt field, does not conform to BaseDocument contract
   id: string;
   uid: string;
   gatewayOrderId?: string;

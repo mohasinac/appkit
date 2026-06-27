@@ -58,7 +58,7 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = SELLER_PRODUCT_STATUS_TABS;
 
-type ListingKind = "all" | "standard" | "auction" | "pre-order" | "prize-draw" | "bundle" | "classified" | "digital-code" | "live";
+type ListingKind = "all" | "standard" | "auction" | "pre-order" | "prize-draw" | "bundle" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: extends ListingType with "all"+"bundle" filter options — cannot reduce to the canonical ListingType
 
 interface ProductRow {
   id: string;

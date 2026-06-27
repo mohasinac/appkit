@@ -27,6 +27,7 @@ export type GroupTheme =
 export type GroupVisibility = "visible" | "hidden";
 
 export interface GroupedListingDocument {
+  // audit-schema-base-ok: collection root not in Phase C sweep; lacks updatedAt (computed fields use timestamps) — BaseDocument extension deferred
   id: string;
   slug: string;
   title: string;

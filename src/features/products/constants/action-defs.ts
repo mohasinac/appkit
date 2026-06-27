@@ -188,21 +188,37 @@ export const DETAIL_ACTIONS = {
   auction:  [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_AUCTION, ACTION_ID.WATCH_AUCTION, ACTION_ID.SHARE],
   /** Pre-order: reserve, wishlist, share */
   preorder: [ACTION_ID.RESERVE_NOW, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.SHARE],
+  /** Prize draw: enter, wishlist, share */
+  "prize-draw":   [ACTION_ID.ENTER_PRIZE_DRAW, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.SHARE],
+  /** Classified: offer, share */
+  classified:     [ACTION_ID.MAKE_OFFER, ACTION_ID.SHARE],
+  /** Digital code: buy now, share */
+  "digital-code": [ACTION_ID.BUY_NOW, ACTION_ID.SHARE],
+  /** Live item: buy now, wishlist, share */
+  live:           [ACTION_ID.BUY_NOW, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.SHARE],
 } as const satisfies Record<string, readonly ActionId[]>;
 
 // Mobile bottom bar — 1–2 primary CTAs only (limited horizontal space)
 export const MOBILE_PRIMARY_ACTIONS = {
-  product:  [ACTION_ID.BUY_NOW, ACTION_ID.ADD_TO_CART],
-  auction:  [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_AUCTION],
-  preorder: [ACTION_ID.RESERVE_NOW],
+  product:        [ACTION_ID.BUY_NOW, ACTION_ID.ADD_TO_CART],
+  auction:        [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_AUCTION],
+  preorder:       [ACTION_ID.RESERVE_NOW],
+  "prize-draw":   [ACTION_ID.ENTER_PRIZE_DRAW],
+  classified:     [ACTION_ID.MAKE_OFFER],
+  "digital-code": [ACTION_ID.BUY_NOW],
+  live:           [ACTION_ID.BUY_NOW],
 } as const satisfies Record<string, readonly ActionId[]>;
 
 // Listing page bulk actions — shown in the bottom action bar when items are selected
 export const LISTING_BULK_ACTIONS = {
-  products:  [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
-  auctions:  [ACTION_ID.WATCH_AUCTION, ACTION_ID.UNWATCH_AUCTION, ACTION_ID.COMPARE],
-  preorders: [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
-  stores:    [ACTION_ID.COMPARE] as ActionId[],
+  products:     [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
+  auctions:     [ACTION_ID.WATCH_AUCTION, ACTION_ID.UNWATCH_AUCTION, ACTION_ID.COMPARE],
+  preorders:    [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
+  prizeDraws:   [ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE] as readonly ActionId[],
+  classifieds:  [ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE] as readonly ActionId[],
+  digitalCodes: [ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE] as readonly ActionId[],
+  live:         [ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE] as readonly ActionId[],
+  stores:       [ACTION_ID.COMPARE] as ActionId[],
 } as const satisfies Record<string, readonly ActionId[]>;
 
 /** Maximum number of items the Compare overlay (BK3) supports at once. */

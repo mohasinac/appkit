@@ -1,13 +1,13 @@
 "use server";
 
 import { cache } from "react";
-import { storeRepository, productRepository } from "../../../../repositories";
+import { storeRepository } from "../../../../repositories";
 import type { StoreDocument } from "../../../../features/stores/schemas/firestore";
-import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import {
   STORES_PRODUCTS_PAGE_SIZE,
   STORES_SITEMAP_LIMIT,
 } from "../../../shared/features/stores/config";
+import { makeGetStoreListingsInitial } from "../shared/listing-data-factory";
 
 /** Full store document by slug — deduped per request via React.cache(). */
 export const getStoreForDetail = cache(
@@ -16,66 +16,10 @@ export const getStoreForDetail = cache(
   },
 );
 
-/**
- * Published products for a store detail page.
- * Returns the first page used for SSR initial data.
- */
-export const listStoreProductsInitial = cache(
-  async (
-    storeId: string,
-    page = 1,
-  ): Promise<{ items: ProductDocument[]; total: number }> => {
-    const result = await productRepository
-      .list({
-        filters: `storeId==${storeId},status==published,listingType==standard`,
-        sorts: "-createdAt",
-        page,
-        pageSize: STORES_PRODUCTS_PAGE_SIZE,
-      })
-      .catch(() => null);
-    return { items: result?.items ?? [], total: result?.total ?? 0 };
-  },
-);
-
-/**
- * Published auctions for a store detail page.
- */
-export const listStoreAuctionsInitial = cache(
-  async (
-    storeId: string,
-    page = 1,
-  ): Promise<{ items: ProductDocument[]; total: number }> => {
-    const result = await productRepository
-      .list({
-        filters: `storeId==${storeId},status==published,listingType==auction`,
-        sorts: "-createdAt",
-        page,
-        pageSize: STORES_PRODUCTS_PAGE_SIZE,
-      })
-      .catch(() => null);
-    return { items: result?.items ?? [], total: result?.total ?? 0 };
-  },
-);
-
-/**
- * Published pre-orders for a store detail page.
- */
-export const listStorePreOrdersInitial = cache(
-  async (
-    storeId: string,
-    page = 1,
-  ): Promise<{ items: ProductDocument[]; total: number }> => {
-    const result = await productRepository
-      .list({
-        filters: `storeId==${storeId},status==published,listingType==pre-order`,
-        sorts: "-createdAt",
-        page,
-        pageSize: STORES_PRODUCTS_PAGE_SIZE,
-      })
-      .catch(() => null);
-    return { items: result?.items ?? [], total: result?.total ?? 0 };
-  },
-);
+// Collapse of three near-identical 14-line functions via factory — export names unchanged.
+export const listStoreProductsInitial  = makeGetStoreListingsInitial("standard",  STORES_PRODUCTS_PAGE_SIZE);
+export const listStoreAuctionsInitial  = makeGetStoreListingsInitial("auction",   STORES_PRODUCTS_PAGE_SIZE);
+export const listStorePreOrdersInitial = makeGetStoreListingsInitial("pre-order", STORES_PRODUCTS_PAGE_SIZE);
 
 /** Stores for sitemap generation. */
 export const listSitemapStores = cache(

@@ -31,7 +31,7 @@ export interface SitemapProduct {
   slugOrId: string;
   updatedAt: Date;
   /** Canonical listing-kind discriminator (SB1-G — Phase 4 dropped booleans). */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw"; // audit-listing-type-inline-ok: pre-existing 4-value union in server data shape; pending ListingType import and extension to all 7 types
 }
 
 /** List all published products for sitemap generation. */

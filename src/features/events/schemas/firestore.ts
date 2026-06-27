@@ -4,6 +4,7 @@
 
 import type { MediaField } from "../../media/types";
 import type { JsonValue } from "@mohasinac/appkit";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type {
   EventType,
   EventStatus,
@@ -22,8 +23,7 @@ import type {
 
 export const EVENTS_COLLECTION = "events" as const;
 export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
-export interface EventDocument {
-  id: string;
+export interface EventDocument extends BaseDocument {
   slug?: string;
   type: EventType;
   title: string;
@@ -64,12 +64,10 @@ export interface EventDocument {
     flaggedEntries: number;
   };
   createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface EventEntryDocument {
-  id: string;
+  id: string; // audit-schema-base-ok: uses submittedAt instead of updatedAt — cannot extend BaseDocument
   eventId: string;
   userId?: string;
   userDisplayName?: string;

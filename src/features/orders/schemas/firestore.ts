@@ -5,6 +5,7 @@
 import { generateOrderId } from "../../../utils/id-generators";
 import type { OrderStatus, PaymentStatus } from "../types";
 import type { OrderType } from "../utils/order-splitter";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export type ShippingMethod = "custom" | "shiprocket";
 export type RefundType = "full" | "partial";
@@ -65,7 +66,7 @@ export interface OrderDocumentItem {
   unitPrice: number;
   totalPrice: number;
   /** SB8-F â€" set when the item is a prize-draw entry; drives the reveals badge. */
- listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
+ listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** SB8-F â€" ISO timestamp; deadline by which the buyer must claim the prize. */
@@ -111,8 +112,7 @@ export interface AppliedOrderDiscount {
   storeId?: string;
 }
 
-export interface OrderDocument {
-  id: string;
+export interface OrderDocument extends BaseDocument {
   productId: string;
   productTitle: string;
   userId: string;
@@ -232,9 +232,6 @@ export interface OrderDocument {
   pickedAt?: Date;
   /** Timestamp when the order was packed and ready for courier handoff. */
   packedAt?: Date;
-
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const ORDER_COLLECTION = "orders" as const;
@@ -249,6 +246,9 @@ export const ORDER_INDEXED_FIELDS = [
   "shippingMethod",
   "orderDate",
   "createdAt",
+  "assignedWorkerId",
+  "pickedAt",
+  "packedAt",
 ] as const;
 
 export const DEFAULT_ORDER_DATA: Partial<OrderDocument> = {

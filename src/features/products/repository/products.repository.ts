@@ -41,6 +41,9 @@ const SIEVE_CLAUSE_LT_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_
 const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
 const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
 const SIEVE_CLAUSE_LT_PRIZE_DRAW = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRIZE_DRAW}`;
+const SIEVE_CLAUSE_LT_CLASSIFIED = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.CLASSIFIED}`;
+const SIEVE_CLAUSE_LT_DIGITAL_CODE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.DIGITAL_CODE}`;
+const SIEVE_CLAUSE_LT_LIVE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.LIVE}`;
 
 // Canonical tokens match the `ListingType` union in
 // `appkit/src/features/products/types/index.ts`. Legacy aliases (`preorder`,
@@ -52,6 +55,9 @@ type ProductListingKind =
   | "auction"
   | "pre-order"
   | "prize-draw"
+  | "classified"
+  | "digital-code"
+  | "live"
   // Legacy aliases — see `LISTING_KIND_ALIAS_MAP` below.
   | "preorder"
   | "product"
@@ -62,6 +68,9 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   auction: LISTING_TYPE_VALUES.AUCTION,
   "pre-order": LISTING_TYPE_VALUES.PRE_ORDER,
   "prize-draw": LISTING_TYPE_VALUES.PRIZE_DRAW,
+  classified: LISTING_TYPE_VALUES.CLASSIFIED,
+  "digital-code": LISTING_TYPE_VALUES.DIGITAL_CODE,
+  live: LISTING_TYPE_VALUES.LIVE,
   // Legacy → canonical.
   product: LISTING_TYPE_VALUES.STANDARD,
   preorder: LISTING_TYPE_VALUES.PRE_ORDER,
@@ -498,6 +507,15 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     currency: { canFilter: true, canSort: false },
     freeShipping: { canFilter: true, canSort: false },
     searchTokens: { canFilter: true, canSort: false },
+    "classified.meetupArea": { canFilter: true, canSort: false },
+    "classified.acceptsShipping": { canFilter: true, canSort: false },
+    "classified.negotiable": { canFilter: true, canSort: false },
+    "digitalCode.codeDeliveryMethod": { canFilter: true, canSort: false },
+    "digitalCode.codesAvailable": { canFilter: true, canSort: true },
+    "liveItem.species": { canFilter: true, canSort: false },
+    "liveItem.sex": { canFilter: true, canSort: false },
+    "liveItem.jurisdictionAllowed": { canFilter: true, canSort: false },
+    "liveItem.cites": { canFilter: true, canSort: false },
   };
 
   /**
@@ -554,6 +572,12 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PREORDER].join(",");
         case "publicPrizeDraws":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PRIZE_DRAW].join(",");
+        case "publicClassifieds":
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_CLASSIFIED].join(",");
+        case "publicDigitalCodes":
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_DIGITAL_CODE].join(",");
+        case "publicLive":
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_LIVE].join(",");
         case "published":
           return SIEVE_CLAUSE_PUBLISHED;
         default:

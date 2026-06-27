@@ -51,7 +51,7 @@ export interface AvatarMetadata {
 }
 
 export interface UserDocument {
-  id?: string;
+  id?: string; // audit-schema-base-ok: auth uses Firebase UID as primary key; id is an optional alias, cannot extend BaseDocument
   uid: string;
   email: string | null;
   phoneNumber: string | null;
@@ -366,6 +366,7 @@ export const USER_FIELDS = {
 // ============================================================================
 
 export interface EmailVerificationTokenDocument {
+  // audit-schema-base-ok: optional id set by Firestore on write; token documents are immutable (no updatedAt) and do not conform to BaseDocument
   id?: string;
   userId: string;
   email: string;
@@ -375,6 +376,7 @@ export interface EmailVerificationTokenDocument {
 }
 
 export interface PasswordResetTokenDocument {
+  // audit-schema-base-ok: optional id set by Firestore on write; token documents are immutable (no updatedAt) and do not conform to BaseDocument
   id?: string;
   userId: string;
   email: string;
@@ -441,6 +443,7 @@ export const TOKEN_FIELDS = {
 // ============================================================================
 
 export interface SessionDocument {
+  // audit-schema-base-ok: sessions collection root; lacks updatedAt (uses lastActivity instead), not compatible with BaseDocument contract
   id: string;
   userId: string;
   deviceInfo?: {

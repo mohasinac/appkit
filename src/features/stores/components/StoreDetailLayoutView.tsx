@@ -19,6 +19,9 @@ const STORE_LISTING_HREF: Record<
   "pre-orders": (slug) => String(ROUTES.PUBLIC.STORE_PRE_ORDERS(slug)),
   "prize-draws": (slug) => String(ROUTES.PUBLIC.STORE_PRIZE_DRAWS(slug)),
   bundles: (slug) => String(ROUTES.PUBLIC.STORE_BUNDLES(slug)),
+  classifieds: (slug) => String(ROUTES.PUBLIC.STORE_CLASSIFIEDS(slug)),
+  "digital-codes": (slug) => String(ROUTES.PUBLIC.STORE_DIGITAL_CODES(slug)),
+  live: (slug) => String(ROUTES.PUBLIC.STORE_LIVE(slug)),
 };
 
 export const getStoreBySlug = cache((slug: string) =>
@@ -60,7 +63,7 @@ export async function StoreDetailLayoutView({
 
   const settings = await siteSettingsRepository.findById("global").catch(() => null);
 
-  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, couponsCount, reviewsCount] = storeId
+  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, classifiedsCount, digitalCodesCount, liveCount, couponsCount, reviewsCount] = storeId
     ? await Promise.all([
         productRepository
           .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")), page: 1, pageSize: 1 })
@@ -84,6 +87,18 @@ export async function StoreDetailLayoutView({
           .listByType("bundle", { activeOnly: true, limit: 100 })
           .then((rows) => rows.filter((c) => c.createdByStoreId === storeId).length)
           .catch(() => 0),
+        productRepository
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "classified")), page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
+        productRepository
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "digital-code")), page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
+        productRepository
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "live")), page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
         couponsRepository
           .list({ filters: sieveAnd(sieveFilter("sellerId", SIEVE_OP.EQ, storeId), sieveFilter("validity.isActive", SIEVE_OP.EQ, "true")), page: 1, pageSize: 1 })
           .then((r) => r.total)
@@ -93,7 +108,7 @@ export async function StoreDetailLayoutView({
           .then((r) => r.total)
           .catch(() => 0),
       ])
-    : [0, 0, 0, 0, 0, 0, 0];
+    : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   const listingCounts: Record<(typeof STORE_PAGE_TABS)[number]["id"], number> = {
     products: productsCount,
@@ -101,6 +116,9 @@ export async function StoreDetailLayoutView({
     "pre-orders": preOrdersCount,
     "prize-draws": prizeDrawsCount,
     bundles: bundlesCount,
+    classifieds: classifiedsCount,
+    "digital-codes": digitalCodesCount,
+    live: liveCount,
   };
 
   const TAB_LISTING_TYPE: Record<string, string> = {
@@ -108,6 +126,9 @@ export async function StoreDetailLayoutView({
     auctions: "auction",
     "pre-orders": "pre-order",
     "prize-draws": "prize-draw",
+    classifieds: "classified",
+    "digital-codes": "digital-code",
+    live: "live",
   };
 
   const visibleStoreTabs = STORE_PAGE_TABS.filter((tab) => {

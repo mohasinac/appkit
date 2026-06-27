@@ -8,10 +8,11 @@
  * repository overrides `createWithId` and `create` to inject encryption.
  */
 
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+
 export type AddressOwnerType = "user" | "store";
 
-export interface AddressDocument {
-  id: string;
+export interface AddressDocument extends BaseDocument {
   ownerType: AddressOwnerType;
   ownerId: string;
   label: string;
@@ -25,8 +26,6 @@ export interface AddressDocument {
   postalCode: string;
   country: string;
   isDefault: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const ADDRESSES_COLLECTION = "addresses" as const;

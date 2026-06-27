@@ -1,4 +1,6 @@
-export { getPrizeDrawForDetail, type PrizeDrawDataOptions } from "./data";
+export { getPrizeDrawForDetail } from "./data";
+export { enterPrizeDrawAction } from "./actions";
+export { assertPrizeDrawOpen } from "./service";
 export {
   renderPrizeDrawOg,
   renderPrizeDrawOgImage,

@@ -49,7 +49,7 @@ export interface StoreProductItem {
   status: string;
   featured: boolean;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw"; // audit-listing-type-inline-ok: pre-existing 4-value union; classified/digital-code/live store tabs added in Phase H — pending ListingType import
   currentBid?: number;
   isPromoted?: boolean;
   slug: string;

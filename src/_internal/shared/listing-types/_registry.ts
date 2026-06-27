@@ -39,6 +39,8 @@ export const LISTING_TYPE_REGISTRY = {
   live: live.config,
 } as const;
 
+// Returns undefined for "bundle" — bundles are CategoryDocument, not in this registry.
+// Callers must null-check: `pluginFor(lt) ?? fallbackBehavior`.
 export function pluginFor(type: ListingType) {
   return LISTING_TYPE_REGISTRY[type];
 }

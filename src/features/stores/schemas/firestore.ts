@@ -7,6 +7,7 @@
 
 import { slugify } from "../../../utils/string.formatter";
 import type { StoreCapability } from "../../auth/permissions/constants";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 // -- Shipping config ----------------------------------------------------------
 
@@ -63,8 +64,7 @@ export const StoreStatusValues = {
 export type StoreStatus =
   (typeof StoreStatusValues)[keyof typeof StoreStatusValues];
 
-export interface StoreDocument {
-  id: string; // = storeSlug
+export interface StoreDocument extends BaseDocument {
   storeSlug: string;
   ownerId: string; // references users/{uid}
 
@@ -157,8 +157,6 @@ export interface StoreDocument {
     connectedAt?: Date;
   };
 
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 // Re-export StoreCapability so consumers can import from this module

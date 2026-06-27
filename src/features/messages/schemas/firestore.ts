@@ -6,8 +6,10 @@
  * a subcollection when the thread exceeds ~200 messages.
  */
 
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+
 export interface ConversationMessage {
-  id: string;
+  id: string; // audit-schema-base-ok: embedded array element, not a Firestore collection root
   senderId: string;
   senderRole: "buyer" | "seller";
   body: string;
@@ -16,8 +18,7 @@ export interface ConversationMessage {
   attachments?: string[];
 }
 
-export interface ConversationDocument {
-  id: string;
+export interface ConversationDocument extends BaseDocument {
   buyerId: string;
   buyerDisplayName: string;
   storeId: string;
@@ -31,8 +32,6 @@ export interface ConversationDocument {
   unreadBuyer: number;
   unreadSeller: number;
   status: "active" | "archived" | "blocked";
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const CONVERSATIONS_COLLECTION = "conversations" as const;
