@@ -28,6 +28,7 @@ vi.mock("../../../../../errors/normalize", () => ({
 }));
 
 import { runPayoutBatch } from "../payoutBatch";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -39,13 +40,13 @@ function makeCtx(overrides: Partial<{ env: (key: string) => string | undefined }
         RAZORPAY_KEY_SECRET: "secret",
         RAZORPAY_ACCOUNT_NUMBER: "ACC123",
         RAZORPAY_API_BASE_URL: "https://api.razorpay.com/v1",
-        APP_BRAND_NAME: "LetItRip",
+        APP_BRAND_NAME: "TestBrand",
       };
       return defaults[key];
     },
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() },
     ...overrides,
-  };
+  } as unknown as JobContext;
 }
 
 function makeRef() {
@@ -369,7 +370,7 @@ describe("runPayoutBatch — multiple payouts", () => {
     const ctx = makeCtx();
     await runPayoutBatch(ctx);
 
-    const summaryCall = ctx.logger.info.mock.calls.find(
+    const summaryCall = (ctx.logger.info as ReturnType<typeof vi.fn>).mock.calls.find(
       (c: unknown[]) => typeof c[0] === "string" && (c[0] as string).toLowerCase().includes("complete"),
     );
     expect(summaryCall).toBeTruthy();

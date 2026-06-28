@@ -33,6 +33,7 @@ vi.mock("../../../../../errors/normalize", () => ({
 }));
 
 import { handleOrderCreate } from "../onOrderCreate";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ function makeCtx(envOverrides: Record<string, string | undefined> = {}) {
   return {
     env: (key: string) => defaults[key],
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-  };
+  } as unknown as JobContext;
 }
 
 function makeInput(overrides = {}) {

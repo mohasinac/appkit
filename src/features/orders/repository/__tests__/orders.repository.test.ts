@@ -10,20 +10,24 @@ vi.mock("../../../../providers/db-firebase", () => ({
     protected collection: string;
     protected get db() { return db; }
     constructor(col: string) { this.collection = col; }
-    protected getCollection() { return db.collection(this.collection); }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    protected getCollection() { return (db as any).collection(this.collection); }
     protected mapDoc(snap: { id: string; data: () => Record<string, unknown> }) {
       return { id: snap.id, ...snap.data() };
     }
     async findById(id: string) {
-      const snap = await db.collection(this.collection).doc(id).get();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const snap = await (db as any).collection(this.collection).doc(id).get() as { exists: boolean; id: string; data: () => Record<string, unknown> };
       return snap.exists ? { id: snap.id, ...snap.data() } : null;
     }
     async findBy(field: string, value: unknown) {
-      const snap = await db.collection(this.collection).where(field, "==", value).get();
-      return snap.docs.map((d: { id: string; data: () => Record<string, unknown> }) => ({ id: d.id, ...d.data() }));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const snap = await (db as any).collection(this.collection).where(field, "==", value).get() as { docs: Array<{ id: string; data: () => Record<string, unknown> }> };
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     }
     async update(id: string, data: Record<string, unknown>) {
-      await db.collection(this.collection).doc(id).update(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (db as any).collection(this.collection).doc(id).update(data);
       return { id, ...data };
     }
   },

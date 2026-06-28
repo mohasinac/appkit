@@ -5,6 +5,7 @@ vi.mock("../../../../../errors/normalize", () => ({
 }));
 
 import { handleUserBanChange } from "../onUserBanChange";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -42,7 +43,7 @@ beforeEach(() => {
 describe("handleUserBanChange — early exit", () => {
   it("returns immediately when after is null", async () => {
     const ctx = makeCtx();
-    await handleUserBanChange({ uid: "user-1", before: null, after: null }, ctx);
+    await handleUserBanChange({ uid: "user-1", before: null, after: null }, ctx as unknown as JobContext);
     expect(ctx.batch.commit).not.toHaveBeenCalled();
   });
 
@@ -53,7 +54,7 @@ describe("handleUserBanChange — early exit", () => {
       uid: "user-1",
       before: { isDisabled: false, softBans: [] },
       after: { isDisabled: false, softBans: [] },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     expect(ctx.batch.commit).not.toHaveBeenCalled();
   });
 });
@@ -66,7 +67,7 @@ describe("handleUserBanChange — hard ban applied", () => {
       uid: "user-1",
       before: { isDisabled: false },
       after: { isDisabled: true, hardBanReason: "Violating ToS", hardBannedBy: "admin-1" },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     expect(batch.set).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({ type: "hard_ban", reason: "Violating ToS" }),
@@ -81,7 +82,7 @@ describe("handleUserBanChange — hard ban applied", () => {
       uid: "user-1",
       before: { isDisabled: false },
       after: { isDisabled: true, hardBanReason: "Fraud", hardBannedBy: "admin-2" },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     const call = batch.set.mock.calls[0][1] as { performedBy: string };
     expect(call.performedBy).toBe("admin-2");
   });
@@ -93,7 +94,7 @@ describe("handleUserBanChange — hard ban applied", () => {
       uid: "user-1",
       before: { isDisabled: true },
       after: { isDisabled: true, hardBanReason: "Fraud" },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     const hardBanCalls = (batch.set.mock.calls as Array<[unknown, { type: string }]>).filter(
       (c) => c[1].type === "hard_ban",
     );
@@ -109,7 +110,7 @@ describe("handleUserBanChange — hard ban lifted (unban)", () => {
       uid: "user-1",
       before: { isDisabled: true },
       after: { isDisabled: false },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     expect(batch.set).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({ type: "hard_unban" }),
@@ -129,7 +130,7 @@ describe("handleUserBanChange — soft ban changes", () => {
           { action: "place_bids", reason: "Shill bidding", bannedBy: "admin-1" },
         ],
       },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     expect(batch.set).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({ type: "soft_ban", action: "place_bids" }),
@@ -143,7 +144,7 @@ describe("handleUserBanChange — soft ban changes", () => {
       uid: "user-1",
       before: { softBans: [{ action: "place_bids" }] },
       after: { softBans: [] },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     expect(batch.set).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({ type: "soft_unban", action: "place_bids" }),
@@ -157,7 +158,7 @@ describe("handleUserBanChange — soft ban changes", () => {
       uid: "user-1",
       before: { softBans: [{ action: "place_bids" }] },
       after: { softBans: [{ action: "place_bids" }] }, // same ban, no change
-    }, ctx);
+    }, ctx as unknown as JobContext);
     expect(batch.commit).not.toHaveBeenCalled();
   });
 
@@ -173,7 +174,7 @@ describe("handleUserBanChange — soft ban changes", () => {
           { action: "post_reviews" },
         ],
       },
-    }, ctx);
+    }, ctx as unknown as JobContext);
     expect(batch.set).toHaveBeenCalledTimes(2);
   });
 });
@@ -187,7 +188,7 @@ describe("handleUserBanChange — batch failure", () => {
       uid: "user-1",
       before: { isDisabled: false },
       after: { isDisabled: true, hardBanReason: "Test" },
-    }, ctx)).resolves.toBeUndefined();
+    }, ctx as unknown as JobContext)).resolves.toBeUndefined();
     expect(ctx.logger.error).toHaveBeenCalled();
   });
 });

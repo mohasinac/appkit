@@ -234,7 +234,7 @@ export function createRouteHandler<
 
   return async (
     request: Request,
-    context: { params: Promise<TParams> },
+    context?: { params: Promise<TParams> },
   ): Promise<Response> => {
     const requestId = generateRequestId();
     let user: RouteUser | undefined;

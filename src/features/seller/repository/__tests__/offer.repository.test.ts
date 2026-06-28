@@ -18,7 +18,7 @@ vi.mock("../../../../providers/db-firebase", async (importOriginal) => {
 vi.mock("../../../../security", () => ({
   encryptPiiFields: (d: Record<string, unknown>) => d,
   decryptPiiFields: (d: Record<string, unknown>) => d,
-  OFFER_PII_FIELDS: ["buyerDisplayName", "buyerEmail"],
+  OFFER_PII_FIELDS: ["buyerName", "buyerEmail"],
 }));
 
 vi.mock("../../../../monitoring", () => ({
@@ -39,7 +39,7 @@ function makeOfferDoc(overrides: Record<string, unknown> = {}) {
     productId: "product-charizard-psa9",
     storeId: "store-pokemon-palace",
     buyerUid: "user-ravi",
-    buyerDisplayName: "Ravi Kumar",
+    buyerName: "Ravi Kumar",
     buyerEmail: "ravi@test.com",
     offerAmount: 450_00, // paise
     status: "pending" as const,
@@ -76,7 +76,7 @@ describe("OfferRepository.create", () => {
       productId: "product-charizard-psa9",
       storeId: "store-pokemon-palace",
       buyerUid: "user-ravi",
-      buyerDisplayName: "Ravi Kumar",
+      buyerName: "Ravi Kumar",
       buyerEmail: "ravi@test.com",
       offerAmount: 450_00,
     } as never);
@@ -90,7 +90,7 @@ describe("OfferRepository.create", () => {
       productId: "product-1",
       storeId: "store-1",
       buyerUid: "user-1",
-      buyerDisplayName: "Buyer",
+      buyerName: "Buyer",
       buyerEmail: "b@test.com",
       offerAmount: 100_00,
     } as never);
@@ -107,7 +107,7 @@ describe("OfferRepository.create", () => {
       productId: "p-1",
       storeId: "s-1",
       buyerUid: "u-1",
-      buyerDisplayName: "Buyer",
+      buyerName: "Buyer",
       buyerEmail: "b@test.com",
       offerAmount: 200_00,
     } as never);
@@ -119,12 +119,12 @@ describe("OfferRepository.create", () => {
       productId: "p-1",
       storeId: "s-1",
       buyerUid: "u-1",
-      buyerDisplayName: "Ravi Kumar",
+      buyerName: "Ravi Kumar",
       buyerEmail: "ravi@test.com",
       offerAmount: 100_00,
     } as never);
     // Passthrough mock means plaintext === encrypted; verify field is accessible
-    expect(result.buyerDisplayName).toBe("Ravi Kumar");
+    expect(result.buyerName).toBe("Ravi Kumar");
   });
 
   it("sets createdAt and updatedAt timestamps", async () => {
@@ -132,7 +132,7 @@ describe("OfferRepository.create", () => {
       productId: "p-1",
       storeId: "s-1",
       buyerUid: "u-1",
-      buyerDisplayName: "Buyer",
+      buyerName: "Buyer",
       buyerEmail: "b@test.com",
       offerAmount: 50_00,
     } as never);

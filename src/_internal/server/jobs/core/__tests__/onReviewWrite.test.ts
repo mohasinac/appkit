@@ -35,6 +35,7 @@ vi.mock("../../../../../features/products/schemas/firestore", () => ({
 }));
 
 import { handleReviewWrite } from "../onReviewWrite";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -48,7 +49,7 @@ function makeCtx() {
       }),
     },
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-  };
+  } as unknown as JobContext;
 }
 
 function makeReviewData(overrides = {}) {

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // No repository mocks needed — function uses ctx.db directly.
 
 import { runTriggerEventRaffle } from "../triggerEventRaffle";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -12,7 +13,7 @@ function makeCtx(dbOverrides = {}) {
     now: new Date("2026-01-01T00:00:00Z"),
     env: vi.fn().mockReturnValue(""),
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-  };
+  } as unknown as JobContext;
 }
 
 /**
@@ -91,7 +92,7 @@ describe("runTriggerEventRaffle — event not found", () => {
   it("does NOT update eventRef when event not found", async () => {
     const ctx = makeCtx({ eventExists: false });
     await runTriggerEventRaffle(INPUT_BASE, ctx);
-    expect((ctx.db as ReturnType<typeof buildMockDb>).mockUpdate).not.toHaveBeenCalled();
+    expect((ctx.db as unknown as ReturnType<typeof buildMockDb>).mockUpdate).not.toHaveBeenCalled();
   });
 });
 
@@ -106,7 +107,7 @@ describe("runTriggerEventRaffle — already triggered (idempotency)", () => {
   it("does NOT query entries or update event when already triggered", async () => {
     const ctx = makeCtx({ eventData: { raffleWinnerUserId: "user-already-won" } });
     await runTriggerEventRaffle(INPUT_BASE, ctx);
-    expect((ctx.db as ReturnType<typeof buildMockDb>).mockUpdate).not.toHaveBeenCalled();
+    expect((ctx.db as unknown as ReturnType<typeof buildMockDb>).mockUpdate).not.toHaveBeenCalled();
   });
 });
 
@@ -121,7 +122,7 @@ describe("runTriggerEventRaffle — no eligible entries", () => {
   it("does NOT update event when no entries", async () => {
     const ctx = makeCtx({ entriesDocs: [] });
     await runTriggerEventRaffle(INPUT_BASE, ctx);
-    expect((ctx.db as ReturnType<typeof buildMockDb>).mockUpdate).not.toHaveBeenCalled();
+    expect((ctx.db as unknown as ReturnType<typeof buildMockDb>).mockUpdate).not.toHaveBeenCalled();
   });
 });
 

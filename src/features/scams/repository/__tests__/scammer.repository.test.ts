@@ -399,7 +399,7 @@ describe("ScammerRepository.listVerified", () => {
   it("applies status==verified as the base query filter", async () => {
     mockQuery.get.mockResolvedValue(makeQuerySnap([]));
     mockQuery.count = vi.fn().mockReturnValue({ get: vi.fn().mockResolvedValue({ data: () => ({ count: 0 }) }) });
-    await repo.listVerified({ page: 1, perPage: 20, filters: "", sort: "createdAt", order: "desc" });
+    await repo.listVerified({ page: 1, pageSize: 20, filters: "" });
     expect(mockCollection.where).toHaveBeenCalledWith(
       expect.stringContaining("status"),
       "==",

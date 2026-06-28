@@ -82,8 +82,9 @@ describe("NotificationRepository.create", () => {
     await repo.create({
       userId: "user-ravi",
       type: "order_shipped" as never,
+      priority: "normal" as const,
       title: "Shipped!",
-      body: "Your order shipped.",
+      message: "Your order shipped.",
     });
     const setArg = mockDocRef.set.mock.calls[0][0] as Record<string, unknown>;
     expect(setArg.isRead).toBe(false);
@@ -93,8 +94,9 @@ describe("NotificationRepository.create", () => {
     await repo.create({
       userId: "user-ravi",
       type: "order_placed" as never,
+      priority: "normal" as const,
       title: "Order placed",
-      body: "Thanks for your order.",
+      message: "Thanks for your order.",
     });
     const setArg = mockDocRef.set.mock.calls[0][0] as Record<string, unknown>;
     expect(setArg.userId).toBe("user-ravi");
@@ -103,14 +105,14 @@ describe("NotificationRepository.create", () => {
   });
 
   it("sets createdAt and updatedAt timestamps", async () => {
-    await repo.create({ userId: "user-1", type: "general" as never, title: "Hi", body: "Hello" });
+    await repo.create({ userId: "user-1", type: "general" as never, priority: "normal" as const, title: "Hi", message: "Hello" });
     const setArg = mockDocRef.set.mock.calls[0][0] as Record<string, unknown>;
     expect(setArg.createdAt).toBeInstanceOf(Date);
     expect(setArg.updatedAt).toBeInstanceOf(Date);
   });
 
   it("uses collection.doc() with no args (auto-ID)", async () => {
-    await repo.create({ userId: "user-1", type: "general" as never, title: "T", body: "B" });
+    await repo.create({ userId: "user-1", type: "general" as never, priority: "normal" as const, title: "T", message: "B" });
     // doc() is called with no argument for auto-generated IDs
     expect(mockCollection.doc).toHaveBeenCalledWith();
   });
@@ -120,8 +122,9 @@ describe("NotificationRepository.create", () => {
     const result = await repo.create({
       userId: "user-ravi",
       type: "bid_won" as never,
+      priority: "normal" as const,
       title: "You won!",
-      body: "Congratulations.",
+      message: "Congratulations.",
     });
     expect(result.id).toBe("notif-auto-123");
     expect(result.isRead).toBe(false);
@@ -363,8 +366,9 @@ describe("NotificationRepository.createInBatch", () => {
     repo.createInBatch(mockExternalBatch as never, {
       userId: "user-ravi",
       type: "order_shipped" as never,
+      priority: "normal" as const,
       title: "Shipped!",
-      body: "On its way.",
+      message: "On its way.",
     });
     expect(mockExternalBatch.create).toHaveBeenCalledOnce();
     expect(mockExternalBatch.commit).not.toHaveBeenCalled();
@@ -375,8 +379,9 @@ describe("NotificationRepository.createInBatch", () => {
     repo.createInBatch(mockExternalBatch as never, {
       userId: "user-ravi",
       type: "general" as never,
+      priority: "normal" as const,
       title: "Hi",
-      body: "Hello",
+      message: "Hello",
     });
     const createArg = mockExternalBatch.create.mock.calls[0][1] as Record<string, unknown>;
     expect(createArg.isRead).toBe(false);
@@ -387,8 +392,9 @@ describe("NotificationRepository.createInBatch", () => {
     const ref = repo.createInBatch(mockExternalBatch as never, {
       userId: "user-1",
       type: "general" as never,
+      priority: "normal" as const,
       title: "T",
-      body: "B",
+      message: "B",
     });
     expect(ref).toBeDefined();
     expect(ref.id).toBeDefined();

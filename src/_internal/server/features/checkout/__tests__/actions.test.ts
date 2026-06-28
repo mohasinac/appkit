@@ -171,7 +171,7 @@ vi.mock("../../../../../utils", () => ({
   resolveDate: vi.fn((d: unknown) => (d instanceof Date ? d : new Date())),
 }));
 
-import { createCheckoutOrderAction } from "../actions";
+import { createCheckoutOrderAction, type CreateCheckoutOrderInput } from "../actions";
 import { cartIsDigitalOnly } from "../../../../shared/listing-types/cart-shipping";
 import { validateCartItemStock } from "../bundle-expansion";
 
@@ -255,7 +255,7 @@ function makeSiteSettings(overrides: Record<string, unknown> = {}) {
   };
 }
 
-function makeInput(overrides: Record<string, unknown> = {}) {
+function makeInput(overrides: Record<string, unknown> = {}): CreateCheckoutOrderInput {
   return {
     userId: "user-1",
     userName: "Ravi Kumar",
@@ -263,7 +263,7 @@ function makeInput(overrides: Record<string, unknown> = {}) {
     addressId: "addr-1",
     paymentMethod: "cod",
     ...overrides,
-  };
+  } as CreateCheckoutOrderInput;
 }
 
 // OTP snap helpers

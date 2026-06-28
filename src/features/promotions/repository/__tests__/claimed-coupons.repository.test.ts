@@ -30,7 +30,13 @@ function makeClaimInput(overrides: Record<string, unknown> = {}) {
     couponId: "coupon-welcome10",
     couponCode: "welcome10",
     source: "manual" as const,
-    couponSnapshot: { label: "10% off", discountValue: 10, type: "percentage" },
+    couponSnapshot: {
+      name: "10% Off Coupon",
+      type: "percentage" as const,
+      scope: "admin" as const,
+      discount: { value: 10, maxDiscount: 0, minPurchase: 0 },
+      restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: true },
+    },
     expiresAt: null,
     ...overrides,
   };

@@ -332,7 +332,7 @@ describe("ProductFeaturesRepository.listFiltered", () => {
 
   it("filters by productType in-memory (not Firestore)", async () => {
     const feature1 = makeFeatureDoc({ id: "f-1", productTypes: ["all"] });
-    const feature2 = makeFeatureDoc({ id: "f-2", productTypes: ["standard"] });
+    const feature2 = makeFeatureDoc({ id: "f-2", productTypes: ["product"] });
     const feature3 = makeFeatureDoc({ id: "f-3", productTypes: ["auction"] });
     // No Firestore filters applied for productType-only query → uses mockCollection.get
     (mockCollection.get as ReturnType<typeof vi.fn>).mockResolvedValue(
@@ -342,8 +342,8 @@ describe("ProductFeaturesRepository.listFiltered", () => {
         { id: "f-3", data: feature3 },
       ]),
     );
-    const results = await repo.listFiltered({ productType: "standard" });
-    // "all" matches everything; "standard" matches "standard"; "auction" does NOT match "standard"
+    const results = await repo.listFiltered({ productType: "product" });
+    // "all" matches everything; "product" matches "product"; "auction" does NOT match "product"
     expect(results).toHaveLength(2);
     const ids = results.map((r) => r.id);
     expect(ids).toContain("f-1");

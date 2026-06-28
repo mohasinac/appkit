@@ -12,6 +12,7 @@ import {
   syncBundlesForProduct,
 } from "../onProductStockChange";
 import { PRODUCT_FIELDS } from "../../../../../constants/field-names";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -25,7 +26,7 @@ function makeCtx(dbQuery?: ReturnType<typeof vi.fn>) {
     queryChain,
     now: new Date(),
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-  };
+  } as unknown as JobContext;
 }
 
 const PUBLISHED = PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED;

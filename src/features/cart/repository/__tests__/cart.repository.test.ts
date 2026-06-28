@@ -90,7 +90,9 @@ function makeCart(overrides: Partial<CartDoc> = {}): CartDoc {
   };
 }
 
-function makeAddInput(overrides: Partial<CartItem & { isOffer?: boolean }> = {}) {
+type AddInputOverrides = Partial<Omit<CartItem, "listingType"> & { listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; isOffer?: boolean }>;
+
+function makeAddInput(overrides: AddInputOverrides = {}) {
   return {
     productId: "product-new",
     productTitle: "New Product",
@@ -100,9 +102,9 @@ function makeAddInput(overrides: Partial<CartItem & { isOffer?: boolean }> = {})
     quantity: 1,
     storeId: "store-1",
     storeName: "Store",
-    listingType: "standard",
+    listingType: "standard" as const,
     ...overrides,
-  };
+  } as { productId: string; productTitle: string; productImage: string; price: number; currency: string; quantity: number; storeId: string; storeName: string; listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; isOffer?: boolean; offerId?: string; lockedPrice?: number; locked?: boolean; bundleCategorySlug?: string; bundleProductIds?: string[] };
 }
 
 beforeEach(() => {

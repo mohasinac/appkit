@@ -32,6 +32,7 @@ function makeFaqDoc(overrides: Partial<FAQDocument> = {}): FAQDocument {
     category: "Auctions" as FAQDocument["category"],
     tags: ["bidding", "auctions"],
     searchTokens: ["how", "does", "bidding", "work"],
+    relatedFAQs: [],
     seo: { slug: "how-does-bidding-work" },
     isActive: true,
     showOnHomepage: false,
@@ -39,6 +40,8 @@ function makeFaqDoc(overrides: Partial<FAQDocument> = {}): FAQDocument {
     isPinned: false,
     priority: 0,
     order: 0,
+    useSiteSettings: false,
+    createdBy: "admin-1",
     stats: { views: 0, helpful: 0, notHelpful: 0 },
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -138,7 +141,7 @@ describe("FirebaseFAQsRepository.createWithSlug", () => {
       isActive: true,
     };
     const result = await repo.createWithSlug(input as never);
-    const whatCount = result.searchTokens.filter((t) => t === "what").length;
+    const whatCount = result.searchTokens!.filter((t) => t === "what").length;
     expect(whatCount).toBe(1);
   });
 });
@@ -277,7 +280,7 @@ describe("FirebaseFAQsRepository.getHomepageFAQs", () => {
 
   it("returns matching FAQs", async () => {
     const faq = makeFaqDoc({ showOnHomepage: true });
-    mockQuery.get.mockResolvedValue(makeQuerySnap([{ id: faq.id, data: faq }]));
+    mockQuery.get.mockResolvedValue(makeQuerySnap([{ id: faq.id, data: faq as unknown as Record<string, unknown> }]));
     const results = await repo.getHomepageFAQs();
     expect(results).toHaveLength(1);
   });
@@ -309,7 +312,7 @@ describe("FirebaseFAQsRepository.searchByTag", () => {
 
   it("returns matching FAQs", async () => {
     const faq = makeFaqDoc({ tags: ["grading"] });
-    mockQuery.get.mockResolvedValue(makeQuerySnap([{ id: faq.id, data: faq }]));
+    mockQuery.get.mockResolvedValue(makeQuerySnap([{ id: faq.id, data: faq as unknown as Record<string, unknown> }]));
     const results = await repo.searchByTag("grading");
     expect(results).toHaveLength(1);
   });

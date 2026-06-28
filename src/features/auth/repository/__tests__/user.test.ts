@@ -60,7 +60,7 @@ const db = {
   collection: vi.fn((name: string) => {
     if (!mockCollectionChain[name]) {
       const chain = makeQueryChain();
-      (chain as { doc: typeof mockDoc }).doc = mockDoc;
+      (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
       mockCollectionChain[name] = chain;
     }
     return mockCollectionChain[name];
@@ -91,7 +91,7 @@ beforeEach(() => {
   for (const k of Object.keys(mockCollectionChain)) {
     delete mockCollectionChain[k];
   }
-  mockRunTransaction.mockImplementation(async (fn: (txn: typeof txn) => Promise<void>) => {
+  mockRunTransaction.mockImplementation(async (fn: (txn: { get: typeof mockTxGet; update: typeof mockTxUpdate; set: typeof mockTxSet }) => Promise<void>) => {
     await fn(txn);
   });
   repo = new UserRepository();
@@ -100,7 +100,7 @@ beforeEach(() => {
 describe("UserRepository.isEmailRegistered", () => {
   it("returns true when blind-index matches an existing document", async () => {
     const chain = makeQueryChain([{ id: "user-1", email: "enc:test@test.com", emailIndex: "idx:test@test.com", role: "user" }]);
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
 
     const result = await repo.isEmailRegistered("test@test.com");
@@ -109,7 +109,7 @@ describe("UserRepository.isEmailRegistered", () => {
 
   it("returns false when no match", async () => {
     const chain = makeQueryChain([]);
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
 
     const result = await repo.isEmailRegistered("noone@test.com");
@@ -118,7 +118,7 @@ describe("UserRepository.isEmailRegistered", () => {
 
   it("uses HMAC blind index not plaintext for the query", async () => {
     const chain = makeQueryChain([]);
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
 
     await repo.isEmailRegistered("user@example.com");
@@ -130,7 +130,7 @@ describe("UserRepository.isEmailRegistered", () => {
 describe("UserRepository.updateLoginMetadata", () => {
   it("uses a Firestore transaction", async () => {
     const chain = makeQueryChain();
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
     mockDocGet.mockResolvedValue({ data: () => ({ metadata: { loginCount: 3 } }), exists: true });
     mockTxGet.mockResolvedValue({ data: () => ({ metadata: { loginCount: 3 } }), exists: true });
@@ -141,7 +141,7 @@ describe("UserRepository.updateLoginMetadata", () => {
 
   it("increments loginCount by 1 inside the transaction", async () => {
     const chain = makeQueryChain();
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
     mockTxGet.mockResolvedValue({ data: () => ({ metadata: { loginCount: 5 } }), exists: true });
 
@@ -153,7 +153,7 @@ describe("UserRepository.updateLoginMetadata", () => {
 
   it("sets lastSignInTime in the transaction update", async () => {
     const chain = makeQueryChain();
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
     mockTxGet.mockResolvedValue({ data: () => ({ metadata: { loginCount: 0 } }), exists: true });
 
@@ -171,7 +171,7 @@ describe("UserRepository.updateLoginMetadata", () => {
 describe("UserRepository.updateProfileWithVerificationReset", () => {
   function setupFindById(userData: Record<string, unknown>) {
     const chain = makeQueryChain();
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
     mockDocGet.mockResolvedValue({
       exists: true,
@@ -216,7 +216,7 @@ describe("UserRepository.updateProfileWithVerificationReset", () => {
 describe("UserRepository.findByRole", () => {
   it("queries where role == requested role", async () => {
     const chain = makeQueryChain([]);
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
 
     await repo.findByRole("seller");
@@ -230,7 +230,7 @@ describe("UserRepository.countByRole", () => {
     (getFirestoreCount as ReturnType<typeof vi.fn>).mockResolvedValue(7);
 
     const chain = makeQueryChain([]);
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
 
     const count = await repo.countByRole("seller");
@@ -241,17 +241,19 @@ describe("UserRepository.countByRole", () => {
 describe("UserRepository.create", () => {
   it("generates a human-readable slug ID from name + email", async () => {
     const chain = makeQueryChain();
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
     mockDocSet.mockResolvedValue(undefined);
 
     const user = await repo.create({
+      uid: "uid-ravi-kumar",
       displayName: "Ravi Kumar",
       email: "ravi@test.com",
+      phoneNumber: null,
+      photoURL: null,
       role: "user",
       emailVerified: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      disabled: false,
     });
 
     // ID must contain a slug fragment from the name, not a raw UUID
@@ -264,7 +266,7 @@ describe("UserRepository.create", () => {
 describe("UserRepository.findByEmail", () => {
   it("uses blind index (idx:email) not plaintext for lookup", async () => {
     const chain = makeQueryChain([]);
-    (chain as { doc: typeof mockDoc }).doc = mockDoc;
+    (chain as unknown as { doc: typeof mockDoc }).doc = mockDoc;
     db.collection.mockReturnValue(chain);
 
     await repo.findByEmail("user@example.com");

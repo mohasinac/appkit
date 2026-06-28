@@ -52,6 +52,7 @@ vi.mock("../../../../../errors/normalize", () => ({
 }));
 
 import { handleBidPlaced } from "../onBidPlaced";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -71,7 +72,7 @@ function makeCtx() {
     },
     now: new Date(),
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-  };
+  } as unknown as JobContext;
 }
 
 function makeInput(overrides = {}): Parameters<typeof handleBidPlaced>[0] {

@@ -87,7 +87,7 @@ describe("wrapScheduleHandler", () => {
 // ── wrapTriggerHandler ───────────────────────────────────────────────────────
 
 describe("wrapTriggerHandler", () => {
-  const mockEvent = { params: {}, before: null, after: {} };
+  const mockEvent = { path: "test/doc1", params: {}, before: null, after: {} };
 
   it("returns handler result when handler succeeds", async () => {
     const handler = vi.fn().mockResolvedValue(undefined);

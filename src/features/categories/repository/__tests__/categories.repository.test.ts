@@ -671,7 +671,7 @@ describe("CategoriesRepository.buildTree", () => {
     );
 
     const tree = await repo.buildTree();
-    expect(tree.find((n) => n.id === "cat-brand")).toBeUndefined();
+    expect(tree.find((n) => n.category.id === "cat-brand")).toBeUndefined();
   });
 });
 

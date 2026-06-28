@@ -52,7 +52,7 @@ function makeRepo() {
 function makeSettingsDoc(overrides: Record<string, unknown> = {}) {
   return {
     id: "global",
-    branding: { siteName: "LetItRip", tagline: "India's largest collectibles marketplace" },
+    siteName: "LetItRip",
     credentials: {},
     featureFlags: { useMockPayment: false, useMockShipping: false },
     features: [],
@@ -79,11 +79,11 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 describe("SiteSettingsRepository.getSingleton", () => {
   it("returns cached value without hitting Firestore when cache is warm", async () => {
-    const cached = makeSettingsDoc({ branding: { siteName: "Cached LetItRip" } });
+    const cached = makeSettingsDoc({ siteName: "Cached LetItRip" });
     mockCacheManager.get.mockReturnValue(cached);
     const repo = makeRepo();
     const result = await repo.getSingleton();
-    expect(result.branding.siteName).toBe("Cached LetItRip");
+    expect(result.siteName).toBe("Cached LetItRip");
     expect(mockDocRef.get).not.toHaveBeenCalled();
   });
 

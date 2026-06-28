@@ -29,13 +29,14 @@ vi.mock("../../../../../errors/normalize", () => ({
 }));
 
 import { handleOrderStatusChange } from "../onOrderStatusChange";
+import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 function makeCtx() {
   return {
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
-  };
+  } as unknown as JobContext;
 }
 
 function makeInput(

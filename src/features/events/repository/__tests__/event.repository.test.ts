@@ -337,19 +337,19 @@ describe("EventEntryRepository.reviewEntry", () => {
     );
   });
 
-  it("sets reviewStatus=rejected on the entry", async () => {
-    const entry = makeEntryDoc({ reviewStatus: "rejected" });
+  it("sets reviewStatus=flagged on the entry", async () => {
+    const entry = makeEntryDoc({ reviewStatus: "flagged" });
     mockDocRef.get.mockResolvedValue(makeSnap(entry, "entry-1"));
-    await entryRepo.reviewEntry("entry-1", "rejected", "mod-1", "Off topic");
+    await entryRepo.reviewEntry("entry-1", "flagged", "mod-1", "Off topic");
     expect(mockDocRef.update).toHaveBeenCalledWith(
-      expect.objectContaining({ reviewStatus: "rejected" }),
+      expect.objectContaining({ reviewStatus: "flagged" }),
     );
   });
 
   it("stores reviewNote when provided", async () => {
-    const entry = makeEntryDoc({ reviewStatus: "rejected" });
+    const entry = makeEntryDoc({ reviewStatus: "flagged" });
     mockDocRef.get.mockResolvedValue(makeSnap(entry, "entry-1"));
-    await entryRepo.reviewEntry("entry-1", "rejected", "mod-1", "Spam");
+    await entryRepo.reviewEntry("entry-1", "flagged", "mod-1", "Spam");
     expect(mockDocRef.update).toHaveBeenCalledWith(
       expect.objectContaining({ reviewNote: "Spam" }),
     );

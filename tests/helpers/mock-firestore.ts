@@ -33,6 +33,8 @@ export type MockQuery = {
   limit: ReturnType<typeof vi.fn>;
   get: ReturnType<typeof vi.fn>;
   count: ReturnType<typeof vi.fn>;
+  offset?: ReturnType<typeof vi.fn>;
+  select?: ReturnType<typeof vi.fn>;
 };
 
 export type MockCollectionRef = MockQuery & {
@@ -60,6 +62,7 @@ export type MockDb = {
   batch: ReturnType<typeof vi.fn>;
   runTransaction: ReturnType<typeof vi.fn>;
   doc: ReturnType<typeof vi.fn>;
+  getAll?: ReturnType<typeof vi.fn>;
 };
 
 /**

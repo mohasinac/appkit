@@ -9,20 +9,23 @@ vi.mock("../../../../providers/db-firebase", () => ({
     protected collection: string;
     protected get db() { return db; }
     constructor(col: string) { this.collection = col; }
-    protected getCollection() { return db.collection(this.collection); }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    protected getCollection() { return (db as any).collection(this.collection); }
     protected mapDoc(snap: { id: string; data: () => Record<string, unknown> }) {
       return { id: snap.id, ...snap.data() };
     }
     async findBy(field: string, value: unknown) {
-      const snap = await db.collection(this.collection).where(field, "==", value).get();
-      return snap.docs.map((d: { id: string; data: () => Record<string, unknown> }) => ({ id: d.id, ...d.data() }));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const snap = await (db as any).collection(this.collection).where(field, "==", value).get() as { docs: Array<{ id: string; data: () => Record<string, unknown> }> };
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     }
     async findOneBy(field: string, value: unknown) {
       const results = await this.findBy(field, value);
       return results[0] ?? null;
     }
     async findById(id: string) {
-      const snap = await db.collection(this.collection).doc(id).get();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const snap = await (db as any).collection(this.collection).doc(id).get() as { exists: boolean; id: string; data: () => Record<string, unknown> };
       return snap.exists ? { id: snap.id, ...snap.data() } : null;
     }
     async findByIdOrFail(id: string) {
@@ -31,7 +34,8 @@ vi.mock("../../../../providers/db-firebase", () => ({
       return doc;
     }
     async create(data: Record<string, unknown>) {
-      const ref = await db.collection(this.collection).add(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ref = await (db as any).collection(this.collection).add(data) as { id: string };
       return { id: ref.id, ...data };
     }
   },
