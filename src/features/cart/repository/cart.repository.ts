@@ -208,7 +208,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
 
       return updatedCart;
     } catch (error) {
-      if (error instanceof DatabaseError || error instanceof NotFoundError) {
+      if (error instanceof DatabaseError || error instanceof NotFoundError || error instanceof ValidationError) {
         throw error;
       }
       throw new DatabaseError("Failed to update cart item", error);
@@ -243,7 +243,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
 
       return updatedCart;
     } catch (error) {
-      if (error instanceof DatabaseError || error instanceof NotFoundError) {
+      if (error instanceof DatabaseError || error instanceof NotFoundError || error instanceof ValidationError) {
         throw error;
       }
       throw new DatabaseError("Failed to remove cart item", error);

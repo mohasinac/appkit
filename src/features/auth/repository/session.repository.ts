@@ -104,12 +104,21 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
       // still holds the cookie. Firestore Admin throws `5 NOT_FOUND` in that
       // case — swallow it so the activity ping is best-effort, not a 500.
       // Any other error is rethrown so genuine failures still surface.
+      //
+      // BaseRepository.update() wraps Firestore errors in DatabaseError, so we
+      // must also inspect .data (the original cause) for the NOT_FOUND signal.
       const code = (err as { code?: JsonValue })?.code;
       const msg = (err as { message?: string })?.message ?? "";
+      const cause = (err as { data?: unknown })?.data;
+      const causeCode = (cause as { code?: JsonValue })?.code;
+      const causeMsg = (cause as { message?: string })?.message ?? "";
       const isNotFound =
         code === 5 ||
         code === "not-found" ||
-        /No document to update|NOT_FOUND/i.test(msg);
+        causeCode === 5 ||
+        causeCode === "not-found" ||
+        /No document to update|NOT_FOUND/i.test(msg) ||
+        /No document to update|NOT_FOUND/i.test(causeMsg);
       if (!isNotFound) throw err;
     }
   }
