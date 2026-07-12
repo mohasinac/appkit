@@ -20,6 +20,7 @@ import type {
   RaffleType,
   SpinPrize,
 } from "../types";
+import type { LotteryConfig } from "../../lottery/types";
 
 export const EVENTS_COLLECTION = "events" as const;
 export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
@@ -58,6 +59,8 @@ export interface EventDocument extends BaseDocument {
   spinMaxPerUser?: number;
   spinWindowStart?: Date;
   spinWindowEnd?: Date;
+  /** Full lottery config including server-only price/weight fields. */
+  lotteryConfig?: LotteryConfig;
   stats: {
     totalEntries: number;
     approvedEntries: number;

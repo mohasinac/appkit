@@ -1,5 +1,6 @@
 import type { MediaField } from "../../media/types/index";
 import type { JsonValue } from "@mohasinac/appkit";
+import type { ClientLotteryConfig } from "../../lottery/types";
 
 // --- Enums / union types ------------------------------------------------------
 
@@ -10,7 +11,8 @@ export type EventType =
   | "survey"
   | "feedback"
   | "raffle"
-  | "spin_wheel";
+  | "spin_wheel"
+  | "lottery";
 
 export type RaffleType =
   | "top_n_scorers"
@@ -133,6 +135,8 @@ export interface EventItem {
   spinMaxPerUser?: number;
   spinWindowStart?: string;
   spinWindowEnd?: string;
+  /** Lottery config — slots have price/weight stripped for client consumption. */
+  lotteryConfig?: ClientLotteryConfig;
   stats: {
     totalEntries: number;
     approvedEntries: number;

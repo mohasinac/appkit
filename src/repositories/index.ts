@@ -217,3 +217,9 @@ export { loadProductFeaturesForStore } from "../features/products/repository/loa
 // SB-UNI-V — BundlesRepository deleted; bundles live on categoriesRepository
 // with categoryType:"bundle". See features/categories/repository for the
 // listByType / findBySlugAndType helpers.
+
+// Lottery entries repository
+export {
+  LotteryEntryRepository,
+  lotteryEntryRepository,
+} from "../features/lottery/repository/lottery-entry.repository";

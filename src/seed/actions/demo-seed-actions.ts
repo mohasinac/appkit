@@ -56,7 +56,8 @@ export type SeedCollectionName =
   | "storeGoogleConfig"
   | "roleOverrides"
   | "customRoles"
-  | "adminNotifications";
+  | "adminNotifications"
+  | "lotteryEntries";
 
 export interface SeedOperationResult {
   success?: boolean;

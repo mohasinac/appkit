@@ -1647,3 +1647,18 @@ export {
   type ProviderResolutionContext,
   type ShippingResolutionFactories,
 } from "./_internal/server/providers";
+
+// ── Lottery feature — server data + adapters + actions ──────────────────────────
+export { getLotteryEventCached, listLotteryEvents, getLotteryEntriesForAdmin, getLotteryEntriesForUser } from "./_internal/server/features/lottery/data";
+export type { LotteryEventClient } from "./_internal/server/features/lottery/data";
+export { toClientLotterySlot, toClientLotteryConfig } from "./_internal/server/features/lottery/adapters";
+export { buildLotteryMetadata } from "./_internal/server/features/lottery/metadata";
+export {
+  submitLotteryPullAction,
+  flagLotteryEntryAction,
+  reopenLotterySlotAction,
+  createLotteryEventAction,
+  updateLotteryEventAction,
+  setProductLotteryModeAction,
+} from "./_internal/server/features/lottery/actions";
+export { lotteryEntryRepository } from "./features/lottery/repository/lottery-entry.repository";

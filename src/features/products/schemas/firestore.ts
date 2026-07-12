@@ -12,6 +12,7 @@ import {
 } from "../../../utils/id-generators";
 import type { ProductStatus, ListingType } from "../types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { LotteryConfig } from "../../lottery/types";
 
 export interface ProductVideoField {
   url: string;
@@ -175,7 +176,7 @@ export interface ProductDocument extends BaseDocument {
   features?: string[];
   shippingInfo?: string;
   returnPolicy?: string;
-  condition?: "new" | "used" | "refurbished" | "broken" | "graded";
+  condition?: "new" | "like_new" | "good" | "fair" | "poor" | "used" | "refurbished" | "broken" | "graded";
   insurance?: boolean;
   insuranceCost?: number;
   shippingPaidBy?: "seller" | "buyer";
@@ -286,6 +287,17 @@ export interface ProductDocument extends BaseDocument {
   prizeRevealDeadlineDays?: number;
   /** Public proof-of-fairness file (commit-reveal scheme). */
   prizeGithubFileUrl?: string;
+  /**
+   * Draw mode for prize-draw listings.
+   * "reveal" = classic buyer-reveal flow (default, backward-compat).
+   * "lottery" = user self-pull with weighted random slot assignment.
+   */
+  prizeDrawMode?: "reveal" | "lottery";
+  /**
+   * Full lottery config. Only set when prizeDrawMode === "lottery".
+   * Includes server-only price/weight fields — stripped by adapter before any client response.
+   */
+  lotteryConfig?: LotteryConfig;
 
   // ── Per-product shipping overrides (S-SBUNI-RULES 2026-05-13) ───────────
   /**
@@ -339,6 +351,9 @@ export interface PrizeDrawItem {
   video?: { url: string; thumbnailUrl?: string };
   condition: string;
   estimatedValue?: number;
+  // FUTURE_FINANCIAL_DB: external_tx_id → lottery_transactions.external_tx_id
+  /** Per-slot price in paise for lottery mode. Lower price = higher weight = higher chance. */
+  prizeSlotPrice?: number;
   isWon: boolean;
 }
 

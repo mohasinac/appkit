@@ -77,5 +77,12 @@ export const EVENT_ENTRY_PII_FIELDS = [
   "ipAddress",
 ] as const;
 
+/** PII fields in lottery entries */
+export const LOTTERY_ENTRY_PII_FIELDS = [
+  "userPhone",
+  "userEmail",
+  "userDisplayName",
+] as const;
+
 /** Store OAuth bearer tokens — encrypted via SETTINGS_ENCRYPTION_KEY */
 export const STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"] as const;

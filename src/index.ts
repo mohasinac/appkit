@@ -1353,6 +1353,8 @@ export { ENC_PREFIX } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EVENT_ENTRY_PII_FIELDS - Constant used across modules.
 export { EVENT_ENTRY_PII_FIELDS } from "./security/index";
+// LOTTERY_ENTRY_PII_FIELDS - PII fields for lottery entries.
+export { LOTTERY_ENTRY_PII_FIELDS } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // HMAC_PREFIX - Constant used across modules.
 export { HMAC_PREFIX } from "./security/index";
@@ -2001,6 +2003,7 @@ export { claimedCouponsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventEntriesSeedData - Model for event entries seed data.
 export { eventEntriesSeedData } from "./seed/index";
+// lotteryEntriesSeedData already exported above via LOTTERY_ENTRIES_COLLECTION block.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventsSeedData - Model for events seed data.
 export { eventsSeedData } from "./seed/index";
@@ -5455,6 +5458,10 @@ export { EVENT_ADMIN_SORT_OPTIONS } from "./features/events/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // EVENT_ENTRIES_COLLECTION - Constant used across modules.
 export { EVENT_ENTRIES_COLLECTION } from "./features/events/index";
+// LOTTERY_ENTRIES_COLLECTION - New lotteryEntries collection constant.
+export { LOTTERY_ENTRIES_COLLECTION } from "./features/lottery/schemas/firestore";
+// lotteryEntriesSeedData - Seed data for the lotteryEntries collection.
+export { lotteryEntriesSeedData } from "./seed/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // EVENT_ENTRY_FIELDS - Constant used across modules.
 export { EVENT_ENTRY_FIELDS } from "./features/events/index";
@@ -5511,6 +5518,20 @@ export type { EventRaffleWinnerViewProps } from "./features/events/index";
 // SpinWheelView - Spin-the-wheel client component for spin-wheel events.
 export { SpinWheelView } from "./features/events/index";
 export type { SpinWheelViewProps } from "./features/events/index";
+// Lottery feature — client components
+export { LotterySlotGrid } from "./_internal/client/features/lottery/LotterySlotGrid";
+export { LotteryPullForm } from "./_internal/client/features/lottery/LotteryPullForm";
+export { LotteryListView } from "./_internal/client/features/lottery/LotteryListView";
+export { LotteryDetailView } from "./_internal/client/features/lottery/LotteryDetailView";
+export { LotteryEntriesView } from "./_internal/client/features/lottery/LotteryEntriesView";
+export { LotteryAdminSlotView } from "./_internal/client/features/lottery/LotteryAdminSlotView";
+export { LotteryAdminEditView } from "./_internal/client/features/lottery/LotteryAdminEditView";
+export { PrizeDrawLotteryDetailView } from "./_internal/client/features/lottery/PrizeDrawLotteryDetailView";
+// Lottery feature — types
+export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
+export { LotteryError, computeWeight, pickWeightedSlot, assignSlotWeights } from "./features/lottery/types";
+// Lottery feature — Firestore schema
+export type { LotteryEntryDocument } from "./features/lottery/schemas/firestore";
 export type { SpinPrize } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventsListView - Component for events list view.

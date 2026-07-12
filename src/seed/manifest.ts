@@ -184,6 +184,7 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   eventEntries: [],
+  lotteryEntries: [],
   sessions: pick(
     asArr(sessionsSeedData).map((s) => ({
       ...s,

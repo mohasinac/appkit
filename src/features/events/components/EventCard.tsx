@@ -26,6 +26,7 @@ const TYPE_ICONS: Record<EventType, string> = {
   feedback: "💬",
   raffle: "🎟️",
   spin_wheel: "🎡",
+  lottery: "🎰",
 };
 
 interface EventCardProps {

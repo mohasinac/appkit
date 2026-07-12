@@ -62,7 +62,8 @@ export type ActionResource =
   | "CHECKOUT"
   | "NAV"
   | "MEDIA"
-  | "SUPPORT";
+  | "SUPPORT"
+  | "LOTTERY";
 
 /** Confirmation modal config — when set, <Button action={...}> opens
  *  a confirm dialog before firing the actual handler. */
@@ -1829,6 +1830,52 @@ export const ACTIONS: ActionTree = {
         title: "Close this ticket?",
         body: "The ticket will be marked as resolved. You can reopen it later.",
         confirmLabel: "Close ticket",
+      },
+    },
+  },
+  LOTTERY: {
+    "pull": {
+      id: "lottery.pull",
+      label: "Submit Entry",
+      description: "Submit a lottery pull entry — slot assigned immediately.",
+      kind: "primary",
+    },
+    "flag-entry": {
+      id: "lottery.flag-entry",
+      label: "Flag as Scammer",
+      description: "Flag a lottery entry as fraudulent.",
+      kind: "danger",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Flag this entry?",
+        body: "Entry will be marked fraudulent. Their claimed slot stays booked until you manually reopen it.",
+        confirmLabel: "Flag entry",
+        confirmKind: "danger",
+      },
+    },
+    "reopen-slot": {
+      id: "lottery.reopen-slot",
+      label: "Reopen Slot",
+      description: "Free a flagged entry's slot so it can be claimed again.",
+      kind: "secondary",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Reopen this slot?",
+        body: "The slot will be available for new pulls. The flagged entry's slot assignment is removed.",
+        confirmLabel: "Reopen",
+      },
+    },
+    "cancel": {
+      id: "lottery.cancel",
+      label: "Cancel Lottery",
+      description: "Close the draw window and reject pending pulls.",
+      kind: "danger",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Cancel lottery?",
+        body: "Draw window closes immediately. Pending pulls rejected.",
+        confirmLabel: "Cancel",
+        confirmKind: "danger",
       },
     },
   },

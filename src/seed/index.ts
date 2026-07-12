@@ -173,6 +173,7 @@ export type { CouponUsageSeedRecord } from "./coupon-usage-seed-data";
 export { couponUsageSeedData } from "./coupon-usage-seed-data";
 export { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
 export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
+export { lotteryEntriesSeedData } from "./lottery-entries-seed-data";
 export { payoutsSeedData } from "./payouts-seed-data";
 export { notificationsSeedData } from "./notifications-seed-data";
 export { blogPostsSeedData } from "./blog-posts-seed-data";

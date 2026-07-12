@@ -92,9 +92,14 @@ export const PRODUCT_FIELDS = {
 
   CONDITION_VALUES: {
     NEW: "new",
+    LIKE_NEW: "like_new",
+    GOOD: "good",
+    FAIR: "fair",
+    POOR: "poor",
     USED: "used",
     REFURBISHED: "refurbished",
     BROKEN: "broken",
+    GRADED: "graded",
   },
 
   SHIPPING_PAID_BY_VALUES: {
@@ -125,7 +130,6 @@ export const PRODUCT_FIELDS = {
     AUCTION: "auction",
     PRE_ORDER: "pre-order",
     PRIZE_DRAW: "prize-draw",
-    BUNDLE: "bundle",
     CLASSIFIED: "classified",
     DIGITAL_CODE: "digital-code",
     LIVE: "live",

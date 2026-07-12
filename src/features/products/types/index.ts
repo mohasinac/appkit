@@ -15,7 +15,8 @@ export type ProductCondition =
   | "poor"
   | "used"
   | "refurbished"
-  | "broken";
+  | "broken"
+  | "graded";
 /**
  * Canonical listing-kind discriminator (SB1-G Phase 4).
  *

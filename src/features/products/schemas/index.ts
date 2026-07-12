@@ -69,11 +69,12 @@ export const productItemSchema = z.object({
       "used",
       "refurbished",
       "broken",
+      "graded",
     ])
     .optional(),
   // SB1-G Phase 4 — canonical discriminator (legacy `isAuction`/`isPreOrder` booleans removed).
   listingType: z
-    .enum(["standard", "auction", "pre-order", "prize-draw", "bundle"])
+    .enum(["standard", "auction", "pre-order", "prize-draw", "classified", "digital-code", "live"])
     .optional(),
   // SB1-C — prize-draw + bundle fields. All optional.
   maxPerUser: z.number().int().positive().optional(),
@@ -227,13 +228,14 @@ export const productListParamsSchema = z.object({
       "used",
       "refurbished",
       "broken",
+      "graded",
     ])
     .optional(),
   minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
   inStock: z.coerce.boolean().optional(),
   listingType: z
-    .enum(["standard", "auction", "pre-order", "prize-draw", "bundle"])
+    .enum(["standard", "auction", "pre-order", "prize-draw", "classified", "digital-code", "live"])
     .optional(),
   storeId: z.string().optional(),
   sort: z.string().optional(),

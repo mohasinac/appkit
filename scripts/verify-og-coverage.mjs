@@ -63,7 +63,9 @@ const OG_EXEMPT_ROUTES = new Set([
 // shipped in this session) all have opengraph-image.tsx siblings now.
 // Re-add new entries here with a tracker ID when a public dynamic detail
 // page legitimately needs to ship without OG.
-const OG_KNOWN_GAPS = new Set([]);
+const OG_KNOWN_GAPS = new Set([
+  "lottery/[id]", // Lottery feature — OG renderer pending (uses buildLotteryMetadata for metadata; OG image follows in a follow-up)
+]);
 
 const DYNAMIC_SEGMENT_RE = /^\[(?:\.{3})?(.+?)\]$/;
 

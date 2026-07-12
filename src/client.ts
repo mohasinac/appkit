@@ -203,6 +203,16 @@ export { FirebaseClientRealtimeProvider } from "./providers/firebase-client/inde
 // EventFormDrawer - Component for event form drawer.
 export { EventFormDrawer, EventParticipateView, EventPollWidget } from "./features/events/index";
 export type { EventParticipateViewProps } from "./features/events/index";
+// Lottery feature — client components (safe for client bundles — no server imports)
+export { LotterySlotGrid } from "./_internal/client/features/lottery/LotterySlotGrid";
+export { LotteryPullForm } from "./_internal/client/features/lottery/LotteryPullForm";
+export { LotteryListView } from "./_internal/client/features/lottery/LotteryListView";
+export { LotteryDetailView } from "./_internal/client/features/lottery/LotteryDetailView";
+export { LotteryEntriesView } from "./_internal/client/features/lottery/LotteryEntriesView";
+export { LotteryAdminSlotView } from "./_internal/client/features/lottery/LotteryAdminSlotView";
+export { LotteryAdminEditView } from "./_internal/client/features/lottery/LotteryAdminEditView";
+export { PrizeDrawLotteryDetailView } from "./_internal/client/features/lottery/PrizeDrawLotteryDetailView";
+export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // BottomSheet - Shared export for bottom sheet.
 export { BottomSheet } from "./features/layout/index";
