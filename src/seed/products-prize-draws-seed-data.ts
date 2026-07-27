@@ -12,6 +12,7 @@ import type {
   ProductDocument,
   PrizeDrawItem,
 } from "../features/products/schemas";
+import type { LotteryConfig } from "../features/lottery/types";
 import { PRODUCT_FIELDS, SCHEMA_DEFAULTS } from "../constants/field-names";
 import { buildSearchTokens } from "../utils/search-tokens";
 import { seedExtMedia } from "./_helpers/media";
@@ -136,7 +137,80 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     createdAt: daysAgo(8),
     updatedAt: daysAgo(1),
   },
+
+  // 3. Hot Wheels Rare Numbered Slot Lottery (lottery mode — user self-pull)
+  {
+    id: "prize-hotwheels-slot-lottery",
+    slug: "prize-hotwheels-slot-lottery",
+    title: "Hot Wheels Rare — Numbered Slot Lottery",
+    description:
+      "<p>10 rare Hot Wheels Redline and Treasure Hunt castings. Submit your UPI transaction ID and claim a slot — prize assigned instantly by weighted random draw. Lower-priced slots have a higher chance!</p>",
+    categorySlugs: ["category-diecast-vehicles"],
+    categoryNames: ["Diecast Vehicles"],
+    brand: "Hot Wheels",
+    brandSlug: "brand-hot-wheels",
+    price: 99900,
+    currency: SCHEMA_DEFAULTS.CURRENCY,
+    stockQuantity: 10,
+    availableQuantity: 10,
+    mainImage: seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=800&h=800&fit=crop"),
+    images: [
+      seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=800&h=800&fit=crop"),
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    storeName: "Diecast Depot",
+    storeId: "store-diecast-depot",
+    featured: false,
+    isPromoted: false,
+    tags: ["hot-wheels", "lottery", "diecast", "redline", "rare"],
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    listingType: "prize-draw",
+    prizeDrawMode: "lottery",
+    lotteryConfig: _hotWheelsLotteryConfig(),
+    prizeDrawItems: _hotWheelsPrizeItems(),
+    allowOffers: false,
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(1),
+  },
 ];
+
+function _hotWheelsLotteryConfig(): LotteryConfig {
+  const slots = [
+    { slotNumber: 1, name: "Red Line Hot Wheels Custom Camaro (1969)", priceInPaise: 49900, weight: 68, isBooked: true, bookedByUserLotteryNumber: 1, bookedByDisplayName: "Ravi K." },
+    { slotNumber: 2, name: "Treasure Hunt Dodge Challenger (2023)", priceInPaise: 79900, weight: 42, isBooked: true, bookedByUserLotteryNumber: 2, bookedByDisplayName: "Aisha M." },
+    { slotNumber: 3, name: "Hot Wheels Super Treasure Hunt (sealed)", priceInPaise: 99900, weight: 22, isBooked: true, bookedByUserLotteryNumber: 3, bookedByDisplayName: "Dev S." },
+    { slotNumber: 4, name: "Redline Ferrari 246 Dino (1969 original)", priceInPaise: 149900, weight: 1, isBooked: true, bookedByUserLotteryNumber: 4, bookedByDisplayName: "Priya L." },
+    { slotNumber: 5, name: "Hot Wheels Mystery Car (sealed, unknown model)", priceInPaise: 29900, weight: 100, isBooked: true, bookedByUserLotteryNumber: 5, bookedByDisplayName: "Mohsin C." },
+    { slotNumber: 6, name: "Hot Wheels RLC Exclusive Bone Shaker", priceInPaise: 59900, weight: 55, isBooked: false },
+    { slotNumber: 7, name: "Hot Wheels Pop Culture DeLorean (BTTF)", priceInPaise: 39900, weight: 79, isBooked: false },
+    { slotNumber: 8, name: "Hot Wheels Premium Car Culture (set of 5)", priceInPaise: 89900, weight: 31, isBooked: false },
+    { slotNumber: 9, name: "Hot Wheels ID Car (NFC-chip, sealed)", priceInPaise: 69900, weight: 46, isBooked: false },
+    { slotNumber: 10, name: "Redline Hot Wheels Beach Bomb (1969 – prototype type)", priceInPaise: 199900, weight: 1, isBooked: false },
+  ];
+  return {
+    slots,
+    totalSlots: 10,
+    pricingMode: "variable",
+    drawWindowDurationMinutes: 60,
+    maxPullsPerTransaction: 1,
+    maxPullsPerUser: 1,
+  };
+}
+
+function _hotWheelsPrizeItems(): PrizeDrawItem[] {
+  return [
+    { itemNumber: 1, title: "Red Line Custom Camaro (1969)", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.USED, estimatedValue: 49900, prizeSlotPrice: 49900, isWon: true },
+    { itemNumber: 2, title: "Treasure Hunt Dodge Challenger", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW, estimatedValue: 79900, prizeSlotPrice: 79900, isWon: true },
+    { itemNumber: 3, title: "Super Treasure Hunt (sealed)", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW, estimatedValue: 99900, prizeSlotPrice: 99900, isWon: true },
+    { itemNumber: 4, title: "Redline Ferrari 246 Dino (1969)", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.USED, estimatedValue: 149900, prizeSlotPrice: 149900, isWon: true },
+    { itemNumber: 5, title: "Mystery Car (sealed)", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW, estimatedValue: 29900, prizeSlotPrice: 29900, isWon: true },
+    { itemNumber: 6, title: "RLC Exclusive Bone Shaker", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW, estimatedValue: 59900, prizeSlotPrice: 59900, isWon: false },
+    { itemNumber: 7, title: "Pop Culture DeLorean (BTTF)", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW, estimatedValue: 39900, prizeSlotPrice: 39900, isWon: false },
+    { itemNumber: 8, title: "Premium Car Culture set of 5", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW, estimatedValue: 89900, prizeSlotPrice: 89900, isWon: false },
+    { itemNumber: 9, title: "ID Car (NFC-chip, sealed)", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW, estimatedValue: 69900, prizeSlotPrice: 69900, isWon: false },
+    { itemNumber: 10, title: "Redline Beach Bomb (1969 prototype type)", images: [seedExtMedia("https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=600&fit=crop")], condition: PRODUCT_FIELDS.CONDITION_VALUES.USED, estimatedValue: 199900, prizeSlotPrice: 199900, isWon: false },
+  ];
+}
 
 function _pokemonPrizeItems(): PrizeDrawItem[] {
   return [

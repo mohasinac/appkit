@@ -5463,6 +5463,9 @@ export { LOTTERY_ENTRIES_COLLECTION } from "./features/lottery/schemas/firestore
 // lotteryEntriesSeedData - Seed data for the lotteryEntries collection.
 export { lotteryEntriesSeedData } from "./seed/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
+// LOTTERY_ENTRY_FIELDS - Canonical field name constants for lotteryEntries collection.
+export { LOTTERY_ENTRY_FIELDS } from "./features/lottery/schemas/firestore";
+// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // EVENT_ENTRY_FIELDS - Constant used across modules.
 export { EVENT_ENTRY_FIELDS } from "./features/events/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.

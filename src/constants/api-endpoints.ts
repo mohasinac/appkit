@@ -293,6 +293,18 @@ export const EVENT_ENDPOINTS = {
     `/api/events/${id}/leaderboard${limit !== undefined ? `?limit=${limit}` : ""}`,
   // SB9-E user spin assignment
   SPIN: (id: string) => `/api/events/${id}/spin`,
+  // Lottery: user self-pull (draw happens immediately on submit)
+  LOTTERY_PULL: (id: string) => `/api/events/${id}/lottery-pull`,
+  LOTTERY_ENTRIES: (id: string) => `/api/events/${id}/lottery-entries`,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Lottery
+// ---------------------------------------------------------------------------
+
+export const LOTTERY_ENDPOINTS = {
+  FLAG_ENTRY: (entryId: string) => `/api/lottery-entries/${entryId}/flag`,
+  REOPEN_SLOT: (entryId: string) => `/api/lottery-entries/${entryId}/reopen-slot`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -367,6 +379,9 @@ export const PRODUCT_ENDPOINTS = {
   LIST: "/api/products",
   BY_SLUG: (slug: string) => `/api/products/${slug}`,
   BY_ID: (id: string) => `/api/products/${id}`,
+  // Lottery: user self-pull for prize-draw products in lottery mode
+  LOTTERY_PULL: (id: string) => `/api/products/${id}/lottery-pull`,
+  LOTTERY_ENTRIES: (id: string) => `/api/products/${id}/lottery-entries`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -562,6 +577,7 @@ export const API_ENDPOINTS = {
   COPILOT: COPILOT_ENDPOINTS,
   CORPORATE: CORPORATE_ENDPOINTS,
   EVENTS: EVENT_ENDPOINTS,
+  LOTTERY: LOTTERY_ENDPOINTS,
   FAQS: FAQ_ENDPOINTS,
   HOMEPAGE: HOMEPAGE_ENDPOINTS,
   LOYALTY: LOYALTY_ENDPOINTS,
