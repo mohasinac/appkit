@@ -54,4 +54,5 @@ export type GradientKey =
   | "card-teal"
   | "card-amber"
   | "card-rose"
-  | "logo";
+  | "logo"
+  | "sidebar";

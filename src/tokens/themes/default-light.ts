@@ -118,5 +118,7 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
       "linear-gradient(to bottom right, var(--appkit-color-error-surface), var(--appkit-color-surface), var(--appkit-color-surface))",
     logo:
       "linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-primary-500) 55%, var(--appkit-color-secondary-400) 100%)",
+    sidebar:
+      "linear-gradient(to bottom, var(--appkit-color-primary-700), var(--appkit-color-secondary-500))",
   },
 };

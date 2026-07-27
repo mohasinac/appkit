@@ -5,8 +5,8 @@
  * sidebar (admin, store/seller, user). Replaces three identical inline copies
  * that previously baked hardcoded hex gradients per role — see plan §1.
  *
- * Background uses `--appkit-color-primary-*` / `--appkit-color-secondary-*`
- * tokens so the handle re-themes correctly in light and dark modes. Chevron
+ * Background uses `--appkit-gradient-sidebar` so the handle re-themes
+ * correctly: blue→green in light mode, pink→sky-blue in dark mode. Chevron
  * foreground is pinned to `--appkit-color-text-on-primary` so it stays
  * readable against the gradient regardless of theme.
  */
@@ -22,8 +22,7 @@ export interface SidebarCollapseToggleProps {
 }
 
 const HANDLE_STYLE: React.CSSProperties = {
-  background:
-    "linear-gradient(to bottom, var(--appkit-color-primary-700, var(--appkit-color-primary)), var(--appkit-color-secondary-500, var(--appkit-color-secondary)))",
+  background: "var(--appkit-gradient-sidebar)", // audit-inline-style-ok: theme gradient CSS var, not a raw colour
 };
 
 const CHEVRON_STYLE: React.CSSProperties = {

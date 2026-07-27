@@ -76,7 +76,7 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
   },
   gradients: {
     brand:
-      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-primary-400))",
+      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-info))",
     "brand-tri":
       "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary), var(--appkit-color-info))",
     accent:
@@ -110,6 +110,8 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "card-rose":
       "linear-gradient(to bottom right, var(--appkit-color-error-surface), var(--appkit-color-surface), var(--appkit-color-surface))",
     logo:
-      "linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-primary-500) 55%, var(--appkit-color-secondary-400) 100%)",
+      "linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-primary-500) 55%, var(--appkit-color-info) 100%)",
+    sidebar:
+      "linear-gradient(to bottom, var(--appkit-color-primary), var(--appkit-color-info))",
   },
 };
