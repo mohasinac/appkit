@@ -110,7 +110,7 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "card-rose":
       "linear-gradient(to bottom right, var(--appkit-color-error-surface), var(--appkit-color-surface), var(--appkit-color-surface))",
     logo:
-      "linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-primary-500) 55%, var(--appkit-color-info) 100%)",
+      "linear-gradient(to right, var(--appkit-color-primary-300) 0%, var(--appkit-color-primary-400) 55%, var(--appkit-color-info) 100%)",
     sidebar:
       "linear-gradient(to bottom, var(--appkit-color-primary), var(--appkit-color-info))",
   },

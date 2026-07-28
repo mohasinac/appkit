@@ -1,3 +1,4 @@
+"use client";
 /**
  * LetItRip site logo — SVG wordmark "LetItRip" + small ".in" superscript.
  *
@@ -8,6 +9,7 @@
  * Sizes are responsive presets — the variant catalogue forbids consumer-side
  * className overrides on primitive components.
  */
+import { useId } from "react";
 import { MediaImage } from "../../features/media/MediaImage";
 
 export type SiteLogoSize = "sm" | "md" | "lg" | "xl" | "hero";
@@ -38,7 +40,9 @@ export interface SiteLogoProps {
   src?: string;
 }
 
-const GRADIENT_ID = "appkit-logo-gradient";
+// Gradient ID prefix — made unique per instance via useId() to prevent
+// cross-SVG id conflicts when multiple SiteLogo components share the page.
+const GRADIENT_ID_PREFIX = "appkit-logo-gradient";
 
 const SIZE_HEIGHTS: Record<SiteLogoSize, string> = {
   sm: "h-5",
@@ -48,7 +52,7 @@ const SIZE_HEIGHTS: Record<SiteLogoSize, string> = {
   hero: "h-24 xl:h-32 2xl:h-40",
 };
 
-function resolveFill(tone: SiteLogoTone): string {
+function resolveFill(tone: SiteLogoTone, gradientId: string): string {
   switch (tone) {
     case "mono":
       return "currentColor";
@@ -58,7 +62,7 @@ function resolveFill(tone: SiteLogoTone): string {
       return "var(--appkit-color-text)";
     case "brand":
     default:
-      return `url(#${GRADIENT_ID})`;
+      return `url(#${gradientId})`;
   }
 }
 
@@ -68,6 +72,8 @@ export function SiteLogo({
   title = "LetItRip.in",
   src,
 }: SiteLogoProps) {
+  const uid = useId();
+  const gradientId = `${GRADIENT_ID_PREFIX}-${uid.replace(/:/g, "")}`;
   const heightCls = SIZE_HEIGHTS[size];
 
   if (src) {
@@ -83,7 +89,7 @@ export function SiteLogo({
     );
   }
 
-  const fill = resolveFill(tone);
+  const fill = resolveFill(tone, gradientId);
   const isGradient = tone === "brand";
 
   return (
@@ -99,20 +105,22 @@ export function SiteLogo({
       <title>{title}</title>
       {isGradient && (
         <defs>
-          {/* Embedded linearGradient references the active theme's
-              --appkit-gradient-logo stops via a fallback CSS reference path. */}
-          <linearGradient id={GRADIENT_ID} x1="0%" y1="0%" x2="100%" y2="0%">
+          {/* Per-stop CSS variables (--appkit-logo-stop-*) are defined in
+              tokens.css with separate light/dark overrides so the gradient
+              stays visible on both light and dark surfaces without any
+              client-side JS branching. */}
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop
               offset="0%"
-              style={{ stopColor: "var(--appkit-color-primary-700)" }}
+              style={{ stopColor: "var(--appkit-logo-stop-from)" }}
             />
             <stop
               offset="55%"
-              style={{ stopColor: "var(--appkit-color-primary-500)" }}
+              style={{ stopColor: "var(--appkit-logo-stop-mid)" }}
             />
             <stop
               offset="100%"
-              style={{ stopColor: "var(--appkit-color-secondary-400)" }}
+              style={{ stopColor: "var(--appkit-logo-stop-to)" }}
             />
           </linearGradient>
         </defs>

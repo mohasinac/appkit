@@ -179,7 +179,7 @@ function DrawerPanel({
   children: React.ReactNode;
 }) {
   return (
-    <Div className="hidden md:block">
+    <Div className="hidden lg:block">
       {/* Backdrop */}
       <Div surface="overlay-xs" className="fixed inset-0 z-40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       {/* Panel — slides in from RIGHT */}
@@ -229,8 +229,8 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
       <>
         {/* Desktop backdrop */}
         {desktopOpen && (
-          <Div surface="overlay-xs" 
-            className="hidden md:block fixed inset-0 backdrop-blur-[2px] z-30"
+          <Div surface="overlay-xs"
+            className="hidden lg:block fixed inset-0 backdrop-blur-[2px] z-30"
             onClick={handleToggle}
             aria-hidden="true"
           />
@@ -238,7 +238,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
 
         {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
         <Div
-          className={`hidden md:flex fixed left-0 z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[13rem] ${desktopOpen ? "translate-x-0" : "-translate-x-[calc(100%-1.25rem)]"}`}
+          className={`hidden lg:flex fixed left-0 z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[13rem] ${desktopOpen ? "translate-x-0" : "-translate-x-[calc(100%-1.25rem)]"}`}
         >
           {/* Nav panel */}
           <Stack border="default" surface="default" className={`flex-1 border-r dark:border-[var(--appkit-color-border)] ${__O.hidden}`} shadow="xl">
@@ -254,7 +254,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
         </Div>
 
         {/* Mobile: bottom sheet */}
-        <Div className="md:hidden">
+        <Div className="lg:hidden">
           <BottomSheet open={mobileOpen} onClose={close} title="My Account">
             <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
           </BottomSheet>
@@ -277,7 +277,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           document.body
         )}
       {/* Mobile — BottomSheet */}
-      <Div className="md:hidden">
+      <Div className="lg:hidden">
         <BottomSheet open={mobileOpen} onClose={close} title="My Account">
           <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
         </BottomSheet>

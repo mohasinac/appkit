@@ -104,8 +104,8 @@ export function TitleBarLayout({
   promoStripText,
   isDark = false,
   onToggleTheme,
-  hasDashboardNav: _hasDashboardNav,
-  onToggleDashboardNav: _onToggleDashboardNav,
+  hasDashboardNav,
+  onToggleDashboardNav,
   hideSidebarToggle = false,
   id = "titlebar",
   className = "",
@@ -151,10 +151,10 @@ export function TitleBarLayout({
       type="button"
       variant="ghost"
       size="sm"
-      aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+      aria-label={sidebarOpen ? "Close menu" : hasDashboardNav ? "Open dashboard navigation" : "Open menu"}
       aria-expanded={sidebarOpen}
       aria-controls="secondary-sidebar"
-      onClick={onToggleSidebar}
+      onClick={hasDashboardNav && onToggleDashboardNav ? onToggleDashboardNav : onToggleSidebar}
       className={iconBtn}
     >
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

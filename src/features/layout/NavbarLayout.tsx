@@ -40,7 +40,7 @@ function DefaultNavItem({
   const activeClasses = item.highlighted
     ? "border border-primary-400/40 dark:border-secondary-400/30 text-primary-700 dark:text-secondary-400 bg-primary-50/80 dark:bg-secondary-900/30 px-3 transition-colors duration-150"
     : isActive
-      ? "bg-primary-50 dark:bg-secondary-900/30 text-primary-800 dark:text-secondary-200 font-semibold px-3 border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
+      ? "bg-primary-50 dark:bg-slate-800 text-primary-800 dark:text-white font-semibold px-3 border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
       : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 px-3";
 
   return (

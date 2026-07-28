@@ -66,5 +66,5 @@ export const HEADER_HEIGHT_CSS_VAR = "--header-height";
  * Exported so DashboardLayoutClient can call `window.matchMedia(DASHBOARD_DESKTOP_MEDIA_QUERY)`
  * without re-hardcoding the value across every layout consumer.
  */
-export const DASHBOARD_DESKTOP_BREAKPOINT_PX = 768;
+export const DASHBOARD_DESKTOP_BREAKPOINT_PX = 1024;
 export const DASHBOARD_DESKTOP_MEDIA_QUERY = `(min-width: ${DASHBOARD_DESKTOP_BREAKPOINT_PX}px)`;

@@ -304,6 +304,11 @@
   --appkit-gradient-card-rose:        linear-gradient(to bottom right, var(--appkit-color-error-surface), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-logo:             linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-primary-500) 55%, var(--appkit-color-secondary-400) 100%);
   --appkit-gradient-sidebar:          linear-gradient(to bottom, var(--appkit-color-primary-700), var(--appkit-color-secondary-500));
+  /* Per-stop variables so SiteLogo SVG can reference each stop individually
+     (SVG linearGradient cannot consume a full CSS gradient value directly). */
+  --appkit-logo-stop-from:            var(--appkit-color-primary-700);
+  --appkit-logo-stop-mid:             var(--appkit-color-primary-500);
+  --appkit-logo-stop-to:              var(--appkit-color-secondary-400);
 }
 
 /* --- Theme — Dark ([data-theme="dark"]) ----------------------------------- */
@@ -380,8 +385,12 @@
   --appkit-gradient-card-teal:       linear-gradient(to bottom right, rgba(56,189,248,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-amber:      linear-gradient(to bottom right, var(--appkit-color-warning-surface), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-rose:       linear-gradient(to bottom right, var(--appkit-color-error-surface), var(--appkit-color-surface), var(--appkit-color-surface));
-  --appkit-gradient-logo:            linear-gradient(to right, var(--appkit-color-primary-700) 0%, var(--appkit-color-primary-500) 55%, var(--appkit-color-info) 100%);
+  --appkit-gradient-logo:            linear-gradient(to right, var(--appkit-color-primary-300) 0%, var(--appkit-color-primary-400) 55%, var(--appkit-color-info) 100%);
   --appkit-gradient-sidebar:         linear-gradient(to bottom, var(--appkit-color-primary), var(--appkit-color-info));
+  /* Logo stop overrides — lighter shades visible on dark (#020617) background */
+  --appkit-logo-stop-from:           var(--appkit-color-primary-300);
+  --appkit-logo-stop-mid:            var(--appkit-color-primary-400);
+  --appkit-logo-stop-to:             var(--appkit-color-info);
 }
 
 /* --- Theme — Cobalt Night ([data-theme="cobalt-night"]) ------------------- */
@@ -417,6 +426,10 @@
   --appkit-color-focus-ring:       #8eb9ff;
   --appkit-shadow-glow:            0 0 0 1px rgba(89,146,255,0.18), 0 4px 16px -4px rgba(89,146,255,0.30);
   --appkit-shadow-glow-pink:       0 0 0 1px rgba(89,146,255,0.18), 0 4px 20px -4px rgba(89,146,255,0.30);
+  /* Logo stops — lighter cobalt blues visible on #111e58 background */
+  --appkit-logo-stop-from:         var(--appkit-color-primary-300);
+  --appkit-logo-stop-mid:          var(--appkit-color-primary-400);
+  --appkit-logo-stop-to:           var(--appkit-color-secondary);
 }
 
 /* --- Theme — Sunset ([data-theme="sunset"]) ------------------------------- */
