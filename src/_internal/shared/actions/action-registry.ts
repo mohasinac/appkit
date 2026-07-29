@@ -936,6 +936,19 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
       permissions: ["admin"],
     },
+    "verify-payment": {
+      id: "admin.verify-payment",
+      label: "Verify Payment",
+      ariaLabel: "Mark payment as received and verified",
+      description: "Confirms manual cash/UPI payment was received. Moves order to Processing.",
+      kind: "primary",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Verify payment?",
+        body: "This marks the payment as received. The order will move to Processing. This action cannot be undone.",
+        confirmLabel: "Yes, verify",
+      },
+    },
     "verify-vendor": {
       id: "admin.verify-vendor",
       label: "Verify vendor",

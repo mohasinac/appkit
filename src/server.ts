@@ -36,6 +36,12 @@ export {
 } from "./_internal/shared/types/action-result";
 export type { ActionResult } from "./_internal/shared/types/action-result";
 
+// [SERVER-ONLY] P-1 manual payment proof server actions.
+export {
+  attachPaymentProofAction,
+  adminVerifyPaymentAction,
+} from "./_internal/server/features/orders/actions";
+
 // [SERVER-ONLY] Cloud Function handler wrappers — persist exceptions to
 // serverErrors (source: "function") before re-throwing so retry semantics
 // are preserved. Apply at the consumer's runtime adapter boundary.

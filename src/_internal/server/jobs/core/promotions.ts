@@ -18,6 +18,10 @@ export async function runPromotions(
   _input: void,
   ctx: JobContext,
 ): Promise<PromotionsCallableResult> {
+  if (ctx.env("FEATURE_EVENTS") !== "true") {
+    ctx.logger.info("FEATURE_EVENTS disabled — skipping promotions");
+    return { promotedProducts: [], featuredProducts: [], activeCoupons: [] };
+  }
   ctx.logger.info("Promotions data requested");
   const now = new Date();
   const nowIso = now.toISOString();

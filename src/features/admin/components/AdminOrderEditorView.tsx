@@ -1,11 +1,14 @@
 "use client";
 
 import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client";
-import React from "react";
+import React, { useState } from "react";
+import { normalizeError } from "../../../errors/normalize";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Div, Form, FormActions, Input, Label, Select, SideDrawer, Stack, useToast } from "../../../ui";
+import { Button, Div, Form, FormActions, Input, Label, Select, SideDrawer, Stack, Text, useToast } from "../../../ui";
+import { MediaImage } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 // --- Types -------------------------------------------------------------------
 
@@ -15,6 +18,10 @@ export interface AdminOrderEditorViewProps {
   orderId?: string;
   orderLabel?: string;
   currentStatus?: string;
+  paymentProofUrl?: string;
+  paymentTransactionId?: string;
+  paymentMethod?: string;
+  paymentStatus?: string;
 }
 
 const STATUS_OPTIONS = [
@@ -45,6 +52,10 @@ export function AdminOrderEditorView({
   orderId,
   orderLabel,
   currentStatus,
+  paymentProofUrl,
+  paymentTransactionId,
+  paymentMethod,
+  paymentStatus,
 }: AdminOrderEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -54,6 +65,10 @@ export function AdminOrderEditorView({
   const [carrier, setCarrier] = React.useState("");
   const [notes, setNotes] = React.useState("");
   const [refundAmount, setRefundAmount] = React.useState("");
+  const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+
+  const isCashOrUpi = paymentMethod === "cash" || paymentMethod === "upi_manual";
+  const needsVerification = isCashOrUpi && paymentStatus === "pending";
 
   React.useEffect(() => {
     if (open) {
@@ -88,6 +103,22 @@ export function AdminOrderEditorView({
       showToast((err as Error)?.message ?? "Failed to update order.", "error");
     },
   });
+
+  const handleVerifyPayment = async () => {
+    if (!orderId) return;
+    setIsVerifyingPayment(true);
+    try {
+      await apiClient.patch(`/api/admin/orders/${orderId}/payment-verify`, {});
+      showToast("Payment verified. Order moved to Processing.", "success");
+      queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
+      onClose();
+    } catch (err) {
+      void normalizeError(err);
+      showToast((err as Error)?.message ?? "Failed to verify payment.", "error");
+    } finally {
+      setIsVerifyingPayment(false);
+    }
+  };
 
   return (
     <SideDrawer
@@ -144,6 +175,45 @@ export function AdminOrderEditorView({
             onChange={(e) => setRefundAmount(e.target.value)}
             placeholder="e.g. 499.00"
           />
+        )}
+
+        {isCashOrUpi && (
+          <Stack gap="xs">
+            <Label size="sm" weight="medium" color="primary">Payment Proof</Label>
+            {paymentProofUrl ? (
+              <Stack gap="xs">
+                {/* audit-variant-ok: MediaImage has no border or rounded variant props */}
+                <MediaImage
+                  src={paymentProofUrl}
+                  alt="Payment screenshot"
+                  size="card"
+                  className="rounded-lg border border-zinc-200 dark:border-zinc-700"
+                />
+                {paymentTransactionId && (
+                  <Text size="xs" color="muted">UTR: <Text as="span" size="xs" weight="medium">{paymentTransactionId}</Text></Text>
+                )}
+                {needsVerification && (
+                  <Button
+                    type="button"
+                    action={ACTIONS.ADMIN["verify-payment"]}
+                    onClick={handleVerifyPayment}
+                    isLoading={isVerifyingPayment}
+                    disabled={isVerifyingPayment}
+                    variant="primary"
+                    className="mt-1 w-full"
+                  />
+                )}
+                {!needsVerification && paymentStatus === "paid" && (
+                  // audit-variant-ok: themed success border color not in BORDER_MAP
+                  <Div rounded="lg" padding="inlineSm" className="border border-success/20" surface="success-surface">
+                    <Text size="xs" className="text-success" weight="medium">Payment verified</Text>
+                  </Div>
+                )}
+              </Stack>
+            ) : (
+              <Text size="xs" color="faint">No proof uploaded yet.</Text>
+            )}
+          </Stack>
         )}
 
         <FormActions align="right">

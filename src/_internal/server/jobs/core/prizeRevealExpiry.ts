@@ -7,6 +7,10 @@ import type { JsonValue } from "@mohasinac/appkit";
 const ORDER_COLLECTION = "orders";
 
 export async function runPrizeRevealExpiry(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
+    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping prize reveal expiry");
+    return;
+  }
   ctx.logger.info("Prize reveal expiry sweep starting");
 
   const snap = await ctx.db

@@ -8,6 +8,10 @@ const ORDER_COLLECTION = "orders";
 const ONE_DAY_MS = 86_400_000;
 
 export async function runPrizeRevealReminder(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
+    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping prize reveal reminder");
+    return;
+  }
   ctx.logger.info("Prize reveal reminder sweep starting");
 
   const cutoff = new Date(ctx.now.getTime() + ONE_DAY_MS);

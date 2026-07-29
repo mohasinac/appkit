@@ -66,8 +66,11 @@ export interface DashboardLayoutClientProps {
  * Hoisted drawer-state hook — the matchMedia-aware open/close logic that was
  * triplicated across admin/store/user layouts. Used internally by
  * DashboardLayoutClient; not exported because it's not generically useful.
+ *
+ * storageKey: variant-scoped localStorage key (`appkit:sidebar-open:{variant}`)
+ * so admin/store/user each persist their own collapse state independently.
  */
-function useResponsiveDrawer() {
+function useResponsiveDrawer(storageKey: string) {
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { registerNav, unregisterNav } = useDashboardNav();
@@ -77,26 +80,42 @@ function useResponsiveDrawer() {
     [],
   );
 
+  // Restore persisted desktop-open state after hydration (avoids SSR mismatch).
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(storageKey) === "true") setDesktopOpen(true);
+    } catch { /* localStorage unavailable (private-browse / SSR fallback) */ }
+  }, [storageKey]);
+
   const open = useCallback(() => {
     startTransition(() => {
-      if (isDesktop()) setDesktopOpen(true);
-      else setMobileOpen(true);
+      if (isDesktop()) {
+        try { localStorage.setItem(storageKey, "true"); } catch { /* noop */ }
+        setDesktopOpen(true);
+      } else setMobileOpen(true);
     });
-  }, [isDesktop]);
+  }, [isDesktop, storageKey]);
 
   const close = useCallback(() => {
     startTransition(() => {
-      if (isDesktop()) setDesktopOpen(false);
-      else setMobileOpen(false);
+      if (isDesktop()) {
+        try { localStorage.setItem(storageKey, "false"); } catch { /* noop */ }
+        setDesktopOpen(false);
+      } else setMobileOpen(false);
     });
-  }, [isDesktop]);
+  }, [isDesktop, storageKey]);
 
   const toggle = useCallback(() => {
     startTransition(() => {
-      if (isDesktop()) setDesktopOpen((prev) => !prev);
-      else setMobileOpen((prev) => !prev);
+      if (isDesktop()) {
+        setDesktopOpen((prev) => {
+          const next = !prev;
+          try { localStorage.setItem(storageKey, String(next)); } catch { /* noop */ }
+          return next;
+        });
+      } else setMobileOpen((prev) => !prev);
     });
-  }, [isDesktop]);
+  }, [isDesktop, storageKey]);
 
   useEffect(() => {
     registerNav({ open, close, toggle });
@@ -139,7 +158,8 @@ export function DashboardLayoutClient({
 }: DashboardLayoutClientProps) {
   const pathname = usePathname();
   const activeHref = explicitActiveHref ?? pathname ?? "";
-  const { desktopOpen, mobileOpen, close, toggle } = useResponsiveDrawer();
+  const storageKey = `appkit:sidebar-open:${variant}`;
+  const { desktopOpen, mobileOpen, close, toggle } = useResponsiveDrawer(storageKey);
   const { data: settings } = useSiteSettings<{ navConfig?: Record<string, { enabled: boolean }> }>();
   const navConfig = (settings as { navConfig?: Record<string, { enabled: boolean }> } | undefined)?.navConfig;
 

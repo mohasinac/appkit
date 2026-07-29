@@ -37,6 +37,10 @@ export async function runAssignSpinPrize(
   input: AssignSpinPrizeInput,
   ctx: JobContext,
 ): Promise<AssignSpinPrizeResult> {
+  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
+    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping spin prize assignment");
+    return { eventId: input.eventId, userId: input.userId, reason: "feature_disabled" };
+  }
   const { eventId, userId } = input;
 
   const eventSnap = await ctx.db.collection(EVENTS_COLLECTION).doc(eventId).get();

@@ -308,7 +308,60 @@ for (let i = _rawOrdersSeedData.length; i < 50; i++) {
   });
 }
 
-export const ordersSeedData = [..._rawOrdersSeedData, ...expandedOrders].slice(
-  0,
-  50
-) as OrderDocument[];
+// P-1 MVP: two cash/UPI manual payment orders for demo purposes.
+// cashOrderPendingProof: buyer submitted proof, admin has NOT yet verified.
+const cashOrderPendingProof: Partial<OrderDocument> = {
+  id: "order-1-20260729-cash01",
+  productId: "product-dark-magician-lob-1st",
+  productTitle: "Dark Magician — LOB 1st Edition",
+  userId: "user-yugi-muto",
+  userName: "Yugi Muto",
+  userEmail: "yugi@duelkingdom.in",
+  storeId: "store-kaiba-corp-cards",
+  quantity: 1,
+  unitPrice: 499900,
+  totalPrice: 499900,
+  currency: "INR",
+  status: "pending",
+  paymentStatus: "pending",
+  paymentMethod: "cash",
+  paymentProofUrl: "/media/payment-proof-demo-pending.jpg",
+  paymentTransactionId: "UPI-DEMO-20260728-PROOF",
+  paymentProofMimeType: "image/jpeg",
+  paymentProofUploadedAt: daysAgo(1),
+  shippingAddress: "addr-yugi-home",
+  orderDate: daysAgo(2),
+  createdAt: daysAgo(2),
+  updatedAt: daysAgo(1),
+};
+
+const cashOrderVerified: Partial<OrderDocument> = {
+  id: "order-1-20260729-cash02",
+  productId: "product-hot-wheels-redline-vintage",
+  productTitle: "Hot Wheels Redline — Vintage",
+  userId: "user-yugi-muto",
+  userName: "Yugi Muto",
+  userEmail: "yugi@duelkingdom.in",
+  storeId: "store-diecast-depot",
+  quantity: 1,
+  unitPrice: 129900,
+  totalPrice: 129900,
+  currency: "INR",
+  status: "processing",
+  paymentStatus: "paid",
+  paymentMethod: "cash",
+  paymentProofUrl: "/media/payment-proof-demo-verified.jpg",
+  paymentTransactionId: "UPI-DEMO-20260727-YUGI",
+  paymentProofMimeType: "image/jpeg",
+  paymentProofUploadedAt: daysAgo(3),
+  shippingAddress: "addr-yugi-home",
+  orderDate: daysAgo(4),
+  createdAt: daysAgo(4),
+  updatedAt: daysAgo(2),
+};
+
+export const ordersSeedData = [
+  cashOrderPendingProof,
+  cashOrderVerified,
+  ...[..._rawOrdersSeedData, ...expandedOrders].slice(0, 48),
+] as OrderDocument[];

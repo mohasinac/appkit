@@ -101,6 +101,10 @@ async function dispatch(ctx: JobContext, entry: { ref: DocumentReference; data: 
 }
 
 export async function runPayoutBatch(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_PAYOUTS") !== "true") {
+    ctx.logger.info("FEATURE_PAYOUTS disabled — skipping payout batch");
+    return;
+  }
   ctx.logger.info("Starting payout batch sweep");
   const pending = await payoutRepository.getPending();
   if (pending.length === 0) {

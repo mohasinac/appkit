@@ -9,6 +9,10 @@ const ORDER_COLLECTION = "orders";
 const PRIZE_DRAW_LISTING_TYPE = "prize-draw";
 
 export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
+    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping prize reveal open");
+    return;
+  }
   ctx.logger.info("Prize reveal open sweep starting");
 
   const snap = await ctx.db

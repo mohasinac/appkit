@@ -63,7 +63,7 @@ export const CONTEXT_LIMITS = {
 } as const;
 
 // Contexts that accept both image and PDF (proof documents).
-const IMAGE_OR_PDF_CONTEXTS = ["shipping-proof", "refund-proof"] as const;
+const IMAGE_OR_PDF_CONTEXTS = ["shipping-proof", "refund-proof", "payment-proof"] as const;
 type ImageOrPdfContextType = (typeof IMAGE_OR_PDF_CONTEXTS)[number];
 
 const PDF_ONLY_CONTEXTS = ["invoice", "payout-doc"] as const;
@@ -332,7 +332,7 @@ export function applyMediaContextGuards({
     return {
       ok: false,
       status: 400,
-      error: "PDF uploads are only allowed for invoice, payout-doc, shipping-proof, or refund-proof contexts",
+      error: "PDF uploads are only allowed for invoice, payout-doc, shipping-proof, refund-proof, or payment-proof contexts",
       details: { context: ctx.type, detected: detectedMime },
     };
   }

@@ -16,6 +16,10 @@ import type { JobContext } from "../runtime/types";
 const PLATFORM_COMMISSION_RATE = 0.05;
 
 export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_PAYOUTS") !== "true") {
+    ctx.logger.info("FEATURE_PAYOUTS disabled — skipping weekly payout eligibility");
+    return;
+  }
   ctx.logger.info("Starting weekly payout eligibility sweep");
   const eligible = await orderRepository.getEligibleShiprocket();
   if (eligible.length === 0) {

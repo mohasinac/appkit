@@ -29,6 +29,10 @@ export async function runTriggerEventRaffle(
   input: TriggerEventRaffleInput,
   ctx: JobContext,
 ): Promise<TriggerEventRaffleResult> {
+  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
+    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping event raffle");
+    return { eventId: input.eventId, raffleEntryCount: 0 };
+  }
   const eventRef = ctx.db.collection(EVENTS_COLLECTION).doc(input.eventId);
   const eventSnap = await eventRef.get();
   if (!eventSnap.exists) {

@@ -5,6 +5,10 @@ const PRODUCT_COLLECTION = "products";
 const PRIZE_DRAW_LISTING_TYPE = "prize-draw";
 
 export async function runPrizeRevealClose(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_PRIZE_DRAWS") !== "true") {
+    ctx.logger.info("FEATURE_PRIZE_DRAWS disabled — skipping prize reveal close");
+    return;
+  }
   ctx.logger.info("Prize reveal close sweep starting");
 
   const snap = await ctx.db

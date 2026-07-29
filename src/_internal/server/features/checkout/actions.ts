@@ -369,7 +369,7 @@ export async function createCheckoutOrderAction(
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
 
-  // W1-43 — enforce COD toggle. Admin bypass + non-COD payments still flow through.
+  // W1-43 — enforce COD toggle.
   if (
     !adminBypass &&
     paymentMethod === "cod" &&
@@ -377,6 +377,17 @@ export async function createCheckoutOrderAction(
   ) {
     throw new ValidationError(
       "Cash on Delivery is not currently accepted. Please choose another payment method.",
+    );
+  }
+
+  // P-1 — enforce UPI/cash manual payment toggle.
+  if (
+    !adminBypass &&
+    (paymentMethod === "upi_manual" || paymentMethod === "cash") &&
+    siteSettings?.payment?.upiManualEnabled === false
+  ) {
+    throw new ValidationError(
+      "Manual UPI / cash payment is not currently accepted. Please choose another payment method.",
     );
   }
 
@@ -688,7 +699,7 @@ export async function createCheckoutOrderAction(
       commissions,
     );
 
-    const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual";
+    const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual" || paymentMethod === "cash";
     const depositAmount = isCodLike
       ? Math.round(groupTotal * (commissions.codDepositPercent / 100) * 100) / 100
       : undefined;

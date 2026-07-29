@@ -22,6 +22,10 @@ function getBusinessDayCutoff(daysAgo: number): Date {
 }
 
 export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_PAYOUTS") !== "true") {
+    ctx.logger.info("FEATURE_PAYOUTS disabled — skipping auto-payout eligibility");
+    return;
+  }
   ctx.logger.info("Starting daily auto-payout eligibility sweep", {
     windowDays: AUTO_PAYOUT_WINDOW_DAYS,
   });

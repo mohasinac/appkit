@@ -44,6 +44,10 @@ async function computeBundleStockStatus(
 }
 
 export async function runBundleStockSync(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_BUNDLES") !== "true") {
+    ctx.logger.info("FEATURE_BUNDLES disabled — skipping bundle stock sync");
+    return;
+  }
   ctx.logger.info("Bundle stock sync starting (SB-UNI-V categories)");
 
   const snap = await ctx.db

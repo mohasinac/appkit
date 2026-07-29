@@ -44,6 +44,7 @@ export const PaymentStatusValues = {
 /** Runtime-accessible payment method values â€" use instead of bare string literals. */
 export const PaymentMethodValues = {
   COD: "cod",
+  CASH: "cash",
   ONLINE: "online",
   UPI_MANUAL: "upi_manual",
   RAZORPAY: "razorpay",
@@ -232,6 +233,16 @@ export interface OrderDocument extends BaseDocument {
   pickedAt?: Date;
   /** Timestamp when the order was packed and ready for courier handoff. */
   packedAt?: Date;
+
+  // ── Manual / Cash / UPI payment proof (P-1) ─────────────────────────────
+  /** Media slug for buyer-uploaded UPI/bank screenshot (via /api/media proxy). */
+  paymentProofUrl?: string;
+  /** UTR / transaction reference entered by the buyer. */
+  paymentTransactionId?: string;
+  /** MIME type detected at finalize step (image/jpeg, image/png, application/pdf). */
+  paymentProofMimeType?: string;
+  /** When the buyer submitted the proof. */
+  paymentProofUploadedAt?: Date;
 }
 
 export const ORDER_COLLECTION = "orders" as const;

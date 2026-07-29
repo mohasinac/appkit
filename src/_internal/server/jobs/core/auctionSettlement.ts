@@ -83,6 +83,10 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
 }
 
 export async function runAuctionSettlement(ctx: JobContext): Promise<void> {
+  if (ctx.env("FEATURE_AUCTIONS") !== "true") {
+    ctx.logger.info("FEATURE_AUCTIONS disabled — skipping auction settlement");
+    return;
+  }
   ctx.logger.info("Starting auction settlement sweep");
 
   const expired = await productRepository.getExpiredAuctions(ctx.now);

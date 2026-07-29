@@ -11,7 +11,7 @@ import {
 import { assertOrderCancellable, assertOrderOwnership, assertReturnWindowOpen } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 import { OrderNotFoundError, OrderOwnershipError } from "../../../shared/features/orders/errors";
-import { isAdminUser } from "../../../../features/auth/role-predicates";
+import { isAdminUser, isModeratorUser } from "../../../../features/auth/role-predicates";
 
 export async function createOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
@@ -60,5 +60,49 @@ export async function updateOrderStatusAction(input: unknown): Promise<ActionRes
         trackingNumber: parsed.data.trackingNumber,
         shippingCarrier: parsed.data.carrier,
       } as any);
+  });
+}
+
+// ── P-1 Manual payment proof ─────────────────────────────────────────────────
+
+export async function attachPaymentProofAction(
+  orderId: string,
+  proof: { proofUrl: string; transactionId?: string; mimeType?: string },
+): Promise<ActionResult<void>> {
+  return wrapAction(async () => {
+    const user = await requireRoleUser(["buyer", "seller", "admin"]);
+    const order = await orderRepository.findById(orderId).catch(() => null);
+    if (!order) throw new OrderNotFoundError(orderId);
+    if (!isAdminUser(user) && order.userId !== user.uid) throw new OrderOwnershipError(orderId);
+    const pm = order.paymentMethod ?? "";
+    if (pm !== "cash" && pm !== "upi_manual") {
+      throw new ValidationError("Payment proof can only be attached to cash or UPI orders");
+    }
+    if (order.paymentProofUrl) {
+      throw new ValidationError("PROOF_ALREADY_ATTACHED");
+    }
+    await orderRepository.update(orderId, {
+      paymentProofUrl: proof.proofUrl,
+      paymentTransactionId: proof.transactionId,
+      paymentProofMimeType: proof.mimeType,
+      paymentProofUploadedAt: new Date(),
+    } as any);
+  });
+}
+
+export async function adminVerifyPaymentAction(orderId: string): Promise<ActionResult<void>> {
+  return wrapAction(async () => {
+    const user = await requireRoleUser(["admin", "moderator"]);
+    if (!isAdminUser(user) && !isModeratorUser(user)) {
+      throw new ValidationError("Only admin or moderator can verify payments");
+    }
+    const order = await orderRepository.findById(orderId).catch(() => null);
+    if (!order) throw new OrderNotFoundError(orderId);
+    if (order.paymentStatus === "paid") return; // idempotent
+    await orderRepository.update(orderId, {
+      paymentStatus: "paid",
+      paymentId: order.paymentTransactionId ?? order.paymentId ?? `manual-${orderId}`,
+      status: "processing",
+    } as any);
   });
 }

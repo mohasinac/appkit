@@ -31,6 +31,10 @@ interface OrderRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  paymentProofUrl?: string;
+  paymentTransactionId?: string;
+  paymentMethod?: string;
+  paymentStatus?: string;
 }
 
 export type AdminOrdersViewProps = ListingLayoutProps;
@@ -84,6 +88,10 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         ].join(" · "),
         status: toStringValue(item.status, "Unknown"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        paymentProofUrl: toStringValue(item.paymentProofUrl, "") || undefined,
+        paymentTransactionId: toStringValue(item.paymentTransactionId, "") || undefined,
+        paymentMethod: toStringValue(item.paymentMethod, "") || undefined,
+        paymentStatus: toStringValue(item.paymentStatus, "") || undefined,
       })),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
@@ -169,6 +177,10 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         orderId={selectedRow?.id}
         orderLabel={selectedRow?.primary}
         currentStatus={selectedRow?.status}
+        paymentProofUrl={selectedRow?.paymentProofUrl}
+        paymentTransactionId={selectedRow?.paymentTransactionId}
+        paymentMethod={selectedRow?.paymentMethod}
+        paymentStatus={selectedRow?.paymentStatus}
       />
     </>
   );

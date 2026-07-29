@@ -28,6 +28,7 @@ import {
 import { useMediaUpload } from "../../media";
 import { resolveDate } from "../../../utils/date.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 import type { ProductItem, ProductStatus } from "../types";
 import {
   isAuctionListing,
@@ -148,6 +149,7 @@ export function ProductForm({
   const t = useTranslations("adminProducts");
   const { upload } = useMediaUpload();
   const galleryIndexRef = useRef(0);
+  const listingTypeFlags = useListingTypeFlags();
 
   const update = (partial: ProductFormValue) => {
     onChange({ ...product, ...partial });
@@ -548,18 +550,22 @@ export function ProductForm({
         </>
       )}
 
-      <Heading level={4} className="mt-4">
-        {t("sectionAuctionSettings")}
-      </Heading>
+      {listingTypeFlags.auction && (
+        <>
+          <Heading level={4} className="mt-4">
+            {t("sectionAuctionSettings")}
+          </Heading>
 
-      <Checkbox
-        label={t("formIsAuction")}
-        checked={isAuctionListing(product)}
-        onChange={(e) =>
-          update({ listingType: e.target.checked ? "auction" : "standard" })
-        }
-        disabled={isReadonly}
-      />
+          <Checkbox
+            label={t("formIsAuction")}
+            checked={isAuctionListing(product)}
+            onChange={(e) =>
+              update({ listingType: e.target.checked ? "auction" : "standard" })
+            }
+            disabled={isReadonly}
+          />
+        </>
+      )}
 
       {isAuctionListing(product) && (
         <>
@@ -678,37 +684,45 @@ export function ProductForm({
         </>
       )}
 
-      <Heading level={4} className="mt-4">
-        {t("sectionPreOrderSettings")}
-      </Heading>
+      {listingTypeFlags["pre-order"] && (
+        <>
+          <Heading level={4} className="mt-4">
+            {t("sectionPreOrderSettings")}
+          </Heading>
 
-      <Checkbox
-        label={t("formIsPreOrder")}
-        checked={isPreOrderListing(product)}
-        onChange={(e) =>
-          update({ listingType: e.target.checked ? "pre-order" : "standard" })
-        }
-        disabled={isReadonly}
-      />
+          <Checkbox
+            label={t("formIsPreOrder")}
+            checked={isPreOrderListing(product)}
+            onChange={(e) =>
+              update({ listingType: e.target.checked ? "pre-order" : "standard" })
+            }
+            disabled={isReadonly}
+          />
+        </>
+      )}
 
       {/* ── Prize-Draw section (SB4-C) ── */}
-      <Heading level={4} className="mt-4">
-        Prize Draw Settings
-      </Heading>
+      {listingTypeFlags["prize-draw"] && (
+        <>
+          <Heading level={4} className="mt-4">
+            Prize Draw Settings
+          </Heading>
 
-      <Checkbox
-        label="This is a prize-draw listing"
-        checked={isPrizeDrawListing(product)}
-        onChange={(e) =>
-          update({ listingType: e.target.checked ? "prize-draw" : "standard" })
-        }
-        disabled={
-          isReadonly ||
-          ((product.prizeDrawItems as PrizeDrawItem[] | undefined) ?? []).some(
-            (it) => it.isWon,
-          )
-        }
-      />
+          <Checkbox
+            label="This is a prize-draw listing"
+            checked={isPrizeDrawListing(product)}
+            onChange={(e) =>
+              update({ listingType: e.target.checked ? "prize-draw" : "standard" })
+            }
+            disabled={
+              isReadonly ||
+              ((product.prizeDrawItems as PrizeDrawItem[] | undefined) ?? []).some(
+                (it) => it.isWon,
+              )
+            }
+          />
+        </>
+      )}
 
       {isPrizeDrawListing(product) && (
         (() => {
