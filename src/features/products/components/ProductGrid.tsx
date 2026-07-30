@@ -272,7 +272,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {visible.map((name) => (
                 <Span padding="pill-2xs" layout="inline-flex"
                   key={name}
-                  className="gap-[0.125rem] text-[10px] truncate max-w-[100px]" rounded="full" surface="subtle" color="muted"
+                  className="gap-[0.125rem] text-[10px]" rounded="full" surface="subtle" color="muted"
                 >
                   <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
@@ -290,7 +290,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                 </Span>
               )}
               {product.brand && (
-                <Span padding="pill-2xs" layout="inline-flex" gap="2xs" className="text-[10px] truncate max-w-[90px]" rounded="full" surface="subtle" color="muted">
+                <Span padding="pill-2xs" layout="inline-flex" gap="2xs" className="text-[10px]" rounded="full" surface="subtle" color="muted">
                   <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                   </svg>
@@ -304,7 +304,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         {(() => {
           const seller = safeDisplayName(product.storeName, "");
           return seller ? (
-            <Text className="mt-0.5 text-[11px] truncate" color="faint">
+            <Text className="mt-0.5 text-[11px]" color="faint">
               by {seller}
             </Text>
           ) : null;

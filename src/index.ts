@@ -1988,7 +1988,7 @@ export { cartsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // SB-UNI-C â€" brandsSeedData merged into categoriesSeedData with categoryType:"brand".
 // categoriesSeedData - Model for categories seed data.
-export { categoriesSeedData } from "./seed/index";
+export { categoriesSeedData, categoriesP1SeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // couponsSeedData - Model for coupons seed data.
 export { couponsSeedData } from "./seed/index";

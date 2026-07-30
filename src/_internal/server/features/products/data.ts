@@ -15,7 +15,10 @@ import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 /** Fetch a single product by slug or id, deduped per request. */
 export const getProductForDetail = cache(
   async (slugOrId: string): Promise<ProductDocument | null> => {
-    return (await productRepository.findByIdOrSlug(slugOrId).catch(() => undefined)) ?? null;
+    const product = (await productRepository.findByIdOrSlug(slugOrId).catch(() => undefined)) ?? null;
+    // Fire-and-forget viewCount increment — must not affect response time
+    if (product) void productRepository.incrementViewCount(product.id);
+    return product;
   },
 );
 

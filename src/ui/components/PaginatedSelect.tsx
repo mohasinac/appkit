@@ -74,6 +74,7 @@ const C = {
   placeholder: "appkit-ps__placeholder",
   triggerLeft: "appkit-ps__trigger-left",
   dropdown: "appkit-ps__dropdown",
+  dropdownUp: "appkit-ps__dropdown--up",
   search: "appkit-ps__search",
   list: "appkit-ps__list",
   option: "appkit-ps__option",
@@ -131,6 +132,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
 
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [opensUp, setOpensUp] = useState(false);
   const [asyncOptions, setAsyncOptions] = useState<PaginatedSelectOption<V>[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -170,6 +172,13 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
     if (!open || !loadOptions) return;
     void load(query, 1, true);
   }, [open, query, load, loadOptions]);
+
+  useEffect(() => {
+    if (!open || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    setOpensUp(spaceBelow < 220 && rect.top > 220);
+  }, [open]);
 
   useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
@@ -324,7 +333,7 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
         {/* dropdown */}
         {open && (
           <div
-            className={C.dropdown}
+            className={[C.dropdown, opensUp ? C.dropdownUp : ""].filter(Boolean).join(" ")}
             role="listbox"
             aria-multiselectable={isMulti || undefined}
           >

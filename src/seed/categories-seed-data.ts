@@ -2233,3 +2233,10 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
   ...bundleRows.map((bundle) => ({ ancestors: [] as any[], ...bundle, createdByType: "admin" as const })),
 ];
+
+// P-1 default seed: excludes bundle rows (FEATURE_BUNDLES is off in P-1)
+export const categoriesP1SeedData: Partial<CategoryDocument>[] = [
+  ...rawCategories.map((c) => ({ ancestors: [] as any[], ...c, createdByType: "admin" as const })),
+  ...sublistingRows.map((s) => ({ ancestors: [] as any[], ...s, createdByType: "admin" as const })),
+  ...brandRows.map((b) => ({ ancestors: [] as any[], ...b, createdByType: "admin" as const })),
+];

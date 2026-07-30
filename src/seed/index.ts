@@ -156,7 +156,7 @@ export { sessionsSeedData, SESSION_COLLECTION } from "./sessions-seed-data";
 export { addressesSeedData } from "./addresses-seed-data";
 export { storesSeedData } from "./stores-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
-export { categoriesSeedData } from "./categories-seed-data";
+export { categoriesSeedData, categoriesP1SeedData } from "./categories-seed-data";
 export { productsStandardSeedData } from "./products-standard-seed-data";
 export { productsAuctionsSeedData } from "./products-auctions-seed-data";
 export { productsPreordersSeedData } from "./products-preorders-seed-data";
