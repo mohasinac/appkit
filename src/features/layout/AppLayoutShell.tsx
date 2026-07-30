@@ -27,6 +27,7 @@ import { SidebarLayout } from "./SidebarLayout";
 import { TitleBar } from "./TitleBar";
 import { BackToTop } from "./BackToTop";
 import { useDashboardNav } from "./DashboardNavContext";
+import { usePathname } from "next/navigation";
 
 /** A single sidebar link. */
 export interface AppLayoutShellSidebarLink {
@@ -597,6 +598,8 @@ export function AppLayoutShell({
   // a single consumer-level QueryProvider is the correct architecture.
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const pathname = usePathname();
+  useEffect(() => { setSidebarOpen(false); }, [pathname]);
   const { theme, toggleTheme } = useTheme();
   const { closeNav: closeDashboardNav, hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } = useDashboardNav();
   const { state: bottomActionsState } = useBottomActionsContext();

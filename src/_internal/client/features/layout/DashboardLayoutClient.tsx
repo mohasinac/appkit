@@ -105,6 +105,11 @@ function useResponsiveDrawer(storageKey: string) {
     });
   }, [isDesktop, storageKey]);
 
+  // Close only the mobile drawer — used on route change so desktop sidebar stays persistent.
+  const closeMobile = useCallback(() => {
+    startTransition(() => { setMobileOpen(false); });
+  }, []);
+
   const toggle = useCallback(() => {
     startTransition(() => {
       if (isDesktop()) {
@@ -122,7 +127,7 @@ function useResponsiveDrawer(storageKey: string) {
     return () => unregisterNav();
   }, [registerNav, unregisterNav, open, close, toggle]);
 
-  return { desktopOpen, mobileOpen, close, toggle };
+  return { desktopOpen, mobileOpen, close, closeMobile, toggle };
 }
 
 /** Filter nav groups by navConfig (enabled toggle) + requiredPermission. */
@@ -159,7 +164,8 @@ export function DashboardLayoutClient({
   const pathname = usePathname();
   const activeHref = explicitActiveHref ?? pathname ?? "";
   const storageKey = `appkit:sidebar-open:${variant}`;
-  const { desktopOpen, mobileOpen, close, toggle } = useResponsiveDrawer(storageKey);
+  const { desktopOpen, mobileOpen, close, closeMobile, toggle } = useResponsiveDrawer(storageKey);
+  useEffect(() => { closeMobile(); }, [pathname, closeMobile]);
   const { data: settings } = useSiteSettings<{ navConfig?: Record<string, { enabled: boolean }> }>();
   const navConfig = (settings as { navConfig?: Record<string, { enabled: boolean }> } | undefined)?.navConfig;
 
