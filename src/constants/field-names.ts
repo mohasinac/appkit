@@ -507,6 +507,7 @@ export const CATEGORY_FIELDS = {
   BUNDLE_STOCK_STATUS: "bundleStockStatus",
   BUNDLE_QUERY_RESOLVED_AT: "bundleQueryResolvedAt",
   DISPLAY: "display",
+  VIEW_COUNT: "viewCount",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 

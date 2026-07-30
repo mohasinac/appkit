@@ -5,6 +5,7 @@ import type { AnalyticsTopProduct } from "../../types";
 export interface AdminTopProductsTableLabels {
   title?: string;
   orders?: string;
+  views?: string;
   view?: string;
   revenue?: string;
 }
@@ -45,6 +46,13 @@ export function AdminTopProductsTable({
                 {product.orders} {labels.orders ?? "orders"}
               </Text>
             </Div>
+            {product.viewCount != null && (
+              <Div className="text-right ml-4 hidden sm:block">
+                <Text size="sm" color="muted">
+                  {product.viewCount} {labels.views ?? "views"}
+                </Text>
+              </Div>
+            )}
             <Div className="text-right ml-4">
               <Text weight="semibold">
                 {formatRevenue(product.revenue)}

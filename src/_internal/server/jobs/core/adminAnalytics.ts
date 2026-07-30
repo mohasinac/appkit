@@ -25,6 +25,7 @@ export interface AdminAnalyticsResult {
     revenue: number;
     orders: number;
     mainImage: string;
+    viewCount: number;
   }>;
 }
 
@@ -123,6 +124,7 @@ export async function runAdminAnalytics(
   const topProductsWithImages = topProducts.map((p, i) => ({
     ...p,
     mainImage: topProductDocs[i]?.mainImage ?? "",
+    viewCount: topProductDocs[i]?.viewCount ?? 0,
   }));
 
   return {

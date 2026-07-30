@@ -528,6 +528,7 @@ export interface SiteSettingsDocument {
       auction?: boolean;
       "pre-order"?: boolean;
       "prize-draw"?: boolean;
+      bundle?: boolean;
       classified?: boolean;
       "digital-code"?: boolean;
       live?: boolean;
@@ -710,6 +711,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       auction: true,
       "pre-order": true,
       "prize-draw": true,
+      bundle: true,
       classified: true,
       "digital-code": true,
       live: true,

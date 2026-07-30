@@ -8,7 +8,9 @@ import { CATEGORIES_FEATURED_LIMIT, CATEGORIES_MENU_LIMIT, CATEGORIES_SITEMAP_LI
 /** Full category document by slug — deduped per request via React.cache(). */
 export const getCategoryForDetail = cache(
   async (slug: string): Promise<CategoryDocument | null> => {
-    return (await categoriesRepository.getCategoryBySlug(slug).catch(() => undefined)) ?? null;
+    const category = (await categoriesRepository.getCategoryBySlug(slug).catch(() => undefined)) ?? null;
+    if (category) void categoriesRepository.incrementViewCount(category.id);
+    return category;
   },
 );
 

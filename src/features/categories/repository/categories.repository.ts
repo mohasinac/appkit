@@ -640,6 +640,17 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
    * SB-UNI-B — derive the canonical `sublisting-{slug}` ID from a
    * human-entered category name.
    */
+  async incrementViewCount(categoryId: string): Promise<void> {
+    try {
+      await this.db
+        .collection(this.collection)
+        .doc(categoryId)
+        .update({ [CATEGORY_FIELDS.VIEW_COUNT]: increment(1) });
+    } catch {
+      // View analytics must not break category read path.
+    }
+  }
+
   generateSublistingId(name: string): string {
     const base = name
       .toLowerCase()

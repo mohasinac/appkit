@@ -123,6 +123,7 @@ export interface CategoryDocument extends BaseDocument {
   subtreeSize: number;
 
   metrics: CategoryDocumentMetrics;
+  viewCount?: number;
 
   isFeatured: boolean;
   featuredPriority?: number;
@@ -414,6 +415,7 @@ export const CATEGORY_FIELDS = {
   FEATURED_PRIORITY: "featuredPriority",
   SEO: "seo",
   DISPLAY: "display",
+  VIEW_COUNT: "viewCount",
   IS_ACTIVE: "isActive",
   IS_SEARCHABLE: "isSearchable",
   CATEGORY_TYPE: "categoryType",

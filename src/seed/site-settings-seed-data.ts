@@ -436,6 +436,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
       auction: false,
       "pre-order": false,
       "prize-draw": false,
+      bundle: false,
       classified: false,
       "digital-code": false,
       live: false,
