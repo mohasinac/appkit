@@ -7,14 +7,37 @@ import {
   blogRepository,
   eventRepository,
   categoriesRepository,
+  siteSettingsRepository,
 } from "../../../../repositories";
 import {
   HOMEPAGE_FEATURED_REVIEWS_LIMIT,
   HOMEPAGE_RECENT_BLOG_POSTS_LIMIT,
 } from "../../../shared/features/homepage/config";
+import type { SectionType } from "../../../../features/homepage/schemas/firestore";
+import type { FeatureFlagKey } from "../../../../features/admin/schemas/firestore";
+
+/** Section types that require a feature flag to be enabled to show on the homepage. */
+const SECTION_FEATURE_GATE: Partial<Record<SectionType, FeatureFlagKey>> = {
+  auctions: "auctions",
+  "pre-orders": "preOrders",
+  events: "events",
+  "event-raffles": "events",
+  "prize-draws": "events",
+  "blog-articles": "blog",
+};
 
 export const getHomepageSections = cache(async () => {
-  return homepageSectionsRepository.getEnabledSections().catch(() => []);
+  const [sections, settings] = await Promise.all([
+    homepageSectionsRepository.getEnabledSections().catch(() => []),
+    siteSettingsRepository.getSingleton().catch(() => null),
+  ]);
+  const flags = settings?.featureFlags;
+  if (!flags) return sections;
+  return sections.filter((s) => {
+    const flagKey = SECTION_FEATURE_GATE[s.type as SectionType];
+    if (!flagKey) return true;
+    return flags[flagKey] !== false;
+  });
 });
 
 export const getHeroCarouselSlides = cache(async () => {
@@ -27,7 +50,8 @@ export const getHeroCarouselSlides = cache(async () => {
  */
 export const getHomepageInitial = cache(async () => {
   const [
-    sections,
+    rawSections,
+    settings,
     carouselSlides,
     featuredProducts,
     activeAuctions,
@@ -39,6 +63,7 @@ export const getHomepageInitial = cache(async () => {
     featuredCategories,
   ] = await Promise.all([
     homepageSectionsRepository.getEnabledSections().catch(() => []),
+    siteSettingsRepository.getSingleton().catch(() => null),
     carouselRepository.getActiveSlides().catch(() => []),
     productRepository.findFeatured().catch(() => []),
     productRepository.findActiveAuctions().catch(() => []),
@@ -49,6 +74,15 @@ export const getHomepageInitial = cache(async () => {
     eventRepository.listActive().catch(() => []),
     categoriesRepository.getFeaturedCategories().catch(() => []),
   ]);
+
+  const flags = settings?.featureFlags;
+  const sections = flags
+    ? rawSections.filter((s) => {
+        const flagKey = SECTION_FEATURE_GATE[s.type as SectionType];
+        if (!flagKey) return true;
+        return flags[flagKey] !== false;
+      })
+    : rawSections;
 
   return {
     sections,
