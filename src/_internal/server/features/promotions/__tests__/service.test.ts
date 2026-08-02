@@ -9,7 +9,7 @@ const { mockGetCouponByCode, mockGetUserCouponUsageCount } = vi.hoisted(() => ({
   mockGetUserCouponUsageCount:  vi.fn(),
 }));
 
-vi.mock("../../../../repositories", () => ({
+vi.mock("../../../../../repositories", () => ({
   couponsRepository: {
     getCouponByCode:          mockGetCouponByCode,
     getUserCouponUsageCount:  mockGetUserCouponUsageCount,
