@@ -52,6 +52,8 @@ export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "
   eventId?: string;
   onSaved?: (id: string) => void;
   embedded?: boolean;
+  /** When provided, restricts the event type dropdown to these values only. */
+  allowedTypes?: EventType[];
 }
 
 const CLS_REMOVE_BTN = "text-zinc-400 hover:text-error transition-colors text-lg leading-none px-1 p-0 min-h-0 h-auto rounded-none";
@@ -345,6 +347,7 @@ export function AdminEventEditorView({
   eventId,
   onSaved,
   embedded,
+  allowedTypes,
   ...rest
 }: AdminEventEditorViewProps) {
   const isEdit = Boolean(eventId);
@@ -493,7 +496,7 @@ export function AdminEventEditorView({
             <Select
               label="Event type"
               value={values.type}
-              options={EVENT_TYPE_OPTIONS}
+              options={allowedTypes ? EVENT_TYPE_OPTIONS.filter((o) => allowedTypes.includes(o.value as EventType)) : EVENT_TYPE_OPTIONS}
               onChange={(e) => onChange({ type: e.target.value as EventType })}
             />
           )}
