@@ -364,7 +364,7 @@ export const USER_FIELDS = {
 // ============================================================================
 
 export type EmailVerificationTokenDocument = {
-  id?: string;
+  id?: string; // audit-schema-base-ok: ephemeral auth token; no updatedAt — tokens are set once and deleted, never updated
   userId: string;
   email: string;
   token: string;
@@ -373,7 +373,7 @@ export type EmailVerificationTokenDocument = {
 }
 
 export type PasswordResetTokenDocument = {
-  id?: string;
+  id?: string; // audit-schema-base-ok: ephemeral auth token; no updatedAt — tokens are set once, marked used, then purged
   userId: string;
   email: string;
   token: string;
@@ -439,7 +439,7 @@ export const TOKEN_FIELDS = {
 // ============================================================================
 
 export type SessionDocument = {
-  id: string;
+  id: string; // audit-schema-base-ok: session managed via Firebase Auth, not a BaseRepository subclass
   userId: string;
   deviceInfo?: {
     userAgent?: string;

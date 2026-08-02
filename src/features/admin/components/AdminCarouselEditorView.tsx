@@ -48,7 +48,7 @@ function makeCard(zone: 1 | 2 | 3 | 4 | 5 | 6 = 1): CarouselCard {
     id: `card-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     zone,
     background: { type: "color", color: "var(--appkit-color-primary)" },
-    content: { title: "", subtitle: "", textColor: "#ffffff", textAlign: "left" },
+    content: { title: "", subtitle: "", textColor: "#ffffff", textAlign: "left" }, // audit-hex-tokens-ok: Firestore document default value (text CSS color field), not a styling literal
     buttons: [],
     hover: { effect: "scale" },
   };
@@ -207,7 +207,7 @@ function BackgroundEditor({
           label="Colour (CSS token or hex)"
           value={value.color ?? ""}
           onChange={(e) => set({ color: e.target.value })}
-          placeholder="var(--appkit-color-primary) or #1a1a2e"
+          placeholder="var(--appkit-color-primary) or #1a1a2e" // audit-hex-tokens-ok: descriptive placeholder string showing users valid input formats
         />
       )}
 
@@ -301,7 +301,7 @@ function CardEditor({
         <Input label="Title" value={card.content?.title ?? ""} onChange={(e) => setContent({ title: e.target.value })} />
         <Input label="Subtitle" value={card.content?.subtitle ?? ""} onChange={(e) => setContent({ subtitle: e.target.value || undefined })} />
         <Input label="Description" value={card.content?.description ?? ""} onChange={(e) => setContent({ description: e.target.value || undefined })} />
-        <Input label="Text colour (CSS)" value={card.content?.textColor ?? "#ffffff"} onChange={(e) => setContent({ textColor: e.target.value })} />
+        <Input label="Text colour (CSS)" value={card.content?.textColor ?? "#ffffff"} onChange={(e) => setContent({ textColor: e.target.value })} /> {/* audit-hex-tokens-ok: default for free-form CSS color text input — value is a Firestore field, not styling */}
         <Select label="Text align" value={card.content?.textAlign ?? "left"} onChange={(e) => setContent({ textAlign: e.target.value as "left" | "center" | "right" })} options={TEXT_ALIGN_OPTIONS} />
       </Stack>
 

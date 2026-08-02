@@ -1825,8 +1825,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           <Input label="Title" value={card.title} onChange={(e) => updateCard(index, { title: e.target.value })} />
           <Input label="Body / description" value={card.body} onChange={(e) => updateCard(index, { body: e.target.value })} />
           <Input label="Link (href)" value={card.link} onChange={(e) => updateCard(index, { link: e.target.value })} placeholder="/categories/..." />
-          <Input label="Background colour" value={card.backgroundColor} onChange={(e) => updateCard(index, { backgroundColor: e.target.value })} placeholder="#ffffff or var(--appkit-color-primary)" />
-          <Input label="Text colour" value={card.textColor} onChange={(e) => updateCard(index, { textColor: e.target.value })} placeholder="#000000" />
+          <Input label="Background colour" value={card.backgroundColor} onChange={(e) => updateCard(index, { backgroundColor: e.target.value })} placeholder="#ffffff or var(--appkit-color-primary)" /> {/* audit-hex-tokens-ok: descriptive placeholder showing valid color input format */}
+          <Input label="Text colour" value={card.textColor} onChange={(e) => updateCard(index, { textColor: e.target.value })} placeholder="#000000" /> {/* audit-hex-tokens-ok: descriptive placeholder showing valid color input format */}
           <Select
             label="Border radius"
             value={card.borderRadius}

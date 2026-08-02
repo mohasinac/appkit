@@ -62,6 +62,7 @@ export function useConversation(conversationId: string | null): UseConversationR
   const [isConnected, setIsConnected] = useState(false);
 
   const refetch = useCallback(async () => {
+    // toast-intentionally-silent: background conversation refetch — error stored in state, UI shows inline error
     if (!conversationId) {
       setConversation(null);
       return;

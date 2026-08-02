@@ -192,6 +192,7 @@ export function useGoogleLogin(options?: {
   }, []); // mount once — uses refs, no stale closure risk
 
   const mutate = useCallback(async () => {
+    // toast-intentionally-silent: OAuth popup flow — errors forwarded to onErrorRef callback, not toast
     calledRef.current = false; // reset for each new auth flow
     const popup = window.open(
       `${window.location.origin}/auth.html`,

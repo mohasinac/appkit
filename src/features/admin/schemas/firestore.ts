@@ -386,7 +386,7 @@ export function meetsMinPriority(
  * applied when the user's mode preference resolves to that mode.
  */
 export type SiteSettingsThemeRecord = {
-  id: string;
+  id: string; // audit-schema-base-ok: embedded sub-document stored in siteSettings.theme.themes[] array, not a collection root
   name: string;
   mode: "light" | "dark";
   /** `true` for the two seeded defaults; admin UI surfaces them as read-only. */

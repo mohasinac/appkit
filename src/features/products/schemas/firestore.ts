@@ -41,7 +41,7 @@ export const MAX_CUSTOM_FIELDS = 50;
 export const MAX_CUSTOM_SECTIONS = 3;
 
 export type CustomSection = {
-  id: string;
+  id: string; // audit-schema-base-ok: embedded sub-document stored as array element on ProductDocument
   title: string;
   text?: string;
   fields?: CustomField[];

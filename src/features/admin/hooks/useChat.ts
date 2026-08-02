@@ -44,6 +44,7 @@ export function useChat(
   const unsubscribeRef = useRef<Unsubscribe | null>(null);
 
   const connectAndSubscribe = useCallback(async () => {
+    // toast-intentionally-silent: RTDB connection management — error set in state, not surfaced via toast
     if (!chatId) return;
 
     setIsLoading(true);

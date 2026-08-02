@@ -58,6 +58,7 @@ export class ClaimedCouponsRepository extends BaseRepository<ClaimedCouponDocume
         status: "active",
         expiresAt: input.expiresAt ?? null,
         claimedAt: now,
+        createdAt: now,
         updatedAt: now,
       };
 

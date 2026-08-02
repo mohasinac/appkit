@@ -39,6 +39,7 @@ export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
     status: "active",
     expiresAt: daysAhead(14),
     claimedAt: daysAgo(2),
+    createdAt: daysAgo(2),
     updatedAt: daysAgo(2),
   },
   // Expired — manually claimed 30 days ago, no purchase made
@@ -59,6 +60,7 @@ export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
     status: "expired",
     expiresAt: daysAgo(5),
     claimedAt: daysAgo(45),
+    createdAt: daysAgo(45),
     updatedAt: daysAgo(5),
   },
   // Used — applied to a prior order
@@ -81,6 +83,7 @@ export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
     usedAt: daysAgo(10),
     usedOrderId: "order-3-20260508-a1b2c3",
     claimedAt: daysAgo(20),
+    createdAt: daysAgo(20),
     updatedAt: daysAgo(10),
   },
 ];

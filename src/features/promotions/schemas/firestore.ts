@@ -102,8 +102,7 @@ export interface ClaimedCouponSnapshot {
   restrictions: RestrictionsConfig;
 }
 
-export type ClaimedCouponDocument = {
-  id: string;
+export interface ClaimedCouponDocument extends BaseDocument {
   userId: string;
   couponId: string;
   couponCode: string;
@@ -120,7 +119,6 @@ export type ClaimedCouponDocument = {
   /** Set when status transitions to "used". */
   usedOrderId?: string;
   claimedAt: Date;
-  updatedAt: Date;
 }
 
 export const CLAIMED_COUPONS_COLLECTION = "claimedCoupons" as const;
