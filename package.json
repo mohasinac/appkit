@@ -103,6 +103,10 @@
       "style": "./dist/tokens/tokens.css",
       "default": "./dist/tokens/tokens.css"
     },
+    "./constants": {
+      "types": "./dist/constants/index.d.ts",
+      "import": "./dist/constants/index.js"
+    },
     "./configs": {
       "types": "./dist/configs/index.d.ts",
       "import": "./dist/configs/index.js",

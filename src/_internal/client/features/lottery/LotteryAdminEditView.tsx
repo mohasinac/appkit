@@ -13,7 +13,7 @@ import {
   DataTable,
   type DataTableColumn,
 } from "../../../../ui";
-import { Form, FieldInput, FieldSelect } from "../../../../ui";
+import { Form, FieldInput, FieldSelect, Input } from "../../../../ui";
 import type { UseFormShellStateResult } from "../../../../ui/forms";
 
 interface LotterySlotRow {
@@ -139,9 +139,9 @@ export function LotteryAdminEditView({
       key: "name",
       header: "Prize Name",
       render: (s) => (
-        <input // audit-raw-form-input-ok: inline slot name editor inside DataTable cell — no FieldInput available without Form wrapper per row
+        <Input
           type="text"
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-2 py-1 text-sm"
+          className="w-full"
           placeholder={`Prize for slot ${s.slotNumber}`}
           value={s.name}
           onChange={(e) => updateSlot(s._idx, "name", e.target.value)}
@@ -155,9 +155,9 @@ export function LotteryAdminEditView({
             key: "priceInPaise" as const,
             header: "Price (₹)",
             render: (s: LotterySlotRow & { _idx: number }) => (
-              <input // audit-raw-form-input-ok: inline price editor inside DataTable cell — per-row Form wrapper would require full refactor
+              <Input
                 type="number"
-                className="w-24 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-2 py-1 text-sm"
+                className="w-24"
                 placeholder="0"
                 value={s.priceInPaise / 100}
                 onChange={(e) => updateSlot(s._idx, "priceInPaise", e.target.value)}

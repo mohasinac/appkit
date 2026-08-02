@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Row } from "../../../ui";
+import { Button, Form, Input, Row } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 interface StoreScopedSearchProps {
@@ -39,8 +39,7 @@ export function StoreScopedSearch({
   };
 
   return (
-    // audit-raw-form-input-ok: store-scoped search bar — single query field, no validation needed
-    <form onSubmit={submit} className={`w-full ${className}`}>
+    <Form onSubmit={submit} className={`w-full ${className}`}>
       <Row gap="sm" align="center" className="w-full">
         <Input
           type="search"
@@ -54,6 +53,6 @@ export function StoreScopedSearch({
           Search
         </Button>
       </Row>
-    </form>
+    </Form>
   );
 }

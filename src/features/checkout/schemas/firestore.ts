@@ -22,8 +22,7 @@ export type FailedPaymentReason =
   | "stock_insufficient"
   | "unknown";
 
-export interface FailedCheckoutDocument {
-  // audit-schema-base-ok: append-only failure-log document; no updatedAt field, does not conform to BaseDocument contract
+export type FailedCheckoutDocument = {
   id: string;
   uid: string;
   addressId?: string;
@@ -36,8 +35,7 @@ export interface FailedCheckoutDocument {
   createdAt: Date;
 }
 
-export interface FailedPaymentDocument {
-  // audit-schema-base-ok: append-only failure-log document; no updatedAt field, does not conform to BaseDocument contract
+export type FailedPaymentDocument = {
   id: string;
   uid: string;
   gatewayOrderId?: string;

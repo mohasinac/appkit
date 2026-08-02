@@ -7,6 +7,7 @@ import { Div, Row, Span, Table, Thead, Tbody, Tr, Th, Td, Text, Modal, SideDrawe
 import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isPreOrderListing } from "../utils/listing-type";
+import type { ListingType } from "../types";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -21,7 +22,7 @@ interface GroupMember {
   images?: string[];
   slug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+  listingType?: ListingType;
   isGroupParent?: boolean;
   groupTitle?: string;
   condition?: string;
@@ -64,8 +65,7 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
       >
         <MediaImage src={image} alt={member.title} size="card" />
         {member.isGroupParent && (
-          // audit-inline-style-ok: single-corner border-radius; no appkit rounded= variant covers individual corners
-          <Span color="inverse" className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-[8px] leading-none px-[0.25rem] py-[0.125rem]" style={{ borderTopLeftRadius: "0.25rem" }}>
+          <Span color="inverse" rounded="sm" className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary)] text-[8px] leading-none px-[0.25rem] py-[0.125rem]">
             Set
           </Span>
         )}

@@ -125,6 +125,8 @@ export const PRODUCT_FIELDS = {
     CLOSED: "closed",
   },
 
+  IS_ACTIVE: "isActive",
+  DISPLAY_ORDER: "displayOrder",
   LISTING_TYPE_VALUES: {
     STANDARD: "standard",
     AUCTION: "auction",

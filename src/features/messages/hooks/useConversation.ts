@@ -71,7 +71,6 @@ export function useConversation(conversationId: string | null): UseConversationR
     try {
       setConversation(await fetchDetail(conversationId));
     } catch (e) {
-      // toast-intentionally-silent: background refetch, error surfaced via error state
       void normalizeError(e);
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
@@ -129,17 +128,11 @@ export function useConversation(conversationId: string | null): UseConversationR
     [conversationId, refetch],
   );
 
-  const markRead = useCallback(async () => {
-    if (!conversationId) return;
-    try {
-      await fetch(READ_ENDPOINT(conversationId), {
-        method: "POST",
-        credentials: "include",
-      });
-      await refetch();
-    } catch {
-      // toast-intentionally-silent: read-receipt is best-effort, non-critical
-    }
+  const markRead = useCallback((): Promise<void> => {
+    if (!conversationId) return Promise.resolve();
+    return fetch(READ_ENDPOINT(conversationId), { method: "POST", credentials: "include" })
+      .then(() => void refetch())
+      .catch((err: unknown) => void normalizeError(err));
   }, [conversationId, refetch]);
 
   return {

@@ -93,7 +93,8 @@ export function ProductDetailActions({
     try {
       try {
         await apiClient.post("/api/wishlist", { productId });
-      } catch (err) { // audit-catch-raw-ok: pre-existing-handler-intentional
+      } catch (err: unknown) {
+        void normalizeError(err);
         const status = (err as { status?: number })?.status;
         if (status === 401 || status === 403) {
           addToGuestWishlist(productId, "product", {

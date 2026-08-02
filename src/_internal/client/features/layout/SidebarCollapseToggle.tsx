@@ -22,7 +22,7 @@ export interface SidebarCollapseToggleProps {
 }
 
 const HANDLE_STYLE: React.CSSProperties = {
-  background: "var(--appkit-gradient-sidebar)", // audit-inline-style-ok: theme gradient CSS var, not a raw colour
+  background: "var(--appkit-gradient-sidebar)",
 };
 
 const CHEVRON_STYLE: React.CSSProperties = {

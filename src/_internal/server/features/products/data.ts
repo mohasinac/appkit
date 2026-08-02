@@ -6,6 +6,7 @@ import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firest
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { PRODUCTS_SITEMAP_LIMIT } from "../../../shared/features/products/config";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
+import type { ListingType } from "../../../../features/products/types";
 
 // ---------------------------------------------------------------------------
 // Request-scoped cache — each function is deduplicated per RSC render tree.
@@ -34,7 +35,7 @@ export interface SitemapProduct {
   slugOrId: string;
   updatedAt: Date;
   /** Canonical listing-kind discriminator (SB1-G — Phase 4 dropped booleans). */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw"; // audit-listing-type-inline-ok: pre-existing 4-value union in server data shape; pending ListingType import and extension to all 7 types
+  listingType: ListingType;
 }
 
 /** List all published products for sitemap generation. */

@@ -40,8 +40,7 @@ export interface CustomField {
 export const MAX_CUSTOM_FIELDS = 50;
 export const MAX_CUSTOM_SECTIONS = 3;
 
-export interface CustomSection {
-  // audit-schema-base-ok: embedded sub-document stored inside ProductDocument.customSections[], not a top-level collection root
+export type CustomSection = {
   id: string;
   title: string;
   text?: string;
@@ -561,8 +560,7 @@ export const PRODUCT_CODES_SUBCOLLECTION = "codes" as const;
 
 export type ProductCodeStatus = "available" | "claimed" | "revoked";
 
-export interface ProductCodeDocument {
-  id: string; // audit-schema-base-ok: subcollection document, not a collection root
+export interface ProductCodeDocument extends BaseDocument {
   productId: string;
   code: string;
   status: ProductCodeStatus;
@@ -570,8 +568,6 @@ export interface ProductCodeDocument {
   claimedByUserId?: string;
   claimedAt?: Date;
   expiresAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const productQueryHelpers = {

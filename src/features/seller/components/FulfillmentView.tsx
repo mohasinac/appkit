@@ -50,15 +50,14 @@ export function FulfillmentView({
   const { showToast } = useToast();
 
   const fetchOrders = useCallback(async () => {
-    // toast-intentionally-silent: background data loader — stale list is kept on error
     setIsLoadingOrders(true);
     try {
       const res = await apiClient.get<{ orders: OrderDocument[]; total: number }>(
         SELLER_ENDPOINTS.ORDERS_FULFILLMENT,
       );
       setOrders(res.orders ?? []);
-    } catch {
-      // keep stale list on error
+    } catch (err: unknown) {
+      void normalizeError(err);
     } finally {
       setIsLoadingOrders(false);
     }

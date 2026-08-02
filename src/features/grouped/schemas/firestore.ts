@@ -12,6 +12,8 @@
  * to "hidden" (recomputed by `onProductStockChange`).
  */
 
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+
 export type GroupTheme =
   /** "Other anime figures you might like" */
   | "related"
@@ -26,9 +28,7 @@ export type GroupTheme =
 
 export type GroupVisibility = "visible" | "hidden";
 
-export interface GroupedListingDocument {
-  // audit-schema-base-ok: collection root not in Phase C sweep; lacks updatedAt (computed fields use timestamps) — BaseDocument extension deferred
-  id: string;
+export interface GroupedListingDocument extends BaseDocument {
   slug: string;
   title: string;
   description?: string;
@@ -48,8 +48,6 @@ export interface GroupedListingDocument {
   brandSlug?: string;
   categorySlug?: string;
   createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const GROUPED_LISTINGS_COLLECTION = "groupedListings" as const;

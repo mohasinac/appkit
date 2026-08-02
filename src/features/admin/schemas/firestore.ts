@@ -385,8 +385,7 @@ export function meetsMinPriority(
  * `defaultLightThemeId` and `defaultDarkThemeId` decide which record is
  * applied when the user's mode preference resolves to that mode.
  */
-export interface SiteSettingsThemeRecord {
-  // audit-schema-base-ok: theme record stored as an array element inside SiteSettingsDocument, not a top-level collection root
+export type SiteSettingsThemeRecord = {
   id: string;
   name: string;
   mode: "light" | "dark";
@@ -407,8 +406,8 @@ export interface SiteSettingsTheme {
   defaultDarkThemeId?: string;
 }
 
-export interface SiteSettingsDocument {
-  id: "global"; // audit-schema-base-ok: singleton document — id is always "global", not a dynamic collection key
+export interface SiteSettingsDocument extends BaseDocument {
+  id: "global";
   siteName: string;
   motto: string;
   logo: {
@@ -483,7 +482,6 @@ export interface SiteSettingsDocument {
     ogImage: string;
   };
   features: {
-    // audit-schema-base-ok: inline anonymous object type inside SiteSettingsDocument, not a named collection root interface
     id: string;
     name: string;
     description: string;
@@ -630,8 +628,6 @@ export interface SiteSettingsDocument {
    * opt-in and require the corresponding credentials to be set.
    */
   notificationChannels?: NotificationChannelConfig;
-  createdAt: Date; // audit-schema-base-ok: SiteSettingsDocument is a singleton with id="global", not extending BaseDocument
-  updatedAt: Date;
 }
 
 export type FeatureFlagKey = keyof SiteSettingsDocument["featureFlags"];

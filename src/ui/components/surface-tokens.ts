@@ -118,6 +118,30 @@ export const ROUNDED_MAP = {
 
 export type RoundedKey = keyof typeof ROUNDED_MAP;
 
+const ROUNDED_TOP_MAP: Record<RoundedKey, string> = {
+  none: "",
+  default: "rounded-t",
+  sm: "rounded-t-sm",
+  md: "rounded-t-md",
+  lg: "rounded-t-lg",
+  xl: "rounded-t-xl",
+  "2xl": "rounded-t-2xl",
+  "3xl": "rounded-t-3xl",
+  full: "rounded-t-full",
+};
+
+const ROUNDED_BOTTOM_MAP: Record<RoundedKey, string> = {
+  none: "",
+  default: "rounded-b",
+  sm: "rounded-b-sm",
+  md: "rounded-b-md",
+  lg: "rounded-b-lg",
+  xl: "rounded-b-xl",
+  "2xl": "rounded-b-2xl",
+  "3xl": "rounded-b-3xl",
+  full: "rounded-b-full",
+};
+
 export const BORDER_MAP = {
   none: "",
   default: "border border-zinc-200 dark:border-slate-700",
@@ -268,6 +292,10 @@ export interface SurfaceProps {
   /** Independent vertical padding. Use with `paddingX` when you need different x/y padding without authoring raw className. */
   paddingY?: YPaddingKey;
   rounded?: RoundedKey;
+  /** Round only the top two corners — replaces raw `rounded-t-*` className on primitives. */
+  roundedTop?: RoundedKey;
+  /** Round only the bottom two corners — replaces raw `rounded-b-*` className on primitives. */
+  roundedBottom?: RoundedKey;
   border?: BorderKey;
   shadow?: ShadowKey;
   /** Overflow behaviour — replaces consumer `overflow-*` className. */
@@ -281,6 +309,8 @@ export function buildSurfaceClasses(props: SurfaceProps): string {
     props.paddingX ? X_ONLY_MAP[props.paddingX] : "",
     props.paddingY ? Y_ONLY_MAP[props.paddingY] : "",
     props.rounded ? ROUNDED_MAP[props.rounded] : "",
+    props.roundedTop ? ROUNDED_TOP_MAP[props.roundedTop] : "",
+    props.roundedBottom ? ROUNDED_BOTTOM_MAP[props.roundedBottom] : "",
     props.border ? BORDER_MAP[props.border] : "",
     props.shadow ? SHADOW_MAP[props.shadow] : "",
     props.overflow ? OVERFLOW_MAP[props.overflow] : "",

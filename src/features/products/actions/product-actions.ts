@@ -1,5 +1,6 @@
 import { sieveAnd, sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
+import type { ListingType } from "../types";
 import { productRepository } from "../repository/products.repository";
 import { ProductStatusValues } from "../schemas";
 import type { ProductDocument } from "../schemas";
@@ -24,7 +25,7 @@ export interface ProductListActionParams {
   page?: number;
   pageSize?: number;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+  listingType?: ListingType;
   featured?: boolean;
   storeId?: string;
   categoriesIn?: string[];

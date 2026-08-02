@@ -7,6 +7,7 @@
 
 import { couponsRepository } from "../repository/coupons.repository";
 import type { CouponValidationResult } from "../schemas";
+import type { ListingType } from "../../products/types";
 
 export type { CouponValidationResult };
 
@@ -27,7 +28,7 @@ export type CouponCartItem = {
   price: number;
   quantity: number;
   /** Canonical listing-kind snapshot (SB1-G Phase 4). */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+  listingType: ListingType;
 };
 
 export async function validateCoupon(

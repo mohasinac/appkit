@@ -119,12 +119,13 @@ export async function runCountersReconcile(ctx: JobContext): Promise<void> {
   ctx.logger.info("Starting counters reconciliation (categories + stores)");
   try {
     await reconcileCategories(ctx);
-  } catch (err) { // audit-catch-raw-ok: pre-existing-handler-intentional
+  } catch (err: unknown) {
+    void normalizeError(err);
     ctx.logger.error("Category reconciliation failed", err);
   }
   try {
     await reconcileStores(ctx);
-  } catch (err) {
+  } catch (err: unknown) {
     ctx.logger.error("Store reconciliation failed", err);
     throw err;
   }

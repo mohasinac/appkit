@@ -18,6 +18,7 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import { normalizeListingType } from "../../products/utils/listing-type";
+import type { ListingType } from "../../products/types";
 import {
   toRecordArray,
   toRelativeDate,
@@ -58,7 +59,7 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = SELLER_PRODUCT_STATUS_TABS;
 
-type ListingKind = "all" | "standard" | "auction" | "pre-order" | "prize-draw" | "bundle" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: extends ListingType with "all"+"bundle" filter options — cannot reduce to the canonical ListingType
+type ListingKind = ListingType | "all" | "bundle";
 
 interface ProductRow {
   id: string;

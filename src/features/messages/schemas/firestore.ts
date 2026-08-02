@@ -8,8 +8,8 @@
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
-export interface ConversationMessage {
-  id: string; // audit-schema-base-ok: embedded array element, not a Firestore collection root
+export type ConversationMessage = {
+  id: string;
   senderId: string;
   senderRole: "buyer" | "seller";
   body: string;

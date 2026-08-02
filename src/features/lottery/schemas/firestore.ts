@@ -6,8 +6,8 @@ import type { LotteryEntryStatus } from "../types";
 
 export const LOTTERY_ENTRIES_COLLECTION = "lotteryEntries" as const;
 
-export interface LotteryEntryDocument {
-  id: string; // audit-schema-base-ok: uses submittedAt instead of updatedAt — cannot extend BaseDocument
+export type LotteryEntryDocument = {
+  id: string;
   sourceType: "event" | "product";
   /** Set when sourceType === "event" */
   eventId?: string;

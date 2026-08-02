@@ -8,11 +8,14 @@ const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:t
 const CLS_PILL_LINK = "inline-flex items-center gap-1 rounded-full bg-error-surface dark:bg-error-surface px-2.5 py-0.5 text-xs font-medium text-error dark:text-error hover:bg-error-surface transition-colors";
 import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
 import {
+  Button,
   Container,
   Div,
+  Form,
   Heading,
   Main,
   Section,
+  Select,
   Text,
   Grid,
   Stack,
@@ -185,51 +188,41 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
             </Row>
 
             {/* Search + sort + type filter form (GET — SSR-friendly) */}
-            {/* audit-raw-form-input-ok: plain GET-form URL search/filter — SSR-friendly */}
-            <form method="GET" className="flex flex-wrap gap-3">
-              <Div className="flex-1 min-w-48">
-                <Input
-                  type="search"
-                  name="q"
-                  defaultValue={query}
-                  placeholder="Search name, phone, UPI ID, or email…"
-                  icon={<Search className="h-4 w-4" />}
+            <Form method="GET">
+              <Row wrap gap="sm">
+                <Div className="flex-1 min-w-48">
+                  <Input
+                    type="search"
+                    name="q"
+                    defaultValue={query}
+                    placeholder="Search name, phone, UPI ID, or email…"
+                    icon={<Search className="h-4 w-4" />}
+                  />
+                </Div>
+                <Select
+                  name="scamType"
+                  defaultValue={scamType}
+                  options={SCAM_TYPES.map((t) => ({ value: t.id, label: t.label }))}
+                  placeholder="All scam types"
                 />
-              </Div>
-              <select
-                name="scamType"
-                defaultValue={scamType}
-                className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="">All scam types</option>
-                {SCAM_TYPES.map((t) => (
-                  <option key={t.id} value={t.id}>{t.label}</option>
-                ))}
-              </select>
-              <select
-                name="sort"
-                defaultValue={sort}
-                className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                {SORT_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-              <button
-                type="submit"
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
-              >
-                Search
-              </button>
-              {(query || scamType || sort !== "-createdAt") && (
-                <Link
-                  href={ROUTES.PUBLIC.SCAMS as string}
-                  className="rounded-lg border border-zinc-300 dark:border-slate-600 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  Clear
-                </Link>
-              )}
-            </form>
+                <Select
+                  name="sort"
+                  defaultValue={sort}
+                  options={SORT_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+                />
+                <Button type="submit" variant="primary" size="sm">
+                  Search
+                </Button>
+                {(query || scamType || sort !== "-createdAt") && (
+                  <Link
+                    href={ROUTES.PUBLIC.SCAMS as string}
+                    className="rounded-lg border border-zinc-300 dark:border-slate-600 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    Clear
+                  </Link>
+                )}
+              </Row>
+            </Form>
 
             {/* Active filter chip */}
             {scamType && SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS] && (

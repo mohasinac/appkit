@@ -223,8 +223,8 @@ export { Slider } from "./components/Slider";
 export type { CheckboxProps } from "./components/Checkbox";
 export { Checkbox } from "./components/Checkbox";
 
-export type { RadioGroupProps, RadioOption } from "./components/Radio";
-export { RadioGroup } from "./components/Radio";
+export type { RadioGroupProps, RadioOption, RadioItemProps } from "./components/Radio";
+export { RadioGroup, RadioItem } from "./components/Radio";
 
 export type { ToggleProps } from "./components/Toggle";
 export { Toggle } from "./components/Toggle";

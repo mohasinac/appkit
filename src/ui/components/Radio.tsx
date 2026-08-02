@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Label, Span, Text } from "./Typography";
 
@@ -162,6 +163,62 @@ export function RadioGroup({
 
       {error && (
         <Text size="sm" variant="error" className="mt-1.5" role="alert">
+          {error}
+        </Text>
+      )}
+    </div>
+  );
+}
+
+/** Standalone single radio button — mirrors the `Checkbox` API. Use `RadioGroup` when all options are known upfront. */
+export interface RadioItemProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "type"
+> {
+  label?: React.ReactNode;
+  suffix?: React.ReactNode;
+  error?: React.ReactNode;
+}
+
+export function RadioItem({
+  label,
+  suffix,
+  error,
+  className = "",
+  checked,
+  disabled,
+  id,
+  ...props
+}: RadioItemProps) {
+  const generatedId = React.useId();
+  const inputId = id ?? generatedId;
+
+  return (
+    <div className="appkit-radio-item" data-section="radio-item-div">
+      <Label
+        htmlFor={inputId}
+        className={["appkit-radio-item__label", disabled ? "appkit-radio-item__label--disabled" : ""].filter(Boolean).join(" ")}
+      >
+        <span className="appkit-radio-item__box-wrap">
+          <input
+            {...props}
+            id={inputId}
+            type="radio"
+            checked={checked}
+            disabled={disabled}
+            aria-invalid={error ? "true" : undefined}
+            className={["appkit-radio-item__input", error ? "appkit-radio-item__input--error" : "", className].filter(Boolean).join(" ")}
+          />
+        </span>
+        {(label || suffix) && (
+          <span className="appkit-radio-item__content">
+            {label ? <Span className="appkit-radio-item__text">{label}</Span> : <span />}
+            {suffix}
+          </span>
+        )}
+      </Label>
+      {error && (
+        <Text size="sm" variant="error" className="appkit-radio-item__error" role="alert">
           {error}
         </Text>
       )}

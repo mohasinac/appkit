@@ -71,8 +71,8 @@ export interface CouponDocument extends BaseDocument {
   stats: CouponStats;
 }
 
-export interface CouponUsageDocument {
-  id: string; // audit-schema-base-ok: subcollection users/{uid}/couponUsage/{couponId}, not a collection root
+export type CouponUsageDocument = {
+  id: string;
   userId: string;
   couponCode: string;
   usageCount: number;
@@ -102,8 +102,7 @@ export interface ClaimedCouponSnapshot {
   restrictions: RestrictionsConfig;
 }
 
-export interface ClaimedCouponDocument {
-  // audit-schema-base-ok: collection root not in Phase C sweep; lacks updatedAt (coupon claims are immutable after creation) — BaseDocument extension deferred
+export type ClaimedCouponDocument = {
   id: string;
   userId: string;
   couponId: string;

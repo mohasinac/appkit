@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Alert, Button, Div, Heading, Input, Row, Span, Stack, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Form, Heading, Input, Row, Span, Stack, StackedViewShell, Text } from "../../../ui";
 import { apiClient } from "../../../http";
 import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
@@ -89,14 +89,12 @@ function renderCopilotChatPanel(props: {
         <Div ref={messagesEndRef} />
       </Stack>
       <Div border="top" className={__P.p3}>
-        {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          {/* audit-raw-form-input-ok: chat input */}
-          <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder={labels?.inputPlaceholder ?? "Ask anything..."} disabled={isLoading} className="flex-1 h-10 rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition disabled:opacity-60" />
+        <Form onSubmit={handleSubmit} gap="xs" className="flex">
+          <Input type="text" bare value={input} onChange={(e) => setInput(e.target.value)} placeholder={labels?.inputPlaceholder ?? "Ask anything..."} disabled={isLoading} className="flex-1 h-10" />
           <Button type="submit" variant="primary" disabled={isLoading || !input.trim()} className="shrink-0">
             {isLoading ? labels?.sendingButton ?? "Sending..." : labels?.sendButton ?? "Send"}
           </Button>
-        </form>
+        </Form>
       </Div>
     </Stack>
   );
@@ -111,11 +109,10 @@ function renderCopilotHistoryPanel(props: {
   return (
     <Stack surface="card" padding="sm" gap="3">
       <Heading level={3} size="sm" weight="semibold">{labels?.historyTitle ?? "Conversation History"}</Heading>
-      {/* audit-raw-form-input-ok: conversation-id loader — single field, no validation */}
-      <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); if (!conversationInput.trim()) return; loadConversation(conversationInput.trim()); }}>
+      <Form spacing="sm" onSubmit={(e) => { e.preventDefault(); if (!conversationInput.trim()) return; loadConversation(conversationInput.trim()); }}>
         <Input label={labels?.conversationId ?? LBL_CONVERSATION_ID} value={conversationInput} onChange={(e) => setConversationInput(e.target.value)} placeholder="conv_..." />
         <Button type="submit" variant="secondary" size="sm" className="w-full">{labels?.loadConversation ?? "Load conversation"}</Button>
-      </form>
+      </Form>
       {historyQuery.error ? (
         <Alert variant="warning" title="History unavailable">{historyQuery.error instanceof Error ? historyQuery.error.message : "Could not load history"}</Alert>
       ) : null}
@@ -230,16 +227,15 @@ export function AdminCopilotView({
             </Stack>
 
             <Div border="top" className={__P.p3}>
-              {/* audit-raw-form-input-ok: chat input — single field, no validation, Enter-to-submit semantics */}
-              <form onSubmit={handleSubmit} className="flex gap-2">
-                {/* audit-raw-form-input-ok: chat input */}
-                <input
+              <Form onSubmit={handleSubmit} gap="xs" className="flex">
+                <Input
                   type="text"
+                  bare
                   value={input}
                   onChange={(event) => setInput(event.target.value)}
                   placeholder={labels.inputPlaceholder ?? "Ask anything..."}
                   disabled={isLoading}
-                  className="flex-1 h-10 rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition disabled:opacity-60"
+                  className="flex-1 h-10"
                 />
                 <Button
                   type="submit"
@@ -249,7 +245,7 @@ export function AdminCopilotView({
                 >
                   {isLoading ? labels.sendingButton ?? "Sending..." : labels.sendButton ?? "Send"}
                 </Button>
-              </form>
+              </Form>
             </Div>
           </Stack>
 
@@ -257,8 +253,8 @@ export function AdminCopilotView({
             <Heading level={3} size="sm" weight="semibold">
               {labels.historyTitle ?? "Conversation History"}
             </Heading>
-            <form
-              className="space-y-2"
+            <Form
+              spacing="sm"
               onSubmit={(event) => {
                 event.preventDefault();
                 if (!conversationInput.trim()) return;
@@ -274,7 +270,7 @@ export function AdminCopilotView({
               <Button type="submit" variant="secondary" size="sm" className="w-full">
                 {labels.loadConversation ?? "Load conversation"}
               </Button>
-            </form>
+            </Form>
 
             {historyQuery.error ? (
               <Alert variant="warning" title="History unavailable">

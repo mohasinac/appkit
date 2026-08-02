@@ -18,6 +18,7 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
 
 import { ProductStatusValues } from "../features/products/schemas";
 import { getDefaultCurrency } from "../core/baseline-resolver";
+import type { ListingType } from "../features/products/types";
 
 /**
  * JSON-LD permits omitting optional fields at every nesting level — JSON.stringify
@@ -49,7 +50,7 @@ export interface ProductJsonLdInput {
   status?: string;
   auctionEndDate?: Date;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw"; // audit-listing-type-inline-ok: pre-existing 4-value union; pending ListingType import and extension to all 7 types
+  listingType?: ListingType;
 }
 
 export interface ReviewJsonLdInput {

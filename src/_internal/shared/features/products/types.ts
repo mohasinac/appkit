@@ -1,4 +1,4 @@
-export type {
+import type {
   ProductStatus,
   ProductCondition,
   ListingType,
@@ -8,6 +8,16 @@ export type {
   ProductImage,
   ProductSeo,
 } from "../../../../features/products/types/index";
+export type {
+  ProductStatus,
+  ProductCondition,
+  ListingType,
+  ProductItem,
+  ProductListResponse,
+  ProductListParams,
+  ProductImage,
+  ProductSeo,
+};
 
 export type {
   ProductDocument,
@@ -38,7 +48,7 @@ export interface ProductDetailInitial {
   tags: string[];
   condition?: string;
   /** Canonical listing-kind discriminator (SB1-G — Phase 4 dropped legacy booleans). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw"; // audit-listing-type-inline-ok: pre-existing 4-value union in shared products type; pending ListingType import and extension to all 7 types
+  listingType?: ListingType;
   auctionEndDate?: string;
   startingBid?: number;
   currentBid?: number;

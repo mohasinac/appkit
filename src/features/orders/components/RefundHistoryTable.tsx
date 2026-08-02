@@ -88,8 +88,7 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
   return (
     <Div className={`${className}`} rounded="xl" surface="default" border="default">
       {order.contestable === false && (
-        // audit-inline-style-ok: asymmetric border-radius (top corners only); no appkit rounded= variant covers partial corners
-        <Div surface="warning-surface" padding="inline" style={{ borderTopLeftRadius: "0.75rem", borderTopRightRadius: "0.75rem" }}>
+        <Div surface="warning-surface" padding="inline" roundedTop="lg">
           <Row gap="sm" align="center">
             <WarningIcon />
             <Text size="sm" weight="semibold" className="text-warning">

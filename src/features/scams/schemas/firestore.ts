@@ -226,9 +226,9 @@ export interface ScammerDocument extends BaseDocument {
  * it is stored here instead of creating a duplicate top-level profile.
  * The public detail page shows these in a table ("Other victims who reported this person").
  */
-export interface ScammerIncidentDocument {
+export type ScammerIncidentDocument = {
   /** Firestore auto-ID — incidents never get semantic slugs. */
-  id: string; // audit-schema-base-ok: subcollection of scammerProfiles, not a collection root
+  id: string;
   /** Parent ScammerDocument id. */
   scammerId: string;
 
@@ -306,9 +306,9 @@ export const DEFAULT_SCAMMER_INCIDENT_DATA: Partial<ScammerIncidentDocument> = {
  *  - isAccused is self-declared — admin reviews and can set isAccusedVerified
  *  - Hidden comments are still stored but not rendered to public
  */
-export interface ScammerCommentDocument {
+export type ScammerCommentDocument = {
   /** Firestore auto-ID. */
-  id: string; // audit-schema-base-ok: subcollection of scammerProfiles, not a collection root
+  id: string;
   scammerId: string;
 
   authorId: string;
@@ -388,9 +388,9 @@ export const MAX_COMMENT_BODY_LENGTH = 500;
  * On uphold: admin edits profile manually before marking upheld.
  * On dismiss: profile status is unchanged; contest is archived.
  */
-export interface ScammerContestDocument {
+export type ScammerContestDocument = {
   /** Firestore auto-ID. */
-  id: string; // audit-schema-base-ok: subcollection of scammerProfiles, not a collection root
+  id: string;
   scammerId: string;
 
   contestType: ContestType;

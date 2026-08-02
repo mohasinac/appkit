@@ -15,6 +15,7 @@ import {
   generateUserId,
   type GenerateUserIdInput,
 } from "../../../utils/id-generators";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 // ============================================================================
 // SCHEMA DEFAULTS
@@ -50,8 +51,7 @@ export interface AvatarMetadata {
   zoom: number; // 0.1 to 3.0
 }
 
-export interface UserDocument {
-  id?: string; // audit-schema-base-ok: auth uses Firebase UID as primary key; id is an optional alias, cannot extend BaseDocument
+export interface UserDocument extends BaseDocument {
   uid: string;
   email: string | null;
   phoneNumber: string | null;
@@ -63,8 +63,6 @@ export interface UserDocument {
   passwordHash?: string;
   emailVerified: boolean;
   disabled: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 
   // Store identity (populated when user is granted seller role)
   storeId?: string;
@@ -365,8 +363,7 @@ export const USER_FIELDS = {
 // TOKEN DOCUMENTS
 // ============================================================================
 
-export interface EmailVerificationTokenDocument {
-  // audit-schema-base-ok: optional id set by Firestore on write; token documents are immutable (no updatedAt) and do not conform to BaseDocument
+export type EmailVerificationTokenDocument = {
   id?: string;
   userId: string;
   email: string;
@@ -375,8 +372,7 @@ export interface EmailVerificationTokenDocument {
   createdAt: Date;
 }
 
-export interface PasswordResetTokenDocument {
-  // audit-schema-base-ok: optional id set by Firestore on write; token documents are immutable (no updatedAt) and do not conform to BaseDocument
+export type PasswordResetTokenDocument = {
   id?: string;
   userId: string;
   email: string;
@@ -442,8 +438,7 @@ export const TOKEN_FIELDS = {
 // SESSION DOCUMENT
 // ============================================================================
 
-export interface SessionDocument {
-  // audit-schema-base-ok: sessions collection root; lacks updatedAt (uses lastActivity instead), not compatible with BaseDocument contract
+export type SessionDocument = {
   id: string;
   userId: string;
   deviceInfo?: {

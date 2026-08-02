@@ -56,15 +56,14 @@ export function AdminFulfillmentView({
   const { showToast } = useToast();
 
   const fetchOrders = useCallback(async (sid: string) => {
-    // toast-intentionally-silent: background data loader — stale list is kept on error
     setIsLoading(true);
     try {
       const res = await apiClient.get<{ orders: OrderDocument[]; total: number }>(
         ADMIN_ENDPOINTS.ADMIN_FULFILLMENT(sid),
       );
       setOrders(res.orders ?? []);
-    } catch {
-      // keep stale list on error
+    } catch (err: unknown) {
+      void normalizeError(err);
     } finally {
       setIsLoading(false);
     }

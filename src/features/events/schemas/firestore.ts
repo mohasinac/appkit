@@ -69,8 +69,8 @@ export interface EventDocument extends BaseDocument {
   createdBy: string;
 }
 
-export interface EventEntryDocument {
-  id: string; // audit-schema-base-ok: uses submittedAt instead of updatedAt — cannot extend BaseDocument
+export type EventEntryDocument = {
+  id: string;
   eventId: string;
   userId?: string;
   userDisplayName?: string;

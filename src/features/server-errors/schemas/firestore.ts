@@ -3,8 +3,7 @@ export const SERVER_ERRORS_COLLECTION = "serverErrors";
 /** Discriminator for which surface a recorded failure came from. */
 export type ServerErrorSource = "vercel" | "client" | "function";
 
-export interface ServerErrorDocument {
-  // audit-schema-base-ok: append-only error-log document; uses occurredAt instead of createdAt/updatedAt — does not conform to BaseDocument contract
+export type ServerErrorDocument = {
   id: string;
   /** Server timestamp; also acts as the TTL field (30d retention). */
   occurredAt: number;

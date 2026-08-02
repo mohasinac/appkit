@@ -1,4 +1,5 @@
 // Domain types for @mohasinac/feat-search
+import type { ListingType } from "../../products/types";
 
 // --- Product card data used in search results ---------------------------------
 
@@ -13,7 +14,7 @@ export interface SearchProductItem {
   status: string;
   featured?: boolean;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+  listingType?: ListingType;
   currentBid?: number;
   isPromoted?: boolean;
   slug: string;
@@ -42,7 +43,7 @@ export interface SearchQuery {
   maxPrice?: number;
   condition?: string;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+  listingType?: ListingType;
   inStock?: boolean;
   minRating?: number;
   sort?: string;

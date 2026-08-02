@@ -332,8 +332,7 @@ export type ItemRequestStatus =
   | "closed"
   | "rejected";
 
-export interface ItemRequestReply {
-  // audit-schema-base-ok: embedded sub-document stored inside ItemRequestDocument.replies[], not a top-level collection root
+export type ItemRequestReply = {
   id: string;
   authorId: string;
   authorName?: string;

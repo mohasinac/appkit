@@ -13,6 +13,7 @@ import type {
 } from "../../contracts";
 import type { JsonValue } from "../../schemas/types";
 import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
+import { normalizeError } from "../../errors/normalize";
 
 /** Firebase error codes that represent a normal "not authenticated" state. */
 const EXPECTED_AUTH_CODES = new Set([
@@ -88,7 +89,8 @@ export const firebaseAuthProvider: IAuthProvider = {
     try {
       const decoded = await getAdminAuthLite().verifyIdToken(token);
       return toAuthPayload(decoded);
-    } catch (err) { // audit-catch-raw-ok: pre-existing-handler-intentional
+    } catch (err: unknown) {
+      void normalizeError(err);
       if (!isExpectedAuthError(err)) {
         console.error(
           "[@mohasinac/auth-firebase] Token verification failed:",

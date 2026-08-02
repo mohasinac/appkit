@@ -15,6 +15,7 @@
  * When ids are passed, this component does a single fetch to
  * `GET /api/products?ids=<csv>` (BK3 listByIds endpoint).
  */
+import type { ListingType } from "../types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const __P = {
@@ -56,7 +57,7 @@ export interface CompareProductLike {
   storeName?: string;
   storeSlug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+  listingType?: ListingType;
   features?: string[];
 }
 

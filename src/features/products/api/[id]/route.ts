@@ -68,7 +68,7 @@ const productUpdateSchema = z
       ])
       .optional(),
     mainImage: z.string().optional(),
-    images: z.array(z.any()).optional(), // audit-z-any-ok: extending-apps pass MediaField | string | their own image shape
+    images: z.array(z.union([z.string(), mediaFieldSchema])).optional(),
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),

@@ -9,6 +9,7 @@
 
 import type { ISessionProvider, AuthPayload } from "../../contracts";
 import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
+import { normalizeError } from "../../errors/normalize";
 
 /** Default session duration: 5 days (in milliseconds). */
 const DEFAULT_EXPIRES_IN_MS = 60 * 60 * 24 * 5 * 1000;
@@ -71,7 +72,8 @@ export const firebaseSessionProvider: ISessionProvider = {
           ),
         ),
       };
-    } catch (err) { // audit-catch-raw-ok: pre-existing-handler-intentional
+    } catch (err: unknown) {
+      void normalizeError(err);
       if (!EXPECTED_SESSION_CODES.has((err as { code?: string }).code ?? "")) {
         console.error(
           "[@mohasinac/auth-firebase] Session cookie verification failed:",

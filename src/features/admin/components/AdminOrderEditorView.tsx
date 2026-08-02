@@ -182,13 +182,13 @@ export function AdminOrderEditorView({
             <Label size="sm" weight="medium" color="primary">Payment Proof</Label>
             {paymentProofUrl ? (
               <Stack gap="xs">
-                {/* audit-variant-ok: MediaImage has no border or rounded variant props */}
-                <MediaImage
-                  src={paymentProofUrl}
-                  alt="Payment screenshot"
-                  size="card"
-                  className="rounded-lg border border-zinc-200 dark:border-zinc-700"
-                />
+                <Div border="default" rounded="lg" overflow="hidden">
+                  <MediaImage
+                    src={paymentProofUrl}
+                    alt="Payment screenshot"
+                    size="card"
+                  />
+                </Div>
                 {paymentTransactionId && (
                   <Text size="xs" color="muted">UTR: <Text as="span" size="xs" weight="medium">{paymentTransactionId}</Text></Text>
                 )}
@@ -204,7 +204,6 @@ export function AdminOrderEditorView({
                   />
                 )}
                 {!needsVerification && paymentStatus === "paid" && (
-                  // audit-variant-ok: themed success border color not in BORDER_MAP
                   <Div rounded="lg" padding="inlineSm" className="border border-success/20" surface="success-surface">
                     <Text size="xs" className="text-success" weight="medium">Payment verified</Text>
                   </Div>

@@ -70,7 +70,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
       if (filter.scope) q = q.where(COUPON_FIELDS.SCOPE, "==", filter.scope);
       if (filter.storeId) q = q.where(PRODUCT_FIELDS.STORE_ID, "==", filter.storeId);
       if (typeof filter.isActive === "boolean") {
-        q = q.where("isActive", "==", filter.isActive); // audit-field-name-ok — product_features collection has no dedicated FIELDS constant
+        q = q.where(PRODUCT_FIELDS.IS_ACTIVE, "==", filter.isActive);
       }
       const snap = await q.get();
       let docs = snap.docs.map((d) => this.mapDoc(d));

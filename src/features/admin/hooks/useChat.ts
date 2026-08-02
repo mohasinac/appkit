@@ -43,7 +43,7 @@ export function useChat(
   const tokenExpiresAtRef = useRef<number>(0);
   const unsubscribeRef = useRef<Unsubscribe | null>(null);
 
-  const connectAndSubscribe = useCallback(async () => { // toast-intentionally-silent: connection error surfaced via error state
+  const connectAndSubscribe = useCallback(async () => {
     if (!chatId) return;
 
     setIsLoading(true);

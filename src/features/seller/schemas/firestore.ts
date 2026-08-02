@@ -6,6 +6,7 @@ import {
   generateOfferId,
   type GenerateOfferIdInput,
 } from "../../../utils/id-generators";
+import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export type OfferStatus =
   | "pending"
@@ -27,9 +28,7 @@ export const OfferStatusValues = {
   PAID: "paid",
 } as const satisfies Record<string, OfferStatus>;
 
-export interface OfferDocument {
-  // audit-schema-base-ok: collection root not in Phase C sweep; BaseDocument extension deferred
-  id: string;
+export interface OfferDocument extends BaseDocument {
   productId: string;
   productTitle: string;
   productSlug?: string;
@@ -51,8 +50,6 @@ export interface OfferDocument {
   acceptedAt?: Date;
   checkoutDeadline?: Date;
   respondedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const OFFER_COLLECTION = "offers" as const;

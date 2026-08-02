@@ -94,11 +94,9 @@ function PackingSlip({ order, brandName }: { order: PrintCenterOrder; brandName:
       {order.physicalLocation && (
         <Text size="xs" color="muted">Staging: {order.physicalLocation}</Text>
       )}
-      {/* audit-variant-ok: directional top-border + top-padding for print separator — no Stack variant covers mt-3/border-t/pt-2 combo */}
-      <Stack className="mt-3 border-t pt-2">
+      <Stack border="top" padding="t-xs" className="mt-3">
         {order.items.map((item, i) => (
-          // audit-variant-ok: py-1 is vertical-only padding; border-b last:border-b-0 uses pseudo-selector — no Row variant covers these
-          <Row key={i} justify="between" className="py-1 border-b last:border-b-0">
+          <Row key={i} justify="between" padding="y-2xs" className="border-b last:border-b-0">
             <Stack gap="xs">
               <Text size="xs" weight="medium">{item.productName}</Text>
               {item.barcodeId && <Text size="xs" color="muted">{item.barcodeId}</Text>}

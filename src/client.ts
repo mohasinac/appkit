@@ -267,6 +267,8 @@ export { Button } from "./ui/components/Button";
 export { ClaimCouponButton } from "./ui/components/ClaimCouponButton";
 export type { ClaimCouponButtonProps } from "./ui/components/ClaimCouponButton";
 export { Checkbox } from "./ui/components/Checkbox";
+export type { RadioItemProps } from "./ui/components/Radio";
+export { RadioItem } from "./ui/components/Radio";
 export { Input } from "./ui/components/Input";
 export { OtpInput } from "./ui/components/OtpInput";
 export type { OtpInputProps } from "./ui/components/OtpInput";

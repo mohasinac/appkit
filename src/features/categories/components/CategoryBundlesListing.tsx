@@ -156,8 +156,7 @@ export function CategoryBundlesListing({
               <Stack key={bundle.id}>
                 <MarketplaceBundleCard bundle={bundle} />
                 {onBuyNow && (
-                  // audit-inline-style-ok: asymmetric border-radius (bottom corners only); no appkit rounded= variant covers partial corners
-                  <Div border="default" surface="default" className="-mt-px border-t border-t-0 border-[var(--appkit-color-border)] pt-[0.5rem] pb-[0.75rem]" padding="x-sm" style={{ borderBottomLeftRadius: "0.75rem", borderBottomRightRadius: "0.75rem" }}>
+                  <Div border="default" surface="default" className="-mt-px border-t border-t-0 border-[var(--appkit-color-border)] pt-[0.5rem] pb-[0.75rem]" padding="x-sm" roundedBottom="lg">
                     <BundleBuyNowCta
                       bundleSlug={bundle.slug}
                       outOfStock={bundle.bundleStockStatus === "out_of_stock"}

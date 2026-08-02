@@ -22,6 +22,7 @@ import {
   StoreStatusValues,
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
+import { normalizeError } from "../../../errors/normalize";
 import {
   encryptSecret,
   decryptSecret,
@@ -94,7 +95,8 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
         .collection(this.collection)
         .doc(input.storeSlug)
         .create(prepareForFirestore(this.encryptSecrets(storeData)));
-    } catch (err: unknown) { // audit-catch-raw-ok: pre-existing-handler-intentional
+    } catch (err: unknown) {
+      void normalizeError(err);
       // gRPC ALREADY_EXISTS = code 6
       if ((err as { code?: number }).code === 6) {
         throw new DatabaseError(

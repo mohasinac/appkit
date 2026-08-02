@@ -6,6 +6,7 @@ import { ROUTES } from "../../../next";
 import { Div, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
+import type { ListingType } from "../types";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -21,7 +22,7 @@ interface CarouselListing {
   mainImage?: string;
   slug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+  listingType?: ListingType;
 }
 
 interface CategoryMeta {

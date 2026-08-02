@@ -42,7 +42,6 @@ export function useConversations(userId: string | null | undefined): UseConversa
     try {
       setConversations(await fetchList());
     } catch (e) {
-      // toast-intentionally-silent: background refetch, error surfaced via error state
       void normalizeError(e);
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {

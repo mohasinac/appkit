@@ -6,6 +6,7 @@ import { generateOrderId } from "../../../utils/id-generators";
 import type { OrderStatus, PaymentStatus } from "../types";
 import type { OrderType } from "../utils/order-splitter";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { ListingType } from "../../products/types";
 
 export type ShippingMethod = "custom" | "shiprocket";
 export type RefundType = "full" | "partial";
@@ -67,7 +68,7 @@ export interface OrderDocumentItem {
   unitPrice: number;
   totalPrice: number;
   /** SB8-F â€" set when the item is a prize-draw entry; drives the reveals badge. */
- listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live"; // audit-listing-type-inline-ok: pre-existing inline union; pending import of ListingType from products/types
+ listingType?: ListingType;
  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** SB8-F â€" ISO timestamp; deadline by which the buyer must claim the prize. */

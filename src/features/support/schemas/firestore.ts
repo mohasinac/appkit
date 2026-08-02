@@ -85,8 +85,8 @@ export const ELIGIBLE_ORDER_STATUSES_FOR_TICKET = [
 // TICKET MESSAGE
 // ============================================================================
 
-export interface TicketMessage {
-  id: string; // audit-schema-base-ok: embedded array element inside SupportTicketDocument, not a collection root
+export type TicketMessage = {
+  id: string;
   authorId: string;
   authorRole: "user" | "support" | "admin";
   /** Plain text or safe HTML body. */

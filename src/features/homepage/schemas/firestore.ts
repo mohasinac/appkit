@@ -36,8 +36,7 @@ export type CarouselSlideHeight = "viewport" | "tall" | "medium";
 export type CarouselHoverEffect = "scale" | "color" | "glow" | "none";
 
 /** A content card placed in one of 6 grid zones (2 rows × 3 cols). */
-export interface CarouselCard {
-  // audit-schema-base-ok: embedded card sub-document stored inside CarouselSlideDocument.cards[], not a top-level collection root
+export type CarouselCard = {
   id: string;
   /** Zone 1–6: row 1 = zones 1–3, row 2 = zones 4–6 */
   zone: 1 | 2 | 3 | 4 | 5 | 6;
@@ -53,7 +52,6 @@ export interface CarouselCard {
     textAlign?: "left" | "center" | "right";
   };
   buttons?: Array<{
-    // audit-schema-base-ok: inline anonymous object type inside an array, not a named collection root interface
     id?: string;
     text: string;
     href: string;
@@ -249,15 +247,16 @@ export interface WelcomeSectionConfig {
   ctaLink?: string;
 }
 
+export type TrustIndicator = {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+};
+
 export interface TrustIndicatorsSectionConfig {
   title: string;
-  indicators: Array<{
-    // audit-schema-base-ok: inline anonymous object type inside an array within a section config, not a collection root
-    id: string;
-    icon: string;
-    title: string;
-    description: string;
-  }>;
+  indicators: TrustIndicator[];
 }
 
 export interface SectionCTA {
@@ -501,8 +500,7 @@ export type SocialFeedLayout = "grid" | "masonry" | "carousel";
  * videoId is stored; thumbnail URL is computed at render time from the video ID.
  * Do NOT store raw YouTube CDN thumbnail URLs in Firestore (they may expire).
  */
-export interface StaticSocialPost {
-  // audit-schema-base-ok: embedded sub-document inside SocialFeedSectionConfig.posts[], not a top-level collection root
+export type StaticSocialPost = {
   id: string;
   platform: SocialPlatform;
   /** YouTube video ID (e.g. "dQw4w9WgXcQ"). Required when platform is "youtube". */
@@ -532,8 +530,7 @@ export interface SocialFeedSectionConfig {
 }
 
 /** Normalised social post returned by /api/social-feed */
-export interface SocialPost {
-  // audit-schema-base-ok: API DTO shape returned by /api/social-feed, not a Firestore collection root
+export type SocialPost = {
   id: string;
   platform: SocialPlatform;
   imageUrl?: string;
@@ -584,8 +581,7 @@ export interface BannerSectionConfig {
   clickLink?: string;
 }
 
-export interface CustomCardsCard {
-  // audit-schema-base-ok: embedded card sub-document inside CustomCardsSectionConfig.cards[], not a top-level collection root
+export type CustomCardsCard = {
   id: string;
   image?: string;
   imageAlt?: string;

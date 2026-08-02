@@ -12,6 +12,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../ui";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { normalizeError } from "../../../errors/normalize";
 import {
   type GuestHistoryItem,
   type GuestHistoryType,
@@ -105,8 +106,8 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
       } else {
         setItems(getGuestHistory());
       }
-    } catch {
-      // toast-intentionally-silent: data loading — silent fallback to empty
+    } catch (err: unknown) {
+      void normalizeError(err);
     }
   }, [isAuth]);
 
