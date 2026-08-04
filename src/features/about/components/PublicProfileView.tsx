@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews, getReviewsAuthoredBy, getReviewsReceivedBy } from "../../auth/actions/profile-actions";
+import { getPublicUserProfile, getProfileStoreProducts, getReviewsAuthoredBy, getReviewsReceivedBy } from "../../auth/actions/profile-actions";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
@@ -77,9 +77,8 @@ export async function PublicProfileView({
   const profile = await getPublicUserProfile(userId).catch(() => null);
   const storeId = profile?.storeSlug ?? null;
 
-  const [products, reviewsReceived, store, reviewsAuthored, reviewsReceivedAsBuyer] = await Promise.all([
+  const [products, store, reviewsAuthored, reviewsReceivedAsBuyer] = await Promise.all([
     storeId ? getProfileStoreProducts(storeId).catch(() => []) : Promise.resolve([]),
-    storeId ? getSellerReviews(storeId).catch(() => []) : Promise.resolve([]),
     storeId ? storeRepository.findById(storeId).catch(() => null) : Promise.resolve(null),
     getReviewsAuthoredBy(userId).catch(() => []),
     getReviewsReceivedBy(userId).catch(() => []),
@@ -101,7 +100,7 @@ export async function PublicProfileView({
   const stats = profile?.stats;
 
   const listingCount = products.length;
-  const reviewCount = reviewsAuthored.length + reviewsReceived.length;
+  const reviewCount = reviewsAuthored.length + reviewsReceivedAsBuyer.length;
   const itemsSold = stats?.itemsSold ?? 0;
   const auctionsWon = stats?.auctionsWon ?? 0;
   const totalOrders = stats?.totalOrders ?? 0;
@@ -123,7 +122,6 @@ export async function PublicProfileView({
         {renderProfileListingsSection(t, products, storeSlug ?? null)}
         {renderAuthoredReviewsSection(t, reviewsAuthored, displayName)}
         {reviewsReceivedAsBuyer.length > 0 && renderBuyerReceivedReviewsSection(t, reviewsReceivedAsBuyer)}
-        {isSeller && storeSlug && renderProfileReviewsSection(t, reviewsReceived, storeSlug)}
         <Row justify="center" padding="t-xs">
           <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
             ← {t("backHome")}

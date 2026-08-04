@@ -109,9 +109,11 @@ export async function getProfileStoreProducts(storeId: string) {
   return products.filter((p) => p.status === ProductStatusValues.PUBLISHED);
 }
 
-/** Approved reviews AUTHORED by this user (not reviews of their store). */
+/** Approved product reviews written by this user as a buyer. Excludes seller→buyer ratings. */
 export async function getReviewsAuthoredBy(userId: string) {
-  const snapshot = await reviewRepository.findApprovedByUser(userId).catch(() => []);
+  const all = await reviewRepository.findApprovedByUser(userId).catch(() => []);
+  // reviewerRole:"seller" means this user rated a buyer — not a product review
+  const snapshot = all.filter((r) => r.reviewerRole !== "seller");
   return snapshot.map((r): Review => ({
     id: r.id,
     productId: r.productId,
