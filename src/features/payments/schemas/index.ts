@@ -1,4 +1,5 @@
 export * from "./firestore";
+export * from "./saved-methods-firestore";
 import { z } from "zod";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { auditTimestampsShape, firestoreDateSchema, paiseSchema } from "../../../schemas/firestore-helpers";

@@ -12,6 +12,8 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
 
 export type AddressOwnerType = "user" | "store";
 
+export type AddressBanStatus = "banned" | "unban_requested" | "suspicious";
+
 export interface AddressDocument extends BaseDocument {
   ownerType: AddressOwnerType;
   ownerId: string;
@@ -26,6 +28,16 @@ export interface AddressDocument extends BaseDocument {
   postalCode: string;
   country: string;
   isDefault: boolean;
+  /** SHA-256(normalised postalCode|line1|line2) — stored unencrypted for cross-account dedup. */
+  addressHash?: string;
+  banStatus?: AddressBanStatus;
+  banReason?: string;
+  bannedBy?: string;
+  bannedAt?: Date;
+  /** true when cascaded from a user hard-ban (vs manually banned by admin). */
+  autoBanned?: boolean;
+  unbanRequestNote?: string;
+  unbanRequestedAt?: Date;
 }
 
 export const ADDRESSES_COLLECTION = "addresses" as const;
@@ -34,6 +46,9 @@ export const ADDRESS_INDEXED_FIELDS = [
   "ownerType",
   "ownerId",
   "isDefault",
+  "addressHash",
+  "banStatus",
+  "autoBanned",
   "createdAt",
 ] as const;
 
@@ -56,6 +71,13 @@ export const ADDRESS_PUBLIC_FIELDS = [
   "postalCode",
   "country",
   "isDefault",
+  "addressHash",
+  "banStatus",
+  "banReason",
+  "bannedAt",
+  "autoBanned",
+  "unbanRequestNote",
+  "unbanRequestedAt",
   "createdAt",
   "updatedAt",
 ] as const;
@@ -72,6 +94,13 @@ export const ADDRESS_UPDATABLE_FIELDS = [
   "postalCode",
   "country",
   "isDefault",
+  "banStatus",
+  "banReason",
+  "bannedBy",
+  "bannedAt",
+  "autoBanned",
+  "unbanRequestNote",
+  "unbanRequestedAt",
 ] as const;
 
 // External create-input excludes the discriminator (added by createForOwner)
@@ -100,6 +129,14 @@ export const ADDRESS_FIELDS = {
   POSTAL_CODE: "postalCode",
   COUNTRY: "country",
   IS_DEFAULT: "isDefault",
+  ADDRESS_HASH: "addressHash",
+  BAN_STATUS: "banStatus",
+  BAN_REASON: "banReason",
+  BANNED_BY: "bannedBy",
+  BANNED_AT: "bannedAt",
+  AUTO_BANNED: "autoBanned",
+  UNBAN_REQUEST_NOTE: "unbanRequestNote",
+  UNBAN_REQUESTED_AT: "unbanRequestedAt",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 } as const;

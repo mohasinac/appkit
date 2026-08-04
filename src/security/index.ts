@@ -65,6 +65,7 @@ export {
   CHAT_PII_FIELDS,
   EVENT_ENTRY_PII_FIELDS,
   LOTTERY_ENTRY_PII_FIELDS,
+  PAYMENT_METHOD_PII_FIELDS,
 } from "./pii-schemas";
 export {
   encryptSecret,

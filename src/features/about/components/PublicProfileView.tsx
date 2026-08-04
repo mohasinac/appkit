@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews, getReviewsAuthoredBy } from "../../auth/actions/profile-actions";
+import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews, getReviewsAuthoredBy, getReviewsReceivedBy } from "../../auth/actions/profile-actions";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
@@ -77,11 +77,12 @@ export async function PublicProfileView({
   const profile = await getPublicUserProfile(userId).catch(() => null);
   const storeId = profile?.storeSlug ?? null;
 
-  const [products, reviewsReceived, store, reviewsAuthored] = await Promise.all([
+  const [products, reviewsReceived, store, reviewsAuthored, reviewsReceivedAsBuyer] = await Promise.all([
     storeId ? getProfileStoreProducts(storeId).catch(() => []) : Promise.resolve([]),
     storeId ? getSellerReviews(storeId).catch(() => []) : Promise.resolve([]),
     storeId ? storeRepository.findById(storeId).catch(() => null) : Promise.resolve(null),
     getReviewsAuthoredBy(userId).catch(() => []),
+    getReviewsReceivedBy(userId).catch(() => []),
   ]);
 
   const isSeller = isSellerUser(profile) || isAdminUser(profile);
@@ -121,6 +122,7 @@ export async function PublicProfileView({
         {renderStoreDescriptionSection(isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
         {renderProfileListingsSection(t, products, storeSlug ?? null)}
         {renderAuthoredReviewsSection(t, reviewsAuthored, displayName)}
+        {reviewsReceivedAsBuyer.length > 0 && renderBuyerReceivedReviewsSection(t, reviewsReceivedAsBuyer)}
         {isSeller && storeSlug && renderProfileReviewsSection(t, reviewsReceived, storeSlug)}
         <Row justify="center" padding="t-xs">
           <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
@@ -292,6 +294,17 @@ function renderAuthoredReviewsSection(t: ProfileT, reviews: ProfileReview[], dis
           {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
         </Grid>
       )}
+    </Section>
+  );
+}
+
+function renderBuyerReceivedReviewsSection(t: ProfileT, reviews: ProfileReview[]) {
+  return (
+    <Section>
+      <Heading level={2} className="mb-4">{t("reviewsReceivedAsBuyerTitle") as string || "Reviews Received"}</Heading>
+      <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
+        {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
+      </Grid>
     </Section>
   );
 }

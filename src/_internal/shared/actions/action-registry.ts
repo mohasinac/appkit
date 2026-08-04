@@ -1660,6 +1660,68 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    // ── Address ban management ─────────────────────────────────────────────
+    "ban-address": {
+      id: "admin.ban-address",
+      label: "Ban Address",
+      ariaLabel: "Ban this address",
+      description: "Ban an address from being used on the platform.",
+      kind: "danger",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Ban this address?",
+        body: "The address will be blocked from use at checkout across all accounts.",
+        confirmLabel: "Ban address",
+        confirmKind: "danger",
+      },
+    },
+    "approve-unban": {
+      id: "admin.approve-unban",
+      label: "Approve Unban",
+      ariaLabel: "Approve unban request",
+      description: "Approve an address unban request and restore it to active.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "reject-unban": {
+      id: "admin.reject-unban",
+      label: "Reject Unban",
+      ariaLabel: "Reject unban request",
+      description: "Reject an address unban request — address stays banned.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    // ── Payment method ban management ──────────────────────────────────────
+    "ban-payment-method": {
+      id: "admin.ban-payment-method",
+      label: "Ban Payment Method",
+      ariaLabel: "Ban this payment method",
+      description: "Ban a payment identifier from being used on the platform.",
+      kind: "danger",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Ban this payment method?",
+        body: "The payment identifier will be blocked from checkout across all accounts.",
+        confirmLabel: "Ban payment method",
+        confirmKind: "danger",
+      },
+    },
+    "approve-payment-unban": {
+      id: "admin.approve-payment-unban",
+      label: "Approve Unban",
+      ariaLabel: "Approve payment method unban",
+      description: "Approve a payment method unban request.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "reject-payment-unban": {
+      id: "admin.reject-payment-unban",
+      label: "Reject Unban",
+      ariaLabel: "Reject payment method unban",
+      description: "Reject a payment method unban request — stays banned.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
   },
   CART: {
     "clear-cart": {

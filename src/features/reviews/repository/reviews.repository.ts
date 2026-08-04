@@ -28,6 +28,8 @@ const REVIEW_FIELDS = {
   STATUS: "status",
   FEATURED: "featured",
   CREATED_AT: "createdAt",
+  REVIEWEE_ID: "revieweeId",
+  REVIEWER_ROLE: "reviewerRole",
 } as const;
 
 export interface ReviewRatingAggregate {
@@ -288,6 +290,31 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return { count, avgRating };
   }
 
+  /** Find reviews where this user is the reviewee (seller→buyer reviews received by a buyer). */
+  async findByReviewee(revieweeId: string): Promise<ReviewDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(REVIEW_FIELDS.REVIEWEE_ID, "==", revieweeId)
+      .where(REVIEW_FIELDS.STATUS, "==", "approved")
+      .orderBy(REVIEW_FIELDS.CREATED_AT, "desc")
+      .get();
+    return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
+  }
+
+  /** Find reviews written by a user filtered by their role as reviewer. */
+  async findByUserAsRole(
+    userId: string,
+    role: "buyer" | "seller",
+  ): Promise<ReviewDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(REVIEW_FIELDS.USER_ID, "==", userId)
+      .where(REVIEW_FIELDS.REVIEWER_ROLE, "==", role)
+      .orderBy(REVIEW_FIELDS.CREATED_AT, "desc")
+      .get();
+    return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
+  }
+
   static readonly SIEVE_FIELDS = {
     id: { canFilter: true, canSort: false },
     productId: { canFilter: true, canSort: false },
@@ -297,6 +324,8 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     userName: { canFilter: false, canSort: false },
     storeId: { canFilter: true, canSort: false },
     storeName: { canFilter: true, canSort: false },
+    revieweeId: { canFilter: true, canSort: false },
+    reviewerRole: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: true },
     rating: { canFilter: true, canSort: true },
     verified: { canFilter: true, canSort: false },

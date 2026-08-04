@@ -86,3 +86,6 @@ export const LOTTERY_ENTRY_PII_FIELDS = [
 
 /** Store OAuth bearer tokens — encrypted via SETTINGS_ENCRYPTION_KEY */
 export const STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"] as const;
+
+/** PII fields in savedPaymentMethods — full identifier (UPI VPA, card PAN, etc.) */
+export const PAYMENT_METHOD_PII_FIELDS = ["identifier"] as const;

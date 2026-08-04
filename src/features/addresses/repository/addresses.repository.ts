@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { normalizeError } from "../../../errors/normalize";
 /**
  * AddressesRepository — SB-UNI-A 2026-05-13
@@ -26,6 +27,7 @@ import {
 import {
   ADDRESS_FIELDS,
   ADDRESSES_COLLECTION,
+  type AddressBanStatus,
   type AddressCreateInput,
   type AddressDocument,
   type AddressOwnerType,
@@ -145,6 +147,7 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
         ...input,
         ownerType,
         ownerId,
+        addressHash: this.computeAddressHash(input.postalCode, input.addressLine1, input.addressLine2),
         createdAt: now,
         updatedAt: now,
       };
@@ -197,7 +200,15 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
       await this.clearDefaultFlag(ownerType, ownerId);
     }
 
-    return this.update(addressId, input);
+    const updateData: AddressUpdateInput = { ...input };
+    if (input.postalCode || input.addressLine1 || input.addressLine2 !== undefined) {
+      const postalCode = input.postalCode ?? existing.postalCode;
+      const line1 = input.addressLine1 ?? existing.addressLine1;
+      const line2 = input.addressLine2 ?? existing.addressLine2;
+      (updateData as Partial<AddressDocument>).addressHash = this.computeAddressHash(postalCode, line1, line2);
+    }
+
+    return this.update(addressId, updateData);
   }
 
   async deleteForOwner(
@@ -254,6 +265,139 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
         error,
       );
     }
+  }
+
+  private computeAddressHash(
+    postalCode: string,
+    line1: string,
+    line2?: string,
+  ): string {
+    const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
+    return createHash("sha256")
+      .update([postalCode, line1, line2 ?? ""].map(norm).join("|"))
+      .digest("hex");
+  }
+
+  async banAllForOwner(
+    ownerType: AddressOwnerType,
+    ownerId: string,
+    banData: { banReason: string; bannedBy: string },
+  ): Promise<number> {
+    try {
+      const snap = await this.getCollection()
+        .where(ADDRESS_FIELDS.OWNER_TYPE, "==", ownerType)
+        .where(ADDRESS_FIELDS.OWNER_ID, "==", ownerId)
+        .get();
+      if (snap.empty) return 0;
+
+      const now = new Date();
+      const batch = this.db.batch();
+      snap.docs.forEach((doc) => {
+        batch.update(doc.ref, {
+          [ADDRESS_FIELDS.BAN_STATUS]: "banned",
+          [ADDRESS_FIELDS.BAN_REASON]: banData.banReason,
+          [ADDRESS_FIELDS.BANNED_BY]: banData.bannedBy,
+          [ADDRESS_FIELDS.BANNED_AT]: now,
+          [ADDRESS_FIELDS.AUTO_BANNED]: true,
+          [ADDRESS_FIELDS.UPDATED_AT]: now,
+        });
+      });
+      await batch.commit();
+      return snap.size;
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(`Failed to ban addresses for ${ownerType}:${ownerId}`, error);
+    }
+  }
+
+  async unbanAutoForOwner(
+    ownerType: AddressOwnerType,
+    ownerId: string,
+  ): Promise<number> {
+    try {
+      const snap = await this.getCollection()
+        .where(ADDRESS_FIELDS.OWNER_TYPE, "==", ownerType)
+        .where(ADDRESS_FIELDS.OWNER_ID, "==", ownerId)
+        .where(ADDRESS_FIELDS.AUTO_BANNED, "==", true)
+        .get();
+      if (snap.empty) return 0;
+
+      const now = new Date();
+      const batch = this.db.batch();
+      snap.docs.forEach((doc) => {
+        batch.update(doc.ref, {
+          [ADDRESS_FIELDS.BAN_STATUS]: null,
+          [ADDRESS_FIELDS.BAN_REASON]: null,
+          [ADDRESS_FIELDS.BANNED_BY]: null,
+          [ADDRESS_FIELDS.BANNED_AT]: null,
+          [ADDRESS_FIELDS.AUTO_BANNED]: null,
+          [ADDRESS_FIELDS.UPDATED_AT]: now,
+        });
+      });
+      await batch.commit();
+      return snap.size;
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(`Failed to unban addresses for ${ownerType}:${ownerId}`, error);
+    }
+  }
+
+  async listByAddressHash(addressHash: string): Promise<AddressDocument[]> {
+    try {
+      const snap = await this.getCollection()
+        .where(ADDRESS_FIELDS.ADDRESS_HASH, "==", addressHash)
+        .get();
+      return snap.docs.map((d) => this.mapDoc<AddressDocument>(d));
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(`Failed to lookup addresses by hash`, error);
+    }
+  }
+
+  async listByBanStatus(
+    banStatus: AddressBanStatus,
+    limit = 50,
+    offset = 0,
+  ): Promise<AddressDocument[]> {
+    try {
+      const snap = await this.getCollection()
+        .where(ADDRESS_FIELDS.BAN_STATUS, "==", banStatus)
+        .orderBy(ADDRESS_FIELDS.BANNED_AT, "desc")
+        .limit(limit)
+        .offset(offset)
+        .get();
+      return snap.docs.map((d) => this.mapDoc<AddressDocument>(d));
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(`Failed to list addresses by banStatus:${banStatus}`, error);
+    }
+  }
+
+  async banById(
+    id: string,
+    banData: { banReason: string; bannedBy: string },
+  ): Promise<AddressDocument> {
+    return this.update(id, {
+      banStatus: "banned",
+      banReason: banData.banReason,
+      bannedBy: banData.bannedBy,
+      bannedAt: new Date(),
+      autoBanned: false,
+    } as Partial<AddressDocument>);
+  }
+
+  async clearBanById(id: string): Promise<void> {
+    const now = new Date();
+    await this.db.collection(ADDRESSES_COLLECTION).doc(id).update({
+      [ADDRESS_FIELDS.BAN_STATUS]: null,
+      [ADDRESS_FIELDS.BAN_REASON]: null,
+      [ADDRESS_FIELDS.BANNED_BY]: null,
+      [ADDRESS_FIELDS.BANNED_AT]: null,
+      [ADDRESS_FIELDS.AUTO_BANNED]: null,
+      [ADDRESS_FIELDS.UNBAN_REQUEST_NOTE]: null,
+      [ADDRESS_FIELDS.UNBAN_REQUESTED_AT]: null,
+      [ADDRESS_FIELDS.UPDATED_AT]: now,
+    });
   }
 
   private async clearDefaultFlag(

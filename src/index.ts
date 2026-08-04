@@ -1827,6 +1827,8 @@ export { passwordResetTokenRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // payoutRepository - Shared export for payout repository.
 export { payoutRepository } from "./repositories/index";
+// savedPaymentMethodsRepository - user saved payment methods (UPI, card, bank) with PII encryption + ban system.
+export { savedPaymentMethodsRepository, SavedPaymentMethodsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // productRepository - Shared export for product repository.
 export { productRepository } from "./repositories/index";
@@ -3658,6 +3660,18 @@ export type { AdminReturnRequestsViewProps } from "./features/admin/index";
 // AdminStoreAddressesView - Admin read-only store pickup locations overview (LL17).
 export { AdminStoreAddressesView } from "./features/admin/index";
 export type { AdminStoreAddressesViewProps } from "./features/admin/index";
+// AdminAddressesView - Address ban management (Banned / Unban Requested / Suspicious tabs).
+export { AdminAddressesView } from "./features/admin/index";
+export type { AdminAddressesViewProps } from "./features/admin/index";
+// AdminAddressClustersView - Multi-account shared address cluster view.
+export { AdminAddressClustersView } from "./features/admin/index";
+export type { AdminAddressClustersViewProps } from "./features/admin/index";
+// AdminPaymentMethodsView - Payment method ban management.
+export { AdminPaymentMethodsView } from "./features/admin/index";
+export type { AdminPaymentMethodsViewProps } from "./features/admin/index";
+// AdminPaymentClustersView - Multi-account shared payment identifier cluster view.
+export { AdminPaymentClustersView } from "./features/admin/index";
+export type { AdminPaymentClustersViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminTopBar - Shared export for admin top bar.
 export { AdminTopBar } from "./features/admin/index";

@@ -51,6 +51,10 @@ export interface ReviewDocument extends BaseDocument {
   sellerRepliedAt?: Date;
   approvedAt?: Date;
   rejectedAt?: Date;
+  /** Set only on seller→buyer reviews. The userId of the buyer being reviewed. */
+  revieweeId?: string;
+  /** Absent on legacy docs = "buyer". Distinguishes seller→buyer reviews from buyer→product reviews. */
+  reviewerRole?: "buyer" | "seller";
 }
 
 export const REVIEW_COLLECTION = "reviews" as const;
@@ -59,6 +63,8 @@ export const REVIEW_INDEXED_FIELDS = [
   "productId",
   "storeId",
   "userId",
+  "revieweeId",
+  "reviewerRole",
   "status",
   "rating",
   "verified",

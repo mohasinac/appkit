@@ -84,6 +84,10 @@ export {
   blogRepository,
 } from "../features/blog/repository/blog.repository";
 export { payoutRepository } from "../features/payments/repository/payout.repository";
+export {
+  SavedPaymentMethodsRepository,
+  savedPaymentMethodsRepository,
+} from "../features/payments/repository/saved-payment-methods.repository";
 
 // Grouped listings repository
 export {

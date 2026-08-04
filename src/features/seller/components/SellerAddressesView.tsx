@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Button, ConfirmDeleteModal, Div, Grid, Heading, Label, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, Label, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
@@ -45,6 +45,7 @@ interface AddressDoc {
   postalCode: string;
   country: string;
   isDefault: boolean;
+  banStatus?: "banned" | "unban_requested" | "suspicious";
 }
 
 interface AddressDraft {
@@ -108,10 +109,11 @@ function AddressCard({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const isBanned = address.banStatus === "banned";
   return (
     <Stack surface="card" padding="sm" gap="sm">
       <Row align="start" justify="between" gap="xs">
-        <Row gap="xs" className="min-w-0">
+        <Row gap="xs" wrap className="min-w-0">
           <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
           <Span size="sm" weight="semibold" className="truncate" color="primary">{address.label}</Span>
           {address.isDefault && (
@@ -120,24 +122,31 @@ function AddressCard({
               Default
             </Span>
           )}
+          {isBanned && <Badge variant="danger" size="sm">Banned</Badge>}
         </Row>
         <Row gap="px" className="shrink-0">
-          <button
-            type="button"
-            onClick={onEdit}
-            title="Edit address"
-            className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={onDelete}
-            title="Delete address"
-            className={CLS_DELETE_BTN}
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {isBanned ? (
+            <Span size="xs" color="muted" title="Contact support to resolve address ban">Contact support</Span>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={onEdit}
+                title="Edit address"
+                className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+              >
+                <Pencil className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={onDelete}
+                title="Delete address"
+                className={CLS_DELETE_BTN}
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </>
+          )}
         </Row>
       </Row>
       <Text size="sm" color="muted">
@@ -336,23 +345,35 @@ export function SellerAddressesView({
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {addresses.map((addr) => (
-                      <Tr
-                        key={addr.id}
-                        className={`border-t border-[var(--appkit-color-border)] ${deletingId === addr.id ? "opacity-50" : ""}`}
-                      >
-                        <Td padding="sm">{addr.label}</Td>
-                        <Td padding="sm">{addr.fullName}</Td>
-                        <Td padding="sm">{addr.city}, {addr.state}</Td>
-                        <Td className="tabular-nums" padding="sm">{addr.phone}</Td>
-                        <Td className="text-right" padding="sm">
-                          <Row justify="end" gap="xs">
-                            <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
-                            <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
-                          </Row>
-                        </Td>
-                      </Tr>
-                    ))}
+                    {addresses.map((addr) => {
+                      const isBanned = addr.banStatus === "banned";
+                      return (
+                        <Tr
+                          key={addr.id}
+                          className={`border-t border-[var(--appkit-color-border)] ${deletingId === addr.id ? "opacity-50" : ""}`}
+                        >
+                          <Td padding="sm">
+                            <Row gap="xs" align="center">
+                              <Span>{addr.label}</Span>
+                              {isBanned && <Badge variant="danger" size="sm">Banned</Badge>}
+                            </Row>
+                          </Td>
+                          <Td padding="sm">{addr.fullName}</Td>
+                          <Td padding="sm">{addr.city}, {addr.state}</Td>
+                          <Td className="tabular-nums" padding="sm">{addr.phone}</Td>
+                          <Td className="text-right" padding="sm">
+                            {isBanned ? (
+                              <Span size="xs" color="muted" title="Contact support to resolve address ban">Contact support</Span>
+                            ) : (
+                              <Row justify="end" gap="xs">
+                                <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
+                                <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
+                              </Row>
+                            )}
+                          </Td>
+                        </Tr>
+                      );
+                    })}
                   </Tbody>
                 </Table>
               </Div>

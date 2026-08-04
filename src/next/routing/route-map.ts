@@ -349,6 +349,10 @@ export const DEFAULT_ROUTE_MAP = {
     GUIDE_TEAM: "/admin/guide/team",
     GUIDE_ANALYTICS: "/admin/guide/analytics",
     GUIDE_TRUST: "/admin/guide/trust",
+    BANNED_ADDRESSES: "/admin/banned-addresses",
+    ADDRESS_CLUSTERS: "/admin/address-clusters",
+    PAYMENT_METHODS: "/admin/payment-methods",
+    PAYMENT_METHODS_CLUSTERS: "/admin/payment-methods/clusters",
   },
   DEMO: {
     SEED: "/demo/seed",

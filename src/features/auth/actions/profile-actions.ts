@@ -134,3 +134,29 @@ export async function getReviewsAuthoredBy(userId: string) {
     storeName: r.storeName,
   }));
 }
+
+/** Approved seller→buyer reviews received by this buyer. */
+export async function getReviewsReceivedBy(userId: string) {
+  const snapshot = await reviewRepository.findByReviewee(userId).catch(() => []);
+  return snapshot.map((r): Review => ({
+    id: r.id,
+    productId: r.productId,
+    productTitle: r.productTitle,
+    userId: r.userId,
+    userName: maskPublicReview(r).userName,
+    userAvatar: r.userAvatar,
+    rating: r.rating as Review["rating"],
+    title: r.title,
+    comment: r.comment,
+    images: r.images?.map((url) => ({ url })),
+    status: r.status,
+    helpfulCount: r.helpfulCount,
+    reportCount: r.reportCount,
+    verified: r.verified,
+    featured: r.featured,
+    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : undefined,
+    updatedAt: r.updatedAt instanceof Date ? r.updatedAt.toISOString() : undefined,
+    storeSlug: r.storeId,
+    storeName: r.storeName,
+  }));
+}
