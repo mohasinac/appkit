@@ -25,6 +25,7 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | Name | File | What it does |
 |------|------|-------------|
 | `Accordion` | `Accordion.tsx` | Collapsible disclosure panel |
+| `Anchor` | `Anchor.tsx` | Typed external link with `tone`/`underline`; auto-applies `target`/`rel`. Use for external URLs; `TextLink` for internal Next.js routes |
 | `ActiveFilterChips` | `ActiveFilterChips.tsx` | Displays active filter pills with remove buttons |
 | `Alert` | `Alert.tsx` | Inline alert / info / warning / error banner |
 | `Avatar` | `Avatar.tsx` | Circular user avatar with fallback initials |
@@ -33,7 +34,6 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `Badge` | `Badge.tsx` | Small status/label pill with color variants |
 | `BaseListingCard` | `BaseListingCard.tsx` | Base card shell used by product/auction/preorder cards |
 | `BulkActionBar` | `BulkActionBar.tsx` | Sticky bar with bulk action buttons (shown when rows selected) |
-| `BulkActionsBar` | `BulkActionsBar.tsx` | Alias/variant of BulkActionBar |
 | `Button` | `Button.tsx` | Primary action button — mutations/forms only, never navigation |
 | `Card` | `Card.tsx` | Generic surface card with optional header/footer |
 | `Checkbox` | `Checkbox.tsx` | Controlled checkbox input |
@@ -43,21 +43,29 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `DescriptionField` | `DescriptionField.tsx` | Styled read-only description display field |
 | `DetailViewShell` | `DetailViewShell.tsx` | Shell for detail pages (header + tabs + content) |
 | `Div` | `Div.tsx` | Semantic div wrapper with design-system props |
+| `Details` | `Details.tsx` | `<Details>` + `<Summary>` primitives — typed `tone`/`defaultOpen` |
+| `Dialog` | `Dialog.tsx` | Native top-layer dialog (use `Modal` for portal variant) |
 | `Divider` | `Divider.tsx` | Horizontal rule separator |
 | `Drawer` | `Drawer.tsx` | Bottom/side drawer panel |
 | `Dropdown` | `Dropdown.tsx` | Floating dropdown menu |
-| `DynamicSelect` | `DynamicSelect.tsx` | Async searchable select that fetches options from API |
+| `PaginatedSelect` | `PaginatedSelect.tsx` | Unified async/sync searchable select (replaces DynamicSelect + InlineCreateSelect + PaginatedMultiSelect). Use `multiple` for multi-select. `loadOptions` for async. `createLabel`+`renderCreateForm` or `createFields`+`onCreateSubmit` for inline create. Required for >5 options |
 | `EmptyState` | `EmptyState.tsx` | Empty list / zero-results placeholder with icon + CTA |
+| `FallbackShell` | `FallbackShell.tsx` | Error boundary fallback — ships critical CSS so it renders without Tailwind. Use instead of raw `<div>` in `ErrorBoundary`/`global-error.tsx` |
+| `Fieldset` | `Fieldset.tsx` | `<Fieldset>` + `<Legend>` primitives with typed `tone`/`padding` |
 | `FilterDrawer` | `FilterDrawer.tsx` | Mobile-friendly filter panel that slides in |
 | `FlowDiagram` | `FlowDiagram.tsx` | Horizontal step-flow diagram |
 | `Form` | `Form.tsx` | Form wrapper with accessible submit handling |
 | `FormField` | `FormField.tsx` | Label + input + error message wrapper |
 | `FormGrid` | `FormGrid.tsx` | Responsive 1/2/3-column form layout grid |
+| `HorizontalRule` | `HorizontalRule.tsx` | Styled `<hr>` with `tone`/`spacing` — use instead of raw `<hr />` |
 | `HorizontalScroller` | `HorizontalScroller.tsx` | Drag-scrollable horizontal card row |
+| `HotspotMarker` | `HotspotMarker.tsx` | Absolute-positioned overlay dot with `xPct`/`yPct`/`size`/`tone`/`shape` |
+| `IconBox` | `IconBox.tsx` | Square icon container with `size`/`tone`/`rounded` — replaces raw `<div className="flex...">` icon wrappers |
 | `IconButton` | `IconButton.tsx` | Icon-only button with accessible label |
+| `Iframe` | `Iframe.tsx` | Typed `<iframe>` with `src`/`title`/`aspect`/`sandbox` — replaces raw `<iframe />` |
 | `ImageGallery` | `ImageGallery.tsx` | Thumbnail strip + main image viewer |
 | `ImageLightbox` | `ImageLightbox.tsx` | Full-screen image zoom overlay |
-| `InlineCreateSelect` | `InlineCreateSelect.tsx` | DynamicSelect + "+ Create new" option that opens SideDrawer (`renderCreateForm`) or QuickFormDrawer (`createFields`+`onCreateSubmit`) |
+| `Kbd` | `Kbd.tsx` | `<kbd>` primitive with `size`/`tone` — replaces raw `<kbd>` |
 | `Input` | `Input.tsx` | Text/number/email/password input |
 | `ItemRow` | `ItemRow.tsx` | Single row item with label/value/action |
 | `Layout` | `Layout.tsx` | Container/Stack/Row/Grid/Section/Main layout primitives |
@@ -72,15 +80,17 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `PasswordStrengthIndicator` | `PasswordStrengthIndicator.tsx` | Visual password strength meter |
 | `PriceDisplay` | `PriceDisplay.tsx` | Formats paise → ₹ with strike-through sale price |
 | `Progress` | `Progress.tsx` | Linear progress bar |
+| `Quote` | `Quote.tsx` | `<q>`/`<blockquote>` primitive with `tone` and `block` flag — replaces raw quote tags |
 | `Radio` | `Radio.tsx` | Radio input group |
+| `ResponsiveView` | `ResponsiveView.tsx` | **Deprecated** — use `<Show>`/`<Hide>` from `Responsive.tsx` |
+| `Show` / `Hide` | `Responsive.tsx` | Hydration-safe breakpoint-gated render (`<Show above="sm">` / `<Hide below="md">`) — replaces `hidden sm:block` className patterns |
 | `RatingDisplay` | `RatingDisplay.tsx` | Star rating display (read-only) |
-| `ResponsiveView` | `ResponsiveView.tsx` | Conditionally renders children based on breakpoint |
+| `ResponsiveView` | `ResponsiveView.tsx` | **Deprecated** — use `<Show>`/`<Hide>` from `Responsive.tsx` |
 | `RichTextEditor` | `RichTextEditor.tsx` | WYSIWYG rich text editor (Tiptap-based) |
 | `RoleBadge` | `RoleBadge.tsx` | User role pill (admin / seller / buyer) |
 | `RowActionMenu` | `RowActionMenu.tsx` | Per-row ⋮ action menu (edit / delete / status) |
 | `Select` | `Select.tsx` | Native/custom select dropdown |
 | `Semantic` | `Semantic.tsx` | Semantic HTML wrappers (Section, Article, Main, Aside, Nav, Header, Footer) |
-| `SectionTabs` | `SectionTabs.tsx` | Tab bar for section/page-level tab switching |
 | `SideDrawer` | `SideDrawer.tsx` | Slide-in panel from right for create/edit forms |
 | `SideModal` | `SideModal.tsx` | Fixed-width side panel modal |
 | `Skeleton` | `Skeleton.tsx` | Shimmer placeholder for loading states |
@@ -88,6 +98,7 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `Slider` | `Slider.tsx` | Range slider input |
 | `SlottedListingView` | `SlottedListingView.tsx` | Admin/seller listing scaffold with columns, search, sort, pagination, row actions |
 | `SortDropdown` | `SortDropdown.tsx` | Sort-by dropdown selector |
+| `StickyToolbar` | `StickyToolbar.tsx` | Sticky section with `offset`/`tone`/`border` — replaces raw `<div className="sticky top-[...]">` toolbar patterns |
 | `Spinner` | `Spinner.tsx` | Loading spinner |
 | `StackedViewShell` | `StackedViewShell.tsx` | Mobile-optimised stacked panel shell |
 | `StarRating` | `StarRating.tsx` | Interactive star rating input |
