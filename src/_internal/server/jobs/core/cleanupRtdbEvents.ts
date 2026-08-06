@@ -22,7 +22,10 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
         await Promise.all(
           staleAuthIds.flatMap((id) => [
             rtdb.ref(`auth_events/${id}`).remove(),
-            auth.deleteUser(`auth_event_${id}`).catch(console.error),
+            auth.deleteUser(`auth_event_${id}`).catch((err: unknown) => {
+              void normalizeError(err);
+              ctx.logger.warn("cleanupRtdbEvents: deleteUser skipped — may already be absent", { userId: `auth_event_${id}`, error: err instanceof Error ? err.message : String(err) });
+            }),
           ]),
         );
         ctx.logger.info("Auth events removed", { count: staleAuthIds.length });
