@@ -14,6 +14,7 @@ import { blogRepository } from "../../repository/blog.repository";
 import type { BlogPostDocument } from "../../schemas";
 import type { BlogPost } from "../../types/index";
 import { normalizeError } from "../../../../errors/normalize";
+import { safeFireAndForget } from "../../../../utils/safe-fire-forget";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -49,7 +50,7 @@ export async function GET(
     }
 
     // Increment view count fire-and-forget — must not block response
-    blogRepository.incrementViews(post.id).catch(console.error);
+    safeFireAndForget(blogRepository.incrementViews(post.id), "blog: incrementViews");
 
     // Related posts: same category, latest 3, excluding current
     const related = (

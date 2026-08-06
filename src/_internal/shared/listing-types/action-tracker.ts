@@ -1,4 +1,5 @@
 import type { FirestoreDocument } from "@mohasinac/appkit";
+import { normalizeError } from "../../../errors/normalize";
 /**
  * Action telemetry sink — SB-UNI-X5 2026-05-13.
  *
@@ -73,7 +74,7 @@ export const actionTracker = {
       const result = currentSink(event);
       // Swallow promise rejections so the caller path is never affected.
       if (result && typeof (result as Promise<void>).catch === "function") {
-        (result as Promise<void>).catch(console.error);
+        (result as Promise<void>).catch((err: unknown) => { void normalizeError(err); });
       }
     } catch {
       // Intentionally swallowed — telemetry must never break callers.

@@ -2,6 +2,7 @@
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { scammerRepository } from "../repository/scammer.repository";
+import { safeFireAndForget } from "../../../utils/safe-fire-forget";
 import type {
   ScammerDocument,
   ScammerIncidentDocument,
@@ -69,7 +70,7 @@ export async function getPublicScammerById(id: string): Promise<ScammerDocument 
   if (!doc || doc.status !== "verified") return null;
 
   // Increment views — non-blocking.
-  scammerRepository.incrementViews(doc.id).catch(console.error);
+  safeFireAndForget(scammerRepository.incrementViews(doc.id), "scam: incrementViews");
 
   return doc;
 }

@@ -16,6 +16,8 @@ import {
   orderRepository,
 } from "../../../repositories";
 import { getAdminDb, getFirestoreCount } from "../../../providers/db-firebase";
+import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 
 export interface LiveStatRequest {
   /** The stat's unique key in StatsSectionConfig — used as the result map key. */
@@ -58,28 +60,28 @@ export async function fetchLiveStats(
     tasks.push(
       productRepository.count()
         .then((n) => { resolvedPresets.total_listings = String(n); })
-        .catch(console.error),
+        .catch((err: unknown) => { void normalizeError(err); serverLogger.warn("live-stats: total_listings query failed — stat omitted", { error: err instanceof Error ? err.message : String(err) }); }),
     );
   }
   if (neededPresets.has("verified_sellers")) {
     tasks.push(
       storeRepository.count()
         .then((n) => { resolvedPresets.verified_sellers = String(n); })
-        .catch(console.error),
+        .catch((err: unknown) => { void normalizeError(err); serverLogger.warn("live-stats: verified_sellers query failed — stat omitted", { error: err instanceof Error ? err.message : String(err) }); }),
     );
   }
   if (neededPresets.has("total_buyers")) {
     tasks.push(
       userRepository.countByRole("user")
         .then((n) => { resolvedPresets.total_buyers = String(n); })
-        .catch(console.error),
+        .catch((err: unknown) => { void normalizeError(err); serverLogger.warn("live-stats: total_buyers query failed — stat omitted", { error: err instanceof Error ? err.message : String(err) }); }),
     );
   }
   if (neededPresets.has("total_orders")) {
     tasks.push(
       orderRepository.count()
         .then((n) => { resolvedPresets.total_orders = String(n); })
-        .catch(console.error),
+        .catch((err: unknown) => { void normalizeError(err); serverLogger.warn("live-stats: total_orders query failed — stat omitted", { error: err instanceof Error ? err.message : String(err) }); }),
     );
   }
   if (neededPresets.has("total_reviews") || neededPresets.has("platform_rating")) {
@@ -97,7 +99,7 @@ export async function fetchLiveStats(
             resolvedPresets.platform_rating = avg.toFixed(1) + "★";
           }
         })
-        .catch(console.error),
+        .catch((err: unknown) => { void normalizeError(err); serverLogger.warn("live-stats: reviews/rating query failed — stat omitted", { error: err instanceof Error ? err.message : String(err) }); }),
     );
   }
 

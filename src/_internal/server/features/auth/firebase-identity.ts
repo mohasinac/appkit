@@ -1,4 +1,5 @@
 import { withRetry } from "../../../../http/retry";
+import type { JsonObject } from "../../../../schemas/types";
 
 const IDENTITY_TOOLKIT_BASE =
   "https://identitytoolkit.googleapis.com/v1/accounts";
@@ -14,9 +15,9 @@ type IdentityOperation = "signInWithPassword" | "signInWithCustomToken";
  * into a session cookie. Centralised here so the URL, Content-Type, and retry
  * config are in one place.
  */
-export async function callFirebaseIdentityToolkit<T extends Record<string, unknown>>(
+export async function callFirebaseIdentityToolkit<T extends JsonObject>(
   operation: IdentityOperation,
-  body: Record<string, unknown>,
+  body: JsonObject,
   apiKey: string,
 ): Promise<T> {
   const url = `${IDENTITY_TOOLKIT_BASE}:${operation}?key=${encodeURIComponent(apiKey)}`;
