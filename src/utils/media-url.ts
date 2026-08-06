@@ -1,4 +1,5 @@
 import { MEDIA_ENDPOINTS } from "../constants/api-endpoints";
+import { normalizeError } from "../errors/normalize";
 
 /**
  * Single source of truth for the Firebase Storage host literal. Every other
