@@ -14,6 +14,7 @@ import type { PaginatedSelectOption, AsyncPage } from "../../../../ui/components
 import type { JsonValue } from "@mohasinac/appkit";
 import type { FacetOption } from "../../../../features/filters/FilterFacetSection";
 import { apiClient } from "../../../../http/ApiClient";
+import { normalizeError } from "../../../../errors/normalize";
 
 export type LoadOptionsFn<T = PaginatedSelectOption> = (
   query: string,
@@ -43,7 +44,7 @@ async function fetchPage<T>(
       hasMore: data?.hasMore ?? false,
     };
   } catch (_err) {
-    // PaginatedSelect degrades to an empty page on load error — caller can retry by re-typing
+    void normalizeError(_err); // PaginatedSelect degrades to empty page; caller can retry by re-typing
     return { items: [], hasMore: false };
   }
 }
