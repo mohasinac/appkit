@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 import type { ListingType } from "../../products/types";
 /**
  * Coupons Repository
@@ -354,8 +355,10 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       if (!doc.exists) return 0;
       const data = doc.data() as { usageCount?: number };
       return data.usageCount ?? 1;
-    } catch {
-      return 0;
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.error("coupons-repo: getUserCouponUsageCount failed — rethrowing to prevent coupon limit bypass", { userId, couponId, error: err instanceof Error ? err.message : String(err) });
+      throw err;
     }
   }
 

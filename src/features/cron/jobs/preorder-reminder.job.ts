@@ -1,6 +1,8 @@
 import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import type { IRepository } from "../../../contracts";
 import { createCronJob } from "../registry";
+import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 
 /**
  * Built-in job: Mark pre-orders as "shipping_soon" when their
@@ -50,7 +52,9 @@ export function createPreOrderReminderJob(
             status: "shipping_soon",
           } as Partial<PreOrderDocument>);
           processed++;
-        } catch {
+        } catch (err) {
+          void normalizeError(err);
+          serverLogger.warn("preorder-reminder: per-order update failed", { orderId: order.id, error: err instanceof Error ? err.message : String(err) });
           errors++;
         }
       }

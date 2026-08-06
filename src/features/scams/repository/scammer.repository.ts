@@ -6,6 +6,7 @@ import {
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 import { increment } from "../../../contracts/field-ops";
 import {
   SCAMMER_COLLECTION,
@@ -158,7 +159,9 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
         .limit(20)
         .get();
       return snap.docs.map((d) => this.mapDoc<ScammerIncidentDocument>(d));
-    } catch {
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.warn("scammer-repo: listPublicIncidents failed — returning empty", { scammerId, error: err instanceof Error ? err.message : String(err) });
       return [];
     }
   }
@@ -174,7 +177,9 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
         .limit(30)
         .get();
       return snap.docs.map((d) => this.mapDoc<ScammerCommentDocument>(d));
-    } catch {
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.warn("scammer-repo: listPublicComments failed — returning empty", { scammerId, error: err instanceof Error ? err.message : String(err) });
       return [];
     }
   }
@@ -186,7 +191,9 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
         ids.slice(0, 5).map((id) => this.findById(id).catch(() => null)),
       );
       return results.filter((d): d is ScammerDocument => d !== null && d.status === "verified");
-    } catch {
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.warn("scammer-repo: findManyById failed — returning empty", { ids, error: err instanceof Error ? err.message : String(err) });
       return [];
     }
   }

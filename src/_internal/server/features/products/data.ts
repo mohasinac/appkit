@@ -2,6 +2,8 @@ import { cache } from "react";
 import { productRepository } from "../../../../repositories";
 import { reviewRepository } from "../../../../repositories";
 import { getAdminDb } from "../../../../providers/db-firebase";
+import { normalizeError } from "../../../../errors/normalize";
+import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { PRODUCTS_SITEMAP_LIMIT } from "../../../shared/features/products/config";
@@ -64,7 +66,9 @@ export async function listSitemapProducts(): Promise<SitemapProduct[]> {
         listingType,
       };
     });
-  } catch {
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.warn("products-data: listSitemapProducts failed — returning empty", { error: err instanceof Error ? err.message : String(err) });
     return [];
   }
 }

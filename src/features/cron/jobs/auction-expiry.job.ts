@@ -1,6 +1,8 @@
 import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import type { IRepository } from "../../../contracts";
 import { createCronJob } from "../registry";
+import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 
 /**
  * Built-in job: Close live auctions whose `endTime` has passed.
@@ -62,7 +64,9 @@ export function createAuctionExpiryJob(
           } as Partial<AuctionDocument>);
 
           processed++;
-        } catch {
+        } catch (err) {
+          void normalizeError(err);
+          serverLogger.warn("auction-expiry: per-auction close failed", { auctionId: auction.id, error: err instanceof Error ? err.message : String(err) });
           errors++;
         }
       }

@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { serverLogger } from "../../../monitoring/server-logger";
 import type { JsonValue } from "@mohasinac/appkit";
 /**
  * Site Settings Repository
@@ -277,8 +278,10 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
         .doc(this.SINGLETON_ID)
         .get();
       return doc.exists;
-    } catch {
-      return false;
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.error("site-settings-repo: exists() Firestore read failed — rethrowing to avoid masking missing settings", { error: err instanceof Error ? err.message : String(err) });
+      throw err;
     }
   }
 

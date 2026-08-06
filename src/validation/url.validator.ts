@@ -2,11 +2,14 @@
  * URL Validation Utilities
  */
 
+import { normalizeError } from "../errors/normalize";
+
 export function isValidUrl(url: string): boolean {
   try {
     new URL(url);
     return true;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err); // URL constructor throws TypeError for invalid URL syntax
     return false;
   }
 }
@@ -19,7 +22,8 @@ export function isValidUrlWithProtocol(
   try {
     const urlObj = new URL(url);
     return protocols.includes(urlObj.protocol.replace(":", ""));
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err); // URL constructor throws TypeError for invalid URL syntax
     return false;
   }
 }
@@ -32,7 +36,8 @@ export function isExternalUrl(url: string, currentDomain?: string): boolean {
       currentDomain ||
       (typeof window !== "undefined" ? window.location.hostname : "");
     return urlObj.hostname !== currentHost;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err); // URL constructor throws TypeError for invalid URL syntax
     return false;
   }
 }

@@ -76,8 +76,8 @@ export const actionTracker = {
       if (result && typeof (result as Promise<void>).catch === "function") {
         (result as Promise<void>).catch((err: unknown) => { void normalizeError(err); });
       }
-    } catch {
-      // Intentionally swallowed — telemetry must never break callers.
+    } catch (_err) {
+      // Telemetry sink threw synchronously — swallowed so the caller action always completes
     }
   },
 };

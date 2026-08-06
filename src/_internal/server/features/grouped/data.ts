@@ -80,7 +80,9 @@ export const getGroupedListingForDetail = cache(
         return mapDoc(byId as unknown as FirebaseFirestore.QueryDocumentSnapshot);
       }
       return mapDoc(snap.docs[0]);
-    } catch {
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.warn("grouped-data: getGroupedListingForDetail failed — returning null", { slug, error: err instanceof Error ? err.message : String(err) });
       return null;
     }
   },
@@ -126,7 +128,9 @@ export async function listGroupedListings(
       .limit(params.limit ?? GROUPED_LISTINGS_PAGE_SIZE)
       .get();
     return snap.docs.map(mapDoc);
-  } catch {
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.warn("grouped-data: listGroupedListings failed — returning empty", { params, error: err instanceof Error ? err.message : String(err) });
     return [];
   }
 }
@@ -159,7 +163,9 @@ export async function listSitemapGroupedListings(): Promise<SitemapGroupedListin
         updatedAt: (data.updatedAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? new Date(),
       };
     });
-  } catch {
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.warn("grouped-data: listSitemapGroupedListings failed — returning empty", { error: err instanceof Error ? err.message : String(err) });
     return [];
   }
 }

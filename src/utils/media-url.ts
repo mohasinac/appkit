@@ -29,7 +29,8 @@ export function resolveMediaUrl(url: string | null | undefined): string | undefi
       if (m) return `${PROXY_PREFIX}${decodeURIComponent(m[1])}`;
     }
     return MEDIA_ENDPOINTS.EXT_URL(url);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err); // URL constructor throws for non-URL strings (e.g., relative paths) — return original
     return url;
   }
 }

@@ -35,8 +35,8 @@ async function persist(name: string, err: unknown, ctxLike?: { now?: Date }): Pr
       requestId: `fn-${name}-${(ctxLike?.now ?? new Date()).getTime()}`,
       occurredAt: (ctxLike?.now ?? new Date()).getTime(),
     });
-  } catch {
-    /* logging-the-logging-failure is forbidden */
+  } catch (_err) {
+    // Logging the logging failure would cause infinite recursion — intentionally swallowed
   }
 }
 

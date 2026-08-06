@@ -146,7 +146,8 @@ function decodeCursor(cursor: string | undefined | null): number | null {
     const parsed = JSON.parse(json) as { page?: number };
     const page = Number(parsed.page);
     return Number.isFinite(page) && page > 0 ? page : null;
-  } catch {
+  } catch (_err) {
+    // Malformed base64 or JSON — treat as no cursor (start from first page)
     return null;
   }
 }
