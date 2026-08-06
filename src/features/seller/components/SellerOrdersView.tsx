@@ -210,7 +210,7 @@ function OrderDetailDrawer({
             {(order.items ?? []).length > 0 && (
               <Div>
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)] mb-2" weight="semibold">Items</Text>
-                <Div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 border border-[var(--appkit-color-border)]" rounded="lg">
+                <Div className="divide-y divide-[var(--appkit-color-border)] divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
                   {(order.items ?? []).map((item, i) => (
                     <Row key={i} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
                       <Div className="min-w-0">

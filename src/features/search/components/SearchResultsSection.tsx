@@ -136,7 +136,7 @@ export function SearchResultsSection({
               value={urlSort}
               onValueChange={onSortChange}
               options={sortOptions}
-              className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none"
+              className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-3 py-1.5 text-sm text-[var(--appkit-color-text)] focus:outline-none"
             />
           )}
         </Row>
@@ -169,7 +169,7 @@ export function SearchResultsSection({
               size="sm"
               onClick={() => onPageChange(urlPage - 1)}
               disabled={urlPage <= 1}
-              className="px-4 py-2 border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 border border-[var(--appkit-color-border)] text-sm text-[var(--appkit-color-text-muted)] disabled:opacity-40 hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
             >
               {L.prevPage}
             </Button>
@@ -182,7 +182,7 @@ export function SearchResultsSection({
               size="sm"
               onClick={() => onPageChange(urlPage + 1)}
               disabled={urlPage >= totalPages}
-              className="px-4 py-2 border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 border border-[var(--appkit-color-border)] text-sm text-[var(--appkit-color-text-muted)] disabled:opacity-40 hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
             >
               {L.nextPage}
             </Button>

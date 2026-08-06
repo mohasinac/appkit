@@ -231,7 +231,7 @@ export function SellerPayoutMethodsView({
             {rows.map((row) => (
               <div
                 key={row.id}
-                className="rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3"
+                className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-3"
               >
                 <Row align="start" justify="between" gap="md">
                   <Row className="min-w-0" align="start" gap="3">

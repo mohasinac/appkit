@@ -77,13 +77,13 @@ export function Toggle({
           cfg.track,
           checked
             ? "bg-primary-600 dark:bg-secondary-500"
-            : "bg-zinc-200 dark:bg-slate-700",
+            : "bg-zinc-200 bg-[var(--appkit-color-border)]",
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >
         <Span
           className={cn(
-            "inline-block rounded-full bg-white shadow-sm transition-transform duration-200",
+            "inline-block rounded-full bg-[var(--appkit-color-surface)] shadow-sm transition-transform duration-200",
             cfg.thumb,
             checked ? cfg.translateOn : cfg.translateOff,
           )}
@@ -96,8 +96,8 @@ export function Toggle({
           className={cn(
             "text-sm font-medium cursor-pointer select-none",
             checked
-              ? "text-zinc-900 dark:text-zinc-100"
-              : "text-zinc-600 dark:text-zinc-400",
+              ? "text-[var(--appkit-color-text)]"
+              : "text-[var(--appkit-color-text-muted)]",
             disabled && "opacity-50 cursor-not-allowed",
           )}
         >

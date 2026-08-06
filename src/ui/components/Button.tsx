@@ -96,9 +96,9 @@ const BUTTON_TEXT_COLOR_MAP: Record<ButtonTextColor, string> = {
 type ButtonBorder = "none" | "default" | "subtle" | "strong";
 const BUTTON_BORDER_MAP: Record<ButtonBorder, string> = {
   none: "",
-  default: "border border-zinc-200 dark:border-slate-700",
-  subtle: "border border-zinc-100 dark:border-slate-800/60",
-  strong: "border border-zinc-300 dark:border-slate-600",
+  default: "border border-[var(--appkit-color-border)]",
+  subtle: "border border-[var(--appkit-color-border-subtle)]",
+  strong: "border border-[var(--appkit-color-border)]",
 };
 
 type ButtonPaddingY = "none" | "xs" | "y-xs-tall" | "sm" | "y-sm-tall" | "md" | "lg";

@@ -30,7 +30,7 @@ export function CoinsDisplay({ coins, label = "HC Coins" }: CoinsDisplayProps) {
       <Text className={CLS_COIN_TOTAL}>
         {coins.toLocaleString()}
       </Text>
-      <Text className="text-gray-500" size="sm">{label}</Text>
+      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{label}</Text>
     </Stack>
   );
 }

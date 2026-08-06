@@ -93,7 +93,7 @@ export function AboutView({
             {valueItems.map(({ title, text, icon }) => (
               <div
                 key={title}
-                className="bg-white dark:bg-slate-800 rounded-xl p-6 space-y-3 border border-neutral-200 dark:border-slate-700"
+                className="bg-[var(--appkit-color-surface)] rounded-xl p-6 space-y-3 border border-[var(--appkit-color-border)]"
               >
                 <Div><Span size="3xl">{icon}</Span></Div>
                 <Heading level={3}>{title}</Heading>

@@ -69,7 +69,7 @@ const STATUS_COLOR: Record<string, string> = {
   in_progress: "bg-warning-surface text-warning",
   waiting_on_user: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
   resolved: "bg-success-surface text-success",
-  closed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+  closed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 const ROLE_LABEL: Record<string, string> = {
@@ -371,7 +371,7 @@ export function AdminSupportTicketDetailView({
                 <Div textSize="sm"
                   key={msg.id ?? i}
                   surface={msg.authorRole === "user" ? "default" : "info-surface"}
-                  className={msg.authorRole === "user" ? "border border-zinc-200 dark:border-slate-700" : "border border-[var(--appkit-color-info)]"} rounded="lg" padding="sm"
+                  className={msg.authorRole === "user" ? "border border-[var(--appkit-color-border)]" : "border border-[var(--appkit-color-info)]"} rounded="lg" padding="sm"
                 >
                   <Row color="muted" textSize="xs" className="mb-1" align="center" gap="sm">
                     <Span weight="medium" color="muted">
@@ -398,7 +398,7 @@ export function AdminSupportTicketDetailView({
             onChange={(e) => setReplyBody(e.target.value)}
             rows={3}
             placeholder="Type a reply…"
-            className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
           <Button
             type="button"
@@ -438,7 +438,7 @@ export function AdminSupportTicketDetailView({
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Notes visible only to admins and employees…"
-            className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </Stack>
 
@@ -608,7 +608,7 @@ function OrderItemsPanel(props: {
                         min="0"
                         value={it.quantity}
                         onChange={(e) => updateQty(idx, e.target.value)}
-                        className="w-16 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-xs"
+                        className="w-16 rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2 py-1 text-xs"
                       />
                     </Row>
                   ))}

@@ -140,8 +140,8 @@ export interface AppLayoutShellProps {
 
 import { OVERLAY_FALLBACK_COLOR, SEED_DARK_BG as DEFAULT_DARK_BG, SEED_LIGHT_BG as DEFAULT_LIGHT_BG } from "./background-seed-defaults";
 
-const CLS_STAT_BOX = "flex flex-col items-center gap-1 p-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-center";
-const CLS_STAT_LABEL = "text-xs text-zinc-500 dark:text-zinc-400";
+const CLS_STAT_BOX = "flex flex-col items-center gap-1 p-2 bg-[var(--appkit-color-surface)] rounded-lg text-center";
+const CLS_STAT_LABEL = "text-xs text-[var(--appkit-color-text-muted)]";
 const CLS_LOGOUT_BTN = "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-error transition-colors hover:bg-error-surface hover:text-error dark:text-error dark:hover:bg-error-surface dark:hover:text-error";
 
 /** Collapsible accordion section for the public sidebar. */
@@ -158,7 +158,7 @@ function CollapsibleNavGroup({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
       >
         <Span>{title}</Span>
         <svg
@@ -210,7 +210,7 @@ function CollapsibleSidebarSection({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
       >
         <Span>{section.title}</Span>
         <svg
@@ -297,7 +297,7 @@ function SidebarUserHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="flex-shrink-0 rounded-full p-2 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="flex-shrink-0 rounded-full p-2 text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -322,7 +322,7 @@ function SidebarGuestHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="rounded-full p-2 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="rounded-full p-2 text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -350,6 +350,7 @@ interface SidebarContentProps {
   showThemeToggleInSidebar?: boolean;
   sidebarProfileLabels?: AppLayoutShellProps["sidebarProfileLabels"];
   theme: "light" | "dark";
+  activeThemeName: string;
   toggleTheme: () => void;
   onLogout?: () => void;
   onAfterLogout: () => void;
@@ -371,6 +372,7 @@ function SidebarContent({
   showThemeToggleInSidebar,
   sidebarProfileLabels,
   theme,
+  activeThemeName,
   toggleTheme,
   onLogout,
   onAfterLogout,
@@ -395,7 +397,7 @@ function SidebarContent({
   };
 
   const navItemClass =
-    "flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-secondary-300";
+    "flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
 
   const normalizedSections: AppLayoutShellSidebarSection[] = hasSections
     ? (sidebarSections as AppLayoutShellSidebarSection[])
@@ -415,7 +417,7 @@ function SidebarContent({
               className={[
                 "block w-full rounded-lg px-3 py-2.5 text-center text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm",
                 action.variant === "outline"
-                  ? "border border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-slate-700 dark:text-zinc-100 dark:hover:bg-slate-800"
+                  ? "border border-zinc-300 text-zinc-700 hover:bg-zinc-50 border-[var(--appkit-color-border)] text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-elevated)]"
                   : "bg-primary text-white hover:bg-primary-600 dark:bg-primary dark:hover:bg-primary-600 btn-glow",
               ].join(" ")}
             >
@@ -499,16 +501,16 @@ function SidebarContent({
       ))}
 
       {(sidebarLocaleSlot || showThemeToggleInSidebar || (isAuthenticated && onLogout)) && (
-        <Stack border="default" className="border-t dark:border-slate-800" padding="t-md" gap="3">
+        <Stack border="default" className="border-t border-[var(--appkit-color-border-subtle)]" padding="t-md" gap="3">
           {sidebarLocaleSlot}
           {showThemeToggleInSidebar && (
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-secondary-300"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-50 hover:text-primary-800"
             >
               <Span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</Span>
-              {theme === "dark" ? "Light mode" : "Dark mode"}
+              {activeThemeName}
             </button>
           )}
           {isAuthenticated && onLogout && (
@@ -586,7 +588,7 @@ export function AppLayoutShell({
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, activeTheme } = useTheme();
   const { closeNav: closeDashboardNav, hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } = useDashboardNav();
   const { state: bottomActionsState } = useBottomActionsContext();
   const { user: authUser } = useAuth();
@@ -637,6 +639,7 @@ export function AppLayoutShell({
       showThemeToggleInSidebar={showThemeToggleInSidebar}
       sidebarProfileLabels={sidebarProfileLabels}
       theme={theme}
+      activeThemeName={activeTheme.name}
       toggleTheme={toggleTheme}
       onLogout={onLogout}
       onAfterLogout={() => setSidebarOpen(false)}

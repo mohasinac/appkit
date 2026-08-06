@@ -64,7 +64,7 @@ export interface TitleBarLayoutProps {
 
 /** Shared icon-button class for all action buttons in the title bar. */
 const iconBtn =
-  "flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors";
+  "flex items-center justify-center w-9 h-9 rounded-lg text-[var(--appkit-color-text-muted)] hover:bg-primary-50 hover:text-primary-700 hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-400 transition-colors";
 
 /** Badge counter class for wishlist/cart counts. */
 const countBadge =
@@ -283,7 +283,7 @@ export function TitleBarLayout({
       {loginHref && (
         <Link
           href={loginHref}
-          className="px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary-700 dark:hover:text-secondary-400 transition-colors rounded-lg hover:bg-primary-50 dark:hover:bg-slate-800"
+          className="px-3 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:text-primary-700 dark:hover:text-secondary-400 transition-colors rounded-lg hover:bg-primary-50 hover:bg-[var(--appkit-color-surface-elevated)]"
         >
           Sign in
         </Link>
@@ -306,7 +306,7 @@ export function TitleBarLayout({
   return (
     <BlockHeader
       id={id}
-      className={`sticky top-0 z-50 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-slate-800 shadow-sm ${className}`}
+      className={`sticky top-0 z-50 bg-white/95 bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b border-zinc-100 border-[var(--appkit-color-border-subtle)] shadow-sm ${className}`}
     >
       {/* Promo strip */}
       {promoStripText && (

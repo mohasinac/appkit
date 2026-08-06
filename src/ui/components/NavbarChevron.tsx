@@ -13,7 +13,7 @@ export interface NavbarChevronProps {
 // navbar's overflow-scroll fade — the gradient classes implement the
 // edge-fade affordance, not consumer styling.
 const BASE_CLS =
-  "absolute top-0 bottom-0 z-10 flex items-center justify-center w-8 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors";
+  "absolute top-0 bottom-0 z-10 flex items-center justify-center w-8 text-[var(--appkit-color-text-muted)] hover:text-zinc-900 dark:hover:text-white transition-colors";
 const FADE_LEFT =
   "bg-gradient-to-r from-white/95 dark:from-slate-950/95 to-transparent";
 const FADE_RIGHT =

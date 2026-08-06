@@ -96,11 +96,11 @@ export function Slider({
             "relative w-full appearance-none bg-transparent cursor-pointer",
             "focus:outline-none",
             "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4",
-            "[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white",
+            "[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--appkit-color-surface)]",
             "[&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary-500 dark:[&::-webkit-slider-thumb]:border-secondary-500",
             "[&::-webkit-slider-thumb]:shadow-sm",
             "[&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4",
-            "[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white",
+            "[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--appkit-color-surface)]",
             "[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary-500 dark:[&::-moz-range-thumb]:border-secondary-500",
             disabled && "opacity-50 cursor-not-allowed",
           )}

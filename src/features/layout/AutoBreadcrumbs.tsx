@@ -125,14 +125,14 @@ export function AutoBreadcrumbs({
                   ) : (
                     <Link
                       href={crumb.href}
-                      className="text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
+                      className="text-[var(--appkit-color-text-muted)] hover:text-zinc-950 dark:hover:text-white transition-colors"
                     >
                       {crumb.label}
                     </Link>
                   )}
                   {!isLast && (
                     <Span
-                      className="dark:text-zinc-400/90 select-none" color="muted"
+                      className="text-[var(--appkit-color-text-muted)]/90 select-none" color="muted"
                       aria-hidden="true"
                     >
                       {separator}

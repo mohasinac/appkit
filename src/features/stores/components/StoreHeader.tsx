@@ -17,7 +17,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-warning-surface dark:bg-warning-surface flex items-center justify-center text-warning dark:text-warning font-bold text-2xl shadow-sm";
+const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white border-[var(--appkit-color-border-subtle)] bg-warning-surface dark:bg-warning-surface flex items-center justify-center text-warning dark:text-warning font-bold text-2xl shadow-sm";
 const CLS_STARS = "inline-flex items-center gap-1 text-warning";
 const CLS_FOLLOW_BTN = "rounded-lg border border-warning px-4 py-2 text-sm font-medium text-warning hover:bg-warning-surface transition-colors";
 const CLS_WARN_BANNER = "mt-3 rounded-lg bg-warning-surface dark:bg-warning-surface border border-warning dark:border-warning px-3 py-2 text-sm text-warning dark:text-warning";
@@ -44,7 +44,7 @@ export function StoreHeader({
   return (
     <Section surface="default" border="bottom" className={className}>
       {store.storeBannerURL && (
-          <Div className={`h-40 md:h-56 ${__O.hidden} bg-gray-100 dark:bg-neutral-800`}>
+          <Div className={`h-40 md:h-56 ${__O.hidden} bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]`}>
           <img
             src={store.storeBannerURL}
             alt={`${store.storeName} banner`}
@@ -71,7 +71,7 @@ export function StoreHeader({
             <Row className="mb-0.5" align="center" gap="sm" wrap>
               <Heading
                 level={1}
-                className="text-gray-900" size="xl" weight="bold"
+                className="text-[var(--appkit-color-text)]" size="xl" weight="bold"
               >
                 {store.storeName}
               </Heading>
@@ -81,7 +81,7 @@ export function StoreHeader({
                 </Span>
               )}
             </Row>
-            <Row textSize="xs" className="text-gray-500 mb-0.5" gap="3">
+            <Row textSize="xs" className="text-[var(--appkit-color-text-muted)] mb-0.5" gap="3">
               {(store as any).category && <Span transform="capitalize">{(store as any).category}</Span>}
               {store.totalProducts != null && store.totalProducts > 0 && (
                 <Span>{store.totalProducts} {labels.products ?? "products"}</Span>

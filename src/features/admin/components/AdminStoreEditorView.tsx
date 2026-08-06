@@ -64,7 +64,7 @@ const STATUS_OPTIONS = [
 ];
 
 const TEXTAREA_CHROME =
-  "w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
+  "w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
 
 // --- Component ---------------------------------------------------------------
 
@@ -180,7 +180,7 @@ export function AdminStoreEditorView({
           ({capabilities.size} active)
         </Span>
       </Span>
-      <Div className="divide-y divide-zinc-100 dark:divide-slate-700" rounded="xl" border="default">
+      <Div className="divide-y divide-zinc-100 divide-[var(--appkit-color-border)]" rounded="xl" border="default">
         {CAPABILITY_GROUPS.map((group) => {
           const checked = group.caps.filter((c) => capabilities.has(c.key)).length;
           return (
@@ -195,13 +195,13 @@ export function AdminStoreEditorView({
                 {group.caps.map((cap) => (
                   <label
                     key={cap.key}
-                    className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 dark:text-zinc-300"
+                    className="flex items-center gap-2 cursor-pointer text-xs text-[var(--appkit-color-text-muted)]"
                   >
                     <input
                       type="checkbox"
                       checked={capabilities.has(cap.key)}
                       onChange={() => toggleCapability(cap.key)}
-                      className="h-3.5 w-3.5 rounded border-zinc-300 dark:border-slate-600 accent-primary"
+                      className="h-3.5 w-3.5 rounded border-[var(--appkit-color-border)] accent-primary"
                     />
                     {cap.label}
                   </label>

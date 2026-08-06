@@ -256,7 +256,7 @@ export function MediaPickerModal({
                       "rounded-lg border overflow-hidden text-left transition p-0 h-auto",
                       isSelected
                         ? "border-primary-500 ring-2 ring-primary-300"
-                        : "border-zinc-200 dark:border-slate-700",
+                        : "border-[var(--appkit-color-border)]",
                     ].join(" ")}
                     aria-pressed={isSelected}
                   >

@@ -15,7 +15,7 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
     <TextLink rounded="xl"
       href={href}
       shadow="hover-lg"
-      className="group relative block overflow-hidden bg-gray-100 dark:bg-[var(--appkit-color-surface-elevated)] transition"
+      className="group relative block overflow-hidden bg-[var(--appkit-color-surface)] dark:bg-[var(--appkit-color-surface-elevated)] transition"
     >
       {collection.image ? (
         <Div className={`${LAYOUT.cardHeight.md} w-full`} overflow="hidden">
@@ -29,11 +29,11 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
         <Div surface="muted" className={`${LAYOUT.cardHeight.md} ${CLS_PLACEHOLDER}`} />
       )}
       <Div surface="default" padding="sm">
-          <Heading level={3} className="text-gray-900" weight="semibold">
+          <Heading level={3} className="text-[var(--appkit-color-text)]" weight="semibold">
           {collection.title}
         </Heading>
         {collection.subtitle && (
-            <Text className="mt-1 text-gray-500" size="sm">
+            <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
             {collection.subtitle}
           </Text>
         )}

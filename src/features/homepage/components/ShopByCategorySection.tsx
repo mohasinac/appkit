@@ -46,7 +46,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
-      className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
+      className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:hover:border-primary-600"
     >
       {coverImage && isImageUrl(coverImage) ? (
         <Div className={`aspect-video w-full ${__O.hidden}`} surface="subtle">
@@ -116,7 +116,7 @@ function FilterChip({
         "whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium transition-colors",
         active
           ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
-          : "border-zinc-300 bg-white text-zinc-600 hover:border-[var(--appkit-color-primary)] dark:border-slate-600 dark:bg-slate-800 dark:text-zinc-300",
+          : "border-zinc-300 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-primary)] border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
       ].join(" ")}
     >
       {label}

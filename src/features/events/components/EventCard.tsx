@@ -108,7 +108,7 @@ export function EventCard({
         <Link href={detailHref} className="block">
           <Heading
             level={3}
-            className="text-gray-900 leading-snug mb-1 group-hover:text-primary transition-colors" size="base" weight="semibold"
+            className="text-[var(--appkit-color-text)] leading-snug mb-1 group-hover:text-primary transition-colors" size="base" weight="semibold"
           >
             {safeTitle}
           </Heading>
@@ -116,7 +116,7 @@ export function EventCard({
         <RichText
           html={normalizeRichTextHtml(event.description ?? "")}
           proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-          className="mb-3 line-clamp-3 text-sm text-zinc-600 dark:text-zinc-400"
+          className="mb-3 line-clamp-3 text-sm text-[var(--appkit-color-text-muted)]"
         />
 
         <Row color="muted" textSize="xs" className="mb-3 mt-auto" align="center" justify="between">

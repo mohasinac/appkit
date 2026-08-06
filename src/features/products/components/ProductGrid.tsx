@@ -32,14 +32,14 @@ const CLS_BADGE_SALE = "rounded-full bg-success-surface px-2 py-0.5 text-[10px] 
 const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
 const CLS_BADGE_LIMITED = "rounded-full bg-info-surface px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
 const CLS_HEART_ACTIVE = "bg-error-surface text-white hover:bg-error-surface";
-const CLS_HEART_IDLE = "bg-white/90 dark:bg-slate-800/90 text-zinc-500 dark:text-zinc-400 hover:text-error hover:bg-white dark:hover:bg-slate-800";
+const CLS_HEART_IDLE = "bg-white/90 bg-[var(--appkit-color-surface-elevated)]/90 text-[var(--appkit-color-text-muted)] hover:text-error hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]";
 const CLS_STAR = "text-[11px] text-warning";
 const CLS_DISCOUNT_TEXT = "mt-1 text-[11px] font-semibold text-error";
 const CLS_DISCOUNT_TEXT_BARE = "text-[10px] text-error";
 const CLS_STAR_BARE = "text-warning";
 const CLS_BID_TEXT = "text-[11px] text-error";
 const CLS_HEART_ROSE_ACTIVE = "text-error";
-const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-zinc-600 dark:text-zinc-400 hover:text-error";
+const CLS_HEART_ROSE_IDLE = "text-zinc-300 dark:text-[var(--appkit-color-text-muted)] hover:text-error";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -114,13 +114,13 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       {...(!selectionMode ? longPress : {})}
       className={[
         "group relative flex h-full flex-col overflow-hidden",
-        "rounded-2xl border bg-white",
+        "rounded-2xl border bg-[var(--appkit-color-surface)]",
         "shadow-sm transition-all duration-200",
         isSelected
           ? "border-primary ring-2 ring-primary/30 shadow-md"
           : "border-zinc-200/80 hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5",
-        "dark:bg-slate-900",
-        isSelected ? "dark:border-primary dark:ring-primary/30" : "dark:border-slate-700/60",
+        "bg-[var(--appkit-color-surface)]",
+        isSelected ? "dark:border-primary dark:ring-primary/30" : "border-[var(--appkit-color-border)]/60",
         selectionMode || onClick || href ? "cursor-pointer" : "",
         className,
       ]
@@ -533,14 +533,14 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       onClick={onClick ? () => onClick(product) : undefined}
       className={[
         "flex items-center gap-3 p-2 sm:p-3",
-        "hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors",
+        "hover:bg-[var(--appkit-color-surface)]/60 transition-colors",
         onClick ? "cursor-pointer" : "",
       ]
         .filter(Boolean)
         .join(" ")}
     >
       {/* Thumbnail */}
-      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-neutral-100 dark:bg-neutral-800`} rounded="lg">
+      <Div className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 ${__O.hidden} bg-[var(--appkit-color-surface)]`} rounded="lg">
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}
@@ -689,7 +689,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
     if (view === "list") {
       return (
         <Stack
-          className={`divide-y divide-zinc-100 dark:divide-zinc-800 ${className}`} border="subtle" rounded="xl"
+          className={`divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)] ${className}`} border="subtle" rounded="xl"
         >
           {products.map((p) => (
             <ProductListRow<T>

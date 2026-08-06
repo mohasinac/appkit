@@ -44,7 +44,7 @@ export function LoginRequiredModal({
         </Div>
       }
     >
-      <Text className="text-sm text-zinc-600 dark:text-zinc-300">{message}</Text>
+      <Text className="text-sm text-[var(--appkit-color-text-muted)]">{message}</Text>
     </Modal>
   );
 }

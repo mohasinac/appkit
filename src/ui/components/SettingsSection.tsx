@@ -36,7 +36,7 @@ export function SettingsSection({
     <section
       className={[
         "appkit-settings-section",
-        "space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4",
+        "space-y-3 rounded-lg border border-[var(--appkit-color-border)] p-4",
         className,
       ]
         .filter(Boolean)
@@ -44,11 +44,11 @@ export function SettingsSection({
     >
       <header className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <Heading level={3} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          <Heading level={3} className="text-base font-semibold text-[var(--appkit-color-text)]">
             {title}
           </Heading>
           {description ? (
-            <Text className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+            <Text className="mt-1 text-sm text-[var(--appkit-color-text-muted)]">
               {description}
             </Text>
           ) : null}
@@ -105,11 +105,11 @@ export function ToggleRow({
         .join(" ")}
     >
       <div className="flex-1 min-w-0">
-        <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+        <Text className="text-sm font-medium text-[var(--appkit-color-text)]">
           {label}
         </Text>
         {description ? (
-          <Text className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+          <Text className="mt-0.5 text-xs text-[var(--appkit-color-text-muted)]">
             {description}
           </Text>
         ) : null}

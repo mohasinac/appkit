@@ -16,6 +16,7 @@ import {
   userConversationsPingPath,
 } from "../realtime";
 import { normalizeError } from "../../../errors/normalize";
+import { apiClient, ApiClientError } from "../../../http/ApiClient";
 import type { ConversationDocument } from "../schemas/firestore";
 
 /**
@@ -48,11 +49,12 @@ export interface UseConversationReturn {
 }
 
 async function fetchDetail(id: string): Promise<ConversationDocument | null> {
-  const res = await fetch(DETAIL_ENDPOINT(id), { credentials: "include" });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`Failed to load conversation (${res.status})`);
-  const json = (await res.json()) as { data?: ConversationDocument };
-  return json.data ?? null;
+  try {
+    return await apiClient.get<ConversationDocument>(DETAIL_ENDPOINT(id));
+  } catch (err) {
+    if (err instanceof ApiClientError && err.status === 404) return null;
+    throw err;
+  }
 }
 
 export function useConversation(conversationId: string | null): UseConversationReturn {
@@ -113,15 +115,7 @@ export function useConversation(conversationId: string | null): UseConversationR
       if (!conversationId) return;
       const trimmed = body.trim();
       if (!trimmed) return;
-      const res = await fetch(SEND_ENDPOINT(conversationId), {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ body: trimmed }),
-      });
-      if (!res.ok) {
-        throw new Error(`Failed to send message (${res.status})`);
-      }
+      await apiClient.post(SEND_ENDPOINT(conversationId), { body: trimmed });
       // RTDB ping will trigger refetch — but kick off one immediately in case
       // the ping path isn't subscribed (e.g. provider not registered).
       await refetch();
@@ -131,7 +125,8 @@ export function useConversation(conversationId: string | null): UseConversationR
 
   const markRead = useCallback((): Promise<void> => {
     if (!conversationId) return Promise.resolve();
-    return fetch(READ_ENDPOINT(conversationId), { method: "POST", credentials: "include" })
+    return apiClient
+      .post(READ_ENDPOINT(conversationId))
       .then(() => void refetch())
       .catch((err: unknown) => void normalizeError(err));
   }, [conversationId, refetch]);

@@ -165,10 +165,10 @@ export function ProductFeatureBadges({
       key: "categoryCount",
       icon: <Span size="xs">▦</Span>,
       label: labels.categoryProductCount(formattedCount, categoryName),
-      colorClass: "text-zinc-700 dark:text-zinc-300",
+      colorClass: "text-[var(--appkit-color-text-muted)]",
       bgClass:
         categoryBadgeClassName ??
-        "bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700",
+        "bg-[var(--appkit-color-surface)] border-[var(--appkit-color-border)]",
     });
   }
 

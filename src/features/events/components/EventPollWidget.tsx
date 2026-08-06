@@ -136,7 +136,7 @@ export function EventPollWidget({
         {pollConfig.options.map((opt) => (
           <label
             key={opt.id}
-            className="flex items-center gap-3 cursor-pointer rounded-lg border border-zinc-200 dark:border-zinc-700 px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+            className="flex items-center gap-3 cursor-pointer rounded-lg border border-[var(--appkit-color-border)] px-4 py-3 hover:bg-[var(--appkit-color-surface)] transition-colors"
           >
             <input
               type={isMulti ? "checkbox" : "radio"}
@@ -156,7 +156,7 @@ export function EventPollWidget({
           onChange={(e) => setComment(e.target.value)}
           placeholder="Add a comment (optional)"
           rows={3}
-          className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text-muted)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
         />
       )}
       {error && <Text className="text-error" size="sm">{error}</Text>}

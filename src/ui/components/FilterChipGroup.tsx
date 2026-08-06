@@ -47,11 +47,11 @@ export interface FilterChipGroupProps {
 const ACTIVE_CLS =
   "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]";
 const INACTIVE_CLS =
-  "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800";
+  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
 const CHIP_BASE_CLS =
   "rounded-full px-3 py-1 text-xs font-medium border transition-colors";
 const LABEL_CLS =
-  "text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400";
+  "text-xs font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]";
 
 export function FilterChipGroup({
   label,

@@ -108,13 +108,13 @@ function renderFeeTableSection(t: TranslateFn, themed: ThemedTokens, rows: FeeRo
               <Th className="text-left hidden md:table-cell" padding="md" weight="semibold">{t("colNote")}</Th>
             </Tr>
           </Thead>
-          <Tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
+          <Tbody className="divide-y divide-neutral-100 divide-[var(--appkit-color-border)]">
             {rows.map((row) => (
-              <Tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 dark:hover:bg-neutral-800/50`}>
+              <Tr key={row.category} className={`${themed.bgPrimary} hover:bg-neutral-50 hover:bg-[var(--appkit-color-surface-elevated)]/50`}>
                 <Td weight="medium" padding="md">{row.category}</Td>
                 <Td className={CLS_RATE_CELL}>{row.rate}</Td>
                 <Td padding="md"><Caption>{row.who}</Caption></Td>
-                <Td className="text-neutral-500 dark:text-neutral-400 hidden md:table-cell" padding="md" size="xs">{row.note}</Td>
+                <Td className="text-[var(--appkit-color-text-muted)] hidden md:table-cell" padding="md" size="xs">{row.note}</Td>
               </Tr>
             ))}
           </Tbody>
@@ -134,8 +134,8 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
         <Heading level={3} className="mb-4" size="base">{t("payoutExampleProduct")}</Heading>
         <Stack gap="sm">
           {rows.map((row, i) => (
-            <Row textWeight="bold" textSize="sm" key={i} className={`${row.highlight ? "border-t border-neutral-200 dark:border-neutral-700 mt-2" : ""}`} paddingY={row.highlight ? "t-xs" : undefined} justify="between">
-              <Text className={row.highlight ? "font-bold" : "text-neutral-600 dark:text-neutral-400"}>{row.label}</Text>
+            <Row textWeight="bold" textSize="sm" key={i} className={`${row.highlight ? "border-t border-[var(--appkit-color-border)] mt-2" : ""}`} paddingY={row.highlight ? "t-xs" : undefined} justify="between">
+              <Text className={row.highlight ? "font-bold" : "text-[var(--appkit-color-text-muted)]"}>{row.label}</Text>
               <Text className={row.highlight ? CLS_HIGHLIGHT : ""}>{row.example}</Text>
             </Row>
           ))}

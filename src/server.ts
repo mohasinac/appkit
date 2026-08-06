@@ -1394,6 +1394,12 @@ export { storeRepository } from "./repositories/index";
 // serverLogger - Structured server-side logger.
 export { serverLogger } from "./monitoring/index";
 
+// -- Error handling utilities ------------------------------------------------
+// withRetry - Exponential-backoff retry for idempotent async operations.
+export { withRetry } from "./http/retry";
+// safeFireAndForget - Runs non-critical promises without blocking the caller.
+export { safeFireAndForget } from "./utils/safe-fire-forget";
+
 // -- Security / Rate limiting ------------------------------------------------
 // applyRateLimit - Apply rate limiting middleware.
 export { applyRateLimit } from "./security/index";
@@ -1597,6 +1603,10 @@ export type { SitemapOptions, RobotsOptions, ManifestOptions, DefaultOgOptions }
 export { checkActionAllowed } from "./features/admin/utils/checkActionAllowed";
 export { getDisabledRoutes } from "./features/admin/utils/getDisabledRoutes";
 export { getSiteSettingsGlobal } from "./features/admin/utils/getSiteSettingsGlobal";
+// Null-safe wrapper — returns null on Firestore failure instead of throwing.
+export { getSiteSettingsSafe } from "./_internal/server/features/site-settings/safe-settings";
+// Firebase Identity Toolkit REST helper (signInWithPassword / signInWithCustomToken).
+export { callFirebaseIdentityToolkit } from "./_internal/server/features/auth/firebase-identity";
 
 // -- Site-settings domain actions (updateActionConfig / updateNavConfig) --
 export { updateActionConfigDomain, updateNavConfigDomain } from "./_internal/server/features/site-settings/actions";

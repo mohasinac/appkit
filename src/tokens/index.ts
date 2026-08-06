@@ -218,33 +218,33 @@ export const LOCALE_CONFIG = {
  */
 const THEMED = {
   // Backgrounds
-  bgPrimary: "bg-zinc-50 dark:bg-slate-950",
-  bgSecondary: "bg-zinc-100 dark:bg-slate-900",
-  bgTertiary: "bg-zinc-200 dark:bg-slate-800",
-  bgElevated: "bg-white dark:bg-slate-900/90",
-  bgInput: "bg-white dark:bg-slate-800/60",
+  bgPrimary: "bg-zinc-50 bg-[var(--appkit-color-bg)]",
+  bgSecondary: "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)]",
+  bgTertiary: "bg-zinc-200 bg-[var(--appkit-color-surface-elevated)]",
+  bgElevated: "bg-[var(--appkit-color-surface)]",
+  bgInput: "bg-[var(--appkit-color-surface-input)]",
   // Text
-  textPrimary: "text-zinc-900 dark:text-zinc-50",
-  textSecondary: "text-zinc-500 dark:text-zinc-400",
-  textMuted: "text-zinc-400 dark:text-zinc-400",
+  textPrimary: "text-[var(--appkit-color-text)]",
+  textSecondary: "text-[var(--appkit-color-text-muted)]",
+  textMuted: "text-[var(--appkit-color-text-faint)]",
   textError: "text-red-600 dark:text-red-400",
   textSuccess: "text-emerald-600 dark:text-emerald-400",
   textOnPrimary: "text-white",
   textOnDark: "text-white",
   // Borders
-  border: "border-zinc-200 dark:border-slate-700",
-  borderSubtle: "border-zinc-100 dark:border-slate-800/60",
-  borderLight: "border-zinc-100 dark:border-slate-700/60",
+  border: "border-[var(--appkit-color-border)]",
+  borderSubtle: "border-[var(--appkit-color-border-subtle)]",
+  borderLight: "border-zinc-100 border-[var(--appkit-color-border)]/60",
   borderError: "border-red-500",
-  borderColor: "border-zinc-200 dark:border-slate-700",
+  borderColor: "border-[var(--appkit-color-border)]",
   // Interactive
-  hover: "hover:bg-zinc-100 dark:hover:bg-slate-800",
-  hoverCard: "hover:bg-zinc-50 dark:hover:bg-slate-800/60",
-  hoverBorder: "hover:border-zinc-300 dark:hover:border-slate-600",
+  hover: "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]",
+  hoverCard: "hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/60",
+  hoverBorder: "hover:border-[var(--appkit-color-border)]",
   hoverText: "hover:text-zinc-800 dark:hover:text-zinc-100",
   activeRow: "bg-primary-50 dark:bg-secondary-950/30",
   focusRing: "focus:ring-primary-500 dark:focus:ring-secondary-400",
-  divider: "divide-zinc-200 dark:divide-slate-700",
+  divider: "divide-zinc-200 divide-[var(--appkit-color-border)]",
   placeholder: "placeholder-zinc-400 dark:placeholder-zinc-500",
 } as const;
 
@@ -261,15 +261,15 @@ export const LAYOUT = {
   contentPadding: "px-4 md:px-6 lg:px-8",
   navPadding: "px-4 sm:px-6 lg:px-8",
   titleBarBg:
-    "bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-zinc-200/80 dark:border-slate-800/80",
+    "bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-b border-[var(--appkit-color-border)]",
   navbarBg:
-    "bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-zinc-200/80 dark:border-slate-800/80",
+    "bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-b border-[var(--appkit-color-border)]",
   sidebarBg:
-    "bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-800",
+    "bg-[var(--appkit-color-surface)] border-l border-[var(--appkit-color-border-subtle)]",
   bottomNavBg:
-    "bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-zinc-200/80 dark:border-slate-800/80",
+    "bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)]",
   footerBg:
-    "bg-zinc-50 dark:bg-slate-900 border-t border-zinc-200 dark:border-slate-800",
+    "bg-zinc-50 bg-[var(--appkit-color-surface)] border-t border-[var(--appkit-color-border-subtle)]",
   fullScreen: "min-h-screen",
   flexCenter: "flex items-center justify-center",
   centerText: "text-center",
@@ -294,7 +294,7 @@ export const LAYOUT = {
   lastChild: "mb-0 pb-0",
   /** Combined bottom-nav bar (hidden on lg+, iPhone safe-area aware) */
   bottomNav:
-    "fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-16 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 lg:hidden pb-[env(safe-area-inset-bottom)]",
+    "fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-16 bg-[var(--appkit-color-surface)] border-t border-[var(--appkit-color-border-subtle)] lg:hidden pb-[env(safe-area-inset-bottom)]",
   /** Main content bottom padding to clear the bottom nav on mobile */
   mainPadBottomNav: "pb-20 lg:pb-0",
   /** Standard card heights for consistency */
@@ -325,16 +325,16 @@ const TYPOGRAPHY = {
   pageTitle:
     "text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-tight",
   pageSubtitle:
-    "text-base md:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed mt-1",
+    "text-base md:text-lg text-[var(--appkit-color-text-muted)] leading-relaxed mt-1",
   sectionTitle: "text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight",
   sectionSubtitle:
-    "text-sm md:text-base lg:text-lg text-zinc-500 dark:text-zinc-400",
+    "text-sm md:text-base lg:text-lg text-[var(--appkit-color-text-muted)]",
   cardTitle: "text-base md:text-lg font-semibold leading-snug",
   cardBody: "text-sm md:text-base leading-relaxed",
-  label: "text-sm font-medium text-zinc-700 dark:text-zinc-300",
-  caption: "text-xs text-zinc-500 dark:text-zinc-400",
+  label: "text-sm font-medium text-[var(--appkit-color-text-muted)]",
+  caption: "text-xs text-[var(--appkit-color-text-muted)]",
   overline:
-    "text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400",
+    "text-xs font-semibold uppercase tracking-wider text-[var(--appkit-color-text-muted)]",
   h1: "text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight font-display",
   h2: "text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight font-display",
   h3: "text-xl md:text-2xl lg:text-3xl font-bold tracking-tight font-display",
@@ -533,13 +533,13 @@ const PAGE = {
  * Form input styles — border, bg, focus ring, error/success/disabled states.
  */
 const INPUT = {
-  base: "rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3.5 py-2.5 text-base sm:text-sm text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary-500/40 dark:focus:ring-secondary-400/40 focus:border-primary-500 dark:focus:border-secondary-400 focus:outline-none transition-colors duration-150 placeholder:text-zinc-400 dark:placeholder:text-zinc-500",
+  base: "rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-3.5 py-2.5 text-base sm:text-sm text-[var(--appkit-color-text)] focus:ring-2 focus:ring-primary-500/40  focus:border-primary-500  focus:outline-none transition-colors duration-150 placeholder:text-[var(--appkit-color-text-faint)]",
   error:
     "border-red-400 dark:border-red-500 focus:ring-red-500/20 focus:border-red-500 bg-red-50/30 dark:bg-red-950/10",
   success:
     "border-emerald-400 dark:border-emerald-500 focus:ring-emerald-500/20 focus:border-emerald-500",
   disabled:
-    "bg-zinc-50 dark:bg-slate-800/30 text-zinc-400 dark:text-zinc-400 cursor-not-allowed opacity-60",
+    "bg-zinc-50 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-faint)] cursor-not-allowed opacity-60",
   withIcon: "pl-10",
 } as const;
 
@@ -553,22 +553,22 @@ const CARD = {
   hover:
     "hover:shadow-md dark:hover:shadow-xl cursor-pointer transition-shadow duration-200",
   standard:
-    "rounded-2xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-all duration-200",
+    "rounded-2xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm hover:shadow-md transition-all duration-200",
   elevated:
-    "rounded-2xl bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-700 shadow-md hover:shadow-lg transition-shadow duration-200",
+    "rounded-2xl bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] shadow-md hover:shadow-lg transition-shadow duration-200",
   interactive:
-    "rounded-2xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md hover:border-primary-300/60 dark:hover:border-secondary-500/60 transition-all duration-200 cursor-pointer",
+    "rounded-2xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm hover:shadow-md hover:border-primary-300/60 dark:hover:border-secondary-500/60 transition-all duration-200 cursor-pointer",
   glass:
-    "rounded-2xl backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border border-zinc-200/60 dark:border-slate-700/40 shadow-lg",
+    "rounded-2xl backdrop-blur-md bg-[color-mix(in_srgb,var(--appkit-color-surface)_85%,transparent)] border border-[var(--appkit-color-border-subtle)] shadow-lg",
   // Card anatomy tokens (Phase 20)
   /** Product card image wrapper — portrait aspect ratio */
-  image: "relative aspect-[3/4] overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+  image: "relative aspect-[3/4] overflow-hidden bg-[var(--appkit-color-surface)]",
   /** Wide image wrapper — video/landscape ratio */
   imageWide:
-    "relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+    "relative aspect-video overflow-hidden bg-[var(--appkit-color-surface)]",
   /** Square image wrapper */
   imageSquare:
-    "relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+    "relative aspect-square overflow-hidden bg-[var(--appkit-color-surface)]",
   /** Banner aspect ratio — 4:3 on mobile, auto on md+ */
   aspectBanner: "aspect-[4/3] md:aspect-auto",
   /** Card body — flex-column, responsive padding */
@@ -640,11 +640,11 @@ const POSITION = {
 const STATES = {
   disabled: "opacity-50 cursor-not-allowed pointer-events-none",
   loading: "opacity-75 cursor-wait",
-  readonly: "bg-zinc-100 dark:bg-slate-800 cursor-default",
+  readonly: "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] cursor-default",
   error: "border-red-500 dark:border-red-500",
   success: "border-green-500 dark:border-green-500",
   focus:
-    "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-secondary-400 dark:focus:ring-offset-slate-950",
+    "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-secondary-400 dark:focus:ring-offset-[var(--appkit-color-bg)]",
 } as const;
 
 /**
@@ -675,18 +675,18 @@ const TRANSITIONS = {
  */
 const SKELETON = {
   // - Pulse (fade) variant ----------------------------------------------------------------
-  base: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60",
-  text: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-4",
-  heading: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-7",
-  image: "animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700/60",
-  card: "animate-pulse rounded-2xl bg-zinc-200 dark:bg-slate-700/60",
+  base: "animate-pulse rounded bg-zinc-200 bg-[var(--appkit-color-border-subtle)]",
+  text: "animate-pulse rounded bg-zinc-200 bg-[var(--appkit-color-border-subtle)] h-4",
+  heading: "animate-pulse rounded bg-zinc-200 bg-[var(--appkit-color-border-subtle)] h-7",
+  image: "animate-pulse rounded-xl bg-zinc-200 bg-[var(--appkit-color-border-subtle)]",
+  card: "animate-pulse rounded-2xl bg-zinc-200 bg-[var(--appkit-color-border-subtle)]",
   // - Shimmer (sweep) variant ----------------------------------------------------------
   shimmer:
-    "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+    "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 from-[var(--appkit-color-border-subtle)] via-[var(--appkit-color-bg)] to-[var(--appkit-color-border-subtle)]",
   shimmerText:
-    "animate-shimmer bg-[length:400%_100%] h-4 rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+    "animate-shimmer bg-[length:400%_100%] h-4 rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 from-[var(--appkit-color-border-subtle)] via-[var(--appkit-color-bg)] to-[var(--appkit-color-border-subtle)]",
   shimmerCard:
-    "animate-shimmer bg-[length:400%_100%] rounded-2xl bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+    "animate-shimmer bg-[length:400%_100%] rounded-2xl bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 from-[var(--appkit-color-border-subtle)] via-[var(--appkit-color-bg)] to-[var(--appkit-color-border-subtle)]",
 } as const;
 
 /**
@@ -716,9 +716,9 @@ const UTILITIES = {
   scrollbarHide:
     "scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]",
   scrollbarThin:
-    "scrollbar-thin [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-zinc-100 dark:[&::-webkit-scrollbar-track]:bg-slate-800/60 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-zinc-400 dark:[&::-webkit-scrollbar-thumb:hover]:bg-slate-500",
+    "scrollbar-thin [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[var(--appkit-color-surface)] dark:[&::-webkit-scrollbar-track]:bg-slate-800/60 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-zinc-400 dark:[&::-webkit-scrollbar-thumb:hover]:bg-slate-500",
   scrollbarThinX:
-    "[&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-zinc-100 dark:[&::-webkit-scrollbar-track]:bg-slate-800/60 [&::-webkit-scrollbar-thumb]:bg-zinc-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-zinc-400 dark:[&::-webkit-scrollbar-thumb:hover]:bg-slate-500",
+    "[&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-[var(--appkit-color-surface)] dark:[&::-webkit-scrollbar-track]:bg-slate-800/60 [&::-webkit-scrollbar-thumb]:bg-zinc-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-zinc-400 dark:[&::-webkit-scrollbar-thumb:hover]:bg-slate-500",
   safeAreaBottom: "pb-[env(safe-area-inset-bottom)]",
   safeAreaTop: "pt-[env(safe-area-inset-top)]",
   safeAreaInline:
@@ -737,28 +737,28 @@ const UTILITIES = {
  * Common component pattern compositions.
  */
 const PATTERNS = {
-  pageContainer: "min-h-screen bg-white dark:bg-slate-950",
+  pageContainer: "min-h-screen bg-[var(--appkit-color-bg)]",
   sectionContainer: "max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8 lg:py-12",
   formContainer:
-    "bg-white dark:bg-slate-900 rounded-2xl border border-zinc-200 dark:border-slate-700 shadow-sm p-6 lg:p-8 space-y-6",
+    "bg-[var(--appkit-color-surface)] rounded-2xl border border-[var(--appkit-color-border)] shadow-sm p-6 lg:p-8 space-y-6",
   listItem:
-    "bg-white dark:bg-slate-900 border border-zinc-200 dark:border-slate-700 rounded-xl p-4 hover:border-zinc-300 dark:hover:border-slate-600 transition-colors",
+    "bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] rounded-xl p-4 hover:border-[var(--appkit-color-border)] transition-colors",
   linkDefault:
     "text-primary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-secondary-300 transition-colors underline-offset-2 hover:underline",
   iconButton:
-    "p-2 rounded-lg transition-colors hover:bg-zinc-100 dark:hover:bg-slate-800 active:bg-zinc-200 dark:active:bg-slate-700 min-h-[44px] min-w-[44px] flex items-center justify-center",
+    "p-2 rounded-lg transition-colors hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] active:bg-zinc-200 dark:active:bg-slate-700 min-h-[44px] min-w-[44px] flex items-center justify-center",
   modalOverlay:
     "fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50",
   modalContent:
-    "bg-white dark:bg-slate-900 rounded-2xl border border-zinc-200 dark:border-slate-700 shadow-xl max-w-lg w-full mx-4 overflow-hidden",
-  divider: "border-t border-zinc-200 dark:border-slate-700",
+    "bg-[var(--appkit-color-surface)] rounded-2xl border border-[var(--appkit-color-border)] shadow-xl max-w-lg w-full mx-4 overflow-hidden",
+  divider: "border-t border-[var(--appkit-color-border)]",
   emptyState:
-    "flex flex-col items-center justify-center py-12 text-center text-zinc-500 dark:text-zinc-400",
+    "flex flex-col items-center justify-center py-12 text-center text-[var(--appkit-color-text-muted)]",
 } as const;
 
 /** Icon colour variants and sizes. */
 const ICON = {
-  muted: "text-zinc-400 dark:text-zinc-400",
+  muted: "text-[var(--appkit-color-text-faint)]",
   primary: "text-primary-600 dark:text-secondary-400",
   success: "text-emerald-500 dark:text-emerald-400",
   danger: "text-red-500 dark:text-red-400",
@@ -776,7 +776,7 @@ const TAB = {
   active:
     "border-b-2 border-primary-600 dark:border-secondary-400 text-primary-600 dark:text-secondary-400 font-semibold",
   inactive:
-    "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300",
+    "border-transparent text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]",
 } as const;
 
 /**
@@ -809,7 +809,7 @@ const TEXT = {
   label: "text-xs font-medium uppercase tracking-wide",
   price: "text-lg sm:text-xl font-bold tabular-nums",
   priceLg: "text-2xl sm:text-3xl font-bold tabular-nums",
-  muted: "text-zinc-500 dark:text-zinc-400",
+  muted: "text-[var(--appkit-color-text-muted)]",
   error: "text-red-600 dark:text-red-400",
   success: "text-green-600 dark:text-green-400",
 } as const;
@@ -817,7 +817,7 @@ const TEXT = {
 /** Star rating colours. */
 const RATING = {
   filled: "text-yellow-400",
-  empty: "text-zinc-300 dark:text-zinc-600",
+  empty: "text-[var(--appkit-color-text-faint)]",
 } as const;
 
 // THEME_CONSTANTS deleted 2026-06-17 in Phase 8 of the Three-Layer Style

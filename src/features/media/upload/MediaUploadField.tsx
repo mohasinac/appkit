@@ -719,7 +719,7 @@ export function MediaUploadField({
               type="button"
               onClick={() => mobileCaptureRef.current?.click()}
               variant="ghost"
-              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 text-sm text-zinc-500 dark:text-zinc-400"
+              className="w-full py-3 border-2 border-dashed border-[var(--appkit-color-border)] text-sm text-[var(--appkit-color-text-muted)]"
             >
               {t("switchToCamera")}
             </Button>
@@ -730,7 +730,7 @@ export function MediaUploadField({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               variant="ghost"
-              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 text-sm text-zinc-500 dark:text-zinc-400"
+              className="w-full py-3 border-2 border-dashed border-[var(--appkit-color-border)] text-sm text-[var(--appkit-color-text-muted)]"
             >
               {value ? tUpload("replaceFile") : tUpload("chooseFile")}
             </Button>

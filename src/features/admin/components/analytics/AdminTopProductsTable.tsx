@@ -27,7 +27,7 @@ export function AdminTopProductsTable({
 }: AdminTopProductsTableProps) {
   return (
     <Div
-      className={`border border-neutral-200 dark:border-neutral-800 sm:p-[1.5rem] ${className}`} rounded="xl" padding="md" surface="default"
+      className={`border border-[var(--appkit-color-border-subtle)] sm:p-[1.5rem] ${className}`} rounded="xl" padding="md" surface="default"
     >
       {labels.title && (
         <Heading level={3} className="mb-4" size="base" weight="semibold">
@@ -38,11 +38,11 @@ export function AdminTopProductsTable({
         {products.map((product) => (
           <Row
             key={product.productId}
-            className="border-b last:border-b-0 border-neutral-100 dark:border-neutral-800" padding="y-sm" align="center" justify="between"
+            className="border-b last:border-b-0 border-[var(--appkit-color-border-subtle)]" padding="y-sm" align="center" justify="between"
           >
             <Div className="flex-1 min-w-0">
               <Text className="truncate" weight="medium">{product.title}</Text>
-              <Text className="text-neutral-500 dark:text-neutral-400" size="sm">
+              <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
                 {product.orders} {labels.orders ?? "orders"}
               </Text>
             </Div>

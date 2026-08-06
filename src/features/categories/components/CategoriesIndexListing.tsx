@@ -54,7 +54,7 @@ function renderCategoryGrid(props: {
   }
   if (view === "list") {
     return (
-      <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
+      <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
         {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
       </Stack>
     );
@@ -232,7 +232,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
                 "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
                 activeTab === tab.key
                   ? "border-primary text-primary dark:text-primary-400 dark:border-primary-400"
-                  : "border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200",
+                  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]",
               ].join(" ")}
             >
               {tab.label}

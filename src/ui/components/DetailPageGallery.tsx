@@ -62,7 +62,7 @@ export function DetailPageGallery({
       <Div
         className={[
           "appkit-detail-gallery",
-          "w-full overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-800",
+          "w-full overflow-hidden rounded-2xl bg-[var(--appkit-color-surface)]",
           ASPECT_CLASS[aspect],
           className,
         ]
@@ -88,7 +88,7 @@ export function DetailPageGallery({
     >
       <Div
         className={[
-          "w-full overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-800",
+          "w-full overflow-hidden rounded-2xl bg-[var(--appkit-color-surface)]",
           ASPECT_CLASS[aspect],
         ].join(" ")}
       >
@@ -127,7 +127,7 @@ export function DetailPageGallery({
       ) : null}
 
       {active.caption ? (
-        <Div className="text-xs text-zinc-500 dark:text-zinc-400">{active.caption}</Div>
+        <Div className="text-xs text-[var(--appkit-color-text-muted)]">{active.caption}</Div>
       ) : null}
     </Div>
   );

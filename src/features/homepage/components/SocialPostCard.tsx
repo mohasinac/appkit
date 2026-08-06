@@ -137,7 +137,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       href={post.permalink}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block aspect-square overflow-hidden rounded-xl bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)] dark:bg-zinc-800"
+      className="group relative block aspect-square overflow-hidden rounded-xl bg-[var(--appkit-color-surface)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface-elevated)]"
       aria-label={post.caption ?? `View on ${meta.label}`}
     >
       {/* Thumbnail */}

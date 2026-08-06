@@ -121,7 +121,7 @@ export function AddressesIndexListing({
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-xl border border-zinc-200 dark:border-slate-700 animate-pulse p-4 space-y-2"
+                className="rounded-xl border border-[var(--appkit-color-border)] animate-pulse p-4 space-y-2"
               >
                 <Div className="h-4 w-1/3" surface="subtle" rounded="default" />
                 <Div className="h-3 w-3/4" surface="subtle" rounded="default" />

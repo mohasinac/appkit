@@ -116,7 +116,7 @@ export function MarketplaceOrderCard({
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all duration-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
+      className={`group relative overflow-hidden rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] transition-all duration-200 hover:shadow-md border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)] ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -140,7 +140,7 @@ export function MarketplaceOrderCard({
           className={`flex items-start gap-3 ${selectable ? "pl-8" : ""} ${isListVariant ? "min-w-0 flex-1" : ""}`}
          data-section="marketplaceordercard-div-413">
           <Row className="h-10 w-10 flex-shrink-0" surface="subtle" align="center" justify="center" rounded="lg">
-            <Package className="h-5 w-5 text-zinc-500 dark:text-slate-400" />
+            <Package className="h-5 w-5 text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]" />
           </Row>
           <Stack className="min-w-0" gap="xs">
             <TextLink href={detailHref} className="leading-tight">

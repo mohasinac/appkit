@@ -6,8 +6,8 @@ const __O = {
 } as const;
 
 const SVG_PATH_SEARCH = "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z";
-const CLS_HOVER_ROW = "hover:bg-zinc-100 dark:hover:bg-slate-800";
-const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400";
+const CLS_HOVER_ROW = "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]";
+const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-[var(--appkit-color-text-muted)]";
 const CLS_TRUNCATE = "font-medium truncate";
 import type { LucideIcon } from "lucide-react";
 import { Button, Div, Input, Li, Row, Span, Stack, Text, Ul } from "../../../ui";
@@ -90,7 +90,7 @@ const DEFAULT_TYPE_ICONS: Record<NavSuggestionRecord["type"], string> = {
 };
 
 const DEFAULT_TYPE_BADGES: Record<NavSuggestionRecord["type"], string> = {
-  page: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300",
+  page: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
   category: "bg-info-surface text-info dark:bg-info-surface dark:text-info",
   blog: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-900/40 dark:text-fuchsia-300",
   event: "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
@@ -122,7 +122,7 @@ function SuggestionItem({
         variant="ghost"
         onClick={() => onSelect(suggestion)}
         onMouseEnter={() => onHover(itemIndex)}
-        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
+        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-[var(--appkit-color-border)] last:border-b-0 ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
       >
         <Span size="sm">{typeIcons[suggestion.type]}</Span>
         <Div className="flex-1 min-w-0">
@@ -330,7 +330,7 @@ export function Search({
               router.push(link.href);
             }}
             onMouseEnter={() => setActiveIndex(index)}
-            className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-[var(--appkit-color-border)] ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
           >
             <Icon className={CLS_ICON_ROW} />
             <Text size="sm" className={CLS_TRUNCATE}>
@@ -415,7 +415,7 @@ export function Search({
               );
             }}
             placeholder={placeholder ?? labels.placeholder}
-            className="w-full rounded-lg border border-zinc-300 bg-white pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
+            className="w-full rounded-lg border border-zinc-300 bg-[var(--appkit-color-surface)] pl-9 text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:text-white dark:placeholder:text-slate-500"
           />
           {query && (
             <Button rounded="full" textColor="faint"
@@ -447,7 +447,7 @@ export function Search({
             value={selectedType}
             onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
             aria-label={labels.resourceTypeLabel ?? "Search in"}
-            className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-zinc-300 cursor-pointer"
+            className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
           >
             {resourceTypes.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -483,7 +483,7 @@ export function Search({
 
         {isInlineOpen && (filteredQuickLinks.length > 0 || query) && (
           <div
-            className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900 [z-index:var(--appkit-z-dropdown)]"
+            className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-[var(--appkit-color-surface)] shadow-lg border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] [z-index:var(--appkit-z-dropdown)]"
             onMouseDown={(event) => event.preventDefault()}
           >
             {filteredQuickLinks.length > 0 && (
@@ -512,7 +512,7 @@ export function Search({
                     variant="ghost"
                     onClick={() => handleSuggestionClick(suggestion)}
                     onMouseEnter={() => setActiveIndex(itemIndex)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-[var(--appkit-color-border)] ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
                   >
                     <Span size="sm">
                       {typeIcons[suggestion.type]}
@@ -544,7 +544,7 @@ export function Search({
                   setIsInlineOpen(false);
                 }}
                 onMouseEnter={() => setActiveIndex(inlineItems.length - 1)}
-                className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === inlineItems.length - 1 ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
+                className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === inlineItems.length - 1 ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
               >
                 <svg
                   className={CLS_ICON_ROW}
@@ -660,7 +660,7 @@ export function Search({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               onKeyDown={handleOverlayKeyDown}
-              className="w-full rounded-lg border border-zinc-300 bg-white text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
+              className="w-full rounded-lg border border-zinc-300 bg-[var(--appkit-color-surface)] text-zinc-900 placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] dark:text-white dark:placeholder:text-slate-500"
             />
           </Div>
 
@@ -669,7 +669,7 @@ export function Search({
               value={selectedType}
               onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
               aria-label={labels.resourceTypeLabel ?? "Search in"}
-              className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-zinc-300 cursor-pointer"
+              className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
             >
               {resourceTypes.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -703,7 +703,7 @@ export function Search({
           <Button rounded="xl" 
             variant="ghost"
             onClick={() => onClose?.()}
-            className="p-2.5 md:p-3 transition-colors text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-slate-800 dark:hover:text-zinc-200 flex-shrink-0"
+            className="p-2.5 md:p-3 transition-colors text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:text-zinc-700 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] flex-shrink-0"
             aria-label={labels.closeAriaLabel}
           >
             <svg
@@ -752,7 +752,7 @@ export function Search({
                             router.push(link.href);
                           }}
                           onMouseEnter={() => setActiveIndex(itemIndex)}
-                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
+                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-[var(--appkit-color-border)] last:border-b-0 ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
                         >
                           <Icon className={CLS_ICON_ROW} />
                           <Text size="sm" weight="medium">
@@ -796,7 +796,7 @@ export function Search({
                   variant="ghost"
                   onClick={handleOverlaySearch}
                   onMouseEnter={() => setActiveIndex(overlayItems.length - 1)}
-                  className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === overlayItems.length - 1 ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}${suggestions.length > 0 ? " border-t border-zinc-200 dark:border-slate-700" : ""}`}
+                  className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === overlayItems.length - 1 ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}${suggestions.length > 0 ? " border-t border-[var(--appkit-color-border)]" : ""}`}
                 >
                   <svg
                     className={CLS_ICON_ROW}

@@ -322,7 +322,7 @@ export function GroupSettingsPanel({
                 {loading && !children ? (
                   <Text size="xs" color="faint">Loading…{/* audit-spinner-defaults-ok — single-line inline panel section, skeleton would over-claim space */}</Text>
                 ) : (
-                  <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                  <Div className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]">
                     {/* Parent row */}
                     <Row align="center" gap="sm" padding="y-xs">
                       <Span padding="pill-2xs" weight="semibold" className="bg-[var(--appkit-color-primary)]/10 text-[var(--appkit-color-primary)] text-[10px]" rounded="default">Parent</Span>
@@ -332,7 +332,7 @@ export function GroupSettingsPanel({
                       <Row key={child.id} align="center" gap="sm" padding="y-xs">
                         {child.images?.[0] ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={child.images[0]} alt={child.title} className="w-8 h-8 rounded-full object-cover border border-zinc-200 dark:border-zinc-700" />
+                          <img src={child.images[0]} alt={child.title} className="w-8 h-8 rounded-full object-cover border border-[var(--appkit-color-border)]" />
                         ) : (
                           <Div className="w-8 h-8" surface="subtle" rounded="full" />
                         )}

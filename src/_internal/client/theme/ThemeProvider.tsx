@@ -1,5 +1,6 @@
 "use client";
 
+import { normalizeError } from "../../../errors/normalize";
 import {
   createContext,
   useCallback,
@@ -59,8 +60,8 @@ function readModePreference(): ModePreference {
   try {
     const stored = window.localStorage.getItem(MODE_STORAGE_KEY);
     if (stored === "light" || stored === "dark" || stored === "auto") return stored;
-  } catch {
-    /* localStorage may be unavailable (privacy mode, embedded iframe). */
+  } catch (_err) {
+    void normalizeError(_err); /* localStorage unavailable in privacy/iframe context */
   }
   return "auto";
 }
@@ -80,6 +81,8 @@ function pickTheme(registry: ThemeRegistry, mode: ThemeMode): ThemeRecord {
   return mode === "dark" ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
 }
 
+const THEME_ID_STORAGE_KEY = "appkit:theme-id";
+
 /** Apply a theme record to `<html>` by setting `data-theme` and inline CSS variables. */
 function applyTheme(theme: ThemeRecord): void {
   if (typeof document === "undefined") return;
@@ -88,6 +91,10 @@ function applyTheme(theme: ThemeRecord): void {
   // Mode class kept in sync for any legacy `.dark` selectors that still exist.
   if (theme.mode === "dark") root.classList.add("dark");
   else root.classList.remove("dark");
+
+  // Persist active theme ID so the anti-FOUC script can restore it on return visits,
+  // preventing a flash to the built-in cobalt/hot-pink colors on page load.
+  try { window.localStorage.setItem(THEME_ID_STORAGE_KEY, theme.id); } catch (_err) { void normalizeError(_err); /* localStorage unavailable in this context */ }
 
   for (const [name, value] of Object.entries(theme.tokens)) {
     root.style.setProperty(`--${name}`, value);
@@ -149,8 +156,8 @@ export function ThemeProvider({ registry, children }: ThemeProviderProps) {
     setPreferenceState(next);
     try {
       window.localStorage.setItem(MODE_STORAGE_KEY, next);
-    } catch {
-      /* ignore; preference applies for the session at minimum. */
+    } catch (_err) {
+      void normalizeError(_err); /* localStorage unavailable; preference applies for this session */
     }
   }, []);
 

@@ -28,7 +28,7 @@ const __O = {
 } as const;
 
 const REL_NOOPENER = "noopener noreferrer";
-const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 hover:text-error dark:hover:bg-zinc-800";
+const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-[var(--appkit-color-surface)] hover:text-error hover:bg-[var(--appkit-color-surface-elevated)]";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
@@ -119,15 +119,15 @@ export interface CompareOverlayProps {
 }
 
 const OVERLAY_CLASS =
-  "fixed inset-0 flex flex-col bg-white dark:bg-zinc-950 overflow-hidden z-[var(--appkit-z-modal,60)]";
+  "fixed inset-0 flex flex-col bg-[var(--appkit-color-bg)] overflow-hidden z-[var(--appkit-z-modal,60)]";
 const HEADER_CLASS =
-  "flex items-center justify-between gap-3 border-b border-zinc-200 dark:border-zinc-800 px-4 py-3";
+  "flex items-center justify-between gap-3 border-b border-[var(--appkit-color-border-subtle)] px-4 py-3";
 const FIELD_LABEL_CLASS =
-  "text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400";
+  "text-xs font-medium uppercase tracking-wider text-[var(--appkit-color-text-muted)]";
 const CHIP_CLASS =
-  "inline-flex items-center rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-2 py-0.5 text-xs";
+  "inline-flex items-center rounded-full bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] px-2 py-0.5 text-xs";
 const COLUMN_CARD_CLASS =
-  "flex flex-col gap-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3";
+  "flex flex-col gap-3 rounded-xl border border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)] p-3";
 
 function detailHref(item: CompareProductLike, type: CompareOverlayProps["productType"]): string {
   const id = item.slug ?? item.id;
@@ -177,7 +177,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
           href={href}
           target="_blank"
           rel={REL_NOOPENER}
-          className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 hover:underline line-clamp-2"
+          className="text-sm font-semibold text-[var(--appkit-color-text)] hover:underline line-clamp-2"
         >
           {item.title ?? item.id}
         </Link>
@@ -359,7 +359,7 @@ export function CompareOverlay({
           type="button"
           onClick={onClose}
           aria-label={labels.close}
-          className="rounded-full p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-full p-2 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]"
         >
           <X className="h-5 w-5" />
         </button>
@@ -414,7 +414,7 @@ export function CompareOverlay({
                       className={`h-2 w-2 rounded-full transition-colors ${
  idx === activeIndex
  ? "bg-primary"
- : "bg-zinc-300 dark:bg-zinc-700"
+ : "bg-[var(--appkit-color-border)]"
  }`}
                     />
                   ))}

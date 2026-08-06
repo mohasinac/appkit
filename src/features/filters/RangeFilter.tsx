@@ -4,7 +4,7 @@ import { Button, Div, Input, Row, Slider, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
 const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
-const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error rounded-full transition-colors";
+const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error rounded-full transition-colors";
 
 interface DualSliderProps {
   minValue: string;
@@ -143,14 +143,14 @@ export function RangeFilter({
   const hasValue = !!(minValue || maxValue);
 
   const inputClass =
-    "w-full rounded-md border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-secondary-400/20";
+    "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-2.5 py-1.5 text-xs text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 ";
 
   return (
     <Div
       role="group"
       aria-labelledby={`rf-${title}`}
       className={cn(
-        "p-4 border-b border-zinc-200 dark:border-slate-700 last:border-b-0",
+        "p-4 border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
     >
@@ -174,7 +174,7 @@ export function RangeFilter({
           </Span>
           <svg
             className={cn(
-              "w-4 h-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200",
+              "w-4 h-4 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               isCollapsed ? "" : "rotate-180",
             )}
             fill="none"

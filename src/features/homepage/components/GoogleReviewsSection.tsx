@@ -10,7 +10,7 @@ const __P = {
 } as const;
 
 const CLS_STAR_ON = "text-star";
-const CLS_STAR_OFF = "text-zinc-300 dark:text-zinc-600";
+const CLS_STAR_OFF = "text-[var(--appkit-color-text-faint)]";
 const CLS_GMAPS_LINK = "shrink-0 text-sm font-medium text-info hover:underline";
 
 // --- Star Rating -------------------------------------------------------------

@@ -163,7 +163,7 @@ export function ImageCropModal({
           <Div className="absolute inset-0 pointer-events-none">
             <Div layout="grid" className="absolute w-full h-full grid-cols-3 grid-rows-3">
               {Array.from({ length: 9 }).map((_, i) => (
-                <Div key={i} className="border border-white/20 dark:border-slate-600/30" />
+                <Div key={i} className="border border-white/20 border-[var(--appkit-color-border)]/30" />
               ))}
             </Div>
             {/* Centre crosshair */}
@@ -223,7 +223,7 @@ export function ImageCropModal({
                 variant="ghost"
                 size="sm"
                 onClick={() => setZoom(preset)}
-                className="px-3 py-1 text-xs bg-zinc-100 dark:bg-slate-800"
+                className="px-3 py-1 text-xs bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]"
               >
                 {preset * 100}%
               </Button>
@@ -239,7 +239,7 @@ export function ImageCropModal({
         )}
 
         {/* Position info + reset */}
-        <Row textSize="xs" justify="between" className="text-zinc-500 dark:text-slate-400">
+        <Row textSize="xs" justify="between" className="text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]">
           <Span>
             {t("cropPosition")}: {Math.round(position.x)}%, {Math.round(position.y)}%
           </Span>

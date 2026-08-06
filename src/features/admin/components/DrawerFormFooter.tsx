@@ -61,7 +61,7 @@ export function DrawerFormFooter({
   className = "",
   labels,
   variant = "footer",
-  themeConfig = { borderClass: "border-t border-zinc-200 dark:border-zinc-700" },
+  themeConfig = { borderClass: "border-t border-[var(--appkit-color-border)]" },
 }: DrawerFormFooterProps) {
   const l = { ...DEFAULT_LABELS, ...labels };
 

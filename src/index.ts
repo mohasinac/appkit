@@ -1915,6 +1915,9 @@ export { userRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // wishlistRepository - Shared export for wishlist repository.
 export { wishlistRepository } from "./repositories/index";
+// [DB]-Database layer — mediaAssetsRepository for SEO-friendly /media/{shortId} URL mapping.
+export { MediaAssetsRepository, mediaAssetsRepository } from "./repositories/index";
+export type { MediaAssetDocument, MediaAssetCreateInput } from "./repositories/index";
 export { GroupedListingsRepository, groupedListingsRepository } from "./repositories/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NewsletterListModel - Type contract for newsletter list model.
@@ -9747,6 +9750,14 @@ export type {
   SchemasShape,
   WebhookSchemaBucket,
 } from "./schemas/index";
+
+// ── Fire-and-forget safety wrapper ─────────────────────────────────────────
+// Replaces .catch(console.error) for non-critical background operations.
+export { safeFireAndForget } from "./utils/safe-fire-forget";
+
+// ── Exponential-backoff retry ───────────────────────────────────────────────
+// Use for GCS / Firestore transient errors where retrying is safe.
+export { withRetry } from "./http/retry";
 
 // ── W3 catch-clause normalizer ──────────────────────────────────────────────
 // Every catch (e: unknown) funnels through normalizeError(e) which returns

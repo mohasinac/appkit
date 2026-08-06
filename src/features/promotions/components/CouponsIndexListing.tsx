@@ -137,7 +137,7 @@ export function CouponsIndexListing({
             className={`flex shrink-0 items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
  hasActiveFilters
  ? "border-primary bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
- : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
  }`}
           >
             <SlidersHorizontal className="h-4 w-4" />
@@ -152,13 +152,13 @@ export function CouponsIndexListing({
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search by name or description…"
-              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
+              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 outline-none"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={() => { setSearchInput(""); table.set(TABLE_KEYS.QUERY, ""); }}
-                className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                className="p-2 text-zinc-400 hover:text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"
                 aria-label="Clear search"
               >
                 <X className="h-3.5 w-3.5" />
@@ -215,7 +215,7 @@ export function CouponsIndexListing({
             <button
               type="button"
               onClick={clearFilters}
-              className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 underline"
+              className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] underline"
             >
               Clear all
             </button>
@@ -306,7 +306,7 @@ export function CouponsIndexListing({
               <button
                 type="button"
                 onClick={() => { pendingTable.set(TABLE_KEYS.TYPE, ""); }}
-                className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 underline"
+                className="text-xs text-zinc-400 hover:text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] underline"
               >
                 Clear type
               </button>
@@ -326,7 +326,7 @@ export function CouponsIndexListing({
                 type="date"
                 value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
                 onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_FROM, e.target.value); }}
-                className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] outline-none focus:ring-2 focus:ring-primary"
               />
             </>
             <>
@@ -335,7 +335,7 @@ export function CouponsIndexListing({
                 type="date"
                 value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}
                 onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_TO, e.target.value); }}
-                className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] outline-none focus:ring-2 focus:ring-primary"
               />
             </>
           </Stack>

@@ -133,19 +133,19 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           <Nav layout="flex" gap="2xs" textSize="sm" className="mb-4" aria-label="Breadcrumb">
             <Link
               href={String(ROUTES.HOME)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 transition-colors"}
             >
               Home
             </Link>
             <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
             <Link
               href={String((ROUTES.PUBLIC as any).BRANDS ?? "/brands")}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 transition-colors"}
             >
               Brands
             </Link>
             <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
-            <Span weight="medium" className={hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-100"}>
+            <Span weight="medium" className={hasCover ? "text-white" : "text-[var(--appkit-color-text)]"}>
               {brand?.name ?? slug}
             </Span>
           </Nav>

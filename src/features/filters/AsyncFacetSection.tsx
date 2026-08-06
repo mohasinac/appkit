@@ -6,7 +6,7 @@ import type { FacetOption } from "./FilterFacetSection";
 import type { AsyncPage } from "../../ui/components/PaginatedSelect";
 
 const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
-const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error hover:bg-zinc-100 dark:hover:bg-slate-700 transition-colors rounded-full";
+const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors rounded-full";
 
 export interface AsyncFacetSectionProps {
   title: string;
@@ -93,7 +93,7 @@ export function AsyncFacetSection({
   return (
     <Div
       className={cn(
-        "p-4 border-b border-zinc-200 dark:border-slate-700 last:border-b-0",
+        "p-4 border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
     >
@@ -104,7 +104,7 @@ export function AsyncFacetSection({
           onClick={() => setCollapsed((c) => !c)}
           variant="ghost"
           size="sm"
-          className="flex-1 justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
+          className="flex-1 justify-between text-sm font-semibold text-[var(--appkit-color-text)] py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!collapsed}
         >
           <Row as={Span} gap="xs">
@@ -117,7 +117,7 @@ export function AsyncFacetSection({
           </Row>
           <svg
             className={cn(
-              "w-4 h-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200",
+              "w-4 h-4 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               collapsed ? "" : "rotate-180",
             )}
             fill="none"
@@ -173,7 +173,7 @@ export function AsyncFacetSection({
           placeholder="Search…"
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
-          className="w-full rounded-md border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+          className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-2.5 py-1.5 text-xs text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
         />
       </Div>
 
@@ -188,7 +188,7 @@ export function AsyncFacetSection({
                   checked={isSelected}
                   onChange={() => toggle(opt.value)}
                   aria-label={opt.label}
-                  className="flex-shrink-0 w-4 h-4 rounded border-zinc-300 dark:border-slate-600 cursor-pointer text-primary-600 dark:text-secondary-500"
+                  className="flex-shrink-0 w-4 h-4 rounded border-[var(--appkit-color-border)] cursor-pointer text-primary-600 dark:text-secondary-500"
                 />
                 <Span size="sm" className="flex-1 group-hover:text-[var(--appkit-color-text)] transition-colors truncate" color="muted">
                   {opt.label}

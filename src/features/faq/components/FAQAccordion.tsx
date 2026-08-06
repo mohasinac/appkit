@@ -22,7 +22,7 @@ function FAQAccordionItem({
         variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="w-full justify-[space-between] gap-[1rem] py-[1rem] text-left text-[0.875rem] font-[500] text-neutral-900 dark:text-[var(--appkit-color-text)] transition hover:text-primary"
+        className="w-full justify-[space-between] gap-[1rem] py-[1rem] text-left text-[0.875rem] font-[500] text-[var(--appkit-color-text)] dark:text-[var(--appkit-color-text)] transition hover:text-primary"
       >
         <Span>{faq.question}</Span>
         <Span
@@ -46,13 +46,13 @@ function FAQAccordionItem({
         </Span>
       </Button>
       {isOpen && (
-        <Div textSize="sm" className="text-neutral-600 dark:text-neutral-400" padding="b-md">
+        <Div textSize="sm" className="text-[var(--appkit-color-text-muted)]" padding="b-md">
           {faq.tags && faq.tags.length > 0 && (
             <Row wrap gap="sm" className="mb-3">
               {faq.tags.map((tag) => (
                 <Span
                   key={tag}
-                  className="bg-neutral-100 dark:bg-neutral-800 py-[0.25rem] text-neutral-600 dark:text-neutral-400" rounded="md" padding="x-xs" size="xs"
+                  className="bg-[var(--appkit-color-surface)] py-[0.25rem] text-[var(--appkit-color-text-muted)]" rounded="md" padding="x-xs" size="xs"
                 >
                   {tag}
                 </Span>
@@ -92,7 +92,7 @@ export function FAQAccordion({
   if (faqs.length === 0 && labels?.noResults) {
     return (
       <Div surface="card" padding="xl" className="text-center">
-        <Text className="text-neutral-600 dark:text-neutral-400">{labels.noResults}</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">{labels.noResults}</Text>
       </Div>
     );
   }
@@ -100,7 +100,7 @@ export function FAQAccordion({
   return (
     <Div
       surface="card"
-      className={`divide-y divide-neutral-100 dark:divide-slate-700 ${className}`} padding="x-md"
+      className={`divide-y divide-neutral-100 divide-[var(--appkit-color-border)] ${className}`} padding="x-md"
     >
       {faqs.map((faq) => (
         <FAQAccordionItem
@@ -132,7 +132,7 @@ export function FAQCategoryTabs({
     <Row wrap gap="sm" className="scrollbar-none">
       <Button
         onClick={() => onSelect(null)}
-        className={`rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+        className={`rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] transition ${!active ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
       >
         {labels.all ?? "All"}
       </Button>
@@ -140,7 +140,7 @@ export function FAQCategoryTabs({
         <Button
           key={cat}
           onClick={() => onSelect(cat)}
-          className={`whitespace-nowrap rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
+          className={`whitespace-nowrap rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
         >
           {labels[cat] ?? cat.replace(/_/g, " ")}
         </Button>

@@ -213,7 +213,7 @@ export function ProtectedRoute({
         return <>{unauthorizedComponent}</>;
       }
       return (
-        <Row className="min-h-[50vh] bg-neutral-50 dark:bg-neutral-900" align="center" justify="center">
+        <Row className="min-h-[50vh] bg-[var(--appkit-color-surface)]" align="center" justify="center">
           <Div className="text-center">
             <Heading level={1} className="mb-2" size="2xl" weight="bold">
               {uiLabels.accessDenied}

@@ -46,7 +46,7 @@ function CategoryTreeNode({
           if (hasChildren) setExpanded((p) => !p);
           onSelect?.(item);
         }}
-        className={`cursor-pointer py-1.5 transition select-none ${depthPl} ${isActive ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`} align="center" gap="xs" padding="x-xs" rounded="md"
+        className={`cursor-pointer py-1.5 transition select-none ${depthPl} ${isActive ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]"}`} align="center" gap="xs" padding="x-xs" rounded="md"
       >
         {hasChildren && (
           <Span
@@ -129,7 +129,7 @@ export function CategoryTree({
 
   if (roots.length === 0) {
     return (
-      <Text paddingY="md" className="text-neutral-500 dark:text-neutral-400" size="sm" align="center">
+      <Text paddingY="md" className="text-[var(--appkit-color-text-muted)]" size="sm" align="center">
         No categories
       </Text>
     );

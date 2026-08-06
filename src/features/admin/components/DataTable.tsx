@@ -172,7 +172,7 @@ export function DataTable<T extends { id: string }>({
                       aria-label={allRowsSelected ? "Deselect all" : "Select all"}
                       checked={allRowsSelected}
                       onChange={() => onToggleSelectAll(!allRowsSelected)}
-                      className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 accent-zinc-900 dark:accent-zinc-100"
+                      className="h-4 w-4 rounded border-[var(--appkit-color-border)] accent-zinc-900 dark:accent-zinc-100"
                     />
                   )}
                 </Th>
@@ -184,7 +184,7 @@ export function DataTable<T extends { id: string }>({
                   onClick={
                     col.sortable && onSort ? () => onSort(col.key) : undefined
                   }
-                  className={`text-left text-neutral-900 dark:text-zinc-100 ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} padding="md" weight="semibold"
+                  className={`text-left text-[var(--appkit-color-text)] text-[var(--appkit-color-text)] ${col.sortable && onSort ? "cursor-pointer select-none hover:text-primary" : ""} ${col.className ?? ""}`} padding="md" weight="semibold"
                 >
                   {col.header}
                   {col.sortable && sortKey === col.key && (
@@ -244,7 +244,7 @@ export function DataTable<T extends { id: string }>({
               onClick={() => onPageChange(p)}
               variant={p === currentPage ? "primary" : "ghost"}
               size="sm"
-              className={`h-8 w-8 rounded text-xs font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "text-neutral-600 dark:text-zinc-300 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-slate-800"}`}
+              className={`h-8 w-8 rounded text-xs font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]"}`}
             >
               {p}
             </Button>

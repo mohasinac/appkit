@@ -111,7 +111,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
           ({permissions.size} selected)
         </Span>
       </Span>
-      <Div className={`divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] ${__O.yAuto}`} rounded="xl" border="default">
+      <Div className={`divide-y divide-zinc-100 divide-[var(--appkit-color-border)] max-h-[42vh] ${__O.yAuto}`} rounded="xl" border="default">
         {PERMISSION_DOMAINS.map((domain) => {
           const domainPerms = getPermissionsForDomain(domain.prefix);
           if (domainPerms.length === 0) return null;
@@ -128,13 +128,13 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
                 {domainPerms.map((perm) => (
                   <label
                     key={perm}
-                    className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 dark:text-zinc-300"
+                    className="flex items-center gap-2 cursor-pointer text-xs text-[var(--appkit-color-text-muted)]"
                   >
                     <input
                       type="checkbox"
                       checked={permissions.has(perm)}
                       onChange={() => togglePerm(perm)}
-                      className="h-3.5 w-3.5 rounded border-zinc-300 dark:border-slate-600 accent-primary"
+                      className="h-3.5 w-3.5 rounded border-[var(--appkit-color-border)] accent-primary"
                     />
                     {formatPermLabel(perm)}
                   </label>
@@ -276,7 +276,7 @@ export function AdminEmployeeEditorView({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="employee@example.com"
-                className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
+                className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
               />
             </Stack>
           )}

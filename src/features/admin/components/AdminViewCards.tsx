@@ -26,7 +26,7 @@ const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; co
   { key: "featured", label: "Featured", color: "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning" },
   { key: "isPromoted", label: "Promoted", color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
   { key: "isOnSale", label: "Sale", color: "bg-success-surface text-success" },
-  { key: "isSold", label: "Sold", color: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400" },
+  { key: "isSold", label: "Sold", color: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]" },
 ];
 
 function StatusBadge({ status }: { status: string }) {
@@ -88,7 +88,7 @@ function AdminCardItem({
       <Row
         gap="sm"
         className={[
-          "px-4 py-3 cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-slate-800/50",
+          "px-4 py-3 cursor-pointer transition-colors hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/50",
           selected ? "bg-primary-50/40 dark:bg-primary-900/10" : "",
         ].filter(Boolean).join(" ")}
         onClick={handleClick}
@@ -129,7 +129,7 @@ function AdminCardItem({
         "border overflow-hidden cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5",
         selected
           ? "border-primary ring-1 ring-primary/20 bg-primary-50/30 dark:bg-primary-900/10"
-          : "border-zinc-100 dark:border-slate-700 bg-white dark:bg-slate-900",
+          : "border-zinc-100 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]",
       ].filter(Boolean).join(" ")}
       onClick={handleClick}
       role={onRowClick ? "button" : undefined}
@@ -184,7 +184,7 @@ export function AdminViewCards({
     const count = view === "grid" ? 12 : 8;
     if (view === "list") {
       return (
-        <Div rounded="xl" border="subtle" className={`${__O.hidden} divide-y divide-zinc-100 dark:divide-slate-700`}>
+        <Div rounded="xl" border="subtle" className={`${__O.hidden} divide-y divide-zinc-100 divide-[var(--appkit-color-border)]`}>
           {Array.from({ length: count }).map((_, i) => <SkeletonCard key={i} view="list" />)}
         </Div>
       );
@@ -204,7 +204,7 @@ export function AdminViewCards({
 
   if (view === "list") {
     return (
-      <Div rounded="xl" border="subtle" className={`${__O.hidden} divide-y divide-zinc-100 dark:divide-slate-700`}>
+      <Div rounded="xl" border="subtle" className={`${__O.hidden} divide-y divide-zinc-100 divide-[var(--appkit-color-border)]`}>
         {rows.map((row) => (
           <AdminCardItem
             key={row.id}

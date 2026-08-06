@@ -47,7 +47,7 @@ interface UserSupportResponse {
 // --- Constants ---------------------------------------------------------------
 
 const CLS_INPUT =
-  "w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
+  "w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
 
 const CATEGORY_OPTIONS = [
   { label: "Order Issue", value: "order_issue" },
@@ -67,7 +67,7 @@ const CATEGORY_OPTIONS = [
   { label: "General", value: "general" },
 ];
 
-const CLS_MSG_USER = "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700";
+const CLS_MSG_USER = "bg-zinc-50 border border-zinc-200 bg-[var(--appkit-color-surface)]/40 border-[var(--appkit-color-border)]";
 const CLS_MSG_STAFF = "bg-info-surface border border-info dark:bg-info-surface dark:border-info";
 
 const STATUS_BADGE: Record<string, string> = {
@@ -75,7 +75,7 @@ const STATUS_BADGE: Record<string, string> = {
   in_progress: "bg-warning-surface text-warning",
   waiting_on_user: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
   resolved: "bg-success-surface text-success",
-  closed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+  closed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 const ROLE_LABEL: Record<string, string> = {

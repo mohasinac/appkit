@@ -38,7 +38,7 @@ import { Div, Row, Span, Text, Button } from "../../ui";
 
 // Token values inlined from @mohasinac/appkit/tokens
 const BOTTOM_NAV_BG =
-  "bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-zinc-200/80 dark:border-slate-800/80";
+  "bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)]";
 const Z_BOTTOM_ACTIONS = "z-40";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
@@ -64,7 +64,7 @@ function BulkPickerPanel({
       className={[
         "absolute bottom-full left-0 right-0 overflow-hidden",
         BOTTOM_NAV_BG,
-        "border-t border-zinc-200/80 dark:border-slate-700/80",
+        "border-t border-zinc-200/80 border-[var(--appkit-color-border)]/80",
         "shadow-[0_-8px_24px_rgba(0,0,0,0.10)] dark:shadow-[0_-8px_24px_rgba(0,0,0,0.35)]",
         "transition-[max-height,opacity] duration-200 ease-out",
         pickerOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0 pointer-events-none",
@@ -85,11 +85,11 @@ function BulkPickerPanel({
             onClick={() => onSelect(action.id)}
             className={[
               "w-full flex items-center gap-3 px-5 py-3.5 text-left text-sm font-medium transition-colors rounded-none",
-              i > 0 ? "border-t border-zinc-100/80 dark:border-slate-800/80" : "",
-              isSelected ? "bg-zinc-50 dark:bg-slate-800/60" : "",
+              i > 0 ? "border-t border-zinc-100/80 border-[var(--appkit-color-border-subtle)]" : "",
+              isSelected ? "bg-zinc-50 bg-[var(--appkit-color-surface-input)]" : "",
               action.variant === "danger"
                 ? "text-error hover:bg-error-surface"
-                : "text-zinc-800 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-slate-800/60",
+                : "text-[var(--appkit-color-text)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/60",
               action.disabled || action.loading ? "opacity-50 cursor-not-allowed" : "",
             ]
               .filter(Boolean)
@@ -290,11 +290,11 @@ export default function BottomActions() {
                 aria-expanded={pickerOpen}
                 className={[
                   "flex-1 min-w-0 h-10 flex items-center gap-2 px-3 rounded-lg border text-sm font-medium transition-colors",
-                  "bg-zinc-50 hover:bg-zinc-100 active:bg-zinc-200 dark:bg-slate-800/60 dark:hover:bg-slate-700/60",
-                  "border-zinc-200 dark:border-slate-700",
+                  "bg-zinc-50 hover:bg-[var(--appkit-color-surface)] active:bg-zinc-200 bg-[var(--appkit-color-surface-input)] dark:hover:bg-slate-700/60",
+                  "border-[var(--appkit-color-border)]",
                   selectedAction?.variant === "danger"
                     ? "text-error"
-                    : "text-zinc-800 dark:text-zinc-100",
+                    : "text-[var(--appkit-color-text)]",
                 ]
                   .filter(Boolean)
                   .join(" ")}

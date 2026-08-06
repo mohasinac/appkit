@@ -109,7 +109,7 @@ export function RadioGroup({
                     ].join(" ")}
                   />
                 </span>
-                <Span size="sm" className="text-zinc-700 dark:text-zinc-200">
+                <Span size="sm" className="text-[var(--appkit-color-text-muted)]">
                   {option.label}
                 </Span>
               </Label>

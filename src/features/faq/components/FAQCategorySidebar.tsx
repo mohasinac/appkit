@@ -48,7 +48,7 @@ export function FAQCategorySidebar({
       <TextLink rounded="lg" 
         href={allFaqsHref}
         onClick={() => onCategorySelect?.("all")}
-        className={`mb-3 block w-full p-4 text-left transition-colors ${ selectedCategory === "all" ? "bg-primary/10 text-zinc-900 dark:text-zinc-100" : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700" }`}
+        className={`mb-3 block w-full p-4 text-left transition-colors ${ selectedCategory === "all" ? "bg-primary/10 text-[var(--appkit-color-text)]" : "text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] dark:hover:bg-slate-700" }`}
       >
         <Row justify="between">
           <Row gap="3">
@@ -73,7 +73,7 @@ export function FAQCategorySidebar({
               key={category.key}
               href={categoryHref(category.key)}
               onClick={() => onCategorySelect?.(category.key)}
-              className={`mb-3 block w-full p-4 text-left transition-colors ${ isSelected ? "bg-primary/10 text-zinc-900 dark:text-zinc-100" : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700" }`}
+              className={`mb-3 block w-full p-4 text-left transition-colors ${ isSelected ? "bg-primary/10 text-[var(--appkit-color-text)]" : "text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] dark:hover:bg-slate-700" }`}
             >
               <Row justify="between" className="mb-1">
                 <Row gap="3">

@@ -47,10 +47,10 @@ export function InteractiveStoreCard({
   return (
     <Div
       className={[
-        "group relative flex flex-col h-full overflow-hidden rounded-xl border bg-white dark:bg-zinc-900 shadow-sm transition-shadow hover:shadow-lg",
+        "group relative flex flex-col h-full overflow-hidden rounded-xl border bg-[var(--appkit-color-surface)] shadow-sm transition-shadow hover:shadow-lg",
         isSelected
           ? "border-[var(--appkit-color-primary,theme(colors.violet.600))] outline outline-2 outline-[var(--appkit-color-primary,theme(colors.violet.600))]"
-          : "border-zinc-200 dark:border-zinc-700",
+          : "border-[var(--appkit-color-border)]",
         className,
       ].join(" ")}
       onMouseDown={!isSelected ? longPress.onMouseDown : undefined}
@@ -112,7 +112,7 @@ export function InteractiveStoreCard({
                 <img
                   src={store.storeLogoURL!}
                   alt={store.storeName}
-                  className="h-10 w-10 rounded-lg border-2 border-white dark:border-zinc-800 shadow-md object-cover bg-white dark:bg-zinc-800"
+                  className="h-10 w-10 rounded-lg border-2 border-white border-[var(--appkit-color-border-subtle)] shadow-md object-cover bg-[var(--appkit-color-surface)]"
                   onError={() => setLogoBroken(true)}
                   loading="lazy"
                 />
@@ -137,7 +137,7 @@ export function InteractiveStoreCard({
             <RichText
               html={normalizeRichTextHtml(store.storeDescription)}
               proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-              className="mt-1 line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400 flex-1"
+              className="mt-1 line-clamp-2 text-xs text-[var(--appkit-color-text-muted)] flex-1"
             />
           ) : (
             <Div className="flex-1" />

@@ -233,7 +233,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
               onChange={(e) => setReplyText(e.target.value)}
               rows={4}
               placeholder="Write a public reply to this review…"
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </Stack>
           <Row justify="end" gap="sm">

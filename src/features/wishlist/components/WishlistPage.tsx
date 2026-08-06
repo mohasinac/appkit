@@ -2,7 +2,7 @@ import { Button, Div, Stack, Text } from "../../../ui";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 
-const CLS_REMOVE_BTN = "self-start text-zinc-400 dark:text-zinc-400 transition hover:text-error";
+const CLS_REMOVE_BTN = "self-start text-[var(--appkit-color-text-faint)] transition hover:text-error";
 
 interface WishlistCardProps {
   item: WishlistItem;
@@ -26,7 +26,7 @@ export function WishlistCard({
             ? (e) => e.key === "Enter" && onProductClick(item)
             : undefined
         }
-        className={`h-20 w-20 flex-shrink-0 overflow-hidden bg-neutral-100 dark:bg-slate-800 ${onProductClick ? "cursor-pointer" : ""}`} rounded="lg"
+        className={`h-20 w-20 flex-shrink-0 overflow-hidden bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] ${onProductClick ? "cursor-pointer" : ""}`} rounded="lg"
       >
         {item.productImage && (
           <img
@@ -41,7 +41,7 @@ export function WishlistCard({
           {item.productTitle}
         </Text>
         {item.productPrice !== undefined && (
-            <Text className="text-neutral-900 dark:text-neutral-100" size="sm" weight="semibold">
+            <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">
             {formatCurrency(item.productPrice, item.productCurrency)}
           </Text>
         )}

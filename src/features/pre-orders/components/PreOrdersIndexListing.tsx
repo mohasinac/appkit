@@ -323,7 +323,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             No pre-orders found.
           </Text>
         ) : view === "list" ? (
-          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
             {(preOrders as any[]).map((product) => (
               <MarketplacePreorderCard
                 key={product.id}

@@ -75,7 +75,7 @@ function statusClass(s: "pending" | "open" | "closed" | undefined): string {
     case "open":
       return "bg-success-surface text-success";
     case "closed":
-      return "bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200";
+      return "bg-zinc-200 text-zinc-700 bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]";
     case "pending":
     default:
       return "bg-warning-surface text-warning";
@@ -207,7 +207,7 @@ export async function PrizeDrawDetailPageView({
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap"
+            className="flex items-center gap-1.5 text-xs text-[var(--appkit-color-text-muted)] flex-wrap"
           >
             <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">
               Home
@@ -301,7 +301,7 @@ export async function PrizeDrawDetailPageView({
                 <RichText
                   html={descriptionHtml}
                   proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                  className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
+                  className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
                 />
               )}
 
@@ -336,7 +336,7 @@ export async function PrizeDrawDetailPageView({
                   <RichText
                     html={descriptionHtml}
                     proseClass="prose prose-sm sm:prose max-w-none dark:prose-invert"
-                    className="text-zinc-700 dark:text-zinc-300"
+                    className="text-[var(--appkit-color-text-muted)]"
                   />
                 ) : undefined
               }

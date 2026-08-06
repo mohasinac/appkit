@@ -74,7 +74,7 @@ export function FooterLayout({
   return (
     <BlockFooter
       id={id}
-      className="bg-zinc-50 dark:bg-slate-950 border-t border-zinc-200 dark:border-slate-800"
+      className="bg-zinc-50 bg-[var(--appkit-color-bg)] border-t border-[var(--appkit-color-border-subtle)]"
     >
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (
@@ -126,7 +126,7 @@ export function FooterLayout({
                       aria-label={link.ariaLabel}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 dark:border-slate-700 text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary hover:border-primary/40 dark:hover:border-secondary/40 transition-colors"
+                      className="flex items-center justify-center w-9 h-9 rounded-full border border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary hover:border-primary/40 dark:hover:border-secondary/40 transition-colors"
                     >
                       {link.icon}
                     </Link>
@@ -154,7 +154,7 @@ export function FooterLayout({
                   type="button"
                   variant="ghost"
                   onClick={() => toggleGroup(idx)}
-                  className="w-full justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 dark:border-slate-800 dark:text-zinc-100 dark:hover:text-white lg:hidden"
+                  className="w-full justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 border-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text)] dark:hover:text-white lg:hidden"
                   aria-expanded={!!openGroups[idx]}
                 >
                   {group.heading}
@@ -171,7 +171,7 @@ export function FooterLayout({
                     <Li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary transition-colors"
+                        className="text-sm text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -189,7 +189,7 @@ export function FooterLayout({
                       <Li key={link.href}>
                         <Link
                           href={link.href}
-                          className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary transition-colors"
+                          className="text-sm text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
                         >
                           {link.label}
                         </Link>
@@ -203,7 +203,7 @@ export function FooterLayout({
         </Div>
 
         {/* Bottom bar */}
-        <Stack direction="sm-row" color="muted" textSize="xs" justify="between" border="default" className="mt-10 border-t dark:border-slate-800 text-zinc-600 dark:text-zinc-400" padding="t-lg" align="center" gap="3">
+        <Stack direction="sm-row" color="muted" textSize="xs" justify="between" border="default" className="mt-10 border-t border-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text-muted)]" padding="t-lg" align="center" gap="3">
           <Text size="xs" color="muted">
             {copyrightText}
           </Text>
@@ -214,7 +214,7 @@ export function FooterLayout({
                   <Li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary transition-colors underline-offset-2 hover:underline"
+                      className="text-xs text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors underline-offset-2 hover:underline"
                     >
                       {link.label}
                     </Link>

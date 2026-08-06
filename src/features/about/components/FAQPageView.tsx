@@ -72,7 +72,7 @@ export async function FAQPageView({
                   paddingX="sm" paddingY="xs"
                   layout="flex" align="center" justify="between"
                   weight={!category ? "semibold" : undefined}
-                  className={`transition-colors ${ !category ? "bg-primary/10 text-primary" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
+                  className={`transition-colors ${ !category ? "bg-primary/10 text-primary" : "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]" }`} size="sm"
                 >
                   <Span className={`${flex.row}`} gap="md">
                     <HelpCircle className="w-4 h-4" />
@@ -87,7 +87,7 @@ export async function FAQPageView({
                     paddingX="sm" paddingY="xs"
                     layout="flex" align="center" justify="between"
                     weight={category === cat.slug ? "semibold" : undefined}
-                    className={`transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary" : "hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800" }`} size="sm"
+                    className={`transition-colors ${ category === cat.slug ? "bg-primary/10 text-primary" : "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]" }`} size="sm"
                   >
                     <Span className={`${flex.row}`} gap="md">
                       <Span>{cat.icon}</Span>
@@ -106,7 +106,7 @@ export async function FAQPageView({
               <Section
                 className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="y-4xl"
               >
-                <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-zinc-600 dark:text-zinc-400" />
+                <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-[var(--appkit-color-text-muted)]" />
                 <Heading level={3} className="mb-2" size="base">
                   {t("emptyTitle")}
                 </Heading>
@@ -126,7 +126,7 @@ export async function FAQPageView({
                       paddingX="x-5" paddingY="y-md"
                       size="sm" weight="medium"
                       layout="flex" align="center" justify="between"
-                      className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors"
+                      className="hover:bg-neutral-50 hover:bg-[var(--appkit-color-surface-elevated)]/50 transition-colors"
                     >
                       <Span>{item.question}</Span>
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />

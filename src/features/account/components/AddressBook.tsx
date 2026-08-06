@@ -64,18 +64,18 @@ export function AddressCard({
         </Span>
       )}
       {address.label && (
-        <Text className="mb-1 tracking-wide text-neutral-500 dark:text-neutral-400" size="xs" weight="semibold" transform="uppercase">
+        <Text className="mb-1 tracking-wide text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
           {address.label}
         </Text>
       )}
-      <Text className="text-neutral-900 dark:text-neutral-100" size="sm">{line1}</Text>
-      {line2 && <Text className="text-neutral-900 dark:text-neutral-100" size="sm">{line2}</Text>}
-      <Text className="text-neutral-900 dark:text-neutral-100" size="sm">
+      <Text className="text-[var(--appkit-color-text)]" size="sm">{line1}</Text>
+      {line2 && <Text className="text-[var(--appkit-color-text)]" size="sm">{line2}</Text>}
+      <Text className="text-[var(--appkit-color-text)]" size="sm">
         {address.city}, {address.state} {address.postalCode}
       </Text>
-      <Text className="text-neutral-900 dark:text-neutral-100" size="sm">{address.country}</Text>
+      <Text className="text-[var(--appkit-color-text)]" size="sm">{address.country}</Text>
       {address.phone && (
-        <Text className="mt-1 text-neutral-500 dark:text-neutral-400" size="sm">{address.phone}</Text>
+        <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">{address.phone}</Text>
       )}
       <Div layout="flex" gap="1" className="mt-3">
         {onEdit && (
@@ -125,7 +125,7 @@ export function AddressBook({
   return (
     <Stack gap="md">
       {addresses.length === 0 && (
-        <Text className="text-neutral-500 dark:text-neutral-400" size="sm">{emptyLabel}</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{emptyLabel}</Text>
       )}
       <Div layout="grid" gap="4" className="sm:grid-cols-2">
         {addresses.map((addr) => (
@@ -143,7 +143,7 @@ export function AddressBook({
           onClick={onAdd}
           variant="outline"
           paddingX="md" paddingY="md" textSize="sm" weight="medium"
-          className="mt-2 border border-dashed border-neutral-300 dark:border-[var(--appkit-color-border)] text-neutral-500 dark:text-[var(--appkit-color-text-muted)] transition hover:border-neutral-400 dark:hover:border-[var(--appkit-color-border-subtle)] hover:text-neutral-700 dark:hover:text-[var(--appkit-color-text)]"
+          className="mt-2 border border-dashed border-neutral-300 dark:border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-muted)] transition hover:border-neutral-400 dark:hover:border-[var(--appkit-color-border-subtle)] hover:text-neutral-700 dark:hover:text-[var(--appkit-color-text)]"
         >
           + {addLabel}
         </Button>

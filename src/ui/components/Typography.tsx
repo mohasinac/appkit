@@ -482,9 +482,9 @@ type SpanPadding = "none" | "2xs" | "x-xs" | "x-sm" | "x-md" | "y-2xs" | "y-xs" 
 
 const SPAN_BORDER_MAP: Record<SpanBorder, string> = {
   none: "",
-  default: "border border-zinc-200 dark:border-slate-700",
-  subtle: "border border-zinc-100 dark:border-zinc-800",
-  strong: "border border-zinc-300 dark:border-slate-600",
+  default: "border border-[var(--appkit-color-border)]",
+  subtle: "border border-[var(--appkit-color-border-subtle)]",
+  strong: "border border-[var(--appkit-color-border)]",
 };
 type SpanBg = "none" | "muted" | "subtle" | "default" | "success-surface" | "danger-surface" | "warning-surface" | "info-surface" | "overlay-xs" | "overlay-sm" | "overlay-md" | "overlay-lg" | "overlay-xl";
 

@@ -65,7 +65,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "Messaging": "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300",
   "Seller": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   "Orders": "bg-lime-100 text-lime-800 dark:bg-lime-900/30 dark:text-lime-300",
-  "Account": "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+  "Account": "bg-[var(--appkit-color-surface)] text-zinc-700 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 const ALL_ACTION_IDS = Object.values(ACTION_ID) as ActionId[];
@@ -143,7 +143,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                 <Tr
                   key={id}
                   className={[
-                    idx % 2 === 0 ? "bg-white dark:bg-slate-900" : "bg-zinc-50/50 dark:bg-slate-800/50",
+                    idx % 2 === 0 ? "bg-[var(--appkit-color-surface)]" : "bg-zinc-50/50 bg-[var(--appkit-color-surface-elevated)]/50",
                     !enabled ? "opacity-60" : "",
                   ].join(" ")}
                 >

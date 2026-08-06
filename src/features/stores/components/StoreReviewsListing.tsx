@@ -194,7 +194,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
             No reviews found.
           </Text>
         ) : view === "list" ? (
-          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
             { }
             {reviews.map((review) => (
               <ReviewCard key={review.id} review={review as any} context="store" />

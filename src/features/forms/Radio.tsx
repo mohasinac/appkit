@@ -57,7 +57,7 @@ export function RadioGroup({
                   checked={isSelected}
                   disabled={option.disabled}
                   onChange={() => !option.disabled && onChange?.(option.value)}
-                  className="w-4 h-4 text-primary-600 dark:text-secondary-500 border-zinc-300 dark:border-slate-600 focus:ring-primary-500/30 dark:focus:ring-secondary-400/30"
+                  className="w-4 h-4 text-primary-600 dark:text-secondary-500 border-[var(--appkit-color-border)] focus:ring-primary-500/30 dark:focus:ring-secondary-400/30"
                 />
                 <Span size="sm" color="muted">
                   {option.label}
@@ -96,7 +96,7 @@ export function RadioGroup({
                 "flex items-center justify-center px-4 py-2.5 rounded-xl border text-sm font-medium cursor-pointer transition-all duration-200",
                 isSelected
                   ? "bg-primary-600 dark:bg-secondary-500 border-primary-600 dark:border-secondary-500 text-white shadow-sm"
-                  : "border-zinc-200 dark:border-slate-700 text-zinc-700 dark:text-zinc-300 hover:border-primary-400 dark:hover:border-secondary-400 hover:bg-primary-50/50 dark:hover:bg-secondary-900/20",
+                  : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:border-primary-400 dark:hover:border-secondary-400 hover:bg-primary-50/50 dark:hover:bg-secondary-900/20",
                 option.disabled && "opacity-50 cursor-not-allowed",
               )}
             >

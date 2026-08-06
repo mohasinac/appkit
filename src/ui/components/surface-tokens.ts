@@ -32,9 +32,9 @@ export const SURFACE_MAP = {
   "overlay-md": "bg-black/55",
   "overlay-lg": "bg-black/60",
   "overlay-xl": "bg-black/70",
-  // Skeleton loader presets — light grey + dark variant.
-  skeleton: "bg-zinc-300 dark:bg-slate-700",
-  "skeleton-light": "bg-zinc-200 dark:bg-slate-800",
+  // Skeleton loader presets — theme-adaptive via CSS variables.
+  skeleton: "bg-[var(--appkit-color-border)]",
+  "skeleton-light": "bg-[var(--appkit-color-border-subtle)]",
 } as const;
 
 export type SurfaceKey = keyof typeof SURFACE_MAP;
@@ -144,16 +144,16 @@ const ROUNDED_BOTTOM_MAP: Record<RoundedKey, string> = {
 
 export const BORDER_MAP = {
   none: "",
-  default: "border border-zinc-200 dark:border-slate-700",
-  subtle: "border border-zinc-100 dark:border-slate-800/60",
-  strong: "border border-zinc-300 dark:border-slate-600",
-  dashed: "border border-dashed border-zinc-300 dark:border-slate-600",
-  bottom: "border-b border-zinc-200 dark:border-slate-700",
-  "bottom-subtle": "border-b border-zinc-100 dark:border-slate-800/60",
-  top: "border-t border-zinc-200 dark:border-slate-700",
-  "top-subtle": "border-t border-zinc-100 dark:border-slate-800/60",
+  default: "border border-[var(--appkit-color-border)]",
+  subtle: "border border-[var(--appkit-color-border-subtle)]",
+  strong: "border border-[var(--appkit-color-border)]",
+  dashed: "border border-dashed border-[var(--appkit-color-border)]",
+  bottom: "border-b border-[var(--appkit-color-border)]",
+  "bottom-subtle": "border-b border-[var(--appkit-color-border-subtle)]",
+  top: "border-t border-[var(--appkit-color-border)]",
+  "top-subtle": "border-t border-[var(--appkit-color-border-subtle)]",
   /** 2px border for skeleton placeholder cards. */
-  "skeleton": "border-2 border-zinc-100 dark:border-slate-700",
+  "skeleton": "border-2 border-[var(--appkit-color-border-subtle)]",
 } as const;
 
 export type BorderKey = keyof typeof BORDER_MAP;

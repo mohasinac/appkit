@@ -8,7 +8,7 @@ import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const CLS_TOGGLE_ON = "h-4 w-4 text-success dark:text-success";
-const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors disabled:opacity-50";
+const CLS_DELETE_BTN = "rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors disabled:opacity-50";
 
 const TYPE_COLORS: Record<CouponType, { card: string; code: string }> = {
   percentage:   { card: "bg-purple-50 border-purple-200 dark:bg-purple-950/30 dark:border-purple-800", code: "bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200 border-purple-300 dark:border-purple-700" },
@@ -260,7 +260,7 @@ export function CouponCard({
             {n.isActive ? labels.active : labels.inactive}
           </Badge>
           {n.scope && (
-            <Span layout="inline-flex" weight="semibold" className="bg-neutral-200/70 text-[10px] tracking-wide dark:bg-neutral-700/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
+            <Span layout="inline-flex" weight="semibold" className="bg-neutral-200/70 text-[10px] tracking-wide bg-[var(--appkit-color-border)]/60" rounded="full" padding="pill-xs" color="primary" transform="uppercase">
               {n.scope}
             </Span>
           )}
@@ -337,7 +337,7 @@ export function CouponCard({
               onClick={() => onEdit(n.id)}
               title={labels.edit}
               aria-label={labels.edit}
-              className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-black/30 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30 hover:text-zinc-800 hover:text-[var(--appkit-color-text-muted)] transition-colors"
             >
               <Pencil className="h-4 w-4" />
             </button>
@@ -349,7 +349,7 @@ export function CouponCard({
               disabled={busy === "toggle"}
               title={n.isActive ? labels.deactivate : labels.activate}
               aria-label={n.isActive ? labels.deactivate : labels.activate}
-              className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-black/30 transition-colors disabled:opacity-50"
+              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30 transition-colors disabled:opacity-50"
             >
               {n.isActive
                 ? <ToggleRight className={CLS_TOGGLE_ON} />

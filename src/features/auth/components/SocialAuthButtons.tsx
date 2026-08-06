@@ -19,7 +19,7 @@ export function SocialAuthButtons({
           <Div className="w-full border-t border-neutral-200" />
         </Row>
         <Row textSize="sm" className="relative" justify="center">
-          <Span className="text-neutral-500 dark:text-neutral-400" padding="x-xs" surface="default">{dividerLabel}</Span>
+          <Span className="text-[var(--appkit-color-text-muted)]" padding="x-xs" surface="default">{dividerLabel}</Span>
         </Row>
       </Div>
 
@@ -30,7 +30,7 @@ export function SocialAuthButtons({
           disabled={disabled}
           variant="outline"
           paddingX="md" paddingY="sm" textSize="sm" weight="medium"
-          className="inline- justify-[center] border border-neutral-300 dark:border-neutral-700 bg-[var(--appkit-color-surface)] dark:bg-neutral-900 text-neutral-900 dark:text-[var(--appkit-color-text)] hover:bg-neutral-50 dark:hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline- justify-[center] border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] dark:text-[var(--appkit-color-text)] hover:bg-neutral-50 hover:bg-[var(--appkit-color-surface-elevated)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
             <path

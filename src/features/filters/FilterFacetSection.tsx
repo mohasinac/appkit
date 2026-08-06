@@ -12,7 +12,7 @@ const CLS_OPTION_SELECTED = "border-success bg-success-surface text-success dark
 const CLS_OPTION_DOT = "inline-flex h-4 w-4 items-center justify-center rounded-full bg-success-surface text-[10px] text-white";
 const CLS_CLEAR_BTN = "w-full py-1 text-xs text-zinc-400 transition-colors hover:text-error";
 const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
-const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error hover:bg-zinc-100 dark:hover:bg-slate-700 transition-colors rounded-full";
+const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors rounded-full";
 
 export interface FacetOption extends FilterOption {
   count?: number;
@@ -125,7 +125,7 @@ export function FilterFacetSection({
             "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
             hasValue
               ? CLS_OPTION_SELECTED
-              : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400 dark:border-slate-700 dark:bg-slate-900 dark:text-zinc-200 dark:hover:border-slate-500",
+              : "border-zinc-200 bg-[var(--appkit-color-surface)] text-zinc-700 hover:border-zinc-400 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-border)]",
           )}
         >
           {title}
@@ -151,7 +151,7 @@ export function FilterFacetSection({
                   placeholder="Search…"
                   value={search}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full rounded-md border border-zinc-200 bg-white px-2 py-1 text-xs text-zinc-900 focus:outline-none dark:border-slate-700 dark:bg-slate-800/60 dark:text-zinc-100"
+                  className="w-full rounded-md border border-zinc-200 bg-white px-2 py-1 text-xs text-[var(--appkit-color-text)] focus:outline-none border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] text-[var(--appkit-color-text)]"
                 />
               </Div>
             )}
@@ -170,7 +170,7 @@ export function FilterFacetSection({
                       checked={isSelected}
                       onChange={() => toggle(option.value)}
                       aria-label={option.label}
-                      className="h-3.5 w-3.5 flex-shrink-0 cursor-pointer rounded border-zinc-300 text-primary-600 dark:border-slate-600 dark:text-secondary-500"
+                      className="h-3.5 w-3.5 flex-shrink-0 cursor-pointer rounded border-zinc-300 text-primary-600 border-[var(--appkit-color-border)] dark:text-secondary-500"
                     />
                     <Span size="xs" className="flex-1 truncate" color="muted">
                       {option.label}
@@ -210,7 +210,7 @@ export function FilterFacetSection({
   return (
     <Div
       className={cn(
-        "p-4 border-b border-zinc-200 dark:border-slate-700 last:border-b-0",
+        "p-4 border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
     >
@@ -234,7 +234,7 @@ export function FilterFacetSection({
           </Row>
           <svg
             className={cn(
-              "w-4 h-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200",
+              "w-4 h-4 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               isCollapsed ? "" : "rotate-180",
             )}
             fill="none"
@@ -305,7 +305,7 @@ export function FilterFacetSection({
             placeholder="Search…"
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full rounded-md border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-secondary-400/20"
+            className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-2.5 py-1.5 text-xs text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 "
           />
         </Div>
       )}
@@ -327,7 +327,7 @@ export function FilterFacetSection({
                     onChange={() => toggle(option.value)}
                     aria-label={option.label}
                     className={cn(
-                      "flex-shrink-0 border-zinc-300 dark:border-slate-600 cursor-pointer",
+                      "flex-shrink-0 border-[var(--appkit-color-border)] cursor-pointer",
                       "w-4 h-4 rounded-full text-primary-600 dark:text-secondary-500",
                       "focus:ring-primary-500/30 dark:focus:ring-secondary-400/30",
                     )}
@@ -339,7 +339,7 @@ export function FilterFacetSection({
                     onChange={() => toggle(option.value)}
                     aria-label={option.label}
                     className={cn(
-                      "flex-shrink-0 border-zinc-300 dark:border-slate-600 cursor-pointer",
+                      "flex-shrink-0 border-[var(--appkit-color-border)] cursor-pointer",
                       "w-4 h-4 rounded text-primary-600 dark:text-secondary-500 checked:bg-primary-600 dark:checked:bg-secondary-500",
                       "focus:ring-primary-500/30 dark:focus:ring-secondary-400/30",
                     )}

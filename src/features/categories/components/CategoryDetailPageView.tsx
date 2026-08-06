@@ -151,19 +151,19 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           <Nav layout="flex" gap="2xs" textSize="sm" className="mb-4" aria-label="Breadcrumb">
             <Link
               href={String(ROUTES.HOME)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 transition-colors"}
             >
               Home
             </Link>
             <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
             <Link
               href={String(ROUTES.PUBLIC.CATEGORIES)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 transition-colors"}
             >
               Categories
             </Link>
             <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
-            <Span weight="medium" className={hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-100"}>
+            <Span weight="medium" className={hasCover ? "text-white" : "text-[var(--appkit-color-text)]"}>
               {category?.name ?? slug}
             </Span>
           </Nav>
@@ -215,7 +215,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 <Link
                   key={child.id}
                   href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug))}
-                  className="flex-shrink-0 flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
+                  className="flex-shrink-0 flex items-center gap-1.5 rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-4 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
                 >
                   {child.display?.icon && (
                     <Span className="leading-none">{child.display.icon}</Span>

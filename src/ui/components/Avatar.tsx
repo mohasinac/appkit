@@ -90,7 +90,7 @@ export function AvatarGroup({
           key={`${avatar.src ?? avatar.name ?? "avatar"}-${index}`}
           {...avatar}
           size={size}
-          className="ring-2 ring-white dark:ring-slate-900"
+          className="ring-2 ring-white ring-[var(--appkit-color-bg)]"
         />
       ))}
       {extra > 0 ? (

@@ -40,8 +40,8 @@ function DefaultNavItem({
   const activeClasses = item.highlighted
     ? "border border-primary-400/40 dark:border-secondary-400/30 text-primary-700 dark:text-secondary-400 bg-primary-50/80 dark:bg-secondary-900/30 px-3 transition-colors duration-150"
     : isActive
-      ? "bg-primary-50 dark:bg-slate-800 text-primary-800 dark:text-white font-semibold px-3 border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
-      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 px-3";
+      ? "bg-primary-50 bg-[var(--appkit-color-surface-elevated)] text-primary-800 dark:text-white font-semibold px-3 border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
+      : "text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 px-3";
 
   return (
     <Link
@@ -123,7 +123,7 @@ export function NavbarLayout({
     <Nav border="subtle" 
       id={id}
       aria-label={ariaLabel}
-      className="hidden lg:block bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b"
+      className="hidden lg:block bg-white/95 bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b"
     >
       <Row className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px] h-10" padding="x-md" align="center">
         {/* Scrollable items area */}

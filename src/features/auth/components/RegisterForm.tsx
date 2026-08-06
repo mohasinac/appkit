@@ -85,7 +85,7 @@ export function RegisterForm({
             {labels.title ?? "Create Account"}
           </Heading>
           {(labels.subtitle || renderLoginLink) && (
-            <Text className="mt-2 text-neutral-600 dark:text-neutral-400" size="sm">
+            <Text className="mt-2 text-[var(--appkit-color-text-muted)]" size="sm">
               {labels.subtitle ?? "Already have an account?"}{" "}
               {renderLoginLink?.()}
             </Text>

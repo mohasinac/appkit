@@ -22,7 +22,7 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-zinc-50 dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 bg-[var(--appkit-color-surface)]/60 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
         aria-expanded={open}
       >
         <Span size="sm" weight="semibold" className="tracking-wide" color="muted" transform="uppercase">

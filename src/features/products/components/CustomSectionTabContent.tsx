@@ -19,7 +19,7 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
         <RichText
           html={html}
           proseClass="prose prose-sm sm:prose max-w-none dark:prose-invert"
-          className="text-zinc-700 dark:text-zinc-300"
+          className="text-[var(--appkit-color-text-muted)]"
         />
       )}
       {fields.length > 0 && (

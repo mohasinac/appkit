@@ -51,7 +51,7 @@ function StepCard({
     <div
       className={[
         "relative rounded-3xl p-8",
-        "bg-white dark:bg-slate-900",
+        "bg-[var(--appkit-color-surface)]",
         "shadow-md group hover:-translate-y-2 hover:shadow-xl",
         "transition-all duration-300",
         delayClass,

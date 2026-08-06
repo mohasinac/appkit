@@ -92,7 +92,7 @@ export function ProductTabsShell({
             className={`flex-shrink-0 -mb-px pb-3 px-4 text-sm font-medium border-b-2 transition-colors ${
  activeId === t.id
  ? "border-[var(--appkit-color-primary)] text-[var(--appkit-color-primary)]"
- : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+ : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"
  }`}
           >
             {t.label}

@@ -18,12 +18,12 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
           <React.Fragment key={step.id}>
             <Row gap="2.5">
               <Span layout="flex" color="inverse"
-                className={`h-6 w-6 justify-[center] ${ isDone ? "bg-success " : isActive ? "bg-neutral-900 " : "bg-neutral-200 dark:bg-[var(--appkit-color-surface-elevated)] text-neutral-500 dark:text-[var(--appkit-color-text-faint)]" }`} rounded="full" size="xs" weight="semibold"
+                className={`h-6 w-6 justify-[center] ${ isDone ? "bg-success " : isActive ? "bg-neutral-900 " : "bg-neutral-200 dark:bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)]" }`} rounded="full" size="xs" weight="semibold"
               >
                 {isDone ? "✓" : idx + 1}
               </Span>
               <Span
-                className={`${isActive ? "text-neutral-900 dark:text-[var(--appkit-color-text)]" : isDone ? "text-neutral-500 dark:text-[var(--appkit-color-text-faint)]" : "text-[var(--appkit-color-text-faint)]"}`} size="sm" weight="medium"
+                className={`${isActive ? "text-[var(--appkit-color-text)] dark:text-[var(--appkit-color-text)]" : isDone ? "text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)]" : "text-[var(--appkit-color-text-faint)]"}`} size="sm" weight="medium"
               >
                 {step.label}
               </Span>

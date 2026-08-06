@@ -64,7 +64,7 @@ export function Slider({
         <div className="mb-2 flex items-center justify-between gap-3" data-section="slider-div-608">
           {label ? <Label htmlFor={inputId}>{label}</Label> : <span />}
           {showValue ? (
-            <Span size="sm" className="tabular-nums text-zinc-600 dark:text-zinc-300">
+            <Span size="sm" className="tabular-nums text-[var(--appkit-color-text-muted)]">
               {value}
             </Span>
           ) : null}
@@ -75,7 +75,7 @@ export function Slider({
         <div
           aria-hidden="true"
           className={[
-            "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 overflow-hidden rounded-full bg-zinc-200 dark:bg-slate-700",
+            "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 overflow-hidden rounded-full bg-zinc-200 bg-[var(--appkit-color-border)]",
             SIZE_CLASSES[size],
           ].join(" ")}
          data-section="slider-div-610">

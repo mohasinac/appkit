@@ -57,7 +57,7 @@ function MaskedInput({
       <button
         type="button"
         onClick={() => setRevealed((r) => !r)}
-        className="absolute right-3 top-8 text-xs text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+        className="absolute right-3 top-8 text-xs text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)]"
       >
         {revealed ? "Hide" : "Reveal"}
       </button>
@@ -65,8 +65,8 @@ function MaskedInput({
   );
 }
 
-const NOTIF_CHANNEL_INDENT = "space-y-4 pl-4 border-l-2 border-zinc-200 dark:border-zinc-700";
-const CLS_TEXTAREA = "w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 p-3 text-sm text-zinc-800 dark:text-zinc-200 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500";
+const NOTIF_CHANNEL_INDENT = "space-y-4 pl-4 border-l-2 border-[var(--appkit-color-border)]";
+const CLS_TEXTAREA = "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-3 text-sm text-[var(--appkit-color-text-muted)] resize-y focus:outline-none focus:ring-2 focus:ring-blue-500";
 const PRIORITY_OPTIONS: SelectOption[] = [
   { label: "Low (send all)", value: "low" },
   { label: "Normal", value: "normal" },

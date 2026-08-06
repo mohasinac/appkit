@@ -92,7 +92,7 @@ export function BidHistory({
           ) : (
             <div
               key={bid.id}
-              className="flex items-center justify-between rounded-lg border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 text-sm"
+              className="flex items-center justify-between rounded-lg border border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)] p-3 text-sm"
              data-section="bidhistory-div-422">
               <Span weight="bold" className="text-primary-600 dark:text-primary-400">
                 {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}

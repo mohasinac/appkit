@@ -40,7 +40,7 @@ function StatCard({
         "transition-all duration-700",
         delayClass,
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-        !isLast ? "border-r border-zinc-200 dark:border-slate-700" : "",
+        !isLast ? "border-r border-[var(--appkit-color-border)]" : "",
       ].join(" ")}
     >
       {stat.renderIcon && (

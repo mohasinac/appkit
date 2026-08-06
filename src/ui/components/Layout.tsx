@@ -267,7 +267,7 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
   /**
    * Render a themed top-border between adjacent children. `true` / `"default"`
    * uses the active theme's border colour; `"subtle"` uses border-subtle.
-   * Replaces the recurrent `divide-y divide-zinc-200 dark:divide-zinc-700`
+   * Replaces the recurrent `divide-y divide-[var(--appkit-color-border)]`
    * className pattern (which bypasses theme tokens).
    */
   divide?: boolean | "default" | "subtle";
@@ -404,7 +404,7 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProp
   /**
    * Render a themed left-border between adjacent children. `true` / `"default"`
    * uses the active theme's border colour; `"subtle"` uses border-subtle.
-   * Replaces the recurrent `divide-x divide-zinc-200 dark:divide-zinc-700`
+   * Replaces the recurrent `divide-x divide-[var(--appkit-color-border)]`
    * className pattern (which bypasses theme tokens).
    */
   divide?: boolean | "default" | "subtle";

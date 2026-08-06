@@ -14,9 +14,9 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
+const INPUT_CLS = "w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
 const CLS_DEFAULT_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border border-warning dark:border-warning px-2 py-0.5";
-const CLS_DELETE_BTN = "rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
+const CLS_DELETE_BTN = "rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -133,7 +133,7 @@ function AddressCard({
                 type="button"
                 onClick={onEdit}
                 title="Edit address"
-                className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+                className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
               >
                 <Pencil className="h-4 w-4" />
               </button>
@@ -295,7 +295,7 @@ export function SellerAddressesView({
           </Row>
         ) : addresses.length === 0 ? (
           <Stack border="default" className="border-2 border-dashed" padding="y-4xl" align="center" gap="3" rounded="xl">
-            <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
+            <MapPin className="h-8 w-8 text-zinc-300 text-[var(--appkit-color-text-muted)]" />
             <Text size="sm" color="muted">No pickup addresses yet</Text>
             <Button size="sm" variant="outline" onClick={openAdd}>
               Add your first address

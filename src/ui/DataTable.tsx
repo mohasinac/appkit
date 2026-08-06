@@ -243,7 +243,7 @@ export function DataTable<T extends object>({
           <Div className="text-center" padding="x-md">
             {emptyIcon ?? (
               <svg
-                className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-400"
+                className="mx-auto h-12 w-12 text-[var(--appkit-color-text-faint)]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -504,7 +504,7 @@ export function DataTable<T extends object>({
                   )}
                 </tr>
               </thead>
-              <tbody className="appkit-data-table__tbody divide-y divide-zinc-200 dark:divide-slate-700">
+              <tbody className="appkit-data-table__tbody divide-y divide-zinc-200 divide-[var(--appkit-color-border)]">
                 {paginatedData.map((item, index) => (
                   <tr
                     key={keyExtractor(item)}
@@ -738,7 +738,7 @@ function DataTableTableView<T extends object>({
               )}
             </tr>
           </thead>
-          <tbody className="appkit-data-table__tbody divide-y divide-zinc-200 dark:divide-slate-700">
+          <tbody className="appkit-data-table__tbody divide-y divide-zinc-200 divide-[var(--appkit-color-border)]">
             {paginatedData.map((item, index) => (
               <tr
                 key={keyExtractor(item)}

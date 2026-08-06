@@ -43,7 +43,7 @@ export function Checkbox({
               "transition-all duration-200 appearance-none",
               error
                 ? "border-error dark:border-error"
-                : "border-zinc-300 dark:border-slate-600",
+                : "border-[var(--appkit-color-border)]",
               "checked:bg-primary-600 checked:border-primary-600",
               "dark:checked:bg-secondary-500 dark:checked:border-secondary-500",
               "hover:border-primary-400 dark:hover:border-secondary-400",

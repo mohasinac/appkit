@@ -502,7 +502,7 @@ export function AdminCouponEditorView({
                     <button
                       type="button"
                       aria-label={`Remove ${cid}`}
-                      className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100"
+                      className="text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100"
                       onClick={() =>
                         setApplicableCategories(applicableCategories.filter((c) => c !== cid))
                       }

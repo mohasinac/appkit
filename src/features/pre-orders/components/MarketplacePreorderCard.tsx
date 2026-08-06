@@ -237,7 +237,7 @@ export function MarketplacePreorderCard({
               <RichText
                 html={normalizeRichTextHtml(product.description)}
                 proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                className="line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400"
+                className="line-clamp-2 text-xs text-[var(--appkit-color-text-muted)]"
               />
             ) : null}
             <Row justify="between" className="mt-1" gap="sm">

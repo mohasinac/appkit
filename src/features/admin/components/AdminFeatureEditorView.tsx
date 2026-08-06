@@ -48,9 +48,9 @@ const PILL_BASE_CLASS =
   "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium cursor-pointer transition-colors";
 const PILL_CHECKED_CLASS = "bg-primary text-white border-primary";
 const PILL_UNCHECKED_CLASS =
-  "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800";
+  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
 const FIELD_LABEL_CLASS =
-  "text-sm font-medium text-zinc-700 dark:text-zinc-300";
+  "text-sm font-medium text-[var(--appkit-color-text-muted)]";
 const DELETE_CONFIRM_TEXT =
   "Delete this feature? It will fail if any product still references it.";
 

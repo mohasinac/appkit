@@ -292,7 +292,7 @@ const DEFAULT_LABELS: Required<MarketplaceAuctionCardLabels> = {
 };
 
 const COUNTDOWN_STATUS_CLASS = {
-  ended: "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400",
+  ended: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)]",
   endingSoon: "bg-warning-surface text-warning",
   live: "bg-success-surface text-success",
 } as const;

@@ -65,7 +65,7 @@ export function CustomSectionsEditor({
           <Div>
             <label
               htmlFor={`${baseId}-title-${i}`}
-              className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400"
+              className="mb-1 block text-xs font-medium text-[var(--appkit-color-text-muted)]"
             >
               Section title <Span className="text-error">*</Span>
             </label>
@@ -82,7 +82,7 @@ export function CustomSectionsEditor({
           <Div>
             <label
               htmlFor={`${baseId}-text-${i}`}
-              className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400"
+              className="mb-1 block text-xs font-medium text-[var(--appkit-color-text-muted)]"
             >
               Body text{" "}
               <Span weight="normal" color="faint">(optional)</Span>
@@ -94,7 +94,7 @@ export function CustomSectionsEditor({
               placeholder="Additional details for this section…"
               rows={3}
               maxLength={2000}
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y"
+              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y"
             />
           </Div>
 

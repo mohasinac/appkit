@@ -123,7 +123,7 @@ export function ContactForm({
     <Stack gap="xs">
       <label
         htmlFor={id}
-        className="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+        className="text-sm font-medium text-[var(--appkit-color-text-muted)]"
       >
         {label}
       </label>
@@ -134,7 +134,7 @@ export function ContactForm({
           onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
           placeholder={placeholder}
           rows={5}
-          className="w-full rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm outline-none focus:ring-2 ring-primary/20 transition"
+          className="w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm outline-none focus:ring-2 ring-primary/20 transition"
         />
       ) : (
         <input
@@ -143,7 +143,7 @@ export function ContactForm({
           value={form[id]}
           onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
           placeholder={placeholder}
-          className="h-10 w-full rounded-lg border border-neutral-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition"
+          className="h-10 w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition"
         />
       )}
       {errors[id] && <Span size="xs" className={CLS_FIELD_ERROR}>{errors[id]}</Span>}

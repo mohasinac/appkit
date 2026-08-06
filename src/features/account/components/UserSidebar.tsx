@@ -56,7 +56,7 @@ function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boo
   const linkClass = `flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
  isActive
  ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
- : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100"
+ : "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] hover:text-zinc-900 dark:hover:text-zinc-100"
  }`;
   return (
     <>
@@ -142,7 +142,7 @@ function DrawerContent({
               className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
  hasActive && !isOpen
  ? "text-primary-600 dark:text-primary-400"
- : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+ : "text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"
  }`}
             >
               <Span>{group.title}</Span>
@@ -195,7 +195,7 @@ function DrawerPanel({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex items-center justify-center w-7 h-7 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-md text-zinc-400 hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -16,9 +16,9 @@ const __P = {
   p3: "p-3",
 } as const;
 
-const CLS_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
+const CLS_PANEL = "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 space-y-3";
 const CLS_ROW_BETWEEN = "flex items-center justify-between";
-const CLS_SECTION_HEADING = "text-sm font-semibold text-zinc-900 dark:text-zinc-100";
+const CLS_SECTION_HEADING = "text-sm font-semibold text-[var(--appkit-color-text)]";
 
 import type {
   CarouselBackground,
@@ -120,8 +120,8 @@ function ZonePicker({
  selected === z
  ? "bg-primary text-white border-primary"
  : isDisabled
- ? "bg-zinc-100 text-zinc-300 border-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 cursor-not-allowed"
- : "bg-white border-zinc-300 text-zinc-700 hover:border-primary dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-200"
+ ? "bg-[var(--appkit-color-surface)] text-zinc-300 border-zinc-200 bg-[var(--appkit-color-surface-elevated)] border-[var(--appkit-color-border)] cursor-not-allowed"
+ : "bg-[var(--appkit-color-surface)] border-zinc-300 text-zinc-700 hover:border-primary bg-[var(--appkit-color-surface)] border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]"
  }`}
             >
               {z}

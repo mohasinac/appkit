@@ -27,19 +27,19 @@ export const DASHBOARD_ACCENT_CLASSES: Record<DashboardVariant, {
   hoverBg: string;
 }> = {
   admin: {
-    activeBg: "bg-zinc-100 dark:bg-slate-800",
-    activeText: "text-zinc-900 dark:text-zinc-100",
-    hoverBg: "hover:bg-zinc-50 dark:hover:bg-slate-800/60",
+    activeBg: "bg-[var(--appkit-color-surface-elevated)]",
+    activeText: "text-[var(--appkit-color-text)]",
+    hoverBg: "hover:bg-[var(--appkit-color-surface)]",
   },
   store: {
-    activeBg: "bg-warning-surface dark:bg-warning-surface",
-    activeText: "text-warning dark:text-warning",
-    hoverBg: "hover:bg-zinc-50 dark:hover:bg-slate-800/60",
+    activeBg: "bg-warning-surface",
+    activeText: "text-warning",
+    hoverBg: "hover:bg-[var(--appkit-color-surface)]",
   },
   user: {
     activeBg: "bg-primary-50 dark:bg-primary-900/25",
     activeText: "text-primary-700 dark:text-primary-300",
-    hoverBg: "hover:bg-zinc-50 dark:hover:bg-slate-800",
+    hoverBg: "hover:bg-[var(--appkit-color-surface)]",
   },
 };
 

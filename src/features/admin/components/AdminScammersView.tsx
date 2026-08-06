@@ -23,7 +23,7 @@ const STATUS_BADGE: Record<string, string> = {
   pending_review: "bg-warning-surface text-warning",
   verified: "bg-success-surface text-success",
   rejected: "bg-error-surface text-error",
-  removed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+  removed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 interface AdminScammersResponse {

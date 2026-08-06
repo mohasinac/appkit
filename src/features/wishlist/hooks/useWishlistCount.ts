@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { apiClient } from "../../../http";
+import { normalizeError } from "../../../errors/normalize";
 import { useGuestWishlist } from "./useGuestWishlist";
 import {
   clearGuestWishlist,
@@ -78,25 +79,12 @@ export function useWishlistCount(userId: string | null | undefined) {
       return;
     }
 
-    fetch(WISHLIST_MERGE_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        items: items.map((i) => ({ productId: i.itemId })),
-      }),
-    })
-      .then(async (res) => {
-        if (!res.ok) return;
-        const json = (await res.json().catch(() => null)) as
-          | {
-              data?: {
-                capReached?: boolean;
-                skippedFull?: number;
-                limit?: number;
-              };
-            }
-          | null;
-        const data = json?.data;
+    apiClient
+      .post<{ capReached?: boolean; skippedFull?: number; limit?: number }>(
+        WISHLIST_MERGE_API,
+        { items: items.map((i) => ({ productId: i.itemId })) },
+      )
+      .then((data) => {
         if (data?.capReached) {
           dispatchCapEvent({
             limit: data.limit ?? WISHLIST_MAX,
@@ -105,7 +93,7 @@ export function useWishlistCount(userId: string | null | undefined) {
           });
         }
       })
-      .catch(console.error)
+      .catch((err: unknown) => void normalizeError(err))
       .finally(finish);
   }, [userId, queryClient]);
 

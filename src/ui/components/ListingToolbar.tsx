@@ -14,8 +14,8 @@ import { SortDropdown } from "./SortDropdown";
 import { Div } from "./Div";
 import { Span } from "./Typography";
 
-const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-error dark:text-zinc-400 transition-colors";
-const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-error dark:hover:text-error transition-colors";
+const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-error text-[var(--appkit-color-text-muted)] transition-colors";
+const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-[var(--appkit-color-border)] p-1.5 sm:p-2 text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] hover:text-error dark:hover:text-error transition-colors";
 
 export interface ListingToolbarSortOption {
   value: string;
@@ -111,7 +111,7 @@ const VIEW_BTN_BASE =
 const VIEW_BTN_ACTIVE =
   "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white";
 const VIEW_BTN_INACTIVE =
-  "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400";
+  "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]";
 
 export function ListingToolbar({
   filterCount = 0,
@@ -155,7 +155,7 @@ export function ListingToolbar({
   return (
     <div
       data-testid="listing-toolbar"
-      className={`sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
+      className={`sticky top-[var(--header-height,0px)] z-20 border-b border-[var(--appkit-color-border)] bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
 
@@ -165,7 +165,7 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onBulkSelectAll}
-              className="flex items-center gap-1.5 rounded-lg border border-zinc-300 dark:border-slate-600 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+              className="flex items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-3 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
             >
               {allSelected
                 ? <CheckSquare className="h-4 w-4 text-[var(--appkit-color-primary,theme(colors.violet.600))]" />
@@ -185,14 +185,14 @@ export function ListingToolbar({
             </button>
           </div>
         ) : onSearchChange ? (
-          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 min-w-0">
+          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] min-w-0">
             <input
               type="text"
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={searchPlaceholder}
-              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
+              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 outline-none"
             />
             <button
               type="button"
@@ -212,7 +212,7 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onFiltersClick}
-              className="relative flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-300 dark:border-slate-600 px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+              className="relative flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline">{l.filters}</span>
@@ -225,7 +225,7 @@ export function ListingToolbar({
           )}
 
           {sortOptions && sortValue !== undefined && onSortChange && (
-            <Div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
+            <Div className="flex items-center gap-1.5 text-[var(--appkit-color-text-muted)]">
               <Span size="xs" className="hidden md:inline whitespace-nowrap">{l.sort}</Span>
               <SortDropdown
                 value={sortValue}
@@ -236,7 +236,7 @@ export function ListingToolbar({
           )}
 
           {!hideViewToggle && onViewChange && (
-            <div className="flex items-center rounded-lg border border-zinc-300 dark:border-slate-600 overflow-hidden">
+            <div className="flex items-center rounded-lg border border-[var(--appkit-color-border)] overflow-hidden">
               <button
                 type="button"
                 onClick={() => onViewChange("grid")}
@@ -290,7 +290,7 @@ export function ListingToolbar({
                   className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
  t.active
  ? "border-transparent bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
- : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
  }`}
                 >
                   {t.label}

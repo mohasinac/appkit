@@ -73,7 +73,7 @@ function AccordionSection({ title, defaultOpen = true, children }: AccordionSect
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 text-left"
+        className="w-full flex items-center justify-between px-4 py-3 bg-[var(--appkit-color-surface-elevated)]/60 text-left"
         aria-expanded={open}
       >
         <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
@@ -87,7 +87,7 @@ function AccordionSection({ title, defaultOpen = true, children }: AccordionSect
         </svg>
       </button>
       {open && (
-        <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+        <Div className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]">
           {children}
         </Div>
       )}

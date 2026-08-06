@@ -13,6 +13,7 @@
 import type { PaginatedSelectOption, AsyncPage } from "../../../../ui/components/PaginatedSelect";
 import type { JsonValue } from "@mohasinac/appkit";
 import type { FacetOption } from "../../../../features/filters/FilterFacetSection";
+import { apiClient } from "../../../../http/ApiClient";
 
 export type LoadOptionsFn<T = PaginatedSelectOption> = (
   query: string,
@@ -35,21 +36,16 @@ async function fetchPage<T>(
   url: string,
   mapItem: (item: Record<string, JsonValue>) => T,
 ): Promise<AsyncPage<T>> {
-  const res = await fetch(url);
-  if (!res.ok) return { items: [], hasMore: false };
-  const json = (await res.json()) as {
-    data?: {
-      items?: unknown[];
-      hasMore?: boolean;
-      total?: number;
+  try {
+    const data = await apiClient.get<{ items?: unknown[]; hasMore?: boolean }>(url);
+    return {
+      items: ((data?.items ?? []) as Record<string, JsonValue>[]).map(mapItem),
+      hasMore: data?.hasMore ?? false,
     };
-  };
-  const raw = json.data?.items ?? [];
-  const hasMore = json.data?.hasMore ?? false;
-  return {
-    items: (raw as Record<string, JsonValue>[]).map(mapItem),
-    hasMore,
-  };
+  } catch (_err) {
+    // PaginatedSelect degrades to an empty page on load error — caller can retry by re-typing
+    return { items: [], hasMore: false };
+  }
 }
 
 // ── Categories ────────────────────────────────────────────────────────────────

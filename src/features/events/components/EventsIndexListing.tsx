@@ -192,7 +192,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
             No events found.
           </Text>
         ) : view === "list" ? (
-          <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
+          <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "../../../http/ApiClient";
 import type { AdSlotId } from "../ad-registry";
 
 export type ActiveAdCreative = {
@@ -21,23 +22,13 @@ export type ActiveAdRecord = {
   creative: ActiveAdCreative;
 };
 
-type State = { loading: boolean; ad: ActiveAdRecord | null };
+export function useActiveAd(slotId: AdSlotId): { loading: boolean; ad: ActiveAdRecord | null } {
+  const { data, isPending } = useQuery<ActiveAdRecord | null>({
+    queryKey: ["active-ad", slotId],
+    queryFn: () => apiClient.get<ActiveAdRecord | null>(`/api/ads?slot=${encodeURIComponent(slotId)}`),
+    staleTime: 60_000,
+    retry: 1,
+  });
 
-export function useActiveAd(slotId: AdSlotId): State {
-  const [state, setState] = useState<State>({ loading: true, ad: null });
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(`/api/ads?slot=${encodeURIComponent(slotId)}`)
-      .then((r) => r.json())
-      .then((json: { data: ActiveAdRecord | null }) => {
-        if (!cancelled) setState({ loading: false, ad: json?.data ?? null });
-      })
-      .catch(() => {
-        if (!cancelled) setState({ loading: false, ad: null });
-      });
-    return () => { cancelled = true; };
-  }, [slotId]);
-
-  return state;
+  return { loading: isPending, ad: data ?? null };
 }

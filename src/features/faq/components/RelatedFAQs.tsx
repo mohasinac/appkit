@@ -33,7 +33,7 @@ export function RelatedFAQs({
           >
             <Row align="start" gap="3">
               <svg
-                className="mt-0.5 h-5 w-5 flex-shrink-0 text-zinc-500 dark:text-zinc-400"
+                className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--appkit-color-text-muted)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -51,7 +51,7 @@ export function RelatedFAQs({
               </Text>
 
               <svg
-                className="ml-auto mt-0.5 h-4 w-4 flex-shrink-0 text-zinc-500 opacity-0 transition-opacity group-hover:opacity-100 dark:text-zinc-400"
+                className="ml-auto mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--appkit-color-text-muted)] opacity-0 transition-opacity group-hover:opacity-100 text-[var(--appkit-color-text-muted)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

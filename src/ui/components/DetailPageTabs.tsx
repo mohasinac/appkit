@@ -69,7 +69,7 @@ export function DetailPageTabs({
         .filter(Boolean)
         .join(" ")}
     >
-      <Div role="tablist" aria-orientation="horizontal" className={`flex gap-2 border-b border-zinc-200 dark:border-zinc-700 ${__O.xAuto}`}>
+      <Div role="tablist" aria-orientation="horizontal" className={`flex gap-2 border-b border-[var(--appkit-color-border)] ${__O.xAuto}`}>
         {tabs.map((tab) => {
           const isActive = tab.id === active?.id;
           return (
@@ -85,14 +85,14 @@ export function DetailPageTabs({
               className={[
                 "flex-shrink-0 px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
                 isActive
-                  ? "border-[var(--appkit-color-primary)] text-zinc-900 dark:text-zinc-100"
-                  : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200",
+                  ? "border-[var(--appkit-color-primary)] text-[var(--appkit-color-text)]"
+                  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)]",
                 tab.disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
               ].join(" ")}
             >
               {tab.label}
               {typeof tab.count === "number" ? (
-                <Span size="xs" className="ml-2 inline-flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5">
+                <Span size="xs" className="ml-2 inline-flex items-center justify-center rounded-full bg-[var(--appkit-color-surface)] px-2 py-0.5">
                   {tab.count}
                 </Span>
               ) : null}

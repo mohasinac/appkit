@@ -70,11 +70,11 @@ function BaseListingCardRoot({
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       className={[
-        "group relative w-full min-w-0 overflow-hidden rounded-xl border bg-white dark:bg-zinc-900 transition-shadow",
+        "group relative w-full min-w-0 overflow-hidden rounded-xl border bg-[var(--appkit-color-surface)] transition-shadow",
         variant === "list" ? "flex flex-row items-stretch" : "flex flex-col",
         isSelected
           ? "border-primary outline outline-2 outline-primary shadow-sm"
-          : "border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-md",
+          : "border-[var(--appkit-color-border)] shadow-sm hover:shadow-md",
         isDisabled ? "opacity-60" : "",
         onClick ? "cursor-pointer" : "",
         className,
@@ -99,7 +99,7 @@ function BaseListingCardHero({
     return (
       <div
         className={[
-          "relative overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex-shrink-0",
+          "relative overflow-hidden bg-[var(--appkit-color-surface)] flex-shrink-0",
           "w-20 h-20 sm:w-28 sm:h-28",
           className,
         ]
@@ -123,7 +123,7 @@ function BaseListingCardHero({
   return (
     <div
       className={[
-        "relative overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex-shrink-0",
+        "relative overflow-hidden bg-[var(--appkit-color-surface)] flex-shrink-0",
         aspectClass,
         className,
       ]
@@ -180,7 +180,7 @@ function BaseListingCardCheckbox({
         "focus-visible:ring-2 focus-visible:ring-primary/50",
         selected
           ? "bg-primary border-primary shadow-sm"
-          : "bg-white/80 border-zinc-300/80 hover:border-primary/60 hover:bg-white dark:bg-zinc-800/80 dark:border-zinc-600",
+          : "bg-white/80 border-zinc-300/80 hover:border-primary/60 hover:bg-[var(--appkit-color-surface)]/80 border-[var(--appkit-color-border)]",
         position,
         className,
       ]
@@ -222,7 +222,7 @@ function BaseListingCardIconOverlay({
           key={key}
           src={icon}
           alt=""
-          className="w-5 h-5 rounded-full border border-white/80 shadow-sm bg-white dark:bg-zinc-900 object-cover"
+          className="w-5 h-5 rounded-full border border-white/80 shadow-sm bg-[var(--appkit-color-surface)] object-cover"
         />
       );
     }
@@ -230,7 +230,7 @@ function BaseListingCardIconOverlay({
       <Span
         key={key}
         size="sm"
-        className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-white/80 bg-white/95 dark:bg-zinc-900/95 shadow-sm leading-none"
+        className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-white/80 bg-white/95 bg-[var(--appkit-color-surface)]/95 shadow-sm leading-none"
       >
         {icon}
       </Span>

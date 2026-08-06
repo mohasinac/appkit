@@ -114,7 +114,7 @@ export function SellerGoogleReviewsView({
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="h-12 animate-pulse rounded-xl border border-zinc-100 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800"
+            className="h-12 animate-pulse rounded-xl border border-zinc-100 border-[var(--appkit-color-border)] bg-zinc-50 bg-[var(--appkit-color-surface-elevated)]"
           />
         ))}
       </Stack>

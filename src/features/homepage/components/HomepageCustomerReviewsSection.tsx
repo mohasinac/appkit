@@ -30,7 +30,7 @@ export function HomepageCustomerReviewsSection({
       renderItem={(review: Review) => (
         <ReviewCard
           review={review}
-          className="h-full border-zinc-200 shadow-sm dark:border-slate-700"
+          className="h-full border-zinc-200 shadow-sm border-[var(--appkit-color-border)]"
         />
       )}
       viewMoreHref={viewMoreHref}

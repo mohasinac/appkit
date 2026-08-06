@@ -12,7 +12,7 @@ const __O = {
   yAuto: "overflow-y-auto",
 } as const;
 
-const CLS_REMOVE_BTN = "self-start text-zinc-400 dark:text-zinc-400 transition hover:text-error";
+const CLS_REMOVE_BTN = "self-start text-[var(--appkit-color-text-faint)] transition hover:text-error";
 
 interface CartItemRowProps {
   item: CartItem;
@@ -43,7 +43,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-neutral-900 dark:text-zinc-100 hover:underline underline-offset-2 line-clamp-2"
+              className="font-medium text-[var(--appkit-color-text)] text-[var(--appkit-color-text)] hover:underline underline-offset-2 line-clamp-2"
             >
               {item.meta.title}
             </a>
@@ -60,14 +60,14 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
         </Row>
         {item.meta.attributes &&
           Object.keys(item.meta.attributes).length > 0 && (
-            <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
+            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
               {Object.entries(item.meta.attributes)
                 .map(([k, v]) => `${k}: ${v}`)
                 .join(", ")}
             </Text>
           )}
         <Row justify="between">
-          <Text className="text-neutral-900 dark:text-neutral-100" weight="semibold">
+          <Text className="text-[var(--appkit-color-text)]" weight="semibold">
             {formatCurrency(
               item.meta.price * item.quantity,
               item.meta.currency,
@@ -80,7 +80,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
                 disabled={item.quantity <= 1}
                 variant="outline"
                 size="sm"
-                className="h-7 w-7 justify-center border border-neutral-200 dark:border-slate-600 text-sm disabled:opacity-40"
+                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-sm disabled:opacity-40"
               >
                 −
               </Button>
@@ -91,7 +91,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
                 onClick={() => onQtyChange(item.id, item.quantity + 1)}
                 variant="outline"
                 size="sm"
-                className="h-7 w-7 justify-center border border-neutral-200 dark:border-slate-600 text-sm"
+                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-sm"
               >
                 +
               </Button>
@@ -169,7 +169,7 @@ export function CartDrawer({
             size="sm"
             aria-label="Close cart"
             textColor="faint"
-            className="hover:text-neutral-900 dark:hover:text-[var(--appkit-color-text)]"
+            className="hover:text-[var(--appkit-color-text)] dark:hover:text-[var(--appkit-color-text)]"
           >
             ✕
           </Button>
@@ -180,7 +180,7 @@ export function CartDrawer({
               <Div className="h-8 w-8 animate-spin border-2 border-neutral-300 border-t-neutral-800 dark:border-t-zinc-200" rounded="full" />
             </Row>
           ) : items.length === 0 ? (
-            <Text paddingY="3xl" className="text-neutral-500 dark:text-neutral-400" size="sm" align="center">
+            <Text paddingY="3xl" className="text-[var(--appkit-color-text-muted)]" size="sm" align="center">
               {labels.empty ?? "Your cart is empty"}
             </Text>
           ) : (
@@ -197,7 +197,7 @@ export function CartDrawer({
         {items.length > 0 && (
           <Stack border="top" className={__P.p4} gap="md">
             <Row textSize="sm" justify="between">
-              <Span className="text-neutral-600 dark:text-neutral-400">
+              <Span className="text-[var(--appkit-color-text-muted)]">
                 {labels.subtotal ?? "Subtotal"}
               </Span>
               <Span weight="semibold">

@@ -8,3 +8,4 @@
 
 export { ApiClient, ApiClientError, apiClient } from "./ApiClient";
 export type { ApiClientOptions, RequestConfig, ApiResponse } from "./ApiClient";
+export { withRetry } from "./retry";

@@ -282,7 +282,7 @@ export function SellerAnalyticsAlertsView({
                     className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
  draft.notifyChannels.includes(ch.value)
  ? "bg-[var(--appkit-color-primary)] text-white border-transparent"
- : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700"
+ : "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] border-[var(--appkit-color-border)]"
  }`}
                   >
                     {ch.label}

@@ -67,10 +67,10 @@ export async function HowPreOrdersWorkView({
     {
       emoji: "🔍",
       circleClass:
-        "bg-slate-100 dark:bg-slate-700 border-2 border-slate-300 dark:border-slate-500",
+        "bg-[var(--appkit-color-border-subtle)] border-2 border-[var(--appkit-color-border)]",
       badge: t("step1Title"),
       badgeClass:
-        "bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300",
+        "bg-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text-muted)]",
       desc: t("diagramStep1Desc"),
     },
     {

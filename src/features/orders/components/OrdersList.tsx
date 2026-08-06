@@ -14,7 +14,7 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
   cancelled: "bg-error-surface text-error",
   refunded: "bg-warning-surface text-warning",
   return_requested: "bg-warning-surface text-warning",
-  returned: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
+  returned: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 interface OrderCardProps {
@@ -32,7 +32,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       })
     : "";
   const statusColor =
-    STATUS_COLORS[order.orderStatus] ?? "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300";
+    STATUS_COLORS[order.orderStatus] ?? "bg-[var(--appkit-color-surface)] text-neutral-700 bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]";
 
   // SB8-F — count unrevealed prize-draw entries to surface a "reveals pending" badge.
   const unrevealedPrizeDraws = order.items.filter(
@@ -61,7 +61,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
     >
       <Row wrap align="start" justify="between" gap="3">
         <Div>
-          <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
+          <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
             Order #{order.id.slice(-8).toUpperCase()}
           </Text>
           {date && (
@@ -112,10 +112,10 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         )}
       </Row>
         <Row justify="between" className="mt-4 border-t border-neutral-100" padding="t-sm">
-          <Span size="sm" className="text-neutral-500 dark:text-neutral-400">
+          <Span size="sm" className="text-[var(--appkit-color-text-muted)]">
           {order.currency ?? ""} Total
         </Span>
-          <Span weight="semibold" className="text-neutral-900 dark:text-neutral-100">
+          <Span weight="semibold" className="text-[var(--appkit-color-text)]">
           {formatCurrency(order.total, order.currency)}
         </Span>
       </Row>

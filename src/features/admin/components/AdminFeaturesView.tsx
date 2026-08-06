@@ -23,11 +23,11 @@ const PAGE_SIZE = 50;
 const DEFAULT_SCOPE: ProductFeatureScope = "platform";
 
 const STICKY_TABS_CLASS =
-  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex gap-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-2";
+  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex gap-2 bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-2";
 const TAB_BASE_CLASS = "rounded-full px-3 py-1 text-xs font-medium border transition-colors";
 const TAB_ACTIVE_CLASS = "bg-primary text-white border-primary";
 const TAB_INACTIVE_CLASS =
-  "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800";
+  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
 
 interface AdminFeaturesResponse {
   items?: JsonArray;

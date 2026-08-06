@@ -180,7 +180,7 @@ function PreOrderInfoSection({
           {category && (
             <Link
               href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
-              className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+              className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
             >
               {categoryName || category}
             </Link>
@@ -193,7 +193,7 @@ function PreOrderInfoSection({
           {brand && brandSlug && (
             <Link
               href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
-              className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+              className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
             >
               {brand}
             </Link>
@@ -230,7 +230,7 @@ function PreOrderInfoSection({
         <RichText
           html={descriptionHtml}
           proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-          className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
+          className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
         />
       )}
 
@@ -572,7 +572,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
                   <RichText
                     html={descriptionHtml}
                     proseClass="prose prose-sm sm:prose max-w-none dark:prose-invert"
-                    className="text-zinc-700 dark:text-zinc-300"
+                    className="text-[var(--appkit-color-text-muted)]"
                   />
                 ) : undefined
               }

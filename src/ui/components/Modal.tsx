@@ -184,7 +184,7 @@ export function ModalFooter({
   return (
     <div
       className={[
-        "flex items-center justify-end gap-3 border-t border-zinc-100 px-6 py-4 dark:border-slate-800",
+        "flex items-center justify-end gap-3 border-t border-zinc-100 px-6 py-4 border-[var(--appkit-color-border-subtle)]",
         className,
       ]
         .filter(Boolean)

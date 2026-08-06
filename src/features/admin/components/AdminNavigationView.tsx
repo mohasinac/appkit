@@ -43,9 +43,9 @@ function NavItemRow({
     <Row surface="default" padding="inline" align="center" gap="3">
       <Stack className="shrink-0 gap-[0.125rem]">
         <Button variant="ghost" type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
-          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>
+          className="text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>
         <Button variant="ghost" type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}
-          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
+          className="text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
       </Stack>
       <Div className="flex-1 min-w-0">
         <Text className="truncate" color="primary" size="sm" weight="medium">
@@ -172,7 +172,7 @@ export function AdminNavigationView({
               No nav items yet. Click "New item" to add one.
             </Text>
           ) : null,
-          <Div key="list" className={`divide-y divide-zinc-200 dark:divide-zinc-700 ${__O.hidden}`} rounded="lg" border="default">
+          <Div key="list" className={`divide-y divide-[var(--appkit-color-border)] ${__O.hidden}`} rounded="lg" border="default">
             {sorted.map((item, idx) => (
               <NavItemRow
                 key={item.id}

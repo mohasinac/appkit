@@ -123,9 +123,9 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
       {(categoryName || category || brand) && (
         <Row gap="sm" wrap>
-          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
+          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
           {!category && categoryName && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{categoryName}</Span>}
-          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
+          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
           {brand && !brandSlug && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{brand}</Span>}
         </Row>
       )}
@@ -138,7 +138,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
           </Ul>
         </Div>
       )}
-      {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4" />}
+      {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4" />}
       {safeSeller && (
         <Div className={`${__P.p3}`} border="subtle" rounded="xl" surface="muted">
           <Row justify="between" align="center">
@@ -454,7 +454,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <RichText
                     html={descriptionHtml}
                     proseClass="prose prose-sm sm:prose max-w-none dark:prose-invert"
-                    className="text-zinc-700 dark:text-zinc-300"
+                    className="text-[var(--appkit-color-text-muted)]"
                   />
                 ) : undefined
               }

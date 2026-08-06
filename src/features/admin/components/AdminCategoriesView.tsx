@@ -144,7 +144,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
               className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
  (pendingFilters.isActive || "") === opt.value
  ? "bg-primary text-white border-primary"
- : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
  }`}
             >
               {opt.label}
@@ -170,7 +170,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
               className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
  (pendingFilters.isFeatured || "") === opt.value
  ? "bg-primary text-white border-primary"
- : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+ : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
  }`}
             >
               {opt.label}

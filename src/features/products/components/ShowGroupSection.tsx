@@ -60,7 +60,7 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
         className={`relative w-14 h-14 rounded-full overflow-hidden border-2 transition-all ${
  isCurrent
  ? "border-[var(--appkit-color-primary)] ring-2 ring-[var(--appkit-color-primary)]/30"
- : "border-zinc-200 dark:border-zinc-700 group-hover:border-[var(--appkit-color-primary)]"
+ : "border-[var(--appkit-color-border)] group-hover:border-[var(--appkit-color-primary)]"
  }`}
       >
         <MediaImage src={image} alt={member.title} size="card" />
@@ -161,7 +161,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-zinc-100/70 dark:hover:bg-zinc-800/70 transition-colors"
+          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[var(--appkit-color-surface)]/70 hover:bg-[var(--appkit-color-surface-elevated)]/70 transition-colors"
           aria-expanded={open}
         >
           <Row align="center" gap="xs">

@@ -28,7 +28,7 @@ export function SellerTopProducts({
 }: SellerTopProductsProps) {
   return (
     <Div
-      className={`border border-neutral-200 dark:border-neutral-800 sm:p-[1.5rem] ${className}`} rounded="xl" padding="md" surface="default"
+      className={`border border-[var(--appkit-color-border-subtle)] sm:p-[1.5rem] ${className}`} rounded="xl" padding="md" surface="default"
     >
       {labels.title && (
         <Heading level={3} className="mb-4" size="base" weight="semibold">
@@ -37,7 +37,7 @@ export function SellerTopProducts({
       )}
 
       {products.length > 0 ? (
-        <Div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+        <Div className="divide-y divide-neutral-100 divide-[var(--appkit-color-border)]">
           {products.map((product, index) => (
             <Row key={product.productId} align="center" gap="md" padding="y-sm">
               <Span size="sm" weight="bold" className="w-6" color="muted">

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { apiClient, ApiClientError } from "../../../http/ApiClient";
 import type { PreorderItem } from "../types";
 import { PREORDER_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -6,11 +7,10 @@ export function usePreorders(opts?: { endpoint?: string }) {
   const endpoint = opts?.endpoint ?? PREORDER_ENDPOINTS.LIST;
   return useQuery<PreorderItem[]>({
     queryKey: ["preorders"],
-    queryFn: async () => {
-      const res = await fetch(endpoint);
-      if (!res.ok) throw new Error("Failed to fetch preorders");
-      return res.json() as Promise<PreorderItem[]>;
-    },
+    queryFn: () =>
+      apiClient
+        .get<{ items: PreorderItem[] }>(endpoint)
+        .then((res) => res.items ?? []),
     staleTime: 2 * 60 * 1000,
   });
 }
@@ -24,10 +24,12 @@ export function usePreorder(
     queryFn: async () => {
       if (!slug) return null;
       const endpoint = opts?.endpoint ?? PREORDER_ENDPOINTS.BY_SLUG(slug);
-      const res = await fetch(endpoint);
-      if (res.status === 404) return null;
-      if (!res.ok) throw new Error("Failed to fetch preorder");
-      return res.json() as Promise<PreorderItem>;
+      try {
+        return await apiClient.get<PreorderItem>(endpoint);
+      } catch (err) {
+        if (err instanceof ApiClientError && err.status === 404) return null;
+        throw err;
+      }
     },
     enabled: !!slug,
     staleTime: 2 * 60 * 1000,

@@ -430,7 +430,7 @@ export function AdminAdEditorView({
               {placements.map((placement) => (
                 <label
                   key={placement.id}
-                  className="flex items-center gap-2 rounded-md border border-neutral-200 dark:border-slate-700 px-3 py-2"
+                  className="flex items-center gap-2 rounded-md border border-[var(--appkit-color-border)] px-3 py-2"
                 >
                   <input
                     type="checkbox"
@@ -448,7 +448,7 @@ export function AdminAdEditorView({
 
           <Div border="default" className={__P.p3} rounded="lg">
             <Text className="mb-1" size="sm" weight="medium">Preview</Text>
-            <Text className="text-neutral-500 dark:text-neutral-400" size="xs">
+            <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
               {title || name || "Untitled ad"}
             </Text>
             {body ? <Text className="mt-1" size="sm">{body}</Text> : null}

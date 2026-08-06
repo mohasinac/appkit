@@ -17,7 +17,7 @@ export function ConcernCard({
       type="button"
       variant="outline"
       onClick={() => onClick?.(concern)}
-      className={`group flex flex-col items-center gap-3 rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 text-center shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
+      className={`group flex flex-col items-center gap-3 rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 text-center shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
     >
       {concern.display?.coverImage && (
         <img
@@ -29,7 +29,7 @@ export function ConcernCard({
       <Div>
         <Heading
           level={3}
-          className="text-neutral-900 dark:text-neutral-100 group-hover:text-primary dark:group-hover:text-primary-400" size="sm" weight="semibold"
+          className="text-[var(--appkit-color-text)] group-hover:text-primary dark:group-hover:text-primary-400" size="sm" weight="semibold"
         >
           {concern.name}
         </Heading>

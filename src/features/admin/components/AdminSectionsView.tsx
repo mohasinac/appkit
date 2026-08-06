@@ -141,7 +141,7 @@ const __P = {
   p4: "p-4",
 } as const;
 
-const CLS_SECTION_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
+const CLS_SECTION_PANEL = "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 space-y-3";
 const LBL_FILTER_BY_CATEGORY = "Filter by category";
 const PH_FILTER_BY_CATEGORY = "Filter by category…";
 const LBL_MAX_ITEMS = "Max items";

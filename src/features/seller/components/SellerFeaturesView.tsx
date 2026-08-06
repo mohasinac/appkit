@@ -35,9 +35,9 @@ const ROW_CLASS =
 const CAP_BANNER_CLASS =
   "rounded-xl border border-warning dark:border-warning/60 bg-warning-surface px-4 py-2.5 text-xs text-warning";
 const EMPTY_STATE_CLASS =
-  "rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-center text-sm text-zinc-500 dark:text-zinc-400";
+  "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 text-center text-sm text-[var(--appkit-color-text-muted)]";
 const LIST_CLASS =
-  "divide-y divide-zinc-200 dark:divide-slate-700 rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900";
+  "divide-y divide-zinc-200 divide-[var(--appkit-color-border)] rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]";
 
 interface SellerFeaturesResponse {
   items?: ProductFeatureDocument[];

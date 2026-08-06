@@ -184,7 +184,7 @@ export function AdminEventEntriesView({
           <input
             type="number"
             min={0}
-            className="w-20 rounded border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm px-2 py-1 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-20 rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-sm px-2 py-1 text-[var(--appkit-color-text-muted)] focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="0"
             value={pointsInputs[row.id] ?? (row.points !== undefined ? String(row.points) : "")}
             onChange={(e) =>

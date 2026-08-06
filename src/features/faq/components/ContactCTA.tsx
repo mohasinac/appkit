@@ -3,8 +3,8 @@ const __P = {
   p8: "p-8",
 } as const;
 
-const CLS_CONTACT_CARD = "flex items-center gap-3 rounded-lg border border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-3 hover:border-primary/40 transition-colors";
-const CLS_CONTACT_LABEL = "text-xs text-zinc-500 dark:text-zinc-400";
+const CLS_CONTACT_CARD = "flex items-center gap-3 rounded-lg border border-zinc-100 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-4 py-3 hover:border-primary/40 transition-colors";
+const CLS_CONTACT_LABEL = "text-xs text-[var(--appkit-color-text-muted)]";
 
 interface ContactCTAProps {
   email: string;

@@ -75,7 +75,7 @@ export function BottomSheet({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`absolute bottom-0 inset-x-0 rounded-t-2xl border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`} surface="default"
+        className={`absolute bottom-0 inset-x-0 rounded-t-2xl border-t border-[var(--appkit-color-border-subtle)] shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`} surface="default"
       >
         {/* Handle and header */}
         <Row border="subtle" 
@@ -83,7 +83,7 @@ export function BottomSheet({
           className="border-b shrink-0" padding="inline"
         >
           {/* Drag handle */}
-          <Div surface="skeleton" className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 dark:bg-zinc-600" rounded="full" />
+          <Div surface="skeleton" className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-[var(--appkit-color-border)]" rounded="full" />
 
           {title && (
             <Span size="sm" weight="semibold" className="mt-2" color="primary">
@@ -95,7 +95,7 @@ export function BottomSheet({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="ml-auto mt-2 p-1.5 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-200 dark:hover:bg-zinc-800 transition-colors min-h-[44px] min-w-[44px] justify-center"
+            className="ml-auto mt-2 p-1.5 text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] transition-colors min-h-[44px] min-w-[44px] justify-center"
           >
             {/* ✕ */}
             <svg

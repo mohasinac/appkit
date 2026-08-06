@@ -180,7 +180,7 @@ export function AvatarUpload({
             <AvatarDisplay
               cropData={hasPending ? pendingCropData : cropData}
               size="2xl"
-              className={`border-4 ${hasPending ? "border-primary/60 ring-2 ring-primary/20" : "border-zinc-200 dark:border-slate-700"}`}
+              className={`border-4 ${hasPending ? "border-primary/60 ring-2 ring-primary/20" : "border-[var(--appkit-color-border)]"}`}
               displayName={displayName}
             />
           </Div>

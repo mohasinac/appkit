@@ -19,7 +19,7 @@ const __P = {
   p6: "p-6",
 } as const;
 
-const CLS_EMPTY_ICON = "w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600 ";
+const CLS_EMPTY_ICON = "w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-[var(--appkit-color-text-muted)] ";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -123,7 +123,7 @@ export async function PublicProfileView({
         {renderAuthoredReviewsSection(t, reviewsAuthored, displayName)}
         {reviewsReceivedAsBuyer.length > 0 && renderBuyerReceivedReviewsSection(t, reviewsReceivedAsBuyer)}
         <Row justify="center" padding="t-xs">
-          <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
+          <Link href={String(ROUTES.HOME)} className="text-sm text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)]">
             ← {t("backHome")}
           </Link>
         </Row>
@@ -211,7 +211,7 @@ function renderProfileBioSection(pub: PubProfile) {
       <Stack gap="sm" className={`${__P.p6}`} border="default" surface="muted" rounded="2xl">
         {pub.bio && <Text className="leading-relaxed text-neutral-700" size="sm">{pub.bio}</Text>}
         <Row gap="md" wrap>
-          {pub.location && <Span layout="flex" gap="xs" size="sm" className="text-neutral-500 dark:text-neutral-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
+          {pub.location && <Span layout="flex" gap="xs" size="sm" className="text-[var(--appkit-color-text-muted)]"><MapPin className="w-4 h-4" />{pub.location}</Span>}
           {pub.website && <Anchor href={pub.website} layout="inline-flex" className="gap-[0.375rem]"><Globe className="w-4 h-4" /><Span size="sm">{pub.website.replace(/^https?:\/\//, "")}</Span></Anchor>}
         </Row>
       </Stack>

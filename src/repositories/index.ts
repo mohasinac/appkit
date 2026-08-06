@@ -227,3 +227,13 @@ export {
   LotteryEntryRepository,
   lotteryEntryRepository,
 } from "../features/lottery/repository/lottery-entry.repository";
+
+// Media assets — short ID → storagePath mapping for SEO-friendly /media/{id} URLs
+export {
+  MediaAssetsRepository,
+  mediaAssetsRepository,
+} from "../features/media/repository/media-assets.repository";
+export type {
+  MediaAssetDocument,
+  MediaAssetCreateInput,
+} from "../features/media/repository/media-assets.repository";

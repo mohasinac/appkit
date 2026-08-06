@@ -223,7 +223,7 @@ export function PrizeDrawsIndexListing({
           <>
             <label
               htmlFor="prizeRevealStatusFilter"
-              className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5"
+              className="block text-xs font-semibold text-[var(--appkit-color-text-muted)] mb-1.5"
             >
               Reveal status
             </label>
@@ -233,7 +233,7 @@ export function PrizeDrawsIndexListing({
               onChange={(e) =>
                 pendingTable.set(TABLE_KEYS.PRIZE_REVEAL_STATUS, e.target.value)
               }
-              className="w-full rounded border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1.5 text-sm"
+              className="w-full rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2 py-1.5 text-sm"
             >
               <option value="">Any</option>
               <option value="pending">Reveal pending</option>

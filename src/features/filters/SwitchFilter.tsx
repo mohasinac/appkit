@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Div, Row, Span, Text, Toggle } from "../../ui";
 import { cn } from "./filterUtils";
 
-const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-zinc-500 dark:text-zinc-400 hover:text-error dark:hover:text-error rounded-full transition-colors";
+const CLS_CLEAR_BTN = "inline-flex items-center justify-center w-5 h-5 text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error rounded-full transition-colors";
 
 export interface SwitchFilterProps {
   title: string;
@@ -42,7 +42,7 @@ export function SwitchFilter({
       role="group"
       aria-labelledby={`sf-${title}`}
       className={cn(
-        "p-4 border-b border-zinc-200 dark:border-slate-700 last:border-b-0",
+        "p-4 border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
     >
@@ -61,7 +61,7 @@ export function SwitchFilter({
           </Text>
           <svg
             className={cn(
-              "w-4 h-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200",
+              "w-4 h-4 text-[var(--appkit-color-text-muted)] transition-transform duration-200",
               isCollapsed ? "" : "rotate-180",
             )}
             fill="none"

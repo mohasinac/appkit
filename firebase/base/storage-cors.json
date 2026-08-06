@@ -1,0 +1,21 @@
+[
+  {
+    "origin": [
+      "https://letitrip.in",
+      "https://www.letitrip.in",
+      "http://localhost:3000",
+      "http://localhost:3001"
+    ],
+    "method": ["PUT", "GET", "HEAD", "DELETE", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "Content-Range",
+      "Content-MD5",
+      "Content-Disposition",
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Headers",
+      "Access-Control-Allow-Methods"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

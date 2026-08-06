@@ -12,7 +12,7 @@ const __O = {
 const STATUS_STYLES: Record<string, string> = {
   published:
     "bg-success-surface text-success dark:bg-success-surface dark:text-success",
-  draft: "bg-zinc-100 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300",
+  draft: "bg-[var(--appkit-color-surface)] text-zinc-700 bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]",
   out_of_stock:
     "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   discontinued: "bg-error-surface text-error dark:bg-error-surface dark:text-error",
@@ -127,7 +127,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
             className={[
               "rounded px-2 py-1 text-xs font-medium",
               STATUS_STYLES[status] ??
-                "bg-zinc-100 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300",
+                "bg-[var(--appkit-color-surface)] text-zinc-700 bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]",
             ].join(" ")}
           >
             {status.replace("_", " ")}
@@ -159,7 +159,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
               "rounded px-2 py-1 text-xs font-medium",
               featured
                 ? CLS_LOW_STOCK
-                : "bg-zinc-100 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300",
+                : "bg-[var(--appkit-color-surface)] text-zinc-700 bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]",
             ].join(" ")}
           >
             {featured ? labels.yes : labels.no}

@@ -151,7 +151,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     secondary: (
       <Row align="center" gap="3">
         {row.thumbnailUrl && (
-          <img src={row.thumbnailUrl} alt="" className="w-14 h-9 object-cover rounded flex-shrink-0 bg-zinc-200 dark:bg-zinc-800" />
+          <img src={row.thumbnailUrl} alt="" className="w-14 h-9 object-cover rounded flex-shrink-0 bg-[var(--appkit-color-surface)]" />
         )}
         <Span size="sm" className="truncate" color="muted">{row.secondary}</Span>
       </Row>
@@ -269,7 +269,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
                 <Button key={opt.label} variant="ghost" type="button"
                   onClick={() => setPendingFilters((p) => ({ ...p, active: opt.value }))}
-                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors min-h-0 h-auto ${(pendingFilters.active || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors min-h-0 h-auto ${(pendingFilters.active || "") === opt.value ? "bg-primary text-white border-primary" : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"}`}
                 >{opt.label}</Button>
               ))}
             </Row>

@@ -12,7 +12,7 @@ const __P = {
   p4: "p-4",
 } as const;
 
-const CLS_SECTION_LABEL = "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
+const CLS_SECTION_LABEL = "text-xs font-medium text-[var(--appkit-color-text-muted)] uppercase tracking-wide";
 
 export interface AdminScammerEditorViewProps {
   open: boolean;
@@ -40,7 +40,7 @@ const STATUS_COLOR: Record<string, string> = {
   pending_review: "bg-warning-surface text-warning",
   verified: "bg-success-surface text-success",
   rejected: "bg-error-surface text-error",
-  removed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+  removed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 export function AdminScammerEditorView({
@@ -216,7 +216,7 @@ export function AdminScammerEditorView({
             onChange={(e) => setNote(e.target.value)}
             rows={3}
             placeholder="e.g. Verified via 3 independent reports…"
-            className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </Stack>
 

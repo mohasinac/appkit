@@ -46,7 +46,7 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   }
   if (view === "list") {
     return (
-      <Stack className="divide-y divide-zinc-100 dark:divide-zinc-800" border="subtle" rounded="xl">
+      <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
         {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
       </Stack>
     );

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_ICON_SM = "h-3 w-3 shrink-0";
-const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-error dark:text-zinc-600";
+const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-error text-[var(--appkit-color-text-faint)]";
 const CLS_PILL_LINK = "inline-flex items-center gap-1 rounded-full bg-error-surface dark:bg-error-surface px-2.5 py-0.5 text-xs font-medium text-error dark:text-error hover:bg-error-surface transition-colors";
 import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
 import {
@@ -216,7 +216,7 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
                 {(query || scamType || sort !== "-createdAt") && (
                   <Link
                     href={ROUTES.PUBLIC.SCAMS as string}
-                    className="rounded-lg border border-zinc-300 dark:border-slate-600 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+                    className="rounded-lg border border-[var(--appkit-color-border)] px-4 py-2 text-sm text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
                   >
                     Clear
                   </Link>

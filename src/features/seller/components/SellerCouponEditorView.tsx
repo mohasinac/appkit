@@ -275,7 +275,7 @@ export function SellerCouponEditorView({
                         <button
                           type="button"
                           aria-label={`Remove ${cid}`}
-                          className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100"
+                          className="text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100"
                           onClick={() =>
                             set("applicableCategories", draft.applicableCategories.filter((c) => c !== cid))
                           }
@@ -300,7 +300,7 @@ export function SellerCouponEditorView({
                 type="checkbox"
                 checked={draft.isActive}
                 onChange={(e) => set("isActive", e.target.checked)}
-                className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
+                className="h-4 w-4 rounded border-[var(--appkit-color-border)] text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
               />
               <Div className="flex-1 min-w-0">
                 <Text size="sm" className="text-[var(--appkit-color-text-primary)]" weight="medium">

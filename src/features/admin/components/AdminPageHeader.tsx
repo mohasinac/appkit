@@ -23,7 +23,7 @@ const __P = {
  * themeConfig={{
  * gradient: "bg-info-surface",
  * titleClass: "text-3xl font-bold",
- * subtitleClass: "text-lg text-gray-600"
+ * subtitleClass: "text-lg text-[var(--appkit-color-text-muted)]"
  * }}
  * />
  * ```
@@ -93,7 +93,7 @@ export function AdminPageHeader({
               {crumb.href && themeConfig.TextLink ? (
                 <themeConfig.TextLink
                   href={crumb.href}
-                  className="hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+                  className="hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] transition-colors"
                 >
                   {crumb.label}
                 </themeConfig.TextLink>

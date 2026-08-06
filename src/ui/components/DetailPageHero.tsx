@@ -60,12 +60,12 @@ export function DetailPageHero({
 
       <Stack gap="md" className="flex-1 min-w-0">
         {eyebrow ? (
-          <Div className="text-sm text-zinc-500 dark:text-zinc-400">{eyebrow}</Div>
+          <Div className="text-sm text-[var(--appkit-color-text-muted)]">{eyebrow}</Div>
         ) : null}
 
         <Heading
           level={1}
-          className="text-3xl font-semibold text-zinc-900 dark:text-zinc-100"
+          className="text-3xl font-semibold text-[var(--appkit-color-text)]"
         >
           {title}
         </Heading>

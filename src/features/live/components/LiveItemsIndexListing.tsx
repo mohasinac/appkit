@@ -195,7 +195,7 @@ export function LiveItemsIndexListing({ initialData }: LiveItemsIndexListingProp
             No live item listings found.
           </Text>
         ) : (
-          <Div className={view === "list" ? "flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800" : gridClass}>
+          <Div className={view === "list" ? "flex flex-col divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)] rounded-xl border border-[var(--appkit-color-border-subtle)]" : gridClass}>
             {(products as any[]).map((product) => (
               <InteractiveProductCard
                 key={product.id}

@@ -9,9 +9,9 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all";
-const CLS_RELATED_LABEL = "text-xs text-zinc-400 dark:text-zinc-400 mb-0.5";
-const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-neutral-100 dark:text-white truncate group-hover:text-primary transition-colors";
+const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 hover:border-primary hover:shadow-sm transition-all";
+const CLS_RELATED_LABEL = "text-xs text-[var(--appkit-color-text-faint)] mb-0.5";
+const CLS_RELATED_TITLE = "text-sm font-medium text-[var(--appkit-color-text)] dark:text-white truncate group-hover:text-primary transition-colors";
 const CLS_RATING_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface px-3 py-1 text-warning dark:bg-warning-surface dark:text-warning";
 const CLS_HELPFUL_ACTIVE = "border-success bg-success-surface text-success dark:border-success cursor-default";
 const CLS_ICON_ORANGE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-warning-surface dark:bg-warning-surface text-xl";
@@ -114,7 +114,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {/* Star rating — large */}
           <Row gap="sm" className="mb-4">
             <StarRating value={review.rating} size="lg" readOnly />
-            <Span color="inverse" weight="bold" className="text-neutral-900 dark:text-neutral-100 dark:" size="2xl">
+            <Span color="inverse" weight="bold" className="text-[var(--appkit-color-text)] dark:" size="2xl">
               {review.rating}.0
             </Span>
             {review.verified && (
@@ -130,7 +130,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           </Row>
 
           {review.title && (
-            <Heading color="inverse" level={1} className="text-neutral-900 dark:text-neutral-100 dark: mb-4 leading-snug" size="2xl" weight="bold">
+            <Heading color="inverse" level={1} className="text-[var(--appkit-color-text)] dark: mb-4 leading-snug" size="2xl" weight="bold">
               {review.title}
             </Heading>
           )}
@@ -141,10 +141,10 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               <img
                 src={review.userAvatar}
                 alt={displayName}
-                className="h-11 w-11 flex-shrink-0 object-cover rounded-full ring-2 ring-white dark:ring-zinc-800"
+                className="h-11 w-11 flex-shrink-0 object-cover rounded-full ring-2 ring-white ring-[var(--appkit-color-border-subtle)]"
               />
             ) : (
-              <Row textWeight="bold" textSize="base" centered className="h-11 w-11 flex-shrink-0 bg-primary/10 text-primary ring-2 ring-white dark:ring-zinc-800" rounded="full">
+              <Row textWeight="bold" textSize="base" centered className="h-11 w-11 flex-shrink-0 bg-primary/10 text-primary ring-2 ring-white ring-[var(--appkit-color-border-subtle)]" rounded="full">
                 {initials}
               </Row>
             )}
@@ -152,12 +152,12 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               {reviewerHref ? (
                 <Link
                   href={reviewerHref}
-                  className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 dark:text-white hover:text-primary transition-colors"
+                  className="text-sm font-semibold text-[var(--appkit-color-text)] dark:text-white hover:text-primary transition-colors"
                 >
                   {displayName}
                 </Link>
               ) : (
-                <Span color="inverse" size="sm" weight="semibold" className="text-neutral-900 dark:text-neutral-100 dark:">
+                <Span color="inverse" size="sm" weight="semibold" className="text-[var(--appkit-color-text)] dark:">
                   {review.isAnonymous ? "Anonymous" : displayName}
                 </Span>
               )}
@@ -178,7 +178,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <RichText
               html={normalizeRichTextHtml(review.comment)}
               proseClass="prose prose-neutral dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:font-semibold prose-img:rounded-lg prose-a:text-primary"
-              className="text-neutral-700 dark:text-zinc-300"
+              className="text-neutral-700 text-[var(--appkit-color-text-muted)]"
             />
           </Section>
         )}
@@ -196,7 +196,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   type="button"
                   onClick={() => setLightboxIdx(i)}
                   aria-label={`View photo ${i + 1}`}
-                  className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-100 dark:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <img
                     src={img.thumbnailUrl ?? img.url}
@@ -218,7 +218,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="tracking-wide mb-3" color="faint" size="sm" weight="semibold" transform="uppercase">
               Video
             </Heading>
-            <Div className={`${__O.hidden} border border-neutral-200 dark:border-neutral-700 bg-[rgb(0,0,0)] aspect-video`} rounded="xl">
+            <Div className={`${__O.hidden} border border-[var(--appkit-color-border)] bg-[rgb(0,0,0)] aspect-video`} rounded="xl">
               <video
                 src={review.video.url}
                 poster={review.video.thumbnailUrl}
@@ -232,10 +232,10 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
         {/* Helpful votes */}
         <Section className="flex items-[center] gap-[1rem] border-t border-neutral-100" padding="y-md">
-          <Div textSize="sm" className="text-neutral-500 dark:text-neutral-400">
+          <Div textSize="sm" className="text-[var(--appkit-color-text-muted)]">
             {helpfulCount > 0 && (
               <Span>
-                <Span color="inverse" weight="bold" className="text-neutral-900 dark:text-neutral-100 dark:">{helpfulCount}</Span>{" "}
+                <Span color="inverse" weight="bold" className="text-[var(--appkit-color-text)] dark:">{helpfulCount}</Span>{" "}
                 {helpfulCount === 1 ? "person" : "people"} found this helpful
               </Span>
             )}
@@ -247,7 +247,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             className={`ml-auto flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
  voted
  ? CLS_HELPFUL_ACTIVE
- : "border-neutral-300 dark:border-zinc-600 text-neutral-700 dark:text-zinc-200 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
+ : "border-neutral-300 border-[var(--appkit-color-border)] text-neutral-700 text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
  }`}
           >
             <Span aria-hidden="true">{voted ? "✓" : "👍"}</Span>
@@ -313,7 +313,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </Span>
               <Div className="min-w-0">
                 <Span size="xs" className="block mb-0.5" color="faint">Reviewer</Span>
-                <Span color="inverse" size="sm" weight="medium" className="block text-neutral-900 dark:text-neutral-100 dark: truncate">
+                <Span color="inverse" size="sm" weight="medium" className="block text-[var(--appkit-color-text)] dark: truncate">
                   Anonymous
                 </Span>
               </Div>

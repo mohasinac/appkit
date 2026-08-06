@@ -5,17 +5,17 @@
  * shimmer (animate-shimmer + gradient).
  */
 export const SKELETON = {
-  // Pulse (fade) variant
-  base: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60",
-  text: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-4",
-  heading: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-7",
-  image: "animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700/60",
-  card: "animate-pulse rounded-2xl bg-zinc-200 dark:bg-slate-700/60",
-  // Shimmer (sweep) variant
+  // Pulse (fade) variant — bg adapts to active theme
+  base: "animate-pulse rounded bg-[var(--appkit-color-border-subtle)]",
+  text: "animate-pulse rounded bg-[var(--appkit-color-border-subtle)] h-4",
+  heading: "animate-pulse rounded bg-[var(--appkit-color-border-subtle)] h-7",
+  image: "animate-pulse rounded-xl bg-[var(--appkit-color-border-subtle)]",
+  card: "animate-pulse rounded-2xl bg-[var(--appkit-color-border-subtle)]",
+  // Shimmer (sweep) variant — gradient from border-subtle → bg → border-subtle
   shimmer:
-    "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+    "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-[var(--appkit-color-border-subtle)] via-[var(--appkit-color-bg)] to-[var(--appkit-color-border-subtle)]",
   shimmerText:
-    "animate-shimmer bg-[length:400%_100%] h-4 rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+    "animate-shimmer bg-[length:400%_100%] h-4 rounded bg-gradient-to-r from-[var(--appkit-color-border-subtle)] via-[var(--appkit-color-bg)] to-[var(--appkit-color-border-subtle)]",
   shimmerCard:
-    "animate-shimmer bg-[length:400%_100%] rounded-2xl bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+    "animate-shimmer bg-[length:400%_100%] rounded-2xl bg-gradient-to-r from-[var(--appkit-color-border-subtle)] via-[var(--appkit-color-bg)] to-[var(--appkit-color-border-subtle)]",
 } as const;

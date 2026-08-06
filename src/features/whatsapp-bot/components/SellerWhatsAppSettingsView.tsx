@@ -12,7 +12,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_SECTION_CARD = "border border-zinc-200 dark:border-zinc-700 rounded-xl p-5";
+const CLS_SECTION_CARD = "border border-[var(--appkit-color-border)] rounded-xl p-5";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -412,7 +412,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Text>
 
         {/* Simulated WhatsApp catalog tile grid */}
-        <Div className={`${__O.hidden} bg-[var(--appkit-color-whatsapp-bg)] dark:bg-neutral-800 ${__P.p3}`} rounded="xl" border="default">
+        <Div className={`${__O.hidden} bg-[var(--appkit-color-whatsapp-bg)] bg-[var(--appkit-color-surface-elevated)] ${__P.p3}`} rounded="xl" border="default">
           <Row gap="sm" align="center" className="mb-3">
             <Row className="w-8 h-8 bg-[var(--appkit-color-whatsapp)]" align="center" justify="center" rounded="full">
               <Text color="inverse" size="xs" weight="bold">W</Text>

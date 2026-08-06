@@ -14,8 +14,8 @@ const __O = {
 } as const;
 
 const CLS_GRADIENT_BG = "absolute inset-0 bg-[image:var(--appkit-gradient-promotion)]";
-const CLS_CTA_BTN_SM = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0";
-const CLS_CTA_BTN_LG = "bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2";
+const CLS_CTA_BTN_SM = "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0";
+const CLS_CTA_BTN_LG = "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2";
 
 // --- Types -------------------------------------------------------------------
 
@@ -112,7 +112,7 @@ export function AdvertisementBanner({
                     variant="secondary"
                     size="lg"
                     onClick={onCtaClick}
-                    className="self-start bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] hover:bg-neutral-100 dark:bg-neutral-100 dark:text-[var(--appkit-color-text)] dark:hover:bg-neutral-200 font-[600]"
+                    className="self-start bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface)] dark:bg-[var(--appkit-color-surface)] dark:text-[var(--appkit-color-text)] dark:hover:bg-neutral-200 font-[600]"
                     shadow="lg"
                   >
                     {ctaLabel}

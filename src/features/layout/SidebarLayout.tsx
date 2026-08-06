@@ -48,10 +48,10 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
           ref={ref as React.RefObject<HTMLElement>}
           id={id}
           aria-label={ariaLabel}
-          className={`fixed inset-y-0 right-0 w-80 bg-white dark:bg-slate-900 border-l dark:border-slate-800 shadow-2xl transform duration-300 ease-in-out z-50 ${isOpen ? "translate-x-0" : "translate-x-full"} flex flex-col`}
+          className={`fixed inset-y-0 right-0 w-80 bg-[var(--appkit-color-surface)] border-l border-[var(--appkit-color-border-subtle)] shadow-2xl transform duration-300 ease-in-out z-50 ${isOpen ? "translate-x-0" : "translate-x-full"} flex flex-col`}
         >
           {/* Fixed (non-scrolling) header strip */}
-          <Div border="default" className="flex-shrink-0 py-5 border-b dark:border-slate-800" padding="x-lg" surface="muted">
+          <Div border="default" className="flex-shrink-0 py-5 border-b border-[var(--appkit-color-border-subtle)]" padding="x-lg" surface="muted">
             {header}
           </Div>
 

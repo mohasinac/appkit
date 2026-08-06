@@ -75,7 +75,7 @@ export function NavPermissionsManager({
                     <Tr
                       key={item.href}
                       className={[
-                        idx % 2 === 0 ? "bg-white dark:bg-slate-900" : "bg-zinc-50/50 dark:bg-slate-800/50",
+                        idx % 2 === 0 ? "bg-[var(--appkit-color-surface)]" : "bg-zinc-50/50 bg-[var(--appkit-color-surface-elevated)]/50",
                         !enabled ? "opacity-60" : "",
                       ].join(" ")}
                     >

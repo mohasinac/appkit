@@ -75,7 +75,7 @@ export function Select({
               "w-5 h-5 transition-transform duration-200",
               error
                 ? "text-error"
-                : "text-zinc-400 dark:text-zinc-400",
+                : "text-[var(--appkit-color-text-faint)]",
             )}
             viewBox="0 0 20 20"
             fill="currentColor"

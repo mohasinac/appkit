@@ -26,7 +26,7 @@ const PRIORITY_BADGE: Record<string, string> = {
   urgent: "bg-error-surface text-error",
   high: "bg-warning-surface text-warning",
   normal: "bg-info-surface text-info",
-  low: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+  low: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 const STATUS_BADGE: Record<string, string> = {
@@ -34,7 +34,7 @@ const STATUS_BADGE: Record<string, string> = {
   in_progress: "bg-warning-surface text-warning",
   waiting_on_user: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
   resolved: "bg-success-surface text-success",
-  closed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+  closed: "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
 };
 
 interface AdminSupportTicketsResponse {

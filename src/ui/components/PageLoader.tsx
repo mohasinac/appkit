@@ -28,7 +28,7 @@ export function PageLoader({ children }: PageLoaderProps) {
     if (timedOut) {
       return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-8 text-center">
-          <Text className="text-base font-medium text-zinc-700 dark:text-zinc-300">
+          <Text className="text-base font-medium text-[var(--appkit-color-text-muted)]">
             Something went wrong. Please refresh the page.
           </Text>
           <Button variant="secondary" onClick={() => window.location.reload()}>
@@ -40,7 +40,7 @@ export function PageLoader({ children }: PageLoaderProps) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Spinner size="lg" />
-        <Text className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</Text>
+        <Text className="text-sm text-[var(--appkit-color-text-muted)]">Loading…</Text>
       </div>
     );
   }
@@ -52,10 +52,10 @@ export function PageLoader({ children }: PageLoaderProps) {
       <div aria-hidden="true">{children}</div>
 
       {/* Floating overlay */}
-      <div className="pointer-events-none fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-white/60 p-8 text-center backdrop-blur-sm dark:bg-zinc-900/60">
+      <div className="pointer-events-none fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-white/60 p-8 text-center backdrop-blur-sm bg-[var(--appkit-color-surface)]/60">
         {timedOut ? (
           <>
-            <Text className="text-base font-medium text-zinc-700 dark:text-zinc-300">
+            <Text className="text-base font-medium text-[var(--appkit-color-text-muted)]">
               Something went wrong. Please refresh the page.
             </Text>
             {/* pointer-events-auto so the button stays clickable */}
@@ -68,7 +68,7 @@ export function PageLoader({ children }: PageLoaderProps) {
         ) : (
           <>
             <Spinner size="lg" />
-            <Text className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</Text>{/* audit-spinner-defaults-ok — PageLoader primitive: spinner + label by design */}
+            <Text className="text-sm text-[var(--appkit-color-text-muted)]">Loading…</Text>{/* audit-spinner-defaults-ok — PageLoader primitive: spinner + label by design */}
           </>
         )}
       </div>

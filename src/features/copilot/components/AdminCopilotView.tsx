@@ -44,7 +44,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
   return (
     <Div layout="flex" justify={isUser ? "end" : "start"}>
       {/* audit-inline-style-ok: asymmetric chat-bubble border-radius; no appkit rounded= variant covers per-corner values */}
-      <Div textSize="sm" className={`max-w-[80%] py-[0.625rem] ${ isUser ? "bg-primary text-white" : "bg-neutral-100 dark:bg-[var(--appkit-color-surface-elevated)] text-neutral-900 dark:text-neutral-100" }`} padding="x-md" style={{ borderRadius: isUser ? "1.5rem 0.125rem 1.5rem 1.5rem" : "0.125rem 1.5rem 1.5rem 1.5rem" }}>
+      <Div textSize="sm" className={`max-w-[80%] py-[0.625rem] ${ isUser ? "bg-primary text-white" : "bg-[var(--appkit-color-surface)] dark:bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)]" }`} padding="x-md" style={{ borderRadius: isUser ? "1.5rem 0.125rem 1.5rem 1.5rem" : "0.125rem 1.5rem 1.5rem 1.5rem" }}>
         <Text className="whitespace-pre-wrap leading-relaxed" size="sm">{msg.content}</Text>
         {msg.durationMs ? (
           <Span size="xs" className="mt-1 block opacity-60">{(msg.durationMs / 1000).toFixed(1)}s</Span>
@@ -65,7 +65,7 @@ function renderCopilotChatPanel(props: {
   return (
     <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
       <Div border="bottom" className={__P.p3}>
-        <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
+        <Text className="text-[var(--appkit-color-text-muted)]" size="xs" weight="medium">
           {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
       </Div>
@@ -119,7 +119,7 @@ function renderCopilotHistoryPanel(props: {
       <Stack className={`max-h-72 ${__O.yAuto}`} gap="sm">
         {(historyQuery.data?.messages ?? []).map((log, index) => (
           <Div key={`${log.createdAt}-${index}`} className="border border-neutral-200" rounded="lg" padding="xs">
-            <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
+            <Text className="text-[var(--appkit-color-text-muted)]" size="xs" weight="medium">{new Date(log.createdAt).toLocaleString()}</Text>
             <Text className={`mt-1`} truncate={3} size="sm">Q: {log.prompt}</Text>
             <Text className={`mt-1`} color="muted" truncate={3} size="sm">A: {log.response}</Text>
           </Div>
@@ -193,7 +193,7 @@ export function AdminCopilotView({
         <Div layout="grid" gap="4" className="grid-cols-1 lg:grid-cols-[2fr,1fr]">
           <Stack className="border border-neutral-200 h-[calc(100vh-300px)]" surface="default" rounded="xl">
             <Div border="bottom" className={__P.p3}>
-              <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
+              <Text className="text-[var(--appkit-color-text-muted)]" size="xs" weight="medium">
                 {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
               </Text>
             </Div>
@@ -284,7 +284,7 @@ export function AdminCopilotView({
                   key={`${log.createdAt}-${index}`}
                   className="border border-neutral-200" rounded="lg" padding="xs"
                 >
-                  <Text className="text-neutral-500 dark:text-neutral-400" size="xs" weight="medium">
+                  <Text className="text-[var(--appkit-color-text-muted)]" size="xs" weight="medium">
                     {new Date(log.createdAt).toLocaleString()}
                   </Text>
                   <Text className={`mt-1`} truncate={3} size="sm">Q: {log.prompt}</Text>

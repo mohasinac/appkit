@@ -96,7 +96,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         <div className="relative" data-section="input-div-528">
           {icon && (
-            <Div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-zinc-400 dark:text-zinc-400" data-section="input-div-529">
+            <Div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[var(--appkit-color-text-faint)]" data-section="input-div-529">
               {icon}
             </Div>
           )}
@@ -111,7 +111,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
 
           {adornment && (
-            <Div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-400" data-section="input-div-530">
+            <Div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[var(--appkit-color-text-faint)]" data-section="input-div-530">
               {adornment}
             </Div>
           )}

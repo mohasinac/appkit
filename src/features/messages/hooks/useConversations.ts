@@ -9,6 +9,7 @@ import { getClientRealtimeProvider } from "../../../contracts/client-realtime";
 import { userConversationsPingPath } from "../realtime";
 import type { ConversationDocument } from "../schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
+import { apiClient } from "../../../http/ApiClient";
 
 const LIST_ENDPOINT = "/api/user/conversations";
 
@@ -21,10 +22,8 @@ export interface UseConversationsReturn {
 }
 
 async function fetchList(): Promise<ConversationDocument[]> {
-  const res = await fetch(LIST_ENDPOINT, { credentials: "include" });
-  if (!res.ok) throw new Error(`Failed to load conversations (${res.status})`);
-  const json = (await res.json()) as { data?: { items?: ConversationDocument[] } };
-  return json.data?.items ?? [];
+  const data = await apiClient.get<{ items?: ConversationDocument[] }>(LIST_ENDPOINT);
+  return data.items ?? [];
 }
 
 export function useConversations(userId: string | null | undefined): UseConversationsReturn {

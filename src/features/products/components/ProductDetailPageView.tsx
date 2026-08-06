@@ -12,7 +12,7 @@ const ACTION_NOT_WIRED = "Action not wired";
 
 const CLS_STAR_FULL = "text-warning text-sm";
 const CLS_STAR_HALF = "text-warning text-sm";
-const CLS_STAR_EMPTY = "text-zinc-300 dark:text-zinc-600 text-sm";
+const CLS_STAR_EMPTY = "text-[var(--appkit-color-text-faint)] text-sm";
 const CLS_STOCK_IN = "bg-success-surface text-success dark:bg-success-surface dark:text-success";
 const CLS_STOCK_OUT = "bg-error-surface text-error dark:bg-error-surface dark:text-error";
 const CLS_BUNDLE_PILL = "inline-flex items-center gap-1 rounded-full border border-success bg-success-surface px-2.5 py-1 text-xs font-semibold text-success transition-colors hover:border-success hover:bg-success-surface dark:border-success/60 dark:bg-success-surface dark:text-success dark:hover:border-success dark:hover:bg-success-surface";
@@ -521,7 +521,7 @@ export async function ProductDetailPageView({
                     <Link
                       key={slug}
                       href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(slug))}
-                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                      className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                     >
                       {categoryNames[i] ?? slug}
                     </Link>
@@ -534,7 +534,7 @@ export async function ProductDetailPageView({
                   {brand && brandSlug && (
                     <Link
                       href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
-                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                      className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                     >
                       {brand}
                     </Link>
@@ -618,7 +618,7 @@ export async function ProductDetailPageView({
                 <RichText
                   html={descriptionHtml}
                   proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                  className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
+                  className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
                 />
               )}
 
@@ -839,7 +839,7 @@ export async function ProductDetailPageView({
                   <RichText
                     html={descriptionHtml}
                     proseClass="prose prose-sm sm:prose max-w-none dark:prose-invert"
-                    className="text-zinc-700 dark:text-zinc-300"
+                    className="text-[var(--appkit-color-text-muted)]"
                   />
                 ) : undefined
               }
