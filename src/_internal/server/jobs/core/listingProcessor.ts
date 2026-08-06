@@ -29,6 +29,7 @@ import {
 } from "../../../../repositories";
 import type { JobContext } from "../runtime/types";
 import type { JsonValue } from "../../../../schemas/types";
+import { normalizeError } from "../../../../errors/normalize";
 
 const DEFAULT_SORT = "-createdAt";
 const DEFAULT_PAGE = 1;
