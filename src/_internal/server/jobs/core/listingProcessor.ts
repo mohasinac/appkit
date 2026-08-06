@@ -147,7 +147,7 @@ function decodeCursor(cursor: string | undefined | null): number | null {
     const page = Number(parsed.page);
     return Number.isFinite(page) && page > 0 ? page : null;
   } catch (_err) {
-    // Malformed base64 or JSON — treat as no cursor (start from first page)
+    void normalizeError(_err); // Malformed base64 or JSON — treat as no cursor
     return null;
   }
 }

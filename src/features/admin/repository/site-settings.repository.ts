@@ -178,8 +178,9 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
       if (value) {
         try {
           result[key] = decryptSecret(value);
-        } catch {
-          result[key] = ""; // auth-tag mismatch or malformed blob → treat as missing
+        } catch (_err) {
+          void normalizeError(_err); // Auth-tag mismatch or key rotation — treat as missing credential
+          result[key] = "";
         }
       }
     }

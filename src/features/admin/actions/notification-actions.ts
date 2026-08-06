@@ -99,8 +99,9 @@ export async function sendNotification(
     fetchedUserDoc = await userRepository.findById(input.userId);
     userChannelPrefs = fetchedUserDoc?.notificationPreferences?.channels ?? {};
     userTypePrefs = fetchedUserDoc?.notificationPreferences?.types ?? {};
-  } catch {
-    // non-fatal: fall through with empty prefs (all enabled)
+  } catch (err) {
+    void normalizeError(err);
+    serverLogger.warn("notification-actions: user prefs lookup failed — defaulting to all channels enabled", { userId: input.userId, error: err instanceof Error ? err.message : String(err) });
   }
 
   // If caller didn't supply userEmail, try to decrypt it from the already-fetched user doc.

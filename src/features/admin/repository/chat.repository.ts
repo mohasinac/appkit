@@ -235,8 +235,8 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
         await docRef.delete();
         try {
           await getAdminRealtimeDb().ref(`/chat/${chatId}`).remove();
-        } catch {
-          // Non-fatal — RTDB subtree cleanup is best-effort
+        } catch (_err) {
+          void normalizeError(_err); // RTDB cleanup is best-effort — Firestore doc already deleted
         }
         return "deleted";
       }
@@ -271,8 +271,8 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
         );
       try {
         await getAdminRealtimeDb().ref(`/chat/${chatId}`).remove();
-      } catch {
-        // Non-fatal
+      } catch (_err) {
+        void normalizeError(_err); // RTDB cleanup is best-effort — adminDeleted flag already revokes access
       }
     } catch (error) {
       void normalizeError(error);

@@ -8,6 +8,7 @@
  */
 
 import { mapToHttpError } from "../../../../errors/error-mapping";
+import { normalizeError } from "../../../../errors/normalize";
 import { serverErrorsRepository } from "../../../../features/server-errors/repository/server-errors.repository";
 import type {
   CallableHandler,
@@ -36,7 +37,7 @@ async function persist(name: string, err: unknown, ctxLike?: { now?: Date }): Pr
       occurredAt: (ctxLike?.now ?? new Date()).getTime(),
     });
   } catch (_err) {
-    // Logging the logging failure would cause infinite recursion — intentionally swallowed
+    void normalizeError(_err); // Logging the logging failure — only normalize, never re-log
   }
 }
 
