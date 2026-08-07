@@ -25,6 +25,7 @@ interface PayoutDraft {
   businessType: string;
   autoPayout: boolean;
   minimumThreshold: string;
+  emiEnabled: boolean;
 }
 
 interface SafePayoutDetails {
@@ -57,6 +58,7 @@ const DEFAULT_DRAFT: PayoutDraft = {
   businessType: "",
   autoPayout: true,
   minimumThreshold: "",
+  emiEnabled: false,
 };
 
 export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings" }: SellerPayoutSettingsViewProps) {
@@ -89,6 +91,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
           minimumThreshold: res?.data?.preferences?.minimumThreshold
             ? String(res.data.preferences.minimumThreshold / 100)
             : "",
+          emiEnabled: res?.data?.emiEnabled ?? false,
         });
       })
       .catch(console.error)
@@ -119,6 +122,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
 
       const body = {
         ...methodFields,
+        emiEnabled: draft.emiEnabled,
         taxInfo: {
           gstin: draft.gstin.trim(),
           pan: draft.pan.trim(),
@@ -342,6 +346,18 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
               Auto-payouts run every Monday for the previous week&apos;s settled orders. Manual payouts can be requested from the Payouts page at any time.
             </Text>
           </Div>
+          <Toggle
+            checked={values.emiEnabled}
+            onChange={(checked) => onChange({ emiEnabled: checked })}
+            label="Offer EMI financing on eligible orders"
+            disabled={busy}
+          />
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            Only shown to buyers when platform-wide EMI is also enabled and their
+            cart subtotal from your store exceeds the site&apos;s minimum order
+            value. Orders on an EMI plan hold your payout until every installment
+            is paid, unless you mark the item &quot;ship before EMI completes&quot;.
+          </Text>
         </Stack>
       ),
     },
