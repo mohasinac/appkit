@@ -37,7 +37,7 @@ export type CarouselHoverEffect = "scale" | "color" | "glow" | "none";
 
 /** A content card placed in one of 6 grid zones (2 rows × 3 cols). */
 export type CarouselCard = {
-  id: string; // audit-schema-base-ok: embedded sub-document stored in carouselSlides.cards[] array
+  id: string;
   /** Zone 1–6: row 1 = zones 1–3, row 2 = zones 4–6 */
   zone: 1 | 2 | 3 | 4 | 5 | 6;
   /** On mobile, collapse to row-1 centre (zone 2) or row-2 centre (zone 5) */
@@ -52,7 +52,7 @@ export type CarouselCard = {
     textAlign?: "left" | "center" | "right";
   };
   buttons?: Array<{
-    id?: string; // audit-schema-base-ok: anonymous inline array element shape, not a Firestore collection root
+    id?: string;
     text: string;
     href: string;
     variant: "primary" | "secondary" | "outline" | "ghost" | "link";
@@ -248,7 +248,7 @@ export interface WelcomeSectionConfig {
 }
 
 export type TrustIndicator = {
-  id: string; // audit-schema-base-ok: embedded sub-document used as array element, not a Firestore collection root
+  id: string;
   icon: string;
   title: string;
   description: string;
@@ -501,7 +501,7 @@ export type SocialFeedLayout = "grid" | "masonry" | "carousel";
  * Do NOT store raw YouTube CDN thumbnail URLs in Firestore (they may expire).
  */
 export type StaticSocialPost = {
-  id: string; // audit-schema-base-ok: embedded sub-document stored in siteSettings config array, not a collection root
+  id: string;
   platform: SocialPlatform;
   /** YouTube video ID (e.g. "dQw4w9WgXcQ"). Required when platform is "youtube". */
   videoId?: string;
@@ -531,7 +531,7 @@ export interface SocialFeedSectionConfig {
 
 /** Normalised social post returned by /api/social-feed */
 export type SocialPost = {
-  id: string; // audit-schema-base-ok: API response shape, not a Firestore document type
+  id: string;
   platform: SocialPlatform;
   imageUrl?: string;
   videoThumbnailUrl?: string;
@@ -582,7 +582,7 @@ export interface BannerSectionConfig {
 }
 
 export type CustomCardsCard = {
-  id: string; // audit-schema-base-ok: embedded sub-document stored as array element in homepage section config
+  id: string;
   image?: string;
   imageAlt?: string;
   eyebrow?: string;

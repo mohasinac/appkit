@@ -48,7 +48,7 @@ function makeCard(zone: 1 | 2 | 3 | 4 | 5 | 6 = 1): CarouselCard {
     id: `card-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     zone,
     background: { type: "color", color: "var(--appkit-color-primary)" },
-    content: { title: "", subtitle: "", textColor: "#ffffff", textAlign: "left" }, // audit-hex-tokens-ok: Firestore document default value (text CSS color field), not a styling literal
+    content: { title: "", subtitle: "", textColor: "#ffffff", textAlign: "left" },
     buttons: [],
     hover: { effect: "scale" },
   };
@@ -207,7 +207,7 @@ function BackgroundEditor({
           label="Colour (CSS token or hex)"
           value={value.color ?? ""}
           onChange={(e) => set({ color: e.target.value })}
-          placeholder="var(--appkit-color-primary) or #1a1a2e" // audit-hex-tokens-ok: descriptive placeholder string showing users valid input formats
+          placeholder="var(--appkit-color-primary) or #1a1a2e"
         />
       )}
 

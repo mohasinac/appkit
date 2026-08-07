@@ -32,7 +32,6 @@ export function useConversations(userId: string | null | undefined): UseConversa
   const [error, setError] = useState<Error | null>(null);
 
   const refetch = useCallback(async () => {
-    // toast-intentionally-silent: background conversations list refetch — error stored in state
     if (!userId) {
       setConversations([]);
       return;

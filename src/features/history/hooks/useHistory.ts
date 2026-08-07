@@ -104,7 +104,6 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
   const trackTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   const loadItems = useCallback(async () => {
-    // toast-intentionally-silent: background history load — normalizeError logs, silent fail is acceptable
     try {
       if (isAuth) {
         setItems(await fetchAuthHistory());

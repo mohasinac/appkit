@@ -195,7 +195,6 @@ export function UserOffersPanel({
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const loadOffers = useCallback(async () => {
-    // toast-intentionally-silent: background data loader — error displayed in inline fetchError state
     setLoading(true);
     setFetchError("");
     try {

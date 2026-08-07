@@ -263,7 +263,6 @@ export function SellerOffersPanel({
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const loadOffers = useCallback(async () => {
-    // toast-intentionally-silent: background data loader — error displayed in inline fetchError state
     setLoading(true);
     setFetchError("");
     try {

@@ -165,7 +165,6 @@ export function SellerReviewsView({
   );
 
   const fetchReviews = useCallback(async () => {
-    // toast-intentionally-silent: background data loader — error displayed in inline error state
     setLoading(true);
     setError(null);
     try {

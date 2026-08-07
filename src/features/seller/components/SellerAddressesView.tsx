@@ -182,7 +182,6 @@ export function SellerAddressesView({
   const [deleteTargetAddr, setDeleteTargetAddr] = useState<AddressDoc | null>(null);
 
   const load = useCallback(async () => {
-    // toast-intentionally-silent: background address loader — error displayed in inline errorMessage state
     setIsLoading(true);
     setErrorMessage(null);
     try {

@@ -56,7 +56,6 @@ export function AdminFulfillmentView({
   const { showToast } = useToast();
 
   const fetchOrders = useCallback(async (sid: string) => {
-    // toast-intentionally-silent: background data loader — normalizeError logs, no user-facing toast needed
     setIsLoading(true);
     try {
       const res = await apiClient.get<{ orders: OrderDocument[]; total: number }>(

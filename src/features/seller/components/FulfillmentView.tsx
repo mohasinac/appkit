@@ -50,7 +50,6 @@ export function FulfillmentView({
   const { showToast } = useToast();
 
   const fetchOrders = useCallback(async () => {
-    // toast-intentionally-silent: background data loader — normalizeError logs, no user-facing toast needed
     setIsLoadingOrders(true);
     try {
       const res = await apiClient.get<{ orders: OrderDocument[]; total: number }>(
