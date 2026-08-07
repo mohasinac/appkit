@@ -301,7 +301,8 @@ export function SessionProvider({
             : null,
           dismissedBannerHash: data.dismissedBannerHash,
         };
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         return null;
       }
     }, [ep.userProfile]);

@@ -5,6 +5,7 @@
  * Re-visit semantics mirror server: remove existing entry for productId,
  * unshift new entry at position 0, then slice to HISTORY_MAX.
  */
+import { normalizeError } from "../../../errors/normalize";
 import { HISTORY_MAX } from "../../../constants/limits";
 
 const DEFAULT_GUEST_HISTORY_KEY = process.env.NEXT_PUBLIC_APP_ID
@@ -44,7 +45,8 @@ function read(storage: Storage | null, key: string): GuestHistoryItem[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? (parsed as GuestHistoryItem[]) : [];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return [];
   }
 }

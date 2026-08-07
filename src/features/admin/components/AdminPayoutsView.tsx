@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -82,7 +83,8 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       a.download = `payouts-${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       toast.showToast("CSV export failed.", "error");
     }
   };

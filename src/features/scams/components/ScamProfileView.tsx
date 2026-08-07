@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import React from "react";
 
 const CLS_OUTLINE_BTN = "appkit-button appkit-button--outline appkit-button--md flex w-full items-center gap-2";
@@ -56,7 +57,8 @@ function formatDate(d: Date | string | undefined): string {
   if (!d) return "";
   try {
     return new Date(d as string).toLocaleDateString("en-IN", { dateStyle: "medium" });
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return String(d);
   }
 }

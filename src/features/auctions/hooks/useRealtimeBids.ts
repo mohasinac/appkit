@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import { useEffect, useState } from "react";
 import { logger } from "../../../core/Logger";
 import { BID_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -72,7 +73,8 @@ export function useRealtimeBids(
         } else if (msg.type === "error") {
           setConnected(false);
         }
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         logger.warn("[useRealtimeBids] Failed to parse SSE message");
       }
     };

@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useLongPress } from "../../../react/hooks/useLongPress";
@@ -105,7 +106,8 @@ export function MarketplacePreorderCard({
       event.stopPropagation();
       try {
         await toggle();
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         // The hook rolls back optimistic state when the mutation fails.
       }
     },

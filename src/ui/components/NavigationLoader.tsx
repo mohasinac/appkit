@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -119,7 +120,8 @@ export function NavigationLoader({
         if (nextKey === liveKey) return false;
         if (pendingUrl.current && nextKey === pendingUrl.current) return false;
         return true;
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         return true;
       }
     }
@@ -132,7 +134,8 @@ export function NavigationLoader({
           const href = typeof next === "string" ? next : next?.toString() ?? "";
           const nextUrl = new URL(href, window.location.href);
           showOverlay(`${nextUrl.pathname}?${nextUrl.searchParams.toString()}`);
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           showOverlay();
         }
       }

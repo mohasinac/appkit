@@ -89,7 +89,8 @@ export function GroupSettingsPanel({
     try {
       const res = (await apiClient.get(`/api/products/group/${encodeURIComponent(groupId)}`)) as ChildrenResponse;
       setChildren(res.data?.items ?? []);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       setChildren([]);
     } finally {
       setLoading(false);

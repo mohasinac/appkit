@@ -128,7 +128,8 @@ export async function fetchLiveStats(
               : ref;
           const count = await getFirestoreCount(query);
           result[key] = String(count);
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           // silently fall back to static value
         }
       })(),

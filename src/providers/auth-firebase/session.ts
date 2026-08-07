@@ -91,7 +91,8 @@ export const firebaseSessionProvider: ISessionProvider = {
         false,
       );
       await getAdminAuthLite().revokeRefreshTokens(decoded.uid);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // Best-effort: if cookie is already invalid, treat as already destroyed
     }
   },

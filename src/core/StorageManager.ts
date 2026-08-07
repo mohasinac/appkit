@@ -44,8 +44,9 @@ export class StorageManager {
       const storage =
         type === "local" ? window.localStorage : window.sessionStorage;
       return storage ?? null;
-    } catch {
-      return null;
+    } catch (_err) {
+      void normalizeError(_err);
+      return null; // localStorage/sessionStorage unavailable (SSR, cross-origin iframe, or security policy)
     }
   }
 
@@ -148,8 +149,9 @@ export class StorageManager {
       storage.setItem(testKey, "1");
       storage.removeItem(testKey);
       return true;
-    } catch {
-      return false;
+    } catch (_err) {
+      void normalizeError(_err);
+      return false; // storage blocked by browser security policy or private mode
     }
   }
 

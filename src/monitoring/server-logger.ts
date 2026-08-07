@@ -118,7 +118,8 @@ function formatLogEntry(entry: LogEntry): string {
   if (sanitized !== undefined) {
     try {
       dataStr = `\n Data: ${JSON.stringify(sanitized, null, 2)}`;
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       dataStr = `\n Data: [non-serializable — ${typeof sanitized}]`;
     }
   }
@@ -153,8 +154,8 @@ async function cleanOldLogFiles(logsDir: string): Promise<void> {
       filesWithStats.length - MAX_LOG_FILES,
     );
     await Promise.all(filesToDelete.map((file) => unlink(file.path)));
-  } catch {
-    // Logger failures must never break the request path.
+  } catch (_err) {
+    void normalizeError(_err); // Logger failures must never break the request path
   }
 }
 
@@ -173,8 +174,8 @@ async function rotateLogFileIfNeeded(filePath: string): Promise<void> {
 
     await rename(filePath, rotatedPath);
     await cleanOldLogFiles(dir);
-  } catch {
-    // Logger failures must never break the request path.
+  } catch (_err) {
+    void normalizeError(_err); // Logger failures must never break the request path
   }
 }
 

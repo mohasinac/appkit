@@ -191,7 +191,8 @@ export function SellerAddressesView({
       const json = await res.json();
       const data = (json?.data?.addresses ?? json?.addresses ?? []) as AddressDoc[];
       setAddresses(data);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       setErrorMessage("Could not load addresses. Please try again.");
     } finally {
       setIsLoading(false);

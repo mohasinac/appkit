@@ -1,6 +1,7 @@
 /** Shared string helpers for homepage section rendering. */
 
 /** Strip leading emoji/symbols that admins sometimes prefix onto DB titles. */
+import { normalizeError } from "../../../errors/normalize";
 export function cleanTitle(raw: string | undefined): string | undefined {
   if (!raw) return raw;
   const cleaned = raw.replace(/^[^\p{L}\p{N}]+/u, "").trim();
@@ -20,7 +21,8 @@ export function parseWelcomeDescription(description: string | undefined): string
       .join(" ")
       .trim();
     return extracted || description;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return description;
   }
 }

@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState } from "react";
 import Link from "next/link";
 import { Code, Div, Heading, Row, Stack, Text } from "../../../ui";
@@ -41,7 +42,8 @@ export function EventOfferCard({
       await navigator.clipboard.writeText(couponCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       /* clipboard unavailable — leave button as-is */
     }
   };

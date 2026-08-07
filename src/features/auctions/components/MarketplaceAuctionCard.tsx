@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Clock, Gavel, Heart, Play, ShoppingBag, Star } from "lucide-react";
@@ -417,7 +418,8 @@ export function MarketplaceAuctionCard({
       event.stopPropagation();
       try {
         await toggle();
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         // The hook rolls back optimistic state when the mutation fails.
       }
     },

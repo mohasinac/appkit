@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
@@ -77,7 +78,8 @@ function toDateInputValue(val: Date | string | undefined): string {
   if (!val) return "";
   try {
     return new Date(val).toISOString().split("T")[0];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return "";
   }
 }

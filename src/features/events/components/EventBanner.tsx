@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useEffect, useMemo, useState } from "react";
 import { useEvents } from "../hooks/useEvents";
 import { Button, Section, TextLink } from "../../../ui";
@@ -30,7 +31,8 @@ export function EventBanner({
     try {
       const stored = sessionStorage.getItem(storageKey);
       if (stored) setDismissedIds(JSON.parse(stored));
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // ignore session storage failures
     }
     setMounted(true);
@@ -66,7 +68,8 @@ export function EventBanner({
     setDismissedIds(next);
     try {
       sessionStorage.setItem(storageKey, JSON.stringify(next));
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // ignore
     }
   };

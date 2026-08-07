@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useState } from "react";
 
@@ -18,7 +19,8 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
       try {
         await navigator.share({ title: title ?? document.title, text, url });
         return;
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         // user cancelled or browser blocked — fall through to clipboard
       }
     }

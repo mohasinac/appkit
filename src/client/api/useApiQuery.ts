@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 
 import * as React from "react";
 import {
@@ -65,8 +66,8 @@ export function useApiQuery<
             message: err.message,
             requestId: err.requestId,
           });
-        } catch {
-          /* never propagate from the reporter */
+        } catch (_err) {
+          void normalizeError(_err); /* never propagate from the reporter — it is a pure observability sink */
         }
       }
     } else {

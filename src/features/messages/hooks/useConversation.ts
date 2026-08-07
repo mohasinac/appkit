@@ -103,7 +103,8 @@ export function useConversation(conversationId: string | null): UseConversationR
         setIsConnected(false);
         unsubscribe();
       };
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // Realtime provider not registered — falls back to one-shot fetch above.
       setIsConnected(false);
       return undefined;

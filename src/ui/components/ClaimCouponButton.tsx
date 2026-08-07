@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 
 /**
  * ClaimCouponButton — surfaced anywhere a user wins or earns a coupon
@@ -36,7 +37,8 @@ async function postClaim(
       body: JSON.stringify({ couponCode, source }),
     });
     return res.ok;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return false;
   }
 }
@@ -48,7 +50,8 @@ async function copyToClipboard(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text);
     return true;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return false;
   }
 }

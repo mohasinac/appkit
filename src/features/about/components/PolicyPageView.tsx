@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import { Row } from "@mohasinac/appkit/ui";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
@@ -39,7 +40,8 @@ export async function PolicyPageView({
     const settings = await siteSettingsRepository.getSingleton();
     const legalPages = (settings as any).legalPages ?? {};
     adminHtml = legalPages[firestoreFieldMap[policy]] ?? "";
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // Firestore unavailable — fall back to i18n
   }
 

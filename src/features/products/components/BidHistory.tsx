@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import React from "react";
 import { Div, Heading, Span, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -39,7 +40,8 @@ function formatBidDate(raw: string): string {
       hour: "2-digit",
       minute: "2-digit",
     });
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return raw;
   }
 }

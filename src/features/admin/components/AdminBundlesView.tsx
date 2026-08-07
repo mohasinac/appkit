@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { Row, SIEVE_OP, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
@@ -99,7 +100,8 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
         const res = await fetch(ADMIN_ENDPOINTS.BUNDLE_REBUILD(bundleId), { method: "POST" });
         if (!res.ok) throw new Error("Rebuild failed");
         toast.showToast("Bundle stock rebuilt.", "success");
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         toast.showToast("Failed to rebuild bundle stock.", "error");
       } finally {
         setRebuildingId(null);

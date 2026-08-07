@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
@@ -22,7 +23,8 @@ function validateThirdPartyUrl(url: string, issues: string[]): void {
     if (parsed.protocol !== "https:") {
       issues.push("Third-party ad URL must be https");
     }
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     issues.push("Third-party ad URL must be a valid URL");
   }
 }

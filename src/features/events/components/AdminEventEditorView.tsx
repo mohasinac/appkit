@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import type { JsonObjectWithUndefined } from "@mohasinac/appkit";
@@ -256,7 +257,8 @@ function toLocalDatetime(iso: string | undefined): string {
     const offset = d.getTimezoneOffset();
     const local = new Date(d.getTime() - offset * 60000);
     return local.toISOString().slice(0, 16);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return "";
   }
 }
@@ -265,7 +267,8 @@ function toISOString(local: string): string {
   if (!local) return "";
   try {
     return new Date(local).toISOString();
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return "";
   }
 }

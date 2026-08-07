@@ -1,4 +1,5 @@
 import { ApiError, isApiError } from "./ApiError";
+import { normalizeError } from "../../errors/normalize";
 import { getErrorDisplay } from "../../errors/error-display-map";
 
 /**
@@ -59,8 +60,8 @@ export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
         message,
         stack: err instanceof Error ? err.stack : undefined,
       });
-    } catch {
-      // never let the reporter break the catch path
+    } catch (_err) {
+      void normalizeError(_err); // error reporter must never break the catch path — it is a pure side-effect sink
     }
   }
 

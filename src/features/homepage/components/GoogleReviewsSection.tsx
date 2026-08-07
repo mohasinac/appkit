@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import React from "react";
 import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
@@ -190,7 +191,8 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
     reviews = result.reviews;
     aggregateRating = result.aggregateRating;
     totalRatings = result.totalRatings;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // Fail silently — empty state shown
   }
 

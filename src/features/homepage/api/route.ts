@@ -31,7 +31,8 @@ async function getRoleFromSession(request: Request): Promise<string | null> {
     if (!cookie) return null;
     const payload = await session.verifySession(cookie);
     return payload.role ?? null;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return null;
   }
 }

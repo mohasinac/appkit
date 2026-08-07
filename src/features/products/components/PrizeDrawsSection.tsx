@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import Link from "next/link";
@@ -40,7 +41,8 @@ export async function PrizeDrawsSection({
       pageSize: limit,
     });
     draws = (result.items ?? []) as ProductDocument[];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     draws = [];
   }
 

@@ -1,6 +1,7 @@
 /**
  * String Formatting and Manipulation Utilities
  */
+import { normalizeError } from "../errors/normalize";
 
 export function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -179,7 +180,8 @@ export function proseMirrorToHtml(value: string): string {
       return renderProseMirrorNodes(parsed.content ?? []);
     }
     return value;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return value;
   }
 }

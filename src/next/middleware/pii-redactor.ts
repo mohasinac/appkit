@@ -1,5 +1,6 @@
 // appkit/src/next/middleware/pii-redactor.ts
 import type { NextRequest, NextResponse as NR } from "next/server";
+import { normalizeError } from "../../errors/normalize";
 import { NextResponse } from "next/server";
 import type { AuthRequestContext, Middleware } from "./types";
 import type { JsonValue } from "../../schemas/types";
@@ -84,7 +85,8 @@ export function createPiiRedactorMiddleware(
     let body: Record<string, JsonValue>;
     try {
       body = (await response.json()) as Record<string, JsonValue>;
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       return response;
     }
 

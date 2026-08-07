@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Button, Details, Div, Heading, Input, Label, Li, Row, Span, Stack, Summary, Text, Textarea, Ul } from "../../../ui";
@@ -92,7 +93,8 @@ export function CharacterHotspotForm({
     try {
       const url = await onUploadImage(file);
       setImageUrl(url);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       setError("Image upload failed.");
     } finally {
       setUploading(false);
@@ -159,7 +161,8 @@ export function CharacterHotspotForm({
       await onSave({ imageUrl, imageAlt, active, pins });
       await onAfterSave?.();
       setSuccess(true);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       setError("Save failed. Check your connection and try again.");
     } finally {
       setSaving(false);

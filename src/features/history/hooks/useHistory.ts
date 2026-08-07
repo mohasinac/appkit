@@ -53,7 +53,8 @@ async function fetchAuthHistory(): Promise<GuestHistoryItem[]> {
     if (!res.ok) return [];
     const json = (await res.json()) as HistoryFetchResponse;
     return json.data?.items ?? [];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return [];
   }
 }
@@ -66,7 +67,8 @@ async function postAuthTrack(args: TrackArgs): Promise<void> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(args),
     });
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // best-effort tracking
   }
 }
@@ -77,7 +79,8 @@ async function deleteAuthItem(productId: string): Promise<void> {
       method: "DELETE",
       credentials: "include",
     });
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // ignore
   }
 }
@@ -88,7 +91,8 @@ async function deleteAuthAll(): Promise<void> {
       method: "DELETE",
       credentials: "include",
     });
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // ignore
   }
 }
@@ -177,7 +181,8 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
       }
       setItems([]);
       showToast("History cleared.", "success");
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       showToast("Failed to clear history.", "error");
     }
   }, [isAuth, showToast]);

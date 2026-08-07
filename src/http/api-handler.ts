@@ -1,3 +1,4 @@
+import { normalizeError } from "../errors/normalize";
 import { createApiHandlerFactory } from "../next";
 import { applyRateLimit } from "../security";
 import {
@@ -58,7 +59,8 @@ function parseCookieHeader(cookieHeader: string | null): Map<string, string> {
 
     try {
       result.set(key, decodeURIComponent(value));
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       result.set(key, value);
     }
   }
@@ -77,7 +79,8 @@ async function getUserFromRequest(
   let decoded: AuthPayload;
   try {
     decoded = await providers.session.verifySession(sessionCookie);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     throw new AuthenticationError(ERROR_MESSAGES.USER.NOT_AUTHENTICATED);
   }
 

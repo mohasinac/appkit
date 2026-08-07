@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation, type JsonValue, type FirestoreDocument } from "@mohasinac/appkit/client";
 import React from "react";
@@ -92,7 +93,8 @@ function toDateInputValue(val: Date | string | undefined): string {
   if (!val) return "";
   try {
     return new Date(val).toISOString().split("T")[0];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return "";
   }
 }

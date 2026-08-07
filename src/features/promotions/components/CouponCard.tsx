@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useState } from "react";
 import { Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
@@ -208,7 +209,8 @@ export function CouponCard({
           credentials: "include",
           body: JSON.stringify({ couponCode: n.code, source: claimSource }),
         });
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         /* anon/network — non-fatal */
       }
       if (typeof window !== "undefined") {

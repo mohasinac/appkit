@@ -9,6 +9,7 @@
  */
 
 import { LOGS_ENDPOINTS } from "../constants/api-endpoints";
+import { normalizeError } from "../errors/normalize";
 
 export type LogLevel = "debug" | "info" | "warn" | "error";
 
@@ -142,8 +143,8 @@ export class Logger {
   private saveToStorage(): void {
     try {
       localStorage.setItem("app_logs", JSON.stringify(this.logs));
-    } catch {
-      // Silently fail
+    } catch (_err) {
+      void normalizeError(_err); // localStorage unavailable or quota exceeded — logger must not crash the app
     }
   }
 
@@ -160,8 +161,8 @@ export class Logger {
           data: entry.data,
         }),
       });
-    } catch {
-      // Silently fail
+    } catch (_err) {
+      void normalizeError(_err); // remote log endpoint unavailable — logger must not crash the app
     }
   }
 

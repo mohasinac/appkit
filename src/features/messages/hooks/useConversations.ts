@@ -68,7 +68,8 @@ export function useConversations(userId: string | null | undefined): UseConversa
         },
       );
       return unsubscribe;
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // Realtime provider not registered — non-fatal; list still works.
       return undefined;
     }

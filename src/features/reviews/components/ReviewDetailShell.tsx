@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useEffect, useCallback } from "react";
 
 const __P = {
@@ -87,7 +88,8 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
       setHelpfulCount((c) => c + 1);
       setVoted(true);
       localStorage.setItem(storageKey, "1");
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // silently fail
     } finally {
       setVoting(false);

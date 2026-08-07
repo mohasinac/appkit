@@ -9,6 +9,7 @@
  * - all mutations run inside a Firestore transaction (concurrent-write safe)
  */
 
+import { normalizeError } from "../../../errors/normalize";
 import { getAdminDb } from "../../../providers/db-firebase";
 import type { JsonValue } from "@mohasinac/appkit";
 import { serverLogger } from "../../../monitoring";
@@ -105,7 +106,8 @@ export class UserWishlistRepository {
         try {
           const doc = await db.collection("products").doc(item.productId).get();
           return doc.exists ? item : null;
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           return item;
         }
       }),

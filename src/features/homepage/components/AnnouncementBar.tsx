@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useAuth } from "../../../react/contexts/SessionContext";
@@ -23,7 +24,8 @@ function isLocallyDismissed(message: string): boolean {
     const { hash, at } = JSON.parse(raw);
     if (hash !== hashBannerMessage(message)) return false;
     return Date.now() - at < ONE_WEEK_MS;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return false;
   }
 }
@@ -31,7 +33,7 @@ function isLocallyDismissed(message: string): boolean {
 function saveLocalDismissal(message: string): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ hash: hashBannerMessage(message), at: Date.now() }));
-  } catch { /* quota exceeded — ignore */ }
+  } catch (_err) { void normalizeError(_err); /* quota exceeded — ignore */ }
 }
 
 export interface AnnouncementBarProps {

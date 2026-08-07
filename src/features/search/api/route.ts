@@ -85,7 +85,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     let siteSettings: Awaited<ReturnType<typeof getSiteSettingsGlobal>> | null = null;
     try {
       siteSettings = await getSiteSettingsGlobal();
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       siteSettings = null;
     }
     if (listingType && siteSettings && !isListingTypeEnabled(listingType, siteSettings)) {

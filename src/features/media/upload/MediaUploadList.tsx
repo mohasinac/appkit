@@ -41,7 +41,8 @@ function fileNameFromUrl(url: string): string {
   try {
     const parts = new URL(url).pathname.split("/");
     return decodeURIComponent(parts[parts.length - 1] || url);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return url;
   }
 }

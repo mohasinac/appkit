@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../errors/normalize";
 import React, { useState, useCallback } from "react";
 import { Modal } from "../../ui/components/Modal";
 import { Button, Div, Input, Label, Row, Stack, Text, Alert } from "../../ui";
@@ -132,7 +133,8 @@ export function MediaPickerModal({
       setUrlError("Please enter a URL.");
       return;
     }
-    try { new URL(trimmed); } catch {
+    try { new URL(trimmed); } catch (_err) {
+      void normalizeError(_err);
       setUrlError("Enter a valid URL starting with https://");
       return;
     }

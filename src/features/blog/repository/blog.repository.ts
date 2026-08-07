@@ -101,7 +101,8 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
         .collection(this.collection)
         .doc(id)
         .update({ [BLOG_POST_FIELDS.VIEWS]: increment(1) });
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // Fire-and-forget by design.
     }
   }

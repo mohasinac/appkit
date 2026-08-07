@@ -646,7 +646,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         .collection(this.collection)
         .doc(categoryId)
         .update({ [CATEGORY_FIELDS.VIEW_COUNT]: increment(1) });
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // View analytics must not break category read path.
     }
   }

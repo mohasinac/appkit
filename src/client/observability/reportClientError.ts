@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 
 /**
  * Send a client-side error to the persisted log. POSTs `/api/client-errors`
@@ -84,7 +85,7 @@ export function reportClientError(payload: ClientErrorPayload): void {
     }).catch(() => {
       /* swallow — reporting must never throw */
     });
-  } catch {
-    /* swallow — reporting must never throw */
+  } catch (_err) {
+    void normalizeError(_err); /* swallow — error reporting must never throw and break the calling error handler */
   }
 }

@@ -1,4 +1,5 @@
 import { getApps, initializeApp, type FirebaseApp } from "firebase/app";
+import { normalizeError } from "../../errors/normalize";
 import {
   getDatabase,
   ref,
@@ -42,7 +43,8 @@ export class FirebaseClientRealtimeProvider implements IClientRealtimeProvider {
   async signOut(): Promise<void> {
     try {
       await signOut(getAuth(this.app));
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // no-op — signing out of a secondary app can fail harmlessly
     }
   }

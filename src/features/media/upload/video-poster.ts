@@ -21,6 +21,7 @@
  * the poster is fetched via /api/media/<slug>.
  */
 
+import { normalizeError } from "../../../errors/normalize";
 const TARGET_FRAME_TIME_SECONDS = 0.5;
 const JPEG_QUALITY = 0.85;
 const LOAD_TIMEOUT_MS = 10_000;
@@ -132,7 +133,8 @@ export async function extractVideoPosterFrame(
     if (!blob) return null;
 
     return { blob, width, height };
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return null;
   } finally {
     URL.revokeObjectURL(objectUrl);

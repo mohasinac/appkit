@@ -8,6 +8,7 @@
  */
 
 import { logger } from "../core/Logger";
+import { normalizeError } from "../errors/normalize";
 import { AppError } from "../errors";
 import type { FirestoreValue, JsonValue } from "../schemas/types";
 
@@ -97,8 +98,9 @@ export const logApiError = async (
 
   try {
     responseBody = await response.clone().json();
-  } catch {
-    responseBody = await response.clone().text();
+  } catch (_err) {
+    void normalizeError(_err);
+    responseBody = await response.clone().text(); // response body is not JSON — read as plain text
   }
 
   logClientError(`API Error: ${endpoint}`, new Error(response.statusText), {

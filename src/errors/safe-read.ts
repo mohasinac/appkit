@@ -63,8 +63,8 @@ export async function safeRead<T>(
         message: mapped.message,
         stack: err instanceof Error ? err.stack : undefined,
       });
-    } catch {
-      // reporter itself must never propagate; safeRead is a safety net.
+    } catch (_err) {
+      void normalizeError(_err); // error reporter must never propagate — safeRead is a last-resort safety net
     }
     return opts.fallback;
   }

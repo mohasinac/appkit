@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 const DEFAULT_GUEST_WISHLIST_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_wishlist`
   : "guest_wishlist";
@@ -31,7 +32,8 @@ function readItems(
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? (parsed as GuestWishlistItem[]) : [];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return [];
   }
 }

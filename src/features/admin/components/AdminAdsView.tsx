@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
@@ -357,7 +358,8 @@ export function AdminAdsView({
         if (parsed.protocol !== "https:") {
           issues.push("Third-party script URL must be https");
         }
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         issues.push("Third-party script URL must be a valid URL");
       }
     }

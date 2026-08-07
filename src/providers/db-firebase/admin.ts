@@ -12,6 +12,7 @@
  * All getters are lazy — the SDK is not touched until first use.
  */
 import type { App } from "firebase-admin/app";
+import { normalizeError } from "../../errors/normalize";
 import type { Auth } from "firebase-admin/auth";
 import type { Firestore } from "firebase-admin/firestore";
 import type { Storage } from "firebase-admin/storage";
@@ -227,7 +228,8 @@ export function getAdminDb(): Firestore {
     // settings() can only be called once per Firestore instance — guard for
     // HMR reloads and duplicate module instances.
     db.settings({ ignoreUndefinedProperties: true });
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // Already configured — safe to ignore.
   }
   set("__mohasinac_firebase_admin_db__", db);

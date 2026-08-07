@@ -106,7 +106,8 @@ export function parseIncomingWebhookPayload(
           : "";
     if (!from || !body) return null;
     return { from: from.replace(/\D/g, ""), body: body.trim() };
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return null;
   }
 }
@@ -170,7 +171,8 @@ export async function sendWhatsAppBusinessMessage(
       }),
     });
     return res.ok;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return false;
   }
 }

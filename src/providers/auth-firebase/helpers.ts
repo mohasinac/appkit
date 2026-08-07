@@ -217,7 +217,8 @@ export async function getUserFromRequest<T = unknown>(
     const payload = await verifySessionCookie(sessionCookie);
     if (!payload) return null;
     return findById(payload.uid);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return null;
   }
 }

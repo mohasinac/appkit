@@ -57,7 +57,8 @@ async function validateSchema<TInput>(
   try {
     const data = (await request.json()) as TInput;
     return { validationError: false, data };
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return { validationError: false, data: undefined as unknown as TInput };
   }
 }

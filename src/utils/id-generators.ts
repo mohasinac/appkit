@@ -7,6 +7,7 @@
  */
 
 import { slugify } from "./string.formatter";
+import { normalizeError } from "../errors/normalize";
 
 function generateRandomString(length: number = 6): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -265,7 +266,8 @@ export async function idExists(
   try {
     const doc = await getExistingId();
     return !!doc;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return false;
   }
 }

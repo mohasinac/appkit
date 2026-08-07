@@ -14,6 +14,7 @@
  *   const razorpay = new Razorpay({ key_id: keys.razorpayKeyId, key_secret: keys.razorpayKeySecret });
  */
 import { siteSettingsRepository } from "../repositories";
+import { normalizeError } from "../errors/normalize";
 
 export interface ResolvedKeys {
   // Razorpay
@@ -60,9 +61,8 @@ export async function resolveKeys(): Promise<ResolvedKeys> {
   let db: Partial<ResolvedKeys> = EMPTY_KEYS;
   try {
     db = await siteSettingsRepository.getDecryptedCredentials();
-  } catch {
-    // Preserve legacy letitrip behavior: Firestore failures must still fall
-    // through to env-based defaults instead of failing key resolution.
+  } catch (_err) {
+    void normalizeError(_err); // Firestore unavailable — fall through to env-based defaults for backward compatibility
   }
 
   const value: ResolvedKeys = {

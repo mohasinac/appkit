@@ -26,7 +26,8 @@ export function useCurrentUser(opts?: UseCurrentUserOptions) {
     queryFn: async () => {
       try {
         return await apiClient.get<AuthUser>(AUTH_ENDPOINTS.ME);
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         return null;
       }
     },

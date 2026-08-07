@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useTransition } from "react";
 import { Code, Div, Input, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
 import { useToast } from "../../../ui";
@@ -41,7 +42,8 @@ export function NavPermissionsManager({
       try {
         await onUpdate(navId, enabled);
         showToast(`"${label}" ${enabled ? "enabled" : "disabled"}.`, "success");
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         setConfig(prev);
         showToast("Failed to update nav config. Please try again.", "error");
       }

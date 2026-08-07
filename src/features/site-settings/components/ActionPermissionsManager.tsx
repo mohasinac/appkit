@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useTransition, useMemo } from "react";
 import { Badge, Code, Div, Input, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
 import { ACTION_META, ACTION_ID } from "../../products/constants/action-defs";
@@ -99,7 +100,8 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
           `"${ACTION_META[actionId]?.label}" ${enabled ? "enabled" : "disabled"}.`,
           "success",
         );
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         setConfig(prev);
         showToast("Failed to update action config. Please try again.", "error");
       }

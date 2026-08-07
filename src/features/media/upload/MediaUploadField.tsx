@@ -135,7 +135,8 @@ function filenameFromUrl(url: string): string {
   try {
     const parts = new URL(url).pathname.split("/");
     return decodeURIComponent(parts[parts.length - 1] || url);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return url;
   }
 }
@@ -152,7 +153,8 @@ function extractYouTubeId(input: string): string | null {
       url.searchParams.get("v") ||
       (url.hostname === "youtu.be" ? url.pathname.slice(1) : null)
     );
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return null;
   }
 }
@@ -378,7 +380,7 @@ export function MediaUploadField({
   function handleExtApply() {
     const trimmed = extInput.trim();
     if (!trimmed) { setExtError("Enter a URL."); return; }
-    try { new URL(trimmed); } catch { setExtError("Enter a valid URL."); return; }
+    try { new URL(trimmed); } catch (_err) { void normalizeError(_err); setExtError("Enter a valid URL."); return; }
     const type = /\.(mp4|webm|ogg|mov|avi)(\?|$)/i.test(trimmed) ? "video" : "image";
     onChange(trimmed);
     onChangeField?.({ url: trimmed, type, source: "external" });

@@ -141,7 +141,8 @@ async function verifySession(request: Request): Promise<RouteUser> {
       emailVerified: payload.emailVerified,
       ...payload.claims,
     };
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     throw Object.assign(new Error("Invalid or expired session"), {
       status: 401,
     });
@@ -251,7 +252,8 @@ export function createRouteHandler<
       } else if (options.authOptional) {
         try {
           user = await verifySession(request);
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           // anonymous
         }
       }
@@ -300,7 +302,8 @@ export function createRouteHandler<
         let raw: unknown;
         try {
           raw = await request.json();
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           return errorJson(400, HTTP_ERROR_CODES.VALIDATION_FAILED, "Invalid JSON body", requestId);
         }
         const result = resolvedSchema.safeParse(raw);
@@ -317,7 +320,8 @@ export function createRouteHandler<
       } else if (options.bodyRequired) {
         try {
           body = (await request.json()) as TInput;
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           return errorJson(400, HTTP_ERROR_CODES.VALIDATION_FAILED, "Invalid JSON body", requestId);
         }
       } else if (options.bodyOptional) {
@@ -325,7 +329,8 @@ export function createRouteHandler<
         try {
           const text = await request.text();
           body = text ? (JSON.parse(text) as TInput) : undefined;
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           body = undefined;
         }
       }

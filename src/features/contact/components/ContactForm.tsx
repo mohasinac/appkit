@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useCallback } from "react";
 import { Button, Div, Heading, Span, Stack, Text, Textarea } from "../../../ui";
 const CLS_FIELD_ERROR = "text-error";
@@ -81,7 +82,8 @@ export function ContactForm({
         await onSubmit(form);
         setSubmitted(true);
         setForm(INITIAL_FORM);
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         setSubmitError(
           labels.errorGeneric ?? "Something went wrong. Please try again.",
         );

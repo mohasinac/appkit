@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import React, { useEffect, useRef, useState } from "react";
 import JsBarcode from "jsbarcode";
@@ -59,7 +60,8 @@ function ProductLabel({ product }: { product: PrintCenterProduct }) {
           fontSize: 12,
           margin: 8,
         });
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         // Invalid barcode value — render nothing
       }
     }

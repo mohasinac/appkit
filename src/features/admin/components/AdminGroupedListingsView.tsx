@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 /**
  * AdminGroupedListingsView — admin moderation view for grouped product listings.
@@ -70,7 +71,8 @@ function ReassignProductsDrawer({
       showToast("Products reassigned.", "success");
       onSaved();
       onClose();
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       showToast("Failed to save changes.", "error");
     } finally {
       setSaving(false);

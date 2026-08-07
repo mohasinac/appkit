@@ -182,7 +182,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         try {
           const doc = await this.findById(candidateId);
           return !!doc;
-        } catch {
+        } catch (_err) {
+          void normalizeError(_err);
           return false;
         }
       },
@@ -673,7 +674,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         .update({
           [PRODUCT_FIELDS.VIEW_COUNT]: increment(1),
         });
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // View analytics must not break product read path.
     }
   }

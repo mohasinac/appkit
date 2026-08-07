@@ -16,6 +16,7 @@
  */
 
 import type { FeaturesConfig } from "../contracts";
+import { normalizeError } from "../errors/normalize";
 import type { JsonValue } from "@mohasinac/appkit";
 
 // ---------------------------------------------------------------------------
@@ -180,8 +181,9 @@ async function tryLoadFeatureMessages(
       `@mohasinac/appkit/features/${featureKey}/messages/${locale}.json`,
     );
     return (mod.default ?? mod) as Messages;
-  } catch {
-    return {};
+  } catch (_err) {
+    void normalizeError(_err);
+    return {}; // feature message file not present — treat as empty (feature messages are optional per-locale)
   }
 }
 
@@ -200,8 +202,8 @@ export async function mergeFeatureMessages(
   try {
     const mod = await _dynamicImport(`../../messages/${locale}.json`);
     projectMessages = (mod.default ?? mod) as Messages;
-  } catch {
-    // Tolerate missing file (e.g. test environments)
+  } catch (_err) {
+    void normalizeError(_err); // Tolerate missing file — project may not have a locale file for this locale yet
   }
 
   const enabledKeys = Object.entries(features)

@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../../errors/normalize";
 
 /**
  * DashboardLayoutClient — unified client island that replaces the ~75 lines of
@@ -84,13 +85,15 @@ function useResponsiveDrawer(storageKey: string) {
   useEffect(() => {
     try {
       if (localStorage.getItem(storageKey) === "true") setDesktopOpen(true);
-    } catch { /* localStorage unavailable (private-browse / SSR fallback) */ }
+    } catch (_err) {
+      void normalizeError(_err); /* localStorage unavailable (private-browse / SSR fallback) */
+    }
   }, [storageKey]);
 
   const open = useCallback(() => {
     startTransition(() => {
       if (isDesktop()) {
-        try { localStorage.setItem(storageKey, "true"); } catch { /* noop */ }
+        try { localStorage.setItem(storageKey, "true"); } catch (_err) { void normalizeError(_err); }
         setDesktopOpen(true);
       } else setMobileOpen(true);
     });
@@ -99,7 +102,7 @@ function useResponsiveDrawer(storageKey: string) {
   const close = useCallback(() => {
     startTransition(() => {
       if (isDesktop()) {
-        try { localStorage.setItem(storageKey, "false"); } catch { /* noop */ }
+        try { localStorage.setItem(storageKey, "false"); } catch (_err) { void normalizeError(_err); }
         setDesktopOpen(false);
       } else setMobileOpen(false);
     });
@@ -115,7 +118,7 @@ function useResponsiveDrawer(storageKey: string) {
       if (isDesktop()) {
         setDesktopOpen((prev) => {
           const next = !prev;
-          try { localStorage.setItem(storageKey, String(next)); } catch { /* noop */ }
+          try { localStorage.setItem(storageKey, String(next)); } catch (_err) { void normalizeError(_err); }
           return next;
         });
       } else setMobileOpen((prev) => !prev);

@@ -123,7 +123,8 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
       await this.getCollection()
         .doc(id)
         .update({ [SCAMMER_FIELDS.VIEWS]: increment(1) });
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // Fire-and-forget by design.
     }
   }

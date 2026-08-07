@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -74,7 +75,8 @@ export function AdminNewsletterView({
       a.download = "newsletter-subscribers.csv";
       a.click();
       URL.revokeObjectURL(url);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       showToast("Failed to export CSV.", "error");
     }
   }, [showToast]);

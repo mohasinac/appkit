@@ -6,6 +6,7 @@
  * The sync manager replays these and clears them after a successful push.
  */
 
+import { normalizeError } from "../../../errors/normalize";
 const APP_ID = () =>
   typeof process !== "undefined" && process.env.NEXT_PUBLIC_APP_ID
     ? process.env.NEXT_PUBLIC_APP_ID
@@ -54,7 +55,8 @@ function read<T>(key: string): T[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? (parsed as T[]) : [];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return [];
   }
 }
@@ -63,7 +65,8 @@ function write<T>(key: string, items: T[]): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(key, JSON.stringify(items));
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // storage quota exceeded — best effort
   }
 }

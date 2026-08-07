@@ -2,6 +2,7 @@
  * Cache Performance Metrics — pure localStorage implementation.
  * No Firebase dependencies.
  */
+import { normalizeError } from "../errors/normalize";
 
 interface CacheMetrics {
   hits: number;
@@ -50,8 +51,9 @@ export function getCacheMetrics(): CacheMetrics {
       return initializeMetrics();
     }
     return m;
-  } catch {
-    return initializeMetrics();
+  } catch (_err) {
+    void normalizeError(_err);
+    return initializeMetrics(); // stale or corrupt metrics record — reset to zero
   }
 }
 

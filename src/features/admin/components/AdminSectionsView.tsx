@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import type { JsonObjectWithUndefined, JsonValue } from "@mohasinac/appkit";
@@ -312,7 +313,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       let parsedConfig: Record<string, JsonValue>;
       try {
         parsedConfig = JSON.parse(configJson) as Record<string, JsonValue>;
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         throw new Error("Config must be valid JSON.");
       }
 

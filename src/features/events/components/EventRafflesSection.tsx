@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import Link from "next/link";
@@ -39,7 +40,8 @@ export async function EventRafflesSection({
       pageSize: limit,
     });
     events = (result.items ?? []) as unknown as EventItem[];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     events = [];
   }
 

@@ -1,3 +1,4 @@
+import { normalizeError } from "../../errors/normalize";
 import { getAdminStorage } from "../../providers/db-firebase";
 import { FIREBASE_STORAGE_HOST, GCS_HOST } from "../../utils/media-url";
 import type { MediaField } from "./types";
@@ -32,7 +33,8 @@ export function extractStoragePathFromUrl(
     }
 
     return null;
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return null;
   }
 }
@@ -80,7 +82,8 @@ export async function finalizeStagedMediaUrl(url: string): Promise<string> {
           const finalPath = await moveToFinalPath(asset.storagePath);
           await mediaAssetsRepository.promoteToFinalized(shortId, finalPath);
         }
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         // Non-fatal: URL is still valid; proxy will serve whatever storagePath points to.
       }
       return url; // URL is stable — same before and after the file move
@@ -92,7 +95,8 @@ export async function finalizeStagedMediaUrl(url: string): Promise<string> {
       try {
         const finalPath = await moveToFinalPath(rawPath);
         return `${PROXY_URL_PREFIX}${finalPath}`;
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         return url;
       }
     }

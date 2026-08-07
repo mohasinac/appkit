@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
@@ -106,7 +107,8 @@ export function useCategoryDetail(
     queryFn: async () => {
       try {
         return await apiClient.get<CategoryItem>(categoryEndpoint);
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         return null;
       }
     },

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizeError } from "../errors/normalize";
 
 // ============================================
 // COMMON SCHEMAS
@@ -38,7 +39,8 @@ export const mediaUrlSchema = z
         return APPROVED_MEDIA_DOMAINS.some(
           (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
         );
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         return false;
       }
     },

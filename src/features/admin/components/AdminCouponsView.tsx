@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 
 import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
@@ -54,7 +55,8 @@ export function AdminCouponsView({
         });
         showToast(currentlyActive ? "Coupon deactivated." : "Coupon activated.", "success");
         queryClient.invalidateQueries({ queryKey: ["admin", "coupons"] });
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         showToast("Could not update coupon status.", "error");
       }
     },
@@ -67,7 +69,8 @@ export function AdminCouponsView({
         await apiClient.delete(ADMIN_ENDPOINTS.COUPON_BY_ID(id));
         showToast("Coupon deleted.", "success");
         queryClient.invalidateQueries({ queryKey: ["admin", "coupons"] });
-      } catch {
+      } catch (_err) {
+        void normalizeError(_err);
         showToast("Could not delete coupon.", "error");
       }
     },

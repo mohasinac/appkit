@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../../errors/normalize";
 import React, { useEffect, useRef, useState } from "react";
 import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
@@ -35,7 +36,8 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
       ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
         {},
       );
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // AdSense not loaded yet — no-op
     }
   }, []);

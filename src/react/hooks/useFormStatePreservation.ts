@@ -1,4 +1,5 @@
 "use client";
+import { normalizeError } from "../../errors/normalize";
 import { useEffect, useRef, useCallback } from "react";
 import type { JsonValue } from "@mohasinac/appkit";
 
@@ -52,7 +53,8 @@ export function useFormStatePreservation<TValues extends Record<string, JsonValu
     try {
       const decoded = JSON.parse(atob(encoded)) as TValues;
       onRestore(decoded);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       // ignore corrupt payloads
     }
   }, [paramName, onRestore]);

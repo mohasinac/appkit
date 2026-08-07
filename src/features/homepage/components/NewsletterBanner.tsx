@@ -1,4 +1,5 @@
 "use client"
+import { normalizeError } from "../../../errors/normalize";
 import React, { useState } from "react";
 import {
   Button,
@@ -60,7 +61,8 @@ export function NewsletterBanner({
       await onSubscribe(email);
       setEmail("");
       setSuccess(true);
-    } catch {
+    } catch (_err) {
+      void normalizeError(_err);
       setError(true);
     } finally {
       setLoading(false);

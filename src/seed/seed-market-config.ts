@@ -2,6 +2,7 @@
 // Locale-specific data pools for seed factories and fixtures.
 // Default pools match current letitrip.in baseline (Indian market).
 
+import { normalizeError } from "../errors/normalize";
 import {
   getMarketProfile,
   getDefaultCurrency,
@@ -210,7 +211,8 @@ export function formatSeedPrice(amount: number): string {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     // Fallback if Intl is unavailable or currency unknown
     return `${profile.currencySymbol}${amount.toLocaleString()}`;
   }

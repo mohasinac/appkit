@@ -19,6 +19,7 @@
  * const order = await shiprocketCreateOrder(token, orderData);
  * ```
  */
+import { normalizeError } from "../../errors/normalize";
 
 const BASE_URL = "https://apiv2.shiprocket.in/v1/external";
 
@@ -281,7 +282,8 @@ async function shiprocketFetch<T>(
   let json: unknown;
   try {
     json = JSON.parse(text);
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     throw new Error(
       `Shiprocket API non-JSON response ${response.status}: ${text.slice(0, 200)}`,
     );

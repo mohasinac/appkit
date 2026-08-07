@@ -1,3 +1,4 @@
+import { normalizeError } from "../../../errors/normalize";
 import { CART_MAX_ITEMS } from "../../../constants/limits";
 
 const DEFAULT_GUEST_CART_KEY = process.env.NEXT_PUBLIC_APP_ID
@@ -52,7 +53,8 @@ function readItems(
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? (parsed as GuestCartItem[]) : [];
-  } catch {
+  } catch (_err) {
+    void normalizeError(_err);
     return [];
   }
 }
