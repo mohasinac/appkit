@@ -33,10 +33,10 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
 import { useSwipe } from "../../../react/hooks/useSwipe";
-import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { COMPARE_MAX_ITEMS } from "../constants/action-defs";
-import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
+import { normalizeListingType } from "../utils/listing-type";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 /** Subset of ProductDocument the overlay needs. Kept loose so it can be fed
  * sanitized public payloads directly. */
@@ -131,13 +131,12 @@ const COLUMN_CARD_CLASS =
 
 function detailHref(item: CompareProductLike, type: CompareOverlayProps["productType"]): string {
   const id = item.slug ?? item.id;
-  if (type === "auction" || isAuctionListing(item)) {
-    return String(ROUTES.PUBLIC.AUCTION_DETAIL(id));
-  }
-  if (type === "preorder" || isPreOrderListing(item)) {
-    return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(id));
-  }
-  return String(ROUTES.PUBLIC.PRODUCT_DETAIL(id));
+  // The caller-supplied `type` hint takes precedence — some compare contexts
+  // (e.g. an auction comparison page) feed items that don't carry their own
+  // `listingType` field, so the hint is the only signal available.
+  const listingType =
+    type === "auction" ? "auction" : type === "preorder" ? "pre-order" : normalizeListingType(item);
+  return pluginFor(listingType).detailRoute(id);
 }
 
 function priceLabel(item: CompareProductLike): string {

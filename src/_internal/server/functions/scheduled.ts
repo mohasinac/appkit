@@ -11,6 +11,7 @@ import {
   couponExpiryHandler,
   dailyDataCleanupHandler,
   draftPruneHandler,
+  emiInstallmentReminderHandler,
   mediaTmpCleanupHandler,
   notificationPruneHandler,
   offerExpiryHandler,
@@ -197,6 +198,14 @@ export const bundleStockSync = defineFunction({
   options: { region: REGION, timeoutSeconds: 540, memory: "256MiB", maxInstances: 1 },
 });
 
+export const emiInstallmentReminder = defineFunction({
+  name: "emiInstallmentReminder",
+  description: "Nudge buyers on upcoming EMI installments and flag overdue ones (daily 09:00 IST).",
+  trigger: { kind: "schedule", cron: "0 9 * * *", timeZone: "Asia/Kolkata" },
+  handler: emiInstallmentReminderHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
 export const SCHEDULED_FUNCTIONS = [
   auctionSettlement,
   pendingOrderTimeout,
@@ -219,4 +228,5 @@ export const SCHEDULED_FUNCTIONS = [
   prizeRevealExpiry,
   prizeRevealReminder,
   bundleStockSync,
+  emiInstallmentReminder,
 ] as const;

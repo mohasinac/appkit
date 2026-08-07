@@ -164,6 +164,8 @@ export { productsPrizeDrawsSeedData } from "./products-prize-draws-seed-data";
 export { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
 export { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data";
 export { productsLiveItemsSeedData } from "./products-live-items-seed-data";
+export { productsArtSeedData } from "./products-art-seed-data";
+export { productsStickersSeedData } from "./products-stickers-seed-data";
 export { ordersSeedData } from "./orders-seed-data";
 export { reviewsSeedData } from "./reviews-seed-data";
 export { cartsSeedData } from "./cart-seed-data";

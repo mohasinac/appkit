@@ -34,9 +34,27 @@ import {
   isAuctionListing,
   isPreOrderListing,
   isPrizeDrawListing,
+  normalizeListingType,
 } from "../utils/listing-type";
 import { PrizeDrawItemsEditor } from "./PrizeDrawItemsEditor";
 import type { PrizeDrawItem } from "../schemas/firestore";
+import type { ListingType } from "../types";
+
+// ListingType uses the canonical SB1-G spellings ("standard", "pre-order");
+// ProductFeatureProductType predates it with legacy spellings for 2 values.
+// Replaces the old 2-case ternary that silently mapped every other type
+// (classified/digital-code/live/prize-draw/art/stickers) to "product".
+const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeatureProductType> = {
+  standard: "product",
+  auction: "auction",
+  "pre-order": "preorder",
+  "prize-draw": "prize-draw",
+  classified: "classified",
+  "digital-code": "digital-code",
+  live: "live",
+  art: "art",
+  stickers: "stickers",
+};
 
 export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =
   [
@@ -478,6 +496,12 @@ export function ProductForm({
           label={t("formIsPromoted")}
           checked={!!product.isPromoted}
           onChange={(e) => update({ isPromoted: e.target.checked })}
+          disabled={isReadonly}
+        />
+        <Checkbox
+          label={t("formAllowShipBeforeEmiComplete")}
+          checked={!!product.allowShipBeforeEmiComplete}
+          onChange={(e) => update({ allowShipBeforeEmiComplete: e.target.checked })}
           disabled={isReadonly}
         />
       </FormGroup>
@@ -983,13 +1007,7 @@ export function ProductForm({
       <ProductFeaturesSelector
         value={(product.features as string[]) ?? []}
         onChange={(features) => update({ features })}
-        productType={
-          (isAuctionListing(product)
-            ? "auction"
-            : isPreOrderListing(product)
-              ? "preorder"
-              : "product") as ProductFeatureProductType
-        }
+        productType={LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE[normalizeListingType(product)]}
         storeId={product.storeId as string | undefined}
         disabled={isReadonly}
       />

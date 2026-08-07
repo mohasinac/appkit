@@ -48,7 +48,6 @@ const EMAIL_KEYS = new Set([
   "email",
   "userEmail",
   "sellerEmail",
-  "shiprocketEmail",
 ]);
 
 /** Keys whose string values get phone masking */

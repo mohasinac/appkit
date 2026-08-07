@@ -43,6 +43,7 @@ function makeCtx(
     db: db as unknown as JobContext["db"],
     now: new Date("2026-01-15T12:00:00Z"),
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    env: vi.fn().mockReturnValue("true"),
   };
 }
 

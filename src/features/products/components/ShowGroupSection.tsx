@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { ROUTES } from "../../../next";
 import { Div, Row, Span, Table, Thead, Tbody, Tr, Th, Td, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { isPreOrderListing } from "../utils/listing-type";
+import { normalizeListingType } from "../utils/listing-type";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import type { ListingType } from "../types";
 
 const __O = {
@@ -41,8 +41,7 @@ interface Props {
 
 function memberHref(m: GroupMember): string {
   const slug = m.slug ?? m.id;
-  if (isPreOrderListing(m)) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug));
-  return String(ROUTES.PUBLIC.PRODUCT_DETAIL(slug));
+  return pluginFor(normalizeListingType(m)).detailRoute(slug);
 }
 
 function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: boolean }) {

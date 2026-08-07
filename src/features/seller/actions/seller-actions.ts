@@ -5,10 +5,8 @@
  * explicit params. Called by letitrip thin wrappers that handle auth,
  * rate-limiting, and user-facing validation.
  *
- * Note: Shiprocket-specific actions (updateSellerShipping,
- * verifyShiprocketPickupOtp, shiprocketShipOrder) remain in the letitrip
- * thin wrapper because they use the @/lib/shiprocket/client SDK which is
- * a permanent letitrip-only dependency.
+ * Note: updateSellerShipping remains in the letitrip thin wrapper
+ * (src/actions/seller.actions.ts) alongside the other seller server actions.
  */
 
 import { serverLogger } from "../../../monitoring";
@@ -30,7 +28,8 @@ import { payoutRepository } from "../../payments/repository/payout.repository";
 import { PAYOUT_FIELDS } from "../../payments/schemas";
 import { couponsRepository } from "../../promotions/repository/coupons.repository";
 import { generateStoreSlug } from "../../stores/schemas/firestore";
-import { DEFAULT_PLATFORM_FEE_RATE } from "../../payments/schemas/firestore";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
+import { computePayoutDeduction } from "../../../_internal/shared/fees/calculator";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   finalizeStagedMediaUrl,
@@ -123,6 +122,15 @@ export interface CustomShipOrderInput {
   shippingCarrier: string;
   trackingNumber: string;
   trackingUrl: string;
+}
+
+export interface MarkEmiInstallmentPaidInput {
+  /** 1-based installment number, matches EmiInstallment.index. */
+  installmentIndex: number;
+  /** Buyer-supplied UTR/reference number for this installment's manual payment. */
+  transactionId?: string;
+  /** Signed-URL media slug for the buyer's payment proof for this installment. */
+  proofUrl?: string;
 }
 
 export interface SellerListParams {
@@ -361,17 +369,18 @@ async function computeSellerEarnings(sellerId: string) {
     (sum, o) => sum + (o.totalPrice ?? 0),
     0,
   );
-  const platformFee = parseFloat(
-    (grossAmount * DEFAULT_PLATFORM_FEE_RATE).toFixed(2),
-  );
-  const netAmount = parseFloat((grossAmount - platformFee).toFixed(2));
+  const siteSettings = await siteSettingsRepository.getSingleton();
+  const deduction = computePayoutDeduction(grossAmount, siteSettings.commissions);
 
   return {
     eligibleOrders,
     grossAmount,
-    platformFee,
-    netAmount,
+    platformFee: deduction.platformFee,
+    gatewayFee: deduction.gatewayFee,
+    gstAmount: deduction.gstOnFee,
+    netAmount: deduction.netAmount,
     productCount: products.length,
+    commissions: siteSettings.commissions,
   };
 }
 
@@ -401,7 +410,11 @@ export async function requestPayout(
     amount: earnings.netAmount,
     grossAmount: earnings.grossAmount,
     platformFee: earnings.platformFee,
-    platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
+    platformFeeRate: earnings.commissions.platformFeePercent / 100,
+    gatewayFee: earnings.gatewayFee,
+    gatewayFeeRate: (earnings.commissions.gatewayFeePercent ?? 0) / 100,
+    gstAmount: earnings.gstAmount,
+    gstRate: earnings.commissions.gstPercent / 100,
     currency: getDefaultCurrency(),
     paymentMethod: input.paymentMethod,
     ...(input.bankAccount && { bankAccount: input.bankAccount }),
@@ -469,27 +482,35 @@ export async function bulkSellerOrder(
       skipped.push(id);
       continue;
     }
+    if (order.emiEnabled && !order.emiComplete) {
+      // Delivered via the seller's allowShipBeforeEmiComplete override, but the
+      // buyer hasn't finished paying — hold the payout until emiComplete.
+      skipped.push(id);
+      continue;
+    }
     eligible.push(order as NonNullable<typeof order>);
   }
 
   if (eligible.length === 0)
     throw new ValidationError("No eligible orders found.");
 
-  const PLATFORM_COMMISSION_RATE = DEFAULT_PLATFORM_FEE_RATE;
   const grossAmount = eligible.reduce((sum, o) => sum + (o.totalPrice ?? 0), 0);
-  const platformFee =
-    Math.round(grossAmount * PLATFORM_COMMISSION_RATE * 100) / 100;
-  const netAmount = Math.round((grossAmount - platformFee) * 100) / 100;
+  const bulkSiteSettings = await siteSettingsRepository.getSingleton();
+  const bulkDeduction = computePayoutDeduction(grossAmount, bulkSiteSettings.commissions);
 
   const payoutDoc = await payoutRepository.create({
     storeId: userId,
     sellerName: userDisplayName,
     sellerEmail: userEmail,
     orderIds: eligible.map((o) => o.id!),
-    amount: netAmount,
+    amount: bulkDeduction.netAmount,
     grossAmount,
-    platformFee,
-    platformFeeRate: PLATFORM_COMMISSION_RATE,
+    platformFee: bulkDeduction.platformFee,
+    platformFeeRate: bulkSiteSettings.commissions.platformFeePercent / 100,
+    gatewayFee: bulkDeduction.gatewayFee,
+    gatewayFeeRate: (bulkSiteSettings.commissions.gatewayFeePercent ?? 0) / 100,
+    gstAmount: bulkDeduction.gstOnFee,
+    gstRate: bulkSiteSettings.commissions.gstPercent / 100,
     currency: getDefaultCurrency(),
     paymentMethod:
       userDoc.payoutDetails.method === "upi"
@@ -520,7 +541,7 @@ export async function bulkSellerOrder(
     userId,
     payoutId,
     orderCount: eligible.length,
-    netAmount,
+    netAmount: bulkDeduction.netAmount,
   });
 
   return {
@@ -529,9 +550,9 @@ export async function bulkSellerOrder(
     skipped,
     eligibleCount: eligible.length,
     skippedCount: skipped.length,
-    netAmount,
+    netAmount: bulkDeduction.netAmount,
     grossAmount,
-    platformFee,
+    platformFee: bulkDeduction.platformFee,
   };
 }
 
@@ -565,13 +586,7 @@ export async function getSellerStore(
 export async function getSellerShipping(userId: string) {
   const userData = await userRepository.findById(userId);
   if (!userData) return null;
-  const config = userData.shippingConfig;
-  if (!config) return null;
-  if (config.method === "shiprocket" && config.shiprocketToken) {
-    const { shiprocketToken: _removed, ...safe } = config;
-    return safe;
-  }
-  return config;
+  return userData.shippingConfig ?? null;
 }
 
 export async function getSellerPayoutSettings(userId: string) {
@@ -743,6 +758,25 @@ export async function sellerDeleteProduct(
 
 // --- Custom Ship Order --------------------------------------------------------
 
+/**
+ * EMI orders stay unshipped until every installment is paid, UNLESS every
+ * product in the order has its `allowShipBeforeEmiComplete` flag set. This
+ * is the single choke point for the "ship" transition, so it can't be
+ * bypassed by a different route/action reaching `orderRepository.update`
+ * directly with `status: "shipped"`.
+ */
+export async function assertEmiShippable(order: OrderDocument): Promise<void> {
+  if (!order.emiEnabled || order.emiComplete) return;
+  const productIds = (order.items ?? []).map((i) => i.productId).filter(Boolean);
+  const products = await Promise.all(productIds.map((id) => productRepository.findById(id)));
+  const allAllowEarlyShip = products.length > 0 && products.every((p) => p?.allowShipBeforeEmiComplete === true);
+  if (!allAllowEarlyShip) {
+    throw new ValidationError(
+      "This order is still on an EMI plan — it can't ship until all installments are paid, unless the seller has enabled early shipping for every item in the order.",
+    );
+  }
+}
+
 export async function customShipOrder(
   userId: string,
   userRole: string,
@@ -760,6 +794,7 @@ export async function customShipOrder(
     throw new ValidationError("Order is already shipped");
   if (order.status !== OrderStatusValues.CONFIRMED)
     throw new ValidationError("Order must be confirmed before shipping");
+  await assertEmiShippable(order);
 
   await orderRepository.update(orderId, {
     status: OrderStatusValues.SHIPPED,
@@ -777,4 +812,60 @@ export async function customShipOrder(
     carrier: input.shippingCarrier,
   });
   return { orderId, method: "custom" };
+}
+
+/**
+ * Records collection of one EMI installment. Seller/admin marks the
+ * installment paid after verifying the buyer's manual transfer (UTR +
+ * proof). Recomputes `emiRemainingBalance` from the still-pending
+ * installments and flips `emiComplete` once none remain — that flag is the
+ * single gate `assertEmiShippable` reads, so this is the only place an
+ * EMI order can become shippable.
+ */
+export async function markEmiInstallmentPaid(
+  userId: string,
+  userRole: string,
+  orderId: string,
+  input: MarkEmiInstallmentPaidInput,
+): Promise<OrderDocument> {
+  const order = await orderRepository.findById(orderId);
+  if (!order) throw new NotFoundError("Order not found");
+  if (userRole !== "admin" && order.storeId !== userId)
+    throw new AuthorizationError("You do not own this order");
+  if (!order.emiEnabled) throw new ValidationError("This order is not on an EMI plan");
+
+  const installments = order.emiInstallments ?? [];
+  const target = installments.find((i) => i.index === input.installmentIndex);
+  if (!target) throw new ValidationError(`Installment ${input.installmentIndex} not found on this order`);
+  if (target.status === "paid") throw new ValidationError("This installment is already marked paid");
+
+  const updatedInstallments = installments.map((i) =>
+    i.index === input.installmentIndex
+      ? {
+          ...i,
+          status: "paid" as const,
+          paidAt: new Date(),
+          transactionId: input.transactionId,
+          proofUrl: input.proofUrl,
+        }
+      : i,
+  );
+  const emiRemainingBalance = updatedInstallments
+    .filter((i) => i.status !== "paid")
+    .reduce((sum, i) => sum + i.amount, 0);
+  const emiComplete = updatedInstallments.every((i) => i.status === "paid");
+
+  const updated = await orderRepository.update(orderId, {
+    emiInstallments: updatedInstallments,
+    emiRemainingBalance,
+    emiComplete,
+  });
+
+  serverLogger.info("markEmiInstallmentPaid", {
+    orderId,
+    userId,
+    installmentIndex: input.installmentIndex,
+    emiComplete,
+  });
+  return updated;
 }

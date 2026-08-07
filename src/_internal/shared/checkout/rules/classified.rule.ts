@@ -13,6 +13,7 @@ export const classifiedRule: ListingCheckoutRule = {
   orderType: "standard", // placeholder — classified never reaches order creation
   purchaseable: false,
   cartEligible: false,
+  cartIneligibleHint: 'Use "Contact Seller" to arrange a meetup.',
   requiresShippingAddress: false,
   requiresConsentOtp: false,
 };

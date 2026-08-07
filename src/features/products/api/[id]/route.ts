@@ -21,6 +21,7 @@ import { storeRepository } from "../../../stores/repository/store.repository";
 // SB-UNI-V — bundlesRepository deleted; bundle stock-sync moves to the
 // `onProductStockChange` Firebase Function (see functions/src/bundle-stock-sync.ts).
 import { sanitizeProductForPublic } from "../../utils/sanitize";
+import { printMetaSchema } from "../../schemas/index";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { isAdminUser, isModeratorUser } from "../../../auth/role-predicates";
 
@@ -72,8 +73,10 @@ const productUpdateSchema = z
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
+    allowShipBeforeEmiComplete: z.boolean().optional(),
+    printMeta: printMetaSchema.optional(),
     listingType: z
-      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live"])
+      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live", "art", "stickers"])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })

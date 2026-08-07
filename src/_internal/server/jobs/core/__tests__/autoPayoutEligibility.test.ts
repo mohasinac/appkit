@@ -6,12 +6,14 @@ const {
   mockMarkPayoutRequested,
   mockStoreFindBySlug,
   mockUserFindById,
+  mockGetSingleton,
 } = vi.hoisted(() => ({
   mockGetEligibleAutomatic: vi.fn(),
   mockPayoutCreate: vi.fn(),
   mockMarkPayoutRequested: vi.fn(),
   mockStoreFindBySlug: vi.fn(),
   mockUserFindById: vi.fn(),
+  mockGetSingleton: vi.fn(),
 }));
 
 vi.mock("../../../../../repositories", () => ({
@@ -22,6 +24,7 @@ vi.mock("../../../../../repositories", () => ({
   payoutRepository: { create: mockPayoutCreate },
   storeRepository: { findBySlug: mockStoreFindBySlug },
   userRepository: { findById: mockUserFindById },
+  siteSettingsRepository: { getSingleton: mockGetSingleton },
 }));
 
 vi.mock("../../../../../core/index", () => ({
@@ -41,6 +44,7 @@ function makeCtx() {
     db: { batch: vi.fn(() => batch) } as unknown as JobContext["db"],
     now: new Date(),
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    env: vi.fn().mockReturnValue("true"),
   } as unknown as JobContext;
 }
 
@@ -65,6 +69,9 @@ beforeEach(() => {
   mockStoreFindBySlug.mockResolvedValue({ id: "store-palace", ownerId: "seller-uid" });
   mockUserFindById.mockResolvedValue(mockSeller);
   mockMarkPayoutRequested.mockReturnValue(undefined);
+  mockGetSingleton.mockResolvedValue({
+    commissions: { platformFeePercent: 5, gstPercent: 18, gatewayFeePercent: 2, minimumTransactionFee: 0 },
+  });
 });
 
 describe("runAutoPayoutEligibility — no eligible orders", () => {
@@ -121,14 +128,14 @@ describe("runAutoPayoutEligibility — fee calculation", () => {
 
     const callArg = mockPayoutCreate.mock.calls[0][0];
     expect(callArg.grossAmount).toBe(gross);
-    // platformFee = 100000 * 0.05 = 5000
-    // gatewayFee = 100000 * 0.0236 = 2360
-    // gstAmount = 5000 * 0.18 = 900
-    // net = 100000 - 5000 - 2360 - 900 = 91740
+    // platformFee = 100000 * 5% = 5000
+    // gatewayFee = 100000 * 2% = 2000
+    // gstAmount = 5000 * 18% = 900
+    // net = 100000 - 5000 - 2000 - 900 = 92100
     expect(callArg.platformFee).toBe(5000);
-    expect(callArg.gatewayFee).toBe(2360);
+    expect(callArg.gatewayFee).toBe(2000);
     expect(callArg.gstAmount).toBe(900);
-    expect(callArg.amount).toBe(91740);
+    expect(callArg.amount).toBe(92100);
   });
 
   it("sets isAutomatic: true on the payout", async () => {
@@ -168,6 +175,7 @@ describe("runAutoPayoutEligibility — batch marking", () => {
       db: { batch: vi.fn(() => batchObj) } as unknown as JobContext["db"],
       now: new Date(),
       logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+      env: vi.fn().mockReturnValue("true"),
     } as unknown as JobContext;
     mockGetEligibleAutomatic.mockResolvedValue([makeOrder()]);
     await runAutoPayoutEligibility(ctx);

@@ -12,7 +12,6 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
 // -- Shipping config ----------------------------------------------------------
 
 export type ShippingProviderType =
-  | "shiprocket"
   | "self-courier"
   | "store-pickup"
   | "custom";
@@ -132,6 +131,13 @@ export interface StoreDocument extends BaseDocument {
    * ShippingPicker; the chosen provider + fee lock onto each CartItem.
    */
   shippingConfig?: StoreShippingConfig;
+
+  /**
+   * Seller opt-in for EMI (installment) checkout. EMI is offered on this
+   * store's items only when this AND `siteSettings.emi.enabled` are both
+   * true. Default false — sellers must explicitly opt in.
+   */
+  emiEnabled?: boolean;
 
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {

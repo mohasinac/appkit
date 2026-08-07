@@ -86,6 +86,23 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: true,
     hasInstantFulfillment: false,
   },
+  // Art/stickers session — printed-only physical goods, standard-like checkout.
+  art: {
+    canAddToCart: true,
+    canBid: false,
+    supportsShipping: true,
+    requiresVendorVerified: false,
+    requiresJurisdictionCheck: false,
+    hasInstantFulfillment: false,
+  },
+  stickers: {
+    canAddToCart: true,
+    canBid: false,
+    supportsShipping: true,
+    requiresVendorVerified: false,
+    requiresJurisdictionCheck: false,
+    hasInstantFulfillment: false,
+  },
 };
 
 export function capabilityFor(type: ListingType): ListingTypeCapability {

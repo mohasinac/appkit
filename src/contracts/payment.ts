@@ -31,22 +31,27 @@ export interface Refund {
   createdAt: string; // ISO-8601
 }
 
-// --- Payment Interface --------------------------------------------------------
+// --- Payment Contract -----------------------------------------------------
 
 /**
- * Payment gateway adapter contract.
- * Implemented by @mohasinac/payment-razorpay, @mohasinac/payment-stripe,
- * @mohasinac/payment-braintree.
+ * Payment gateway adapter contract. An abstract base class rather than a
+ * plain interface so every provider (manual, Razorpay, and any future
+ * gateway) extends one shared type — adding a new provider is a subclass,
+ * not a fresh reimplementation of the shape.
+ *
+ * Implemented by the manual provider (default), Razorpay, and their mocks.
  */
-export interface IPaymentProvider {
-  createOrder(
+export abstract class IPaymentProvider {
+  /** Short discriminator used by admin dev tooling to confirm which provider is registered. */
+  abstract readonly name: string;
+  abstract createOrder(
     amount: number,
     currency: string,
     metadata?: Record<string, JsonValue>,
   ): Promise<PaymentOrder>;
   /** Returns true if the webhook signature is valid. */
-  verifyWebhook(payload: string, signature: string): boolean;
-  capturePayment(orderId: string): Promise<PaymentCapture>;
-  refund(paymentId: string, amount?: number): Promise<Refund>;
-  getOrder(orderId: string): Promise<PaymentOrder>;
+  abstract verifyWebhook(payload: string, signature: string): boolean;
+  abstract capturePayment(orderId: string): Promise<PaymentCapture>;
+  abstract refund(paymentId: string, amount?: number): Promise<Refund>;
+  abstract getOrder(orderId: string): Promise<PaymentOrder>;
 }

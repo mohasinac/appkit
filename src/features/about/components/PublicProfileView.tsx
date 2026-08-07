@@ -10,7 +10,8 @@ import { ProductCard } from "../../products/components/ProductGrid";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
 import type { ProductItem } from "../../products/types";
 import type { ProductDocument } from "../../products/schemas/firestore";
-import { isAuctionListing, isPreOrderListing } from "../../products/utils/listing-type";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { normalizeListingType } from "../../products/utils/listing-type";
 import { isAdminUser, isSellerUser } from "../../auth/role-predicates";
 import { User, Star, ShoppingBag, Package, Trophy, Globe, MapPin, ExternalLink } from "lucide-react";
 
@@ -61,9 +62,7 @@ function toProductItem(p: ProductDocument): ProductItem {
 }
 
 function getProductHref(p: ProductDocument): string {
-  if (isAuctionListing(p)) return String(ROUTES.PUBLIC.AUCTION_DETAIL(p.id));
-  if (isPreOrderListing(p)) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id));
-  return String(ROUTES.PUBLIC.PRODUCT_DETAIL(p.id));
+  return pluginFor(normalizeListingType(p)).detailRoute(p.id);
 }
 
 export async function PublicProfileView({

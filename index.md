@@ -170,6 +170,8 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `AdminWishlistsView` | `AdminWishlistsView.tsx` | Admin wishlist insights — read-only; Firestore collectionGroup("wishlist") cross-user data (LL15) |
 | `AdminBidsView` | `AdminBidsView.tsx` | Admin bids listing — RowActionMenu: Cancel bid (disabled when already cancelled/voided), ConfirmDeleteModal (variant=warning); PATCH BID_BY_ID {status:"cancelled"} (B5/VA16) |
 | `AdminPayoutsView` | `AdminPayoutsView.tsx` | Admin payouts listing — store identity (storeName/storeId, no sellerId in UI), Mark paid Modal (1 field: transactionId), CSV export button GET /api/admin/payouts/export (ARCH4) |
+| `AdminArtView` | `AdminArtView.tsx` | Admin art print listings — thin DataListingView config, filters `listingType==art` (EMI/art-stickers session) |
+| `AdminStickersView` | `AdminStickersView.tsx` | Admin sticker listings — thin DataListingView config, filters `listingType==stickers` (EMI/art-stickers session) |
 | `AdminAdsView` | `AdminAdsView.tsx` | Admin ads/promotions listing |
 | `AdminAdEditorView` | `AdminAdEditorView.tsx` | Admin ad create/edit form |
 | `AdminNewsletterView` | `AdminNewsletterView.tsx` | Admin newsletter subscribers listing — RowActionMenu: Unsubscribe (disabled when already unsubscribed); Export CSV button → blob download /api/admin/newsletter/export (B6/VA14) |
@@ -210,6 +212,8 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `SellerEditProductView` | `SellerEditProductView.tsx` | Seller edit product form |
 | `SellerGuideView` | `SellerGuideView.tsx` | Seller guide/help page |
 | `SellerShippingView` | `SellerShippingView.tsx` | Seller shipping config form |
+| `SellerArtView` | `SellerArtView.tsx` | Seller art print listings — thin DataListingView config, filters `listingType==art` (EMI/art-stickers session) |
+| `SellerStickersView` | `SellerStickersView.tsx` | Seller sticker listings — thin DataListingView config, filters `listingType==stickers` (EMI/art-stickers session) |
 | `SellerPayoutSettingsView` | `SellerPayoutSettingsView.tsx` | Seller payout settings form |
 | `SellerPayoutHistoryTable` | `SellerPayoutHistoryTable.tsx` | Payout history table component |
 | `SellerPayoutStats` | `SellerPayoutStats.tsx` | Payout stats summary |

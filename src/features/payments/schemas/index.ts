@@ -8,7 +8,7 @@ import { auditTimestampsShape, firestoreDateSchema, paiseSchema } from "../../..
 // Mirrors PayoutDocument + PayoutRefundDeduction + PayoutBankAccount in
 // ./firestore.ts. Registered into SCHEMAS.firestore.payouts.
 
-export const payoutStatusEnumSchema = z.enum(["pending", "processing", "completed", "failed"]);
+export const payoutStatusEnumSchema = z.enum(["pending", "processing", "paid", "failed"]);
 export const payoutPaymentMethodSchema = z.enum(["bank_transfer", "upi"]);
 
 export const payoutBankAccountSchema = z.object({
@@ -62,7 +62,7 @@ export type PayoutFromSchema = z.infer<typeof payoutFirestoreSchema>;
 export const payoutStatusSchema = z.enum([
   "pending",
   "processing",
-  "completed",
+  "paid",
   "failed",
 ]);
 

@@ -547,6 +547,8 @@ export {
   isClassifiedListing,
   isDigitalCodeListing,
   isLiveListing,
+  isArtListing,
+  isStickersListing,
 } from "./features/products/utils/listing-type";
 
 // SB-UNI-X4 2026-05-13 — per-type feature-flag helpers (client-safe).
@@ -634,8 +636,9 @@ export {
   assertNever,
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
-export { LISTING_TYPE_REGISTRY, pluginFor } from "./_internal/shared/listing-types/_registry";
+export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_internal/shared/listing-types/_registry";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
+export type { ListingType } from "./features/products/types/index";
 
 // Media upload limits — shared by client uploaders + server sign/finalize routes.
 export {
@@ -706,6 +709,10 @@ export { SellerBundlesView } from "./features/seller/components/SellerBundlesVie
 export type { SellerBundlesViewProps } from "./features/seller/components/SellerBundlesView";
 export { SellerClassifiedView } from "./features/seller/components/SellerClassifiedView";
 export type { SellerClassifiedViewProps } from "./features/seller/components/SellerClassifiedView";
+export { SellerArtView } from "./features/seller/components/SellerArtView";
+export type { SellerArtViewProps } from "./features/seller/components/SellerArtView";
+export { SellerStickersView } from "./features/seller/components/SellerStickersView";
+export type { SellerStickersViewProps } from "./features/seller/components/SellerStickersView";
 export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";
 export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
 export { SellerLiveView } from "./features/seller/components/SellerLiveView";

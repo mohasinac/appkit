@@ -181,7 +181,6 @@ export function AdminSiteSettingsView({
   // ⑧ Integrations
   const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
   const [razorpaySecret, setRazorpaySecret] = React.useState("");
-  const [shiprocketToken, setShiprocketToken] = React.useState("");
   const [smtpHost, setSmtpHost] = React.useState("");
   const [smtpPort, setSmtpPort] = React.useState("587");
   const [smtpUser, setSmtpUser] = React.useState("");
@@ -201,9 +200,13 @@ export function AdminSiteSettingsView({
 
   // ⑨ Shipping
   const [freeShippingThreshold, setFreeShippingThreshold] = React.useState(999);
-  const [codEnabled, setCodEnabled] = React.useState(true);
-  const [defaultCarrier, setDefaultCarrier] = React.useState("shiprocket");
+  const [defaultCarrier, setDefaultCarrier] = React.useState("custom");
   const [maxDeliveryRadius, setMaxDeliveryRadius] = React.useState(0);
+
+  // ⑨ Payment methods (siteSettings.payment — read by checkout for method eligibility)
+  const [razorpayEnabled, setRazorpayEnabled] = React.useState(false);
+  const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
+  const [codEnabled, setCodEnabled] = React.useState(true);
 
   // ⑩ Auction
   const [minBidIncrement, setMinBidIncrement] = React.useState(50);
@@ -323,7 +326,6 @@ export function AdminSiteSettingsView({
 
     setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
     setRazorpaySecret(s.credentialsMasked?.razorpaySecret ?? "");
-    setShiprocketToken(s.credentialsMasked?.shiprocketToken ?? "");
     setSmtpHost(s.emailSettings?.host ?? "");
     setSmtpPort(String(s.emailSettings?.port ?? 587));
     setSmtpUser(s.emailSettings?.user ?? "");
@@ -341,9 +343,12 @@ export function AdminSiteSettingsView({
     setDeviantartClientSecret(s.credentialsMasked?.deviantartClientSecret ?? "");
 
     setFreeShippingThreshold(Math.round((s.shipping?.freeShippingThreshold ?? 99900) / 100));
-    setCodEnabled(s.shipping?.codEnabled ?? true);
-    setDefaultCarrier(s.shipping?.defaultCarrier ?? "shiprocket");
+    setDefaultCarrier(s.shipping?.defaultCarrier ?? "custom");
     setMaxDeliveryRadius(s.shipping?.maxDeliveryRadius ?? 0);
+
+    setRazorpayEnabled(s.payment?.razorpayEnabled ?? false);
+    setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
+    setCodEnabled(s.payment?.codEnabled ?? true);
 
     setMinBidIncrement(Math.round((s.auctionConfig?.minBidIncrement ?? 5000) / 100));
     setAutoExtendWindow(s.auctionConfig?.autoExtendWindowMinutes ?? 5);
@@ -430,7 +435,7 @@ export function AdminSiteSettingsView({
   }));
   const integrationsMutation = useSave("Integrations", () => ({
     credentials: {
-      razorpayKeyId, razorpaySecret, shiprocketToken, smtpPassword,
+      razorpayKeyId, razorpaySecret, smtpPassword,
       metaPageAccessToken, metaPageId,
       tiktokClientKey, tiktokClientSecret, tiktokAccessToken,
       deviantartClientId, deviantartClientSecret,
@@ -439,7 +444,8 @@ export function AdminSiteSettingsView({
     integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
   }));
   const shippingMutation = useSave("Shipping", () => ({
-    shipping: { freeShippingThreshold: freeShippingThreshold * 100, codEnabled, defaultCarrier, maxDeliveryRadius },
+    shipping: { freeShippingThreshold: freeShippingThreshold * 100, defaultCarrier, maxDeliveryRadius },
+    payment: { razorpayEnabled, upiManualEnabled, codEnabled },
   }));
   const auctionMutation = useSave("Auction Config", () => ({
     auctionConfig: { minBidIncrement: minBidIncrement * 100, autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
@@ -484,6 +490,7 @@ export function AdminSiteSettingsView({
     { label: "System", value: "system" },
   ];
   const CARRIER_OPTIONS = [
+    { label: "Custom / Other", value: "custom" },
     { label: "Shiprocket", value: "shiprocket" },
     { label: "Delhivery", value: "delhivery" },
     { label: "Bluedart", value: "bluedart" },
@@ -725,10 +732,6 @@ export function AdminSiteSettingsView({
                 </Grid>
               </Stack>
               <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">Shiprocket</Text>
-                <MaskedInput label="Shiprocket API token" value={shiprocketToken} onChange={setShiprocketToken} placeholder="••••••••" />
-              </Stack>
-              <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">SMTP / Email</Text>
                 <Grid cols={2} gap="md">
                   <Input label="SMTP host" value={smtpHost} onChange={(e) => setSmtpHost(e.target.value)} placeholder="smtp.sendgrid.net" />
@@ -778,8 +781,11 @@ export function AdminSiteSettingsView({
           {/* ⑨ Shipping Defaults */}
           <TabsContent value="shipping">
             <Form onSubmit={(e) => { e.preventDefault(); shippingMutation.mutate(); }} className="pt-4" spacing="md">
-              <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />
+              <Text size="sm" weight="medium" color="muted">Payment methods</Text>
+              <Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} />
+              <Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} />
               <Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} />
+              <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />
               <Select label="Default carrier" options={CARRIER_OPTIONS} value={defaultCarrier} onValueChange={setDefaultCarrier} />
               <Input label="Max delivery radius (km, 0 = no limit)" value={String(maxDeliveryRadius)} onChange={(e) => setMaxDeliveryRadius(parseInt(e.target.value) || 0)} type="number" min={0} />
               <GroupSaveButton isPending={shippingMutation.isPending} />

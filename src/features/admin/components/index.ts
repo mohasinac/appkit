@@ -49,6 +49,11 @@ export { AdminDigitalCodesView } from "./AdminDigitalCodesView";
 export type { AdminDigitalCodesViewProps } from "./AdminDigitalCodesView";
 export { AdminLiveView } from "./AdminLiveView";
 export type { AdminLiveViewProps } from "./AdminLiveView";
+// EMI/art-stickers session — admin listing views for art / stickers.
+export { AdminArtView } from "./AdminArtView";
+export type { AdminArtViewProps } from "./AdminArtView";
+export { AdminStickersView } from "./AdminStickersView";
+export type { AdminStickersViewProps } from "./AdminStickersView";
 export { AdminGroupedListingsView } from "./AdminGroupedListingsView";
 export type { AdminGroupedListingsViewProps } from "./AdminGroupedListingsView";
 // S-SBUNI-4 2026-05-13 — admin bundle CRUD views.
@@ -182,6 +187,8 @@ export { AdminFulfillmentView } from "./AdminFulfillmentView";
 export type { AdminFulfillmentViewProps } from "./AdminFulfillmentView";
 export { AdminAddressesView } from "./AdminAddressesView";
 export type { AdminAddressesViewProps } from "./AdminAddressesView";
+export { AdminAddressBookView } from "./AdminAddressBookView";
+export type { AdminAddressBookViewProps } from "./AdminAddressBookView";
 export { AdminAddressClustersView } from "./AdminAddressClustersView";
 export type { AdminAddressClustersViewProps } from "./AdminAddressClustersView";
 export { AdminPaymentMethodsView } from "./AdminPaymentMethodsView";

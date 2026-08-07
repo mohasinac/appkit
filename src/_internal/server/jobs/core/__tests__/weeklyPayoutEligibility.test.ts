@@ -1,27 +1,30 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const {
-  mockGetEligibleShiprocket,
+  mockGetEligibleForPayoutSweep,
   mockPayoutCreate,
   mockMarkPayoutRequested,
   mockStoreFindBySlug,
   mockUserFindById,
+  mockGetSingleton,
 } = vi.hoisted(() => ({
-  mockGetEligibleShiprocket: vi.fn(),
+  mockGetEligibleForPayoutSweep: vi.fn(),
   mockPayoutCreate: vi.fn(),
   mockMarkPayoutRequested: vi.fn(),
   mockStoreFindBySlug: vi.fn(),
   mockUserFindById: vi.fn(),
+  mockGetSingleton: vi.fn(),
 }));
 
 vi.mock("../../../../../repositories", () => ({
   orderRepository: {
-    getEligibleShiprocket: mockGetEligibleShiprocket,
+    getEligibleForPayoutSweep: mockGetEligibleForPayoutSweep,
     markPayoutRequested: mockMarkPayoutRequested,
   },
   payoutRepository: { create: mockPayoutCreate },
   storeRepository: { findBySlug: mockStoreFindBySlug },
   userRepository: { findById: mockUserFindById },
+  siteSettingsRepository: { getSingleton: mockGetSingleton },
 }));
 
 vi.mock("../../../../../core", () => ({
@@ -41,6 +44,7 @@ function makeCtx() {
     db: { batch: vi.fn(() => batch) } as unknown as JobContext["db"],
     now: new Date(),
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+    env: vi.fn().mockReturnValue("true"),
   } as unknown as JobContext;
 }
 
@@ -60,11 +64,14 @@ const mockSeller = {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mockGetEligibleShiprocket.mockResolvedValue([]);
+  mockGetEligibleForPayoutSweep.mockResolvedValue([]);
   mockPayoutCreate.mockResolvedValue({ id: "payout-weekly-1" });
   mockStoreFindBySlug.mockResolvedValue({ id: "store-palace", ownerId: "seller-uid" });
   mockUserFindById.mockResolvedValue(mockSeller);
   mockMarkPayoutRequested.mockReturnValue(undefined);
+  mockGetSingleton.mockResolvedValue({
+    commissions: { platformFeePercent: 5, gstPercent: 18, gatewayFeePercent: 2, minimumTransactionFee: 0 },
+  });
 });
 
 describe("runWeeklyPayoutEligibility — no eligible orders", () => {
@@ -77,7 +84,7 @@ describe("runWeeklyPayoutEligibility — no eligible orders", () => {
 
 describe("runWeeklyPayoutEligibility — order missing storeId", () => {
   it("skips orders with no storeId and warns", async () => {
-    mockGetEligibleShiprocket.mockResolvedValue([
+    mockGetEligibleForPayoutSweep.mockResolvedValue([
       { id: "order-1", data: {}, ref: {} },
     ]);
     const ctx = makeCtx();
@@ -89,7 +96,7 @@ describe("runWeeklyPayoutEligibility — order missing storeId", () => {
 
 describe("runWeeklyPayoutEligibility — store/seller not found", () => {
   it("skips store when storeRepository returns null", async () => {
-    mockGetEligibleShiprocket.mockResolvedValue([makeOrder()]);
+    mockGetEligibleForPayoutSweep.mockResolvedValue([makeOrder()]);
     mockStoreFindBySlug.mockResolvedValue(null);
     const ctx = makeCtx();
     await runWeeklyPayoutEligibility(ctx);
@@ -98,7 +105,7 @@ describe("runWeeklyPayoutEligibility — store/seller not found", () => {
   });
 
   it("skips store when seller not found", async () => {
-    mockGetEligibleShiprocket.mockResolvedValue([makeOrder()]);
+    mockGetEligibleForPayoutSweep.mockResolvedValue([makeOrder()]);
     mockUserFindById.mockResolvedValue(null);
     const ctx = makeCtx();
     await runWeeklyPayoutEligibility(ctx);
@@ -106,24 +113,23 @@ describe("runWeeklyPayoutEligibility — store/seller not found", () => {
   });
 });
 
-describe("runWeeklyPayoutEligibility — fee calculation (5% platform only)", () => {
-  it("deducts only 5% platform fee — no gateway fee, no GST", async () => {
-    mockGetEligibleShiprocket.mockResolvedValue([makeOrder({ totalPrice: 100000 })]);
+describe("runWeeklyPayoutEligibility — fee calculation (platform + gateway + GST, via shared calculator)", () => {
+  it("deducts platform fee + gateway fee + GST on platform fee, matching computePayoutDeduction", async () => {
+    mockGetEligibleForPayoutSweep.mockResolvedValue([makeOrder({ totalPrice: 100000 })]);
     const ctx = makeCtx();
     await runWeeklyPayoutEligibility(ctx);
     const callArg = mockPayoutCreate.mock.calls[0][0];
     expect(callArg.grossAmount).toBe(100000);
-    expect(callArg.platformFee).toBe(5000);
-    // No gatewayFee or gstAmount fields in weekly payout
-    expect(callArg.gatewayFee).toBeUndefined();
-    expect(callArg.gstAmount).toBeUndefined();
-    expect(callArg.amount).toBe(95000);
+    expect(callArg.platformFee).toBe(5000); // 5%
+    expect(callArg.gatewayFee).toBe(2000); // 2%
+    expect(callArg.gstAmount).toBe(900); // 18% of platformFee
+    expect(callArg.amount).toBe(92100); // 100000 - 5000 - 2000 - 900
   });
 });
 
 describe("runWeeklyPayoutEligibility — multiple stores", () => {
   it("creates a separate payout per store", async () => {
-    mockGetEligibleShiprocket.mockResolvedValue([
+    mockGetEligibleForPayoutSweep.mockResolvedValue([
       makeOrder({ storeId: "store-a", id: "order-1" }),
       makeOrder({ storeId: "store-b", id: "order-2" }),
     ]);
@@ -135,7 +141,7 @@ describe("runWeeklyPayoutEligibility — multiple stores", () => {
 
 describe("runWeeklyPayoutEligibility — batch marking", () => {
   it("calls markPayoutRequested once per eligible order", async () => {
-    mockGetEligibleShiprocket.mockResolvedValue([
+    mockGetEligibleForPayoutSweep.mockResolvedValue([
       makeOrder({ id: "order-1" }),
       makeOrder({ id: "order-2" }),
     ]);

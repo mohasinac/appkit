@@ -8,6 +8,7 @@
 
 import type { SeedCollectionName } from "./actions/demo-seed-actions";
 import type { FirestoreDocument, JsonValue } from "../schemas/types";
+import type { ListingType } from "../features/products/types/index";
 import {
   payoutMethodsSeedData,
   shippingConfigsSeedData,
@@ -32,6 +33,8 @@ import { productsPrizeDrawsSeedData } from "./products-prize-draws-seed-data";
 import { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
 import { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data";
 import { productsLiveItemsSeedData } from "./products-live-items-seed-data";
+import { productsArtSeedData } from "./products-art-seed-data";
+import { productsStickersSeedData } from "./products-stickers-seed-data";
 import { ordersSeedData } from "./orders-seed-data";
 import { reviewsSeedData } from "./reviews-seed-data";
 import { bidsSeedData } from "./bids-seed-data";
@@ -84,6 +87,20 @@ function pick(items: unknown[], nameKey = "name"): SeedManifestEntry[] {
     }));
 }
 
+// SB1-G Phase 4 — canonical listingType drives the manifest "type" tag.
+// "bundle" is a categoryType, not a ListingType — falls through to "bundle" below.
+const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
+  standard: "standard",
+  auction: "auction",
+  "pre-order": "preorder",
+  "prize-draw": "prize-draw",
+  classified: "classified",
+  "digital-code": "digital-code",
+  live: "live",
+  art: "art",
+  stickers: "stickers",
+};
+
 export const SEED_MANIFEST: SeedManifest = {
   categories: pick(asArr(categoriesSeedData)),
   users: pick(
@@ -107,25 +124,14 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsClassifiedsSeedData),
       ...asArr(productsDigitalCodesSeedData),
       ...asArr(productsLiveItemsSeedData),
+      ...asArr(productsArtSeedData),
+      ...asArr(productsStickersSeedData),
     ].map((p) => ({
       ...p,
-      // SB1-G Phase 4 — canonical listingType drives the manifest "type" tag.
       type:
-        p.listingType === "auction"
-          ? "auction"
-          : p.listingType === "pre-order"
-            ? "preorder"
-            : p.listingType === "prize-draw"
-              ? "prize-draw"
-              : p.listingType === "classified"
-                ? "classified"
-                : p.listingType === "digital-code"
-                  ? "digital-code"
-                  : p.listingType === "live"
-                    ? "live"
-                    : p.listingType === "bundle"
-                      ? "bundle"
-                      : "standard",
+        p.listingType === "bundle"
+          ? "bundle"
+          : LISTING_TYPE_TO_MANIFEST_TAG[(p.listingType as ListingType) ?? "standard"],
     })),
     "title",
   ),

@@ -14,7 +14,7 @@ export function AdminSiteConfigGuideView() {
     { name: "contactSocial", desc: "Email, phone, social media URLs, WhatsApp business number." },
     { name: "watermark", desc: "Watermark text and opacity applied to all product images via the /api/media proxy." },
     { name: "fees", desc: "platformFee (%), Razorpay gateway fee pass-through toggle, GST rate on platform fees." },
-    { name: "integrations", desc: "API keys: Razorpay (live/test), Shiprocket, Resend, WhatsApp Cloud API. Keys are encrypted at rest — never log or export." },
+    { name: "integrations", desc: "API keys: Razorpay (live/test, disabled by default — manual payment is the default), Resend, WhatsApp Cloud API. Keys are encrypted at rest — never log or export." },
     { name: "shipping", desc: "Default shipping carriers, free shipping threshold (paise), COD availability toggle." },
     { name: "auctionConfig", desc: "Global bid increment default, auto-extend window (minutes), minimum auction duration." },
     { name: "platformLimits", desc: "Cart item cap (50), wishlist cap (20), history cap (50), support ticket limits (2 general + 1 per order)." },

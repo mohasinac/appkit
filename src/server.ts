@@ -454,47 +454,14 @@ export { verifyPaymentSignatureWithKeys } from "./providers/payment-razorpay/ind
 // verifyWebhookSignature - Shared export for verify webhook signature.
 export { verifyWebhookSignature } from "./providers/payment-razorpay/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// SHIPROCKET_TOKEN_TTL_MS - Constant used across modules.
-export { SHIPROCKET_TOKEN_TTL_MS } from "./providers/shipping-shiprocket/index";
-// SHIPROCKET_TRACKING_URL_BASE / buildShiprocketTrackingUrl / SHIPROCKET_STATUS_PICKUP_SCHEDULED — see I5/O5
-export {
-  SHIPROCKET_TRACKING_URL_BASE,
-  buildShiprocketTrackingUrl,
-  SHIPROCKET_STATUS_PICKUP_SCHEDULED,
-} from "./providers/shipping-shiprocket/index";
+// resolveKeys - resolves integration credentials (Razorpay etc.) from Firestore site settings, falling back to env vars. Used by providers.config.ts to construct RazorpayProvider when siteSettings.payment.razorpayEnabled is true.
+export { resolveKeys } from "./core/integration-keys";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// ShiprocketProvider - Component for shiprocket provider.
-export { ShiprocketProvider } from "./providers/shipping-shiprocket/index";
+// ManualPaymentProvider - the default IPaymentProvider implementation (no gateway).
+export { ManualPaymentProvider } from "./providers/payment-manual/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// isShiprocketTokenExpired - Shared export for is shiprocket token expired.
-export { isShiprocketTokenExpired } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketAddPickupLocation - Shared export for shiprocket add pickup location.
-export { shiprocketAddPickupLocation } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketAuthenticate - Shared export for shiprocket authenticate.
-export { shiprocketAuthenticate } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketCheckServiceability - Shared export for shiprocket check serviceability.
-export { shiprocketCheckServiceability } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketCreateOrder - Shared export for shiprocket create order.
-export { shiprocketCreateOrder } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketGenerateAWB - Shared export for shiprocket generate awb.
-export { shiprocketGenerateAWB } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketGeneratePickup - Shared export for shiprocket generate pickup.
-export { shiprocketGeneratePickup } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketGetPickupLocations - Shared export for shiprocket get pickup locations.
-export { shiprocketGetPickupLocations } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketTrackByAWB - Shared export for shiprocket track by awb.
-export { shiprocketTrackByAWB } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketVerifyPickupOTP - Shared export for shiprocket verify pickup otp.
-export { shiprocketVerifyPickupOTP } from "./providers/shipping-shiprocket/index";
+// ManualShippingProvider - the default (and only) IShippingProvider implementation.
+export { ManualShippingProvider } from "./providers/shipping-manual/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createAddressForUser - Helper for create address for user.
 export { createAddressForUser } from "./features/account/server";
@@ -947,6 +914,18 @@ export {
   processRefundAction,
   type ProcessRefundInput,
 } from "./_internal/server/features/refunds/actions";
+// [SERVER-ONLY] Shared fee calculator — platform/gateway/GST/COD handling fee math.
+export {
+  computeCheckoutFees,
+  computePayoutDeduction,
+  computeCodHandlingFee,
+} from "./_internal/shared/fees/calculator";
+export type {
+  FeeCommissionRates,
+  CheckoutFees,
+  PayoutDeduction,
+  CodHandlingFeeRates,
+} from "./_internal/shared/fees/calculator";
 // [SERVER-ONLY] Payout refund deduction action
 export {
   applyRefundDeductionAction,
@@ -1533,7 +1512,7 @@ export {
   assertNever,
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
-export { LISTING_TYPE_REGISTRY, pluginFor } from "./_internal/shared/listing-types/_registry";
+export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_internal/shared/listing-types/_registry";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
 
 // Media context guards — shared by /api/media/sign + legacy /api/media/upload.
@@ -1644,24 +1623,21 @@ export { toClientLiveItem, type LiveItemClientShape } from "./_internal/server/f
 export { buildLiveItemMetadata, type LiveItemMetadataOptions } from "./_internal/server/features/live/metadata";
 export { renderLiveItemOg, renderLiveItemOgImage, renderLiveItemOgFromDoc, type LiveItemOgData } from "./_internal/server/features/live/og";
 
-// ── Track H — Payment + Shipping provider abstraction ────────────────────────
-// In-process mock implementations. Real providers continue to live in
-// appkit/src/providers/payment-razorpay + shipping-shiprocket and are
-// registered separately. The resolver helper sits next to them so consumers
-// can drive selection from siteSettings.featureFlags.useMockPayment.
+// ── Track H — Payment provider abstraction ────────────────────────────────
+// In-process mock implementation. The real provider continues to live in
+// appkit/src/providers/payment-razorpay and is registered separately. The
+// resolver helper sits next to it so consumers can drive selection from
+// siteSettings.featureFlags.useMockPayment. Shipping has no mock/resolver —
+// ManualShippingProvider makes no external API calls, so there's nothing to
+// mock or choose between.
 export {
   MockRazorpayProvider,
-  MockShiprocketProvider,
   resolvePaymentProvider,
-  resolveShippingProvider,
   type MockWebhookEvent,
   type MockWebhookPayload,
   type WebhookSink,
-  type ShipmentEvent,
-  type ShipmentEventSink,
   type PaymentResolutionFactories,
   type ProviderResolutionContext,
-  type ShippingResolutionFactories,
 } from "./_internal/server/providers";
 
 // ── Lottery feature — server data + adapters + actions ──────────────────────────

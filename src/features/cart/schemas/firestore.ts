@@ -7,6 +7,7 @@
 
 // -- Cart Document ------------------------------------------------------------
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { ListingType } from "../../products/types/index";
 
 export interface CartItemDocument {
   itemId: string;
@@ -28,14 +29,7 @@ export interface CartItemDocument {
   // SB-UNI-F 2026-05-13 — Phase 2 union extension. Cart capability is
   // enforced by the action layer (capabilityFor / canAddToCart) — classified
   // and live are blocked at addToCart, digital-code is allowed.
-  listingType:
-    | "standard"
-    | "auction"
-    | "pre-order"
-    | "prize-draw"
-    | "classified"
-    | "digital-code"
-    | "live";
+  listingType: ListingType;
   /** True when item was added from an accepted Make-an-Offer */
   isOffer?: boolean;
   offerId?: string;
@@ -140,14 +134,7 @@ export type AddToCartInput = {
   // SB-UNI-F 2026-05-13 — Phase 2 union extension. Cart capability is
   // enforced by the action layer (capabilityFor / canAddToCart) — classified
   // and live are blocked at addToCart, digital-code is allowed.
-  listingType:
-    | "standard"
-    | "auction"
-    | "pre-order"
-    | "prize-draw"
-    | "classified"
-    | "digital-code"
-    | "live";
+  listingType: ListingType;
   isOffer?: boolean;
   offerId?: string;
   lockedPrice?: number;

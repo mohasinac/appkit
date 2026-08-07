@@ -15,7 +15,7 @@ export interface PayoutBankAccount {
   bankName: string;
 }
 
-export type PayoutStatus = "pending" | "processing" | "completed" | "failed";
+export type PayoutStatus = "pending" | "processing" | "paid" | "failed";
 
 /**
  * A single refund deduction applied against a payout before dispatch.
@@ -37,7 +37,7 @@ export interface PayoutRefundDeduction {
 export const PayoutStatusValues = {
   PENDING: "pending",
   PROCESSING: "processing",
-  COMPLETED: "completed",
+  PAID: "paid",
   FAILED: "failed",
 } as const satisfies Record<string, PayoutStatus>;
 
@@ -106,7 +106,7 @@ export const PAYOUT_FIELDS = {
   STATUS_VALUES: {
     PENDING: "pending" as PayoutStatus,
     PROCESSING: "processing" as PayoutStatus,
-    COMPLETED: "completed" as PayoutStatus,
+    PAID: "paid" as PayoutStatus,
     FAILED: "failed" as PayoutStatus,
   },
 } as const;

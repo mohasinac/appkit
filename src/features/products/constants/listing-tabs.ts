@@ -32,6 +32,8 @@ export const CATEGORY_PAGE_TABS = [
   { id: "classifieds", label: "Classifieds", listingType: "classified" },
   { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
   { id: "live", label: "Live Items", listingType: "live" },
+  { id: "art", label: "Art", listingType: "art" },
+  { id: "stickers", label: "Stickers", listingType: "stickers" },
   { id: "stores", label: "Stores", entity: "stores" },
 ] as const satisfies readonly ListingTab[];
 
@@ -47,6 +49,8 @@ export const STORE_PAGE_TABS = [
   { id: "classifieds", label: "Classifieds", listingType: "classified" },
   { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
   { id: "live", label: "Live Items", listingType: "live" },
+  { id: "art", label: "Art", listingType: "art" },
+  { id: "stickers", label: "Stickers", listingType: "stickers" },
 ] as const satisfies readonly ListingTab[];
 
 export type StoreTabId = (typeof STORE_PAGE_TABS)[number]["id"];
@@ -61,6 +65,8 @@ export const SELLER_LISTING_TABS = [
   { id: "classifieds", label: "Classifieds", listingType: "classified" },
   { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
   { id: "live", label: "Live Items", listingType: "live" },
+  { id: "art", label: "Art", listingType: "art" },
+  { id: "stickers", label: "Stickers", listingType: "stickers" },
 ] as const;
 
 export type SellerListingTabId = (typeof SELLER_LISTING_TABS)[number]["id"];
@@ -76,6 +82,8 @@ export const SEARCH_RESULT_TABS = [
   { id: "classifieds", label: "Classifieds", listingType: "classified" },
   { id: "digital-codes", label: "Digital Codes", listingType: "digital-code" },
   { id: "live", label: "Live Items", listingType: "live" },
+  { id: "art", label: "Art", listingType: "art" },
+  { id: "stickers", label: "Stickers", listingType: "stickers" },
 ] as const;
 
 export type SearchTabId = (typeof SEARCH_RESULT_TABS)[number]["id"];

@@ -113,7 +113,7 @@ export interface ProductDigitalCodeMeta {
 
 // SB-UNI-K 2026-05-13 — Live-item listing fields (animals / plants).
 // `listingType:"live"` requires vendor verification + jurisdiction match
-// at add-to-cart. Carrier handoff may bypass Shiprocket (handled per-store).
+// at add-to-cart. Carrier handoff is handled per-store (manual shipping).
 export interface ProductLiveItemMeta {
   /** Species or cultivar name (taxonomic where applicable). */
   species: string;
@@ -135,6 +135,22 @@ export interface ProductLiveItemMeta {
   vendorVerified?: boolean;
   /** CITES permit number (Appendix I/II species). */
   cites?: string;
+}
+
+/**
+ * Print-specific metadata shared by the "art" and "stickers" listing types
+ * (both are printed-only physical goods). Every field optional so partial
+ * seller input still saves.
+ */
+export interface ProductPrintMeta {
+  /** e.g. "A4", "12x18 in", "5x5 cm sheet". */
+  size?: string;
+  /** e.g. "Matte photo paper", "Vinyl", "Canvas". */
+  material?: string;
+  /** e.g. "Glossy", "Matte", "Holographic". */
+  finish?: string;
+  /** Limited-edition print run size; omitted for open editions. */
+  editionSize?: number;
 }
 
 export interface ProductDocument extends BaseDocument {
@@ -226,6 +242,10 @@ export interface ProductDocument extends BaseDocument {
   isPromoted?: boolean;
   isOnSale?: boolean;
   isSold?: boolean;
+  /** When true, an EMI order for this product ships as soon as it's confirmed instead of waiting for every installment to be paid. Default false. */
+  allowShipBeforeEmiComplete?: boolean;
+  /** Print-specific metadata for "art" / "stickers" listings — printed-only physical goods. Optional on every listing type; only populated for art/stickers. */
+  printMeta?: ProductPrintMeta;
   promotionEndDate?: Date;
   pickupAddressId?: string;
   viewCount?: number;
@@ -520,6 +540,8 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "preOrderCancellable",
   "isOnSale",
   "isSold",
+  "allowShipBeforeEmiComplete",
+  "printMeta",
   "seoTitle",
   "seoDescription",
   "seoKeywords",

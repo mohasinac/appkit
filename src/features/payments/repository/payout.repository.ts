@@ -194,7 +194,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     return this.update(payoutId, {
       status,
       ...extra,
-      ...(status === PAYOUT_FIELDS.STATUS_VALUES.COMPLETED ||
+      ...(status === PAYOUT_FIELDS.STATUS_VALUES.PAID ||
       status === PAYOUT_FIELDS.STATUS_VALUES.FAILED
         ? { processedAt: new Date() }
         : {}),
@@ -244,7 +244,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     const snapshot = await this.db
       .collection(this.collection)
       .where(PAYOUT_FIELDS.STORE_ID, "==", storeId)
-      .where(PAYOUT_FIELDS.STATUS, "in", ["pending", "processing", "completed"])
+      .where(PAYOUT_FIELDS.STATUS, "in", ["pending", "processing", "paid"])
       .get();
 
     const ids = new Set<string>();

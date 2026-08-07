@@ -1,11 +1,10 @@
 /**
- * `resolvePaymentProvider` / `resolveShippingProvider` — decide between the
- * real adapter and the in-process mock based on site-settings feature flags.
+ * `resolvePaymentProvider` — decide between the real adapter and the
+ * in-process mock based on site-settings feature flags.
  *
- * Resolution rule (single explicit boolean per provider, no implicit fallback):
+ * Resolution rule (single explicit boolean, no implicit fallback):
  *
- *   1. Read `siteSettings.featureFlags.useMockPayment` /
- *      `featureFlags.useMockShipping`.
+ *   1. Read `siteSettings.featureFlags.useMockPayment`.
  *   2. If the flag is `true` and `process.env.NODE_ENV !== "production"` →
  *      return the mock provider.
  *   3. If the flag is `true` and `process.env.NODE_ENV === "production"` →
@@ -15,17 +14,20 @@
  *
  * The resolver is intentionally provider-agnostic (it accepts factories so
  * the consumer's `providers.config.ts` controls instantiation), keeping this
- * file zero-dep on Razorpay / Shiprocket SDK chains.
+ * file zero-dep on the Razorpay SDK chain.
+ *
+ * Shipping has no equivalent resolver: the manual shipping provider makes no
+ * external API calls, so there is nothing to mock — `providers.config.ts`
+ * registers `ManualShippingProvider` directly.
  */
 
-import type { IPaymentProvider, IShippingProvider } from "../../../contracts";
+import type { IPaymentProvider } from "../../../contracts";
 
 export interface ProviderResolutionContext {
   readonly nodeEnv: string;
   readonly siteSettings: {
     readonly featureFlags?: {
       readonly useMockPayment?: boolean;
-      readonly useMockShipping?: boolean;
     };
   };
 }
@@ -33,11 +35,6 @@ export interface ProviderResolutionContext {
 export interface PaymentResolutionFactories {
   readonly real: () => Promise<IPaymentProvider> | IPaymentProvider;
   readonly mock: () => Promise<IPaymentProvider> | IPaymentProvider;
-}
-
-export interface ShippingResolutionFactories {
-  readonly real: () => Promise<IShippingProvider> | IShippingProvider;
-  readonly mock: () => Promise<IShippingProvider> | IShippingProvider;
 }
 
 export async function resolvePaymentProvider(
@@ -49,21 +46,6 @@ export async function resolvePaymentProvider(
     throw new Error(
       "[providers] siteSettings.featureFlags.useMockPayment is TRUE in production. " +
         "The mock payment provider must never run in production. Set the flag to false " +
-        "in Admin → Site Settings, or unset NODE_ENV=production for the deploy.",
-    );
-  }
-  return want ? await factories.mock() : await factories.real();
-}
-
-export async function resolveShippingProvider(
-  ctx: ProviderResolutionContext,
-  factories: ShippingResolutionFactories,
-): Promise<IShippingProvider> {
-  const want = ctx.siteSettings.featureFlags?.useMockShipping === true;
-  if (want && ctx.nodeEnv === "production") {
-    throw new Error(
-      "[providers] siteSettings.featureFlags.useMockShipping is TRUE in production. " +
-        "The mock shipping provider must never run in production. Set the flag to false " +
         "in Admin → Site Settings, or unset NODE_ENV=production for the deploy.",
     );
   }

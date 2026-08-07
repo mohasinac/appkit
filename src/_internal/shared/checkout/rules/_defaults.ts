@@ -12,6 +12,7 @@ import { STANDARD_MAX_QTY_PER_LINE } from "./_limits";
 export const DEFAULT_LISTING_RULE: Omit<ListingCheckoutRule, "orderType"> = {
   purchaseable: true,
   cartEligible: true,
+  cartIneligibleHint: "This listing type cannot be added to the cart.",
   requiresShippingAddress: true,
   requiresConsentOtp: true,
   nonRefundable: false,

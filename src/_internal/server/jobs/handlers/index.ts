@@ -66,3 +66,5 @@ export { onScamReportCreateHandler } from "./onScamReportCreate";
 export { onScamReportUpdateHandler } from "./onScamReportUpdate";
 // SB-UNI-Y-1 — 30-day draft prune
 export { draftPruneHandler } from "./draftPrune";
+// EMI — installment reminder + overdue-flagging sweep
+export { emiInstallmentReminderHandler } from "./emiInstallmentReminder";

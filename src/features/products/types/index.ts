@@ -1,6 +1,6 @@
 import type { MediaField } from "../../media/types/index";
-import type { CustomField, CustomSection } from "../schemas/firestore";
-export type { CustomField, CustomSection } from "../schemas/firestore";
+import type { CustomField, CustomSection, ProductPrintMeta } from "../schemas/firestore";
+export type { CustomField, CustomSection, ProductPrintMeta } from "../schemas/firestore";
 
 export type ProductStatus =
   | "draft"
@@ -31,6 +31,8 @@ export type ProductCondition =
 // Capability registry decides whether cart accepts each type. Classified is
 // chat-only (canAddToCart=false). Digital-code skips shipping address +
 // instant-fulfills. Live requires vendor verification + jurisdiction check.
+// EMI/art-stickers session — additive extension: art | stickers. Both are
+// printed-only physical goods (standard-like cart/checkout behavior).
 export type ListingType =
   | "standard"
   | "auction"
@@ -38,7 +40,9 @@ export type ListingType =
   | "prize-draw"
   | "classified"
   | "digital-code"
-  | "live";
+  | "live"
+  | "art"
+  | "stickers";
 
 export interface ProductImage {
   url: string;
@@ -67,6 +71,8 @@ export interface ProductItem {
   video?: { url: string; thumbnailUrl?: string };
   featured?: boolean;
   isPromoted?: boolean;
+  allowShipBeforeEmiComplete?: boolean;
+  printMeta?: ProductPrintMeta;
   currentBid?: number;
   availableQuantity?: number;
   /** @deprecated Use categorySlugs[0] */

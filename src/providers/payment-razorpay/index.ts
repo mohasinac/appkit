@@ -22,8 +22,8 @@
 import Razorpay from "razorpay";
 import type { JsonValue } from "@mohasinac/appkit";
 import { createHmac, timingSafeEqual } from "crypto";
+import { IPaymentProvider } from "../../contracts";
 import type {
-  IPaymentProvider,
   PaymentOrder,
   PaymentCapture,
   Refund,
@@ -38,11 +38,13 @@ export interface RazorpayConfig {
 
 // --- IPaymentProvider implementation ------------------------------------------
 
-export class RazorpayProvider implements IPaymentProvider {
+export class RazorpayProvider extends IPaymentProvider {
+  readonly name = "razorpay";
   private readonly razorpay: Razorpay;
   private readonly webhookSecret?: string;
 
   constructor(config: RazorpayConfig) {
+    super();
     this.razorpay = new Razorpay({
       key_id: config.keyId,
       key_secret: config.keySecret,

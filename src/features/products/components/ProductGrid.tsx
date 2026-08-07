@@ -15,7 +15,8 @@ import { useLongPress } from "../../../react/hooks/useLongPress";
 import { FeatureBadgeList } from "./FeatureBadge";
 import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
-import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
+import { normalizeListingType } from "../utils/listing-type";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 const __P = {
   p3: "p-3",
@@ -25,8 +26,6 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_BADGE_AUCTION = "bg-warning-surface text-white";
-const CLS_BADGE_PREORDER = "bg-violet-600 text-white";
 const CLS_BADGE_NEW = "rounded-full bg-error-surface px-2 py-0.5 text-[10px] text-white shadow-sm";
 const CLS_BADGE_SALE = "rounded-full bg-success-surface px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
 const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
@@ -80,15 +79,10 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )
       : null;
 
-  // SB1-G — canonical accessors that handle the legacy boolean fallback.
-  const isAuction = isAuctionListing(product);
-  const isPreOrder = isPreOrderListing(product);
-
-  const typeBadge = isAuction
-    ? { label: "Auction", cls: CLS_BADGE_AUCTION }
-    : isPreOrder
-      ? { label: "Pre-Order", cls: CLS_BADGE_PREORDER }
-      : null;
+  const listingPlugin = pluginFor(normalizeListingType(product));
+  const typeBadge = listingPlugin.badge
+    ? { label: listingPlugin.badge.label, cls: listingPlugin.badge.className }
+    : null;
 
   const longPress = useLongPress(() => onSelect?.(product.id));
 
@@ -336,7 +330,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           {(() => {
             const stock =
               product.stockCount ?? product.stockQuantity ?? product.availableQuantity;
-            if (stock === undefined || isAuction) return null;
+            if (stock === undefined || !listingPlugin.showsStockQuantity) return null;
             if (stock <= 0) {
               return (
                 <Text className={CLS_DISCOUNT_TEXT}>

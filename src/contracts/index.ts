@@ -35,12 +35,10 @@ export type {
 export type { UploadOptions, StorageFile, IStorageProvider } from "./storage";
 
 // Payment
-export type {
-  PaymentOrder,
-  PaymentCapture,
-  Refund,
-  IPaymentProvider,
-} from "./payment";
+export type { PaymentOrder, PaymentCapture, Refund } from "./payment";
+// IPaymentProvider is an abstract class (not a pure type) — subclasses need
+// the runtime constructor to `extends` it, so it's a value export.
+export { IPaymentProvider } from "./payment";
 
 // Shipping
 export type {
@@ -50,8 +48,10 @@ export type {
   TrackingEvent,
   TrackingInfo,
   ServiceabilityResult,
-  IShippingProvider,
 } from "./shipping";
+// IShippingProvider is an abstract class (not a pure type) — subclasses need
+// the runtime constructor to `extends` it, so it's a value export.
+export { IShippingProvider } from "./shipping";
 
 // Search
 export type {

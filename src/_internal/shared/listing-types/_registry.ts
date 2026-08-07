@@ -17,6 +17,9 @@ import * as prizeDraw from "./prize-draw/config";
 import * as classified from "./classified/config";
 import * as digitalCode from "./digital-code/config";
 import * as live from "./live/config";
+// EMI/art-stickers session — printed-only physical-goods types.
+import * as art from "./art/config";
+import * as stickers from "./stickers/config";
 
 import { LISTING_TYPE_CAPABILITIES } from "./capabilities";
 import type { ListingType } from "../../../features/products/types/index";
@@ -25,11 +28,22 @@ export interface ListingTypePlugin {
   listingType: ListingType;
   slugPrefix: string;
   cartLine: "single-product" | "blocked" | "bundle-expand";
+  /** Public detail-page href builder — replaces the ad-hoc per-type href pickers duplicated across card/link components. */
+  detailRoute: (idOrSlug: string) => string;
+  /** Card-grid badge shown for time-sensitive/action-required types (auction/pre-order); undefined = no badge. */
+  badge?: { label: string; className: string };
+  /** Seller create/edit form price-field label. */
+  priceLabel: string;
+  /** Human label for the listing type (breadcrumbs/titles). */
+  typeLabel: string;
+  /** Whether the seller create/edit form shows a Stock Quantity field. */
+  showsStockQuantity: boolean;
 }
 
 // SB-UNI-D — bundle entry removed; bundles are a categoryType, not a listingType.
 // SB-UNI-F 2026-05-13 — classified / digital-code / live added.
-export const LISTING_TYPE_REGISTRY = {
+// EMI/art-stickers session — art / stickers added.
+export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   standard: standard.config,
   auction: auction.config,
   "pre-order": preOrder.config,
@@ -37,12 +51,25 @@ export const LISTING_TYPE_REGISTRY = {
   classified: classified.config,
   "digital-code": digitalCode.config,
   live: live.config,
-} as const;
+  art: art.config,
+  stickers: stickers.config,
+};
 
-// Returns undefined for "bundle" — bundles are CategoryDocument, not in this registry.
-// Callers must null-check: `pluginFor(lt) ?? fallbackBehavior`.
-export function pluginFor(type: ListingType) {
+export function pluginFor(type: ListingType): ListingTypePlugin {
   return LISTING_TYPE_REGISTRY[type];
+}
+
+/**
+ * Infer a listing type from a product slug/id by matching its registered
+ * `slugPrefix` — replaces ad-hoc `id.startsWith("auction-")` chains in
+ * contexts (guest carts, unauthenticated payloads) that don't carry an
+ * explicit `listingType` field. Falls back to "standard" when no prefix matches.
+ */
+export function detectListingTypeFromSlug(slug: string): ListingType {
+  for (const plugin of Object.values(LISTING_TYPE_REGISTRY)) {
+    if (plugin.slugPrefix && slug.startsWith(plugin.slugPrefix)) return plugin.listingType;
+  }
+  return "standard";
 }
 
 // Re-export the capability map so consumers can pull both surfaces from

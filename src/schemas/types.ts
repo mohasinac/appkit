@@ -97,7 +97,7 @@ export interface ApiRouteSchema<
 
 // ---------------------------------------------------------------------------
 // WebhookSchemaBucket — per-provider map of `eventName` → envelope schema.
-// Razorpay, Shiprocket, Google OAuth, etc. each register one bucket.
+// Razorpay, Google OAuth, etc. each register one bucket.
 // ---------------------------------------------------------------------------
 
 export type WebhookSchemaBucket = Readonly<Record<string, z.ZodTypeAny>>;

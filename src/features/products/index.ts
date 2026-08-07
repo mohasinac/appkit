@@ -19,6 +19,9 @@ export {
   isClassifiedListing,
   isDigitalCodeListing,
   isLiveListing,
+  // Art/stickers session.
+  isArtListing,
+  isStickersListing,
 } from "./utils/listing-type";
 export {
   sanitizeProductForPublic,

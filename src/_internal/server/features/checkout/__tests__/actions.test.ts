@@ -371,6 +371,119 @@ describe("createCheckoutOrderAction — COD gate", () => {
     const result = await createCheckoutOrderAction(makeInput({ paymentMethod: "cod" }));
     expect(result.orderIds).toHaveLength(1);
   });
+
+  it("COD → codHandlingFee = max(floor, subtotal × percent) is added to totalPrice", async () => {
+    // groupTotal = 5000 paise; default rates (not set in makeSiteSettings) fall back to
+    // ₹200 floor (20000 paise) / 10% — percentFee = 500, floor wins → codHandlingFee = 20000.
+    await createCheckoutOrderAction(makeInput({ paymentMethod: "cod" }));
+    const orderArg = mockOrdersCreate.mock.calls[0][0] as { codHandlingFee?: number; totalPrice: number };
+    expect(orderArg.codHandlingFee).toBe(20000);
+    expect(orderArg.totalPrice).toBe(5000 + 20000);
+  });
+
+  it("COD with an explicit percent rate above the floor → percentage wins", async () => {
+    mockSiteSettingsGetSingleton.mockResolvedValue(
+      makeSiteSettings({
+        commissions: {
+          platformFeePercent: 5,
+          gstPercent: 18,
+          platformShippingPercent: 2,
+          platformShippingFixedMin: 50,
+          codDepositPercent: 10,
+          codHandlingFeeMinInPaise: 100,
+          codHandlingFeePercent: 10,
+        },
+      }),
+    );
+    await createCheckoutOrderAction(makeInput({ paymentMethod: "cod" }));
+    const orderArg = mockOrdersCreate.mock.calls[0][0] as { codHandlingFee?: number };
+    // groupTotal = 5000 paise, 10% = 500, which beats the 100-paise floor.
+    expect(orderArg.codHandlingFee).toBe(500);
+  });
+
+  it("non-COD payment method → codHandlingFee is undefined", async () => {
+    await createCheckoutOrderAction(makeInput({ paymentMethod: "upi_manual" }));
+    const orderArg = mockOrdersCreate.mock.calls[0][0] as { codHandlingFee?: number };
+    expect(orderArg.codHandlingFee).toBeUndefined();
+  });
+});
+
+// ── EMI ──────────────────────────────────────────────────────────────────────
+
+describe("createCheckoutOrderAction — EMI", () => {
+  const emiSettings = {
+    enabled: true,
+    minOrderValueInPaise: 1000, // ₹10 — below the 5000-paise test cart total so the fixture stays eligible
+    tenureOptions: [2, 3, 4, 5, 6],
+    tokenPercent: 10,
+    billingDay: 5,
+    surchargePercentPerMonth: 1,
+    surchargeSellerSharePercent: 50,
+  };
+
+  beforeEach(() => {
+    mockStoresFindById.mockResolvedValue({ id: "store-A", ownerId: "owner-1", emiEnabled: true });
+  });
+
+  it("no emiTenureMonths provided → ValidationError", async () => {
+    mockSiteSettingsGetSingleton.mockResolvedValue(makeSiteSettings({ emi: emiSettings }));
+    await expect(
+      createCheckoutOrderAction(makeInput({ paymentMethod: "emi" })),
+    ).rejects.toThrow(/emiTenureMonths/i);
+  });
+
+  it("site EMI disabled → ValidationError mentioning site_disabled", async () => {
+    mockSiteSettingsGetSingleton.mockResolvedValue(
+      makeSiteSettings({ emi: { ...emiSettings, enabled: false } }),
+    );
+    await expect(
+      createCheckoutOrderAction(makeInput({ paymentMethod: "emi", emiTenureMonths: 3 })),
+    ).rejects.toThrow(/site_disabled/);
+  });
+
+  it("seller has not opted in → ValidationError mentioning seller_disabled", async () => {
+    mockSiteSettingsGetSingleton.mockResolvedValue(makeSiteSettings({ emi: emiSettings }));
+    mockStoresFindById.mockResolvedValue({ id: "store-A", ownerId: "owner-1", emiEnabled: false });
+    await expect(
+      createCheckoutOrderAction(makeInput({ paymentMethod: "emi", emiTenureMonths: 3 })),
+    ).rejects.toThrow(/seller_disabled/);
+  });
+
+  it("below the minimum order value → ValidationError mentioning below_minimum", async () => {
+    mockSiteSettingsGetSingleton.mockResolvedValue(
+      makeSiteSettings({ emi: { ...emiSettings, minOrderValueInPaise: 999999999 } }),
+    );
+    await expect(
+      createCheckoutOrderAction(makeInput({ paymentMethod: "emi", emiTenureMonths: 3 })),
+    ).rejects.toThrow(/below_minimum/);
+  });
+
+  it("eligible EMI order → order created with token, surcharge, and installment schedule", async () => {
+    mockSiteSettingsGetSingleton.mockResolvedValue(makeSiteSettings({ emi: emiSettings }));
+    await createCheckoutOrderAction(makeInput({ paymentMethod: "emi", emiTenureMonths: 3 }));
+    const orderArg = mockOrdersCreate.mock.calls[0][0] as {
+      emiEnabled?: boolean;
+      emiTenureMonths?: number;
+      emiTokenAmount?: number;
+      emiSurchargeAmount?: number;
+      emiInstallments?: { status: string }[];
+      emiRemainingBalance?: number;
+      emiComplete?: boolean;
+      totalPrice: number;
+    };
+    // groupTotal = 5000 paise. tokenAmount = 10% = 500. principalRemaining = 4500.
+    // surchargeAmount = 4500 * 1% * 3 = 135. remainingBalance = 4635.
+    expect(orderArg.emiEnabled).toBe(true);
+    expect(orderArg.emiTenureMonths).toBe(3);
+    expect(orderArg.emiTokenAmount).toBe(500);
+    expect(orderArg.emiSurchargeAmount).toBe(135);
+    expect(orderArg.emiRemainingBalance).toBe(4635);
+    expect(orderArg.emiComplete).toBe(false);
+    expect(orderArg.emiInstallments).toHaveLength(3);
+    expect(orderArg.emiInstallments!.every((i) => i.status === "pending")).toBe(true);
+    // totalPrice includes the surcharge on top of the subtotal.
+    expect(orderArg.totalPrice).toBe(5000 + 135);
+  });
 });
 
 // ── Cart validation ───────────────────────────────────────────────────────────

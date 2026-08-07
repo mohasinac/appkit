@@ -27,8 +27,9 @@ import type {
   FailedPaymentReason,
 } from "../../../../features/checkout/schemas/firestore";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
-import { splitCartIntoOrderGroups } from "../../../../features/orders/index";
+import { splitCartIntoOrderGroups, type OrderType } from "../../../../features/orders/index";
 import { resolveDate } from "../../../../utils";
+import { computeCodHandlingFee, type CodHandlingFeeRates } from "../../../shared/fees/calculator";
 import {
   getAdminDb,
   getAdminRealtimeDb,
@@ -60,7 +61,9 @@ import {
   fetchRazorpayOrder,
   paiseToRupees,
 } from "../../../../providers/payment-razorpay/index";
-import { CHECKOUT_DEFAULT_COMMISSIONS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
+import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
+import { checkEmiEligibility, computeEmiSchedule, type EmiSettings } from "../../../shared/features/emi/schedule";
+import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import {
   enforceMaxPerUserForCart,
@@ -216,6 +219,8 @@ export interface CreateCheckoutOrderInput {
   /** Required for physical carts; omitted for digital-code-only carts (no shipping). */
   addressId?: string;
   paymentMethod: CheckoutPaymentMethod;
+  /** Required when paymentMethod === "emi" — the buyer's chosen tenure (2–6 months). */
+  emiTenureMonths?: number;
   notes?: string;
   excludedProductIds?: string[];
   /** When true this is an admin test order — OTP consent is pre-granted and the order is created paid/processing. */
@@ -242,24 +247,16 @@ function accumulateCouponUsage(
 
 async function resolveShippingCost(
   storeId: string | undefined,
-  groupTotal: number,
-  commissions: { platformShippingPercent: number; platformShippingFixedMin: number },
-): Promise<{ shippingFee: number; storeOwnerId: string | undefined }> {
-  if (!storeId) return { shippingFee: 0, storeOwnerId: undefined };
+): Promise<{ shippingFee: number; storeOwnerId: string | undefined; storeEmiEnabled: boolean }> {
+  if (!storeId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled: false };
   const store = await storeRepository.findById(storeId);
   const storeOwnerId = store?.ownerId;
-  if (!storeOwnerId) return { shippingFee: 0, storeOwnerId: undefined };
+  const storeEmiEnabled = store?.emiEnabled === true;
+  if (!storeOwnerId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled };
   const sellerUser = await userRepository.findById(storeOwnerId);
   const shippingConfig = sellerUser?.shippingConfig;
-  if (!shippingConfig?.isConfigured) return { shippingFee: 0, storeOwnerId };
-  if (shippingConfig.method === "custom") {
-    return { shippingFee: shippingConfig.customShippingPrice ?? 0, storeOwnerId };
-  }
-  if (shippingConfig.method === "shiprocket") {
-    const percentFee = groupTotal * (commissions.platformShippingPercent / 100);
-    return { shippingFee: Math.max(percentFee, commissions.platformShippingFixedMin), storeOwnerId };
-  }
-  return { shippingFee: 0, storeOwnerId };
+  if (!shippingConfig?.isConfigured) return { shippingFee: 0, storeOwnerId, storeEmiEnabled };
+  return { shippingFee: shippingConfig.customShippingPrice ?? 0, storeOwnerId, storeEmiEnabled };
 }
 
 function buildStockUpdatePayload(
@@ -348,6 +345,292 @@ function dispatchOrderConfirmationEmails(
   );
 }
 
+// SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle price
+// at add-time); regular lines use product.price (current Firestore). Prevents
+// stale cart-cached prices from being charged on COD/UPI orders.
+function unitPriceFor(item: CartItemDocument, product: ProductDocument | null): number {
+  return item.bundleCategorySlug && item.bundleProductIds?.length
+    ? item.price
+    : (product as ProductDocument).price;
+}
+
+interface OrderGroupContext {
+  paymentMethod: CheckoutPaymentMethod;
+  emiTenureMonths?: number;
+  emiSettings: EmiSettings;
+  commissions: CodHandlingFeeRates & { codDepositPercent: number };
+  appliedCoupons: CartAppliedCoupon[];
+  cartSubtotal: number;
+  couponUsageAccumulator: Map<string, CouponAccumEntry>;
+  uid: string;
+  userName: string;
+  userEmail: string;
+  shippingAddress?: string;
+  notes?: string;
+  adminBypass: boolean;
+  adminBypassBy?: string;
+  adminBatchId?: string;
+  orderIds: string[];
+  emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][];
+}
+
+/**
+ * Places one order for one seller-group of the checkout cart — fee math
+ * (COD deposit/handling, EMI schedule), coupon apportionment, order-doc
+ * creation, digital-code claim, and notification fan-out. Pushes into
+ * `ctx.orderIds` / `ctx.emailsToSend` and returns the group's pre-fee total
+ * so the caller can accumulate the checkout-wide `total`.
+ */
+async function createOrderForGroup(
+  group: Array<{ item: CartItemDocument; product: ProductDocument }>,
+  orderType: OrderType,
+  ctx: OrderGroupContext,
+): Promise<number> {
+  const {
+    paymentMethod,
+    emiTenureMonths,
+    emiSettings,
+    commissions,
+    appliedCoupons,
+    cartSubtotal,
+    couponUsageAccumulator,
+    uid,
+    userName,
+    userEmail,
+    shippingAddress,
+    notes,
+    adminBypass,
+    adminBypassBy,
+    adminBatchId,
+    orderIds,
+    emailsToSend,
+  } = ctx;
+
+  const firstItem = group[0].item;
+  const firstProduct = group[0].product;
+  const groupTotal = group.reduce(
+    (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
+    0,
+  );
+
+  // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
+  const orderItems = group.map(({ item, product }) => {
+    const lt = (product.listingType ?? "standard") as ListingType;
+    const itemRule = getListingRule(lt);
+    // SB-UNI-5 2026-05-13 — forward bundle identifiers so the order-detail
+    // UI can collapse expanded lines back under a "Bundle: <name>" header.
+    const bundleFields =
+      item.bundleCategorySlug && item.bundleProductIds
+        ? {
+            bundleCategorySlug: item.bundleCategorySlug,
+            bundleProductIds: item.bundleProductIds,
+          }
+        : {};
+    const unitPrice = unitPriceFor(item, product);
+    const baseLine = {
+      productId: item.productId,
+      productTitle: item.productTitle,
+      quantity: item.quantity,
+      unitPrice,
+      totalPrice: unitPrice * item.quantity,
+      ...bundleFields,
+    };
+    return itemRule.decorateOrderItem(baseLine, product);
+  });
+  const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
+
+  const { shippingFee, storeOwnerId, storeEmiEnabled } = await resolveShippingCost(
+    firstItem.storeId,
+  );
+
+  const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual" || paymentMethod === "cash";
+  const depositAmount = isCodLike
+    ? Math.round(groupTotal * (commissions.codDepositPercent / 100) * 100) / 100
+    : undefined;
+  const codRemainingAmount = isCodLike
+    ? Math.round((groupTotal - (depositAmount ?? 0)) * 100) / 100
+    : undefined;
+
+  let emiSchedule: ReturnType<typeof computeEmiSchedule> | undefined;
+  if (paymentMethod === "emi" && emiTenureMonths) {
+    const eligibility = checkEmiEligibility(groupTotal, storeEmiEnabled, emiSettings);
+    if (!eligibility.eligible) {
+      throw new ValidationError(
+        `EMI is not available for this order (${eligibility.reason}). Minimum order value per seller is ₹${Math.round(emiSettings.minOrderValueInPaise / 100)}.`,
+      );
+    }
+    emiSchedule = computeEmiSchedule(groupTotal, emiTenureMonths, emiSettings);
+  }
+  // Handling fee charged to the buyer for choosing COD, on top of the order
+  // total — not deducted from the deposit/remaining split above.
+  const codHandlingFee =
+    paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
+
+  let couponDiscount = 0;
+  const appliedDiscounts: {
+    code: string;
+    couponId?: string;
+    type: "coupon" | "deal" | "auto";
+    discountAmount: number;
+    scope?: "admin" | "seller";
+    storeId?: string;
+  }[] = [];
+  const groupCouponCodes = new Set<string>();
+
+  for (const coupon of appliedCoupons) {
+    let couponGroupDiscount = 0;
+    const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
+    if (isSellerScoped) {
+      if (coupon.storeId !== firstItem.storeId) continue;
+      if (coupon.applicableItemIds?.length) {
+        const eligibleTotal = group
+          .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
+          .reduce((s, { item }) => s + item.price * item.quantity, 0);
+        couponGroupDiscount =
+          eligibleTotal > 0
+            ? Math.min(
+                Math.round((eligibleTotal / groupTotal) * coupon.discountAmount * 100) / 100,
+                eligibleTotal,
+              )
+            : 0;
+      } else {
+        couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
+      }
+    } else {
+      if (cartSubtotal > 0) {
+        couponGroupDiscount = Math.min(
+          Math.round((groupTotal / cartSubtotal) * coupon.discountAmount * 100) / 100,
+          groupTotal,
+        );
+      }
+    }
+
+    if (couponGroupDiscount > 0) {
+      couponDiscount += couponGroupDiscount;
+      appliedDiscounts.push({
+        code: coupon.code,
+        couponId: coupon.couponId,
+        type: "coupon",
+        discountAmount: couponGroupDiscount,
+        scope: coupon.scope,
+        storeId: coupon.storeId,
+      });
+      if (coupon.couponId) {
+        accumulateCouponUsage(couponUsageAccumulator, coupon.code, coupon.couponId, couponGroupDiscount);
+        groupCouponCodes.add(coupon.code);
+      }
+    }
+  }
+
+  couponDiscount = Math.min(couponDiscount, groupTotal);
+  const orderTotal =
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + (emiSchedule?.surchargeAmount ?? 0);
+
+  const imageUrls = [
+    ...new Set(
+      group
+        .map(({ product }) => product.mainImage)
+        .filter((url): url is string => typeof url === "string" && url.length > 0),
+    ),
+  ];
+
+  // S-SBUNI-RULES 2026-05-13 — order-doc decoration via rule registry.
+  const lt0 = (group[0].product.listingType ?? "standard") as ListingType;
+  const groupRule = getListingRule(lt0);
+  const extraOrderFields = {
+    ...groupRule.decorateOrderDoc(group[0].item, group[0].product),
+    ...(orderType === "prize-draw"
+      ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
+      : {}),
+  };
+
+  const order = await unitOfWork.orders.create({
+    productId: firstItem.productId,
+    productTitle: firstItem.productTitle,
+    userId: uid,
+    userName,
+    userEmail,
+    quantity: totalQuantity,
+    unitPrice: unitPriceFor(firstItem, firstProduct),
+    totalPrice: orderTotal,
+    currency: firstItem.currency ?? getDefaultCurrency(),
+    storeId: firstItem.storeId || undefined,
+    storeName: firstItem.storeName || undefined,
+    items: orderItems,
+    orderType,
+    offerId: firstItem.offerId ?? undefined,
+    status: adminBypass ? OrderStatusValues.PROCESSING : OrderStatusValues.PENDING,
+    paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
+    paymentMethod: adminBypass ? PaymentMethodValues.ADMIN_BYPASS : paymentMethod,
+    paymentId: adminBatchId,
+    adminBypassBy: adminBypassBy,
+    shippingAddress,
+    notes,
+    shippingFee: shippingFee > 0 ? shippingFee : undefined,
+    depositAmount: adminBypass ? undefined : depositAmount,
+    codRemainingAmount: adminBypass ? undefined : codRemainingAmount,
+    codHandlingFee: !adminBypass && codHandlingFee > 0 ? codHandlingFee : undefined,
+    emiEnabled: !adminBypass && !!emiSchedule ? true : undefined,
+    emiTenureMonths: !adminBypass && emiSchedule ? emiTenureMonths : undefined,
+    emiTokenAmount: !adminBypass ? emiSchedule?.tokenAmount : undefined,
+    emiSurchargeAmount: !adminBypass ? emiSchedule?.surchargeAmount : undefined,
+    emiInstallments: !adminBypass && emiSchedule
+      ? emiSchedule.installments.map((i) => ({ index: i.index, dueDate: i.dueDate, amount: i.amount, status: "pending" as const }))
+      : undefined,
+    emiRemainingBalance: !adminBypass ? emiSchedule?.remainingBalance : undefined,
+    emiComplete: !adminBypass && emiSchedule ? false : undefined,
+    couponCode: appliedDiscounts[0]?.code,
+    couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
+    appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
+    imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+    ...extraOrderFields,
+  });
+
+  orderIds.push(order.id);
+
+  // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
+  // order is already persisted so a claim failure is logged, not thrown).
+  if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
+    claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
+      userEmail: userEmail || undefined,
+      userName,
+      productTitle: firstItem.productTitle,
+    }).catch((e) => serverLogger.error("claimDigitalCode", e));
+  }
+
+  for (const code of groupCouponCodes) {
+    const entry = couponUsageAccumulator.get(code);
+    if (entry) entry.orderIds.push(order.id);
+  }
+
+  if (userEmail) {
+    emailsToSend.push({
+      to: userEmail,
+      userName,
+      orderId: order.id,
+      productTitle: orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+      quantity: totalQuantity,
+      totalPrice: orderTotal,
+      currency: firstItem.currency ?? getDefaultCurrency(),
+      shippingAddress,
+      paymentMethod,
+      items: orderItems,
+    });
+  }
+
+  emitOrderPlacedNotifications({
+    orderId: order.id,
+    buyerUid: uid,
+    buyerName: userName,
+    storeOwnerId,
+    productLabel:
+      orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+    paid: adminBypass,
+  });
+
+  return groupTotal;
+}
+
 /**
  * Place order(s) from the user's cart in a single Firestore transaction.
  *
@@ -363,6 +646,7 @@ export async function createCheckoutOrderAction(
     userEmail,
     addressId,
     paymentMethod,
+    emiTenureMonths,
     notes,
     excludedProductIds = [],
     adminBypass = false,
@@ -371,6 +655,15 @@ export async function createCheckoutOrderAction(
 
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
+  const emiSettings = siteSettings?.emi ?? CHECKOUT_DEFAULT_EMI_SETTINGS;
+
+  if (paymentMethod === "emi") {
+    if (!emiTenureMonths || !emiSettings.tenureOptions.includes(emiTenureMonths)) {
+      throw new ValidationError(
+        `emiTenureMonths must be one of: ${emiSettings.tenureOptions.join(", ")}`,
+      );
+    }
+  }
 
   // W1-43 — enforce COD toggle.
   if (
@@ -645,14 +938,6 @@ export async function createCheckoutOrderAction(
   let total = 0;
   const emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][] = [];
 
-  // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle
-  // price at add-time); regular lines use product.price (current Firestore).
-  // This prevents stale cart-cached prices from being charged on COD/UPI orders.
-  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
-    item.bundleCategorySlug && item.bundleProductIds?.length
-      ? item.price
-      : (product as ProductDocument).price;
-
   const cartSubtotal = orderGroups.reduce(
     (s, { items: g }) =>
       s + g.reduce((gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity, 0),
@@ -661,205 +946,27 @@ export async function createCheckoutOrderAction(
 
   const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
 
+  const groupCtx: OrderGroupContext = {
+    paymentMethod,
+    emiTenureMonths,
+    emiSettings,
+    commissions,
+    appliedCoupons,
+    cartSubtotal,
+    couponUsageAccumulator,
+    uid,
+    userName,
+    userEmail,
+    shippingAddress,
+    notes,
+    adminBypass,
+    adminBypassBy,
+    adminBatchId,
+    orderIds,
+    emailsToSend,
+  };
   for (const { items: group, orderType } of orderGroups) {
-    const firstItem = group[0].item;
-    const firstProduct = group[0].product;
-    const groupTotal = group.reduce(
-      (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
-      0,
-    );
-    total += groupTotal;
-
-    // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
-    const orderItems = group.map(({ item, product }) => {
-      const lt = (product.listingType ?? "standard") as ListingType;
-      const itemRule = getListingRule(lt);
-      // SB-UNI-5 2026-05-13 — forward bundle identifiers so the order-detail
-      // UI can collapse expanded lines back under a "Bundle: <name>" header.
-      const bundleFields =
-        item.bundleCategorySlug && item.bundleProductIds
-          ? {
-              bundleCategorySlug: item.bundleCategorySlug,
-              bundleProductIds: item.bundleProductIds,
-            }
-          : {};
-      const unitPrice = unitPriceFor(item, product);
-      const baseLine = {
-        productId: item.productId,
-        productTitle: item.productTitle,
-        quantity: item.quantity,
-        unitPrice,
-        totalPrice: unitPrice * item.quantity,
-        ...bundleFields,
-      };
-      return itemRule.decorateOrderItem(baseLine, product);
-    });
-    const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
-
-    const { shippingFee, storeOwnerId } = await resolveShippingCost(
-      firstItem.storeId,
-      groupTotal,
-      commissions,
-    );
-
-    const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual" || paymentMethod === "cash";
-    const depositAmount = isCodLike
-      ? Math.round(groupTotal * (commissions.codDepositPercent / 100) * 100) / 100
-      : undefined;
-    const codRemainingAmount = isCodLike
-      ? Math.round((groupTotal - (depositAmount ?? 0)) * 100) / 100
-      : undefined;
-
-    let couponDiscount = 0;
-    const appliedDiscounts: {
-      code: string;
-      couponId?: string;
-      type: "coupon" | "deal" | "auto";
-      discountAmount: number;
-      scope?: "admin" | "seller";
-      storeId?: string;
-    }[] = [];
-    const groupCouponCodes = new Set<string>();
-
-    for (const coupon of appliedCoupons) {
-      let couponGroupDiscount = 0;
-      const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
-      if (isSellerScoped) {
-        if (coupon.storeId !== firstItem.storeId) continue;
-        if (coupon.applicableItemIds?.length) {
-          const eligibleTotal = group
-            .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
-            .reduce((s, { item }) => s + item.price * item.quantity, 0);
-          couponGroupDiscount =
-            eligibleTotal > 0
-              ? Math.min(
-                  Math.round((eligibleTotal / groupTotal) * coupon.discountAmount * 100) / 100,
-                  eligibleTotal,
-                )
-              : 0;
-        } else {
-          couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
-        }
-      } else {
-        if (cartSubtotal > 0) {
-          couponGroupDiscount = Math.min(
-            Math.round((groupTotal / cartSubtotal) * coupon.discountAmount * 100) / 100,
-            groupTotal,
-          );
-        }
-      }
-
-      if (couponGroupDiscount > 0) {
-        couponDiscount += couponGroupDiscount;
-        appliedDiscounts.push({
-          code: coupon.code,
-          couponId: coupon.couponId,
-          type: "coupon",
-          discountAmount: couponGroupDiscount,
-          scope: coupon.scope,
-          storeId: coupon.storeId,
-        });
-        if (coupon.couponId) {
-          accumulateCouponUsage(couponUsageAccumulator, coupon.code, coupon.couponId, couponGroupDiscount);
-          groupCouponCodes.add(coupon.code);
-        }
-      }
-    }
-
-    couponDiscount = Math.min(couponDiscount, groupTotal);
-    const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
-
-    const imageUrls = [
-      ...new Set(
-        group
-          .map(({ product }) => product.mainImage)
-          .filter((url): url is string => typeof url === "string" && url.length > 0),
-      ),
-    ];
-
-    // S-SBUNI-RULES 2026-05-13 — order-doc decoration via rule registry.
-    const lt0 = (group[0].product.listingType ?? "standard") as ListingType;
-    const groupRule = getListingRule(lt0);
-    const extraOrderFields = {
-      ...groupRule.decorateOrderDoc(group[0].item, group[0].product),
-      ...(orderType === "prize-draw"
-        ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
-        : {}),
-    };
-
-    const order = await unitOfWork.orders.create({
-      productId: firstItem.productId,
-      productTitle: firstItem.productTitle,
-      userId: uid,
-      userName,
-      userEmail,
-      quantity: totalQuantity,
-      unitPrice: unitPriceFor(firstItem, firstProduct),
-      totalPrice: orderTotal,
-      currency: firstItem.currency ?? getDefaultCurrency(),
-      storeId: firstItem.storeId || undefined,
-      storeName: firstItem.storeName || undefined,
-      items: orderItems,
-      orderType,
-      offerId: firstItem.offerId ?? undefined,
-      status: adminBypass ? OrderStatusValues.PROCESSING : OrderStatusValues.PENDING,
-      paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
-      paymentMethod: adminBypass ? PaymentMethodValues.ADMIN_BYPASS : paymentMethod,
-      paymentId: adminBatchId,
-      adminBypassBy: adminBypassBy,
-      shippingAddress,
-      notes,
-      shippingFee: shippingFee > 0 ? shippingFee : undefined,
-      depositAmount: adminBypass ? undefined : depositAmount,
-      codRemainingAmount: adminBypass ? undefined : codRemainingAmount,
-      couponCode: appliedDiscounts[0]?.code,
-      couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
-      appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
-      imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
-      ...extraOrderFields,
-    });
-
-    orderIds.push(order.id);
-
-    // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
-    // order is already persisted so a claim failure is logged, not thrown).
-    if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
-      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
-        userEmail: userEmail || undefined,
-        userName,
-        productTitle: firstItem.productTitle,
-      }).catch((e) => serverLogger.error("claimDigitalCode", e));
-    }
-
-    for (const code of groupCouponCodes) {
-      const entry = couponUsageAccumulator.get(code);
-      if (entry) entry.orderIds.push(order.id);
-    }
-
-    if (userEmail) {
-      emailsToSend.push({
-        to: userEmail,
-        userName,
-        orderId: order.id,
-        productTitle: orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
-        quantity: totalQuantity,
-        totalPrice: orderTotal,
-        currency: firstItem.currency ?? getDefaultCurrency(),
-        shippingAddress,
-        paymentMethod,
-        items: orderItems,
-      });
-    }
-
-    emitOrderPlacedNotifications({
-      orderId: order.id,
-      buyerUid: uid,
-      buyerName: userName,
-      storeOwnerId,
-      productLabel:
-        orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
-      paid: adminBypass,
-    });
+    total += await createOrderForGroup(group, orderType, groupCtx);
   }
 
   await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
@@ -1174,12 +1281,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
       const sellerUser = storeOwnerId ? await userRepository.findById(storeOwnerId) : null;
       const shippingConfig = sellerUser?.shippingConfig;
       if (shippingConfig?.isConfigured) {
-        if (shippingConfig.method === "custom") {
-          shippingFee = shippingConfig.customShippingPrice ?? 0;
-        } else if (shippingConfig.method === "shiprocket") {
-          const percentFee = groupTotal * (commissions.platformShippingPercent / 100);
-          shippingFee = Math.max(percentFee, commissions.platformShippingFixedMin);
-        }
+        shippingFee = shippingConfig.customShippingPrice ?? 0;
       }
     }
 

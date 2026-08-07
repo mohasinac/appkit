@@ -124,6 +124,18 @@ export function useGoogleLogin(options?: {
   const [popupPending, setPopupPending] = useState(false);
   // calledRef prevents both RTDB and postMessage from firing the callbacks
   const calledRef = useRef(false);
+  // Polls for the popup being closed manually (without completing sign-in).
+  // Without this, a user who closes the popup before RTDB/postMessage
+  // resolves leaves popupPending stuck true forever — the button never
+  // recovers from its loading state.
+  const closePollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearClosePoll = useCallback(() => {
+    if (closePollRef.current !== null) {
+      clearInterval(closePollRef.current);
+      closePollRef.current = null;
+    }
+  }, []);
 
   const onSuccessRef = useRef(options?.onSuccess);
   const onErrorRef = useRef(options?.onError);
@@ -135,6 +147,9 @@ export function useGoogleLogin(options?: {
   useEffect(() => { onSessionSyncedRef.current = options?.onSessionSynced; }, [options?.onSessionSynced]);
   useEffect(() => { authEventResetRef.current = authEvent.reset; }, [authEvent.reset]);
 
+  // Stop polling for popup-closed if the component unmounts mid-flow.
+  useEffect(() => clearClosePoll, [clearClosePoll]);
+
   // RTDB status watcher — fast path when RTDB is available.
   // FAILED is intentionally not forwarded to onError here: RTDB connection
   // failures (e.g. missing database URL) should fall through to the postMessage
@@ -144,6 +159,7 @@ export function useGoogleLogin(options?: {
       setPopupPending(false);
       if (calledRef.current) return;
       calledRef.current = true;
+      clearClosePoll();
       Promise.resolve(onSessionSyncedRef.current?.()).then(() => {
         onSuccessRef.current?.(authEvent.data);
       });
@@ -152,12 +168,13 @@ export function useGoogleLogin(options?: {
       setPopupPending(false);
       if (calledRef.current) return;
       calledRef.current = true;
+      clearClosePoll();
       onErrorRef.current?.(
         new Error(authEvent.error ?? "Sign-in timed out. Please try again."),
       );
     }
     // FAILED: do not call onError — wait for the postMessage from /auth/close
-  }, [authEvent.status, authEvent.error, authEvent.data]);
+  }, [authEvent.status, authEvent.error, authEvent.data, clearClosePoll]);
 
   // postMessage fallback — fires when /auth/close sends window.opener.postMessage.
   // This covers two cases:
@@ -172,6 +189,7 @@ export function useGoogleLogin(options?: {
 
       calledRef.current = true;
       setPopupPending(false);
+      clearClosePoll();
       authEventResetRef.current();
 
       if (event.data.status === "success") {
@@ -190,7 +208,7 @@ export function useGoogleLogin(options?: {
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, []); // mount once — uses refs, no stale closure risk
+  }, [clearClosePoll]); // clearClosePoll has a stable identity — effectively mount-once
 
   const mutate = useCallback(async () => {
     calledRef.current = false; // reset for each new auth flow
@@ -208,6 +226,17 @@ export function useGoogleLogin(options?: {
     }
 
     setPopupPending(true);
+
+    clearClosePoll();
+    closePollRef.current = setInterval(() => {
+      if (popup.closed && !calledRef.current) {
+        calledRef.current = true;
+        clearClosePoll();
+        setPopupPending(false);
+        authEventResetRef.current();
+        onErrorRef.current?.(new Error("Sign-in was cancelled."));
+      }
+    }, 500);
 
     try {
       setInitiating(true);
@@ -230,6 +259,7 @@ export function useGoogleLogin(options?: {
       }
     } catch (err) {
       void normalizeError(err);
+      clearClosePoll();
       popup.close();
       setPopupPending(false);
       onErrorRef.current?.(
@@ -238,7 +268,7 @@ export function useGoogleLogin(options?: {
     } finally {
       setInitiating(false);
     }
-  }, [authEvent]);
+  }, [authEvent, clearClosePoll]);
 
   const isLoading =
     initiating ||
@@ -266,17 +296,15 @@ export function useRegister(options?: {
         },
       );
 
-      // Sign in via client SDK and exchange ID token for a server session cookie
+      // /api/auth/register already created the server-side session cookie +
+      // Firestore session doc. Sign in via the client SDK only so
+      // `auth.currentUser` is populated for client-side Firebase usage
+      // (RTDB presence, etc) — do NOT call /api/auth/session again here,
+      // that would create a second, orphaned session document.
       await getClientAuthProvider().signInWithEmailAndPassword(
         data.email.trim(),
         data.password,
       );
-
-      const currentUser = getClientSessionAdapter().getCurrentUser();
-      if (currentUser) {
-        const idToken = await currentUser.getIdToken(true);
-        await apiClient.post(AUTH_ENDPOINTS.SESSION, { idToken });
-      }
 
       return { success: true, ...response };
     },

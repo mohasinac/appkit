@@ -2138,6 +2138,10 @@ export { productsClassifiedsSeedData } from "./seed/index";
 export { productsDigitalCodesSeedData } from "./seed/index";
 // productsLiveItemsSeedData - Seed data for live-item product listings (SB-UNI-K).
 export { productsLiveItemsSeedData } from "./seed/index";
+// productsArtSeedData - Seed data for art product listings (EMI/art-stickers session).
+export { productsArtSeedData } from "./seed/index";
+// productsStickersSeedData - Seed data for stickers product listings (EMI/art-stickers session).
+export { productsStickersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
 export { registerSeedLocale } from "./seed/index";
@@ -2860,112 +2864,15 @@ export type { RazorpayPaymentResult } from "./providers/payment-razorpay/index";
 // RazorpayRefundResult - Type contract for razorpay refund result.
 export type { RazorpayRefundResult } from "./providers/payment-razorpay/index";
 
-// ./providers/shipping-shiprocket/index
+// ./providers/payment-manual/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// SHIPROCKET_TOKEN_TTL_MS - Constant used across modules.
-export { SHIPROCKET_TOKEN_TTL_MS } from "./providers/shipping-shiprocket/index";
-// SHIPROCKET_TRACKING_URL_BASE / buildShiprocketTrackingUrl / SHIPROCKET_STATUS_PICKUP_SCHEDULED â€" pure helpers, see O5.
-export {
- SHIPROCKET_TRACKING_URL_BASE,
- buildShiprocketTrackingUrl,
- SHIPROCKET_STATUS_PICKUP_SCHEDULED,
-} from "./providers/shipping-shiprocket/index";
+// ManualPaymentProvider - the default IPaymentProvider implementation (no gateway).
+export { ManualPaymentProvider } from "./providers/payment-manual/index";
+
+// ./providers/shipping-manual/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// ShiprocketProvider - Component for shiprocket provider.
-export { ShiprocketProvider } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// isShiprocketTokenExpired - Shared export for is shiprocket token expired.
-export { isShiprocketTokenExpired } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketAddPickupLocation - Shared export for shiprocket add pickup location.
-export { shiprocketAddPickupLocation } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketAuthenticate - Shared export for shiprocket authenticate.
-export { shiprocketAuthenticate } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketCheckServiceability - Shared export for shiprocket check serviceability.
-export { shiprocketCheckServiceability } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketCreateOrder - Shared export for shiprocket create order.
-export { shiprocketCreateOrder } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketGenerateAWB - Shared export for shiprocket generate awb.
-export { shiprocketGenerateAWB } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketGeneratePickup - Shared export for shiprocket generate pickup.
-export { shiprocketGeneratePickup } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketGetPickupLocations - Shared export for shiprocket get pickup locations.
-export { shiprocketGetPickupLocations } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketTrackByAWB - Shared export for shiprocket track by awb.
-export { shiprocketTrackByAWB } from "./providers/shipping-shiprocket/index";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// shiprocketVerifyPickupOTP - Shared export for shiprocket verify pickup otp.
-export { shiprocketVerifyPickupOTP } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketAWBResponse - Type contract for shiprocket awbresponse.
-export type { ShiprocketAWBResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketAddPickupRequest - Type contract for shiprocket add pickup request.
-export type { ShiprocketAddPickupRequest } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketAddPickupResponse - Type contract for shiprocket add pickup response.
-export type { ShiprocketAddPickupResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketAuthRequest - Type contract for shiprocket auth request.
-export type { ShiprocketAuthRequest } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketAuthResponse - Type contract for shiprocket auth response.
-export type { ShiprocketAuthResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketCourierServiceabilityResponse - Type contract for shiprocket courier serviceability response.
-export type { ShiprocketCourierServiceabilityResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketCreateOrderRequest - Type contract for shiprocket create order request.
-export type { ShiprocketCreateOrderRequest } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketCreateOrderResponse - Type contract for shiprocket create order response.
-export type { ShiprocketCreateOrderResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketGenerateAWBRequest - Type contract for shiprocket generate awbrequest.
-export type { ShiprocketGenerateAWBRequest } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketGeneratePickupRequest - Type contract for shiprocket generate pickup request.
-export type { ShiprocketGeneratePickupRequest } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketOrderItem - Type contract for shiprocket order item.
-export type { ShiprocketOrderItem } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketPickupLocation - Type contract for shiprocket pickup location.
-export type { ShiprocketPickupLocation } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketPickupLocationsResponse - Type contract for shiprocket pickup locations response.
-export type { ShiprocketPickupLocationsResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketPickupResponse - Type contract for shiprocket pickup response.
-export type { ShiprocketPickupResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketProviderConfig - Type contract for shiprocket provider config.
-export type { ShiprocketProviderConfig } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketShipmentTrack - Type contract for shiprocket shipment track.
-export type { ShiprocketShipmentTrack } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketTrackActivity - Type contract for shiprocket track activity.
-export type { ShiprocketTrackActivity } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketTrackingResponse - Type contract for shiprocket tracking response.
-export type { ShiprocketTrackingResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketVerifyPickupOTPRequest - Type contract for shiprocket verify pickup otprequest.
-export type { ShiprocketVerifyPickupOTPRequest } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketVerifyPickupOTPResponse - Type contract for shiprocket verify pickup otpresponse.
-export type { ShiprocketVerifyPickupOTPResponse } from "./providers/shipping-shiprocket/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ShiprocketWebhookPayload - Type contract for shiprocket webhook payload.
-export type { ShiprocketWebhookPayload } from "./providers/shipping-shiprocket/index";
+// ManualShippingProvider - the default (and only) IShippingProvider implementation.
+export { ManualShippingProvider } from "./providers/shipping-manual/index";
 
 // ./providers/storage-firebase/client
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -3586,6 +3493,9 @@ export { AdminPrizeDrawsView } from "./features/admin/index";
 export { AdminClassifiedView } from "./features/admin/index";
 export { AdminDigitalCodesView } from "./features/admin/index";
 export { AdminLiveView } from "./features/admin/index";
+// EMI/art-stickers session — admin listing views for art / stickers.
+export { AdminArtView } from "./features/admin/index";
+export { AdminStickersView } from "./features/admin/index";
 export type { AdminPrizeDrawsViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminProductsView - Component for admin products view.
@@ -3666,6 +3576,9 @@ export type { AdminStoreAddressesViewProps } from "./features/admin/index";
 // AdminAddressesView - Address ban management (Banned / Unban Requested / Suspicious tabs).
 export { AdminAddressesView } from "./features/admin/index";
 export type { AdminAddressesViewProps } from "./features/admin/index";
+// AdminAddressBookView - Address book lookup by owner (ADMIN.ADDRESSES).
+export { AdminAddressBookView } from "./features/admin/index";
+export type { AdminAddressBookViewProps } from "./features/admin/index";
 // AdminAddressClustersView - Multi-account shared address cluster view.
 export { AdminAddressClustersView } from "./features/admin/index";
 export type { AdminAddressClustersViewProps } from "./features/admin/index";
@@ -7356,6 +7269,8 @@ export {
  isClassifiedListing,
  isDigitalCodeListing,
  isLiveListing,
+ isArtListing,
+ isStickersListing,
 } from "./features/products/index";
 // SB-UNI-X4 2026-05-13 â€" per-type feature-flag helpers.
 export {
@@ -7393,6 +7308,27 @@ export {
  type ActionConfirmation,
 } from "./_internal/shared/actions/action-registry";
 export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
+// Shared fee calculator — platform/gateway/GST/COD handling fee math (pure, client-safe).
+export {
+  computeCheckoutFees,
+  computePayoutDeduction,
+  computeCodHandlingFee,
+} from "./_internal/shared/fees/calculator";
+export type {
+  FeeCommissionRates,
+  CheckoutFees,
+  PayoutDeduction,
+  CodHandlingFeeRates,
+} from "./_internal/shared/fees/calculator";
+// EMI eligibility + schedule computation (pure, client-safe — used for checkout quotes).
+export { checkEmiEligibility, computeEmiSchedule } from "./_internal/shared/features/emi/schedule";
+export type {
+  EmiSettings,
+  EmiIneligibleReason,
+  EmiEligibility,
+  EmiInstallmentPlan,
+  EmiScheduleResult,
+} from "./_internal/shared/features/emi/schedule";
 // User-role predicates â€" SB-UNI-E 2026-05-13.
 export {
   isAdminUser,
@@ -8468,6 +8404,11 @@ export { createStore } from "./features/seller/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // customShipOrder - Shared export for custom ship order.
 export { customShipOrder } from "./features/seller/server";
+// assertEmiShippable - the single EMI shipment-gate choke point; any code path that transitions an order to "shipped" must call this first.
+export { assertEmiShippable } from "./features/seller/server";
+// markEmiInstallmentPaid - records collection of one EMI installment; recomputes emiRemainingBalance/emiComplete.
+export { markEmiInstallmentPaid } from "./features/seller/server";
+export type { MarkEmiInstallmentPaidInput } from "./features/seller/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerAnalytics - Helper for get seller analytics.
 export { getSellerAnalytics } from "./features/seller/server";
@@ -9559,7 +9500,7 @@ export {
   assertNever,
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
-export { LISTING_TYPE_REGISTRY, pluginFor } from "./_internal/shared/listing-types/_registry";
+export { LISTING_TYPE_REGISTRY, pluginFor, detectListingTypeFromSlug } from "./_internal/shared/listing-types/_registry";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
 
 // Checkout rule registry â€" pure TS, safe in both client and server bundles.
@@ -9708,6 +9649,10 @@ export { SellerBundlesView } from "./features/seller/components/SellerBundlesVie
 export type { SellerBundlesViewProps } from "./features/seller/components/SellerBundlesView";
 export { SellerClassifiedView } from "./features/seller/components/SellerClassifiedView";
 export type { SellerClassifiedViewProps } from "./features/seller/components/SellerClassifiedView";
+export { SellerArtView } from "./features/seller/components/SellerArtView";
+export type { SellerArtViewProps } from "./features/seller/components/SellerArtView";
+export { SellerStickersView } from "./features/seller/components/SellerStickersView";
+export type { SellerStickersViewProps } from "./features/seller/components/SellerStickersView";
 export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";
 export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
 export { SellerLiveView } from "./features/seller/components/SellerLiveView";

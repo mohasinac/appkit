@@ -25,10 +25,22 @@ export const orderPaymentStatusSchema = z.enum([
   "partial_refund",
 ]);
 
-export const orderShippingMethodSchema = z.enum(["custom", "shiprocket"]);
+export const orderShippingMethodSchema = z.enum(["custom"]);
 export const orderRefundStatusSchema = z.enum(["pending", "processing", "completed", "rejected"]);
 export const orderPayoutStatusSchema = z.enum(["eligible", "requested", "paid"]);
 export const orderRefundTypeSchema = z.enum(["full", "partial"]);
+
+export const emiInstallmentStatusSchema = z.enum(["pending", "paid", "overdue"]);
+export const emiInstallmentSchema = z.object({
+  index: z.number().int().positive(),
+  dueDate: firestoreDateSchema,
+  amount: paiseSchema,
+  status: emiInstallmentStatusSchema,
+  paidAt: firestoreDateSchema.optional(),
+  transactionId: z.string().optional(),
+  proofUrl: z.string().optional(),
+  reminderSentAt: firestoreDateSchema.optional(),
+});
 
 export const orderDocumentItemSchema = z.object({
   productId: z.string(),
@@ -128,15 +140,18 @@ export const orderFirestoreSchema = z.object({
   platformFee: paiseSchema.optional(),
   depositAmount: paiseSchema.optional(),
   codRemainingAmount: paiseSchema.optional(),
+  codHandlingFee: paiseSchema.optional(),
+  emiEnabled: z.boolean().optional(),
+  emiTenureMonths: z.number().int().min(2).max(6).optional(),
+  emiTokenAmount: paiseSchema.optional(),
+  emiSurchargeAmount: paiseSchema.optional(),
+  emiInstallments: z.array(emiInstallmentSchema).optional(),
+  emiRemainingBalance: paiseSchema.optional(),
+  emiComplete: z.boolean().optional(),
   shippingFee: paiseSchema.optional(),
   shippingMethod: orderShippingMethodSchema.optional(),
   shippingCarrier: z.string().optional(),
   trackingUrl: z.string().optional(),
-  shiprocketOrderId: z.number().int().optional(),
-  shiprocketShipmentId: z.number().int().optional(),
-  shiprocketAWB: z.string().optional(),
-  shiprocketStatus: z.string().optional(),
-  shiprocketUpdatedAt: firestoreDateSchema.optional(),
   payoutStatus: orderPayoutStatusSchema.optional(),
   payoutId: z.string().optional(),
   offerId: z.string().optional(),

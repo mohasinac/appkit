@@ -22,8 +22,8 @@
  */
 
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { IPaymentProvider } from "../../../../contracts";
 import type {
-  IPaymentProvider,
   PaymentCapture,
   PaymentOrder,
   Refund,
@@ -51,7 +51,7 @@ export type WebhookSink = (
   payload: MockWebhookPayload,
 ) => Promise<void> | void;
 
-export class MockRazorpayProvider implements IPaymentProvider {
+export class MockRazorpayProvider extends IPaymentProvider {
   readonly name = "razorpay-mock" as const;
   private readonly orders = new Map<string, PaymentOrder>();
   private readonly captures = new Map<string, PaymentCapture>();

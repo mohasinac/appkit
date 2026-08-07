@@ -8,7 +8,7 @@
   "payoutStatus": {
     "pending": "Pending",
     "processing": "Processing",
-    "completed": "Completed",
+    "paid": "Paid",
     "failed": "Failed"
   },
   "dashboard": {

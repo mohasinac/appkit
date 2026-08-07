@@ -15,6 +15,7 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { Review } from "../../types/index";
 import { normalizeError } from "../../../../errors/normalize";
+import { isAdminUser, isModeratorUser } from "../../../auth/role-predicates";
 
 const ERR_REVIEW_NOT_FOUND = "Review not found";
 
@@ -102,8 +103,8 @@ export const reviewItemPATCH = createRouteHandler({
       );
 
     const isOwner = review.userId === user!.uid;
-    const isModerator = user!.role === "moderator";
-    const isAdmin = user!.role === "admin";
+    const isModerator = isModeratorUser(user);
+    const isAdmin = isAdminUser(user);
 
     if (!isOwner && !isModerator && !isAdmin) {
       return NextResponse.json(
@@ -151,8 +152,8 @@ export const reviewItemDELETE = createRouteHandler({
       );
 
     const isOwner = review.userId === user!.uid;
-    const isModerator = user!.role === "moderator";
-    const isAdmin = user!.role === "admin";
+    const isModerator = isModeratorUser(user);
+    const isAdmin = isAdminUser(user);
 
     if (!isOwner && !isModerator && !isAdmin) {
       return NextResponse.json(

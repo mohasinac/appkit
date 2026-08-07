@@ -284,10 +284,6 @@ export function encryptShippingConfig<T extends object>(
 ): T | undefined | null {
   if (!config) return config;
   const result = { ...config } as Record<string, FirestoreValue>;
-  // shiprocketEmail is PII
-  if (typeof result.shiprocketEmail === "string" && result.shiprocketEmail) {
-    result.shiprocketEmail = encryptPii(result.shiprocketEmail);
-  }
   const addr = result.pickupAddress;
   if (addr && typeof addr === "object" && !Array.isArray(addr) && !(addr instanceof Date)) {
     result.pickupAddress = encryptPiiFields(
@@ -306,9 +302,6 @@ export function decryptShippingConfig<T extends object>(
 ): T | undefined | null {
   if (!config) return config;
   const result = { ...config } as Record<string, FirestoreValue>;
-  if (typeof result.shiprocketEmail === "string" && result.shiprocketEmail) {
-    result.shiprocketEmail = decryptPii(result.shiprocketEmail);
-  }
   const addr = result.pickupAddress;
   if (addr && typeof addr === "object" && !Array.isArray(addr) && !(addr instanceof Date)) {
     result.pickupAddress = decryptPiiFields(

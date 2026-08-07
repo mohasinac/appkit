@@ -17,6 +17,14 @@ export const productSeoSchema = z.object({
   keywords: z.array(z.string()).optional(),
 });
 
+/** Print-specific metadata for "art" / "stickers" listings. */
+export const printMetaSchema = z.object({
+  size: z.string().max(80).optional(),
+  material: z.string().max(80).optional(),
+  finish: z.string().max(80).optional(),
+  editionSize: z.number().int().positive().optional(),
+});
+
 // --- Base item schema ---------------------------------------------------------
 
 /**
@@ -48,6 +56,8 @@ export const productItemSchema = z.object({
     .optional(),
   featured: z.boolean().optional(),
   isPromoted: z.boolean().optional(),
+  allowShipBeforeEmiComplete: z.boolean().optional(),
+  printMeta: printMetaSchema.optional(),
   currentBid: z.number().optional(),
   availableQuantity: z.number().optional(),
   category: z.string().optional(),

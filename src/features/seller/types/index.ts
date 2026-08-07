@@ -38,7 +38,7 @@ export interface SellerStore {
 
 // --- Payout -------------------------------------------------------------------
 
-export type PayoutStatus = "pending" | "processing" | "completed" | "failed";
+export type PayoutStatus = "pending" | "processing" | "paid" | "failed";
 export type PayoutPaymentMethod = "bank_transfer" | "upi";
 
 export interface PayoutBankAccount {

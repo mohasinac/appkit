@@ -3,15 +3,14 @@ import {
   payoutRepository,
   storeRepository,
   userRepository,
+  siteSettingsRepository,
 } from "../../../../repositories";
 import { getDefaultCurrency } from "../../../../core/index";
+import { computePayoutDeduction } from "../../../shared/fees/calculator";
 import type { JobContext } from "../runtime/types";
 import { BATCH_LIMIT } from "../handlers/messages";
 
 const AUTO_PAYOUT_WINDOW_DAYS = 7;
-const PLATFORM_COMMISSION_RATE = 0.05;
-const GATEWAY_FEE_RATE = 0.0236;
-const GST_RATE = 0.18;
 
 function getBusinessDayCutoff(daysAgo: number): Date {
   const now = new Date();
@@ -29,6 +28,8 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
   ctx.logger.info("Starting daily auto-payout eligibility sweep", {
     windowDays: AUTO_PAYOUT_WINDOW_DAYS,
   });
+  const siteSettings = await siteSettingsRepository.getSingleton();
+  const commissions = siteSettings.commissions;
 
   const cutoff = getBusinessDayCutoff(AUTO_PAYOUT_WINDOW_DAYS);
   const eligible = await orderRepository.getEligibleAutomatic(cutoff);
@@ -70,11 +71,7 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
       (sum, o) => sum + ((o.data as { totalPrice?: number }).totalPrice ?? 0),
       0,
     );
-    const platformFee = Math.round(grossAmount * PLATFORM_COMMISSION_RATE * 100) / 100;
-    const gatewayFee = Math.round(grossAmount * GATEWAY_FEE_RATE * 100) / 100;
-    const gstAmount = Math.round(platformFee * GST_RATE * 100) / 100;
-    const netAmount =
-      Math.round((grossAmount - platformFee - gatewayFee - gstAmount) * 100) / 100;
+    const { platformFee, gatewayFee, gstOnFee: gstAmount, netAmount } = computePayoutDeduction(grossAmount, commissions);
 
     const payoutInput = {
       storeId,
@@ -84,11 +81,11 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
       amount: netAmount,
       grossAmount,
       platformFee,
-      platformFeeRate: PLATFORM_COMMISSION_RATE,
+      platformFeeRate: commissions.platformFeePercent / 100,
       gatewayFee,
-      gatewayFeeRate: GATEWAY_FEE_RATE,
+      gatewayFeeRate: (commissions.gatewayFeePercent ?? 0) / 100,
       gstAmount,
-      gstRate: GST_RATE,
+      gstRate: commissions.gstPercent / 100,
       isAutomatic: true,
       currency: getDefaultCurrency(),
       status: "pending" as const,

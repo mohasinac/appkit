@@ -5,7 +5,8 @@ import Link from "next/link";
 import { ROUTES } from "../../../next";
 import { Div, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
+import { normalizeListingType } from "../utils/listing-type";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import type { ListingType } from "../types";
 
 const __O = {
@@ -45,9 +46,7 @@ interface Props {
 
 function getHref(listing: CarouselListing): string {
   const slug = listing.slug ?? listing.id;
-  if (isAuctionListing(listing)) return String(ROUTES.PUBLIC.AUCTION_DETAIL(slug));
-  if (isPreOrderListing(listing)) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug));
-  return String(ROUTES.PUBLIC.PRODUCT_DETAIL(slug));
+  return pluginFor(normalizeListingType(listing)).detailRoute(slug);
 }
 
 function ListingThumb({

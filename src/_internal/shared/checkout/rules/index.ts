@@ -31,3 +31,5 @@ export { bundleRule } from "./bundle.rule";
 export { classifiedRule } from "./classified.rule";
 export { digitalCodeRule } from "./digital-code.rule";
 export { liveRule } from "./live.rule";
+export { artRule } from "./art.rule";
+export { stickersRule } from "./stickers.rule";

@@ -206,6 +206,13 @@ export const DEFAULT_ROUTE_MAP = {
     LIVE_ITEMS: "/store/live",
     LIVE_ITEMS_NEW: "/store/live/new",
     LIVE_ITEMS_EDIT: (id: string) => `/store/live/${id}/edit`,
+    // EMI/art-stickers session — art / stickers
+    ART: "/store/art",
+    ART_NEW: "/store/art/new",
+    ART_EDIT: (id: string) => `/store/art/${id}/edit`,
+    STICKERS: "/store/stickers",
+    STICKERS_NEW: "/store/stickers/new",
+    STICKERS_EDIT: (id: string) => `/store/stickers/${id}/edit`,
     PRINT_CENTER: "/store/print-center",
     INVENTORY_PRINT: "/store/inventory/print",
     FULFILLMENT: "/store/fulfillment",
@@ -267,6 +274,9 @@ export const DEFAULT_ROUTE_MAP = {
     CLASSIFIED: "/admin/classified",
     DIGITAL_CODES: "/admin/digital-codes",
     LIVE: "/admin/live",
+    // EMI/art-stickers session — art / stickers
+    ART: "/admin/art",
+    STICKERS: "/admin/stickers",
     GROUPED_LISTINGS: "/admin/grouped-listings",
     DEALS: "/admin/deals",
     FEATURED: "/admin/featured",

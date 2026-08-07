@@ -8,7 +8,8 @@ import type { OrderType } from "../utils/order-splitter";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ListingType } from "../../products/types";
 
-export type ShippingMethod = "custom" | "shiprocket";
+/** Manual shipping is the only supported method — sellers enter carrier + tracking directly, no carrier API integration. */
+export type ShippingMethod = "custom";
 export type RefundType = "full" | "partial";
 export type OrderPayoutStatus = "eligible" | "requested" | "paid";
 export type RefundStatus = "pending" | "processing" | "completed" | "rejected";
@@ -16,7 +17,6 @@ export type RefundStatus = "pending" | "processing" | "completed" | "rejected";
 /** Runtime-accessible shipping method values â€" use instead of bare string literals. */
 export const ShippingMethodValues = {
  CUSTOM: "custom",
- SHIPROCKET: "shiprocket",
 } as const satisfies Record<string, ShippingMethod>;
 
 /** Runtime-accessible order status values â€" use instead of bare string literals. */
@@ -50,7 +50,26 @@ export const PaymentMethodValues = {
   UPI_MANUAL: "upi_manual",
   RAZORPAY: "razorpay",
   ADMIN_BYPASS: "admin_bypass",
+  EMI: "emi",
 } as const;
+
+export type EmiInstallmentStatus = "pending" | "paid" | "overdue";
+
+export interface EmiInstallment {
+  /** 1-based installment number. */
+  index: number;
+  dueDate: Date;
+  /** Installment amount in paise (principal share + surcharge share for this installment). */
+  amount: number;
+  status: EmiInstallmentStatus;
+  paidAt?: Date;
+  /** Buyer-uploaded UTR/reference number for this installment's manual payment. */
+  transactionId?: string;
+  /** Signed-URL media slug for the buyer's payment proof for this installment. */
+  proofUrl?: string;
+  /** Set once the reminder sweep has notified the buyer for this installment, so it isn't re-sent on every sweep run. */
+  reminderSentAt?: Date;
+}
 
 /** Runtime-accessible refund status values â€" use instead of bare string literals. */
 export const RefundStatusValues = {
@@ -153,15 +172,27 @@ export interface OrderDocument extends BaseDocument {
   platformFee?: number;
   depositAmount?: number;
   codRemainingAmount?: number;
+  /** COD handling fee charged to the buyer: max(codHandlingFeeMinInPaise, subtotal × codHandlingFeePercent / 100). Only set when paymentMethod === "cod". */
+  codHandlingFee?: number;
+
+  // ── EMI (installment) fields — only set when paymentMethod === "emi" ────────
+  emiEnabled?: boolean;
+  /** Number of monthly installments the buyer chose (2–6). */
+  emiTenureMonths?: number;
+  /** Down payment collected at checkout, in paise (emiTokenPercent × seller subtotal). */
+  emiTokenAmount?: number;
+  /** Extra cost of choosing EMI over full payment, in paise — split between platform and seller. */
+  emiSurchargeAmount?: number;
+  emiInstallments?: EmiInstallment[];
+  /** Sum of unpaid installment amounts, in paise. 0 once all installments are paid. */
+  emiRemainingBalance?: number;
+  /** True once every installment's status is "paid". Gates shipment unless the product's `allowShipBeforeEmiComplete` flag is set. */
+  emiComplete?: boolean;
+
   shippingFee?: number;
   shippingMethod?: ShippingMethod;
   shippingCarrier?: string;
   trackingUrl?: string;
-  shiprocketOrderId?: number;
-  shiprocketShipmentId?: number;
-  shiprocketAWB?: string;
-  shiprocketStatus?: string;
-  shiprocketUpdatedAt?: Date;
   payoutStatus?: OrderPayoutStatus;
   payoutId?: string;
   offerId?: string;

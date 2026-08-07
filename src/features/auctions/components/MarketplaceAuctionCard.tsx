@@ -11,6 +11,7 @@ import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import type { ListingType } from "../../products/types/index";
 
 const CLS_STAR_ICON = "h-5 w-5 fill-warning text-warning";
 const CLS_LIVE_BADGE = "rounded-full bg-error-surface px-2 py-0.5 text-white";
@@ -28,15 +29,8 @@ export interface MarketplaceAuctionCardData {
   mainImage?: string;
   images?: string[];
   video?: { url?: string; thumbnailUrl?: string };
-  /** Canonical discriminator (SB1-G Phase 4 · SB-UNI-F 2026-05-13 union extension). */
-  listingType?:
-    | "standard"
-    | "auction"
-    | "pre-order"
-    | "prize-draw"
-    | "classified"
-    | "digital-code"
-    | "live";
+  /** Canonical discriminator (SB1-G Phase 4). */
+  listingType?: ListingType;
   auctionEndDate?: string | Date;
   startingBid?: number;
   currentBid?: number;

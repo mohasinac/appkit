@@ -1,6 +1,6 @@
 /**
- * Core: weekly Saturday sweep — converts delivered Shiprocket orders
- * with `payoutStatus=eligible` into pending payout documents grouped by seller.
+ * Core: weekly Saturday sweep — converts delivered orders with
+ * `payoutStatus=eligible` into pending payout documents grouped by seller.
  */
 
 import {
@@ -8,12 +8,12 @@ import {
   userRepository,
   orderRepository,
   payoutRepository,
+  siteSettingsRepository,
 } from "../../../../repositories";
 import { BATCH_LIMIT } from "../handlers/messages";
 import { getDefaultCurrency } from "../../../../core";
+import { computePayoutDeduction } from "../../../shared/fees/calculator";
 import type { JobContext } from "../runtime/types";
-
-const PLATFORM_COMMISSION_RATE = 0.05;
 
 export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void> {
   if (ctx.env("FEATURE_PAYOUTS") !== "true") {
@@ -21,9 +21,11 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
     return;
   }
   ctx.logger.info("Starting weekly payout eligibility sweep");
-  const eligible = await orderRepository.getEligibleShiprocket();
+  const siteSettings = await siteSettingsRepository.getSingleton();
+  const commissions = siteSettings.commissions;
+  const eligible = await orderRepository.getEligibleForPayoutSweep();
   if (eligible.length === 0) {
-    ctx.logger.info("No eligible Shiprocket-delivered orders found");
+    ctx.logger.info("No eligible delivered orders found");
     return;
   }
   ctx.logger.info(`Found ${eligible.length} eligible order(s) — grouping by seller`);
@@ -55,8 +57,7 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
       (sum, o) => sum + ((o.data as { totalPrice?: number }).totalPrice ?? 0),
       0,
     );
-    const platformFee = Math.round(grossAmount * PLATFORM_COMMISSION_RATE * 100) / 100;
-    const netAmount = Math.round((grossAmount - platformFee) * 100) / 100;
+    const { platformFee, gatewayFee, gstOnFee, netAmount } = computePayoutDeduction(grossAmount, commissions);
 
     const payoutInput = {
       storeId,
@@ -66,7 +67,11 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
       amount: netAmount,
       grossAmount,
       platformFee,
-      platformFeeRate: PLATFORM_COMMISSION_RATE,
+      platformFeeRate: commissions.platformFeePercent / 100,
+      gatewayFee,
+      gatewayFeeRate: (commissions.gatewayFeePercent ?? 0) / 100,
+      gstAmount: gstOnFee,
+      gstRate: commissions.gstPercent / 100,
       currency: defaultCurrency,
       status: "pending" as const,
       paymentMethod:
@@ -82,7 +87,7 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
               bankName: seller.payoutDetails.bankAccount.bankName,
             }
           : undefined,
-      notes: `Automated weekly payout — ${orders.length} Shiprocket delivered order(s)`,
+      notes: `Automated weekly payout — ${orders.length} delivered order(s)`,
       requestedAt: new Date(),
     };
 

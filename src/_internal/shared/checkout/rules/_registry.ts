@@ -26,6 +26,8 @@ import { bundleRule } from "./bundle.rule";
 import { classifiedRule } from "./classified.rule";
 import { digitalCodeRule } from "./digital-code.rule";
 import { liveRule } from "./live.rule";
+import { artRule } from "./art.rule";
+import { stickersRule } from "./stickers.rule";
 
 export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   standard: standardRule,
@@ -35,6 +37,8 @@ export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   classified: classifiedRule,
   "digital-code": digitalCodeRule,
   live: liveRule,
+  art: artRule,
+  stickers: stickersRule,
 };
 
 export const CATEGORY_CHECKOUT_RULES: Record<string, CategoryCheckoutRule> = {

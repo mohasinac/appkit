@@ -58,20 +58,25 @@ export interface ServiceabilityResult {
   }>;
 }
 
-// --- Shipping Interface -------------------------------------------------------
+// --- Shipping Contract ------------------------------------------------------
 
 /**
- * Shipping carrier adapter contract.
- * Implemented by @mohasinac/shipping-shiprocket, @mohasinac/shipping-shippo,
- * @mohasinac/shipping-easypost.
+ * Shipping carrier adapter contract. An abstract base class rather than a
+ * plain interface so every provider (manual, and any future carrier
+ * integration) extends one shared type — adding a new carrier is a
+ * subclass, not a fresh reimplementation of the shape.
+ *
+ * Implemented by the manual provider (default) and its mock.
  */
-export interface IShippingProvider {
-  createShipment(data: CreateShipmentInput): Promise<Shipment>;
-  trackShipment(trackingId: string): Promise<TrackingInfo>;
-  cancelShipment(shipmentId: string): Promise<void>;
-  checkServiceability(
+export abstract class IShippingProvider {
+  /** Short discriminator used by admin dev tooling to confirm which provider is registered. */
+  abstract readonly name: string;
+  abstract createShipment(data: CreateShipmentInput): Promise<Shipment>;
+  abstract trackShipment(trackingId: string): Promise<TrackingInfo>;
+  abstract cancelShipment(shipmentId: string): Promise<void>;
+  abstract checkServiceability(
     pincode: string,
     weight: number,
   ): Promise<ServiceabilityResult>;
-  generateLabel(shipmentId: string): Promise<ArrayBuffer>;
+  abstract generateLabel(shipmentId: string): Promise<ArrayBuffer>;
 }

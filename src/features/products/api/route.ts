@@ -19,6 +19,7 @@ import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next";
 import type { ProductItem, ProductListResponse } from "../types/index";
 import { mediaFieldSchema } from "../../media/types/index";
+import { printMetaSchema } from "../schemas/index";
 import { sanitizeProductsForPublic } from "../utils/sanitize";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -52,12 +53,14 @@ const productMutateSchema = z
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
+    allowShipBeforeEmiComplete: z.boolean().optional(),
+    printMeta: printMetaSchema.optional(),
     sellerId: z.string().optional(),
     sellerName: z.string().optional(),
     sellerEmail: z.string().email().optional(),
     slug: z.string().optional(),
     listingType: z
-      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live"])
+      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live", "art", "stickers"])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })

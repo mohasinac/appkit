@@ -135,6 +135,8 @@ export const PRODUCT_FIELDS = {
     CLASSIFIED: "classified",
     DIGITAL_CODE: "digital-code",
     LIVE: "live",
+    ART: "art",
+    STICKERS: "stickers",
   },
 } as const;
 
@@ -185,11 +187,6 @@ export const ORDER_FIELDS = {
   SHIPPING_METHOD: "shippingMethod",
   SHIPPING_CARRIER: "shippingCarrier",
   TRACKING_URL: "trackingUrl",
-  SHIPROCKET_ORDER_ID: "shiprocketOrderId",
-  SHIPROCKET_SHIPMENT_ID: "shiprocketShipmentId",
-  SHIPROCKET_AWB: "shiprocketAWB",
-  SHIPROCKET_STATUS: "shiprocketStatus",
-  SHIPROCKET_UPDATED_AT: "shiprocketUpdatedAt",
   ITEMS: "items",
   TOTAL_AMOUNT: "totalAmount",
   BUYER_ID: "buyerId",
@@ -224,7 +221,6 @@ export const ORDER_FIELDS = {
 
   SHIPPING_METHOD_VALUES: {
     CUSTOM: "custom",
-    SHIPROCKET: "shiprocket",
   },
 } as const;
 

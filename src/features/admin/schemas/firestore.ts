@@ -33,7 +33,9 @@ export type NotificationType =
   | "refund_initiated"
   | "prize_reveal_ready"
   | "prize_reveal_expired"
-  | "prize_reveal_reminder";
+  | "prize_reveal_reminder"
+  | "emi_installment_due_soon"
+  | "emi_installment_overdue";
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
@@ -276,8 +278,6 @@ export interface SiteSettingsCredentials {
   razorpayWebhookSecret?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
-  shiprocketEmail?: string;
-  shiprocketPassword?: string;
   metaAppId?: string;
   metaAppSecret?: string;
   metaPageAccessToken?: string;
@@ -305,8 +305,6 @@ export interface SiteSettingsCredentialsMasked {
   razorpayWebhookSecret?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
-  shiprocketEmail?: string;
-  shiprocketPassword?: string;
   metaAppId?: string;
   metaAppSecret?: string;
   metaPageAccessToken?: string;
@@ -441,6 +439,21 @@ export interface SiteSettingsDocument extends BaseDocument {
     upiManualEnabled: boolean;
     codEnabled: boolean;
   };
+  /** Site-wide EMI (installment) settings. A seller must ALSO have `StoreDocument.emiEnabled` on for EMI to appear at checkout for their items. */
+  emi: {
+    enabled: boolean;
+    /** Paise — a seller's cart subtotal must exceed this for EMI to appear as an option. */
+    minOrderValueInPaise: number;
+    tenureOptions: number[];
+    /** Down payment % collected at checkout. */
+    tokenPercent: number;
+    /** Day of month (1–10) each installment is due. */
+    billingDay: number;
+    /** Extra % of principal per month of tenure — the "excess EMI fee" the buyer pays for spreading payment. */
+    surchargePercentPerMonth: number;
+    /** Share of the surcharge that goes to the seller (0–100); the rest is the platform's cut. */
+    surchargeSellerSharePercent: number;
+  };
   commissions: {
     /** Our platform cut charged to the buyer as a % of order value (e.g. 5 = 5%). */
     platformFeePercent: number;
@@ -451,6 +464,9 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** Razorpay gateway cost % (absorbed by platform, not passed through separately). */
     gatewayFeePercent: number;
     codDepositPercent: number;
+    /** COD handling fee charged to the buyer: max(codHandlingFeeMinInPaise, subtotal × codHandlingFeePercent / 100). */
+    codHandlingFeeMinInPaise: number;
+    codHandlingFeePercent: number;
     sellerShippingFixed: number;
     platformShippingPercent: number;
     platformShippingFixedMin: number;
@@ -510,12 +526,6 @@ export interface SiteSettingsDocument extends BaseDocument {
      * if this is ever true. Default false.
      */
     useMockPayment?: boolean;
-    /**
-     * Track H — when true and NODE_ENV !== "production", the shipping provider
-     * resolver returns MockShiprocketProvider. In production the resolver throws
-     * if this is ever true. Default false.
-     */
-    useMockShipping?: boolean;
     // Single-source flag-key constant so consumers don't reference the field
     // name by string literal (audit-checkout-bypass rule 1).
     // SB-UNI-X4 2026-05-13 — per-type feature flags. Disabled types are
@@ -661,9 +671,18 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   motto: "Your Marketplace, Your Rules",
   theme: DEFAULT_SITE_SETTINGS_THEME,
   payment: {
-    razorpayEnabled: true,
+    razorpayEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
+  },
+  emi: {
+    enabled: false,
+    minOrderValueInPaise: 1000000,
+    tenureOptions: [2, 3, 4, 5, 6],
+    tokenPercent: 10,
+    billingDay: 5,
+    surchargePercentPerMonth: 1,
+    surchargeSellerSharePercent: 50,
   },
   commissions: {
     platformFeePercent: 5,
@@ -671,6 +690,8 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     minimumTransactionFee: 0,
     gatewayFeePercent: 2,
     codDepositPercent: 10,
+    codHandlingFeeMinInPaise: 20000,
+    codHandlingFeePercent: 10,
     sellerShippingFixed: 0,
     platformShippingPercent: 10,
     platformShippingFixedMin: 0,
@@ -699,7 +720,6 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     // Track H — both mock-provider flags default to false. Production
     // deployments must never flip these on (the resolver throws if they are).
     useMockPayment: false,
-    useMockShipping: false,
     // W1-37 2026-05-23 — Phase 2 listing types enabled by default; all per-type
     // surfaces (seller + admin via W1-29 + public) are now shipped.
     listingTypes: {

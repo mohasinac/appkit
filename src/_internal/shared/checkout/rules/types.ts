@@ -48,6 +48,12 @@ export interface ListingCheckoutRule {
    * (direct-checkout-only via CategoryCheckoutRule).
    */
   cartEligible: boolean;
+  /**
+   * Buyer-facing hint appended to the "cannot add to cart" error when
+   * `cartEligible` is false — tells them what to do instead (place a bid,
+   * contact seller, etc). Ignored when `cartEligible` is true.
+   */
+  cartIneligibleHint: string;
   /** OrderType assigned to orders created from this listing type. */
   orderType: OrderType;
   /**

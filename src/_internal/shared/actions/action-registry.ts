@@ -530,6 +530,20 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["seller", "admin"],
     },
+    "mark-installment-paid": {
+      id: "store.mark-installment-paid",
+      label: "Mark installment paid",
+      ariaLabel: "Mark this EMI installment as paid",
+      description: "Record collection of one EMI installment after verifying the buyer's manual transfer proof.",
+      kind: "primary",
+      permissions: ["seller", "admin"],
+      confirmation: {
+        title: "Mark this installment as paid?",
+        body: "This confirms the buyer's payment was received and verified. The order becomes eligible to ship once every installment is marked paid.",
+        confirmLabel: "Mark paid",
+        confirmKind: "primary",
+      },
+    },
     "request-payout": {
       id: "store.request-payout",
       label: "Request payout",
@@ -1119,6 +1133,20 @@ export const ACTIONS: ActionTree = {
       description: "Update an order status to delivered.",
       kind: "primary",
       permissions: ["admin", "moderator"],
+    },
+    "mark-installment-paid": {
+      id: "admin.mark-installment-paid",
+      label: "Mark installment paid",
+      ariaLabel: "Mark this EMI installment as paid",
+      description: "Record collection of one EMI installment after verifying the buyer's manual transfer proof.",
+      kind: "primary",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Mark this installment as paid?",
+        body: "This confirms the buyer's payment was received and verified. The order becomes eligible to ship once every installment is marked paid.",
+        confirmLabel: "Mark paid",
+        confirmKind: "primary",
+      },
     },
     "cancel-order": {
       id: "admin.cancel-order",

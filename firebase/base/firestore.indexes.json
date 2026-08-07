@@ -2627,6 +2627,20 @@
       ]
     },
     {
+      "collectionGroup": "orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "emiEnabled",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "emiComplete",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "chatRooms",
       "queryScope": "COLLECTION",
       "fields": [

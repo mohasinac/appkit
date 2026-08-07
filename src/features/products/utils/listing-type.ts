@@ -45,6 +45,15 @@ export const isLiveListing = (
   input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "live";
 
+// Art/stickers session — printed-only physical-goods listing types.
+export const isArtListing = (
+  input?: { listingType?: ListingType },
+): boolean => normalizeListingType(input) === "art";
+
+export const isStickersListing = (
+  input?: { listingType?: ListingType },
+): boolean => normalizeListingType(input) === "stickers";
+
 // SB-UNI-D — isBundleListing removed. Bundles are now a categoryType
 // discriminator on CategoryDocument; consumers should query
 // `categoriesRepository.findBySlugAndType(slug, "bundle")` instead.

@@ -8,7 +8,6 @@ import { auditTimestampsShape, firestoreDateSchema, paiseSchema } from "../../..
 // Mirrors StoreDocument in ./firestore.ts. Registered into SCHEMAS.firestore.stores.
 
 export const shippingProviderTypeSchema = z.enum([
-  "shiprocket",
   "self-courier",
   "store-pickup",
   "custom",
@@ -89,6 +88,7 @@ export const storeFirestoreSchema = z.object({
     })
     .optional(),
   shippingConfig: storeShippingConfigSchema.optional(),
+  emiEnabled: z.boolean().optional(),
   whatsappConfig: z
     .object({
       phoneNumber: z.string().optional(),

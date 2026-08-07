@@ -109,6 +109,8 @@ export interface ProductDetailPageViewProps {
    * legacy bullets render unchanged.
    */
   productFeatures?: ProductFeatureDocument[];
+  /** Site-wide COD availability (`siteSettings.payment.codEnabled`), threaded from the page's data layer. Drives the "Cash on Delivery" feature badge. */
+  codEnabled?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -214,6 +216,7 @@ export async function ProductDetailPageView({
   renderOfferAction,
   renderPrimaryActions,
   productFeatures,
+  codEnabled,
 }: ProductDetailPageViewProps) {
   // Use pre-fetched data when available to avoid a redundant repository call.
   // The page layer wraps getProductForDetail in React.cache(), so both
@@ -569,6 +572,7 @@ export async function ProductDetailPageView({
               <ProductFeatureBadges
                 featured={featured}
                 freeShipping={freeShipping}
+                codAvailable={codEnabled === true}
                 condition={condition ?? undefined}
                 returnable={returnPolicy != null && returnPolicy.length > 0}
                 labels={{

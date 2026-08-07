@@ -12,8 +12,25 @@ import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddress
 import type { MediaField } from "../../media/types";
 import { QuickProductForm } from "./QuickProductForm";
 import { BarcodeField } from "./BarcodeField";
+import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import type { ListingType } from "../../products/types/index";
 
 import { normalizeError } from "../../../errors/normalize";
+
+/**
+ * "bundle" is a categoryType, not a ListingType, so it can't live in
+ * LISTING_TYPE_REGISTRY — this is the single, explicit escape hatch that
+ * lets the seller form's registry lookups also cover it.
+ */
+const BUNDLE_PLUGIN_FALLBACK = {
+  priceLabel: "Price (₹)",
+  typeLabel: "Bundle",
+  showsStockQuantity: false,
+} as const;
+
+function pluginForMode(mode: ProductListingMode) {
+  return mode === "bundle" ? BUNDLE_PLUGIN_FALLBACK : pluginFor(mode as ListingType);
+}
 export type ProductListingMode =
   | "standard"
   | "auction"
@@ -22,7 +39,9 @@ export type ProductListingMode =
   | "bundle"
   | "classified"
   | "digital-code"
-  | "live";
+  | "live"
+  | "art"
+  | "stickers";
 
 export interface SellerProductDraft {
   title?: string;
@@ -94,6 +113,11 @@ export interface SellerProductDraft {
   liveCites?: boolean;
   /** Barcode ID of the physical sticker on this item. Auto-generated on save if blank. */
   barcodeId?: string;
+  // Print meta (art / stickers) — shared block, both types use the same fields.
+  printSize?: string;
+  printMaterial?: string;
+  printFinish?: string;
+  printEditionSize?: number;
 }
 
 const sellerProductSchema = z.object({
@@ -730,6 +754,140 @@ function StepLiveItemSettings({
   );
 }
 
+// ── Step: Print Meta (art / stickers) ───────────────────────────────────────
+// Shared by both "art" and "stickers" — identical field set, only the intro
+// copy differs (set by the caller via `intro`).
+
+function StepPrintMetaSettings({
+  values,
+  onChange,
+  intro,
+}: {
+  values: SellerProductDraft;
+  onChange: (p: Partial<SellerProductDraft>) => void;
+  intro: string;
+}) {
+  return (
+    <Stack gap="md">
+      <Alert variant="info">{intro}</Alert>
+      <FormGroup columns={2}>
+        <FormField
+          name="printSize"
+          label="Size"
+          type="text"
+          value={values.printSize ?? ""}
+          onChange={(v) => onChange({ printSize: v })}
+          placeholder="e.g. A4, 12x18 in"
+        />
+        <FormField
+          name="printMaterial"
+          label="Material"
+          type="text"
+          value={values.printMaterial ?? ""}
+          onChange={(v) => onChange({ printMaterial: v })}
+          placeholder="e.g. Matte photo paper, Vinyl"
+        />
+      </FormGroup>
+      <FormGroup columns={2}>
+        <FormField
+          name="printFinish"
+          label="Finish (optional)"
+          type="text"
+          value={values.printFinish ?? ""}
+          onChange={(v) => onChange({ printFinish: v })}
+          placeholder="e.g. Glossy, Matte, Holographic"
+        />
+        <FormField
+          name="printEditionSize"
+          label="Edition Size (optional)"
+          type="number"
+          value={String(values.printEditionSize ?? "")}
+          onChange={(v) => onChange({ printEditionSize: v ? Number(v) : undefined })}
+          placeholder="Leave blank for an open edition"
+        />
+      </FormGroup>
+    </Stack>
+  );
+}
+
+// ── Type-specific step registry ──────────────────────────────────────────────
+// Replaces the ad-hoc per-type ternary chain that used to pick the wizard step
+// (create mode) / section (edit mode) — one Record lookup instead of a
+// duplicated 5(+)-way chain in each mode.
+
+interface TypeSpecificStepDef extends StepDef<SellerProductDraft> {
+  /** Section id used by the edit-mode single-page layout. */
+  id: string;
+  /** Edit-mode section heading — defaults to `label` when omitted (a couple of
+   *  types want a fuller sentence here than fits as a compact wizard-step tab). */
+  sectionHeading?: string;
+}
+
+const TYPE_SPECIFIC_STEPS: Partial<Record<ProductListingMode, TypeSpecificStepDef>> = {
+  auction: {
+    id: "auction",
+    label: "Auction Settings",
+    render: ({ values, onChange }) => (
+      <StepAuctionSettings values={values} onChange={onChange} />
+    ),
+    validate: (v) => (!v.startingBid ? "Starting bid is required" : !v.auctionEndDate ? "Auction end date is required" : null),
+  },
+  "pre-order": {
+    id: "preorder",
+    label: "Pre-Order",
+    sectionHeading: "Pre-Order Settings",
+    render: ({ values, onChange }) => (
+      <StepPreOrderSettings values={values} onChange={onChange} />
+    ),
+    validate: (v) => (!v.preOrderDeliveryDate ? "Estimated delivery date is required" : null),
+  },
+  classified: {
+    id: "classified",
+    label: "Meetup Details",
+    render: ({ values, onChange }) => (
+      <StepClassifiedSettings values={values} onChange={onChange} />
+    ),
+    validate: (v) => (!v.classifiedCity?.trim() ? "City is required for classified listings" : null),
+  },
+  "digital-code": {
+    id: "digitalcode",
+    label: "Code Details",
+    render: ({ values, onChange }) => (
+      <StepDigitalCodeSettings values={values} onChange={onChange} />
+    ),
+  },
+  live: {
+    id: "live",
+    label: "Live Item Details",
+    render: ({ values, onChange }) => (
+      <StepLiveItemSettings values={values} onChange={onChange} />
+    ),
+    validate: (v) => (!v.liveSpecies?.trim() ? "Species name is required" : null),
+  },
+  art: {
+    id: "printmeta",
+    label: "Print Details",
+    render: ({ values, onChange }) => (
+      <StepPrintMetaSettings
+        values={values}
+        onChange={onChange}
+        intro="Art prints are sold as physical, printed-only reproductions — no original artwork or digital files."
+      />
+    ),
+  },
+  stickers: {
+    id: "printmeta",
+    label: "Print Details",
+    render: ({ values, onChange }) => (
+      <StepPrintMetaSettings
+        values={values}
+        onChange={onChange}
+        intro="Sticker listings are sold as physical, printed sheets or packs — no digital files."
+      />
+    ),
+  },
+};
+
 // ── Step: Pricing ─────────────────────────────────────────────────────────
 
 function StepPricing({
@@ -741,16 +899,8 @@ function StepPricing({
   onChange: (p: Partial<SellerProductDraft>) => void;
   listingType: ProductListingMode;
 }) {
-  const priceLabel =
-    listingType === "auction"
-      ? "Suggested Retail Price (₹)"
-      : listingType === "pre-order"
-        ? "Pre-Order Price (₹)"
-        : listingType === "classified"
-          ? "Asking Price (₹)"
-          : listingType === "digital-code"
-            ? "Price per Code (₹)"
-            : "Price (₹)";
+  const listingPlugin = pluginForMode(listingType);
+  const priceLabel = listingPlugin.priceLabel;
 
   return (
     <Stack gap="md">
@@ -774,7 +924,7 @@ function StepPricing({
           helpText="Original price shown as strikethrough"
         />
       </FormGroup>
-      {(listingType === "standard" || listingType === "classified" || listingType === "live") && (
+      {listingPlugin.showsStockQuantity && (
         <FormField
           name="stockQuantity"
           label="Stock Quantity"
@@ -1016,62 +1166,8 @@ export function SellerProductShell({
     }
   }, [draft, onPublish, markClean, showToast]);
 
-  const listingTypeLabel =
-    listingType === "auction"
-      ? "Auction"
-      : listingType === "pre-order"
-        ? "Pre-Order"
-        : listingType === "bundle"
-          ? "Bundle"
-          : listingType === "classified"
-            ? "Classified"
-            : listingType === "digital-code"
-              ? "Digital Code"
-              : listingType === "live"
-                ? "Live Item"
-                : "Product";
-
-  const typeSpecificStep: StepDef<SellerProductDraft> | null =
-    listingType === "auction"
-      ? {
-          label: "Auction Settings",
-          render: ({ values, onChange }) => (
-            <StepAuctionSettings values={values} onChange={onChange} />
-          ),
-          validate: (v) => (!v.startingBid ? "Starting bid is required" : !v.auctionEndDate ? "Auction end date is required" : null),
-        }
-      : listingType === "pre-order"
-        ? {
-            label: "Pre-Order",
-            render: ({ values, onChange }) => (
-              <StepPreOrderSettings values={values} onChange={onChange} />
-            ),
-            validate: (v) => (!v.preOrderDeliveryDate ? "Estimated delivery date is required" : null),
-          }
-        : listingType === "classified"
-          ? {
-              label: "Meetup Details",
-              render: ({ values, onChange }) => (
-                <StepClassifiedSettings values={values} onChange={onChange} />
-              ),
-              validate: (v) => (!v.classifiedCity?.trim() ? "City is required for classified listings" : null),
-            }
-          : listingType === "digital-code"
-            ? {
-                label: "Code Details",
-                render: ({ values, onChange }) => (
-                  <StepDigitalCodeSettings values={values} onChange={onChange} />
-                ),
-              }
-            : listingType === "live"
-              ? {
-                  label: "Live Item Details",
-                  render: ({ values, onChange }) => (
-                    <StepLiveItemSettings values={values} onChange={onChange} />
-                  ),
-                  validate: (v) => (!v.liveSpecies?.trim() ? "Species name is required" : null),
-                }
-              : null;
+  const listingTypeLabel = pluginForMode(listingType).typeLabel;
+  const typeSpecificStep: TypeSpecificStepDef | null = TYPE_SPECIFIC_STEPS[listingType] ?? null;
 
   const steps: StepDef<SellerProductDraft>[] = [
     {
@@ -1248,11 +1344,7 @@ export function SellerProductShell({
   // Edit mode — FormShell with section nav + full form
   const editSections: FormShellSection[] = [
     ...EDIT_SECTIONS,
-    ...(listingType === "auction" ? [{ id: "auction", label: "Auction" }] : []),
-    ...(listingType === "pre-order" ? [{ id: "preorder", label: "Pre-Order" }] : []),
-    ...(listingType === "classified" ? [{ id: "classified", label: "Meetup Details" }] : []),
-    ...(listingType === "digital-code" ? [{ id: "digitalcode", label: "Code Details" }] : []),
-    ...(listingType === "live" ? [{ id: "live", label: "Live Item" }] : []),
+    ...(typeSpecificStep ? [{ id: typeSpecificStep.id, label: typeSpecificStep.label }] : []),
   ];
 
   return (
@@ -1286,34 +1378,10 @@ export function SellerProductShell({
           <Heading level={3} className="mb-4">Media</Heading>
           <StepMedia values={draft} onChange={update} storeSlug={storeSlug} />
         </Section>
-        {listingType === "auction" && (
-          <Section id="auction">
-            <Heading level={3} className="mb-4">Auction Settings</Heading>
-            <StepAuctionSettings values={draft} onChange={update} />
-          </Section>
-        )}
-        {listingType === "pre-order" && (
-          <Section id="preorder">
-            <Heading level={3} className="mb-4">Pre-Order Settings</Heading>
-            <StepPreOrderSettings values={draft} onChange={update} />
-          </Section>
-        )}
-        {listingType === "classified" && (
-          <Section id="classified">
-            <Heading level={3} className="mb-4">Meetup Details</Heading>
-            <StepClassifiedSettings values={draft} onChange={update} />
-          </Section>
-        )}
-        {listingType === "digital-code" && (
-          <Section id="digitalcode">
-            <Heading level={3} className="mb-4">Code Details</Heading>
-            <StepDigitalCodeSettings values={draft} onChange={update} />
-          </Section>
-        )}
-        {listingType === "live" && (
-          <Section id="live">
-            <Heading level={3} className="mb-4">Live Item Details</Heading>
-            <StepLiveItemSettings values={draft} onChange={update} />
+        {typeSpecificStep && (
+          <Section id={typeSpecificStep.id}>
+            <Heading level={3} className="mb-4">{typeSpecificStep.sectionHeading ?? typeSpecificStep.label}</Heading>
+            {typeSpecificStep.render({ values: draft, onChange: update, errors: {} })}
           </Section>
         )}
         <Section id="pricing">

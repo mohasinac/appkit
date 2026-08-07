@@ -56,7 +56,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
         {
           providerId: "provider-letitrip-standard",
           label: "Standard Shipping",
-          type: "shiprocket" as const,
+          type: "custom" as const,
           fee: { flatInPaise: 4900, freeAboveInPaise: 99900 },
           etaDaysMin: 3,
           etaDaysMax: 5,
@@ -65,7 +65,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
         {
           providerId: "provider-letitrip-express",
           label: "Express Shipping",
-          type: "shiprocket" as const,
+          type: "custom" as const,
           fee: { flatInPaise: 9900 },
           etaDaysMin: 1,
           etaDaysMax: 2,
@@ -148,7 +148,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
         {
           providerId: "provider-kaiba-box",
           label: "Box Shipping (Sealed Product)",
-          type: "shiprocket" as const,
+          type: "custom" as const,
           fee: { flatInPaise: 14900 },
           etaDaysMin: 4,
           etaDaysMax: 7,
@@ -157,7 +157,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
         {
           providerId: "provider-kaiba-express",
           label: "Express Courier",
-          type: "shiprocket" as const,
+          type: "custom" as const,
           fee: { flatInPaise: 19900 },
           etaDaysMin: 1,
           etaDaysMax: 2,
@@ -210,7 +210,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     shippingConfig: {
       defaultProviderId: "provider-pokemon-standard",
       providers: [
-        { providerId: "provider-pokemon-standard", label: "Standard Shipping", type: "shiprocket" as const, fee: { flatInPaise: 4900, freeAboveInPaise: 79900 }, etaDaysMin: 4, etaDaysMax: 6, requiresAwbUpload: true },
+        { providerId: "provider-pokemon-standard", label: "Standard Shipping", type: "custom" as const, fee: { flatInPaise: 4900, freeAboveInPaise: 79900 }, etaDaysMin: 4, etaDaysMax: 6, requiresAwbUpload: true },
       ],
     },
     isPublic: true,
@@ -237,11 +237,11 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     location: "Hyderabad, Telangana, India",
     socialLinks: { instagram: "https://instagram.com/cardgamehub.in", twitter: "https://twitter.com/cardgamehub" },
     returnPolicy: "5-day returns. Items must be in original packaging.",
-    shippingPolicy: "Free shipping above ₹1,499. Ships within 48 hours via Shiprocket.",
+    shippingPolicy: "Free shipping above ₹1,499. Ships within 48 hours.",
     shippingConfig: {
       defaultProviderId: "provider-cardgame-standard",
       providers: [
-        { providerId: "provider-cardgame-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 5900, freeAboveInPaise: 149900 }, etaDaysMin: 4, etaDaysMax: 7, requiresAwbUpload: true },
+        { providerId: "provider-cardgame-standard", label: "Standard", type: "custom" as const, fee: { flatInPaise: 5900, freeAboveInPaise: 149900 }, etaDaysMin: 4, etaDaysMax: 7, requiresAwbUpload: true },
       ],
     },
     isPublic: true,
@@ -272,7 +272,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     shippingConfig: {
       defaultProviderId: "provider-beyblade-standard",
       providers: [
-        { providerId: "provider-beyblade-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 4500, freeAboveInPaise: 59900 }, etaDaysMin: 3, etaDaysMax: 6, requiresAwbUpload: true },
+        { providerId: "provider-beyblade-standard", label: "Standard", type: "custom" as const, fee: { flatInPaise: 4500, freeAboveInPaise: 59900 }, etaDaysMin: 3, etaDaysMax: 6, requiresAwbUpload: true },
       ],
     },
     isPublic: true,
@@ -304,8 +304,8 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     shippingConfig: {
       defaultProviderId: "provider-tokyo-standard",
       providers: [
-        { providerId: "provider-tokyo-standard", label: "Standard (Double-Box)", type: "shiprocket" as const, fee: { flatInPaise: 9900, freeAboveInPaise: 199900 }, etaDaysMin: 5, etaDaysMax: 8, requiresAwbUpload: true },
-        { providerId: "provider-tokyo-express", label: "Express", type: "shiprocket" as const, fee: { flatInPaise: 19900 }, etaDaysMin: 2, etaDaysMax: 3, requiresAwbUpload: true },
+        { providerId: "provider-tokyo-standard", label: "Standard (Double-Box)", type: "custom" as const, fee: { flatInPaise: 9900, freeAboveInPaise: 199900 }, etaDaysMin: 5, etaDaysMax: 8, requiresAwbUpload: true },
+        { providerId: "provider-tokyo-express", label: "Express", type: "custom" as const, fee: { flatInPaise: 19900 }, etaDaysMin: 2, etaDaysMax: 3, requiresAwbUpload: true },
       ],
     },
     isPublic: true,
@@ -336,7 +336,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     shippingConfig: {
       defaultProviderId: "provider-gundam-standard",
       providers: [
-        { providerId: "provider-gundam-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 7900, freeAboveInPaise: 149900 }, etaDaysMin: 4, etaDaysMax: 7, requiresAwbUpload: true },
+        { providerId: "provider-gundam-standard", label: "Standard", type: "custom" as const, fee: { flatInPaise: 7900, freeAboveInPaise: 149900 }, etaDaysMin: 4, etaDaysMax: 7, requiresAwbUpload: true },
       ],
     },
     isPublic: true,

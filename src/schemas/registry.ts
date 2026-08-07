@@ -143,7 +143,6 @@ const sieve = {
 // keyed on the `event` discriminator.
 // ---------------------------------------------------------------------------
 import { razorpayWebhookEnvelopeSchema } from "./webhooks/razorpay";
-import { shiprocketTrackingUpdateSchema } from "./webhooks/shiprocket";
 import {
   googleSignInWithIdpResponseSchema,
   googleTokenInfoSchema,
@@ -152,9 +151,6 @@ import {
 const webhook = {
   razorpay: {
     envelope: razorpayWebhookEnvelopeSchema,
-  },
-  shiprocket: {
-    trackingUpdate: shiprocketTrackingUpdateSchema,
   },
   googleOauth: {
     signInWithIdp: googleSignInWithIdpResponseSchema,

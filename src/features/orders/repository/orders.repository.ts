@@ -437,30 +437,38 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   }
 
   /**
-   * Cloud Functions: find shiprocket-shipped delivered orders eligible for payout.
+   * Cloud Functions: find delivered orders eligible for the weekly payout sweep.
+   *
+   * EMI orders that still have unpaid installments are excluded — the seller
+   * is only eligible once the buyer has fully paid off the order, not merely
+   * once it's delivered (a seller-enabled `allowShipBeforeEmiComplete` item
+   * can be delivered long before EMI collection finishes).
    */
-  async getEligibleShiprocket(): Promise<
+  async getEligibleForPayoutSweep(): Promise<
     Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
   > {
     const snap = await this.db
       .collection(this.collection)
       .where(ORDER_FIELDS.PAYOUT_STATUS, "==", "eligible")
-      .where(ORDER_FIELDS.SHIPPING_METHOD, "==", "shiprocket")
       .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.DELIVERED)
       .limit(500)
       .get();
 
-    return snap.docs.map((d) => ({
-      id: d.id,
-      ref: d.ref as DocumentReference,
-      data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
-    }));
+    return snap.docs
+      .map((d) => ({
+        id: d.id,
+        ref: d.ref as DocumentReference,
+        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+      }))
+      .filter((o) => !o.data.emiEnabled || o.data.emiComplete);
   }
 
   /**
    * Cloud Functions: find auto-payout eligible delivered orders older than windowDays business days.
    * @param windowDays - number of business days since delivery
    * @param cutoff - pre-computed business-day cutoff date (computed by caller)
+   *
+   * See {@link getEligibleForPayoutSweep} for the EMI-incomplete exclusion rationale.
    */
   async getEligibleAutomatic(
     cutoff: Date,
@@ -472,6 +480,31 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       .where(ORDER_FIELDS.PAYOUT_STATUS, "==", "eligible")
       .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.DELIVERED)
       .where(ORDER_FIELDS.UPDATED_AT, "<=", cutoff)
+      .limit(500)
+      .get();
+
+    return snap.docs
+      .map((d) => ({
+        id: d.id,
+        ref: d.ref as DocumentReference,
+        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+      }))
+      .filter((o) => !o.data.emiEnabled || o.data.emiComplete);
+  }
+
+  /**
+   * Cloud Functions: EMI reminder sweep — orders on an active (not yet fully
+   * paid) EMI plan. Per-installment due-date filtering happens in the job
+   * itself since `emiInstallments` is an array field Firestore can't range-
+   * query on.
+   */
+  async getActiveEmiOrders(): Promise<
+    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
+  > {
+    const snap = await this.db
+      .collection(this.collection)
+      .where("emiEnabled", "==", true)
+      .where("emiComplete", "==", false)
       .limit(500)
       .get();
 

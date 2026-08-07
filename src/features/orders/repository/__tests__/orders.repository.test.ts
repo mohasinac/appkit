@@ -255,3 +255,73 @@ describe("OrderRepository.createFromAuction", () => {
     expect(mockBatch.commit).not.toHaveBeenCalled();
   });
 });
+
+describe("OrderRepository.getEligibleForPayoutSweep", () => {
+  it("filters by payoutStatus=eligible, status=delivered", async () => {
+    mockQuery.get.mockResolvedValue(makeQuerySnap([]));
+    await repo.getEligibleForPayoutSweep();
+    expect(mockQuery.where).toHaveBeenCalledWith("payoutStatus", "==", "eligible");
+    expect(mockQuery.where).toHaveBeenCalledWith("status", "==", "delivered");
+  });
+
+  it("excludes EMI orders with unpaid installments", async () => {
+    mockQuery.get.mockResolvedValue(
+      makeQuerySnap([
+        { id: "order-non-emi", data: { status: "delivered", payoutStatus: "eligible" } },
+        {
+          id: "order-emi-incomplete",
+          data: { status: "delivered", payoutStatus: "eligible", emiEnabled: true, emiComplete: false },
+        },
+        {
+          id: "order-emi-complete",
+          data: { status: "delivered", payoutStatus: "eligible", emiEnabled: true, emiComplete: true },
+        },
+      ]),
+    );
+    const result = await repo.getEligibleForPayoutSweep();
+    expect(result.map((o) => o.id)).toEqual(["order-non-emi", "order-emi-complete"]);
+  });
+});
+
+describe("OrderRepository.getEligibleAutomatic", () => {
+  it("filters by payoutStatus=eligible, status=delivered, updatedAt<=cutoff", async () => {
+    mockQuery.get.mockResolvedValue(makeQuerySnap([]));
+    const cutoff = new Date("2026-06-01");
+    await repo.getEligibleAutomatic(cutoff);
+    expect(mockQuery.where).toHaveBeenCalledWith("payoutStatus", "==", "eligible");
+    expect(mockQuery.where).toHaveBeenCalledWith("status", "==", "delivered");
+    expect(mockQuery.where).toHaveBeenCalledWith("updatedAt", "<=", cutoff);
+  });
+
+  it("excludes EMI orders with unpaid installments", async () => {
+    mockQuery.get.mockResolvedValue(
+      makeQuerySnap([
+        {
+          id: "order-emi-incomplete",
+          data: { status: "delivered", payoutStatus: "eligible", emiEnabled: true, emiComplete: false },
+        },
+        { id: "order-non-emi", data: { status: "delivered", payoutStatus: "eligible" } },
+      ]),
+    );
+    const result = await repo.getEligibleAutomatic(new Date());
+    expect(result.map((o) => o.id)).toEqual(["order-non-emi"]);
+  });
+});
+
+describe("OrderRepository.getActiveEmiOrders", () => {
+  it("filters by emiEnabled=true, emiComplete=false", async () => {
+    mockQuery.get.mockResolvedValue(makeQuerySnap([]));
+    await repo.getActiveEmiOrders();
+    expect(mockQuery.where).toHaveBeenCalledWith("emiEnabled", "==", true);
+    expect(mockQuery.where).toHaveBeenCalledWith("emiComplete", "==", false);
+  });
+
+  it("returns docs with id, ref, and data", async () => {
+    mockQuery.get.mockResolvedValue(
+      makeQuerySnap([{ id: "order-emi-1", data: { emiEnabled: true, emiComplete: false } }]),
+    );
+    const result = await repo.getActiveEmiOrders();
+    expect(result[0].id).toBe("order-emi-1");
+    expect(result[0].data).toBeDefined();
+  });
+});

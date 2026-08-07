@@ -61,7 +61,7 @@ export { firebaseStorageProvider } from "./providers/storage-firebase/index";
 export { createResendProvider } from "./providers/email-resend/index";
 export type { ResendProviderOptions } from "./providers/email-resend/index";
 
-// Payment (Razorpay)
+// Payment (Razorpay) — disabled by default; siteSettings.payment.razorpayEnabled turns it on
 export {
   RazorpayProvider,
   rupeesToPaise,
@@ -81,9 +81,11 @@ export type {
   RazorpayRefundResult,
 } from "./providers/payment-razorpay/index";
 
-// Shipping (Shiprocket)
-export { ShiprocketProvider } from "./providers/shipping-shiprocket/index";
-export type { ShiprocketProviderConfig } from "./providers/shipping-shiprocket/index";
+// Payment (manual) — the default provider
+export { ManualPaymentProvider } from "./providers/payment-manual/index";
+
+// Shipping (manual) — the default (and only) provider
+export { ManualShippingProvider } from "./providers/shipping-manual/index";
 
 // Style adapter
 export { tailwindAdapter } from "./style/tailwind/index";

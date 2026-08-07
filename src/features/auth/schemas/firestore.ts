@@ -154,7 +154,8 @@ export interface UserSoftBan {
 
 // -- Seller Shipping Config --------------------------------------------------
 
-export type SellerShippingMethod = "custom" | "shiprocket";
+/** Manual shipping is the only supported method — sellers enter carrier + tracking directly, no carrier API integration. */
+export type SellerShippingMethod = "custom";
 
 export interface SellerPickupAddress {
   locationName: string;
@@ -168,17 +169,12 @@ export interface SellerPickupAddress {
   pincode: string;
   country: string;
   isVerified: boolean;
-  shiprocketAddressId?: number;
 }
 
 export interface SellerShippingConfig {
   method: SellerShippingMethod;
   customShippingPrice?: number;
   customCarrierName?: string;
-  shiprocketEmail?: string;
-  /** Shiprocket JWT — server-only, never returned to client. */
-  shiprocketToken?: string;
-  shiprocketTokenExpiry?: Date;
   pickupAddress?: SellerPickupAddress;
   isConfigured: boolean;
 }

@@ -13,7 +13,7 @@ export const storeStatusSchema = z.enum([
 export const payoutStatusSchema = z.enum([
   "pending",
   "processing",
-  "completed",
+  "paid",
   "failed",
 ]);
 
