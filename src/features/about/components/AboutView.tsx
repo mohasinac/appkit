@@ -91,16 +91,20 @@ export function AboutView({
           <Heading level={2} className="mb-12" align="center">{labels.valuesTitle}</Heading>
           <Div className="grid md:grid-cols-3" gap="5">
             {valueItems.map(({ title, text, icon }) => (
-              <Div
+              <Stack
                 key={title}
-                className="bg-[var(--appkit-color-surface)] rounded-xl p-6 space-y-3 border border-[var(--appkit-color-border)]"
+                gap="3"
+                surface="default"
+                padding="lg"
+                rounded="xl"
+                border="default"
               >
                 <Div><Span size="3xl">{icon}</Span></Div>
                 <Heading level={3}>{title}</Heading>
                 <Text size="sm" variant="secondary" className="leading-relaxed">
                   {text}
                 </Text>
-              </Div>
+              </Stack>
             ))}
           </Div>
         </Section>

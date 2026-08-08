@@ -60,7 +60,12 @@ export function EventLeaderboard({
         ) : (
           <Div
             key={entry.userId}
-            className="flex items-center justify-between p-3 rounded-xl border"
+            layout="flex"
+            align="center"
+            justify="between"
+            rounded="xl"
+            padding="sm"
+            className="border"
            data-section="eventleaderboard-div-282">
             <Span weight="medium">
               #{entry.rank} {entry.userDisplayName}

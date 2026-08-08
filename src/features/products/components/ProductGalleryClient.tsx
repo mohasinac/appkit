@@ -56,7 +56,8 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
     <Stack gap="3">
       {/* Main image — click to open lightbox */}
       <Div
-        className="overflow-hidden rounded-xl border border-[var(--appkit-color-border-subtle)] cursor-zoom-in aspect-square w-full"
+        rounded="xl"
+        className="overflow-hidden border border-[var(--appkit-color-border-subtle)] cursor-zoom-in aspect-square w-full"
         onClick={() => setLightboxIndex(activeIndex)}
         role="button"
         tabIndex={0}

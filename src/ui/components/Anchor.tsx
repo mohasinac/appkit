@@ -1,5 +1,16 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
-import { ROUNDED_MAP, type RoundedKey, SHADOW_MAP, type ShadowKey } from "./surface-tokens";
+import { PADDING_MAP, type PaddingKey, ROUNDED_MAP, type RoundedKey, SHADOW_MAP, type ShadowKey } from "./surface-tokens";
+
+export type AnchorGap = "none" | "2xs" | "xs" | "sm" | "md" | "lg";
+
+const ANCHOR_GAP_CLS: Record<AnchorGap, string> = {
+  none: "",
+  "2xs": "gap-0.5",
+  xs: "gap-1",
+  sm: "gap-1.5",
+  md: "gap-2",
+  lg: "gap-3",
+};
 
 /**
  * Anchor — primitive for **external** links, `mailto:`, and `tel:` URLs.
@@ -55,6 +66,12 @@ export interface AnchorProps
   shadow?: ShadowKey;
   /** Display layout. `"inline-flex"` and `"flex"` include `items-center` automatically. */
   layout?: "inline-flex" | "flex";
+  /** Padding — for card/banner-style anchors. Replaces consumer `p*-*` className. */
+  padding?: PaddingKey;
+  /** Gap between flex children — only meaningful with `layout`. Replaces consumer `gap-*` className. */
+  gap?: AnchorGap;
+  /** Themed hover background — replaces consumer `hover:bg-*` className on card-style anchors. */
+  hoverSurface?: "none" | "subtle";
   /**
    * Escape hatch for behaviour-coupled utility classes (layout overrides,
    * state-driven classes like `group`, structural card-link styling).
@@ -62,6 +79,11 @@ export interface AnchorProps
    */
   className?: string;
 }
+
+const ANCHOR_HOVER_SURFACE_CLS: Record<"none" | "subtle", string> = {
+  none: "",
+  subtle: "hover:bg-[var(--appkit-color-border-subtle)]",
+};
 
 const TONE_CLS: Record<AnchorTone, string> = {
   default: "text-[var(--appkit-color-text)]",
@@ -103,6 +125,9 @@ export function Anchor({
   rounded,
   shadow,
   layout,
+  padding,
+  gap,
+  hoverSurface,
   external,
   rel,
   target,
@@ -130,6 +155,9 @@ export function Anchor({
         rounded ? ROUNDED_MAP[rounded] : "",
         shadow ? SHADOW_MAP[shadow] : "",
         layout ? ANCHOR_LAYOUT_CLS[layout] : "",
+        padding ? PADDING_MAP[padding] : "",
+        gap ? ANCHOR_GAP_CLS[gap] : "",
+        hoverSurface ? ANCHOR_HOVER_SURFACE_CLS[hoverSurface] : "",
         "transition-colors",
         className ?? "",
       ].filter(Boolean).join(" ")}

@@ -113,7 +113,9 @@ export async function TrackOrderView({
             {STEPS.map(({ icon: Icon, title, text, color, bg }, index) => (
               <Div
                 key={title}
-                className={`${themed.bgSecondary} rounded-xl border ${themed.border} p-6 relative`}
+                rounded="xl"
+                padding="lg"
+                className={`${themed.bgSecondary} border ${themed.border} relative`}
               >
                 <Caption className="absolute top-4 right-4" weight="bold">
                   {String(index + 1).padStart(2, "0")}

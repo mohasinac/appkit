@@ -37,7 +37,11 @@ return (
           {items.map((indicator, index) => (
             <Div
               key={index}
-              className="text-center p-4 rounded-2xl bg-[var(--appkit-color-surface)] border border-zinc-100 border-[var(--appkit-color-border-subtle)] hover:shadow-md transition-shadow"
+              padding="md"
+              rounded="2xl"
+              border="subtle"
+              shadow="hover-md"
+              className="text-center bg-[var(--appkit-color-surface)]"
             >
               <Div className="text-[2.25rem] md:text-[3rem] mb-2 md:mb-3">
                 {indicator.icon}

@@ -59,7 +59,11 @@ return (
           {features.map((feature) => (
             <Div
               key={feature.id}
-              className="p-6 text-center hover:shadow-lg transition-all group rounded-2xl bg-[var(--appkit-color-surface)] border border-zinc-100 border-[var(--appkit-color-border-subtle)]"
+              padding="lg"
+              rounded="2xl"
+              border="subtle"
+              shadow="hover-lg"
+              className="text-center transition-all group bg-[var(--appkit-color-surface)]"
             >
               {/* Icon */}
               <Div className="text-[3.75rem] mb-4 group-hover:scale-110 transition-transform">

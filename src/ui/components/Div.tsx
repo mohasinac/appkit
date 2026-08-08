@@ -41,11 +41,13 @@ const DIV_TEXT_WEIGHT_MAP: Record<DivTextWeight, string> = {
   bold: "font-bold",
 };
 
-type DivLayout = "block" | "flex" | "inline-flex" | "grid" | "inline-block" | "inline";
+type DivLayout = "block" | "flex" | "flex-col" | "inline-flex" | "grid" | "inline-block" | "inline";
 
 const DIV_LAYOUT_MAP: Record<DivLayout, string> = {
   block: "block",
   flex: "flex",
+  /** `flex flex-col` — for one-off Divs that need a ref Stack can't forward. */
+  "flex-col": "flex flex-col",
   "inline-flex": "inline-flex",
   grid: "grid",
   "inline-block": "inline-block",

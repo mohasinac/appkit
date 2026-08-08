@@ -692,7 +692,10 @@ export function AdminSiteSettingsView({
                 <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">
                   <Span
                     ref={watermarkPreviewRef}
-                    className="select-none font-medium p-1 text-[var(--appkit-color-text-faint)]"
+                    weight="medium"
+                    color="faint"
+                    padding="1"
+                    className="select-none"
                   >
                     {watermarkText}
                   </Span>

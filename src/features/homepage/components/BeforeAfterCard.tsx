@@ -120,7 +120,8 @@ export function BeforeAfterCard({
         {/* Divider */}
         <Div
           ref={dividerRef}
-          className="absolute top-0 bottom-0 z-10 w-0.5 bg-[var(--appkit-color-surface)] shadow-md"
+          shadow="md"
+          className="absolute top-0 bottom-0 z-10 w-0.5 bg-[var(--appkit-color-surface)]"
         >
           <Row className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 bg-card" align="center" justify="center" rounded="full" shadow="lg">
             <svg

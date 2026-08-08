@@ -136,7 +136,9 @@ return (
               {details.map(({ title: dt, text: dx }) => (
                 <Div
                   key={dt}
-                  className={`${themed.bgSecondary} border ${themed.border} rounded-xl p-5`}
+                  rounded="xl"
+                  padding="5"
+                  className={`${themed.bgSecondary} border ${themed.border}`}
                 >
                   <Heading level={3} className="mb-2" weight="semibold">
                     {dt}

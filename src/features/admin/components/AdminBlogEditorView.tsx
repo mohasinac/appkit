@@ -425,7 +425,9 @@ export function AdminBlogEditorView({
   const previewSection = (
     <Div
       key="preview"
-      className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] p-5 max-h-[calc(100vh-12rem)] overflow-y-auto"
+      rounded="lg"
+      padding="5"
+      className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] max-h-[calc(100vh-12rem)] overflow-y-auto"
     >
       <Row textSize="xs" textWeight="semibold" color="muted" className="mb-3 uppercase tracking-wide" align="center" gap="sm">
         <Span>Live preview</Span>

@@ -43,7 +43,8 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-[var(--appkit-color-text)] text-[var(--appkit-color-text)] hover:underline underline-offset-2 line-clamp-2"
+              weight="medium"
+              className="text-[var(--appkit-color-text)] hover:underline underline-offset-2 line-clamp-2"
             >
               {item.meta.title}
             </TextLink>

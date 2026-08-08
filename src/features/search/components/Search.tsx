@@ -483,7 +483,10 @@ export function Search({
 
         {isInlineOpen && (filteredQuickLinks.length > 0 || query) && (
           <Div
-            className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-[var(--appkit-color-surface)] shadow-lg border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] [z-index:var(--appkit-z-dropdown)]"
+            rounded="xl"
+            border="default"
+            shadow="lg"
+            className="absolute top-full left-0 right-0 mt-2 overflow-hidden bg-[var(--appkit-color-surface)] [z-index:var(--appkit-z-dropdown)]"
             onMouseDown={(event) => event.preventDefault()}
           >
             {filteredQuickLinks.length > 0 && (

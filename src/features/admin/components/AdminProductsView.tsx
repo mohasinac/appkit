@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { SIEVE_OP, Stack, sieveFilter, type JsonArray, Div } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter, type JsonArray, Div, Row } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { ListingLayout, Span, Text, Toggle, useToast } from "../../../ui";
@@ -139,8 +139,10 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     header: "Flags",
     className: "w-56",
     render: (row) => (
-      <Div
-        className="flex flex-wrap gap-x-3 gap-y-1"
+      <Row
+        wrap
+        gap="none"
+        className="gap-x-3 gap-y-1"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
         role="presentation"
@@ -156,7 +158,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
             }}
           />
         ))}
-      </Div>
+      </Row>
     ),
   };
 

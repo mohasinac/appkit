@@ -213,7 +213,7 @@ export type GapPresetKey = keyof typeof GAP_PRESETS;
 export const PADDING_PRESETS = PADDING_MAP;
 export type PaddingPresetKey = PaddingKey;
 
-export type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page";
+export type XPaddingKey = "none" | "x-xs" | "x-sm" | "x-md" | "x-5" | "x-lg" | "x-xl" | "x-sm-md" | "x-sm-lg-md" | "x-md-lg" | "x-md-xl" | "x-md-2xl" | "x-page" | "l-xl";
 type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-sm" | "y-sm-tall" | "y-md" | "y-md-lg" | "y-lg" | "y-xl" | "y-2xl" | "y-3xl" | "y-4xl" | "y-5xl" | "y-6xl" | "y-2-5xl" | "t-2xs" | "b-2xs" | "t-xs" | "b-xs" | "t-sm" | "b-sm" | "t-md" | "b-md" | "b-md-lg" | "b-lg" | "t-md-b-lg";
 
 export const X_ONLY_MAP: Record<XPaddingKey, string> = {
@@ -236,6 +236,10 @@ export const X_ONLY_MAP: Record<XPaddingKey, string> = {
   "x-md-2xl": "px-4 sm:px-8",
   /** Responsive: `px-4 sm:px-6 lg:px-8` — canonical page-container horizontal padding. */
   "x-page": "px-4 sm:px-6 lg:px-8",
+  // Asymmetric left one-sided value (for sites that pad just one edge, e.g. a
+  // selection-checkbox gutter).
+  /** Asymmetric: `pl-8` — reserves a left gutter (e.g. for an overlaid selection checkbox). */
+  "l-xl": "pl-8",
 };
 
 const Y_ONLY_MAP: Record<YPaddingKey, string> = {

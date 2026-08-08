@@ -81,7 +81,8 @@ export function Slider({
           <Div className="w-full h-1.5" surface="subtle" rounded="full">
             <Div
               ref={fillRef}
-              className="h-full bg-primary-500 dark:bg-secondary-500 transition-all rounded-full"
+              rounded="full"
+              className="h-full bg-primary-500 dark:bg-secondary-500 transition-all"
             />
           </Div>
         </Row>

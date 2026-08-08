@@ -185,7 +185,9 @@ export function QuickFormDrawer({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed inset-y-0 right-0 flex flex-col bg-[var(--appkit-color-surface)] shadow-2xl w-full lg:w-[40%] [z-index:calc(var(--appkit-z-modal)+2)]"
+        layout="flex-col"
+        shadow="2xl"
+        className="fixed inset-y-0 right-0 bg-[var(--appkit-color-surface)] w-full lg:w-[40%] [z-index:calc(var(--appkit-z-modal)+2)]"
       >
         {/* Header */}
         <Row className="flex-shrink-0 border-b border-[var(--appkit-color-border)]" padding="md" align="center" gap="3">

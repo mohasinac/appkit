@@ -111,7 +111,11 @@ function AuctionRow({
       {expanded && (
         <Div className="border-t border-[var(--appkit-color-border)]">
           <Div
-            className={`grid text-xs font-medium text-[var(--appkit-color-text-muted)] uppercase tracking-wide px-4 py-2 border-b border-[var(--appkit-color-border-subtle)] ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
+            textSize="xs"
+            textWeight="medium"
+            paddingX="x-md"
+            paddingY="y-xs"
+            className={`grid text-[var(--appkit-color-text-muted)] uppercase tracking-wide border-b border-[var(--appkit-color-border-subtle)] ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
           >
             <Span>{portal === "buyer" ? "Amount" : "Bidder"}</Span>
             {portal !== "buyer" && <Span>Amount</Span>}
@@ -121,7 +125,11 @@ function AuctionRow({
           {sorted.map((bid) => (
             <Div
               key={bid.id}
-              className={`grid items-center px-4 py-2.5 border-b border-[var(--appkit-color-border-subtle)] last:border-0 hover:bg-[var(--appkit-color-border-subtle)] transition-colors ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
+              layout="grid"
+              align="center"
+              paddingX="x-md"
+              paddingY="y-xs-tall"
+              className={`border-b border-[var(--appkit-color-border-subtle)] last:border-0 hover:bg-[var(--appkit-color-border-subtle)] transition-colors ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
             >
               {portal !== "buyer" && (
                 <Text className="text-[var(--appkit-color-text)] truncate pr-[0.75rem]" size="sm">

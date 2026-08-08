@@ -114,9 +114,82 @@ export function MarketplaceOrderCard({
   const isListVariant = variant === "list";
   const itemCount = order.items?.length ?? 0;
 
+  const infoBlock = (
+    <>
+      <Row className="h-10 w-10 flex-shrink-0" surface="subtle" align="center" justify="center" rounded="lg">
+        <Package className="h-5 w-5 text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]" />
+      </Row>
+      <Stack className="min-w-0" gap="xs">
+        <TextLink href={detailHref} className="leading-tight">
+          <Text weight="semibold" className="truncate">
+            {order.productTitle ?? shortId}
+          </Text>
+        </TextLink>
+        <Caption className="font-mono">
+          {mergedLabels.orderNumber} {shortId}
+        </Caption>
+        <Caption>
+          {mergedLabels.placedOn} {formatDate(order.orderDate)}
+        </Caption>
+        {itemCount > 1 && (
+          <Caption>
+            {mergedLabels.items}: <Span weight="medium">{itemCount}</Span>
+          </Caption>
+        )}
+      </Stack>
+    </>
+  );
+
+  const statusPriceBlock = (
+    <>
+      <StatusBadge status={status} label={statusLabel} />
+      <Text weight="semibold" className="tabular-nums">
+        {formatCurrency(order.totalPrice, order.currency)}
+      </Text>
+    </>
+  );
+
+  const actionsRow = (
+    <Row align="center" gap="sm" wrap>
+      {(isShipped || isDelivered) &&
+        trackHref &&
+        order.trackingNumber && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className={CLS_ACTION_BUTTON}
+            onClick={() => navigate(trackHref)}
+          >
+            {mergedLabels.trackOrder}
+          </Button>
+        )}
+      {isDelivered && reviewHref && (
+        <Button
+          variant="outline"
+          size="sm"
+          className={CLS_ACTION_BUTTON}
+          onClick={() => navigate(reviewHref)}
+        >
+          {mergedLabels.writeReview}
+        </Button>
+      )}
+      <Button
+        variant="secondary"
+        size="sm"
+        className={CLS_ACTION_BUTTON}
+        onClick={() => navigate(detailHref)}
+      >
+        {mergedLabels.viewOrder}
+      </Button>
+    </Row>
+  );
+
   return (
     <Div
-      className={`group relative overflow-hidden rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] transition-all duration-200 hover:shadow-md border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)] ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
+      rounded="xl"
+      border="subtle"
+      shadow="hover-md"
+      className={`group relative overflow-hidden bg-[var(--appkit-color-surface)] transition-all duration-200 ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
@@ -133,81 +206,44 @@ export function MarketplaceOrderCard({
         />
       )}
 
-      <Div
-        className={`flex gap-4 p-4 ${isListVariant ? "flex-row items-center justify-between" : "flex-col"}`}
-       data-section="marketplaceordercard-div-412">
-        <Div
-          className={`flex items-start gap-3 ${selectable ? "pl-8" : ""} ${isListVariant ? "min-w-0 flex-1" : ""}`}
-         data-section="marketplaceordercard-div-413">
-          <Row className="h-10 w-10 flex-shrink-0" surface="subtle" align="center" justify="center" rounded="lg">
-            <Package className="h-5 w-5 text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]" />
-          </Row>
-          <Stack className="min-w-0" gap="xs">
-            <TextLink href={detailHref} className="leading-tight">
-              <Text weight="semibold" className="truncate">
-                {order.productTitle ?? shortId}
-              </Text>
-            </TextLink>
-            <Caption className="font-mono">
-              {mergedLabels.orderNumber} {shortId}
-            </Caption>
-            <Caption>
-              {mergedLabels.placedOn} {formatDate(order.orderDate)}
-            </Caption>
-            {itemCount > 1 && (
-              <Caption>
-                {mergedLabels.items}: <Span weight="medium">{itemCount}</Span>
-              </Caption>
-            )}
-          </Stack>
-        </Div>
-
-        <Div
-          className={`flex ${isListVariant ? "flex-shrink-0 items-center gap-4" : "flex-col gap-3"}`}
-         data-section="marketplaceordercard-div-416">
+      {isListVariant ? (
+        <Row align="center" justify="between" gap="md" padding="md" data-section="marketplaceordercard-div-412">
           <Div
-            className={`flex ${isListVariant ? "items-center gap-4" : "flex-wrap items-center justify-between gap-3"}`}
-           data-section="marketplaceordercard-div-417">
-            <StatusBadge status={status} label={statusLabel} />
-            <Text weight="semibold" className="tabular-nums">
-              {formatCurrency(order.totalPrice, order.currency)}
-            </Text>
+            layout="flex"
+            align="start"
+            gap="3"
+            paddingX={selectable ? "l-xl" : undefined}
+            className="min-w-0 flex-1"
+           data-section="marketplaceordercard-div-413">
+            {infoBlock}
           </Div>
 
-          <Row align="center" gap="sm" wrap>
-            {(isShipped || isDelivered) &&
-              trackHref &&
-              order.trackingNumber && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={CLS_ACTION_BUTTON}
-                  onClick={() => navigate(trackHref)}
-                >
-                  {mergedLabels.trackOrder}
-                </Button>
-              )}
-            {isDelivered && reviewHref && (
-              <Button
-                variant="outline"
-                size="sm"
-                className={CLS_ACTION_BUTTON}
-                onClick={() => navigate(reviewHref)}
-              >
-                {mergedLabels.writeReview}
-              </Button>
-            )}
-            <Button
-              variant="secondary"
-              size="sm"
-              className={CLS_ACTION_BUTTON}
-              onClick={() => navigate(detailHref)}
-            >
-              {mergedLabels.viewOrder}
-            </Button>
+          <Row align="center" gap="md" className="flex-shrink-0" data-section="marketplaceordercard-div-416">
+            <Row align="center" gap="md" data-section="marketplaceordercard-div-417">
+              {statusPriceBlock}
+            </Row>
+            {actionsRow}
           </Row>
-        </Div>
-      </Div>
+        </Row>
+      ) : (
+        <Stack gap="md" padding="md" data-section="marketplaceordercard-div-412">
+          <Div
+            layout="flex"
+            align="start"
+            gap="3"
+            paddingX={selectable ? "l-xl" : undefined}
+           data-section="marketplaceordercard-div-413">
+            {infoBlock}
+          </Div>
+
+          <Stack gap="3" data-section="marketplaceordercard-div-416">
+            <Row wrap align="center" justify="between" gap="3" data-section="marketplaceordercard-div-417">
+              {statusPriceBlock}
+            </Row>
+            {actionsRow}
+          </Stack>
+        </Stack>
+      )}
     </Div>
   );
 }

@@ -83,7 +83,12 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
       target={creative.ctaHref ? "_blank" : undefined}
       rel="noopener noreferrer"
       underline="none"
-      className="flex items-center gap-3 w-full overflow-hidden rounded-lg bg-[var(--appkit-color-surface)] px-4 py-3 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+      layout="flex"
+      gap="lg"
+      rounded="lg"
+      padding="inline"
+      hoverSurface="subtle"
+      className="w-full overflow-hidden bg-[var(--appkit-color-surface)]"
     >
       {creative.imageUrl ? (
         <img
