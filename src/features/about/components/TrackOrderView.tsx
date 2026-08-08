@@ -111,7 +111,7 @@ export async function TrackOrderView({
           </Heading>
           <Grid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4" gap="lg">
             {STEPS.map(({ icon: Icon, title, text, color, bg }, index) => (
-              <div
+              <Div
                 key={title}
                 className={`${themed.bgSecondary} rounded-xl border ${themed.border} p-6 relative`}
               >
@@ -127,7 +127,7 @@ export async function TrackOrderView({
                 <Text variant="secondary" size="sm" className="leading-relaxed">
                   {text}
                 </Text>
-              </div>
+              </Div>
             ))}
           </Grid>
         </Section>

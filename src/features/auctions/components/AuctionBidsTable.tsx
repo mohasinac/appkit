@@ -110,16 +110,16 @@ function AuctionRow({
 
       {expanded && (
         <Div className="border-t border-[var(--appkit-color-border)]">
-          <div
+          <Div
             className={`grid text-xs font-medium text-[var(--appkit-color-text-muted)] uppercase tracking-wide px-4 py-2 border-b border-[var(--appkit-color-border-subtle)] ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
           >
             <Span>{portal === "buyer" ? "Amount" : "Bidder"}</Span>
             {portal !== "buyer" && <Span>Amount</Span>}
             <Span>Status</Span>
             <Span className="text-right">Time</Span>
-          </div>
+          </Div>
           {sorted.map((bid) => (
-            <div
+            <Div
               key={bid.id}
               className={`grid items-center px-4 py-2.5 border-b border-[var(--appkit-color-border-subtle)] last:border-0 hover:bg-[var(--appkit-color-border-subtle)] transition-colors ${portal === "buyer" ? "[grid-template-columns:1fr_auto_auto]" : "[grid-template-columns:1fr_1fr_auto_auto]"}`}
             >
@@ -137,7 +137,7 @@ function AuctionRow({
               <Text variant="secondary" size="xs" align="end">
                 {relDate(bid.bidDate)}
               </Text>
-            </div>
+            </Div>
           ))}
         </Div>
       )}

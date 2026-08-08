@@ -11,6 +11,7 @@ import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import {
   ThemeManagerView,
   type ThemeManagerValue,
@@ -626,7 +627,7 @@ export function AdminSiteSettingsView({
             <Form onSubmit={(e) => { e.preventDefault(); announcementMutation.mutate(); }} className="pt-4" spacing="md">
               <Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} />
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
-              <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder="/products" disabled={!announcementEnabled} />
+              <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
               <Stack gap="none">
                 <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
                 <Input type="color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 cursor-pointer" bare disabled={!announcementEnabled} /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
@@ -689,12 +690,12 @@ export function AdminSiteSettingsView({
               <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
                 <Text size="xs" color="muted">Preview (text watermark only)</Text>
                 <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">
-                  <span
+                  <Span
                     ref={watermarkPreviewRef}
                     className="select-none font-medium p-1 text-[var(--appkit-color-text-faint)]"
                   >
                     {watermarkText}
-                  </span>
+                  </Span>
                 </Row>
               </Stack>
               <GroupSaveButton isPending={watermarkMutation.isPending} />

@@ -79,7 +79,7 @@ export function Slider({
         {/* Track background */}
         <Row className="absolute inset-y-0 w-full" align="center">
           <Div className="w-full h-1.5" surface="subtle" rounded="full">
-            <div
+            <Div
               ref={fillRef}
               className="h-full bg-primary-500 dark:bg-secondary-500 transition-all rounded-full"
             />

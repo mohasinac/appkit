@@ -112,7 +112,7 @@ export function SellerGoogleReviewsView({
     return (
       <Stack gap="md" paddingY="y-lg" paddingX="x-md">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div
+          <Div
             key={i}
             className="h-12 animate-pulse rounded-xl border border-zinc-100 border-[var(--appkit-color-border)] bg-zinc-50 bg-[var(--appkit-color-surface-elevated)]"
           />

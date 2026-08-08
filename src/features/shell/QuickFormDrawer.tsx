@@ -180,7 +180,7 @@ export function QuickFormDrawer({
       />
 
       {/* Drawer panel: 100% mobile / 40% desktop */}
-      <div
+      <Div
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
@@ -269,7 +269,7 @@ export function QuickFormDrawer({
             {submitLabel} →
           </Button>
         </Row>
-      </div>
+      </Div>
     </>
   );
 }

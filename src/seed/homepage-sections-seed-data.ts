@@ -15,6 +15,7 @@
 
 import type { HomepageSectionDocument } from "../features/homepage/schemas";
 import { seedExtMedia } from "./_helpers/media";
+import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -31,7 +32,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       description: "Buy, sell, and auction collectibles from verified sellers across India. Pokémon, Yu-Gi-Oh!, Hot Wheels, Gundam, Beyblade, Funko Pop, and thousands more — all with secure escrow payments and authenticity guarantees.",
       showCTA: true,
       ctaText: "Start Shopping",
-      ctaLink: "/products",
+      ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(2),
@@ -185,7 +186,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         description: "The ultimate Yu-Gi-Oh! flex. Find every Exodia printing on LetItRip.",
       },
       buttons: [
-        { text: "Shop Exodia", link: "/products?q=exodia", variant: "primary" },
+        { text: "Shop Exodia", link: `${String(ROUTES.PUBLIC.PRODUCTS)}?q=exodia`, variant: "primary" },
         { text: "Exodia Guide", link: "/blog/complete-exodia-guide", variant: "outline" },
       ],
       clickable: false,
@@ -336,7 +337,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       placeholder: "Enter your email address",
       buttonText: "Subscribe",
       privacyText: "We respect your privacy. Unsubscribe anytime.",
-      privacyLink: "/privacy",
+      privacyLink: String(ROUTES.PUBLIC.PRIVACY),
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(12),

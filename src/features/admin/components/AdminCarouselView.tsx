@@ -162,7 +162,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       key: "drag",
       header: "",
       render: (row) => (
-        <div
+        <Div
           draggable
           onDragStart={() => handleDragStart(row.id)}
           onDragOver={(e) => e.preventDefault()}
@@ -171,7 +171,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
           title="Drag to reorder"
         >
           ⠿
-        </div>
+        </Div>
       ),
     },
     {

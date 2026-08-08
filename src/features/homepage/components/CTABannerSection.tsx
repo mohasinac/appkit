@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 export interface CTABannerSectionProps {
   title?: string;
   subtitle?: string;
@@ -15,9 +16,9 @@ export function CTABannerSection({
   title = "Thousands of collectibles. One marketplace.",
   subtitle,
   primaryLabel = "Shop All Products →",
-  primaryHref = "/products",
+  primaryHref = String(ROUTES.PUBLIC.PRODUCTS),
   secondaryLabel = "Browse Auctions →",
-  secondaryHref = "/auctions",
+  secondaryHref = String(ROUTES.PUBLIC.AUCTIONS),
   className = "",
 }: CTABannerSectionProps) {
   return (

@@ -15,6 +15,7 @@ import {
 } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 
 // --- Types -------------------------------------------------------------------
 
@@ -147,7 +148,7 @@ export function AdminNavEditorView({
           value={href}
           onChange={(e) => setHref(e.target.value)}
           required
-          placeholder="/products"
+          placeholder={String(ROUTES.PUBLIC.PRODUCTS)}
           helperText="Use relative paths (e.g. /products) or full URLs."
         />
 

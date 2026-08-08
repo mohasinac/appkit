@@ -2,6 +2,7 @@
 
 import React, { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "../ui/components/Button";
+import { Div } from "../ui/components/Div";
 import { Heading, Text } from "../ui/components/Typography";
 
 export interface ErrorBoundaryProps {
@@ -24,7 +25,7 @@ function DefaultFallback({
   onReset: () => void;
 }) {
   return (
-    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] p-6 text-center border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" data-section="errorboundary-div-445">
+    <Div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] p-6 text-center border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" data-section="errorboundary-div-445">
       <Heading level={2}>Something went wrong</Heading>
       <Text variant="secondary">
         An unexpected error occurred. Please try again.
@@ -37,7 +38,7 @@ function DefaultFallback({
       <Button type="button" onClick={onReset}>
         Try again
       </Button>
-    </div>
+    </Div>
   );
 }
 

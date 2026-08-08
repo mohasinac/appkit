@@ -3,6 +3,7 @@ import {
   makeHomepageSection,
   type SeedHomepageSectionDocument,
 } from "../factories/homepage-section.factory";
+import { ROUTES } from "../../next/routing/route-map";
 
 export const DEFAULT_HOMEPAGE_SECTIONS: SeedHomepageSectionDocument[] = [
   makeHomepageSection("hero", {
@@ -12,7 +13,7 @@ export const DEFAULT_HOMEPAGE_SECTIONS: SeedHomepageSectionDocument[] = [
       title: "Welcome to Our Store",
       subtitle: "Discover the best products at unbeatable prices.",
       ctaLabel: "Shop Now",
-      ctaUrl: "/products",
+      ctaUrl: String(ROUTES.PUBLIC.PRODUCTS),
       backgroundImage: "",
     },
   }),

@@ -64,7 +64,7 @@ function ChartCard({
       className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden ${className}`} rounded="xl" shadow="sm"
     >
       {/* brand gradient top accent */}
-      <div
+      <Div
         className="absolute top-0 left-0 right-0 h-[3px] [background:linear-gradient(to_right,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_55%,var(--appkit-color-secondary-400)_100%)]"
         aria-hidden="true"
       />

@@ -134,7 +134,7 @@ return (
             )}
             <Grid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mb-12">
               {details.map(({ title: dt, text: dx }) => (
-                <div
+                <Div
                   key={dt}
                   className={`${themed.bgSecondary} border ${themed.border} rounded-xl p-5`}
                 >
@@ -148,7 +148,7 @@ return (
                   >
                     {dx}
                   </Text>
-                </div>
+                </Div>
               ))}
             </Grid>
           </>

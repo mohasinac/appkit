@@ -101,7 +101,7 @@ export function SellerCouponEditorView({
   return (
     <Form onSubmit={handleSubmit} noValidate>
       <Stack gap="none" className={`max-w-lg mx-auto border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`} rounded="xl" shadow="sm">
-        <div
+        <Div
           className="h-[3px] w-full [background:linear-gradient(to_right,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_55%,var(--appkit-color-secondary-400)_100%)]"
           aria-hidden="true"
         />

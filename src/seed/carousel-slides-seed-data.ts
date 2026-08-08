@@ -15,6 +15,7 @@
 
 import type { CarouselSlideDocument } from "../features/homepage/schemas";
 import { seedExtMedia } from "./_helpers/media";
+import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -45,7 +46,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
-    link: { url: "/auctions", openInNewTab: false },
+    link: { url: String(ROUTES.PUBLIC.AUCTIONS), openInNewTab: false },
     settings: { autoplayDelayMs: 5000, height: "tall" },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(55),
@@ -61,7 +62,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
       dimOverlay: { enabled: true, opacity: 0.45 },
     },
-    link: { url: "/products?q=exodia", openInNewTab: false },
+    link: { url: `${String(ROUTES.PUBLIC.PRODUCTS)}?q=exodia`, openInNewTab: false },
     settings: { autoplayDelayMs: 5000, height: "tall" },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(50),

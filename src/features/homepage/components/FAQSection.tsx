@@ -179,7 +179,7 @@ const flex = { between: FLEX_BETWEEN };
           {visibleItems.map((faq) => {
             const isOpen = openIds.has(faq.id);
             return (
-              <div
+              <Div
                 key={faq.id}
                 className={`${themed.bgPrimary} rounded-xl overflow-hidden border transition-all duration-200 ${
  isOpen ? "border-primary/40 shadow-sm" : `${themed.border}`
@@ -229,7 +229,7 @@ const flex = { between: FLEX_BETWEEN };
                     </Div>
                   </Div>
                 </Div>
-              </div>
+              </Div>
             );
           })}
         </Stack>

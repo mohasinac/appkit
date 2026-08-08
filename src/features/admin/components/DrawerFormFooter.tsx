@@ -1,4 +1,4 @@
-import { Button, Row } from "@mohasinac/appkit/ui";
+import { Button, Row, Div } from "@mohasinac/appkit/ui";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../../products/constants/action-defs";
 
 /**
@@ -66,7 +66,7 @@ export function DrawerFormFooter({
   const l = { ...DEFAULT_LABELS, ...labels };
 
   return (
-    <div
+    <Div
       className={`flex items-center gap-3${
  variant === "inline" ? ` pt-4 ${themeConfig.borderClass}` : ""
  } ${className}`}
@@ -101,6 +101,6 @@ export function DrawerFormFooter({
           {isLoading ? l.saving : l.submit}
         </Button>
       </Row>
-    </div>
+    </Div>
   );
 }

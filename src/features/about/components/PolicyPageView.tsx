@@ -81,7 +81,7 @@ export async function PolicyPageView({
       <Div className={`${page.container.sm}`} padding="content-banner">
         {adminHtml ? (
           /* Admin-set HTML takes priority */
-          <div
+          <Div
             className="prose prose-neutral dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: adminHtml }}
           />

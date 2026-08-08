@@ -15,6 +15,7 @@
 
 import type { NotificationDocument } from "../features/admin/schemas";
 import { NOTIFICATION_FIELDS } from "../features/admin/schemas";
+import { ROUTES } from "../next/routing/route-map";
 
 const NOW = new Date();
 const hoursAgo = (n: number) => new Date(NOW.getTime() - n * 3_600_000);
@@ -137,7 +138,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     priority: "normal",
     title: "Welcome to LetItRip, Yugi!",
     message: "Your account is ready. Start browsing verified Yu-Gi-Oh! cards from sellers across India.",
-    actionUrl: "/products",
+    actionUrl: String(ROUTES.PUBLIC.PRODUCTS),
     actionLabel: "Start Shopping",
     isRead: true,
     readAt: daysAgo(30),

@@ -204,7 +204,7 @@ export function MarketplaceBundleCard({
             {mergedLabels.itemsLabel(memberCount)}
           </Text>
         </Row>
-        <div
+        <Div
           className={CLS_VIEW_BTN}
           role="button"
           tabIndex={0}
@@ -212,7 +212,7 @@ export function MarketplaceBundleCard({
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNavigate(); }}
         >
           View Bundle
-        </div>
+        </Div>
       </BaseListingCard.Info>
     </BaseListingCard>
   );

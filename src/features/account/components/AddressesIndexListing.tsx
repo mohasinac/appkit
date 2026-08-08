@@ -119,14 +119,14 @@ export function AddressesIndexListing({
         {isLoading ? (
           <Div layout="grid" gap="4" className="sm:grid-cols-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div
+              <Div
                 key={i}
                 className="rounded-xl border border-[var(--appkit-color-border)] animate-pulse p-4 space-y-2"
               >
                 <Div className="h-4 w-1/3" surface="subtle" rounded="default" />
                 <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
                 <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
-              </div>
+              </Div>
             ))}
           </Div>
         ) : addresses.length === 0 ? (

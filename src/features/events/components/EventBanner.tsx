@@ -3,6 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 import React, { useEffect, useMemo, useState } from "react";
 import { useEvents } from "../hooks/useEvents";
 import { Button, Section, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { EventItem } from "../types";
 
 export interface EventBannerProps {
@@ -20,7 +21,7 @@ export interface EventBannerProps {
 export function EventBanner({
   storageKey = "dismissed_event_banners",
   className = "",
-  saleHref = "/products",
+  saleHref = String(ROUTES.PUBLIC.PRODUCTS),
   getOfferHref = (eventId: string) => `/events/${eventId}`,
   labels,
 }: EventBannerProps) {

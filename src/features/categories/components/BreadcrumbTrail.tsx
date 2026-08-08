@@ -1,6 +1,7 @@
 import React from "react";
 import { Breadcrumb } from "../../../ui";
 import type { BreadcrumbItem } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { CategoryItem, CategoryAncestor } from "../types";
 
 // --- BreadcrumbTrail ----------------------------------------------------------
@@ -54,8 +55,8 @@ export interface BreadcrumbTrailProps {
 export function BreadcrumbTrail({
   category,
   rootLabel = "All Categories",
-  rootHref = "/categories",
-  basePath = "/categories",
+  rootHref = String(ROUTES.PUBLIC.CATEGORIES),
+  basePath = String(ROUTES.PUBLIC.CATEGORIES),
   showCurrent = true,
   className,
 }: BreadcrumbTrailProps) {

@@ -58,7 +58,7 @@ export function EventLeaderboard({
             {renderEntry(entry, i)}
           </React.Fragment>
         ) : (
-          <div
+          <Div
             key={entry.userId}
             className="flex items-center justify-between p-3 rounded-xl border"
            data-section="eventleaderboard-div-282">
@@ -68,7 +68,7 @@ export function EventLeaderboard({
             <Span>
               {entry.totalPoints} {labels.points ?? "pts"}
             </Span>
-          </div>
+          </Div>
         ),
       )}
     </Stack>

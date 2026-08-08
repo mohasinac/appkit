@@ -423,7 +423,7 @@ export function AdminBlogEditorView({
   }
 
   const previewSection = (
-    <div
+    <Div
       key="preview"
       className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] p-5 max-h-[calc(100vh-12rem)] overflow-y-auto"
     >
@@ -459,7 +459,7 @@ export function AdminBlogEditorView({
           ))}
         </Row>
       ) : null}
-    </div>
+    </Div>
   );
 
   return (

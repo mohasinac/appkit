@@ -71,7 +71,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
         {/* Category cards */}
         <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-2">
           {SCAM_CATEGORIES.map((cat) => (
-            <div
+            <Div
               key={cat.id}
               className="flex gap-3 rounded-lg border border-[color:var(--appkit-color-border,theme(colors.zinc.200))] bg-[color:var(--appkit-color-surface,theme(colors.zinc.50))] p-3"
             >
@@ -86,7 +86,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
                   {cat.description}
                 </Text>
               </Stack>
-            </div>
+            </Div>
           ))}
         </Div>
 

@@ -10,6 +10,7 @@ import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSele
 import { Button, Checkbox, ConfirmDeleteModal, Div, Form, FormActions, Input, Modal, Row, Select, Stack, Text, Textarea, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, DEMO_ENDPOINTS } from "../../../constants";
+import { ROUTES } from "../../../next/routing/route-map";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
 import { DataTable } from "./DataTable";
 import {
@@ -1440,7 +1441,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Input label="Email placeholder" value={newsletterBuilder.placeholder} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, placeholder: e.target.value }))} />
         <Input label="Button text" value={newsletterBuilder.buttonText} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, buttonText: e.target.value }))} />
         <Input label="Privacy text" value={newsletterBuilder.privacyText} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, privacyText: e.target.value }))} />
-        <Input label="Privacy link" value={newsletterBuilder.privacyLink} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, privacyLink: e.target.value }))} placeholder="/privacy" />
+        <Input label="Privacy link" value={newsletterBuilder.privacyLink} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, privacyLink: e.target.value }))} placeholder={String(ROUTES.PUBLIC.PRIVACY)} />
       </Div>
     );
   }
@@ -1473,7 +1474,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         </Stack>
         <Checkbox checked={bannerBuilder.clickable} label="Make entire banner clickable" onChange={(e) => setBannerBuilder((prev) => ({ ...prev, clickable: e.target.checked }))} />
         {bannerBuilder.clickable ? (
-          <Input label="Click link" value={bannerBuilder.clickLink} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, clickLink: e.target.value }))} placeholder="/products" />
+          <Input label="Click link" value={bannerBuilder.clickLink} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, clickLink: e.target.value }))} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} />
         ) : null}
       </Div>
     );
@@ -1564,7 +1565,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         {welcomeBuilder.showCTA ? (
           <>
             <Input label="CTA text" value={welcomeBuilder.ctaText} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, ctaText: e.target.value }))} />
-            <Input label="CTA link" value={welcomeBuilder.ctaLink} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, ctaLink: e.target.value }))} placeholder="/products" />
+            <Input label="CTA link" value={welcomeBuilder.ctaLink} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, ctaLink: e.target.value }))} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} />
           </>
         ) : null}
       </Div>

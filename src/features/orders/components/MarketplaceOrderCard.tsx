@@ -1,7 +1,7 @@
 "use client"
 import { useCallback } from "react";
 import { Package } from "lucide-react";
-import { BaseListingCard, Button, Caption, Row, Span, Stack, StatusBadge, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Button, Caption, Row, Span, Stack, StatusBadge, Text, TextLink, Div } from "../../../ui";
 import { formatCurrency, formatDate } from "../../../utils";
 import { OrderStatusValues } from "../schemas";
 import { useLongPress } from "../../../react/hooks/useLongPress";
@@ -115,7 +115,7 @@ export function MarketplaceOrderCard({
   const itemCount = order.items?.length ?? 0;
 
   return (
-    <div
+    <Div
       className={`group relative overflow-hidden rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] transition-all duration-200 hover:shadow-md border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)] ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
       onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
       onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
@@ -133,10 +133,10 @@ export function MarketplaceOrderCard({
         />
       )}
 
-      <div
+      <Div
         className={`flex gap-4 p-4 ${isListVariant ? "flex-row items-center justify-between" : "flex-col"}`}
        data-section="marketplaceordercard-div-412">
-        <div
+        <Div
           className={`flex items-start gap-3 ${selectable ? "pl-8" : ""} ${isListVariant ? "min-w-0 flex-1" : ""}`}
          data-section="marketplaceordercard-div-413">
           <Row className="h-10 w-10 flex-shrink-0" surface="subtle" align="center" justify="center" rounded="lg">
@@ -160,19 +160,19 @@ export function MarketplaceOrderCard({
               </Caption>
             )}
           </Stack>
-        </div>
+        </Div>
 
-        <div
+        <Div
           className={`flex ${isListVariant ? "flex-shrink-0 items-center gap-4" : "flex-col gap-3"}`}
          data-section="marketplaceordercard-div-416">
-          <div
+          <Div
             className={`flex ${isListVariant ? "items-center gap-4" : "flex-wrap items-center justify-between gap-3"}`}
            data-section="marketplaceordercard-div-417">
             <StatusBadge status={status} label={statusLabel} />
             <Text weight="semibold" className="tabular-nums">
               {formatCurrency(order.totalPrice, order.currency)}
             </Text>
-          </div>
+          </Div>
 
           <Row align="center" gap="sm" wrap>
             {(isShipped || isDelivered) &&
@@ -206,8 +206,8 @@ export function MarketplaceOrderCard({
               {mergedLabels.viewOrder}
             </Button>
           </Row>
-        </div>
-      </div>
-    </div>
+        </Div>
+      </Div>
+    </Div>
   );
 }

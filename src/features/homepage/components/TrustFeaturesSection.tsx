@@ -33,7 +33,7 @@ function TrustFeatureCard({
   delayClass: string;
 }) {
   return (
-    <div
+    <Div
       className={[
         "flex flex-col items-center text-center p-4",
         "transition-all duration-500",
@@ -64,7 +64,7 @@ function TrustFeatureCard({
       <Text className="leading-relaxed" color="muted" size="xs">
         {item.description}
       </Text>
-    </div>
+    </Div>
   );
 }
 

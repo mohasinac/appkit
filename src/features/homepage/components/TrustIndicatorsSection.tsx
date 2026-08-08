@@ -35,7 +35,7 @@ return (
           className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4"
         >
           {items.map((indicator, index) => (
-            <div
+            <Div
               key={index}
               className="text-center p-4 rounded-2xl bg-[var(--appkit-color-surface)] border border-zinc-100 border-[var(--appkit-color-border-subtle)] hover:shadow-md transition-shadow"
             >
@@ -51,7 +51,7 @@ return (
               <Text className={`${themed.textSecondary}`} size="xs">
                 {indicator.description}
               </Text>
-            </div>
+            </Div>
           ))}
         </Grid>
       </Div>

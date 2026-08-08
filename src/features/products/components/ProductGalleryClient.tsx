@@ -55,7 +55,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
   return (
     <Stack gap="3">
       {/* Main image — click to open lightbox */}
-      <div
+      <Div
         className="overflow-hidden rounded-xl border border-[var(--appkit-color-border-subtle)] cursor-zoom-in aspect-square w-full"
         onClick={() => setLightboxIndex(activeIndex)}
         role="button"
@@ -71,7 +71,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
           size="gallery"
           className="transition-transform duration-300 hover:scale-105"
         />
-      </div>
+      </Div>
 
       {/* Thumbnail strip */}
       {images.length > 1 && (

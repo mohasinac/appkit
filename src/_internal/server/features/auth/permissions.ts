@@ -11,6 +11,7 @@
 
 import { userRepository } from "../../../../repositories";
 import type { Permission } from "../../../../features/auth/permissions/constants";
+import { ROUTES } from "../../../../next/routing/route-map";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -103,7 +104,7 @@ export function makeAdminSectionLayout(
 
     const user = await opts.getUser();
     if (!user) {
-      redirect(opts.loginPath ?? "/auth/login");
+      redirect(opts.loginPath ?? String(ROUTES.AUTH.LOGIN));
       return null;
     }
 
@@ -112,13 +113,13 @@ export function makeAdminSectionLayout(
 
     // non-employee non-admin roles have no business in /admin
     if (user.role !== "employee") {
-      redirect(opts.unauthorizedPath ?? "/unauthorized");
+      redirect(opts.unauthorizedPath ?? String(ROUTES.ERRORS.UNAUTHORIZED));
       return null;
     }
 
     const resolved = await getServerPermissions(user.uid);
     if (!checkPermission(resolved, permission)) {
-      redirect(opts.unauthorizedPath ?? "/unauthorized");
+      redirect(opts.unauthorizedPath ?? String(ROUTES.ERRORS.UNAUTHORIZED));
       return null;
     }
 

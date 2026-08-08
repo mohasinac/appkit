@@ -139,7 +139,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
             </Link>
             <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
             <Link
-              href={String((ROUTES.PUBLIC as any).BRANDS ?? "/brands")}
+              href={String(ROUTES.PUBLIC.BRANDS)}
               className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 transition-colors"}
             >
               Brands

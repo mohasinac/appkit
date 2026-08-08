@@ -104,7 +104,7 @@ export function BeforeAfterCard({
         />
 
         {/* Before image — clipped to left of divider */}
-        <div
+        <Div
           ref={beforeClipRef}
           className="absolute inset-0 overflow-hidden"
         >
@@ -115,10 +115,10 @@ export function BeforeAfterCard({
             sizes="(max-width: 640px) 100vw, 50vw"
             className="object-cover"
           />
-        </div>
+        </Div>
 
         {/* Divider */}
-        <div
+        <Div
           ref={dividerRef}
           className="absolute top-0 bottom-0 z-10 w-0.5 bg-[var(--appkit-color-surface)] shadow-md"
         >
@@ -139,7 +139,7 @@ export function BeforeAfterCard({
               />
             </svg>
           </Row>
-        </div>
+        </Div>
 
         {/* Labels */}
         <Span surface="overlay-sm" color="inverse" size="xs" weight="medium" className="absolute top-3 left-3 z-10" padding="pill-sm" rounded="full">

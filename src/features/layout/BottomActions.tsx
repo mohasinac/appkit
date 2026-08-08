@@ -57,7 +57,7 @@ function BulkPickerPanel({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div
+    <Div
       role="listbox"
       aria-label="Bulk actions"
       className={[
@@ -109,7 +109,7 @@ function BulkPickerPanel({
           </Button>
         );
       })}
-    </div>
+    </Div>
   );
 }
 
@@ -217,7 +217,7 @@ export default function BottomActions() {
   };
 
   return (
-    <div
+    <Div
       ref={containerRef}
       role="toolbar"
       aria-label={
@@ -347,6 +347,6 @@ export default function BottomActions() {
           <PageActionsRow pageActions={pageActions} dispatchAction={dispatchAction} />
         )}
       </Row>
-    </div>
+    </Div>
   );
 }

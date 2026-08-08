@@ -57,7 +57,7 @@ return (
           className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {features.map((feature) => (
-            <div
+            <Div
               key={feature.id}
               className="p-6 text-center hover:shadow-lg transition-all group rounded-2xl bg-[var(--appkit-color-surface)] border border-zinc-100 border-[var(--appkit-color-border-subtle)]"
             >
@@ -78,7 +78,7 @@ return (
               <Text className={`${themed.textSecondary}`} size="base">
                 {feature.description}
               </Text>
-            </div>
+            </Div>
           ))}
         </Grid>
       </Div>

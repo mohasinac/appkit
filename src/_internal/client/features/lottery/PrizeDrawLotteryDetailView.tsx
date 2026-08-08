@@ -12,6 +12,7 @@ import {
   Div,
   Anchor,
 } from "../../../../ui";
+import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
@@ -104,7 +105,7 @@ export function PrizeDrawLotteryDetailView({
                 <Stack gap="md" className="text-center">
                   <Heading level={2} size="xl" weight="semibold">Want to Enter?</Heading>
                   <Text color="muted">Log in to submit your entry.</Text>
-                  <Anchor href="/login" tone="brand">
+                  <Anchor href={String(ROUTES.AUTH.LOGIN)} tone="brand">
                     Log In to Enter
                   </Anchor>
                 </Stack>

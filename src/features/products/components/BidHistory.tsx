@@ -92,7 +92,7 @@ export function BidHistory({
           renderBid ? (
             <React.Fragment key={bid.id}>{renderBid(bid, i)}</React.Fragment>
           ) : (
-            <div
+            <Div
               key={bid.id}
               className="flex items-center justify-between rounded-lg border border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)] p-3 text-sm"
              data-section="bidhistory-div-422">
@@ -102,7 +102,7 @@ export function BidHistory({
               <Span size="xs" color="muted">
                 {formatBidDate(bid.placedAt)}
               </Span>
-            </div>
+            </Div>
           ),
         )}
       </Stack>

@@ -66,7 +66,7 @@ function ListingThumb({
       aria-label={listing.title}
       className="flex flex-col items-center gap-1.5 flex-shrink-0 w-16 group"
     >
-      <div
+      <Div
         className={`w-14 h-14 rounded-full overflow-hidden border-2 transition-all ${
  isCurrent
  ? "border-[var(--appkit-color-primary)] ring-2 ring-[var(--appkit-color-primary)]/30"
@@ -86,7 +86,7 @@ function ListingThumb({
             â—¯
           </Row>
         )}
-      </div>
+      </Div>
       <Text className="text-[10px] leading-tight line-clamp-2 w-full" color="muted" align="center">
         {listing.title}
       </Text>

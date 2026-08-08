@@ -9,6 +9,7 @@ import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { JsonValue, JsonObject } from "../../../schemas/types";
 
@@ -533,7 +534,7 @@ export function AdminCarouselEditorView({
             <Stack className={`${__P.p3}`} gap="sm" rounded="lg" border="default">
               <Text size="sm" weight="medium">CTA button</Text>
               <Input label="Button text" value={overlayBtnText} onChange={(e) => setOverlayBtnText(e.target.value)} placeholder="Shop Now" />
-              <Input label="Button link" value={overlayBtnLink} onChange={(e) => setOverlayBtnLink(e.target.value)} placeholder="/products" />
+              <Input label="Button link" value={overlayBtnLink} onChange={(e) => setOverlayBtnLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} />
               <Select
                 label="Variant"
                 value={overlayBtnVariant}

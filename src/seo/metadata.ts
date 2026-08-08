@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ROUTES } from "../next/routing/route-map";
 
 export interface SeoConfig {
   siteName: string;
@@ -294,7 +295,7 @@ export function generateSearchMetadata(
         "search",
         seoConfig.siteName,
       ],
-      path: q ? `/search?q=${encodeURIComponent(q)}` : "/search",
+      path: q ? `${String(ROUTES.PUBLIC.SEARCH)}?q=${encodeURIComponent(q)}` : String(ROUTES.PUBLIC.SEARCH),
       noIndex: true,
     },
     seoConfig,

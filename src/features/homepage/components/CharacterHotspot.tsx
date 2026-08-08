@@ -5,6 +5,7 @@ import Link from "next/link";
 import { GRID_COLS_6_LG } from "../../../_internal/shared/styles/grid";
 import { useMediaQuery } from "../../../react";
 import { Button, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { CharacterHotspotConfig, HotspotPin as HotspotPinData } from "../types";
 
 const __O = {
@@ -199,7 +200,7 @@ export function CharacterHotspot({
   config,
   defaultHotspots = DEFAULT_HOTSPOTS,
   universeLinks,
-  shopAllHref = "/search",
+  shopAllHref = String(ROUTES.PUBLIC.SEARCH),
   heading = "HEROES & LEGENDS",
   subheading,
 }: CharacterHotspotProps) {

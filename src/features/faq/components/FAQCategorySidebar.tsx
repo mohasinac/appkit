@@ -1,4 +1,5 @@
 import { Card, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
 import type { FAQCategory } from "../types";
 
 export interface FAQCategoryItem {
@@ -29,7 +30,7 @@ export function FAQCategorySidebar({
   onCategorySelect,
   categoryCounts,
   categories,
-  allFaqsHref = "/faqs",
+  allFaqsHref = String(ROUTES.PUBLIC.FAQS),
   categoryHref,
   contactHref,
   labels,

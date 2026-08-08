@@ -62,7 +62,7 @@ export function FeaturedBundlesSection({
             )}
           </Stack>
           <Link
-            href={String(ROUTES.PUBLIC.BUNDLES ?? "/bundles")}
+            href={String(ROUTES.PUBLIC.BUNDLES)}
             className="text-sm font-medium text-[var(--appkit-color-primary)] hover:underline"
           >
             {BUNDLE_COPY.featured.viewAll}

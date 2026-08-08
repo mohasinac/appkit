@@ -1,4 +1,5 @@
 import type { FirestoreDocument } from "@mohasinac/appkit";
+import { ROUTES } from "../../../../next/routing/route-map";
 const LABEL_VERIFIED_SELLERS = "Verified Sellers";
 
 export const SECTION_TYPE_OPTIONS = [
@@ -492,7 +493,7 @@ export const DEFAULT_WELCOME_BUILDER: WelcomeBuilderState = {
   description: "",
   showCTA: true,
   ctaText: "Shop Now",
-  ctaLink: "/products",
+  ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
 };
 
 export const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
@@ -583,7 +584,7 @@ export const DEFAULT_NEWSLETTER_BUILDER: NewsletterBuilderState = {
   placeholder: "Enter your email",
   buttonText: "Subscribe",
   privacyText: "We respect your privacy. Unsubscribe anytime.",
-  privacyLink: "/privacy",
+  privacyLink: String(ROUTES.PUBLIC.PRIVACY),
 };
 
 export const DEFAULT_CAROUSEL_BUILDER: CarouselBuilderState = {

@@ -229,7 +229,7 @@ export function SellerPayoutMethodsView({
         ) : (
           <Stack gap="3">
             {rows.map((row) => (
-              <div
+              <Div
                 key={row.id}
                 className="rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-3"
               >
@@ -281,7 +281,7 @@ export function SellerPayoutMethodsView({
                     </Button>
                   </Row>
                 </Row>
-              </div>
+              </Div>
             ))}
           </Stack>
         )}

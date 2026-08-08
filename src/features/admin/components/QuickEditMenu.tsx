@@ -55,7 +55,7 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
 
   return (
     <>
-      <div
+      <Div
         ref={menuRef}
         className="appkit-row-action-menu"
         onClick={(e) => e.stopPropagation()}
@@ -73,7 +73,7 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
         </Button>
 
         {menuOpen && (
-          <div
+          <Div
             role="menu"
             className={`appkit-row-action-menu__dropdown ${align === "right" ? "appkit-row-action-menu__dropdown--right" : "appkit-row-action-menu__dropdown--left"}`}
           >
@@ -97,9 +97,9 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
                 </Button>
               </Div>
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       {activeAction?.fields && (
         <QuickFormDrawer

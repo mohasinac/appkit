@@ -44,7 +44,7 @@ function SecurityCard({
   const iconColorClass = item.iconColorClass ?? "text-primary";
 
   return (
-    <div
+    <Div
       className={[
         "rounded-xl border p-5 transition-all duration-500",
         colorClass,
@@ -63,7 +63,7 @@ function SecurityCard({
       <Text variant="secondary" className="leading-relaxed" size="sm">
         {item.description}
       </Text>
-    </div>
+    </Div>
   );
 }
 

@@ -48,7 +48,7 @@ function StepCard({
   } = step;
 
   return (
-    <div
+    <Div
       className={[
         "relative rounded-3xl p-8",
         "bg-[var(--appkit-color-surface)]",
@@ -98,7 +98,7 @@ function StepCard({
       >
         {step.desc}
       </Text>
-    </div>
+    </Div>
   );
 }
 

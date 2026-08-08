@@ -1,4 +1,6 @@
 // appkit/src/seed/factories/carousel.factory.ts
+import { ROUTES } from "../../next/routing/route-map";
+
 let _seq = 1;
 
 export interface SeedCarouselSlideDocument {
@@ -22,7 +24,7 @@ export function makeCarouselSlide(
     title: overrides.title ?? `Slide ${n}`,
     subtitle: overrides.subtitle ?? "",
     ctaLabel: overrides.ctaLabel ?? "Shop Now",
-    ctaUrl: overrides.ctaUrl ?? "/products",
+    ctaUrl: overrides.ctaUrl ?? String(ROUTES.PUBLIC.PRODUCTS),
     sortOrder: overrides.sortOrder ?? n,
     isActive: overrides.isActive ?? true,
     ...overrides,

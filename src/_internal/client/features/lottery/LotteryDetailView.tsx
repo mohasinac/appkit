@@ -12,6 +12,7 @@ import {
   Div,
   Anchor,
 } from "../../../../ui";
+import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
@@ -118,7 +119,7 @@ export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailVi
                     Log in to submit your lottery entry.
                   </Text>
                   <Anchor
-                    href="/login"
+                    href={String(ROUTES.AUTH.LOGIN)}
                     tone="brand"
                   >
                     Log In to Enter
