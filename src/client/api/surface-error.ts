@@ -1,4 +1,5 @@
 import { ApiError, isApiError } from "./ApiError";
+import { ApiClientError } from "../../http/ApiClient";
 import { normalizeError } from "../../errors/normalize";
 import { getErrorDisplay } from "../../errors/error-display-map";
 
@@ -31,15 +32,12 @@ export interface SurfaceErrorOptions {
   }) => void;
 }
 
-/** True for `ApiError` instances and for any other thrown error (e.g. the
- * lower-level `ApiClientError` from `ApiClient.request()`) that carries the
- * same stable `code: string` field — both shapes route through the same
- * toast-vs-inline-field-error logic below. */
+/** True for `ApiError` instances and for `ApiClientError` (the lower-level
+ * error `ApiClient.request()` throws) when it carries a stable `code` —
+ * both shapes route through the same toast-vs-inline-field-error logic
+ * below. */
 function hasStableErrorCode(err: unknown): err is { code: string; message: string } {
-  return (
-    isApiError(err) ||
-    (err instanceof Error && typeof (err as { code?: unknown }).code === "string")
-  );
+  return isApiError(err) || (err instanceof ApiClientError && typeof err.code === "string");
 }
 
 export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
