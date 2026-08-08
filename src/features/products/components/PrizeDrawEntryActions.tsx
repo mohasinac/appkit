@@ -86,7 +86,8 @@ export function PrizeDrawEntryActions({
           tone="none"
           underline="hover"
           size="xs"
-          className="text-center font-medium text-primary-600 underline-offset-4 dark:text-primary-400"
+          weight="medium"
+          className="text-center text-primary-600 underline-offset-4 dark:text-primary-400"
         >
           View RNG source code on GitHub →
         </Anchor>

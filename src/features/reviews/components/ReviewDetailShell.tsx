@@ -367,6 +367,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             className="relative h-[85vh] w-[85vw]"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* audit-variant-ok: MediaImage has no rounded/shadow prop — this is the primitive's only styling escape hatch */}
             <MediaImage
               src={currentImage.url}
               alt={`Review photo ${lightboxIdx + 1}`}

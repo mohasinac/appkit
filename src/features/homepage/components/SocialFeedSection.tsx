@@ -146,7 +146,9 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
               href={profileUrl}
               tone="none"
               underline="none"
-              className="shrink-0 text-sm font-medium text-[var(--appkit-color-primary)] hover:opacity-80"
+              size="sm"
+              weight="medium"
+              className="shrink-0 text-[var(--appkit-color-primary)] hover:opacity-80"
             >
               Follow on {PLATFORM_LABELS[platform]} →
             </Anchor>

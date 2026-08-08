@@ -72,11 +72,13 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
   const meta = PLATFORM_META.youtube;
 
   return (
+    // audit-variant-ok: bg-zinc-900 is a fixed dark video-placeholder backdrop, not a themed surface token
     <Anchor
       href={href}
       tone="none"
       underline="none"
-      className="group relative block aspect-video w-full overflow-hidden rounded-xl bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-youtube)]"
+      rounded="xl"
+      className="group relative block aspect-video w-full overflow-hidden bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-youtube)]"
       aria-label={post.caption ?? `Watch on YouTube`}
     >
       <MediaImage
@@ -138,7 +140,8 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       href={post.permalink}
       tone="none"
       underline="none"
-      className="group relative block aspect-square overflow-hidden rounded-xl bg-[var(--appkit-color-surface)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface-elevated)]"
+      rounded="xl"
+      className="group relative block aspect-square overflow-hidden bg-[var(--appkit-color-surface)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface-elevated)]"
       aria-label={post.caption ?? `View on ${meta.label}`}
     >
       {/* Thumbnail */}
