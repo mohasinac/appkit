@@ -107,11 +107,17 @@ function shapingClasses(opts: {
 
 type HeadingSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl";
 
+/** Sizes backed by a themed `--appkit-text-*` var. 6xl/7xl/8xl have no token (Tailwind default scale only). */
+const THEMED_TEXT_SIZES = new Set(["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl"]);
+
 function responsiveSizeClass(prefix: "sm:" | "md:" | "lg:" | "xl:", size: HeadingSize | undefined): string {
   if (!size) return "";
-  // Use raw Tailwind text-* utilities (which support responsive prefixes) rather
-  // than the custom .appkit-text--N classes (which don't).
-  return `${prefix}text-${size}`;
+  // Tailwind supports responsive prefixes on arbitrary values, so themed sizes
+  // stay theme-editable at every breakpoint via the CSS var; only the
+  // above-scale 6xl/7xl/8xl sizes (no token) fall back to the fixed utility.
+  return THEMED_TEXT_SIZES.has(size)
+    ? `${prefix}text-[length:var(--appkit-text-${size})]`
+    : `${prefix}text-${size}`;
 }
 
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {

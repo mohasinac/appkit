@@ -48,42 +48,42 @@
 }
 
 .appkit-text--xs {
-  font-size: 0.75rem;
+  font-size: var(--appkit-text-xs, 0.75rem);
 }
 
 .appkit-text--sm {
-  font-size: 0.875rem;
+  font-size: var(--appkit-text-sm, 0.875rem);
 }
 
 .appkit-text--base {
-  font-size: 1rem;
+  font-size: var(--appkit-text-base, 1rem);
 }
 
 .appkit-text--lg {
-  font-size: 1.125rem;
+  font-size: var(--appkit-text-lg, 1.125rem);
 }
 
 .appkit-text--xl {
-  font-size: 1.25rem;
+  font-size: var(--appkit-text-xl, 1.25rem);
 }
 
 .appkit-text--2xl {
-  font-size: 1.5rem;
+  font-size: var(--appkit-text-2xl, 1.5rem);
   line-height: 2rem;
 }
 
 .appkit-text--3xl {
-  font-size: 1.875rem;
+  font-size: var(--appkit-text-3xl, 1.875rem);
   line-height: 2.25rem;
 }
 
 .appkit-text--4xl {
-  font-size: 2.25rem;
+  font-size: var(--appkit-text-4xl, 2.25rem);
   line-height: 2.5rem;
 }
 
 .appkit-text--5xl {
-  font-size: 3rem;
+  font-size: var(--appkit-text-5xl, 3rem);
   line-height: 1;
 }
 

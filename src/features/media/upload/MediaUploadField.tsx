@@ -19,13 +19,6 @@ import { extractVideoPosterFrame, posterBlobAsFile } from "./video-poster";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
 import { normalizeError } from "../../../errors/normalize";
-const __P = {
-  p3: "p-3",
-} as const;
-
-const __O = {
-  hidden: "overflow-hidden",
-} as const;
 
 /**
  * SB-UNI-Z5 2026-05-13 — `kind` prop UX sugar. When set, the component
@@ -251,10 +244,10 @@ function MediaPreviewPanel({
   tMediaEditor: (key: string) => string;
 }) {
   return (
-    <Div className={`${__P.p3}`} rounded="lg" surface="muted" border="default">
+    <Div padding="sm" rounded="lg" surface="muted" border="default">
       {isVideo(value) ? (
         <Stack gap="sm">
-          <Div className={`relative aspect-video ${__O.hidden}`} rounded="lg">
+          <Div className="relative aspect-video" overflow="hidden" rounded="lg">
             <MediaVideo src={value} alt={label} controls objectFit="contain" />
           </Div>
           {/* Video size warning for large files */}
@@ -263,13 +256,13 @@ function MediaPreviewPanel({
           </Text>
         </Stack>
       ) : isImage(value) ? (
-        <Div className={`relative aspect-video ${__O.hidden}`} rounded="lg">
+        <Div className="relative aspect-video" overflow="hidden" rounded="lg">
           <MediaImage src={value} alt={label} size="card" objectFit="contain" />
         </Div>
       ) : isPdf(value) ? (
         <Stack gap="sm">
           <Div
-            className={`relative w-full ${__O.hidden}`} rounded="lg" border="default"
+            className="relative w-full" overflow="hidden" rounded="lg" border="default"
             style={{ height: 280 }}
           >
             <iframe

@@ -245,7 +245,7 @@ function CarouselCardRenderer({
             </Text>
           )}
           {(card.buttons?.length ?? 0) > 0 && (
-            <Row wrap gap="xs" className="md:gap-[0.5rem]">
+            <Row wrap gap="xs" className="md:gap-[var(--appkit-space-2)]">
               {(card.buttons ?? []).map((btn, i) => {
                 const variant = btn.variant === "link" || btn.variant === "ghost"
                   ? "ghost"
@@ -447,7 +447,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 {/* Cards grid */}
                 {hasCards && (
                   <Div
-                    className={`${POSITION_FILL} grid gap-[0.5rem] md:gap-[1rem] md:p-[2rem]`} padding="md"
+                    className={`${POSITION_FILL} grid gap-[var(--appkit-space-2)] md:gap-[var(--appkit-space-4)] md:p-[var(--appkit-space-8)]`} padding="md"
                     style={{
                       gridTemplateRows: "repeat(2, 1fr)",
                       gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",

@@ -59,6 +59,35 @@ const MODE_OPTIONS = [
   { label: "Dark", value: "dark" },
 ];
 
+/** Groups `REQUIRED_THEME_TOKENS` into labeled subsections so the editor doesn't read as one undifferentiated grid of ~68 inputs. */
+const TOKEN_GROUPS: { label: string; keys: readonly (typeof REQUIRED_THEME_TOKENS)[number][] }[] = [
+  { label: "Primary", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-color-primary")) },
+  { label: "Secondary", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-color-secondary")) },
+  {
+    label: "Surface & border",
+    keys: REQUIRED_THEME_TOKENS.filter((k) =>
+      ["appkit-color-bg", "appkit-color-surface", "appkit-color-surface-elevated", "appkit-color-surface-input", "appkit-color-border", "appkit-color-border-subtle"].includes(k),
+    ),
+  },
+  {
+    label: "Text",
+    keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-color-text")),
+  },
+  {
+    label: "Status",
+    keys: REQUIRED_THEME_TOKENS.filter((k) =>
+      ["appkit-color-success", "appkit-color-success-surface", "appkit-color-warning", "appkit-color-warning-surface", "appkit-color-error", "appkit-color-error-surface", "appkit-color-info", "appkit-color-info-surface"].includes(k),
+    ),
+  },
+  {
+    label: "Focus & glow",
+    keys: REQUIRED_THEME_TOKENS.filter((k) => k === "appkit-color-focus-ring" || k.startsWith("appkit-shadow-glow")),
+  },
+  { label: "Fonts", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-font-")) },
+  { label: "Spacing scale", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-space-")) },
+  { label: "Font-size scale", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-text-")) },
+];
+
 function isBuiltInId(id: string): boolean {
   return BUILT_IN_THEMES.some((t) => t.id === id);
 }
@@ -263,18 +292,25 @@ function ThemeEditor({
             when this theme is active. Empty values fall back to the active
             mode&rsquo;s built-in theme.
           </Text>
-          <Grid cols={2} gap="sm">
-            {REQUIRED_THEME_TOKENS.map((key) => (
-              <Input
-                key={key}
-                label={key}
-                value={draft.tokens[key] ?? ""}
-                onChange={(event) => updateToken(key, event.target.value)}
-                disabled={readOnly}
-                placeholder="inherits from built-in"
-              />
-            ))}
-          </Grid>
+          {TOKEN_GROUPS.map((group) => (
+            <Stack key={group.label} gap="xs">
+              <Text size="xs" weight="semibold" color="muted">
+                {group.label}
+              </Text>
+              <Grid cols={2} gap="sm">
+                {group.keys.map((key) => (
+                  <Input
+                    key={key}
+                    label={key}
+                    value={draft.tokens[key] ?? ""}
+                    onChange={(event) => updateToken(key, event.target.value)}
+                    disabled={readOnly}
+                    placeholder="inherits from built-in"
+                  />
+                ))}
+              </Grid>
+            </Stack>
+          ))}
         </Stack>
 
         <Stack gap="sm">
