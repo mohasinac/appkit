@@ -56,7 +56,7 @@ export async function createReviewAction(input: unknown): Promise<ActionResult<u
 
 export async function replyToReviewAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["seller", "admin"]);
+    await requireRoleUser(["seller", "admin"]);
     
       const parsed = replyToReviewSchema.safeParse(input);
       if (!parsed.success) {

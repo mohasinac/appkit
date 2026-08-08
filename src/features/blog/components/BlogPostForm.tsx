@@ -110,7 +110,7 @@ function renderBlogPostMediaFields(props: {
   coverImageUrl: string | null; contentImages: ReturnType<typeof coerceMediaFieldArray>;
   additionalImages: ReturnType<typeof coerceMediaFieldArray>;
 }) {
-  const { value, update, isReadonly, labels, onUploadCover, onUploadContentImage, onUploadAdditionalImage, onAbort, coverImageUrl, contentImages, additionalImages } = props;
+  const { update, isReadonly, labels, onUploadCover, onUploadContentImage, onUploadAdditionalImage, onAbort, coverImageUrl, contentImages, additionalImages } = props;
   return (
     <>
       <MediaUploadField label={labels.coverImage} value={coverImageUrl || ""} onChange={(url) => update({ coverImage: url ? { url, type: "image" } : null })} onChangeField={(media) => update({ coverImage: media })} onUpload={onUploadCover} onAbort={onAbort} accept="image/*" maxSizeMB={10} disabled={isReadonly} helperText={labels.coverImageHelper} />

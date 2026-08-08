@@ -111,6 +111,8 @@ export interface ProductDetailPageViewProps {
   productFeatures?: ProductFeatureDocument[];
   /** Site-wide COD availability (`siteSettings.payment.codEnabled`), threaded from the page's data layer. Drives the "Cash on Delivery" feature badge. */
   codEnabled?: boolean;
+  /** Site-wide EMI availability (`siteSettings.emi.enabled`), threaded from the page's data layer. Drives the "EMI Available" feature badge. */
+  emiEnabled?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -217,6 +219,7 @@ export async function ProductDetailPageView({
   renderPrimaryActions,
   productFeatures,
   codEnabled,
+  emiEnabled,
 }: ProductDetailPageViewProps) {
   // Use pre-fetched data when available to avoid a redundant repository call.
   // The page layer wraps getProductForDetail in React.cache(), so both
@@ -573,6 +576,9 @@ export async function ProductDetailPageView({
                 featured={featured}
                 freeShipping={freeShipping}
                 codAvailable={codEnabled === true}
+                codHref={String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS)}
+                emiAvailable={emiEnabled === true}
+                emiHref={String(ROUTES.PUBLIC.HOW_EMI_WORKS)}
                 condition={condition ?? undefined}
                 returnable={returnPolicy != null && returnPolicy.length > 0}
                 labels={{
@@ -587,6 +593,7 @@ export async function ProductDetailPageView({
                   returnable: "Returnable",
                   freeShipping: "Free Shipping",
                   codAvailable: "Cash on Delivery",
+                  emiAvailable: "EMI Available",
                   wishlistCount: (n) => `${n} wishlisted`,
                   categoryProductCount: (n, cat) => `${n} in ${cat}`,
                 }}

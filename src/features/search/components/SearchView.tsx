@@ -31,7 +31,7 @@ export interface SearchViewProps {
 export function SearchView({
   query,
   total,
-  isLoading,
+  isLoading: _isLoading,
   labels = {},
   renderSearchInput,
   renderFilters,

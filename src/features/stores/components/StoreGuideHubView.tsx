@@ -10,7 +10,7 @@ import {
   Circle,
   BookOpen,
 } from "lucide-react";
-import { Div, Heading, Progress, Row, Section, Stack, Text } from "../../../ui";
+import { Div, Heading, Progress, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import type { StoreDocument } from "../schemas";
 import { ROUTES } from "../../../next/routing/route-map";
 
@@ -150,10 +150,14 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           </Heading>
           <Div layout="grid" gap="4" className="grid-cols-1 sm:grid-cols-2">
             {GUIDE_CARDS.map(({ Icon, title, description, href }) => (
-              <a
+              <TextLink
                 key={title}
+                variant="bare"
                 href={href}
-                className="group flex flex-col gap-3 rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5 hover:border-[var(--appkit-color-primary)] hover:shadow-md transition-all"
+                rounded="xl"
+                layout="flex-col"
+                gap="md"
+                className="group border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5 hover:border-[var(--appkit-color-primary)] hover:shadow-md transition-all"
               >
                 <Row align="center" gap="3">
                   <Row
@@ -171,7 +175,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                 <Text className="text-[var(--appkit-color-primary)] mt-auto" size="xs" weight="medium">
                   Read guide →
                 </Text>
-              </a>
+              </TextLink>
             ))}
           </Div>
         </Stack>
@@ -197,11 +201,17 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
             {/* Steps */}
             <Div className="divide-y divide-[var(--appkit-color-border)]">
               {steps.map(({ label, done, href }) => (
-                <a
+                <TextLink
                   key={label}
+                  variant="bare"
                   href={done ? "#" : href}
                   aria-disabled={done}
-                  className={`flex items-center gap-3 px-5 py-3.5 text-sm transition-colors ${
+                  layout="flex"
+                  align="center"
+                  gap="sm"
+                  paddingX="lg"
+                  size="sm"
+                  className={`py-3.5 transition-colors ${
  done
  ? "cursor-default"
  : "hover:bg-[var(--appkit-color-border)]/30"
@@ -221,7 +231,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
                   >
                     {label}
                   </Text>
-                </a>
+                </TextLink>
               ))}
             </Div>
           </Div>

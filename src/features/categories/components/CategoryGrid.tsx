@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Div, Row, Span, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
+import { MediaImage } from "../../media/MediaImage";
 
 import type { CategoryItem } from "../types";
 
@@ -39,10 +40,11 @@ export function CategoryCard({
       {/* Image area — fixed aspect ratio */}
       <Div surface="muted" className={`relative aspect-[4/3] w-full ${__O.hidden} flex-shrink-0`}>
         {category.display?.coverImage ? (
-          <img
+          <MediaImage
             src={category.display.coverImage}
             alt={category.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            size="card"
+            className="transition-transform duration-300 group-hover:scale-105"
           />
         ) : category.display?.color ? (
           <DynamicBgDiv color={category.display.color} className="h-full w-full opacity-80" />

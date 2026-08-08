@@ -5,7 +5,7 @@ import type { JsonValue } from "@mohasinac/appkit";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
-import { Div, LoginRequiredModal, Span, Stack, Text } from "../../../ui";
+import { Div, LoginRequiredModal, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 
 const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-6 py-8 text-center space-y-2";
@@ -103,12 +103,16 @@ export function EventPollWidget({
       <Stack className={`text-center ${className}`} gap="3" rounded="xl" paddingY="y-xl" paddingX="x-lg" border="default">
         <Text weight="semibold" color="primary">Login to vote</Text>
         <Text size="sm" color="muted">You need an account to participate in this poll.</Text>
-        <a
+        <TextLink
+          variant="bare"
           href={String(ROUTES.AUTH.LOGIN)}
-          className="inline-block rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-600"
+          rounded="xl"
+          size="sm"
+          weight="semibold"
+          className="inline-block bg-primary px-6 py-2.5 text-white hover:bg-primary-600"
         >
           Log In
-        </a>
+        </TextLink>
       </Stack>
     );
   }

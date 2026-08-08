@@ -134,7 +134,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
     filters: filterParts.length > 0 ? sieveAnd(...filterParts) : undefined,
   };
 
-  const { events, total, totalPages, isLoading } = useEvents(params as any, { initialData });
+  const { events, totalPages, isLoading } = useEvents(params as any, { initialData });
   const currentPage = table.getNumber(TABLE_KEYS.PAGE, 1);
 
   const commitSearch = useCallback(() => {

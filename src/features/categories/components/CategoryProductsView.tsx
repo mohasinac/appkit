@@ -62,7 +62,7 @@ export interface CategoryProductsViewProps {
 }
 
 export function CategoryProductsView({
-  labels = {},
+  labels: _labels = {},
   table,
   filterVariant = "public",
   sortValue,

@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react";
 import { Button, Div, Heading, Modal, RichText, Row, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { maskName } from "../../../security";
@@ -44,11 +45,9 @@ export function ViewReviewModal({
         {/* Author + rating */}
         <Row gap="3">
           {review.userAvatar ? (
-            <img
-              src={review.userAvatar}
-              alt={displayName}
-              className="h-10 w-10 flex-shrink-0 object-cover rounded-full"
-            />
+            <Div className="relative h-10 w-10 flex-shrink-0 overflow-hidden" rounded="full">
+              <MediaImage src={review.userAvatar} alt={displayName} size="avatar" />
+            </Div>
           ) : (
             <Row textWeight="medium" textSize="sm" className="h-10 w-10 flex-shrink-0 bg-neutral-200 text-[var(--appkit-color-text-muted)]" align="center" justify="center" rounded="full">
               {displayName.charAt(0).toUpperCase()}
@@ -104,7 +103,7 @@ export function ViewReviewModal({
                 onClick={() => setLightboxIdx(i)}
                 className={`h-20 w-20 rounded-lg border overflow-hidden transition hover:opacity-80 p-0 flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 border-[var(--appkit-color-border)]"}`}
               >
-                <img src={img.thumbnailUrl ?? img.url} alt={`Review thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+                <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Review thumbnail ${i + 1}`} size="thumbnail" />
               </button>
             ))}
           </Row>

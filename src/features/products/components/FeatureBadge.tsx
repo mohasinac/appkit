@@ -78,12 +78,6 @@ function FeatureIcon({
   return <Cmp className={className} />;
 }
 
-function colorStyleFor(iconColor: string | undefined): React.CSSProperties | undefined {
-  if (!iconColor) return undefined;
-  const ref = `var(${iconColor})`;
-  return { color: ref, borderColor: ref };
-}
-
 export interface FeatureBadgeProps {
   featureId: string;
   features: ProductFeatureDocument[];

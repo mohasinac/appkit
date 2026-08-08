@@ -170,6 +170,7 @@ function PreOrderInfoSection({
           returnable: "Cancellable",
           freeShipping: "Free Shipping",
           codAvailable: "Cash on Delivery",
+          emiAvailable: "EMI Available",
           wishlistCount: (n) => `${n} wishlisted`,
           categoryProductCount: (n, cat) => `${n} in ${cat}`,
         }}

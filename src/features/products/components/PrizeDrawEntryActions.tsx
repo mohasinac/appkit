@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Stack, Text, LoginRequiredModal } from "../../../ui";
+import { Anchor, Button, Stack, Text, LoginRequiredModal } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
@@ -34,14 +34,14 @@ export function PrizeDrawEntryActions({
   productId,
   productSlug,
   title,
-  thumb,
+  thumb: _thumb,
   pricePerEntry,
   currency,
   remainingEntries,
   revealStatus,
   prizeGithubFileUrl,
-  storeId,
-  storeName,
+  storeId: _storeId,
+  storeName: _storeName,
 }: PrizeDrawEntryActionsProps) {
   const router = useRouter();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
@@ -81,14 +81,15 @@ export function PrizeDrawEntryActions({
       </Button>
 
       {prizeGithubFileUrl ? (
-        <a
+        <Anchor
           href={prizeGithubFileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-center text-xs font-medium text-primary-600 underline-offset-4 hover:underline dark:text-primary-400"
+          tone="none"
+          underline="hover"
+          size="xs"
+          className="text-center font-medium text-primary-600 underline-offset-4 dark:text-primary-400"
         >
           View RNG source code on GitHub →
-        </a>
+        </Anchor>
       ) : null}
 
       <Text className="text-[var(--appkit-color-text-muted)]" size="xs" align="center">

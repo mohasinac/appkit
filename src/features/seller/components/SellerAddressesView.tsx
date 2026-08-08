@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, Label, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
@@ -14,19 +14,8 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const INPUT_CLS = "w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
 const CLS_DEFAULT_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border border-warning dark:border-warning px-2 py-0.5";
 const CLS_DELETE_BTN = "rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
-
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <Stack gap="xs">
-      <Label className="block" color="primary" size="xs" weight="medium">{label}</Label>
-      {children}
-      {hint && <Text size="xs" color="muted">{hint}</Text>}
-    </Stack>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Types

@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { Div, Heading, TextLink } from "../../../ui";
 
 export interface QuickActionItem {
   id: string;
@@ -44,13 +44,22 @@ export function QuickActionsPanel({
                 {action.label}
               </button>
             ) : (
-              <a
+              <TextLink
+                variant="bare"
                 href={action.href ?? "#"}
-                className="w-full inline-flex items-center justify-start gap-2 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)] px-3 py-2 text-sm"
+                rounded="lg"
+                paddingX="sm"
+                paddingY="xs"
+                size="sm"
+                layout="inline-flex"
+                align="center"
+                justify="start"
+                gap="sm"
+                className="w-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text)]"
               >
                 {action.icon}
                 {action.label}
-              </a>
+              </TextLink>
             )}
           </Div>
         ))}

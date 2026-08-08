@@ -11,7 +11,7 @@ import {
   AlertTriangle,
   BookOpen,
 } from "lucide-react";
-import { Alert, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Alert, Div, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-6";
@@ -150,10 +150,14 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
           </Heading>
           <Div layout="grid" gap="4" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {visibleCards.map(({ Icon, title, description, href }) => (
-              <a
+              <TextLink
                 key={title}
+                variant="bare"
                 href={href}
-                className="group flex flex-col gap-3 rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5 hover:border-[var(--appkit-color-primary)] hover:shadow-md transition-all"
+                rounded="xl"
+                layout="flex-col"
+                gap="md"
+                className="group border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5 hover:border-[var(--appkit-color-primary)] hover:shadow-md transition-all"
               >
                 <Row align="center" gap="3">
                   <Row
@@ -171,7 +175,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
                 <Text className="text-[var(--appkit-color-primary)] mt-auto" size="xs" weight="medium">
                   Read guide →
                 </Text>
-              </a>
+              </TextLink>
             ))}
           </Div>
         </Section>

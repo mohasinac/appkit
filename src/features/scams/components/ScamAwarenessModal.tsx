@@ -4,7 +4,7 @@ import { Span, useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Shield, IndianRupee, UserX, CreditCard, Package, UserCheck, ShieldAlert, Truck } from "lucide-react";
-import { Div, Modal, Stack, Row, Text, Checkbox } from "../../../ui";
+import { Div, Modal, Stack, Row, Text, Checkbox, TextLink } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SCAM_CATEGORIES } from "../constants/scam-types";
@@ -96,22 +96,24 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
 
         {/* Links */}
         <Row textSize="sm" gap="md" wrap>
-          <a
+          <TextLink
+            variant="bare"
             href={String(ROUTES.PUBLIC.SCAM_TYPES)}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
           >
             See all 27 scam types →
-          </a>
-          <a
+          </TextLink>
+          <TextLink
+            variant="bare"
             href={String(ROUTES.PUBLIC.SCAM_FAQS)}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
           >
             Common scam FAQs →
-          </a>
+          </TextLink>
         </Row>
 
         {mutation.isError && (

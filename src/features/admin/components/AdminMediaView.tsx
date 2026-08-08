@@ -6,6 +6,7 @@ import { normalizeError } from "../../../errors/normalize";
 import type { StackedViewShellProps } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
+  MediaImage,
   MediaUploadField,
   MediaUploadList,
   type MediaField,
@@ -118,14 +119,12 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
               key={f.name}
               className="group overflow-hidden" surface="muted" rounded="lg" border="default"
             >
-              <Row color="muted" textSize="xs" className="aspect-square" surface="subtle" align="center" justify="center">
+              <Row color="muted" textSize="xs" className="relative aspect-square" surface="subtle" align="center" justify="center">
                 {isImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <MediaImage
                     src={f.downloadURL}
                     alt={f.name}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
+                    size="thumbnail"
                   />
                 ) : (
                   <Text align="center" paddingX="x-xs" className="break-all">

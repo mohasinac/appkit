@@ -12,6 +12,7 @@ import {
   Div,
   Anchor,
 } from "../../../../ui";
+import { MediaImage } from "../../../../features/media/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
@@ -61,12 +62,11 @@ export function PrizeDrawLotteryDetailView({
         <Stack gap="xl">
           {/* Image */}
           {product.mainImage ? (
-            <Div rounded="2xl" className="overflow-hidden" style={{ aspectRatio: "16/9", maxHeight: "16rem" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <Div rounded="2xl" className="relative overflow-hidden" style={{ aspectRatio: "16/9", maxHeight: "16rem" }}>
+              <MediaImage
                 src={product.mainImage}
                 alt={product.title}
-                className="w-full h-full object-cover"
+                size="hero"
               />
             </Div>
           ) : (

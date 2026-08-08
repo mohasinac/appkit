@@ -140,11 +140,9 @@ function ZonePicker({
 function BackgroundEditor({
   value,
   onChange,
-  prefix,
 }: {
   value: CarouselBackground;
   onChange: (bg: CarouselBackground) => void;
-  prefix: string;
 }) {
   const set = (patch: Partial<CarouselBackground>) => onChange({ ...value, ...patch });
 
@@ -292,7 +290,6 @@ function CardEditor({
         <BackgroundEditor
           value={card.background}
           onChange={(bg) => set({ background: bg })}
-          prefix={`card-${index}`}
         />
       </Div>
 
@@ -521,7 +518,7 @@ export function AdminCarouselEditorView({
           {/* ── 2. Background ────────────────────────────────────────────── */}
           <Div className={CLS_PANEL}>
             <Heading level={3} className={CLS_SECTION_HEADING}>Background</Heading>
-            <BackgroundEditor value={background} onChange={setBackground} prefix="slide" />
+            <BackgroundEditor value={background} onChange={setBackground} />
           </Div>
 
           {/* ── 3. Overlay text (optional) ───────────────────────────────── */}

@@ -46,9 +46,6 @@ interface UserSupportResponse {
 
 // --- Constants ---------------------------------------------------------------
 
-const CLS_INPUT =
-  "w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
-
 const CATEGORY_OPTIONS = [
   { label: "Order Issue", value: "order_issue" },
   { label: "Billing / Payment", value: "billing_payment" },

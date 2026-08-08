@@ -75,9 +75,6 @@ export async function submitLotteryPullAction(
       throw new ValidationError("Product lottery pull must go through the product lottery pull route.");
     }
 
-    // Compute weights
-    const weightedSlots = assignSlotWeights(lotteryConfig);
-
     // Check draw window
     if (!isDrawWindowOpen(lotteryConfig)) {
       throw new LotteryError("LOTTERY_FULL", "All slots have been claimed.");

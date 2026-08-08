@@ -58,10 +58,6 @@ function makeAdminUser(overrides: Record<string, unknown> = {}) {
   return { uid: "user-admin-1", email: "admin@test.com", name: "Admin User", ...overrides };
 }
 
-function makeSellerUser(overrides: Record<string, unknown> = {}) {
-  return { uid: "store-seller-1", email: "seller@test.com", name: "Seller", ...overrides };
-}
-
 function makeCoupon(overrides: Record<string, unknown> = {}) {
   return {
     id: "coupon-welcome10",

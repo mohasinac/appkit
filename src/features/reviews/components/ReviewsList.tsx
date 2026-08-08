@@ -12,6 +12,7 @@ import {
   Text,
 } from "../../../ui";
 import { StarRating } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import type { Review } from "../types";
 
 import { maskName } from "../../../security";
@@ -62,11 +63,9 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
       <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">
         <Row align="start" gap="3">
           {review.userAvatar ? (
-            <img
-              src={review.userAvatar}
-              alt={displayName}
-              className="h-9 w-9 flex-shrink-0 object-cover rounded-full"
-            />
+            <Div className="relative h-9 w-9 flex-shrink-0 overflow-hidden" rounded="full">
+              <MediaImage src={review.userAvatar} alt={displayName} size="avatar" />
+            </Div>
           ) : (
             <Row textWeight="medium" textSize="sm" className="h-9 w-9 flex-shrink-0 bg-neutral-200 text-[var(--appkit-color-text-muted)]" align="center" justify="center" rounded="full">
               {initials}

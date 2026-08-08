@@ -46,12 +46,10 @@ export const faqUpdateSchema = faqBaseSchema.partial();
 export type FaqCreateInput = z.infer<typeof faqCreateSchema>;
 export type FaqUpdateInput = z.infer<typeof faqUpdateSchema>;
 
-const voteSchema = z.object({
-  faqId: z.string().min(1),
-  vote: z.enum(["helpful", "not-helpful"]),
-});
-
-export type VoteFaqActionInput = z.infer<typeof voteSchema>;
+export interface VoteFaqActionInput {
+  faqId: string;
+  vote: "helpful" | "not-helpful";
+}
 
 export interface VoteFaqActionResult {
   helpful: number;

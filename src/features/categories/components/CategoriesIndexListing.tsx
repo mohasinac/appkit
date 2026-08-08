@@ -179,11 +179,6 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
-  const clearSearch = () => {
-    setSearchInput("");
-    table.set(TABLE_KEYS.QUERY, "");
-  };
-
   // Tab state — "all" | "categories" | "brands" (not used when brandsOnly=true)
   const activeTab = brandsOnly ? "brands" : (table.get(TABLE_KEYS.TAB) || "all");
 
@@ -197,7 +192,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     table.set(TABLE_KEYS.TAB, key);
   };
 
-  const { categories, total, totalPages, isLoading } = useCategoriesFiltered({
+  const { categories, totalPages, isLoading } = useCategoriesFiltered({
     q: table.get(TABLE_KEYS.QUERY) || undefined,
     isFeatured: table.get(TABLE_KEYS.IS_FEATURED) === "true" || undefined,
     isBrand: isBrandParam,

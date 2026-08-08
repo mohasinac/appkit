@@ -19,7 +19,7 @@ function useMotionProps(
 ): Record<string, unknown> {
   const reduced = useReducedMotion();
   if (!reduced) return props;
-  const { initial, animate, exit, whileHover, whileTap, whileInView, transition, ...rest } = props;
+  const { initial: _initial, animate: _animate, exit: _exit, whileHover: _whileHover, whileTap: _whileTap, whileInView: _whileInView, transition: _transition, ...rest } = props;
   return { ...rest, initial: false, animate: false };
 }
 

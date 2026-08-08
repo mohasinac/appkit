@@ -121,7 +121,6 @@ describe("runPositionsReconcile — sibling ordering", () => {
     await runPositionsReconcile(ctx);
     const calls = ctx._batchUpdate.mock.calls;
     const catFirst = calls.find(c => {
-      const ref = c[0];
       // we can't easily check ref.id without adapter but positions tell us
       return c[1].position === 2;
     });

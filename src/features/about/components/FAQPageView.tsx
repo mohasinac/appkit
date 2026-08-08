@@ -1,6 +1,5 @@
 import { ROUTES } from "../../../constants";
 import type { JsonValue } from "@mohasinac/appkit";
-import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { FLEX_ROW } from "../../../_internal/shared/styles/themed";
 import { Aside, Container, Details, Div, Heading, Nav, RichTextRenderer, Row, Section, Span, Stack, Summary, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
@@ -15,7 +14,6 @@ export interface FAQPageViewProps {
 export async function FAQPageView({
   category,
 }: FAQPageViewProps = {}) {
-  const page = { container: PAGE_CONTAINER };
   const flex = { row: FLEX_ROW };
   const { getTranslations, getMessages } = await import("next-intl/server");
   const t = await getTranslations("faqs");

@@ -1,5 +1,4 @@
 "use client"
-import { sortBy } from "@mohasinac/appkit";
 import React from "react";
 import { Div, Heading, Row, Text } from "../../../ui";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -45,13 +44,6 @@ export interface WishlistViewProps {
   renderPagination?: (total: number) => React.ReactNode;
   className?: string;
 }
-
-const WISHLIST_SORT_OPTIONS = [
-  { value: sortBy("addedAt", "DESC"), label: "Newest first" },
-  { value: "addedAt", label: "Oldest first" },
-  { value: sortBy("price", "DESC"), label: "Price: high → low" },
-  { value: sortBy("price", "ASC"), label: "Price: low → high" },
-];
 
 export function WishlistView({
   userId,

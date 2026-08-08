@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Heading, Text, TextLink } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { LAYOUT } from "../../../tokens";
 import type { CollectionListItem } from "../types";
 
@@ -18,11 +19,12 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
       className="group relative block overflow-hidden bg-[var(--appkit-color-surface)] dark:bg-[var(--appkit-color-surface-elevated)] transition"
     >
       {collection.image ? (
-        <Div className={`${LAYOUT.cardHeight.md} w-full`} overflow="hidden">
-          <img
+        <Div className={`relative ${LAYOUT.cardHeight.md} w-full`} overflow="hidden">
+          <MediaImage
             src={collection.image}
             alt={collection.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            size="card"
+            className="transition-transform duration-300 group-hover:scale-105"
           />
         </Div>
       ) : (

@@ -10,6 +10,7 @@
 import React from "react";
 import Link from "next/link";
 import { Badge, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 import {
@@ -101,14 +102,13 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
       gap="none" surface="default" rounded="xl" border="default"
     >
       <Link href={href} className="group block p-3 hover:no-underline">
-        <Div className={`mb-2 aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
+        <Div className={`relative mb-2 aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
           {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <MediaImage
               src={cover}
               alt={bundle.name}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
-              loading="lazy"
+              size="card"
+              className="transition-transform group-hover:scale-105"
             />
           ) : (
             <Row textSize="3xl" className="h-full w-full" align="center" justify="center">

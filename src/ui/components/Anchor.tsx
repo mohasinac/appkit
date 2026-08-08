@@ -30,7 +30,9 @@ export type AnchorTone =
   | "accent"
   | "danger"
   | "success"
-  | "inverse";
+  | "inverse"
+  /** No colour applied — for card/button-style anchors that fully own their own colour via `className`. */
+  | "none";
 
 export type AnchorUnderline = "none" | "hover" | "always";
 export type AnchorSize = "xs" | "sm" | "base" | "lg";
@@ -93,6 +95,7 @@ const TONE_CLS: Record<AnchorTone, string> = {
   danger: "text-[var(--appkit-color-error)] hover:text-[var(--appkit-color-error-hover)]",
   success: "text-[var(--appkit-color-success)]",
   inverse: "text-[var(--appkit-color-text-on-primary)]",
+  none: "",
 };
 
 const UNDERLINE_CLS: Record<AnchorUnderline, string> = {

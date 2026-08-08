@@ -1,4 +1,5 @@
 import { Div, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -91,11 +92,9 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         {order.items.slice(0, 3).map((item, i) => (
           <Row key={i} gap="sm">
             {item.image && (
-              <img
-                src={item.image}
-                alt={item.title}
-                className="h-10 w-10 object-cover rounded-lg"
-              />
+              <Div className="relative h-10 w-10 flex-shrink-0 overflow-hidden" rounded="lg">
+                <MediaImage src={item.image} alt={item.title} size="thumbnail" />
+              </Div>
             )}
             <Div>
               <Text truncate size="sm" weight="medium" color="primary">

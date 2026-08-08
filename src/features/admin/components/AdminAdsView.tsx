@@ -4,7 +4,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Label, Row, Select, Stack, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Input, Label, Row, Select, Stack, StackedViewShell, Text, TextLink } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -322,12 +322,18 @@ export function AdminAdsView({
         return (
           <Row align="center" gap="sm">
             {renderEditLink ? renderEditLink(row) : (
-              <a
-                className="inline-flex h-8 items-center rounded-md border border-neutral-200 px-3 text-xs border-[var(--appkit-color-border)]"
+              <TextLink
+                variant="bare"
                 href={`/admin/ads/${row.id}/edit`}
+                rounded="md"
+                paddingX="sm"
+                size="xs"
+                layout="inline-flex"
+                align="center"
+                className="h-8 border border-neutral-200 border-[var(--appkit-color-border)]"
               >
                 Edit
-              </a>
+              </TextLink>
             )}
             <Button
               size="sm"
@@ -389,12 +395,19 @@ export function AdminAdsView({
       sections={[
         <Row align="center" justify="between" gap="3">
           <Text variant="secondary">Manage ad inventory, placement mapping, and publishing state.</Text>
-          <a
+          <TextLink
+            variant="bare"
             href={createHref}
-            className="inline-flex h-9 items-center rounded-md bg-neutral-900 px-3 text-sm font-medium text-white bg-[var(--appkit-color-surface)] dark:text-[var(--appkit-color-text)]"
+            rounded="md"
+            paddingX="sm"
+            size="sm"
+            weight="medium"
+            layout="inline-flex"
+            align="center"
+            className="h-9 bg-neutral-900 text-white bg-[var(--appkit-color-surface)] dark:text-[var(--appkit-color-text)]"
           >
             New ad
-          </a>
+          </TextLink>
         </Row>,
         adsQuery.error ? (
           <Alert variant="error" title="Could not load ads">

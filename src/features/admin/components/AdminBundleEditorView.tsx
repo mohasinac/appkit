@@ -102,13 +102,6 @@ const bundleFormSchema = z.object({
   coverImage: z.string().optional().or(z.literal("")),
 }).passthrough();
 
-async function parseResponseError(res: Response): Promise<string> {
-  const err = (await res.json().catch(() => null)) as {
-    error?: { message?: string };
-  } | null;
-  return err?.error?.message ?? `Create failed: ${res.status}`;
-}
-
 function bundleToForm(bundle: CategoryDocument | null): FormState {
   if (!bundle) return EMPTY_FORM;
   const rule = bundle.bundleQueryRule;

@@ -5,6 +5,7 @@ import { Button } from "./Button";
 import { Div } from "./Div";
 import { Heading } from "./Typography";
 import { Row } from "./Layout";
+import { TextLink } from "./TextLink";
 
 export interface QuickCreateModalProps<T = unknown> {
   isOpen: boolean;
@@ -105,14 +106,15 @@ export function QuickCreateModal<T = unknown>({
         <Div className="appkit-quick-create-modal__body">{children}</Div>
         <Div className="appkit-quick-create-modal__footer">
           {fullPageHref ? (
-            <a
+            <TextLink
+              variant="none"
               href={fullPageHref}
               target="_blank"
               rel="noreferrer"
               className="appkit-quick-create-modal__full-link"
             >
               Add more details →
-            </a>
+            </TextLink>
           ) : (
             <span />
           )}

@@ -60,6 +60,18 @@ export async function FeesView({
       who: t("paidByBuyer"),
       note: t("shippingFeeNote"),
     },
+    {
+      category: t("emiSurchargeFeeTitle"),
+      rate: t("emiSurchargeFeeRate"),
+      who: t("paidByBuyer"),
+      note: t("emiSurchargeFeeNote"),
+    },
+    {
+      category: t("codHandlingFeeTitle"),
+      rate: t("codHandlingFeeRate"),
+      who: t("paidByBuyer"),
+      note: t("codHandlingFeeNote"),
+    },
   ];
 
   const OFFER_PAYOUT_ROWS = [
@@ -145,7 +157,7 @@ function renderPayoutExampleSection(t: TranslateFn, themed: ThemedTokens, rows: 
   );
 }
 
-function renderDisclaimerSection(t: TranslateFn, themed: ThemedTokens) {
+function renderDisclaimerSection(t: TranslateFn, _themed: ThemedTokens) {
   return (
     <Section className={`${__P.p5}`} border="default" surface="subtle" rounded="xl">
       <Heading level={3} className="mb-2" size="base">{t("disclaimerTitle")}</Heading>

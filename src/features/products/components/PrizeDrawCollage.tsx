@@ -18,6 +18,7 @@
 import { Row } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, Scrim, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import type { PrizeDrawItem } from "../schemas/firestore";
@@ -116,13 +117,7 @@ export function PrizeDrawCollage({
             >
               <Div className="relative aspect-square w-full">
                 {cover ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={cover}
-                    alt={it.title || `Prize #${it.itemNumber}`}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    loading="lazy"
-                  />
+                  <MediaImage src={cover} alt={it.title || `Prize #${it.itemNumber}`} size="thumbnail" />
                 ) : (
                   <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]" align="center" justify="center">
                     <Text className="text-[var(--appkit-color-text-muted)]" size="xs">

@@ -277,24 +277,13 @@ function makeValidOtp() {
   };
 }
 
-function makeExpiredOtp() {
-  return {
-    exists: true,
-    data: () => ({
-      verified: true,
-      expiresAt: new Date(Date.now() - 1000), // 1 second ago
-      verifiedVia: "sms",
-    }),
-  };
-}
-
 // The runTransaction mock simulates the Firestore tx by calling the callback.
 // By default, make it succeed with the provided items.
 function setupTransactionSuccess(
   availableItems: ReturnType<typeof makeCartItem>[] = [makeCartItem()],
   unavailableItems: unknown[] = [],
 ) {
-  mockRunTransaction.mockImplementation(async (callback: (tx: unknown) => unknown) => {
+  mockRunTransaction.mockImplementation(async (_callback: (tx: unknown) => unknown) => {
     const mockTx = {
       get: vi.fn().mockResolvedValue(makeValidOtp()), // OTP valid by default
       update: vi.fn(),
@@ -561,7 +550,7 @@ describe("createCheckoutOrderAction — address validation", () => {
 
 describe("createCheckoutOrderAction — OTP gate (inside transaction)", () => {
   function setupOtpInTransaction(otpSnap: object) {
-    mockRunTransaction.mockImplementation(async (callback: (tx: unknown) => unknown) => {
+    mockRunTransaction.mockImplementation(async (_callback: (tx: unknown) => unknown) => {
       const mockTx = {
         get: vi.fn().mockResolvedValue(otpSnap),
         update: vi.fn(),
@@ -613,7 +602,7 @@ describe("createCheckoutOrderAction — OTP gate (inside transaction)", () => {
       }),
     });
     // Also provide product snap in transaction
-    mockRunTransaction.mockImplementation(async (callback: (tx: unknown) => unknown) => {
+    mockRunTransaction.mockImplementation(async (_callback: (tx: unknown) => unknown) => {
       return {
         available: [{ item: makeCartItem(), product: makeProduct() }],
         unavailable: [],

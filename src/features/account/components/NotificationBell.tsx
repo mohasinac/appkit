@@ -91,7 +91,7 @@ export function NotificationBell({
 }: NotificationBellProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { showSuccess, showError } = useMessage();
+  const { showSuccess, showError: _showError } = useMessage();
   const { showToast } = useToast();
   const {
     notifications,
@@ -127,7 +127,6 @@ export function NotificationBell({
   );
 
   const emitSuccess = onMarkAllReadSuccess ?? showSuccess;
-  const emitError = onMarkAllReadError ?? showError;
 
   const handleMarkAllRead = useCallback(async () => {
     try {

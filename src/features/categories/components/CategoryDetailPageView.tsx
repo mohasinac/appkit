@@ -9,6 +9,7 @@ import {
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import type { CategoryItem } from "../types";
 
@@ -127,7 +128,6 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   const prizeDrawCount = prizeDrawsCountResult?.total ?? 0;
   const bundleCount = bundlesResult?.length ?? 0;
   const storeCount = categoryStores.length;
-  const totalCount = productCount + auctionCount + preOrderCount + prizeDrawCount + bundleCount + storeCount;
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
 
@@ -137,11 +137,9 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
         {hasCover && (
           <>
-            <img
-              src={coverImage}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <Div className="absolute inset-0">
+              <MediaImage src={coverImage} alt="" size="banner" />
+            </Div>
             <Div surface="overlay-md" className="absolute inset-0" />
           </>
         )}

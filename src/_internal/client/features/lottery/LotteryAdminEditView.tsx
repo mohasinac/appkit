@@ -175,7 +175,7 @@ export function LotteryAdminEditView({
     <Container>
       <Section>
         <Form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-          {({ setFieldError, clearErrors }: UseFormShellStateResult) => (
+          {({ clearErrors }: UseFormShellStateResult) => (
             <Stack gap="xl">
               <Heading level={1} size="2xl" weight="bold">
                 {eventId ? "Edit Lottery" : "Create Lottery"}

@@ -24,7 +24,7 @@ export interface EventFormDrawerProps {
 
 export function EventFormDrawer({
   isOpen,
-  onClose,
+  onClose: _onClose,
   renderHeader,
   renderBaseFields,
   renderMediaFields,

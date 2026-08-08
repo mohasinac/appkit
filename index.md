@@ -282,6 +282,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `TrustBadges` | `features/homepage/components/TrustBadges.tsx` | Trust/guarantee badges row |
 | `HomepageCustomerReviewsSection` | `features/homepage/components/HomepageCustomerReviewsSection.tsx` | Homepage reviews section |
 | `AboutView` | `features/about/components/AboutView.tsx` | About page |
+| `HowEmiWorksView` | `features/about/components/HowEmiWorksView.tsx` | EMI eligibility, token payment, and installment schedule explainer |
 | `ContactForm` | `features/contact/components/ContactForm.tsx` | Contact form |
 | `ContactPageView` | `features/contact/components/ContactPageView.tsx` | Contact page with form + info |
 | `FAQCategorySidebar` | `features/faq/components/FAQCategorySidebar.tsx` | FAQ category filter sidebar |

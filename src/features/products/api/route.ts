@@ -212,9 +212,8 @@ export const POST = createRouteHandler({
   auth: true,
   roles: ["seller", "moderator", "admin"],
   schema: productMutateSchema,
-  handler: async ({ user, body }) => {
+  handler: async ({ body }) => {
     const payload = body as Record<string, JsonValue>;
-    const userRecord = (user ?? {}) as Record<string, JsonValue>;
     const { db } = getProviders();
     if (!db) {
       return NextResponse.json(

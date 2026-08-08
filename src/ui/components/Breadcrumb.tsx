@@ -1,6 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import { Nav, Ol, Li } from "./Semantic";
 import { Span } from "./Typography";
+import { TextLink } from "./TextLink";
 
 /**
  * Breadcrumb — accessible navigation trail with ChevronRight separators.
@@ -45,9 +46,9 @@ export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
                   {item.label}
                 </Span>
               ) : (
-                <a href={item.href} className="appkit-breadcrumb__link">
+                <TextLink href={item.href} variant="none" className="appkit-breadcrumb__link">
                   {item.label}
-                </a>
+                </TextLink>
               )}
             </Li>
           );

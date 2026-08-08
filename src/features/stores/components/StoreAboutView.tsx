@@ -1,6 +1,6 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
-import { Div, Heading, RichText, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, RichText, Stack, Text } from "../../../ui";
 const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
 const CLS_WARN_BOX = "bg-warning-surface border border-warning rounded-lg p-4";
 const CLS_WARN_TITLE = "text-warning font-medium";
@@ -80,14 +80,9 @@ export function StoreAboutView({
             <Text className={CLS_LABEL}>
               {labels.websiteLabel ?? "Website"}
             </Text>
-            <a
-              href={store.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline break-all"
-            >
+            <Anchor href={store.website} tone="none" underline="hover" className="text-primary break-all">
               {store.website}
-            </a>
+            </Anchor>
           </Row>
         )}
       </Stack>

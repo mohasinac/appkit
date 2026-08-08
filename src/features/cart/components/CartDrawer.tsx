@@ -1,5 +1,6 @@
 import type { CartItem } from "../types";
 import { Aside, Button, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
@@ -27,13 +28,9 @@ interface CartItemRowProps {
 export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
     <Div layout="flex" gap="4" surface="card" padding="sm" className={`transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
-      <Div surface="muted" className={`h-20 w-20 flex-shrink-0 ${__O.hidden}`} rounded="lg">
+      <Div surface="muted" className={`relative h-20 w-20 flex-shrink-0 ${__O.hidden}`} rounded="lg">
         {item.meta.image && (
-          <img
-            src={item.meta.image}
-            alt={item.meta.title}
-            className="h-full w-full object-cover"
-          />
+          <MediaImage src={item.meta.image} alt={item.meta.title} size="thumbnail" />
         )}
       </Div>
       <Stack justify="between" className="flex-1">

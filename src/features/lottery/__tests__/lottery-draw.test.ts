@@ -118,7 +118,6 @@ describe("pickWeightedSlot", () => {
   });
 
   it("always picks from unclaimed slots only", () => {
-    const booked = makeSlot({ slotNumber: 1, weight: 99, isBooked: true });
     const available = makeSlot({ slotNumber: 2, weight: 1, isBooked: false });
 
     // pickWeightedSlot only receives unclaimed — so booked should never be passed

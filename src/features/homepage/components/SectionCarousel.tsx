@@ -107,7 +107,6 @@ export interface SectionCarouselProps<T = unknown> {
 // --- Skeleton ----------------------------------------------------------------
 
 function CarouselSkeleton({ count }: { count: number }) {
-const themed = { bgSecondary: THEMED_BG_SECONDARY, textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
 return (
     <Div layout="flex" gap="4" className={`${__O.hidden}`} padding="x-md">
       {Array.from({ length: count }).map((_, i) => (
@@ -146,7 +145,7 @@ export function SectionCarousel<T = unknown>({
   isLoading = false,
   skeletonCount = 4,
   lightText,
-  showPeek = false,
+  showPeek: _showPeek = false,
   minItemWidth = 220,
 }: SectionCarouselProps<T>) {
   if (!isLoading && items.length === 0) return null;

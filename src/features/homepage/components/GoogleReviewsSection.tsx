@@ -1,6 +1,7 @@
 import { normalizeError } from "../../../errors/normalize";
 import React from "react";
-import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
 import type { GoogleReview } from "../lib/google-reviews-fetcher";
@@ -85,13 +86,9 @@ function ReviewCard({
     <Stack className={`${__P.p4} bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)]`} gap="3" rounded="xl" shadow="sm">
       <Row align="center" gap="3">
         {review.authorPhotoUrl ? (
-          <img
-            src={review.authorPhotoUrl}
-            alt={review.authorName}
-            className="w-9 h-9 rounded-full object-cover flex-shrink-0"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-          />
+          <Div className="relative w-9 h-9 flex-shrink-0 overflow-hidden" rounded="full">
+            <MediaImage src={review.authorPhotoUrl} alt={review.authorName} size="avatar" />
+          </Div>
         ) : (
           <Row className="w-9 h-9 bg-[var(--appkit-color-primary)] flex-shrink-0" align="center" justify="center" rounded="full">
             <Span color="inverse" size="sm" weight="bold">
@@ -222,14 +219,9 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
             )}
           </>
           {linkToGoogleMaps && mapsHref && (
-            <a
-              href={mapsHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={CLS_GMAPS_LINK}
-            >
+            <Anchor href={mapsHref} tone="none" underline="hover" className={CLS_GMAPS_LINK}>
               View on Google →
-            </a>
+            </Anchor>
           )}
         </Row>
 

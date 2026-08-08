@@ -12,8 +12,6 @@ interface ConsultationFormProps {
   concerns?: string[];
 }
 
-const CLS_INPUT = "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm";
-
 const TIME_SLOTS = [
   "9:00 AM",
   "10:00 AM",

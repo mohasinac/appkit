@@ -5,8 +5,6 @@ import Link from "next/link";
 import { Button, Div, Heading, Row, Span, Stack } from "../../../ui";
 import type { Banner } from "../types";
 
-const FONT_BANGERS = "var(--font-bangers, Bangers, cursive)";
-
 export interface HeroBannerProps {
   banners: Banner[];
   /** Milliseconds between automatic slide advances. Default: 5000. */

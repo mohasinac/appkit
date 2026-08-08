@@ -21,6 +21,7 @@ const CLS_ICON_PURPLE = "flex h-10 w-10 flex-shrink-0 items-center justify-cente
 const CLS_ICON_PURPLE_BARE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30";
 import Link from "next/link";
 import { Div, Grid, Heading, RichText, Row, Section, Span, StarRating, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -140,11 +141,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {/* Reviewer row */}
           <Row gap="sm">
             {review.userAvatar ? (
-              <img
-                src={review.userAvatar}
-                alt={displayName}
-                className="h-11 w-11 flex-shrink-0 object-cover rounded-full ring-2 ring-white ring-[var(--appkit-color-border-subtle)]"
-              />
+              <Div className="relative h-11 w-11 flex-shrink-0 overflow-hidden ring-2 ring-white ring-[var(--appkit-color-border-subtle)]" rounded="full">
+                <MediaImage src={review.userAvatar} alt={displayName} size="avatar" />
+              </Div>
             ) : (
               <Row textWeight="bold" textSize="base" centered className="h-11 w-11 flex-shrink-0 bg-primary/10 text-primary ring-2 ring-white ring-[var(--appkit-color-border-subtle)]" rounded="full">
                 {initials}
@@ -200,10 +199,11 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   aria-label={`View photo ${i + 1}`}
                   className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
-                  <img
+                  <MediaImage
                     src={img.thumbnailUrl ?? img.url}
                     alt={`Review image ${i + 1}`}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    size="card"
+                    className="transition-transform duration-300 group-hover:scale-105"
                   />
                   <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[rgba(0,0,0,0.3)]">
                     <Span color="inverse" size="xl">🔍</Span>
@@ -364,13 +364,15 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {/* Image */}
           <Row
             centered
-            className="max-h-[85vh] max-w-[85vw]"
+            className="relative h-[85vh] w-[85vw]"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <MediaImage
               src={currentImage.url}
               alt={`Review photo ${lightboxIdx + 1}`}
-              className="max-h-[85vh] max-w-[85vw] rounded-lg object-contain shadow-2xl"
+              size="hero"
+              objectFit="contain"
+              className="rounded-lg shadow-2xl"
             />
           </Row>
 
@@ -401,7 +403,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
  : "border-transparent opacity-60 hover:opacity-100"
  }`}
                 >
-                  <img src={img.thumbnailUrl ?? img.url} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+                  <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Thumbnail ${i + 1}`} size="thumbnail" />
                 </button>
               ))}
             </Row>

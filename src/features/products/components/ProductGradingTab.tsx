@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Div, Heading, Row, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, Row, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 import { MediaImage } from "../../media/MediaImage";
 import type { ProductGrading } from "../schemas/firestore";
@@ -53,14 +53,9 @@ export function ProductGradingTab({ grading, slabImageUrl }: ProductGradingTabPr
               {lookupUrl ? (
                 <>
                   {" — "}
-                  <a
-                    href={lookupUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[var(--appkit-color-primary)] hover:underline"
-                  >
+                  <Anchor href={lookupUrl} tone="none" underline="hover" className="text-[var(--appkit-color-primary)]">
                     Verify
-                  </a>
+                  </Anchor>
                 </>
               ) : null}
             </Text>

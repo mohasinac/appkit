@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Row, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
 const __P = {
   p4: "p-4",
 } as const;
@@ -44,12 +44,9 @@ export function ContactInfoSidebar({
                   {item.label}
                 </Text>
                 {item.href ? (
-                  <a
-                    href={item.href}
-                    className="text-sm text-primary-800 dark:text-primary-300 hover:underline"
-                  >
+                  <Anchor href={item.href} size="sm" underline="hover">
                     {item.value}
-                  </a>
+                  </Anchor>
                 ) : (
                   <Text size="sm">{item.value}</Text>
                 )}

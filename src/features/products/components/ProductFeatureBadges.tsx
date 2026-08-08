@@ -1,5 +1,5 @@
-import { type ReactNode } from "react";
-import { Row, Span } from "../../../ui";
+import { Fragment, type ReactNode } from "react";
+import { Row, Span, TextLink } from "../../../ui";
 
 interface ProductFeatureBadgeLabels {
   featured: string;
@@ -13,6 +13,7 @@ interface ProductFeatureBadgeLabels {
   returnable: string;
   freeShipping: string;
   codAvailable: string;
+  emiAvailable: string;
   wishlistCount: (count: number) => string;
   categoryProductCount: (count: string, category: string) => string;
 }
@@ -28,6 +29,11 @@ interface ProductFeatureBadgesProps {
   categoryProductCount?: number;
   categoryName?: string;
   codAvailable?: boolean;
+  /** When set, the COD badge links here (e.g. the "How Checkout Works" policy page). */
+  codHref?: string;
+  emiAvailable?: boolean;
+  /** When set, the EMI badge links here (e.g. the "How EMI Works" policy page). */
+  emiHref?: string;
   labels: ProductFeatureBadgeLabels;
   formatCount?: (value: number) => string;
   categoryBadgeClassName?: string;
@@ -39,6 +45,7 @@ interface FeatureBadge {
   label: string;
   colorClass: string;
   bgClass: string;
+  href?: string;
 }
 
 export function ProductFeatureBadges({
@@ -52,6 +59,9 @@ export function ProductFeatureBadges({
   categoryProductCount,
   categoryName,
   codAvailable,
+  codHref,
+  emiAvailable,
+  emiHref,
   labels,
   formatCount,
   categoryBadgeClassName,
@@ -142,6 +152,19 @@ export function ProductFeatureBadges({
       colorClass: "text-purple-700 dark:text-purple-300",
       bgClass:
         "bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-800",
+      href: codHref,
+    });
+  }
+
+  if (emiAvailable) {
+    badges.push({
+      key: "emi",
+      icon: <Span size="xs">📅</Span>,
+      label: labels.emiAvailable,
+      colorClass: "text-indigo-700 dark:text-indigo-300",
+      bgClass:
+        "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800",
+      href: emiHref,
     });
   }
 
@@ -174,17 +197,26 @@ export function ProductFeatureBadges({
 
   if (badges.length === 0) return null;
 
+  const renderPill = (badge: FeatureBadge) => (
+    <Span layout="inline-flex" gap="xs"
+      className={`.5 border py-[0.375rem] ${badge.bgClass} ${badge.colorClass}`} rounded="lg" padding="x-sm" size="xs" weight="medium"
+    >
+      <Span aria-hidden="true">{badge.icon}</Span>
+      {badge.label}
+    </Span>
+  );
+
   return (
     <Row wrap gap="sm">
-      {badges.map((badge) => (
-        <Span layout="inline-flex" gap="xs"
-          key={badge.key}
-          className={`.5 border py-[0.375rem] ${badge.bgClass} ${badge.colorClass}`} rounded="lg" padding="x-sm" size="xs" weight="medium"
-        >
-          <Span aria-hidden="true">{badge.icon}</Span>
-          {badge.label}
-        </Span>
-      ))}
+      {badges.map((badge) =>
+        badge.href ? (
+          <TextLink key={badge.key} href={badge.href} className="no-underline">
+            {renderPill(badge)}
+          </TextLink>
+        ) : (
+          <Fragment key={badge.key}>{renderPill(badge)}</Fragment>
+        ),
+      )}
     </Row>
   );
 }

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Article, BaseListingCard, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 
 import type { BlogPost, BlogPostCategory } from "../types";
 import { getMediaUrl } from "../../media/types/index";
@@ -81,12 +82,13 @@ export function BlogFeaturedCard({
       )}
       <TextLink href={href} layout="flex-col" className="h-full">
         {/* Cover image — aspect-video like EventCard */}
-        <Div className={`aspect-video ${__O.hidden} flex-shrink-0`}>
+        <Div className={`relative aspect-video ${__O.hidden} flex-shrink-0`}>
           {coverImageUrl ? (
-            <img
+            <MediaImage
               src={coverImageUrl}
               alt={safeTitle}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              size="card"
+              className="transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <Div

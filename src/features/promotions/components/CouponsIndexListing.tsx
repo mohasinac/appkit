@@ -46,7 +46,7 @@ const FILTER_KEYS = [TABLE_KEYS.TYPE, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO] 
 
 export function CouponsIndexListing({
   initialCoupons,
-  storeSlug,
+  storeSlug: _storeSlug,
   storeId,
 }: CouponsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "12", sort: DEFAULT_SORT } });

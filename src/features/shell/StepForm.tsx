@@ -171,7 +171,7 @@ export function StepForm<T extends object = Record<string, JsonValue>>({
   stepErrors,
 }: StepFormProps<T>) {
   const { showToast } = useToast();
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [fieldErrors, _setFieldErrors] = useState<Record<string, string>>({});
   const [stepError, setStepError] = useState<string | null>(null);
 
   // Persist step to localStorage if formId provided

@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { Div, Heading, RichText, Row, Scrim, Span, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
@@ -157,11 +158,7 @@ export function BlogPostView({
           {renderImage ? (
             renderImage(post)
           ) : (
-            <img
-              src={coverImageUrl}
-              alt={post.title}
-              className="h-full w-full object-cover"
-            />
+            <MediaImage src={coverImageUrl} alt={post.title} size="hero" />
           )}
           <Scrim direction="bottom-up" intensity="subtle" className="absolute inset-0" />
         </Div>

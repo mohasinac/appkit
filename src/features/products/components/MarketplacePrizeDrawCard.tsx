@@ -10,6 +10,7 @@ import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-white";
 import { BaseListingCard, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 
 export type MarketplacePrizeDrawCardData = ProductItem;
 
@@ -160,13 +161,7 @@ export function MarketplacePrizeDrawCard({
                     className="relative overflow-hidden bg-[var(--appkit-color-surface-muted)]"
                   >
                     {img ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={img}
-                        alt={it?.title ?? `Prize ${i + 1}`}
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover"
-                      />
+                      <MediaImage src={img} alt={it?.title ?? `Prize ${i + 1}`} size="card" />
                     ) : null}
                   </Div>
                 );

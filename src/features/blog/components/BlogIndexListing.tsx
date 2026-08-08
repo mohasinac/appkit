@@ -164,7 +164,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, PAGE_SIZE),
   };
 
-  const { posts, total, totalPages, isLoading } = useBlogPosts(params, { initialData });
+  const { posts, totalPages, isLoading } = useBlogPosts(params, { initialData });
   const currentPage = table.getNumber("page", 1);
 
   const commitSearch = useCallback(() => {

@@ -3,6 +3,7 @@ import { normalizeError } from "../../errors/normalize";
 import React, { useState, useCallback } from "react";
 import { Modal } from "../../ui/components/Modal";
 import { Button, Div, Input, Label, Row, Stack, Text, Alert } from "../../ui";
+import { MediaImage } from "./MediaImage";
 import { MediaUploadField } from "./upload/MediaUploadField";
 import { useMediaUpload, useMediaCleanup } from "./index";
 
@@ -263,16 +264,10 @@ export function MediaPickerModal({
                     aria-pressed={isSelected}
                   >
                     <Row
-                      className="aspect-square w-full" surface="subtle" align="center" justify="center"
+                      className="relative aspect-square w-full" surface="subtle" align="center" justify="center"
                     >
                       {isImage ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={f.downloadURL}
-                          alt={f.name}
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                        />
+                        <MediaImage src={f.downloadURL} alt={f.name} size="thumbnail" />
                       ) : (
                         <Text size="sm" color="muted">
                           {f.contentType ?? "file"}

@@ -1052,7 +1052,6 @@ export async function verifyAndPlaceRazorpayOrderAction(
   const siteSettings = await siteSettingsRepository.getSingleton();
   const platformFeePercent = siteSettings?.commissions?.platformFeePercent ?? 5;
   const gstPercent = siteSettings?.commissions?.gstPercent ?? 18;
-  const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
 
   const isValid = await verifyPaymentSignatureWithKeys({
     razorpay_order_id,

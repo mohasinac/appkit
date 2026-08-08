@@ -6,6 +6,7 @@ import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
 import { useActiveAd } from "../hooks/useActiveAd";
 import type { ActiveAdRecord } from "../hooks/useActiveAd";
 import { Anchor, Div, Span, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 
 // ---------------------------------------------------------------------------
 // Props
@@ -91,12 +92,9 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
       className="w-full overflow-hidden bg-[var(--appkit-color-surface)]"
     >
       {creative.imageUrl ? (
-        <img
-          src={creative.imageUrl}
-          alt={creative.title || "Advertisement"}
-          className="h-14 w-14 rounded object-cover flex-shrink-0"
-          loading="lazy"
-        />
+        <Div className="relative h-14 w-14 flex-shrink-0 overflow-hidden" rounded="default">
+          <MediaImage src={creative.imageUrl} alt={creative.title || "Advertisement"} size="thumbnail" />
+        </Div>
       ) : null}
       <Div className="flex-1 min-w-0">
         {creative.title ? (

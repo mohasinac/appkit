@@ -137,7 +137,7 @@ export function ListingLayout({
   defaultSidebarOpen = false,
   filterPendingCount,
   className = "",
-  loading = false,
+  loading: _loading = false,
   errorSlot,
   labels,
   portal,

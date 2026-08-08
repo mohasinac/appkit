@@ -6,6 +6,7 @@ import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { useBottomActions } from "../../layout";
+import { MediaImage } from "../../media/MediaImage";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -57,7 +58,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     view, setView, table, searchInput, setSearchInput, commitSearch,
     filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
     pendingFilters, setPendingFilters, activeFilterCount, hasActiveState, resetAll,
-    rows: fetchedRows, total, isLoading, errorMessage,
+    rows: fetchedRows, isLoading, errorMessage,
     currentPage, totalPages, selection,
   } = useAdminListing<AdminCarouselResponse, CarouselRow>({
     filterKeys: FILTER_KEYS,
@@ -150,7 +151,9 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     secondary: (
       <Row align="center" gap="3">
         {row.thumbnailUrl && (
-          <img src={row.thumbnailUrl} alt="" className="w-14 h-9 object-cover rounded flex-shrink-0 bg-[var(--appkit-color-surface)]" />
+          <Div className="relative w-14 h-9 flex-shrink-0 overflow-hidden bg-[var(--appkit-color-surface)]" rounded="default">
+            <MediaImage src={row.thumbnailUrl} alt="" size="thumbnail" />
+          </Div>
         )}
         <Span size="sm" className="truncate" color="muted">{row.secondary}</Span>
       </Row>

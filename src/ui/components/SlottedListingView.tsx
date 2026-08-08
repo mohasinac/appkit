@@ -85,16 +85,14 @@ export function SlottedListingView({
   renderTable,
   renderPagination,
   overlays,
-  manageSearch,
+  manageSearch: _manageSearch,
   manageSelection,
-  manageSort = false,
+  manageSort: _manageSort = false,
   inlineToolbar = false,
   total = 0,
   isLoading = false,
   className = "",
 }: SlottedListingViewProps) {
-  const effectiveManageSearch =
-    manageSearch ?? (portal === "admin" || portal === "seller" || portal === "user");
   const effectiveManageSelection =
     manageSelection ?? (portal === "admin" || portal === "seller");
 

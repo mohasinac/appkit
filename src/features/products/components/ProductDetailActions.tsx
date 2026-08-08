@@ -41,7 +41,7 @@ export interface ProductDetailActionsProps {
  */
 export function ProductDetailActions({
   productId,
-  productSlug,
+  productSlug: _productSlug,
   productTitle,
   productImage,
   price,

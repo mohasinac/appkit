@@ -1,5 +1,6 @@
 import type { CategoryItem } from "../types";
 import { Button, Div, Heading, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 
 interface ConcernCardProps {
   concern: CategoryItem;
@@ -20,11 +21,9 @@ export function ConcernCard({
       className={`group flex flex-col items-center gap-3 rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 text-center shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
     >
       {concern.display?.coverImage && (
-        <img
-          src={concern.display.coverImage}
-          alt={concern.name}
-          className="h-16 w-16 object-cover rounded-full"
-        />
+        <Div className="relative h-16 w-16 overflow-hidden" rounded="full">
+          <MediaImage src={concern.display.coverImage} alt={concern.name} size="thumbnail" />
+        </Div>
       )}
       <Div>
         <Heading

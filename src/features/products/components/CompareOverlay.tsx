@@ -32,6 +32,7 @@ const CLS_REMOVE_BTN = "shrink-0 rounded-full p-1 text-zinc-400 hover:bg-[var(--
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { useSwipe } from "../../../react/hooks/useSwipe";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { COMPARE_MAX_ITEMS } from "../constants/action-defs";
@@ -196,12 +197,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
         <Link href={href} target="_blank" rel={REL_NOOPENER}>
           <Div className={`relative aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
             {img ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={img}
-                alt={item.title ?? item.id}
-                className="h-full w-full object-cover"
-              />
+              <MediaImage src={img} alt={item.title ?? item.id} size="card" />
             ) : null}
           </Div>
         </Link>

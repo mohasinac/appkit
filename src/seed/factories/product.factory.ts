@@ -10,39 +10,6 @@ import {
 let _seq = 1;
 
 // --- Realistic data pools (from seed locale config) ---------------------------
-const PRODUCT_NAMES = [
-  "Handloom Cotton Saree",
-  "Silver Oxidised Jhumkas",
-  "Brass Pooja Diya Set",
-  "Khadi Kurta & Pyjama Set",
-  "Terracotta Flower Vase",
-  "Sandalwood Incense Sticks",
-  "Batik Print Salwar Suit",
-  "Copper Water Bottle",
-  "Warli Art Wall Frame",
-  "Clay Tea Kadai Set",
-  "Jute Laptop Bag",
-  "Madhubani Painting Print",
-  "Organic Tulsi Green Tea",
-  "Kantha Embroidered Cushion",
-  "Brass Dancing Ganesha Figurine",
-  "Block Print Bedsheet Set",
-  "Bamboo Cutlery Kit",
-  "Dhokra Metal Elephant",
-  "Rajasthani Mojari Jutti",
-  "Coconut Shell Bowl Set",
-] as const;
-
-const CATEGORIES = [
-  "clothing",
-  "jewellery",
-  "home-decor",
-  "food-beverages",
-  "art-crafts",
-  "wellness",
-  "accessories",
-  "kitchenware",
-] as const;
 
 const TAGS_POOL = [
   ["handmade", "artisan"],

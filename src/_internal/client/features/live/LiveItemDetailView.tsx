@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
 } from "../../../../ui";
+import { MediaImage } from "../../../../features/media/MediaImage";
 import { formatCurrency } from "../../../../utils/number.formatter";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
@@ -61,11 +62,12 @@ export function LiveItemDetailView({
         <Stack gap="lg">
           {/* Gallery */}
           {product.images.length > 0 && (
-            <Div className={`${__O.hidden} bg-muted`} rounded="lg">
-              <img
+            <Div className={`relative h-80 w-full ${__O.hidden} bg-muted`} rounded="lg">
+              <MediaImage
                 src={product.mainImage || product.images[0]}
                 alt={product.title}
-                className="h-80 w-full object-contain"
+                size="hero"
+                objectFit="contain"
               />
             </Div>
           )}

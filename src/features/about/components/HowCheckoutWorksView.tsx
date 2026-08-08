@@ -3,7 +3,7 @@ import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { Div, FlowDiagram, Heading, Row, Section, Stack, Text } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { Smartphone, Banknote } from "lucide-react";
+import { Wallet, Smartphone, Banknote, CalendarClock } from "lucide-react";
 
 const __P = {
   p5: "p-5",
@@ -30,7 +30,7 @@ export async function HowCheckoutWorksView({
 
   const PAYMENT_METHODS = [
     {
-      icon: Smartphone,
+      icon: Wallet,
       title: t("pm1Title"),
       text: t("pm1Text"),
       color:
@@ -38,12 +38,28 @@ export async function HowCheckoutWorksView({
       iconColor: "text-primary",
     },
     {
-      icon: Banknote,
+      icon: Smartphone,
       title: t("pm2Title"),
       text: t("pm2Text"),
       color:
+        "bg-sky-50 border-sky-200 dark:bg-sky-900/20 dark:border-sky-700",
+      iconColor: "text-sky-600 dark:text-sky-400",
+    },
+    {
+      icon: Banknote,
+      title: t("pm3Title"),
+      text: t("pm3Text"),
+      color:
         "bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-700",
       iconColor: "text-emerald-600 dark:text-emerald-400",
+    },
+    {
+      icon: CalendarClock,
+      title: t("pm4Title"),
+      text: t("pm4Text"),
+      color:
+        "bg-violet-50 border-violet-200 dark:bg-violet-900/20 dark:border-violet-700",
+      iconColor: "text-violet-600 dark:text-violet-400",
     },
   ];
 

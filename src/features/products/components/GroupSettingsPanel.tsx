@@ -3,6 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 
 import React, { useState } from "react";
 import { Button, Code, ConfirmDeleteModal, Div, FormField, Heading, Modal, Row, Select, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 
@@ -332,8 +333,9 @@ export function GroupSettingsPanel({
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (
                       <Row key={child.id} align="center" gap="sm" padding="y-xs">
                         {child.images?.[0] ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={child.images[0]} alt={child.title} className="w-8 h-8 rounded-full object-cover border border-[var(--appkit-color-border)]" />
+                          <Div className="relative w-8 h-8 flex-shrink-0 overflow-hidden border border-[var(--appkit-color-border)]" rounded="full">
+                            <MediaImage src={child.images[0]} alt={child.title} size="thumbnail" />
+                          </Div>
                         ) : (
                           <Div className="w-8 h-8" surface="subtle" rounded="full" />
                         )}

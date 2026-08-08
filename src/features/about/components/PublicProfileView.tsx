@@ -159,7 +159,7 @@ function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewC
 }
 
 function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: string | null; memberSince: string; isSeller: boolean; storeSlug: string | null | undefined; flex: ProfileFlex; page: ProfilePage }) {
-  const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page } = ctx;
+  const { displayName, photoURL, memberSince, isSeller, storeSlug, page } = ctx;
   return (
     <Section color="inverse" tone="accent-banner" paddingY="y-2-5xl">
       <Div className={`${page.container.md}`}>
@@ -248,29 +248,6 @@ function renderProfileListingsSection(t: ProfileT, products: ProfileProduct[], s
       {products.length > 8 && storeSlug && (
         <Div className="mt-4 text-center">
           <Link href={String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug))} className="text-sm font-medium text-primary hover:underline">{t("viewAllListings", { count: products.length })}</Link>
-        </Div>
-      )}
-    </Section>
-  );
-}
-
-function renderProfileReviewsSection(t: ProfileT, reviews: ProfileReview[], storeSlug: string | null) {
-  return (
-    <Section>
-      <Heading level={2} className="mb-4">{t("reviewsReceivedTitle")}</Heading>
-      {reviews.length === 0 ? (
-        <Div rounded="2xl" padding="3xl" className="text-center" border="default" surface="subtle">
-          <Star className={CLS_EMPTY_ICON} />
-          <Text variant="secondary" size="sm">{t("noReviewsReceived")}</Text>
-        </Div>
-      ) : (
-        <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
-          {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
-        </Grid>
-      )}
-      {reviews.length > 6 && storeSlug && (
-        <Div className="mt-4 text-center">
-          <Link href={String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug))} className="text-sm font-medium text-primary hover:underline">{t("viewAllReviews", { count: reviews.length })}</Link>
         </Div>
       )}
     </Section>

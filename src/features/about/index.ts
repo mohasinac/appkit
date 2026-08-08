@@ -21,6 +21,9 @@ export type { ShippingPolicyViewProps } from "./components/ShippingPolicyView";
 export { HowCheckoutWorksView } from "./components/HowCheckoutWorksView";
 export type { HowCheckoutWorksViewProps } from "./components/HowCheckoutWorksView";
 
+export { HowEmiWorksView } from "./components/HowEmiWorksView";
+export type { HowEmiWorksViewProps } from "./components/HowEmiWorksView";
+
 export { HowOffersWorkView } from "./components/HowOffersWorkView";
 export type { HowOffersWorkViewProps } from "./components/HowOffersWorkView";
 

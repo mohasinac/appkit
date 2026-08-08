@@ -1,19 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
 
-function makeCollectionChain(snapOverrides: { empty?: boolean; docs?: unknown[] } = {}) {
-  const snap = {
-    empty: snapOverrides.empty ?? (snapOverrides.docs?.length === 0),
-    size: snapOverrides.docs?.length ?? 0,
-    docs: snapOverrides.docs ?? [],
-  };
-  const chain = {
-    where: vi.fn().mockReturnThis(),
-    limit: vi.fn().mockReturnThis(),
-    get: vi.fn().mockResolvedValue(snap),
-  };
-  return { chain, snap };
-}
-
 function makeProductSnap(docs: { id: string; data: object }[] = []) {
   return {
     size: docs.length,

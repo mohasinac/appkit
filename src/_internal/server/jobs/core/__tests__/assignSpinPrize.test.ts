@@ -142,7 +142,6 @@ describe("runAssignSpinPrize — prize selection", () => {
     const prizes = [{ id: "prize-1", title: "Coupon Prize", weight: 1, couponId: "coupon-abc" }];
     const couponSnap = { exists: true, data: () => ({ code: "SUMMER20" }) };
 
-    let callCount = 0;
     const ctx = {
       db: {
         collection: vi.fn().mockImplementation((col: string) => {
@@ -167,7 +166,6 @@ describe("runAssignSpinPrize — prize selection", () => {
               }),
             };
           }
-          callCount++;
           return { doc: vi.fn(), where: vi.fn().mockReturnThis(), limit: vi.fn().mockReturnThis(), get: vi.fn() };
         }),
       },

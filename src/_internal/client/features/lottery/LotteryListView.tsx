@@ -14,6 +14,7 @@ import {
   Div,
   Grid,
 } from "../../../../ui";
+import { MediaImage } from "../../../../features/media/MediaImage";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 
 interface ClientLotteryEvent {
@@ -88,12 +89,11 @@ export function LotteryListView({ items, adminMode = false }: LotteryListViewPro
                     className="overflow-hidden"
                   >
                     {event.coverImageUrl ? (
-                      <Div className="aspect-video overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                      <Div className="relative aspect-video overflow-hidden">
+                        <MediaImage
                           src={event.coverImageUrl}
                           alt={event.title}
-                          className="w-full h-full object-cover"
+                          size="card"
                         />
                       </Div>
                     ) : (

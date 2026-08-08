@@ -1,7 +1,7 @@
 "use client";
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
-import { Div, Heading, HorizontalScroller, Section, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, HorizontalScroller, Section, Stack, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { SectionCarousel } from "./SectionCarousel";
@@ -94,15 +94,17 @@ function CardItem({ card }: { card: CustomCardsCard }) {
         {card.buttons && card.buttons.length > 0 && (
           <Row gap="sm" wrap className="mt-2">
             {card.buttons.map((btn, i) => (
-              <a
+              <Anchor
                 key={i}
                 href={btn.href}
                 target={btn.target ?? "_self"}
                 rel={btn.target === "_blank" ? "noopener noreferrer" : undefined}
+                tone="none"
+                underline="none"
                 className={VARIANT_CLASS[btn.variant] ?? VARIANT_CLASS.primary}
               >
                 {btn.label}
-              </a>
+              </Anchor>
             ))}
           </Row>
         )}
@@ -141,7 +143,6 @@ export type CustomCardsSectionProps = CustomCardsSectionConfig;
 
 export function CustomCardsSection(config: CustomCardsSectionProps) {
   const { title, layout, columns = 3, cards, autoScroll, scrollIntervalMs } = config;
-const themed = { textPrimary: THEMED_TEXT_PRIMARY };
 if (!cards?.length) return null;
 
   // autoScroll: wrap all cards in SectionCarousel (client carousel)

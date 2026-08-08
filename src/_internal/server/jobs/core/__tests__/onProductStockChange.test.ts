@@ -16,8 +16,7 @@ import type { JobContext } from "../../runtime/types";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-function makeCtx(dbQuery?: ReturnType<typeof vi.fn>) {
-  const mockQuery = dbQuery ?? vi.fn().mockReturnThis();
+function makeCtx() {
   const queryChain = { where: vi.fn().mockReturnThis(), get: vi.fn() };
   return {
     db: {

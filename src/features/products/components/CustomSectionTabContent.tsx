@@ -1,6 +1,6 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
-import { Dd, Dl, Dt, RichText, Stack, Text } from "../../../ui";
+import { Anchor, Dd, Dl, Dt, RichText, Stack, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 
@@ -34,14 +34,9 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
               </Dt>
               <Dd className="flex-1" color="muted">
                 {f.type === "url" ? (
-                  <a
-                    href={f.value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary-600 hover:underline dark:text-primary-400 break-all"
-                  >
+                  <Anchor href={f.value} tone="none" underline="hover" className="text-primary-600 dark:text-primary-400 break-all">
                     {f.value}
-                  </a>
+                  </Anchor>
                 ) : (
                   renderFieldValue(f)
                 )}

@@ -39,9 +39,8 @@ export function InteractiveStoreCard({
 }: InteractiveStoreCardProps) {
   const initial = store.storeName[0]?.toUpperCase() ?? "S";
   const [logoBroken, setLogoBroken] = useState(false);
-  const [bannerBroken, setBannerBroken] = useState(false);
   const hasLogo = Boolean(store.storeLogoURL) && !logoBroken;
-  const hasBanner = Boolean(store.storeBannerURL) && !bannerBroken;
+  const hasBanner = Boolean(store.storeBannerURL);
   const longPress = useLongPress(() => onSelect?.(store.id, !isSelected));
 
   return (

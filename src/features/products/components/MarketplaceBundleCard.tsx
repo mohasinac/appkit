@@ -11,6 +11,7 @@ const CLS_BUNDLE_PILL = "inline-flex items-center rounded-full bg-violet-600 px-
 const CLS_STOCK_OK = "bg-success-surface text-white";
 const CLS_VIEW_BTN = "mt-2 w-full cursor-pointer rounded-md bg-violet-600 py-1.5 text-center text-xs font-semibold text-white transition-colors hover:bg-violet-700 active:scale-[0.98]";
 import { BaseListingCard, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 
 export type MarketplaceBundleCardData = Pick<
   CategoryDocument,
@@ -121,12 +122,10 @@ export function MarketplaceBundleCard({
                   key={`${tile.productId}-${i}`}
                   className="relative overflow-hidden bg-[var(--appkit-color-surface-muted)]"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <MediaImage
                     src={tile.imageURL}
                     alt={tile.title ?? `${bundle.name} item ${i + 1}`}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover"
+                    size="card"
                   />
                   {i === collageTiles.length - 1 && overflow > 0 && (
                     <Row textWeight="semibold" textSize="sm" surface="overlay-md" className="absolute inset-0 text-white" align="center" justify="center">
@@ -138,13 +137,7 @@ export function MarketplaceBundleCard({
             </Div>
           ) : cover ? (
             <Div className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={cover}
-                alt={bundle.name}
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
+              <MediaImage src={cover} alt={bundle.name} size="card" />
             </Div>
           ) : (
             <Row className="absolute inset-0 bg-[var(--appkit-color-surface-muted)]" align="center" justify="center">

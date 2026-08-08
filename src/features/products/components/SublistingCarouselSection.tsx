@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next";
 import { Div, Row, Span, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
@@ -68,20 +69,14 @@ function ListingThumb({
     >
       <Div
         rounded="full"
-        className={`w-14 h-14 overflow-hidden border-2 transition-all ${
+        className={`relative w-14 h-14 overflow-hidden border-2 transition-all ${
  isCurrent
  ? "border-[var(--appkit-color-primary)] ring-2 ring-[var(--appkit-color-primary)]/30"
  : "border-[var(--appkit-color-border)] group-hover:border-[var(--appkit-color-primary)]"
  }`}
       >
         {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            alt={listing.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          <MediaImage src={image} alt={listing.title} size="avatar" />
         ) : (
           <Row textSize="xs" color="faint" className="w-full h-full" surface="subtle" align="center" justify="center">
             â—¯

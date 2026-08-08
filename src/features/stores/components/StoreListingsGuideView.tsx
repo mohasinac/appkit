@@ -1,7 +1,7 @@
 import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Li, Section, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "../../../ui";
+import { Alert, Div, Heading, Li, Section, Span, Stack, Table, Tbody, Td, Text, TextLink, Th, Thead, Tr, Ul } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -353,13 +353,18 @@ export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
   return (
     <Stack gap="lg" padding="b-2xl">
       {/* Back nav */}
-      <a
+      <TextLink
+        variant="bare"
         href={String(ROUTES.STORE.GUIDE)}
-        className="inline-flex items-center gap-1.5 text-sm text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)] transition-colors"
+        size="sm"
+        layout="inline-flex"
+        align="center"
+        gap="sm"
+        className="text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)] transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Seller Guide
-      </a>
+      </TextLink>
 
       {/* Page title */}
       <Div>

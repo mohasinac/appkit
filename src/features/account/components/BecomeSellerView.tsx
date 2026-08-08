@@ -24,7 +24,7 @@ export function BecomeSellerView({
   renderSuccess,
   renderAlreadySeller,
   state = "guide",
-  isLoading = false,
+  isLoading: _isLoading = false,
   className = "",
 }: BecomeSellerViewProps) {
   return (

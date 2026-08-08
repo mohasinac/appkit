@@ -9,6 +9,7 @@ import {
 import { ROUTES } from "../../../next";
 import { Container, Div, Heading, Main, Nav, Section, Span, Text } from "../../../ui";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
+import { MediaImage } from "../../media/MediaImage";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
@@ -116,11 +117,9 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
       <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
         {hasCover && (
           <>
-            <img
-              src={coverImage}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <Div className="absolute inset-0">
+              <MediaImage src={coverImage} alt="" size="banner" />
+            </Div>
             <Div surface="overlay-md" className="absolute inset-0" />
           </>
         )}

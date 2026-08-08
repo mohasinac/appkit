@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Alert, Button, Div, Label, Row, Spinner, Stack, Text } from "../../../ui";
+import { Alert, Anchor, Button, Div, Label, Row, Spinner, Stack, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
@@ -191,14 +191,9 @@ export function MediaUploadList({
                   />
                 </Div>
               ) : (
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={CLS_PDF_LINK}
-                >
+                <Anchor href={item.url} tone="none" underline="none" className={CLS_PDF_LINK}>
                   {fileNameFromUrl(item.url)}
-                </a>
+                </Anchor>
               )}
 
               {!disabled && (

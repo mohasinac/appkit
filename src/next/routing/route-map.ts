@@ -75,6 +75,7 @@ export const DEFAULT_ROUTE_MAP = {
     HOW_PRE_ORDERS_WORK: "/how-pre-orders-work",
     HOW_OFFERS_WORK: "/how-offers-work",
     HOW_CHECKOUT_WORKS: "/how-checkout-works",
+    HOW_EMI_WORKS: "/how-emi-works",
     HOW_ORDERS_WORK: "/how-orders-work",
     HOW_REVIEWS_WORK: "/how-reviews-work",
     HOW_PAYOUTS_WORK: "/how-payouts-work",

@@ -120,7 +120,7 @@ export function ReviewsIndexListing({
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
-  const { reviews, total, totalPages, isLoading } = useReviews(
+  const { reviews, totalPages, isLoading } = useReviews(
     {
       q: table.get(TABLE_KEYS.QUERY) || undefined,
       rating: table.get(TABLE_KEYS.RATING) || undefined,

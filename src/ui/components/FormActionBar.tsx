@@ -3,6 +3,7 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "./Button";
+import { TextLink } from "./TextLink";
 
 export interface FormActionBarBreadcrumb {
   label: string;
@@ -49,9 +50,9 @@ export function FormActionBar({
               <React.Fragment key={i}>
                 {i > 0 && <ChevronRight className="h-3 w-3 flex-shrink-0" />}
                 {crumb.href ? (
-                  <a href={crumb.href} className="hover:underline truncate">
+                  <TextLink href={crumb.href} variant="inherit" truncate>
                     {crumb.label}
-                  </a>
+                  </TextLink>
                 ) : (
                   <span className="truncate">{crumb.label}</span>
                 )}

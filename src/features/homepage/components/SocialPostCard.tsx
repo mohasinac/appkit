@@ -1,5 +1,6 @@
 import type { SocialPost, SocialPlatform } from "../schemas";
-import { Div, Row, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, Row, Span, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 const __P = {
   p3: "p-3",
 } as const;
@@ -71,18 +72,18 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
   const meta = PLATFORM_META.youtube;
 
   return (
-    <a
+    <Anchor
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      tone="none"
+      underline="none"
       className="group relative block aspect-video w-full overflow-hidden rounded-xl bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-youtube)]"
       aria-label={post.caption ?? `Watch on YouTube`}
     >
-      <img
+      <MediaImage
         src={thumbnail}
         alt={post.caption ?? "YouTube video"}
-        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        loading="lazy"
+        size="card"
+        className="transition-transform duration-300 group-hover:scale-105"
       />
 
       {/* Play button overlay */}
@@ -113,7 +114,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
           <Text color="inverse" className="line-clamp-2" size="xs">{post.caption}</Text>
         </Stack>
       )}
-    </a>
+    </Anchor>
   );
 }
 
@@ -133,20 +134,20 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
   const meta = PLATFORM_META[post.platform];
 
   return (
-    <a
+    <Anchor
       href={post.permalink}
-      target="_blank"
-      rel="noopener noreferrer"
+      tone="none"
+      underline="none"
       className="group relative block aspect-square overflow-hidden rounded-xl bg-[var(--appkit-color-surface)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface-elevated)]"
       aria-label={post.caption ?? `View on ${meta.label}`}
     >
       {/* Thumbnail */}
       {post.imageUrl ? (
-        <img
+        <MediaImage
           src={post.imageUrl}
           alt={post.caption ?? `${meta.label} post`}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
+          size="card"
+          className="transition-transform duration-300 group-hover:scale-105"
         />
       ) : (
         <Row className="h-full w-full" surface="subtle" align="center" justify="center">
@@ -217,6 +218,6 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
           </Row>
         )}
       </Stack>
-    </a>
+    </Anchor>
   );
 }

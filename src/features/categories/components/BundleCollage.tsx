@@ -12,6 +12,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Div, Row, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -79,12 +80,11 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                 aria-label={`View ${p.title} in lightbox`}
               >
                 {cover ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
+                  <MediaImage
                     src={cover}
                     alt={p.title}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
-                    loading="lazy"
+                    size="card"
+                    className="transition-transform group-hover:scale-105"
                   />
                 ) : (
                   <Row textSize="3xl" surface="muted" className="absolute inset-0" align="center" justify="center">

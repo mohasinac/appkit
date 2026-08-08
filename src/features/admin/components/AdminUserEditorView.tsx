@@ -229,7 +229,7 @@ export function AdminUserEditorView({
   userId,
   displayName,
   currentRole,
-  currentIsDisabled,
+  currentIsDisabled: _currentIsDisabled,
   currentEmailVerified,
   ownedStoreId,
   ownedStoreName,

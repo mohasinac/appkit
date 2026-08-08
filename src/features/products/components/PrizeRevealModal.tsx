@@ -17,7 +17,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button, Div, Heading, LoginRequiredModal, Modal, Span, Stack, Text, useToast } from "../../../ui";
+import { Anchor, Button, Div, Heading, LoginRequiredModal, Modal, Span, Stack, Text, useToast } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
@@ -277,12 +278,9 @@ export function PrizeRevealModal({
               #{winner.itemNumber} — {winner.title}
             </Heading>
             {winnerImg ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={winnerImg}
-                alt={winner.title}
-                className="mx-auto max-h-64 rounded"
-              />
+              <Div className="relative mx-auto h-64 w-64 max-w-full overflow-hidden" rounded="md">
+                <MediaImage src={winnerImg} alt={winner.title} size="hero" objectFit="contain" />
+              </Div>
             ) : null}
             {winner.estimatedValue != null ? (
               <Text className="mt-2 text-[var(--appkit-color-text-muted)]" size="sm">
@@ -303,14 +301,9 @@ export function PrizeRevealModal({
           theatrical — neither the store nor LetItRip staff can influence the
           outcome.{" "}
           {effectiveRngUrl ? (
-            <a
-              href={effectiveRngUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="underline"
-            >
+            <Anchor href={effectiveRngUrl} tone="none" underline="always">
               View RNG source code →
-            </a>
+            </Anchor>
           ) : null}
         </Div>
       </Stack>

@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import { Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { Anchor, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { SocialPostCard } from "./SocialPostCard";
 import {
   fetchInstagramPosts,
@@ -31,16 +31,6 @@ function platformProfileUrl(platform: SocialPlatform, handle: string): string {
 }
 
 // --- Skeleton ----------------------------------------------------------------
-
-function SocialFeedSkeleton({ count }: { count: number }) {
-  return (
-    <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-      {Array.from({ length: count }).map((_, i) => (
-        <Div key={i} className="aspect-square animate-pulse" surface="subtle" rounded="xl" />
-      ))}
-    </Div>
-  );
-}
 
 // --- Empty state -------------------------------------------------------------
 
@@ -152,14 +142,14 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
             )}
           </>
           {profileUrl && (
-            <a
+            <Anchor
               href={profileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              tone="none"
+              underline="none"
               className="shrink-0 text-sm font-medium text-[var(--appkit-color-primary)] hover:opacity-80"
             >
               Follow on {PLATFORM_LABELS[platform]} →
-            </a>
+            </Anchor>
           )}
         </Row>
 

@@ -6,7 +6,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button, ConfirmDeleteModal, Div, Heading, Input, RichTextEditor, RichTextRenderer, Row, Select, Span, Stack, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { ImageUpload, useMediaUpload } from "../../media";
+import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { BlogPostCategory, BlogPostStatus } from "../../blog/types";
@@ -433,7 +433,9 @@ export function AdminBlogEditorView({
         <Span>Live preview</Span>
       </Row>
       {draft.coverImage ? (
-        <img src={draft.coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
+        <Div className="relative h-64 w-full mb-4 overflow-hidden" rounded="md">
+          <MediaImage src={draft.coverImage} alt="" size="hero" />
+        </Div>
       ) : null}
       <Heading level={1} className="mb-1" size="2xl" weight="bold">
         {draft.title || "Untitled post"}

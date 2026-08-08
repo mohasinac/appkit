@@ -1,5 +1,5 @@
 import React from "react";
-import { Div } from "../../../ui";
+import { Div, TextLink } from "../../../ui";
 
 export interface StoreTab {
   value: string;
@@ -41,19 +41,24 @@ export function StoreNavTabs({
     >
       {tabs.map((tab) =>
         tab.href ? (
-          <a
+          <TextLink
             key={tab.value}
+            variant="bare"
             href={tab.href}
             role="tab"
             aria-selected={activeValue === tab.value}
-            className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
+            paddingX="md"
+            paddingY="xs"
+            size="sm"
+            weight="medium"
+            className={`whitespace-nowrap border-b-2 -mb-px transition-colors ${
  activeValue === tab.value
  ? "border-primary text-primary"
  : "border-transparent text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-800 hover:text-[var(--appkit-color-text-muted)]"
  }`}
           >
             {tab.label}
-          </a>
+          </TextLink>
         ) : (
           <button
             key={tab.value}
