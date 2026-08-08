@@ -1,5 +1,5 @@
 import type { CartItem } from "../types";
-import { Aside, Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
+import { Aside, Button, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
@@ -39,14 +39,14 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
       <Stack justify="between" className="flex-1">
         <Row gap="xs" className="" align="start">
           {href ? (
-            <a
+            <TextLink
               href={href}
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-[var(--appkit-color-text)] text-[var(--appkit-color-text)] hover:underline underline-offset-2 line-clamp-2"
             >
               {item.meta.title}
-            </a>
+            </TextLink>
           ) : (
             <Text truncate={2} weight="medium" color="primary">
               {item.meta.title}

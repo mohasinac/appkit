@@ -5,7 +5,7 @@ import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
 import { useActiveAd } from "../hooks/useActiveAd";
 import type { ActiveAdRecord } from "../hooks/useActiveAd";
-import { Div, Span, Text } from "../../../ui";
+import { Anchor, Div, Span, Text } from "../../../ui";
 
 // ---------------------------------------------------------------------------
 // Props
@@ -78,11 +78,12 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
   if (!creative) return null;
 
   return (
-    <a
+    <Anchor
       href={creative.ctaHref || "#"}
       target={creative.ctaHref ? "_blank" : undefined}
       rel="noopener noreferrer"
-      className="flex items-center gap-3 w-full overflow-hidden rounded-lg bg-[var(--appkit-color-surface)] px-4 py-3 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors no-underline"
+      underline="none"
+      className="flex items-center gap-3 w-full overflow-hidden rounded-lg bg-[var(--appkit-color-surface)] px-4 py-3 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
     >
       {creative.imageUrl ? (
         <img
@@ -105,7 +106,7 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
           {creative.ctaLabel}
         </Span>
       ) : null}
-    </a>
+    </Anchor>
   );
 }
 
