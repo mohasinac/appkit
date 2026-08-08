@@ -1,11 +1,11 @@
 "use client";
 
 import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
-import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
+import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -138,27 +138,12 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <Stack gap="sm">
-        <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-          Type
-        </Text>
-        <Row wrap gap="sm">
-          {NOTIF_TYPES.map((opt) => (
-            <button
-              key={opt}
-              type="button"
-              onClick={() => setPendingFilters((p) => ({ ...p, type: opt === "All" ? "" : opt }))}
-              className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
- (pendingFilters.type || "All") === opt
- ? "bg-primary text-white border-primary"
- : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
- }`}
-            >
-              {opt}
-            </button>
-          ))}
-        </Row>
-      </Stack>
+      <FilterChipGroup
+        label="Type"
+        tabs={NOTIF_TYPES.map((opt) => ({ id: opt, label: opt }))}
+        value={pendingFilters.type || "All"}
+        onChange={(v) => setPendingFilters((p) => ({ ...p, type: v }))}
+      />
     ),
   };
 

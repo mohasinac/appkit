@@ -1,12 +1,12 @@
 "use client";
 
 import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
-import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
+import { SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
+import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -130,30 +130,15 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <Stack gap="sm">
-        <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-          Status
-        </Text>
-        <Row wrap gap="sm">
-          {[
-            { label: "All", value: "" },
-            { label: "Active only", value: "true" },
-          ].map((opt) => (
-            <button
-              key={opt.label}
-              type="button"
-              onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
-              className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
- (pendingFilters.isActive || "") === opt.value
- ? "bg-primary text-white border-primary"
- : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
- }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </Row>
-      </Stack>
+      <FilterChipGroup
+        label="Status"
+        tabs={[
+          { id: "All", label: "All" },
+          { id: "true", label: "Active only" },
+        ]}
+        value={pendingFilters.isActive || ""}
+        onChange={(v) => setPendingFilters((p) => ({ ...p, isActive: v }))}
+      />
     ),
   };
 

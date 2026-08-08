@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Button, Div, Row, Span, Stack, Text, useToast } from "../../../ui";
+import { Button, Div, Row, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { NotificationPreferences, NotificationChannelPrefs, NotificationTypePrefs } from "../types";
 import type { NotificationChannelConfig } from "../../admin/schemas/firestore";
@@ -48,28 +48,13 @@ function ToggleRow({
         <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">{label}</Text>
         <Text variant="secondary" className="mt-0.5" size="xs">{description}</Text>
       </Div>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        aria-label={label}
+      <Toggle
+        checked={checked}
+        ariaLabel={label}
         disabled={disabled}
-        onClick={() => onChange(!checked)}
-        className={[
-          "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent",
-          "transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2",
-          "focus-visible:ring-[var(--appkit-color-primary)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          checked ? "bg-[var(--appkit-color-primary)]" : "bg-[var(--appkit-color-text-faint)]",
-        ].join(" ")}
-      >
-        <Span
-          className={[
-            "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-[var(--appkit-color-surface)] shadow-lg",
-            "ring-0 transition duration-200 ease-in-out",
-            checked ? "translate-x-4" : "translate-x-0",
-          ].join(" ")}
-        />
-      </button>
+        onChange={onChange}
+        size="sm"
+      />
     </Row>
   );
 }

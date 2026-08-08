@@ -1,10 +1,10 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { Row, SIEVE_OP, sieveFilter, type JsonArray } from "@mohasinac/appkit";
+import { SIEVE_OP, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
-import { Badge, Button, Stack, Text, TextLink, useToast } from "../../../ui";
+import { Badge, Button, FilterChipGroup, Stack, Text, TextLink, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -207,57 +207,25 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
-        <Stack gap="sm">
-          <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-            Status
-          </Text>
-          <Row wrap gap="sm">
-            {[
-              { label: "All", value: "" },
-              { label: "Active", value: "true" },
-              { label: "Inactive", value: "false" },
-            ].map((opt) => (
-              <button
-                key={opt.label}
-                type="button"
-                onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
-                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
- (pendingFilters.isActive || "") === opt.value
- ? "bg-primary text-white border-primary"
- : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
- }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </Row>
-        </Stack>
-        <Stack gap="sm">
-          <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-            Stock
-          </Text>
-          <Row wrap gap="sm">
-            {[
-              { label: "All", value: "" },
-              { label: "Sold out", value: "out_of_stock" },
-            ].map((opt) => (
-              <button
-                key={opt.label}
-                type="button"
-                onClick={() =>
-                  setPendingFilters((p) => ({ ...p, bundleStockStatus: opt.value }))
-                }
-                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
- (pendingFilters.bundleStockStatus || "") === opt.value
- ? "bg-primary text-white border-primary"
- : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
- }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </Row>
-        </Stack>
+        <FilterChipGroup
+          label="Status"
+          tabs={[
+            { id: "All", label: "All" },
+            { id: "true", label: "Active" },
+            { id: "false", label: "Inactive" },
+          ]}
+          value={pendingFilters.isActive || ""}
+          onChange={(v) => setPendingFilters((p) => ({ ...p, isActive: v }))}
+        />
+        <FilterChipGroup
+          label="Stock"
+          tabs={[
+            { id: "All", label: "All" },
+            { id: "out_of_stock", label: "Sold out" },
+          ]}
+          value={pendingFilters.bundleStockStatus || ""}
+          onChange={(v) => setPendingFilters((p) => ({ ...p, bundleStockStatus: v }))}
+        />
       </>
     ),
   };

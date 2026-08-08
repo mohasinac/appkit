@@ -55,13 +55,18 @@ function MaskedInput({
         placeholder={placeholder}
         helperText={helperText}
       />
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        textSize="xs"
+        textColor="faint"
+        paddingX="none"
+        paddingY="none"
         onClick={() => setRevealed((r) => !r)}
-        className="absolute right-3 top-8 text-xs text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)]"
+        className="absolute right-3 top-8"
       >
         {revealed ? "Hide" : "Reveal"}
-      </button>
+      </Button>
     </Div>
   );
 }

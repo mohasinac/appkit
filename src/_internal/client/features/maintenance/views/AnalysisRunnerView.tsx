@@ -2,7 +2,7 @@
 import { normalizeError } from "../../../../../errors/normalize";
 
 import * as React from "react";
-import { Div, Heading, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit";
+import { Button, Div, Heading, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit";
 import type { AnalyzeReport } from "../../../../server/features/maintenance/analyze";
 
 export function AnalysisRunnerView(): React.JSX.Element {
@@ -66,21 +66,9 @@ export function AnalysisRunnerView(): React.JSX.Element {
             <option value="function">function</option>
           </select>
         </label>
-        <button
-          type="button"
-          onClick={run}
-          disabled={running}
-          style={{
-            padding: "0.5rem 1rem",
-            background: "var(--appkit-color-primary)",
-            color: "var(--appkit-color-surface)",
-            border: 0,
-            borderRadius: 4,
-            cursor: running ? "wait" : "pointer",
-          }}
-        >
-          {running ? "Running…" : "Run analysis"}
-        </button>
+        <Button type="button" onClick={run} isLoading={running}>
+          Run analysis
+        </Button>
       </Div>
 
       {error ? <Text as="p" style={{ color: "var(--appkit-color-error)" }}>{error}</Text> : null}

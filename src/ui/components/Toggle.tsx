@@ -8,6 +8,8 @@ export interface ToggleProps {
   onChange?: (checked: boolean) => void;
   disabled?: boolean;
   label?: React.ReactNode;
+  /** Accessible name for the switch when no visible `label` is rendered alongside it. */
+  ariaLabel?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
   id?: string;
@@ -35,6 +37,7 @@ export function Toggle({
   onChange,
   disabled = false,
   label,
+  ariaLabel,
   size = "md",
   className = "",
   id,
@@ -67,6 +70,7 @@ export function Toggle({
         role="switch"
         aria-checked={checked}
         aria-labelledby={label ? `${toggleId}-label` : undefined}
+        aria-label={label ? undefined : ariaLabel}
         disabled={disabled}
         onClick={handleToggle}
         className={[

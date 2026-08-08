@@ -70,22 +70,27 @@ function AccordionSection({ title, defaultOpen = true, children }: AccordionSect
   const [open, setOpen] = React.useState(defaultOpen);
   return (
     <Div className={`${__O.hidden}`} rounded="lg" border="default">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-[var(--appkit-color-surface-elevated)]/60 text-left"
+        paddingX="md"
+        paddingY="md"
+        className="w-full text-left bg-[var(--appkit-color-surface-elevated)]/60"
         aria-expanded={open}
       >
-        <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-          {title}
-        </Text>
-        <svg
-          className={`h-4 w-4 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
-          fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+        <Row align="center" justify="between" className="w-full">
+          <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
+            {title}
+          </Text>
+          <svg
+            className={`h-4 w-4 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+            fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </Row>
+      </Button>
       {open && (
         <Div className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]">
           {children}

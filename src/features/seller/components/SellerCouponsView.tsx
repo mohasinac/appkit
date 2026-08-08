@@ -1,11 +1,11 @@
 "use client";
 
-import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
+import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Div, ListingLayout, Text, useToast } from "../../../ui";
+import { Div, FilterChipGroup, ListingLayout, Text, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -119,31 +119,16 @@ export function SellerCouponsView({
       ? { label: "Add Coupon", onClick: () => onCreateClick() }
       : undefined,
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <Stack gap="sm">
-        <Text className="tracking-widest" color="muted" size="xs" weight="semibold" transform="uppercase">
-          Status
-        </Text>
-        <Row wrap gap="sm">
-          {[
-            { label: "All", value: "" },
-            { label: "Active", value: "true" },
-            { label: "Inactive", value: "false" },
-          ].map((opt) => (
-            <button
-              key={opt.label}
-              type="button"
-              onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
-              className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
- (pendingFilters.isActive || "") === opt.value
- ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
- : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
- }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </Row>
-      </Stack>
+      <FilterChipGroup
+        label="Status"
+        tabs={[
+          { id: "All", label: "All" },
+          { id: "true", label: "Active" },
+          { id: "false", label: "Inactive" },
+        ]}
+        value={pendingFilters.isActive || ""}
+        onChange={(v) => setPendingFilters((p) => ({ ...p, isActive: v }))}
+      />
     ),
     renderCards: (rows, _view, _selection, isLoading) =>
       isLoading ? (

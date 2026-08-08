@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Div, Li, Nav, Row, Span, Stack, Ul } from "../../../ui";
+import { Button, Div, IconButton, Li, Nav, Row, Span, Stack, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -87,23 +87,30 @@ function GroupsContent({
         const hasActive = group.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/"));
         return (
           <Div key={group.title} className="mb-0.5">
-            <button
+            <Button
               type="button"
+              variant="ghost"
               onClick={() => toggle(group.title)}
-              className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
+              paddingX="md"
+              paddingY="sm"
+              weight="semibold"
+              rounded="none"
+              className={`w-full text-[0.6875rem] uppercase tracking-widest transition-colors ${
  hasActive && !isOpen
  ? "text-[var(--appkit-color-text-muted)]"
- : "text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"
+ : "text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)]"
  }`}
             >
-              <Span>{group.title}</Span>
-              <svg
-                className={`w-3 h-3 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
-                fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+              <Row align="center" justify="between" className="w-full">
+                <Span>{group.title}</Span>
+                <svg
+                  className={`w-3 h-3 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                </svg>
+              </Row>
+            </Button>
             {isOpen && (
               <Ul paddingX="x-sm" paddingY="y-bottom-xs" spacing="2xs">
                 {group.items.map((item) => (
@@ -140,16 +147,17 @@ function DrawerPanel({
       >
         <Row border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md" align="center" justify="between">
           <Span size="xs" weight="semibold" transform="uppercase" color="muted">{title}</Span>
-          <button
-            type="button"
-            onClick={onClose}
+          <IconButton
             aria-label="Close"
-            className="flex items-center justify-center w-7 h-7 rounded-md text-zinc-400 hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            icon={
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            }
+          />
         </Row>
         <Div className={`flex-1 ${__O.yAuto}`}>{children}</Div>
       </Stack>

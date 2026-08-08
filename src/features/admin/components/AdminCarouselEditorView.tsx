@@ -112,21 +112,19 @@ function ZonePicker({
         {zones.map((z) => {
           const isDisabled = disabled?.(z) ?? false;
           return (
-            <button
+            <Button
               key={z}
               type="button"
+              variant={selected === z ? "primary" : "outline"}
+              size="sm"
               disabled={isDisabled}
+              paddingY="sm"
+              textSize="xs"
+              className="font-mono"
               onClick={() => !isDisabled && onChange(z)}
-              className={`rounded text-xs font-mono py-2 border transition-colors ${
- selected === z
- ? "bg-primary text-white border-primary"
- : isDisabled
- ? "bg-[var(--appkit-color-surface)] text-zinc-300 border-zinc-200 bg-[var(--appkit-color-surface-elevated)] border-[var(--appkit-color-border)] cursor-not-allowed"
- : "bg-[var(--appkit-color-surface)] border-zinc-300 text-zinc-700 hover:border-primary bg-[var(--appkit-color-surface)] border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]"
- }`}
             >
               {z}
-            </button>
+            </Button>
           );
         })}
       </Div>

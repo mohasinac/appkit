@@ -4,7 +4,7 @@ import { sortBy, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { ListingLayout, Row } from "../../../ui";
+import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -23,11 +23,7 @@ const PAGE_SIZE = 50;
 const DEFAULT_SCOPE: ProductFeatureScope = "platform";
 
 const STICKY_TABS_CLASS =
-  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex gap-2 bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-2";
-const TAB_BASE_CLASS = "rounded-full px-3 py-1 text-xs font-medium border transition-colors";
-const TAB_ACTIVE_CLASS = "bg-primary text-white border-primary";
-const TAB_INACTIVE_CLASS =
-  "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
+  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-2";
 
 interface AdminFeaturesResponse {
   items?: JsonArray;
@@ -63,6 +59,8 @@ function mapFeatureRow(item: Record<string, JsonValue>, index: number): FeatureR
 export type AdminFeaturesViewProps = ListingLayoutProps;
 
 export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const scopeFilter = (searchParams.get("scope") as ProductFeatureScope | null) || DEFAULT_SCOPE;
 
@@ -107,11 +105,17 @@ export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps
       },
     ],
     renderAboveContent: () => (
-      <Row className={STICKY_TABS_CLASS} gap="xs">
-        {PRODUCT_FEATURE_SCOPE_TABS.map((tab) => (
-          <ScopeTabButton key={tab.value} value={tab.value} label={tab.label} current={scopeFilter} />
-        ))}
-      </Row>
+      <FilterChipGroup
+        label="Scope"
+        className={STICKY_TABS_CLASS}
+        tabs={PRODUCT_FEATURE_SCOPE_TABS.map((tab) => ({ id: tab.value, label: tab.label }))}
+        value={scopeFilter}
+        onChange={(value) => {
+          const params = new URLSearchParams(searchParams.toString());
+          params.set("scope", value);
+          router.replace(`${pathname}?${params.toString()}`);
+        }}
+      />
     ),
     renderEditor: ({ editId, closePanel }) => (
       <AdminFeatureEditorView
@@ -125,33 +129,4 @@ export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps
   };
 
   return <DataListingView config={config} />;
-}
-
-function ScopeTabButton({
-  value,
-  label,
-  current,
-}: {
-  value: ProductFeatureScope;
-  label: string;
-  current: ProductFeatureScope;
-}) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const handleClick = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("scope", value);
-    router.replace(`${pathname}?${params.toString()}`);
-  };
-  const isActive = current === value;
-  return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className={`${TAB_BASE_CLASS} ${isActive ? TAB_ACTIVE_CLASS : TAB_INACTIVE_CLASS}`}
-    >
-      {label}
-    </button>
-  );
 }
