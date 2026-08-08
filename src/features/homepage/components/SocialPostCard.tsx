@@ -72,13 +72,13 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
   const meta = PLATFORM_META.youtube;
 
   return (
-    // audit-variant-ok: bg-zinc-900 is a fixed dark video-placeholder backdrop, not a themed surface token
     <Anchor
       href={href}
       tone="none"
       underline="none"
       rounded="xl"
-      className="group relative block aspect-video w-full overflow-hidden bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-youtube)]"
+      surface="media-dark"
+      className="group relative block aspect-video w-full overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-youtube)]"
       aria-label={post.caption ?? `Watch on YouTube`}
     >
       <MediaImage
