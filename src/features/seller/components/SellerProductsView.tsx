@@ -138,7 +138,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     className: "w-12",
     render: (row) =>
       row.imageUrl ? (
-        <Div className="relative w-10 h-10 flex-shrink-0 overflow-hidden border border-[var(--appkit-color-border)]" rounded="lg">
+        <Div className="relative w-10 h-10 flex-shrink-0 border border-[var(--appkit-color-border)]" rounded="lg" overflow="hidden">
           <MediaImage src={row.imageUrl} alt="" size="thumbnail" />
         </Div>
       ) : (

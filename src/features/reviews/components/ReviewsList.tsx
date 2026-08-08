@@ -63,7 +63,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
       <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">
         <Row align="start" gap="3">
           {review.userAvatar ? (
-            <Div className="relative h-9 w-9 flex-shrink-0 overflow-hidden" rounded="full">
+            <Div className="relative h-9 w-9 flex-shrink-0" rounded="full" overflow="hidden">
               <MediaImage src={review.userAvatar} alt={displayName} size="avatar" />
             </Div>
           ) : (
@@ -113,7 +113,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
         {review.images && review.images.length > 0 && (
           <Row wrap gap="sm" className="mt-3">
             {review.images.map((img, i) => (
-              <Div key={i} className="relative h-16 w-16 flex-shrink-0 overflow-hidden border border-neutral-100" rounded="lg">
+              <Div key={i} className="relative h-16 w-16 flex-shrink-0 border border-neutral-100" rounded="lg" overflow="hidden">
                 <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Review image ${i + 1}`} size="thumbnail" />
               </Div>
             ))}

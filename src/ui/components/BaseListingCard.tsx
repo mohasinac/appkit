@@ -1,4 +1,5 @@
 import type { ReactNode, MouseEvent } from "react";
+import { MediaImage } from "../../features/media/MediaImage";
 
 import { Span } from "./Typography";
 
@@ -217,13 +218,12 @@ function BaseListingCardIconOverlay({
     const isMediaUrl = icon.startsWith("/media/") || icon.startsWith("http");
     if (isMediaUrl) {
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <div
           key={key}
-          src={icon}
-          alt=""
-          className="w-5 h-5 rounded-full border border-white/80 shadow-sm bg-[var(--appkit-color-surface)] object-cover"
-        />
+          className="relative w-5 h-5 overflow-hidden rounded-full border border-white/80 shadow-sm bg-[var(--appkit-color-surface)]"
+        >
+          <MediaImage src={icon} alt="" size="thumbnail" />
+        </div>
       );
     }
     return (

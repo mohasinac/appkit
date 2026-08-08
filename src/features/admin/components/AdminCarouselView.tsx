@@ -151,7 +151,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     secondary: (
       <Row align="center" gap="3">
         {row.thumbnailUrl && (
-          <Div className="relative w-14 h-9 flex-shrink-0 overflow-hidden bg-[var(--appkit-color-surface)]" rounded="default">
+          <Div className="relative w-14 h-9 flex-shrink-0 bg-[var(--appkit-color-surface)]" rounded="default" overflow="hidden">
             <MediaImage src={row.thumbnailUrl} alt="" size="thumbnail" />
           </Div>
         )}

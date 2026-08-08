@@ -45,7 +45,7 @@ export function ViewReviewModal({
         {/* Author + rating */}
         <Row gap="3">
           {review.userAvatar ? (
-            <Div className="relative h-10 w-10 flex-shrink-0 overflow-hidden" rounded="full">
+            <Div className="relative h-10 w-10 flex-shrink-0" rounded="full" overflow="hidden">
               <MediaImage src={review.userAvatar} alt={displayName} size="avatar" />
             </Div>
           ) : (

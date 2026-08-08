@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Div, Row, Span } from "../../ui";
 import { resolveMediaUrl } from "../../utils/media-url";
 
@@ -74,6 +74,15 @@ export interface MediaImageProps {
    */
   className?: string;
   /**
+   * Inline style applied to the absolute-fill wrapper div. Use for dynamic,
+   * per-instance CSS impossible to express with Tailwind classes — e.g. a
+   * live zoom/rotate transform driven by interactive state in a lightbox.
+   * Since the wrapper is already sized to exactly fill its parent box,
+   * transforms behave identically to applying them on a directly-sized
+   * `<img>`.
+   */
+  style?: CSSProperties;
+  /**
    * Art-directed responsive sources (renders a `<picture>` instead of a bare
    * `<img>`). Each entry becomes a `<source>` element. The primary `src`
    * remains the fallback. Use this for cases where the image content itself
@@ -116,6 +125,7 @@ export function MediaImage({
   objectFit = "cover",
   fallback,
   className,
+  style,
   sources,
   onError,
 }: MediaImageProps) {
@@ -154,6 +164,7 @@ export function MediaImage({
     return (
       <Div
         className={`relative w-full h-full overflow-hidden${className ? ` ${className}` : ""}`}
+        style={style}
       >
         {!isLoaded && (
           <Div
@@ -190,6 +201,7 @@ export function MediaImage({
   return (
     <Div
       className={`relative w-full h-full overflow-hidden${className ? ` ${className}` : ""}`}
+      style={style}
     >
       {!isLoaded && (
         <Div

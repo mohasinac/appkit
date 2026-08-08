@@ -1,4 +1,5 @@
 import { Button, Div, Stack, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 
@@ -26,14 +27,10 @@ export function WishlistCard({
             ? (e) => e.key === "Enter" && onProductClick(item)
             : undefined
         }
-        className={`h-20 w-20 flex-shrink-0 overflow-hidden bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] ${onProductClick ? "cursor-pointer" : ""}`} rounded="lg"
+        className={`relative h-20 w-20 flex-shrink-0 overflow-hidden bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] ${onProductClick ? "cursor-pointer" : ""}`} rounded="lg"
       >
         {item.productImage && (
-          <img
-            src={item.productImage}
-            alt={item.productTitle ?? ""}
-            className="h-full w-full object-cover"
-          />
+          <MediaImage src={item.productImage} alt={item.productTitle ?? ""} size="thumbnail" />
         )}
       </Div>
       <Stack justify="between" className="flex-1">

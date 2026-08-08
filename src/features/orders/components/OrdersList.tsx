@@ -92,7 +92,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         {order.items.slice(0, 3).map((item, i) => (
           <Row key={i} gap="sm">
             {item.image && (
-              <Div className="relative h-10 w-10 flex-shrink-0 overflow-hidden" rounded="lg">
+              <Div className="relative h-10 w-10 flex-shrink-0" rounded="lg" overflow="hidden">
                 <MediaImage src={item.image} alt={item.title} size="thumbnail" />
               </Div>
             )}

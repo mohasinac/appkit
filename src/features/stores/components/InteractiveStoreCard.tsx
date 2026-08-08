@@ -108,7 +108,7 @@ export function InteractiveStoreCard({
           <Row className="-mt-5 mb-2" align="end" justify="between">
             <Div className="flex-shrink-0">
               {hasLogo ? (
-                <Div className="relative h-10 w-10 overflow-hidden border-2 border-white border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]" rounded="lg" shadow="md">
+                <Div className="relative h-10 w-10 border-2 border-white border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]" rounded="lg" shadow="md" overflow="hidden">
                   <MediaImage
                     src={store.storeLogoURL!}
                     alt={store.storeName}

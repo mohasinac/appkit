@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Article, BaseListingCard, Button, Div, Heading, RichText, Row, Span, Stack, TextLink } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { LAYOUT } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
@@ -83,11 +84,12 @@ export function EventCard({
       )}
       <Link href={detailHref} className="block flex-shrink-0">
         {event.coverImageUrl ? (
-          <Div className={`aspect-video ${__O.hidden}`}>
-            <img
+          <Div className={`relative aspect-video ${__O.hidden}`}>
+            <MediaImage
               src={event.coverImageUrl}
               alt={safeTitle}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              size="card"
+              className="transition-transform duration-300 group-hover:scale-105"
             />
           </Div>
         ) : (

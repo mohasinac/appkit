@@ -45,23 +45,15 @@ export function StoreHeader({
   return (
     <Section surface="default" border="bottom" className={className}>
       {store.storeBannerURL && (
-          <Div className={`h-40 md:h-56 ${__O.hidden} bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]`}>
-          <img
-            src={store.storeBannerURL}
-            alt={`${store.storeName} banner`}
-            className="h-full w-full object-cover"
-          />
+          <Div className={`relative h-40 md:h-56 ${__O.hidden} bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]`}>
+          <MediaImage src={store.storeBannerURL} alt={`${store.storeName} banner`} size="banner" />
         </Div>
       )}
       <Div paddingX="x-page" className="max-w-7xl mx-auto" padding="y-md">
         <Row align="end" gap="md">
           {store.storeLogoURL ? (
-            <Div className="-mt-8 h-16 w-16 border-2 border-white" rounded="xl" shadow="sm" overflow="hidden">
-              <img
-                src={store.storeLogoURL}
-                alt={store.storeName}
-                className="w-full h-full object-cover"
-              />
+            <Div className="relative -mt-8 h-16 w-16 border-2 border-white" rounded="xl" shadow="sm" overflow="hidden">
+              <MediaImage src={store.storeLogoURL} alt={store.storeName} size="avatar" />
             </Div>
           ) : (
             <Div className={CLS_AVATAR}>

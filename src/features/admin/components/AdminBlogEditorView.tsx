@@ -433,7 +433,7 @@ export function AdminBlogEditorView({
         <Span>Live preview</Span>
       </Row>
       {draft.coverImage ? (
-        <Div className="relative h-64 w-full mb-4 overflow-hidden" rounded="md">
+        <Div className="relative h-64 w-full mb-4" rounded="md" overflow="hidden">
           <MediaImage src={draft.coverImage} alt="" size="hero" />
         </Div>
       ) : null}

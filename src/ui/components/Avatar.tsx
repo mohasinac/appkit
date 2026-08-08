@@ -1,4 +1,5 @@
 import React from "react";
+import { MediaImage } from "../../features/media/MediaImage";
 
 export interface AvatarProps {
   src?: string | null;
@@ -52,13 +53,13 @@ export function Avatar({
 
   if (src) {
     return (
-      <img
-        src={src}
-        alt={alt ?? name ?? ""}
+      <div
         className={[UI_AVATAR.base, sizeClass, className]
           .filter(Boolean)
           .join(" ")}
-      />
+      >
+        <MediaImage src={src} alt={alt ?? name ?? ""} size="avatar" />
+      </div>
     );
   }
 

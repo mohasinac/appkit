@@ -333,7 +333,7 @@ export function GroupSettingsPanel({
                     {(children ?? []).filter((c) => c.id !== productId).map((child) => (
                       <Row key={child.id} align="center" gap="sm" padding="y-xs">
                         {child.images?.[0] ? (
-                          <Div className="relative w-8 h-8 flex-shrink-0 overflow-hidden border border-[var(--appkit-color-border)]" rounded="full">
+                          <Div className="relative w-8 h-8 flex-shrink-0 border border-[var(--appkit-color-border)]" rounded="full" overflow="hidden">
                             <MediaImage src={child.images[0]} alt={child.title} size="thumbnail" />
                           </Div>
                         ) : (

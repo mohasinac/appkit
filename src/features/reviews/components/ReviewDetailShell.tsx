@@ -141,7 +141,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {/* Reviewer row */}
           <Row gap="sm">
             {review.userAvatar ? (
-              <Div className="relative h-11 w-11 flex-shrink-0 overflow-hidden ring-2 ring-white ring-[var(--appkit-color-border-subtle)]" rounded="full">
+              <Div className="relative h-11 w-11 flex-shrink-0 ring-2 ring-white ring-[var(--appkit-color-border-subtle)]" rounded="full" overflow="hidden">
                 <MediaImage src={review.userAvatar} alt={displayName} size="avatar" />
               </Div>
             ) : (

@@ -278,7 +278,7 @@ export function PrizeRevealModal({
               #{winner.itemNumber} — {winner.title}
             </Heading>
             {winnerImg ? (
-              <Div className="relative mx-auto h-64 w-64 max-w-full overflow-hidden" rounded="md">
+              <Div className="relative mx-auto h-64 w-64 max-w-full" rounded="md" overflow="hidden">
                 <MediaImage src={winnerImg} alt={winner.title} size="hero" objectFit="contain" />
               </Div>
             ) : null}

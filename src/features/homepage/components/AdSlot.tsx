@@ -92,7 +92,7 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
       className="w-full overflow-hidden bg-[var(--appkit-color-surface)]"
     >
       {creative.imageUrl ? (
-        <Div className="relative h-14 w-14 flex-shrink-0 overflow-hidden" rounded="default">
+        <Div className="relative h-14 w-14 flex-shrink-0" rounded="default" overflow="hidden">
           <MediaImage src={creative.imageUrl} alt={creative.title || "Advertisement"} size="thumbnail" />
         </Div>
       ) : null}

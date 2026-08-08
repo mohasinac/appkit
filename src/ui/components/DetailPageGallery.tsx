@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, type ReactNode } from "react";
 import { Div } from "./Div";
+import { MediaImage } from "../../features/media/MediaImage";
 
 const __O = {
   xAuto: "overflow-x-auto",
@@ -88,16 +89,11 @@ export function DetailPageGallery({
     >
       <Div
         className={[
-          "w-full overflow-hidden rounded-2xl bg-[var(--appkit-color-surface)]",
+          "relative w-full overflow-hidden rounded-2xl bg-[var(--appkit-color-surface)]",
           ASPECT_CLASS[aspect],
         ].join(" ")}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={active.url}
-          alt={active.alt ?? title ?? ""}
-          className="h-full w-full object-cover"
-        />
+        <MediaImage src={active.url} alt={active.alt ?? title ?? ""} size="hero" />
       </Div>
 
       {images.length > 1 ? (
@@ -115,12 +111,7 @@ export function DetailPageGallery({
                   : "border-transparent hover:border-zinc-300 dark:hover:border-zinc-600",
               ].join(" ")}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={img.url}
-                alt={img.alt ?? `${title ?? ""} ${idx + 1}`}
-                className="h-full w-full object-cover"
-              />
+              <MediaImage src={img.url} alt={img.alt ?? `${title ?? ""} ${idx + 1}`} size="thumbnail" />
             </button>
           ))}
         </Div>

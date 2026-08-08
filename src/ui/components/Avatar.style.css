@@ -1,6 +1,9 @@
 /* Avatar — circular image or initials display with size variants */
 
 .appkit-avatar {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
   border-radius: 9999px;
   object-fit: cover;
   background: var(--appkit-color-zinc-100);

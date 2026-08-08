@@ -86,7 +86,7 @@ function ReviewCard({
     <Stack className={`${__P.p4} bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)]`} gap="3" rounded="xl" shadow="sm">
       <Row align="center" gap="3">
         {review.authorPhotoUrl ? (
-          <Div className="relative w-9 h-9 flex-shrink-0 overflow-hidden" rounded="full">
+          <Div className="relative w-9 h-9 flex-shrink-0" rounded="full" overflow="hidden">
             <MediaImage src={review.authorPhotoUrl} alt={review.authorName} size="avatar" />
           </Div>
         ) : (

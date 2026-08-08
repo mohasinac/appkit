@@ -94,7 +94,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
         )}
         <Row className="mt-auto" padding="t-sm" gap="3">
           {post.authorAvatar ? (
-            <Div className="relative h-7 w-7 flex-shrink-0 overflow-hidden" rounded="full">
+            <Div className="relative h-7 w-7 flex-shrink-0" rounded="full" overflow="hidden">
               <MediaImage
                 src={post.authorAvatar}
                 alt={post.authorName ?? "author"}

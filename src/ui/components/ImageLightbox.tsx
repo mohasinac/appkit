@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCw, Maximize2 } fr
 import { Button } from "./Button";
 import { Div } from "./Div";
 import { Text, Span } from "./Typography";
+import { MediaImage } from "../../features/media/MediaImage";
 
 const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-error-surface text-white flex items-center justify-center";
 
@@ -201,11 +202,12 @@ export function ImageLightbox({
         className="appkit-lightbox__image-wrap"
         style={{ cursor: zoom > 100 ? "grab" : "default" }}
       >
-        <img
+        <MediaImage
           src={image.src}
           alt={image.alt ?? ""}
+          size="hero"
+          objectFit="contain"
           className="appkit-lightbox__img"
-          draggable={false}
           style={{
             transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
             transition: "transform 0.2s ease",
@@ -259,11 +261,7 @@ export function ImageLightbox({
               ].join(" ")}
               aria-label={`Go to image ${i + 1}`}
             >
-              <img
-                src={thumb.src}
-                alt={thumb.alt ?? `Image ${i + 1}`}
-                className="h-full w-full object-cover"
-              />
+              <MediaImage src={thumb.src} alt={thumb.alt ?? `Image ${i + 1}`} size="thumbnail" />
             </button>
           ))}
         </div>
