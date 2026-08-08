@@ -35,6 +35,8 @@ export const SURFACE_MAP = {
   // Skeleton loader presets — theme-adaptive via CSS variables.
   skeleton: "bg-[var(--appkit-color-border)]",
   "skeleton-light": "bg-[var(--appkit-color-border-subtle)]",
+  /** Near-black placeholder behind a media thumbnail (e.g. YouTube card) — deliberately not theme-tinted. */
+  "media-dark": "bg-zinc-900",
 } as const;
 
 export type SurfaceKey = keyof typeof SURFACE_MAP;

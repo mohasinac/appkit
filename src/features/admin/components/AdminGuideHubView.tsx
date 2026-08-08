@@ -157,7 +157,10 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
                 rounded="xl"
                 layout="flex-col"
                 gap="md"
-                className="group border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-5 hover:border-[var(--appkit-color-primary)] hover:shadow-md transition-all"
+                paddingX="lg"
+                paddingY="lg"
+                shadow="hover-md"
+                className="group border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] hover:border-[var(--appkit-color-primary)] transition-all"
               >
                 <Row align="center" gap="3">
                   <Row

@@ -84,12 +84,13 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
               href={String(ROUTES.PUBLIC.AUCTIONS)}
               rounded="full"
               paddingX="sm"
+              paddingY="2xs"
               size="xs"
               weight="medium"
               layout="inline-flex"
               align="center"
               gap="sm"
-              className="border border-primary/30 bg-primary/10 py-1.5 text-primary-700 dark:text-primary-400 hover:bg-primary/15 transition-colors"
+              className="border border-primary/30 bg-primary/10 text-primary-700 dark:text-primary-400 hover:bg-primary/15 transition-colors"
             >
               🏷️ Looking for unique deals? Browse Auctions →
             </TextLink>

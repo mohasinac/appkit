@@ -79,12 +79,15 @@ const LINK_PADDING_X_MAP: Record<LinkPaddingX, string> = {
   xl: "px-6",
 };
 
-type LinkPaddingY = "none" | "xs" | "sm" | "md";
+type LinkPaddingY = "none" | "2xs" | "xs" | "sm" | "sm-tall" | "md" | "lg";
 const LINK_PADDING_Y_MAP: Record<LinkPaddingY, string> = {
   none: "",
+  "2xs": "py-1.5",
   xs: "py-2",
   sm: "py-2.5",
+  "sm-tall": "py-3.5",
   md: "py-3",
+  lg: "py-5",
 };
 
 /** Display layout for button-style / nav-style links. */

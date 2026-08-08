@@ -1,5 +1,14 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
-import { PADDING_MAP, type PaddingKey, ROUNDED_MAP, type RoundedKey, SHADOW_MAP, type ShadowKey } from "./surface-tokens";
+import { PADDING_MAP, type PaddingKey, ROUNDED_MAP, type RoundedKey, SHADOW_MAP, type ShadowKey, SURFACE_MAP, type SurfaceKey } from "./surface-tokens";
+
+export type AnchorWeight = "normal" | "medium" | "semibold" | "bold";
+
+const ANCHOR_WEIGHT_CLS: Record<AnchorWeight, string> = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+  bold: "font-bold",
+};
 
 export type AnchorGap = "none" | "2xs" | "xs" | "sm" | "md" | "lg";
 
@@ -54,6 +63,10 @@ export interface AnchorProps
   underline?: AnchorUnderline;
   /** Typography size. */
   size?: AnchorSize;
+  /** Typography weight. */
+  weight?: AnchorWeight;
+  /** Background surface — for card/banner-style anchors. Replaces consumer `bg-*` className. */
+  surface?: SurfaceKey;
   /**
    * Treat as an external link. Default is auto-detected from the href shape:
    *   - `http(s)://` → external
@@ -125,6 +138,8 @@ export function Anchor({
   tone = "brand",
   underline = "hover",
   size,
+  weight,
+  surface,
   rounded,
   shadow,
   layout,
@@ -155,6 +170,8 @@ export function Anchor({
         TONE_CLS[tone],
         UNDERLINE_CLS[underline],
         size ? ANCHOR_SIZE_CLS[size] : "",
+        weight ? ANCHOR_WEIGHT_CLS[weight] : "",
+        surface ? SURFACE_MAP[surface] : "",
         rounded ? ROUNDED_MAP[rounded] : "",
         shadow ? SHADOW_MAP[shadow] : "",
         layout ? ANCHOR_LAYOUT_CLS[layout] : "",

@@ -109,7 +109,9 @@ export function EventPollWidget({
           rounded="xl"
           size="sm"
           weight="semibold"
-          className="inline-block bg-primary px-6 py-2.5 text-white hover:bg-primary-600"
+          paddingX="xl"
+          paddingY="sm"
+          className="inline-block bg-primary text-white hover:bg-primary-600"
         >
           Log In
         </TextLink>

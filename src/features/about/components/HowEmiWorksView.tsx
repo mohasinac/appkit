@@ -198,7 +198,7 @@ function renderEmiExample(t: EmiT, themed: ThemedTokens, rows: EmiExampleRow[]) 
           </Thead>
           <Tbody className="divide-y divide-neutral-100 divide-[var(--appkit-color-border)]">
             {rows.map((row, i) => (
-              <Tr key={i} className={`${themed.bgPrimary} ${row.highlight ? "font-bold" : ""}`}>
+              <Tr key={i} className={themed.bgPrimary}>
                 <Td padding="md" weight={row.highlight ? "bold" : "medium"}>{row.label}</Td>
                 <Td className={`text-right ${row.highlight ? "text-primary" : ""}`} padding="md">{row.example}</Td>
               </Tr>
