@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getClientAuthProvider } from "../../../contracts/client-auth";
 import { getClientSessionAdapter } from "../../../contracts/client-session";
 import { apiClient } from "../../../http";
-import { NotFoundError } from "../../../errors";
+
 import type { AuthUser } from "../types";
 import { useAuthEvent } from "./useAuthEvent";
 import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";

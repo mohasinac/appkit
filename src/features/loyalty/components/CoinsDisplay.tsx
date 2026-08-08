@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span, Stack, Text } from "../../../ui";
+import { Span, Stack, Text } from "../../../ui";
 const CLS_COIN_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface px-2 py-0.5 text-xs font-semibold text-warning";
 const CLS_COIN_TOTAL = "text-3xl font-bold text-warning";
 

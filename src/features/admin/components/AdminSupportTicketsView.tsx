@@ -4,7 +4,7 @@ import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit"
 import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
+import { FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";

@@ -40,7 +40,10 @@ export function Slider({
 }: SliderProps) {
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const value = controlledValue !== undefined ? controlledValue : internalValue;
-  const sliderId = id ?? React.useId();
+  // React.useId() must run unconditionally on every render — using `id ?? React.useId()`
+  // skips the hook call whenever `id` is provided, violating the Rules of Hooks.
+  const generatedId = React.useId();
+  const sliderId = id ?? generatedId;
   const pct = ((value - min) / (max - min)) * 100;
   const fillRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

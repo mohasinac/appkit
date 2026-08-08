@@ -1,5 +1,5 @@
 import React from "react";
-import { Aside, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
+import { Div, Heading, Row, Span, Stack, Text } from "../../../ui";
 const __P = {
   p4: "p-4",
 } as const;

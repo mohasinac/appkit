@@ -1,5 +1,5 @@
 import type { ReactNode, MouseEvent } from "react";
-import { Button } from "./Button";
+
 import { Span } from "./Typography";
 
 export interface BaseListingCardIconOverlayProps {

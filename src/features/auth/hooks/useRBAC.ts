@@ -89,8 +89,13 @@ export function useIsOwner(
   resourceOwnerId: string | null | undefined,
 ): boolean {
   const { user } = useCurrentUser();
+  // useHasRole must run unconditionally on every render — it was previously
+  // called after the early return below, which skips the hook call whenever
+  // !user || !resourceOwnerId, violating the Rules of Hooks (call-count
+  // mismatch risk when that condition flips between renders).
+  const isAdmin = useHasRole("admin");
   if (!user || !resourceOwnerId) return false;
-  if (useHasRole("admin")) return true;
+  if (isAdmin) return true;
   return user.id === resourceOwnerId;
 }
 

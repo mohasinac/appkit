@@ -43,99 +43,8 @@ import {
   DEFAULT_EVENT_RAFFLES_BUILDER,
   DEFAULT_COLLECTION_CARDS_BUILDER,
 } from "./sections/adminSectionsTypes";
-import type {
-  SectionType,
-  SectionPatchPayload,
-  ResourceMode,
-  ResourceSortBy,
-  ResourceMaxCount,
-  CategoryOption,
-  ReorderItem,
-  FAQCategory,
-  ProductsBuilderState,
-  AuctionsBuilderState,
-  StatsBuilderState,
-  PreOrdersBuilderState,
-  StoresBuilderState,
-  EventsBuilderState,
-  SocialFeedBuilderState,
-  WelcomeBuilderState,
-  TrustIndicatorsBuilderState,
-  CategoriesBuilderState,
-  BrandsBuilderState,
-  BannerBuilderState,
-  FeaturesBuilderState,
-  ReviewsBuilderState,
-  WhatsAppBuilderState,
-  FAQBuilderState,
-  BlogBuilderState,
-  NewsletterBuilderState,
-  CarouselBuilderState,
-  CustomCardsCardBuilderEntry,
-  CustomCardsBuilderState,
-  GoogleReviewsBuilderState,
-  FeaturedBundlesBuilderState,
-  PrizeDrawsBuilderState,
-  EventRafflesBuilderState,
-  CollectionCardsBuilderState,
-  CollectionCardEntryType,
-} from "./sections/adminSectionsTypes";
-import {
-  toStringValue,
-  toNumberValue,
-  toBooleanValue,
-  toStringArray,
-  buildProductsConfig,
-  buildAuctionsConfig,
-  buildStatsConfig,
-  buildPreOrdersConfig,
-  buildStoresConfig,
-  buildEventsConfig,
-  buildSocialFeedConfig,
-  buildWelcomeConfig,
-  buildTrustIndicatorsConfig,
-  buildCategoriesConfig,
-  buildBrandsConfig,
-  buildBannerConfig,
-  buildFeaturesConfig,
-  buildReviewsConfig,
-  buildWhatsAppConfig,
-  buildFAQConfig,
-  buildBlogConfig,
-  buildNewsletterConfig,
-  buildCarouselConfig,
-  buildCustomCardsConfig,
-  buildGoogleReviewsConfig,
-  buildFeaturedBundlesConfig,
-  buildPrizeDrawsConfig,
-  buildEventRafflesConfig,
-  buildCollectionCardsConfig,
-  parseProductsBuilder,
-  parseAuctionsBuilder,
-  parseStatsBuilder,
-  parsePreOrdersBuilder,
-  parseStoresBuilder,
-  parseEventsBuilder,
-  parseSocialFeedBuilder,
-  parseWelcomeBuilder,
-  parseTrustIndicatorsBuilder,
-  parseCategoriesBuilder,
-  parseBrandsBuilder,
-  parseBannerBuilder,
-  parseFeaturesBuilder,
-  parseReviewsBuilder,
-  parseWhatsAppBuilder,
-  parseFAQBuilder,
-  parseBlogBuilder,
-  parseNewsletterBuilder,
-  parseCarouselBuilder,
-  parseCustomCardsBuilder,
-  parseGoogleReviewsBuilder,
-  parseFeaturedBundlesBuilder,
-  parsePrizeDrawsBuilder,
-  parseEventRafflesBuilder,
-  parseCollectionCardsBuilder,
-} from "./sections/adminSectionsBuildParse";
+import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, AuctionsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, PrizeDrawsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
+import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildPrizeDrawsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parsePrizeDrawsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
 
 const __P = {
   p3: "p-3",
@@ -2495,6 +2404,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
   }
 
+  // React.useMemo must run unconditionally on every render — it was
+  // previously declared after the `hasChildren` early return below, which
+  // skips the hook call in passthrough mode, violating the Rules of Hooks.
+  const sectionOrderMap = React.useMemo(() => {
+    return new Map(sections.map((section) => [section.id, section.order]));
+  }, [sections]);
+
   // If children exist, render passthrough mode (detail view)
   if (hasChildren) {
     return <>{children}</>;
@@ -2508,10 +2424,6 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     status: section.enabled ? "Active" : "Inactive",
     updatedAt: new Date(section.updatedAt).toLocaleDateString(),
   }));
-
-  const sectionOrderMap = React.useMemo(() => {
-    return new Map(sections.map((section) => [section.id, section.order]));
-  }, [sections]);
 
   const hasReorderChanges = reorderDraft.some(
     (item) => sectionOrderMap.get(item.id) !== item.order,
@@ -2639,7 +2551,6 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           </Stack>
         )}
       </Stack>
-
 
       <ConfirmDeleteModal
         isOpen={seedResetOpen}

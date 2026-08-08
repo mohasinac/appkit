@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Stack } from "../../../ui";
+import { Heading, Stack } from "../../../ui";
 export interface CartSummaryProps {
   isLoading?: boolean;
   /** Render the line-items breakdown (subtotal, discount, shipping rows) */

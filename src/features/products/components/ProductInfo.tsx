@@ -1,5 +1,4 @@
 import React from "react";
-import { Div } from "../../../ui/components/Div";
 
 import { Stack } from "@mohasinac/appkit";
 export interface ProductInfoProps {

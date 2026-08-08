@@ -9,7 +9,7 @@ import { Eye, Printer, MapPin, Truck } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
-import { AdminViewCards } from "../../admin/components/AdminViewCards";
+
 import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps, SelectOption } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -660,11 +660,14 @@ export function SellerOrdersView({
     buildBulkAction(ACTIONS.STORE["request-payout"], () => void requestPayoutForSelection(), { variant: "primary" }),
   ];
 
+  // useBottomActions must run unconditionally on every render — it was
+  // previously called after the `hasChildren` early return below, which
+  // skips the hook call in passthrough mode, violating the Rules of Hooks.
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
+
   if (hasChildren) {
     return <ListingLayout portal="seller" {...props}>{children}</ListingLayout>;
   }
-
-  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <Div className="min-h-screen">

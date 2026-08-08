@@ -15,14 +15,14 @@ import { z } from "zod";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { ProductItem } from "../../types/index";
-import type { JsonValue } from "../../../../schemas/types";
+
 import { mediaFieldSchema } from "../../../media/types/index";
 import { storeRepository } from "../../../stores/repository/store.repository";
 // SB-UNI-V — bundlesRepository deleted; bundle stock-sync moves to the
 // `onProductStockChange` Firebase Function (see functions/src/bundle-stock-sync.ts).
 import { sanitizeProductForPublic } from "../../utils/sanitize";
 import { printMetaSchema } from "../../schemas/index";
-import { serverLogger } from "../../../../monitoring/server-logger";
+
 import { isAdminUser, isModeratorUser } from "../../../auth/role-predicates";
 
 import { normalizeError } from "../../../../errors/normalize";

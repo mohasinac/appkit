@@ -4,7 +4,7 @@ import { Span, useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Shield, IndianRupee, UserX, CreditCard, Package, UserCheck, ShieldAlert, Truck } from "lucide-react";
-import { Div, Modal, Stack, Row, Heading, Text, Checkbox } from "../../../ui";
+import { Div, Modal, Stack, Row, Text, Checkbox } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SCAM_CATEGORIES } from "../constants/scam-types";

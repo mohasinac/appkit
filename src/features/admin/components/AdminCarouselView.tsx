@@ -17,7 +17,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
-import { AdminViewCards } from "./AdminViewCards";
+
 import { RowActionMenu } from "../../../ui/components/RowActionMenu";
 import { apiClient } from "../../../http";
 import type { AdminTableColumn } from "../types";
@@ -45,7 +45,6 @@ interface CarouselRow {
   order: number;
   thumbnailUrl: string;
 }
-
 
 export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCarouselViewProps) {
   const hasChildren = React.Children.count(children) > 0;

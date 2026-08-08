@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useTransition, useMemo } from "react";
-import { Badge, Code, Div, Input, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
+import { Code, Div, Input, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
 import { ACTION_META, ACTION_ID } from "../../products/constants/action-defs";
 import type { ActionId } from "../../products/constants/action-defs";
 import { useToast } from "../../../ui";

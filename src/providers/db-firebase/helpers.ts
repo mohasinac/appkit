@@ -3,7 +3,7 @@ import type {
   DocumentData,
   Query,
 } from "firebase-admin/firestore";
-import type { FirestoreDocument, FirestoreValue, JsonValue } from "../../schemas/types";
+import type { FirestoreValue, JsonValue } from "../../schemas/types";
 
 /**
  * Firestore serialisation helpers.

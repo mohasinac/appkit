@@ -3,7 +3,7 @@
 import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray, type JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
-import { Div, Heading, ListingLayout, Span, Text } from "../../../ui";
+import { Heading, ListingLayout, Span, Text } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

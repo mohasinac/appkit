@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import { Gavel } from "lucide-react";
 import type { WishlistToggleActions } from "../../wishlist";
-import { Div, Row, Span, Stack, Text } from "../../../ui";
+import { Div, Row, Stack, Text } from "../../../ui";
 import {
   MarketplaceAuctionCard,
   type MarketplaceAuctionCardData,

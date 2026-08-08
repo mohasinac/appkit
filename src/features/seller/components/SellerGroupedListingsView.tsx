@@ -2,7 +2,7 @@
 
 import { Row, sortBy, type JsonArray } from "@mohasinac/appkit";
 import React from "react";
-import { Badge, Button, Div, Span } from "../../../ui";
+import { Badge, Button, Span } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

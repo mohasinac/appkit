@@ -36,11 +36,7 @@ import {
   finalizeStagedMediaField,
   finalizeStagedMediaArray,
 } from "../../media/finalize";
-import type {
-  UserDocument,
-  SellerPayoutDetails,
-  SellerShippingConfig,
-} from "../../auth/schemas/firestore";
+import type { UserDocument, SellerPayoutDetails } from "../../auth/schemas/firestore";
 import type { StoreDocument } from "../../stores/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import type { OrderDocument } from "../../orders/schemas/firestore";

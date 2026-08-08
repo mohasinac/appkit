@@ -1,6 +1,6 @@
 "use client";
 import { Div, FormGroup } from "../../../ui";
-import { Label, Span, Checkbox, RichTextEditor, Text } from "../../../ui";
+import { Label, Checkbox, RichTextEditor, Text } from "../../../ui";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { FormField } from "../../../ui";
 import { flattenCategories, type Category } from "../types";

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 function makeCollectionChain(snapOverrides: { empty?: boolean; docs?: unknown[] } = {}) {
   const snap = {

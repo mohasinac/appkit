@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Div, Input, Label, Row, Select, Span, Stack } from "../../../ui";
+import { Button, Input, Label, Row, Select, Span, Stack } from "../../../ui";
 import type { SearchCategoryOption } from "../types";
 
 interface SearchFiltersRowProps {

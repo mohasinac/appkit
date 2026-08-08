@@ -35,7 +35,7 @@ import {
   getAdminRealtimeDb,
   RTDB_PATHS,
 } from "../../../../providers/db-firebase";
-import { PRODUCT_COLLECTION, PRODUCT_CODES_SUBCOLLECTION, ProductStatusValues } from "../../../../features/products/schemas/firestore";
+import { PRODUCT_COLLECTION, PRODUCT_CODES_SUBCOLLECTION } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { CART_COLLECTION } from "../../../../features/cart/schemas/index";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";

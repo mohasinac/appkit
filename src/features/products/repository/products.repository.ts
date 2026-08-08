@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
@@ -13,16 +13,7 @@ import {
 } from "../../../providers/db-firebase";
 import { cacheManager } from "../../../core";
 import { generateUniqueId, slugify, buildSearchTokens, tokenizeQuery, generateBarcodeId } from "../../../utils";
-import {
-  PRODUCT_COLLECTION,
-  createAuctionId,
-  createPreOrderId,
-  createProductId,
-  ProductStatusValues,
-  type ProductCreateInput,
-  type ProductDocument,
-  type ProductUpdateInput,
-} from "../schemas";
+import { PRODUCT_COLLECTION, ProductStatusValues, type ProductCreateInput, type ProductDocument, type ProductUpdateInput } from "../schemas";
 import type { ProductStatus } from "../types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 

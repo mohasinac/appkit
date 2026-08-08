@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { LotteryConfig, LotterySlot } from "../types/index";
+import type { LotteryConfig } from "../types/index";
 import { LotteryError } from "../types/index";
 
 // Mock the repository and db

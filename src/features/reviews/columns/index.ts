@@ -1,10 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
-import {
-  buildColumns,
-  renderRating,
-  renderBoolean,
-  renderCount,
-} from "../../../ui/columns";
+import { buildColumns } from "../../../ui/columns";
 import type { Review } from "../types";
 
 /**

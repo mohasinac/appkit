@@ -1,10 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
-import {
-  buildColumns,
-  renderBoolean,
-  renderNullable,
-  renderCount,
-} from "../../../ui/columns";
+import { buildColumns } from "../../../ui/columns";
 import type { BlogPost } from "../types";
 
 /**

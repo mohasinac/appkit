@@ -1,9 +1,8 @@
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { ShieldAlert, Home, LogIn } from "lucide-react";
-
 
 export interface UnauthorizedViewProps {
 }

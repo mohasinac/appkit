@@ -1,7 +1,7 @@
 "use client"
 import { useCallback } from "react";
 import { Package } from "lucide-react";
-import { BaseListingCard, Button, Caption, Div, Row, Span, Stack, StatusBadge, Text, TextLink } from "../../../ui";
+import { BaseListingCard, Button, Caption, Row, Span, Stack, StatusBadge, Text, TextLink } from "../../../ui";
 import { formatCurrency, formatDate } from "../../../utils";
 import { OrderStatusValues } from "../schemas";
 import { useLongPress } from "../../../react/hooks/useLongPress";

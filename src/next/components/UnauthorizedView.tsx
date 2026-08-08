@@ -12,7 +12,6 @@
  *   }
  */
 
-import { Div } from "../../ui/components/Div";
 import { Row } from "../../ui/components/Layout";
 import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";

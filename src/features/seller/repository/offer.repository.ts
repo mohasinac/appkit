@@ -13,12 +13,7 @@ import type {
   SieveModel,
   FirebaseSieveResult,
 } from "../../../providers/db-firebase";
-import type {
-  OfferDocument,
-  OfferCreateInput,
-  OfferUpdateInput,
-  OfferStatus,
-} from "../schemas";
+import type { OfferDocument, OfferCreateInput, OfferUpdateInput } from "../schemas";
 import { OFFER_COLLECTION, OFFER_FIELDS, createOfferId } from "../schemas";
 import {
   encryptPiiFields,

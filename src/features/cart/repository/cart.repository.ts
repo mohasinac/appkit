@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { JsonValue } from "@mohasinac/appkit";
+
 import type { DocumentReference } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError, NotFoundError, ValidationError } from "../../../errors";

@@ -11,14 +11,7 @@ import {
   prepareForFirestore,
 } from "../../../providers/db-firebase";
 import { normalizeError } from "../../../errors/normalize";
-import {
-  CLAIMED_COUPONS_COLLECTION,
-  type ClaimedCouponDocument,
-  type ClaimedCouponSource,
-  type ClaimedCouponSnapshot,
-  type ClaimedCouponStatus,
-  createClaimedCouponId,
-} from "../schemas";
+import { CLAIMED_COUPONS_COLLECTION, type ClaimedCouponDocument, type ClaimedCouponSource, type ClaimedCouponSnapshot, createClaimedCouponId } from "../schemas";
 import { DatabaseError } from "../../../errors";
 import { COUPON_USAGE_FIELDS } from "../../../constants/field-names";
 

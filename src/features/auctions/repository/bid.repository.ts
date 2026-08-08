@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+
 /**
  * Bid Repository
  *

@@ -8,7 +8,6 @@ import {
 } from "motion/react";
 import type { HTMLMotionProps, Transition } from "motion/react";
 import { MOTION_PRESETS, SPRING_SNAPPY, EASE_OUT } from "../../tokens/motion";
-import type { MotionPreset } from "../../tokens/motion";
 
 // Re-export AnimatePresence for consumer convenience
 export const AnimatePresence = MotionAnimatePresence;

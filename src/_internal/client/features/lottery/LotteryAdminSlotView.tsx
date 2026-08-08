@@ -1,17 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Stack,
-  Row,
-  Text,
-  Heading,
-  Badge,
-  Section,
-  Container,
-  DataTable,
-  type DataTableColumn,
-} from "../../../../ui";
+import { Stack, Text, Heading, Badge, Section, Container, DataTable, type DataTableColumn } from "../../../../ui";
 import type { ClientLotterySlot } from "../../../../features/lottery/types";
 
 interface AdminLotterySlot extends ClientLotterySlot {

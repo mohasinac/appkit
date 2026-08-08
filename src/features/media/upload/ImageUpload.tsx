@@ -11,7 +11,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useState, useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import { Alert, Button, Div, Label, Progress, Row, Span, Spinner, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Label, Progress, Row, Spinner, Stack, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { ImageCropModal } from "../modals/ImageCropModal";
 import type { ImageCropData } from "../modals/ImageCropModal";

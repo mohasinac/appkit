@@ -8,7 +8,7 @@ import {
   updateOrderStatusSchema,
   cancelOrderSchema,
 } from "../../../shared/features/orders/schema";
-import { assertOrderCancellable, assertOrderOwnership, assertReturnWindowOpen } from "./service";
+import { assertOrderCancellable, assertReturnWindowOpen } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 import { OrderNotFoundError, OrderOwnershipError } from "../../../shared/features/orders/errors";
 import { isAdminUser, isModeratorUser } from "../../../../features/auth/role-predicates";

@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { serverLogger } from "../../../monitoring/server-logger";
-import type { JsonValue } from "@mohasinac/appkit";
+
 /**
  * Site Settings Repository
  *

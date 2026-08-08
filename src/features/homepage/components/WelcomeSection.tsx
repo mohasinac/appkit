@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEMED_TEXT_SECONDARY, FLEX_CENTER } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Grid, Heading, Row, Section, SiteLogo, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button, Div, Grid, Heading, Row, Section, SiteLogo, Span, Text, TextLink } from "../../../ui";
 
 // --- Props -------------------------------------------------------------------
 export interface WelcomeSectionChip {

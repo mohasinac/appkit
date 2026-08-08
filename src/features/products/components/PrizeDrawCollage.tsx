@@ -15,7 +15,7 @@
  * adds an emphasis ring to the cell that just won.
  */
 
-import { Row, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
+import { Row } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { Div, Scrim, Text } from "../../../ui";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";

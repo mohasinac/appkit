@@ -25,7 +25,6 @@
 //      CLAUDE.md seed table has a `firestore.<collection>` entry.
 
 import type { SchemaRegistry } from "./types";
-import type { JsonValue } from "@mohasinac/appkit";
 
 // ── W2 — Firestore document schemas ──────────────────────────────────────────
 import { addressFirestoreSchema } from "../features/addresses/schemas";

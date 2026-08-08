@@ -8,7 +8,7 @@
 import { serverLogger } from "../../../monitoring";
 import { couponsRepository } from "../repository/coupons.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
-import { userRepository } from "../../auth/repository/user.repository";
+
 import { buildSellerCouponCode } from "../schemas/firestore";
 import {
   AuthorizationError,

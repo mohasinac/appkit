@@ -3,7 +3,7 @@
  */
 
 import { createHmac, randomInt } from "crypto";
-import type { FirestoreDocument, JsonValue } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "@mohasinac/appkit";
 import { getAdminDb } from "../../providers/db-firebase";
 import { AuthorizationError } from "../../errors";
 import { escapeHtml, resolveDate } from "../../utils";

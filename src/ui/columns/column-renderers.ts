@@ -8,10 +8,7 @@
  */
 
 import { formatCurrency } from "../../utils/number.formatter";
-import {
-  getDefaultCurrency,
-  getDefaultLocale,
-} from "../../core/baseline-resolver";
+import { getDefaultCurrency } from "../../core/baseline-resolver";
 
 // --- Boolean ------------------------------------------------------------------
 

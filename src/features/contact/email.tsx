@@ -9,7 +9,7 @@ import type React from "react";
 // → providers.config.ts → @mohasinac/appkit/server → ... → email.tsx).
 // `require()` is opaque to Next's static analyser so the chain stops here.
 function renderToStaticMarkup(el: React.ReactElement): string {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+   
   const m = require("react-dom/server") as typeof import("react-dom/server");
   return m.renderToStaticMarkup(el);
 }

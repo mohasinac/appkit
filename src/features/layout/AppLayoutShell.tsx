@@ -22,7 +22,7 @@ import BottomActions from "./BottomActions";
 import { AutoBreadcrumbs } from "./AutoBreadcrumbs";
 import { BottomNavbar, type BottomNavbarUser } from "./BottomNavbar";
 import { FooterLayout, type FooterLayoutProps } from "./FooterLayout";
-import { MainNavbar, type MainNavbarItem } from "./MainNavbar";
+import { type MainNavbarItem } from "./MainNavbar";
 import { SidebarLayout } from "./SidebarLayout";
 import { TitleBar } from "./TitleBar";
 import { BackToTop } from "./BackToTop";
@@ -242,8 +242,6 @@ function CollapsibleSidebarSection({
     </Stack>
   );
 }
-
-
 
 /** Sidebar header when a user is logged in — avatar + display name + close button. */
 function SidebarUserHeader({

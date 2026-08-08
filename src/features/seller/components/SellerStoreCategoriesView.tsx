@@ -5,7 +5,7 @@ import { Badge, Row, Span, Stack, sortBy, type JsonArray } from "@mohasinac/appk
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { X, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import {
@@ -109,7 +109,6 @@ export function SellerStoreCategoriesView({
     successMessage: "Category deleted.",
     onSuccess: () => { refetch?.(); },
   });
-
 
   const commitSearch = useCallback(() => { table.set(TABLE_KEYS.QUERY, searchInput.trim()); }, [searchInput, table]);
 

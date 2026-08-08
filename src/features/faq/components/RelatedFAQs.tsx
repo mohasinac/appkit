@@ -1,4 +1,4 @@
-import { Card, Div, Heading, Row, Stack, Text, TextLink } from "../../../ui";
+import { Card, Heading, Row, Stack, Text, TextLink } from "../../../ui";
 import type { FAQ } from "../types";
 
 interface RelatedFAQsProps {

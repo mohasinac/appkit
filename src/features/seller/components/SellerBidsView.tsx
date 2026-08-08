@@ -6,7 +6,7 @@ import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { AdminViewCards } from "../../admin/components/AdminViewCards";
+
 import { Badge, BulkActionBar, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, Span, Text, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";

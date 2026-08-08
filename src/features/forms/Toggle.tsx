@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { Button, Div, Row, Span } from "../../ui";
+import { Button, Row, Span } from "../../ui";
 import { cn } from "./utils";
 
 export interface ToggleProps {
@@ -60,7 +60,10 @@ export function Toggle({
     onChange?.(newChecked);
   };
 
-  const toggleId = id ?? React.useId();
+  // React.useId() must run unconditionally on every render — using `id ?? React.useId()`
+  // skips the hook call whenever `id` is provided, violating the Rules of Hooks.
+  const generatedId = React.useId();
+  const toggleId = id ?? generatedId;
   const cfg = SIZE_CONFIG[size];
 
   return (

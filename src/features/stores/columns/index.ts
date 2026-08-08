@@ -1,11 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
-import {
-  buildColumns,
-  renderBoolean,
-  renderCount,
-  renderNullable,
-  renderRating,
-} from "../../../ui/columns";
+import { buildColumns, renderBoolean, renderNullable, renderRating } from "../../../ui/columns";
 import type { StoreListItem } from "../types";
 
 /**

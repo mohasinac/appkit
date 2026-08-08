@@ -173,7 +173,6 @@ vi.mock("../../../../../utils", () => ({
 
 import { createCheckoutOrderAction, type CreateCheckoutOrderInput } from "../actions";
 import { cartIsDigitalOnly } from "../../../../shared/listing-types/cart-shipping";
-import { validateCartItemStock } from "../bundle-expansion";
 
 // ── Shared helpers ──────────────────────────────────────────────────────────
 

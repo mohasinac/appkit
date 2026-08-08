@@ -16,7 +16,6 @@
  *   }
  */
 
-import { Div } from "../../ui/components/Div";
 import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";

@@ -144,6 +144,13 @@ export function ListingLayout({
   overlays,
   detailView,
 }: ListingLayoutProps) {
+  // useState must run unconditionally on every render — these were
+  // previously declared after the detail-view early return below, which
+  // skipped both hook calls whenever `detailView` was passed, violating the
+  // Rules of Hooks.
+  const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
   // Detail view short-circuit (folded from ListingViewShell)
   if (detailView) {
     return <>{detailView}</>;
@@ -152,8 +159,6 @@ export function ListingLayout({
   const effectiveIsDashboard =
     isDashboard ?? (portal === "admin" || portal === "seller");
   const l = { ...DEFAULT_LABELS, ...labels };
-  const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const hasFilter = Boolean(filterContent);
   const panelTitle = filterTitle ?? l.filtersTitle;

@@ -1,7 +1,7 @@
 import { sieveAnd, sieveFilter, SIEVE_OP, sortBy } from "@mohasinac/appkit";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
-import type { ProductItem, ProductListResponse } from "../types";
+import type { ProductListResponse } from "../types";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 type RelatedProductsResponse = ProductListResponse;

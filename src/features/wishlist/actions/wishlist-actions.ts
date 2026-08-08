@@ -6,11 +6,7 @@
  */
 
 import { ValidationError } from "../../../errors";
-import {
-  wishlistRepository,
-  WishlistFullError,
-  type UserWishlistItem,
-} from "../repository/user-wishlist.repository";
+import { wishlistRepository, type UserWishlistItem } from "../repository/user-wishlist.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import type { ProductDocument } from "../../products/schemas";
 

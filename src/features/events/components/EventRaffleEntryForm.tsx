@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "../../../ui/components/Button";
 import { Form } from "../../../ui/components/Form";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
-import { Div, Heading, Span, Stack, Text } from "../../../ui";
+import { Div, Heading, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 
 const __P = {

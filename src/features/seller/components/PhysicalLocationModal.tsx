@@ -4,7 +4,7 @@ import { Modal } from "../../../ui/components/Modal";
 import { Input } from "../../../ui/components/Input";
 import { Button } from "../../../ui/components/Button";
 import { Row, Stack } from "../../../ui/components/Layout";
-import { Div } from "../../../ui/components/Div";
+
 import { Text } from "../../../ui/components/Typography";
 import { normalizeError } from "../../../errors/normalize";
 

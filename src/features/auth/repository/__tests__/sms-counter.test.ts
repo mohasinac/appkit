@@ -9,7 +9,7 @@ vi.mock("../../../../providers/db-firebase", () => ({
     protected collection: string;
     protected get db() { return db; }
     constructor(col: string) { this.collection = col; }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     protected getCollection() { return (db as any).collection(this.collection); }
   },
 }));

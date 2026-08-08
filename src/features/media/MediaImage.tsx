@@ -155,7 +155,7 @@ export function MediaImage({
               media={source.media}
             />
           ))}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          { }
           <img
             src={resolvedSrc}
             alt={alt}

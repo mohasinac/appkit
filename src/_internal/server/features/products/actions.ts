@@ -4,18 +4,7 @@ import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { productRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { isAdminUser } from "../../../../features/auth/role-predicates";
-import {
-  productInputSchema,
-  productUpdateSchema,
-  auctionInputSchema,
-  preOrderInputSchema,
-  setFeaturedSchema,
-  setStatusSchema,
-  type ProductInput,
-  type ProductUpdate,
-  type AuctionInput,
-  type PreOrderInput,
-} from "../../../shared/features/products/schema";
+import { productInputSchema, productUpdateSchema, auctionInputSchema, preOrderInputSchema, setFeaturedSchema, setStatusSchema } from "../../../shared/features/products/schema";
 import { assertProductOwnership, assertStatusTransition } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 

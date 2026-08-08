@@ -7,7 +7,6 @@
 // helpers stop returning `Record<string, JsonValue>`.
 
 import { z } from "zod";
-import type { JsonValue } from "@mohasinac/appkit";
 
 // ---------------------------------------------------------------------------
 // SieveGrammarSchema — the wire-level request envelope. `filters` and `sorts`

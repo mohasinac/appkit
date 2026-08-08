@@ -91,6 +91,18 @@ export function Accordion({
   value,
   onChange,
 }: AccordionProps) {
+  // useMemo/useState must run unconditionally on every render — they were
+  // previously declared after the legacy-mode early return below, which
+  // skipped both hook calls whenever `title` was passed, violating the
+  // Rules of Hooks. Their result is simply unused in legacy mode.
+  const initialOpen = useMemo(() => {
+    if (value !== undefined) return toArray(value);
+    return toArray(defaultValue);
+  }, [defaultValue, value]);
+
+  const [internalOpenValues, setInternalOpenValues] =
+    useState<string[]>(initialOpen);
+
   // Backward-compatible simple details mode.
   if (title !== undefined) {
     return renderLegacyAccordion({
@@ -102,14 +114,6 @@ export function Accordion({
       contentClassName,
     });
   }
-
-  const initialOpen = useMemo(() => {
-    if (value !== undefined) return toArray(value);
-    return toArray(defaultValue);
-  }, [defaultValue, value]);
-
-  const [internalOpenValues, setInternalOpenValues] =
-    useState<string[]>(initialOpen);
 
   const activeOpenValues =
     value !== undefined ? toArray(value) : internalOpenValues;

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Div, Heading, IconButton, Modal, RichText, Row, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, Modal, RichText, Row, Stack, Text } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { maskName } from "../../../security";

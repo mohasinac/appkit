@@ -1,6 +1,6 @@
 "use client"
 import { Button, Div, Label, Row, Select, SideDrawer } from "../../../ui";
-import type { JsonValue } from "@mohasinac/appkit";
+
 import { useState, useCallback } from "react";
 import { useCategories, useCreateCategory } from "../hooks/useCategorySelector";
 import { useMessage } from "../../../react";

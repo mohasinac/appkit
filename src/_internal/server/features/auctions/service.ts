@@ -1,5 +1,5 @@
 import { productRepository } from "../../../../repositories";
-import { bidRepository } from "../../../../repositories";
+
 import { isAuctionListing } from "../../../../features/products/utils/listing-type";
 import {
   AuctionNotFoundError,

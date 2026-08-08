@@ -1,4 +1,4 @@
-import { Div, Heading, Section, Stack, StarRating, Text } from "../../../ui";
+import { Div, Heading, Stack, StarRating, Text } from "../../../ui";
 import type { Testimonial } from "../types";
 
 export interface TestimonialsCarouselProps {

@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+
 import { useAddresses } from "../hooks/useAddresses";
-import { BulkActionBar, Div, ListingFilterDrawer, ListingToolbar, Stack, Text } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
+import { Div, ListingFilterDrawer, ListingToolbar, Stack, Text } from "../../../ui";
+
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";
 import type { UrlTable } from "../../filters/FilterPanel";

@@ -4,7 +4,7 @@ import { lotteryEntryRepository } from "../../../../features/lottery/repository/
 import { toClientLotteryConfig } from "./adapters";
 import type { SieveModel } from "../../../../providers/db-firebase";
 import type { EventDocument } from "../../../../features/events/schemas/firestore";
-import type { LotteryEntryDocument } from "../../../../features/lottery/schemas/firestore";
+
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 
 /** Event shape with lottery config stripped of price/weight. */

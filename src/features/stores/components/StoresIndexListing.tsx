@@ -150,6 +150,27 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
   const selection = useBulkSelection({ items: stores, keyExtractor: (s) => s.id ?? s.storeSlug });
 
+  // useBottomActions must run unconditionally on every render, once per
+  // component — it was previously mis-placed inside the grid view's
+  // `stores.map(...)` callback below, which fired it once per store in the
+  // list (a severe Rules-of-Hooks violation) instead of once for the whole
+  // bulk-selection bar.
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
+    {
+      id: ACTION_ID.COMPARE,
+      label: "Compare",
+      variant: "secondary",
+      onClick: () => { selection.clearSelection(); },
+    },
+    {
+      id: "visit",
+      label: "Visit Store",
+      variant: "primary",
+      disabled: selection.selectedCount !== 1,
+      onClick: () => { selection.clearSelection(); },
+    },
+  ] } } : {});
+
   return (
     <Div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
@@ -248,23 +269,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
           <Div layout="grid" gap="6" className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {stores.map((store) => {
               const storeKey = store.storeSlug ?? store.id;
-              useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
-          {
-            id: ACTION_ID.COMPARE,
-            label: "Compare",
-            variant: "secondary",
-            onClick: () => { selection.clearSelection(); },
-          },
-          {
-            id: "visit",
-            label: "Visit Store",
-            variant: "primary",
-            disabled: selection.selectedCount !== 1,
-            onClick: () => { selection.clearSelection(); },
-          },
-        ] } } : {});
-
-  return (
+              return (
                 <InteractiveStoreCard
                   key={storeKey}
                   store={store}

@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useTransition } from "react";
-import { Code, Div, Input, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
+import { Code, Div, Stack, Table, Tbody, Td, Text, Th, Thead, Toggle, Tr } from "../../../ui";
 import { useToast } from "../../../ui";
 
 const __O = {

@@ -1,4 +1,4 @@
-import { normalizeError } from "./errors/normalize";
+
 // Single unified barrel
 // Runtime tags: [CLIENT-SSR] [CLIENT-ONLY] [SERVER-ONLY] [DB] [UTIL] [TYPE] [SCHEMA] [CONFIG]
 
@@ -5154,7 +5154,6 @@ export type { CollectionItem } from "./features/collections/index";
 // CollectionListItem - Type contract for collection list item.
 export type { CollectionListItem } from "./features/collections/index";
 
-
 // ./features/consultation/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ConsultationForm - Component for consultation form.
@@ -9657,7 +9656,6 @@ export { SellerDigitalCodesView } from "./features/seller/components/SellerDigit
 export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
 export { SellerLiveView } from "./features/seller/components/SellerLiveView";
 export type { SellerLiveViewProps } from "./features/seller/components/SellerLiveView";
-
 
 // ── Central schema registry (W1) ──────────────────────────────────────────────
 // SCHEMAS is the single source of truth for every Zod schema at a system

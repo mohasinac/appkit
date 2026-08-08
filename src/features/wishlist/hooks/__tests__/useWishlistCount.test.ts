@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useWishlistCount, useWishlistCountWithLimit, WISHLIST_CAP_EVENT } from "../useWishlistCount";
+import { useWishlistCount, useWishlistCountWithLimit } from "../useWishlistCount";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/home",

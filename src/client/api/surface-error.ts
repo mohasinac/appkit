@@ -1,4 +1,4 @@
-import { ApiError, isApiError } from "./ApiError";
+import { isApiError } from "./ApiError";
 import { ApiClientError } from "../../http/ApiClient";
 import { normalizeError } from "../../errors/normalize";
 import { getErrorDisplay } from "../../errors/error-display-map";

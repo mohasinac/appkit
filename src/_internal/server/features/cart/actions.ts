@@ -3,12 +3,7 @@
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { cartRepository } from "../../../../repositories";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
-import {
-  addToCartSchema,
-  updateCartItemSchema,
-  removeFromCartSchema,
-  mergeGuestCartSchema,
-} from "../../../shared/features/cart/schema";
+import { addToCartSchema, removeFromCartSchema, mergeGuestCartSchema } from "../../../shared/features/cart/schema";
 import { upsertCartItem, mergeGuestItems } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 

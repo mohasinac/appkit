@@ -3,7 +3,7 @@
 import { Span, useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Badge, Button, Div, FormActions, Row, SideDrawer, Stack, Text, useToast } from "../../../ui";
+import { Button, Div, FormActions, Row, SideDrawer, Stack, Text, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 

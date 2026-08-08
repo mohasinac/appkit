@@ -1,11 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
-import {
-  buildColumns,
-  renderCurrencyCompact,
-  renderCount,
-  renderBoolean,
-  renderNullable,
-} from "../../../ui/columns";
+import { buildColumns } from "../../../ui/columns";
 import type { AuctionItem, BidRecord } from "../types";
 
 // --- Auction columns ----------------------------------------------------------

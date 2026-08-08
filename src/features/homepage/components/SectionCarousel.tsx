@@ -1,7 +1,7 @@
 import React from "react";
 import { THEMED_BG_SECONDARY, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { SKELETON as skeleton } from "../../../_internal/shared/styles/skeleton";
-import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text, TextLink, type PerViewConfig } from "../../../ui";
+import { Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text, TextLink, type PerViewConfig } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 

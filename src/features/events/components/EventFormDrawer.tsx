@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Stack } from "../../../ui";
+import { Stack } from "../../../ui";
 import type { EventType } from "../types";
 
 export interface EventFormDrawerProps {

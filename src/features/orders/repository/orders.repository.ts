@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { DatabaseError, NotFoundError } from "../../../errors";
 import type {

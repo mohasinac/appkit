@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useBulkAction } from "../useBulkAction";
-import type { BulkActionPayload, BulkActionResult } from "../useBulkAction";
+import type { BulkActionResult } from "../useBulkAction";
 
 function makeResult(overrides: Partial<BulkActionResult> = {}): BulkActionResult {
   return {
