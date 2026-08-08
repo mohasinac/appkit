@@ -14,6 +14,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingLayout, Pagination, Row, Span, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
@@ -137,11 +138,9 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     className: "w-12",
     render: (row) =>
       row.imageUrl ? (
-        <img
-          src={row.imageUrl}
-          alt=""
-          className="w-10 h-10 rounded-lg object-cover border border-[var(--appkit-color-border)]"
-        />
+        <Div className="relative w-10 h-10 flex-shrink-0 overflow-hidden border border-[var(--appkit-color-border)]" rounded="lg">
+          <MediaImage src={row.imageUrl} alt="" size="thumbnail" />
+        </Div>
       ) : (
         <Row className="w-10 h-10 bg-[var(--appkit-color-surface-raised)] border border-[var(--appkit-color-border)]" align="center" justify="center" rounded="lg">
           <Span size="xs" color="faint">–</Span>

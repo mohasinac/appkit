@@ -101,20 +101,21 @@ export function InteractiveStoreCard({
         {/* ── Info section ────────────────────────────────────────────── */}
         <Stack paddingY="b-md" className="flex-1" padding="x-md">
           {/* Logo — overlaps banner bottom edge.
-              Uses a native <img> with onError → state flip so a missing or
+              Uses MediaImage's onError callback → state flip so a missing or
               broken storeLogoURL falls back to the initials circle below
               (matches the §5 plan fix: prevent the "tiny dot" artifact when
               MediaImage's generic emoji fallback gets clipped in a 40×40 box). */}
           <Row className="-mt-5 mb-2" align="end" justify="between">
             <Div className="flex-shrink-0">
               {hasLogo ? (
-                <img
-                  src={store.storeLogoURL!}
-                  alt={store.storeName}
-                  className="h-10 w-10 rounded-lg border-2 border-white border-[var(--appkit-color-border-subtle)] shadow-md object-cover bg-[var(--appkit-color-surface)]"
-                  onError={() => setLogoBroken(true)}
-                  loading="lazy"
-                />
+                <Div className="relative h-10 w-10 overflow-hidden border-2 border-white border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]" rounded="lg" shadow="md">
+                  <MediaImage
+                    src={store.storeLogoURL!}
+                    alt={store.storeName}
+                    size="thumbnail"
+                    onError={() => setLogoBroken(true)}
+                  />
+                </Div>
               ) : (
                 <Row textWeight="bold" textSize="base" className="h-10 w-10 border-2 border-white bg-primary/10 dark:bg-primary/20 text-primary" align="center" justify="center" rounded="lg" shadow="md">
                   {initial}

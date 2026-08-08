@@ -8,6 +8,7 @@ import {
   Span,
   Text,
 } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ShareButton } from "../../products/components/ShareButton";
 import { StoreScopedSearch } from "./StoreScopedSearch";

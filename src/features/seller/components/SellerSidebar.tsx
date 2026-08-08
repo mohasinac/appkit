@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Div, Li, Nav, Row, Span, Stack, Text, Ul } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -11,7 +12,7 @@ const __O = {
   yAuto: "overflow-y-auto",
 } as const;
 
-const CLS_STORE_AVATAR = "h-8 w-8 rounded-md bg-cover bg-center flex-shrink-0";
+const CLS_STORE_AVATAR = "relative h-8 w-8 overflow-hidden rounded-md bg-cover bg-center flex-shrink-0";
 const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary";
 const CLS_STORE_NAME = "text-sm font-semibold text-[var(--appkit-color-text)] truncate";
 const CLS_NAV_ACTIVE = "bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning";
@@ -84,7 +85,9 @@ function FlatContent({
       {storeName && (
         <Row border="bottom-subtle" gap="3" padding="inline">
           {storeLogoURL ? (
-            <img src={storeLogoURL} alt={storeName} className={`${CLS_STORE_AVATAR} object-cover`} />
+            <Div className={CLS_STORE_AVATAR}>
+              <MediaImage src={storeLogoURL} alt={storeName} size="thumbnail" />
+            </Div>
           ) : (
             <Div className={CLS_STORE_FALLBACK}>
               {storeName[0]?.toUpperCase()}
@@ -135,7 +138,9 @@ function GroupsContent({
       {storeName && (
         <Row border="bottom-subtle" gap="3" padding="inline">
           {storeLogoURL ? (
-            <img src={storeLogoURL} alt={storeName} className={`${CLS_STORE_AVATAR} object-cover`} />
+            <Div className={CLS_STORE_AVATAR}>
+              <MediaImage src={storeLogoURL} alt={storeName} size="thumbnail" />
+            </Div>
           ) : (
             <Div className={CLS_STORE_FALLBACK}>
               {storeName[0]?.toUpperCase()}
@@ -265,7 +270,9 @@ export function StoreSidebar({
             <Div border="bottom-subtle" paddingY="y-sm-tall" className="shrink-0" padding="x-md">
               <Row className="min-w-0" align="center" gap="3">
                 {storeLogoURL ? (
-                  <img src={storeLogoURL} alt={storeName} className={`${CLS_STORE_AVATAR} object-cover`} />
+                  <Div className={CLS_STORE_AVATAR}>
+                    <MediaImage src={storeLogoURL} alt={storeName ?? ""} size="thumbnail" />
+                  </Div>
                 ) : (
                   <Div className={CLS_STORE_FALLBACK}>
                     {storeName?.[0]?.toUpperCase()}

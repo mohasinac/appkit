@@ -60,6 +60,15 @@ export interface MediaImageProps {
    */
   fallback?: string;
   /**
+   * Called when the resolved image fails to load (broken URL, 404, etc).
+   * Use this when the consumer needs a bespoke fallback (e.g. initials
+   * avatar) instead of MediaImage's own emoji placeholder — the emoji
+   * placeholder can render as an illegible "tiny dot" inside very small
+   * (≤40px) boxes. MediaImage still renders its own fallback state
+   * internally; this callback is purely a notification hook.
+   */
+  onError?: () => void;
+  /**
    * Extra Tailwind classes applied to the absolute-fill wrapper div.
    * Use for hover animations, e.g. `group-hover:scale-110 transition-transform duration-300`.
    */
@@ -108,12 +117,18 @@ export function MediaImage({
   fallback,
   className,
   sources,
+  onError,
 }: MediaImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const icon = fallback ?? FALLBACK_ICONS[size];
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
   const resolvedSrc = resolveMediaUrl(src);
+
+  const handleError = () => {
+    setHasError(true);
+    onError?.();
+  };
 
   if (!resolvedSrc || hasError) {
     return (
@@ -165,7 +180,7 @@ export function MediaImage({
             // <img> here). Object-fit + className come from typed props.
             className={`absolute inset-0 w-full h-full ${fitClass}`}
             onLoad={() => setIsLoaded(true)}
-            onError={() => setHasError(true)}
+            onError={handleError}
           />
         </picture>
       </Div>
