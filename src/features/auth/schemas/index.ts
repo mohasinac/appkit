@@ -1,6 +1,7 @@
 export * from "./firestore";
 
 import { z } from "zod";
+import { ERROR_MESSAGES } from "../../../errors/messages";
 
 // --- Form schemas -------------------------------------------------------------
 
@@ -16,9 +17,23 @@ export const loginSchema = z.object({
   password: z.string().min(6),
 });
 
+/**
+ * Matches the server-side complexity rule enforced in
+ * src/app/api/auth/register/route.ts — kept in sync so a password that fails
+ * client-side validation is exactly the same one that would fail server-side,
+ * instead of passing the client gate and failing with a generic toast after
+ * the network round-trip.
+ */
+export const registerPasswordSchema = z
+  .string()
+  .min(8, ERROR_MESSAGES.PASSWORD.TOO_SHORT)
+  .regex(/[A-Z]/, ERROR_MESSAGES.PASSWORD.NO_UPPERCASE)
+  .regex(/[a-z]/, ERROR_MESSAGES.PASSWORD.NO_LOWERCASE)
+  .regex(/[0-9]/, ERROR_MESSAGES.PASSWORD.NO_NUMBER);
+
 export const registerSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: registerPasswordSchema,
   displayName: z.string().min(1).optional(),
 });
 

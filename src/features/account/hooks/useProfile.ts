@@ -19,6 +19,11 @@ export interface UpdateCurrentProfileInput {
   displayName?: string;
   phoneNumber?: string;
   photoURL?: string;
+  avatarMetadata?: {
+    url: string;
+    position: { x: number; y: number };
+    zoom: number;
+  };
   bio?: string;
   profileIsPublic?: boolean;
 }

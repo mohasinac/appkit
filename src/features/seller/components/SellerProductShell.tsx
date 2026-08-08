@@ -1181,13 +1181,18 @@ export function SellerProductShell({
           renderTemplateSelector={renderTemplateSelector}
         />
       ),
-      validate: (v) => (!v.title?.trim() ? "Title is required" : null),
+      validate: (v) => {
+        if (!v.title?.trim() || v.title.trim().length < 3) return "Title must be at least 3 characters";
+        if (!v.description?.trim() || v.description.trim().length < 20) return "Description must be at least 20 characters";
+        return null;
+      },
     },
     {
       label: "Media",
       render: ({ values, onChange }) => (
         <StepMedia values={values} onChange={onChange} storeSlug={storeSlug} />
       ),
+      validate: (v) => (!v.mainImage ? "A main image is required" : null),
     },
     ...(typeSpecificStep ? [typeSpecificStep] : []),
     {
@@ -1195,7 +1200,16 @@ export function SellerProductShell({
       render: ({ values, onChange }) => (
         <StepPricing values={values} onChange={onChange} listingType={listingType} />
       ),
-      validate: (v) => (!v.price ? "Price is required" : null),
+      validate: (v) => {
+        if (!v.price) return "Price is required";
+        if (
+          pluginForMode(listingType).showsStockQuantity &&
+          (v.stockQuantity === undefined || v.stockQuantity === null)
+        ) {
+          return "Stock quantity is required";
+        }
+        return null;
+      },
     },
     {
       label: "Shipping",

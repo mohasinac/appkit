@@ -546,15 +546,30 @@ export function SellerOrdersView({
     },
   ];
 
+  const [shippingRowId, setShippingRowId] = useState<string | null>(null);
+
   const handleQuickShip = useCallback(async (row: OrderRow, e: React.MouseEvent) => {
     e.stopPropagation();
-    const res = await fetch(`${orderDetailApiBase}/${row.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: "shipped" }),
-    }).catch(() => null);
-    if (res?.ok) setSelectedOrderId(null);
-  }, [orderDetailApiBase]);
+    setShippingRowId(row.id);
+    try {
+      const res = await fetch(`${orderDetailApiBase}/${row.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "shipped" }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to mark order shipped");
+      }
+      showToast("Order marked shipped.", "success");
+      setSelectedOrderId(null);
+    } catch (err) {
+      void normalizeError(err);
+      showToast(err instanceof Error ? err.message : "Failed to mark order shipped.", "error");
+    } finally {
+      setShippingRowId(null);
+    }
+  }, [orderDetailApiBase, showToast]);
 
   const renderRowActions = useCallback(
     (row: OrderRow) => {
@@ -568,6 +583,8 @@ export function SellerOrdersView({
               onClick={(e) => void handleQuickShip(row, e)}
               aria-label="Mark as shipped"
               title="Mark shipped"
+              isLoading={shippingRowId === row.id}
+              disabled={shippingRowId !== null}
             >
               <Truck className="h-4 w-4" />
             </Button>
@@ -584,7 +601,7 @@ export function SellerOrdersView({
         </Row>
       );
     },
-    [handleQuickShip],
+    [handleQuickShip, shippingRowId],
   );
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });

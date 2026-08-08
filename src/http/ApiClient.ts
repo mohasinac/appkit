@@ -20,6 +20,14 @@ import type { JsonValue } from "../schemas/types";
  */
 
 export class ApiClientError extends Error {
+  /** Stable server error code, e.g. HTTP_ERROR_CODES.VALIDATION_FAILED — lets
+   * `surfaceError`/`ERROR_DISPLAY_MAP` route this to a toast or an inline
+   * field error the same way a `client/api/ApiError` would. */
+  readonly code?: string;
+  /** Serialised Zod issues, when the failure was a validation error. */
+  readonly issues?: { message: string; path?: (string | number)[]; code?: string }[];
+  readonly requestId?: string;
+
   constructor(
     message: string,
     public readonly status: number,
@@ -27,6 +35,12 @@ export class ApiClientError extends Error {
   ) {
     super(message);
     this.name = "ApiClientError";
+    const body = data as
+      | { code?: unknown; issues?: unknown; requestId?: unknown }
+      | undefined;
+    this.code = typeof body?.code === "string" ? body.code : undefined;
+    this.issues = Array.isArray(body?.issues) ? (body.issues as ApiClientError["issues"]) : undefined;
+    this.requestId = typeof body?.requestId === "string" ? body.requestId : undefined;
   }
 }
 

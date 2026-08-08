@@ -125,6 +125,34 @@
       ]
     },
     {
+      "collectionGroup": "addresses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "banStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "bannedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "savedPaymentMethods",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "banStatus",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "bannedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "products",
       "queryScope": "COLLECTION",
       "fields": [

@@ -6,12 +6,14 @@ const {
   mockOrderUpdate,
   mockPayoutCreate,
   mockGetSingleton,
+  mockFindByOwnerId,
 } = vi.hoisted(() => ({
   mockUserFindById: vi.fn(),
   mockOrderFindById: vi.fn(),
   mockOrderUpdate: vi.fn(),
   mockPayoutCreate: vi.fn(),
   mockGetSingleton: vi.fn(),
+  mockFindByOwnerId: vi.fn(),
 }));
 
 vi.mock("../../../auth/repository/user.repository", () => ({
@@ -26,6 +28,11 @@ vi.mock("../../../payments/repository/payout.repository", () => ({
 vi.mock("../../../admin/repository/site-settings.repository", () => ({
   siteSettingsRepository: { getSingleton: mockGetSingleton },
 }));
+// order.storeId is the store SLUG, not the seller's Firebase UID — bulkSellerOrder
+// resolves the caller's store via storeRepository before comparing eligibility.
+vi.mock("../../../stores/repository/store.repository", () => ({
+  storeRepository: { findByOwnerId: mockFindByOwnerId },
+}));
 
 // The module under test pulls in a large tree of sibling repositories/errors —
 // only the ones above matter for bulkSellerOrder's EMI-skip branch, so the
@@ -37,7 +44,7 @@ import type { OrderDocument } from "../../../orders/schemas/firestore";
 function makeOrder(overrides: Partial<OrderDocument> = {}): OrderDocument {
   return {
     id: "order-1",
-    storeId: "seller-uid",
+    storeId: "store-seller",
     status: "delivered",
     shippingMethod: "custom",
     payoutStatus: "eligible",
@@ -56,6 +63,7 @@ beforeEach(() => {
   });
   mockPayoutCreate.mockResolvedValue({ id: "payout-1" });
   mockOrderUpdate.mockResolvedValue(undefined);
+  mockFindByOwnerId.mockResolvedValue({ id: "store-seller" });
 });
 
 describe("bulkSellerOrder — EMI-incomplete exclusion", () => {

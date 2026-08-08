@@ -1136,10 +1136,16 @@ export async function verifyAndPlaceRazorpayOrderAction(
   // decrement runs against `expansionPaid.decrements` lower down.
   const expansionPaid = getExpandedDecrements(cart.items);
   const productByIdPaid = new Map<string, ProductDocument>();
-  for (const pid of expansionPaid.productIds) {
-    const product = await unitOfWork.products.findById(pid);
+  // Independent reads across distinct product docs — batch them instead of
+  // awaiting one findById per product (mirrors the COD/UPI path above, which
+  // already batches its product lookups via Promise.all).
+  const fetchedProductsPaid = await Promise.all(
+    expansionPaid.productIds.map((pid) => unitOfWork.products.findById(pid)),
+  );
+  expansionPaid.productIds.forEach((pid, i) => {
+    const product = fetchedProductsPaid[i];
     if (product) productByIdPaid.set(pid, product);
-  }
+  });
   const productChecks = cart.items.map((item) => {
     const [firstMember] = getCartItemMemberIds(item);
     const product = productByIdPaid.get(firstMember) ?? null;
@@ -1272,18 +1278,10 @@ export async function verifyAndPlaceRazorpayOrderAction(
       0,
     );
 
-    let shippingFee = 0;
-    let storeOwnerId: string | undefined;
-    const storeId = firstItem.storeId;
-    if (storeId) {
-      const store = await storeRepository.findById(storeId);
-      storeOwnerId = store?.ownerId;
-      const sellerUser = storeOwnerId ? await userRepository.findById(storeOwnerId) : null;
-      const shippingConfig = sellerUser?.shippingConfig;
-      if (shippingConfig?.isConfigured) {
-        shippingFee = shippingConfig.customShippingPrice ?? 0;
-      }
-    }
+    // Reuses the same store/seller lookup as the COD/UPI path above instead
+    // of re-implementing it inline — was two sequential findById calls per
+    // seller group here, duplicated from resolveShippingCost.
+    const { shippingFee, storeOwnerId } = await resolveShippingCost(firstItem.storeId);
 
     let couponDiscount = 0;
     const appliedDiscounts: {

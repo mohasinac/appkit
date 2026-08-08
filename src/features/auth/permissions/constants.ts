@@ -43,6 +43,10 @@ export type Permission =
   | "admin:stores:write"
   | "admin:store-addresses:read"
 
+  // Management — unified address book (users + stores, SB-UNI-A)
+  | "admin:addresses:read"
+  | "admin:addresses:write"
+
   // Finance
   | "admin:analytics:view"
   | "admin:payouts:read"

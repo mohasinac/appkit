@@ -109,6 +109,7 @@ export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
 // S-STORE — pure-UI primitives + Seller view consumed by new dashboard pages
 export { EmptyState } from "./ui/components/EmptyState";
 export { Skeleton } from "./ui/components/Skeleton";
+export { Alert } from "./ui/components/Alert";
 export type { SkeletonProps } from "./ui/components/Skeleton";
 export { Divider } from "./ui/components/Divider";
 export { TabStrip } from "./ui/components/TabStrip";
@@ -219,6 +220,8 @@ export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig
 export { BottomSheet } from "./features/layout/index";
 export { ImageUpload } from "./features/media/index";
 export type { ImageUploadProps } from "./features/media/index";
+export { AvatarUpload } from "./features/media/index";
+export type { AvatarUploadProps, ImageCropData } from "./features/media/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // ImageCropModal - Component for image crop modal.
 export { ImageCropModal } from "./features/media/index";
@@ -277,13 +280,15 @@ export { DateInput, DateRangeInput } from "./ui/components/DateInput";
 export type { DateInputProps, DateRangeInputProps } from "./ui/components/DateInput";
 // FormShell + context-aware fields (SB-UNI-Y-1)
 export type { FormShellProps, FormShellProviderProps, FormShellStep, FormShellContextValue, UseFormShellStateResult } from "./ui/forms";
-export { FormShell, FormShellProvider, FormShellContext, useFormShell, useFormShellState } from "./ui/forms";
+export { FormShell, FormShellProvider, FormShellContext, useFormShell, useFormShellState, applyZodIssues } from "./ui/forms";
 export type { FieldInputProps } from "./ui/forms";
 export { FieldInput } from "./ui/forms";
 export type { FieldSelectProps } from "./ui/forms";
 export { FieldSelect } from "./ui/forms";
 export type { FieldCheckboxProps } from "./ui/forms";
 export { FieldCheckbox } from "./ui/forms";
+export type { FieldTextareaProps } from "./ui/forms";
+export { FieldTextarea } from "./ui/forms";
 export type { ColorPickerFieldProps } from "./ui/forms";
 export { ColorPickerField } from "./ui/forms";
 export { Select } from "./ui/components/Select";
@@ -340,6 +345,7 @@ export type { Address, AddressFormData } from "./features/account/index";
 export { AddressBook, AddressCard, AddressForm } from "./features/account/index";
 export type { AddressCardAddress, AddressCardProps } from "./features/account/index";
 export { useProfile, useUpdateProfile } from "./features/account/index";
+export { updateProfileSchema } from "./features/account/index";
 export { CategoryProductsView } from "./features/categories/index";
 export type { CategoryItem } from "./features/categories/index";
 export { MediaImage } from "./features/media/index";

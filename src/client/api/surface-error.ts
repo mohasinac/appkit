@@ -31,10 +31,21 @@ export interface SurfaceErrorOptions {
   }) => void;
 }
 
+/** True for `ApiError` instances and for any other thrown error (e.g. the
+ * lower-level `ApiClientError` from `ApiClient.request()`) that carries the
+ * same stable `code: string` field — both shapes route through the same
+ * toast-vs-inline-field-error logic below. */
+function hasStableErrorCode(err: unknown): err is { code: string; message: string } {
+  return (
+    isApiError(err) ||
+    (err instanceof Error && typeof (err as { code?: unknown }).code === "string")
+  );
+}
+
 export function surfaceError(err: unknown, opts: SurfaceErrorOptions): void {
   const { showToast, setFieldError, translate, report } = opts;
 
-  if (isApiError(err)) {
+  if (hasStableErrorCode(err)) {
     const display = getErrorDisplay(err.code);
     const message = translate?.(display.messageKey) ?? err.message;
 

@@ -51,8 +51,15 @@ export const userProfileSchema = z.object({
   updatedAt: z.string().optional(),
 });
 
+/**
+ * Client-side mirror of the server's updateProfileSchema
+ * (src/app/api/user/profile/route.ts) — kept field-for-field in sync so a
+ * value that passes client validation is guaranteed to pass server
+ * validation too.
+ */
 export const updateProfileSchema = z.object({
-  displayName: z.string().min(1).optional(),
-  phone: z.string().optional(),
-  bio: z.string().optional(),
+  displayName: z.string().min(1, "Enter your name").optional(),
+  phoneNumber: z.string().optional(),
+  bio: z.string().max(500, "Bio must be 500 characters or fewer").optional(),
+  profileIsPublic: z.boolean().optional(),
 });

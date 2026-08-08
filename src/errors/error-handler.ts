@@ -1,52 +1,45 @@
 import { NextResponse } from "next/server.js";
 import type { JsonValue } from "@mohasinac/appkit";
 import { AppError } from "./base-error";
-import { ERROR_CODES, ERROR_MESSAGES_BY_CODE } from "./error-codes";
+import { mapToHttpError } from "./error-mapping";
 
 /**
  * Handle API errors with consistent response format.
  * Use in Next.js API route catch blocks.
+ *
+ * Delegates classification to `mapToHttpError` — the same table `createRouteHandler`
+ * uses — so `DatabaseError`/bare Firestore error codes/`ApiError` are classified
+ * correctly here too, instead of silently falling through to a generic 500 the way
+ * this function previously did for anything that wasn't an `AppError` or a Zod-shaped
+ * object. Response shape is unchanged for existing callers.
  */
 export function handleApiError(error: unknown): NextResponse {
-  if (error instanceof AppError) {
-    if (error.statusCode >= 500) {
-      console.error("[API Error]", {
-        code: error.code,
-        message: error.message,
-        statusCode: error.statusCode,
-        data: error.data,
-      });
-    }
-    return NextResponse.json(error.toJSON(), { status: error.statusCode });
-  }
-
-  // Zod / schema validation errors
-  if (error && typeof error === "object" && "issues" in error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Validation failed",
-        code: ERROR_CODES.VALIDATION_INVALID_INPUT,
-        data: error,
-      },
-      { status: 400 },
-    );
-  }
-
-  console.error("[Unexpected API Error]", {
-    error:
-      error instanceof Error
-        ? { name: error.name, message: error.message, stack: error.stack }
-        : error,
+  const mapped = mapToHttpError(error, {
+    isProduction: process.env.NODE_ENV === "production",
   });
+
+  if (mapped.status >= 500) {
+    console.error("[API Error]", {
+      code: mapped.code,
+      message: mapped.message,
+      statusCode: mapped.status,
+      data: error instanceof AppError ? error.data : undefined,
+    });
+  }
 
   return NextResponse.json(
     {
       success: false,
-      error: ERROR_MESSAGES_BY_CODE[ERROR_CODES.GEN_INTERNAL_ERROR],
-      code: ERROR_CODES.GEN_INTERNAL_ERROR,
+      error: mapped.message,
+      code: mapped.code,
+      statusCode: mapped.status,
+      ...(error instanceof AppError && error.data !== undefined
+        ? { data: error.data }
+        : mapped.issues
+          ? { data: { issues: mapped.issues } }
+          : {}),
     },
-    { status: 500 },
+    { status: mapped.status },
   );
 }
 

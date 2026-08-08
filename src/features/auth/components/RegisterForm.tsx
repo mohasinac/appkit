@@ -7,7 +7,7 @@ import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { applyZodIssues } from "../../../ui/forms/FormShell";
-import { registerSchema } from "../schemas";
+import { registerSchema, registerPasswordSchema } from "../schemas";
 
 export interface RegisterFormValues {
   email: string;
@@ -47,7 +47,7 @@ export interface RegisterFormProps {
 
 const registerClientSchema = registerSchema.extend({
   displayName: z.string().min(1, "Enter your name"),
-  confirmPassword: z.string().min(6),
+  confirmPassword: registerPasswordSchema,
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: "You must accept the terms to continue" }),
   }),

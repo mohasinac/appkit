@@ -449,6 +449,11 @@ export async function bulkSellerOrder(
     );
   }
 
+  // order.storeId is the store slug, not the seller's Firebase UID — resolve
+  // the caller's store once so eligibility can compare like-for-like.
+  const callerStore =
+    userRole !== "admin" ? await storeRepository.findByOwnerId(userId) : null;
+
   const orders = await Promise.all(
     orderIds.map((id) => orderRepository.findById(id)),
   );
@@ -466,7 +471,7 @@ export async function bulkSellerOrder(
       skipped.push(id);
       continue;
     }
-    if (userRole !== "admin" && order.storeId !== userId) {
+    if (userRole !== "admin" && order.storeId !== callerStore?.id) {
       skipped.push(id);
       continue;
     }
@@ -570,9 +575,15 @@ export async function createSellerProduct(
     sellerId: userId,
     sellerName: userName,
     sellerEmail: userEmail,
-    status: "draft",
+    // Pass through the caller's intended status (draft vs published) instead
+    // of hardcoding "draft" — this previously made every "Publish" click
+    // silently save as a draft regardless of what the wizard sent.
+    status: (finalizedData as { status?: string }).status ?? "draft",
   } as any);
-  serverLogger.info("createSellerProduct: product created", { userId });
+  serverLogger.info("createSellerProduct: product created", {
+    userId,
+    status: (finalizedData as { status?: string }).status ?? "draft",
+  });
 }
 
 // --- Read Actions -------------------------------------------------------------
@@ -602,7 +613,20 @@ export async function listSellerOrders(
   userId: string,
   params?: SellerListParams,
 ): Promise<FirebaseSieveResult<OrderDocument>> {
-  const sellerProducts = await productRepository.findByStore(userId);
+  // productRepository.findByStore expects the store slug, not the seller's
+  // Firebase UID — resolve the caller's store first.
+  const store = await storeRepository.findByOwnerId(userId);
+  if (!store) {
+    return {
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize: params?.pageSize ?? 20,
+      totalPages: 0,
+      hasMore: false,
+    };
+  }
+  const sellerProducts = await productRepository.findByStore(store.id);
   const productIds = sellerProducts.map((p) => p.id);
   if (productIds.length === 0) {
     return {
@@ -623,7 +647,10 @@ export async function listSellerOrders(
 }
 
 export async function getSellerAnalytics(userId: string) {
-  const products = await productRepository.findByStore(userId);
+  // productRepository.findByStore expects the store slug, not the seller's
+  // Firebase UID — resolve the caller's store first.
+  const store = await storeRepository.findByOwnerId(userId);
+  const products = store ? await productRepository.findByStore(store.id) : [];
   const productIds = products.map((p) => p.id);
   let allOrders: OrderDocument[] = [];
   if (productIds.length > 0) {
@@ -732,8 +759,12 @@ export async function sellerUpdateProduct(
 ): Promise<ProductDocument> {
   const existing = await productRepository.findById(productId);
   if (!existing) throw new NotFoundError("Product not found");
-  if (userRole !== "admin" && existing.storeId !== userId)
-    throw new AuthorizationError("You do not own this product");
+  // existing.storeId is the store slug, not the seller's Firebase UID.
+  if (userRole !== "admin") {
+    const store = await storeRepository.findByOwnerId(userId);
+    if (!store || existing.storeId !== store.id)
+      throw new AuthorizationError("You do not own this product");
+  }
   const finalizedData = await finalizeProductMediaReferences(input);
   const updated = await productRepository.updateProduct(
     productId,
@@ -750,8 +781,12 @@ export async function sellerDeleteProduct(
 ): Promise<void> {
   const existing = await productRepository.findById(productId);
   if (!existing) throw new NotFoundError("Product not found");
-  if (userRole !== "admin" && existing.storeId !== userId)
-    throw new AuthorizationError("You do not own this product");
+  // existing.storeId is the store slug, not the seller's Firebase UID.
+  if (userRole !== "admin") {
+    const store = await storeRepository.findByOwnerId(userId);
+    if (!store || existing.storeId !== store.id)
+      throw new AuthorizationError("You do not own this product");
+  }
   await productRepository.delete(productId);
   serverLogger.info("sellerDeleteProduct", { userId, productId });
 }
@@ -785,8 +820,12 @@ export async function customShipOrder(
 ): Promise<{ orderId: string; method: string }> {
   const order = await orderRepository.findById(orderId);
   if (!order) throw new NotFoundError("Order not found");
-  if (userRole !== "admin" && order.storeId !== userId)
-    throw new AuthorizationError("You do not own this order");
+  // order.storeId is the store slug, not the seller's Firebase UID.
+  if (userRole !== "admin") {
+    const store = await storeRepository.findByOwnerId(userId);
+    if (!store || order.storeId !== store.id)
+      throw new AuthorizationError("You do not own this order");
+  }
   if (
     order.status === OrderStatusValues.SHIPPED ||
     order.status === OrderStatusValues.DELIVERED
@@ -830,8 +869,12 @@ export async function markEmiInstallmentPaid(
 ): Promise<OrderDocument> {
   const order = await orderRepository.findById(orderId);
   if (!order) throw new NotFoundError("Order not found");
-  if (userRole !== "admin" && order.storeId !== userId)
-    throw new AuthorizationError("You do not own this order");
+  // order.storeId is the store slug, not the seller's Firebase UID.
+  if (userRole !== "admin") {
+    const store = await storeRepository.findByOwnerId(userId);
+    if (!store || order.storeId !== store.id)
+      throw new AuthorizationError("You do not own this order");
+  }
   if (!order.emiEnabled) throw new ValidationError("This order is not on an EMI plan");
 
   const installments = order.emiInstallments ?? [];
