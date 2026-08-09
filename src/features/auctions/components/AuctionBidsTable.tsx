@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { Badge, Div, Row, Span, Stack, Text } from "../../../ui";
+import { Badge, Button, Div, Row, Span, Stack, Text } from "../../../ui";
 import type { BidDocument } from "../schemas/firestore";
 
 const __O = {
@@ -80,10 +80,14 @@ function AuctionRow({
 
   return (
     <Div className={`border border-[var(--appkit-color-border)] ${__O.hidden} bg-[var(--appkit-color-surface)]`} rounded="xl" shadow="sm">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={() => setExpanded((v) => !v)}
-        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--appkit-color-border-subtle)] transition-colors text-left"
+        gap="lg"
+        paddingX="md"
+        paddingY="md"
+        className="w-full text-left"
         aria-expanded={expanded}
       >
         <ChevronRight
@@ -106,7 +110,7 @@ function AuctionRow({
             {paise(highest)}
           </Text>
         </Row>
-      </button>
+      </Button>
 
       {expanded && (
         <Div className="border-t border-[var(--appkit-color-border)]">

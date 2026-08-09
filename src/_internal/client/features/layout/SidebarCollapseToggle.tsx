@@ -12,6 +12,7 @@
  */
 
 import React from "react";
+import { IconButton } from "../../../../ui/components/IconButton";
 
 export interface SidebarCollapseToggleProps {
   expanded: boolean;
@@ -36,26 +37,26 @@ export function SidebarCollapseToggle({
   collapsedLabel = "Expand sidebar",
 }: SidebarCollapseToggleProps): React.JSX.Element {
   return (
-    <button
+    <IconButton
       type="button"
       onClick={onToggle}
       aria-label={expanded ? expandedLabel : collapsedLabel}
       aria-expanded={expanded}
-       
+      variant="ghost"
       style={HANDLE_STYLE}
-      className="w-9 shrink-0 flex items-center justify-center cursor-pointer rounded-r-[1.25rem] shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]"
-    >
-      <svg
-        className={`w-4 h-4 drop-shadow-sm transition-transform duration-300 ${expanded ? "" : "rotate-180"}`}
-         
-        style={CHEVRON_STYLE}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-      </svg>
-    </button>
+      className="w-9 shrink-0 rounded-r-[1.25rem] shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]"
+      icon={
+        <svg
+          className={`w-4 h-4 drop-shadow-sm transition-transform duration-300 ${expanded ? "" : "rotate-180"}`}
+          style={CHEVRON_STYLE}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+        </svg>
+      }
+    />
   );
 }

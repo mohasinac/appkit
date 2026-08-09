@@ -4,10 +4,11 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Form, FormActions, Grid, Input, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
+import { Alert, BackgroundRenderer, Button, Div, Form, FormActions, Grid, Input, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
 import type { SelectOption } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
+import { MediaUploadField } from "../../media/upload/MediaUploadField";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -118,12 +119,20 @@ export function AdminSiteSettingsView({
   const [maintenanceMode, setMaintenanceMode] = React.useState(false);
   const [maintenanceMessage, setMaintenanceMessage] = React.useState("");
 
-  // ② Appearance
-  const [primaryColor, setPrimaryColor] = React.useState("");
-  const [secondaryColor, setSecondaryColor] = React.useState("");
-  const [accentColor, setAccentColor] = React.useState("");
-  const [defaultTheme, setDefaultTheme] = React.useState("light");
-  const [fontFamily, setFontFamily] = React.useState("inter");
+  // ② Appearance — background image/gradient/color/video (light + dark).
+  // The old primaryColor/secondaryColor/accentColor/fontFamily/defaultTheme
+  // fields here were dead (saved to Firestore, never read back anywhere —
+  // redundant with the working Theme Manager tab below). Removed 2026-08-09.
+  const [lightBgType, setLightBgType] = React.useState<"color" | "gradient" | "image" | "video">("color");
+  const [lightBgValue, setLightBgValue] = React.useState("");
+  const [lightBgOverlayEnabled, setLightBgOverlayEnabled] = React.useState(false);
+  const [lightBgOverlayColor, setLightBgOverlayColor] = React.useState("#000000");
+  const [lightBgOverlayOpacity, setLightBgOverlayOpacity] = React.useState(30);
+  const [darkBgType, setDarkBgType] = React.useState<"color" | "gradient" | "image" | "video">("color");
+  const [darkBgValue, setDarkBgValue] = React.useState("");
+  const [darkBgOverlayEnabled, setDarkBgOverlayEnabled] = React.useState(false);
+  const [darkBgOverlayColor, setDarkBgOverlayColor] = React.useState("#000000");
+  const [darkBgOverlayOpacity, setDarkBgOverlayOpacity] = React.useState(30);
 
   // Theme registry (custom themes + default-light / default-dark pointers).
   const [themeRegistry, setThemeRegistry] = React.useState<ThemeManagerValue>({
@@ -269,11 +278,16 @@ export function AdminSiteSettingsView({
     setMaintenanceMode(s.maintenance?.enabled ?? false);
     setMaintenanceMessage(s.maintenance?.message ?? "");
 
-    setPrimaryColor(s.appearance?.primaryColor ?? "");
-    setSecondaryColor(s.appearance?.secondaryColor ?? "");
-    setAccentColor(s.appearance?.accentColor ?? "");
-    setDefaultTheme(s.appearance?.defaultTheme ?? "light");
-    setFontFamily(s.appearance?.fontFamily ?? "inter");
+    setLightBgType(s.background?.light?.type ?? "color");
+    setLightBgValue(s.background?.light?.value ?? "");
+    setLightBgOverlayEnabled(s.background?.light?.overlay?.enabled ?? false);
+    setLightBgOverlayColor(s.background?.light?.overlay?.color ?? "#000000");
+    setLightBgOverlayOpacity(Math.round((s.background?.light?.overlay?.opacity ?? 0.3) * 100));
+    setDarkBgType(s.background?.dark?.type ?? "color");
+    setDarkBgValue(s.background?.dark?.value ?? "");
+    setDarkBgOverlayEnabled(s.background?.dark?.overlay?.enabled ?? false);
+    setDarkBgOverlayColor(s.background?.dark?.overlay?.color ?? "#000000");
+    setDarkBgOverlayOpacity(Math.round((s.background?.dark?.overlay?.opacity ?? 0.3) * 100));
 
     const themeBlock = (s as FirestoreDocument).theme as
       | {
@@ -414,7 +428,18 @@ export function AdminSiteSettingsView({
     maintenance: { enabled: maintenanceMode, message: maintenanceMessage },
   }));
   const appearanceMutation = useSave("Appearance", () => ({
-    appearance: { primaryColor, secondaryColor, accentColor, defaultTheme, fontFamily },
+    background: {
+      light: {
+        type: lightBgType,
+        value: lightBgValue,
+        overlay: { enabled: lightBgOverlayEnabled, color: lightBgOverlayColor, opacity: lightBgOverlayOpacity / 100 },
+      },
+      dark: {
+        type: darkBgType,
+        value: darkBgValue,
+        overlay: { enabled: darkBgOverlayEnabled, color: darkBgOverlayColor, opacity: darkBgOverlayOpacity / 100 },
+      },
+    },
   }));
   const themeMutation = useSave("Themes", () => ({
     theme: {
@@ -484,16 +509,11 @@ export function AdminSiteSettingsView({
     emailSettings: { fromEmail: notifFromEmail, fromName: notifFromName },
   }));
 
-  const FONT_OPTIONS = [
-    { label: "Inter", value: "inter" },
-    { label: "Poppins", value: "poppins" },
-    { label: "Roboto", value: "roboto" },
-    { label: "Nunito", value: "nunito" },
-  ];
-  const THEME_OPTIONS = [
-    { label: "Light", value: "light" },
-    { label: "Dark", value: "dark" },
-    { label: "System", value: "system" },
+  const BG_TYPE_OPTIONS: SelectOption[] = [
+    { label: "Solid color", value: "color" },
+    { label: "Gradient", value: "gradient" },
+    { label: "Image", value: "image" },
+    { label: "Video", value: "video" },
   ];
   const CARRIER_OPTIONS = [
     { label: "Custom / Other", value: "custom" },
@@ -584,26 +604,97 @@ export function AdminSiteSettingsView({
             </Form>
           </TabsContent>
 
-          {/* ② Appearance */}
+          {/* ② Appearance — site-wide background (homepage/nav/dashboard shells) */}
           <TabsContent value="appearance">
             <Form onSubmit={(e) => { e.preventDefault(); appearanceMutation.mutate(); }} className="pt-4" spacing="md">
-              <Grid gap="md" className="grid-cols-3">
-                <Stack gap="none">
-                  <Text size="sm" weight="medium" color="muted" className="mb-1">Primary color</Text>
-                  <Input type="color" value={primaryColor || "#000000"} onChange={(e) => setPrimaryColor(e.target.value)} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
+              <Text size="xs" color="muted">
+                Sets the background behind the public shell, dashboard sidebars, and any
+                Section/Card that opts into it. Leave the value blank for a plain surface.
+              </Text>
+              <Grid cols={2} gap="lg">
+                <Stack gap="sm" rounded="lg" border="default" padding="md">
+                  <Text size="sm" weight="semibold">Light mode</Text>
+                  <Select
+                    label="Type"
+                    options={BG_TYPE_OPTIONS}
+                    value={lightBgType}
+                    onValueChange={(v) => setLightBgType(v as typeof lightBgType)}
+                  />
+                  {lightBgType === "color" ? (
+                    <Input type="color" label="Color" value={lightBgValue || "#ffffff"} onChange={(e) => setLightBgValue(e.target.value)} className="h-10 w-full cursor-pointer" bare /> /* audit-hex-tokens-ok: native color picker requires literal hex string fallback */
+                  ) : lightBgType === "gradient" ? (
+                    <Textarea label="CSS gradient expression" rows={2} value={lightBgValue} onChange={(e) => setLightBgValue(e.target.value)} placeholder="linear-gradient(...)" />
+                  ) : (
+                    <MediaUploadField
+                      label={lightBgType === "video" ? "Background video" : "Background image"}
+                      kind={lightBgType === "video" ? "video" : "image"}
+                      value={lightBgValue}
+                      onChange={setLightBgValue}
+                      onUpload={(file: File) => upload(file, "store")}
+                    />
+                  )}
+                  <Toggle label="Dim overlay" checked={lightBgOverlayEnabled} onChange={setLightBgOverlayEnabled} />
+                  {lightBgOverlayEnabled && (
+                    <>
+                      <Input type="color" label="Overlay color" value={lightBgOverlayColor} onChange={(e) => setLightBgOverlayColor(e.target.value)} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
+                      <Slider label="Overlay opacity" min={0} max={100} value={lightBgOverlayOpacity} onChange={setLightBgOverlayOpacity} />
+                    </>
+                  )}
+                  <Text size="xs" color="muted">Preview</Text>
+                  <Div className="relative h-24 w-full" overflow="hidden" rounded="md" border="default">
+                    <BackgroundRenderer
+                      mode="light"
+                      lightMode={{
+                        type: lightBgType,
+                        value: lightBgValue,
+                        overlay: { enabled: lightBgOverlayEnabled, color: lightBgOverlayColor, opacity: lightBgOverlayOpacity / 100 },
+                      }}
+                      darkMode={{ type: "color", value: "" }}
+                    />
+                  </Div>
                 </Stack>
-                <Stack gap="none">
-                  <Text size="sm" weight="medium" color="muted" className="mb-1">Secondary color</Text>
-                  <Input type="color" value={secondaryColor || "#000000"} onChange={(e) => setSecondaryColor(e.target.value)} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
+
+                <Stack gap="sm" rounded="lg" border="default" padding="md">
+                  <Text size="sm" weight="semibold">Dark mode</Text>
+                  <Select
+                    label="Type"
+                    options={BG_TYPE_OPTIONS}
+                    value={darkBgType}
+                    onValueChange={(v) => setDarkBgType(v as typeof darkBgType)}
+                  />
+                  {darkBgType === "color" ? (
+                    <Input type="color" label="Color" value={darkBgValue || "#000000"} onChange={(e) => setDarkBgValue(e.target.value)} className="h-10 w-full cursor-pointer" bare /> /* audit-hex-tokens-ok: native color picker requires literal hex string fallback */
+                  ) : darkBgType === "gradient" ? (
+                    <Textarea label="CSS gradient expression" rows={2} value={darkBgValue} onChange={(e) => setDarkBgValue(e.target.value)} placeholder="linear-gradient(...)" />
+                  ) : (
+                    <MediaUploadField
+                      label={darkBgType === "video" ? "Background video" : "Background image"}
+                      kind={darkBgType === "video" ? "video" : "image"}
+                      value={darkBgValue}
+                      onChange={setDarkBgValue}
+                      onUpload={(file: File) => upload(file, "store")}
+                    />
+                  )}
+                  <Toggle label="Dim overlay" checked={darkBgOverlayEnabled} onChange={setDarkBgOverlayEnabled} />
+                  {darkBgOverlayEnabled && (
+                    <>
+                      <Input type="color" label="Overlay color" value={darkBgOverlayColor} onChange={(e) => setDarkBgOverlayColor(e.target.value)} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
+                      <Slider label="Overlay opacity" min={0} max={100} value={darkBgOverlayOpacity} onChange={setDarkBgOverlayOpacity} />
+                    </>
+                  )}
+                  <Text size="xs" color="muted">Preview</Text>
+                  <Div className="relative h-24 w-full" overflow="hidden" rounded="md" border="default">
+                    <BackgroundRenderer
+                      mode="dark"
+                      lightMode={{ type: "color", value: "" }}
+                      darkMode={{
+                        type: darkBgType,
+                        value: darkBgValue,
+                        overlay: { enabled: darkBgOverlayEnabled, color: darkBgOverlayColor, opacity: darkBgOverlayOpacity / 100 },
+                      }}
+                    />
+                  </Div>
                 </Stack>
-                <Stack gap="none">
-                  <Text size="sm" weight="medium" color="muted" className="mb-1">Accent color</Text>
-                  <Input type="color" value={accentColor || "#000000"} onChange={(e) => setAccentColor(e.target.value)} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
-                </Stack>
-              </Grid>
-              <Grid cols={2} gap="md">
-                <Select label="Default theme" options={THEME_OPTIONS} value={defaultTheme} onValueChange={setDefaultTheme} />
-                <Select label="Font family" options={FONT_OPTIONS} value={fontFamily} onValueChange={setFontFamily} />
               </Grid>
               <GroupSaveButton isPending={appearanceMutation.isPending} />
             </Form>

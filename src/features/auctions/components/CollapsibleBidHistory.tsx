@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Div, Span } from "../../../ui";
+import { Button, Div, Span } from "../../../ui";
 import { BidHistory } from "../../products/components/BidHistory";
 import type { BidHistoryEntry } from "../../products/components/BidHistory";
 
@@ -19,10 +19,14 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
 
   return (
     <Div className={`mt-6 ${__O.hidden}`} border="subtle" rounded="xl">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-[var(--appkit-color-surface)]/60 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
+        paddingX="md"
+        paddingY="md"
+        rounded="none"
+        className="w-full justify-between bg-[var(--appkit-color-surface)]/60 hover:bg-[var(--appkit-color-surface-elevated)]"
         aria-expanded={open}
       >
         <Span size="sm" weight="semibold" className="tracking-wide" color="muted" transform="uppercase">
@@ -42,7 +46,7 @@ export function CollapsibleBidHistory({ bids, currency }: CollapsibleBidHistoryP
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
-      </button>
+      </Button>
 
       {open && (
         <Div surface="default" padding="md">

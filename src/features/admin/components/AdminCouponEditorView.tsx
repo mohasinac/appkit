@@ -6,7 +6,7 @@ import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Button, ConfirmDeleteModal, Div, Form, Input, Label, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, IconButton, Input, Label, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -501,16 +501,15 @@ export function AdminCouponEditorView({
                     border="strong" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
                   >
                     {cid}
-                    <button
-                      type="button"
+                    <IconButton
                       aria-label={`Remove ${cid}`}
-                      className="text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100"
+                      variant="ghost"
+                      size="sm"
                       onClick={() =>
                         setApplicableCategories(applicableCategories.filter((c) => c !== cid))
                       }
-                    >
-                      ×
-                    </button>
+                      icon="×"
+                    />
                   </Span>
                 ))}
               </Row>
