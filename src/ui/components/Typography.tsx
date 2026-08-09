@@ -107,17 +107,78 @@ function shapingClasses(opts: {
 
 type HeadingSize = "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "8xl";
 
-/** Sizes backed by a themed `--appkit-text-*` var. 6xl/7xl/8xl have no token (Tailwind default scale only). */
-const THEMED_TEXT_SIZES = new Set(["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl"]);
+/**
+ * Every responsive-prefix x themed-size class fully spelled out as a string
+ * literal. Tailwind's content scanner reads this source file as plain text —
+ * it does NOT evaluate JS — so building the class name by interpolating the
+ * size into an arbitrary-value bracket at runtime leaves the unresolved
+ * placeholder text sitting inside what still looks like a bracket-matched
+ * candidate to the scanner, which copies it verbatim into the generated CSS
+ * and produces an unparsable declaration. Every combination below appears as
+ * a complete literal so the scanner only ever sees real, generatable classes.
+ */
+const RESPONSIVE_TEXT_SIZE_CLASS: Record<"sm:" | "md:" | "lg:" | "xl:", Partial<Record<HeadingSize, string>>> = {
+  "sm:": {
+    xs: "sm:text-[length:var(--appkit-text-xs)]",
+    sm: "sm:text-[length:var(--appkit-text-sm)]",
+    base: "sm:text-[length:var(--appkit-text-base)]",
+    lg: "sm:text-[length:var(--appkit-text-lg)]",
+    xl: "sm:text-[length:var(--appkit-text-xl)]",
+    "2xl": "sm:text-[length:var(--appkit-text-2xl)]",
+    "3xl": "sm:text-[length:var(--appkit-text-3xl)]",
+    "4xl": "sm:text-[length:var(--appkit-text-4xl)]",
+    "5xl": "sm:text-[length:var(--appkit-text-5xl)]",
+    "6xl": "sm:text-6xl",
+    "7xl": "sm:text-7xl",
+    "8xl": "sm:text-8xl",
+  },
+  "md:": {
+    xs: "md:text-[length:var(--appkit-text-xs)]",
+    sm: "md:text-[length:var(--appkit-text-sm)]",
+    base: "md:text-[length:var(--appkit-text-base)]",
+    lg: "md:text-[length:var(--appkit-text-lg)]",
+    xl: "md:text-[length:var(--appkit-text-xl)]",
+    "2xl": "md:text-[length:var(--appkit-text-2xl)]",
+    "3xl": "md:text-[length:var(--appkit-text-3xl)]",
+    "4xl": "md:text-[length:var(--appkit-text-4xl)]",
+    "5xl": "md:text-[length:var(--appkit-text-5xl)]",
+    "6xl": "md:text-6xl",
+    "7xl": "md:text-7xl",
+    "8xl": "md:text-8xl",
+  },
+  "lg:": {
+    xs: "lg:text-[length:var(--appkit-text-xs)]",
+    sm: "lg:text-[length:var(--appkit-text-sm)]",
+    base: "lg:text-[length:var(--appkit-text-base)]",
+    lg: "lg:text-[length:var(--appkit-text-lg)]",
+    xl: "lg:text-[length:var(--appkit-text-xl)]",
+    "2xl": "lg:text-[length:var(--appkit-text-2xl)]",
+    "3xl": "lg:text-[length:var(--appkit-text-3xl)]",
+    "4xl": "lg:text-[length:var(--appkit-text-4xl)]",
+    "5xl": "lg:text-[length:var(--appkit-text-5xl)]",
+    "6xl": "lg:text-6xl",
+    "7xl": "lg:text-7xl",
+    "8xl": "lg:text-8xl",
+  },
+  "xl:": {
+    xs: "xl:text-[length:var(--appkit-text-xs)]",
+    sm: "xl:text-[length:var(--appkit-text-sm)]",
+    base: "xl:text-[length:var(--appkit-text-base)]",
+    lg: "xl:text-[length:var(--appkit-text-lg)]",
+    xl: "xl:text-[length:var(--appkit-text-xl)]",
+    "2xl": "xl:text-[length:var(--appkit-text-2xl)]",
+    "3xl": "xl:text-[length:var(--appkit-text-3xl)]",
+    "4xl": "xl:text-[length:var(--appkit-text-4xl)]",
+    "5xl": "xl:text-[length:var(--appkit-text-5xl)]",
+    "6xl": "xl:text-6xl",
+    "7xl": "xl:text-7xl",
+    "8xl": "xl:text-8xl",
+  },
+};
 
 function responsiveSizeClass(prefix: "sm:" | "md:" | "lg:" | "xl:", size: HeadingSize | undefined): string {
   if (!size) return "";
-  // Tailwind supports responsive prefixes on arbitrary values, so themed sizes
-  // stay theme-editable at every breakpoint via the CSS var; only the
-  // above-scale 6xl/7xl/8xl sizes (no token) fall back to the fixed utility.
-  return THEMED_TEXT_SIZES.has(size)
-    ? `${prefix}text-[length:var(--appkit-text-${size})]`
-    : `${prefix}text-${size}`;
+  return RESPONSIVE_TEXT_SIZE_CLASS[prefix][size] ?? "";
 }
 
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
