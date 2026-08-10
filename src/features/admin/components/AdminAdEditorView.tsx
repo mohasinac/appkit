@@ -10,7 +10,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 function validateThirdPartyUrl(url: string, issues: string[]): void {
@@ -432,7 +432,7 @@ export function AdminAdEditorView({
               {placements.map((placement) => (
                 <label
                   key={placement.id}
-                  className="flex items-center gap-2 rounded-md border border-[var(--appkit-color-border)] px-3 py-2"
+                  className="flex items-center gap-[var(--appkit-space-2)] rounded-md border border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]"
                 >
                   <input
                     type="checkbox"

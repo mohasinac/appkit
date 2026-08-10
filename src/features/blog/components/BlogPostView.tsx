@@ -13,7 +13,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const __P = {
-  p8: "p-8",
+  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 const __O = {
@@ -28,7 +28,7 @@ const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   community: "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
 };
 
-const CLS_FEATURED_BADGE = "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning px-2 py-0.5 rounded-full";
+const CLS_FEATURED_BADGE = "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] rounded-full";
 
 export interface BlogPostViewProps {
   slug: string;
@@ -174,7 +174,7 @@ export function BlogPostView({
               <Link
                 key={tag}
                 href={`${String(ROUTES.PUBLIC.BLOG)}?tags=${encodeURIComponent(tag)}`}
-                className="inline-block px-3 py-1 rounded-full bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] hover:bg-primary/10 text-[var(--appkit-color-text-muted)] hover:text-primary text-xs font-medium transition-colors"
+                className="inline-block px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] rounded-full bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] hover:bg-primary/10 text-[var(--appkit-color-text-muted)] hover:text-primary text-[length:var(--appkit-text-xs)] font-medium transition-colors"
               >
                 #{tag}
               </Link>

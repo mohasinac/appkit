@@ -119,7 +119,7 @@ export function TitleBarLayout({
     <Link
       href={promotionsHref}
       aria-label="Today's deals"
-      className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-primary-100 text-primary-700 dark:bg-secondary-900/40 dark:text-secondary-400 hover:bg-primary-200 dark:hover:bg-secondary-900/60 transition-colors border border-primary-200/60 dark:border-secondary-700/40"
+      className="flex items-center gap-[var(--appkit-space-1)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] rounded-full text-[length:var(--appkit-text-xs)] font-bold bg-primary-100 text-primary-700 dark:bg-secondary-900/40 dark:text-secondary-400 hover:bg-primary-200 dark:hover:bg-secondary-900/60 transition-colors border border-primary-200/60 dark:border-secondary-700/40"
     >
       <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.37.86.58 1.41.58.55 0 1.05-.21 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z" />
@@ -283,7 +283,7 @@ export function TitleBarLayout({
       {loginHref && (
         <Link
           href={loginHref}
-          className="px-3 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:text-primary-700 dark:hover:text-secondary-400 transition-colors rounded-lg hover:bg-primary-50 hover:bg-[var(--appkit-color-surface-elevated)]"
+          className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:text-primary-700 dark:hover:text-secondary-400 transition-colors rounded-lg hover:bg-primary-50 hover:bg-[var(--appkit-color-surface-elevated)]"
         >
           Sign in
         </Link>
@@ -291,7 +291,7 @@ export function TitleBarLayout({
       {registerHref && (
         <Link
           href={registerHref}
-          className="px-3 py-1.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors btn-glow shadow-sm"
+          className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors btn-glow shadow-sm"
         >
           Register
         </Link>
@@ -310,7 +310,7 @@ export function TitleBarLayout({
     >
       {/* Promo strip */}
       {promoStripText && (
-        <Section color="inverse" tone="accent-banner" className="text-xs text-center font-medium" padding="y-2xs">
+        <Section color="inverse" tone="accent-banner" className="text-[length:var(--appkit-text-xs)] text-center font-medium" padding="y-2xs">
           {promoStripText}
         </Section>
       )}
@@ -375,7 +375,7 @@ export function TitleBarLayout({
             aria-label="Account actions"
             justify="end"
             gap="xs"
-            className="flex lg:hidden h-10 border-t px-1"
+            className="flex lg:hidden h-10 border-t px-[var(--appkit-space-1)]"
           >
             {notificationsEl}
             {wishlistEl}

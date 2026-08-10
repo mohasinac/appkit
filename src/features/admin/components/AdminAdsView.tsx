@@ -12,7 +12,7 @@ import { DataTable } from "./DataTable";
 import type { AdminTableColumn } from "../types";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 export type AdminAdStatus = "draft" | "active" | "scheduled" | "paused";

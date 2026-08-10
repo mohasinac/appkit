@@ -38,7 +38,7 @@ function DefaultDateRange({
           type="date"
           value={from}
           onChange={(e) => onChange(e.target.value, to)}
-          className="appkit-input text-sm py-1.5 px-3"
+          className="appkit-input text-[length:var(--appkit-text-sm)] py-[var(--appkit-space-1-5)] px-[var(--appkit-space-3)]"
         />
       </Label>
       <Label layout="flex" gap="md" className="text-[var(--appkit-color-text-muted)]" size="sm">
@@ -47,7 +47,7 @@ function DefaultDateRange({
           type="date"
           value={to}
           onChange={(e) => onChange(from, e.target.value)}
-          className="appkit-input text-sm py-1.5 px-3"
+          className="appkit-input text-[length:var(--appkit-text-sm)] py-[var(--appkit-space-1-5)] px-[var(--appkit-space-3)]"
         />
       </Label>
     </Row>

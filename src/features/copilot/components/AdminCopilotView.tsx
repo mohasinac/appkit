@@ -8,8 +8,8 @@ import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -37,7 +37,7 @@ export interface AdminCopilotViewProps {
 }
 
 const LBL_CONVERSATION_ID = "Conversation ID";
-const CLS_ERROR_TEXT = "text-center text-sm text-error";
+const CLS_ERROR_TEXT = "text-center text-[length:var(--appkit-text-sm)] text-error";
 
 function MessageBubble({ msg }: { msg: CopilotMessage }) {
   const isUser = msg.role === "user";

@@ -9,7 +9,7 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AnalyticsAlertDocument } from "../../store-extensions/schemas/firestore";
 
 const __P = {
-  p5: "p-5",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -279,7 +279,7 @@ export function SellerAnalyticsAlertsView({
                     key={ch.value}
                     type="button"
                     onClick={() => toggleChannel(ch.value)}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    className={`px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] rounded-full text-[length:var(--appkit-text-xs)] border transition-colors ${
  draft.notifyChannels.includes(ch.value)
  ? "bg-[var(--appkit-color-primary)] text-white border-transparent"
  : "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] border-[var(--appkit-color-border)]"

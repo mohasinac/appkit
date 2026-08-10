@@ -101,7 +101,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
               <Div padding="xs">
                 <Link
                   href={href}
-                  className="line-clamp-2 text-sm font-medium hover:underline"
+                  className="line-clamp-2 text-[length:var(--appkit-text-sm)] font-medium hover:underline"
                 >
                   {p.title}
                 </Link>

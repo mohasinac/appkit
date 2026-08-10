@@ -6,8 +6,8 @@ import { Div, Heading } from "../../../../ui";
 import type { AnalyticsMonthEntry } from "../../types";
 
 const __P = {
-  p4: "p-4",
-  p6: "p-6",
+  p4: "p-[var(--appkit-space-4)]",
+  p6: "p-[var(--appkit-space-6)]",
 } as const;
 
 // recharts exports generic components (<DataPointType>) that don't satisfy

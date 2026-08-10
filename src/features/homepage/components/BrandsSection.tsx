@@ -14,9 +14,9 @@ const __O = {
 } as const;
 
 const CTA_CLASSES: Record<SectionCTA["variant"], string> = {
-  filled: "rounded-lg bg-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90",
-  outline: "rounded-lg border border-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-[var(--appkit-color-primary)] hover:bg-[var(--appkit-color-primary)]/10",
-  text: "text-sm font-medium text-[var(--appkit-color-primary)] hover:underline",
+  filled: "rounded-lg bg-[var(--appkit-color-primary)] px-[var(--appkit-space-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-semibold text-white hover:opacity-90",
+  outline: "rounded-lg border border-[var(--appkit-color-primary)] px-[var(--appkit-space-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-primary)] hover:bg-[var(--appkit-color-primary)]/10",
+  text: "text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:underline",
 };
 
 function BrandFilterChip({
@@ -33,7 +33,7 @@ function BrandFilterChip({
       type="button"
       onClick={onClick}
       className={[
-        "whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+        "whitespace-nowrap rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium transition-colors",
         active
           ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
           : "border-zinc-300 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-primary)] border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
@@ -66,7 +66,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(brand.slug)}
-      className="flex h-32 w-36 flex-col items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] p-3 shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] md:h-40"
+      className="flex h-32 w-36 flex-col items-center justify-center gap-[var(--appkit-space-2)] rounded-xl border border-zinc-200 bg-[var(--appkit-color-surface)] p-[var(--appkit-space-3)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] md:h-40"
     >
       {iconSrc || coverImage ? (
         <Image
@@ -128,7 +128,7 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
             )}
           </>
           {!cta && viewMoreHref && (
-            <Link href={viewMoreHref} className="text-sm font-medium text-[var(--appkit-color-primary)] hover:underline">
+            <Link href={viewMoreHref} className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:underline">
               {viewMoreLabel}
             </Link>
           )}

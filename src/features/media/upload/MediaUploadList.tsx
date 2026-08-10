@@ -10,7 +10,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_PDF_LINK = "text-sm underline break-all text-info dark:text-info";
+const CLS_PDF_LINK = "text-[length:var(--appkit-text-sm)] underline break-all text-info dark:text-info";
 
 export interface MediaUploadListProps {
   label: string;

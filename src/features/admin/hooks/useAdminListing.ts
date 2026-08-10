@@ -24,7 +24,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
   const {
     filterKeys,
     defaultSort,
-    pageSize = 25,
+    pageSize: defaultPageSize = 25,
     queryKey,
     endpoint,
     mapRows,
@@ -33,7 +33,15 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
   } = config;
 
   const [view, setView] = useState<"grid" | "list" | "table">(config.initialView ?? "table");
-  const table = useUrlTable({ defaults: { pageSize: String(pageSize), sort: defaultSort } });
+  const table = useUrlTable({ defaults: { pageSize: String(defaultPageSize), sort: defaultSort } });
+  // Reactive — table.getNumber reads the URL param, so a page-size selector
+  // (Pagination's pageSize/onPageSizeChange) actually takes effect instead
+  // of always falling back to the static config default.
+  const pageSize = table.getNumber("pageSize", defaultPageSize);
+  const setPageSize = useCallback(
+    (next: number) => table.setMany({ pageSize: String(next), page: "1" }),
+    [table],
+  );
   const panel = usePanelUrlSync();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -103,6 +111,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
     selection,
     defaultSort,
     pageSize,
+    setPageSize,
   };
 }
 

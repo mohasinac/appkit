@@ -8,8 +8,8 @@ import { useBottomActions } from "../../layout";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 interface ReviewItem {
@@ -377,7 +377,7 @@ export function SellerReviewsView({
           <Div>
             <Text className="mb-1.5" size="sm" weight="medium">Store reply</Text>
             <textarea
-              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
+              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
               rows={5}
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}

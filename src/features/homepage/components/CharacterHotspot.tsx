@@ -320,7 +320,7 @@ function HotspotHeaderOverlay({
         </Div>
         <Link
           href={shopAllHref}
-          className="hidden sm:inline-flex items-center gap-2 px-5 py-2 text-sm font-black uppercase tracking-widest transition-transform hover:-translate-y-0.5"
+          className="hidden sm:inline-flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-black uppercase tracking-widest transition-transform hover:-translate-y-0.5"
           style={{
             fontFamily: FONT_BANGERS,
             letterSpacing: "0.1em",
@@ -478,7 +478,7 @@ function HotspotPin({
             <Link
               href={hotspot.href}
               onClick={onClose}
-              className="flex items-center justify-between px-4 py-2.5 text-sm font-black uppercase transition-opacity hover:opacity-85"
+              className="flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-black uppercase transition-opacity hover:opacity-85"
               style={{
                 fontFamily: FONT_BANGERS,
                 letterSpacing: "0.1em",
@@ -545,7 +545,7 @@ function MobileHotspotSheet({
             <Link
               href={active.href}
               onClick={onClose}
-              className="flex-1 flex items-center justify-between px-4 py-3 font-black uppercase"
+              className="flex-1 flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] font-black uppercase"
               style={{
                 fontFamily: FONT_BANGERS,
                 letterSpacing: "0.1em",
@@ -589,7 +589,7 @@ function UniverseBrowseRow({
         <Link
           key={label}
           href={href}
-          className="group flex items-center gap-2.5 px-3 py-2.5 rounded-sm transition-all hover:-translate-y-0.5"
+          className="group flex items-center gap-[var(--appkit-space-2-5)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2-5)] rounded-sm transition-all hover:-translate-y-0.5"
           style={{
             background: "rgba(255,255,255,0.04)",
             border: "1px solid rgba(255,255,255,0.08)",

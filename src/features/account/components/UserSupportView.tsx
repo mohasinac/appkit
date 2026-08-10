@@ -10,8 +10,8 @@ import { apiClient } from "../../../http";
 import { SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {

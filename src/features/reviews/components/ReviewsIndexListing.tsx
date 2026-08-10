@@ -12,7 +12,7 @@ import { sortBy } from "../../../constants/sort";
 import { REVIEW_FIELDS } from "../../../constants/field-names";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {

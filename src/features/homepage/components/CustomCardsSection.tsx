@@ -9,7 +9,7 @@ import { MediaImage } from "../../media/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -18,7 +18,7 @@ const __O = {
 
 // --- Constants ---------------------------------------------------------------
 
-const CLS_CONTAINER = "w-full max-w-7xl mx-auto px-4";
+const CLS_CONTAINER = "w-full max-w-7xl mx-auto px-[var(--appkit-space-4)]";
 
 // --- Helpers -----------------------------------------------------------------
 
@@ -47,13 +47,13 @@ const SHADOW_CLASS: Record<string, string> = {
 
 const VARIANT_CLASS: Record<string, string> = {
   primary:
-    "inline-flex items-center justify-center px-4 py-2 rounded-md bg-[var(--appkit-color-primary)] text-white text-sm font-medium hover:opacity-90 transition-opacity",
+    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] rounded-md bg-[var(--appkit-color-primary)] text-white text-[length:var(--appkit-text-sm)] font-medium hover:opacity-90 transition-opacity",
   secondary:
-    "inline-flex items-center justify-center px-4 py-2 rounded-md bg-[var(--appkit-color-secondary)] text-white text-sm font-medium hover:opacity-90 transition-opacity",
+    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] rounded-md bg-[var(--appkit-color-secondary)] text-white text-[length:var(--appkit-text-sm)] font-medium hover:opacity-90 transition-opacity",
   outline:
-    "inline-flex items-center justify-center px-4 py-2 rounded-md border border-current text-sm font-medium hover:bg-black/5 transition-colors",
+    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] rounded-md border border-current text-[length:var(--appkit-text-sm)] font-medium hover:bg-black/5 transition-colors",
   ghost:
-    "inline-flex items-center justify-center px-4 py-2 text-sm font-medium hover:underline transition-colors",
+    "inline-flex items-center justify-center px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium hover:underline transition-colors",
 };
 
 // --- Card Item ---------------------------------------------------------------

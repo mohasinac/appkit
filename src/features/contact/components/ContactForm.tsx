@@ -3,7 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useCallback } from "react";
 import { Button, Div, Heading, Span, Stack, Text, Textarea } from "../../../ui";
 const CLS_FIELD_ERROR = "text-error";
-const CLS_ERROR_BANNER = "rounded-lg bg-error-surface dark:bg-error-surface border border-error dark:border-error px-4 py-3 text-sm text-error dark:text-error";
+const CLS_ERROR_BANNER = "rounded-lg bg-error-surface dark:bg-error-surface border border-error dark:border-error px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] text-error dark:text-error";
 
 interface ContactFormData {
   name: string;
@@ -125,7 +125,7 @@ export function ContactForm({
     <Stack gap="xs">
       <label
         htmlFor={id}
-        className="text-sm font-medium text-[var(--appkit-color-text-muted)]"
+        className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)]"
       >
         {label}
       </label>
@@ -136,7 +136,7 @@ export function ContactForm({
           onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
           placeholder={placeholder}
           rows={5}
-          className="w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm outline-none focus:ring-2 ring-primary/20 transition"
+          className="w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] outline-none focus:ring-2 ring-primary/20 transition"
         />
       ) : (
         <input
@@ -145,7 +145,7 @@ export function ContactForm({
           value={form[id]}
           onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
           placeholder={placeholder}
-          className="h-10 w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 text-sm outline-none focus:ring-2 ring-primary/20 transition"
+          className="h-10 w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] outline-none focus:ring-2 ring-primary/20 transition"
         />
       )}
       {errors[id] && <Span size="xs" className={CLS_FIELD_ERROR}>{errors[id]}</Span>}

@@ -27,7 +27,7 @@ export interface RefundRequestViewProps {
 }
 
 const ACK_COUNT = REFUND_COPY.request.acknowledgments.length;
-const CLS_WARN_PANEL = "rounded-xl border border-warning bg-warning-surface p-4 dark:border-warning";
+const CLS_WARN_PANEL = "rounded-xl border border-warning bg-warning-surface p-[var(--appkit-space-4)] dark:border-warning";
 
 export function RefundRequestView({
   order,

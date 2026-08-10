@@ -15,8 +15,8 @@ import {
 } from "lucide-react";
 
 const __P = {
-  p6: "p-6",
-  p8: "p-8",
+  p6: "p-[var(--appkit-space-6)]",
+  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 

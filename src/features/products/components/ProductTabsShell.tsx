@@ -89,7 +89,7 @@ export function ProductTabsShell({
             key={t.id}
             type="button"
             onClick={() => setActiveId(t.id)}
-            className={`flex-shrink-0 -mb-px pb-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex-shrink-0 -mb-px pb-[var(--appkit-space-3)] px-[var(--appkit-space-4)] text-[length:var(--appkit-text-sm)] font-medium border-b-2 transition-colors ${
  activeId === t.id
  ? "border-[var(--appkit-color-primary)] text-[var(--appkit-color-primary)]"
  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"

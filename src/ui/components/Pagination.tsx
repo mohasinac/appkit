@@ -1,6 +1,7 @@
 import React from "react";
 import type { PaginationConfig } from "../../contracts";
 import { DEFAULT_PAGINATION_CONFIG } from "../../contracts";
+import { Select } from "./Select";
 
 /**
  * Pagination — smart ellipsis pagination with prev/next chevrons.
@@ -25,6 +26,10 @@ export interface PaginationProps {
   disabled?: boolean;
   size?: "sm" | "md" | "lg";
   className?: string;
+  /** Current page size — required to render the selector (paired with `onPageSizeChange`). */
+  pageSize?: number;
+  /** Called with the newly picked page size. Rendering the selector requires both this and `pageSize`. */
+  onPageSizeChange?: (size: number) => void;
 }
 
 function getPageNumbers(
@@ -75,12 +80,15 @@ export function Pagination({
   disabled = false,
   size: sizeProp,
   className = "",
+  pageSize,
+  onPageSizeChange,
 }: PaginationProps) {
   const resolved = { ...DEFAULT_PAGINATION_CONFIG, ...paginationConfig };
   const maxVisible = maxVisibleProp ?? resolved.maxVisible;
   const showFirstLast = showFirstLastProp ?? resolved.showFirstLast;
   const showPrevNext = showPrevNextProp ?? resolved.showPrevNext;
   const size = sizeProp ?? resolved.size;
+  const showPageSizeSelector = resolved.showPageSizeSelector && pageSize != null && !!onPageSizeChange;
   const handle = (page: number) => {
     if (disabled || page < 1 || page > totalPages || page === currentPage)
       return;
@@ -169,6 +177,16 @@ export function Pagination({
         >
           »
         </button>
+      )}
+      {showPageSizeSelector && (
+        <Select
+          aria-label="Rows per page"
+          value={String(pageSize)}
+          onValueChange={(next) => onPageSizeChange!(Number(next))}
+          options={resolved.pageSizeOptions.map((n) => ({ label: `${n} / page`, value: String(n) }))}
+          disabled={disabled}
+          className="appkit-pagination__page-size"
+        />
       )}
     </nav>
   );

@@ -6,7 +6,6 @@ import React from "react";
 import { FilterChipGroup, Heading, ListingLayout, Span, Text } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -15,6 +14,7 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminCategoryEditorView } from "./AdminCategoryEditorView";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import type { AdminTableColumn } from "../types";
 
 interface AdminCategoriesResponse {
@@ -110,19 +110,18 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
     label: "Add Category",
     onClick: ({ openCreatePanel }) => openCreatePanel(),
   },
+  // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
   buildBulkActions: (selection) =>
-    [
-      {
-        id: "edit",
-        label: ACTIONS.ADMIN["edit-category"].label,
-        variant: "primary",
-        onClick: () => {
-          const id = selection.selectedIds[0];
-          if (id) selection.openEditPanel(id);
-          selection.clearSelection();
-        },
+    ADMIN_BULK_ACTIONS.categories.map((id) => ({
+      id,
+      label: ROW_ACTION_META[id].label,
+      variant: "primary" as const,
+      onClick: () => {
+        const rowId = selection.selectedIds[0];
+        if (rowId) selection.openEditPanel(rowId);
+        selection.clearSelection();
       },
-    ] satisfies BulkActionItem[],
+    })) satisfies BulkActionItem[],
   renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
     <>
       <FilterChipGroup

@@ -8,14 +8,14 @@ import { MediaImage } from "../../media/MediaImage";
 import type { CategoryItem } from "../types";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_FEATURED_DOT = "absolute left-2 top-2 rounded-full bg-warning-surface p-1 leading-none";
+const CLS_FEATURED_DOT = "absolute left-2 top-2 rounded-full bg-warning-surface p-[var(--appkit-space-1)] leading-none";
 
 // --- CategoryCard -------------------------------------------------------------
 

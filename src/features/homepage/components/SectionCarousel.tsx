@@ -164,7 +164,7 @@ const headingGradient: "none" | "brand" =
   const descVariant = useLightText ? "text-white/80" : themed.textSecondary;
 
   const pillClass =
-    "inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm";
+    "inline-flex items-center gap-[var(--appkit-space-2)] rounded-full border border-primary-500/30 bg-primary-500/10 px-[var(--appkit-space-5)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm";
 
   return (
     <Section
@@ -173,7 +173,7 @@ const headingGradient: "none" | "brand" =
         hasBg ? "" : themed.bgSecondary,
         // Vertical padding: 5rem on desktop, 3rem on mobile to leave room for adjacent sections.
         // Horizontal: 1rem mobile → 2rem desktop; handled via inner max-w container.
-        "py-10 px-4 md:py-12 md:px-8",
+        "py-[var(--appkit-space-10)] px-[var(--appkit-space-4)] md:py-[var(--appkit-space-12)] md:px-[var(--appkit-space-8)]",
         className,
       ]
         .filter(Boolean)
@@ -216,8 +216,8 @@ const headingGradient: "none" | "brand" =
             variant="none"
             gradient={headingGradient}
             className={[
-              "text-3xl md:text-4xl font-bold mb-2",
-              headingVariant === "editorial" ? "font-display text-4xl" : "",
+              "text-[length:var(--appkit-text-3xl)] md:text-[length:var(--appkit-text-4xl)] font-bold mb-2",
+              headingVariant === "editorial" ? "font-display text-[length:var(--appkit-text-4xl)]" : "",
               headingClass,
             ]
               .filter(Boolean)

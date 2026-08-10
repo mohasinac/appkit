@@ -66,7 +66,7 @@ export function ClassifiedFilters({
           value={table.get("city") || ""}
           onChange={(e) => table.set("city", e.target.value)}
           placeholder="e.g. Mumbai"
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-[var(--appkit-color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
+          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-[var(--appkit-color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
         />
       </Div>
 

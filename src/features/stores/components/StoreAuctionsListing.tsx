@@ -15,7 +15,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC");
@@ -135,7 +135,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
     isWishlisted: (productId: string) => wishlistedIds.has(productId),
   };
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
 
   return (
     <Div className="min-h-[200px]">
@@ -192,7 +192,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
           <MarketplaceAuctionGrid
             auctions={auctions as any[]}
             variant={view === "list" ? "list" : "grid"}
-            gridClassName={view === "list" ? "flex flex-col gap-4" : gridClass}
+            gridClassName={view === "list" ? "flex flex-col gap-[var(--appkit-space-4)]" : gridClass}
             wishlistActions={wishlistActions}
             labels={{
               emptyTitle: "No auctions yet",

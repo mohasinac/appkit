@@ -16,14 +16,14 @@ import { formatCurrency } from "../../../../utils/number.formatter";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_WARN_BOX = "rounded-lg border border-warning bg-warning-surface p-4 text-sm";
+const CLS_WARN_BOX = "rounded-lg border border-warning bg-warning-surface p-[var(--appkit-space-4)] text-[length:var(--appkit-text-sm)]";
 const CLS_WARN_TITLE = "font-medium text-warning";
 const CLS_WARN_BODY = "mt-1 text-warning";
 

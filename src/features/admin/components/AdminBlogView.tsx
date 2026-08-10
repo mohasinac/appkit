@@ -7,7 +7,7 @@ import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BLOG_STATUS_TABS } from "../constants/filter-tabs";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -87,20 +87,18 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
       label: "New Post",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
     },
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "publish",
-        label: ACTIONS.ADMIN["publish-blog"].label,
-        variant: "primary",
-        onClick: () => selection.clearSelection(),
-      },
-      {
-        id: "draft",
-        label: ACTIONS.ADMIN["draft-blog"].label,
-        variant: "secondary",
-        onClick: () => selection.clearSelection(),
-      },
-    ],
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    // DELETE has no wired handler yet (pre-existing — publish/draft were
+    // already no-op placeholders too), so it's left out until one exists.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ([ROW_ACTION_ID.PUBLISH, ROW_ACTION_ID.DRAFT] as const)
+        .filter((id) => ADMIN_BULK_ACTIONS.blog.includes(id))
+        .map((id) => ({
+          id,
+          label: ROW_ACTION_META[id].label,
+          variant: id === ROW_ACTION_ID.PUBLISH ? "primary" as const : "secondary" as const,
+          onClick: () => selection.clearSelection(),
+        })),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
         <FilterChipGroup

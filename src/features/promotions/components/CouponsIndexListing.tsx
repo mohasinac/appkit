@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Button, Label, ListingFilterDrawer, Pagination, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
+import { Button, DateInput, IconButton, Input, ListingFilterDrawer, Pagination, RadioGroup, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
 import type { CouponType } from "../types";
@@ -16,7 +16,7 @@ const __O = {
 
 const DEFAULT_SORT = sortBy(COUPON_FIELDS.CREATED_AT);
 
-const CLS_CHIP_BTN = "p-0 min-h-0 h-auto inline-flex";
+const CLS_CHIP_BTN = "p-[var(--appkit-space-0)] min-h-0 h-auto inline-flex";
 
 const COUPON_SORT_OPTIONS = [
   { value: sortBy(COUPON_FIELDS.NAME, "ASC"), label: "Name A–Z" },
@@ -131,47 +131,53 @@ export function CouponsIndexListing({
       <Div border="default" paddingY="y-xs-tall" className="sticky top-[var(--header-height,0px)] z-20 border-b backdrop-blur-sm" surface="default" padding="x-md">
         <Row gap="xs" className="max-w-full">
           {/* Filters button */}
-          <button
+          <Button
             type="button"
+            variant={hasActiveFilters ? "outline" : "ghost"}
             onClick={openFilters}
-            className={`flex shrink-0 items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
- hasActiveFilters
- ? "border-primary bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
- : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
- }`}
+            gap="sm"
+            rounded="lg"
+            paddingX="md"
+            paddingY="sm"
+            textSize="sm"
+            weight="medium"
+            className={hasActiveFilters ? "border-primary bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300 shrink-0" : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] shrink-0"}
           >
             <SlidersHorizontal className="h-4 w-4" />
             <Span className="hidden sm:inline">Filters{hasActiveFilters ? " •" : ""}</Span>
-          </button>
+          </Button>
 
           {/* Search */}
           <Row surface="default" className={`flex-1 ${__O.hidden}`} border="strong" rounded="lg">
-            <input
+            <Input
+              bare
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search by name or description…"
-              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 outline-none"
+              className="min-w-0 flex-1 bg-transparent px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 outline-none"
             />
             {searchInput && (
-              <button
+              <IconButton
                 type="button"
                 onClick={() => { setSearchInput(""); table.set(TABLE_KEYS.QUERY, ""); }}
-                className="p-2 text-zinc-400 hover:text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"
                 aria-label="Clear search"
+                variant="ghost"
+                size="sm"
               >
                 <X className="h-3.5 w-3.5" />
-              </button>
+              </IconButton>
             )}
-            <button
+            <IconButton
               type="button"
               onClick={commitSearch}
-              className="flex shrink-0 items-center justify-center px-3 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
               aria-label="Search"
+              variant="ghost"
+              size="sm"
             >
               <Search className="h-4 w-4" />
-            </button>
+            </IconButton>
           </Row>
 
           {/* Sort */}
@@ -212,13 +218,16 @@ export function CouponsIndexListing({
                 </Button>
               </Span>
             )}
-            <button
+            <Button
+              variant="ghost"
               type="button"
               onClick={clearFilters}
-              className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] underline"
+              textSize="xs"
+              textColor="muted"
+              className="underline"
             >
               Clear all
-            </button>
+            </Button>
           </Row>
         )}
       </Div>
@@ -289,27 +298,24 @@ export function CouponsIndexListing({
             Discount Type
           </Heading>
           <Stack gap="xs">
-            {COUPON_TYPES.map((t) => (
-              <Label layout="flex" gap="md" key={t.value} className="cursor-pointer" color="primary" size="sm">
-                <input
-                  type="radio"
-                  name="coupon-type"
-                  value={t.value}
-                  checked={pendingTable.get(TABLE_KEYS.TYPE) === t.value}
-                  onChange={() => { pendingTable.set(TABLE_KEYS.TYPE, t.value); }}
-                  className="accent-primary"
-                />
-                {t.label}
-              </Label>
-            ))}
+            <RadioGroup
+              name="coupon-type"
+              variant="classic"
+              options={COUPON_TYPES}
+              value={pendingTable.get(TABLE_KEYS.TYPE)}
+              onChange={(v) => { pendingTable.set(TABLE_KEYS.TYPE, v); }}
+            />
             {pendingTable.get(TABLE_KEYS.TYPE) && (
-              <button
+              <Button
+                variant="ghost"
                 type="button"
                 onClick={() => { pendingTable.set(TABLE_KEYS.TYPE, ""); }}
-                className="text-xs text-zinc-400 hover:text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] underline"
+                textSize="xs"
+                textColor="faint"
+                className="underline w-fit"
               >
                 Clear type
-              </button>
+              </Button>
             )}
           </Stack>
         </>
@@ -320,24 +326,16 @@ export function CouponsIndexListing({
             Valid Date Range
           </Heading>
           <Stack gap="sm">
-            <>
-              <Label className="block mb-1" color="muted" size="xs">From date</Label>
-              <input
-                type="date"
-                value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
-                onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_FROM, e.target.value); }}
-                className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] outline-none focus:ring-2 focus:ring-primary"
-              />
-            </>
-            <>
-              <Label className="block mb-1" color="muted" size="xs">To date</Label>
-              <input
-                type="date"
-                value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}
-                onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_TO, e.target.value); }}
-                className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] outline-none focus:ring-2 focus:ring-primary"
-              />
-            </>
+            <DateInput
+              label="From date"
+              value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
+              onChange={(v) => { pendingTable.set(TABLE_KEYS.DATE_FROM, v); }}
+            />
+            <DateInput
+              label="To date"
+              value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}
+              onChange={(v) => { pendingTable.set(TABLE_KEYS.DATE_TO, v); }}
+            />
           </Stack>
         </>
       </ListingFilterDrawer>

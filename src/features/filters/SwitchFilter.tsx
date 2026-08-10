@@ -42,7 +42,7 @@ export function SwitchFilter({
       role="group"
       aria-labelledby={`sf-${title}`}
       className={cn(
-        "p-4 border-b border-[var(--appkit-color-border)] last:border-b-0",
+        "p-[var(--appkit-space-4)] border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
     >

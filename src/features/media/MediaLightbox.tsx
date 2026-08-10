@@ -197,7 +197,7 @@ function LightboxThumbnailStrip({
           aria-label={L.imageThumbnail(i + 1)}
           aria-current={i === index ? "true" : undefined}
           className={cn(
-            "relative shrink-0 w-14 h-14 p-0 overflow-hidden rounded-lg border-2 transition-all active:scale-95",
+            "relative shrink-0 w-14 h-14 p-[var(--appkit-space-0)] overflow-hidden rounded-lg border-2 transition-all active:scale-95",
             i === index ? "border-white opacity-100" : "border-transparent opacity-40 hover:opacity-75",
           )}
         >

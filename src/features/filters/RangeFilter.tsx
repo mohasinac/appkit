@@ -143,14 +143,14 @@ export function RangeFilter({
   const hasValue = !!(minValue || maxValue);
 
   const inputClass =
-    "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-2.5 py-1.5 text-xs text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 ";
+    "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 ";
 
   return (
     <Div
       role="group"
       aria-labelledby={`rf-${title}`}
       className={cn(
-        "p-4 border-b border-[var(--appkit-color-border)] last:border-b-0",
+        "p-[var(--appkit-space-4)] border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
     >

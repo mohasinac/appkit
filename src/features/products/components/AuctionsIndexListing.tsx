@@ -19,7 +19,7 @@ import { AUCTION_PUBLIC_SORT_OPTIONS } from "../constants/sieve";
 import { useBottomActions } from "../../layout";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -141,7 +141,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
     isWishlisted: (productId: string) => wishlistedIds.has(productId),
   };
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4";
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-[var(--appkit-space-4)]";
 
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
           {
@@ -253,7 +253,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
           <MarketplaceAuctionGrid
             auctions={auctions as any[]}
             variant={view === "list" ? "list" : "grid"}
-            gridClassName={view === "list" ? "flex flex-col gap-4" : gridClass}
+            gridClassName={view === "list" ? "flex flex-col gap-[var(--appkit-space-4)]" : gridClass}
             wishlistActions={wishlistActions}
           />
         )}

@@ -46,7 +46,7 @@ function CategoryTreeNode({
           if (hasChildren) setExpanded((p) => !p);
           onSelect?.(item);
         }}
-        className={`cursor-pointer py-1.5 transition select-none ${depthPl} ${isActive ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]"}`} align="center" gap="xs" padding="x-xs" rounded="md"
+        className={`cursor-pointer py-[var(--appkit-space-1-5)] transition select-none ${depthPl} ${isActive ? "bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400" : "text-neutral-700 hover:bg-neutral-50 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]"}`} align="center" gap="xs" padding="x-xs" rounded="md"
       >
         {hasChildren && (
           <Span

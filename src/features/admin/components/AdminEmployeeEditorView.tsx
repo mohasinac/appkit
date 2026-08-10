@@ -128,7 +128,7 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
                 {domainPerms.map((perm) => (
                   <label
                     key={perm}
-                    className="flex items-center gap-2 cursor-pointer text-xs text-[var(--appkit-color-text-muted)]"
+                    className="flex items-center gap-[var(--appkit-space-2)] cursor-pointer text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
                   >
                     <input
                       type="checkbox"
@@ -276,7 +276,7 @@ export function AdminEmployeeEditorView({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="employee@example.com"
-                className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
+                className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
               />
             </Stack>
           )}

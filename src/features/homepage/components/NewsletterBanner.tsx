@@ -6,7 +6,7 @@ import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 
-const CLS_ERROR_TEXT = "mt-3 text-sm text-error";
+const CLS_ERROR_TEXT = "mt-3 text-[length:var(--appkit-text-sm)] text-error";
 
 export interface NewsletterBannerProps {
   /**
@@ -65,7 +65,7 @@ export function NewsletterBanner({
   return (
     <DynamicBgDiv
       background="var(--newsletter-bg, linear-gradient(135deg, var(--appkit-color-primary) 0%, var(--appkit-color-secondary) 100%))"
-      className="py-24 relative overflow-hidden"
+      className="py-[var(--appkit-space-24)] relative overflow-hidden"
     >
       {/* Decorative rings */}
       <Div className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 border border-white/[0.06]" rounded="full" />

@@ -15,8 +15,8 @@ import type { StoreDocument } from "../schemas";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CLS_CHECK_ICON = "w-5 h-5 flex-shrink-0 text-emerald-500";
-const CLS_SUCCESS_BOX = "rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 px-5 py-4";
-const CLS_SUCCESS_BODY = "text-sm font-medium text-emerald-700 dark:text-emerald-400";
+const CLS_SUCCESS_BOX = "rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 px-[var(--appkit-space-5)] py-[var(--appkit-space-4)]";
+const CLS_SUCCESS_BODY = "text-[length:var(--appkit-text-sm)] font-medium text-emerald-700 dark:text-emerald-400";
 
 // -- Guide cards ---------------------------------------------------------------
 

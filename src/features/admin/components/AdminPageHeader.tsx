@@ -2,7 +2,7 @@ import { Button, Div, Heading, Nav, Row, Span, Stack, Text } from "@mohasinac/ap
 import { ChevronRight } from "lucide-react";
 
 const __P = {
-  p6: "p-6",
+  p6: "p-[var(--appkit-space-6)]",
 } as const;
 
 /**
@@ -73,8 +73,8 @@ export function AdminPageHeader({
   className = "",
   themeConfig = {
     gradient: "bg-info-surface",
-    titleClass: "text-3xl font-bold",
-    subtitleClass: "text-lg text-gray-700",
+    titleClass: "text-[length:var(--appkit-text-3xl)] font-bold",
+    subtitleClass: "text-[length:var(--appkit-text-lg)] text-gray-700",
     spacingClass: "space-y-1",
   },
 }: AdminPageHeaderProps) {

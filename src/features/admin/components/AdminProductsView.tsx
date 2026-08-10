@@ -24,6 +24,7 @@ import { apiClient } from "../../../http";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { AdminProductEditorView } from "./AdminProductEditorView";
 import { QuickEditMenu } from "./QuickEditMenu";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 
 export interface AdminProductsViewProps extends ListingLayoutProps {
   actionHref?: string;
@@ -94,6 +95,11 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
 export function AdminProductsView({ children, ...props }: AdminProductsViewProps) {
   const [overrides, setOverrides] = useState<Record<string, Partial<ProductRow>>>({});
   const { showToast } = useToast();
+  // Mirrors the raw API record per row id (ProductRow itself is the shared
+  // AdminListingScaffoldRow display shape, not the full record) so
+  // renderEditor can seed AdminProductEditorView with data already in
+  // memory instead of re-fetching a record the table already has.
+  const rawByIdRef = React.useRef<Record<string, Record<string, unknown>>>({});
 
   const handleToggle = useCallback(
     async (id: string, field: FlagField, value: boolean) => {
@@ -186,6 +192,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => {
         const id = toStringValue(item.id, `product-${index}`);
+        rawByIdRef.current[id] = item;
         const base: ProductRow = {
           id,
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
@@ -217,44 +224,28 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       label: "Add Product",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
     },
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "feature",
-        label: ACTIONS.ADMIN["toggle-featured"].label,
-        variant: "secondary",
-        onClick: () => {
-          for (const id of selection.selectedIds) {
-            const row = selection.rows.find((r) => r.id === id);
-            if (row) void handleToggle(id, "featured", !row.featured);
-          }
-          selection.clearSelection();
-        },
-      },
-      {
-        id: "promote",
-        label: ACTIONS.ADMIN["toggle-promoted"].label,
-        variant: "secondary",
-        onClick: () => {
-          for (const id of selection.selectedIds) {
-            const row = selection.rows.find((r) => r.id === id);
-            if (row) void handleToggle(id, "isPromoted", !row.isPromoted);
-          }
-          selection.clearSelection();
-        },
-      },
-      {
-        id: "sale",
-        label: ACTIONS.ADMIN["toggle-on-sale"].label,
-        variant: "secondary",
-        onClick: () => {
-          for (const id of selection.selectedIds) {
-            const row = selection.rows.find((r) => r.id === id);
-            if (row) void handleToggle(id, "isOnSale", !row.isOnSale);
-          }
-          selection.clearSelection();
-        },
-      },
-    ],
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] => {
+      const fieldByAction: Partial<Record<(typeof ADMIN_BULK_ACTIONS.products)[number], FlagField>> = {
+        [ROW_ACTION_ID.FEATURE]: "featured",
+        [ROW_ACTION_ID.PROMOTE]: "isPromoted",
+        [ROW_ACTION_ID.SALE]: "isOnSale",
+      };
+      const toggleField = (rowId: string, field: FlagField) => {
+        const row = selection.rows.find((r) => r.id === rowId);
+        if (row) void handleToggle(rowId, field, !row[field]);
+      };
+      const bulkToggle = (field: FlagField) => () => {
+        selection.selectedIds.forEach((rowId) => toggleField(rowId, field));
+        selection.clearSelection();
+      };
+      return ADMIN_BULK_ACTIONS.products.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        variant: "secondary" as const,
+        onClick: bulkToggle(fieldByAction[id]!),
+      }));
+    },
     renderRowActions: (row) => (
       <QuickEditMenu
         actions={[
@@ -329,6 +320,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     renderEditor: ({ editId, closePanel }) => (
       <AdminProductEditorView
         productId={editId ?? undefined}
+        initialData={editId ? (rawByIdRef.current[editId] as any) : undefined}
         onSaved={closePanel}
         onDeleted={closePanel}
         embedded

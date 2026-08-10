@@ -12,7 +12,7 @@ import { ROUTES } from "../../../next";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -118,7 +118,7 @@ export function EventCard({
         <RichText
           html={normalizeRichTextHtml(event.description ?? "")}
           proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-          className="mb-3 line-clamp-3 text-sm text-[var(--appkit-color-text-muted)]"
+          className="mb-3 line-clamp-3 text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)]"
         />
 
         <Row color="muted" textSize="xs" className="mb-3 mt-auto" align="center" justify="between">
@@ -133,7 +133,7 @@ export function EventCard({
           <Button rounded="lg" 
             type="button"
             onClick={() => onParticipate(event)}
-            className="w-full bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
+            className="w-full bg-primary py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium text-white transition-colors hover:bg-primary-600"
           >
             {labels.participate ?? "Participate"}
           </Button>

@@ -11,7 +11,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
@@ -83,7 +83,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
     table.set("q", searchInput.trim());
   }, [searchInput, table]);
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4";
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[var(--appkit-space-4)]";
 
   return (
     <Div className="min-h-[200px]">

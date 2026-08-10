@@ -83,7 +83,7 @@ function BulkPickerPanel({
             disabled={action.disabled || action.loading}
             onClick={() => onSelect(action.id)}
             className={[
-              "w-full flex items-center gap-3 px-5 py-3.5 text-left text-sm font-medium transition-colors rounded-none",
+              "w-full flex items-center gap-[var(--appkit-space-3)] px-[var(--appkit-space-5)] py-[var(--appkit-space-3-5)] text-left text-[length:var(--appkit-text-sm)] font-medium transition-colors rounded-none",
               i > 0 ? "border-t border-zinc-100/80 border-[var(--appkit-color-border-subtle)]" : "",
               isSelected ? "bg-zinc-50 bg-[var(--appkit-color-surface-input)]" : "",
               action.variant === "danger"
@@ -140,7 +140,7 @@ function PageActionsRow({
             className={[
               "h-10 relative",
               growClass,
-              isIconOnly ? "px-0 justify-center" : "",
+              isIconOnly ? "px-[var(--appkit-space-0)] justify-center" : "",
             ]
               .filter(Boolean)
               .join(" ")}
@@ -156,7 +156,7 @@ function PageActionsRow({
             {action.label && <Span className="truncate leading-none">{action.label}</Span>}
             {action.badge !== undefined && (
               <Span
-                className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] ${CLS_COUNT_BADGE} text-[10px] ${FLEX_CENTER} px-1 pointer-events-none select-none`} rounded="full" weight="bold"
+                className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] ${CLS_COUNT_BADGE} text-[10px] ${FLEX_CENTER} px-[var(--appkit-space-1)] pointer-events-none select-none`} rounded="full" weight="bold"
                 aria-hidden="true"
               >
                 {action.badge}
@@ -252,7 +252,7 @@ export default function BottomActions() {
 
       {/* -- Info label row (page mode only) --------------------------------- */}
       {infoLabel && !isBulkMode && (
-        <Div border="subtle" className="pt-2 pb-0 border-b /80" padding="x-md">
+        <Div border="subtle" className="pt-[var(--appkit-space-2)] pb-[var(--appkit-space-0)] border-b /80" padding="x-md">
           <Text className="leading-5 truncate" color="muted" size="xs" weight="semibold">
             {infoLabel}
           </Text>
@@ -288,7 +288,7 @@ export default function BottomActions() {
                 aria-haspopup="listbox"
                 aria-expanded={pickerOpen}
                 className={[
-                  "flex-1 min-w-0 h-10 flex items-center gap-2 px-3 rounded-lg border text-sm font-medium transition-colors",
+                  "flex-1 min-w-0 h-10 flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] rounded-lg border text-[length:var(--appkit-text-sm)] font-medium transition-colors",
                   "bg-zinc-50 hover:bg-[var(--appkit-color-surface)] active:bg-zinc-200 bg-[var(--appkit-color-surface-input)] dark:hover:bg-slate-700/60",
                   "border-[var(--appkit-color-border)]",
                   selectedAction?.variant === "danger"

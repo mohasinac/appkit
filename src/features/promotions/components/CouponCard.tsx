@@ -3,13 +3,13 @@ import { normalizeError } from "../../../errors/normalize";
 
 import { useState } from "react";
 import { Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
-import { Badge, BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Stack, Text } from "../../../ui";
+import { Badge, BaseListingCard, Button, ConfirmDeleteModal, Div, IconButton, Row, Span, Stack, Text } from "../../../ui";
 import type { JsonValue } from "../../../schemas/types";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const CLS_TOGGLE_ON = "h-4 w-4 text-success dark:text-success";
-const CLS_DELETE_BTN = "rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors disabled:opacity-50";
+const CLS_DELETE_BTN = "p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors disabled:opacity-50";
 
 const TYPE_COLORS: Record<CouponType, { card: string; code: string }> = {
   percentage:   { card: "bg-purple-50 border-purple-200 dark:bg-purple-950/30 dark:border-purple-800", code: "bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200 border-purple-300 dark:border-purple-700" },
@@ -291,27 +291,39 @@ export function CouponCard({
           {n.code || "—"}
         </Span>
         {n.code && (
-          <button
+          <Button
+            variant="outline"
             type="button"
             onClick={handleCopy}
-            className="shrink-0 rounded-md px-2.5 py-1 text-xs font-semibold transition-all hover:opacity-80 active:scale-95 bg-white/60 dark:bg-black/20 border border-current/20"
+            rounded="md"
+            paddingX="sm"
+            paddingY="none"
+            textSize="xs"
+            weight="semibold"
+            className="shrink-0 hover:opacity-80 active:scale-95 bg-white/60 dark:bg-black/20 border-current/20"
             aria-label="Copy coupon code"
           >
             {copied ? labels.copied : labels.copy}
-          </button>
+          </Button>
         )}
       </Row>
       {showClaim && n.code && n.isActive && (
         <Div className="mt-2">
-          <button
+          <Button
+            variant="primary"
             type="button"
             onClick={handleClaim}
             disabled={claiming}
-            className="w-full rounded-md px-3 py-1.5 text-xs font-semibold transition-all active:scale-95 bg-[var(--appkit-color-primary-700)] text-[var(--appkit-color-text-on-primary)] hover:bg-[var(--appkit-color-primary-800)] disabled:opacity-50"
+            rounded="md"
+            paddingX="md"
+            paddingY="xs"
+            textSize="xs"
+            weight="semibold"
+            className="w-full active:scale-95 bg-[var(--appkit-color-primary-700)] hover:bg-[var(--appkit-color-primary-800)]"
             aria-label={`Claim coupon ${n.code} and apply at checkout`}
           >
             {claiming ? labels.claiming : labels.claim}
-          </button>
+          </Button>
         </Div>
       )}
 
@@ -334,41 +346,47 @@ export function CouponCard({
       {hasAdminActions && (
         <Row gap="xs" justify="end" className="mt-auto" padding="t-sm">
           {onEdit && (
-            <button
+            <IconButton
               type="button"
               onClick={() => onEdit(n.id)}
               title={labels.edit}
               aria-label={labels.edit}
-              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30 hover:text-zinc-800 hover:text-[var(--appkit-color-text-muted)] transition-colors"
+              variant="ghost"
+              rounded="lg"
+              className="text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30 hover:text-[var(--appkit-color-text-muted)]"
             >
               <Pencil className="h-4 w-4" />
-            </button>
+            </IconButton>
           )}
           {onToggleActive && (
-            <button
+            <IconButton
               type="button"
               onClick={handleToggle}
               disabled={busy === "toggle"}
               title={n.isActive ? labels.deactivate : labels.activate}
               aria-label={n.isActive ? labels.deactivate : labels.activate}
-              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30 transition-colors disabled:opacity-50"
+              variant="ghost"
+              rounded="lg"
+              className="text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30"
             >
               {n.isActive
                 ? <ToggleRight className={CLS_TOGGLE_ON} />
                 : <ToggleLeft className="h-4 w-4" />}
-            </button>
+            </IconButton>
           )}
           {onDelete && (
-            <button
+            <IconButton
               type="button"
               onClick={() => setDeleteConfirmOpen(true)}
               disabled={busy === "delete"}
               title={labels.delete}
               aria-label={labels.delete}
+              variant="ghost"
+              rounded="lg"
               className={CLS_DELETE_BTN}
             >
               <Trash2 className="h-4 w-4" />
-            </button>
+            </IconButton>
           )}
         </Row>
       )}

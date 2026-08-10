@@ -20,7 +20,7 @@ const categoryFormSchema = z.object({
 }).passthrough();
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -305,7 +305,7 @@ export function AdminCategoryEditorView({
 
   const twoPanel = (
     <Div layout="grid" gap="6" lgAlign="start" className="lg:grid-cols-[1fr_280px]">
-      <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
+      <CardBody className="min-w-0 space-y-6 p-[var(--appkit-space-0)]">{formContent}</CardBody>
       <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}
       </Div>

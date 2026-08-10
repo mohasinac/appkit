@@ -67,8 +67,8 @@ export function DrawerFormFooter({
 
   return (
     <Div
-      className={`flex items-center gap-3${
- variant === "inline" ? ` pt-4 ${themeConfig.borderClass}` : ""
+      className={`flex items-center gap-[var(--appkit-space-3)]${
+ variant === "inline" ? ` pt-[var(--appkit-space-4)] ${themeConfig.borderClass}` : ""
  } ${className}`}
     >
       {onDelete && (

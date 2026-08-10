@@ -191,7 +191,7 @@ export function AdminAddressEditorView({
             {(["user", "store"] as AddressOwnerType[]).map((type) => (
               <label
                 key={type}
-                className="flex cursor-pointer items-center gap-2"
+                className="flex cursor-pointer items-center gap-[var(--appkit-space-2)]"
               >
                 <input
                   type="radio"
@@ -345,7 +345,7 @@ export function AdminAddressEditorView({
 
   const twoPanel = (
     <Div layout="grid" gap="6" lgAlign="start" className="lg:grid-cols-[1fr_280px]">
-      <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
+      <CardBody className="min-w-0 space-y-6 p-[var(--appkit-space-0)]">{formContent}</CardBody>
       <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}
       </Div>

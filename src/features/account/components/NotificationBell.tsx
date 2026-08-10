@@ -56,8 +56,8 @@ export interface NotificationBellProps {
   hideOnMobile?: boolean;
 }
 
-const CLS_UNREAD_BADGE = "absolute -top-1 -right-1 bg-error-surface text-white min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full shadow-md";
-const CLS_UNREAD_PILL = "ml-2 bg-error-surface text-error dark:bg-error-surface dark:text-error px-2 py-0.5 rounded-full";
+const CLS_UNREAD_BADGE = "absolute -top-1 -right-1 bg-error-surface text-white min-w-[20px] h-5 px-[var(--appkit-space-1-5)] flex items-center justify-center rounded-full shadow-md";
+const CLS_UNREAD_PILL = "ml-2 bg-error-surface text-error dark:bg-error-surface dark:text-error px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] rounded-full";
 
 const DEFAULT_ICONS: Record<string, string> = {
   order_placed: "🛍️",
@@ -236,7 +236,7 @@ function renderNotificationDropdown(props: {
       </Div>
       {viewAllHref && (
         <Div border="default" className="border-t border-[var(--appkit-color-border)] text-center" padding="inline">
-          {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-sm text-primary hover:underline font-medium", children: labels.viewAll })}
+          {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-[length:var(--appkit-text-sm)] text-primary hover:underline font-medium", children: labels.viewAll })}
         </Div>
       )}
     </Div>
@@ -275,8 +275,8 @@ function renderNotificationListContent(props: {
             </Row>
             <Text size="sm" className={`mt-0.5`} truncate={2} color="muted">{notification.message}</Text>
             <Row gap="3" className="mt-1.5">
-              {notification.actionUrl && renderActionLink({ href: notification.actionUrl, onClick: () => { void handleMarkReadAndClose(notification); }, className: "text-xs text-primary hover:underline font-medium", children: notification.actionLabel ?? labels.viewAction })}
-              {!notification.isRead && <Button variant="ghost" onClick={() => void handleMarkRead(notification.id)} className="text-xs text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] hover:underline p-0 h-auto">{labels.markRead}</Button>}
+              {notification.actionUrl && renderActionLink({ href: notification.actionUrl, onClick: () => { void handleMarkReadAndClose(notification); }, className: "text-[length:var(--appkit-text-xs)] text-primary hover:underline font-medium", children: notification.actionLabel ?? labels.viewAction })}
+              {!notification.isRead && <Button variant="ghost" onClick={() => void handleMarkRead(notification.id)} className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] hover:underline p-[var(--appkit-space-0)] h-auto">{labels.markRead}</Button>}
             </Row>
           </Div>
         </Li>

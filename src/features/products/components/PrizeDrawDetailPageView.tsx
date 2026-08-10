@@ -2,11 +2,11 @@ import Link from "next/link";
 import { orderRepository, productRepository } from "../../../repositories";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
-const CLS_PRIZE_BADGE = "inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300";
+const CLS_PRIZE_BADGE = "inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-fuchsia-700 dark:text-fuchsia-300";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -122,7 +122,7 @@ export async function PrizeDrawDetailPageView({
               </Text>
               <Link
                 href={String(ROUTES.PUBLIC.PRIZE_DRAWS)}
-                className="text-sm font-medium text-primary-600 hover:underline"
+                className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline"
               >
                 Browse Prize Draws
               </Link>
@@ -207,7 +207,7 @@ export async function PrizeDrawDetailPageView({
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-1.5 text-xs text-[var(--appkit-color-text-muted)] flex-wrap"
+            className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] flex-wrap"
           >
             <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">
               Home
@@ -301,7 +301,7 @@ export async function PrizeDrawDetailPageView({
                 <RichText
                   html={descriptionHtml}
                   proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                  className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
+                  className="text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
                 />
               )}
 
@@ -319,7 +319,7 @@ export async function PrizeDrawDetailPageView({
                     {storeHref && (
                       <Link
                         href={storeHref}
-                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
+                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
                       >
                         Visit Store →
                       </Link>

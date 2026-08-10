@@ -11,7 +11,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_RATING_BADGE = "absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/50 backdrop-blur-sm px-2 py-0.5 text-xs font-semibold text-warning";
+const CLS_RATING_BADGE = "absolute top-2 right-2 flex items-center gap-[var(--appkit-space-1)] rounded-full bg-black/50 backdrop-blur-sm px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-semibold text-warning";
 
 export interface InteractiveStoreCardProps {
   store: StoreListItem;
@@ -137,7 +137,7 @@ export function InteractiveStoreCard({
             <RichText
               html={normalizeRichTextHtml(store.storeDescription)}
               proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-              className="mt-1 line-clamp-2 text-xs text-[var(--appkit-color-text-muted)] flex-1"
+              className="mt-1 line-clamp-2 text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] flex-1"
             />
           ) : (
             <Div className="flex-1" />

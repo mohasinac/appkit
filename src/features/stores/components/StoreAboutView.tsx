@@ -2,7 +2,7 @@ import { Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Anchor, Div, Heading, RichText, Stack, Text } from "../../../ui";
 const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
-const CLS_WARN_BOX = "bg-warning-surface border border-warning rounded-lg p-4";
+const CLS_WARN_BOX = "bg-warning-surface border border-warning rounded-lg p-[var(--appkit-space-4)]";
 const CLS_WARN_TITLE = "text-warning font-medium";
 const CLS_WARN_BODY = "text-warning mt-1";
 import type { StoreDetail } from "../types";

@@ -11,10 +11,10 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
-const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-surface px-2 py-0.5 text-white";
-const CLS_SALE_BADGE = "rounded-full bg-success-surface px-2 py-0.5 text-xs font-bold text-white";
-const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white";
-const CLS_LIMITED_BADGE = "rounded-full bg-info-surface px-2 py-0.5 text-xs font-bold text-white";
+const CLS_PREORDER_BADGE = "inline-flex items-center rounded-full bg-warning-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
+const CLS_SALE_BADGE = "rounded-full bg-success-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
+const CLS_TRENDING_BADGE = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
+const CLS_LIMITED_BADGE = "rounded-full bg-info-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-bold text-white";
 import { BaseListingCard, Button, RichText, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { PreorderBadge } from "./PreorderCard";
@@ -239,7 +239,7 @@ export function MarketplacePreorderCard({
               <RichText
                 html={normalizeRichTextHtml(product.description)}
                 proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                className="line-clamp-2 text-xs text-[var(--appkit-color-text-muted)]"
+                className="line-clamp-2 text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
               />
             ) : null}
             <Row justify="between" className="mt-1" gap="sm">

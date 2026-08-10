@@ -170,7 +170,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
           onDragStart={() => handleDragStart(row.id)}
           onDragOver={(e) => e.preventDefault()}
           onDrop={() => handleDrop(row.id)}
-          className="cursor-grab active:cursor-grabbing text-zinc-400 px-1 select-none"
+          className="cursor-grab active:cursor-grabbing text-zinc-400 px-[var(--appkit-space-1)] select-none"
           title="Drag to reorder"
         >
           ⠿
@@ -271,7 +271,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
               {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
                 <Button key={opt.label} variant="ghost" type="button"
                   onClick={() => setPendingFilters((p) => ({ ...p, active: opt.value }))}
-                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors min-h-0 h-auto ${(pendingFilters.active || "") === opt.value ? "bg-primary text-white border-primary" : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"}`}
+                  className={`rounded-full px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium border transition-colors min-h-0 h-auto ${(pendingFilters.active || "") === opt.value ? "bg-primary text-white border-primary" : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"}`}
                 >{opt.label}</Button>
               ))}
             </Row>

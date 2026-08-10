@@ -34,7 +34,7 @@ import { BrandQuickCreateForm } from "./BrandQuickCreateForm";
 import { BarcodeField } from "../../seller/components/BarcodeField";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
   sectionLabel: "tracking-widest mb-4",
 } as const;
 
@@ -50,6 +50,13 @@ export interface AdminProductEditorViewProps
   embedded?: boolean;
   /** Listing types that are enabled. When provided, restricts the mode tabs. */
   enabledListingTypes?: string[];
+  /**
+   * The full product record, when the caller already has it in memory.
+   * Seeds the edit-mode query so the drawer opens pre-filled — no loading
+   * spinner, no redundant GET — while React Query still refetches in the
+   * background per its normal staleTime rules.
+   */
+  initialData?: ProductFormValue;
 }
 
 type ProductMode = "standard" | "auction" | "preorder" | "prize-draw" | "classified" | "digital-code" | "live";
@@ -147,6 +154,7 @@ export function AdminProductEditorView({
   onDeleted,
   embedded,
   enabledListingTypes,
+  initialData,
   ...rest
 }: AdminProductEditorViewProps) {
   const isEdit = Boolean(productId);
@@ -162,6 +170,9 @@ export function AdminProductEditorView({
       return (res as { data?: ProductFormValue } & ProductFormValue)?.data ?? (res as ProductFormValue);
     },
     enabled: isEdit,
+    // Caller-supplied row data seeds the query — avoids a redundant GET when
+    // the table already holds the full record.
+    initialData,
   });
 
   React.useEffect(() => {
@@ -446,7 +457,7 @@ export function AdminProductEditorView({
 
   const twoPanel = (
     <Div layout="grid" gap="6" lgAlign="start" className="lg:grid-cols-[1fr_280px]">
-      <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
+      <CardBody className="min-w-0 space-y-6 p-[var(--appkit-space-0)]">{formContent}</CardBody>
       <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
         {actionSidebar}
       </Div>

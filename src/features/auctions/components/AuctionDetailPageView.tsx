@@ -4,13 +4,13 @@ import { productRepository } from "../../../repositories";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
-  p5: "p-5",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
-const CLS_LIVE_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-2.5 py-0.5 text-warning dark:text-warning";
+const CLS_LIVE_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-warning dark:text-warning";
 const CLS_STAR_ON = "text-warning";
 const CLS_STAR_OFF = "text-zinc-200 dark:text-zinc-700";
 import { ROUTES } from "../../../next";
@@ -123,9 +123,9 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
       <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", emiAvailable: "EMI Available", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
       {(categoryName || category || brand) && (
         <Row gap="sm" wrap>
-          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
+          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
           {!category && categoryName && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{categoryName}</Span>}
-          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
+          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
           {brand && !brandSlug && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{brand}</Span>}
         </Row>
       )}
@@ -138,7 +138,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
           </Ul>
         </Div>
       )}
-      {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4" />}
+      {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4" />}
       {safeSeller && (
         <Div className={`${__P.p3}`} border="subtle" rounded="xl" surface="muted">
           <Row justify="between" align="center">
@@ -146,7 +146,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
               <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">Listed by</Text>
               <Text size="sm" weight="semibold" color="primary">{safeSeller}</Text>
             </Div>
-            {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
+            {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
           </Row>
         </Div>
       )}
@@ -211,7 +211,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               <Text color="muted">
                 This auction may have ended or the link is incorrect.
               </Text>
-              <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className="text-sm font-medium text-primary-600 hover:underline">
+              <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
                 Browse Auctions
               </Link>
             </Stack>
@@ -534,7 +534,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                 renderGrid={() => (
                   <MarketplaceAuctionGrid
                     auctions={related}
-                    gridClassName="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+                    gridClassName="grid grid-cols-2 gap-[var(--appkit-space-4)] sm:grid-cols-3 lg:grid-cols-4"
                   />
                 )}
               />

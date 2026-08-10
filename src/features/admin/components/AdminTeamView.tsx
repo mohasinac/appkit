@@ -9,7 +9,7 @@ import { Button, FilterChipGroup, ListingLayout, RowActionMenu } from "../../../
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { ALL_TAB } from "../constants/filter-tabs";
 import type { AdminFilterTab } from "../constants/filter-tabs";
 import {
@@ -143,13 +143,18 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
         Invite Employee
       </Button>
     ),
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: onBulkRemove
-      ? (selection): BulkActionItem[] => [
-          buildBulkAction(ACTIONS.ADMIN["remove-team-member"], async () => {
-            await onBulkRemove(selection.selectedIds);
-            selection.clearSelection();
-          }),
-        ]
+      ? (selection): BulkActionItem[] =>
+          ADMIN_BULK_ACTIONS.team.map((id) => ({
+            id,
+            label: ROW_ACTION_META[id].label,
+            destructive: ROW_ACTION_META[id].destructive,
+            onClick: async () => {
+              await onBulkRemove(selection.selectedIds);
+              selection.clearSelection();
+            },
+          }))
       : undefined,
     renderRowActions: (row) => (
       <RowActionMenu

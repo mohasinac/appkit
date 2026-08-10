@@ -233,6 +233,7 @@ export const ROW_ACTION_ID = {
   EDIT:      "row-edit",
   VIEW:      "row-view",
   DELETE:    "row-delete",
+  REMOVE:    "row-remove",
   APPROVE:   "row-approve",
   REJECT:    "row-reject",
   SUSPEND:   "row-suspend",
@@ -288,6 +289,10 @@ export const ROW_ACTION_META: Record<RowActionId, RowActionMeta> = {
   [ROW_ACTION_ID.EDIT]:      { id: ROW_ACTION_ID.EDIT,      label: "Edit",           iconName: "Pencil",       requiresAuth: true                                                    },
   [ROW_ACTION_ID.VIEW]:      { id: ROW_ACTION_ID.VIEW,      label: "View",           iconName: "Eye",          requiresAuth: true                                                    },
   [ROW_ACTION_ID.DELETE]:    { id: ROW_ACTION_ID.DELETE,    label: "Delete",         iconName: "Trash2",       requiresAuth: true, destructive: true, separator: true               },
+  // REMOVE — for curation-list actions ("remove from Deals/Featured") that
+  // don't delete/archive the underlying record, just its membership in a
+  // homepage curation list. Added 2026-08-11 for admin/deals + admin/featured.
+  [ROW_ACTION_ID.REMOVE]:    { id: ROW_ACTION_ID.REMOVE,    label: "Remove",         iconName: "X",            requiresAuth: true, destructive: true                                 },
   [ROW_ACTION_ID.APPROVE]:   { id: ROW_ACTION_ID.APPROVE,   label: "Approve",        iconName: "Check",        requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.content.approve" },
   [ROW_ACTION_ID.REJECT]:    { id: ROW_ACTION_ID.REJECT,    label: "Reject",         iconName: "X",            requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.content.approve", destructive: true },
   [ROW_ACTION_ID.SUSPEND]:   { id: ROW_ACTION_ID.SUSPEND,   label: "Suspend",        iconName: "Ban",          requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.users.suspend", destructive: true, separator: true },
@@ -525,8 +530,13 @@ export const DASHBOARD_QUICK_ACTIONS = {
 
 // Admin bulk actions per listing entity — used in BulkActionsBar on admin tables
 export const ADMIN_BULK_ACTIONS = {
-  users:               [ROW_ACTION_ID.SUSPEND, ROW_ACTION_ID.RESTORE, ROW_ACTION_ID.DELETE],
-  stores:              [ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT, ROW_ACTION_ID.SUSPEND],
+  // MANAGE added 2026-08-11 — AdminUsersView's existing bulk action opens
+  // the user management drawer for the first selection.
+  users:               [ROW_ACTION_ID.MANAGE, ROW_ACTION_ID.SUSPEND, ROW_ACTION_ID.RESTORE, ROW_ACTION_ID.DELETE],
+  // MANAGE added 2026-08-11 — AdminStoresView's existing bulk action opens
+  // the store editor for the first selection; APPROVE/REJECT/SUSPEND cover
+  // the moderation actions.
+  stores:              [ROW_ACTION_ID.MANAGE, ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT, ROW_ACTION_ID.SUSPEND],
   products:            [ROW_ACTION_ID.FEATURE, ROW_ACTION_ID.PROMOTE, ROW_ACTION_ID.SALE],
   orders:              [ROW_ACTION_ID.MARK_SHIPPED, ROW_ACTION_ID.MARK_DELIVERED, ROW_ACTION_ID.CANCEL],
   reviews:             [ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT, ROW_ACTION_ID.DELETE],
@@ -553,6 +563,8 @@ export const ADMIN_BULK_ACTIONS = {
   eventEntries:        [ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT],
   returnRequests:      [ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT],
   coupons:             [ROW_ACTION_ID.ARCHIVE, ROW_ACTION_ID.DELETE],
+  deals:               [ROW_ACTION_ID.REMOVE],
+  featured:            [ROW_ACTION_ID.REMOVE],
 } as const satisfies Record<string, readonly RowActionId[]>;
 
 // Seller bulk actions per listing entity
@@ -564,6 +576,8 @@ export const SELLER_BULK_ACTIONS = {
   classified:     [ROW_ACTION_ID.DELETE],
   digitalCodes:   [ROW_ACTION_ID.DELETE],
   live:           [ROW_ACTION_ID.DELETE],
+  art:            [ROW_ACTION_ID.DELETE],
+  stickers:       [ROW_ACTION_ID.DELETE],
   auctions:       [ROW_ACTION_ID.DELETE],
   preOrders:      [ROW_ACTION_ID.DELETE],
   prizeDraws:     [ROW_ACTION_ID.DELETE],

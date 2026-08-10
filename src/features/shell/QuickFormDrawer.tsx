@@ -196,7 +196,7 @@ export function QuickFormDrawer({
             type="button"
             onClick={handleClose}
             aria-label="Close"
-            className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
+            className="rounded-lg p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -204,7 +204,7 @@ export function QuickFormDrawer({
 
         {/* Scrollable body */}
         <form
-          className="flex-1 overflow-y-auto px-4 py-5 space-y-4"
+          className="flex-1 overflow-y-auto px-[var(--appkit-space-4)] py-[var(--appkit-space-5)] space-y-4"
           onSubmit={handleSubmit}
           noValidate
         >

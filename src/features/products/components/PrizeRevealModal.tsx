@@ -25,10 +25,10 @@ import type { PrizeDrawItem } from "../schemas/firestore";
 
 import { normalizeError } from "../../../errors/normalize";
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
-const CLS_REFUND_NOTE = "rounded border border-warning/40 bg-warning-surface px-4 py-3 text-warning dark:bg-warning-surface dark:text-warning";
+const CLS_REFUND_NOTE = "rounded border border-warning/40 bg-warning-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-warning dark:bg-warning-surface dark:text-warning";
 
 export interface PrizeRevealResponse {
   prizeWon?: {

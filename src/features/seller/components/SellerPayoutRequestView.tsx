@@ -3,8 +3,8 @@ import { normalizeError } from "../../../errors/normalize";
 import { useEffect, useState } from "react";
 import { Alert, Badge, Button, Div, Modal, Row, Stack, Text } from "../../../ui";
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 interface PayoutSummary {
@@ -141,7 +141,7 @@ export function SellerPayoutRequestView({
           <Div>
             <Text className="mb-1.5" size="sm" weight="medium">Notes (optional)</Text>
             <textarea
-              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
+              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

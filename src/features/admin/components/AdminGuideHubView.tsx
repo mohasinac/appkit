@@ -14,9 +14,9 @@ import {
 import { Alert, Div, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
-const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-6";
+const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-[var(--appkit-space-6)]";
 const CLS_WARN_HEAD = "font-semibold text-amber-800 dark:text-amber-300 mb-1";
-const CLS_WARN_BODY = "text-sm text-amber-700 dark:text-amber-400";
+const CLS_WARN_BODY = "text-[length:var(--appkit-text-sm)] text-amber-700 dark:text-amber-400";
 
 // ─── Guide cards ──────────────────────────────────────────────────────────────
 

@@ -44,6 +44,11 @@ export function AdminCouponsView({
 }: AdminCouponsViewProps) {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
+  // Mirrors the currently-rendered rows so renderEditor can seed
+  // AdminCouponEditorView with data already in memory (raw: item) instead of
+  // re-fetching a record the table already has — DataListingView's
+  // renderEditor callback only receives { editId, closePanel }, not rows.
+  const rowsRef = React.useRef<CouponRow[]>([]);
 
   const handleToggle = useCallback(
     async (id: string, currentlyActive: boolean) => {
@@ -140,8 +145,9 @@ export function AdminCouponsView({
         onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
       />
     ),
-    renderCards: (rows, _view, selectionCtx, isLoading) =>
-      isLoading ? (
+    renderCards: (rows, _view, selectionCtx, isLoading) => {
+      rowsRef.current = rows;
+      return isLoading ? (
         <Div gap="3" className="fluid-grid-card">
           {Array.from({ length: 6 }).map((_, i) => (
             <Stack border="skeleton"
@@ -170,10 +176,12 @@ export function AdminCouponsView({
             />
           ))}
         </Div>
-      ),
+      );
+    },
     renderEditor: ({ editId, closePanel }) => (
       <AdminCouponEditorView
         couponId={editId ?? undefined}
+        initialData={editId ? rowsRef.current.find((r) => r.id === editId)?.raw as Record<string, unknown> | undefined : undefined}
         onSaved={closePanel}
         onDeleted={closePanel}
         embedded

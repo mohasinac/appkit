@@ -7,8 +7,8 @@ import { TextLink } from "../../../ui";
 import { CalendarClock, Wallet, TrendingUp, ShieldCheck } from "lucide-react";
 
 const __P = {
-  p5: "p-5",
-  p8: "p-8",
+  p5: "p-[var(--appkit-space-5)]",
+  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 const __O = {

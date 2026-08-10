@@ -125,7 +125,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
         return (
           <Span
             className={[
-              "rounded px-2 py-1 text-xs font-medium",
+              "rounded px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium",
               STATUS_STYLES[status] ??
                 "bg-[var(--appkit-color-surface)] text-zinc-700 bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]",
             ].join(" ")}
@@ -156,7 +156,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
         return (
           <Span
             className={[
-              "rounded px-2 py-1 text-xs font-medium",
+              "rounded px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium",
               featured
                 ? CLS_LOW_STOCK
                 : "bg-[var(--appkit-color-surface)] text-zinc-700 bg-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)]",

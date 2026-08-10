@@ -6,7 +6,7 @@ import { formatCurrency, formatDate } from "../../../utils";
 import { OrderStatusValues } from "../schemas";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
-const CLS_ACTION_BUTTON = "min-w-0 flex-1 px-2 text-xs";
+const CLS_ACTION_BUTTON = "min-w-0 flex-1 px-[var(--appkit-space-2)] text-[length:var(--appkit-text-xs)]";
 
 const STATUS_MAP: Record<
   string,

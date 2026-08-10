@@ -3,7 +3,7 @@ import { THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY } from "../../../_internal/s
 import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
 const __P = {
-  p8: "p-8",
+  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 // --- Types -------------------------------------------------------------------

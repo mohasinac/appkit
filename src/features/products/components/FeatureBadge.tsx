@@ -47,9 +47,9 @@ export const FEATURE_ICON_MAP: Record<
 
 const ICON_SIZE_CLASS = "h-3 w-3";
 const BADGE_BASE_CLASS =
-  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[var(--appkit-font-size-2xs,11px)] font-medium border-[var(--appkit-color-border)]";
+  "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full border px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[var(--appkit-font-size-2xs,11px)] font-medium border-[var(--appkit-color-border)]";
 const MORE_BADGE_CLASS =
-  "inline-flex items-center rounded-full border border-[var(--appkit-color-border)] px-2 py-0.5 text-[var(--appkit-font-size-2xs,11px)] font-medium text-[var(--appkit-color-text-muted)]";
+  "inline-flex items-center rounded-full border border-[var(--appkit-color-border)] px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[var(--appkit-font-size-2xs,11px)] font-medium text-[var(--appkit-color-text-muted)]";
 
 function FeatureIcon({
   icon,

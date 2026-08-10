@@ -8,12 +8,12 @@ import type { GoogleReview } from "../lib/google-reviews-fetcher";
 import type { GoogleReviewsSectionConfig } from "../schemas";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const CLS_STAR_ON = "text-star";
 const CLS_STAR_OFF = "text-[var(--appkit-color-text-faint)]";
-const CLS_GMAPS_LINK = "shrink-0 text-sm font-medium text-info hover:underline";
+const CLS_GMAPS_LINK = "shrink-0 text-[length:var(--appkit-text-sm)] font-medium text-info hover:underline";
 
 // --- Star Rating -------------------------------------------------------------
 
@@ -195,8 +195,8 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
 
   const gridClass =
     layout === "carousel"
-      ? "flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory"
-      : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4";
+      ? "flex gap-[var(--appkit-space-4)] overflow-x-auto pb-[var(--appkit-space-2)] snap-x snap-mandatory"
+      : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[var(--appkit-space-4)]";
 
   const cardClass = layout === "carousel" ? "flex-shrink-0 w-[85%] sm:w-72 snap-start" : "";
 

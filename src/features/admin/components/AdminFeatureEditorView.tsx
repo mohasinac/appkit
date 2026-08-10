@@ -37,7 +37,7 @@ import type {
 } from "../../products/schemas/product-features";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -45,12 +45,12 @@ const __O = {
 } as const;
 
 const PILL_BASE_CLASS =
-  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium cursor-pointer transition-colors";
+  "inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium cursor-pointer transition-colors";
 const PILL_CHECKED_CLASS = "bg-primary text-white border-primary";
 const PILL_UNCHECKED_CLASS =
   "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
 const FIELD_LABEL_CLASS =
-  "text-sm font-medium text-[var(--appkit-color-text-muted)]";
+  "text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)]";
 const DELETE_CONFIRM_TEXT =
   "Delete this feature? It will fail if any product still references it.";
 

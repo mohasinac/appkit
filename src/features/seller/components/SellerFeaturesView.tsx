@@ -31,11 +31,11 @@ const TOAST = {
 } as const;
 
 const ROW_CLASS =
-  "flex items-center justify-between gap-3 px-4 py-3";
+  "flex items-center justify-between gap-[var(--appkit-space-3)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)]";
 const CAP_BANNER_CLASS =
-  "rounded-xl border border-warning dark:border-warning/60 bg-warning-surface px-4 py-2.5 text-xs text-warning";
+  "rounded-xl border border-warning dark:border-warning/60 bg-warning-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-xs)] text-warning";
 const EMPTY_STATE_CLASS =
-  "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-6 text-center text-sm text-[var(--appkit-color-text-muted)]";
+  "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-6)] text-center text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)]";
 const LIST_CLASS =
   "divide-y divide-zinc-200 divide-[var(--appkit-color-border)] rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]";
 

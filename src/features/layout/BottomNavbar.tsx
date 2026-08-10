@@ -107,7 +107,7 @@ export function BottomNavbar({
     more: "More",
   } as const;
 
-  const slotClassName = "relative flex h-full w-full flex-col items-center justify-center gap-1 transition-colors duration-200";
+  const slotClassName = "relative flex h-full w-full flex-col items-center justify-center gap-[var(--appkit-space-1)] transition-colors duration-200";
   const defaultIcon = (
     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -152,7 +152,7 @@ export function BottomNavbar({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z" />
                 </svg>
                 {wishlistCount > 0 && (
-                  <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-1 leading-none text-[var(--appkit-color-text-on-primary)]">
+                  <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-[var(--appkit-space-1)] leading-none text-[var(--appkit-color-text-on-primary)]">
                     {wishlistCount > 9 ? "9+" : wishlistCount}
                   </Span>
                 )}
@@ -274,7 +274,7 @@ export function BottomNavbar({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z" />
               </svg>
               {wishlistCount > 0 && (
-                <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-1 leading-none text-[var(--appkit-color-text-on-primary)]">
+                <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-[var(--appkit-space-1)] leading-none text-[var(--appkit-color-text-on-primary)]">
                   {wishlistCount > 9 ? "9+" : wishlistCount}
                 </Span>
               )}

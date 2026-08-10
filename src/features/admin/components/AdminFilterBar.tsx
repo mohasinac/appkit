@@ -74,7 +74,7 @@ export function AdminFilterBar({
   onReset,
   pendingCount = 0,
   labels = { apply: "Apply", reset: "Reset" },
-  themeConfig = { cardPadding: "p-4", flexEnd: "flex justify-end" },
+  themeConfig = { cardPadding: "p-[var(--appkit-space-4)]", flexEnd: "flex justify-end" },
 }: AdminFilterBarProps) {
   const gridCols = {
     1: "grid-cols-1",

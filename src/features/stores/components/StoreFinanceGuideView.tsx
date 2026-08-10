@@ -6,8 +6,8 @@ import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
-const SECTION_BODY = "space-y-4 text-sm text-[var(--appkit-color-text-muted)]";
-const MONO_MUTED = "font-mono text-xs text-[var(--appkit-color-text-muted)]";
+const SECTION_BODY = "space-y-4 text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)]";
+const MONO_MUTED = "font-mono text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]";
 
 // -- Section wrapper -----------------------------------------------------------
 

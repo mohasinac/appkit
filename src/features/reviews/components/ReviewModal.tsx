@@ -88,7 +88,7 @@ export function ViewReviewModal({
           <RichText
             html={normalizeRichTextHtml(review.comment)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]"
+            className="text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]"
           />
         )}
 
@@ -101,7 +101,7 @@ export function ViewReviewModal({
                 type="button"
                 aria-label={`View image ${i + 1}`}
                 onClick={() => setLightboxIdx(i)}
-                className={`h-20 w-20 rounded-lg border overflow-hidden transition hover:opacity-80 p-0 flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 border-[var(--appkit-color-border)]"}`}
+                className={`h-20 w-20 rounded-lg border overflow-hidden transition hover:opacity-80 p-[var(--appkit-space-0)] flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 border-[var(--appkit-color-border)]"}`}
               >
                 <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Review thumbnail ${i + 1}`} size="thumbnail" />
               </button>

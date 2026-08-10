@@ -13,7 +13,7 @@ import { PRIZE_DRAW_SORT_OPTIONS } from "../constants/sieve";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const DEFAULT_SORT = PRIZE_DRAW_SORT_OPTIONS[0].value;
@@ -119,7 +119,7 @@ export function PrizeDrawsIndexListing({
     if (e.key === "Enter") commitSearch();
   };
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
 
   return (
     <Div className="min-h-screen">
@@ -223,7 +223,7 @@ export function PrizeDrawsIndexListing({
           <>
             <label
               htmlFor="prizeRevealStatusFilter"
-              className="block text-xs font-semibold text-[var(--appkit-color-text-muted)] mb-1.5"
+              className="block text-[length:var(--appkit-text-xs)] font-semibold text-[var(--appkit-color-text-muted)] mb-1.5"
             >
               Reveal status
             </label>
@@ -233,7 +233,7 @@ export function PrizeDrawsIndexListing({
               onChange={(e) =>
                 pendingTable.set(TABLE_KEYS.PRIZE_REVEAL_STATUS, e.target.value)
               }
-              className="w-full rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2 py-1.5 text-sm"
+              className="w-full rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)]"
             >
               <option value="">Any</option>
               <option value="pending">Reveal pending</option>

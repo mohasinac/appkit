@@ -223,7 +223,7 @@ export function ImageCropModal({
                 variant="ghost"
                 size="sm"
                 onClick={() => setZoom(preset)}
-                className="px-3 py-1 text-xs bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]"
+                className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]"
               >
                 {preset * 100}%
               </Button>

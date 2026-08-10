@@ -21,6 +21,7 @@ import {
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ADMIN_USER_STATUS_TABS, ADMIN_USER_ROLE_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -147,22 +148,26 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       setSelectedRow(row);
       setDrawerOpen(true);
     },
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "manage",
-        label: ACTIONS.ADMIN["manage-user"].label,
-        variant: "primary",
-        onClick: () => {
-          const id = selection.selectedIds[0];
-          const row = selection.rows.find((r) => r.id === id) ?? null;
-          if (row) {
-            setSelectedRow(row);
-            setDrawerOpen(true);
-          }
-          selection.clearSelection();
-        },
-      },
-    ],
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    // Only MANAGE has a wired handler today; SUSPEND/RESTORE/DELETE are left
+    // out until they have real bulk handlers.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ([ROW_ACTION_ID.MANAGE] as const)
+        .filter((id) => ADMIN_BULK_ACTIONS.users.includes(id))
+        .map((id) => ({
+          id,
+          label: ROW_ACTION_META[id].label,
+          variant: "primary" as const,
+          onClick: () => {
+            const rowId = selection.selectedIds[0];
+            const row = selection.rows.find((r) => r.id === rowId) ?? null;
+            if (row) {
+              setSelectedRow(row);
+              setDrawerOpen(true);
+            }
+            selection.clearSelection();
+          },
+        })),
     renderRowActions: (row) => {
       const isBanned = row.status === "Hard banned";
       return (

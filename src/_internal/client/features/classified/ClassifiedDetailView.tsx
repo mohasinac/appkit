@@ -22,7 +22,7 @@ import type { ConversationDocument } from "../../../../features/messages/schemas
 import type { startClassifiedConversationAction } from "../../../server/features/classified/actions";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {

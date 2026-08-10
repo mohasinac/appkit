@@ -106,7 +106,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           <RichText
             html={normalizeRichTextHtml(review.comment)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="mt-2 text-sm leading-relaxed text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]"
+            className="mt-2 text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)]"
           />
         )}
 
@@ -133,7 +133,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showStoreLink && (
             <Link
               href={String(ROUTES.PUBLIC.STORE_DETAIL(review.storeSlug!))}
-              className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+              className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium text-primary hover:underline"
             >
               <Span aria-hidden="true">🏪</Span>
               <Span truncate>{review.storeName}</Span>
@@ -142,7 +142,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProductLink && (
             <Link
               href={productHref!}
-              className="flex items-center gap-1.5 text-xs font-medium text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-700 hover:text-[var(--appkit-color-text-muted)]"
+              className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-700 hover:text-[var(--appkit-color-text-muted)]"
             >
               <Span aria-hidden="true">📦</Span>
               <Span truncate>
@@ -154,7 +154,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
           {showProfileLink && (
             <Link
               href={profileHref!}
-              className="flex items-center gap-1.5 text-xs font-medium text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-700 hover:text-[var(--appkit-color-text-muted)]"
+              className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-700 hover:text-[var(--appkit-color-text-muted)]"
             >
               <Span aria-hidden="true">👤</Span>
               <Span truncate>{displayName}</Span>

@@ -117,7 +117,7 @@ function TypeDropdown({
       <select
         value={active}
         onChange={(e) => onChange(e.target.value as ListingKind)}
-        className="rounded border border-[var(--appkit-color-border)] bg-transparent px-2 py-1 text-sm sm:max-w-xs"
+        className="rounded border border-[var(--appkit-color-border)] bg-transparent px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] sm:max-w-xs"
         aria-label="Filter by listing type"
       >
         {options.map((o) => (

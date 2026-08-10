@@ -5,14 +5,14 @@ import type { JsonValue } from "@mohasinac/appkit";
 import React from "react";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_SECTION_CARD = "border border-[var(--appkit-color-border)] rounded-xl p-5";
+const CLS_SECTION_CARD = "border border-[var(--appkit-color-border)] rounded-xl p-[var(--appkit-space-5)]";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -75,7 +75,7 @@ function MaskedTokenInput({
         variant="ghost"
         size="sm"
         onClick={() => setRevealed((r) => !r)}
-        className="absolute right-3 top-8 text-xs"
+        className="absolute right-3 top-8 text-[length:var(--appkit-text-xs)]"
       >
         {revealed ? "Hide" : "Reveal"}
       </Button>

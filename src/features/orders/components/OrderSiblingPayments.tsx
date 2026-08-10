@@ -46,7 +46,7 @@ export function OrderSiblingPayments({
             <Row key={o.id} justify="between" align="center" gap="sm">
               <Link
                 href={href}
-                className="text-sm font-medium text-[color:var(--appkit-color-primary)] hover:underline"
+                className="text-[length:var(--appkit-text-sm)] font-medium text-[color:var(--appkit-color-primary)] hover:underline"
               >
                 {o.id}
               </Link>

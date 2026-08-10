@@ -21,7 +21,7 @@ import type { CategoryDocument } from "../../categories/schemas";
 import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -64,7 +64,7 @@ export function FeaturedBundlesSection({
           </Stack>
           <Link
             href={String(ROUTES.PUBLIC.BUNDLES)}
-            className="text-sm font-medium text-[var(--appkit-color-primary)] hover:underline"
+            className="text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:underline"
           >
             {BUNDLE_COPY.featured.viewAll}
           </Link>
@@ -101,7 +101,7 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
     <Stack
       gap="none" surface="default" rounded="xl" border="default"
     >
-      <Link href={href} className="group block p-3 hover:no-underline">
+      <Link href={href} className="group block p-[var(--appkit-space-3)] hover:no-underline">
         <Div className={`relative mb-2 aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
           {cover ? (
             <MediaImage

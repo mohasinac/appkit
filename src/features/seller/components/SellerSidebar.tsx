@@ -13,10 +13,10 @@ const __O = {
 } as const;
 
 const CLS_STORE_AVATAR = "relative h-8 w-8 overflow-hidden rounded-md bg-cover bg-center flex-shrink-0";
-const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary";
-const CLS_STORE_NAME = "text-sm font-semibold text-[var(--appkit-color-text)] truncate";
+const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-[length:var(--appkit-text-sm)] font-bold text-primary";
+const CLS_STORE_NAME = "text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] truncate";
 const CLS_NAV_ACTIVE = "bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning";
-const CLS_NAV_BADGE = "shrink-0 rounded-full bg-warning-surface px-1.5 py-0.5 text-[10px] text-white leading-none";
+const CLS_NAV_BADGE = "shrink-0 rounded-full bg-warning-surface px-[var(--appkit-space-1-5)] py-[var(--appkit-space-0-5)] text-[10px] text-white leading-none";
 const CLS_NAV_ICON_ACTIVE = "text-warning dark:text-warning";
 
 export interface StoreNavItem {
@@ -56,7 +56,7 @@ function NavLink({ item, isActive, onClick }: { item: StoreNavItem; isActive: bo
     <Link
       href={item.href}
       onClick={onClick}
-      className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
+      className={`flex items-center gap-[var(--appkit-space-2-5)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium leading-tight transition-colors ${
  isActive
  ? CLS_NAV_ACTIVE
  : "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/60 hover:text-zinc-800 hover:text-[var(--appkit-color-text-muted)]"

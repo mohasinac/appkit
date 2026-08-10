@@ -50,7 +50,7 @@ function StepCard({
   return (
     <Div
       className={[
-        "relative rounded-3xl p-8",
+        "relative rounded-3xl p-[var(--appkit-space-8)]",
         "bg-[var(--appkit-color-surface)]",
         "shadow-md group hover:-translate-y-2 hover:shadow-xl",
         "transition-all duration-300",

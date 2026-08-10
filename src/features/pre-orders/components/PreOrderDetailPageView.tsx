@@ -3,8 +3,8 @@ import type { FirestoreDocument } from "@mohasinac/appkit";
 import { productRepository } from "../../../repositories";
 
 const __P = {
-  p3: "p-3",
-  p5: "p-5",
+  p3: "p-[var(--appkit-space-3)]",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 const __O = {
@@ -12,8 +12,8 @@ const __O = {
 } as const;
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
-const CLS_PREORDER_BADGE = "inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-indigo-700 dark:text-indigo-300";
-const CLS_STATUS_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-2.5 py-0.5 text-warning dark:text-warning";
+const CLS_PREORDER_BADGE = "inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-indigo-700 dark:text-indigo-300";
+const CLS_STATUS_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-warning dark:text-warning";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -181,7 +181,7 @@ function PreOrderInfoSection({
           {category && (
             <Link
               href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
-              className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+              className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
             >
               {categoryName || category}
             </Link>
@@ -194,7 +194,7 @@ function PreOrderInfoSection({
           {brand && brandSlug && (
             <Link
               href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
-              className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+              className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
             >
               {brand}
             </Link>
@@ -231,7 +231,7 @@ function PreOrderInfoSection({
         <RichText
           html={descriptionHtml}
           proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-          className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
+          className="text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
         />
       )}
 
@@ -249,7 +249,7 @@ function PreOrderInfoSection({
             {storeHref && (
               <Link
                 href={storeHref}
-                className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
+                className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
               >
                 Visit Store →
               </Link>
@@ -389,7 +389,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               <Text color="muted">
                 The pre-order item you are looking for may have been removed.
               </Text>
-              <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className="text-sm font-medium text-primary-600 hover:underline">
+              <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
                 Browse Pre-Orders
               </Link>
             </Stack>

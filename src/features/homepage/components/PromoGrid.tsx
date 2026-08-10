@@ -4,7 +4,7 @@ import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import type { PromoBanner } from "../types";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 export interface PromoGridProps {

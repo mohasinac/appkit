@@ -244,7 +244,7 @@ export function DataTable<T extends { id: string }>({
               onClick={() => onPageChange(p)}
               variant={p === currentPage ? "primary" : "ghost"}
               size="sm"
-              className={`h-8 w-8 rounded text-xs font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]"}`}
+              className={`h-8 w-8 rounded text-[length:var(--appkit-text-xs)] font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]"}`}
             >
               {p}
             </Button>

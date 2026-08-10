@@ -154,7 +154,7 @@ function filterGroups<T extends SidebarNavGroup>(
     .filter((group) => group.items.length > 0) as T[];
 }
 
-const DEFAULT_CONTENT_PADDING = "px-5 py-8 lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10";
+const DEFAULT_CONTENT_PADDING = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10";
 const DEFAULT_CONTENT_MAX_WIDTH = "max-w-screen-2xl";
 
 export function DashboardLayoutClient({

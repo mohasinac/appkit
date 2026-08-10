@@ -101,7 +101,7 @@ export async function CollectionCardsSection({
             {cta ? (
               <Link
                 href={cta.href}
-                className="text-sm font-medium text-primary hover:underline"
+                className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
               >
                 {cta.label} →
               </Link>

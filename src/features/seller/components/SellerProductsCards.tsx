@@ -9,7 +9,7 @@ import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/const
 import { LISTING_BADGE_VARIANT } from "../../products/utils/listing-badge-variant";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {

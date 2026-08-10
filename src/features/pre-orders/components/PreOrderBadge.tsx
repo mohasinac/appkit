@@ -1,7 +1,7 @@
 import type { PreOrderStatus } from "../types";
 import { Div, Span } from "../../../ui";
 
-const CLS_NEW_BADGE = "rounded-full bg-indigo-600 px-2.5 py-0.5 text-white";
+const CLS_NEW_BADGE = "rounded-full bg-indigo-600 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-white";
 
 const STATUS_MAP: Record<PreOrderStatus, { label: string; color: string }> = {
   pending: { label: "Pending", color: "bg-warning-surface text-warning" },

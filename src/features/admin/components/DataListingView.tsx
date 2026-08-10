@@ -196,6 +196,8 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
     currentPage,
     totalPages,
     selection,
+    pageSize,
+    setPageSize,
   } = listing;
 
   const selectionContext: ListingSelectionContext<TRow> = {
@@ -290,6 +292,9 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
+            pageSize={pageSize}
+            onPageSizeChange={setPageSize}
+            paginationConfig={{ showPageSizeSelector: true, pageSizeOptions: [10, 25, 50, 100] }}
           />
         </Row>
       )}

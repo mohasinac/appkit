@@ -58,7 +58,7 @@ export function getCategoryTableColumns(
             ) : (
               <DynamicBgDiv
                 color={cat.display?.color ?? "var(--appkit-color-text-faint)"}
-                className="w-full h-full flex items-center justify-center text-base text-[var(--appkit-color-text-on-primary)]"
+                className="w-full h-full flex items-center justify-center text-[length:var(--appkit-text-base)] text-[var(--appkit-color-text-on-primary)]"
               >
                 {cat.display?.icon ?? "🗂️"}
               </DynamicBgDiv>

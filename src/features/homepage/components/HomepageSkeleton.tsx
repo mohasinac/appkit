@@ -3,7 +3,7 @@ import { SKELETON } from "../../../_internal/shared/styles/skeleton";
 import { Div, Grid, Row, Section, Stack } from "../../../ui";
 
 const __P = {
-  p8: "p-8",
+  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 const __O = {

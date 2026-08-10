@@ -23,7 +23,7 @@ export function CategorySortSelect({
 
   return (
     <Row
-      className={["items-center gap-3", className].filter(Boolean).join(" ")}
+      className={["items-center gap-[var(--appkit-space-3)]", className].filter(Boolean).join(" ")}
     >
       <Span size="sm" color="muted">{label}</Span>
       <Div className="min-w-44">

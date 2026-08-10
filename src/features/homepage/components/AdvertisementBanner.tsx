@@ -6,7 +6,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 const __P = {
-  p8: "p-8",
+  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 const __O = {
@@ -14,8 +14,8 @@ const __O = {
 } as const;
 
 const CLS_GRADIENT_BG = "absolute inset-0 bg-[image:var(--appkit-gradient-promotion)]";
-const CLS_CTA_BTN_SM = "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0";
-const CLS_CTA_BTN_LG = "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2";
+const CLS_CTA_BTN_SM = "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-[var(--appkit-space-1-5)] flex-shrink-0";
+const CLS_CTA_BTN_LG = "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface)] text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-[var(--appkit-space-2)]";
 
 // --- Types -------------------------------------------------------------------
 

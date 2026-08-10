@@ -67,7 +67,7 @@ export function ProductTabs({
             <button
               key={t.value}
               onClick={() => setActiveTab(t.value)}
-              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
+              className={`pb-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium border-b-2 transition-colors ${
  activeTab === t.value
  ? "border-current text-current"
  : "border-transparent text-[var(--appkit-color-text-muted)]"

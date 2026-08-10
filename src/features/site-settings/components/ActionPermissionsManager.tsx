@@ -10,7 +10,7 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_CUSTOM_PILL = "inline-block rounded-full bg-warning-surface px-2 py-0.5 text-xs font-medium text-warning dark:bg-warning-surface dark:text-warning";
+const CLS_CUSTOM_PILL = "inline-block rounded-full bg-warning-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-medium text-warning dark:bg-warning-surface dark:text-warning";
 
 export interface ActionPermissionsManagerProps {
   initialConfig: Record<string, { enabled: boolean }>;
@@ -117,7 +117,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
           placeholder="Search actions…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-9 max-w-sm text-sm"
+          className="h-9 max-w-sm text-[length:var(--appkit-text-sm)]"
         />
         <Text size="sm" color="muted">
           {filteredActions.length} action{filteredActions.length !== 1 ? "s" : ""}

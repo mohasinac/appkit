@@ -24,7 +24,7 @@ import {
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {

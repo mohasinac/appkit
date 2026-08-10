@@ -5,7 +5,7 @@ import type { CustomField, CustomSection } from "../schemas/firestore";
 import { MAX_CUSTOM_SECTIONS } from "../schemas/firestore";
 import { CustomFieldsEditor } from "./CustomFieldsEditor";
 
-const CLS_REMOVE = "text-zinc-400 hover:text-error dark:hover:text-error text-xs";
+const CLS_REMOVE = "text-zinc-400 hover:text-error dark:hover:text-error text-[length:var(--appkit-text-xs)]";
 
 export interface CustomSectionsEditorProps {
   sections: CustomSection[];
@@ -65,7 +65,7 @@ export function CustomSectionsEditor({
           <Div>
             <label
               htmlFor={`${baseId}-title-${i}`}
-              className="mb-1 block text-xs font-medium text-[var(--appkit-color-text-muted)]"
+              className="mb-1 block text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)]"
             >
               Section title <Span className="text-error">*</Span>
             </label>
@@ -82,7 +82,7 @@ export function CustomSectionsEditor({
           <Div>
             <label
               htmlFor={`${baseId}-text-${i}`}
-              className="mb-1 block text-xs font-medium text-[var(--appkit-color-text-muted)]"
+              className="mb-1 block text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)]"
             >
               Body text{" "}
               <Span weight="normal" color="faint">(optional)</Span>
@@ -94,7 +94,7 @@ export function CustomSectionsEditor({
               placeholder="Additional details for this section…"
               rows={3}
               maxLength={2000}
-              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y"
+              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y"
             />
           </Div>
 

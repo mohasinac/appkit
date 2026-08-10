@@ -7,7 +7,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../../seller/schemas";
 import { normalizeError } from "../../../errors/normalize";
 
-const CLS_COUNTER_AMOUNT = "text-sm font-semibold text-info dark:text-info";
+const CLS_COUNTER_AMOUNT = "text-[length:var(--appkit-text-sm)] font-semibold text-info dark:text-info";
 
 export interface UserOffersPanelProps {
   fetchEndpoint?: string;
@@ -159,7 +159,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         <Button size="sm" variant="ghost"
           onClick={() => setConfirming("withdraw")}
           disabled={isPending}
-          className="text-error border border-error/20 text-xs">
+          className="text-error border border-error/20 text-[length:var(--appkit-text-xs)]">
           Withdraw Offer
         </Button>
       )}

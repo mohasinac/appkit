@@ -8,11 +8,11 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
-const CLS_SECTION_LABEL = "text-xs font-medium text-[var(--appkit-color-text-muted)] uppercase tracking-wide";
+const CLS_SECTION_LABEL = "text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] uppercase tracking-wide";
 
 export interface AdminScammerEditorViewProps {
   open: boolean;
@@ -216,7 +216,7 @@ export function AdminScammerEditorView({
             onChange={(e) => setNote(e.target.value)}
             rows={3}
             placeholder="e.g. Verified via 3 independent reports…"
-            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </Stack>
 

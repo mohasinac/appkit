@@ -10,7 +10,7 @@ import { Button, FilterChipGroup, Label, ListingLayout, Modal, RowActionMenu, us
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { ADMIN_REVIEW_STATUS_TABS, ADMIN_REVIEW_RATING_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -140,20 +140,18 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       if (f.rating && f.rating !== "All") parts.push(sieveFilter("rating", SIEVE_OP.EQ, f.rating));
       return parts.join(",") || undefined;
     },
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "approve",
-        label: `${ACTIONS.ADMIN["approve-review"].label} Selected`,
-        variant: "primary",
-        onClick: () => selection.clearSelection(),
-      },
-      {
-        id: "reject",
-        label: `${ACTIONS.ADMIN["reject-review"].label} Selected`,
-        variant: "secondary",
-        onClick: () => selection.clearSelection(),
-      },
-    ],
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    // DELETE has no wired handler yet (pre-existing — approve/reject were
+    // already no-op placeholders too), so it's left out until one exists.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ([ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT] as const)
+        .filter((id) => ADMIN_BULK_ACTIONS.reviews.includes(id))
+        .map((id) => ({
+          id,
+          label: `${ROW_ACTION_META[id].label} Selected`,
+          variant: id === ROW_ACTION_ID.APPROVE ? "primary" as const : "secondary" as const,
+          onClick: () => selection.clearSelection(),
+        })),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
@@ -233,7 +231,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
               onChange={(e) => setReplyText(e.target.value)}
               rows={4}
               placeholder="Write a public reply to this review…"
-              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </Stack>
           <Row justify="end" gap="sm">

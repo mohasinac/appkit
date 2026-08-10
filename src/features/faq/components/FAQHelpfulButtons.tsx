@@ -5,7 +5,7 @@ import { Button, Div, Span, Text } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 
 const __P = {
-  p6: "p-6",
+  p6: "p-[var(--appkit-space-6)]",
 } as const;
 
 interface FAQHelpfulButtonsProps {
@@ -79,7 +79,7 @@ export function FAQHelpfulButtons({
           variant="ghost"
           onClick={() => handleVote(true)}
           disabled={isPending || userVote !== null}
-          className={`flex-1 gap-2 rounded-lg p-4 transition-all ${
+          className={`flex-1 gap-[var(--appkit-space-2)] rounded-lg p-[var(--appkit-space-4)] transition-all ${
  userVote === "helpful"
  ? "bg-success text-white"
  : userVote
@@ -97,7 +97,7 @@ export function FAQHelpfulButtons({
           variant="ghost"
           onClick={() => handleVote(false)}
           disabled={isPending || userVote !== null}
-          className={`flex-1 gap-2 rounded-lg p-4 transition-all ${
+          className={`flex-1 gap-[var(--appkit-space-2)] rounded-lg p-[var(--appkit-space-4)] transition-all ${
  userVote === "not-helpful"
  ? "bg-error text-white"
  : userVote

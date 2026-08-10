@@ -15,7 +15,7 @@ import { sortBy } from "../../../constants/sort";
 import { CATEGORY_FIELDS } from "../../../constants/field-names";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -224,7 +224,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
               type="button"
               onClick={() => switchTab(tab.key)}
               className={[
-                "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
+                "px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-medium transition-colors border-b-2 -mb-px",
                 activeTab === tab.key
                   ? "border-primary text-primary dark:text-primary-400 dark:border-primary-400"
                   : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]",

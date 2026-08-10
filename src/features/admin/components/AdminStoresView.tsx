@@ -10,6 +10,7 @@ import { FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../.
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ADMIN_STORE_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -105,19 +106,24 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
     buildFilters: (state) =>
       state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
     onRowClick: (row) => setEditorRow(row),
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "manage",
-        label: ACTIONS.ADMIN["manage-store"].label,
-        variant: "primary",
-        onClick: () => {
-          const id = selection.selectedIds[0];
-          const row = selection.rows.find((r) => r.id === id) ?? null;
-          if (row) setEditorRow(row);
-          selection.clearSelection();
-        },
-      },
-    ],
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    // Only MANAGE has a wired handler today (opens the editor for the first
+    // selected row); APPROVE/REJECT/SUSPEND/DELETE are left out until they
+    // have real bulk handlers.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ([ROW_ACTION_ID.MANAGE] as const)
+        .filter((id) => ADMIN_BULK_ACTIONS.stores.includes(id))
+        .map((id) => ({
+          id,
+          label: ROW_ACTION_META[id].label,
+          variant: "primary" as const,
+          onClick: () => {
+            const rowId = selection.selectedIds[0];
+            const row = selection.rows.find((r) => r.id === rowId) ?? null;
+            if (row) setEditorRow(row);
+            selection.clearSelection();
+          },
+        })),
     renderRowActions: (row) => {
       const isSuspended = row.status?.toLowerCase() === "suspended";
       const isVerified = Boolean(row._raw?.isVerified);

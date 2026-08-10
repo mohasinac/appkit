@@ -79,7 +79,7 @@ export function EventBanner({
     <Section
       tone="accent-banner"
       className={[
-        "relative px-4 py-2 text-center text-sm font-medium text-white",
+        "relative px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-center text-[length:var(--appkit-text-sm)] font-medium text-white",
         className,
       ].join(" ")}
      data-section="eventbanner-div-277">

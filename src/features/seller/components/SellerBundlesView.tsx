@@ -8,8 +8,9 @@ import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../..";
+import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 
-const CLS_ITEMS_PILL = "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 tabular-nums";
+const CLS_ITEMS_PILL = "inline-flex items-center rounded-full px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-medium bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 tabular-nums";
 import {
   toRecordArray,
   toRelativeDate,
@@ -139,18 +140,18 @@ export function SellerBundlesView({
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: () => "listingType==bundle",
     primaryAction: { label: "New Bundle", onClick: () => handleCreate() },
+    // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
     buildBulkActions: onBulkDelete
-      ? (selection): BulkActionItem[] => [
-          {
-            id: "bulk-delete",
-            label: ACTIONS.STORE["delete-listing"].label,
-            variant: "danger",
+      ? (selection): BulkActionItem[] =>
+          SELLER_BULK_ACTIONS.bundles.map((id) => ({
+            id,
+            label: ROW_ACTION_META[id].label,
+            destructive: ROW_ACTION_META[id].destructive,
             onClick: async () => {
               await onBulkDelete(selection.selectedIds);
               selection.clearSelection();
             },
-          },
-        ]
+          }))
       : undefined,
     renderRowActions: (row) => (
       <RowActionMenu

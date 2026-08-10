@@ -66,7 +66,7 @@ export function StoreNavTabs({
             role="tab"
             aria-selected={activeValue === tab.value}
             onClick={() => handleChange(tab.value)}
-            className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
+            className={`px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
  activeValue === tab.value
  ? "border-primary text-primary"
  : "border-transparent text-[var(--appkit-color-text-muted)] text-[var(--appkit-color-text-muted)] hover:text-neutral-800 hover:text-[var(--appkit-color-text-muted)]"

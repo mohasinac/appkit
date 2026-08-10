@@ -109,7 +109,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
           <Row wrap gap="md">
             <Link
               href={banner.ctaUrl}
-              className="inline-flex items-center gap-2 sm:gap-3 px-5 py-3 sm:px-8 sm:py-3.5 font-black uppercase transition-all hover:-translate-y-0.5 [font-family:var(--font-bangers,Bangers,cursive)] tracking-[0.1em] text-[clamp(0.85rem,2.5vw,1.1rem)] bg-[var(--color-yellow)] text-[var(--appkit-color-text)] [box-shadow:0_4px_24px_rgba(255,229,0,0.35)]"
+              className="inline-flex items-center gap-[var(--appkit-space-2)] sm:gap-[var(--appkit-space-3)] px-[var(--appkit-space-5)] py-[var(--appkit-space-3)] sm:px-[var(--appkit-space-8)] sm:py-[var(--appkit-space-3-5)] font-black uppercase transition-all hover:-translate-y-0.5 [font-family:var(--font-bangers,Bangers,cursive)] tracking-[0.1em] text-[clamp(0.85rem,2.5vw,1.1rem)] bg-[var(--color-yellow)] text-[var(--appkit-color-text)] [box-shadow:0_4px_24px_rgba(255,229,0,0.35)]"
             >
               {banner.ctaLabel}
               <Span

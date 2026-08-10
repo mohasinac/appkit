@@ -189,7 +189,7 @@ export function ImageEditor({
                 variant="ghost"
                 size="sm"
                 onClick={() => applyAspectRatio(preset.ratio)}
-                className="px-3 py-1 text-xs bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]"
+                className="px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]"
               >
                 {preset.label}
               </Button>

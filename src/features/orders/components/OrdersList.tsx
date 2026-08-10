@@ -4,7 +4,7 @@ import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 
-const CLS_PRIZE_BADGE = "inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-fuchsia-700 dark:text-fuchsia-300";
+const CLS_PRIZE_BADGE = "inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-fuchsia-700 dark:text-fuchsia-300";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
   pending: "bg-warning-surface text-warning",

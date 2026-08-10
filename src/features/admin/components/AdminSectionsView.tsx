@@ -48,11 +48,11 @@ import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, Re
 import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildPrizeDrawsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parsePrizeDrawsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
-const CLS_SECTION_PANEL = "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 space-y-3";
+const CLS_SECTION_PANEL = "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] space-y-3";
 const LBL_FILTER_BY_CATEGORY = "Filter by category";
 const PH_FILTER_BY_CATEGORY = "Filter by category…";
 const LBL_MAX_ITEMS = "Max items";

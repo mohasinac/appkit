@@ -108,7 +108,7 @@ export function MediaVideo({
   if (!resolvedSrc) {
     return (
       <Row
-        className="absolute inset-0 text-zinc-400 text-4xl" surface="subtle" align="center" justify="center"
+        className="absolute inset-0 text-zinc-400 text-[length:var(--appkit-text-4xl)]" surface="subtle" align="center" justify="center"
         role="img"
         aria-label={alt}
       >

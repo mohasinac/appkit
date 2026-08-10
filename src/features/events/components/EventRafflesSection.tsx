@@ -72,7 +72,7 @@ export async function EventRafflesSection({
               </Text>
               <Link
                 href={String(ROUTES.PUBLIC.EVENTS)}
-                className="text-sm font-medium text-primary hover:underline"
+                className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
               >
                 Browse all events →
               </Link>

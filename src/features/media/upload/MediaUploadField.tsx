@@ -29,8 +29,8 @@ import { normalizeError } from "../../../errors/normalize";
 export type MediaUploadFieldKind = "image" | "video" | "pdf" | "auto";
 
 const CLS_PDF_BADGE = "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-error-surface text-error dark:bg-error-surface dark:text-error";
-const CLS_PDF_NAME = "text-sm font-medium text-info underline break-all dark:text-info";
-const CLS_PDF_LINK = "text-sm underline break-all text-info dark:text-info";
+const CLS_PDF_NAME = "text-[length:var(--appkit-text-sm)] font-medium text-info underline break-all dark:text-info";
+const CLS_PDF_LINK = "text-[length:var(--appkit-text-sm)] underline break-all text-info dark:text-info";
 
 const KIND_DEFAULTS: Record<
   Exclude<MediaUploadFieldKind, "auto">,
@@ -714,7 +714,7 @@ export function MediaUploadField({
               type="button"
               onClick={() => mobileCaptureRef.current?.click()}
               variant="ghost"
-              className="w-full py-3 border-2 border-dashed border-[var(--appkit-color-border)] text-sm text-[var(--appkit-color-text-muted)]"
+              className="w-full py-[var(--appkit-space-3)] border-2 border-dashed border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)]"
             >
               {t("switchToCamera")}
             </Button>
@@ -725,7 +725,7 @@ export function MediaUploadField({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               variant="ghost"
-              className="w-full py-3 border-2 border-dashed border-[var(--appkit-color-border)] text-sm text-[var(--appkit-color-text-muted)]"
+              className="w-full py-[var(--appkit-space-3)] border-2 border-dashed border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)]"
             >
               {value ? tUpload("replaceFile") : tUpload("chooseFile")}
             </Button>

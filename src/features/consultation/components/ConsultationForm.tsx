@@ -95,7 +95,7 @@ export function ConsultationForm({
               variant="outline"
               size="sm"
               onClick={() => toggleConcern(c)}
-              className={`rounded-full border px-3 py-1 text-xs transition ${
+              className={`rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] transition ${
  form.concern.includes(c)
  ? "border-primary bg-primary text-white"
  : "border-neutral-300 text-neutral-700 hover:border-primary"

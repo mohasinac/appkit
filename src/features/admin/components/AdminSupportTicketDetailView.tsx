@@ -8,8 +8,8 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
-  p3: "p-3",
-  p4: "p-4",
+  p3: "p-[var(--appkit-space-3)]",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -398,7 +398,7 @@ export function AdminSupportTicketDetailView({
             onChange={(e) => setReplyBody(e.target.value)}
             rows={3}
             placeholder="Type a reply…"
-            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
           <Button
             type="button"
@@ -438,7 +438,7 @@ export function AdminSupportTicketDetailView({
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Notes visible only to admins and employees…"
-            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </Stack>
 
@@ -608,7 +608,7 @@ function OrderItemsPanel(props: {
                         min="0"
                         value={it.quantity}
                         onChange={(e) => updateQty(idx, e.target.value)}
-                        className="w-16 rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2 py-1 text-xs"
+                        className="w-16 rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)]"
                       />
                     </Row>
                   ))}

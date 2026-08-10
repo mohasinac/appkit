@@ -19,7 +19,7 @@ import { ACTION_ID } from "../../products/constants/action-defs";
 import { useBottomActions } from "../../layout";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -105,7 +105,7 @@ export function LiveItemsIndexListing({ initialData }: LiveItemsIndexListingProp
   }, [searchInput, table]);
 
   const selection = useBulkSelection({ items: products as any[], keyExtractor: (p: any) => p.id });
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
 
   const wishlistActions = {
     addToWishlist: (productId: string) => {

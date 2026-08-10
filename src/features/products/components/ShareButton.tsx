@@ -34,7 +34,7 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
     <button
       type="button"
       onClick={handleShare}
-      className={`inline-flex items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-3 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] transition-colors ${className}`}
+      className={`inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-lg border border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] transition-colors ${className}`}
       aria-label="Share this page"
     >
       🔗 {copied ? "Link Copied!" : "Share"}

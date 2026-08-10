@@ -18,7 +18,7 @@ export function ConcernCard({
       type="button"
       variant="outline"
       onClick={() => onClick?.(concern)}
-      className={`group flex flex-col items-center gap-3 rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 text-center shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
+      className={`group flex flex-col items-center gap-[var(--appkit-space-3)] rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] text-center shadow-sm transition hover:border-primary dark:hover:border-primary-400 hover:shadow-md ${className}`}
     >
       {concern.display?.coverImage && (
         <Div className="relative h-16 w-16" rounded="full" overflow="hidden">

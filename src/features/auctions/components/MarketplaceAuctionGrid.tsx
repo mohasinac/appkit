@@ -10,7 +10,7 @@ import {
 } from "./MarketplaceAuctionCard";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -113,8 +113,8 @@ export function MarketplaceAuctionGrid({
 
   const containerClass =
     variant === "list"
-      ? "flex flex-col gap-4"
-      : `${gridClassName ?? "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"}`;
+      ? "flex flex-col gap-[var(--appkit-space-4)]"
+      : `${gridClassName ?? "grid grid-cols-1 gap-[var(--appkit-space-6)] sm:grid-cols-2 xl:grid-cols-4"}`;
 
   if (loading) {
     return (

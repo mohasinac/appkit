@@ -25,7 +25,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { useBottomActions } from "../../layout";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {

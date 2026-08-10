@@ -24,10 +24,10 @@ import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
 const __P = {
-  p6: "p-6",
+  p6: "p-[var(--appkit-space-6)]",
 } as const;
 
-const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-error-surface px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow";
+const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-error-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-bold uppercase tracking-wider text-white shadow";
 
 export interface PrizeDrawCollageProps {
   items: PrizeDrawItem[];

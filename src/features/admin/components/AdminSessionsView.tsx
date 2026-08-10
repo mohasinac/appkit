@@ -9,8 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -110,14 +109,14 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
     getTotal: (response, mappedRows) =>
       typeof response.count === "number" ? response.count : mappedRows.length,
     buildFilters: (state) => (state.isActive ? sieveFilter("isActive", SIEVE_OP.EQ, state.isActive) : undefined),
-    buildBulkActions: (selection) => [
-      {
-        id: ROW_ACTION_ID.REVOKE,
-        label: ACTIONS.ADMIN["revoke-session"].label,
-        variant: "secondary",
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection) =>
+      ADMIN_BULK_ACTIONS.sessions.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        variant: "secondary" as const,
         onClick: () => selection.clearSelection(),
-      },
-    ],
+      })),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

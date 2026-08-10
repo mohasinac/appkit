@@ -7,7 +7,7 @@ import { Div, Heading, Stack, Text } from "../../../ui";
 import { Badge } from "../../../ui/components/Badge";
 
 const __P = {
-  p6: "p-6",
+  p6: "p-[var(--appkit-space-6)]",
 } as const;
 
 export interface EventRaffleEntryFormProps {

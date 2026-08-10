@@ -18,6 +18,7 @@ import {
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
+import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 
 interface SellerAuctionsResponse {
   auctions?: JsonArray;
@@ -110,18 +111,18 @@ export function SellerAuctionsView({
         : mappedRows.length,
     buildFilters: (state) =>
       state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
+    // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
     buildBulkActions: onBulkDelete
-      ? (selection): BulkActionItem[] => [
-          {
-            id: "bulk-delete",
-            label: ACTIONS.STORE["delete-listing"].label,
-            variant: "danger",
+      ? (selection): BulkActionItem[] =>
+          SELLER_BULK_ACTIONS.auctions.map((id) => ({
+            id,
+            label: ROW_ACTION_META[id].label,
+            destructive: ROW_ACTION_META[id].destructive,
             onClick: async () => {
               await onBulkDelete(selection.selectedIds);
               selection.clearSelection();
             },
-          },
-        ]
+          }))
       : undefined,
     renderRowActions: (row) => (
       <RowActionMenu

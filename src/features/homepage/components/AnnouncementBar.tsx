@@ -73,7 +73,7 @@ export function AnnouncementBar({ message, className = "", onDismiss }: Announce
               onDismiss?.(bannerHash);
               setDismissed(true);
             }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 rounded p-0.5 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+            className="absolute right-0 top-1/2 -translate-y-1/2 rounded p-[var(--appkit-space-0-5)] hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Dismiss announcement"
           >
             <X className="h-4 w-4" />

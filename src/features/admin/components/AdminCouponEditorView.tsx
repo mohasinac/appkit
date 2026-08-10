@@ -16,7 +16,7 @@ import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -41,6 +41,14 @@ export interface AdminCouponEditorViewProps
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
+  /**
+   * The full coupon record, when the caller already has it in memory (e.g.
+   * `AdminCouponsView`'s row already carries `raw: item`). When provided,
+   * the edit-mode query starts pre-populated — no loading spinner, no
+   * redundant GET — while still allowing a background refetch to pick up
+   * changes made elsewhere.
+   */
+  initialData?: Record<string, unknown>;
 }
 
 interface CouponPayload {
@@ -194,6 +202,7 @@ export function AdminCouponEditorView({
   onSaved,
   onDeleted,
   embedded,
+  initialData,
   ...rest
 }: AdminCouponEditorViewProps) {
   const isEdit = Boolean(couponId);
@@ -244,6 +253,11 @@ export function AdminCouponEditorView({
       return (res as any)?.data ?? res;
     },
     enabled: isEdit,
+    // The caller's row (AdminCouponsView already holds `raw: item`) seeds the
+    // query so the drawer opens with the form already filled in — no loading
+    // spinner, no redundant GET. React Query still refetches in the
+    // background per its normal staleTime rules.
+    initialData,
   });
 
   React.useEffect(() => {

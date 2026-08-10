@@ -73,7 +73,7 @@ function MaskedInput({
 }
 
 const NOTIF_CHANNEL_INDENT = "space-y-4 pl-4 border-l-2 border-[var(--appkit-color-border)]";
-const CLS_TEXTAREA = "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-3 text-sm text-[var(--appkit-color-text-muted)] resize-y focus:outline-none focus:ring-2 focus:ring-blue-500";
+const CLS_TEXTAREA = "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] resize-y focus:outline-none focus:ring-2 focus:ring-blue-500";
 const PRIORITY_OPTIONS: SelectOption[] = [
   { label: "Low (send all)", value: "low" },
   { label: "Normal", value: "normal" },
@@ -567,7 +567,7 @@ export function AdminSiteSettingsView({
 
           {/* ⓪ About Page */}
           <TabsContent value="about">
-            <Form onSubmit={(e) => { e.preventDefault(); aboutMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); aboutMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Override the About page hero and mission text. Leave blank to use the platform defaults.
               </Text>
@@ -591,7 +591,7 @@ export function AdminSiteSettingsView({
 
           {/* ① Branding */}
           <TabsContent value="branding">
-            <Form onSubmit={(e) => { e.preventDefault(); brandingMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); brandingMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder="LetItRip" />
               <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
@@ -606,7 +606,7 @@ export function AdminSiteSettingsView({
 
           {/* ② Appearance — site-wide background (homepage/nav/dashboard shells) */}
           <TabsContent value="appearance">
-            <Form onSubmit={(e) => { e.preventDefault(); appearanceMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); appearanceMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Sets the background behind the public shell, dashboard sidebars, and any
                 Section/Card that opts into it. Leave the value blank for a plain surface.
@@ -707,7 +707,7 @@ export function AdminSiteSettingsView({
                 e.preventDefault();
                 themeMutation.mutate();
               }}
-              className="pt-4" spacing="md"
+              className="pt-[var(--appkit-space-4)]" spacing="md"
             >
               <ThemeManagerView
                 value={themeRegistry}
@@ -720,7 +720,7 @@ export function AdminSiteSettingsView({
 
           {/* ③ Announcement */}
           <TabsContent value="announcement">
-            <Form onSubmit={(e) => { e.preventDefault(); announcementMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); announcementMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} />
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
@@ -734,7 +734,7 @@ export function AdminSiteSettingsView({
 
           {/* ④ SEO */}
           <TabsContent value="seo">
-            <Form onSubmit={(e) => { e.preventDefault(); seoMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); seoMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="LetItRip — Buy, Sell & Auction Collectibles in India" maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
               <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
               <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
@@ -746,7 +746,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑤ Contact & Social */}
           <TabsContent value="contact">
-            <Form onSubmit={(e) => { e.preventDefault(); contactMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); contactMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder="support@letitrip.in" />
                 <Input label="Support phone" value={supportPhone} onChange={(e) => setSupportPhone(e.target.value)} placeholder="+91 XXXXX XXXXX" />
@@ -769,7 +769,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑥ Watermark */}
           <TabsContent value="watermark">
-            <Form onSubmit={(e) => { e.preventDefault(); watermarkMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); watermarkMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Select
                 label="Watermark type"
                 options={[{ label: "Text", value: "text" }, { label: "Image", value: "image" }]}
@@ -803,7 +803,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑦ Fees & Commissions */}
           <TabsContent value="fees">
-            <Form onSubmit={(e) => { e.preventDefault(); feesMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); feesMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
@@ -822,7 +822,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑧ Integrations & Keys */}
           <TabsContent value="integrations">
-            <Form onSubmit={(e) => { e.preventDefault(); integrationsMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); integrationsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">Razorpay</Text>
@@ -880,7 +880,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑨ Shipping Defaults */}
           <TabsContent value="shipping">
-            <Form onSubmit={(e) => { e.preventDefault(); shippingMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); shippingMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
               <Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} />
               <Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} />
@@ -894,7 +894,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑩ Auction Config */}
           <TabsContent value="auction">
-            <Form onSubmit={(e) => { e.preventDefault(); auctionMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); auctionMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Minimum bid increment (₹)" value={String(minBidIncrement)} onChange={(e) => setMinBidIncrement(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Global default — individual auctions may override." />
               <Input label="Auto-extend window (minutes before end)" value={String(autoExtendWindow)} onChange={(e) => setAutoExtendWindow(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Extend auction end time if a bid arrives within this window." />
               <Input label="Settlement grace period (hours)" value={String(settlementGrace)} onChange={(e) => setSettlementGrace(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Time winner has to pay before the auction is re-listed." />
@@ -904,7 +904,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑪ Platform Limits */}
           <TabsContent value="limits">
-            <Form onSubmit={(e) => { e.preventDefault(); limitsMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); limitsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max images per product" value={String(maxImagesPerProduct)} onChange={(e) => setMaxImagesPerProduct(parseInt(e.target.value) || 0)} type="number" min={1} />
@@ -919,7 +919,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑬ WhatsApp Business Cloud API */}
           <TabsContent value="whatsapp">
-            <Form onSubmit={(e) => { e.preventDefault(); whatsappMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); whatsappMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
                 announcements to admin numbers when orders are placed. Store owners configure their
@@ -952,7 +952,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑭ Notification Channels */}
           <TabsContent value="notifications">
-            <Form onSubmit={(e) => { e.preventDefault(); notifChannelsMutation.mutate(); }} className="pt-4" spacing="lg">
+            <Form onSubmit={(e) => { e.preventDefault(); notifChannelsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
               <Text size="xs" color="muted">
                 In-app notifications are always on. Enable external channels below to let the platform
                 fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
@@ -1035,7 +1035,7 @@ export function AdminSiteSettingsView({
 
           {/* ⑫ Legal Policies */}
           <TabsContent value="legal">
-            <Form onSubmit={(e) => { e.preventDefault(); legalMutation.mutate(); }} className="pt-4" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); legalMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               {[
                 ["Terms of Service", termsHtml, setTermsHtml],
                 ["Privacy Policy", privacyHtml, setPrivacyHtml],

@@ -8,7 +8,7 @@ import { ROUTES } from "../../../next";
 import { Div, LoginRequiredModal, Span, Stack, Text, TextLink } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 
-const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-6 py-8 text-center space-y-2";
+const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-[var(--appkit-space-6)] py-[var(--appkit-space-8)] text-center space-y-2";
 
 interface EventPollWidgetProps {
   eventId: string;
@@ -142,7 +142,7 @@ export function EventPollWidget({
         {pollConfig.options.map((opt) => (
           <label
             key={opt.id}
-            className="flex items-center gap-3 cursor-pointer rounded-lg border border-[var(--appkit-color-border)] px-4 py-3 hover:bg-[var(--appkit-color-surface)] transition-colors"
+            className="flex items-center gap-[var(--appkit-space-3)] cursor-pointer rounded-lg border border-[var(--appkit-color-border)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] hover:bg-[var(--appkit-color-surface)] transition-colors"
           >
             <input
               type={isMulti ? "checkbox" : "radio"}
@@ -162,7 +162,7 @@ export function EventPollWidget({
           onChange={(e) => setComment(e.target.value)}
           placeholder="Add a comment (optional)"
           rows={3}
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-2 text-sm text-[var(--appkit-color-text-muted)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
         />
       )}
       {error && <Text className="text-error" size="sm">{error}</Text>}
@@ -170,7 +170,7 @@ export function EventPollWidget({
         type="button"
         onClick={handleSubmit}
         disabled={isLoading || selectedVotes.length === 0}
-        className="w-full rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-600 disabled:opacity-60"
+        className="w-full rounded-xl bg-primary px-[var(--appkit-space-6)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] font-semibold text-white hover:bg-primary-600 disabled:opacity-60"
       >
         {isLoading ? "Submitting…" : "Submit Vote"}
       </button>

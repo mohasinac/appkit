@@ -1,7 +1,7 @@
 import { Article, ClaimCouponButton, Div, Heading, Row, Span, Stack, Text, TextLink } from "../../../ui";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 export interface RaffleWinnerEvent {
@@ -34,9 +34,9 @@ export interface EventRaffleWinnerViewProps {
   };
 }
 
-const CLS_PANEL = "rounded-2xl border border-warning bg-warning-surface/60 dark:border-warning dark:bg-warning-surface p-6 space-y-3";
-const CLS_LABEL = "text-xs uppercase tracking-wide text-warning dark:text-warning";
-const CLS_WINNER_NAME = "mt-1 text-2xl font-bold text-warning dark:text-warning";
+const CLS_PANEL = "rounded-2xl border border-warning bg-warning-surface/60 dark:border-warning dark:bg-warning-surface p-[var(--appkit-space-6)] space-y-3";
+const CLS_LABEL = "text-[length:var(--appkit-text-xs)] uppercase tracking-wide text-warning dark:text-warning";
+const CLS_WINNER_NAME = "mt-1 text-[length:var(--appkit-text-2xl)] font-bold text-warning dark:text-warning";
 
 const DEFAULT_LABELS: Required<NonNullable<EventRaffleWinnerViewProps["labels"]>> = {
   heading: "Raffle Winner",

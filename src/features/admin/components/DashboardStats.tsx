@@ -9,7 +9,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 const __P = {
-  p5: "p-5",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 const __O = {

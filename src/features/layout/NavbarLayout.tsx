@@ -38,16 +38,16 @@ function DefaultNavItem({
   isActive: boolean;
 }) {
   const activeClasses = item.highlighted
-    ? "border border-primary-400/40 dark:border-secondary-400/30 text-primary-700 dark:text-secondary-400 bg-primary-50/80 dark:bg-secondary-900/30 px-3 transition-colors duration-150"
+    ? "border border-primary-400/40 dark:border-secondary-400/30 text-primary-700 dark:text-secondary-400 bg-primary-50/80 dark:bg-secondary-900/30 px-[var(--appkit-space-3)] transition-colors duration-150"
     : isActive
-      ? "bg-primary-50 bg-[var(--appkit-color-surface-elevated)] text-primary-800 dark:text-white font-semibold px-3 border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
-      : "text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 px-3";
+      ? "bg-primary-50 bg-[var(--appkit-color-surface-elevated)] text-primary-800 dark:text-white font-semibold px-[var(--appkit-space-3)] border-b-2 border-primary-500 dark:border-secondary-400 rounded-none pb-[6px] transition-colors duration-150"
+      : "text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 px-[var(--appkit-space-3)]";
 
   return (
     <Link
       href={item.href}
       aria-current={isActive ? "page" : undefined}
-      className={`flex items-center gap-1.5 py-2 text-sm rounded-lg font-medium transition-colors duration-150 whitespace-nowrap ${activeClasses}`}
+      className={`flex items-center gap-[var(--appkit-space-1-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] rounded-lg font-medium transition-colors duration-150 whitespace-nowrap ${activeClasses}`}
     >
       {item.icon}
       <Span>{item.label}</Span>
@@ -104,7 +104,7 @@ export function NavbarLayout({
     return (
       <Ul
         aria-label={ariaLabel}
-        className="hidden xl:flex items-center gap-0.5 xl:gap-1"
+        className="hidden xl:flex items-center gap-[var(--appkit-space-0-5)] xl:gap-[var(--appkit-space-1)]"
       >
         {items.map((item) => (
           <Li key={item.href}>
@@ -125,7 +125,7 @@ export function NavbarLayout({
       aria-label={ariaLabel}
       className="hidden lg:block bg-white/95 bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b"
     >
-      <Row className="container mx-auto sm:px-6 lg:px-8 max-w-[1920px] h-10" padding="x-md" align="center">
+      <Row className="container mx-auto sm:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)] max-w-[1920px] h-10" padding="x-md" align="center">
         {/* Scrollable items area */}
         <Div className={`relative flex-1 ${__O.hidden}`}>
           {canScrollLeft && (
@@ -134,7 +134,7 @@ export function NavbarLayout({
 
           <Ul
             ref={scrollRef}
-            className="flex items-center gap-0.5 lg:gap-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="flex items-center gap-[var(--appkit-space-0-5)] lg:gap-[var(--appkit-space-1)] overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {items.map((item) => (
               <Li key={item.href} className="shrink-0">

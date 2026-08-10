@@ -11,7 +11,7 @@ import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -26,7 +26,7 @@ const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   community: "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
 };
 
-const CLS_FEATURED_BADGE = "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning px-2 py-0.5 rounded-full";
+const CLS_FEATURED_BADGE = "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] rounded-full";
 
 export interface BlogFeaturedCardProps {
   post: BlogPost;

@@ -5,7 +5,7 @@ import { Alert, Button, Div, FormField, Stack, Text } from "../../../ui";
 import type { SellerProductDraft, SellerProductShellProps } from "./SellerProductShell";
 
 const __P = {
-  p5: "p-5",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 export interface QuickProductFormProps {

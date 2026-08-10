@@ -35,7 +35,7 @@ export function StoreReviewsView({
       portal="public"
       {...rest}
       title={labels.title}
-      className={`py-4 ${rest.className ?? ""}`}
+      className={`py-[var(--appkit-space-4)] ${rest.className ?? ""}`}
       renderFilters={() => renderSummary?.() ?? null}
       renderTable={() => renderReviews(items, isLoading)}
       renderPagination={() => renderPagination?.(total) ?? null}

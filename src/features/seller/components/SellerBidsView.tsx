@@ -315,7 +315,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                   <button
                     type="button"
                     onClick={() => toggleGroup(group.id)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-raised)]"
+                    className="w-full flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-raised)]"
                   >
                     <Span className="truncate">
                       {group.title}{" "}

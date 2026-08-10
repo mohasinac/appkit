@@ -7,7 +7,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -23,7 +23,7 @@ const PAGE_SIZE = 50;
 const DEFAULT_SCOPE: ProductFeatureScope = "platform";
 
 const STICKY_TABS_CLASS =
-  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-2";
+  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]";
 
 interface AdminFeaturesResponse {
   items?: JsonArray;
@@ -96,14 +96,14 @@ export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps
       label: "Add Feature",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
     },
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "delete",
-        label: ACTIONS.ADMIN["delete-feature"].label,
-        variant: "secondary",
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ADMIN_BULK_ACTIONS.features.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        destructive: ROW_ACTION_META[id].destructive,
         onClick: () => selection.clearSelection(),
-      },
-    ],
+      })),
     renderAboveContent: () => (
       <FilterChipGroup
         label="Scope"

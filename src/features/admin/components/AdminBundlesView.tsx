@@ -19,7 +19,7 @@ import {
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import type { AdminTableColumn } from "../types";
 
 interface BundlesResponse {
@@ -160,40 +160,49 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
         </TextLink>
       </Button>
     ),
-    buildBulkActions: (selection): BulkActionItem[] => [
-      buildBulkAction(ACTIONS.ADMIN["activate-bundle"], async () => {
-        await Promise.all(
-          selection.selectedIds.map((id) =>
-            fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ isActive: true }),
-            }),
-          ),
-        );
-        selection.clearSelection();
-      }),
-      buildBulkAction(ACTIONS.ADMIN["deactivate-bundle"], async () => {
-        await Promise.all(
-          selection.selectedIds.map((id) =>
-            fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ isActive: false }),
-            }),
-          ),
-        );
-        selection.clearSelection();
-      }),
-      buildBulkAction(ACTIONS.ADMIN["delete-bundle"], async () => {
-        await Promise.all(
-          selection.selectedIds.map((id) =>
-            fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), { method: "DELETE" }),
-          ),
-        );
-        selection.clearSelection();
-      }),
-    ],
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] => {
+      const handlers: Record<(typeof ADMIN_BULK_ACTIONS.bundles)[number], () => Promise<void>> = {
+        [ROW_ACTION_ID.ACTIVATE]: async () => {
+          await Promise.all(
+            selection.selectedIds.map((id) =>
+              fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ isActive: true }),
+              }),
+            ),
+          );
+          selection.clearSelection();
+        },
+        [ROW_ACTION_ID.DEACTIVATE]: async () => {
+          await Promise.all(
+            selection.selectedIds.map((id) =>
+              fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ isActive: false }),
+              }),
+            ),
+          );
+          selection.clearSelection();
+        },
+        [ROW_ACTION_ID.DELETE]: async () => {
+          await Promise.all(
+            selection.selectedIds.map((id) =>
+              fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), { method: "DELETE" }),
+            ),
+          );
+          selection.clearSelection();
+        },
+      };
+      return ADMIN_BULK_ACTIONS.bundles.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        destructive: ROW_ACTION_META[id].destructive,
+        onClick: handlers[id],
+      }));
+    },
     renderRowActions: (row) => (
       <Button
         variant="ghost"

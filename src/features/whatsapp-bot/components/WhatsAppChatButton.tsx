@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-const CLS_WA_BTN = "inline-flex items-center gap-2 rounded-lg bg-success-surface px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-success-surface";
+const CLS_WA_BTN = "inline-flex items-center gap-[var(--appkit-space-2)] rounded-lg bg-success-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-semibold text-white transition-colors hover:bg-success-surface";
 
 interface WhatsAppChatButtonProps {
   waNumber: string;

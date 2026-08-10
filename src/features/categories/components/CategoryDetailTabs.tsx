@@ -96,7 +96,7 @@ export function CategoryDetailTabs({
             key={t.id}
             type="button"
             onClick={() => setActiveTab(t.id as CategoryTabId)}
-            className={`px-5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors -mb-px border-b-2 ${
+            className={`px-[var(--appkit-space-5)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-medium whitespace-nowrap transition-colors -mb-px border-b-2 ${
  activeTab === t.id
  ? "border-primary text-primary"
  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-900 dark:hover:text-zinc-100"

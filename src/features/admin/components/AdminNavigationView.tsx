@@ -43,9 +43,9 @@ function NavItemRow({
     <Row surface="default" padding="inline" align="center" gap="3">
       <Stack className="shrink-0 gap-[0.125rem]">
         <Button variant="ghost" type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
-          className="text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>
+          className="text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] disabled:opacity-30 leading-none text-[length:var(--appkit-text-xs)] p-[var(--appkit-space-0)] min-h-0 h-auto rounded-none" aria-label="Move up">▲</Button>
         <Button variant="ghost" type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}
-          className="text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] disabled:opacity-30 leading-none text-xs p-0 min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
+          className="text-zinc-400 hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)] disabled:opacity-30 leading-none text-[length:var(--appkit-text-xs)] p-[var(--appkit-space-0)] min-h-0 h-auto rounded-none" aria-label="Move down">▼</Button>
       </Stack>
       <Div className="flex-1 min-w-0">
         <Text className="truncate" color="primary" size="sm" weight="medium">

@@ -5,7 +5,7 @@ import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const __P = {
-  p6: "p-6",
+  p6: "p-[var(--appkit-space-6)]",
 } as const;
 
 export interface EventSaleBannerProps {

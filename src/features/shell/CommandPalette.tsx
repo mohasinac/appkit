@@ -113,7 +113,7 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
                   onClick={() => navigate(item.href)}
                   onMouseEnter={() => setActiveIndex(idx)}
                   className={[
-                    "flex w-full items-center justify-between rounded-md px-3 py-2 text-left transition-colors",
+                    "flex w-full items-center justify-between rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-left transition-colors",
                     idx === activeIndex
                       ? "bg-[var(--appkit-color-primary-50)] text-[var(--appkit-color-primary-700)]"
                       : "hover:bg-[var(--appkit-color-surface-elevated)]",

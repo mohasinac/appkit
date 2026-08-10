@@ -61,7 +61,7 @@ export function SearchFiltersRow({
             { value: "", label: L.allCategories },
             ...categories.map((cat) => ({ value: cat.id, label: cat.name })),
           ]}
-          className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-3 py-2 text-sm text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+          className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
         />
       </Stack>
 
@@ -77,7 +77,7 @@ export function SearchFiltersRow({
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
             placeholder={L.minPrice}
-            className="w-28 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-3 py-2 text-sm text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+            className="w-28 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
           />
           <Span size="sm" color="muted">–</Span>
           <Input
@@ -86,14 +86,14 @@ export function SearchFiltersRow({
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
             placeholder={L.maxPrice}
-            className="w-28 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-3 py-2 text-sm text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+            className="w-28 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
           />
           <Button rounded="lg" 
             type="button"
             variant="primary"
             size="sm"
             onClick={() => onPriceFilter(minPrice, maxPrice)}
-            className="h-10 px-4 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors"
+            className="h-10 px-[var(--appkit-space-4)] bg-primary-600 hover:bg-primary-700 text-white text-[length:var(--appkit-text-sm)] font-medium transition-colors"
           >
             {L.apply}
           </Button>

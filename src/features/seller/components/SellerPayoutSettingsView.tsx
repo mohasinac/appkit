@@ -6,7 +6,7 @@ import { StepDef, StepForm } from "../../shell";
 
 import { normalizeError } from "../../../errors/normalize";
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 type PayoutMethod = "upi" | "bank_transfer";
@@ -182,7 +182,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
             ]).map(({ value, label, desc }) => (
               <label
                 key={value}
-                className="flex items-center gap-3 p-3 rounded-lg border border-[var(--appkit-color-border)] cursor-pointer has-[:checked]:border-[var(--appkit-color-primary)] has-[:checked]:bg-[var(--appkit-color-primary)]/5"
+                className="flex items-center gap-[var(--appkit-space-3)] p-[var(--appkit-space-3)] rounded-lg border border-[var(--appkit-color-border)] cursor-pointer has-[:checked]:border-[var(--appkit-color-primary)] has-[:checked]:bg-[var(--appkit-color-primary)]/5"
               >
                 <input
                   type="radio"

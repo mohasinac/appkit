@@ -115,10 +115,10 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
 
   const gridClass =
     layout === "carousel"
-      ? "flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory"
+      ? "flex gap-[var(--appkit-space-3)] overflow-x-auto pb-[var(--appkit-space-2)] snap-x snap-mandatory"
       : layout === "masonry"
-        ? "columns-2 sm:columns-3 lg:columns-4 gap-3 space-y-3"
-        : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3";
+        ? "columns-2 sm:columns-3 lg:columns-4 gap-[var(--appkit-space-3)] space-y-3"
+        : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-3)]";
 
   const cardClass =
     layout === "carousel"

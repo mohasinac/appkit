@@ -57,8 +57,8 @@ export async function UnauthorizedView({
                 href={href}
                 className={
                   isPrimary
-                    ? "bg-white text-rose-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-white/90 transition-colors"
-                    : "border border-white/40 text-white px-6 py-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                    ? "bg-white text-rose-700 font-semibold px-[var(--appkit-space-6)] py-[var(--appkit-space-2-5)] rounded-xl hover:bg-white/90 transition-colors"
+                    : "border border-white/40 text-white px-[var(--appkit-space-6)] py-[var(--appkit-space-2-5)] rounded-xl hover:bg-white/10 transition-colors"
                 }
               >
                 <Span layout="inline-flex" gap="md" >

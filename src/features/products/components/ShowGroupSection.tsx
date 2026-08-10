@@ -53,7 +53,7 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
     <Link
       href={href}
       aria-label={member.title}
-      className="flex flex-col items-center gap-1.5 flex-shrink-0 w-16 group"
+      className="flex flex-col items-center gap-[var(--appkit-space-1-5)] flex-shrink-0 w-16 group"
     >
       <Div
         rounded="full"
@@ -105,7 +105,7 @@ function GroupTableRow({ member }: { member: GroupMember }) {
       <Td padding="xs-tall">
         <Link
           href={href}
-          className="text-xs text-[var(--appkit-color-primary)] hover:underline"
+          className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline"
         >
           View â†’
         </Link>
@@ -161,7 +161,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[var(--appkit-color-surface)]/70 hover:bg-[var(--appkit-color-surface-elevated)]/70 transition-colors"
+          className="w-full flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-left hover:bg-[var(--appkit-color-surface)]/70 hover:bg-[var(--appkit-color-surface-elevated)]/70 transition-colors"
           aria-expanded={open}
         >
           <Row align="center" gap="xs">
@@ -178,7 +178,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
             variant="ghost"
             size="sm"
             onClick={(e) => { e.stopPropagation(); setShowAll(true); }}
-            className="text-xs text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
+            className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >
             View whole group â†’
           </Button>

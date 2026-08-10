@@ -22,6 +22,7 @@ import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_PAYOUT_STATUS_TABS } from "../constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -138,14 +139,14 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
         {ACTIONS.ADMIN["export-csv"].label}
       </Button>
     ),
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "mark-paid",
-        label: ACTIONS.ADMIN["mark-paid"].label,
-        variant: "primary",
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ADMIN_BULK_ACTIONS.payouts.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        variant: "primary" as const,
         onClick: () => selection.clearSelection(),
-      },
-    ],
+      })),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

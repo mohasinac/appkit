@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState, type CSSProperties } from "react";
 import { Div, Row, Span } from "../../ui";
+import { ROUNDED_MAP, SHADOW_MAP, type RoundedKey, type ShadowKey } from "../../ui/components/surface-tokens";
 import { resolveMediaUrl } from "../../utils/media-url";
 
 // --- Size presets -------------------------------------------------------------
@@ -73,6 +74,10 @@ export interface MediaImageProps {
    * Use for hover animations, e.g. `group-hover:scale-110 transition-transform duration-300`.
    */
   className?: string;
+  /** Border radius applied to the wrapper — replaces consumer `rounded-*` className. */
+  rounded?: RoundedKey;
+  /** Box shadow applied to the wrapper — replaces consumer `shadow-*` className. */
+  shadow?: ShadowKey;
   /**
    * Inline style applied to the absolute-fill wrapper div. Use for dynamic,
    * per-instance CSS impossible to express with Tailwind classes — e.g. a
@@ -125,6 +130,8 @@ export function MediaImage({
   objectFit = "cover",
   fallback,
   className,
+  rounded,
+  shadow,
   style,
   sources,
   onError,
@@ -134,6 +141,11 @@ export function MediaImage({
   const icon = fallback ?? FALLBACK_ICONS[size];
   const fitClass = objectFit === "contain" ? "object-contain" : "object-cover";
   const resolvedSrc = resolveMediaUrl(src);
+  const wrapperExtra = [
+    rounded ? ROUNDED_MAP[rounded] : "",
+    shadow ? SHADOW_MAP[shadow] : "",
+    className ?? "",
+  ].filter(Boolean).join(" ");
 
   const handleError = () => {
     setHasError(true);
@@ -143,7 +155,7 @@ export function MediaImage({
   if (!resolvedSrc || hasError) {
     return (
       <Row
-        className={`relative w-full h-full overflow-hidden text-zinc-400 text-4xl${className ? ` ${className}` : ""}`} align="center" justify="center" surface="subtle"
+        className={`relative w-full h-full overflow-hidden text-zinc-400 text-[length:var(--appkit-text-4xl)]${wrapperExtra ? ` ${wrapperExtra}` : ""}`} align="center" justify="center" surface="subtle"
         role="img"
         aria-label={alt}
       >
@@ -163,7 +175,7 @@ export function MediaImage({
   if (sources && sources.length > 0) {
     return (
       <Div
-        className={`relative w-full h-full overflow-hidden${className ? ` ${className}` : ""}`}
+        className={`relative w-full h-full overflow-hidden${wrapperExtra ? ` ${wrapperExtra}` : ""}`}
         style={style}
       >
         {!isLoaded && (
@@ -200,7 +212,7 @@ export function MediaImage({
 
   return (
     <Div
-      className={`relative w-full h-full overflow-hidden${className ? ` ${className}` : ""}`}
+      className={`relative w-full h-full overflow-hidden${wrapperExtra ? ` ${wrapperExtra}` : ""}`}
       style={style}
     >
       {!isLoaded && (

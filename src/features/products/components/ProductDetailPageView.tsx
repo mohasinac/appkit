@@ -3,27 +3,27 @@ import type { FirestoreDocument } from "@mohasinac/appkit";
 import { productRepository, reviewRepository } from "../../../repositories";
 
 const __P = {
-  p3: "p-3",
-  p5: "p-5",
+  p3: "p-[var(--appkit-space-3)]",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 const ACTION_NOT_WIRED = "Action not wired";
 
-const CLS_STAR_FULL = "text-warning text-sm";
-const CLS_STAR_HALF = "text-warning text-sm";
-const CLS_STAR_EMPTY = "text-[var(--appkit-color-text-faint)] text-sm";
+const CLS_STAR_FULL = "text-warning text-[length:var(--appkit-text-sm)]";
+const CLS_STAR_HALF = "text-warning text-[length:var(--appkit-text-sm)]";
+const CLS_STAR_EMPTY = "text-[var(--appkit-color-text-faint)] text-[length:var(--appkit-text-sm)]";
 const CLS_STOCK_IN = "bg-success-surface text-success dark:bg-success-surface dark:text-success";
 const CLS_STOCK_OUT = "bg-error-surface text-error dark:bg-error-surface dark:text-error";
-const CLS_BUNDLE_PILL = "inline-flex items-center gap-1 rounded-full border border-success bg-success-surface px-2.5 py-1 text-xs font-semibold text-success transition-colors hover:border-success hover:bg-success-surface dark:border-success/60 dark:bg-success-surface dark:text-success dark:hover:border-success dark:hover:bg-success-surface";
-const CLS_DISCOUNT_BADGE = "rounded-full bg-error-surface px-2 py-0.5 text-white";
+const CLS_BUNDLE_PILL = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full border border-success bg-success-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-semibold text-success transition-colors hover:border-success hover:bg-success-surface dark:border-success/60 dark:bg-success-surface dark:text-success dark:hover:border-success dark:hover:bg-success-surface";
+const CLS_DISCOUNT_BADGE = "rounded-full bg-error-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
 const CLS_FREE_SHIPPING_ICON = "mt-0.5 flex-shrink-0 text-success";
-const CLS_BUNDLE_BOX = "rounded-xl border border-success dark:border-success/60 bg-success-surface dark:bg-success-surface p-5";
+const CLS_BUNDLE_BOX = "rounded-xl border border-success dark:border-success/60 bg-success-surface dark:bg-success-surface p-[var(--appkit-space-5)]";
 const CLS_BUNDLE_ICON = "text-success dark:text-success";
-const CLS_BUNDLE_TITLE = "text-sm font-semibold text-success dark:text-success";
-const CLS_BUNDLE_ROW = "flex items-center justify-between gap-4 rounded-lg border border-success dark:border-success/50 bg-white dark:bg-success-surface px-4 py-3";
-const CLS_BUNDLE_LABEL = "text-xs text-success dark:text-success font-medium uppercase tracking-wide mb-0.5";
-const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-surface hover:bg-success-surface px-3 py-1.5 text-xs font-semibold text-white transition-colors";
+const CLS_BUNDLE_TITLE = "text-[length:var(--appkit-text-sm)] font-semibold text-success dark:text-success";
+const CLS_BUNDLE_ROW = "flex items-center justify-between gap-[var(--appkit-space-4)] rounded-lg border border-success dark:border-success/50 bg-white dark:bg-success-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-3)]";
+const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:text-success font-medium uppercase tracking-wide mb-0.5";
+const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-surface hover:bg-success-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-white transition-colors";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -244,7 +244,7 @@ export async function ProductDetailPageView({
               </Text>
               <Link
                 href={String(ROUTES.PUBLIC.PRODUCTS)}
-                className="text-sm font-medium text-primary-600 hover:underline"
+                className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline"
               >
                 Browse Products
               </Link>
@@ -527,7 +527,7 @@ export async function ProductDetailPageView({
                     <Link
                       key={slug}
                       href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(slug))}
-                      className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                      className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                     >
                       {categoryNames[i] ?? slug}
                     </Link>
@@ -540,7 +540,7 @@ export async function ProductDetailPageView({
                   {brand && brandSlug && (
                     <Link
                       href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
-                      className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-2.5 py-1 text-xs font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                      className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                     >
                       {brand}
                     </Link>
@@ -629,7 +629,7 @@ export async function ProductDetailPageView({
                 <RichText
                   html={descriptionHtml}
                   proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                  className="text-sm leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
+                  className="text-[length:var(--appkit-text-sm)] leading-relaxed text-[var(--appkit-color-text-muted)] line-clamp-4"
                 />
               )}
 
@@ -659,7 +659,7 @@ export async function ProductDetailPageView({
                     {storeHref && (
                       <Link
                         href={storeHref}
-                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
+                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
                       >
                         Visit Store →
                       </Link>

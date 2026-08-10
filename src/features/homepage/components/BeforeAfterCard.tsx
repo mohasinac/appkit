@@ -5,7 +5,7 @@ import { Div, Row, Span, Text } from "../../../ui";
 import type { BeforeAfterItem } from "../types";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {

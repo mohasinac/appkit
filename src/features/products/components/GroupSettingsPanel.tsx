@@ -8,7 +8,7 @@ import { apiClient } from "../../../http";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const CLS_DELETE_LINK = "text-error hover:text-error";
@@ -264,7 +264,7 @@ export function GroupSettingsPanel({
           setOpen(next);
           if (next && isGroupParent && children === null) loadChildren();
         }}
-        className="w-full flex items-center justify-between py-2 text-left group"
+        className="w-full flex items-center justify-between py-[var(--appkit-space-2)] text-left group"
         aria-expanded={open}
       >
         <Heading level={3} size="sm" weight="semibold" color="muted">
@@ -346,7 +346,7 @@ export function GroupSettingsPanel({
                           size="sm"
                           onClick={() => requestUnlinkChild(child.id)}
                           isLoading={loading}
-                          className={`${CLS_DELETE_LINK} text-xs`}
+                          className={`${CLS_DELETE_LINK} text-[length:var(--appkit-text-xs)]`}
                         >
                           Unlink
                         </Button>

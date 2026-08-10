@@ -73,7 +73,7 @@ export async function PrizeDrawsSection({
               </Text>
               <Link
                 href={String(ROUTES.PUBLIC.AUCTIONS)}
-                className="text-sm font-medium text-primary hover:underline"
+                className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
               >
                 Browse live auctions →
               </Link>

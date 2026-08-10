@@ -15,6 +15,7 @@ import {
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { AdminEventEditorView } from "./AdminEventEditorView";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 
 // TODO(events): TYPE_OPTIONS list pre-dates the SB9 EventType union refresh
 // (sale|offer|poll|survey|feedback|raffle|spin_wheel). Keep current values to
@@ -92,14 +93,14 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
       label: "Add Event",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
     },
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "delete",
-        label: "Delete Selected",
-        variant: "secondary",
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ADMIN_BULK_ACTIONS.events.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        destructive: ROW_ACTION_META[id].destructive,
         onClick: () => selection.clearSelection(),
-      },
-    ],
+      })),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
         <FilterChipGroup

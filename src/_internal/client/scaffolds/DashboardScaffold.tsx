@@ -86,7 +86,7 @@ export function DashboardScaffold({
       <Stack className="min-w-0 flex-1">
         {(slotPageHeader || slotMenuToggle) && (
           <div
-            className="sticky top-0 z-20 flex items-center gap-3 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-2"
+            className="sticky top-0 z-20 flex items-center gap-[var(--appkit-space-3)] border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-4)] py-[var(--appkit-space-2)]"
             data-dashboard-slot="page-header"
           >
             {slotMenuToggle ? (
@@ -98,7 +98,7 @@ export function DashboardScaffold({
           </div>
         )}
 
-        <Main className="min-w-0 flex-1 pb-20 lg:pb-0" data-dashboard-slot="main">
+        <Main className="min-w-0 flex-1 pb-[var(--appkit-space-20)] lg:pb-[var(--appkit-space-0)]" data-dashboard-slot="main">
           {children}
         </Main>
 

@@ -18,10 +18,10 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white border-[var(--appkit-color-border-subtle)] bg-warning-surface dark:bg-warning-surface flex items-center justify-center text-warning dark:text-warning font-bold text-2xl shadow-sm";
-const CLS_STARS = "inline-flex items-center gap-1 text-warning";
-const CLS_FOLLOW_BTN = "rounded-lg border border-warning px-4 py-2 text-sm font-medium text-warning hover:bg-warning-surface transition-colors";
-const CLS_WARN_BANNER = "mt-3 rounded-lg bg-warning-surface dark:bg-warning-surface border border-warning dark:border-warning px-3 py-2 text-sm text-warning dark:text-warning";
+const CLS_AVATAR = "-mt-8 h-16 w-16 rounded-xl border-2 border-white border-[var(--appkit-color-border-subtle)] bg-warning-surface dark:bg-warning-surface flex items-center justify-center text-warning dark:text-warning font-bold text-[length:var(--appkit-text-2xl)] shadow-sm";
+const CLS_STARS = "inline-flex items-center gap-[var(--appkit-space-1)] text-warning";
+const CLS_FOLLOW_BTN = "rounded-lg border border-warning px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium text-warning hover:bg-warning-surface transition-colors";
+const CLS_WARN_BANNER = "mt-3 rounded-lg bg-warning-surface dark:bg-warning-surface border border-warning dark:border-warning px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-warning dark:text-warning";
 
 interface StoreHeaderProps {
   store: StoreDetail;

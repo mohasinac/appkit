@@ -5,7 +5,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -78,7 +78,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
                 disabled={item.quantity <= 1}
                 variant="outline"
                 size="sm"
-                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-sm disabled:opacity-40"
+                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)] disabled:opacity-40"
               >
                 −
               </Button>
@@ -89,7 +89,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
                 onClick={() => onQtyChange(item.id, item.quantity + 1)}
                 variant="outline"
                 size="sm"
-                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-sm"
+                className="h-7 w-7 justify-center border border-neutral-200 border-[var(--appkit-color-border)] text-[length:var(--appkit-text-sm)]"
               >
                 +
               </Button>

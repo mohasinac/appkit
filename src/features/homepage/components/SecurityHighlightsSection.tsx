@@ -46,7 +46,7 @@ function SecurityCard({
   return (
     <Div
       className={[
-        "rounded-xl border p-5 transition-all duration-500",
+        "rounded-xl border p-[var(--appkit-space-5)] transition-all duration-500",
         colorClass,
         delayClass,
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",

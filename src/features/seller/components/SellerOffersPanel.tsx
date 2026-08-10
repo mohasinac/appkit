@@ -333,7 +333,7 @@ export function SellerOffersPanel({
             size="sm"
             variant={statusFilter === f.value ? "primary" : "ghost"}
             onClick={() => setStatusFilter(f.value)}
-            className="text-xs px-2 py-1"
+            className="text-[length:var(--appkit-text-xs)] px-[var(--appkit-space-2)] py-[var(--appkit-space-1)]"
           >
             {f.label}
           </Button>

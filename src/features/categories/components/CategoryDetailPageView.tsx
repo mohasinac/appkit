@@ -213,7 +213,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 <Link
                   key={child.id}
                   href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug))}
-                  className="flex-shrink-0 flex items-center gap-1.5 rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-4 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
+                  className="flex-shrink-0 flex items-center gap-[var(--appkit-space-1-5)] rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
                 >
                   {child.display?.icon && (
                     <Span className="leading-none">{child.display.icon}</Span>

@@ -65,7 +65,7 @@ function ListingThumb({
     <Link
       href={href}
       aria-label={listing.title}
-      className="flex flex-col items-center gap-1.5 flex-shrink-0 w-16 group"
+      className="flex flex-col items-center gap-[var(--appkit-space-1-5)] flex-shrink-0 w-16 group"
     >
       <Div
         rounded="full"
@@ -125,7 +125,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[var(--appkit-color-surface)]/70 hover:bg-[var(--appkit-color-surface-elevated)]/70 transition-colors"
+        className="w-full flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-left hover:bg-[var(--appkit-color-surface)]/70 hover:bg-[var(--appkit-color-surface-elevated)]/70 transition-colors"
         aria-expanded={open}
       >
         <Row align="center" gap="xs">
@@ -144,7 +144,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
           <Link
             href={String(ROUTES.PUBLIC.SUBLISTING_CATEGORY(category.slug))}
             onClick={(e) => e.stopPropagation()}
-            className="text-xs text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
+            className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >
             View all â†’
           </Link>

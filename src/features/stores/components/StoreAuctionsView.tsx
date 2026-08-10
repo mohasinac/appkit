@@ -37,7 +37,7 @@ export function StoreAuctionsView({
       portal="public"
       {...rest}
       title={labels.title}
-      className={`py-4 ${rest.className ?? ""}`}
+      className={`py-[var(--appkit-space-4)] ${rest.className ?? ""}`}
       renderTable={() => renderAuctions(items, isLoading)}
       renderPagination={() => renderPagination?.(total) ?? null}
       total={total}

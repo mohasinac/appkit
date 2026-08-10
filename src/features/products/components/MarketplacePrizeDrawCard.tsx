@@ -8,7 +8,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
-const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-2 py-0.5 text-white";
+const CLS_PRIZE_PILL = "inline-flex items-center rounded-full bg-fuchsia-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
 import { BaseListingCard, Button, Div, Row, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 

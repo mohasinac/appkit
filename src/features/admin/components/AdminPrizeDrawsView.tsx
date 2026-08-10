@@ -7,7 +7,7 @@ import { Pencil } from "lucide-react";
 import { Badge, Button, FilterChipGroup, ListingLayout, Span, Text, TextLink } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { ADMIN_PRODUCT_STATUS_TABS } from "../constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import {
@@ -141,14 +141,14 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       return ["listingType==prize-draw", status].filter(Boolean).join(",");
     },
     getRowHref: (row) => String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id)),
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "delete",
-        label: ACTIONS.ADMIN["delete-prize-draw"].label,
-        variant: "secondary",
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ADMIN_BULK_ACTIONS.prizeDraws.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        destructive: ROW_ACTION_META[id].destructive,
         onClick: () => selection.clearSelection(),
-      },
-    ],
+      })),
     renderRowActions: (row) => (
       <Button variant="ghost" size="sm" asChild>
         <TextLink href={String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))} aria-label="Edit">

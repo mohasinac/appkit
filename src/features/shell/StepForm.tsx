@@ -108,7 +108,7 @@ export function StepIndicator({
               disabled={!isDone && !isActive}
               onClick={() => isDone && onStepClick?.(i)}
               className={classNames(
-                "flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors",
+                "flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] rounded-lg text-[length:var(--appkit-text-sm)] transition-colors",
                 isActive
                   ? "font-semibold text-[var(--appkit-color-primary)]"
                   : isDone
@@ -125,7 +125,7 @@ export function StepIndicator({
                 )}
               <Span
                 className={classNames(
-                  "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2",
+                  "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[length:var(--appkit-text-xs)] font-bold border-2",
                   hasError
                     ? "border-[var(--appkit-color-error)] bg-[var(--appkit-color-error)] text-white"
                     : isActive

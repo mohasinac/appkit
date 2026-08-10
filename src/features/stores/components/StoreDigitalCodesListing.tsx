@@ -54,7 +54,7 @@ export function StoreDigitalCodesListing({ storeId, initialData }: StoreDigitalC
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
 
   return (
     <Div className="min-h-[200px]">

@@ -18,13 +18,13 @@ function randomId() {
   return Math.random().toString(36).slice(2, 9);
 }
 
-const CLS_STEP = "space-y-4 rounded-lg border-2 p-6";
+const CLS_STEP = "space-y-4 rounded-lg border-2 p-[var(--appkit-space-6)]";
 const CLS_IMG_WRAP = "relative w-full overflow-hidden rounded-lg";
-const CLS_INPUT = "rounded border-2 px-3 py-2 text-sm outline-none";
-const CLS_ERROR_BANNER = "rounded border border-error bg-error-surface px-4 py-2 text-sm font-bold text-error";
-const CLS_SUCCESS_BANNER = "rounded border border-success bg-success-surface px-4 py-2 text-sm font-bold text-success";
-const CLS_SUCCESS_TEXT = "text-xs font-medium text-success";
-const CLS_DELETE_PIN = "shrink-0 rounded p-1 text-xs text-error hover:bg-error-surface";
+const CLS_INPUT = "rounded border-2 px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] outline-none";
+const CLS_ERROR_BANNER = "rounded border border-error bg-error-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-bold text-error";
+const CLS_SUCCESS_BANNER = "rounded border border-success bg-success-surface px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-bold text-success";
+const CLS_SUCCESS_TEXT = "text-[length:var(--appkit-text-xs)] font-medium text-success";
+const CLS_DELETE_PIN = "shrink-0 rounded p-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] text-error hover:bg-error-surface";
 const STY_BORDER_INK = "2px solid var(--border-ink)";
 const STY_CENTERED = "translate(-50%, -50%)";
 
@@ -344,7 +344,7 @@ export function CharacterHotspotForm({
                 type="button"
                 onClick={() => setStep("review")}
                 variant="ghost"
-                className="px-4 py-2 text-sm font-medium rounded transition-opacity hover:opacity-70"
+                className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium rounded transition-opacity hover:opacity-70"
                 style={{
                   background: "transparent",
                   color: "var(--color-black)",
@@ -546,7 +546,7 @@ export function CharacterHotspotForm({
               type="button"
               onClick={() => setStep("image")}
               variant="ghost"
-              className="px-4 py-2 text-sm font-medium rounded transition-opacity hover:opacity-70"
+              className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium rounded transition-opacity hover:opacity-70"
               style={{ background: "transparent", color: "var(--color-black)" }}
             >
               ← Back
@@ -557,7 +557,7 @@ export function CharacterHotspotForm({
                   type="button"
                   onClick={() => setStep("review")}
                   variant="outline"
-                  className="px-4 py-2 text-sm font-bold rounded transition-opacity"
+                  className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-bold rounded transition-opacity"
                   style={{
                     background: "var(--surface-warm)",
                     color: "var(--color-black)",
@@ -648,7 +648,7 @@ export function CharacterHotspotForm({
               rows={3}
               value={draftDescription}
               onChange={(e) => setDraftDescription(e.target.value)}
-              className="resize-none rounded border-2 px-3 py-2 text-sm outline-none"
+              className="resize-none rounded border-2 px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] outline-none"
               style={{
                 borderColor: "var(--border-ink)",
                 background: "var(--surface-elevated)",
@@ -746,7 +746,7 @@ export function CharacterHotspotForm({
               type="button"
               onClick={() => setStep("place")}
               variant="ghost"
-              className="px-4 py-2 text-sm font-medium rounded transition-opacity hover:opacity-70"
+              className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium rounded transition-opacity hover:opacity-70"
               style={{ background: "transparent", color: "var(--color-black)" }}
             >
               ← Back
@@ -974,7 +974,7 @@ export function CharacterHotspotForm({
                 setStep("place");
               }}
               variant="outline"
-              className="px-4 py-2 text-sm font-bold rounded transition-opacity"
+              className="px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-bold rounded transition-opacity"
               style={{
                 background: "var(--surface-warm)",
                 color: "var(--color-black)",

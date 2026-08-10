@@ -140,9 +140,9 @@ export interface AppLayoutShellProps {
 
 import { OVERLAY_FALLBACK_COLOR, SEED_DARK_BG as DEFAULT_DARK_BG, SEED_LIGHT_BG as DEFAULT_LIGHT_BG } from "./background-seed-defaults";
 
-const CLS_STAT_BOX = "flex flex-col items-center gap-1 p-2 bg-[var(--appkit-color-surface)] rounded-lg text-center";
-const CLS_STAT_LABEL = "text-xs text-[var(--appkit-color-text-muted)]";
-const CLS_LOGOUT_BTN = "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-error transition-colors hover:bg-error-surface hover:text-error dark:text-error dark:hover:bg-error-surface dark:hover:text-error";
+const CLS_STAT_BOX = "flex flex-col items-center gap-[var(--appkit-space-1)] p-[var(--appkit-space-2)] bg-[var(--appkit-color-surface)] rounded-lg text-center";
+const CLS_STAT_LABEL = "text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]";
+const CLS_LOGOUT_BTN = "flex w-full items-center gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-error transition-colors hover:bg-error-surface hover:text-error dark:text-error dark:hover:bg-error-surface dark:hover:text-error";
 
 /** Collapsible accordion section for the public sidebar. */
 function CollapsibleNavGroup({
@@ -158,7 +158,7 @@ function CollapsibleNavGroup({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
+        className="flex w-full items-center justify-between px-[var(--appkit-space-1)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-semibold uppercase tracking-wider text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
       >
         <Span>{title}</Span>
         <svg
@@ -210,7 +210,7 @@ function CollapsibleSidebarSection({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
+        className="flex w-full items-center justify-between px-[var(--appkit-space-1)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-semibold uppercase tracking-wider text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
       >
         <Span>{section.title}</Span>
         <svg
@@ -295,7 +295,7 @@ function SidebarUserHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="flex-shrink-0 rounded-full p-2 text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="flex-shrink-0 rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -320,7 +320,7 @@ function SidebarGuestHeader({
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="rounded-full p-2 text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
+        className="rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-200 hover:text-zinc-900 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-zinc-100 transition-all hover:rotate-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -395,7 +395,7 @@ function SidebarContent({
   };
 
   const navItemClass =
-    "flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
+    "flex items-center gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
 
   const normalizedSections: AppLayoutShellSidebarSection[] = hasSections
     ? (sidebarSections as AppLayoutShellSidebarSection[])
@@ -413,7 +413,7 @@ function SidebarContent({
               href={action.href}
               variant="none"
               className={[
-                "block w-full rounded-lg px-3 py-2.5 text-center text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm",
+                "block w-full rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2-5)] text-center text-[length:var(--appkit-text-sm)] font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm",
                 action.variant === "outline"
                   ? "border border-zinc-300 text-zinc-700 hover:bg-zinc-50 border-[var(--appkit-color-border)] text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-elevated)]"
                   : "bg-primary text-white hover:bg-primary-600 dark:bg-primary dark:hover:bg-primary-600 btn-glow",
@@ -505,7 +505,7 @@ function SidebarContent({
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-50 hover:text-primary-800"
+              className="flex w-full items-center gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-50 hover:text-primary-800"
             >
               <Span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</Span>
               {activeThemeName}
@@ -730,7 +730,7 @@ export function AppLayoutShell({
             id="main-content"
             className={`w-full flex-1 flex flex-col ${hasBottomActions ? "mb-28" : "mb-16"} md:mb-0`}
           >
-            <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-5 md:px-6 lg:px-8"}`}>
+            <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
               {children}
             </Div>
           </Main>

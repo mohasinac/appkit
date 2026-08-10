@@ -6,8 +6,7 @@ import React, { useMemo } from "react";
 import { FilterChipGroup, Heading, ListingLayout, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -119,25 +118,25 @@ export function AdminFaqsView({
         label: "Add FAQ",
         onClick: ({ openCreatePanel }) => openCreatePanel(),
       },
-      buildBulkActions: (selection) =>
-        [
-          ...(onBulkArchive
-            ? [
-                buildBulkAction(ACTIONS.ADMIN["archive-faq"], async () => {
-                  await onBulkArchive(selection.selectedIds);
-                  selection.clearSelection();
-                }),
-              ]
-            : []),
-          ...(onBulkDelete
-            ? [
-                buildBulkAction(ACTIONS.ADMIN["delete-faq"], async () => {
-                  await onBulkDelete(selection.selectedIds);
-                  selection.clearSelection();
-                }),
-              ]
-            : []),
-        ] satisfies BulkActionItem[],
+      // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+      buildBulkActions: (selection) => {
+        const handlers: Partial<Record<(typeof ADMIN_BULK_ACTIONS.faqs)[number], () => Promise<void>>> = {
+          [ROW_ACTION_ID.ARCHIVE]: onBulkArchive
+            ? async () => { await onBulkArchive(selection.selectedIds); selection.clearSelection(); }
+            : undefined,
+          [ROW_ACTION_ID.DELETE]: onBulkDelete
+            ? async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); }
+            : undefined,
+        };
+        return ADMIN_BULK_ACTIONS.faqs
+          .filter((id) => handlers[id])
+          .map((id) => ({
+            id,
+            label: ROW_ACTION_META[id].label,
+            destructive: ROW_ACTION_META[id].destructive,
+            onClick: handlers[id]!,
+          })) satisfies BulkActionItem[];
+      },
       renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
         <FilterChipGroup
           label="Status"

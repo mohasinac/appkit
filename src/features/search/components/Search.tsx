@@ -122,7 +122,7 @@ function SuggestionItem({
         variant="ghost"
         onClick={() => onSelect(suggestion)}
         onMouseEnter={() => onHover(itemIndex)}
-        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-[var(--appkit-color-border)] last:border-b-0 ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
+        className={`w-full flex items-center gap-[var(--appkit-space-3)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-left transition-colors border-b border-[var(--appkit-color-border)] last:border-b-0 ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
       >
         <Span size="sm">{typeIcons[suggestion.type]}</Span>
         <Div className="flex-1 min-w-0">
@@ -330,7 +330,7 @@ export function Search({
               router.push(link.href);
             }}
             onMouseEnter={() => setActiveIndex(index)}
-            className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-[var(--appkit-color-border)] ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
+            className={`w-full flex items-center gap-[var(--appkit-space-3)] px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-left transition-colors border-b border-[var(--appkit-color-border)] ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
           >
             <Icon className={CLS_ICON_ROW} />
             <Text size="sm" className={CLS_TRUNCATE}>
@@ -447,7 +447,7 @@ export function Search({
             value={selectedType}
             onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
             aria-label={labels.resourceTypeLabel ?? "Search in"}
-            className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
+            className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
           >
             {resourceTypes.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -515,7 +515,7 @@ export function Search({
                     variant="ghost"
                     onClick={() => handleSuggestionClick(suggestion)}
                     onMouseEnter={() => setActiveIndex(itemIndex)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-[var(--appkit-color-border)] ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
+                    className={`w-full flex items-center gap-[var(--appkit-space-3)] px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-left transition-colors border-b border-[var(--appkit-color-border)] ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
                   >
                     <Span size="sm">
                       {typeIcons[suggestion.type]}
@@ -547,7 +547,7 @@ export function Search({
                   setIsInlineOpen(false);
                 }}
                 onMouseEnter={() => setActiveIndex(inlineItems.length - 1)}
-                className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === inlineItems.length - 1 ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
+                className={`w-full flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-left transition-colors ${activeIndex === inlineItems.length - 1 ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
               >
                 <svg
                   className={CLS_ICON_ROW}
@@ -672,7 +672,7 @@ export function Search({
               value={selectedType}
               onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
               aria-label={labels.resourceTypeLabel ?? "Search in"}
-              className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
+              className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
             >
               {resourceTypes.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -706,7 +706,7 @@ export function Search({
           <Button rounded="xl" 
             variant="ghost"
             onClick={() => onClose?.()}
-            className="p-2.5 md:p-3 transition-colors text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:text-zinc-700 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] flex-shrink-0"
+            className="p-[var(--appkit-space-2-5)] md:p-[var(--appkit-space-3)] transition-colors text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] hover:text-zinc-700 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] flex-shrink-0"
             aria-label={labels.closeAriaLabel}
           >
             <svg
@@ -755,7 +755,7 @@ export function Search({
                             router.push(link.href);
                           }}
                           onMouseEnter={() => setActiveIndex(itemIndex)}
-                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-[var(--appkit-color-border)] last:border-b-0 ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
+                          className={`w-full flex items-center gap-[var(--appkit-space-3)] px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-left transition-colors border-b border-[var(--appkit-color-border)] last:border-b-0 ${isActive ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}`}
                         >
                           <Icon className={CLS_ICON_ROW} />
                           <Text size="sm" weight="medium">
@@ -799,7 +799,7 @@ export function Search({
                   variant="ghost"
                   onClick={handleOverlaySearch}
                   onMouseEnter={() => setActiveIndex(overlayItems.length - 1)}
-                  className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === overlayItems.length - 1 ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}${suggestions.length > 0 ? " border-t border-[var(--appkit-color-border)]" : ""}`}
+                  className={`w-full flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-left transition-colors ${activeIndex === overlayItems.length - 1 ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)]" : CLS_HOVER_ROW}${suggestions.length > 0 ? " border-t border-[var(--appkit-color-border)]" : ""}`}
                 >
                   <svg
                     className={CLS_ICON_ROW}

@@ -8,7 +8,7 @@ import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -96,35 +96,28 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: "mark-shipped",
-        label: ACTIONS.ADMIN["mark-shipped"].label,
-        variant: "secondary",
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] => {
+      const statusByAction: Record<(typeof ADMIN_BULK_ACTIONS.orders)[number], string> = {
+        [ROW_ACTION_ID.MARK_SHIPPED]: "shipped",
+        [ROW_ACTION_ID.MARK_DELIVERED]: "delivered",
+        [ROW_ACTION_ID.CANCEL]: "cancelled",
+      };
+      const variantByAction: Record<(typeof ADMIN_BULK_ACTIONS.orders)[number], "secondary" | "primary" | "danger"> = {
+        [ROW_ACTION_ID.MARK_SHIPPED]: "secondary",
+        [ROW_ACTION_ID.MARK_DELIVERED]: "primary",
+        [ROW_ACTION_ID.CANCEL]: "danger",
+      };
+      return ADMIN_BULK_ACTIONS.orders.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        variant: variantByAction[id],
         onClick: () => {
-          for (const id of selection.selectedIds) void handleQuickStatus(id, "shipped");
+          for (const rowId of selection.selectedIds) void handleQuickStatus(rowId, statusByAction[id]);
           selection.clearSelection();
         },
-      },
-      {
-        id: "mark-delivered",
-        label: ACTIONS.ADMIN["mark-delivered"].label,
-        variant: "primary",
-        onClick: () => {
-          for (const id of selection.selectedIds) void handleQuickStatus(id, "delivered");
-          selection.clearSelection();
-        },
-      },
-      {
-        id: "mark-cancelled",
-        label: ACTIONS.ADMIN["cancel-order"].label,
-        variant: "danger",
-        onClick: () => {
-          for (const id of selection.selectedIds) void handleQuickStatus(id, "cancelled");
-          selection.clearSelection();
-        },
-      },
-    ],
+      }));
+    },
     renderRowActions: (row) => (
       <QuickEditMenu
         actions={[

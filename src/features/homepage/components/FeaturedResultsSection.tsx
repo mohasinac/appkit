@@ -33,7 +33,7 @@ export function FeaturedResultsSection({
   className = "",
 }: FeaturedResultsSectionProps) {
   const pillCls =
-    "inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-primary-700 backdrop-blur-sm dark:text-primary-400";
+    "inline-flex items-center gap-[var(--appkit-space-2)] rounded-full border border-primary-500/30 bg-primary-500/10 px-[var(--appkit-space-5)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-medium uppercase tracking-[0.2em] text-primary-700 backdrop-blur-sm dark:text-primary-400";
 
   if (!items.length) return null;
 

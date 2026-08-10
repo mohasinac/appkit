@@ -1,5 +1,6 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
+import { ROUNDED_MAP, type RoundedKey } from "./surface-tokens";
 
 const BASE = "appkit-icon-button";
 
@@ -23,6 +24,8 @@ export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
   icon?: React.ReactNode;
   size?: keyof typeof SIZES;
   variant?: keyof typeof VARIANTS;
+  /** Border radius — replaces consumer `rounded-*` className. */
+  rounded?: RoundedKey;
 }
 
 /**
@@ -38,6 +41,7 @@ export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 export function IconButton({
   size = "md",
   variant = "ghost",
+  rounded,
   className = "",
   icon,
   children,
@@ -53,7 +57,7 @@ export function IconButton({
   return (
     <button
       type="button"
-      className={twMerge(BASE, SIZES[size], VARIANTS[variant], className)}
+      className={twMerge(BASE, SIZES[size], VARIANTS[variant], rounded ? ROUNDED_MAP[rounded] : "", className)}
       {...props}
     >
       {icon ?? children}

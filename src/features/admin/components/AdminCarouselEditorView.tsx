@@ -14,12 +14,12 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { JsonValue, JsonObject } from "../../../schemas/types";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
-const CLS_PANEL = "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 space-y-3";
+const CLS_PANEL = "rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] space-y-3";
 const CLS_ROW_BETWEEN = "flex items-center justify-between";
-const CLS_SECTION_HEADING = "text-sm font-semibold text-[var(--appkit-color-text)]";
+const CLS_SECTION_HEADING = "text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)]";
 
 import type {
   CarouselBackground,

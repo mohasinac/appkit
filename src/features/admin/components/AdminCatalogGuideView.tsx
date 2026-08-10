@@ -3,7 +3,7 @@ import { Package, FolderTree, Tag, Star, AlertTriangle } from "lucide-react";
 import { Alert, Code, Div, Heading, Li, Row, Section, Span, Stack, Text, Ul } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
-const CLS_CODE = "text-xs bg-amber-100 dark:bg-amber-900/30 px-1 rounded";
+const CLS_CODE = "text-[length:var(--appkit-text-xs)] bg-amber-100 dark:bg-amber-900/30 px-[var(--appkit-space-1)] rounded";
 
 export function AdminCatalogGuideView() {
   return (

@@ -15,7 +15,7 @@ import {
 const SECTION_LABEL_CLASS =
   "text-[var(--appkit-font-size-2xs,11px)] font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)] mb-2";
 const ROW_BASE_CLASS =
-  "flex items-start gap-2 rounded-lg border px-3 py-2 text-xs cursor-pointer transition-colors";
+  "flex items-start gap-[var(--appkit-space-2)] rounded-lg border px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-xs)] cursor-pointer transition-colors";
 const ROW_CHECKED_CLASS =
   "border-primary bg-primary/5 dark:bg-primary/10";
 const ROW_DISABLED_CLASS =
@@ -23,9 +23,9 @@ const ROW_DISABLED_CLASS =
 const ROW_DEFAULT_CLASS =
   "border-[var(--appkit-color-border)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]";
 const OVER_LIMIT_BANNER_CLASS =
-  "rounded-lg border border-error/20 bg-error-surface px-3 py-2 text-xs text-error";
+  "rounded-lg border border-error/20 bg-error-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-xs)] text-error";
 const EMPTY_STATE_CLASS =
-  "rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-3 py-4 text-xs text-[var(--appkit-color-text-muted)] text-center";
+  "rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-4)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] text-center";
 
 export interface ProductFeaturesSelectorProps {
   /** Selected feature IDs. */

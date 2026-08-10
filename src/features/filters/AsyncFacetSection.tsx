@@ -6,7 +6,7 @@ import type { FacetOption } from "./FilterFacetSection";
 import type { AsyncPage } from "../../ui/components/PaginatedSelect";
 
 const CLS_BADGE_COUNT = "inline-flex items-center justify-center w-5 h-5 rounded-full bg-success-surface dark:bg-success-surface text-success dark:text-success ring-1 ring-success/20";
-const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-0 text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors rounded-full";
+const CLS_CLEAR_ICON = "inline-flex items-center justify-center w-5 h-5 p-[var(--appkit-space-0)] text-[var(--appkit-color-text-muted)] hover:text-error dark:hover:text-error hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors rounded-full";
 
 export interface AsyncFacetSectionProps {
   title: string;
@@ -93,7 +93,7 @@ export function AsyncFacetSection({
   return (
     <Div
       className={cn(
-        "p-4 border-b border-[var(--appkit-color-border)] last:border-b-0",
+        "p-[var(--appkit-space-4)] border-b border-[var(--appkit-color-border)] last:border-b-0",
         className,
       )}
     >
@@ -104,7 +104,7 @@ export function AsyncFacetSection({
           onClick={() => setCollapsed((c) => !c)}
           variant="ghost"
           size="sm"
-          className="flex-1 justify-between text-sm font-semibold text-[var(--appkit-color-text)] py-1 hover:opacity-80 transition-opacity"
+          className="flex-1 justify-between text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] py-[var(--appkit-space-1)] hover:opacity-80 transition-opacity"
           aria-expanded={!collapsed}
         >
           <Row as={Span} gap="xs">
@@ -173,7 +173,7 @@ export function AsyncFacetSection({
           placeholder="Search…"
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
-          className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-2.5 py-1.5 text-xs text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+          className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
         />
       </Div>
 

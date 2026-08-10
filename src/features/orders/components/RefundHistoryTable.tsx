@@ -12,7 +12,7 @@ import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-co
 import type { OrderDocument, OrderRefundEvent } from "../schemas";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 export interface RefundHistoryTableProps {

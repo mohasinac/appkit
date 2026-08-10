@@ -3,14 +3,14 @@ import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { THEMED_BG_PRIMARY, THEMED_BG_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { Caption, Div, Heading, Row, Section, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 const __P = {
-  p5: "p-5",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const CLS_RATE_CELL = "py-3 px-4 font-semibold text-violet-700 dark:text-violet-400";
+const CLS_RATE_CELL = "py-[var(--appkit-space-3)] px-[var(--appkit-space-4)] font-semibold text-violet-700 dark:text-violet-400";
 const CLS_HIGHLIGHT = "font-bold text-green-700 dark:text-green-400";
 
 export interface FeesViewProps {

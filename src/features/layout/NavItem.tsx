@@ -40,7 +40,7 @@ export function NavItem({
       <Link
         href={href}
         className={[
-          "relative flex h-full w-full flex-col items-center justify-center gap-1 py-1 text-center transition-colors",
+          "relative flex h-full w-full flex-col items-center justify-center gap-[var(--appkit-space-1)] py-[var(--appkit-space-1)] text-center transition-colors",
           stateClass,
           className,
         ]
@@ -66,7 +66,7 @@ export function NavItem({
       <Link
         href={href}
         className={[
-          "flex items-center gap-2 px-3 py-1 rounded-full border border-primary-700/30 dark:border-primary/30 bg-primary-700/5 dark:bg-primary/5 text-[var(--appkit-color-text)] text-sm font-medium transition-all hover:bg-primary-700/10 dark:hover:bg-primary/10",
+          "flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] rounded-full border border-primary-700/30 dark:border-primary/30 bg-primary-700/5 dark:bg-primary/5 text-[var(--appkit-color-text)] text-[length:var(--appkit-text-sm)] font-medium transition-all hover:bg-primary-700/10 dark:hover:bg-primary/10",
           className,
         ]
           .filter(Boolean)
@@ -82,7 +82,7 @@ export function NavItem({
     <Link
       href={href}
       className={[
-        "flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 lg:px-5 lg:py-3 rounded-lg text-sm md:text-base font-medium transition-all duration-200",
+        "flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] md:px-[var(--appkit-space-4)] md:py-[var(--appkit-space-2-5)] lg:px-[var(--appkit-space-5)] lg:py-[var(--appkit-space-3)] rounded-lg text-[length:var(--appkit-text-sm)] md:text-[length:var(--appkit-text-base)] font-medium transition-all duration-200",
         stateClass,
         className,
       ]

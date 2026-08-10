@@ -14,8 +14,8 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-const CLS_DEFAULT_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border border-warning dark:border-warning px-2 py-0.5";
-const CLS_DELETE_BTN = "rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
+const CLS_DEFAULT_PILL = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border border-warning dark:border-warning px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)]";
+const CLS_DELETE_BTN = "rounded-lg p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -122,7 +122,7 @@ function AddressCard({
                 type="button"
                 onClick={onEdit}
                 title="Edit address"
-                className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
+                className="rounded-lg p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
               >
                 <Pencil className="h-4 w-4" />
               </button>

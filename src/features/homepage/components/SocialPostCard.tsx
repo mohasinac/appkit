@@ -2,7 +2,7 @@ import type { SocialPost, SocialPlatform } from "../schemas";
 import { Anchor, Div, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 // --- Platform brand colours & icons ------------------------------------------

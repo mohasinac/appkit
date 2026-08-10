@@ -83,7 +83,7 @@ export function AddressCard({
             onClick={() => onEdit(address)}
             variant="ghost"
             size="sm"
-            className="text-xs font-medium text-primary hover:underline"
+            className="text-[length:var(--appkit-text-xs)] font-medium text-primary hover:underline"
           >
             {labels.edit ?? "Edit"}
           </Button>
@@ -93,7 +93,7 @@ export function AddressCard({
             onClick={() => onDelete(address.id)}
             variant="ghost"
             size="sm"
-            className="text-xs font-medium text-error hover:underline"
+            className="text-[length:var(--appkit-text-xs)] font-medium text-error hover:underline"
           >
             {labels.delete ?? "Delete"}
           </Button>
@@ -103,7 +103,7 @@ export function AddressCard({
             onClick={() => onSetDefault(address.id)}
             variant="outline"
             size="sm"
-            className="ml-auto text-xs font-medium"
+            className="ml-auto text-[length:var(--appkit-text-xs)] font-medium"
           >
             {labels.setDefault ?? "Set default"}
           </Button>

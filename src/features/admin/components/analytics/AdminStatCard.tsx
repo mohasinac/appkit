@@ -64,7 +64,7 @@ export function AdminStatCard({
         {icon && (
           <DynamicBgDiv
             background={resolvedGradient}
-            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-xl"
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-[length:var(--appkit-text-xl)]"
           >
             {icon}
           </DynamicBgDiv>

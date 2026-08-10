@@ -5,7 +5,7 @@ import type { AdminListingScaffoldRow } from "./DataListingView";
 import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -88,7 +88,7 @@ function AdminCardItem({
       <Row
         gap="sm"
         className={[
-          "px-4 py-3 cursor-pointer transition-colors hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/50",
+          "px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] cursor-pointer transition-colors hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/50",
           selected ? "bg-primary-50/40 dark:bg-primary-900/10" : "",
         ].filter(Boolean).join(" ")}
         onClick={handleClick}

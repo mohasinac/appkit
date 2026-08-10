@@ -4,7 +4,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import React, { useState } from "react";
 import { Button, Div, Row, Span, Stack, Text } from "../../../../ui";
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 export interface RevealedCode {

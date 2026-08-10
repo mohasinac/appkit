@@ -13,7 +13,7 @@ import { sortBy } from "../../../constants/sort";
 import { BLOG_FIELDS } from "../../../constants/field-names";
 
 const __P = {
-  p5: "p-5",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 const __O = {

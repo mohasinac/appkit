@@ -18,6 +18,7 @@ import {
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
+import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 
 interface DigitalCodeRow {
   id: string;
@@ -155,18 +156,18 @@ export function SellerDigitalCodesView({
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: () => "listingType==digital-code",
     primaryAction: { label: "New Digital Code", onClick: () => handleCreate() },
+    // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
     buildBulkActions: onBulkDelete
-      ? (selection): BulkActionItem[] => [
-          {
-            id: "bulk-delete",
-            label: ACTIONS.STORE["delete-listing"].label,
-            variant: "danger",
+      ? (selection): BulkActionItem[] =>
+          SELLER_BULK_ACTIONS.digitalCodes.map((id) => ({
+            id,
+            label: ROW_ACTION_META[id].label,
+            destructive: ROW_ACTION_META[id].destructive,
             onClick: async () => {
               await onBulkDelete(selection.selectedIds);
               selection.clearSelection();
             },
-          },
-        ]
+          }))
       : undefined,
     renderRowActions: (row) => (
       <RowActionMenu

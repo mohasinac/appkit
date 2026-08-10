@@ -15,7 +15,7 @@ import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const FILTER_KEYS = ["condition", "brand", "minPrice", "maxPrice"];

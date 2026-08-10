@@ -45,7 +45,7 @@ export function BottomNavItem({
         href={href}
         aria-label={label}
         aria-current={isActive ? "page" : undefined}
-        className={`relative flex flex-col items-center justify-center gap-0.5 h-full w-full min-h-[44px] transition-colors ${
+        className={`relative flex flex-col items-center justify-center gap-[var(--appkit-space-0-5)] h-full w-full min-h-[44px] transition-colors ${
  isActive
  ? "text-primary-600 dark:text-secondary-400"
  : "text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)]"
@@ -56,7 +56,7 @@ export function BottomNavItem({
           {badge != null && badge > 0 && (
             <Span layout="flex-center" color="inverse" 
               aria-label={`${badge} items`}
-              className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 text-[10px] bg-secondary-500 leading-none" rounded="full" weight="bold"
+              className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-[var(--appkit-space-1)] text-[10px] bg-secondary-500 leading-none" rounded="full" weight="bold"
             >
               {badge > 99 ? "99+" : badge}
             </Span>

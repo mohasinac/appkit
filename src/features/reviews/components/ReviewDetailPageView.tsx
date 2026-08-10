@@ -32,7 +32,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
               </Text>
               <Link
                 href={String(ROUTES.PUBLIC.REVIEWS)}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+                className="inline-flex items-center gap-[var(--appkit-space-2)] rounded-lg bg-primary px-[var(--appkit-space-5)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-medium text-white hover:bg-primary-600 transition-colors"
               >
                 ← Back to Reviews
               </Link>

@@ -80,7 +80,7 @@ export function FooterLayout({
       {showTrustBar && visibleTrustItems.length > 0 && (
               <Div border="subtle" className="border-b" padding="y-xl">
           <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
-            <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
+            <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-[var(--appkit-space-10)]">
               {visibleTrustItems.map((item, i) => (
                 <Li key={item.id ?? String(i)}>
                   <Row textSize="sm" gap="sm" className="min-w-[160px]">
@@ -105,8 +105,8 @@ export function FooterLayout({
         </Div>
       )}
 
-      <Div paddingX="x-page" className="container mx-auto max-w-[1920px] lg:py-14" padding="y-2xl">
-        <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
+      <Div paddingX="x-page" className="container mx-auto max-w-[1920px] lg:py-[var(--appkit-space-14)]" padding="y-2xl">
+        <Div className="grid grid-cols-1 lg:grid-cols-5 gap-[var(--appkit-space-10)] lg:gap-[var(--appkit-space-16)]">
           {/* Brand column */}
           <Stack className="lg:col-span-2" gap="md">
             <Heading level={5} size="xl" weight="bold" color="primary">
@@ -142,7 +142,7 @@ export function FooterLayout({
           </Stack>
 
           {/* Link groups — desktop: columns, mobile: accordions */}
-          <Div className={`lg:col-span-3 grid grid-cols-1 gap-0 lg:gap-8 ${
+          <Div className={`lg:col-span-3 grid grid-cols-1 gap-[var(--appkit-space-0)] lg:gap-[var(--appkit-space-8)] ${
  linkGroups.length <= 3 ? "lg:grid-cols-3" :
  linkGroups.length === 4 ? "lg:grid-cols-4" :
  "lg:grid-cols-5"
@@ -154,7 +154,7 @@ export function FooterLayout({
                   type="button"
                   variant="ghost"
                   onClick={() => toggleGroup(idx)}
-                  className="w-full justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 border-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text)] dark:hover:text-white lg:hidden"
+                  className="w-full justify-between border-b border-zinc-200 py-[var(--appkit-space-3)] text-left text-[length:var(--appkit-text-sm)] font-semibold text-zinc-800 transition-colors hover:text-zinc-950 border-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text)] dark:hover:text-white lg:hidden"
                   aria-expanded={!!openGroups[idx]}
                 >
                   {group.heading}
@@ -165,13 +165,13 @@ export function FooterLayout({
 
                 {/* Mobile content */}
                 <Ul
-                  className={`lg:hidden overflow-hidden transition-all duration-200 ${openGroups[idx] ? "max-h-96 py-3" : "max-h-0"} space-y-2.5`}
+                  className={`lg:hidden overflow-hidden transition-all duration-200 ${openGroups[idx] ? "max-h-96 py-[var(--appkit-space-3)]" : "max-h-0"} space-y-2.5`}
                 >
                   {group.links.map((link) => (
                     <Li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
+                        className="text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -189,7 +189,7 @@ export function FooterLayout({
                       <Li key={link.href}>
                         <Link
                           href={link.href}
-                          className="text-sm text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
+                          className="text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors"
                         >
                           {link.label}
                         </Link>
@@ -214,7 +214,7 @@ export function FooterLayout({
                   <Li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-xs text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors underline-offset-2 hover:underline"
+                      className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] hover:text-primary dark:hover:text-secondary transition-colors underline-offset-2 hover:underline"
                     >
                       {link.label}
                     </Link>

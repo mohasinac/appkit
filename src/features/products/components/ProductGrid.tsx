@@ -19,17 +19,17 @@ import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_BADGE_NEW = "rounded-full bg-error-surface px-2 py-0.5 text-[10px] text-white shadow-sm";
-const CLS_BADGE_SALE = "rounded-full bg-success-surface px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
-const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
-const CLS_BADGE_LIMITED = "rounded-full bg-info-surface px-2 py-0.5 text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_NEW = "rounded-full bg-error-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] text-white shadow-sm";
+const CLS_BADGE_SALE = "rounded-full bg-success-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_TRENDING = "rounded-full bg-indigo-600 px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
+const CLS_BADGE_LIMITED = "rounded-full bg-info-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[10px] font-bold text-white shadow-sm";
 const CLS_HEART_ACTIVE = "bg-error-surface text-white hover:bg-error-surface";
 const CLS_HEART_IDLE = "bg-white/90 bg-[var(--appkit-color-surface-elevated)]/90 text-[var(--appkit-color-text-muted)] hover:text-error hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-elevated)]";
 const CLS_STAR = "text-[11px] text-warning";
@@ -371,7 +371,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                     e.preventDefault();
                     onBuyNow(product);
                   }}
-                  className="justify-center text-xs btn-glow"
+                  className="justify-center text-[length:var(--appkit-text-xs)] btn-glow"
                 >
                   <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -389,7 +389,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                     e.preventDefault();
                     onAddToCart(product);
                   }}
-                  className="justify-center text-xs"
+                  className="justify-center text-[length:var(--appkit-text-xs)]"
                 >
                   <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3H3m4 10v7a1 1 0 001 1h8a1 1 0 001-1v-7M9 21h6" />
@@ -489,7 +489,7 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
 // --- Grid class maps ---------------------------------------------------------
 
 const GRID_CLASSES: Record<"card", string> = {
-  card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6",
+  card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-6)]",
 };
 
 // --- ProductListRow (list-mode row) ------------------------------------------
@@ -526,7 +526,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       }
       onClick={onClick ? () => onClick(product) : undefined}
       className={[
-        "flex items-center gap-3 p-2 sm:p-3",
+        "flex items-center gap-[var(--appkit-space-3)] p-[var(--appkit-space-2)] sm:p-[var(--appkit-space-3)]",
         "hover:bg-[var(--appkit-color-surface)]/60 transition-colors",
         onClick ? "cursor-pointer" : "",
       ]
@@ -608,7 +608,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             onAddToWishlist(product.id);
           }}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-base leading-none ${isWishlisted ? CLS_HEART_ROSE_ACTIVE : CLS_HEART_ROSE_IDLE}`}
+          className={`flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-[length:var(--appkit-text-base)] leading-none ${isWishlisted ? CLS_HEART_ROSE_ACTIVE : CLS_HEART_ROSE_IDLE}`}
         >
           {isWishlisted ? "♥" : "♡"}
         </Button>

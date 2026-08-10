@@ -11,7 +11,7 @@ import type { SectionCTA } from "../schemas/firestore";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -94,9 +94,9 @@ function CategoryChip({ category }: { category: CategoryItem }) {
 }
 
 const CTA_CLASSES: Record<SectionCTA["variant"], string> = {
-  filled: "rounded-lg bg-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90",
-  outline: "rounded-lg border border-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-[var(--appkit-color-primary)] hover:bg-[var(--appkit-color-primary)]/10",
-  text: "text-sm font-medium text-[var(--appkit-color-primary)] hover:underline",
+  filled: "rounded-lg bg-[var(--appkit-color-primary)] px-[var(--appkit-space-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-semibold text-white hover:opacity-90",
+  outline: "rounded-lg border border-[var(--appkit-color-primary)] px-[var(--appkit-space-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-primary)] hover:bg-[var(--appkit-color-primary)]/10",
+  text: "text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:underline",
 };
 
 function FilterChip({
@@ -113,7 +113,7 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={[
-        "whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+        "whitespace-nowrap rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium transition-colors",
         active
           ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
           : "border-zinc-300 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-primary)] border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
@@ -233,7 +233,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
         {/* Fallback view-more link when no CTA configured */}
         {!cta && viewMoreHref && !isLoading && (
           <Div className="mt-6 text-center">
-            <Link href={viewMoreHref} className="inline-flex items-center gap-1 text-sm font-medium text-[var(--appkit-color-primary)] hover:opacity-80">
+            <Link href={viewMoreHref} className="inline-flex items-center gap-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:opacity-80">
               {viewMoreLabel}
             </Link>
           </Div>

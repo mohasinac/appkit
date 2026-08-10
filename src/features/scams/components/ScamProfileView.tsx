@@ -1,7 +1,7 @@
 import { normalizeError } from "../../../errors/normalize";
 import React from "react";
 
-const CLS_OUTLINE_BTN = "appkit-button appkit-button--outline appkit-button--md flex w-full items-center gap-2";
+const CLS_OUTLINE_BTN = "appkit-button appkit-button--outline appkit-button--md flex w-full items-center gap-[var(--appkit-space-2)]";
 import Link from "next/link";
 import {
   Shield,
@@ -236,14 +236,14 @@ function ScammerCommentsSection({
         {isAuthenticated ? (
           <Link
             href={String(ROUTES.PUBLIC.SCAM_REPORT)}
-            className="text-xs text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
+            className="text-[length:var(--appkit-text-xs)] text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
           >
             Leave a comment
           </Link>
         ) : (
           <Link
             href={commentLoginHref}
-            className="text-xs text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
+            className="text-[length:var(--appkit-text-xs)] text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
           >
             Sign in to comment
           </Link>
@@ -333,7 +333,7 @@ function ScammerActionsColumn({
             ) : (
               <Link
                 href={contestLoginHref}
-                className="appkit-button appkit-button--ghost appkit-button--md flex w-full items-center gap-2"
+                className="appkit-button appkit-button--ghost appkit-button--md flex w-full items-center gap-[var(--appkit-space-2)]"
               >
                 <Flag className="h-4 w-4" />
                 Sign in to contest

@@ -5,7 +5,7 @@ import type { SelectOption } from "../../../ui";
 import type { CustomField, CustomFieldType } from "../schemas/firestore";
 import { MAX_CUSTOM_FIELDS } from "../schemas/firestore";
 
-const CLS_REMOVE = "text-zinc-400 hover:text-error dark:hover:text-error px-2";
+const CLS_REMOVE = "text-zinc-400 hover:text-error dark:hover:text-error px-[var(--appkit-space-2)]";
 
 const TYPE_OPTIONS: SelectOption<CustomFieldType>[] = [
   { value: "text", label: "Text" },
@@ -82,7 +82,7 @@ export function CustomFieldsEditor({
               aria-label={`Custom field ${i + 1} value`}
             />
           ) : (
-            <Div className={showUnit ? "flex gap-1" : ""}>
+            <Div className={showUnit ? "flex gap-[var(--appkit-space-1)]" : ""}>
               <Input
                 type={field.type === "number" ? "number" : "text"}
                 value={field.value}

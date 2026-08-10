@@ -40,7 +40,7 @@ import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -57,9 +57,9 @@ export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "
   allowedTypes?: EventType[];
 }
 
-const CLS_REMOVE_BTN = "text-zinc-400 hover:text-error transition-colors text-lg leading-none px-1 p-0 min-h-0 h-auto rounded-none";
-const CLS_REMOVE_BTN_PX2 = "text-zinc-400 hover:text-error transition-colors px-2 py-1 text-lg leading-none p-0 min-h-0 h-auto rounded-none";
-const CLS_REMOVE_BTN_LG = "text-zinc-400 hover:text-error text-lg leading-none px-2 p-0 min-h-0 h-auto rounded-none";
+const CLS_REMOVE_BTN = "text-zinc-400 hover:text-error transition-colors text-[length:var(--appkit-text-lg)] leading-none px-[var(--appkit-space-1)] p-[var(--appkit-space-0)] min-h-0 h-auto rounded-none";
+const CLS_REMOVE_BTN_PX2 = "text-zinc-400 hover:text-error transition-colors px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-lg)] leading-none p-[var(--appkit-space-0)] min-h-0 h-auto rounded-none";
+const CLS_REMOVE_BTN_LG = "text-zinc-400 hover:text-error text-[length:var(--appkit-text-lg)] leading-none px-[var(--appkit-space-2)] p-[var(--appkit-space-0)] min-h-0 h-auto rounded-none";
 const CLS_RAFFLE_PANEL = "border border-warning bg-warning-surface dark:border-warning dark:bg-warning-surface";
 const CLS_RAFFLE_HEADING = "text-warning dark:text-warning";
 const CLS_RAFFLE_BODY = "text-warning dark:text-warning";

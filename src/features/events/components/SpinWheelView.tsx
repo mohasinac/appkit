@@ -7,10 +7,10 @@ import type { SpinPrize } from "../types";
 
 import { normalizeError } from "../../../errors/normalize";
 const CLS_WHEEL = "relative mx-auto aspect-square w-64 overflow-hidden rounded-full border-4 border-warning bg-[image:var(--appkit-gradient-promotion)]";
-const CLS_PRIZE_BOX = "rounded-xl border border-success bg-success-surface dark:border-success p-4 text-center";
-const CLS_PRIZE_TITLE = "mt-1 text-lg font-bold text-success dark:text-success";
-const CLS_PRIZE_BODY = "mt-2 text-sm text-success dark:text-success";
-const CLS_ERROR_TEXT = "text-sm text-error dark:text-error text-center";
+const CLS_PRIZE_BOX = "rounded-xl border border-success bg-success-surface dark:border-success p-[var(--appkit-space-4)] text-center";
+const CLS_PRIZE_TITLE = "mt-1 text-[length:var(--appkit-text-lg)] font-bold text-success dark:text-success";
+const CLS_PRIZE_BODY = "mt-2 text-[length:var(--appkit-text-sm)] text-success dark:text-success";
+const CLS_ERROR_TEXT = "text-[length:var(--appkit-text-sm)] text-error dark:text-error text-center";
 
 export interface SpinWheelViewProps {
   eventId: string;

@@ -11,7 +11,7 @@ import { placeBidSchema } from "../schemas/bid-input";
 
 import { normalizeError } from "../../../errors/normalize";
 const __P = {
-  p5: "p-5",
+  p5: "p-[var(--appkit-space-5)]",
 } as const;
 
 const BID_ERROR_DISPLAY: Record<string, string> = {

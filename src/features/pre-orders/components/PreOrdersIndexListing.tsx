@@ -23,7 +23,7 @@ import { PREORDER_SORT_OPTIONS } from "../../products/constants/sieve";
 import { useBottomActions } from "../../layout";
 
 const __P = {
-  p3: "p-3",
+  p3: "p-[var(--appkit-space-3)]",
 } as const;
 
 const __O = {
@@ -158,7 +158,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   }, [localCart, showToast]);
 
   const selection = useBulkSelection({ items: preOrders as any[], keyExtractor: (p: any) => p.id });
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-[var(--appkit-space-4)]";
 
   const handleBulkAddToCart = useCallback(() => {
     const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));

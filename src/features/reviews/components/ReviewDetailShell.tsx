@@ -3,24 +3,24 @@ import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useEffect, useCallback } from "react";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-4 hover:border-primary hover:shadow-sm transition-all";
-const CLS_RELATED_LABEL = "text-xs text-[var(--appkit-color-text-faint)] mb-0.5";
-const CLS_RELATED_TITLE = "text-sm font-medium text-[var(--appkit-color-text)] dark:text-white truncate group-hover:text-primary transition-colors";
-const CLS_RATING_PILL = "inline-flex items-center gap-1 rounded-full bg-warning-surface px-3 py-1 text-warning dark:bg-warning-surface dark:text-warning";
+const CLS_RELATED_LINK = "group flex items-center gap-[var(--appkit-space-3)] rounded-xl border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-4)] hover:border-primary hover:shadow-sm transition-all";
+const CLS_RELATED_LABEL = "text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-faint)] mb-0.5";
+const CLS_RELATED_TITLE = "text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text)] dark:text-white truncate group-hover:text-primary transition-colors";
+const CLS_RATING_PILL = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-warning-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-warning dark:bg-warning-surface dark:text-warning";
 const CLS_HELPFUL_ACTIVE = "border-success bg-success-surface text-success dark:border-success cursor-default";
-const CLS_ICON_ORANGE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-warning-surface dark:bg-warning-surface text-xl";
-const CLS_ICON_BLUE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-info-surface dark:bg-info-surface text-xl";
-const CLS_ICON_PURPLE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl";
+const CLS_ICON_ORANGE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-warning-surface dark:bg-warning-surface text-[length:var(--appkit-text-xl)]";
+const CLS_ICON_BLUE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-info-surface dark:bg-info-surface text-[length:var(--appkit-text-xl)]";
+const CLS_ICON_PURPLE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-[length:var(--appkit-text-xl)]";
 const CLS_ICON_PURPLE_BARE = "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30";
 import Link from "next/link";
-import { Div, Grid, Heading, RichText, Row, Section, Span, StarRating, Stack, Text } from "../../../ui";
+import { Button, Div, Grid, Heading, IconButton, RichText, Row, Section, Span, StarRating, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -153,7 +153,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               {reviewerHref ? (
                 <Link
                   href={reviewerHref}
-                  className="text-sm font-semibold text-[var(--appkit-color-text)] dark:text-white hover:text-primary transition-colors"
+                  className="text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] dark:text-white hover:text-primary transition-colors"
                 >
                   {displayName}
                 </Link>
@@ -192,12 +192,16 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             </Heading>
             <Grid gap="xs" className="grid-cols-3 sm:grid-cols-4">
               {images.map((img, i) => (
-                <button
+                <Button
                   key={i}
+                  variant="ghost"
                   type="button"
                   onClick={() => setLightboxIdx(i)}
                   aria-label={`View photo ${i + 1}`}
-                  className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  rounded="xl"
+                  paddingX="none"
+                  paddingY="none"
+                  className="group relative aspect-square overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <MediaImage
                     src={img.thumbnailUrl ?? img.url}
@@ -208,7 +212,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-[rgba(0,0,0,0.3)]">
                     <Span color="inverse" size="xl">🔍</Span>
                   </Row>
-                </button>
+                </Button>
               ))}
             </Grid>
           </Section>
@@ -242,19 +246,26 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </Span>
             )}
           </Div>
-          <button
+          <Button
+            variant="outline"
             type="button"
             onClick={handleVote}
             disabled={voted || voting}
-            className={`ml-auto flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+            gap="sm"
+            rounded="lg"
+            paddingX="md"
+            paddingY="sm"
+            textSize="sm"
+            weight="medium"
+            className={`ml-auto transition-colors ${
  voted
  ? CLS_HELPFUL_ACTIVE
- : "border-neutral-300 border-[var(--appkit-color-border)] text-neutral-700 text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
+ : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
  }`}
           >
             <Span aria-hidden="true">{voted ? "✓" : "👍"}</Span>
             {voted ? "Marked helpful" : voting ? "Saving…" : "Helpful?"}
-          </button>
+          </Button>
         </Section>
 
         {/* Links: Product / Seller / Reviewer */}
@@ -335,14 +346,15 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           aria-label="Image lightbox"
         >
           {/* Close */}
-          <button
+          <IconButton
             type="button"
             onClick={closeLightbox}
             aria-label="Close lightbox"
-            className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors text-xl"
+            variant="ghost"
+            className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-white/10 text-white hover:bg-white/20 text-[length:var(--appkit-text-xl)]"
           >
             ×
-          </button>
+          </IconButton>
 
           {/* Counter */}
           <Div textSize="sm" className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70">
@@ -351,14 +363,15 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
           {/* Prev */}
           {images.length > 1 && (
-            <button
+            <IconButton
               type="button"
               onClick={(e) => { e.stopPropagation(); prevImage(); }}
               aria-label="Previous image"
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition-colors text-2xl"
+              variant="ghost"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/25 text-[length:var(--appkit-text-2xl)]"
             >
               ‹
-            </button>
+            </IconButton>
           )}
 
           {/* Image */}
@@ -367,45 +380,50 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             className="relative h-[85vh] w-[85vw]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* audit-variant-ok: MediaImage has no rounded/shadow prop — this is the primitive's only styling escape hatch */}
             <MediaImage
               src={currentImage.url}
               alt={`Review photo ${lightboxIdx + 1}`}
               size="hero"
               objectFit="contain"
-              className="rounded-lg shadow-2xl"
+              rounded="lg"
+              shadow="2xl"
             />
           </Row>
 
           {/* Next */}
           {images.length > 1 && (
-            <button
+            <IconButton
               type="button"
               onClick={(e) => { e.stopPropagation(); nextImage(); }}
               aria-label="Next image"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition-colors text-2xl"
+              variant="ghost"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/25 text-[length:var(--appkit-text-2xl)]"
             >
               ›
-            </button>
+            </IconButton>
           )}
 
           {/* Thumbnail strip */}
           {images.length > 1 && (
             <Row justify="center" gap="xs" className="absolute bottom-4 left-0 right-0" padding="x-md">
               {images.map((img, i) => (
-                <button
+                <Button
                   key={i}
+                  variant="ghost"
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setLightboxIdx(i); }}
                   aria-label={`Go to image ${i + 1}`}
-                  className={`h-12 w-12 flex-shrink-0 rounded-md overflow-hidden border-2 transition-all ${
+                  rounded="md"
+                  paddingX="none"
+                  paddingY="none"
+                  className={`h-12 w-12 flex-shrink-0 overflow-hidden border-2 transition-all ${
  i === lightboxIdx
  ? "border-white scale-110"
  : "border-transparent opacity-60 hover:opacity-100"
  }`}
                 >
                   <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Thumbnail ${i + 1}`} size="thumbnail" />
-                </button>
+                </Button>
               ))}
             </Row>
           )}
