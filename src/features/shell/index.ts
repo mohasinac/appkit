@@ -1,6 +1,9 @@
 export type { FormShellSection, FormShellProps, UseFormShellResult } from "./FormShell";
 export { FormShell, useFormShell } from "./FormShell";
 
+export type { CommandPaletteGroup, CommandPaletteProps } from "./CommandPalette";
+export { CommandPalette, useCommandPaletteHotkey } from "./CommandPalette";
+
 export type { QuickFieldType, QuickFieldDef, QuickFormDrawerProps } from "./QuickFormDrawer";
 export { QuickFormDrawer } from "./QuickFormDrawer";
 

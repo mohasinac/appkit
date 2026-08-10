@@ -277,9 +277,16 @@ export { OtpInput } from "./ui/components/OtpInput";
 export type { OtpInputProps } from "./ui/components/OtpInput";
 export { DateInput, DateRangeInput } from "./ui/components/DateInput";
 export type { DateInputProps, DateRangeInputProps } from "./ui/components/DateInput";
-// FormShell + context-aware fields (SB-UNI-Y-1)
-export type { FormShellProps, FormShellProviderProps, FormShellStep, FormShellContextValue, UseFormShellStateResult } from "./ui/forms";
-export { FormShell, FormShellProvider, FormShellContext, useFormShell, useFormShellState, applyZodIssues } from "./ui/forms";
+// Form-state provider + context-aware fields (SB-UNI-Y-1). `useFormShell`
+// here is the FormShellContext consumer hook FieldInput/FieldSelect use
+// internally — unrelated to the differently-shaped `useFormShell` exported
+// from features/shell (see index.ts), which just tracks a modal's isDirty
+// flag. The step-wizard `FormShell` *component* this file used to export
+// was dead code (no real JSX callers) and previously shadowed the real
+// wizard component whenever imported from `@mohasinac/appkit/client`
+// specifically; deleted 2026-08-09.
+export type { FormShellProviderProps, FormShellStep, FormShellContextValue, UseFormShellStateResult } from "./ui/forms";
+export { FormShellProvider, FormShellContext, useFormShell, useFormShellState, applyZodIssues } from "./ui/forms";
 export type { FieldInputProps } from "./ui/forms";
 export { FieldInput } from "./ui/forms";
 export type { FieldSelectProps } from "./ui/forms";

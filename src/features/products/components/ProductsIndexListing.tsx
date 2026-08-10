@@ -246,6 +246,11 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         onBulkClear={selection.clearSelection}
         toggles={[
           { label: "Show sold", active: showSold, onChange: (next) => table.set(TABLE_KEYS.SHOW_SOLD, next ? "true" : "") },
+          // Inline quick-filter: the highest-frequency drawer-only facet promoted
+          // to the sticky toolbar so it doesn't require open-drawer → check → Apply
+          // → close for every toggle. The full facet set (category/price/brand/…)
+          // remains in <FilterDrawer> below.
+          { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
         ]}
       />
 

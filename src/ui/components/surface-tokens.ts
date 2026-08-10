@@ -41,70 +41,75 @@ export const SURFACE_MAP = {
 
 export type SurfaceKey = keyof typeof SURFACE_MAP;
 
-/** Resolves a bare spacing step (e.g. `4`, `1.5`) to its themed CSS var arbitrary-value class fragment. */
-const SP = (step: string) => `var(--appkit-space-${step.replace(".", "-")})`;
-
+/**
+ * Every className below is spelled out as a complete string literal — Tailwind's
+ * content scanner reads this source file as plain text (it does not evaluate
+ * JS), so building a class name via template-literal interpolation of the
+ * space step leaves an unresolved placeholder that the scanner cannot turn
+ * into a generatable candidate. See the same fix in Typography.tsx
+ * (RESPONSIVE_TEXT_SIZE_CLASS) for the identical issue with text sizes.
+ */
 export const PADDING_MAP = {
   none: "",
-  "2xs": `p-[${SP("1")}]`,
-  xs: `p-[${SP("2")}]`,
-  sm: `p-[${SP("3")}]`,
-  md: `p-[${SP("4")}]`,
-  "5": `p-[${SP("5")}]`,
-  lg: `p-[${SP("6")}]`,
-  xl: `p-[${SP("8")}]`,
-  "3xl": `p-[${SP("12")}]`,
-  card: `p-[${SP("5")}] sm:p-[${SP("6")}] lg:p-[${SP("8")}]`,
-  "card-tight": `p-[${SP("3")}] sm:p-[${SP("4")}]`,
-  section: `py-[${SP("10")}] sm:py-[${SP("14")}] xl:py-[${SP("20")}]`,
-  sectionSm: `py-[${SP("6")}] sm:py-[${SP("10")}]`,
-  page: `py-[${SP("6")}] sm:py-[${SP("8")}] lg:py-[${SP("10")}]`,
-  hero: `py-[${SP("12")}] sm:py-[${SP("16")}] lg:py-[${SP("24")}]`,
-  toolbar: `px-[${SP("3")}] py-[${SP("1.5")}]`,
-  inline: `px-[${SP("4")}] py-[${SP("3")}]`,
-  inlineSm: `px-[${SP("3")}] py-[${SP("2")}]`,
-  inlineLg: `px-[${SP("6")}] py-[${SP("4")}]`,
+  "2xs": "p-[var(--appkit-space-1)]",
+  xs: "p-[var(--appkit-space-2)]",
+  sm: "p-[var(--appkit-space-3)]",
+  md: "p-[var(--appkit-space-4)]",
+  "5": "p-[var(--appkit-space-5)]",
+  lg: "p-[var(--appkit-space-6)]",
+  xl: "p-[var(--appkit-space-8)]",
+  "3xl": "p-[var(--appkit-space-12)]",
+  card: "p-[var(--appkit-space-5)] sm:p-[var(--appkit-space-6)] lg:p-[var(--appkit-space-8)]",
+  "card-tight": "p-[var(--appkit-space-3)] sm:p-[var(--appkit-space-4)]",
+  section: "py-[var(--appkit-space-10)] sm:py-[var(--appkit-space-14)] xl:py-[var(--appkit-space-20)]",
+  sectionSm: "py-[var(--appkit-space-6)] sm:py-[var(--appkit-space-10)]",
+  page: "py-[var(--appkit-space-6)] sm:py-[var(--appkit-space-8)] lg:py-[var(--appkit-space-10)]",
+  hero: "py-[var(--appkit-space-12)] sm:py-[var(--appkit-space-16)] lg:py-[var(--appkit-space-24)]",
+  toolbar: "px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)]",
+  inline: "px-[var(--appkit-space-4)] py-[var(--appkit-space-3)]",
+  inlineSm: "px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]",
+  inlineLg: "px-[var(--appkit-space-6)] py-[var(--appkit-space-4)]",
   /** Tiny pill chip — `px-1.5 py-0.5`. Used by Bundle/PrizeDraw badge labels. */
-  "chip-2xs": `px-[${SP("1.5")}] py-[${SP("0.5")}]`,
+  "chip-2xs": "px-[var(--appkit-space-1-5)] py-[var(--appkit-space-0-5)]",
   // Vertical-only presets — the variant-catalogue codemod migrates raw
   // `py-N` / `py-N md:py-M` className tokens into these names.
-  "y-2xs": `py-[${SP("1")}]`,
-  "y-xs": `py-[${SP("2")}]`,
-  "y-sm": `py-[${SP("3")}]`,
-  "y-md": `py-[${SP("4")}]`,
-  "y-lg": `py-[${SP("6")}]`,
-  "y-xl": `py-[${SP("8")}]`,
-  "y-2xl": `py-[${SP("10")}]`,
-  "y-3xl": `py-[${SP("12")}]`,
-  "y-4xl": `py-[${SP("16")}]`,
+  "y-2xs": "py-[var(--appkit-space-1)]",
+  "y-xs": "py-[var(--appkit-space-2)]",
+  "y-sm": "py-[var(--appkit-space-3)]",
+  "y-md": "py-[var(--appkit-space-4)]",
+  "y-lg": "py-[var(--appkit-space-6)]",
+  "y-xl": "py-[var(--appkit-space-8)]",
+  "y-2xl": "py-[var(--appkit-space-10)]",
+  "y-3xl": "py-[var(--appkit-space-12)]",
+  "y-4xl": "py-[var(--appkit-space-16)]",
   // Horizontal-only presets.
-  "x-xs": `px-[${SP("2")}]`,
-  "x-sm": `px-[${SP("3")}]`,
-  "x-md": `px-[${SP("4")}]`,
-  "x-lg": `px-[${SP("6")}]`,
-  "x-xl": `px-[${SP("8")}]`,
+  "x-xs": "px-[var(--appkit-space-2)]",
+  "x-sm": "px-[var(--appkit-space-3)]",
+  "x-md": "px-[var(--appkit-space-4)]",
+  "x-lg": "px-[var(--appkit-space-6)]",
+  "x-xl": "px-[var(--appkit-space-8)]",
   // Top-only and bottom-only side presets.
-  "t-2xs": `pt-[${SP("1")}]`,
-  "b-2xs": `pb-[${SP("1")}]`,
-  "t-xs": `pt-[${SP("2")}]`,
-  "t-sm": `pt-[${SP("3")}]`,
-  "t-md": `pt-[${SP("4")}]`,
-  "t-lg": `pt-[${SP("6")}]`,
-  "t-xl": `pt-[${SP("8")}]`,
-  "b-xs": `pb-[${SP("2")}]`,
-  "b-sm": `pb-[${SP("3")}]`,
-  "b-md": `pb-[${SP("4")}]`,
-  "b-lg": `pb-[${SP("6")}]`,
-  "b-xl": `pb-[${SP("8")}]`,
-  "b-2xl": `pb-[${SP("10")}]`,
+  "t-2xs": "pt-[var(--appkit-space-1)]",
+  "b-2xs": "pb-[var(--appkit-space-1)]",
+  "t-xs": "pt-[var(--appkit-space-2)]",
+  "t-sm": "pt-[var(--appkit-space-3)]",
+  "t-md": "pt-[var(--appkit-space-4)]",
+  "t-lg": "pt-[var(--appkit-space-6)]",
+  "t-xl": "pt-[var(--appkit-space-8)]",
+  "b-xs": "pb-[var(--appkit-space-2)]",
+  "b-sm": "pb-[var(--appkit-space-3)]",
+  "b-md": "pb-[var(--appkit-space-4)]",
+  "b-lg": "pb-[var(--appkit-space-6)]",
+  "b-xl": "pb-[var(--appkit-space-8)]",
+  "b-2xl": "pb-[var(--appkit-space-10)]",
   // Fill-in vertical sizes.
-  "y-2-5xl": `py-[${SP("14")}]`,
-  "y-5xl": `py-[${SP("20")}]`,
-  "y-6xl": `py-[${SP("24")}]`,
+  "y-2-5xl": "py-[var(--appkit-space-14)]",
+  "y-5xl": "py-[var(--appkit-space-20)]",
+  "y-6xl": "py-[var(--appkit-space-24)]",
   // Responsive banner preset — used by accent-banner Sections.
-  banner: `py-[${SP("14")}] md:py-[${SP("16")}] lg:py-[${SP("20")}]`,
+  banner: "py-[var(--appkit-space-14)] md:py-[var(--appkit-space-16)] lg:py-[var(--appkit-space-20)]",
   // Responsive content preset — about-views inner container padding.
-  "content-banner": `py-[${SP("10")}] md:py-[${SP("12")}] lg:py-[${SP("16")}]`,
+  "content-banner": "py-[var(--appkit-space-10)] md:py-[var(--appkit-space-12)] lg:py-[var(--appkit-space-16)]",
 } as const;
 
 export type PaddingKey = keyof typeof PADDING_MAP;
@@ -194,17 +199,17 @@ export type ShadowKey = keyof typeof SHADOW_MAP;
 export const GAP_PRESETS = {
   none: "gap-0",
   px: "gap-px",
-  xs: `gap-[${SP("1")}]`,
-  sm: `gap-[${SP("2")}]`,
-  dense: `gap-[${SP("2")}]`,
-  md: `gap-[${SP("3")}]`,
-  comfortable: `gap-[${SP("3")}]`,
-  lg: `gap-[${SP("4")}]`,
-  loose: `gap-[${SP("4")}]`,
-  xl: `gap-[${SP("5")}]`,
-  "2xl": `gap-[${SP("6")}]`,
-  section: `gap-[${SP("6")}] sm:gap-[${SP("8")}]`,
-  hero: `gap-[${SP("10")}] sm:gap-[${SP("12")}]`,
+  xs: "gap-[var(--appkit-space-1)]",
+  sm: "gap-[var(--appkit-space-2)]",
+  dense: "gap-[var(--appkit-space-2)]",
+  md: "gap-[var(--appkit-space-3)]",
+  comfortable: "gap-[var(--appkit-space-3)]",
+  lg: "gap-[var(--appkit-space-4)]",
+  loose: "gap-[var(--appkit-space-4)]",
+  xl: "gap-[var(--appkit-space-5)]",
+  "2xl": "gap-[var(--appkit-space-6)]",
+  section: "gap-[var(--appkit-space-6)] sm:gap-[var(--appkit-space-8)]",
+  hero: "gap-[var(--appkit-space-10)] sm:gap-[var(--appkit-space-12)]",
 } as const;
 
 export type GapPresetKey = keyof typeof GAP_PRESETS;
@@ -223,61 +228,61 @@ type YPaddingKey = "none" | "y-2xs" | "y-2xs-tall" | "y-xs" | "y-xs-tall" | "y-s
 
 export const X_ONLY_MAP: Record<XPaddingKey, string> = {
   none: "",
-  "x-xs": `px-[${SP("2")}]`,
-  "x-sm": `px-[${SP("3")}]`,
-  "x-md": `px-[${SP("4")}]`,
-  "x-5": `px-[${SP("5")}]`,
-  "x-lg": `px-[${SP("6")}]`,
-  "x-xl": `px-[${SP("8")}]`,
+  "x-xs": "px-[var(--appkit-space-2)]",
+  "x-sm": "px-[var(--appkit-space-3)]",
+  "x-md": "px-[var(--appkit-space-4)]",
+  "x-5": "px-[var(--appkit-space-5)]",
+  "x-lg": "px-[var(--appkit-space-6)]",
+  "x-xl": "px-[var(--appkit-space-8)]",
   /** Responsive: `px-3 sm:px-4` — the canonical mobile-tight container. */
-  "x-sm-md": `px-[${SP("3")}] sm:px-[${SP("4")}]`,
+  "x-sm-md": "px-[var(--appkit-space-3)] sm:px-[var(--appkit-space-4)]",
   /** Responsive: `px-3 lg:px-4` — the canonical mobile-tight wide container. */
-  "x-sm-lg-md": `px-[${SP("3")}] lg:px-[${SP("4")}]`,
+  "x-sm-lg-md": "px-[var(--appkit-space-3)] lg:px-[var(--appkit-space-4)]",
   /** Responsive: `px-4 sm:px-6` — narrow container horizontal padding. */
-  "x-md-lg": `px-[${SP("4")}] sm:px-[${SP("6")}]`,
+  "x-md-lg": "px-[var(--appkit-space-4)] sm:px-[var(--appkit-space-6)]",
   /** Responsive: `px-6 md:px-10` — guide hub / store-extension container padding. */
-  "x-md-xl": `px-[${SP("6")}] md:px-[${SP("10")}]`,
+  "x-md-xl": "px-[var(--appkit-space-6)] md:px-[var(--appkit-space-10)]",
   /** Responsive: `px-4 sm:px-8` — section header container padding. */
-  "x-md-2xl": `px-[${SP("4")}] sm:px-[${SP("8")}]`,
+  "x-md-2xl": "px-[var(--appkit-space-4)] sm:px-[var(--appkit-space-8)]",
   /** Responsive: `px-4 sm:px-6 lg:px-8` — canonical page-container horizontal padding. */
-  "x-page": `px-[${SP("4")}] sm:px-[${SP("6")}] lg:px-[${SP("8")}]`,
+  "x-page": "px-[var(--appkit-space-4)] sm:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]",
   // Asymmetric left one-sided value (for sites that pad just one edge, e.g. a
   // selection-checkbox gutter).
   /** Asymmetric: `pl-8` — reserves a left gutter (e.g. for an overlaid selection checkbox). */
-  "l-xl": `pl-[${SP("8")}]`,
+  "l-xl": "pl-[var(--appkit-space-8)]",
 };
 
 const Y_ONLY_MAP: Record<YPaddingKey, string> = {
   none: "",
-  "y-2xs": `py-[${SP("1")}]`,
-  "y-2xs-tall": `py-[${SP("1.5")}]`,
-  "y-xs": `py-[${SP("2")}]`,
-  "y-xs-tall": `py-[${SP("2.5")}]`,
-  "y-sm": `py-[${SP("3")}]`,
-  "y-sm-tall": `py-[${SP("3.5")}]`,
-  "y-md": `py-[${SP("4")}]`,
-  "y-md-lg": `py-[${SP("5")}]`,
-  "y-lg": `py-[${SP("6")}]`,
-  "y-xl": `py-[${SP("8")}]`,
-  "y-2xl": `py-[${SP("10")}]`,
-  "y-3xl": `py-[${SP("12")}]`,
-  "y-2-5xl": `py-[${SP("14")}]`,
-  "y-4xl": `py-[${SP("16")}]`,
-  "y-5xl": `py-[${SP("20")}]`,
-  "y-6xl": `py-[${SP("24")}]`,
+  "y-2xs": "py-[var(--appkit-space-1)]",
+  "y-2xs-tall": "py-[var(--appkit-space-1-5)]",
+  "y-xs": "py-[var(--appkit-space-2)]",
+  "y-xs-tall": "py-[var(--appkit-space-2-5)]",
+  "y-sm": "py-[var(--appkit-space-3)]",
+  "y-sm-tall": "py-[var(--appkit-space-3-5)]",
+  "y-md": "py-[var(--appkit-space-4)]",
+  "y-md-lg": "py-[var(--appkit-space-5)]",
+  "y-lg": "py-[var(--appkit-space-6)]",
+  "y-xl": "py-[var(--appkit-space-8)]",
+  "y-2xl": "py-[var(--appkit-space-10)]",
+  "y-3xl": "py-[var(--appkit-space-12)]",
+  "y-2-5xl": "py-[var(--appkit-space-14)]",
+  "y-4xl": "py-[var(--appkit-space-16)]",
+  "y-5xl": "py-[var(--appkit-space-20)]",
+  "y-6xl": "py-[var(--appkit-space-24)]",
   // Asymmetric top/bottom one-sided values (for sites that pad just one edge).
-  "t-2xs": `pt-[${SP("1")}]`,
-  "b-2xs": `pb-[${SP("1")}]`,
-  "t-xs": `pt-[${SP("2")}]`,
-  "b-xs": `pb-[${SP("2")}]`,
-  "t-sm": `pt-[${SP("3")}]`,
-  "b-sm": `pb-[${SP("3")}]`,
-  "t-md": `pt-[${SP("4")}]`,
-  "b-md": `pb-[${SP("4")}]`,
-  "b-md-lg": `pb-[${SP("5")}]`,
-  "b-lg": `pb-[${SP("6")}]`,
+  "t-2xs": "pt-[var(--appkit-space-1)]",
+  "b-2xs": "pb-[var(--appkit-space-1)]",
+  "t-xs": "pt-[var(--appkit-space-2)]",
+  "b-xs": "pb-[var(--appkit-space-2)]",
+  "t-sm": "pt-[var(--appkit-space-3)]",
+  "b-sm": "pb-[var(--appkit-space-3)]",
+  "t-md": "pt-[var(--appkit-space-4)]",
+  "b-md": "pb-[var(--appkit-space-4)]",
+  "b-md-lg": "pb-[var(--appkit-space-5)]",
+  "b-lg": "pb-[var(--appkit-space-6)]",
   /** Asymmetric: `pt-4 pb-6` — hotspot control bar with tighter top than bottom. */
-  "t-md-b-lg": `pt-[${SP("4")}] pb-[${SP("6")}]`,
+  "t-md-b-lg": "pt-[var(--appkit-space-4)] pb-[var(--appkit-space-6)]",
 };
 
 export type OverflowKey = "auto" | "hidden" | "scroll" | "visible" | "x-auto" | "x-hidden" | "y-auto" | "y-hidden";

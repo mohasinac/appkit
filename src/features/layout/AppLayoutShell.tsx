@@ -741,9 +741,11 @@ export function AppLayoutShell({
         <BottomActions />
         <BottomNavbar
           user={user}
+          userId={userId}
           homeHref={homeHref}
           shopHref={shopHref}
           cartHref={cartHref}
+          wishlistHref={wishlistHref}
           profileHref={profileHref}
           loginHref={loginHref}
           onSearchToggle={() => setSearchOpen((prev) => !prev)}

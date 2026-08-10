@@ -32,7 +32,8 @@ import type { DashboardVariant, SidebarNavGroup, SectionResponsive } from "../..
 import { DASHBOARD_DESKTOP_MEDIA_QUERY } from "../../../shared/features/layout/config";
 import { filterNavItems } from "./filterNavItems";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
-import { Div } from "../../../../ui";
+import { useTheme } from "../../theme";
+import { BackgroundRenderer, Div, type BackgroundConfig } from "../../../../ui";
 
 export interface DashboardLayoutClientProps {
   /** Drives sidebar component selection + accent colour. */
@@ -60,6 +61,10 @@ export interface DashboardLayoutClientProps {
   contentSurface?: string;
   /** Override the max-width class on the inner content wrapper. */
   contentMaxWidth?: string;
+  /** Background rendered behind the sidebar + content when the light theme is active. Mirrors `AppLayoutShell`'s prop of the same shape. */
+  lightBackground?: BackgroundConfig;
+  /** Background rendered behind the sidebar + content when the dark theme is active. */
+  darkBackground?: BackgroundConfig;
   children: ReactNode;
 }
 
@@ -162,6 +167,8 @@ export function DashboardLayoutClient({
   contentPadding,
   contentSurface,
   contentMaxWidth,
+  lightBackground,
+  darkBackground,
   children,
 }: DashboardLayoutClientProps) {
   const pathname = usePathname();
@@ -169,8 +176,17 @@ export function DashboardLayoutClient({
   const storageKey = `appkit:sidebar-open:${variant}`;
   const { desktopOpen, mobileOpen, close, closeMobile, toggle } = useResponsiveDrawer(storageKey);
   useEffect(() => { closeMobile(); }, [pathname, closeMobile]);
-  const { data: settings } = useSiteSettings<{ navConfig?: Record<string, { enabled: boolean }> }>();
-  const navConfig = (settings as { navConfig?: Record<string, { enabled: boolean }> } | undefined)?.navConfig;
+  const { data: settings } = useSiteSettings<{
+    navConfig?: Record<string, { enabled: boolean }>;
+    background?: { light?: BackgroundConfig; dark?: BackgroundConfig };
+  }>();
+  const navConfig = settings?.navConfig;
+  const { theme } = useTheme();
+  // Explicit props win; otherwise fall back to the same siteSettings.background
+  // the public shell reads, so admin/store/user dashboards match it by default.
+  const resolvedLightBackground = lightBackground ?? settings?.background?.light;
+  const resolvedDarkBackground = darkBackground ?? settings?.background?.dark;
+  const hasBackground = Boolean(resolvedLightBackground?.value || resolvedDarkBackground?.value);
 
   const filteredGroups = filterGroups(groups, navConfig, permissions);
   const adminGroups =
@@ -180,6 +196,13 @@ export function DashboardLayoutClient({
 
   return (
     <>
+      {hasBackground && (
+        <BackgroundRenderer
+          mode={theme === "dark" ? "dark" : "light"}
+          lightMode={resolvedLightBackground ?? { type: "color", value: "" }}
+          darkMode={resolvedDarkBackground ?? { type: "color", value: "" }}
+        />
+      )}
       {variant === "admin" && (
         <AdminSidebar
           variant="sidebar"

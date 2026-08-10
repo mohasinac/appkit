@@ -1,13 +1,15 @@
 import "./components/index.style.css";
 import "./forms/FormShell.style.css";
 
-// --- FormShell (SB-UNI-Y-1) --------------------------------------------------
+// --- Form-state provider (SB-UNI-Y-1) -----------------------------------------
+// The step-wizard `<FormShell>` component lives in features/shell, not here —
+// see that module's own barrel. This one is just the context/provider/hook
+// FieldInput/FieldSelect/etc. read internally for inline validation.
 export type {
-  FormShellProps,
   FormShellStep,
   FormShellContextValue,
 } from "./forms";
-export { FormShell, useFormShell } from "./forms";
+export { FormShellProvider, useFormShell } from "./forms";
 export type { FieldInputProps } from "./forms";
 export { FieldInput } from "./forms";
 export type { FieldSelectProps } from "./forms";
@@ -35,6 +37,7 @@ export type {
 // --- Semantic HTML wrappers ---------------------------------------------------
 export type {
   SectionProps,
+  SectionBackgroundConfig,
   ArticleProps,
   MainProps,
   AsideProps,
@@ -576,3 +579,5 @@ export { Anchor } from "./components/Anchor";
 export type { AnchorProps, AnchorTone, AnchorUnderline } from "./components/Anchor";
 export { Scrim } from "./components/Scrim";
 export type { ScrimProps, ScrimDirection, ScrimIntensity } from "./components/Scrim";
+export { Kbd } from "./components/Kbd";
+export type { KbdProps, KbdSize, KbdTone } from "./components/Kbd";

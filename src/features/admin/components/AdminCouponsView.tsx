@@ -9,9 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Div, FilterChipGroup, ListingLayout, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
-import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
+import { ROW_ACTION_META, ROW_ACTION_ID, ADMIN_BULK_ACTIONS } from "../../products/constants/action-defs";
 import { ADMIN_COUPON_TYPE_TABS } from "../constants/filter-tabs";
 import { apiClient } from "../../../http";
 import {
@@ -113,28 +111,27 @@ export function AdminCouponsView({
       label: "Add Coupon",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
     },
-    buildBulkActions: (selection): BulkActionItem[] => [
-      ...(onBulkArchive
-        ? [
-            {
-              id: "bulk-archive",
-              label: ROW_ACTION_META[ROW_ACTION_ID.ARCHIVE].label,
-              onClick: async () => {
-                await onBulkArchive(selection.selectedIds);
-                selection.clearSelection();
-              },
-            },
-          ]
-        : []),
-      ...(onBulkDelete
-        ? [
-            buildBulkAction(ACTIONS.ADMIN["delete-coupon"], async () => {
-              await onBulkDelete(selection.selectedIds);
-              selection.clearSelection();
-            }),
-          ]
-        : []),
-    ],
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS registry
+    // preset (not hand-built inline objects) — each id maps to its
+    // ROW_ACTION_META label/destructive flag, with the handler wired here.
+    buildBulkActions: (selection): BulkActionItem[] => {
+      const handlers: Partial<Record<(typeof ADMIN_BULK_ACTIONS.coupons)[number], () => Promise<void>>> = {
+        [ROW_ACTION_ID.ARCHIVE]: onBulkArchive
+          ? async () => { await onBulkArchive(selection.selectedIds); selection.clearSelection(); }
+          : undefined,
+        [ROW_ACTION_ID.DELETE]: onBulkDelete
+          ? async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); }
+          : undefined,
+      };
+      return ADMIN_BULK_ACTIONS.coupons
+        .filter((id) => handlers[id])
+        .map((id) => ({
+          id,
+          label: ROW_ACTION_META[id].label,
+          destructive: ROW_ACTION_META[id].destructive,
+          onClick: handlers[id]!,
+        }));
+    },
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <FilterChipGroup
         label="Type"

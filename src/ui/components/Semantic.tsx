@@ -106,6 +106,26 @@ const SECTION_JUSTIFY_MAP: Record<SectionJustify, string> = {
   evenly: "justify-evenly",
 };
 
+/** Scoped (non-viewport-fixed) background for a single Section — color/gradient/image only; use the page-level shell's lightBackground/darkBackground for video. */
+export interface SectionBackgroundConfig {
+  type: "color" | "gradient" | "image";
+  value: string;
+  overlay?: { enabled: boolean; color: string; opacity: number };
+}
+
+function sectionBackgroundStyle(bg: SectionBackgroundConfig): React.CSSProperties {
+  switch (bg.type) {
+    case "color":
+      return { backgroundColor: bg.value };
+    case "gradient":
+      return { background: bg.value };
+    case "image":
+      return { backgroundImage: `url('${bg.value}')`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" };
+    default:
+      return {};
+  }
+}
+
 export interface SectionProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /**
    * Themed background tone. Defaults to `"plain"`. Use `"page-header"` for
@@ -113,6 +133,8 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Surface
    * `"accent-banner"` for primary→secondary brand banners.
    */
   tone?: SectionTone;
+  /** Scoped color/gradient/image background — an alternative to `tone` for admin/CMS-configured section backgrounds. Renders behind `children`, absolutely positioned within the section. */
+  background?: SectionBackgroundConfig;
   color?: SemanticColor;
   /** Layout preset. `flex-sm-row` is the canonical "mobile column, sm+ row" pattern. */
   layout?: SectionLayout;
@@ -126,7 +148,7 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Surface
 }
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ tone = "plain", color, layout, gap, align, justify, className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, children, ...props }, ref) => (
+  ({ tone = "plain", background, color, layout, gap, align, justify, className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, children, ...props }, ref) => (
     <section
       className={[
         SECTION_TONE_MAP[tone],
@@ -136,6 +158,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
         gap ? SECTION_GAP_MAP[gap] : "",
         align ? SECTION_ALIGN_MAP[align] : "",
         justify ? SECTION_JUSTIFY_MAP[justify] : "",
+        background?.value ? "relative overflow-hidden" : "",
         className,
       ]
         .filter(Boolean)
@@ -143,6 +166,14 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
       ref={ref as React.Ref<HTMLElement>}
       {...props}
     >
+      {background?.value && (
+        <>
+          <span aria-hidden className="absolute inset-0 -z-10" style={sectionBackgroundStyle(background)} />
+          {background.overlay?.enabled && (
+            <span aria-hidden className="absolute inset-0 -z-10" style={{ backgroundColor: background.overlay.color, opacity: background.overlay.opacity }} />
+          )}
+        </>
+      )}
       {children}
     </section>
   ),

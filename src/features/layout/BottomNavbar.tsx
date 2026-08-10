@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { AvatarDisplay, Li, Span, TextLink } from "../../ui";
 import { BottomNavLayout } from "./BottomNavLayout";
 import { NavItem } from "./NavItem";
+import { useWishlistCount } from "../wishlist/hooks/useWishlistCount";
 
 export interface BottomNavItem {
   key: string;
@@ -30,12 +31,20 @@ export interface BottomNavbarUser {
 export interface BottomNavbarProps {
   /** Authenticated user � if provided, shows profile slot with avatar */
   user?: BottomNavbarUser | null;
+  /** Authenticated user's uid — drives the wishlist count badge on the wishlist slot. */
+  userId?: string | null;
   /** href for the Home nav item */
   homeHref: string;
   /** href for the Shop/Products nav item */
   shopHref: string;
   /** href for the Cart link */
   cartHref: string;
+  /**
+   * href for the Wishlist page. When provided (and a `user` is signed in),
+   * renders a 6th slot between Cart and Profile so mobile has the same
+   * 1-click wishlist access desktop's TitleBar already has.
+   */
+  wishlistHref?: string;
   /** href for authenticated user Profile page */
   profileHref: string;
   /** href for the Login page (shown when unauthenticated) */
@@ -68,9 +77,11 @@ export interface BottomNavbarProps {
  */
 export function BottomNavbar({
   user,
+  userId,
   homeHref,
   shopHref,
   cartHref,
+  wishlistHref,
   profileHref,
   loginHref,
   onSearchToggle,
@@ -83,12 +94,14 @@ export function BottomNavbar({
   getRoleBadgeClass,
 }: BottomNavbarProps) {
   const pathname = usePathname();
+  const wishlistCount = useWishlistCount(userId);
 
   const labels = {
     mobileNav: "Mobile navigation",
     home: "Home",
     products: "Products",
     search: "Search",
+    wishlist: "Wishlist",
     cart: "Cart",
     profile: "Profile",
     more: "More",
@@ -102,7 +115,11 @@ export function BottomNavbar({
   );
 
   if (navItems && navItems.length > 0) {
-    const visibleItems = navItems.slice(0, 4);
+    // When a wishlist href is available, trade one nav-item slot for a
+    // dedicated wishlist slot so mobile has the same 1-click wishlist
+    // access desktop's TitleBar already has (previously: More → sidebar →
+    // Shopping group, 2 taps).
+    const visibleItems = navItems.slice(0, wishlistHref ? 3 : 4);
     return (
       <BottomNavLayout ariaLabel={labels.mobileNav}>
         {visibleItems.map((item) => (
@@ -120,6 +137,30 @@ export function BottomNavbar({
             />
           </Li>
         ))}
+        {wishlistHref && (
+          <Li className="flex-1">
+            <TextLink
+              href={wishlistHref}
+              variant="none"
+              className={`${slotClassName} ${
+ pathname === wishlistHref ? activeClassName : inactiveClassName
+ }`}
+              aria-label={wishlistCount > 0 ? `${labels.wishlist}, ${wishlistCount} items` : labels.wishlist}
+            >
+              <Span className="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z" />
+                </svg>
+                {wishlistCount > 0 && (
+                  <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-1 leading-none text-[var(--appkit-color-text-on-primary)]">
+                    {wishlistCount > 9 ? "9+" : wishlistCount}
+                  </Span>
+                )}
+              </Span>
+              <Span className={labelClassName}>{labels.wishlist}</Span>
+            </TextLink>
+          </Li>
+        )}
         <Li className="flex-1">
           <button
             type="button"
@@ -217,7 +258,33 @@ export function BottomNavbar({
         </TextLink>
       </Li>
 
-      {/* 5 — Profile / Login */}
+      {/* 5 — Wishlist (mobile parity with desktop TitleBar's 1-click wishlist icon) */}
+      {wishlistHref && (
+        <Li className="flex-1">
+          <TextLink
+            href={wishlistHref}
+            variant="none"
+            className={`${slotClassName} ${
+ pathname === wishlistHref ? activeClassName : inactiveClassName
+ }`}
+            aria-label={wishlistCount > 0 ? `${labels.wishlist}, ${wishlistCount} items` : labels.wishlist}
+          >
+            <Span className="relative">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z" />
+              </svg>
+              {wishlistCount > 0 && (
+                <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-1 leading-none text-[var(--appkit-color-text-on-primary)]">
+                  {wishlistCount > 9 ? "9+" : wishlistCount}
+                </Span>
+              )}
+            </Span>
+            <Span className={labelClassName}>{labels.wishlist}</Span>
+          </TextLink>
+        </Li>
+      )}
+
+      {/* 6 — Profile / Login */}
       <Li
         className="flex-1"
       >

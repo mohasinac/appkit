@@ -9464,6 +9464,8 @@ export type { AddressInlineSelectProps } from "./features/account/components/Add
 // [CLIENT] FormShell â€" full-viewport edit overlay with sticky top/bottom bars, left section nav, and dirty-state hook.
 export { FormShell, useFormShell } from "./features/shell/index";
 export type { FormShellSection, FormShellProps, UseFormShellResult } from "./features/shell/index";
+export { CommandPalette, useCommandPaletteHotkey } from "./features/shell/index";
+export type { CommandPaletteGroup, CommandPaletteProps } from "./features/shell/index";
 // [CLIENT] QuickFormDrawer â€" 40% desktop / 100% mobile auto-rendered field drawer.
 export { QuickFormDrawer } from "./features/shell/index";
 export type { QuickFieldType, QuickFieldDef, QuickFormDrawerProps } from "./features/shell/index";

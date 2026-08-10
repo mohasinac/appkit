@@ -10,16 +10,8 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
   const { content } = section;
   return (
     <Section layout="flex" align="center"
-      className="relative min-h-[60vh] overflow-hidden bg-neutral-900"
-      style={
-        content?.imageUrl
-          ? {
-              backgroundImage: `url(${content.imageUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }
-          : undefined
-      }
+      className="relative min-h-[60vh] bg-neutral-900"
+      background={content?.imageUrl ? { type: "image", value: content.imageUrl } : undefined}
     >
       <Div surface="overlay-xs" className="absolute inset-0" />
       <Div paddingX="x-page" className="relative mx-auto max-w-7xl text-center text-white" padding="y-4xl">
