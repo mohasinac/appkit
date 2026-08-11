@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { Aside, Div } from "../../ui";
+import { Aside, Div, Section, type SectionBackgroundConfig } from "../../ui";
 
 const __O = {
   yAuto: "overflow-y-auto",
@@ -14,6 +14,8 @@ export interface SidebarLayoutProps {
   /** Scrollable body content */
   children: React.ReactNode;
   id?: string;
+  /** Optional color/gradient/image background for the sidebar panel — same shape as <Section background={…}>. */
+  background?: SectionBackgroundConfig;
 }
 
 /**
@@ -30,35 +32,37 @@ export interface SidebarLayoutProps {
  */
 export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
   function SidebarLayout(
-    { isOpen, ariaLabel, onClose, header, children, id = "secondary-sidebar" },
+    { isOpen, ariaLabel, onClose, header, children, id = "secondary-sidebar", background },
     ref,
   ) {
     return (
       <>
         {/* Backdrop overlay */}
         {isOpen && (
-          <Div surface="overlay-xs" 
+          <Div surface="overlay-xs"
             className="fixed inset-0 backdrop-blur-[2px] z-[var(--appkit-z-overlay)] transition-opacity duration-300"
             onClick={onClose}
             aria-hidden="true"
           />
         )}
 
-        <Aside border="default" 
+        <Aside border="default"
           ref={ref as React.RefObject<HTMLElement>}
           id={id}
           aria-label={ariaLabel}
           className={`fixed inset-y-0 right-0 w-80 bg-[var(--appkit-color-surface)] border-l border-[var(--appkit-color-border-subtle)] shadow-2xl transform duration-300 ease-in-out z-50 ${isOpen ? "translate-x-0" : "translate-x-full"} flex flex-col`}
         >
-          {/* Fixed (non-scrolling) header strip */}
-          <Div border="default" className="flex-shrink-0 py-[var(--appkit-space-5)] border-b border-[var(--appkit-color-border-subtle)]" padding="x-lg" surface="muted">
-            {header}
-          </Div>
+          <Section tone="plain" background={background} className="flex flex-col flex-1 min-h-0">
+            {/* Fixed (non-scrolling) header strip */}
+            <Div border="default" className="flex-shrink-0 py-[var(--appkit-space-5)] border-b border-[var(--appkit-color-border-subtle)]" padding="x-lg" surface="muted">
+              {header}
+            </Div>
 
-          {/* Scrollable body */}
-          <Div className={`flex-1 ${__O.yAuto} scrollbar-thin`} padding="inlineLg">
-            {children}
-          </Div>
+            {/* Scrollable body */}
+            <Div className={`flex-1 ${__O.yAuto} scrollbar-thin`} padding="inlineLg">
+              {children}
+            </Div>
+          </Section>
         </Aside>
       </>
     );

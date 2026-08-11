@@ -3,7 +3,7 @@
 import { Code, useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -393,12 +393,11 @@ export function AdminSupportTicketDetailView({
           <Label className="uppercase tracking-wide" color="muted" size="xs" weight="semibold">
             Reply to user
           </Label>
-          <textarea
+          <Textarea
             value={replyBody}
             onChange={(e) => setReplyBody(e.target.value)}
             rows={3}
             placeholder="Type a reply…"
-            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
           <Button
             type="button"
@@ -433,12 +432,11 @@ export function AdminSupportTicketDetailView({
           <Label className="uppercase tracking-wide" color="muted" size="xs" weight="semibold">
             Internal notes (staff only)
           </Label>
-          <textarea
+          <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Notes visible only to admins and employees…"
-            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </Stack>
 
@@ -603,7 +601,8 @@ function OrderItemsPanel(props: {
                           {it.productId} · ₹{(it.unitPrice / 100).toFixed(2)}/ea
                         </Text>
                       </Div>
-                      <input
+                      <Input
+                        bare
                         type="number"
                         min="0"
                         value={it.quantity}

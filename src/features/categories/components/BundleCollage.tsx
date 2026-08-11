@@ -11,7 +11,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Div, Row, Text } from "../../../ui";
+import { Button, Div, Row, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
@@ -73,10 +73,14 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
               className="group relative overflow-hidden border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] transition-transform hover:scale-[1.01]" rounded="lg"
             >
               {/* Clickable image area → lightbox */}
-              <button
+              <Button
+                variant="ghost"
                 type="button"
                 onClick={makeBundleItemClickHandler(p, idx, onItemClick, setLightboxIndex)}
-                className="relative block aspect-square w-full overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)]"
+                paddingX="none"
+                paddingY="none"
+                rounded="none"
+                className="relative block aspect-square w-full overflow-hidden focus-visible:ring-2 focus-visible:ring-[var(--appkit-color-primary)]"
                 aria-label={`View ${p.title} in lightbox`}
               >
                 {cover ? (
@@ -95,7 +99,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                 <Div textWeight="semibold" textSize="xs" surface="overlay-xl" padding="chip-2xs" className="absolute left-2 top-2 text-white" rounded="default">
                   #{idx + 1}
                 </Div>
-              </button>
+              </Button>
 
               {/* Text area with PDP link */}
               <Div padding="xs">

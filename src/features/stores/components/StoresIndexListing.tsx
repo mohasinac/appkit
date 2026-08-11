@@ -193,6 +193,13 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         bulkTotalCount={stores.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
+        toggles={[
+          // Inline quick-filter: the highest-frequency drawer-only facet promoted
+          // to the sticky toolbar so it doesn't require open-drawer → check → Apply
+          // → close for every toggle. The full facet set (category/rating/product
+          // count) remains in <ListingFilterDrawer> below.
+          { label: "Featured", active: featured === "true", onChange: (next) => table.set(TABLE_KEYS.FEATURED, next ? "true" : "") },
+        ]}
       />
 
       {/* ── Bulk action bar ───────────────────────────────────────────── */}

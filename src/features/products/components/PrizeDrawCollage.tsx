@@ -17,7 +17,7 @@
 
 import { Row } from "@mohasinac/appkit";
 import React, { useState } from "react";
-import { Div, Scrim, Text } from "../../../ui";
+import { Button, Div, Scrim, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
@@ -102,12 +102,16 @@ export function PrizeDrawCollage({
           const cover = it.images?.[0];
           const isHighlight = highlightItemNumber === it.itemNumber;
           return (
-            <button
+            <Button
+              variant="ghost"
               key={`collage-${it.itemNumber}`}
               type="button"
               onClick={makePrizeItemClickHandler(it, idx, onItemClick, setLightboxIndex)}
+              rounded="lg"
+              paddingX="none"
+              paddingY="none"
               className={[
-                "group relative overflow-hidden rounded-lg border bg-[var(--appkit-color-surface)] text-left transition-transform",
+                "group relative overflow-hidden border bg-[var(--appkit-color-surface)] text-left transition-transform",
                 "border-[var(--appkit-color-border)]",
                 isHighlight
                   ? "ring-2 ring-offset-2 ring-[var(--appkit-color-primary)] scale-[1.02]"
@@ -157,7 +161,7 @@ export function PrizeDrawCollage({
                   </Text>
                 ) : null}
               </Div>
-            </button>
+            </Button>
           );
         })}
       </Div>

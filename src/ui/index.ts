@@ -64,6 +64,7 @@ export type {
 } from "./components/Semantic";
 export {
   Section,
+  sectionBackgroundStyle,
   Article,
   Main,
   Aside,

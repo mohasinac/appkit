@@ -6,7 +6,7 @@ import { sortBy } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, Text, useToast } from "../../../ui";
+import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";

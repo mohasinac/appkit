@@ -28,10 +28,10 @@ const __O = {
 } as const;
 
 const REL_NOOPENER = "noopener noreferrer";
-const CLS_REMOVE_BTN = "shrink-0 rounded-full p-[var(--appkit-space-1)] text-zinc-400 hover:bg-[var(--appkit-color-surface)] hover:text-error hover:bg-[var(--appkit-color-surface-elevated)]";
+const CLS_REMOVE_BTN = "shrink-0 text-zinc-400 hover:bg-[var(--appkit-color-surface)] hover:text-error hover:bg-[var(--appkit-color-surface-elevated)]";
 import Link from "next/link";
 import { X } from "lucide-react";
-import { Button, Div, Heading, Row, Span, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, IconButton, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { useSwipe } from "../../../react/hooks/useSwipe";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -182,14 +182,16 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
           {item.title ?? item.id}
         </Link>
         {onRemove && (
-          <button
+          <IconButton
             type="button"
             onClick={() => onRemove(item.id)}
             aria-label={`${labels.remove} ${item.title ?? item.id}`}
+            variant="ghost"
+            rounded="full"
             className={CLS_REMOVE_BTN}
           >
             <X className="h-4 w-4" />
-          </button>
+          </IconButton>
         )}
       </Row>
 
@@ -350,14 +352,16 @@ export function CompareOverlay({
         <Heading level={2} size="base" weight="semibold">
           {labels.title}
         </Heading>
-        <button
+        <IconButton
           type="button"
           onClick={onClose}
           aria-label={labels.close}
-          className="rounded-full p-[var(--appkit-space-2)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]"
+          variant="ghost"
+          rounded="full"
+          className="text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]"
         >
           <X className="h-5 w-5" />
-        </button>
+        </IconButton>
       </Row>
 
       <Div className={`flex-1 ${__O.auto} ${__P.p4}`}>
@@ -401,12 +405,16 @@ export function CompareOverlay({
               {trimmed.length > 1 && (
                 <Row justify="center" gap="xs" className="mt-4">
                   {trimmed.map((it, idx) => (
-                    <button
+                    <Button
+                      variant="ghost"
                       key={it.id}
                       type="button"
                       aria-label={`Show item ${idx + 1}`}
                       onClick={() => setActiveIndex(idx)}
-                      className={`h-2 w-2 rounded-full transition-colors ${
+                      rounded="full"
+                      paddingX="none"
+                      paddingY="none"
+                      className={`h-2 w-2 min-w-0 transition-colors ${
  idx === activeIndex
  ? "bg-primary"
  : "bg-[var(--appkit-color-border)]"

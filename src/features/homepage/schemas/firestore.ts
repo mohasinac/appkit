@@ -245,6 +245,8 @@ export interface WelcomeSectionConfig {
   showCTA: boolean;
   ctaText?: string;
   ctaLink?: string;
+  /** Optional section background — reuses the carousel's background schema for consistency. Video is ignored at this scope (color/gradient/image only); see Section's `background` prop. */
+  background?: CarouselBackground;
 }
 
 export type TrustIndicator = {
@@ -278,6 +280,8 @@ export interface CategoriesSectionConfig {
     rootOnly?: boolean;
     rootCategoryId?: string;
   };
+  /** Optional section background — reuses the carousel's background schema for consistency. */
+  background?: CarouselBackground;
 }
 
 export interface BrandsSectionConfig {
@@ -476,6 +480,8 @@ export interface StoresSectionConfig {
   filterByCategory?: string;
   maxCount?: 5 | 10 | 20;
   loop?: boolean;
+  /** Optional section background — reuses the carousel's background schema for consistency. */
+  background?: CarouselBackground;
 }
 
 export interface EventsSectionConfig {
@@ -488,6 +494,8 @@ export interface EventsSectionConfig {
   filterByCategory?: string;
   maxCount?: 5 | 10 | 20;
   loop?: boolean;
+  /** Optional section background — reuses the carousel's background schema for consistency. */
+  background?: CarouselBackground;
 }
 
 export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "deviantart" | "youtube";
@@ -640,6 +648,8 @@ export interface CollectionCardsSectionConfig {
   maxItems?: number;
   showCollectionTabs?: boolean;
   cta?: SectionCTA;
+  /** Optional section background — reuses the carousel's background schema for consistency. */
+  background?: CarouselBackground;
 }
 
 export const COLLECTION_CARDS_MAX_ENTRIES = 3 as const;

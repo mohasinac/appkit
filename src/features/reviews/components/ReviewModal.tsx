@@ -96,15 +96,19 @@ export function ViewReviewModal({
         {review.images && review.images.length > 0 && (
           <Row wrap gap="sm">
             {review.images.map((img, i) => (
-              <button
+              <Button
+                variant="ghost"
                 key={i}
                 type="button"
                 aria-label={`View image ${i + 1}`}
                 onClick={() => setLightboxIdx(i)}
-                className={`h-20 w-20 rounded-lg border overflow-hidden transition hover:opacity-80 p-[var(--appkit-space-0)] flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 border-[var(--appkit-color-border)]"}`}
+                rounded="lg"
+                paddingX="none"
+                paddingY="none"
+                className={`h-20 w-20 overflow-hidden transition hover:opacity-80 flex-shrink-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 border-[var(--appkit-color-border)]"}`}
               >
                 <MediaImage src={img.thumbnailUrl ?? img.url} alt={`Review thumbnail ${i + 1}`} size="thumbnail" />
-              </button>
+              </Button>
             ))}
           </Row>
         )}

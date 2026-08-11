@@ -161,6 +161,13 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
         bulkTotalCount={products.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
+        toggles={[
+          // Inline quick-filter: the highest-frequency drawer-only facet promoted
+          // to the sticky toolbar so it doesn't require open-drawer → check → Apply
+          // → close for every toggle. The full facet set (category/city/price/
+          // negotiable) remains in <FilterDrawer> below.
+          { label: "Ships nationwide", active: table.get(TABLE_KEYS.ACCEPTS_SHIPPING) === "true", onChange: (next) => table.set(TABLE_KEYS.ACCEPTS_SHIPPING, next ? "true" : "") },
+        ]}
       />
 
       <BulkActionBar

@@ -11,7 +11,7 @@
 
 import { Row, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useMemo, useCallback, useState } from "react";
-import { Div, Label, Span, Text } from "../../../ui";
+import { Div, Label, Span, Text, Toggle } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import type { CategoryDocument } from "../schemas";
@@ -133,6 +133,13 @@ export function CategoryBundlesListing({
         onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        toggles={[
+          // Inline quick-filter: the single facet this page has is promoted to
+          // the sticky toolbar so it doesn't require open-drawer → check →
+          // Apply → close. <FilterDrawer> below stays available for parity
+          // with every other listing page's filter affordance.
+          { label: "Show out-of-stock", active: showOutOfStock, onChange: (next) => table.setMany({ showOutOfStock: next ? "true" : "", page: "1" }) },
+        ]}
       />
 
       {totalPages > 1 && (
@@ -183,19 +190,11 @@ export function CategoryBundlesListing({
         <Stack className={`${__P.p4}`} gap="md">
           <Label layout="flex" gap="lg" className="justify-[space-between] cursor-pointer">
             <Span size="sm" weight="medium" color="muted">Show out-of-stock bundles</Span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={pendingShowOutOfStock}
-              onClick={() => setPendingShowOutOfStock((v) => !v)}
-              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
- pendingShowOutOfStock ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
- }`}
-            >
-              <Span
-                className={`inline-block h-3.5 w-3.5 transform transition-transform duration-200 ${ pendingShowOutOfStock ? "translate-x-[19px]" : "translate-x-[3px]" }`} rounded="full" surface="default" shadow="sm"
-              />
-            </button>
+            <Toggle
+              checked={pendingShowOutOfStock}
+              onChange={setPendingShowOutOfStock}
+              size="sm"
+            />
           </Label>
         </Stack>
       </FilterDrawer>

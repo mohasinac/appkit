@@ -10,6 +10,14 @@ export interface CheckboxProps extends Omit<
   suffix?: React.ReactNode;
   error?: React.ReactNode;
   indeterminate?: boolean;
+  /** Override the native input type — for a checkbox-shaped control driven by radio semantics (e.g. a poll option list toggling between multi/single-select). Defaults to `"checkbox"`. */
+  type?: "checkbox" | "radio";
+  /**
+   * Render just the native input with no Label/box/icon chrome — for
+   * call sites that already own their own custom option-card markup
+   * (border, padding, hover state) and just need the underlying control.
+   */
+  bare?: boolean;
 }
 
 const UI_CHECKBOX = {
@@ -30,6 +38,8 @@ export function Checkbox({
   suffix,
   error,
   indeterminate = false,
+  type = "checkbox",
+  bare = false,
   className = "",
   checked,
   disabled,
@@ -45,6 +55,21 @@ export function Checkbox({
       inputRef.current.indeterminate = indeterminate;
     }
   }, [indeterminate]);
+
+  if (bare) {
+    return (
+      <input
+        {...props}
+        ref={inputRef}
+        id={inputId}
+        type={type}
+        checked={checked}
+        disabled={disabled}
+        aria-invalid={error ? "true" : undefined}
+        className={className}
+      />
+    );
+  }
 
   return (
     <div className={UI_CHECKBOX.base} data-section="checkbox-div-467">
@@ -62,7 +87,7 @@ export function Checkbox({
             {...props}
             ref={inputRef}
             id={inputId}
-            type="checkbox"
+            type={type}
             checked={checked}
             disabled={disabled}
             aria-invalid={error ? "true" : undefined}

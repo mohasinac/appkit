@@ -181,7 +181,7 @@ export function AdminCouponsView({
     renderEditor: ({ editId, closePanel }) => (
       <AdminCouponEditorView
         couponId={editId ?? undefined}
-        initialData={editId ? rowsRef.current.find((r) => r.id === editId)?.raw as Record<string, unknown> | undefined : undefined}
+        initialData={editId ? rowsRef.current.find((r) => r.id === editId)?.raw : undefined}
         onSaved={closePanel}
         onDeleted={closePanel}
         embedded

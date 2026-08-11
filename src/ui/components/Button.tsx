@@ -77,7 +77,7 @@ const BUTTON_ROUNDED_MAP: Record<ButtonRounded, string> = {
 
 type ButtonPaddingX = "none" | "xs" | "sm" | "md" | "lg" | "xl";
 const BUTTON_PADDING_X_MAP: Record<ButtonPaddingX, string> = {
-  none: "",
+  none: "px-0",
   xs: "px-2",
   sm: "px-3",
   md: "px-4",
@@ -103,7 +103,7 @@ const BUTTON_BORDER_MAP: Record<ButtonBorder, string> = {
 
 type ButtonPaddingY = "none" | "xs" | "y-xs-tall" | "sm" | "y-sm-tall" | "md" | "lg";
 const BUTTON_PADDING_Y_MAP: Record<ButtonPaddingY, string> = {
-  none: "",
+  none: "py-0",
   xs: "py-1",
   "y-xs-tall": "py-2.5",
   sm: "py-2",
@@ -118,6 +118,14 @@ const BUTTON_WEIGHT_MAP: Record<ButtonWeight, string> = {
   medium: "font-medium",
   semibold: "font-semibold",
   bold: "font-bold",
+};
+
+type ButtonJustify = "center" | "start" | "end" | "between";
+const BUTTON_JUSTIFY_MAP: Record<ButtonJustify, string> = {
+  center: "justify-center",
+  start: "justify-start",
+  end: "justify-end",
+  between: "justify-between",
 };
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -143,6 +151,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   rounded?: ButtonRounded;
   /** Box shadow override — replaces raw `className="shadow-*"` tokens. */
   shadow?: ShadowKey;
+  /** Main-axis content distribution — for full-width buttons with spread content (e.g. label + chevron). Defaults to the button's own centered layout. */
+  justify?: ButtonJustify;
   /** Render as the child element (e.g. next/link) with button styling applied */
   asChild?: boolean;
   /**
@@ -179,6 +189,7 @@ export function Button({
   border,
   rounded,
   shadow,
+  justify,
   asChild = false,
   action,
   ...props
@@ -203,6 +214,7 @@ export function Button({
     border ? BUTTON_BORDER_MAP[border] : "",
     rounded ? BUTTON_ROUNDED_MAP[rounded] : "",
     shadow ? SHADOW_MAP[shadow] : "",
+    justify ? BUTTON_JUSTIFY_MAP[justify] : "",
     className,
   );
 

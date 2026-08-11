@@ -5,7 +5,7 @@ import { sortBy } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Div, FilterChipGroup, ListingLayout, Text, useToast } from "../../../ui";
+import { Div, FilterChipGroup, ListingLayout, useToast } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {

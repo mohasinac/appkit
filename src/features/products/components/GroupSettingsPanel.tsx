@@ -257,14 +257,18 @@ export function GroupSettingsPanel({
 
   return (
     <Div>
-      <button
+      <Button
+        variant="ghost"
         type="button"
         onClick={() => {
           const next = !open;
           setOpen(next);
           if (next && isGroupParent && children === null) loadChildren();
         }}
-        className="w-full flex items-center justify-between py-[var(--appkit-space-2)] text-left group"
+        paddingX="none"
+        paddingY="xs"
+        justify="between"
+        className="w-full text-left group"
         aria-expanded={open}
       >
         <Heading level={3} size="sm" weight="semibold" color="muted">
@@ -273,7 +277,7 @@ export function GroupSettingsPanel({
         <Span size="xs" className="group-hover:text-[var(--appkit-color-text-muted)] dark:group-hover:text-[var(--appkit-color-text-faint)] transition-colors" color="faint">
           {open ? "▲" : "▼"}
         </Span>
-      </button>
+      </Button>
 
       {open && (
         <Stack gap="sm" className={`mt-3 ${__P.p4}`} surface="muted" rounded="lg" border="default">

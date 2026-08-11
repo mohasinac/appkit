@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 
 const __O = {
@@ -85,18 +86,24 @@ export function ProductTabsShell({
     <Div className={`mt-8 ${className}`}>
       <Div layout="flex" gap="1" border="default" className={`mb-6 ${__O.xAuto} border-b pb-px`}>
         {allTabs.map((t) => (
-          <button
+          <Button
+            variant="ghost"
             key={t.id}
             type="button"
             onClick={() => setActiveId(t.id)}
-            className={`flex-shrink-0 -mb-px pb-[var(--appkit-space-3)] px-[var(--appkit-space-4)] text-[length:var(--appkit-text-sm)] font-medium border-b-2 transition-colors ${
+            paddingX="md"
+            paddingY="none"
+            textSize="sm"
+            weight="medium"
+            rounded="none"
+            className={`flex-shrink-0 -mb-px pb-[var(--appkit-space-3)] border-b-2 transition-colors ${
  activeId === t.id
  ? "border-[var(--appkit-color-primary)] text-[var(--appkit-color-primary)]"
  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]"
  }`}
           >
             {t.label}
-          </button>
+          </Button>
         ))}
       </Div>
       <div>{activeContent}</div>

@@ -447,7 +447,7 @@ export function Search({
             value={selectedType}
             onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
             aria-label={labels.resourceTypeLabel ?? "Search in"}
-            className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
+            className="flex-shrink-0 rounded-lg border px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
           >
             {resourceTypes.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -672,7 +672,7 @@ export function Search({
               value={selectedType}
               onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
               aria-label={labels.resourceTypeLabel ?? "Search in"}
-              className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
+              className="flex-shrink-0 rounded-lg border px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
             >
               {resourceTypes.map((opt) => (
                 <option key={opt.value} value={opt.value}>

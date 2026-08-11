@@ -1,5 +1,5 @@
 "use client"
-import { Row } from "@mohasinac/appkit/ui";
+import { Button, Row } from "@mohasinac/appkit/ui";
 import React from "react";
 import { Div } from "../../../ui/components/Div";
 
@@ -64,17 +64,24 @@ export function ProductTabs({
       ) : (
         <Row gap="md" className="border-b mb-4">
           {tabs.map((t) => (
-            <button
+            <Button
+              variant="ghost"
               key={t.value}
+              type="button"
               onClick={() => setActiveTab(t.value)}
-              className={`pb-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium border-b-2 transition-colors ${
+              paddingX="none"
+              paddingY="xs"
+              textSize="sm"
+              weight="medium"
+              rounded="none"
+              className={`border-b-2 transition-colors ${
  activeTab === t.value
  ? "border-current text-current"
  : "border-transparent text-[var(--appkit-color-text-muted)]"
  }`}
             >
               {t.label}
-            </button>
+            </Button>
           ))}
         </Row>
       )}

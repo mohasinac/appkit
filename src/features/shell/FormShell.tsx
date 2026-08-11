@@ -2,12 +2,13 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { X, AlertTriangle, Eye, ArrowLeft } from "lucide-react";
 import { Button } from "../../ui/components/Button";
+import { IconButton } from "../../ui/components/IconButton";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
 import { Div, Row, Span, Stack, Text } from "../../ui";
 
 const __P = {
-  p4: "p-4",
+  p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 const __O = {
@@ -188,24 +189,31 @@ export function FormShell({
         {/* ── Top bar ─────────────────────────────────────── */}
         <Row gap="sm" paddingX="x-5" className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm">
           {previewMode ? (
-            <button
+            <Button
+              variant="ghost"
               type="button"
               onClick={() => setPreviewMode(false)}
               aria-label="Back to edit"
-              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors flex-shrink-0 flex items-center gap-1.5 text-sm"
+              gap="xs"
+              rounded="lg"
+              textSize="sm"
+              textColor="muted"
+              className="flex-shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
               <Span className="hidden sm:inline">Back to Edit</Span>
-            </button>
+            </Button>
           ) : (
-            <button
+            <IconButton
               type="button"
               onClick={attemptClose}
               aria-label="Close"
-              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors flex-shrink-0"
+              variant="ghost"
+              rounded="lg"
+              className="text-[var(--appkit-color-text-muted)] flex-shrink-0"
             >
               <X className="w-5 h-5" />
-            </button>
+            </IconButton>
           )}
 
           <Div className="flex-1 min-w-0">
@@ -221,14 +229,19 @@ export function FormShell({
             {previewMode ? null : (
               <>
                 {previewSlot && (
-                  <button
+                  <Button
+                    variant="outline"
                     type="button"
                     onClick={() => setPreviewMode(true)}
-                    className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors border border-[var(--appkit-color-border)]"
+                    gap="xs"
+                    rounded="lg"
+                    paddingX="sm"
+                    textSize="sm"
+                    textColor="muted"
                   >
                     <Eye className="w-4 h-4" />
                     <Span className="hidden sm:inline">Preview</Span>
-                  </button>
+                  </Button>
                 )}
                 {onSaveDraft && (
                   <Button
@@ -263,17 +276,24 @@ export function FormShell({
           {sections && sections.length > 0 && !previewMode && (
             <nav
               aria-label="Form sections"
-              className="hidden lg:flex flex-col flex-shrink-0 w-48 border-r border-[var(--appkit-color-border)] py-4 px-3 gap-1 overflow-y-auto"
+              className="hidden lg:flex flex-col flex-shrink-0 w-48 border-r border-[var(--appkit-color-border)] py-[var(--appkit-space-4)] px-[var(--appkit-space-3)] gap-[var(--appkit-space-1)] overflow-y-auto"
             >
               {sections.map((sec) => (
-                <button
+                <Button
+                  variant="ghost"
                   key={sec.id}
                   type="button"
                   onClick={() => scrollToSection(sec.id)}
-                  className="text-left text-sm px-3 py-2 rounded-lg text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
+                  rounded="lg"
+                  paddingX="sm"
+                  paddingY="xs"
+                  textSize="sm"
+                  textColor="muted"
+                  justify="start"
+                  className="text-left"
                 >
                   {sec.label}
-                </button>
+                </Button>
               ))}
             </nav>
           )}
@@ -282,14 +302,20 @@ export function FormShell({
           {sections && sections.length > 0 && !previewMode && (
             <Row gap="px" className={`lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 ${__O.xAuto} px-[1.25rem] bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]`} padding="y-xs">
               {sections.map((sec) => (
-                <button
+                <Button
+                  variant="outline"
                   key={sec.id}
                   type="button"
                   onClick={() => scrollToSection(sec.id)}
-                  className="flex-shrink-0 text-xs px-3 py-1.5 rounded-full border border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-primary)] hover:text-[var(--appkit-color-primary)] transition-colors whitespace-nowrap"
+                  rounded="full"
+                  paddingX="sm"
+                  paddingY="xs"
+                  textSize="xs"
+                  textColor="muted"
+                  className="flex-shrink-0 hover:border-primary hover:text-primary whitespace-nowrap"
                 >
                   {sec.label}
-                </button>
+                </Button>
               ))}
             </Row>
           )}
@@ -299,7 +325,7 @@ export function FormShell({
             ref={bodyRef}
             className={classNames(
               "flex-1 overflow-y-auto",
-              sections && sections.length > 0 && !previewMode ? "pt-0 lg:pt-0" : "",
+              sections && sections.length > 0 && !previewMode ? "pt-[var(--appkit-space-0)] lg:pt-[var(--appkit-space-0)]" : "",
             )}
           >
             {previewMode && previewSlot ? (

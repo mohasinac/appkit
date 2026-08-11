@@ -113,7 +113,7 @@ export interface SectionBackgroundConfig {
   overlay?: { enabled: boolean; color: string; opacity: number };
 }
 
-function sectionBackgroundStyle(bg: SectionBackgroundConfig): React.CSSProperties {
+export function sectionBackgroundStyle(bg: SectionBackgroundConfig): React.CSSProperties {
   switch (bg.type) {
     case "color":
       return { backgroundColor: bg.value };

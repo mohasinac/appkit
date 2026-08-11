@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Div, Form, Heading, Input, Label, Row, Select, Span, Stack, Text } from "../../../ui";
+import { Badge, Button, Checkbox, Div, Form, Heading, IconButton, Input, Label, Row, Select, Span, Stack, Text } from "../../../ui";
 import type { SelectOption } from "../../../ui";
 import { ProductInlineSelect } from "./ProductInlineSelect";
 import { CategoryInlineSelect } from "./CategoryInlineSelect";
@@ -272,16 +272,17 @@ export function SellerCouponEditorView({
                         border="strong" padding="pill-sm" rounded="full" surface="muted" color="primary" size="xs"
                       >
                         {cid}
-                        <button
+                        <IconButton
                           type="button"
                           aria-label={`Remove ${cid}`}
-                          className="text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] dark:hover:text-zinc-100"
+                          variant="ghost"
+                          className="text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
                           onClick={() =>
                             set("applicableCategories", draft.applicableCategories.filter((c) => c !== cid))
                           }
                         >
                           ×
-                        </button>
+                        </IconButton>
                       </Span>
                     ))}
                   </Row>
@@ -296,8 +297,8 @@ export function SellerCouponEditorView({
           {/* Active toggle */}
           <Row className="border border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)]" padding="inline" align="center" gap="3" rounded="lg">
             <Label layout="flex" gap="lg" className="cursor-pointer w-full">
-              <input
-                type="checkbox"
+              <Checkbox
+                bare
                 checked={draft.isActive}
                 onChange={(e) => set("isActive", e.target.checked)}
                 className="h-4 w-4 rounded border-[var(--appkit-color-border)] text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"

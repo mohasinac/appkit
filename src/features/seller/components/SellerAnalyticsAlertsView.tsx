@@ -275,18 +275,23 @@ export function SellerAnalyticsAlertsView({
               </Text>
               <Row gap="sm" wrap>
                 {CHANNEL_OPTIONS.map((ch) => (
-                  <button
+                  <Button
+                    variant="outline"
                     key={ch.value}
                     type="button"
                     onClick={() => toggleChannel(ch.value)}
-                    className={`px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] rounded-full text-[length:var(--appkit-text-xs)] border transition-colors ${
+                    rounded="full"
+                    paddingX="sm"
+                    paddingY="xs"
+                    textSize="xs"
+                    className={
  draft.notifyChannels.includes(ch.value)
  ? "bg-[var(--appkit-color-primary)] text-white border-transparent"
  : "bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] border-[var(--appkit-color-border)]"
- }`}
+ }
                   >
                     {ch.label}
-                  </button>
+                  </Button>
                 ))}
               </Row>
             </Div>

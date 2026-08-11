@@ -1,3 +1,4 @@
+import type React from "react";
 import { Div, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import type { Order, OrderStatus } from "../types";
@@ -22,9 +23,11 @@ interface OrderCardProps {
   order: Order;
   onClick?: (order: Order) => void;
   labels?: Record<string, string>;
+  /** Optional quick-action slot (e.g. Track/Cancel) rendered in the card footer — click-reduction so buyers don't have to open the detail page for a single action. */
+  renderActions?: (order: Order) => React.ReactNode;
 }
 
-export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
+export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderCardProps) {
   const date = order.createdAt
     ? new Date(order.createdAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
@@ -118,6 +121,11 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           {formatCurrency(order.total, order.currency)}
         </Span>
       </Row>
+      {renderActions && (
+        <Row justify="end" gap="sm" className="mt-3" onClick={(e) => e.stopPropagation()}>
+          {renderActions(order)}
+        </Row>
+      )}
     </Div>
   );
 }
@@ -130,6 +138,8 @@ interface OrdersListProps {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   emptyLabel?: string;
+  /** Optional per-card quick-action slot (e.g. Track/Cancel) — see OrderCardProps.renderActions. */
+  renderActions?: (order: Order) => React.ReactNode;
 }
 
 export function OrdersList({
@@ -140,6 +150,7 @@ export function OrdersList({
   currentPage = 1,
   onPageChange,
   emptyLabel = "No orders found",
+  renderActions,
 }: OrdersListProps) {
   if (isLoading) {
     return (
@@ -178,7 +189,7 @@ export function OrdersList({
     <Stack gap="lg">
       <Stack gap="md">
         {orders.map((order) => (
-          <OrderCard key={order.id} order={order} onClick={onOrderClick} />
+          <OrderCard key={order.id} order={order} onClick={onOrderClick} renderActions={renderActions} />
         ))}
       </Stack>
       {totalPages > 1 && onPageChange && (

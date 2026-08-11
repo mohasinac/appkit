@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
-import { Button, Div, Input, Row, Span, Stack, Text } from "../../ui";
+import { Button, Checkbox, Div, Input, Row, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FilterOption } from "./filterUtils";
 
@@ -151,7 +151,7 @@ export function FilterFacetSection({
                   placeholder="Search…"
                   value={search}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full rounded-md border border-zinc-200 bg-white px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text)] focus:outline-none border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] text-[var(--appkit-color-text)]"
+                  className="w-full rounded-md border px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] focus:outline-none border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] text-[var(--appkit-color-text)]"
                 />
               </Div>
             )}
@@ -165,7 +165,8 @@ export function FilterFacetSection({
                     className="cursor-pointer py-[0.375rem] hover:bg-[var(--appkit-color-bg)] mx-1" padding="x-sm" rounded="lg"
                     onClick={() => toggle(option.value)}
                   >
-                    <input
+                    <Checkbox
+                      bare
                       type={selectionMode === "single" ? "radio" : "checkbox"}
                       checked={isSelected}
                       onChange={() => toggle(option.value)}
@@ -321,7 +322,8 @@ export function FilterFacetSection({
                 className="cursor-pointer group" padding="y-2xs"
               >
                 {selectionMode === "single" ? (
-                  <input
+                  <Checkbox
+                    bare
                     type="radio"
                     checked={isSelected}
                     onChange={() => toggle(option.value)}
@@ -333,7 +335,8 @@ export function FilterFacetSection({
                     )}
                   />
                 ) : (
-                  <input
+                  <Checkbox
+                    bare
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => toggle(option.value)}

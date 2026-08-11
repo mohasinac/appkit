@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
-import { Div, Heading, HorizontalScroller, Row, Section, Text } from "../../../ui";
+import { Button, Div, Heading, HorizontalScroller, Row, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
@@ -29,18 +29,24 @@ function BrandFilterChip({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
+      variant="outline"
       type="button"
       onClick={onClick}
+      rounded="full"
+      paddingX="sm"
+      paddingY="xs"
+      textSize="xs"
+      weight="medium"
       className={[
-        "whitespace-nowrap rounded-full border px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium transition-colors",
+        "whitespace-nowrap transition-colors",
         active
           ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
-          : "border-zinc-300 bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-primary)] border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]",
+          : "border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-primary)]",
       ].join(" ")}
     >
       {label}
-    </button>
+    </Button>
   );
 }
 

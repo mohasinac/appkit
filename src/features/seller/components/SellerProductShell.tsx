@@ -1144,16 +1144,27 @@ export function SellerProductShell({
     else router.back();
   }, [onDiscard, router]);
 
-  const handleSave = useCallback(async () => {
+  // `silent` suppresses the success toast — used by the debounced auto-save
+  // path (FormShellProvider's onSaveDraft) so it doesn't pop a "Saved." toast
+  // every couple of seconds while the seller is still typing. The manual
+  // "Save Draft"/"Save Changes" button click stays loud (silent=false).
+  const handleSave = useCallback(async (silent = false) => {
     try {
       await onSave(draft);
       markClean();
-      showToast("Saved.", "success");
+      if (!silent) showToast("Saved.", "success");
     } catch (err) {
       void normalizeError(err);
-      showToast(err instanceof Error ? err.message : "Failed to save.", "error");
+      if (!silent) showToast(err instanceof Error ? err.message : "Failed to save.", "error");
     }
   }, [draft, onSave, markClean, showToast]);
+  const handleAutoSave = useCallback(async () => {
+    try {
+      await handleSave(true);
+    } catch (err) {
+      void normalizeError(err);
+    }
+  }, [handleSave]);
 
   const handlePublish = useCallback(async () => {
     try {
@@ -1260,7 +1271,7 @@ export function SellerProductShell({
 
   if (mode === "create" && formMode === "quick") {
     return (
-      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>}>
+      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>} onSaveDraft={handleAutoSave}>
         <FormShell
           isOpen
           onClose={handleDiscard}
@@ -1337,7 +1348,7 @@ export function SellerProductShell({
           </Div>
         )}
       >
-        <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>}>
+        <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>} onSaveDraft={handleAutoSave}>
           <StepForm<SellerProductDraft>
             steps={steps}
             values={draft}
@@ -1376,7 +1387,7 @@ export function SellerProductShell({
       publishLabel="Update"
       previewSlot={previewSlot}
     >
-      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>}>
+      <FormShellProvider isDirty={isDirty} values={draft as Record<string, JsonValue>} onSaveDraft={handleAutoSave}>
       <Stack gap="lg">
         <Section id="basic">
           <Heading level={3} className="mb-4">Basic Info</Heading>

@@ -2,6 +2,7 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import { useState } from "react";
+import { Button } from "../../../ui/components/Button";
 
 interface ShareButtonProps {
   title?: string;
@@ -31,13 +32,21 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
   };
 
   return (
-    <button
+    <Button
+      variant="outline"
       type="button"
       onClick={handleShare}
-      className={`inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-lg border border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] transition-colors ${className}`}
+      gap="sm"
+      rounded="lg"
+      paddingX="sm"
+      paddingY="xs"
+      textSize="sm"
+      weight="medium"
+      textColor="muted"
+      className={`hover:bg-[var(--appkit-color-surface)] ${className}`}
       aria-label="Share this page"
     >
       🔗 {copied ? "Link Copied!" : "Share"}
-    </button>
+    </Button>
   );
 }

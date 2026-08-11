@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
-import { Div, Row, Stack, Text } from "../../../ui";
+import { Button, Div, Row, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 const __O = {
@@ -78,11 +78,15 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
       {images.length > 1 && (
         <Div layout="flex" gap="2" className={`${__O.xAuto}`} padding="b-2xs">
           {images.map((src, i) => (
-            <button
+            <Button
+              variant="ghost"
               key={i}
               type="button"
               onClick={() => setActiveIndex(i)}
-              className={`flex-shrink-0 h-16 w-16 overflow-hidden rounded-lg border-2 transition-all${
+              rounded="lg"
+              paddingX="none"
+              paddingY="none"
+              className={`flex-shrink-0 h-16 w-16 overflow-hidden border-2 transition-all${
  i === activeIndex
  ? " border-primary-500"
  : " border-transparent opacity-60 hover:opacity-100"
@@ -91,7 +95,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
               aria-current={i === activeIndex ? "true" : undefined}
             >
               <MediaImage src={src} alt={`Thumbnail ${i + 1}`} size="thumbnail" />
-            </button>
+            </Button>
           ))}
         </Div>
       )}

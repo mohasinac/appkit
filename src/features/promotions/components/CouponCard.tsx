@@ -300,7 +300,7 @@ export function CouponCard({
             paddingY="none"
             textSize="xs"
             weight="semibold"
-            className="shrink-0 hover:opacity-80 active:scale-95 bg-white/60 dark:bg-black/20 border-current/20"
+            className="shrink-0 hover:opacity-80 active:scale-95 border-current/20"
             aria-label="Copy coupon code"
           >
             {copied ? labels.copied : labels.copy}
@@ -353,7 +353,7 @@ export function CouponCard({
               aria-label={labels.edit}
               variant="ghost"
               rounded="lg"
-              className="text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30 hover:text-[var(--appkit-color-text-muted)]"
+              className="text-[var(--appkit-color-text-muted)]"
             >
               <Pencil className="h-4 w-4" />
             </IconButton>
@@ -367,7 +367,7 @@ export function CouponCard({
               aria-label={n.isActive ? labels.deactivate : labels.activate}
               variant="ghost"
               rounded="lg"
-              className="text-[var(--appkit-color-text-muted)] hover:bg-white/60 dark:hover:bg-black/30"
+              className="text-[var(--appkit-color-text-muted)]"
             >
               {n.isActive
                 ? <ToggleRight className={CLS_TOGGLE_ON} />

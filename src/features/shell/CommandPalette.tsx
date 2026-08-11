@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Div, Input, Kbd, Modal, Row, Span, Stack, Text } from "../../ui";
+import { Button, Div, Input, Kbd, Modal, Row, Span, Stack, Text } from "../../ui";
 
 export interface CommandPaletteGroup {
   title: string;
@@ -107,13 +107,18 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
           ) : (
             <Stack gap="none">
               {results.map((item, idx) => (
-                <button
+                <Button
+                  variant="ghost"
                   key={item.href}
                   type="button"
                   onClick={() => navigate(item.href)}
                   onMouseEnter={() => setActiveIndex(idx)}
+                  justify="between"
+                  rounded="md"
+                  paddingX="sm"
+                  paddingY="xs"
                   className={[
-                    "flex w-full items-center justify-between rounded-md px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-left transition-colors",
+                    "w-full text-left",
                     idx === activeIndex
                       ? "bg-[var(--appkit-color-primary-50)] text-[var(--appkit-color-primary-700)]"
                       : "hover:bg-[var(--appkit-color-surface-elevated)]",
@@ -121,7 +126,7 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
                 >
                   <Span size="sm" weight={idx === activeIndex ? "semibold" : "normal"}>{item.label}</Span>
                   <Span size="xs" color="muted">{item.groupTitle}</Span>
-                </button>
+                </Button>
               ))}
             </Stack>
           )}

@@ -158,6 +158,9 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        toggles={[
+          { label: "Show expired", active: showExpired, onChange: (next) => table.set(TABLE_KEYS.SHOW_EXPIRED, next ? "true" : "") },
+        ]}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}

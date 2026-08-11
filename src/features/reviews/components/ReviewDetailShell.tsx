@@ -350,10 +350,11 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             type="button"
             onClick={closeLightbox}
             aria-label="Close lightbox"
-            variant="ghost"
-            className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-white/10 text-white hover:bg-white/20 text-[length:var(--appkit-text-xl)]"
+            variant="scrim"
+            rounded="full"
+            className="absolute top-4 right-4 z-10 h-10 w-10"
           >
-            ×
+            <Span size="xl">×</Span>
           </IconButton>
 
           {/* Counter */}
@@ -367,10 +368,11 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               type="button"
               onClick={(e) => { e.stopPropagation(); prevImage(); }}
               aria-label="Previous image"
-              variant="ghost"
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/25 text-[length:var(--appkit-text-2xl)]"
+              variant="scrim"
+              rounded="full"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12"
             >
-              ‹
+              <Span size="2xl">‹</Span>
             </IconButton>
           )}
 
@@ -396,10 +398,11 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               type="button"
               onClick={(e) => { e.stopPropagation(); nextImage(); }}
               aria-label="Next image"
-              variant="ghost"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/25 text-[length:var(--appkit-text-2xl)]"
+              variant="scrim"
+              rounded="full"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 h-12 w-12"
             >
-              ›
+              <Span size="2xl">›</Span>
             </IconButton>
           )}
 

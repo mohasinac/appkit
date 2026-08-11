@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, IconButton, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
@@ -15,7 +15,7 @@ const __O = {
 } as const;
 
 const CLS_DEFAULT_PILL = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning border border-warning dark:border-warning px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)]";
-const CLS_DELETE_BTN = "rounded-lg p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
+const CLS_DELETE_BTN = "text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -118,22 +118,28 @@ function AddressCard({
             <Span size="xs" color="muted" title="Contact support to resolve address ban">Contact support</Span>
           ) : (
             <>
-              <button
+              <IconButton
                 type="button"
                 onClick={onEdit}
                 title="Edit address"
-                className="rounded-lg p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)] transition-colors"
+                aria-label="Edit address"
+                variant="ghost"
+                rounded="lg"
+                className="text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] hover:text-[var(--appkit-color-text-muted)]"
               >
                 <Pencil className="h-4 w-4" />
-              </button>
-              <button
+              </IconButton>
+              <IconButton
                 type="button"
                 onClick={onDelete}
                 title="Delete address"
+                aria-label="Delete address"
+                variant="ghost"
+                rounded="lg"
                 className={CLS_DELETE_BTN}
               >
                 <Trash2 className="h-4 w-4" />
-              </button>
+              </IconButton>
             </>
           )}
         </Row>

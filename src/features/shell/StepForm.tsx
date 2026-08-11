@@ -103,12 +103,17 @@ export function StepIndicator({
         const hasError = stepErrors?.[i] === true;
         return (
           <Row key={i} className="flex-shrink-0" align="center" gap="none">
-            <button
+            <Button
+              variant="ghost"
               type="button"
               disabled={!isDone && !isActive}
               onClick={() => isDone && onStepClick?.(i)}
+              gap="sm"
+              rounded="lg"
+              paddingX="sm"
+              paddingY="xs"
+              textSize="sm"
               className={classNames(
-                "flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] rounded-lg text-[length:var(--appkit-text-sm)] transition-colors",
                 isActive
                   ? "font-semibold text-[var(--appkit-color-primary)]"
                   : isDone
@@ -139,7 +144,7 @@ export function StepIndicator({
               </Span>
               </Span>
               <Span className="hidden sm:inline">{step.label}</Span>
-            </button>
+            </Button>
             {i < steps.length - 1 && (
               <Div
                 className={classNames(

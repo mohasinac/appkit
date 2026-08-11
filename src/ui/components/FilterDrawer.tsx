@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "./Button";
 import { Drawer } from "./Drawer";
 import { Span } from "./Typography";
+import { sectionBackgroundStyle, type SectionBackgroundConfig } from "./Semantic";
 
 export interface FilterDrawerProps {
   children: React.ReactNode;
@@ -21,6 +22,8 @@ export interface FilterDrawerProps {
   side?: "left" | "right" | "bottom";
   /** Width for left/right drawers. Default: "md" (responsive: full-width on mobile, 24rem on desktop). */
   size?: "sm" | "md" | "lg" | "full";
+  /** Optional color/gradient/image background for the drawer body — same shape as <Section background={…}>. */
+  background?: SectionBackgroundConfig;
 }
 
 export function FilterDrawer({
@@ -38,6 +41,7 @@ export function FilterDrawer({
   hideTrigger = false,
   side = "right",
   size = "md",
+  background,
 }: FilterDrawerProps) {
   const [internalOpen, setInternalOpen] = React.useState(false);
   const isControlled = open !== undefined;
@@ -107,7 +111,29 @@ export function FilterDrawer({
           </div>
         }
       >
-        <div className="appkit-filter-drawer__body" data-section="filterdrawer-div-495">{children}</div>
+        <div
+          className={[
+            "appkit-filter-drawer__body",
+            background?.value ? "relative overflow-hidden" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          data-section="filterdrawer-div-495"
+        >
+          {background?.value && (
+            <>
+              <Span aria-hidden className="absolute inset-0 -z-10" style={sectionBackgroundStyle(background)} />
+              {background.overlay?.enabled && (
+                <Span
+                  aria-hidden
+                  className="absolute inset-0 -z-10"
+                  style={{ backgroundColor: background.overlay.color, opacity: background.overlay.opacity }}
+                />
+              )}
+            </>
+          )}
+          {children}
+        </div>
       </Drawer>
     </>
   );

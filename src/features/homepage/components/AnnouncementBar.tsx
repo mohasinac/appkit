@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { Div } from "../../../ui/components/Div";
 
-import { Row, Span } from "@mohasinac/appkit";
+import { IconButton, Row, Span } from "@mohasinac/appkit";
 const STORAGE_KEY = "letitrip:announcement-dismissed";
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -66,18 +66,20 @@ export function AnnouncementBar({ message, className = "", onDismiss }: Announce
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
         <Row textWeight="medium" textSize="sm" className="relative text-center text-white" padding="y-xs" align="center" justify="center">
           <Span>{message}</Span>
-          <button
+          <IconButton
             type="button"
             onClick={() => {
               saveLocalDismissal(message);
               onDismiss?.(bannerHash);
               setDismissed(true);
             }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 rounded p-[var(--appkit-space-0-5)] hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+            variant="ghost"
+            rounded="default"
+            className="absolute right-0 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 focus:ring-white"
             aria-label="Dismiss announcement"
           >
             <X className="h-4 w-4" />
-          </button>
+          </IconButton>
         </Row>
       </Div>
     </Div>

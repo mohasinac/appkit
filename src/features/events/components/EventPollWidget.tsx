@@ -5,7 +5,7 @@ import type { JsonValue } from "@mohasinac/appkit";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
-import { Div, LoginRequiredModal, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button, Checkbox, Div, LoginRequiredModal, Span, Stack, Text, Textarea, TextLink } from "../../../ui";
 import { normalizeError } from "../../../errors/normalize";
 
 const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-[var(--appkit-space-6)] py-[var(--appkit-space-8)] text-center space-y-2";
@@ -144,7 +144,8 @@ export function EventPollWidget({
             key={opt.id}
             className="flex items-center gap-[var(--appkit-space-3)] cursor-pointer rounded-lg border border-[var(--appkit-color-border)] px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] hover:bg-[var(--appkit-color-surface)] transition-colors"
           >
-            <input
+            <Checkbox
+              bare
               type={isMulti ? "checkbox" : "radio"}
               name={`poll-${eventId}`}
               value={opt.id}
@@ -157,23 +158,29 @@ export function EventPollWidget({
         ))}
       </Stack>
       {pollConfig.allowComment && (
-        <textarea
+        <Textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Add a comment (optional)"
           rows={3}
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="text-[var(--appkit-color-text-muted)]"
         />
       )}
       {error && <Text className="text-error" size="sm">{error}</Text>}
-      <button
+      <Button
+        variant="primary"
         type="button"
         onClick={handleSubmit}
         disabled={isLoading || selectedVotes.length === 0}
-        className="w-full rounded-xl bg-primary px-[var(--appkit-space-6)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] font-semibold text-white hover:bg-primary-600 disabled:opacity-60"
+        rounded="xl"
+        paddingX="xl"
+        paddingY="md"
+        textSize="sm"
+        weight="semibold"
+        className="w-full bg-primary hover:bg-primary-600"
       >
         {isLoading ? "Submitting…" : "Submit Vote"}
-      </button>
+      </Button>
     </Stack>
   );
 }

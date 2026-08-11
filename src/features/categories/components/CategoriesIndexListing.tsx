@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo } from "react";
 
 import { useCategoriesFiltered } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
-import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text } from "../../../ui";
+import { Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
@@ -219,19 +219,24 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
       {!brandsOnly && (
         <Row gap="xs" border="default" className="border-b mb-2">
           {TABS.map((tab) => (
-            <button
+            <Button
+              variant="ghost"
               key={tab.key}
               type="button"
               onClick={() => switchTab(tab.key)}
+              paddingX="md"
+              paddingY="y-xs-tall"
+              textSize="sm"
+              weight="medium"
               className={[
-                "px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-medium transition-colors border-b-2 -mb-px",
+                "transition-colors border-b-2 -mb-px rounded-none",
                 activeTab === tab.key
                   ? "border-primary text-primary dark:text-primary-400 dark:border-primary-400"
                   : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-800 text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text-muted)]",
               ].join(" ")}
             >
               {tab.label}
-            </button>
+            </Button>
           ))}
         </Row>
       )}
@@ -251,6 +256,9 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        toggles={[
+          { label: "Featured only", active: table.get(TABLE_KEYS.IS_FEATURED) === "true", onChange: (next) => table.set(TABLE_KEYS.IS_FEATURED, next ? "true" : "") },
+        ]}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}

@@ -15,6 +15,8 @@ const VARIANTS = {
   outline: "appkit-icon-button--outline",
   primary: "appkit-icon-button--primary",
   danger: "appkit-icon-button--danger",
+  /** Theme-independent white-on-translucent-black — for controls floating over a fixed-dark surface (lightbox, video player). */
+  scrim: "appkit-icon-button--scrim",
 } as const;
 
 export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

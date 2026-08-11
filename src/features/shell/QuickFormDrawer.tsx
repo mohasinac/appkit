@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { X } from "lucide-react";
 import type { ZodType } from "zod";
 import { Button } from "../../ui/components/Button";
+import { IconButton } from "../../ui/components/IconButton";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
 import { Div, Row, Stack, Text } from "../../ui";
@@ -192,14 +193,16 @@ export function QuickFormDrawer({
         {/* Header */}
         <Row className="flex-shrink-0 border-b border-[var(--appkit-color-border)]" padding="md" align="center" gap="3">
           <Text className="flex-1 text-[var(--appkit-color-text)]" size="base" weight="semibold">{title}</Text>
-          <button
+          <IconButton
             type="button"
             onClick={handleClose}
             aria-label="Close"
-            className="rounded-lg p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
+            variant="ghost"
+            rounded="lg"
+            className="text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)]"
           >
             <X className="w-5 h-5" />
-          </button>
+          </IconButton>
         </Row>
 
         {/* Scrollable body */}

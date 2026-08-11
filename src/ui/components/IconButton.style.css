@@ -101,3 +101,14 @@
 .dark .appkit-icon-button--danger:hover:not(:disabled) {
   background: rgba(127, 29, 29, 0.35);
 }
+
+/* Theme-independent: for controls floating over a fixed-dark surface (lightbox,
+   video player, fullscreen overlay) that stays near-black regardless of site theme. */
+.appkit-icon-button--scrim {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.appkit-icon-button--scrim:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Div } from "../../../ui";
+import { Button, Div } from "../../../ui";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
@@ -92,18 +92,23 @@ export function CategoryDetailTabs({
     <>
       <Div layout="flex" border="default" className={`border-b mb-6 ${__O.xAuto}`}>
         {visibleTabs.map((t) => (
-          <button
+          <Button
+            variant="ghost"
             key={t.id}
             type="button"
             onClick={() => setActiveTab(t.id as CategoryTabId)}
-            className={`px-[var(--appkit-space-5)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-medium whitespace-nowrap transition-colors -mb-px border-b-2 ${
+            paddingX="lg"
+            paddingY="y-xs-tall"
+            textSize="sm"
+            weight="medium"
+            className={`whitespace-nowrap transition-colors -mb-px border-b-2 rounded-none ${
  activeTab === t.id
  ? "border-primary text-primary"
  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-900 dark:hover:text-zinc-100"
  }`}
           >
             {tabLabel(t.label, countFor(t.id as CategoryTabId))}
-          </button>
+          </Button>
         ))}
       </Div>
 

@@ -7,7 +7,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 
-import { Badge, BulkActionBar, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, Span, Text, useToast } from "../../../ui";
+import { Badge, Button, BulkActionBar, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, Span, Text, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -312,10 +312,17 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                   key={group.id}
                   className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="lg"
                 >
-                  <button
+                  <Button
+                    variant="ghost"
                     type="button"
                     onClick={() => toggleGroup(group.id)}
-                    className="w-full flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-raised)]"
+                    justify="between"
+                    paddingX="md"
+                    paddingY="y-xs-tall"
+                    textSize="sm"
+                    weight="semibold"
+                    textColor="default"
+                    className="w-full hover:bg-[var(--appkit-color-surface-raised)]"
                   >
                     <Span className="truncate">
                       {group.title}{" "}
@@ -326,7 +333,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
                     <Span aria-hidden className="text-[var(--appkit-color-text-muted)]">
                       {collapsed ? "▸" : "▾"}
                     </Span>
-                  </button>
+                  </Button>
                   {!collapsed && (
                     <Div className="border-t border-[var(--appkit-color-border)]">
                       <DataTable

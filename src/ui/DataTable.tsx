@@ -4,6 +4,7 @@ import type { JsonValue } from "../schemas/types";
 
 const CLS_CHECKBOX = "rounded border-zinc-300";
 import { Button } from "./components/Button";
+import { Checkbox } from "./components/Checkbox";
 import { Spinner } from "./components/Spinner";
 import { Pagination } from "./components/Pagination";
 import { Span, Text } from "./components/Typography";
@@ -436,8 +437,8 @@ export function DataTable<T extends object>({
                 <tr>
                   {selectable && (
                     <th scope="col" className="px-4 py-3 w-8">
-                      <input
-                        type="checkbox"
+                      <Checkbox
+                        bare
                         className={CLS_CHECKBOX}
                         aria-label="Select all on page"
                         checked={
@@ -522,8 +523,8 @@ export function DataTable<T extends object>({
                         className="px-4 py-4 w-8"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <input
-                          type="checkbox"
+                        <Checkbox
+                          bare
                           className={CLS_CHECKBOX}
                           aria-label="Select row"
                           checked={selectedIds.includes(keyExtractor(item))}
@@ -607,8 +608,8 @@ function SelectableCard({
         <Row className="w-6 h-6" surface="default" align="center" justify="center" rounded="md" shadow="md">
           {/* relative wrapper ensures checkmark SVG centers over the input */}
           <Row className="relative" align="center" justify="center">
-            <input
-              type="checkbox"
+            <Checkbox
+              bare
               className={[
                 "w-4 h-4 rounded cursor-pointer transition-all appearance-none",
                 selected

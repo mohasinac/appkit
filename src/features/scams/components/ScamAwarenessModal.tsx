@@ -4,7 +4,7 @@ import { Span, useApiMutation } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Shield, IndianRupee, UserX, CreditCard, Package, UserCheck, ShieldAlert, Truck } from "lucide-react";
-import { Div, Modal, Stack, Row, Text, Checkbox, TextLink } from "../../../ui";
+import { Button, Div, Modal, Stack, Row, Text, Checkbox, TextLink } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SCAM_CATEGORIES } from "../constants/scam-types";
@@ -52,13 +52,15 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
       }
       actions={
         <Row gap="sm" justify="end" className="w-full">
-          <button
-            className="appkit-button appkit-button--primary appkit-button--md"
+          <Button
+            variant="primary"
+            size="md"
             disabled={!checked || mutation.isPending}
+            isLoading={mutation.isPending}
             onClick={() => mutation.mutate()}
           >
             {mutation.isPending ? "Saving…" : "Continue to LetItRip →"}
-          </button>
+          </Button>
         </Row>
       }
     >

@@ -158,10 +158,15 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
   return (
     <>
       <Div className={`${__O.hidden}`} surface="muted" rounded="xl" border="default">
-        <button
-          type="button"
+        <Row
+          role="button"
+          tabIndex={0}
           onClick={() => setOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-left hover:bg-[var(--appkit-color-surface)]/70 hover:bg-[var(--appkit-color-surface-elevated)]/70 transition-colors"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen((v) => !v); } }}
+          justify="between"
+          paddingX="x-md"
+          paddingY="y-sm"
+          className="w-full cursor-pointer text-left hover:bg-[var(--appkit-color-surface-elevated)]/70 transition-colors"
           aria-expanded={open}
         >
           <Row align="center" gap="xs">
@@ -182,7 +187,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
           >
             View whole group â†’
           </Button>
-        </button>
+        </Row>
 
         {open && (
           <Div className={`pb-[1rem] pt-[0.25rem] ${__O.xAuto}`} padding="x-md">

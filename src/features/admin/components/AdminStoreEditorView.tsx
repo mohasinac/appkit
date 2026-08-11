@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Details, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, StackedViewShell, Summary, Toggle, useToast } from "../../../ui";
+import { Button, Checkbox, Details, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, StackedViewShell, Summary, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { StoreCapability } from "../../auth/permissions/constants";
@@ -63,8 +63,6 @@ const STATUS_OPTIONS = [
   { label: "Rejected", value: "rejected" },
 ];
 
-const TEXTAREA_CHROME =
-  "w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
 
 // --- Component ---------------------------------------------------------------
 
@@ -141,12 +139,11 @@ export function AdminStoreEditorView({
   const renderNotesSection = () => (
     <Stack gap="xs">
       <Label>Admin notes (optional)</Label>
-      <textarea
+      <Textarea
         value={adminNotes}
         onChange={(e) => setAdminNotes(e.target.value)}
         rows={3}
         placeholder="e.g. Reason for suspension, approval notes…"
-        className={TEXTAREA_CHROME}
       />
     </Stack>
   );
@@ -162,12 +159,11 @@ export function AdminStoreEditorView({
     storeStatus === "suspended" ? (
       <Stack gap="xs">
         <Label>Suspension reason (optional)</Label>
-        <textarea
+        <Textarea
           value={suspensionReason}
           onChange={(e) => setSuspensionReason(e.target.value)}
           rows={2}
           placeholder="e.g. Policy violation, fraudulent activity…"
-          className={TEXTAREA_CHROME}
         />
       </Stack>
     ) : null;
@@ -197,8 +193,8 @@ export function AdminStoreEditorView({
                     key={cap.key}
                     className="flex items-center gap-[var(--appkit-space-2)] cursor-pointer text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      bare
                       checked={capabilities.has(cap.key)}
                       onChange={() => toggleCapability(cap.key)}
                       className="h-3.5 w-3.5 rounded border-[var(--appkit-color-border)] accent-primary"

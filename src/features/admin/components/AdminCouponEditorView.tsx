@@ -48,7 +48,7 @@ export interface AdminCouponEditorViewProps
    * redundant GET — while still allowing a background refetch to pick up
    * changes made elsewhere.
    */
-  initialData?: Record<string, unknown>;
+  initialData?: Record<string, JsonValue>;
 }
 
 interface CouponPayload {

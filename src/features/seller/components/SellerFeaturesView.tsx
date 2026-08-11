@@ -146,9 +146,12 @@ export function SellerFeaturesView() {
         <Stack as="ul" gap="none" className={LIST_CLASS}>
           {features.map((f) => (
             <Row as="li" key={f.id} className={ROW_CLASS} gap="sm">
-              <button
+              <Button
+                variant="ghost"
                 type="button"
                 onClick={() => openEditPanel(f.id)}
+                paddingX="none"
+                paddingY="none"
                 className="flex-1 text-left"
               >
                 <Text
@@ -161,7 +164,7 @@ export function SellerFeaturesView() {
                 >
                   {f.category} · {f.productTypes.join(" · ")}
                 </Text>
-              </button>
+              </Button>
               <Toggle
                 checked={f.isActive}
                 onChange={(checked) => toggleActive(f, checked)}
