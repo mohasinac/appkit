@@ -105,7 +105,7 @@ const sectionRef = useRef<HTMLElement>(null);
     >
       <Div className="max-w-6xl mx-auto">
         {/* Header */}
-        <Div className="text-center mb-10">
+        <Div className="text-left mb-10">
           {pillLabel && (
             <Span layout="inline-flex" gap="md" size="xs" weight="medium" className="border border-primary-[500]/30 bg-primary-500/10 px-[1.25rem] py-[0.375rem] tracking-[0.2em] text-primary-700 dark:text-primary-400 backdrop-blur-sm" rounded="full" transform="uppercase">
               {pillLabel}
@@ -118,7 +118,7 @@ const sectionRef = useRef<HTMLElement>(null);
             {title}
           </Heading>
           {subtitle && (
-            <Text variant="secondary" className="mt-2 max-w-xl mx-auto">
+            <Text variant="secondary" className="mt-2 max-w-xl">
               {subtitle}
             </Text>
           )}
@@ -141,7 +141,7 @@ const sectionRef = useRef<HTMLElement>(null);
 
         {/* CTA link */}
         {learnMoreHref && (
-          <Div className="text-center mt-8">
+          <Div className="text-left mt-8">
             <TextLink href={learnMoreHref}>{learnMoreLabel}</TextLink>
           </Div>
         )}

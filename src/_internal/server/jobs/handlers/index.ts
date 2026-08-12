@@ -68,3 +68,7 @@ export { onScamReportUpdateHandler } from "./onScamReportUpdate";
 export { draftPruneHandler } from "./draftPrune";
 // EMI — installment reminder + overdue-flagging sweep
 export { emiInstallmentReminderHandler } from "./emiInstallmentReminder";
+// Procurement Shipments — 3-function recompute cascade (item→lot, lot/header→shipment allocation, cascade-delete)
+export { onShipmentItemWriteHandler } from "./onShipmentItemWrite";
+export { onShipmentLotWriteHandler, onShipmentHeaderWriteHandler } from "./onShipmentAllocationSync";
+export { onShipmentDeletedHandler } from "./onShipmentDeleted";

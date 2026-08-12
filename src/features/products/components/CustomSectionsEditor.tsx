@@ -1,6 +1,6 @@
 "use client";
 import React, { useId } from "react";
-import { Button, Div, Heading, Input, Row, Span, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, Input, Row, Span, Stack, Text, Textarea } from "../../../ui";
 import type { CustomField, CustomSection } from "../schemas/firestore";
 import { MAX_CUSTOM_SECTIONS } from "../schemas/firestore";
 import { CustomFieldsEditor } from "./CustomFieldsEditor";
@@ -87,14 +87,13 @@ export function CustomSectionsEditor({
               Body text{" "}
               <Span weight="normal" color="faint">(optional)</Span>
             </label>
-            <textarea
+            <Textarea
               id={`${baseId}-text-${i}`}
               value={section.text ?? ""}
               onChange={(e) => update(i, { text: e.target.value || undefined })}
               placeholder="Additional details for this section…"
               rows={3}
               maxLength={2000}
-              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y"
             />
           </Div>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Row, Span, Text } from "../../ui";
+import { Textarea as UiTextarea } from "../../ui/components/Textarea";
 import {
   cn,
   INPUT_BASE,
@@ -52,7 +53,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           </label>
         )}
 
-        <textarea
+        <UiTextarea
+          bare
           ref={ref}
           className={cn(
             INPUT_BASE,

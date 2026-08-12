@@ -7,6 +7,11 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   helperText?: React.ReactNode;
   showCharCount?: boolean;
   variant?: "default" | "ghost" | "error";
+  /**
+   * Render just the native `<textarea>` — no Label/helper/char-count chrome.
+   * For call sites that already own their own label/wrapper markup.
+   */
+  bare?: boolean;
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -17,6 +22,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       helperText,
       showCharCount = false,
       variant = "default",
+      bare = false,
       className = "",
       required,
       maxLength,
@@ -43,6 +49,25 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           ? "border-transparent bg-transparent shadow-none"
           : "";
 
+    const textareaClassName = ["appkit-textarea", variantClass, className]
+      .filter(Boolean)
+      .join(" ");
+
+    if (bare) {
+      return (
+        <textarea
+          {...props}
+          ref={ref}
+          id={inputId}
+          value={value}
+          defaultValue={defaultValue}
+          maxLength={maxLength}
+          aria-invalid={error ? "true" : undefined}
+          className={textareaClassName}
+        />
+      );
+    }
+
     return (
       <div className="w-full" data-section="textarea-div-620">
         {label && (
@@ -59,9 +84,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           defaultValue={defaultValue}
           maxLength={maxLength}
           aria-invalid={error ? "true" : undefined}
-          className={["appkit-textarea", variantClass, className]
-            .filter(Boolean)
-            .join(" ")}
+          className={textareaClassName}
         />
 
         {(error || helperText || (showCharCount && maxLength)) && (

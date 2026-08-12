@@ -1,7 +1,7 @@
 "use client"
 import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useCallback } from "react";
-import { Button, Div, Heading, Span, Stack, Text, Textarea } from "../../../ui";
+import { Button, Div, Form, Heading, Input, Span, Stack, Text, Textarea } from "../../../ui";
 const CLS_FIELD_ERROR = "text-error";
 const CLS_ERROR_BANNER = "rounded-lg bg-error-surface dark:bg-error-surface border border-error dark:border-error px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] text-error dark:text-error";
 
@@ -139,13 +139,13 @@ export function ContactForm({
           className="w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] outline-none focus:ring-2 ring-primary/20 transition"
         />
       ) : (
-        <input
+        <Input
           id={id}
           type={id === "email" ? "email" : "text"}
           value={form[id]}
           onChange={(e) => setForm((f) => ({ ...f, [id]: e.target.value }))}
           placeholder={placeholder}
-          className="h-10 w-full rounded-lg border border-neutral-200 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] outline-none focus:ring-2 ring-primary/20 transition"
+          className="h-10"
         />
       )}
       {errors[id] && <Span size="xs" className={CLS_FIELD_ERROR}>{errors[id]}</Span>}
@@ -153,10 +153,11 @@ export function ContactForm({
   );
 
   return (
-    <form
+    <Form
       onSubmit={handleSubmit}
       noValidate
-      className={`space-y-4 ${className}`}
+      className={className}
+      spacing="md"
     >
       <Heading level={2} className="mb-6">
         {labels.title ?? "Send us a message"}
@@ -200,6 +201,6 @@ export function ContactForm({
           ? (labels.submittingButton ?? "Sending…")
           : (labels.submitButton ?? "Send Message")}
       </Button>
-    </form>
+    </Form>
   );
 }

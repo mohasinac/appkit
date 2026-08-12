@@ -14,7 +14,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
       background={content?.imageUrl ? { type: "image", value: content.imageUrl } : undefined}
     >
       <Div surface="overlay-xs" className="absolute inset-0" />
-      <Div paddingX="x-page" className="relative mx-auto max-w-7xl text-center text-white" padding="y-4xl">
+      <Div paddingX="x-page" className="relative mx-auto max-w-7xl text-left text-white" padding="y-4xl">
         {content?.title && (
           <Heading
             level={1}
@@ -24,7 +24,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
           </Heading>
         )}
         {content?.subtitle && (
-          <Text className="mx-auto mt-4 max-w-2xl opacity-90" size="lg">
+          <Text className="mt-4 max-w-2xl opacity-90" size="lg">
             {content.subtitle}
           </Text>
         )}

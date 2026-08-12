@@ -5,7 +5,7 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
-import { Div, Label } from "../../../ui";
+import { Div, Input, Label } from "../../../ui";
 
 type LoadOptionsFn = AsyncFacetSectionProps["loadOptions"];
 
@@ -61,12 +61,11 @@ export function ClassifiedFilters({
         <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           City / Area
         </Label>
-        <input
+        <Input
           type="text"
           value={table.get("city") || ""}
           onChange={(e) => table.set("city", e.target.value)}
           placeholder="e.g. Mumbai"
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-[var(--appkit-color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
         />
       </Div>
 

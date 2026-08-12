@@ -3,7 +3,7 @@
 import React from "react";
 import type { JsonValue } from "@mohasinac/appkit";
 import type { AdminTableColumn } from "../types";
-import { BaseListingCard, Button, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
+import { BaseListingCard, Button, Checkbox, Div, Row, Span, Stack, Table, Tbody, Td, Text, Th, Thead, Tr } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const __O = {
@@ -166,8 +166,8 @@ export function DataTable<T extends { id: string }>({
               {selectionEnabled && (
                 <Th padding="xs-3" scope="col" className="w-10">
                   {onToggleSelectAll && (
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      bare
                       data-testid="select-all-checkbox"
                       aria-label={allRowsSelected ? "Deselect all" : "Select all"}
                       checked={allRowsSelected}

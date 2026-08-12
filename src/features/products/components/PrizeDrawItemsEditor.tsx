@@ -12,7 +12,7 @@
  */
 
 import { useCallback } from "react";
-import { Button, Div, FormField, Heading, Row, Span, Stack, Text } from "../../../ui";
+import { Button, Div, FormField, Heading, Input, Row, Span, Stack, Text } from "../../../ui";
 
 const CLS_WARN_BOX = "rounded border border-warning/40 bg-warning-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-warning dark:bg-warning-surface dark:text-warning";
 const CLS_WON_BADGE = "rounded bg-error-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-semibold uppercase tracking-wide text-white";
@@ -293,7 +293,8 @@ export function PrizeDrawItemsEditor({
                 {onUploadVideo ? (
                   <Stack gap="xs">
                     <Text size="sm" weight="medium">Video (optional)</Text>
-                    <input
+                    <Input
+                      bare
                       type="file"
                       accept="video/*"
                       disabled={locked}

@@ -46,6 +46,7 @@ import { siteSettingsSeedData } from "./site-settings-seed-data";
 import { faqSeedData } from "./faq-seed-data";
 import { notificationsSeedData } from "./notifications-seed-data";
 import { payoutsSeedData } from "./payouts-seed-data";
+import { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./shipments-seed-data";
 import { blogPostsSeedData } from "./blog-posts-seed-data";
 import { eventsSeedData } from "./events-seed-data";
 import { sessionsSeedData } from "./sessions-seed-data";
@@ -177,6 +178,9 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   payouts: pick(asArr(payoutsSeedData)),
+  shipments: pick(asArr(shipmentsSeedData), "shipmentNumber"),
+  shipmentLots: pick(asArr(shipmentLotsSeedData), "lotName"),
+  shipmentItems: pick(asArr(shipmentItemsSeedData), "title"),
   blogPosts: pick(
     asArr(blogPostsSeedData).map((p) => ({
       ...p,

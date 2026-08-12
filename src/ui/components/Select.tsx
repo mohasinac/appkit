@@ -22,6 +22,11 @@ export interface SelectProps<V extends string = string> extends Omit<
   helperText?: React.ReactNode;
   required?: boolean;
   variant?: "default" | "ghost" | "error";
+  /**
+   * Render just the native `<select>` with its options — no Label/error
+   * chrome. For call sites that already own their own label/wrapper markup.
+   */
+  bare?: boolean;
 }
 
 export function Select<V extends string = string>({
@@ -38,6 +43,7 @@ export function Select<V extends string = string>({
   className = "",
   id,
   variant = "default",
+  bare = false,
   ...props
 }: SelectProps<V>) {
   const generatedId = React.useId();
@@ -54,6 +60,53 @@ export function Select<V extends string = string>({
       : variant === "ghost"
         ? "border-transparent bg-transparent shadow-none"
         : "appkit-select__trigger--default";
+
+  const selectClassName = [
+    "appkit-select__trigger",
+    "w-full appearance-none pr-10",
+    disabled
+      ? "appkit-select__trigger--disabled"
+      : "appkit-select__trigger--enabled",
+    variantClass,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const optionsMarkup = (
+    <>
+      {placeholder ? (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+      ) : null}
+      {options.map((option) => (
+        <option
+          key={String(option.value)}
+          value={option.value}
+          disabled={option.disabled}
+        >
+          {option.label}
+        </option>
+      ))}
+    </>
+  );
+
+  if (bare) {
+    return (
+      <select
+        {...props}
+        id={inputId}
+        value={value}
+        onChange={handleChange}
+        disabled={disabled}
+        aria-invalid={error ? "true" : undefined}
+        className={selectClassName}
+      >
+        {optionsMarkup}
+      </select>
+    );
+  }
 
   return (
     <div className="appkit-select" data-section="select-div-592">
@@ -75,32 +128,9 @@ export function Select<V extends string = string>({
           onChange={handleChange}
           disabled={disabled}
           aria-invalid={error ? "true" : undefined}
-          className={[
-            "appkit-select__trigger",
-            "w-full appearance-none pr-10",
-            disabled
-              ? "appkit-select__trigger--disabled"
-              : "appkit-select__trigger--enabled",
-            variantClass,
-            className,
-          ]
-            .filter(Boolean)
-            .join(" ")}
+          className={selectClassName}
         >
-          {placeholder ? (
-            <option value="" disabled>
-              {placeholder}
-            </option>
-          ) : null}
-          {options.map((option) => (
-            <option
-              key={String(option.value)}
-              value={option.value}
-              disabled={option.disabled}
-            >
-              {option.label}
-            </option>
-          ))}
+          {optionsMarkup}
         </select>
 
         <Div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[var(--appkit-color-text-faint)]" data-section="select-div-594">

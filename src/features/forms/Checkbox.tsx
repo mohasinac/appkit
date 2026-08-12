@@ -1,6 +1,7 @@
 "use client"
 import React from "react";
 import { Div, Row, Span, Text } from "../../ui";
+import { Checkbox as UiCheckbox } from "../../ui/components/Checkbox";
 import { cn, ERROR_BASE } from "./utils";
 
 export interface CheckboxProps extends Omit<
@@ -22,22 +23,15 @@ export function Checkbox({
   checked,
   ...props
 }: CheckboxProps) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  React.useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.indeterminate = !!indeterminate;
-    }
-  }, [indeterminate]);
-
   return (
     <Div className="w-full">
       <label className="flex flex-row items-center gap-3 cursor-pointer group">
           <Row className="relative flex-shrink-0" align="center" justify="center">
-          <input
-            ref={inputRef}
+          <UiCheckbox
+            bare
             type="checkbox"
             checked={checked}
+            indeterminate={indeterminate}
             className={cn(
               "peer w-5 h-5 rounded-md border-2 cursor-pointer",
               "transition-all duration-200 appearance-none",

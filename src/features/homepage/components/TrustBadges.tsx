@@ -116,7 +116,7 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
           {items.map((badge) => (
             <Stack
               key={badge.id}
-              className="text-center sm:[flex-direction:row] sm:items-[center] sm:text-left sm:gap-[1rem]" align="center" gap="sm"
+              className="text-left [flex-direction:row] items-[center] gap-[1rem]" align="center" gap="sm"
             >
               <Row
                 className="h-12 w-12 shrink-0 bg-[rgba(240,196,23,0.12)] text-[var(--color-red)] [border:2px_solid_var(--border-ink)]" align="center" justify="center" rounded="full"

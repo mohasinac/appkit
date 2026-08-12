@@ -3,7 +3,7 @@
 // main component stays under the 150-line code-quality threshold.
 
 import React from "react";
-import { Badge, Button, Div, Grid, Row, Stack, Text, TextLink } from "../../../ui";
+import { Badge, Button, Checkbox, Div, Grid, Row, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { LISTING_BADGE_VARIANT } from "../../products/utils/listing-badge-variant";
@@ -73,8 +73,8 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
             className="group relative bg-[var(--appkit-color-surface)] overflow-hidden" shadow="hover-md" rounded="xl" border={isSelected ? "strong" : "default"}
           >
             <Div className="absolute top-2 left-2 z-10">
-              <input
-                type="checkbox"
+              <Checkbox
+                bare
                 checked={isSelected}
                 onChange={() => toggle(row.id)}
                 className="h-4 w-4 rounded border-[var(--appkit-color-border)]"
@@ -107,8 +107,8 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
             key={row.id}
             className="bg-[var(--appkit-color-surface)] hover:bg-[var(--appkit-color-surface-raised)]" align="center" gap="3" rounded="lg" padding="inlineSm" border={isSelected ? "strong" : "default"}
           >
-            <input
-              type="checkbox"
+            <Checkbox
+              bare
               checked={isSelected}
               onChange={() => toggle(row.id)}
               className="h-4 w-4 rounded border-[var(--appkit-color-border)]"

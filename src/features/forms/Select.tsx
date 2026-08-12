@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Span, Text } from "../../ui";
+import { Select as UiSelect } from "../../ui/components/Select";
 import {
   cn,
   INPUT_BASE,
@@ -30,6 +31,7 @@ export function Select({
   placeholder,
   className = "",
   required,
+  value,
   ...props
 }: SelectProps) {
   return (
@@ -46,7 +48,11 @@ export function Select({
       )}
 
       <Div className="relative group">
-        <select
+        <UiSelect
+          bare
+          options={options}
+          placeholder={placeholder}
+          value={typeof value === "string" ? value : undefined}
           className={cn(
             INPUT_BASE,
             "pr-10 appearance-none cursor-pointer",
@@ -55,18 +61,7 @@ export function Select({
           )}
           aria-invalid={error ? "true" : undefined}
           {...props}
-        >
-          {placeholder && (
-            <option value="" disabled>
-              {placeholder}
-            </option>
-          )}
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        />
 
         {/* Chevron icon */}
         <Div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-150">

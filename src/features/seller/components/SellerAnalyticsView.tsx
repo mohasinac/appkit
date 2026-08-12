@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { StackedViewShell, Label, Row, Text } from "../../../ui";
+import { StackedViewShell, DateInput, Label, Row, Text } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 
 export interface SellerAnalyticsViewProps extends Omit<
@@ -34,20 +34,18 @@ function DefaultDateRange({
     <Row gap="md" align="center" wrap>
       <Label layout="flex" gap="md" className="text-[var(--appkit-color-text-muted)]" size="sm">
         <Text size="sm" variant="secondary">{labels.dateFrom ?? "From"}</Text>
-        <input
-          type="date"
+        <DateInput
           value={from}
-          onChange={(e) => onChange(e.target.value, to)}
-          className="appkit-input text-[length:var(--appkit-text-sm)] py-[var(--appkit-space-1-5)] px-[var(--appkit-space-3)]"
+          onChange={(v) => onChange(v, to)}
+          className="text-[length:var(--appkit-text-sm)] py-[var(--appkit-space-1-5)] px-[var(--appkit-space-3)]"
         />
       </Label>
       <Label layout="flex" gap="md" className="text-[var(--appkit-color-text-muted)]" size="sm">
         <Text size="sm" variant="secondary">{labels.dateTo ?? "To"}</Text>
-        <input
-          type="date"
+        <DateInput
           value={to}
-          onChange={(e) => onChange(from, e.target.value)}
-          className="appkit-input text-[length:var(--appkit-text-sm)] py-[var(--appkit-space-1-5)] px-[var(--appkit-space-3)]"
+          onChange={(v) => onChange(from, v)}
+          className="text-[length:var(--appkit-text-sm)] py-[var(--appkit-space-1-5)] px-[var(--appkit-space-3)]"
         />
       </Label>
     </Row>

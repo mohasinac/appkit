@@ -10,7 +10,7 @@ const CLS_HOVER_ROW = "hover:bg-[var(--appkit-color-surface)] hover:bg-[var(--ap
 const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-[var(--appkit-color-text-muted)]";
 const CLS_TRUNCATE = "font-medium truncate";
 import type { LucideIcon } from "lucide-react";
-import { Button, Div, Input, Li, Row, Span, Stack, Text, Ul } from "../../../ui";
+import { Button, Div, Input, Li, Row, Select, Span, Stack, Text, Ul } from "../../../ui";
 import { useNavSuggestions } from "../hooks/useNavSuggestions";
 import type { NavSuggestionRecord } from "../hooks/useNavSuggestions";
 
@@ -443,18 +443,13 @@ export function Search({
           )}
         </Row>
         {resourceTypes && resourceTypes.length > 0 && (
-          <select
+          <Select
+            options={resourceTypes}
             value={selectedType}
-            onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
+            onValueChange={handleTypeChange}
             aria-label={labels.resourceTypeLabel ?? "Search in"}
-            className="flex-shrink-0 rounded-lg border px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
-          >
-            {resourceTypes.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            className="flex-shrink-0"
+          />
         )}
         {deferred && (
           <Button rounded="lg" paddingX="sm" paddingY="sm"
@@ -668,18 +663,13 @@ export function Search({
           </Div>
 
           {resourceTypes && resourceTypes.length > 0 && (
-            <select
+            <Select
+              options={resourceTypes}
               value={selectedType}
-              onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
+              onValueChange={handleTypeChange}
               aria-label={labels.resourceTypeLabel ?? "Search in"}
-              className="flex-shrink-0 rounded-lg border px-[var(--appkit-space-2)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] text-[var(--appkit-color-text-muted)] cursor-pointer"
-            >
-              {resourceTypes.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              className="flex-shrink-0"
+            />
           )}
           <Button gap="md" 
             onClick={handleOverlaySearch}

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Alert, Button, Div, Form, Heading, Input, Row, Span, Stack, StackedViewShell, Text } from "../../../ui";
 import { apiClient } from "../../../http";
+import { COPILOT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
 
@@ -56,7 +57,7 @@ function MessageBubble({ msg }: { msg: CopilotMessage }) {
 
 export function AdminCopilotView({
   endpoint,
-  historyEndpoint = "/api/copilot/history",
+  historyEndpoint = COPILOT_ENDPOINTS.HISTORY,
   renderHeader,
   labels = {},
   className = "",

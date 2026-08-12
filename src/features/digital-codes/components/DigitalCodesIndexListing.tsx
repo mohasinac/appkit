@@ -190,7 +190,7 @@ export function DigitalCodesIndexListing({ initialData }: DigitalCodesIndexListi
             ))}
           </Div>
         ) : products.length === 0 ? (
-          <Text paddingY="3xl" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="start">
             No digital code listings found.
           </Text>
         ) : (

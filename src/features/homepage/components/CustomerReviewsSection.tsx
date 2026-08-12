@@ -71,7 +71,7 @@ if (isLoading) {
     <Section className={`${className}`} surface="muted" padding="y-3xl">
       <Div className="w-full max-w-7xl mx-auto md:px-[2rem]" padding="x-md">
         {/* Section Header */}
-        <Div className="text-center mb-10">
+        <Div className="text-left mb-10">
           <Heading
             level={2}
             className={`${themed.textPrimary} mb-3`} size="3xl" mdSize="4xl" weight="bold"
@@ -102,7 +102,7 @@ if (isLoading) {
 
         {/* See all link */}
         {viewMoreHref && (
-          <Div className="text-center mt-8">
+          <Div className="text-left mt-8">
             <TextLink
               href={viewMoreHref}
               className="text-primary hover:text-primary/80" size="sm" weight="medium"

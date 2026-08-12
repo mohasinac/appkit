@@ -253,7 +253,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
             ))}
           </Div>
         ) : stores.length === 0 ? (
-          <Text paddingY="4xl" color="muted" size="sm" align="center">
+          <Text paddingY="4xl" color="muted" size="sm" align="start">
             No stores found.
           </Text>
         ) : view === "list" ? (

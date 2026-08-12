@@ -81,7 +81,7 @@ const FORM_ALIGN_MAP: Record<"start" | "center" | "end" | "stretch", string> = {
   stretch: "items-stretch",
 };
 
-export function Form({ children, spacing, schema, align, gap, surface, padding, rounded, border, shadow, className = "", ...props }: FormProps) {
+export function Form({ children, spacing, schema, align, gap, surface, padding, paddingX, paddingY, rounded, border, shadow, overflow, className = "", ...props }: FormProps) {
   const helpers = useFormShellState(schema);
   const content =
     typeof children === "function"
@@ -95,7 +95,7 @@ export function Form({ children, spacing, schema, align, gap, surface, padding, 
           spacing ? FORM_SPACING_MAP[spacing] : "",
           align ? FORM_ALIGN_MAP[align] : "",
           gap ? GAP_MAP[gap] : "",
-          buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+          buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow, overflow }),
           className,
         ].filter(Boolean).join(" ")}
         {...props}

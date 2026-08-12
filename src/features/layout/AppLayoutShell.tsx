@@ -142,7 +142,7 @@ import { OVERLAY_FALLBACK_COLOR, SEED_DARK_BG as DEFAULT_DARK_BG, SEED_LIGHT_BG 
 
 const CLS_STAT_BOX = "flex flex-col items-center gap-[var(--appkit-space-1)] p-[var(--appkit-space-2)] bg-[var(--appkit-color-surface)] rounded-lg text-center";
 const CLS_STAT_LABEL = "text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]";
-const CLS_LOGOUT_BTN = "flex w-full items-center gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-error transition-colors hover:bg-error-surface hover:text-error dark:text-error dark:hover:bg-error-surface dark:hover:text-error";
+const CLS_LOGOUT_BTN = "flex w-full items-center justify-end gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-error transition-colors hover:bg-error-surface hover:text-error dark:text-error dark:hover:bg-error-surface dark:hover:text-error";
 
 /** Collapsible accordion section for the public sidebar. */
 function CollapsibleNavGroup({
@@ -395,7 +395,7 @@ function SidebarContent({
   };
 
   const navItemClass =
-    "flex items-center gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
+    "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
 
   const normalizedSections: AppLayoutShellSidebarSection[] = hasSections
     ? (sidebarSections as AppLayoutShellSidebarSection[])
@@ -505,7 +505,7 @@ function SidebarContent({
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex w-full items-center gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-50 hover:text-primary-800"
+              className="flex w-full items-center justify-end gap-[var(--appkit-space-3)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] transition-colors hover:bg-primary-50 hover:text-primary-800"
             >
               <Span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</Span>
               {activeThemeName}

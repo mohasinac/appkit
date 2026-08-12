@@ -278,7 +278,8 @@ export function ProductForm({
         <Row wrap gap="3">
           {(["single", "unbranded", "mixed"] as const).map((mode) => (
             <Label layout="flex" gap="xs" key={mode} className="cursor-pointer select-none" color="primary" size="sm">
-              <input
+              <Checkbox
+                bare
                 type="radio"
                 name="brandMode"
                 value={mode}

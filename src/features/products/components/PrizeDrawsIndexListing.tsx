@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Stack, Text } from "../../../ui";
+import { Div, FilterDrawer, Label, ListingToolbar, Pagination, Row, Select, Stack, Text } from "../../../ui";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
@@ -177,7 +177,7 @@ export function PrizeDrawsIndexListing({
             ))}
           </Div>
         ) : filteredDraws.length === 0 ? (
-          <Text paddingY="3xl" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="start">
             No prize draws found.
           </Text>
         ) : (
@@ -204,25 +204,22 @@ export function PrizeDrawsIndexListing({
       >
         <Stack gap="md">
           <>
-            <label
-              htmlFor="prizeRevealStatusFilter"
-              className="block text-[length:var(--appkit-text-xs)] font-semibold text-[var(--appkit-color-text-muted)] mb-1.5"
-            >
+            <Label htmlFor="prizeRevealStatusFilter" size="xs" weight="semibold" color="muted" className="block mb-1.5">
               Reveal status
-            </label>
-            <select
+            </Label>
+            <Select
               id="prizeRevealStatusFilter"
+              options={[
+                { value: "", label: "Any" },
+                { value: "pending", label: "Reveal pending" },
+                { value: "open", label: "Reveal open" },
+                { value: "closed", label: "Closed" },
+              ]}
               value={pendingTable.get(TABLE_KEYS.PRIZE_REVEAL_STATUS) ?? ""}
-              onChange={(e) =>
-                pendingTable.set(TABLE_KEYS.PRIZE_REVEAL_STATUS, e.target.value)
+              onValueChange={(v) =>
+                pendingTable.set(TABLE_KEYS.PRIZE_REVEAL_STATUS, v)
               }
-              className="w-full rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)]"
-            >
-              <option value="">Any</option>
-              <option value="pending">Reveal pending</option>
-              <option value="open">Reveal open</option>
-              <option value="closed">Closed</option>
-            </select>
+            />
           </>
           <ProductFilters
             table={pendingTable as any}

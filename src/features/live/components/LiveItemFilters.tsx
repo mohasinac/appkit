@@ -5,7 +5,7 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
-import { Div, Label } from "../../../ui";
+import { Div, Input, Label } from "../../../ui";
 
 type LoadOptionsFn = AsyncFacetSectionProps["loadOptions"];
 
@@ -65,12 +65,11 @@ export function LiveItemFilters({
         <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           Species / Animal
         </Label>
-        <input
+        <Input
           type="text"
           value={table.get("species") || ""}
           onChange={(e) => table.set("species", e.target.value)}
           placeholder="e.g. Axolotl, Parrot"
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-[var(--appkit-color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
         />
       </Div>
 
@@ -78,12 +77,11 @@ export function LiveItemFilters({
         <Label className="block text-[var(--appkit-color-text)] mb-2" size="sm" weight="medium">
           Jurisdiction (state/UT)
         </Label>
-        <input
+        <Input
           type="text"
           value={table.get("jurisdiction") || ""}
           onChange={(e) => table.set("jurisdiction", e.target.value)}
           placeholder="e.g. Maharashtra"
-          className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-[var(--appkit-color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
         />
       </Div>
 

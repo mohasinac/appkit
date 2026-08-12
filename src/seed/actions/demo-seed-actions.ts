@@ -57,7 +57,10 @@ export type SeedCollectionName =
   | "roleOverrides"
   | "customRoles"
   | "adminNotifications"
-  | "lotteryEntries";
+  | "lotteryEntries"
+  | "shipments"
+  | "shipmentLots"
+  | "shipmentItems";
 
 export interface SeedOperationResult {
   success?: boolean;

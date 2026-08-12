@@ -6,6 +6,7 @@ import type { BulkActionItem } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -63,8 +64,8 @@ function statusBadge(status: string) {
 }
 
 export function SellerReviewsView({
-  reviewsApiBase = "/api/store/reviews",
-  replyApiBase = "/api/store/reviews",
+  reviewsApiBase = SELLER_ENDPOINTS.REVIEWS,
+  replyApiBase = SELLER_ENDPOINTS.REVIEWS,
 }: SellerReviewsViewProps) {
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [meta, setMeta] = useState<Meta | null>(null);
@@ -376,8 +377,7 @@ export function SellerReviewsView({
           {replyError && <Alert variant="error">{replyError}</Alert>}
           <Div>
             <Text className="mb-1.5" size="sm" weight="medium">Store reply</Text>
-            <textarea
-              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
+            <Textarea
               rows={5}
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}

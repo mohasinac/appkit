@@ -4,7 +4,7 @@ import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Card, CardBody, ConfirmDeleteModal, Div, Form, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, Card, CardBody, Checkbox, ConfirmDeleteModal, Div, Form, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -193,7 +193,8 @@ export function AdminAddressEditorView({
                 key={type}
                 className="flex cursor-pointer items-center gap-[var(--appkit-space-2)]"
               >
-                <input
+                <Checkbox
+                  bare
                   type="radio"
                   name="ownerType"
                   value={type}

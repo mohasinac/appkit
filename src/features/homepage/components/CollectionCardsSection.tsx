@@ -88,9 +88,9 @@ export async function CollectionCardsSection({
           ) : null}
 
           <Stack
-            align="center"
+            align="start"
             gap="sm"
-            className="border-dashed text-center" border="strong" paddingY="y-3xl" paddingX="x-lg" rounded="2xl"
+            className="border-dashed text-left" border="strong" paddingY="y-3xl" paddingX="x-lg" rounded="2xl"
           >
             <Text size="sm" color="muted">
               Mixed collection rendering ({collections.length}/3 collection

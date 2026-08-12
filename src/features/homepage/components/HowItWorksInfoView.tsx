@@ -65,12 +65,12 @@ return (
     >
       {/* Header */}
       <Section color="inverse" tone="accent-banner" className={heroClass} paddingY="y-5xl">
-        <Div paddingX="x-page" className="max-w-4xl mx-auto text-center">
+        <Div paddingX="x-page" className="max-w-4xl mx-auto text-left">
           <Heading color="inverse" level={1} variant="none" className="mb-4">
             {title}
           </Heading>
           {subtitle && (
-            <Text color="inverse" variant="none" className="/80 max-w-2xl mx-auto">
+            <Text color="inverse" variant="none" className="/80 max-w-2xl">
               {subtitle}
             </Text>
           )}

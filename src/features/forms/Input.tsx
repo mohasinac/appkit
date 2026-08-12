@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Span, Text } from "../../ui";
+import { Input as UiInput } from "../../ui/components/Input";
 import {
   cn,
   INPUT_BASE,
@@ -73,7 +74,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </Div>
           )}
 
-          <input
+          <UiInput
+            bare
             ref={ref}
             className={cn(
               "w-full",

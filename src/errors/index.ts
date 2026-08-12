@@ -12,6 +12,7 @@ export { ValidationError } from "./validation-error";
 export { AuthenticationError } from "./authentication-error";
 export { AuthorizationError } from "./authorization-error";
 export { NotFoundError } from "./not-found-error";
+export { ConflictError } from "./conflict-error";
 export { DatabaseError } from "./database-error";
 export { RazorpayUnreachableError } from "./razorpay-unreachable";
 // error-handler uses `next/server` — only import in server/API-route contexts

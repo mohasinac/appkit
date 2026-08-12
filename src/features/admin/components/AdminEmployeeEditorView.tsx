@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Details, Div, Form, FormActions, Label, Select, SideDrawer, Span, Stack, Summary, Text, useToast } from "../../../ui";
+import { Button, Checkbox, ConfirmDeleteModal, Details, Div, Form, FormActions, Input, Label, Select, SideDrawer, Span, Stack, Summary, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -130,8 +130,8 @@ function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPa
                     key={perm}
                     className="flex items-center gap-[var(--appkit-space-2)] cursor-pointer text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)]"
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      bare
                       checked={permissions.has(perm)}
                       onChange={() => togglePerm(perm)}
                       className="h-3.5 w-3.5 rounded border-[var(--appkit-color-border)] accent-primary"
@@ -270,13 +270,12 @@ export function AdminEmployeeEditorView({
               <Label size="sm" weight="medium" color="primary">
                 Email address
               </Label>
-              <input
+              <Input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="employee@example.com"
-                className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary/60 transition"
               />
             </Stack>
           )}

@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { AdminListingScaffoldRow } from "./DataListingView";
-import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
+import { Checkbox, Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -96,8 +96,8 @@ function AdminCardItem({
       >
         {onToggleSelect && (
           <Div data-checkbox className="shrink-0" onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}>
-            <input
-              type="checkbox"
+            <Checkbox
+              bare
               checked={selected}
               onChange={() => onToggleSelect(row.id)}
               className="h-4 w-4 rounded border-zinc-300 text-primary accent-primary cursor-pointer"
@@ -141,8 +141,8 @@ function AdminCardItem({
           paddingY="t-sm" padding="x-sm"
           onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}
         >
-          <input
-            type="checkbox"
+          <Checkbox
+            bare
             checked={selected}
             onChange={() => onToggleSelect(row.id)}
             className="h-4 w-4 rounded border-zinc-300 text-primary accent-primary cursor-pointer"

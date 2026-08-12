@@ -12,7 +12,7 @@ import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingLayout, Pagination, Row, Span, Text, useToast } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingLayout, Pagination, Row, Select, Span, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -114,18 +114,13 @@ function TypeDropdown({
       <Text className="tracking-wide text-[var(--appkit-color-text-muted)]" size="xs" weight="semibold" transform="uppercase">
         Listing type
       </Text>
-      <select
+      <Select
+        options={options}
         value={active}
-        onChange={(e) => onChange(e.target.value as ListingKind)}
-        className="rounded border border-[var(--appkit-color-border)] bg-transparent px-[var(--appkit-space-2)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] sm:max-w-xs"
+        onValueChange={(v) => onChange(v as ListingKind)}
+        className="sm:max-w-xs"
         aria-label="Filter by listing type"
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+      />
     </Row>
   );
 }

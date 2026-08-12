@@ -73,7 +73,6 @@ function MaskedInput({
 }
 
 const NOTIF_CHANNEL_INDENT = "space-y-4 pl-4 border-l-2 border-[var(--appkit-color-border)]";
-const CLS_TEXTAREA = "w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] p-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-muted)] resize-y focus:outline-none focus:ring-2 focus:ring-blue-500";
 const PRIORITY_OPTIONS: SelectOption[] = [
   { label: "Low (send all)", value: "low" },
   { label: "Normal", value: "normal" },
@@ -576,12 +575,11 @@ export function AdminSiteSettingsView({
               <Input label="Mission section title" value={aboutMissionTitle} onChange={(e) => setAboutMissionTitle(e.target.value)} placeholder="Our Mission" />
               <>
                 <Text className="mb-1" color="muted" size="sm" weight="medium">Mission text</Text>
-                <textarea
+                <Textarea
                   value={aboutMissionText}
                   onChange={(e) => setAboutMissionText(e.target.value)}
                   placeholder="LetItRip was built to democratise commerce…"
                   rows={4}
-                  className={CLS_TEXTAREA}
                 />
               </>
               <Input label="CTA banner title" value={aboutCtaTitle} onChange={(e) => setAboutCtaTitle(e.target.value)} placeholder="Ready to get started?" />

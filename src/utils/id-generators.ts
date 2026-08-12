@@ -234,6 +234,25 @@ export function generatePayoutId(input: GeneratePayoutIdInput): string {
   return `payout-${sellerSlug}-${y}${m}${d}-${generateRandomString(6)}`;
 }
 
+// --- Shipment -------------------------------------------------------------------
+
+export interface GenerateShipmentIdInput {
+  supplierName: string;
+  date?: Date;
+  customId?: string;
+}
+export function generateShipmentId(input: GenerateShipmentIdInput): string {
+  if (input.customId?.trim()) return input.customId.trim();
+  const supplierSlug = slugify(input.supplierName)
+    .substring(0, 25)
+    .replace(/-+$/, "");
+  const date = input.date || new Date();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `shipment-${supplierSlug}-${y}${m}${d}-${generateRandomString(6)}`;
+}
+
 // --- Offer --------------------------------------------------------------------
 
 export interface GenerateOfferIdInput {

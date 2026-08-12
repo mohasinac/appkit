@@ -53,11 +53,11 @@ if (isLoading) {
       <Section
         className={`relative overflow-hidden md:py-[6rem] ${className}`} paddingY="y-4xl" paddingX="x-md"
       >
-        <Div className="animate-pulse max-w-4xl mx-auto text-center">
-          <Div className="h-6 w-52 mx-auto mb-6" surface="subtle" rounded="full" />
-          <Div className="h-20 mb-4 max-w-2xl mx-auto" surface="subtle" rounded="lg" />
-          <Div className="h-6 mb-8 max-w-lg mx-auto" surface="subtle" rounded="lg" />
-          <Row justify="center" gap="md">
+        <Div className="animate-pulse max-w-4xl mx-auto text-left">
+          <Div className="h-6 w-52 mb-6" surface="subtle" rounded="full" />
+          <Div className="h-20 mb-4 max-w-2xl" surface="subtle" rounded="lg" />
+          <Div className="h-6 mb-8 max-w-lg" surface="subtle" rounded="lg" />
+          <Row justify="start" gap="md">
             <Div className="h-12 w-36" surface="subtle" rounded="xl" />
             <Div className="h-12 w-36" surface="subtle" rounded="xl" />
           </Row>
@@ -86,7 +86,7 @@ if (isLoading) {
           className="grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
         >
           {/* Left: text content */}
-          <Div className="text-center lg:text-left">
+          <Div className="text-left">
             {/* Pill badge */}
             {pillLabel && (
               <Div>
@@ -117,7 +117,7 @@ if (isLoading) {
             {/* Subtitle */}
             {subtitle && (
               <Text
-                className={`mt-4 ${themed.textSecondary} max-w-xl leading-relaxed mx-auto lg:mx-0`} size="xl"
+                className={`mt-4 ${themed.textSecondary} max-w-xl leading-relaxed`} size="xl"
               >
                 {subtitle}
               </Text>
@@ -128,7 +128,7 @@ if (isLoading) {
               <Row
                 wrap
                 gap="md"
-                className="mt-8 lg:justify-[flex-start]" justify="center"
+                className="mt-8" justify="start"
               >
                 {ctaHref ? (
                   <TextLink rounded="xl"
@@ -170,7 +170,7 @@ if (isLoading) {
               <Row
                 wrap
                 gap="sm"
-                className="mt-6 lg:justify-[flex-start]" justify="center"
+                className="mt-6" justify="start"
               >
                 {trustChips.map((chip) => (
                   <Span layout="inline-flex" gap="xs"

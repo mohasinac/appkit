@@ -15,6 +15,7 @@ import type { JsonValue } from "@mohasinac/appkit";
 import type { FacetOption } from "../../../../features/filters/FilterFacetSection";
 import { apiClient } from "../../../../http/ApiClient";
 import { normalizeError } from "../../../../errors/normalize";
+import { ADMIN_ENDPOINTS, CATEGORY_ENDPOINTS, BRAND_ENDPOINTS } from "../../../../constants/api-endpoints";
 
 export type LoadOptionsFn<T = PaginatedSelectOption> = (
   query: string,
@@ -60,7 +61,7 @@ export function makeCategoryLoadOptions(
   variant: "public" | "admin" = "admin",
   categoryType?: string,
 ): LoadOptionsFn {
-  const base = variant === "admin" ? "/api/admin/categories" : "/api/categories";
+  const base = variant === "admin" ? ADMIN_ENDPOINTS.CATEGORIES : CATEGORY_ENDPOINTS.LIST;
   return async (q, page) =>
     fetchPage<PaginatedSelectOption>(
       buildUrl(base, q, page, categoryType ? { categoryType } : undefined),
@@ -76,7 +77,7 @@ export function makeCategoryFacetLoadOptions(
   variant: "public" | "admin" = "public",
   categoryType?: string,
 ): LoadOptionsFn<FacetOption> {
-  const base = variant === "admin" ? "/api/admin/categories" : "/api/categories";
+  const base = variant === "admin" ? ADMIN_ENDPOINTS.CATEGORIES : CATEGORY_ENDPOINTS.LIST;
   return async (q, page) =>
     fetchPage<FacetOption>(
       buildUrl(base, q, page, categoryType ? { categoryType } : undefined),
@@ -90,7 +91,7 @@ export function makeCategoryFacetLoadOptions(
 // ── Brands ────────────────────────────────────────────────────────────────────
 
 export function makeBrandLoadOptions(variant: "public" | "admin" = "admin"): LoadOptionsFn {
-  const base = variant === "admin" ? "/api/admin/brands" : "/api/brands";
+  const base = variant === "admin" ? ADMIN_ENDPOINTS.BRANDS : BRAND_ENDPOINTS.LIST;
   return async (q, page) =>
     fetchPage<PaginatedSelectOption>(
       buildUrl(base, q, page),
@@ -103,7 +104,7 @@ export function makeBrandLoadOptions(variant: "public" | "admin" = "admin"): Loa
 }
 
 export function makeBrandFacetLoadOptions(variant: "public" | "admin" = "public"): LoadOptionsFn<FacetOption> {
-  const base = variant === "admin" ? "/api/admin/brands" : "/api/brands";
+  const base = variant === "admin" ? ADMIN_ENDPOINTS.BRANDS : BRAND_ENDPOINTS.LIST;
   return async (q, page) =>
     fetchPage<FacetOption>(
       buildUrl(base, q, page),
@@ -119,7 +120,7 @@ export function makeBrandFacetLoadOptions(variant: "public" | "admin" = "public"
 export function makeStoreLoadOptions(): LoadOptionsFn {
   return async (q, page) =>
     fetchPage<PaginatedSelectOption>(
-      buildUrl("/api/admin/stores", q, page),
+      buildUrl(ADMIN_ENDPOINTS.STORES, q, page),
       (item) => ({
         value: String(item.id ?? item.slug ?? ""),
         label: String(item.storeName ?? item.name ?? item.id ?? ""),
@@ -131,7 +132,7 @@ export function makeStoreLoadOptions(): LoadOptionsFn {
 export function makeStoreFacetLoadOptions(): LoadOptionsFn<FacetOption> {
   return async (q, page) =>
     fetchPage<FacetOption>(
-      buildUrl("/api/admin/stores", q, page),
+      buildUrl(ADMIN_ENDPOINTS.STORES, q, page),
       (item) => ({
         value: String(item.id ?? item.slug ?? ""),
         label: String(item.storeName ?? item.name ?? item.id ?? ""),
@@ -144,7 +145,7 @@ export function makeStoreFacetLoadOptions(): LoadOptionsFn<FacetOption> {
 export function makeProductLoadOptions(storeId?: string): LoadOptionsFn {
   return async (q, page) =>
     fetchPage<PaginatedSelectOption>(
-      buildUrl("/api/admin/products", q, page, storeId ? { storeId } : undefined),
+      buildUrl(ADMIN_ENDPOINTS.PRODUCTS, q, page, storeId ? { storeId } : undefined),
       (item) => ({
         value: String(item.id ?? item.slug ?? ""),
         label: String(item.title ?? item.name ?? item.id ?? ""),
@@ -158,7 +159,7 @@ export function makeProductLoadOptions(storeId?: string): LoadOptionsFn {
 export function makeUserLoadOptions(role?: string): LoadOptionsFn {
   return async (q, page) =>
     fetchPage<PaginatedSelectOption>(
-      buildUrl("/api/admin/users", q, page, role ? { role } : undefined),
+      buildUrl(ADMIN_ENDPOINTS.USERS, q, page, role ? { role } : undefined),
       (item) => ({
         value: String(item.id ?? item.uid ?? ""),
         label: String(item.displayName ?? item.email ?? item.id ?? ""),
@@ -172,7 +173,7 @@ export function makeUserLoadOptions(role?: string): LoadOptionsFn {
 export function makeAddressLoadOptions(ownerType?: "user" | "store"): LoadOptionsFn {
   return async (q, page) =>
     fetchPage<PaginatedSelectOption>(
-      buildUrl("/api/admin/addresses", q, page, ownerType ? { ownerType } : undefined),
+      buildUrl(ADMIN_ENDPOINTS.ADDRESSES, q, page, ownerType ? { ownerType } : undefined),
       (item) => ({
         value: String(item.id ?? ""),
         label: [item.label, item.city, item.state].filter(Boolean).join(", "),

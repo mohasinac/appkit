@@ -39,7 +39,7 @@ export function FeaturedResultsSection({
 
   return (
     <Section className={className} paddingY="y-5xl" paddingX="x-md">
-      <Div className="mb-12 text-center">
+      <Div className="mb-12 text-left">
         {pillLabel && (
           <Span className={pillCls}>
             <Span
@@ -57,7 +57,7 @@ export function FeaturedResultsSection({
           {title}
         </Heading>
 
-        <Row align="center" justify="center" gap="sm" color="faint"
+        <Row align="center" justify="start" gap="sm" color="faint"
           className="mt-3"
           aria-hidden="true"
         >

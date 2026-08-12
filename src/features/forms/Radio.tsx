@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span, Text } from "../../ui";
+import { Checkbox, Div, Span, Text } from "../../ui";
 import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
 
 export interface RadioOption {
@@ -50,7 +50,8 @@ export function RadioGroup({
                   option.disabled && "opacity-50 cursor-not-allowed",
                 )}
               >
-                <input
+                <Checkbox
+                  bare
                   type="radio"
                   name={name}
                   value={option.value}
@@ -100,7 +101,8 @@ export function RadioGroup({
                 option.disabled && "opacity-50 cursor-not-allowed",
               )}
             >
-              <input
+              <Checkbox
+                bare
                 type="radio"
                 name={name}
                 value={option.value}

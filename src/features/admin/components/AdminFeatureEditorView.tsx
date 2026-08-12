@@ -6,6 +6,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Button,
+  Checkbox,
   ConfirmDeleteModal,
   Div,
   Form,
@@ -323,8 +324,8 @@ export function AdminFeatureEditorView({
               const pillClass = `${PILL_BASE_CLASS} ${checked ? PILL_CHECKED_CLASS : PILL_UNCHECKED_CLASS}`;
               return (
                 <Label key={opt.value} className={pillClass}>
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    bare
                     className="sr-only"
                     checked={checked}
                     onChange={() => toggleProductType(opt.value)}

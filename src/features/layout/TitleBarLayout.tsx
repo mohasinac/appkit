@@ -342,7 +342,7 @@ export function TitleBarLayout({
               </Link>
             </Row>
           ) : (
-            navSlot && <Div className="hidden md:flex">{navSlot}</Div>
+            navSlot && <Div className="hidden md:flex ml-auto">{navSlot}</Div>
           )}
 
           {/* Right: #3 — all action buttons.

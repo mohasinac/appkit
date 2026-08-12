@@ -1,7 +1,8 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import { useEffect, useState } from "react";
-import { Alert, Badge, Button, Div, Modal, Row, Stack, Text } from "../../../ui";
+import { Alert, Badge, Button, Div, Modal, Row, Stack, Text, Textarea } from "../../../ui";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
   p4: "p-[var(--appkit-space-4)]",
@@ -32,9 +33,9 @@ function rupees(paise: number) {
 }
 
 export function SellerPayoutRequestView({
-  payoutsApiBase = "/api/store/payouts",
-  payoutSettingsApiBase = "/api/store/payout-settings",
-  requestApiBase = "/api/store/payouts/request",
+  payoutsApiBase = SELLER_ENDPOINTS.PAYOUTS,
+  payoutSettingsApiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS,
+  requestApiBase = SELLER_ENDPOINTS.PAYOUT_REQUEST,
   onRequested,
 }: SellerPayoutRequestViewProps) {
   const [summary, setSummary] = useState<PayoutSummary | null>(null);
@@ -140,8 +141,7 @@ export function SellerPayoutRequestView({
 
           <Div>
             <Text className="mb-1.5" size="sm" weight="medium">Notes (optional)</Text>
-            <textarea
-              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-input)] p-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]"
+            <Textarea
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

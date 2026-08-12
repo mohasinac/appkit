@@ -179,7 +179,7 @@ export function AdvertisementBanner({
               )}
             </Row>
           ) : (
-            <Div className="relative z-10 w-full max-w-4xl mx-auto md:py-[4rem] text-center" paddingY="y-3xl" paddingX="x-lg">
+            <Div className="relative z-10 w-full max-w-4xl mx-auto md:py-[4rem] text-left" paddingY="y-3xl" paddingX="x-lg">
               {tagLabel && (
                 <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="semibold" className="bg-[rgba(255,255,255,0.15)] /90 tracking-widest mb-5 backdrop-blur-sm" shadow="sm" rounded="full" padding="pill-lg" transform="uppercase">
                   <Sparkles className="w-3.5 h-3.5" />
@@ -196,7 +196,7 @@ export function AdvertisementBanner({
               {subtitle && (
                 <Text color="inverse" 
                   variant="none"
-                  className="mb-10 max-w-2xl mx-auto" mdSize="xl" size="base"
+                  className="mb-10 max-w-2xl" mdSize="xl" size="base"
                 >
                   {subtitle}
                 </Text>

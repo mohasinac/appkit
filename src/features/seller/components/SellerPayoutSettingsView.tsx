@@ -1,8 +1,9 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Badge, Div, FormField, FormGroup, Heading, Label, Row, Stack, Text, Toggle } from "../../../ui";
+import { Alert, Badge, Checkbox, Div, FormField, FormGroup, Heading, Label, Row, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { StepDef, StepForm } from "../../shell";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
 const __P = {
@@ -61,7 +62,7 @@ const DEFAULT_DRAFT: PayoutDraft = {
   emiEnabled: false,
 };
 
-export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings" }: SellerPayoutSettingsViewProps) {
+export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS }: SellerPayoutSettingsViewProps) {
   const [draft, setDraft] = useState<PayoutDraft>(DEFAULT_DRAFT);
   const [current, setCurrent] = useState<SafePayoutDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -184,7 +185,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                 key={value}
                 className="flex items-center gap-[var(--appkit-space-3)] p-[var(--appkit-space-3)] rounded-lg border border-[var(--appkit-color-border)] cursor-pointer has-[:checked]:border-[var(--appkit-color-primary)] has-[:checked]:bg-[var(--appkit-color-primary)]/5"
               >
-                <input
+                <Checkbox
+                  bare
                   type="radio"
                   name="payoutMethod"
                   value={value}
@@ -259,7 +261,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   <Row gap="xs">
                     {(["savings", "current"] as const).map((t) => (
                       <Label layout="flex" gap="md" key={t} className="cursor-pointer">
-                        <input
+                        <Checkbox
+                          bare
                           type="radio"
                           name="accountType"
                           value={t}

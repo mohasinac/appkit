@@ -2,8 +2,10 @@
 import { normalizeError } from "../../../../../errors/normalize";
 
 import * as React from "react";
-import { Button, Div, Heading, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit";
+import { Button, Div, Heading, Input, Li, Section, Span, Table, Tbody, Td, Text, Th, Thead, Tr, Ul } from "@mohasinac/appkit";
+import { Select } from "@mohasinac/appkit/ui";
 import type { AnalyzeReport } from "../../../../server/features/maintenance/analyze";
+import { ADMIN_ENDPOINTS } from "../../../../../constants/api-endpoints";
 
 export function AnalysisRunnerView(): React.JSX.Element {
   const [days, setDays] = React.useState(7);
@@ -16,7 +18,7 @@ export function AnalysisRunnerView(): React.JSX.Element {
     setRunning(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/maintenance/analysis", {
+      const res = await fetch(ADMIN_ENDPOINTS.MAINTENANCE_ANALYSIS, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ days, source }),
@@ -44,7 +46,8 @@ export function AnalysisRunnerView(): React.JSX.Element {
       <Div style={{ display: "flex", gap: "1rem", alignItems: "center", margin: "1rem 0" }}>
         <label>
           Days back:&nbsp;
-          <input
+          <Input
+            bare
             type="number"
             min={1}
             max={30}
@@ -55,16 +58,17 @@ export function AnalysisRunnerView(): React.JSX.Element {
         </label>
         <label>
           Source:&nbsp;
-          <select
+          <Select
+            options={[
+              { value: "all", label: "all" },
+              { value: "vercel", label: "server (vercel)" },
+              { value: "client", label: "client" },
+              { value: "function", label: "function" },
+            ]}
             value={source}
-            onChange={(e) => setSource(e.target.value as typeof source)}
+            onValueChange={(v) => setSource(v as typeof source)}
             style={{ padding: "0.35rem 0.5rem", border: "1px solid var(--appkit-color-border)", borderRadius: 4 }}
-          >
-            <option value="all">all</option>
-            <option value="vercel">server (vercel)</option>
-            <option value="client">client</option>
-            <option value="function">function</option>
-          </select>
+          />
         </label>
         <Button type="button" onClick={run} isLoading={running}>
           Run analysis

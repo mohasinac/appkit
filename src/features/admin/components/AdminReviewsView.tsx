@@ -6,7 +6,7 @@ import { Row, SIEVE_OP, Stack, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, FilterChipGroup, Label, ListingLayout, Modal, RowActionMenu, useToast } from "../../../ui";
+import { Button, FilterChipGroup, Label, ListingLayout, Modal, RowActionMenu, Textarea, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -226,12 +226,11 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
             <Label size="sm" weight="medium" color="primary">
               Admin reply
             </Label>
-            <textarea
+            <Textarea
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               rows={4}
               placeholder="Write a public reply to this review…"
-              className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </Stack>
           <Row justify="end" gap="sm">

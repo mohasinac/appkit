@@ -4,7 +4,7 @@ import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client
 import React, { useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Div, Form, FormActions, Input, Label, Select, SideDrawer, Stack, Text, useToast } from "../../../ui";
+import { Button, Div, Form, FormActions, Input, Label, Select, SideDrawer, Stack, Text, Textarea, useToast } from "../../../ui";
 import { MediaImage } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -156,12 +156,11 @@ export function AdminOrderEditorView({
           <Label size="sm" weight="medium" color="primary">
             Internal note (optional)
           </Label>
-          <textarea
+          <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Reason for status change, escalation notes…"
-            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </Stack>
 

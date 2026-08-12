@@ -6,6 +6,7 @@ import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
 import { Button, Checkbox, Div, LoginRequiredModal, Span, Stack, Text, Textarea, TextLink } from "../../../ui";
+import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";
 
 const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-[var(--appkit-space-6)] py-[var(--appkit-space-8)] text-center space-y-2";
@@ -29,7 +30,7 @@ export function EventPollWidget({
   className = "",
 }: EventPollWidgetProps) {
   const { user } = useAuth();
-  const endpoint = entriesEndpoint ?? `/api/events/${eventId}/entries`;
+  const endpoint = entriesEndpoint ?? EVENT_ENDPOINTS.ENTRIES(eventId);
   const isEnded = eventStatus === "ended";
   const isMulti = pollConfig.allowMultiSelect;
 

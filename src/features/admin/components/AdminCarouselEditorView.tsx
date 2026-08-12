@@ -4,7 +4,7 @@ import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Alert, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, Stack, StackedViewShell, Text, Toggle } from "../../../ui";
+import { Alert, Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, Slider, Stack, StackedViewShell, Text, Toggle } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -184,14 +184,13 @@ function BackgroundEditor({
             {value.dimOverlay?.enabled && (
               <Div>
                 <Text className="mb-1" size="sm" weight="medium">Opacity ({value.dimOverlay.opacity}%)</Text>
-                <input
-                  type="range"
+                <Slider
                   min={0}
                   max={90}
                   step={5}
                   value={value.dimOverlay.opacity}
-                  onChange={(e) => set({ dimOverlay: { enabled: true, opacity: Number(e.target.value) } })}
-                  className="w-full"
+                  onChange={(opacity) => set({ dimOverlay: { enabled: true, opacity } })}
+                  showValue={false}
                 />
               </Div>
             )}

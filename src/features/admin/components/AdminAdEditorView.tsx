@@ -4,7 +4,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Alert, Button, Div, Form, FormActions, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, Checkbox, Div, Form, FormActions, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -434,8 +434,8 @@ export function AdminAdEditorView({
                   key={placement.id}
                   className="flex items-center gap-[var(--appkit-space-2)] rounded-md border border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]"
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    bare
                     checked={selectedPlacements.includes(placement.id)}
                     onChange={() => togglePlacement(placement.id)}
                   />

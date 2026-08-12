@@ -141,7 +141,7 @@ const sectionRef = useRef<HTMLElement>(null);
       <Div className="max-w-6xl mx-auto">
         {/* Header */}
         <Div
-          className={`text-center mb-12 transition-all duration-700 ${
+          className={`text-left mb-12 transition-all duration-700 ${
  visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
  }`}
         >
@@ -159,7 +159,7 @@ const sectionRef = useRef<HTMLElement>(null);
           </Heading>
           {subtitle && (
             <Text
-              className={`${themed.textSecondary} max-w-xl mx-auto`} size="base"
+              className={`${themed.textSecondary} max-w-xl`} size="base"
             >
               {subtitle}
             </Text>
@@ -184,7 +184,7 @@ const sectionRef = useRef<HTMLElement>(null);
         {/* CTA */}
         {ctaLabel && onCtaClick && (
           <Div
-            className={`text-center transition-all duration-700 delay-500 ${
+            className={`text-left transition-all duration-700 delay-500 ${
  visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
  }`}
           >

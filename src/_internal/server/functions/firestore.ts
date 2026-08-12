@@ -21,6 +21,10 @@ import {
   onSupportTicketCreateHandler,
   onSupportTicketUpdateHandler,
   onUserBanChangeHandler,
+  onShipmentItemWriteHandler,
+  onShipmentLotWriteHandler,
+  onShipmentHeaderWriteHandler,
+  onShipmentDeletedHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -130,6 +134,41 @@ export const onScamReportUpdate = defineFunction({
   options: { region: REGION },
 });
 
+// Procurement Shipments — 3-function recompute cascade. See
+// onShipmentItemWrite/onShipmentAllocationSync/onShipmentDeleted handler
+// files for the full data-flow explanation.
+export const onShipmentItemWrite = defineFunction({
+  name: "onShipmentItemWrite",
+  description: "Recompute a shipment lot's itemCount + mainItemsProjectedRevenuePaise on any item write.",
+  trigger: { kind: "documentWritten", pathPattern: "shipmentItems/{itemId}" },
+  handler: onShipmentItemWriteHandler,
+  options: { region: REGION },
+});
+
+export const onShipmentLotWrite = defineFunction({
+  name: "onShipmentLotWrite",
+  description: "Recompute cross-lot customs/shipping allocation + shipment totals on any lot write.",
+  trigger: { kind: "documentWritten", pathPattern: "shipmentLots/{lotId}" },
+  handler: onShipmentLotWriteHandler,
+  options: { region: REGION },
+});
+
+export const onShipmentHeaderWrite = defineFunction({
+  name: "onShipmentHeaderWrite",
+  description: "Recompute cross-lot allocation when a shipment's customs/shipping/labor/status fields change.",
+  trigger: { kind: "documentWritten", pathPattern: "procurementShipments/{shipmentId}" },
+  handler: onShipmentHeaderWriteHandler,
+  options: { region: REGION },
+});
+
+export const onShipmentDeleted = defineFunction({
+  name: "onShipmentDeleted",
+  description: "Cascade-delete a shipment's lots + items in batches of 500 (bound as documentWritten; handler checks for deletion).",
+  trigger: { kind: "documentWritten", pathPattern: "procurementShipments/{shipmentId}" },
+  handler: onShipmentDeletedHandler,
+  options: { region: REGION },
+});
+
 export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onBidPlaced,
   onOrderCreate,
@@ -144,4 +183,8 @@ export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onUserBanChange,
   onScamReportCreate,
   onScamReportUpdate,
+  onShipmentItemWrite,
+  onShipmentLotWrite,
+  onShipmentHeaderWrite,
+  onShipmentDeleted,
 ] as const;

@@ -6,7 +6,7 @@ import { Button } from "../../ui/components/Button";
 import { IconButton } from "../../ui/components/IconButton";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
-import { Div, Row, Stack, Text } from "../../ui";
+import { Div, Form, Row, Stack, Text } from "../../ui";
 import type { FormFieldValue, FormValues } from "../../schemas/types";
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
 
@@ -206,8 +206,12 @@ export function QuickFormDrawer({
         </Row>
 
         {/* Scrollable body */}
-        <form
-          className="flex-1 overflow-y-auto px-[var(--appkit-space-4)] py-[var(--appkit-space-5)] space-y-4"
+        <Form
+          className="flex-1"
+          overflow="y-auto"
+          paddingX="x-md"
+          paddingY="y-md-lg"
+          spacing="md"
           onSubmit={handleSubmit}
           noValidate
         >
@@ -257,7 +261,7 @@ export function QuickFormDrawer({
             );
           })}
           {renderExtra?.(values, set)}
-        </form>
+        </Form>
 
         {/* Footer */}
         <Row className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]" padding="md" align="center" justify="between" gap="sm">

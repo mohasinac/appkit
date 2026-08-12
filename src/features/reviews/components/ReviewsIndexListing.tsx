@@ -186,7 +186,7 @@ export function ReviewsIndexListing({
             ))}
           </Div>
         ) : reviews.length === 0 ? (
-          <Text paddingY="3xl" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="start">
             No reviews found.
           </Text>
         ) : view === "list" ? (

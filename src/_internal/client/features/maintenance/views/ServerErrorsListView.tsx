@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Anchor, Div, Heading, Label, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit";
+import { Anchor, Div, Heading, Input, Label, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit";
 import type { ServerErrorDocument, ServerErrorSource } from "../../../../../features/server-errors/schemas/firestore";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";
@@ -66,7 +66,8 @@ export function ServerErrorsListView({
       <Div style={{ display: "flex", gap: "0.75rem", marginBottom: "1rem", alignItems: "center" }}>
         <Label style={{ fontSize: "0.85rem" }}>
           Code
-          <input
+          <Input
+            bare
             type="search"
             value={codeFilter}
             onChange={(e) => setCodeFilter(e.target.value)}
@@ -76,7 +77,8 @@ export function ServerErrorsListView({
         </Label>
         <Label style={{ fontSize: "0.85rem" }}>
           Route
-          <input
+          <Input
+            bare
             type="search"
             value={routeFilter}
             onChange={(e) => setRouteFilter(e.target.value)}

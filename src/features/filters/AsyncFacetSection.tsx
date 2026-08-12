@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Div, Input, Row, Span, Stack, Text } from "../../ui";
+import { Button, Checkbox, Div, Input, Row, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FacetOption } from "./FilterFacetSection";
 import type { AsyncPage } from "../../ui/components/PaginatedSelect";
@@ -183,7 +183,8 @@ export function AsyncFacetSection({
             const isSelected = selected.includes(opt.value);
             return (
               <Row key={opt.value} gap="2.5" className="cursor-pointer group" padding="y-2xs">
-                <input
+                <Checkbox
+                  bare
                   type={selectionMode === "single" ? "radio" : "checkbox"}
                   checked={isSelected}
                   onChange={() => toggle(opt.value)}

@@ -173,7 +173,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
   return (
     <Section className={`md:py-[3rem] ${className}`} surface="subtle" paddingY="y-2xl" paddingX="x-md">
       <Div className="mx-auto max-w-7xl">
-        <Div className="mb-6 text-center">
+        <Div className="mb-6 text-left">
           <Heading level={2} className={themed.textPrimary} size="2xl" mdSize="3xl" weight="bold">
             {title}
           </Heading>
@@ -229,7 +229,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
 
         {/* CTA button */}
         {cta && !isLoading && (
-          <Div className="mt-6 text-center">
+          <Div className="mt-6 text-left">
             <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
               {cta.label}
             </Link>
@@ -238,7 +238,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
 
         {/* Fallback view-more link when no CTA configured */}
         {!cta && viewMoreHref && !isLoading && (
-          <Div className="mt-6 text-center">
+          <Div className="mt-6 text-left">
             <Link href={viewMoreHref} className="inline-flex items-center gap-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-primary)] hover:opacity-80">
               {viewMoreLabel}
             </Link>

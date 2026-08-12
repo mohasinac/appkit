@@ -35,7 +35,7 @@ function TrustFeatureCard({
   return (
     <Div
       className={[
-        "flex flex-col items-center text-center p-[var(--appkit-space-4)]",
+        "flex flex-col items-start text-left p-[var(--appkit-space-4)]",
         "transition-all duration-500",
         delayClass,
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
@@ -140,7 +140,7 @@ export function TrustFeaturesSection({
     >
       <Div className="max-w-6xl mx-auto">
         {title && (
-          <Div className="text-center mb-8">
+          <Div className="text-left mb-8">
             <Heading
               level={2} color="primary" size="3xl" weight="bold" mdSize="4xl">
               {title}

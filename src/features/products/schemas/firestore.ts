@@ -295,6 +295,17 @@ export interface ProductDocument extends BaseDocument {
   /** Denormalised flag — true when partOfBundleIds has at least one entry. Enables Firestore isPartOfBundle==true query. */
   isPartOfBundle?: boolean;
 
+  // ── Procurement Shipments reverse link (Feature A) — set only by the
+  // "Create pre-order link" route; read-only display on the product admin
+  // edit view ("Sourced from SH-2026-0001").
+  sourceShipmentId?: string;
+  sourceShipmentLotId?: string;
+  sourceShipmentItemId?: string;
+  // ── Personal Catalogue reverse link (Feature B) — set only by the
+  // list-from-catalogue / admin-approve-catalogue-listing actions.
+  sourceCatalogueItemId?: string;
+  sourceCatalogueOwnerId?: string;
+
   // ── Prize-draw fields (SB1-B). Only populated when listingType === "prize-draw".
   prizeDrawItems?: PrizeDrawItem[];
   pricePerEntry?: number;

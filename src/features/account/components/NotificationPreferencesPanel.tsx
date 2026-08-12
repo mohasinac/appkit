@@ -5,6 +5,7 @@ import { Button, Div, Row, Span, Stack, Text, Toggle, useToast } from "../../../
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { NotificationPreferences, NotificationChannelPrefs, NotificationTypePrefs } from "../types";
 import type { NotificationChannelConfig } from "../../admin/schemas/firestore";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
 const __O = {
@@ -85,8 +86,8 @@ export interface NotificationPreferencesPanelProps {
 }
 
 export function NotificationPreferencesPanel({
-  fetchUrl = "/api/user/notification-preferences",
-  saveUrl = "/api/user/notification-preferences",
+  fetchUrl = ACCOUNT_ENDPOINTS.NOTIFICATION_PREFERENCES,
+  saveUrl = ACCOUNT_ENDPOINTS.NOTIFICATION_PREFERENCES,
   onSave,
 }: NotificationPreferencesPanelProps) {
   const { showToast } = useToast();

@@ -36,7 +36,7 @@ function StatCard({
   return (
     <Div
       className={[
-        "relative flex flex-col items-center px-[var(--appkit-space-6)] py-[var(--appkit-space-8)] text-center",
+        "relative flex flex-col items-start px-[var(--appkit-space-6)] py-[var(--appkit-space-8)] text-left",
         "transition-all duration-700",
         delayClass,
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",

@@ -87,7 +87,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
           {initial}
         </Row>
       )}
-      <Text className="w-full truncate" color="muted" size="xs" weight="medium" align="center">
+      <Text className="w-full truncate" color="muted" size="xs" weight="medium" align="start">
         {brand.name}
       </Text>
     </Link>
@@ -168,7 +168,7 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
 
         {/* CTA button */}
         {cta && !isLoading && (
-          <Div className="mt-6 text-center">
+          <Div className="mt-6 text-left">
             <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
               {cta.label}
             </Link>

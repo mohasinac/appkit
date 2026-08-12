@@ -4,7 +4,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Label, Row, Select, Stack, StackedViewShell, Text, TextLink } from "../../../ui";
+import { Alert, Button, Checkbox, Div, Input, Label, Row, Select, Stack, StackedViewShell, Text, TextLink } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -125,8 +125,8 @@ function AdsSettingsPanel({
       </Text>
       <Row align="center" justify="between" gap="3">
         <Label layout="flex" gap="md" size="sm">
-          <input
-            type="checkbox"
+          <Checkbox
+            bare
             checked={consentRequired}
             onChange={(event) => setConsentRequired(event.target.checked)}
           />

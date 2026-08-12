@@ -3,7 +3,7 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Code, Div, FormActions, HorizontalRule, Label, Row, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
+import { Button, Code, Div, FormActions, HorizontalRule, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -211,12 +211,11 @@ export function AdminScammerEditorView({
           <Label className="uppercase tracking-wide" color="muted" size="xs" weight="semibold">
             Verification note (internal)
           </Label>
-          <textarea
+          <Textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}
             placeholder="e.g. Verified via 3 independent reports…"
-            className="w-full rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text)] placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </Stack>
 

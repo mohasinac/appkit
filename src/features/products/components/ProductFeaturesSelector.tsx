@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Div, Grid, Heading, Label, Stack, Text } from "../../../ui";
+import { Checkbox, Div, Grid, Heading, Label, Stack, Text } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { PRODUCT_FEATURE_QUERY_STALE_MS } from "../constants/product-features.constants";
@@ -120,8 +120,8 @@ export function ProductFeaturesSelector({
     const cantSelect = !checked && atLimit;
     return (
       <Label key={f.id} className={rowClass(checked, cantSelect)}>
-        <input
-          type="checkbox"
+        <Checkbox
+          bare
           className="mt-0.5"
           checked={checked}
           disabled={disabled || cantSelect}

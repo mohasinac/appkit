@@ -1,7 +1,8 @@
 "use client"
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { Div, Row, Span, Text } from "../../ui";
-import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
+import { Slider as UiSlider } from "../../ui/components/Slider";
+import { cn, ERROR_BASE } from "./utils";
 
 export interface SliderProps {
   value?: number;
@@ -44,14 +45,8 @@ export function Slider({
   // skips the hook call whenever `id` is provided, violating the Rules of Hooks.
   const generatedId = React.useId();
   const sliderId = id ?? generatedId;
-  const pct = ((value - min) / (max - min)) * 100;
-  const fillRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (fillRef.current) fillRef.current.style.width = `${pct}%`;
-  }, [pct]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = Number(e.target.value);
+  const handleChange = (newVal: number) => {
     if (controlledValue === undefined) setInternalValue(newVal);
     onChange?.(newVal);
   };
@@ -63,9 +58,9 @@ export function Slider({
       {(label || showValue) && (
         <Row justify="between">
           {label && (
-            <label htmlFor={sliderId} className={LABEL_BASE}>
-              {label}
-            </label>
+            <Span size="sm" weight="medium">
+              <label htmlFor={sliderId}>{label}</label>
+            </Span>
           )}
           {showValue && (
             <Span size="sm" weight="semibold" className="tabular-nums" color="primary">
@@ -75,43 +70,18 @@ export function Slider({
         </Row>
       )}
 
-      <Row className="relative h-5">
-        {/* Track background */}
-        <Row className="absolute inset-y-0 w-full" align="center">
-          <Div className="w-full h-1.5" surface="subtle" rounded="full">
-            <Div
-              ref={fillRef}
-              rounded="full"
-              className="h-full bg-primary-500 dark:bg-secondary-500 transition-all"
-            />
-          </Div>
-        </Row>
+      <UiSlider
+        id={sliderId}
+        value={value}
+        min={min}
+        max={max}
+        step={step}
+        disabled={disabled}
+        onChange={handleChange}
+        showValue={false}
+      />
 
-        <input
-          type="range"
-          id={sliderId}
-          min={min}
-          max={max}
-          step={step}
-          value={value}
-          disabled={disabled}
-          onChange={handleChange}
-          className={cn(
-            "relative w-full appearance-none bg-transparent cursor-pointer",
-            "focus:outline-none",
-            "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4",
-            "[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--appkit-color-surface)]",
-            "[&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary-500 dark:[&::-webkit-slider-thumb]:border-secondary-500",
-            "[&::-webkit-slider-thumb]:shadow-sm",
-            "[&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4",
-            "[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--appkit-color-surface)]",
-            "[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary-500 dark:[&::-moz-range-thumb]:border-secondary-500",
-            disabled && "opacity-50 cursor-not-allowed",
-          )}
-        />
-      </Row>
-
-      <Row color="muted" textSize="xs" 
+      <Row color="muted" textSize="xs"
         justify="between"
       >
         <Span>{formatValue ? formatValue(min) : min}</Span>

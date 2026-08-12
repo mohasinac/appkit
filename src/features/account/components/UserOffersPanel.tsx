@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, useTransition } from "react";
 import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Row, Spinner, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { OfferDocument } from "../../seller/schemas";
 import { normalizeError } from "../../../errors/normalize";
 
@@ -183,7 +184,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
 }
 
 export function UserOffersPanel({
-  fetchEndpoint = "/api/user/offers",
+  fetchEndpoint = ACCOUNT_ENDPOINTS.OFFERS,
   onAcceptCounter,
   onWithdraw,
   onCheckout,

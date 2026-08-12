@@ -8,6 +8,14 @@
  */
 
 // ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
+
+export const CONFIG_ENDPOINTS = {
+  FEATURE_FLAGS: "/api/config/feature-flags",
+} as const;
+
+// ---------------------------------------------------------------------------
 // Logs
 // ---------------------------------------------------------------------------
 
@@ -53,10 +61,20 @@ export const ACCOUNT_ENDPOINTS = {
   ORDERS: "/api/user/orders",
   ORDER_BY_ID: (orderId: string) => `/api/user/orders/${orderId}`,
   WISHLIST: "/api/user/wishlist",
+  WISHLIST_VALIDATE: "/api/user/wishlist/validate",
   HISTORY: "/api/user/history",
   HISTORY_ITEM: (productId: string) =>
     `/api/user/history/${encodeURIComponent(productId)}`,
   HISTORY_MERGE: "/api/user/history/merge",
+  REVIEWS: "/api/user/reviews",
+  BIDS: "/api/user/bids",
+  EXPORT: "/api/user/export",
+  /** Claimed-coupons wallet — GET list, POST claim, DELETE by id. */
+  COUPONS: "/api/user/coupons",
+  COUPON_BY_ID: (id: string) => `/api/user/coupons/${id}`,
+  COUPONS_CLAIM: "/api/user/coupons/claim",
+  OFFERS: "/api/user/offers",
+  NOTIFICATION_PREFERENCES: "/api/user/notification-preferences",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -178,6 +196,8 @@ export const ADMIN_ENDPOINTS = {
   GROUPED_LISTINGS: "/api/admin/grouped-listings",
   GROUPED_LISTING_BY_ID: (id: string) => `/api/admin/grouped-listings/${id}`,
   ADMIN_FULFILLMENT: (storeId: string) => `/api/store/fulfillment?storeId=${encodeURIComponent(storeId)}`,
+  CHECKOUT_BYPASS: "/api/admin/checkout-bypass",
+  MAINTENANCE_ANALYSIS: "/api/admin/maintenance/analysis",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -218,6 +238,10 @@ export const CART_ENDPOINTS = {
   GET: "/api/cart",
   BY_USER: (userId: string) => `/api/cart?userId=${userId}`,
   MERGE: "/api/cart/merge",
+  BY_ITEM_ID: (itemId: string) => `/api/cart/${encodeURIComponent(itemId)}`,
+  VALIDATE: "/api/cart/validate",
+  SELECTION: "/api/cart/selection",
+  COUPON: "/api/cart/coupon",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -275,6 +299,7 @@ export const CONSULTATION_ENDPOINTS = {
 
 export const COPILOT_ENDPOINTS = {
   CHAT: "/api/copilot/chat",
+  HISTORY: "/api/copilot/history",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -364,6 +389,7 @@ export const ORDER_ENDPOINTS = {
   LIST: "/api/orders",
   BY_ID: (id: string) => `/api/orders/${id}`,
   TRACK: (trackingId: string) => `/api/orders/track/${trackingId}`,
+  PAYMENT_PROOF: (id: string) => `/api/orders/${id}/payment-proof`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -371,8 +397,8 @@ export const ORDER_ENDPOINTS = {
 // ---------------------------------------------------------------------------
 
 export const PREORDER_ENDPOINTS = {
-  LIST: "/api/preorders",
-  BY_SLUG: (slug: string) => `/api/preorders/${slug}`,
+  LIST: "/api/pre-orders",
+  BY_SLUG: (slug: string) => `/api/pre-orders/${slug}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -431,6 +457,9 @@ export const SELLER_ENDPOINTS = {
   OFFERS: "/api/store/offers",
   PAYOUTS: "/api/store/payouts",
   PAYOUT_SETTINGS: "/api/store/payout-settings",
+  PAYOUT_REQUEST: "/api/store/payouts/request",
+  REVIEWS: "/api/store/reviews",
+  SHIPPING: "/api/store/shipping",
   STORE: "/api/store/storefront",
   STORE_ADDRESSES: "/api/store/addresses",
   STORE_ADDRESS_BY_ID: (id: string) => `/api/store/addresses/${id}`,
@@ -460,6 +489,15 @@ export const SELLER_ENDPOINTS = {
     `/api/store/products/scan?barcode=${encodeURIComponent(barcode)}`,
   ORDERS_FULFILLMENT: "/api/store/fulfillment",
   ORDERS_ASSIGN: (orderId: string) => `/api/store/orders/${orderId}/assign`,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Brands (public)
+// ---------------------------------------------------------------------------
+
+export const BRAND_ENDPOINTS = {
+  LIST: "/api/brands",
+  BY_ID: (id: string) => `/api/brands/${id}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -493,6 +531,7 @@ export const STORE_ENDPOINTS = {
 export const WISHLIST_ENDPOINTS = {
   LIST: "/api/user/wishlist",
   BY_USER: (userId: string) => `/api/wishlist?userId=${userId}`,
+  ADD: "/api/wishlist",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -509,6 +548,14 @@ export const PROFILE_STATS_ENDPOINTS = {
 // ---------------------------------------------------------------------------
 // Before / After
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Reports (content/listing abuse reports)
+// ---------------------------------------------------------------------------
+
+export const REPORT_ENDPOINTS = {
+  SUBMIT: "/api/reports",
+} as const;
 
 // ---------------------------------------------------------------------------
 // Support Tickets (user-facing)
@@ -562,6 +609,7 @@ export const WHATSAPP_SELLER_ENDPOINTS = {
 // ---------------------------------------------------------------------------
 
 export const API_ENDPOINTS = {
+  CONFIG: CONFIG_ENDPOINTS,
   LOGS: LOGS_ENDPOINTS,
   AUTH: AUTH_ENDPOINTS,
   ACCOUNT: ACCOUNT_ENDPOINTS,
@@ -593,6 +641,7 @@ export const API_ENDPOINTS = {
   REVIEWS: REVIEW_ENDPOINTS,
   SEARCH: SEARCH_ENDPOINTS,
   SELLER: SELLER_ENDPOINTS,
+  BRANDS: BRAND_ENDPOINTS,
   BLOG: BLOG_ENDPOINTS,
   STORES: STORE_ENDPOINTS,
   WISHLIST: WISHLIST_ENDPOINTS,
@@ -601,6 +650,7 @@ export const API_ENDPOINTS = {
   WHATSAPP_SELLER: WHATSAPP_SELLER_ENDPOINTS,
   SUPPORT: SUPPORT_ENDPOINTS,
   SCAMMERS: SCAMMER_ENDPOINTS,
+  REPORTS: REPORT_ENDPOINTS,
 } as const;
 
 /** Canonical alias — prefer API_ROUTES over API_ENDPOINTS in new code. */

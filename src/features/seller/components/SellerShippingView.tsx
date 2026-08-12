@@ -4,6 +4,7 @@ import { Alert, Badge, Div, FormField, Heading, Row, Stack, Text } from "../../.
 import { StackedViewShell } from "../../../ui";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import { StepDef, StepForm } from "../../shell";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
 
@@ -35,7 +36,7 @@ const DEFAULT_DRAFT: ShippingDraft = {
   fragileSurcharge: "",
 };
 
-export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerShippingViewProps) {
+export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: SellerShippingViewProps) {
   const [draft, setDraft] = useState<ShippingDraft>(DEFAULT_DRAFT);
   const [current, setCurrent] = useState<ShippingConfig | null>(null);
   const [loading, setLoading] = useState(true);

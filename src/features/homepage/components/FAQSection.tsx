@@ -130,7 +130,7 @@ const flex = { between: FLEX_BETWEEN };
       <Div className="w-full max-w-4xl mx-auto">
 
         {/* Section Header */}
-        <Div className="text-center mb-10">
+        <Div className="text-left mb-10">
           <Heading
             level={2}
             variant="none"
@@ -140,7 +140,7 @@ const flex = { between: FLEX_BETWEEN };
             {title}
           </Heading>
           {subtitle && (
-            <Text className={`max-w-xl mx-auto ${themed.textSecondary}`} size="base">
+            <Text className={`max-w-xl ${themed.textSecondary}`} size="base">
               {subtitle}
             </Text>
           )}
@@ -148,7 +148,7 @@ const flex = { between: FLEX_BETWEEN };
 
         {/* Category Tabs — appkit Button with ghost variant */}
         {showTabs && (
-          <Row align="center" justify="center" gap="sm" wrap className={`mb-8`}>
+          <Row align="center" justify="start" gap="sm" wrap className={`mb-8`}>
             <Button rounded="full" 
               variant={activeTab === "all" ? "primary" : "ghost"}
               size="sm"
@@ -172,7 +172,7 @@ const flex = { between: FLEX_BETWEEN };
         {/* FAQ Accordion */}
         <Stack gap="sm">
           {visibleItems.length === 0 && (
-            <Text paddingY="3xl" align="center" className={themed.textSecondary}>
+            <Text paddingY="3xl" align="start" className={themed.textSecondary}>
               No FAQs in this category yet.
             </Text>
           )}
@@ -236,7 +236,7 @@ const flex = { between: FLEX_BETWEEN };
 
         {/* View More */}
         {viewMoreHref && (
-          <Div className="text-center mt-10">
+          <Div className="text-left mt-10">
             <TextLink rounded="full" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
               className="inline-flex items-[center] gap-[0.5rem] bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors" size="sm" weight="medium"

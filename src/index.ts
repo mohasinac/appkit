@@ -1827,6 +1827,8 @@ export { passwordResetTokenRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // payoutRepository - Shared export for payout repository.
 export { payoutRepository } from "./repositories/index";
+// shipmentsRepository / shipmentLotsRepository / shipmentItemsRepository - procurement shipments repositories.
+export { shipmentsRepository, shipmentLotsRepository, shipmentItemsRepository } from "./repositories/index";
 // savedPaymentMethodsRepository - user saved payment methods (UPI, card, bank) with PII encryption + ban system.
 export { savedPaymentMethodsRepository, SavedPaymentMethodsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -2120,6 +2122,8 @@ export { ordersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // payoutsSeedData - Model for payouts seed data.
 export { payoutsSeedData } from "./seed/index";
+// shipmentsSeedData / shipmentLotsSeedData / shipmentItemsSeedData - procurement shipments seed data.
+export { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsStandardSeedData - Seed data for standard (buy-now) product listings.
 export { productsStandardSeedData } from "./seed/index";
@@ -6936,6 +6940,46 @@ export { PAYOUT_ADMIN_UPDATEABLE_FIELDS } from "./features/payments/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // PAYOUT_COLLECTION - Constant used across modules.
 export { PAYOUT_COLLECTION } from "./features/payments/index";
+// SHIPMENT_COLLECTION / SHIPMENT_LOT_COLLECTION / SHIPMENT_ITEM_COLLECTION - procurement shipments collections.
+export {
+  SHIPMENT_COLLECTION,
+  SHIPMENT_LOT_COLLECTION,
+  SHIPMENT_ITEM_COLLECTION,
+  SHIPMENT_FIELDS,
+  SHIPMENT_LOT_FIELDS,
+  SHIPMENT_ITEM_FIELDS,
+  SHIPMENT_STATUS_VALUES,
+  DEFAULT_SHIPMENT_TOTALS,
+  MAX_ITEMS_PER_LOT,
+  MAX_LOTS_PER_SHIPMENT,
+  createShipmentId,
+  shipmentQueryHelpers,
+} from "./features/shipments/index";
+export type {
+  ShipmentDocument,
+  ShipmentLot,
+  ShipmentItem,
+  ShipmentStatus,
+  ShipmentTotals,
+  ShipmentCreateInput,
+  ShipmentUpdateInput,
+  ShipmentLotCreateInput,
+  ShipmentLotUpdateInput,
+  ShipmentItemCreateInput,
+  ShipmentItemUpdateInput,
+  ProductDraftFields,
+} from "./features/shipments/index";
+export {
+  createShipmentSchema,
+  updateShipmentSchema,
+  createShipmentLotSchema,
+  updateShipmentLotSchema,
+  createShipmentItemSchema,
+  updateShipmentItemSchema,
+  bulkShipmentItemsSchema,
+} from "./features/shipments/index";
+export { allocateShipmentCosts } from "./features/shipments/index";
+export type { AllocateShipmentCostsInput, AllocateShipmentCostsResult, LotAllocationInput, LotAllocationResult } from "./features/shipments/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // PAYOUT_FIELDS - Constant used across modules.
 export { PAYOUT_FIELDS } from "./features/payments/index";

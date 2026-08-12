@@ -191,7 +191,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
             ))}
           </Div>
         ) : events.length === 0 ? (
-          <Text paddingY="3xl" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="start">
             No events found.
           </Text>
         ) : view === "list" ? (
