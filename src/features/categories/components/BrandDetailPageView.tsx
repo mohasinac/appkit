@@ -205,7 +205,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               counts={counts}
             />
           ) : (
-            <Text paddingY="3xl" color="muted" size="sm" align="center">
+            <Text paddingY="3xl" color="muted" size="sm" align="start">
               Brand not found.
             </Text>
           )}

@@ -25,7 +25,7 @@ export function TestimonialsCarousel({
         className="mx-auto w-full max-w-7xl sm:px-[2rem] min-h-0" padding="x-lg"
       >
         {/* Heading */}
-        <Div className="mb-6 text-center shrink-0">
+        <Div className="mb-6 text-left shrink-0">
           <Text
             className="mb-1 font-black uppercase tracking-widest text-[var(--color-red)] tracking-[0.18em]" size="xs"
           >

@@ -6980,6 +6980,24 @@ export {
 } from "./features/shipments/index";
 export { allocateShipmentCosts } from "./features/shipments/index";
 export type { AllocateShipmentCostsInput, AllocateShipmentCostsResult, LotAllocationInput, LotAllocationResult } from "./features/shipments/index";
+export { AdminShipmentsView } from "./features/shipments/index";
+export type { AdminShipmentsViewProps } from "./features/shipments/index";
+export { AdminShipmentEditorView } from "./features/shipments/index";
+export type { AdminShipmentEditorViewProps } from "./features/shipments/index";
+export { AdminShipmentLotItemsView } from "./features/shipments/index";
+export type { AdminShipmentLotItemsViewProps } from "./features/shipments/index";
+export { AdminShipmentProjectionsView } from "./features/shipments/index";
+export {
+  useShipments,
+  useShipment,
+  useShipmentItems,
+  useShipmentProjections,
+} from "./features/shipments/index";
+export type {
+  UseShipmentsParams,
+  UseShipmentItemsParams,
+  UseShipmentProjectionsParams,
+} from "./features/shipments/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // PAYOUT_FIELDS - Constant used across modules.
 export { PAYOUT_FIELDS } from "./features/payments/index";
@@ -9215,7 +9233,7 @@ export {
 
 // -- Missing utils
 export { buildSieveFilters } from "./utils/filter.helper";
-export { formatFileSize } from "./utils/number.formatter";
+export { formatFileSize, formatPaise } from "./utils/number.formatter";
 export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
 export type { MediaFilenameContext } from "./utils/id-generators";

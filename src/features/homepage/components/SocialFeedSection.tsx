@@ -36,7 +36,7 @@ function platformProfileUrl(platform: SocialPlatform, handle: string): string {
 
 function SocialFeedEmpty({ platform }: { platform: SocialPlatform }) {
   return (
-    <Stack justify="center" color="faint" padding="y-4xl" align="center">
+    <Stack justify="center" color="faint" padding="y-4xl" align="start">
       <svg className="w-10 h-10 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="3" y="3" width="18" height="18" rx="3" />
         <path d="M9 9h6M9 12h6M9 15h4" />
@@ -156,7 +156,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
         </Row>
 
         {error ? (
-          <Div textSize="sm" className="text-center" color="faint" padding="y-3xl">{error}</Div>
+          <Div textSize="sm" className="text-left" color="faint" padding="y-3xl">{error}</Div>
         ) : posts.length === 0 ? (
           <SocialFeedEmpty platform={platform} />
         ) : (

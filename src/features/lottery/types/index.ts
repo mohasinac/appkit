@@ -91,7 +91,21 @@ export function computeWeight(
 }
 
 /**
- * Pick a slot using weighted random selection.
+ * Cryptographically-random integer in [0, maxExclusive) via the Web Crypto
+ * API — available in both Node (globalThis.crypto, Node 19+) and browsers,
+ * unlike `node:crypto`'s `randomInt` which would leak a Node-only import
+ * into any client bundle that pulls in this shared types module.
+ */
+function secureRandomInt(maxExclusive: number): number {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return buf[0] % maxExclusive;
+}
+
+/**
+ * Pick a slot using weighted random selection. Uses the Web Crypto API, not
+ * `Math.random()`, so the fairness claim shown to users (PrizeRevealModal's
+ * "provably fair" copy) is actually true for this path too.
  * @throws {LotteryError} LOTTERY_FULL when unclaimed is empty.
  */
 export function pickWeightedSlot(unclaimed: LotterySlot[]): LotterySlot {
@@ -99,10 +113,10 @@ export function pickWeightedSlot(unclaimed: LotterySlot[]): LotterySlot {
     throw new LotteryError("LOTTERY_FULL", "No unclaimed slots remain.");
   }
   const total = unclaimed.reduce((s, sl) => s + sl.weight, 0);
-  let r = Math.random() * total;
+  let r = secureRandomInt(total);
   for (const sl of unclaimed) {
     r -= sl.weight;
-    if (r <= 0) return sl;
+    if (r < 0) return sl;
   }
   return unclaimed[unclaimed.length - 1];
 }

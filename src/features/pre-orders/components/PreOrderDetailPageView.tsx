@@ -336,7 +336,7 @@ function PreOrderBuyBarPanel({
               Reserve Now
             </Button>
             {isCancellable && (
-              <Text size="xs" align="center" color="muted">
+              <Text size="xs" align="start" color="muted">
                 ✓ Free cancellation before production
               </Text>
             )}
@@ -382,7 +382,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
       <Main>
         <Section padding="y-5xl" >
           <Container size="md">
-            <Stack align="center" gap="md" className="text-center">
+            <Stack align="start" gap="md" className="text-left">
               <Heading level={1} size="2xl" weight="semibold" color="primary">
                 Pre-Order Not Found
               </Heading>

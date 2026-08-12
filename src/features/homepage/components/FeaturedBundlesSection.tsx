@@ -71,7 +71,7 @@ export function FeaturedBundlesSection({
         </Row>
 
         {items.length === 0 ? (
-          <Div className="border-dashed text-center" padding="y-3xl" rounded="xl" border="default">
+          <Div className="border-dashed text-left" padding="y-3xl" rounded="xl" border="default">
             <Text color="muted">{BUNDLE_COPY.featured.empty}</Text>
           </Div>
         ) : (

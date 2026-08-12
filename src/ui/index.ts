@@ -16,6 +16,8 @@ export type { FieldSelectProps } from "./forms";
 export { FieldSelect } from "./forms";
 export type { FieldCheckboxProps } from "./forms";
 export { FieldCheckbox } from "./forms";
+export type { FieldTextareaProps } from "./forms";
+export { FieldTextarea } from "./forms";
 
 // --- Column utilities ---------------------------------------------------------
 export {

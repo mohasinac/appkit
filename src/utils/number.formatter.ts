@@ -32,6 +32,16 @@ export function formatNumber(
   }).format(num);
 }
 
+/**
+ * Formats an integer paise amount as a currency string, e.g. 349900 -> "₹3,499".
+ * Canonical helper for every paise-denominated amount across the codebase —
+ * see CLAUDE.md's Recurrent Root Cause Patterns for why this was previously
+ * duplicated as a local `formatPaise`/`toRupees` in 5+ admin/seller views.
+ */
+export function formatPaise(paise: number, currency?: string, locale?: string): string {
+  return formatCurrency(paise / 100, currency, locale);
+}
+
 export function formatPercentage(num: number, decimals: number = 0): string {
   return `${(num * 100).toFixed(decimals)}%`;
 }

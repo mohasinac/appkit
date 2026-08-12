@@ -299,7 +299,6 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
         "Free giveaways and community events",
       ],
       buttonText: "Join WhatsApp Community",
-      testimonial: '"The LetItRip group helped me authenticate a PSA slab within 10 minutes." — Ravi K., Mumbai',
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(8),

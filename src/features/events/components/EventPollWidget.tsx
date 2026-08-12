@@ -9,7 +9,7 @@ import { Button, Checkbox, Div, LoginRequiredModal, Span, Stack, Text, Textarea,
 import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";
 
-const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-[var(--appkit-space-6)] py-[var(--appkit-space-8)] text-center space-y-2";
+const CLS_THANKS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface px-[var(--appkit-space-6)] py-[var(--appkit-space-8)] text-left space-y-2";
 
 interface EventPollWidgetProps {
   eventId: string;
@@ -101,7 +101,7 @@ export function EventPollWidget({
 
   if (pollConfig.requireLogin && !user) {
     return (
-      <Stack className={`text-center ${className}`} gap="3" rounded="xl" paddingY="y-xl" paddingX="x-lg" border="default">
+      <Stack className={`text-left ${className}`} gap="3" rounded="xl" paddingY="y-xl" paddingX="x-lg" border="default">
         <Text weight="semibold" color="primary">Login to vote</Text>
         <Text size="sm" color="muted">You need an account to participate in this poll.</Text>
         <TextLink

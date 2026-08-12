@@ -767,7 +767,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       {resolvedHeader}
       {isEmpty
         ? (resolvedEmpty ?? (
-            <Text paddingY="3xl" color="muted" size="sm" align="center">
+            <Text paddingY="3xl" color="muted" size="sm" align="start">
               {emptyLabel}
             </Text>
           ))

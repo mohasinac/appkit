@@ -22,7 +22,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
       <Main>
         <Section padding="y-6xl" >
           <Container size="sm">
-            <Div className="text-center">
+            <Div className="text-left">
               <Text className="mb-4" size="5xl" aria-hidden="true">🔍</Text>
               <Heading color="inverse" level={1} className="text-[var(--appkit-color-text)] dark: mb-2" size="2xl" weight="bold">
                 Review not found

@@ -214,7 +214,7 @@ export function ReviewsList({
 
   if (reviews.length === 0) {
     return (
-      <Text paddingY="3xl" className="text-[var(--appkit-color-text-muted)]" size="sm" align="center">
+      <Text paddingY="3xl" className="text-[var(--appkit-color-text-muted)]" size="sm" align="start">
         {emptyLabel}
       </Text>
     );

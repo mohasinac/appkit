@@ -366,10 +366,12 @@ export function CompareOverlay({
 
       <Div className={`flex-1 ${__O.auto} ${__P.p4}`}>
         {isLoading ? (
+          // audit-content-alignment-ok: loading-state text inside a transient overlay panel, not marketing content
           <Text paddingY="3xl" variant="secondary" align="center">
             Loadingâ€¦
           </Text>
         ) : trimmed.length === 0 ? (
+          // audit-content-alignment-ok: empty-state inside a transient overlay panel, not marketing content
           <Text paddingY="3xl" variant="secondary" align="center">
             {labels.empty}
           </Text>

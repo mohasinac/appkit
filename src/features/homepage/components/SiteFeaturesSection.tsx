@@ -35,7 +35,7 @@ return (
     <Section className={`${__P.p8} ${className}`} surface="subtle">
       <Div className="w-full">
         {/* Section Header */}
-        <Div className="text-center mb-12">
+        <Div className="text-left mb-12">
           <Heading
             level={2}
             className={`${themed.textPrimary} mb-3`} size="3xl" mdSize="4xl" weight="bold"
@@ -63,7 +63,7 @@ return (
               rounded="2xl"
               border="subtle"
               shadow="hover-lg"
-              className="text-center transition-all group bg-[var(--appkit-color-surface)]"
+              className="text-left transition-all group bg-[var(--appkit-color-surface)]"
             >
               {/* Icon */}
               <Div className="text-[3.75rem] mb-4 group-hover:scale-110 transition-transform">

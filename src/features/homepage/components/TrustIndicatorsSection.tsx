@@ -41,7 +41,7 @@ return (
               rounded="2xl"
               border="subtle"
               shadow="hover-md"
-              className="text-center bg-[var(--appkit-color-surface)]"
+              className="text-left bg-[var(--appkit-color-surface)]"
             >
               <Div className="text-[2.25rem] md:text-[3rem] mb-2 md:mb-3">
                 {indicator.icon}

@@ -47,7 +47,7 @@ function renderCategoryGrid(props: {
   }
   if (categories.length === 0) {
     return (
-      <Text paddingY="3xl" color="muted" size="sm" align="center">
+      <Text paddingY="3xl" color="muted" size="sm" align="start">
         {activeSearch ? `No ${isBrandView ? "brands" : "categories"} matching "${activeSearch}"` : isBrandView ? "No brands found" : "No categories found"}
       </Text>
     );

@@ -2,7 +2,7 @@
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 import { getAdminDb } from "../../../../providers/db-firebase";
-import { eventRepository } from "../../../../repositories";
+import { eventRepository, productRepository } from "../../../../repositories";
 import { lotteryEntryRepository } from "../../../../features/lottery/repository/lottery-entry.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { ValidationError } from "../../../shared/errors/index";
@@ -71,8 +71,17 @@ export async function submitLotteryPullAction(
       }
       lotteryConfig = event.lotteryConfig;
     } else {
-      // Product lottery — load via product repository (not implemented here; caller ensures correct source)
-      throw new ValidationError("Product lottery pull must go through the product lottery pull route.");
+      const product = await productRepository.findById(sourceId).catch(() => null);
+      if (!product || product.listingType !== "prize-draw") {
+        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Prize-draw product not found.");
+      }
+      if (product.status !== "published") {
+        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "This prize draw is not currently active.");
+      }
+      if (product.prizeDrawMode !== "lottery" || !product.lotteryConfig) {
+        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Lottery config not found on product.");
+      }
+      lotteryConfig = product.lotteryConfig;
     }
 
     // Check draw window
@@ -98,7 +107,8 @@ export async function submitLotteryPullAction(
 
     // Atomically: pick slot + create entry + mark slot booked
     const db = getAdminDb();
-    const sourceDocRef = db.collection("events").doc(sourceId);
+    const sourceCollectionName = data.sourceType === "event" ? "events" : "products";
+    const sourceDocRef = db.collection(sourceCollectionName).doc(sourceId);
 
     const { assignedSlot, userLotteryNumber } = await db.runTransaction(async (tx) => {
       // Re-read lotteryConfig inside transaction for freshness

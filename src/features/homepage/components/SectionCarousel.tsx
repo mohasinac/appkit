@@ -192,7 +192,7 @@ const headingGradient: "none" | "brand" =
       {/* Content — sits above the background */}
       <Div className="relative z-10 w-full max-w-7xl mx-auto">
         {/* Header */}
-        <Div className="text-center mb-6">
+        <Div className="text-left mb-6">
           {/* Editorial pill */}
           {headingVariant === "editorial" && pillLabel && (
             <Div className="mb-4">
@@ -270,7 +270,7 @@ const headingGradient: "none" | "brand" =
 
         {/* View More button */}
         {viewMoreHref && !isLoading && (
-          <Row className="mt-6" justify="center">
+          <Row className="mt-6" justify="start">
             <TextLink rounded="lg" paddingX="xl" paddingY="sm"
               href={viewMoreHref}
               className={`inline-flex items-[center] gap-[0.375rem] border transition-colors ${ useLightText ? "border-white/40 text-white hover:bg-[rgba(255,255,255,0.1)]" : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]" }`} size="sm" weight="medium"

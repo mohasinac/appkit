@@ -25,7 +25,7 @@ const ROW_DEFAULT_CLASS =
 const OVER_LIMIT_BANNER_CLASS =
   "rounded-lg border border-error/20 bg-error-surface px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-xs)] text-error";
 const EMPTY_STATE_CLASS =
-  "rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-4)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] text-center";
+  "rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-3)] py-[var(--appkit-space-4)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] text-left";
 
 export interface ProductFeaturesSelectorProps {
   /** Selected feature IDs. */

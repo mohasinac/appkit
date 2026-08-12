@@ -251,7 +251,7 @@ export function CouponsIndexListing({
             ))}
           </Grid>
         ) : displayCoupons.length === 0 ? (
-          <Div className="text-center" padding="y-4xl">
+          <Div className="text-left" padding="y-4xl">
             <Text color="faint">No coupons match your search.</Text>
           </Div>
         ) : (
@@ -284,7 +284,7 @@ export function CouponsIndexListing({
         )}
 
         {!isLoading && total > 0 && (
-          <Div className="mt-4 text-center">
+          <Div className="mt-4 text-left">
             <Text size="xs" color="faint">{total} coupon{total !== 1 ? "s" : ""} available</Text>
           </Div>
         )}

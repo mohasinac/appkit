@@ -113,6 +113,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
   // Do NOT use broad @scope/** globs — the full firebase client SDK is hundreds of MB
   // and causes Vercel's "Deploying outputs..." step to time out / fail.
   const defaultOutputFileTracingIncludes: Record<string, string[]> = {
+    // audit-hardcoded-api-routes-ok: Next.js outputFileTracingIncludes glob key, not an endpoint reference
     "/api/**": [
       // Firebase Admin — entire package (lib/ + esm/, all sub-SDKs)
       "./node_modules/firebase-admin/**",

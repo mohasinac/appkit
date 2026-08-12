@@ -83,7 +83,7 @@ export function StoreLiveItemsListing({ storeId, initialData }: StoreLiveItemsLi
           {isLoading
             ? Array.from({ length: 8 }).map((_, i) => <Div key={i} surface="muted" rounded="xl" className="aspect-square animate-pulse" />)
             : products.length === 0
-              ? <Div paddingY="y-4xl" className="col-span-full text-center"><Text color="muted">No live items in this store yet.</Text></Div>
+              ? <Div paddingY="y-4xl" className="col-span-full text-left"><Text color="muted">No live items in this store yet.</Text></Div>
               : products.map((p: any) => (
                   <InteractiveProductCard
                     key={p.id}

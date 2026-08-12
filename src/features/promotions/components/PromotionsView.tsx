@@ -54,7 +54,7 @@ export function PromotionsHero({
 }: PromotionsHeroProps) {
   return (
     <Section color="inverse" tone="accent-banner" className={`${heroBannerClass}`} padding="y-2-5xl">
-      <Div paddingX="x-page" className="max-w-5xl mx-auto text-center">
+      <Div paddingX="x-page" className="max-w-5xl mx-auto text-left">
         <Text color="inverse" className="mb-2 tracking-widest" size="sm" weight="medium" transform="uppercase">
           🎉 {labels.exclusiveOffersBadge}
         </Text>
@@ -110,7 +110,7 @@ export function PromotionsView({
 
       <Stack gap="section" paddingX="x-page" className="max-w-5xl mx-auto" padding="y-3xl">
         {!hasContent && (
-          <Div className="text-center" padding="y-4xl">
+          <Div className="text-left" padding="y-4xl">
             <Heading level={2} className="mb-2">{labels.emptyDeals}</Heading>
             <Text variant="secondary">{labels.checkBack}</Text>
           </Div>

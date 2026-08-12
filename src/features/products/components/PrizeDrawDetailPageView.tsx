@@ -112,7 +112,7 @@ export async function PrizeDrawDetailPageView({
       <Main>
         <Section padding="y-5xl" >
           <Container size="md">
-            <Stack align="center" gap="md" className="text-center">
+            <Stack align="start" gap="md" className="text-left">
               <Heading
                 level={1} size="2xl" weight="semibold" color="primary">
                 Prize Draw Not Found

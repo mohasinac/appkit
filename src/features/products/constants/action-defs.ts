@@ -251,6 +251,7 @@ export const ROW_ACTION_ID = {
   MARK_SHIPPED:  "row-mark-shipped",
   MARK_DELIVERED: "row-mark-delivered",
   MARK_PAID: "row-mark-paid",
+  MARK_RECEIVED: "row-mark-received",
   REVOKE:    "row-revoke",
   MARK_READ: "row-mark-read",
   ACTIVATE:  "row-activate",
@@ -310,6 +311,7 @@ export const ROW_ACTION_META: Record<RowActionId, RowActionMeta> = {
   [ROW_ACTION_ID.MARK_SHIPPED]:   { id: ROW_ACTION_ID.MARK_SHIPPED,   label: "Mark as Shipped",  iconName: "Truck",         requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.orders.update"                         },
   [ROW_ACTION_ID.MARK_DELIVERED]: { id: ROW_ACTION_ID.MARK_DELIVERED, label: "Mark as Delivered", iconName: "PackageCheck",  requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.orders.update"                         },
   [ROW_ACTION_ID.MARK_PAID]:      { id: ROW_ACTION_ID.MARK_PAID,      label: "Mark Paid",        iconName: "Banknote",      requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.payouts.approve"                       },
+  [ROW_ACTION_ID.MARK_RECEIVED]:  { id: ROW_ACTION_ID.MARK_RECEIVED,  label: "Mark Received",    iconName: "PackageCheck", requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.shipments.write"                       },
   [ROW_ACTION_ID.REVOKE]:         { id: ROW_ACTION_ID.REVOKE,         label: "Revoke",           iconName: "ShieldOff",     requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.sessions.revoke", destructive: true     },
   [ROW_ACTION_ID.MARK_READ]:      { id: ROW_ACTION_ID.MARK_READ,      label: "Mark Read",        iconName: "CheckCheck",    requiresAuth: true, requiredRole: "admin"                                                                     },
   [ROW_ACTION_ID.ACTIVATE]:       { id: ROW_ACTION_ID.ACTIVATE,       label: "Activate",         iconName: "ToggleRight",   requiresAuth: true                                                                                            },
@@ -352,6 +354,7 @@ export const ADMIN_ROW_ACTIONS = {
   supportTickets:      [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.REPLY],
   eventEntries:        [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT],
   returnRequests:      [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.APPROVE, ROW_ACTION_ID.REJECT],
+  shipments:           [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.EDIT, ROW_ACTION_ID.MARK_RECEIVED, ROW_ACTION_ID.DELETE],
 } as const satisfies Record<string, readonly RowActionId[]>;
 
 // Seller / Store dashboard row action groups per entity type
@@ -565,6 +568,7 @@ export const ADMIN_BULK_ACTIONS = {
   coupons:             [ROW_ACTION_ID.ARCHIVE, ROW_ACTION_ID.DELETE],
   deals:               [ROW_ACTION_ID.REMOVE],
   featured:            [ROW_ACTION_ID.REMOVE],
+  shipments:           [ROW_ACTION_ID.MARK_RECEIVED, ROW_ACTION_ID.DELETE],
 } as const satisfies Record<string, readonly RowActionId[]>;
 
 // Seller bulk actions per listing entity

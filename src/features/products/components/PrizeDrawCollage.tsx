@@ -85,7 +85,7 @@ export function PrizeDrawCollage({
 
   if (!items.length) {
     return (
-      <Div className={`border border-dashed border-[var(--appkit-color-border)] ${__P.p6} text-center`} rounded="default">
+      <Div className={`border border-dashed border-[var(--appkit-color-border)] ${__P.p6} text-left`} rounded="default">
         <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
           No prizes configured yet.
         </Text>

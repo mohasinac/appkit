@@ -55,6 +55,7 @@ export type ActionResource =
   | "STORE"
   | "BLOG"
   | "EVENT"
+  | "SHIPMENT"
   | "USER"
   | "SELLER"
   | "ADMIN"
@@ -899,6 +900,46 @@ export const ACTIONS: ActionTree = {
         title: "Cancel these bids?",
         body: "The selected bids will be cancelled and bidders will be notified.",
         confirmLabel: "Cancel bids",
+        confirmKind: "danger",
+      },
+    },
+  },
+  SHIPMENT: {
+    "create": {
+      id: "shipment.create",
+      label: "New Shipment",
+      ariaLabel: "Create a new procurement shipment",
+      description: "Start tracking a new import shipment.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "mark-received": {
+      id: "shipment.mark-received",
+      label: "Mark Received",
+      ariaLabel: "Mark this shipment as received",
+      description: "Flags the shipment as physically received so processing can begin.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    "unlink-item": {
+      id: "shipment.unlink-item",
+      label: "Unlink",
+      ariaLabel: "Unlink this item from its product",
+      description: "Clears the product link on this shipment item without touching the product itself.",
+      kind: "ghost",
+      permissions: ["admin"],
+    },
+    "delete": {
+      id: "shipment.delete",
+      label: "Delete",
+      ariaLabel: "Delete this shipment",
+      description: "Permanently deletes the shipment and all its lots/items.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this shipment?",
+        body: "This permanently removes the shipment and all its lots and items. This cannot be undone. Items still linked to a product must be unlinked first.",
+        confirmLabel: "Delete shipment",
         confirmKind: "danger",
       },
     },

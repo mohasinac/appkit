@@ -110,7 +110,7 @@ export function CategoryBundlesListing({
 
   if (filtered.length === 0 && !query && !showOutOfStock) {
     return (
-      <Div className="border-dashed text-center" padding="y-4xl" rounded="2xl" border="default">
+      <Div className="border-dashed text-left" padding="y-4xl" rounded="2xl" border="default">
         <Text color="muted">
           No bundles available{brandName ? ` for ${brandName}` : ""} yet.
         </Text>
@@ -154,7 +154,7 @@ export function CategoryBundlesListing({
 
       <Div padding="y-lg">
         {pageItems.length === 0 ? (
-          <Text paddingY="4xl" color="muted" size="sm" align="center">
+          <Text paddingY="4xl" color="muted" size="sm" align="start">
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.
           </Text>
         ) : (

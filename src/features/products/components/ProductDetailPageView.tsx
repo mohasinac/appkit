@@ -233,7 +233,7 @@ export async function ProductDetailPageView({
       <Main>
         <Section padding="y-5xl" >
           <Container size="md">
-            <Stack align="center" gap="md" className="text-center">
+            <Stack align="start" gap="md" className="text-left">
               <Heading
                 level={1} size="2xl" weight="semibold" color="primary">
                 Product Not Found
@@ -806,6 +806,7 @@ export async function ProductDetailPageView({
 
               {/* Trust badges */}
               <Div border="default" className="border-t" padding="t-md">
+                {/* audit-content-alignment-ok: icon+label badge cluster, not page content */}
                 <Row wrap gap="sm" justify="center" className="text-center">
                   {[
                     { icon: "🔒", label: "Secure\nPayment" },

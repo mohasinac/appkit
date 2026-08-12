@@ -70,7 +70,7 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
           </Span>
         )}
       </Div>
-      <Text className="text-[10px] leading-tight line-clamp-2 w-full" color="muted" align="center">
+      <Text className="text-[10px] leading-tight line-clamp-2 w-full" color="muted" align="start">
         {member.title}
       </Text>
       <Text className="text-[10px]" color="primary" weight="semibold">{price}</Text>

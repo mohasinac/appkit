@@ -71,7 +71,7 @@ export function NewsletterBanner({
       <Div className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 border border-white/[0.06]" rounded="full" />
       <Div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 border border-dashed border-white/[0.08]" rounded="full" />
 
-      <Div className="relative mx-auto max-w-2xl text-center sm:px-[1.5rem]" padding="x-md">
+      <Div className="relative mx-auto max-w-2xl text-left sm:px-[1.5rem]" padding="x-md">
         <Span color="inverse" size="xs" weight="semibold" className="mb-4 inline-flex border border-white/20 tracking-widest /70" rounded="full" padding="pill-md" transform="uppercase">
           {eyebrow}
         </Span>

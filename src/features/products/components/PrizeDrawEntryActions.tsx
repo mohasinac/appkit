@@ -87,13 +87,13 @@ export function PrizeDrawEntryActions({
           underline="hover"
           size="xs"
           weight="medium"
-          className="text-center text-primary-600 underline-offset-4 dark:text-primary-400"
+          className="text-left text-primary-600 underline-offset-4 dark:text-primary-400"
         >
           View RNG source code on GitHub →
         </Anchor>
       ) : null}
 
-      <Text className="text-[var(--appkit-color-text-muted)]" size="xs" align="center">
+      <Text className="text-[var(--appkit-color-text-muted)]" size="xs" align="start">
         Winners chosen by Node.js crypto.randomInt — fully auditable. Entries are
         locked once paid; refunds only if the prize pool is exhausted.
       </Text>

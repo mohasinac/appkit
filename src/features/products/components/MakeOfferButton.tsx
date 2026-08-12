@@ -18,8 +18,8 @@ export interface MakeOfferButtonProps {
 
 type State = "idle" | "confirm" | "loading" | "success" | "pending" | "error";
 
-const CLS_SUCCESS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface p-[var(--appkit-space-4)] text-center space-y-1";
-const CLS_PENDING_BOX = "rounded-xl border border-warning dark:border-warning bg-warning-surface dark:bg-warning-surface p-[var(--appkit-space-4)] text-center space-y-1";
+const CLS_SUCCESS_BOX = "rounded-xl border border-success dark:border-success bg-success-surface p-[var(--appkit-space-4)] text-left space-y-1";
+const CLS_PENDING_BOX = "rounded-xl border border-warning dark:border-warning bg-warning-surface dark:bg-warning-surface p-[var(--appkit-space-4)] text-left space-y-1";
 const CLS_PENDING_TITLE = "text-[length:var(--appkit-text-sm)] font-medium text-warning dark:text-warning";
 const CLS_PENDING_BODY = "text-[length:var(--appkit-text-xs)] text-warning dark:text-warning";
 

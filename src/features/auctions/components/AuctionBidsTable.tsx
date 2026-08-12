@@ -166,7 +166,7 @@ export function AuctionBidsTable({
 
   if (auctions.length === 0) {
     return (
-      <Div padding="y-6xl" className="text-center">
+      <Div padding="y-6xl" className="text-left">
         <Text variant="secondary">{emptyLabel}</Text>
       </Div>
     );

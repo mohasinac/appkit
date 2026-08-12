@@ -904,7 +904,7 @@ export function CharacterHotspotForm({
             </Ul>
           ) : (
             <Div textSize="sm" 
-              className="border-2 border-dashed text-center" rounded="lg" padding="xl"
+              className="border-2 border-dashed text-left" rounded="lg" padding="xl"
               style={{
                 borderColor: "var(--border-ink)",
                 color: "var(--color-muted)",

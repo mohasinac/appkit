@@ -91,7 +91,7 @@ export function PreOrderActionsClient({
           {isPending ? "Processing…" : "Reserve Now"}
         </Button>
         {isCancellable && (
-          <Text size="xs" align="center" color="muted">
+          <Text size="xs" align="start" color="muted">
             ✓ Free cancellation before production
           </Text>
         )}

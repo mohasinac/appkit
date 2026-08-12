@@ -200,6 +200,7 @@ function CarouselCardRenderer({
 
   const hoverClass = getHoverClass(card.hover?.effect);
   const textAlign = card.content?.textAlign ?? "left";
+  // audit-content-alignment-ok: admin-configurable per-card textAlign field, defaults to "left" — not a hardcoded center
   const textAlignClass = textAlign === "center" ? "text-center" : textAlign === "right" ? "text-right" : "text-left";
 
   return (

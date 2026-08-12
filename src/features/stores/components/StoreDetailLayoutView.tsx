@@ -56,7 +56,7 @@ export async function StoreDetailLayoutView({
       <Main>
         <Section padding="y-5xl" >
           <Container size="md">
-            <Text align="center" color="muted">Store not found.</Text>
+            <Text align="start" color="muted">Store not found.</Text>
           </Container>
         </Section>
       </Main>

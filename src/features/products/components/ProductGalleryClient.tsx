@@ -102,6 +102,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
       {/* Image counter */}
       {images.length > 1 && (
+        // audit-content-alignment-ok: functional image-counter label under the gallery, not page content
         <Text size="xs" align="center" color="faint">
           {activeIndex + 1} / {images.length}
         </Text>

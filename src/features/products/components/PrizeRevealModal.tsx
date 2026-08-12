@@ -260,6 +260,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "revealing" ? (
+          // audit-content-alignment-ok: theatrical reveal-modal centerpiece, not marketing content
           <Div className={`bg-[var(--appkit-color-surface-muted)] ${__P.p4} text-center`} rounded="default">
             <Text size="lg" weight="semibold">Rolling…</Text>
             <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
@@ -270,6 +271,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "won" && winner ? (
+          // audit-content-alignment-ok: theatrical reveal-modal centerpiece, not marketing content
           <Div className={`border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center`} rounded="lg">
             <Text className="tracking-wider text-[var(--appkit-color-text-muted)]" size="xs" transform="uppercase">
               You won

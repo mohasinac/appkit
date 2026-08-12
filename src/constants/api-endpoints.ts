@@ -135,6 +135,17 @@ export const ADMIN_ENDPOINTS = {
   PAYOUT_BY_ID: (id: string) => `/api/admin/payouts/${id}`,
   PAYOUTS_WEEKLY: "/api/admin/payouts/weekly",
   PAYOUTS_EXPORT: "/api/admin/payouts/export",
+  SHIPMENTS: "/api/admin/shipments",
+  SHIPMENT_BY_ID: (id: string) => `/api/admin/shipments/${id}`,
+  SHIPMENT_LOTS: (id: string) => `/api/admin/shipments/${id}/lots`,
+  SHIPMENT_LOT_BY_ID: (id: string, lotId: string) => `/api/admin/shipments/${id}/lots/${lotId}`,
+  SHIPMENT_LOT_ITEMS: (id: string, lotId: string) => `/api/admin/shipments/${id}/lots/${lotId}/items`,
+  SHIPMENT_LOT_ITEM_BY_ID: (id: string, lotId: string, itemId: string) =>
+    `/api/admin/shipments/${id}/lots/${lotId}/items/${itemId}`,
+  SHIPMENT_LOT_ITEMS_BULK: (id: string, lotId: string) => `/api/admin/shipments/${id}/lots/${lotId}/items/bulk`,
+  SHIPMENT_LOT_ITEM_LINK: (id: string, lotId: string, itemId: string) =>
+    `/api/admin/shipments/${id}/lots/${lotId}/items/${itemId}/link`,
+  SHIPMENTS_PROJECTIONS: "/api/admin/shipments/projections",
   EVENTS: "/api/admin/events",
   EVENT_BY_ID: (id: string) => `/api/admin/events/${id}`,
   EVENT_STATUS: (id: string) => `/api/admin/events/${id}/status`,

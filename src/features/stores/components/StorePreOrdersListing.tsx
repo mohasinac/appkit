@@ -137,7 +137,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
             ))}
           </Div>
         ) : preOrders.length === 0 ? (
-          <Text paddingY="3xl" color="muted" size="sm" align="center">
+          <Text paddingY="3xl" color="muted" size="sm" align="start">
             This store has no pre-orders yet.
           </Text>
         ) : view === "list" ? (

@@ -246,6 +246,11 @@ export const DEFAULT_ROUTE_MAP = {
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
+    SHIPMENTS: "/admin/shipments",
+    SHIPMENTS_NEW: "/admin/shipments/new",
+    SHIPMENTS_EDIT: (id: string) => `/admin/shipments/${id}/edit`,
+    SHIPMENT_LOT_ITEMS: (id: string, lotId: string) => `/admin/shipments/${id}/lots/${lotId}/items`,
+    SHIPMENTS_PROJECTIONS: "/admin/shipments/projections",
     USERS: "/admin/users",
     SITE: "/admin/site",
     CAROUSEL: "/admin/carousel",
