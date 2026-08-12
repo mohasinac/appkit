@@ -353,6 +353,7 @@ function PreOrderBuyBarPanel({
             </Div>
           )}
           <Div border="default" className="border-t" padding="t-md">
+            {/* audit-content-alignment-ok: icon+label badge cluster, not page content */}
             <Row wrap gap="sm" justify="center" className="text-center">
               {[
                 { icon: "🔒", label: "Secure\nPayment" },

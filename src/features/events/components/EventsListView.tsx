@@ -57,7 +57,7 @@ export function EventsListView<T extends EventItem = EventItem>({
       return <>{slots.renderEmptyState() as React.ReactNode}</>;
     }
     return (
-      <Text paddingY="3xl" color="muted" size="sm" align="center">
+      <Text paddingY="3xl" color="muted" size="sm" align="start">
         {emptyLabel}
       </Text>
     );

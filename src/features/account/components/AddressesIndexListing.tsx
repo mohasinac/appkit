@@ -134,7 +134,7 @@ export function AddressesIndexListing({
             ))}
           </Div>
         ) : addresses.length === 0 ? (
-          <Text paddingY="xl" color="muted" size="sm" align="center">
+          <Text paddingY="xl" color="muted" size="sm" align="start">
             {table.get(TABLE_KEYS.QUERY) ? `No addresses matching "${table.get(TABLE_KEYS.QUERY)}"` : "No saved addresses."}
           </Text>
         ) : (

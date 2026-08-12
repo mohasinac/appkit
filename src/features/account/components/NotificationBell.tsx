@@ -235,7 +235,7 @@ function renderNotificationDropdown(props: {
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
       </Div>
       {viewAllHref && (
-        <Div border="default" className="border-t border-[var(--appkit-color-border)] text-center" padding="inline">
+        <Div border="default" className="border-t border-[var(--appkit-color-border)] text-left" padding="inline">
           {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-[length:var(--appkit-text-sm)] text-primary hover:underline font-medium", children: labels.viewAll })}
         </Div>
       )}
@@ -252,7 +252,7 @@ function renderNotificationListContent(props: {
   const { isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink } = props;
   if (isLoading) return <Row align="center" justify="center" padding="y-2xl"><Spinner size="md" /></Row>;
   if (notifications.length === 0) return (
-    <Stack justify="center" className="text-center" paddingY="y-2xl" paddingX="x-md" align="center">
+    <Stack justify="center" className="text-left" paddingY="y-2xl" paddingX="x-md" align="start">
       <svg className="w-12 h-12 text-[var(--appkit-color-text-faint)] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>

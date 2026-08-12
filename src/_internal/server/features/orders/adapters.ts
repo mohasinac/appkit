@@ -72,5 +72,26 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
       doc.updatedAt instanceof Date
         ? doc.updatedAt.toISOString()
         : String(doc.updatedAt),
+    ...(doc.prizeWon
+      ? {
+          prizeWon: {
+            ...doc.prizeWon,
+            wonAt:
+              doc.prizeWon.wonAt instanceof Date
+                ? doc.prizeWon.wonAt.toISOString()
+                : String(doc.prizeWon.wonAt),
+          },
+        }
+      : {}),
+    ...(doc.prizeRevealDeadline
+      ? {
+          prizeRevealDeadline:
+            doc.prizeRevealDeadline instanceof Date
+              ? doc.prizeRevealDeadline.toISOString()
+              : String(doc.prizeRevealDeadline),
+        }
+      : {}),
+    ...(doc.prizeRevealExpired !== undefined ? { prizeRevealExpired: doc.prizeRevealExpired } : {}),
+    ...(doc.prizeDrawProductId ? { prizeDrawProductId: doc.prizeDrawProductId } : {}),
   };
 }

@@ -152,6 +152,7 @@ export function NotificationPreferencesPanel({
 
   if (loading) {
     return (
+      // audit-content-alignment-ok: loading-state text, not marketing content
       <Div className="text-center" padding="y-xl">
         <Text variant="secondary" size="sm">Loading preferences…</Text>
       </Div>

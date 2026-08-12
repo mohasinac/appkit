@@ -98,6 +98,16 @@ export interface Order {
   physicalLocation?: { zone: string; shelf: string; bin: string };
   createdAt?: string;
   updatedAt?: string;
+  /**
+   * Reveal-mode prize-draw fields (SB4-H/SB8-C). Set once the reveal
+   * endpoint has assigned a prize to this order; used to drive the
+   * "Reveal my prize" CTA on the order-detail page.
+   */
+  prizeWon?: { itemNumber: number; title: string; images: string[]; wonAt: string };
+  prizeRevealDeadline?: string;
+  prizeRevealExpired?: boolean;
+  /** Source prize-draw product id, when this order came from one. */
+  prizeDrawProductId?: string;
 }
 
 export interface OrderListResponse {

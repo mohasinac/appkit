@@ -7,9 +7,11 @@ import type { SpinPrize } from "../types";
 
 import { normalizeError } from "../../../errors/normalize";
 const CLS_WHEEL = "relative mx-auto aspect-square w-64 overflow-hidden rounded-full border-4 border-warning bg-[image:var(--appkit-gradient-promotion)]";
+// audit-content-alignment-ok: self-contained circular spin-wheel game widget, all text centered under the wheel by design
 const CLS_PRIZE_BOX = "rounded-xl border border-success bg-success-surface dark:border-success p-[var(--appkit-space-4)] text-center";
 const CLS_PRIZE_TITLE = "mt-1 text-[length:var(--appkit-text-lg)] font-bold text-success dark:text-success";
 const CLS_PRIZE_BODY = "mt-2 text-[length:var(--appkit-text-sm)] text-success dark:text-success";
+// audit-content-alignment-ok: self-contained circular spin-wheel game widget, all text centered under the wheel by design
 const CLS_ERROR_TEXT = "text-[length:var(--appkit-text-sm)] text-error dark:text-error text-center";
 
 export interface SpinWheelViewProps {
@@ -197,10 +199,12 @@ export function SpinWheelView({
       </Row>
 
       {alreadyUsed ? (
+        // audit-content-alignment-ok: self-contained circular spin-wheel game widget, status text centered under the wheel by design
         <Text size="sm" align="center" color="muted">
           {l.alreadySpun}
         </Text>
       ) : !inWindow ? (
+        // audit-content-alignment-ok: self-contained circular spin-wheel game widget, status text centered under the wheel by design
         <Text size="sm" align="center" color="muted">
           {l.outsideWindow}
         </Text>

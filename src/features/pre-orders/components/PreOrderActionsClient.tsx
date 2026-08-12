@@ -110,6 +110,7 @@ export function PreOrderActionsClient({
       )}
 
       <Div border="default" className="border-t" padding="t-md">
+        {/* audit-content-alignment-ok: icon+label badge cluster, not page content */}
         <Row className="text-center" justify="center" gap="md" wrap>
           {[
             { icon: "🔒", label: "Secure\nPayment" },

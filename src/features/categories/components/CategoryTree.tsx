@@ -129,7 +129,7 @@ export function CategoryTree({
 
   if (roots.length === 0) {
     return (
-      <Text paddingY="md" className="text-[var(--appkit-color-text-muted)]" size="sm" align="center">
+      <Text paddingY="md" className="text-[var(--appkit-color-text-muted)]" size="sm" align="start">
         No categories
       </Text>
     );
