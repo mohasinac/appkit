@@ -181,6 +181,8 @@ export function AdminSiteSettingsView({
   }, [watermarkSize, watermarkOpacity]);
 
   // ⑦ Fees — all read/written under commissions key
+  const [laborHourlyRatePaise, setLaborHourlyRatePaise] = React.useState(20000);
+  const [laborMaxHoursPerDay, setLaborMaxHoursPerDay] = React.useState(6);
   const [platformFeePercent, setPlatformFeePercent] = React.useState(5);
   const [gstPercent, setGstPercent] = React.useState(18);
   const [minimumTransactionFee, setMinimumTransactionFee] = React.useState(0);
@@ -343,6 +345,9 @@ export function AdminSiteSettingsView({
     setFeaturedSlotFee(s.commissions?.featuredSlotFee ?? 999);
     setPromotedSlotFee(s.commissions?.promotedSlotFee ?? 499);
 
+    setLaborHourlyRatePaise(s.laborRate?.hourlyRatePaise ?? 20000);
+    setLaborMaxHoursPerDay(s.laborRate?.maxHoursPerDay ?? 6);
+
     setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
     setRazorpaySecret(s.credentialsMasked?.razorpaySecret ?? "");
     setSmtpHost(s.emailSettings?.host ?? "");
@@ -463,6 +468,9 @@ export function AdminSiteSettingsView({
   const feesMutation = useSave("Fees", () => ({
     commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
   }));
+  const laborRateMutation = useSave("Procurement", () => ({
+    laborRate: { hourlyRatePaise: laborHourlyRatePaise, maxHoursPerDay: laborMaxHoursPerDay },
+  }));
   const integrationsMutation = useSave("Integrations", () => ({
     credentials: {
       razorpayKeyId, razorpaySecret, smtpPassword,
@@ -557,6 +565,7 @@ export function AdminSiteSettingsView({
               ["legal", "⑫ Legal"],
               ["whatsapp", "⑬ WhatsApp"],
               ["notifications", "⑭ Notifications"],
+              ["procurement", "⑮ Procurement"],
             ].map(([value, label]) => (
               <TabsTrigger key={value} value={value}>
                 {label}
@@ -815,6 +824,36 @@ export function AdminSiteSettingsView({
                 <Input label="Promoted slot fee (₹)" value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
               </Grid>
               <GroupSaveButton isPending={feesMutation.isPending} />
+            </Form>
+          </TabsContent>
+
+          {/* ⑮ Procurement — labor rate feeding Feature A shipment cost calc */}
+          <TabsContent value="procurement">
+            <Form onSubmit={(e) => { e.preventDefault(); laborRateMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+              <Text size="xs" color="muted">
+                Used to compute each procurement shipment's labor cost (hours spent × hourly rate) and its
+                estimated processing time (hours spent ÷ max hours/day).
+              </Text>
+              <Grid cols={2} gap="md">
+                <Input
+                  label="Hourly rate (₹)"
+                  helperText="Your effective hourly wage for sorting/categorizing/listing a shipment."
+                  value={String(laborHourlyRatePaise / 100)}
+                  onChange={(e) => setLaborHourlyRatePaise(Math.round((parseFloat(e.target.value) || 0) * 100))}
+                  type="number"
+                  min={0}
+                />
+                <Input
+                  label="Max hours per day"
+                  helperText="Used only to project how many days a shipment's tracked hours will take."
+                  value={String(laborMaxHoursPerDay)}
+                  onChange={(e) => setLaborMaxHoursPerDay(parseFloat(e.target.value) || 0)}
+                  type="number"
+                  min={0}
+                  max={24}
+                />
+              </Grid>
+              <GroupSaveButton isPending={laborRateMutation.isPending} />
             </Form>
           </TabsContent>
 

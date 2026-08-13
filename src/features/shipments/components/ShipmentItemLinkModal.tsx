@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { Button, FieldInput, Modal, Stack, Text, Toggle } from "../../../ui";
+import { Button, FieldInput, Modal, Row, Stack, Text, Toggle } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
@@ -63,10 +63,10 @@ export function ShipmentItemLinkModal({
           Links this item to a real product listing. This is a deliberate, one-time action — nothing links
           automatically.
         </Text>
-        <Stack gap="sm" className="flex-row items-center">
+        <Row gap="sm" align="center">
           <Toggle checked={mode === "create"} onChange={(checked) => setMode(checked ? "create" : "link")} size="sm" />
           <Text>{mode === "create" ? "Create a new pre-order product" : "Link to an existing product"}</Text>
-        </Stack>
+        </Row>
 
         {mode === "link" ? (
           <ProductInlineSelect

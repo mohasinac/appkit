@@ -185,7 +185,7 @@ function renderTicketListArea(props: {
         </Div>
       )}
       {!isLoading && tickets.length === 0 && (
-        <Div className="text-center" surface="muted" paddingY="y-2xl" paddingX="x-lg" rounded="xl" border="default">
+        <Div className="text-left" surface="muted" paddingY="y-2xl" paddingX="x-lg" rounded="xl" border="default">
           <Text size="sm" color="muted">You haven&apos;t opened any support tickets yet.</Text>
         </Div>
       )}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Div, Heading, Modal, Pagination, Stack, Table, Text } from "../../../ui";
+import { Button, Div, Heading, Modal, Pagination, Skeleton, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { useShipmentProjections, useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import { formatPaise } from "../../../utils/number.formatter";
@@ -24,7 +24,7 @@ export function AdminShipmentProjectionsView() {
 
   return (
     <Stack gap="md">
-      <Div className="flex items-center justify-between">
+      <Div layout="flex" align="center" justify="between">
         <Heading level={2}>Projections</Heading>
         <select
           aria-label="Sort by"
@@ -40,39 +40,43 @@ export function AdminShipmentProjectionsView() {
       </Div>
 
       {isLoading ? (
-        <Text variant="secondary">Loading…</Text>
+        <Stack gap="sm">
+          <Skeleton variant="rectangular" height="32px" />
+          <Skeleton variant="rectangular" height="32px" />
+          <Skeleton variant="rectangular" height="32px" />
+        </Stack>
       ) : lots.length === 0 ? (
         <Text variant="secondary">No lots to project yet.</Text>
       ) : (
         <Table>
-          <thead>
-            <tr>
-              <th>Lot</th>
-              <th>Items</th>
-              <th>Landed Cost</th>
-              <th>Projected Revenue</th>
-              <th>Projected Profit</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
+          <Thead>
+            <Tr>
+              <Th>Lot</Th>
+              <Th>Items</Th>
+              <Th>Landed Cost</Th>
+              <Th>Projected Revenue</Th>
+              <Th>Projected Profit</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {lots.map((lot) => (
-              <tr key={lot.id}>
-                <td>{lot.lotName}</td>
-                <td>{lot.itemCount}</td>
-                <td>{formatPaise(lot.totalLandedCostPaise)}</td>
-                <td>{formatPaise(lot.projectedRevenuePaise)}</td>
-                <td className={lot.projectedProfitPaise < 0 ? "text-error" : "text-success"}>
+              <Tr key={lot.id}>
+                <Td>{lot.lotName}</Td>
+                <Td>{lot.itemCount}</Td>
+                <Td>{formatPaise(lot.totalLandedCostPaise)}</Td>
+                <Td>{formatPaise(lot.projectedRevenuePaise)}</Td>
+                <Td className={lot.projectedProfitPaise < 0 ? "text-error" : "text-success"}>
                   {formatPaise(lot.projectedProfitPaise)}
-                </td>
-                <td>
+                </Td>
+                <Td>
                   <Button size="sm" variant="ghost" onClick={() => setPickerLot(lot)}>
                     Create pre-order link
                   </Button>
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             ))}
-          </tbody>
+          </Tbody>
         </Table>
       )}
 
@@ -117,7 +121,7 @@ function LotItemPickerModal({
             <Text variant="secondary">No unlinked, resale-eligible items in this lot.</Text>
           ) : (
             unlinkedItems.map((item) => (
-              <Div key={item.id} className="flex items-center justify-between">
+              <Div key={item.id} layout="flex" align="center" justify="between">
                 <Text>{item.title}</Text>
                 <Button size="sm" onClick={() => setLinkTarget({ itemId: item.id, title: item.title })}>
                   Link

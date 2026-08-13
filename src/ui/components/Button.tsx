@@ -320,7 +320,7 @@ export function Button({
           aria-modal="true"
           aria-labelledby="appkit-action-confirm-title"
           style={{
-            position: "fixed", inset: 0, zIndex: "var(--appkit-z-modal, 1000)" as string,
+            position: "fixed", inset: 0, zIndex: "var(--appkit-z-confirm, 1000)" as string,
             display: "flex", alignItems: "center", justifyContent: "center",
             background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)",
           }}

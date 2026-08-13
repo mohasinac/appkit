@@ -275,6 +275,39 @@ export interface OrderDocument extends BaseDocument {
   paymentProofMimeType?: string;
   /** When the buyer submitted the proof. */
   paymentProofUploadedAt?: Date;
+
+  // ── Payment Detail Parity (Feature C) ───────────────────────────────────
+  /**
+   * Same-shape payment record regardless of how the buyer paid — manual
+   * (cash/UPI proof), Razorpay (webhook-verified), or COD (collected on
+   * delivery). Additive: legacy fields above (`paymentProofUrl`,
+   * `paymentTransactionId`, `paymentId`, `paymentMethod`) are left in place
+   * for backward compatibility with pre-existing orders — `OrderPaymentSummary`
+   * falls back to them when `paymentRecord` is unset. Never renamed/removed.
+   */
+  paymentRecord?: OrderPaymentRecord;
+}
+
+export type OrderPaymentRecordMethod = "manual" | "razorpay" | "cod";
+export type OrderPaymentVerificationMethod = "manual_review" | "webhook" | "cod_collection";
+
+export interface OrderPaymentRecord {
+  method: OrderPaymentRecordMethod;
+  /** UTR (manual) | razorpay_payment_id (razorpay) | collector note/ref (COD). */
+  transactionId?: string;
+  /** Manual proof upload | COD collection receipt photo (optional) | n/a for razorpay. */
+  proofUrl?: string;
+  amountPaise: number;
+  paidAt?: Date;
+  /** Admin/seller uid (manual/COD) | "razorpay-webhook" (razorpay, automatic). */
+  verifiedBy?: string;
+  verificationMethod: OrderPaymentVerificationMethod;
+  /** Razorpay audit trail only. */
+  gatewayRef?: {
+    orderId?: string;
+    paymentId?: string;
+    signature?: string;
+  };
 }
 
 export const ORDER_COLLECTION = "orders" as const;

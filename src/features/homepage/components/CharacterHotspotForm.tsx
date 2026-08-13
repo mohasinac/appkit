@@ -241,6 +241,7 @@ export function CharacterHotspotForm({
             </Row>
             <Span
               weight="medium"
+              // audit-content-alignment-ok: label under a small draggable marker dot, admin editor UI not marketing content
               className="mt-1 text-center text-[10px]"
               style={{ color: "var(--color-muted)" }}
             >

@@ -225,7 +225,7 @@ export default function BottomActions() {
       }
       aria-hidden={!isVisible}
       className={[
-        "fixed bottom-14 left-0 right-0 lg:hidden",
+        "fixed bottom-[var(--bottom-nav-height,4rem)] left-0 right-0 lg:hidden",
         Z_BOTTOM_ACTIONS,
         BOTTOM_NAV_BG,
         "shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.30)]",

@@ -48,6 +48,7 @@
 
 .appkit-lightbox__zoom-hint {
   position: absolute;
+  /* audit-bottom-offset-ok: absolutely positioned within the fullscreen lightbox overlay, not the viewport/bottom-nav */
   bottom: 1rem;
   right: 1rem;
   color: rgba(255, 255, 255, 0.4);

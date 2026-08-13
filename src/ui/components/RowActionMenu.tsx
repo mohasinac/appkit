@@ -71,7 +71,7 @@ export function RowActionMenu({
             className="appkit-row-action-menu__dropdown"
             style={{
               position: "fixed",
-              zIndex: "var(--appkit-z-modal)",
+              zIndex: "var(--appkit-z-confirm)",
               top: pos.top,
               ...(pos.right !== undefined ? { right: pos.right } : { left: pos.left }),
             }}

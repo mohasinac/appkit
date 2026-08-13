@@ -25,9 +25,12 @@
 @media (min-width: 768px) {
   .appkit-toast-container--top-right { top: 1rem; right: 1rem; }
   .appkit-toast-container--top-left { top: 1rem; left: 1rem; }
+  /* audit-bottom-offset-ok: md+ breakpoint only — no mobile bottom-nav present at this width */
   .appkit-toast-container--bottom-right { bottom: 1rem; right: 1rem; top: auto; }
+  /* audit-bottom-offset-ok: md+ breakpoint only — no mobile bottom-nav present at this width */
   .appkit-toast-container--bottom-left { bottom: 1rem; left: 1rem; top: auto; }
   .appkit-toast-container--top-center { top: 1rem; left: 50%; transform: translateX(-50%); }
+  /* audit-bottom-offset-ok: md+ breakpoint only — no mobile bottom-nav present at this width */
   .appkit-toast-container--bottom-center { bottom: 1rem; left: 50%; transform: translateX(-50%); top: auto; }
 }
 

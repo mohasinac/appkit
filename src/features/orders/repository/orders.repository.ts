@@ -137,6 +137,34 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return this.update(orderId, { packedAt: new Date(), updatedAt: new Date() });
   }
 
+  /**
+   * Payment Detail Parity (Feature C) — the COD counterpart to the manual
+   * proof-upload / Razorpay-webhook write paths. Seller or admin confirms
+   * the cash was physically collected; there is no external gateway to
+   * verify against, so `verifiedBy` is the acting user's uid and
+   * `verificationMethod` is always "cod_collection".
+   */
+  async markCodCollected(
+    orderId: string,
+    verifiedBy: string,
+    note?: string,
+  ): Promise<OrderDocument> {
+    const order = await this.findById(orderId);
+    if (!order) throw new NotFoundError(`Order ${orderId} not found`);
+    return this.update(orderId, {
+      paymentStatus: "paid",
+      paymentRecord: {
+        method: "cod",
+        transactionId: note,
+        amountPaise: order.totalPrice,
+        paidAt: new Date(),
+        verifiedBy,
+        verificationMethod: "cod_collection",
+      },
+      updatedAt: new Date(),
+    });
+  }
+
   async findFulfillmentQueue(storeId: string): Promise<OrderDocument[]> {
     const snap = await this.db
       .collection(this.collection)

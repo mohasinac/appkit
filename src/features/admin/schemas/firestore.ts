@@ -480,6 +480,13 @@ export interface SiteSettingsDocument extends BaseDocument {
     featuredSlotFee?: number;
     promotedSlotFee?: number;
   };
+  /** Procurement Shipments (Feature A) — the hourly rate used to compute a
+   *  shipment's laborCostPaise, and the daily-hour cap used to project
+   *  estimatedProcessingDays. */
+  laborRate: {
+    hourlyRatePaise: number;
+    maxHoursPerDay: number;
+  };
   socialLinks: {
     facebook?: string;
     twitter?: string;
@@ -702,6 +709,10 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     preOrderListingFee: 0,
     featuredSlotFee: 999,
     promotedSlotFee: 499,
+  },
+  laborRate: {
+    hourlyRatePaise: 20000,
+    maxHoursPerDay: 6,
   },
   featureFlags: {
     chats: true,

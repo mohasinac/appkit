@@ -344,7 +344,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   if (isLoading) {
     return (
       <Div className={`relative w-full ${heightClass} ${HERO_PLACEHOLDER_BG} animate-pulse`}>
-        <Div className={`${POSITION_FILL} flex items-center justify-start p-[var(--appkit-space-4)]`}>
+        <Div layout="flex" align="center" justify="start" className={`${POSITION_FILL} p-[var(--appkit-space-4)]`}>
           <Text variant="secondary">Loading...</Text>
         </Div>
       </Div>
@@ -353,7 +353,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (!slides || slides.length === 0) {
     return (
-      <Div gap="4" className="relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] flex items-start justify-center [flex-direction:column] px-[var(--appkit-space-6)]">
+      <Div gap="4" layout="flex-col" align="start" justify="center" className="relative w-full min-h-[260px] md:min-h-[60vh] bg-[image:var(--appkit-gradient-section-cool)] px-[var(--appkit-space-6)]">
         <Heading level={2} className="text-primary" size="2xl" weight="bold" align="start">Coming Soon</Heading>
         <Text variant="secondary" className="max-w-md" align="start">
           Amazing deals are on their way. Stay tuned!
@@ -408,7 +408,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
                 {/* Overlay text (no cards, or overlay present) */}
                 {slide.overlay && (
-                  <Div className={`${POSITION_FILL} flex items-start justify-center [flex-direction:column] text-left md:px-[4rem] lg:px-[8rem]`} padding="x-lg">
+                  <Div layout="flex-col" align="start" justify="center" className={`${POSITION_FILL} text-left md:px-[4rem] lg:px-[8rem]`} padding="x-lg">
                     {slide.overlay.subtitle && (
                       <Text color="inverse" shadow="sm" className="stagger-1 !/80 mb-1 md:mb-2 tracking-widest" mdSize="sm" size="xs" transform="uppercase">
                         {slide.overlay.subtitle}

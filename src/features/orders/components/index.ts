@@ -18,6 +18,8 @@ export {
 export type { OrderFiltersProps, OrderFilterVariant } from "./OrderFilters";
 export { OrderSiblingPayments } from "./OrderSiblingPayments";
 export type { OrderSiblingPaymentsProps } from "./OrderSiblingPayments";
+export { OrderPaymentSummary } from "./OrderPaymentSummary";
+export type { OrderPaymentSummaryProps } from "./OrderPaymentSummary";
 export { RefundHistoryTable } from "./RefundHistoryTable";
 export type { RefundHistoryTableProps } from "./RefundHistoryTable";
 export { RefundRequestView } from "./RefundRequestView";

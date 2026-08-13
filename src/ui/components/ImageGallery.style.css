@@ -94,12 +94,14 @@
 }
 
 .appkit-image-gallery__counter {
+  /* audit-bottom-offset-ok: positioned relative to the gallery's own bounding box, not the viewport/bottom-nav */
   bottom: 0.5rem;
   right: 0.5rem;
 }
 
 @media (min-width: 768px) {
   .appkit-image-gallery__counter {
+    /* audit-bottom-offset-ok: positioned relative to the gallery's own bounding box, not the viewport/bottom-nav */
     bottom: 1rem;
     right: 1rem;
   }

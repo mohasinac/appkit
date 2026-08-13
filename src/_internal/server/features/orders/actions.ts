@@ -103,6 +103,15 @@ export async function adminVerifyPaymentAction(orderId: string): Promise<ActionR
       paymentStatus: "paid",
       paymentId: order.paymentTransactionId ?? order.paymentId ?? `manual-${orderId}`,
       status: "processing",
+      paymentRecord: {
+        method: "manual",
+        transactionId: order.paymentTransactionId,
+        proofUrl: order.paymentProofUrl,
+        amountPaise: order.totalPrice,
+        paidAt: new Date(),
+        verifiedBy: user.uid,
+        verificationMethod: "manual_review",
+      },
     } as any);
   });
 }

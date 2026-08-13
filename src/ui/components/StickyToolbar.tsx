@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 
 /**
  * StickyToolbar — primitive for the recurrent translucent sticky bar pattern
- * (`sticky top-[calc(var(--header-height,0px)+44px)] z-10 ... backdrop-blur-sm
- * border-b ...`) used by search-results pages, leaderboards, etc.
+ * (`sticky top-[calc(var(--header-height,0px)+var(--appkit-navbar-height,2.5rem))]
+ * z-10 ... backdrop-blur-sm border-b ...`) used by search-results pages,
+ * leaderboards, etc.
  *
  * The header offset is sourced from `--header-height`, which the global
  * AppLayoutShell sets at runtime. Consumer code never authors the offset
@@ -51,7 +52,7 @@ function resolveOffset(offset: StickyToolbarOffset): string {
     return "top-[var(--header-height,0px)]";
   }
   if (offset === "header+nav") {
-    return "top-[calc(var(--header-height,0px)+44px)]";
+    return "top-[calc(var(--header-height,0px)+var(--appkit-navbar-height,2.5rem))]";
   }
   // Numeric pixel offset.
   return `top-[${offset}px]`;

@@ -407,8 +407,8 @@
 }
 
 .appkit-listing-layout__mobile-pagination--dashboard { bottom: 0; }
-.appkit-listing-layout__mobile-pagination--default   { bottom: 3.5rem; }
-.appkit-listing-layout__mobile-pagination--bulk      { bottom: 7rem; }
+.appkit-listing-layout__mobile-pagination--default   { bottom: var(--bottom-nav-height, 4rem); }
+.appkit-listing-layout__mobile-pagination--bulk      { bottom: calc(var(--bottom-nav-height, 4rem) + 3.5rem); }
 
 /* -- Mobile filter overlay --------------------------- */
 

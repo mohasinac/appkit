@@ -150,12 +150,24 @@
   flex: 1;
   overflow-y: auto;
   padding: 1rem 1.25rem;
+  /* Reserve room to scroll the last inline element fully above the bottom
+     nav — same fix as SideDrawer's __content, same root cause. */
+  padding-bottom: calc(1rem + var(--bottom-nav-height, 0px));
+}
+
+@media (min-width: 1024px) {
+  .appkit-drawer__body { padding-bottom: 1rem; }
 }
 
 .appkit-drawer__footer {
   flex-shrink: 0;
   border-top: 1px solid var(--appkit-color-border-subtle);
   padding: 1rem 1.25rem;
+  padding-bottom: calc(1rem + var(--bottom-nav-height, 0px));
+}
+
+@media (min-width: 1024px) {
+  .appkit-drawer__footer { padding-bottom: 1rem; }
 }
 
 .dark .appkit-drawer__footer {

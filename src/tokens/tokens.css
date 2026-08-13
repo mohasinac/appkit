@@ -588,16 +588,21 @@
   --appkit-z-overlay:        45;
   --appkit-z-navbar:         40;
   --appkit-z-bottom-nav:     40;
+  --appkit-z-title-bar:      42;
   --appkit-z-sidebar:        50;
-  --appkit-z-title-bar:      50;
   --appkit-z-modal:          60;
   --appkit-z-toast:          70;
   --appkit-z-tooltip:        80;
+  /* Confirm dialogs / row-action menus — must always win regardless of what
+     they were opened from (a QuickFormDrawer panel, a FormShell dialog,
+     etc. — the highest of those is 65). Set above tooltip so it's the
+     unconditional top of the interactive-overlay stack. */
+  --appkit-z-confirm:        90;
 
   /* Layout dimensions */
   --appkit-navbar-height:     2.5rem;  /* h-10 = 40px (mobile), h-12 = 48px (md) */
   --appkit-sidebar-width:     20rem;   /* w-80 = 320px */
-  --appkit-bottom-nav-height: 3.5rem;  /* h-14 = 56px */
+  --appkit-bottom-nav-height: 4rem;    /* h-16 = 64px */
   --appkit-title-bar-height:  3rem;    /* h-12 = 48px */
 }
 

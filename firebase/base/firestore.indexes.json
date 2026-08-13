@@ -1143,6 +1143,62 @@
       ]
     },
     {
+      "collectionGroup": "procurementShipments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentLots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "shipmentId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentLots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "shipmentStatus", "order": "ASCENDING" },
+        { "fieldPath": "projectedProfitPaise", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentLots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "shipmentStatus", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lotId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lotId", "order": "ASCENDING" },
+        { "fieldPath": "linkedProductId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "shipmentId", "order": "ASCENDING" },
+        { "fieldPath": "linkedProductId", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "payouts",
       "queryScope": "COLLECTION",
       "fields": [

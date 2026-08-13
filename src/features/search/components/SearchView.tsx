@@ -61,7 +61,7 @@ export function SearchView({
         )}
 
         {!hasQuery && (
-          <Div className="text-center" padding="y-4xl">
+          <Div className="text-left" padding="y-4xl">
             <Span className="mb-4 block" size="4xl">🔍</Span>
             <Heading level={2} className="mb-2">
               {labels.searchTitle ?? "Search"}

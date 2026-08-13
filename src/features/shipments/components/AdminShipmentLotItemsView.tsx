@@ -15,6 +15,11 @@ import {
   Pagination,
   Stack,
   Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
   Text,
   Textarea,
 } from "../../../ui";
@@ -130,7 +135,7 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
 
   return (
     <Stack gap="md">
-      <Div className="flex items-center justify-between">
+      <Div layout="flex" align="center" justify="between">
         <Heading level={3}>Lot Items ({meta?.total ?? items.length}/500)</Heading>
         <Div className="flex gap-[var(--appkit-space-2)]">
           <Button size="sm" variant="secondary" onClick={() => setShowAddItem((v) => !v)}>
@@ -177,22 +182,22 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
         <Text variant="secondary">No items tracked yet.</Text>
       ) : (
         <Table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Qty</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
+          <Thead>
+            <Tr>
+              <Th>Title</Th>
+              <Th>Qty</Th>
+              <Th>Price</Th>
+              <Th>Status</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {items.map((item) => (
-              <tr key={item.id}>
-                <td>{item.title}</td>
-                <td>{item.quantity}</td>
-                <td>{item.isForSelfUse ? "—" : formatPaise(item.price ?? 0)}</td>
-                <td>
+              <Tr key={item.id}>
+                <Td>{item.title}</Td>
+                <Td>{item.quantity}</Td>
+                <Td>{item.isForSelfUse ? "—" : formatPaise(item.price ?? 0)}</Td>
+                <Td>
                   {item.isForSelfUse ? (
                     <Badge variant="secondary">Self use</Badge>
                   ) : item.linkedProductId ? (
@@ -200,8 +205,8 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
                   ) : (
                     <Badge variant="default">Unlinked</Badge>
                   )}
-                </td>
-                <td className="flex gap-[var(--appkit-space-2)]">
+                </Td>
+                <Td className="flex gap-[var(--appkit-space-2)]">
                   {!item.isForSelfUse &&
                     (item.linkedProductId ? (
                       <Button size="sm" variant="ghost" isLoading={unlinkItemMutation.isPending} onClick={() => unlinkItemMutation.mutate(item.id)}>
@@ -221,10 +226,10 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
                   >
                     Delete
                   </Button>
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             ))}
-          </tbody>
+          </Tbody>
         </Table>
       )}
 

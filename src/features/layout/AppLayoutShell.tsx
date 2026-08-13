@@ -704,9 +704,13 @@ export function AppLayoutShell({
           />
           <NavbarWithSettings navItems={navItems} hiddenNavItems={hiddenNavItems} permissions={authUser?.permissions} />
           {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
+          {/* Inside the observed sticky wrapper so any future banner content's
+              height is automatically included in --header-height — a banner
+              rendered outside this wrapper would silently desync any
+              StickyToolbar offset="header" beneath it (same bug class as the
+              bottom-nav overlap this session fixed). */}
+          {eventBannerSlot}
         </Div>
-
-        {eventBannerSlot}
 
         <AutoBreadcrumbs />
 
@@ -728,7 +732,7 @@ export function AppLayoutShell({
 
           <Main
             id="main-content"
-            className={`w-full flex-1 flex flex-col ${hasBottomActions ? "mb-28" : "mb-16"} md:mb-0`}
+            className={`w-full flex-1 flex flex-col ${hasBottomActions ? "mb-28" : "mb-16"} lg:mb-0`}
           >
             <Div padding="y-lg" className={`flex-1 ${contentClassName ?? "mx-auto w-full max-w-screen-xl px-[var(--appkit-space-5)] md:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)]"}`}>
               {children}

@@ -2,7 +2,7 @@
 
 .appkit-form-action-bar {
   position: sticky;
-  bottom: 0;
+  bottom: var(--bottom-nav-height, 0px);
   z-index: var(--appkit-z-raised);
   display: flex;
   align-items: center;

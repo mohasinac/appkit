@@ -253,6 +253,28 @@ export function generateShipmentId(input: GenerateShipmentIdInput): string {
   return `shipment-${supplierSlug}-${y}${m}${d}-${generateRandomString(6)}`;
 }
 
+// --- Catalogue item (Feature B — personal catalogue) -----------------------------
+//
+// `mycatalog-` prefix (not `catalog-`) — deliberately distinct from the
+// unrelated CatalogProductDocument (SB-UNI-L) master-catalog concept.
+
+export interface GenerateCatalogueItemIdInput {
+  ownerSlug: string;
+  title: string;
+  date?: Date;
+  customId?: string;
+}
+export function generateCatalogueItemId(input: GenerateCatalogueItemIdInput): string {
+  if (input.customId?.trim()) return input.customId.trim();
+  const ownerSlug = slugify(input.ownerSlug).substring(0, 25).replace(/-+$/, "");
+  const itemSlug = slugify(input.title).substring(0, 30).replace(/-+$/, "");
+  const date = input.date || new Date();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `mycatalog-${ownerSlug}-${itemSlug}-${y}${m}${d}-${generateRandomString(6)}`;
+}
+
 // --- Offer --------------------------------------------------------------------
 
 export interface GenerateOfferIdInput {
@@ -615,6 +637,7 @@ export type MediaFilenameContext =
   | { type: "category-image"; name: string; ext?: string }
   | { type: "user-avatar"; firstName: string; lastName: string; ext?: string }
   | { type: "carousel-image"; title: string; ext?: string }
+  | { type: "catalogue-image"; item: string; index?: number; ext?: string }
   | { type: "invoice"; orderId: string; date?: Date }
   | { type: "payout-doc"; sellerName: string; date?: Date }
   | { type: "shipping-proof"; orderId: string; ext?: string; date?: Date }
@@ -667,6 +690,12 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
       return generateUserAvatarFilename(ctx.firstName, ctx.lastName, ctx.ext);
     case "carousel-image":
       return generateCarouselImageFilename(ctx.title, ctx.ext);
+    case "catalogue-image": {
+      const item = slugify(ctx.item).substring(0, 40).replace(/-+$/, "");
+      const n = ctx.index ?? 1;
+      const ext = (ctx.ext ?? "webp").replace(/^\./, "");
+      return `catalogue-image-${item}-${n}.${ext}`;
+    }
     case "invoice":
       return generateInvoiceFilename(ctx.orderId, ctx.date);
     case "payout-doc":
@@ -721,6 +750,7 @@ const MEDIA_FILENAME_PREFIXES = [
   "category-image",
   "user-avatar",
   "carousel-image",
+  "catalogue-image",
   "invoice", "payout-doc",
   "shipping-proof", "refund-proof",
 ] as const;

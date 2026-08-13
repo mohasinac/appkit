@@ -247,7 +247,7 @@ export function UserOffersPanel({
       )}
 
       {!loading && offers.length === 0 && (
-        <Div className="text-center" padding="y-3xl">
+        <Div className="text-left" padding="y-3xl">
           <Text size="sm" color="faint">No offers yet</Text>
         </Div>
       )}

@@ -15,6 +15,11 @@ import {
   Heading,
   Stack,
   Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
   Text,
   TextLink,
 } from "../../../ui";
@@ -191,7 +196,7 @@ function ShipmentLotsSection({
 
   return (
     <Stack gap="md" className="border-t pt-[var(--appkit-space-4)]">
-      <Div className="flex items-center justify-between">
+      <Div layout="flex" align="center" justify="between">
         <Heading level={4}>Lots ({lots.length}/10)</Heading>
         {lots.length < 10 && (
           <Button size="sm" variant="secondary" type="button" onClick={() => setShowAddLot((v) => !v)}>
@@ -221,23 +226,23 @@ function ShipmentLotsSection({
         <Text variant="secondary">No lots yet. Add a lot, then manage its items.</Text>
       ) : (
         <Table>
-          <thead>
-            <tr>
-              <th>Lot</th>
-              <th>Weight (g)</th>
-              <th>Items</th>
-              <th>Projected Profit</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
+          <Thead>
+            <Tr>
+              <Th>Lot</Th>
+              <Th>Weight (g)</Th>
+              <Th>Items</Th>
+              <Th>Projected Profit</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {lots.map((lot) => (
-              <tr key={lot.id}>
-                <td>{lot.lotName}</td>
-                <td>{lot.weightGrams}</td>
-                <td>{lot.itemCount}</td>
-                <td>{formatPaise(lot.projectedProfitPaise)}</td>
-                <td className="flex gap-[var(--appkit-space-2)]">
+              <Tr key={lot.id}>
+                <Td>{lot.lotName}</Td>
+                <Td>{lot.weightGrams}</Td>
+                <Td>{lot.itemCount}</Td>
+                <Td>{formatPaise(lot.projectedProfitPaise)}</Td>
+                <Td className="flex gap-[var(--appkit-space-2)]">
                   <TextLink href={ROUTES.ADMIN.SHIPMENT_LOT_ITEMS(shipmentId, lot.id)}>
                     Manage Items →
                   </TextLink>
@@ -251,10 +256,10 @@ function ShipmentLotsSection({
                   >
                     Delete
                   </Button>
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             ))}
-          </tbody>
+          </Tbody>
         </Table>
       )}
 
