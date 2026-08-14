@@ -115,60 +115,61 @@
 }
 
 .appkit-button.appkit-button--secondary {
-  background: var(--appkit-color-surface);
+  background: var(--appkit-color-primary-50);
   border-color: var(--appkit-color-primary-700);
   color: var(--appkit-color-primary-700);
 }
 
 .appkit-button.appkit-button--secondary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--appkit-color-primary-700) 8%, transparent);
+  background: var(--appkit-color-primary-100);
 }
 
 .dark .appkit-button.appkit-button--secondary {
-  background: transparent;
+  background: color-mix(in srgb, var(--appkit-color-secondary) 16%, transparent);
   border-color: var(--appkit-color-secondary);
   color: var(--appkit-color-secondary);
 }
 
 .dark .appkit-button.appkit-button--secondary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--appkit-color-secondary) 12%, transparent);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 26%, transparent);
 }
 
 .appkit-button--outline {
-  background: var(--appkit-color-surface);
-  border-color: var(--appkit-color-border);
+  background: color-mix(in srgb, var(--appkit-color-primary-700) 6%, var(--appkit-color-surface));
+  border-color: var(--appkit-color-primary-300);
   color: var(--appkit-color-text);
 }
 
 .appkit-button--outline:hover:not(:disabled) {
-  background: var(--appkit-color-bg);
+  background: color-mix(in srgb, var(--appkit-color-primary-700) 12%, var(--appkit-color-surface));
 }
 
 .dark .appkit-button--outline {
-  background: transparent;
-  border-color: var(--appkit-color-border);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 10%, transparent);
+  border-color: color-mix(in srgb, var(--appkit-color-secondary) 40%, transparent);
   color: var(--appkit-color-text);
 }
 
 .dark .appkit-button--outline:hover:not(:disabled) {
-  background: rgba(30, 41, 59, 0.5);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 18%, transparent);
 }
 
 .appkit-button--ghost {
-  background: transparent;
+  background: var(--appkit-color-border-subtle);
   color: var(--appkit-color-text);
 }
 
 .appkit-button--ghost:hover:not(:disabled) {
-  background: var(--appkit-color-border-subtle);
+  background: var(--appkit-color-border);
 }
 
 .dark .appkit-button--ghost {
+  background: rgba(255, 255, 255, 0.06);
   color: var(--appkit-color-text-muted);
 }
 
 .dark .appkit-button--ghost:hover:not(:disabled) {
-  background: rgba(30, 41, 59, 0.5);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .appkit-button.appkit-button--danger {

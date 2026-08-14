@@ -109,7 +109,7 @@ export interface ListingToolbarProps {
 const VIEW_BTN_BASE =
   "p-1.5 sm:p-2 transition-colors";
 const VIEW_BTN_ACTIVE =
-  "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white";
+  "bg-[var(--appkit-color-primary)] text-white";
 const VIEW_BTN_INACTIVE =
   "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]";
 
@@ -168,7 +168,7 @@ export function ListingToolbar({
               className="flex items-center gap-1.5 rounded-lg border border-[var(--appkit-color-border)] px-3 py-1.5 text-sm font-medium text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] transition-colors"
             >
               {allSelected
-                ? <CheckSquare className="h-4 w-4 text-[var(--appkit-color-primary,theme(colors.violet.600))]" />
+                ? <CheckSquare className="h-4 w-4 text-[var(--appkit-color-primary)]" />
                 : <Square className="h-4 w-4" />
               }
               {allSelected ? l.deselectAll : l.selectAll(bulkTotalCount)}
@@ -197,7 +197,7 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onSearchCommit}
-              className="flex shrink-0 items-center justify-center px-2.5 py-2 text-zinc-400 hover:text-[var(--appkit-color-primary,theme(colors.violet.600))] transition-colors"
+              className="flex shrink-0 items-center justify-center px-2.5 py-2 text-zinc-400 hover:text-[var(--appkit-color-primary)] transition-colors"
               aria-label={l.search}
             >
               <Search className="h-4 w-4" />
@@ -217,7 +217,7 @@ export function ListingToolbar({
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline">{l.filters}</span>
               {filterCount > 0 && (
-                <Span weight="bold" className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-[10px] text-white">
+                <Span weight="bold" className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--appkit-color-primary)] text-[10px] text-white">
                   {filterCount}
                 </Span>
               )}
@@ -289,7 +289,7 @@ export function ListingToolbar({
                   onClick={() => t.onChange(!t.active)}
                   className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
  t.active
- ? "border-transparent bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
+ ? "border-transparent bg-[var(--appkit-color-primary)] text-white"
  : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]"
  }`}
                 >

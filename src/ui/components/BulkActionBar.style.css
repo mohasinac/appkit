@@ -160,7 +160,7 @@
 
 /* dark */
 .dark .appkit-bulk-bar {
-  border-color: rgba(233, 30, 140, 0.3);
+  border-color: color-mix(in srgb, var(--appkit-color-primary) 30%, transparent);
 }
 
 .dark .appkit-bulk-bar__stripe {
@@ -168,13 +168,13 @@
 }
 
 .dark .appkit-bulk-bar__count-pill {
-  border-color: rgba(233, 30, 140, 0.35);
-  background: rgba(233, 30, 140, 0.1);
+  border-color: color-mix(in srgb, var(--appkit-color-primary) 35%, transparent);
+  background: color-mix(in srgb, var(--appkit-color-primary) 10%, transparent);
   color: var(--appkit-color-primary-300);
 }
 
 .dark .appkit-bulk-bar__count-pill:hover {
-  background: rgba(233, 30, 140, 0.18);
+  background: color-mix(in srgb, var(--appkit-color-primary) 18%, transparent);
 }
 
 .dark .appkit-bulk-bar__picker-trigger {

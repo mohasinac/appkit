@@ -170,13 +170,19 @@ if (!cards?.length) return null;
       <Section padding="y-3xl" surface="muted">
         <Div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
-          <HorizontalScroller gap={16} showArrows snapToItems loop>
-            {cards.map((card) => (
-              <Div key={card.id} className="w-72 flex-shrink-0">
+          <HorizontalScroller
+            gap={16}
+            showArrows
+            snapToItems
+            loop
+            items={cards}
+            keyExtractor={(card) => card.id}
+            renderItem={(card) => (
+              <Div className="w-72 flex-shrink-0">
                 <CardItem card={card} />
               </Div>
-            ))}
-          </HorizontalScroller>
+            )}
+          />
         </Div>
       </Section>
     );

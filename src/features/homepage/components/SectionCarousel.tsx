@@ -256,7 +256,7 @@ const headingGradient: "none" | "brand" =
             gap={gap}
             autoScroll={autoScroll}
             autoScrollInterval={autoScrollInterval}
-            loop={rows === 1}
+            loop
             keyExtractor={keyExtractor}
             rows={rows}
             minItemWidth={minItemWidth}
