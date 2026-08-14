@@ -12,6 +12,7 @@
 import type { JobContext } from "../runtime/types";
 import { runWeeklyPayoutEligibility } from "./weeklyPayoutEligibility";
 import { runHardBanCascade } from "./hardBanCascade";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface JobRunResult {
   summary: {
@@ -23,16 +24,16 @@ export interface JobRunResult {
   succeeded: string[];
   skipped: string[];
   failed: { id: string; reason: string }[];
-  data?: Record<string, unknown>;
+  data?: Record<string, JsonValue>;
 }
 
 export type JobRunner = (
-  payload: Record<string, unknown>,
+  payload: Record<string, JsonValue>,
   ctx: JobContext,
 ) => Promise<JobRunResult>;
 
 async function runPayoutsWeeklyJob(
-  _payload: Record<string, unknown>,
+  _payload: Record<string, JsonValue>,
   ctx: JobContext,
 ): Promise<JobRunResult> {
   const { payoutsCreated, ordersProcessed, payoutIds } = await runWeeklyPayoutEligibility(ctx);
@@ -51,7 +52,7 @@ async function runPayoutsWeeklyJob(
 }
 
 async function runHardBanCascadeJob(
-  payload: Record<string, unknown>,
+  payload: Record<string, JsonValue>,
   ctx: JobContext,
 ): Promise<JobRunResult> {
   const uid = String(payload.uid ?? "");

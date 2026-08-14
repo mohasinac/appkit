@@ -9,6 +9,7 @@ import type { DocumentReference } from "firebase-admin/firestore";
 import { BaseRepository } from "../../../providers/db-firebase";
 import {
   JOBS_COLLECTION,
+  JOB_FIELDS,
   JobStatusValues,
   type JobDocument,
   type JobResult,
@@ -50,8 +51,8 @@ export class JobsRepository extends BaseRepository<JobDocument> {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - ttlDays);
     const snap = await this.getCollection()
-      .where("status", "in", [JobStatusValues.DONE, JobStatusValues.FAILED])
-      .where("updatedAt", "<", cutoff)
+      .where(JOB_FIELDS.STATUS, "in", [JobStatusValues.DONE, JobStatusValues.FAILED])
+      .where(JOB_FIELDS.UPDATED_AT, "<", cutoff)
       .limit(500)
       .get();
     return snap.docs.map((d) => d.ref as DocumentReference);

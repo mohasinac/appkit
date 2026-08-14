@@ -10,6 +10,7 @@ import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
+import { useBulkAction } from "../../../react";
 import {
   toRecordArray,
   toRelativeDate,
@@ -43,6 +44,21 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [deleteTarget, setDeleteTarget] = useState<NotifRow | null>(null);
+  const [bulkDeleteIds, setBulkDeleteIds] = useState<string[] | null>(null);
+
+  const bulkNotifs = useBulkAction<{ action: string; ids: string[] }, unknown>({
+    mutationFn: (payload) => apiClient.post(ADMIN_ENDPOINTS.ADMIN_NOTIFICATIONS_BULK, payload),
+    onSuccess: (result) => {
+      showToast(
+        `${result.summary.succeeded}/${result.summary.total} notifications updated.`,
+        result.summary.failed > 0 ? "warning" : "success",
+      );
+      queryClient.invalidateQueries({ queryKey: ["admin", "notifications"] });
+    },
+    onError: () => {
+      showToast("Bulk action failed.", "error");
+    },
+  });
 
   const deleteMutation = useApiMutation({
     mutationFn: async (id: string) => {
@@ -113,13 +129,17 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
         id: ROW_ACTION_ID.MARK_READ,
         label: ACTIONS.ADMIN["mark-read"].label,
         variant: "primary",
-        onClick: () => selection.clearSelection(),
+        loading: bulkNotifs.isLoading,
+        onClick: () => {
+          void bulkNotifs.execute({ action: "mark_read", ids: selection.selectedIds });
+          selection.clearSelection();
+        },
       },
       {
         id: ROW_ACTION_ID.DELETE,
         label: ACTIONS.ADMIN["delete-notification"].label,
         variant: "secondary",
-        onClick: () => selection.clearSelection(),
+        onClick: () => setBulkDeleteIds(selection.selectedIds),
       },
     ],
     renderRowActions: (row) => (
@@ -151,14 +171,25 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
     <>
       <DataListingView config={config} />
       <ConfirmDeleteModal
-        isOpen={Boolean(deleteTarget)}
-        onClose={() => setDeleteTarget(null)}
-        onConfirm={() => {
-          if (deleteTarget) deleteMutation.mutate(deleteTarget.id);
+        isOpen={Boolean(deleteTarget) || Boolean(bulkDeleteIds)}
+        onClose={() => {
+          setDeleteTarget(null);
+          setBulkDeleteIds(null);
         }}
-        isDeleting={deleteMutation.isPending}
-        title="Delete notification?"
-        message="This notification will be permanently removed."
+        onConfirm={() => {
+          if (bulkDeleteIds) {
+            void bulkNotifs.execute({ action: "delete", ids: bulkDeleteIds }).then(() => setBulkDeleteIds(null));
+          } else if (deleteTarget) {
+            deleteMutation.mutate(deleteTarget.id);
+          }
+        }}
+        isDeleting={deleteMutation.isPending || bulkNotifs.isLoading}
+        title={bulkDeleteIds ? "Delete these notifications?" : "Delete notification?"}
+        message={
+          bulkDeleteIds
+            ? `${bulkDeleteIds.length} notification(s) will be permanently removed.`
+            : "This notification will be permanently removed."
+        }
         confirmText="Delete"
         variant="danger"
       />

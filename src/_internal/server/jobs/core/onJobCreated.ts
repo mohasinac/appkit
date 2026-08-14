@@ -21,13 +21,14 @@ import { RTDB_PATHS } from "../../../../providers/db-firebase/rtdb-paths";
 import type { JobDocument } from "../../../../features/jobs/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 import { JOB_RUNNERS } from "./jobRunners";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface HandleJobCreatedInput {
   jobId: string;
   job: JobDocument;
 }
 
-async function pingBulkEvent(jobId: string, payload: Record<string, unknown>, ctx: JobContext): Promise<void> {
+async function pingBulkEvent(jobId: string, payload: Record<string, JsonValue>, ctx: JobContext): Promise<void> {
   try {
     await getAdminRealtimeDb()
       .ref(`${RTDB_PATHS.BULK_EVENTS}/${jobId}`)
@@ -50,10 +51,10 @@ export async function handleJobCreated(
 
   const runner = JOB_RUNNERS[job.jobType];
   if (!runner) {
-    const error = `Unknown jobType: ${job.jobType}`;
+    const error = `No runner registered for jobType: ${job.jobType}`;
     await jobsRepository.markFailed(jobId, error);
     await pingBulkEvent(jobId, { status: "failed", action: job.jobType, error }, ctx);
-    ctx.logger.error("onJobCreated: unknown jobType", null, { jobId, jobType: job.jobType });
+    ctx.logger.error("onJobCreated: unregistered jobType", null, { jobId, jobType: job.jobType });
     return;
   }
 

@@ -19,10 +19,11 @@ import { jobsRepository } from "../../../repositories";
 import { JobStatusValues } from "../schemas/firestore";
 import { getAdminAuth, getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { RTDB_PATHS } from "../../../providers/db-firebase/rtdb-paths";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export interface EnqueueJobInput {
   jobType: string;
-  payload: Record<string, unknown>;
+  payload: Record<string, JsonValue>;
   requestedBy: string;
 }
 

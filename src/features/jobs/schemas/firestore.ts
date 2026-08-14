@@ -17,6 +17,7 @@
  */
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { JsonValue } from "@mohasinac/appkit";
 
 export const JOBS_COLLECTION = "jobs";
 
@@ -39,7 +40,7 @@ export interface JobResult {
   succeeded: string[];
   skipped: string[];
   failed: { id: string; reason: string }[];
-  data?: Record<string, unknown>;
+  data?: Record<string, JsonValue>;
 }
 
 export interface JobDocument extends BaseDocument {
@@ -47,7 +48,7 @@ export interface JobDocument extends BaseDocument {
   jobType: string;
   status: JobStatus;
   /** Opaque input the runner receives — shape is jobType-specific. */
-  payload: Record<string, unknown>;
+  payload: Record<string, JsonValue>;
   /** uid of the admin/user who enqueued this job. */
   requestedBy: string;
   result?: JobResult;
@@ -55,3 +56,16 @@ export interface JobDocument extends BaseDocument {
   startedAt?: Date;
   finishedAt?: Date;
 }
+
+export const JOB_FIELDS = {
+  JOB_TYPE: "jobType",
+  STATUS: "status",
+  PAYLOAD: "payload",
+  REQUESTED_BY: "requestedBy",
+  ERROR: "error",
+  STARTED_AT: "startedAt",
+  FINISHED_AT: "finishedAt",
+  CREATED_AT: "createdAt",
+  UPDATED_AT: "updatedAt",
+  STATUS_VALUES: JobStatusValues,
+} as const;

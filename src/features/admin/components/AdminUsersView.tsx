@@ -4,7 +4,7 @@ import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
@@ -29,9 +29,13 @@ import {
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
-import type { ListingViewConfig } from "./DataListingView";
+import type { ListingViewConfig, ListingSelectionContext } from "./DataListingView";
 import { apiClient } from "../../../http";
 import { AdminUserEditorView } from "./AdminUserEditorView";
+import { useBulkAction } from "../../../react";
+import { useBulkEvent } from "../../events/hooks/useBulkEvent";
+import { RTDB_PATHS } from "../../../providers/db-firebase/rtdb-paths";
+import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
 
 interface AdminUsersResponse {
   users?: JsonArray;
@@ -59,21 +63,63 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const [banModalOpen, setBanModalOpen] = useState(false);
   const [banTargetId, setBanTargetId] = useState<string | null>(null);
   const [banReason, setBanReason] = useState("");
+  const [bulkConfirmTarget, setBulkConfirmTarget] = useState<{
+    action: "suspend" | "delete";
+    ids: string[];
+  } | null>(null);
 
-  const banUser = useApiMutation({
-    mutationFn: () => {
-      if (!banTargetId) throw new Error("No user selected");
-      return apiClient.post(ADMIN_ENDPOINTS.USER_HARD_BAN(banTargetId), { reason: banReason.trim() });
-    },
-    onSuccess: () => {
+  // Hard-ban runs as a Firebase Function job (cascade across address/payment
+  // clusters can exceed the Vercel Hobby 10s ceiling) — the route only
+  // enqueues it and returns {jobId, customToken} immediately. This event
+  // stream tracks that job through to completion via the bulk_events RTDB
+  // ping channel.
+  const banJobEvent = useBulkEvent<{ uid: string }>({ rtdbPath: RTDB_PATHS.BULK_EVENTS });
+
+  useEffect(() => {
+    if (banJobEvent.status === RealtimeEventStatus.SUCCESS) {
       toast.showToast("User has been banned.", "success");
       setBanModalOpen(false);
       setBanTargetId(null);
       setBanReason("");
       void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
+      banJobEvent.reset();
+    } else if (
+      banJobEvent.status === RealtimeEventStatus.FAILED ||
+      banJobEvent.status === RealtimeEventStatus.TIMEOUT
+    ) {
+      toast.showToast(banJobEvent.error ?? "Failed to ban user.", "error");
+      banJobEvent.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [banJobEvent.status]);
+
+  const banUser = useApiMutation({
+    mutationFn: () => {
+      if (!banTargetId) throw new Error("No user selected");
+      return apiClient.post<{ jobId: string; customToken: string; uid: string }>(
+        ADMIN_ENDPOINTS.USER_HARD_BAN(banTargetId),
+        { reason: banReason.trim() },
+      );
+    },
+    onSuccess: (result) => {
+      banJobEvent.subscribe(result.jobId, result.customToken);
     },
     onError: () => {
-      toast.showToast("Failed to ban user.", "error");
+      toast.showToast("Failed to start hard-ban.", "error");
+    },
+  });
+
+  const bulkUsers = useBulkAction<{ action: string; ids: string[] }, unknown>({
+    mutationFn: (payload) => apiClient.post(ADMIN_ENDPOINTS.USERS_BULK, payload),
+    onSuccess: (result) => {
+      toast.showToast(
+        `${result.summary.succeeded}/${result.summary.total} users updated.`,
+        result.summary.failed > 0 ? "warning" : "success",
+      );
+      void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
+    },
+    onError: () => {
+      toast.showToast("Bulk action failed.", "error");
     },
   });
 
@@ -87,6 +133,21 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       toast.showToast("Failed to lift ban.", "error");
     },
   });
+
+  const handleManageBulkClick = (selection: ListingSelectionContext<UserRow>) => {
+    const rowId = selection.selectedIds[0];
+    const row = selection.rows.find((r) => r.id === rowId) ?? null;
+    if (row) {
+      setSelectedRow(row);
+      setDrawerOpen(true);
+    }
+    selection.clearSelection();
+  };
+
+  const handleRestoreBulkClick = (selection: ListingSelectionContext<UserRow>) => {
+    void bulkUsers.execute({ action: "restore", ids: selection.selectedIds });
+    selection.clearSelection();
+  };
 
   if (React.Children.count(children) > 0) {
     return (
@@ -148,26 +209,38 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       setSelectedRow(row);
       setDrawerOpen(true);
     },
-    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
-    // Only MANAGE has a wired handler today; SUSPEND/RESTORE/DELETE are left
-    // out until they have real bulk handlers.
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset,
+    // backed by the real /api/admin/users/bulk endpoint via useBulkAction.
     buildBulkActions: (selection): BulkActionItem[] =>
-      ([ROW_ACTION_ID.MANAGE] as const)
+      ([ROW_ACTION_ID.MANAGE, ROW_ACTION_ID.SUSPEND, ROW_ACTION_ID.RESTORE, ROW_ACTION_ID.DELETE] as const)
         .filter((id) => ADMIN_BULK_ACTIONS.users.includes(id))
-        .map((id) => ({
-          id,
-          label: ROW_ACTION_META[id].label,
-          variant: "primary" as const,
-          onClick: () => {
-            const rowId = selection.selectedIds[0];
-            const row = selection.rows.find((r) => r.id === rowId) ?? null;
-            if (row) {
-              setSelectedRow(row);
-              setDrawerOpen(true);
-            }
-            selection.clearSelection();
-          },
-        })),
+        .map((id) => {
+          if (id === ROW_ACTION_ID.MANAGE) {
+            return {
+              id,
+              label: ROW_ACTION_META[id].label,
+              variant: "primary" as const,
+              onClick: () => handleManageBulkClick(selection),
+            };
+          }
+          if (id === ROW_ACTION_ID.RESTORE) {
+            return {
+              id,
+              label: ROW_ACTION_META[id].label,
+              variant: "secondary" as const,
+              loading: bulkUsers.isLoading,
+              onClick: () => handleRestoreBulkClick(selection),
+            };
+          }
+          const action = id === ROW_ACTION_ID.SUSPEND ? "suspend" : "delete";
+          return {
+            id,
+            label: ROW_ACTION_META[id].label,
+            variant: "danger" as const,
+            loading: bulkUsers.isLoading,
+            onClick: () => setBulkConfirmTarget({ action, ids: selection.selectedIds }),
+          };
+        }),
     renderRowActions: (row) => {
       const isBanned = row.status === "Hard banned";
       return (
@@ -332,13 +405,56 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
             <Button
               type="submit"
               variant="danger"
-              isLoading={banUser.isPending}
-              disabled={!banReason.trim() || banUser.isPending}
+              isLoading={banUser.isPending || banJobEvent.status === RealtimeEventStatus.SUBSCRIBING || banJobEvent.status === RealtimeEventStatus.PENDING}
+              disabled={
+                !banReason.trim() ||
+                banUser.isPending ||
+                banJobEvent.status === RealtimeEventStatus.SUBSCRIBING ||
+                banJobEvent.status === RealtimeEventStatus.PENDING
+              }
             >
               {ACTIONS.ADMIN["ban-user"].confirmation!.confirmLabel}
             </Button>
           </FormActions>
         </Form>
+      </Modal>
+      <Modal
+        isOpen={Boolean(bulkConfirmTarget)}
+        onClose={() => setBulkConfirmTarget(null)}
+        title={
+          bulkConfirmTarget?.action === "suspend"
+            ? ACTIONS.ADMIN["bulk-suspend-users"].confirmation!.title
+            : ACTIONS.ADMIN["bulk-delete-users"].confirmation!.title
+        }
+      >
+        <AppText size="sm" color="muted" className="mb-4">
+          {bulkConfirmTarget?.action === "suspend"
+            ? ACTIONS.ADMIN["bulk-suspend-users"].confirmation!.body
+            : ACTIONS.ADMIN["bulk-delete-users"].confirmation!.body}
+        </AppText>
+        <FormActions>
+          <Button type="button" variant="secondary" onClick={() => setBulkConfirmTarget(null)}>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            isLoading={bulkUsers.isLoading}
+            onClick={() => {
+              if (!bulkConfirmTarget) return;
+              // bulkUsers.execute already surfaces success/failure via its
+              // own onSuccess/onError toasts — .finally() just closes the
+              // confirm dialog either way.
+              void bulkUsers
+                .execute({ action: bulkConfirmTarget.action, ids: bulkConfirmTarget.ids })
+                .finally(() => setBulkConfirmTarget(null));
+            }}
+          >
+            {bulkConfirmTarget?.action === "suspend"
+              ? ACTIONS.ADMIN["bulk-suspend-users"].confirmation!.confirmLabel
+              : ACTIONS.ADMIN["bulk-delete-users"].confirmation!.confirmLabel}
+          </Button>
+        </FormActions>
       </Modal>
     </>
   );

@@ -44,6 +44,7 @@ import {
   getCartItemMemberIds,
   getExpandedDecrements,
   bucketCartItemsByStock,
+  type StockBucketResult,
 } from "./bundle-expansion";
 import {
   consentOtpRef,
@@ -1063,6 +1064,110 @@ export interface VerifyAndPlaceRazorpayOrderInput {
  *   6. order_placed notifications (buyer + seller)
  *   7. Confirmation email + RTDB success signal (both fire-and-forget)
  */
+/**
+ * Auto-refund the value of items dropped from a Razorpay checkout under the
+ * "skip_items" out-of-stock policy. Razorpay captures payment for the FULL
+ * cart before the stock check runs, so anything not placed as an order must
+ * be given back. Extracted from `verifyAndPlaceRazorpayOrderAction` — same
+ * behavior, kept as a named step so the parent function stays readable.
+ *
+ * Awaited by the caller (this moves money, never fire-and-forget). On
+ * failure the orders themselves are NOT rolled back (already validly
+ * created and paid); the failure is surfaced via `order.refundPending` + an
+ * admin notification fan-out, never silently dropped (Rule #8).
+ */
+async function refundDroppedItemsForRazorpayCheckout(input: {
+  unavailablePaid: StockBucketResult["unavailable"];
+  orderIds: string[];
+  productByIdPaid: Map<string, ProductDocument>;
+  razorpayPaymentId: string;
+}): Promise<void> {
+  const { unavailablePaid, orderIds, productByIdPaid, razorpayPaymentId } = input;
+  if (unavailablePaid.length === 0 || orderIds.length === 0) return;
+
+  const droppedValueInPaise = unavailablePaid.reduce(
+    (sum, u) => sum + (productByIdPaid.get(u.productId)?.price ?? 0) * u.requestedQty,
+    0,
+  );
+  if (droppedValueInPaise <= 0) return;
+
+  const primaryOrderId = orderIds[0];
+  try {
+    const primaryOrder = await unitOfWork.orders.findById(primaryOrderId);
+    // Cap defensively at the primary order's total — processRefundAction
+    // rejects any amount exceeding order.totalPrice, and a multi-order
+    // batch's dropped-items value isn't cleanly attributable to a single
+    // order (Razorpay refunds are keyed by paymentId, not orderId; the
+    // FIRST order created in this batch is used as the refund's book-
+    // keeping anchor).
+    const refundAmount = primaryOrder
+      ? Math.min(droppedValueInPaise, primaryOrder.totalPrice)
+      : droppedValueInPaise;
+    const refundResult = await processRefundAction({
+      orderId: primaryOrderId,
+      type: "partial",
+      amountInPaise: refundAmount,
+      reason: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
+      method: "razorpay",
+      razorpayPaymentId,
+      confirmIrrevocable: true,
+      refundedBy: "system:checkout-auto-refund",
+    });
+    if (!refundResult.ok) {
+      throw new Error(refundResult.error ?? "Automatic refund failed");
+    }
+  } catch (refundErr) {
+    void normalizeError(refundErr);
+    serverLogger.warn(
+      "verifyAndPlaceRazorpayOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
+      {
+        orderId: primaryOrderId,
+        droppedValueInPaise,
+        err: refundErr instanceof Error ? refundErr.message : String(refundErr),
+      },
+    );
+    await unitOfWork.orders
+      .update(primaryOrderId, { refundPending: true } as never)
+      .catch((updErr: unknown) => {
+        void normalizeError(updErr);
+        serverLogger.error(
+          "verifyAndPlaceRazorpayOrderAction: failed to flag refundPending after auto-refund failure",
+          { orderId: primaryOrderId, err: updErr instanceof Error ? updErr.message : String(updErr) },
+        );
+      });
+    // Best-effort admin fan-out — mirrors onScamReportCreate's employee
+    // notification pattern. Never allowed to throw past this point.
+    try {
+      const admins = await userRepository.list({ filters: "role==admin", page: 1, pageSize: 100 });
+      await Promise.all(
+        admins.items
+          .filter((a) => !!a.id)
+          .map((admin) =>
+            sendNotification({
+              userId: admin.id!,
+              type: "system",
+              priority: "high",
+              title: "Automatic refund failed",
+              message: `Automatic refund failed for order ${primaryOrderId} (${unavailablePaid.length} unavailable item(s)) — manual refund required.`,
+              relatedId: primaryOrderId,
+              relatedType: "order",
+              userEmail: admin.email ?? undefined,
+              userPhone: admin.phoneNumber ?? undefined,
+            }).catch((notifErr: unknown) =>
+              serverLogger.error("Failed to notify admin of failed auto-refund (non-fatal)", notifErr),
+            ),
+          ),
+      );
+    } catch (notifyErr) {
+      void normalizeError(notifyErr);
+      serverLogger.error(
+        "verifyAndPlaceRazorpayOrderAction: failed to query admins for failed auto-refund notification",
+        { orderId: primaryOrderId },
+      );
+    }
+  }
+}
+
 export async function verifyAndPlaceRazorpayOrderAction(
   input: VerifyAndPlaceRazorpayOrderInput,
 ): Promise<CheckoutOrderResult> {
@@ -1550,89 +1655,12 @@ export async function verifyAndPlaceRazorpayOrderAction(
   // themselves are NOT rolled back (they're already validly created and
   // paid); instead the failure is surfaced via order.refundPending + an
   // admin notification, never silently dropped (Rule #8).
-  if (unavailablePaid.length > 0 && orderIds.length > 0) {
-    const droppedValueInPaise = unavailablePaid.reduce(
-      (sum, u) => sum + (productByIdPaid.get(u.productId)?.price ?? 0) * u.requestedQty,
-      0,
-    );
-    const primaryOrderId = orderIds[0];
-    if (droppedValueInPaise > 0) {
-      try {
-        const primaryOrder = await unitOfWork.orders.findById(primaryOrderId);
-        // Cap defensively at the primary order's total — processRefundAction
-        // rejects any amount exceeding order.totalPrice, and a multi-order
-        // batch's dropped-items value isn't cleanly attributable to a single
-        // order (Razorpay refunds are keyed by paymentId, not orderId; the
-        // FIRST order created in this batch is used as the refund's book-
-        // keeping anchor).
-        const refundAmount = primaryOrder
-          ? Math.min(droppedValueInPaise, primaryOrder.totalPrice)
-          : droppedValueInPaise;
-        const refundResult = await processRefundAction({
-          orderId: primaryOrderId,
-          type: "partial",
-          amountInPaise: refundAmount,
-          reason: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
-          method: "razorpay",
-          razorpayPaymentId: razorpay_payment_id,
-          confirmIrrevocable: true,
-          refundedBy: "system:checkout-auto-refund",
-        });
-        if (!refundResult.ok) {
-          throw new Error(refundResult.error ?? "Automatic refund failed");
-        }
-      } catch (refundErr) {
-        void normalizeError(refundErr);
-        serverLogger.warn(
-          "verifyAndPlaceRazorpayOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
-          {
-            orderId: primaryOrderId,
-            droppedValueInPaise,
-            err: refundErr instanceof Error ? refundErr.message : String(refundErr),
-          },
-        );
-        await unitOfWork.orders
-          .update(primaryOrderId, { refundPending: true } as never)
-          .catch((updErr: unknown) => {
-            void normalizeError(updErr);
-            serverLogger.error(
-              "verifyAndPlaceRazorpayOrderAction: failed to flag refundPending after auto-refund failure",
-              { orderId: primaryOrderId, err: updErr instanceof Error ? updErr.message : String(updErr) },
-            );
-          });
-        // Best-effort admin fan-out — mirrors onScamReportCreate's employee
-        // notification pattern. Never allowed to throw past this point.
-        try {
-          const admins = await userRepository.list({ filters: "role==admin", page: 1, pageSize: 100 });
-          await Promise.all(
-            admins.items
-              .filter((a) => !!a.id)
-              .map((admin) =>
-                sendNotification({
-                  userId: admin.id!,
-                  type: "system",
-                  priority: "high",
-                  title: "Automatic refund failed",
-                  message: `Automatic refund failed for order ${primaryOrderId} (${unavailablePaid.length} unavailable item(s)) — manual refund required.`,
-                  relatedId: primaryOrderId,
-                  relatedType: "order",
-                  userEmail: admin.email ?? undefined,
-                  userPhone: admin.phoneNumber ?? undefined,
-                }).catch((notifErr: unknown) =>
-                  serverLogger.error("Failed to notify admin of failed auto-refund (non-fatal)", notifErr),
-                ),
-              ),
-          );
-        } catch (notifyErr) {
-          void normalizeError(notifyErr);
-          serverLogger.error(
-            "verifyAndPlaceRazorpayOrderAction: failed to query admins for failed auto-refund notification",
-            { orderId: primaryOrderId },
-          );
-        }
-      }
-    }
-  }
+  await refundDroppedItemsForRazorpayCheckout({
+    unavailablePaid,
+    orderIds,
+    productByIdPaid,
+    razorpayPaymentId: razorpay_payment_id,
+  });
 
   if (emailsToSend.length > 0) {
     Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
