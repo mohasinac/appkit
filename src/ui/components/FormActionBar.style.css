@@ -12,6 +12,11 @@
   background: var(--appkit-color-surface);
   backdrop-filter: blur(8px);
   padding: 0.75rem 1rem;
+  /* Safety net for iOS Safari, which doesn't shrink a 100vh/100dvh ancestor
+     when the on-screen keyboard opens — pads the bar's real bottom edge so
+     it never renders underneath the keyboard even if the ancestor didn't
+     resize. Desktop's `top` flip below resets this via its own shorthand. */
+  padding-bottom: calc(0.75rem + var(--keyboard-inset-height, 0px));
 }
 
 /* Desktop: flip to sticky top, below the fixed header */

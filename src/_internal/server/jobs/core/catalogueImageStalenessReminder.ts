@@ -1,49 +1,54 @@
-import { catalogueRepository } from "../../../../repositories";
-import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { normalizeError } from "../../../../errors/normalize";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { catalogueRepository } from "../../../../repositories";
 import { CATALOGUE_IMAGE_FRESHNESS_DAYS } from "../../../../features/catalogue/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 
-const REMINDER_LEAD_DAYS = 5; // remind at day 25, 5 days before the 30-day freshness cutoff
+const REMINDER_LEAD_DAYS = 5;
+const DAY_MS = 86_400_000;
 
 /**
- * Daily sweep — reminds catalogue owners their photos are approaching the
- * 30-day freshness cutoff, before they hit the hard block on List/Request-
- * to-sell. Dedupes via `staleReminderSentAt` so a second run on the same
- * `lastImageUpdateAt` value doesn't re-notify.
+ * Daily sweep — nudges catalogue owners whose photos are approaching (or
+ * past) the freshness cutoff (`assertCatalogueImagesFresh`'s 30-day gate),
+ * so the "List" / "Request to sell" block doesn't come as a surprise.
+ * `staleReminderSentAt` gates re-notification: only fires again once
+ * `lastImageUpdateAt` has moved past the previous reminder (i.e. the owner
+ * uploaded a fresh photo and then let it go stale again).
  */
 export async function runCatalogueImageStalenessReminder(ctx: JobContext): Promise<void> {
-  ctx.logger.info("Starting catalogue image staleness reminder sweep");
+  ctx.logger.info("Catalogue image staleness reminder sweep starting");
 
-  const cutoff = new Date(ctx.now.getTime() - (CATALOGUE_IMAGE_FRESHNESS_DAYS - REMINDER_LEAD_DAYS) * 86_400_000);
-  const items = await catalogueRepository.listStale(cutoff);
+  const reminderCutoff = new Date(ctx.now.getTime() - (CATALOGUE_IMAGE_FRESHNESS_DAYS - REMINDER_LEAD_DAYS) * DAY_MS);
+  const items = await catalogueRepository.listStale(reminderCutoff, 200);
 
-  let sent = 0;
+  let remindersSent = 0;
+
   for (const item of items) {
-    if (item.staleReminderSentAt && item.staleReminderSentAt >= item.lastImageUpdateAt) {
-      continue; // already reminded for this image version
-    }
+    if (item.listingStatus === "listed") continue; // already listed — no gate left to hit
+    const lastUpdate = new Date(item.lastImageUpdateAt);
+    if (item.staleReminderSentAt && new Date(item.staleReminderSentAt) >= lastUpdate) continue; // already reminded for this image set
+
     try {
       await sendNotification({
         userId: item.ownerId,
-        type: "system",
+        type: "catalogue_images_stale",
         priority: "normal",
-        title: "Refresh your catalogue photos soon",
-        message: `Photos for "${item.title}" in your catalogue will need refreshing in a few days to stay eligible for listing.`,
-        actionUrl: `/user/catalogue/${item.id}/edit`,
-        actionLabel: "Update photos",
+        title: "Refresh your catalogue photos",
+        message: `Photos for "${item.title}" are getting old — refresh them within ${CATALOGUE_IMAGE_FRESHNESS_DAYS - REMINDER_LEAD_DAYS} days or you won't be able to list it.`,
         relatedId: item.id,
-      });
+        relatedType: "catalogueItem",
+        actionUrl: `/user/catalogue/${item.id}/edit`,
+      } as never);
       await catalogueRepository.update(item.id, { staleReminderSentAt: ctx.now });
-      sent += 1;
+      remindersSent++;
     } catch (err) {
       void normalizeError(err);
-      ctx.logger.error("catalogueImageStalenessReminder: failed to notify owner", {
+      ctx.logger.warn("Catalogue staleness reminder notification failed", {
         itemId: item.id,
-        ownerId: item.ownerId,
+        err: err instanceof Error ? err.message : String(err),
       });
     }
   }
 
-  ctx.logger.info("Catalogue image staleness reminder complete", { scanned: items.length, sent });
+  ctx.logger.info("Catalogue image staleness reminder sweep complete", { remindersSent });
 }

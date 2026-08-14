@@ -93,8 +93,10 @@ module.exports = {
         sidebar: "var(--appkit-z-sidebar)",
         "title-bar": "var(--appkit-z-title-bar)",
         modal: "var(--appkit-z-modal)",
+        popover: "var(--appkit-z-popover)",
         toast: "var(--appkit-z-toast)",
         tooltip: "var(--appkit-z-tooltip)",
+        confirm: "var(--appkit-z-confirm)",
       },
       fontSize: {
         "2xs": ["0.625rem", { lineHeight: "0.75rem" }],

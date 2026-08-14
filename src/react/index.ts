@@ -8,6 +8,7 @@
 // Viewport / media breakpoints
 export { useMediaQuery } from "./hooks/useMediaQuery";
 export { useBreakpoint } from "./hooks/useBreakpoint";
+export { useVisualViewportInset } from "./hooks/useVisualViewportInset";
 
 // DOM interaction
 export { useClickOutside } from "./hooks/useClickOutside";

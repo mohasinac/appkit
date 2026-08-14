@@ -1,7 +1,7 @@
 .appkit-modal {
   position: fixed;
   inset: 0;
-  z-index: var(--appkit-z-sidebar);
+  z-index: var(--appkit-z-modal);
   display: flex;
   align-items: center;
   justify-content: center;

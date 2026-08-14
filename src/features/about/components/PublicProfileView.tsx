@@ -4,10 +4,11 @@ import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { FLEX_CENTER } from "../../../_internal/shared/styles/themed";
-import { Anchor, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Anchor, Div, Grid, Heading, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ProductCard } from "../../products/components/ProductGrid";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
+import { PublicCatalogueView } from "../../catalogue/components/PublicCatalogueView";
 import type { ProductItem } from "../../products/types";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
@@ -29,6 +30,13 @@ const __O = {
 
 export interface PublicProfileViewProps {
   userId: string;
+  /**
+   * Feature B — the profile page is deliberately tab-capable (this session
+   * only wires "catalogue"; a future tab is a new value here, not a
+   * restructure). Falls back to the existing overview content when unset
+   * or unrecognized.
+   */
+  tab?: string;
 }
 
 function toProductItem(p: ProductDocument): ProductItem {
@@ -67,6 +75,7 @@ function getProductHref(p: ProductDocument): string {
 
 export async function PublicProfileView({
   userId,
+  tab,
 }: PublicProfileViewProps) {
   const page = { container: PAGE_CONTAINER };
   const flex = { center: FLEX_CENTER };
@@ -111,16 +120,32 @@ export async function PublicProfileView({
   const profileHeroCtx = { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page };
   const statItems = buildProfileStatItems(t, { listingCount, reviewCount, itemsSold, auctionsWon, totalOrders, isSeller });
 
+  const activeTab = tab === "catalogue" ? "catalogue" : "overview";
+
   return (
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {renderProfileHero(t, profileHeroCtx)}
       <Stack gap="2xl" className={`${page.container.md}`} paddingY="y-3xl">
-        {renderProfileStatsRow(flex, statItems)}
-        {renderProfileBioSection(pub)}
-        {renderStoreDescriptionSection(isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
-        {renderProfileListingsSection(t, products, storeSlug ?? null)}
-        {renderAuthoredReviewsSection(t, reviewsAuthored, displayName)}
-        {reviewsReceivedAsBuyer.length > 0 && renderBuyerReceivedReviewsSection(t, reviewsReceivedAsBuyer)}
+        <Row gap="md" padding="t-xs" border="bottom">
+          <TextLink href={`/profile/${userId}/overview`} variant={activeTab === "overview" ? "default" : "muted"} weight={activeTab === "overview" ? "semibold" : "normal"}>
+            Overview
+          </TextLink>
+          <TextLink href={`/profile/${userId}/catalogue`} variant={activeTab === "catalogue" ? "default" : "muted"} weight={activeTab === "catalogue" ? "semibold" : "normal"}>
+            Catalogue
+          </TextLink>
+        </Row>
+        {activeTab === "catalogue" ? (
+          <PublicCatalogueView ownerSlug={userId} />
+        ) : (
+          <>
+            {renderProfileStatsRow(flex, statItems)}
+            {renderProfileBioSection(pub)}
+            {renderStoreDescriptionSection(isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
+            {renderProfileListingsSection(t, products, storeSlug ?? null)}
+            {renderAuthoredReviewsSection(t, reviewsAuthored, displayName)}
+            {reviewsReceivedAsBuyer.length > 0 && renderBuyerReceivedReviewsSection(t, reviewsReceivedAsBuyer)}
+          </>
+        )}
         <Row justify="center" padding="t-xs">
           <Link href={String(ROUTES.HOME)} className="text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)]">
             ← {t("backHome")}

@@ -151,6 +151,9 @@ export const DEFAULT_ROUTE_MAP = {
     DIGITAL_CODES: "/user/digital-codes",
     PRIZE_DRAWS: "/user/prize-draws",
     EVENTS: "/user/events",
+    CATALOGUE: "/user/catalogue",
+    CATALOGUE_NEW: "/user/catalogue/new",
+    CATALOGUE_EDIT: (id: string) => `/user/catalogue/${id}/edit`,
   },
   STORE: {
     DASHBOARD: "/store",
@@ -251,6 +254,7 @@ export const DEFAULT_ROUTE_MAP = {
     SHIPMENTS_EDIT: (id: string) => `/admin/shipments/${id}/edit`,
     SHIPMENT_LOT_ITEMS: (id: string, lotId: string) => `/admin/shipments/${id}/lots/${lotId}/items`,
     SHIPMENTS_PROJECTIONS: "/admin/shipments/projections",
+    CATALOGUE_APPROVALS: "/admin/catalogue-approvals",
     USERS: "/admin/users",
     SITE: "/admin/site",
     CAROUSEL: "/admin/carousel",

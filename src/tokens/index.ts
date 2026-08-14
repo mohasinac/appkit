@@ -256,9 +256,6 @@ export const LAYOUT = {
   firstChild: "mt-0 pt-0",
   /** Kill bottom margin from last element in a zone */
   lastChild: "mb-0 pb-0",
-  /** Combined bottom-nav bar (hidden on lg+, iPhone safe-area aware) */
-  bottomNav:
-    "fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-16 bg-[var(--appkit-color-surface)] border-t border-[var(--appkit-color-border-subtle)] lg:hidden pb-[env(safe-area-inset-bottom)]",
   /** Main content bottom padding to clear the bottom nav on mobile */
   mainPadBottomNav: "pb-20 lg:pb-0",
   /** Standard card heights for consistency */

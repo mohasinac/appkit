@@ -60,7 +60,8 @@ export type SeedCollectionName =
   | "lotteryEntries"
   | "shipments"
   | "shipmentLots"
-  | "shipmentItems";
+  | "shipmentItems"
+  | "catalogueItems";
 
 export interface SeedOperationResult {
   success?: boolean;

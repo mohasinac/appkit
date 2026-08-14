@@ -15,6 +15,7 @@
 
 import * as React from "react";
 import { Div, Main, Nav, Span, Stack } from "../../../ui";
+import { useVisualViewportInset } from "../../../react/hooks/useVisualViewportInset";
 export interface DashboardScaffoldRenderContext {
   /** Whether the off-canvas drawer is open. */
   drawerOpen: boolean;
@@ -49,6 +50,7 @@ export function DashboardScaffold({
   const [drawerOpen, setDrawerOpen] = React.useState(initialDrawerOpen);
   const toggleDrawer = React.useCallback(() => setDrawerOpen((v) => !v), []);
   const ctx: DashboardScaffoldRenderContext = { drawerOpen, toggleDrawer };
+  const isKeyboardOpen = useVisualViewportInset();
 
   const nav = renderNav ? renderNav(ctx) : null;
   const bottomNav = renderBottomNav ? renderBottomNav(ctx) : nav;
@@ -105,7 +107,8 @@ export function DashboardScaffold({
         {bottomNav ? (
           <Nav
             aria-label="Bottom navigation"
-            className="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] lg:hidden"
+            aria-hidden={isKeyboardOpen}
+            className={`fixed bottom-0 left-0 right-0 z-[var(--appkit-z-bottom-nav)] border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] lg:hidden transition-transform duration-200 ease-out ${isKeyboardOpen ? "translate-y-full pointer-events-none" : "translate-y-0"}`}
             data-dashboard-slot="bottom-nav"
           >
             {bottomNav}

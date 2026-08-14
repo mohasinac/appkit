@@ -13,6 +13,7 @@ import {
   Heading,
   Modal,
   Pagination,
+  Skeleton,
   Stack,
   Table,
   Thead,
@@ -178,7 +179,12 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
         </Grid>
       )}
 
-      {items.length === 0 ? (
+      {isLoading ? (
+        <Stack gap="sm">
+          <Skeleton variant="rectangular" height="32px" />
+          <Skeleton variant="rectangular" height="32px" />
+        </Stack>
+      ) : items.length === 0 ? (
         <Text variant="secondary">No items tracked yet.</Text>
       ) : (
         <Table>

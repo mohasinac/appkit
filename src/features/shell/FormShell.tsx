@@ -365,7 +365,9 @@ export function FormShell({
         {!previewMode && renderBottomBar ? (
           renderBottomBar()
         ) : !previewMode && (onSaveDraft || onPublish) ? (
-          <Row justify="between" paddingX="x-5" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm">
+          <Row justify="between" paddingX="x-5" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" padding="y-sm"
+            style={{ paddingBottom: "calc(var(--appkit-space-3) + var(--keyboard-inset-height, 0px))" }}
+          >
             <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
               {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
             </Button>
@@ -400,14 +402,14 @@ export function FormShell({
       {/* Unsaved changes dialog */}
       {showUnsaved && (
         <>
-          <Div surface="overlay-lg" 
+          <Div surface="overlay-lg"
             className="fixed inset-0"
-            style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
+            style={{ zIndex: "var(--appkit-z-confirm)" }}
             onClick={() => setShowUnsaved(false)}
           />
           <Div
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)]" shadow="2xl" rounded="xl" padding="lg"
-            style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
+            style={{ zIndex: "var(--appkit-z-confirm)" }}
           >
             <Row gap="sm" align="start" className="mb-4">
               <Span layout="flex-center" className="flex-shrink-0 w-10 h-10 bg-[var(--appkit-color-warning-surface)]" rounded="full">

@@ -56,6 +56,7 @@ export type ActionResource =
   | "BLOG"
   | "EVENT"
   | "SHIPMENT"
+  | "CATALOGUE"
   | "USER"
   | "SELLER"
   | "ADMIN"
@@ -940,6 +941,66 @@ export const ACTIONS: ActionTree = {
         title: "Delete this shipment?",
         body: "This permanently removes the shipment and all its lots and items. This cannot be undone. Items still linked to a product must be unlinked first.",
         confirmLabel: "Delete shipment",
+        confirmKind: "danger",
+      },
+    },
+  },
+  CATALOGUE: {
+    "list-item": {
+      id: "catalogue.list-item",
+      label: "List",
+      ariaLabel: "List this catalogue item directly",
+      description: "Seller-only — turns a catalogue item into a real listing under your own store immediately.",
+      kind: "primary",
+      permissions: ["seller", "admin"],
+    },
+    "submit-for-approval": {
+      id: "catalogue.submit-for-approval",
+      label: "Request to sell",
+      ariaLabel: "Request admin list this item on your behalf",
+      description: "Sends this item to admin for review before it's listed.",
+      kind: "secondary",
+    },
+    "unlink": {
+      id: "catalogue.unlink",
+      label: "Unlink",
+      ariaLabel: "Unlink this catalogue item from its product",
+      description: "Clears the product link on this catalogue item without touching the product itself.",
+      kind: "ghost",
+      permissions: ["admin"],
+    },
+    "delete": {
+      id: "catalogue.delete",
+      label: "Delete",
+      ariaLabel: "Remove this catalogue item",
+      description: "Permanently removes this item from your personal catalogue.",
+      kind: "danger",
+      confirmation: {
+        title: "Remove this item from your catalogue?",
+        body: "This cannot be undone. Items already listed cannot be deleted from here.",
+        confirmLabel: "Remove",
+        confirmKind: "danger",
+      },
+    },
+    "approve": {
+      id: "catalogue.approve",
+      label: "Approve",
+      ariaLabel: "Approve this catalogue listing request",
+      description: "Creates the product under the platform's consignment store and marks the item listed.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "reject": {
+      id: "catalogue.reject",
+      label: "Reject",
+      ariaLabel: "Reject this catalogue listing request",
+      description: "Declines the request and records a reason the owner can see.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Reject this listing request?",
+        body: "The owner will see your rejection reason.",
+        confirmLabel: "Reject",
         confirmKind: "danger",
       },
     },

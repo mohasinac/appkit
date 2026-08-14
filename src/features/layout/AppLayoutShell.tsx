@@ -15,6 +15,7 @@ const ROLE_DOT_BG_CLASS: Record<string, string> = {
 };
 import { useTheme } from "../../_internal/client/theme";
 import { useAuth } from "../../react/contexts/SessionContext";
+import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 import { isBuyerUser } from "../auth/role-predicates";
 import { NavbarWithSettings } from "./NavbarWithSettings";
 import { useBottomActionsContext } from "./BottomActionsContext";
@@ -602,6 +603,12 @@ export function AppLayoutShell({
     document.documentElement.style.setProperty("--header-height", `${el.offsetHeight}px`);
     return () => observer.disconnect();
   }, []);
+
+  // Writes --keyboard-inset-height to :root so any fixed/sticky element
+  // (BottomActions, BackToTop, FormShell/FormActionBar footers) can offset
+  // itself above the on-screen keyboard via CSS calc() alone. BottomNavLayout
+  // additionally calls this hook itself for its own hide-on-keyboard branch.
+  useVisualViewportInset();
 
   const handleTogglePublicSidebar = useCallback(() => {
     setSidebarOpen((prev) => {

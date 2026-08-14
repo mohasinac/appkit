@@ -85,6 +85,11 @@ export const ACCOUNT_ENDPOINTS = {
   COUPONS_CLAIM: "/api/user/coupons/claim",
   OFFERS: "/api/user/offers",
   NOTIFICATION_PREFERENCES: "/api/user/notification-preferences",
+  CATALOGUE: "/api/user/catalogue",
+  CATALOGUE_BY_ID: (id: string) => `/api/user/catalogue/${id}`,
+  CATALOGUE_LIST: (id: string) => `/api/user/catalogue/${id}/list`,
+  CATALOGUE_SUBMIT: (id: string) => `/api/user/catalogue/${id}/submit`,
+  PUBLIC_CATALOGUE: (ownerSlug: string) => `/api/catalogue/${ownerSlug}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -168,6 +173,9 @@ export const ADMIN_ENDPOINTS = {
   SHIPMENT_LOT_ITEM_LINK: (id: string, lotId: string, itemId: string) =>
     `/api/admin/shipments/${id}/lots/${lotId}/items/${itemId}/link`,
   SHIPMENTS_PROJECTIONS: "/api/admin/shipments/projections",
+  CATALOGUE_APPROVALS: "/api/admin/catalogue",
+  CATALOGUE_APPROVE: (id: string) => `/api/admin/catalogue/${id}/approve`,
+  CATALOGUE_REJECT: (id: string) => `/api/admin/catalogue/${id}/reject`,
   EVENTS: "/api/admin/events",
   EVENT_BY_ID: (id: string) => `/api/admin/events/${id}`,
   EVENT_STATUS: (id: string) => `/api/admin/events/${id}/status`,

@@ -38,7 +38,7 @@ import { Div, Row, Span, Text, Button } from "../../ui";
 // Token values inlined from @mohasinac/appkit/tokens
 const BOTTOM_NAV_BG =
   "bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)]";
-const Z_BOTTOM_ACTIONS = "z-40";
+const Z_BOTTOM_ACTIONS = "z-[var(--appkit-z-bottom-nav)]";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
 const CLS_COUNT_BADGE = "bg-error-surface text-white";
@@ -225,7 +225,7 @@ export default function BottomActions() {
       }
       aria-hidden={!isVisible}
       className={[
-        "fixed bottom-[var(--bottom-nav-height,4rem)] left-0 right-0 lg:hidden",
+        "fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))] left-0 right-0 lg:hidden",
         Z_BOTTOM_ACTIONS,
         BOTTOM_NAV_BG,
         "shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.30)]",

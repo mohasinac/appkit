@@ -2125,6 +2125,7 @@ export { ordersSeedData } from "./seed/index";
 export { payoutsSeedData } from "./seed/index";
 // shipmentsSeedData / shipmentLotsSeedData / shipmentItemsSeedData - procurement shipments seed data.
 export { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./seed/index";
+export { catalogueSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsStandardSeedData - Seed data for standard (buy-now) product listings.
 export { productsStandardSeedData } from "./seed/index";
@@ -7031,6 +7032,13 @@ export {
   approveCatalogueListingAction,
   rejectCatalogueListingAction,
 } from "./features/catalogue/index";
+export { UserCatalogueView } from "./features/catalogue/index";
+export type { UserCatalogueViewProps } from "./features/catalogue/index";
+export { CatalogueItemEditorView } from "./features/catalogue/index";
+export type { CatalogueItemEditorViewProps } from "./features/catalogue/index";
+export { PublicCatalogueView } from "./features/catalogue/index";
+export type { PublicCatalogueViewProps } from "./features/catalogue/index";
+export { AdminCatalogueApprovalsView } from "./features/catalogue/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // PAYOUT_FIELDS - Constant used across modules.
 export { PAYOUT_FIELDS } from "./features/payments/index";

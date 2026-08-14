@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Div, Heading, Modal, Pagination, Skeleton, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { Button, Div, Heading, Modal, Pagination, Select, Skeleton, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { useShipmentProjections, useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import { formatPaise } from "../../../utils/number.formatter";
@@ -26,17 +26,17 @@ export function AdminShipmentProjectionsView() {
     <Stack gap="md">
       <Div layout="flex" align="center" justify="between">
         <Heading level={2}>Projections</Heading>
-        <select
+        <Select
           aria-label="Sort by"
           value={sorts}
-          onChange={(e) => setSorts(e.target.value)}
-          className="appkit-form-field"
-        >
-          <option value="-projectedProfitPaise">Highest projected profit</option>
-          <option value="projectedProfitPaise">Lowest projected profit</option>
-          <option value="-projectedRevenuePaise">Highest projected revenue</option>
-          <option value="-createdAt">Newest</option>
-        </select>
+          onValueChange={setSorts}
+          options={[
+            { value: "-projectedProfitPaise", label: "Highest projected profit" },
+            { value: "projectedProfitPaise", label: "Lowest projected profit" },
+            { value: "-projectedRevenuePaise", label: "Highest projected revenue" },
+            { value: "-createdAt", label: "Newest" },
+          ]}
+        />
       </Div>
 
       {isLoading ? (

@@ -38,7 +38,7 @@ export function BackToTop({
       size="sm"
       aria-label={ariaLabel}
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`fixed bottom-[var(--bottom-nav-height,4rem)] right-4 z-40 flex items-center justify-center w-10 h-10 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] shadow-md text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors ${className}`}
+      className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem))] right-4 z-[var(--appkit-z-bottom-nav)] flex items-center justify-center w-10 h-10 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] shadow-md text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface)] dark:hover:bg-slate-700 transition-colors ${className}`}
     >
       <ChevronUp className="w-5 h-5" aria-hidden="true" />
     </Button>

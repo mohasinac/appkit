@@ -3,7 +3,7 @@
 .appkit-side-drawer__backdrop {
   position: fixed;
   inset: 0;
-  z-index: var(--appkit-z-sidebar);
+  z-index: var(--appkit-z-modal);
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   transition: opacity 0.2s ease;
@@ -13,10 +13,9 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  /* Full-screen overlay meant to sit above the bottom nav — z-navbar shares
-     the bottom nav's own z-index (both 40), so stacking previously relied
-     on DOM-mount-order coincidence. z-sidebar (50) makes it deterministic. */
-  z-index: var(--appkit-z-sidebar);
+  /* Full-screen overlay panel — z-modal groups it with Modal/Drawer/SideModal
+     as the main content-overlay tier, above navbar/bottom-nav/sidebar. */
+  z-index: var(--appkit-z-modal);
   background: var(--appkit-color-surface);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   display: flex;

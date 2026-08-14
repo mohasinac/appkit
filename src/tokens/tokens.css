@@ -591,6 +591,11 @@
   --appkit-z-title-bar:      42;
   --appkit-z-sidebar:        50;
   --appkit-z-modal:          60;
+  /* Transient option menus (Dropdown, Select) — must render above an open
+     Modal/Drawer/SideModal/SideDrawer (60) since they're commonly triggered
+     from inside one (e.g. a form Select field inside a Drawer), but they're
+     non-blocking so sit below toast/tooltip/confirm. */
+  --appkit-z-popover:        65;
   --appkit-z-toast:          70;
   --appkit-z-tooltip:        80;
   /* Confirm dialogs / row-action menus — must always win regardless of what

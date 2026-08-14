@@ -178,6 +178,7 @@ export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
 export { lotteryEntriesSeedData } from "./lottery-entries-seed-data";
 export { payoutsSeedData } from "./payouts-seed-data";
 export { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./shipments-seed-data";
+export { catalogueSeedData } from "./catalogue-seed-data";
 export { notificationsSeedData } from "./notifications-seed-data";
 export { blogPostsSeedData } from "./blog-posts-seed-data";
 export { faqSeedData } from "./faq-seed-data";

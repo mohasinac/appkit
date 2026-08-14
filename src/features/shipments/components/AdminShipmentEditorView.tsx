@@ -49,7 +49,7 @@ export interface AdminShipmentEditorViewProps {
   embedded?: boolean;
 }
 
-export function AdminShipmentEditorView({ shipmentId, onSaved, embedded }: AdminShipmentEditorViewProps) {
+export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEditorViewProps) {
   const isCreate = !shipmentId;
   const queryClient = useQueryClient();
   const { shipment, lots, refetchLots } = useShipment(shipmentId);

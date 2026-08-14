@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { Nav, Ul } from "../../ui";
+import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 
 export interface BottomNavLayoutProps {
   ariaLabel: string;
@@ -26,11 +27,15 @@ export function BottomNavLayout({
   id = "bottom-navbar",
   className,
 }: BottomNavLayoutProps) {
+  const isKeyboardOpen = useVisualViewportInset();
+
   useEffect(() => {
     const root = document.documentElement;
     const mql = typeof window !== "undefined" ? window.matchMedia("(max-width: 1023.98px)") : null;
     const sync = () => {
-      // Only expose the var when the navbar is actually rendered (below lg).
+      // Only expose the var when the navbar is actually rendered (below lg
+      // and the on-screen keyboard isn't covering it — the bar hides itself
+      // in that case, see className below).
       // Includes the safe-area inset since the nav's own padding-bottom
       // (env(safe-area-inset-bottom) below) adds to its real rendered
       // height — omitting it here would under-report the reserved space to
@@ -38,7 +43,7 @@ export function BottomNavLayout({
       // mobile pagination bar, SideDrawer/Drawer footers, etc.).
       root.style.setProperty(
         "--bottom-nav-height",
-        mql && mql.matches ? "calc(4rem + env(safe-area-inset-bottom, 0px))" : "0px",
+        mql && mql.matches && !isKeyboardOpen ? "calc(4rem + env(safe-area-inset-bottom, 0px))" : "0px",
       );
     };
     sync();
@@ -47,13 +52,14 @@ export function BottomNavLayout({
       mql?.removeEventListener("change", sync);
       root.style.setProperty("--bottom-nav-height", "0px");
     };
-  }, []);
+  }, [isKeyboardOpen]);
 
   return (
     <Nav
       id={id}
       aria-label={ariaLabel}
-      className={`fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)] shadow-2xl pb-[env(safe-area-inset-bottom,0px)]${className ? ` ${className}` : ""}`}
+      aria-hidden={isKeyboardOpen}
+      className={`fixed bottom-0 left-0 right-0 lg:hidden z-[var(--appkit-z-bottom-nav)] bg-[color-mix(in_srgb,var(--appkit-color-bg)_90%,transparent)] backdrop-blur-md border-t border-[var(--appkit-color-border)] shadow-2xl pb-[env(safe-area-inset-bottom,0px)] transition-transform duration-200 ease-out ${isKeyboardOpen ? "translate-y-full pointer-events-none" : "translate-y-0"}${className ? ` ${className}` : ""}`}
     >
       <Ul className="flex items-stretch h-16">{children}</Ul>
     </Nav>
