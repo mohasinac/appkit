@@ -377,7 +377,8 @@ Import: `import { useX } from "@mohasinac/appkit/client"`
 | `useCreateReview` | `features/reviews/hooks/useCreateReview.ts` | Submit a new review |
 | `useEvents` | `features/events/hooks/useEvents.ts` | Events listing |
 | `useEvent` | `features/events/hooks/useEvent.ts` | Single event data |
-| `useBulkEvent` | `features/events/hooks/useBulkEvent.ts` | Bulk event actions |
+| `useBulkEvent` | `features/events/hooks/useBulkEvent.ts` | Subscribes to a `bulk_events/{jobId}` RTDB ping via a custom token; `{status, error, result, subscribe(jobId, customToken), reset}`. First real production consumers landed 2026-08-15 (async job primitive — admin payouts/hard-ban) |
+| `useBulkAction` | `react/hooks/useBulkAction.ts` (note: `react/`, not `features/*/hooks/`) | Generic `/bulk` endpoint mutation hook — loading/result/error state + optional confirm-before-execute flow. First real production consumers landed 2026-08-15 (`AdminUsersView`/`AdminNotificationsView` bulk actions) |
 | `useBlog` | `features/blog/hooks/useBlog.ts` | Blog posts data |
 | `useFAQs` | `features/faq/hooks/useFAQs.ts` | FAQs data |
 | `useFaqList` | `features/faq/hooks/useFaqList.ts` | FAQ listing with filters |
