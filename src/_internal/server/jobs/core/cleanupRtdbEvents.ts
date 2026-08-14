@@ -1,9 +1,13 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { getAdminAuth, getAdminRealtimeDb } from "../../../../providers/db-firebase";
+import { jobsRepository } from "../../../../repositories";
+import { batchDelete } from "../handlers/_helpers";
 import type { JobContext } from "../runtime/types";
 
 const AUTH_STALE_MS = 3 * 60 * 1000;
 const PAYMENT_STALE_MS = 15 * 60 * 1000;
+const BULK_STALE_MS = 15 * 60 * 1000;
+const JOBS_TTL_DAYS = 30;
 
 export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
   ctx.logger.info("Starting RTDB events cleanup");
@@ -53,6 +57,36 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
   } catch (payErr) {
     void normalizeError(payErr);
     ctx.logger.error("Payment events cleanup failed (non-fatal)", payErr);
+  }
+
+  try {
+    const bulkSnap = await rtdb.ref("bulk_events").get();
+    if (bulkSnap.exists()) {
+      const allBulkEvents = bulkSnap.val() as Record<string, { createdAt?: number; updatedAt?: number }>;
+      const staleBulkIds = Object.entries(allBulkEvents)
+        .filter(([, node]) => (node.updatedAt ?? node.createdAt ?? 0) < now - BULK_STALE_MS)
+        .map(([id]) => id);
+      if (staleBulkIds.length > 0) {
+        await Promise.all(
+          staleBulkIds.map((id) => rtdb.ref(`bulk_events/${id}`).remove()),
+        );
+        ctx.logger.info("Bulk events removed", { count: staleBulkIds.length });
+      }
+    }
+  } catch (bulkErr) {
+    void normalizeError(bulkErr);
+    ctx.logger.error("Bulk events cleanup failed (non-fatal)", bulkErr);
+  }
+
+  try {
+    const staleJobRefs = await jobsRepository.getStaleFinishedRefs(JOBS_TTL_DAYS);
+    if (staleJobRefs.length > 0) {
+      const deleted = await batchDelete(ctx, staleJobRefs);
+      ctx.logger.info("Stale jobs pruned", { deleted });
+    }
+  } catch (jobsErr) {
+    void normalizeError(jobsErr);
+    ctx.logger.error("Jobs prune failed (non-fatal)", jobsErr);
   }
 
   ctx.logger.info("RTDB events cleanup complete");

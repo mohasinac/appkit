@@ -17,7 +17,7 @@ import type { ProductDraftFields } from "../../shipments/schemas/firestore";
 export const CATALOGUE_COLLECTION = "catalogueItems" as const;
 
 export type CatalogueVisibility = "public" | "private";
-export type CatalogueOwnerRole = "user" | "seller";
+export type CatalogueOwnerRole = "user" | "seller" | "admin";
 export type CatalogueListingStatus = "not_listed" | "pending_admin_approval" | "listed" | "rejected";
 
 export interface CatalogueItemDocument

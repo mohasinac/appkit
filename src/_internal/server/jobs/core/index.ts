@@ -24,7 +24,16 @@ export { runPayoutBatch } from "./payoutBatch";
 export { runAutoPayoutEligibility } from "./autoPayoutEligibility";
 export { runProductStatsSync } from "./productStatsSync";
 export { runPositionsReconcile } from "./positionsReconcile";
-export { runWeeklyPayoutEligibility } from "./weeklyPayoutEligibility";
+export {
+  runWeeklyPayoutEligibility,
+  type WeeklyPayoutEligibilityResult,
+} from "./weeklyPayoutEligibility";
+export { runHardBanCascade } from "./hardBanCascade";
+export {
+  JOB_RUNNERS,
+  type JobRunner,
+  type JobRunResult,
+} from "./jobRunners";
 export { runAuctionSettlement } from "./auctionSettlement";
 export { runPrizeRevealOpen } from "./prizeRevealOpen";
 export { runPrizeRevealClose } from "./prizeRevealClose";
@@ -92,3 +101,4 @@ export {
   type HandleStoreWriteInput,
   type StoreDoc,
 } from "./onStoreWrite";
+export { handleJobCreated, type HandleJobCreatedInput } from "./onJobCreated";

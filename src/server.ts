@@ -218,6 +218,16 @@ export { makeHomepageSection } from "./seed/index";
 // makeNotification - Shared export for make notification.
 export { makeNotification } from "./seed/index";
 export { sendNotification } from "./features/admin/actions/notification-actions";
+// [SERVER-ONLY] enqueueJob — writes a `jobs/{jobId}` doc + returns a bulk-event
+// custom token. The only way a Vercel route may start heavy work; actual
+// processing runs in the `onJobCreated` Firebase Function (CLAUDE.md Rule #6).
+export { enqueueJob } from "./features/jobs/actions/enqueue-job";
+export type { EnqueueJobInput, EnqueueJobResult } from "./features/jobs/actions/enqueue-job";
+export {
+  JOBS_COLLECTION,
+  JobStatusValues,
+} from "./features/jobs/schemas/firestore";
+export type { JobStatus, JobDocument, JobResult } from "./features/jobs/schemas/firestore";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeOrder - Shared export for make order.
 export { makeOrder } from "./seed/index";

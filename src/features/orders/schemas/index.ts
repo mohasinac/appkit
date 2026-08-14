@@ -30,6 +30,14 @@ export const orderRefundStatusSchema = z.enum(["pending", "processing", "complet
 export const orderPayoutStatusSchema = z.enum(["eligible", "requested", "paid"]);
 export const orderRefundTypeSchema = z.enum(["full", "partial"]);
 
+export const outOfStockPolicySchema = z.enum(["cancel_order", "skip_items"]);
+export const orderDroppedItemSchema = z.object({
+  productId: z.string(),
+  productTitle: z.string(),
+  requestedQty: z.number().int().positive(),
+  availableQty: z.number().int().nonnegative(),
+});
+
 export const emiInstallmentStatusSchema = z.enum(["pending", "paid", "overdue"]);
 export const emiInstallmentSchema = z.object({
   index: z.number().int().positive(),
@@ -170,6 +178,9 @@ export const orderFirestoreSchema = z.object({
   shippingProofUploadedAt: firestoreDateSchema.optional(),
   shippingProofUploadedBy: z.string().optional(),
   physicalLocation: physicalLocationSchema.optional(),
+  outOfStockPolicy: outOfStockPolicySchema.optional(),
+  droppedItems: z.array(orderDroppedItemSchema).optional(),
+  refundPending: z.boolean().optional(),
   ...auditTimestampsShape,
 });
 

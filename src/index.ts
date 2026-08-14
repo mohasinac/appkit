@@ -1813,6 +1813,9 @@ export { faqsRepository } from "./repositories/index";
 // homepageSectionsRepository - Shared export for homepage sections repository.
 export { homepageSectionsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// jobsRepository - Shared export for the async-job (jobs collection) repository.
+export { jobsRepository, JobsRepository } from "./repositories/index";
+// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // notificationRepository - Shared export for notification repository.
 export { notificationRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -6798,6 +6801,12 @@ export { PaymentGatewayValues } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PaymentMethodValues - Model for payment method values.
 export { PaymentMethodValues } from "./features/orders/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// OutOfStockPolicyValues - Model for the buyer-chosen out-of-stock checkout policy values.
+export { OutOfStockPolicyValues } from "./features/orders/index";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// OutOfStockPolicy - Type contract for the buyer-chosen out-of-stock checkout policy.
+export type { OutOfStockPolicy } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PaymentStatusValues - Model for payment status values.
 export { PaymentStatusValues } from "./features/orders/index";

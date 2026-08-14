@@ -1,12 +1,11 @@
 "use server";
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
-import { catalogueRepository, productRepository } from "../../../repositories";
+import { catalogueRepository } from "../../../repositories";
 import { requireRoleUser } from "../../../providers/auth-firebase/helpers";
 import { isAdminUser } from "../../../features/auth/role-predicates";
 import { ValidationError, AuthorizationError } from "../../../errors";
-
-const CONSIGNMENT_STORE_ID = "store-letitrip-official";
+import { createProductFromCatalogueItem, CONSIGNMENT_STORE_ID } from "../utils/product-from-item";
 
 /**
  * Admin path — approves a buyer's "Request to sell", creating the product
@@ -27,25 +26,7 @@ export async function approveCatalogueListingAction(
       throw new ValidationError("Only items pending approval can be approved");
     }
 
-    const product = await productRepository.create({
-      title: item.title,
-      description: item.description || "Listed via LetItRip's consignment catalogue.",
-      categorySlugs: item.categorySlugs ?? [],
-      brandSlug: item.brandSlug,
-      price: item.price ?? 0,
-      currency: "INR",
-      stockQuantity: item.quantity,
-      mainImage: item.mainImage ?? item.images[0] ?? "",
-      images: item.images,
-      status: "published",
-      storeId: CONSIGNMENT_STORE_ID,
-      featured: false,
-      tags: [],
-      condition: item.condition,
-      listingType: "standard",
-      sourceCatalogueItemId: item.id,
-      sourceCatalogueOwnerId: item.ownerId,
-    } as never);
+    const product = await createProductFromCatalogueItem(item, CONSIGNMENT_STORE_ID);
 
     await catalogueRepository.update(itemId, {
       listingStatus: "listed",

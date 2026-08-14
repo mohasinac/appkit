@@ -5,7 +5,15 @@ import { Button, Div, Heading, Modal, Pagination, Select, Skeleton, Stack, Table
 import { useShipmentProjections, useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import { formatPaise } from "../../../utils/number.formatter";
+import { sortBy } from "../../../constants/sort";
 import type { ShipmentLot } from "../schemas/firestore";
+
+const SORT_OPTIONS: { value: string; label: string }[] = [
+  { value: sortBy("projectedProfitPaise", "DESC"), label: "Highest projected profit" },
+  { value: sortBy("projectedProfitPaise", "ASC"), label: "Lowest projected profit" },
+  { value: sortBy("projectedRevenuePaise", "DESC"), label: "Highest projected revenue" },
+  { value: sortBy("createdAt", "DESC"), label: "Newest" },
+];
 
 /**
  * A real, paginated, persisted list of lots across every non-cancelled
@@ -17,7 +25,7 @@ import type { ShipmentLot } from "../schemas/firestore";
 export function AdminShipmentProjectionsView() {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
-  const [sorts, setSorts] = React.useState("-projectedProfitPaise");
+  const [sorts, setSorts] = React.useState(SORT_OPTIONS[0].value);
   const { lots, meta, isLoading, refetch } = useShipmentProjections({ page, pageSize, sorts });
 
   const [pickerLot, setPickerLot] = React.useState<ShipmentLot | null>(null);
@@ -30,12 +38,7 @@ export function AdminShipmentProjectionsView() {
           aria-label="Sort by"
           value={sorts}
           onValueChange={setSorts}
-          options={[
-            { value: "-projectedProfitPaise", label: "Highest projected profit" },
-            { value: "projectedProfitPaise", label: "Lowest projected profit" },
-            { value: "-projectedRevenuePaise", label: "Highest projected revenue" },
-            { value: "-createdAt", label: "Newest" },
-          ]}
+          options={SORT_OPTIONS}
         />
       </Div>
 

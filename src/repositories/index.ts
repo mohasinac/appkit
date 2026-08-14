@@ -84,6 +84,7 @@ export {
   blogRepository,
 } from "../features/blog/repository/blog.repository";
 export { payoutRepository } from "../features/payments/repository/payout.repository";
+export { jobsRepository, JobsRepository } from "../features/jobs/repository/jobs.repository";
 export { shipmentsRepository } from "../features/shipments/repository/shipments.repository";
 export { shipmentLotsRepository } from "../features/shipments/repository/shipment-lots.repository";
 export { shipmentItemsRepository } from "../features/shipments/repository/shipment-items.repository";

@@ -87,10 +87,12 @@ export class ShipmentItemsRepository extends BaseRepository<ShipmentItem> {
 
   /** Clears a product link without touching the linked product itself. */
   async unlink(itemId: string): Promise<ShipmentItem> {
+    // `null`, not `undefined` — prepareForFirestore() strips undefined
+    // values before every write, which would leave the fields untouched.
     return this.update(itemId, {
-      linkedProductId: undefined,
-      linkedProductSlug: undefined,
-      linkedProductListingType: undefined,
+      linkedProductId: null,
+      linkedProductSlug: null,
+      linkedProductListingType: null,
     });
   }
 

@@ -1162,16 +1162,32 @@
       "collectionGroup": "shipmentLots",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "shipmentStatus", "order": "ASCENDING" },
-        { "fieldPath": "projectedProfitPaise", "order": "DESCENDING" }
+        { "fieldPath": "projectedProfitPaise", "order": "DESCENDING" },
+        { "fieldPath": "shipmentStatus", "order": "DESCENDING" }
       ]
     },
     {
       "collectionGroup": "shipmentLots",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "shipmentStatus", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
+        { "fieldPath": "projectedProfitPaise", "order": "ASCENDING" },
+        { "fieldPath": "shipmentStatus", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentLots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "projectedRevenuePaise", "order": "DESCENDING" },
+        { "fieldPath": "shipmentStatus", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "shipmentLots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdAt", "order": "DESCENDING" },
+        { "fieldPath": "shipmentStatus", "order": "DESCENDING" }
       ]
     },
     {
@@ -8144,6 +8160,14 @@
         { "fieldPath": "type", "order": "ASCENDING" },
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "startsAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "jobs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "ASCENDING" }
       ]
     }
   ],

@@ -25,6 +25,20 @@ const productConditionSchema = z.enum([
   "graded",
 ]);
 
+// Mirrors ProductDocument's ListingType union (products/types/index.ts) — the
+// linked-product type a main item can be turned into via the link route.
+const listingTypeSchema = z.enum([
+  "standard",
+  "auction",
+  "pre-order",
+  "prize-draw",
+  "classified",
+  "digital-code",
+  "live",
+  "art",
+  "stickers",
+]);
+
 export const createShipmentSchema = z.object({
   shipmentNumber: z.string().min(1, "Shipment number is required"),
   supplierName: z.string().min(1, "Supplier name is required"),
@@ -68,7 +82,16 @@ export const createShipmentItemSchema = shipmentItemBaseSchema.refine(
   (item) => item.isForSelfUse || typeof item.price === "number",
   { message: "Projected sale price is required unless the item is for self use", path: ["price"] },
 );
-export const updateShipmentItemSchema = shipmentItemBaseSchema.partial();
+export const updateShipmentItemSchema = shipmentItemBaseSchema.partial().extend({
+  // Link/unlink fields — written by the link route and by the unlink action
+  // (PATCH with `null` to clear). Not part of item creation, so kept out of
+  // shipmentItemBaseSchema and declared nullable here rather than merely
+  // optional, since Zod strips unknown keys and silently drops any field the
+  // schema doesn't declare — omitting these here would make "unlink" a no-op.
+  linkedProductId: z.string().nullable().optional(),
+  linkedProductSlug: z.string().nullable().optional(),
+  linkedProductListingType: listingTypeSchema.nullable().optional(),
+});
 
 /**
  * Bulk paste-import payload — capped at MAX_ITEMS_PER_LOT (500), matching

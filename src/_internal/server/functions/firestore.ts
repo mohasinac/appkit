@@ -26,6 +26,7 @@ import {
   onShipmentHeaderWriteHandler,
   onShipmentDeletedHandler,
   onCatalogueSubmittedForApprovalHandler,
+  onJobCreatedHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -178,6 +179,18 @@ export const onCatalogueSubmittedForApproval = defineFunction({
   options: { region: REGION },
 });
 
+// Async job primitive — Vercel routes write a lightweight `jobs/{jobId}` doc
+// via `enqueueJob()` and return immediately; this Function does the actual
+// processing (CLAUDE.md Rule #6). Longer timeout/memory than the other
+// triggers since job runners (e.g. hardBanCascade, payoutsWeekly) do real work.
+export const onJobCreated = defineFunction({
+  name: "onJobCreated",
+  description: "Dispatch a jobs/{jobId} doc to its JOB_RUNNERS entry and report the result via bulk_events RTDB.",
+  trigger: { kind: "documentCreated", pathPattern: "jobs/{jobId}" },
+  handler: onJobCreatedHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "512MiB" },
+});
+
 export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onBidPlaced,
   onOrderCreate,
@@ -197,4 +210,5 @@ export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onShipmentHeaderWrite,
   onShipmentDeleted,
   onCatalogueSubmittedForApproval,
+  onJobCreated,
 ] as const;

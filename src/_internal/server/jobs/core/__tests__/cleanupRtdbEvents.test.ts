@@ -7,6 +7,7 @@ const {
   mockAuthDeleteUser,
   mockGetAdminRealtimeDb,
   mockGetAdminAuth,
+  mockGetStaleFinishedRefs,
 } = vi.hoisted(() => {
   const mockRtdbRemove = vi.fn().mockResolvedValue(undefined);
   const mockRtdbGet = vi.fn();
@@ -14,7 +15,16 @@ const {
   const mockRtdbRef = vi.fn().mockReturnValue({ get: mockRtdbGet, remove: mockRtdbRemove });
   const mockGetAdminRealtimeDb = vi.fn().mockReturnValue({ ref: mockRtdbRef });
   const mockGetAdminAuth = vi.fn().mockReturnValue({ deleteUser: mockAuthDeleteUser });
-  return { mockRtdbRef, mockRtdbGet, mockRtdbRemove, mockAuthDeleteUser, mockGetAdminRealtimeDb, mockGetAdminAuth };
+  const mockGetStaleFinishedRefs = vi.fn().mockResolvedValue([]);
+  return {
+    mockRtdbRef,
+    mockRtdbGet,
+    mockRtdbRemove,
+    mockAuthDeleteUser,
+    mockGetAdminRealtimeDb,
+    mockGetAdminAuth,
+    mockGetStaleFinishedRefs,
+  };
 });
 
 vi.mock("../../../../../providers/db-firebase", () => ({
@@ -23,6 +33,10 @@ vi.mock("../../../../../providers/db-firebase", () => ({
 }));
 
 vi.mock("../../../../../errors/normalize", () => ({ normalizeError: vi.fn() }));
+
+vi.mock("../../../../../repositories", () => ({
+  jobsRepository: { getStaleFinishedRefs: mockGetStaleFinishedRefs },
+}));
 
 import { runCleanupRtdbEvents } from "../cleanupRtdbEvents";
 import type { JobContext } from "../../runtime/types";
@@ -51,6 +65,11 @@ beforeEach(() => {
   mockGetAdminAuth.mockReturnValue({ deleteUser: mockAuthDeleteUser });
   mockRtdbRemove.mockResolvedValue(undefined);
   mockAuthDeleteUser.mockResolvedValue(undefined);
+  // Default fallback for the 3rd (bulk_events) .get() call — individual
+  // tests below still override the first two calls (auth/payment) via
+  // mockResolvedValueOnce chains.
+  mockRtdbGet.mockResolvedValue({ exists: () => false, val: () => ({}) });
+  mockGetStaleFinishedRefs.mockResolvedValue([]);
 });
 
 describe("runCleanupRtdbEvents — stale auth events", () => {
@@ -101,6 +120,56 @@ describe("runCleanupRtdbEvents — stale payment events", () => {
     const ctx = makeCtx();
     await runCleanupRtdbEvents(ctx);
     expect(mockRtdbRemove).not.toHaveBeenCalled();
+  });
+});
+
+const BULK_STALE_MS = 15 * 60 * 1000;
+
+describe("runCleanupRtdbEvents — stale bulk_events", () => {
+  it("removes bulk events older than 15 minutes", async () => {
+    const staleTime = Date.now() - BULK_STALE_MS - 1000;
+    mockRtdbGet
+      .mockResolvedValueOnce({ exists: () => false })
+      .mockResolvedValueOnce({ exists: () => false })
+      .mockResolvedValueOnce(makeAuthSnap({ "job-old": { createdAt: staleTime } }));
+    const ctx = makeCtx();
+    await runCleanupRtdbEvents(ctx);
+    expect(mockRtdbRemove).toHaveBeenCalled();
+  });
+
+  it("does NOT remove recent bulk events (within 15 minutes)", async () => {
+    const recentTime = Date.now() - 1000;
+    mockRtdbGet
+      .mockResolvedValueOnce({ exists: () => false })
+      .mockResolvedValueOnce({ exists: () => false })
+      .mockResolvedValueOnce(makeAuthSnap({ "job-recent": { createdAt: recentTime } }));
+    const ctx = makeCtx();
+    await runCleanupRtdbEvents(ctx);
+    expect(mockRtdbRemove).not.toHaveBeenCalled();
+  });
+});
+
+describe("runCleanupRtdbEvents — stale jobs prune", () => {
+  it("deletes finished jobs older than the TTL via jobsRepository.getStaleFinishedRefs", async () => {
+    const mockRef = { delete: vi.fn() };
+    mockGetStaleFinishedRefs.mockResolvedValue([mockRef]);
+    const batchCommit = vi.fn().mockResolvedValue(undefined);
+    const batchDelete = vi.fn();
+    const ctx = makeCtx();
+    (ctx as unknown as { db: { batch: () => unknown } }).db = {
+      batch: () => ({ delete: batchDelete, commit: batchCommit }),
+    };
+    await runCleanupRtdbEvents(ctx);
+    expect(mockGetStaleFinishedRefs).toHaveBeenCalledWith(30);
+    expect(batchDelete).toHaveBeenCalledWith(mockRef);
+    expect(batchCommit).toHaveBeenCalled();
+  });
+
+  it("no stale jobs → no batch write", async () => {
+    mockGetStaleFinishedRefs.mockResolvedValue([]);
+    const ctx = makeCtx();
+    await runCleanupRtdbEvents(ctx);
+    expect(mockGetStaleFinishedRefs).toHaveBeenCalledWith(30);
   });
 });
 

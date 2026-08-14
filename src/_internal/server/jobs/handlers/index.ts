@@ -20,6 +20,7 @@ export { countersReconcileHandler } from "./countersReconcile";
 export { onOrderCreateHandler } from "./onOrderCreate";
 export { onOrderStatusChangeHandler } from "./onOrderStatusChange";
 export { onBidPlacedHandler } from "./onBidPlaced";
+export { onJobCreatedHandler } from "./onJobCreated";
 export { onReviewWriteHandler } from "./onReviewWrite";
 export { promotionsHandler, type PromotionsCallableResult } from "./promotions";
 export { mediaTmpCleanupHandler } from "./mediaTmpCleanup";

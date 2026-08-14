@@ -1,15 +1,24 @@
 "use server";
 
 import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
-import { catalogueRepository, productRepository, storeRepository } from "../../../repositories";
+import { catalogueRepository, storeRepository } from "../../../repositories";
 import { requireRoleUser } from "../../../providers/auth-firebase/helpers";
+import { isAdminUser } from "../../../features/auth/role-predicates";
 import { ValidationError, AuthorizationError } from "../../../errors";
 import { assertCatalogueImagesFresh } from "../utils/freshness";
+import { createProductFromCatalogueItem, CONSIGNMENT_STORE_ID } from "../utils/product-from-item";
 
 /**
- * Seller path — turns a catalogue item directly into a real listing under
- * the seller's own store. No admin step. Freshness-gated (req: photos must
- * be < 30 days old) — see `assertCatalogueImagesFresh`.
+ * Direct-listing path — turns a catalogue item straight into a real listing,
+ * no approval queue. Two callers:
+ *   - **Seller**: listed under their own store.
+ *   - **Admin**: admins are buyers too and have no personal seller store of
+ *     their own, so their catalogue lists under the platform's consignment
+ *     store (`store-letitrip-official`) — the same store the buyer-approval
+ *     path uses. An admin approving their own "Request to sell" would be a
+ *     pointless round trip, so admins get the direct path instead.
+ * Freshness-gated (req: photos must be < 30 days old) — see
+ * `assertCatalogueImagesFresh`.
  */
 export async function listFromCatalogueAction(itemId: string): Promise<ActionResult<{ productId: string; productSlug: string }>> {
   return wrapAction(async () => {
@@ -21,28 +30,16 @@ export async function listFromCatalogueAction(itemId: string): Promise<ActionRes
 
     assertCatalogueImagesFresh(item);
 
-    const store = await storeRepository.findByOwnerId(user.uid);
-    if (!store) throw new ValidationError("You need a store before listing from your catalogue");
+    let storeId: string;
+    if (isAdminUser(user)) {
+      storeId = CONSIGNMENT_STORE_ID;
+    } else {
+      const store = await storeRepository.findByOwnerId(user.uid);
+      if (!store) throw new ValidationError("You need a store before listing from your catalogue");
+      storeId = store.id;
+    }
 
-    const product = await productRepository.create({
-      title: item.title,
-      description: item.description || `Listed from ${user.name ?? "seller"}'s personal catalogue.`,
-      categorySlugs: item.categorySlugs ?? [],
-      brandSlug: item.brandSlug,
-      price: item.price ?? 0,
-      currency: "INR",
-      stockQuantity: item.quantity,
-      mainImage: item.mainImage ?? item.images[0] ?? "",
-      images: item.images,
-      status: "published",
-      storeId: store.id,
-      featured: false,
-      tags: [],
-      condition: item.condition,
-      listingType: "standard",
-      sourceCatalogueItemId: item.id,
-      sourceCatalogueOwnerId: item.ownerId,
-    } as never);
+    const product = await createProductFromCatalogueItem(item, storeId);
 
     await catalogueRepository.update(itemId, {
       listingStatus: "listed",

@@ -43,7 +43,7 @@ import type { CartItemDocument } from "../../../../features/cart/schemas/firesto
 import {
   getCartItemMemberIds,
   getExpandedDecrements,
-  validateCartItemStock,
+  bucketCartItemsByStock,
 } from "./bundle-expansion";
 import {
   consentOtpRef,
@@ -54,7 +54,9 @@ import {
   OrderStatusValues,
   PaymentStatusValues,
   PaymentMethodValues,
+  OutOfStockPolicyValues,
 } from "../../../../features/orders/schemas/index";
+import type { OutOfStockPolicy } from "../../../../features/orders/schemas/index";
 import { getDefaultCurrency } from "../../../../core/index";
 import {
   verifyPaymentSignatureWithKeys,
@@ -76,6 +78,8 @@ import {
 } from "../../../shared/checkout/rules";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "@mohasinac/appkit";
+import { processRefundAction } from "../refunds/actions";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 
 const AUDIT_LOG_FAIL_MSG = "checkout: audit log failed (non-critical)";
 
@@ -227,6 +231,13 @@ export interface CreateCheckoutOrderInput {
   adminBypass?: boolean;
   /** UID of the admin who triggered the bypass. Set when adminBypass is true. */
   adminBypassBy?: string;
+  /**
+   * Buyer's choice for what to do when a cart item is unavailable at
+   * checkout time. Defaults to "skip_items" — preserves this path's
+   * historical behavior (ship the rest of the order) for any caller that
+   * omits the field.
+   */
+  outOfStockPolicy?: OutOfStockPolicy;
 }
 
 function accumulateCouponUsage(
@@ -372,6 +383,10 @@ interface OrderGroupContext {
   adminBatchId?: string;
   orderIds: string[];
   emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][];
+  /** Buyer's chosen out-of-stock policy — set on every order created from this checkout batch. */
+  outOfStockPolicy: OutOfStockPolicy;
+  /** Full session's dropped items ("skip_items" policy) — set on every order created from this checkout batch. */
+  droppedItems: NonNullable<CheckoutOrderResult["unavailableItems"]>;
 }
 
 /**
@@ -404,6 +419,8 @@ async function createOrderForGroup(
     adminBatchId,
     orderIds,
     emailsToSend,
+    outOfStockPolicy,
+    droppedItems,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -583,6 +600,8 @@ async function createOrderForGroup(
     couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
     appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
     imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+    outOfStockPolicy,
+    droppedItems: droppedItems.length > 0 ? droppedItems : undefined,
     ...extraOrderFields,
   });
 
@@ -651,6 +670,7 @@ export async function createCheckoutOrderAction(
     excludedProductIds = [],
     adminBypass = false,
     adminBypassBy,
+    outOfStockPolicy = OutOfStockPolicyValues.SKIP_ITEMS,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -830,35 +850,33 @@ export async function createCheckoutOrderAction(
         }
       }
 
-      const availableItems: StockResult["available"] = [];
-      const unavailableItems: StockResult["unavailable"] = [];
+      // Bundle cart-lines surface the first member as the "product" so
+      // downstream listingType branching (prize-draw) stays sound — bundle
+      // pricing is always "standard" so the prize-draw cap isn't enforced.
+      const bucketed = bucketCartItemsByStock(
+        cartItems,
+        productById,
+        expansion.decrements,
+        (item) => productById.get(getCartItemMemberIds(item)[0]) ?? null,
+      );
+      const unavailableItems: StockResult["unavailable"] = bucketed.unavailable;
 
-      for (const item of cartItems) {
-        const shortfall = validateCartItemStock(
-          item,
-          productById,
-          expansion.decrements,
-        );
-        if (shortfall) {
-          unavailableItems.push({
-            productId: shortfall.productId,
-            productTitle: item.productTitle,
-            requestedQty: item.quantity,
-            availableQty: shortfall.availableQty,
-          });
-          continue;
-        }
-        // Bundle cart-lines surface the first member as the "product" so
-        // downstream listingType branching (prize-draw) stays sound — bundle
-        // pricing is always "standard" so the prize-draw cap isn't enforced.
-        const memberIds = getCartItemMemberIds(item);
-        const representative = productById.get(memberIds[0]) as ProductDocument;
+      // outOfStockPolicy: "cancel_order" — abort the WHOLE checkout batch if
+      // anything is short. This throw happens before any tx.update/tx.set
+      // below, so Firestore's transaction semantics guarantee zero writes
+      // land — no compensating rollback logic needed.
+      if (outOfStockPolicy === OutOfStockPolicyValues.CANCEL_ORDER && unavailableItems.length > 0) {
+        throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
+      }
+
+      const availableItems: StockResult["available"] = [];
+      for (const { item, product } of bucketed.available) {
         // S-SBUNI-RULES 2026-05-13 — sync preflight (prize-pool cap, pre-order
         // quota) via rule registry. Bundles skip — they bypass the cart path.
         if (!item.bundleProductIds?.length) {
-          runSyncPreflight([{ item, product: representative }]);
+          runSyncPreflight([{ item, product }]);
         }
-        availableItems.push({ item, product: representative });
+        availableItems.push({ item, product });
       }
 
       // Apply per-product decrements ONCE per unique product (sums across the
@@ -964,6 +982,8 @@ export async function createCheckoutOrderAction(
     adminBatchId,
     orderIds,
     emailsToSend,
+    outOfStockPolicy,
+    droppedItems: unavailable,
   };
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
@@ -1020,6 +1040,14 @@ export interface VerifyAndPlaceRazorpayOrderInput {
   /** Required for physical carts; omitted for digital-code-only carts. */
   addressId?: string;
   notes?: string;
+  /**
+   * Buyer's choice for what to do when a cart item is unavailable at
+   * checkout time. Defaults to "cancel_order" — matches this path's
+   * historical (only) behavior for any caller/old-client that omits the
+   * field, since "skip_items" partial fulfillment has no prior precedent
+   * on the Razorpay path.
+   */
+  outOfStockPolicy?: OutOfStockPolicy;
 }
 
 /**
@@ -1047,6 +1075,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
     razorpay_signature,
     addressId,
     notes,
+    outOfStockPolicy = OutOfStockPolicyValues.CANCEL_ORDER,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -1178,22 +1207,30 @@ export async function verifyAndPlaceRazorpayOrderAction(
   // SB-UNI-5 — validate every required member product across the cart with
   // cumulative decrement awareness (two bundles sharing a member must NOT
   // both succeed unless the product has enough stock for the sum).
-  for (const item of cart.items) {
-    const shortfall = validateCartItemStock(
-      item,
-      productByIdPaid,
-      expansionPaid.decrements,
-    );
-    if (shortfall) {
-      const exists = productByIdPaid.has(shortfall.productId);
+  //
+  // Out-of-stock policy: unlike the COD/UPI path, Razorpay payment has
+  // ALREADY been captured for the full cart by the time this runs — so
+  // "skip_items" here means placing orders for the available items only and
+  // auto-refunding the dropped items' value (below), not skipping payment.
+  const bucketedPaid = bucketCartItemsByStock(
+    cart.items,
+    productByIdPaid,
+    expansionPaid.decrements,
+    (item) => productByIdPaid.get(getCartItemMemberIds(item)[0]) ?? null,
+  );
+  const unavailablePaid = bucketedPaid.unavailable;
+
+  if (unavailablePaid.length > 0) {
+    for (const u of unavailablePaid) {
+      const exists = productByIdPaid.has(u.productId);
       const reason = exists ? "stock_insufficient" : "product_unavailable";
       failedCheckoutRepository
         .logPayment(
           uid,
           reason,
           exists
-            ? `Product ${shortfall.productId} has ${shortfall.availableQty} left, requested ${item.quantity}`
-            : `Product ${shortfall.productId} not published`,
+            ? `Product ${u.productId} has ${u.availableQty} left, requested ${u.requestedQty}`
+            : `Product ${u.productId} not published`,
           {
             gatewayOrderId: razorpay_order_id,
             gatewayPaymentId: razorpay_payment_id,
@@ -1201,12 +1238,19 @@ export async function verifyAndPlaceRazorpayOrderAction(
           },
         )
         .catch((err: unknown) => { void normalizeError(err); serverLogger.warn(AUDIT_LOG_FAIL_MSG, { error: err instanceof Error ? err.message : String(err) }); });
-      throw new ValidationError(
-        exists
-          ? ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK
-          : ERROR_MESSAGES.CHECKOUT.PRODUCT_UNAVAILABLE,
-      );
     }
+  }
+
+  // outOfStockPolicy: "cancel_order" (also the default for old clients that
+  // omit the field) — reject the whole checkout batch, exactly like every
+  // Razorpay checkout behaved before this policy existed.
+  if (outOfStockPolicy === OutOfStockPolicyValues.CANCEL_ORDER && unavailablePaid.length > 0) {
+    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
+  }
+  // Mirrors the COD/UPI path's all-unavailable guard — regardless of policy,
+  // there is nothing to place an order for.
+  if (bucketedPaid.available.length === 0) {
+    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
   }
 
   {
@@ -1247,7 +1291,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
   }
 
   const appliedCoupons = cart.appliedCoupons ?? [];
-  const orderGroups = splitCartIntoOrderGroups(productChecks);
+  // "skip_items" (or an all-available cart under any policy) — build order
+  // groups from the available bucket only. Dropped items are never ordered;
+  // their value is refunded below since Razorpay already captured payment
+  // for the full cart before this stock check ran.
+  const orderGroups = splitCartIntoOrderGroups(bucketedPaid.available);
 
   const orderIds: string[] = [];
   let total = 0;
@@ -1425,6 +1473,8 @@ export async function verifyAndPlaceRazorpayOrderAction(
       couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
       appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
       imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+      outOfStockPolicy,
+      droppedItems: unavailablePaid.length > 0 ? unavailablePaid : undefined,
       ...extraOrderFields,
     } as never);
 
@@ -1493,6 +1543,97 @@ export async function verifyAndPlaceRazorpayOrderAction(
     safeFireAndForget(otpRefForDelete.delete(), "checkout: delete OTP consent ref after Razorpay payment");
   }
 
+  // outOfStockPolicy: "skip_items" — auto-refund the dropped items' value.
+  // Razorpay already captured payment for the FULL cart before this stock
+  // check ran, so anything not placed as an order must be given back.
+  // AWAITED (not fire-and-forget) — this moves money. On failure the orders
+  // themselves are NOT rolled back (they're already validly created and
+  // paid); instead the failure is surfaced via order.refundPending + an
+  // admin notification, never silently dropped (Rule #8).
+  if (unavailablePaid.length > 0 && orderIds.length > 0) {
+    const droppedValueInPaise = unavailablePaid.reduce(
+      (sum, u) => sum + (productByIdPaid.get(u.productId)?.price ?? 0) * u.requestedQty,
+      0,
+    );
+    const primaryOrderId = orderIds[0];
+    if (droppedValueInPaise > 0) {
+      try {
+        const primaryOrder = await unitOfWork.orders.findById(primaryOrderId);
+        // Cap defensively at the primary order's total — processRefundAction
+        // rejects any amount exceeding order.totalPrice, and a multi-order
+        // batch's dropped-items value isn't cleanly attributable to a single
+        // order (Razorpay refunds are keyed by paymentId, not orderId; the
+        // FIRST order created in this batch is used as the refund's book-
+        // keeping anchor).
+        const refundAmount = primaryOrder
+          ? Math.min(droppedValueInPaise, primaryOrder.totalPrice)
+          : droppedValueInPaise;
+        const refundResult = await processRefundAction({
+          orderId: primaryOrderId,
+          type: "partial",
+          amountInPaise: refundAmount,
+          reason: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
+          method: "razorpay",
+          razorpayPaymentId: razorpay_payment_id,
+          confirmIrrevocable: true,
+          refundedBy: "system:checkout-auto-refund",
+        });
+        if (!refundResult.ok) {
+          throw new Error(refundResult.error ?? "Automatic refund failed");
+        }
+      } catch (refundErr) {
+        void normalizeError(refundErr);
+        serverLogger.warn(
+          "verifyAndPlaceRazorpayOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
+          {
+            orderId: primaryOrderId,
+            droppedValueInPaise,
+            err: refundErr instanceof Error ? refundErr.message : String(refundErr),
+          },
+        );
+        await unitOfWork.orders
+          .update(primaryOrderId, { refundPending: true } as never)
+          .catch((updErr: unknown) => {
+            void normalizeError(updErr);
+            serverLogger.error(
+              "verifyAndPlaceRazorpayOrderAction: failed to flag refundPending after auto-refund failure",
+              { orderId: primaryOrderId, err: updErr instanceof Error ? updErr.message : String(updErr) },
+            );
+          });
+        // Best-effort admin fan-out — mirrors onScamReportCreate's employee
+        // notification pattern. Never allowed to throw past this point.
+        try {
+          const admins = await userRepository.list({ filters: "role==admin", page: 1, pageSize: 100 });
+          await Promise.all(
+            admins.items
+              .filter((a) => !!a.id)
+              .map((admin) =>
+                sendNotification({
+                  userId: admin.id!,
+                  type: "system",
+                  priority: "high",
+                  title: "Automatic refund failed",
+                  message: `Automatic refund failed for order ${primaryOrderId} (${unavailablePaid.length} unavailable item(s)) — manual refund required.`,
+                  relatedId: primaryOrderId,
+                  relatedType: "order",
+                  userEmail: admin.email ?? undefined,
+                  userPhone: admin.phoneNumber ?? undefined,
+                }).catch((notifErr: unknown) =>
+                  serverLogger.error("Failed to notify admin of failed auto-refund (non-fatal)", notifErr),
+                ),
+              ),
+          );
+        } catch (notifyErr) {
+          void normalizeError(notifyErr);
+          serverLogger.error(
+            "verifyAndPlaceRazorpayOrderAction: failed to query admins for failed auto-refund notification",
+            { orderId: primaryOrderId },
+          );
+        }
+      }
+    }
+  }
+
   if (emailsToSend.length > 0) {
     Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
       (err: unknown) => serverLogger.error("Order confirmation email error:", err),
@@ -1510,5 +1651,10 @@ export async function verifyAndPlaceRazorpayOrderAction(
       serverLogger.warn("Payment event RTDB signal failed (non-critical)", { err }),
     );
 
-  return { orderIds, total, itemCount: orderIds.length };
+  return {
+    orderIds,
+    total,
+    itemCount: orderIds.length,
+    ...(unavailablePaid.length > 0 ? { unavailableItems: unavailablePaid } : {}),
+  };
 }

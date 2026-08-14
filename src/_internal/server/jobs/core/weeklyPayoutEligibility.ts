@@ -15,10 +15,18 @@ import { getDefaultCurrency } from "../../../../core";
 import { computePayoutDeduction } from "../../../shared/fees/calculator";
 import type { JobContext } from "../runtime/types";
 
-export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void> {
+export interface WeeklyPayoutEligibilityResult {
+  payoutsCreated: number;
+  ordersProcessed: number;
+  payoutIds: string[];
+}
+
+export async function runWeeklyPayoutEligibility(
+  ctx: JobContext,
+): Promise<WeeklyPayoutEligibilityResult> {
   if (ctx.env("FEATURE_PAYOUTS") !== "true") {
     ctx.logger.info("FEATURE_PAYOUTS disabled — skipping weekly payout eligibility");
-    return;
+    return { payoutsCreated: 0, ordersProcessed: 0, payoutIds: [] };
   }
   ctx.logger.info("Starting weekly payout eligibility sweep");
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -26,7 +34,7 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
   const eligible = await orderRepository.getEligibleForPayoutSweep();
   if (eligible.length === 0) {
     ctx.logger.info("No eligible delivered orders found");
-    return;
+    return { payoutsCreated: 0, ordersProcessed: 0, payoutIds: [] };
   }
   ctx.logger.info(`Found ${eligible.length} eligible order(s) — grouping by seller`);
 
@@ -43,6 +51,7 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
 
   let payoutsCreated = 0;
   let ordersProcessed = 0;
+  const payoutIds: string[] = [];
   const defaultCurrency = getDefaultCurrency();
 
   for (const [storeId, orders] of byStore.entries()) {
@@ -104,6 +113,7 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
 
     payoutsCreated++;
     ordersProcessed += orders.length;
+    payoutIds.push(payoutId);
     ctx.logger.info(`Payout created for store ${storeId}`, {
       payoutId,
       orderCount: orders.length,
@@ -114,4 +124,5 @@ export async function runWeeklyPayoutEligibility(ctx: JobContext): Promise<void>
   }
 
   ctx.logger.info("Weekly payout eligibility sweep complete", { payoutsCreated, ordersProcessed });
+  return { payoutsCreated, ordersProcessed, payoutIds };
 }

@@ -149,9 +149,12 @@ export interface ShipmentItem
   // `price` (paise, from ProductDraftFields, optional via Partial) plays the
   // "projected sale price" role — required unless isForSelfUse (Zod refine).
   notes?: string;
-  linkedProductId?: string;
-  linkedProductSlug?: string;
-  linkedProductListingType?: ListingType;
+  // Nullable (not just optional) so an unlink write can explicitly clear the
+  // field — Firestore writes with `undefined` are stripped before they ever
+  // reach the document (see prepareForFirestore), so clearing requires `null`.
+  linkedProductId?: string | null;
+  linkedProductSlug?: string | null;
+  linkedProductListingType?: ListingType | null;
 }
 
 export const SHIPMENT_STATUS_VALUES = {

@@ -18,11 +18,17 @@ const STATUS_VARIANT: Record<CatalogueItemDocument["listingStatus"], "default" |
 };
 
 export interface UserCatalogueViewProps {
-  /** Whether the signed-in user is a seller (enables direct "List" instead of "Request to sell"). */
-  isSeller: boolean;
+  /**
+   * True for sellers AND admins — both can list a catalogue item directly
+   * (no approval queue). Sellers list under their own store; admins list
+   * under the platform's consignment store, since admins have no personal
+   * seller store and approving their own "Request to sell" would be a
+   * pointless round trip. Ordinary buyers get "Request to sell" instead.
+   */
+  canListDirectly: boolean;
 }
 
-export function UserCatalogueView({ isSeller }: UserCatalogueViewProps) {
+export function UserCatalogueView({ canListDirectly }: UserCatalogueViewProps) {
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery<{ items: CatalogueItemDocument[] }>({
     queryKey: ["user", "catalogue"],
@@ -96,7 +102,7 @@ export function UserCatalogueView({ isSeller }: UserCatalogueViewProps) {
                     {item.visibility === "public" ? "Make private" : "Make public"}
                   </Button>
                   {item.listingStatus === "not_listed" && (
-                    isSeller ? (
+                    canListDirectly ? (
                       <Button size="sm" isLoading={listMutation.isPending} onClick={() => listMutation.mutate(item.id)}>List</Button>
                     ) : (
                       <Button size="sm" isLoading={submitMutation.isPending} onClick={() => submitMutation.mutate(item.id)}>Request to sell</Button>

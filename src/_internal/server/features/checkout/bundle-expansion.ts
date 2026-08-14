@@ -98,3 +98,69 @@ export function validateCartItemStock(
   }
   return null;
 }
+
+/**
+ * Result of bucketing a cart into stock-satisfiable vs. stock-short lines.
+ * Shared shape consumed by both checkout entry points (COD/UPI transaction
+ * path and Razorpay post-payment path) so "what happens when an item is
+ * unavailable" (skip it vs. cancel the whole checkout) is decided ONCE, by
+ * the caller, from the same bucketing logic.
+ */
+export interface StockBucketResult {
+  available: { item: CartItemDocument; product: ProductDocument }[];
+  unavailable: {
+    productId: string;
+    productTitle: string;
+    requestedQty: number;
+    availableQty: number;
+  }[];
+}
+
+/**
+ * For every cart item: bucket into `available` (with its resolved
+ * "representative" product attached) or `unavailable` (with the shortfall
+ * detail). Pure stock bucketing only — callers are responsible for any
+ * extra per-item side effects (sync preflight checks, business-rule caps,
+ * etc.) they want to run over the `available` bucket.
+ *
+ * `resolveRepresentative` lets each call site supply its own "which product
+ * represents this cart line" logic (both current call sites use the first
+ * bundle member / the plain productId) without duplicating that lookup here.
+ */
+export function bucketCartItemsByStock(
+  cartItems: CartItemDocument[],
+  productById: Map<string, ProductDocument>,
+  decrements: Map<string, number>,
+  resolveRepresentative: (item: CartItemDocument) => ProductDocument | null,
+): StockBucketResult {
+  const available: StockBucketResult["available"] = [];
+  const unavailable: StockBucketResult["unavailable"] = [];
+
+  for (const item of cartItems) {
+    const shortfall = validateCartItemStock(item, productById, decrements);
+    if (shortfall) {
+      unavailable.push({
+        productId: shortfall.productId,
+        productTitle: item.productTitle,
+        requestedQty: item.quantity,
+        availableQty: shortfall.availableQty,
+      });
+      continue;
+    }
+    const representative = resolveRepresentative(item);
+    if (!representative) {
+      // Defensive — validateCartItemStock already confirmed every member
+      // product exists + is published, so this should be unreachable.
+      unavailable.push({
+        productId: item.productId,
+        productTitle: item.productTitle,
+        requestedQty: item.quantity,
+        availableQty: 0,
+      });
+      continue;
+    }
+    available.push({ item, product: representative });
+  }
+
+  return { available, unavailable };
+}

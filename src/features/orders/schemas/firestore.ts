@@ -53,6 +53,21 @@ export const PaymentMethodValues = {
   EMI: "emi",
 } as const;
 
+/**
+ * Buyer-chosen policy for what happens when an item in the cart becomes
+ * unavailable between add-to-cart and checkout — either COD/UPI (stock
+ * validated in the checkout transaction) or Razorpay (stock validated after
+ * payment capture). "skip_items" ships whatever remains available; "cancel_order"
+ * rejects the whole checkout batch if anything is short.
+ */
+export type OutOfStockPolicy = "cancel_order" | "skip_items";
+
+/** Runtime-accessible out-of-stock policy values — use instead of bare string literals. */
+export const OutOfStockPolicyValues = {
+  CANCEL_ORDER: "cancel_order",
+  SKIP_ITEMS: "skip_items",
+} as const satisfies Record<string, OutOfStockPolicy>;
+
 export type EmiInstallmentStatus = "pending" | "paid" | "overdue";
 
 export interface EmiInstallment {
@@ -286,6 +301,25 @@ export interface OrderDocument extends BaseDocument {
    * falls back to them when `paymentRecord` is unset. Never renamed/removed.
    */
   paymentRecord?: OrderPaymentRecord;
+
+  // ── Out-of-stock checkout policy (buyer-chosen) ──────────────────────────
+  /**
+   * The buyer's chosen policy at checkout for what to do when a cart item is
+   * unavailable. Set on every order created by the same checkout call — one
+   * checkout call is one buyer decision, so a multi-store/bundle checkout's
+   * sibling orders all carry the same policy + the full session's dropped
+   * items (they aren't cleanly attributable to a single store/order).
+   */
+  outOfStockPolicy?: OutOfStockPolicy;
+  /** Items from this checkout session that were dropped because they were unavailable ("skip_items" policy only). */
+  droppedItems?: {
+    productId: string;
+    productTitle: string;
+    requestedQty: number;
+    availableQty: number;
+  }[];
+  /** Set true only when an automatic partial refund (for dropped Razorpay items) failed and needs manual follow-up. */
+  refundPending?: boolean;
 }
 
 export type OrderPaymentRecordMethod = "manual" | "razorpay" | "cod";
