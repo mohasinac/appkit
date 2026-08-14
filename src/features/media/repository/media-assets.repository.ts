@@ -13,6 +13,15 @@ export interface MediaAssetDocument {
   isPublic: boolean;
   /** staged = still in tmp/; finalized = moved to media/ by finalizeStagedMediaUrl. */
   status: "staged" | "finalized";
+  /**
+   * The media-filename context type this asset was uploaded under (e.g.
+   * "catalogue-image", "product-image") — stamped at finalize time from the
+   * same ctx.type already passed to generateMediaFilename(). Undefined for
+   * every asset uploaded before this field existed. Lets the watermark
+   * resolver distinguish "this image belongs to a personal catalogue" from
+   * any other upload without parsing filename strings.
+   */
+  contextType?: string;
   createdAt: Date;
 }
 

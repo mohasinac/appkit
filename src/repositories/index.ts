@@ -87,6 +87,7 @@ export { payoutRepository } from "../features/payments/repository/payout.reposit
 export { shipmentsRepository } from "../features/shipments/repository/shipments.repository";
 export { shipmentLotsRepository } from "../features/shipments/repository/shipment-lots.repository";
 export { shipmentItemsRepository } from "../features/shipments/repository/shipment-items.repository";
+export { catalogueRepository } from "../features/catalogue/repository/catalogue.repository";
 export {
   SavedPaymentMethodsRepository,
   savedPaymentMethodsRepository,

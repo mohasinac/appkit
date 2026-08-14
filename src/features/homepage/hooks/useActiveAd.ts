@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http/ApiClient";
+import { AD_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AdSlotId } from "../ad-registry";
 
 export type ActiveAdCreative = {
@@ -25,7 +26,7 @@ export type ActiveAdRecord = {
 export function useActiveAd(slotId: AdSlotId): { loading: boolean; ad: ActiveAdRecord | null } {
   const { data, isPending } = useQuery<ActiveAdRecord | null>({
     queryKey: ["active-ad", slotId],
-    queryFn: () => apiClient.get<ActiveAdRecord | null>(`/api/ads?slot=${encodeURIComponent(slotId)}`),
+    queryFn: () => apiClient.get<ActiveAdRecord | null>(AD_ENDPOINTS.ACTIVE_BY_SLOT(slotId)),
     staleTime: 60_000,
     retry: 1,
   });

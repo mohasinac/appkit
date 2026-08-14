@@ -346,7 +346,7 @@ export function AdminProductEditorView({
                       groupChildSlugs={p.groupChildSlugs}
                       groupTitle={p.groupTitle}
                       isAuction={modeFromProduct(p) === "auction"}
-                      storeProductsEndpoint="/api/admin/products"
+                      storeProductsEndpoint={ADMIN_ENDPOINTS.PRODUCTS}
                       onGroupChanged={() => productQuery.refetch()}
                     />
                   )

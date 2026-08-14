@@ -4,7 +4,7 @@ import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import type { PaginatedSelectOption, AsyncPage } from "../../../ui/components/PaginatedSelect";
 import { BrandQuickCreateForm } from "../../admin/components/BrandQuickCreateForm";
 import { apiClient } from "../../../http";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS, BRAND_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface BrandInlineSelectProps {
   value: string;
@@ -54,7 +54,7 @@ async function loadPublicBrandOptions(
   const res = await apiClient.get<{
     items?: { id?: string; name?: string }[];
     total?: number;
-  }>(`/api/brands?${params}`);
+  }>(BRAND_ENDPOINTS.FILTERED(params.toString()));
   const all = (res.items ?? []).map((b) => ({
     value: String(b.id ?? ""),
     label: String(b.name ?? ""),

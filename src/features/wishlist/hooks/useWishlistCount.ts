@@ -13,8 +13,6 @@ import { WISHLIST_MAX } from "../../../constants/limits";
 import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { WishlistResponse } from "../types";
 
-const WISHLIST_MERGE_API = "/api/wishlist/merge";
-
 /** Custom event fired when the server reports the wishlist is full during a merge. */
 export const WISHLIST_CAP_EVENT = "appkit/wishlist/full";
 export interface WishlistCapEventDetail {
@@ -81,7 +79,7 @@ export function useWishlistCount(userId: string | null | undefined) {
 
     apiClient
       .post<{ capReached?: boolean; skippedFull?: number; limit?: number }>(
-        WISHLIST_MERGE_API,
+        WISHLIST_ENDPOINTS.MERGE,
         { items: items.map((i) => ({ productId: i.itemId })) },
       )
       .then((data) => {

@@ -38,6 +38,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 /** Subset of ProductDocument the overlay needs. Kept loose so it can be fed
  * sanitized public payloads directly. */
@@ -261,7 +262,7 @@ function useFetchedProducts(
     lastKey.current = key;
     let cancelled = false;
     setIsLoading(true);
-    fetch(`/api/products?ids=${encodeURIComponent(key)}`, { credentials: "include" })
+    fetch(PRODUCT_ENDPOINTS.BY_IDS(key), { credentials: "include" })
       .then((r) => r.json())
       .then((json) => {
         if (cancelled) return;

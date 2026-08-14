@@ -25,6 +25,7 @@ import {
   onShipmentLotWriteHandler,
   onShipmentHeaderWriteHandler,
   onShipmentDeletedHandler,
+  onCatalogueSubmittedForApprovalHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -169,6 +170,14 @@ export const onShipmentDeleted = defineFunction({
   options: { region: REGION },
 });
 
+export const onCatalogueSubmittedForApproval = defineFunction({
+  name: "onCatalogueSubmittedForApproval",
+  description: "Notify all admins when a catalogue item's listingStatus transitions to pending_admin_approval.",
+  trigger: { kind: "documentUpdated", pathPattern: "catalogueItems/{itemId}" },
+  handler: onCatalogueSubmittedForApprovalHandler,
+  options: { region: REGION },
+});
+
 export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onBidPlaced,
   onOrderCreate,
@@ -187,4 +196,5 @@ export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onShipmentLotWrite,
   onShipmentHeaderWrite,
   onShipmentDeleted,
+  onCatalogueSubmittedForApproval,
 ] as const;

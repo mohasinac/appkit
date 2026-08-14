@@ -12,6 +12,7 @@ import {
   dailyDataCleanupHandler,
   draftPruneHandler,
   emiInstallmentReminderHandler,
+  catalogueImageStalenessReminderHandler,
   mediaTmpCleanupHandler,
   notificationPruneHandler,
   offerExpiryHandler,
@@ -206,6 +207,14 @@ export const emiInstallmentReminder = defineFunction({
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
+export const catalogueImageStalenessReminder = defineFunction({
+  name: "catalogueImageStalenessReminder",
+  description: "Remind catalogue owners whose photos are nearing the 30-day freshness cutoff (daily 07:00 IST).",
+  trigger: { kind: "schedule", cron: "0 7 * * *", timeZone: "Asia/Kolkata" },
+  handler: catalogueImageStalenessReminderHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
 export const SCHEDULED_FUNCTIONS = [
   auctionSettlement,
   pendingOrderTimeout,
@@ -229,4 +238,5 @@ export const SCHEDULED_FUNCTIONS = [
   prizeRevealReminder,
   bundleStockSync,
   emiInstallmentReminder,
+  catalogueImageStalenessReminder,
 ] as const;

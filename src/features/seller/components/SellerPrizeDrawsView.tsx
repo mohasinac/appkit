@@ -113,7 +113,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
   const dispatch = useActionDispatch();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
-    endpoint: (id) => `/api/store/products/${id}`,
+    endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
     deleteFn: onDelete,
     successMessage: "Prize draw deleted.",
     fetchOptions: { credentials: "include" },

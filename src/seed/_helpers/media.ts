@@ -17,6 +17,7 @@
 import { MEDIA_ENDPOINTS } from "../../constants/api-endpoints";
 
 const PROXY_PREFIX = "/media/";
+// audit-hardcoded-api-routes-ok: idempotency prefix check for MEDIA_ENDPOINTS.EXT_URL's own output shape, not a call site
 const EXT_PREFIX = "/api/media/ext?url=";
 
 export function seedExtMedia(url: string): string {

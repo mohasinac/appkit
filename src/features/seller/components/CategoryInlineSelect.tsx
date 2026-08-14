@@ -4,7 +4,7 @@ import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import type { PaginatedSelectOption, AsyncPage } from "../../../ui/components/PaginatedSelect";
 import { CategoryQuickCreateForm } from "../../admin/components/CategoryQuickCreateForm";
 import { apiClient } from "../../../http";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS, CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface CategoryInlineSelectProps {
   value: string;
@@ -46,7 +46,7 @@ async function loadPublicCategoryOptions(
   _page: number,
 ): Promise<AsyncPage<PaginatedSelectOption<string>>> {
   const params = new URLSearchParams({ flat: "true", pageSize: "200" });
-  const res = await fetch(`/api/categories?${params}`, { credentials: "include" });
+  const res = await fetch(CATEGORY_ENDPOINTS.FILTERED(params.toString()), { credentials: "include" });
   const json: { success?: boolean; data?: { id?: string; name?: string }[] } =
     await res.json().catch(() => ({}));
   const all = (json.data ?? []).map((c) => ({

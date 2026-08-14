@@ -23,6 +23,7 @@ import { Button } from "./Button";
 import { LoginRequiredModal } from "./LoginRequiredModal";
 import { useSession } from "../../react/contexts/SessionContext";
 import { useToast } from "./Toast";
+import { ACCOUNT_ENDPOINTS } from "../../constants/api-endpoints";
 
 async function postClaim(
   couponCode: string,
@@ -30,7 +31,7 @@ async function postClaim(
 ): Promise<boolean> {
   if (typeof fetch === "undefined") return false;
   try {
-    const res = await fetch("/api/user/coupons/claim", {
+    const res = await fetch(ACCOUNT_ENDPOINTS.COUPONS_CLAIM, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

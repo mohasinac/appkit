@@ -17,6 +17,7 @@ import {
 } from "../realtime";
 import { normalizeError } from "../../../errors/normalize";
 import { apiClient, ApiClientError } from "../../../http/ApiClient";
+import { CONVERSATION_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { ConversationDocument } from "../schemas/firestore";
 
 /**
@@ -31,12 +32,9 @@ export const CONVERSATIONS_PING_PATH = conversationPingPath;
  */
 export const CONVERSATIONS_PING_USER_PATH = userConversationsPingPath;
 
-const DETAIL_ENDPOINT = (id: string) =>
-  `/api/user/conversations/${encodeURIComponent(id)}`;
-const SEND_ENDPOINT = (id: string) =>
-  `/api/user/conversations/${encodeURIComponent(id)}/messages`;
-const READ_ENDPOINT = (id: string) =>
-  `/api/user/conversations/${encodeURIComponent(id)}/read`;
+const DETAIL_ENDPOINT = CONVERSATION_ENDPOINTS.BY_ID;
+const SEND_ENDPOINT = CONVERSATION_ENDPOINTS.MESSAGES;
+const READ_ENDPOINT = CONVERSATION_ENDPOINTS.READ;
 
 export interface UseConversationReturn {
   conversation: ConversationDocument | null;

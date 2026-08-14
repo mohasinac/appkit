@@ -11,6 +11,7 @@ export const ADMIN_PAGE_PERMISSIONS: Record<string, Permission> = {
   "/admin/reviews": "admin:reviews",
   "/admin/payouts": "admin:payouts",
   "/admin/shipments": "admin:shipments",
+  "/admin/catalogue-approvals": "admin:catalogue",
   "/admin/kyc": "admin:kyc",
   "/admin/analytics": "admin:analytics",
   "/admin/activity": "admin:activity",

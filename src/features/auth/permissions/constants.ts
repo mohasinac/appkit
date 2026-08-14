@@ -116,6 +116,8 @@ export type Permission =
   // Procurement Shipments
   | "admin:shipments:read"
   | "admin:shipments:write"
+  | "admin:catalogue:read"
+  | "admin:catalogue:write"
   | "admin:support-tickets:assign"
   | "admin:support-tickets:close"
 
@@ -478,6 +480,7 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/analytics": "admin:analytics:view",
   "/admin/payouts": "admin:payouts:read",
   "/admin/shipments": "admin:shipments:read",
+  "/admin/catalogue-approvals": "admin:catalogue:read",
   "/admin/categories": "admin:categories:read",
   "/admin/brands": "admin:brands:read",
   "/admin/coupons": "admin:coupons:read",

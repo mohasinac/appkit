@@ -12,7 +12,7 @@ export function buildRobots({ siteUrl }: RobotsOptions): MetadataRoute.Robots {
         allow: "/",
         disallow: [
           "/admin/",
-          "/api/",
+          "/api/", // audit-hardcoded-api-routes-ok: robots.txt disallow prefix, not an endpoint reference
           "/seller/",
           "/user/",
           "/auth/",

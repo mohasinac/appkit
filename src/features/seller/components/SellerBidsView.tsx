@@ -226,7 +226,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
     try {
       const results = await Promise.all(
         selection.selectedIds.map((id) =>
-          fetch(`/api/store/bids/${id}`, { method: "DELETE" }).then((r) => r.ok),
+          fetch(SELLER_ENDPOINTS.BID_BY_ID(id), { method: "DELETE" }).then((r) => r.ok),
         ),
       );
       const failed = results.filter((ok) => !ok).length;

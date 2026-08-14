@@ -54,7 +54,7 @@ export function useCategoriesFiltered(params: CategoriesFilteredParams = {}) {
 
   const query = useQuery<CategoryItem[]>({
     queryKey: ["categories", "filtered", qs],
-    queryFn: () => apiClient.get<CategoryItem[]>(`/api/categories?${qs}`),
+    queryFn: () => apiClient.get<CategoryItem[]>(CATEGORY_ENDPOINTS.FILTERED(qs)),
     staleTime: 2 * 60 * 1000,
   });
 

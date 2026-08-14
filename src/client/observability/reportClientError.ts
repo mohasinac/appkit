@@ -1,5 +1,6 @@
 "use client";
 import { normalizeError } from "../../errors/normalize";
+import { CLIENT_ERROR_ENDPOINTS } from "../../constants/api-endpoints";
 
 /**
  * Send a client-side error to the persisted log. POSTs `/api/client-errors`
@@ -72,12 +73,12 @@ export function reportClientError(payload: ClientErrorPayload): void {
       typeof navigator.sendBeacon === "function"
     ) {
       const blob = new Blob([body], { type: "application/json" });
-      navigator.sendBeacon("/api/client-errors", blob);
+      navigator.sendBeacon(CLIENT_ERROR_ENDPOINTS.REPORT, blob);
       return;
     }
 
     // Fallback to fetch keepalive
-    void fetch("/api/client-errors", {
+    void fetch(CLIENT_ERROR_ENDPOINTS.REPORT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body,

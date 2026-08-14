@@ -9,10 +9,10 @@ import { Eye, Printer, MapPin, Truck } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps, SelectOption } from "../../../ui";
-import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
@@ -637,7 +637,7 @@ export function SellerOrdersView({
   const requestPayoutForSelection = useCallback(async () => {
     if (!selection.selectedIds.length) return;
     try {
-      const res = await fetch("/api/store/payouts/request", {
+      const res = await fetch(SELLER_ENDPOINTS.PAYOUT_REQUEST, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderIds: selection.selectedIds }),

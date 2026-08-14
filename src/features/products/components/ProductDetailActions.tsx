@@ -6,6 +6,7 @@ import { Button, Stack, LoginRequiredModal } from "../../../ui";
 import { useToast } from "../../../ui/components/Toast";
 import { useAddToCart } from "../../cart/hooks/useAddToCart";
 import { apiClient } from "../../../http";
+import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
 import { addToGuestWishlist } from "../../wishlist/utils/guest-wishlist";
 import { ROUTES } from "../../../next";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
@@ -92,7 +93,7 @@ export function ProductDetailActions({
     setBusy("wish");
     try {
       try {
-        await apiClient.post("/api/wishlist", { productId });
+        await apiClient.post(WISHLIST_ENDPOINTS.ADD, { productId });
       } catch (err: unknown) {
         void normalizeError(err);
         const status = (err as { status?: number })?.status;

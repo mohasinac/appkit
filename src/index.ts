@@ -1829,6 +1829,7 @@ export { passwordResetTokenRepository } from "./repositories/index";
 export { payoutRepository } from "./repositories/index";
 // shipmentsRepository / shipmentLotsRepository / shipmentItemsRepository - procurement shipments repositories.
 export { shipmentsRepository, shipmentLotsRepository, shipmentItemsRepository } from "./repositories/index";
+export { catalogueRepository } from "./repositories/index";
 // savedPaymentMethodsRepository - user saved payment methods (UPI, card, bank) with PII encryption + ban system.
 export { savedPaymentMethodsRepository, SavedPaymentMethodsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -7005,6 +7006,31 @@ export type {
   UseShipmentItemsParams,
   UseShipmentProjectionsParams,
 } from "./features/shipments/index";
+export {
+  CATALOGUE_COLLECTION,
+  CATALOGUE_FIELDS,
+  CATALOGUE_IMAGE_FRESHNESS_DAYS,
+  createCatalogueItemId,
+} from "./features/catalogue/index";
+export type {
+  CatalogueItemDocument,
+  CatalogueVisibility,
+  CatalogueOwnerRole,
+  CatalogueListingStatus,
+  CatalogueItemCreateInput,
+  CatalogueItemUpdateInput,
+} from "./features/catalogue/index";
+export {
+  createCatalogueItemSchema,
+  updateCatalogueItemSchema,
+} from "./features/catalogue/index";
+export { assertCatalogueImagesFresh } from "./features/catalogue/index";
+export { listFromCatalogueAction } from "./features/catalogue/index";
+export { submitCatalogueItemForApprovalAction } from "./features/catalogue/index";
+export {
+  approveCatalogueListingAction,
+  rejectCatalogueListingAction,
+} from "./features/catalogue/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // PAYOUT_FIELDS - Constant used across modules.
 export { PAYOUT_FIELDS } from "./features/payments/index";
@@ -9246,6 +9272,7 @@ export { buildSieveFilters } from "./utils/filter.helper";
 export { formatFileSize, formatPaise } from "./utils/number.formatter";
 export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
+export { deriveContextTypeFromFilename } from "./utils/id-generators";
 export type { MediaFilenameContext } from "./utils/id-generators";
 export { resolveMediaUrl, FIREBASE_STORAGE_HOST, GCS_HOST } from "./utils/media-url";
 

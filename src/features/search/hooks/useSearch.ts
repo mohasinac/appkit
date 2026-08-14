@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { SearchResponse, SearchCategoryOption } from "../types";
-import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
+import { CATEGORY_ENDPOINTS, SEARCH_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseSearchOptions {
   initialCategories?: SearchCategoryOption[];
@@ -25,7 +25,7 @@ export function useSearch(searchParams: string, options?: UseSearchOptions) {
     staleTime: 1000 * 60 * 5, // 5 min
   });
 
-  const searchEndpoint = options?.searchEndpoint ?? `/api/search?${searchParams}`;
+  const searchEndpoint = options?.searchEndpoint ?? SEARCH_ENDPOINTS.RAW(searchParams);
   const { data: searchData, isLoading } = useQuery<SearchResponse>({
     queryKey: ["search", searchParams],
     queryFn: () => apiClient.get<SearchResponse>(searchEndpoint),

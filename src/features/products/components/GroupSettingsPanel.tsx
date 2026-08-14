@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Button, Code, ConfirmDeleteModal, Div, FormField, Heading, Modal, Row, Select, SideDrawer, Span, Stack, Tabs, TabsContent, TabsList, TabsTrigger, Text, useToast } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 
 const __P = {
@@ -88,7 +89,7 @@ export function GroupSettingsPanel({
     if (!groupId || !isGroupParent) return;
     setLoading(true);
     try {
-      const res = (await apiClient.get(`/api/products/group/${encodeURIComponent(groupId)}`)) as ChildrenResponse;
+      const res = (await apiClient.get(PRODUCT_ENDPOINTS.GROUP_BY_ID(groupId))) as ChildrenResponse;
       setChildren(res.data?.items ?? []);
     } catch (_err) {
       void normalizeError(_err);

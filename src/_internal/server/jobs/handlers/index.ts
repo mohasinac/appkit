@@ -72,3 +72,6 @@ export { emiInstallmentReminderHandler } from "./emiInstallmentReminder";
 export { onShipmentItemWriteHandler } from "./onShipmentItemWrite";
 export { onShipmentLotWriteHandler, onShipmentHeaderWriteHandler } from "./onShipmentAllocationSync";
 export { onShipmentDeletedHandler } from "./onShipmentDeleted";
+// Personal Catalogue (Feature B) — freshness reminder + admin approval-request notification
+export { catalogueImageStalenessReminderHandler } from "./catalogueImageStalenessReminder";
+export { onCatalogueSubmittedForApprovalHandler } from "./onCatalogueSubmittedForApproval";

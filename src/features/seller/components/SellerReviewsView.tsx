@@ -124,7 +124,7 @@ export function SellerReviewsView({
 
   const submitContest = useCallback(async () => {
     if (!contestTarget) return;
-    await fetch(`/api/store/reviews/${contestTarget.id}/contest`, {
+    await fetch(SELLER_ENDPOINTS.REVIEW_CONTEST(contestTarget.id), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reason: contestReason }),
@@ -136,7 +136,7 @@ export function SellerReviewsView({
 
   const submitFeedback = useCallback(async () => {
     if (!feedbackTarget) return;
-    await fetch(`/api/store/reviews/${feedbackTarget.id}/feedback`, {
+    await fetch(SELLER_ENDPOINTS.REVIEW_FEEDBACK(feedbackTarget.id), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ feedback: feedbackText }),

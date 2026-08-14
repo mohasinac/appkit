@@ -22,6 +22,7 @@ import {
   BUNDLE_MIN_ITEMS,
 } from "../../../_internal/shared/features/categories/bundle-config";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -228,7 +229,7 @@ export function BundleItemsPicker({
 export async function defaultBundleItemsFetch(
   query: string,
 ): Promise<BundleItemSearchResult[]> {
-  const url = `/api/products?q=${encodeURIComponent(query)}&pageSize=20`;
+  const url = PRODUCT_ENDPOINTS.SEARCH(query, 20);
   const res = await fetch(url, { method: "GET" });
   if (!res.ok) {
     throw new Error(`Search failed: ${res.status}`);

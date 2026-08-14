@@ -77,7 +77,7 @@ export function SellerArtView({
 }: SellerArtViewProps) {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
-    endpoint: (id) => `/api/store/products/${id}`,
+    endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
     deleteFn: onDelete,
     successMessage: "Listing deleted.",
     fetchOptions: { credentials: "include" },

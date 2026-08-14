@@ -5,7 +5,7 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Div, FormActions, HorizontalRule, Input, Label, Row, Select, SideDrawer, Span, Stack, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS, SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -151,7 +151,7 @@ export function AdminSupportTicketDetailView({
   const replyMutation = useApiMutation({
     mutationFn: async () => {
       await apiClient.post(
-        `/api/support/tickets/${ticketId!}/messages`,
+        SUPPORT_ENDPOINTS.TICKET_MESSAGES(ticketId!),
         { body: replyBody, newStatus: status },
       );
     },

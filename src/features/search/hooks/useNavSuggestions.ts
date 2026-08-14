@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
+import { SEARCH_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface NavSuggestionRecord {
   objectID: string;
@@ -10,7 +11,7 @@ export interface NavSuggestionRecord {
   url: string;
 }
 
-const SUGGESTIONS_ENDPOINT = "/api/search/suggestions";
+const SUGGESTIONS_ENDPOINT = SEARCH_ENDPOINTS.SUGGESTIONS;
 
 /**
  * W1-19 — wired to `/api/search/suggestions` 2026-05-23. Fetches up to 20

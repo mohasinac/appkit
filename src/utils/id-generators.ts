@@ -766,6 +766,21 @@ export function validateMediaFilename(filename: string): boolean {
 }
 
 /**
+ * Derives the `MediaFilenameContext["type"]` a filename was generated under
+ * (e.g. "catalogue-image") by matching against the same prefix list
+ * {@link validateMediaFilename} uses — the longest matching prefix wins so
+ * "blog-content-image" isn't mis-derived as "blog-cover"'s sibling "blog-".
+ * Used at /api/media/finalize time to stamp `MediaAssetDocument.contextType`
+ * without changing the finalize request contract.
+ */
+export function deriveContextTypeFromFilename(filename: string): string | undefined {
+  const stem = filename.replace(/\.[^.]+$/, "");
+  const matches = MEDIA_FILENAME_PREFIXES.filter((prefix) => stem.startsWith(`${prefix}-`) || stem === prefix);
+  if (matches.length === 0) return undefined;
+  return matches.reduce((longest, candidate) => (candidate.length > longest.length ? candidate : longest));
+}
+
+/**
  * Generates a scannable barcode identifier for a product listing.
  * Returns `LIR-XXXXXXXX` (8 uppercase hex chars) derived from a SHA-1
  * hash of the productId. Deterministic and stateless — calling it twice

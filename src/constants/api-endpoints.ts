@@ -24,6 +24,14 @@ export const LOGS_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
+// Client Error Reporting
+// ---------------------------------------------------------------------------
+
+export const CLIENT_ERROR_ENDPOINTS = {
+  REPORT: "/api/client-errors",
+} as const;
+
+// ---------------------------------------------------------------------------
 // Auth
 // ---------------------------------------------------------------------------
 
@@ -61,6 +69,8 @@ export const ACCOUNT_ENDPOINTS = {
   ORDERS: "/api/user/orders",
   ORDER_BY_ID: (orderId: string) => `/api/user/orders/${orderId}`,
   WISHLIST: "/api/user/wishlist",
+  WISHLIST_ITEM_BY_ID: (itemId: string) =>
+    `/api/user/wishlist/${encodeURIComponent(itemId)}`,
   WISHLIST_VALIDATE: "/api/user/wishlist/validate",
   HISTORY: "/api/user/history",
   HISTORY_ITEM: (productId: string) =>
@@ -75,6 +85,17 @@ export const ACCOUNT_ENDPOINTS = {
   COUPONS_CLAIM: "/api/user/coupons/claim",
   OFFERS: "/api/user/offers",
   NOTIFICATION_PREFERENCES: "/api/user/notification-preferences",
+} as const;
+
+// ---------------------------------------------------------------------------
+// Conversations (buyer messaging)
+// ---------------------------------------------------------------------------
+
+export const CONVERSATION_ENDPOINTS = {
+  LIST: "/api/user/conversations",
+  BY_ID: (id: string) => `/api/user/conversations/${encodeURIComponent(id)}`,
+  MESSAGES: (id: string) => `/api/user/conversations/${encodeURIComponent(id)}/messages`,
+  READ: (id: string) => `/api/user/conversations/${encodeURIComponent(id)}/read`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -112,6 +133,7 @@ export const ADMIN_ENDPOINTS = {
   ORDERS: "/api/admin/orders",
   ORDER_BY_ID: (id: string) => `/api/admin/orders/${id}`,
   ORDER_REFUND: (id: string) => `/api/admin/orders/${id}/refund`,
+  ORDER_PAYMENT_VERIFY: (id: string) => `/api/admin/orders/${id}/payment-verify`,
   USERS: "/api/admin/users",
   USER_BY_ID: (uid: string) => `/api/admin/users/${uid}`,
   REVIEWS: "/api/admin/reviews",
@@ -209,6 +231,7 @@ export const ADMIN_ENDPOINTS = {
   ADMIN_FULFILLMENT: (storeId: string) => `/api/store/fulfillment?storeId=${encodeURIComponent(storeId)}`,
   CHECKOUT_BYPASS: "/api/admin/checkout-bypass",
   MAINTENANCE_ANALYSIS: "/api/admin/maintenance/analysis",
+  MEDIA_LIST: "/api/admin/media",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -267,6 +290,8 @@ export const CATEGORY_ENDPOINTS = {
   BRANDS: (pageSize = 100) =>
     `/api/categories?isBrand=true&pageSize=${pageSize}`,
   ROOT: (pageSize = 20) => `/api/categories?tier=0&pageSize=${pageSize}`,
+  /** @param qs — pre-built querystring (no leading `?`) for structured filters */
+  FILTERED: (qs: string) => `/api/categories?${qs}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -319,6 +344,22 @@ export const COPILOT_ENDPOINTS = {
 
 export const CORPORATE_ENDPOINTS = {
   INQUIRIES: "/api/corporate-inquiries",
+} as const;
+
+// ---------------------------------------------------------------------------
+// Contact (public contact-us form)
+// ---------------------------------------------------------------------------
+
+export const CONTACT_ENDPOINTS = {
+  SUBMIT: "/api/contact",
+} as const;
+
+// ---------------------------------------------------------------------------
+// Ads (public — active ad lookup by slot)
+// ---------------------------------------------------------------------------
+
+export const AD_ENDPOINTS = {
+  ACTIVE_BY_SLOT: (slotId: string) => `/api/ads?slot=${encodeURIComponent(slotId)}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -423,6 +464,27 @@ export const PRODUCT_ENDPOINTS = {
   // Lottery: user self-pull for prize-draw products in lottery mode
   LOTTERY_PULL: (id: string) => `/api/products/${id}/lottery-pull`,
   LOTTERY_ENTRIES: (id: string) => `/api/products/${id}/lottery-entries`,
+  SEARCH: (query: string, pageSize = 20) =>
+    `/api/products?q=${encodeURIComponent(query)}&pageSize=${pageSize}`,
+  /** @param ids — comma-separated product ids, e.g. for a compare-tray fetch */
+  BY_IDS: (ids: string) => `/api/products?ids=${encodeURIComponent(ids)}`,
+  GROUP_BY_ID: (groupId: string) => `/api/products/group/${encodeURIComponent(groupId)}`,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Prize Draws
+// ---------------------------------------------------------------------------
+
+export const PRIZE_DRAW_ENDPOINTS = {
+  REVEAL: (productId: string) => `/api/prize-draws/${encodeURIComponent(productId)}/reveal`,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Sublisting Categories (public)
+// ---------------------------------------------------------------------------
+
+export const SUBLISTING_CATEGORY_ENDPOINTS = {
+  BY_ID: (id: string) => `/api/sublisting-categories/${encodeURIComponent(id)}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -451,6 +513,9 @@ export const REVIEW_ENDPOINTS = {
 export const SEARCH_ENDPOINTS = {
   QUERY: (q: string, extra?: string) =>
     `/api/search?q=${encodeURIComponent(q)}${extra ? `&${extra}` : ""}`,
+  SUGGESTIONS: "/api/search/suggestions",
+  /** @param params — pre-built querystring (no leading `?`) from a caller-owned URLSearchParams */
+  RAW: (params: string) => `/api/search?${params}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -470,11 +535,14 @@ export const SELLER_ENDPOINTS = {
   PAYOUT_SETTINGS: "/api/store/payout-settings",
   PAYOUT_REQUEST: "/api/store/payouts/request",
   REVIEWS: "/api/store/reviews",
+  REVIEW_CONTEST: (id: string) => `/api/store/reviews/${id}/contest`,
+  REVIEW_FEEDBACK: (id: string) => `/api/store/reviews/${id}/feedback`,
   SHIPPING: "/api/store/shipping",
   STORE: "/api/store/storefront",
   STORE_ADDRESSES: "/api/store/addresses",
   STORE_ADDRESS_BY_ID: (id: string) => `/api/store/addresses/${id}`,
   BIDS: "/api/store/bids",
+  BID_BY_ID: (id: string) => `/api/store/bids/${id}`,
   DASHBOARD: "/api/store/dashboard",
   ANALYTICS: (period?: string) =>
     `/api/store/analytics${period ? `?period=${period}` : ""}`,
@@ -500,6 +568,8 @@ export const SELLER_ENDPOINTS = {
     `/api/store/products/scan?barcode=${encodeURIComponent(barcode)}`,
   ORDERS_FULFILLMENT: "/api/store/fulfillment",
   ORDERS_ASSIGN: (orderId: string) => `/api/store/orders/${orderId}/assign`,
+  PRODUCT_BY_ID: (id: string) => `/api/store/products/${id}`,
+  PRODUCT_DUPLICATE: (id: string) => `/api/store/products/${id}/duplicate`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -509,6 +579,8 @@ export const SELLER_ENDPOINTS = {
 export const BRAND_ENDPOINTS = {
   LIST: "/api/brands",
   BY_ID: (id: string) => `/api/brands/${id}`,
+  /** @param qs — pre-built querystring (no leading `?`) for structured filters */
+  FILTERED: (qs: string) => `/api/brands?${qs}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -543,6 +615,7 @@ export const WISHLIST_ENDPOINTS = {
   LIST: "/api/user/wishlist",
   BY_USER: (userId: string) => `/api/wishlist?userId=${userId}`,
   ADD: "/api/wishlist",
+  MERGE: "/api/wishlist/merge",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -622,8 +695,10 @@ export const WHATSAPP_SELLER_ENDPOINTS = {
 export const API_ENDPOINTS = {
   CONFIG: CONFIG_ENDPOINTS,
   LOGS: LOGS_ENDPOINTS,
+  CLIENT_ERRORS: CLIENT_ERROR_ENDPOINTS,
   AUTH: AUTH_ENDPOINTS,
   ACCOUNT: ACCOUNT_ENDPOINTS,
+  CONVERSATIONS: CONVERSATION_ENDPOINTS,
   NOTIFICATIONS: NOTIFICATIONS_ENDPOINTS,
   SITE_SETTINGS: SITE_SETTINGS_ENDPOINTS,
   ADMIN: ADMIN_ENDPOINTS,
@@ -639,6 +714,8 @@ export const API_ENDPOINTS = {
   CONSULTATION: CONSULTATION_ENDPOINTS,
   COPILOT: COPILOT_ENDPOINTS,
   CORPORATE: CORPORATE_ENDPOINTS,
+  CONTACT: CONTACT_ENDPOINTS,
+  ADS: AD_ENDPOINTS,
   EVENTS: EVENT_ENDPOINTS,
   LOTTERY: LOTTERY_ENDPOINTS,
   FAQS: FAQ_ENDPOINTS,
@@ -648,6 +725,7 @@ export const API_ENDPOINTS = {
   ORDERS: ORDER_ENDPOINTS,
   PREORDERS: PREORDER_ENDPOINTS,
   PRODUCTS: PRODUCT_ENDPOINTS,
+  PRIZE_DRAWS: PRIZE_DRAW_ENDPOINTS,
   PROMOTIONS: PROMOTION_ENDPOINTS,
   REVIEWS: REVIEW_ENDPOINTS,
   SEARCH: SEARCH_ENDPOINTS,
@@ -655,6 +733,7 @@ export const API_ENDPOINTS = {
   BRANDS: BRAND_ENDPOINTS,
   BLOG: BLOG_ENDPOINTS,
   STORES: STORE_ENDPOINTS,
+  SUBLISTING_CATEGORIES: SUBLISTING_CATEGORY_ENDPOINTS,
   WISHLIST: WISHLIST_ENDPOINTS,
   PROFILE_STATS: PROFILE_STATS_ENDPOINTS,
   DEMO: DEMO_ENDPOINTS,

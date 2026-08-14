@@ -8,6 +8,7 @@ import type { JsonValue } from "../../../schemas/types";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { useFeatureFlags } from "../../../client/api/useFeatureFlags";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const CLS_TOGGLE_ON = "h-4 w-4 text-success dark:text-success";
 const CLS_DELETE_BTN = "p-[var(--appkit-space-1-5)] text-[var(--appkit-color-text-muted)] hover:bg-error-surface dark:hover:bg-error-surface hover:text-error dark:hover:text-error transition-colors disabled:opacity-50";
@@ -208,7 +209,7 @@ export function CouponCard({
       // ignore so the deep-link still works), then jump to cart with the
       // code pre-filled.
       try {
-        await fetch("/api/user/coupons/claim", {
+        await fetch(ACCOUNT_ENDPOINTS.COUPONS_CLAIM, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",

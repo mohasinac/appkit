@@ -10,8 +10,9 @@ import { userConversationsPingPath } from "../realtime";
 import type { ConversationDocument } from "../schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
 import { apiClient } from "../../../http/ApiClient";
+import { CONVERSATION_ENDPOINTS } from "../../../constants/api-endpoints";
 
-const LIST_ENDPOINT = "/api/user/conversations";
+const LIST_ENDPOINT = CONVERSATION_ENDPOINTS.LIST;
 
 export interface UseConversationsReturn {
   conversations: ConversationDocument[];

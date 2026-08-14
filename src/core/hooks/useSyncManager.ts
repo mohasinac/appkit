@@ -17,6 +17,7 @@
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../http";
+import { CART_ENDPOINTS, ACCOUNT_ENDPOINTS } from "../../constants/api-endpoints";
 import {
   getCartOps,
   clearCartOps,
@@ -34,14 +35,14 @@ async function replayCartOps(): Promise<void> {
   for (const op of ops) {
     if (op.op === "add") {
       await apiClient
-        .post("/api/cart", {
+        .post(CART_ENDPOINTS.GET, {
           productId: op.productId,
           quantity: op.quantity ?? 1,
         })
         .catch(console.error);
     } else if (op.op === "remove") {
       await apiClient
-        .delete(`/api/cart/${op.productId}`)
+        .delete(CART_ENDPOINTS.BY_ITEM_ID(op.productId))
         .catch(console.error);
     }
   }
@@ -56,11 +57,11 @@ async function replayWishlistOps(): Promise<void> {
     if (op.type !== "product") continue; // server wishlist is product-only
     if (op.op === "add") {
       await apiClient
-        .post("/api/user/wishlist", { productId: op.itemId })
+        .post(ACCOUNT_ENDPOINTS.WISHLIST, { productId: op.itemId })
         .catch(console.error);
     } else if (op.op === "remove") {
       await apiClient
-        .delete(`/api/user/wishlist/${op.itemId}`)
+        .delete(ACCOUNT_ENDPOINTS.WISHLIST_ITEM_BY_ID(op.itemId))
         .catch(console.error);
     }
   }

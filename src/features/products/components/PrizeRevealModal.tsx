@@ -21,6 +21,7 @@ import { Anchor, Button, Div, Heading, LoginRequiredModal, Modal, Span, Stack, T
 import { MediaImage } from "../../media/MediaImage";
 import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
+import { PRIZE_DRAW_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
 import { normalizeError } from "../../../errors/normalize";
@@ -72,7 +73,7 @@ async function fetchPrizeReveal(
   productId: string,
   orderId: string,
 ): Promise<{ response: PrizeRevealResponse | null; unauthenticated: boolean }> {
-  const res = await fetch(`/api/prize-draws/${productId}/reveal`, {
+  const res = await fetch(PRIZE_DRAW_ENDPOINTS.REVEAL(productId), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ orderId }),

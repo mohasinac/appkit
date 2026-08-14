@@ -35,6 +35,7 @@ import {
 import { FieldInput } from "../../../ui/forms";
 import type { UseFormShellStateResult } from "../../../ui/forms/FormShell";
 import { apiClient } from "../../../http";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { BundleDynamicRuleEditor } from "../../categories/components/BundleDynamicRuleEditor";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
@@ -156,7 +157,7 @@ export function AdminBundleEditorView({
     let cancelled = false;
     setLoading(true);
     apiClient
-      .get(`/api/admin/bundles/${encodeURIComponent(bundleId)}`)
+      .get(ADMIN_ENDPOINTS.BUNDLE_BY_ID(encodeURIComponent(bundleId)))
       .then((res) => {
         if (cancelled) return;
         const json = res as { data?: CategoryDocument };
@@ -225,13 +226,13 @@ export function AdminBundleEditorView({
 
       if (isEdit && bundleId) {
         await apiClient.put(
-          `/api/admin/bundles/${encodeURIComponent(bundleId)}`,
+          ADMIN_ENDPOINTS.BUNDLE_BY_ID(encodeURIComponent(bundleId)),
           body,
         );
         showToast("Bundle saved.", "success");
         onSaved?.(bundleId);
       } else {
-        const res = (await apiClient.post(`/api/admin/bundles`, body)) as {
+        const res = (await apiClient.post(ADMIN_ENDPOINTS.BUNDLES, body)) as {
           data?: CategoryDocument;
         };
         const newId = res?.data?.id;
@@ -254,7 +255,7 @@ export function AdminBundleEditorView({
     setApiError(null);
     try {
       await apiClient.delete(
-        `/api/admin/bundles/${encodeURIComponent(bundleId)}`,
+        ADMIN_ENDPOINTS.BUNDLE_BY_ID(encodeURIComponent(bundleId)),
       );
       showToast("Bundle deleted.", "success");
       setDeleteConfirmOpen(false);

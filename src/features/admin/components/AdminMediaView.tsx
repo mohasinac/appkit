@@ -5,6 +5,7 @@ import { Alert, Button, Div, Input, Row, Select, Stack, StackedViewShell, Text, 
 import { normalizeError } from "../../../errors/normalize";
 import type { StackedViewShellProps } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   MediaImage,
   MediaUploadField,
@@ -55,7 +56,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
         const params = new URLSearchParams();
         if (prefix) params.set("prefix", prefix);
         if (token) params.set("pageToken", token);
-        const res = await fetch(`/api/admin/media?${params.toString()}`, {
+        const res = await fetch(`${ADMIN_ENDPOINTS.MEDIA_LIST}?${params.toString()}`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Failed to list media");

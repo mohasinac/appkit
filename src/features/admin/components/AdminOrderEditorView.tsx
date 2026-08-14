@@ -108,7 +108,7 @@ export function AdminOrderEditorView({
     if (!orderId) return;
     setIsVerifyingPayment(true);
     try {
-      await apiClient.patch(`/api/admin/orders/${orderId}/payment-verify`, {});
+      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_PAYMENT_VERIFY(orderId), {});
       showToast("Payment verified. Order moved to Processing.", "success");
       queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
       onClose();

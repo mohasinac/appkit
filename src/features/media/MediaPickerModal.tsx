@@ -6,8 +6,9 @@ import { Button, Div, Input, Label, Row, Stack, Text, Alert } from "../../ui";
 import { MediaImage } from "./MediaImage";
 import { MediaUploadField } from "./upload/MediaUploadField";
 import { useMediaUpload, useMediaCleanup } from "./index";
+import { ADMIN_ENDPOINTS } from "../../constants/api-endpoints";
 
-const MEDIA_LIST_ENDPOINT = "/api/admin/media";
+const MEDIA_LIST_ENDPOINT = ADMIN_ENDPOINTS.MEDIA_LIST;
 const EXISTING_GRID_MAX_HEIGHT = "max-h-96";
 
 export interface MediaPickerModalProps {

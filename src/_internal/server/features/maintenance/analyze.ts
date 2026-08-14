@@ -15,6 +15,7 @@ import {
   type ServerErrorDocument,
   type ServerErrorSource,
 } from "../../../../features/server-errors/schemas/firestore";
+import { CLIENT_ERROR_ENDPOINTS } from "../../../../constants/api-endpoints";
 
 export interface AnalyzeOptions {
   /** Look-back window in days (1..30). */
@@ -224,12 +225,13 @@ export async function analyzeLogs(opts: AnalyzeOptions): Promise<AnalyzeReport> 
   if (
     topRoutes.find(
       (r) =>
-        r.route === "/api/client-errors" &&
+        r.route === CLIENT_ERROR_ENDPOINTS.REPORT &&
         topCodes[0]?.code === "NETWORK_ERROR",
     )
   ) {
+    // audit-hardcoded-api-routes-ok: human-readable diagnostic message, not a call site
     recommendations.push(
-      "/api/client-errors itself is failing — ingestion endpoint may be down; client errors are being lost.",
+      `${CLIENT_ERROR_ENDPOINTS.REPORT} itself is failing — ingestion endpoint may be down; client errors are being lost.`,
     );
   }
   if (recommendations.length === 0) {

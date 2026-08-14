@@ -8,6 +8,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { SUBLISTING_CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { ListingType } from "../types";
 
 const __O = {
@@ -102,7 +103,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
   useEffect(() => {
     if (!sublistingCategoryId) return;
     setLoading(true);
-    fetch(`/api/sublisting-categories/${encodeURIComponent(sublistingCategoryId)}`)
+    fetch(SUBLISTING_CATEGORY_ENDPOINTS.BY_ID(sublistingCategoryId))
       .then((r) => r.json())
       .then((res: ApiResponse) => {
         setCategory(res.data?.category ?? null);

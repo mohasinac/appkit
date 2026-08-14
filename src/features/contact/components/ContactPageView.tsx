@@ -6,6 +6,7 @@ import { AdSlot } from "../../homepage/components/AdSlot";
 import { ContactForm } from "./ContactForm";
 import { ContactInfoSidebar } from "./ContactInfoSidebar";
 import { apiClient } from "../../../http";
+import { CONTACT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 type ContactSubmitInput = {
   name: string;
@@ -15,7 +16,7 @@ type ContactSubmitInput = {
 };
 
 async function submitContact(data: ContactSubmitInput): Promise<void> {
-  await apiClient.post("/api/contact", data);
+  await apiClient.post(CONTACT_ENDPOINTS.SUBMIT, data);
 }
 
 export function ContactPageView() {

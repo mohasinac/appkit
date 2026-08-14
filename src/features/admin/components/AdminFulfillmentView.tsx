@@ -7,7 +7,7 @@ import { Button } from "../../../ui/components/Button";
 import { Badge } from "../../../ui/components/Badge";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import { apiClient } from "../../../http";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { OrderDocument } from "../../orders/schemas/firestore";
 import { normalizeError } from "../../../errors/normalize";
 import { useToast } from "../../../ui";
@@ -78,7 +78,7 @@ export function AdminFulfillmentView({
       if (!storeId) return;
       setActionLoadingId(orderId + ":picked");
       try {
-        await apiClient.patch(`/api/store/orders/${orderId}`, { markPicked: true });
+        await apiClient.patch(SELLER_ENDPOINTS.ORDERS_BY_ID(orderId), { markPicked: true });
         showToast("Order marked as picked.", "success");
         await fetchOrders(storeId);
       } catch (err: unknown) {
@@ -95,7 +95,7 @@ export function AdminFulfillmentView({
       if (!storeId) return;
       setActionLoadingId(orderId + ":packed");
       try {
-        await apiClient.patch(`/api/store/orders/${orderId}`, { markPacked: true });
+        await apiClient.patch(SELLER_ENDPOINTS.ORDERS_BY_ID(orderId), { markPacked: true });
         showToast("Order marked as packed.", "success");
         await fetchOrders(storeId);
       } catch (err: unknown) {
@@ -112,7 +112,7 @@ export function AdminFulfillmentView({
       if (!storeId) return;
       setActionLoadingId(orderId + ":unassign");
       try {
-        await apiClient.patch(`/api/store/orders/${orderId}/assign`, { workerId: null });
+        await apiClient.patch(SELLER_ENDPOINTS.ORDERS_ASSIGN(orderId), { workerId: null });
         showToast("Worker unassigned.", "success");
         await fetchOrders(storeId);
       } catch (err: unknown) {

@@ -7,6 +7,7 @@ import { MediaImage } from "../../media/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { ListingType } from "../types";
 
 const __O = {
@@ -123,7 +124,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
   useEffect(() => {
     if (!groupId) return;
     setLoading(true);
-    fetch(`/api/products/group/${encodeURIComponent(groupId)}`)
+    fetch(PRODUCT_ENDPOINTS.GROUP_BY_ID(groupId))
       .then((r) => r.json())
       .then((res: ApiResponse) => setMembers(res.data?.items ?? []))
       .catch(console.error)

@@ -409,7 +409,7 @@ export function SellerProductsView({
 
   // S-STORE-2-C — Duplicate verb. Server-side endpoint is /api/store/products/[id]/duplicate.
   const handleDuplicate = async (row: ProductRow) => {
-    const res = await fetch(`/api/store/products/${row.id}/duplicate`, {
+    const res = await fetch(SELLER_ENDPOINTS.PRODUCT_DUPLICATE(row.id), {
       method: "POST",
     }).catch(() => null);
     if (res && res.ok) {
@@ -424,7 +424,7 @@ export function SellerProductsView({
     const newStatus = currentStatus === "published" ? "draft" : "published";
     setPublishingId(row.id);
     try {
-      const res = await fetch(`/api/store/products/${row.id}`, {
+      const res = await fetch(SELLER_ENDPOINTS.PRODUCT_BY_ID(row.id), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
