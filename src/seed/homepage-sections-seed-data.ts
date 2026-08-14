@@ -28,8 +28,8 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       h1: "India's Largest Collectibles Marketplace",
-      subtitle: "Trading Cards · Action Figures · Diecast · Beyblades · Model Kits · Vintage Rare",
-      description: "Buy, sell, and auction collectibles from verified sellers across India. Pokémon, Yu-Gi-Oh!, Hot Wheels, Gundam, Beyblade, Funko Pop, and thousands more — all with secure escrow payments and authenticity guarantees.",
+      subtitle: "Trading Cards · Action Figures · Diecast · Spinning Tops · Model Kits · Vintage Rare",
+      description: "Buy, sell, and auction collectibles from verified sellers across India — action figures, trading cards, spinning tops, model kits, and thousands more — all with secure escrow payments and authenticity guarantees.",
       showCTA: true,
       ctaText: "Start Shopping",
       ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
@@ -106,7 +106,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       title: "Top Collectibles Brands",
-      subtitle: "Bandai, Hasbro, Takara-Tomy, Mattel, Konami, Funko, Good Smile, and more",
+      subtitle: "Takara-Tomy, Beyblade, and more",
       maxBrands: 13,
       autoScroll: true,
       scrollInterval: 3000,
@@ -179,15 +179,15 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       height: "md",
-      backgroundImage: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
+      backgroundImage: seedExtMedia("https://picsum.photos/seed/section-banner-beyblade-collection-20260101/1600/500"),
       content: {
-        title: "Complete Your Exodia Set",
-        subtitle: "All 5 pieces available — LOB 1st Edition to modern reprints",
-        description: "The ultimate Yu-Gi-Oh! flex. Find every Exodia printing on LetItRip.",
+        title: "Complete Your Beyblade Collection",
+        subtitle: "All 4 generations available — Original to Beyblade X",
+        description: "From the original 1999 series to the latest Xtreme Gear generation, find every era of Beyblade on LetItRip.",
       },
       buttons: [
-        { text: "Shop Exodia", link: `${String(ROUTES.PUBLIC.PRODUCTS)}?q=exodia`, variant: "primary" },
-        { text: "Exodia Guide", link: "/blog/complete-exodia-guide", variant: "outline" },
+        { text: "Shop Beyblade", link: `${String(ROUTES.PUBLIC.PRODUCTS)}?q=beyblade`, variant: "primary" },
+        { text: "Beyblade Guide", link: "/blog/beyblade-x-vs-burst-comparison", variant: "outline" },
       ],
       clickable: false,
     },
