@@ -26,6 +26,7 @@ import {
   bidRepository,
   addressesRepository,
   savedPaymentMethodsRepository,
+  siteSettingsRepository,
 } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { isSellerUser } from "../../../../features/auth/role-predicates";
@@ -183,12 +184,14 @@ export async function runHardBanCascade(
 
   // 8. Notify user
   try {
+    const siteSettings = await siteSettingsRepository.getSingleton();
+    const supportEmail = siteSettings.contact?.email || "support@example.com";
     await sendNotification({
       userId: uid,
       type: "account_action",
       priority: "high",
       title: "Account permanently suspended",
-      message: `Your account has been permanently suspended. Reason: ${reason}. You may appeal by emailing support@letitrip.in.`,
+      message: `Your account has been permanently suspended. Reason: ${reason}. You may appeal by emailing ${supportEmail}.`,
       relatedId: uid,
       relatedType: "user",
     });
