@@ -304,6 +304,16 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `PreOrderBadge` | `features/pre-orders/components/PreOrderBadge.tsx` | Pre-order status badge |
 | `CheckoutSuccessView` | `features/cart/components/CheckoutSuccessView.tsx` | Post-checkout success screen |
 | `CheckoutAddressStep` | `features/cart/components/CheckoutAddressStep.tsx` | Checkout address selection step |
+| `AdminShipmentsView` | `features/shipments/components/AdminShipmentsView.tsx` | Admin procurement shipments listing — status/supplier, "🔄 recalc" badge when `totalsComputedAt < updatedAt` |
+| `AdminShipmentEditorView` | `features/shipments/components/AdminShipmentEditorView.tsx` | Shipment header form + inline lots table (≤10 lots) |
+| `AdminShipmentLotItemsView` | `features/shipments/components/AdminShipmentLotItemsView.tsx` | Per-lot item manager (≤500 items) — single-item add + bulk paste-import drawer |
+| `AdminShipmentProjectionsView` | `features/shipments/components/AdminShipmentProjectionsView.tsx` | Real paginated Sieve query over `shipmentLots` — sortable by profit/revenue/newest; "Create pre-order link" row action |
+| `ShipmentItemLinkModal` | `features/shipments/components/ShipmentItemLinkModal.tsx` | Link a main shipment item to a new or existing pre-order product |
+| `UserCatalogueView` | `features/catalogue/components/UserCatalogueView.tsx` | Owner's own catalogue list — `canListDirectly` prop switches "List" (seller/admin) vs "Request to sell" (buyer) button label |
+| `CatalogueItemEditorView` | `features/catalogue/components/CatalogueItemEditorView.tsx` | Catalogue item create/edit form (title/images/price/condition/visibility) |
+| `PublicCatalogueView` | `features/catalogue/components/PublicCatalogueView.tsx` | Read-only public catalogue for one owner (`visibility:"public"` items only) |
+| `AdminCatalogueApprovalsView` | `features/catalogue/components/AdminCatalogueApprovalsView.tsx` | Admin approval queue for buyer "Request to sell" submissions — Approve/Reject with reason |
+| `OrderPaymentSummary` | `features/orders/components/OrderPaymentSummary.tsx` | Shared payment-detail display reading `order.paymentRecord`, with a legacy-field fallback for pre-Feature-C orders |
 
 ---
 
@@ -390,6 +400,10 @@ Import: `import { useX } from "@mohasinac/appkit/client"`
 | `useBottomActions` | `features/layout/hooks/useBottomActions.ts` | Mobile bottom action bar |
 | `useBeforeAfter` | `features/before-after/hooks/useBeforeAfter.ts` | Before/after gallery state |
 | `useAuthEvent` | `features/auth/hooks/useAuthEvent.ts` | Auth state change events |
+| `useShipments` | `features/shipments/hooks/useShipments.ts` | Paginated shipments list |
+| `useShipment` | `features/shipments/hooks/useShipments.ts` | Single shipment data + refetch |
+| `useShipmentItems` | `features/shipments/hooks/useShipments.ts` | Items for one lot |
+| `useShipmentProjections` | `features/shipments/hooks/useShipments.ts` | Projections list (paginated Sieve query over `shipmentLots`) |
 
 ---
 
@@ -431,6 +445,11 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `productFeatureAdminCreateSchema` / `productFeatureStoreCreateSchema` / `productFeatureUpdateSchema` | zod schemas | — | Shared body validators for the four feature route handlers (S8 refactor — `appkit/src/features/products/schemas/product-features.validators.ts`). |
 | `PRODUCT_FEATURE_CATEGORY_OPTIONS` / `*_PRODUCT_TYPE_OPTIONS` / `*_SCOPE_OPTIONS` / `*_ICON_COLOR_OPTIONS` / `*_SCOPE_TABS` | option lists | — | Centralised Select/pill option lists (S8 refactor — `appkit/src/features/products/constants/product-features.constants.ts`). Editor + Selector + AdminFeaturesView import from here. |
 | `PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER` / `PRODUCT_FEATURE_CARD_MAX_VISIBLE` / `PRODUCT_FEATURE_QUERY_STALE_MS` | tuning constants | — | Defaults: new feature displayOrder (100), max badges on a ProductCard (3), and React-Query staleTime (60s). |
+| `shipmentsRepository` | singleton | `procurementShipments` | Shipment headers — `create()` 409s on duplicate `shipmentNumber`, `hasLinkedItems()` delete-guard query |
+| `shipmentLotsRepository` | singleton | `shipmentLots` | Lots (≤10/shipment) — `listForProjections()` Sieve query, `shipmentStatus != cancelled` |
+| `shipmentItemsRepository` | singleton | `shipmentItems` | Main items (≤500/lot) — `bulkCreate()` single `WriteBatch`, `unlink()` writes `null` not `undefined` |
+| `catalogueRepository` | singleton | `catalogueItems` | Personal catalogue items — `stampImageUpdate()` on every `images[]` write, `listPublicByOwner()`, `listPendingApproval()` |
+| `jobsRepository` | singleton | `jobs` | Background job queue (`enqueueJob()`/`onJobCreated` Firebase Function pattern, Rule #6 heavy-work offload) |
 
 ---
 

@@ -19,6 +19,7 @@ ASCII diagrams for non-trivial components and architectural flows. Updated along
 - [Event Participate flow](#event-participate-flow) — auth gate, no-form redirect, Skeleton default, submit timeout
 - [Search suggestions + `?q=` carry-through](#search-suggestions--q-carry-through) — page hits + listing-page redirect with query
 - [Listing API sieve fallback](#listing-api-sieve-fallback) — Function-first / repo-fallback with full Sieve, no in-memory drop
+- [Shipments + Catalogue — nullable-vs-optional Zod pitfall](#shipments--catalogue--nullable-vs-optional-zod-pitfall) — why "unlink" fields must be `.nullable()`, not just `.optional()`
 
 ---
 
@@ -587,3 +588,55 @@ silently drop predicates. Both the Function path and the repo
 path receive the SAME `filters` value; they only differ in
 where the Sieve adapter runs (Function vCPU vs. Vercel Lambda).
 ```
+
+## Shipments + Catalogue — nullable-vs-optional Zod pitfall
+
+Found while wiring the Procurement Shipments (`shipmentItems`) "unlink"
+action — the same class of bug can hit any field whose whole purpose is to be
+*clearable*, not just absent.
+
+```
+BaseRepository.update(id, data)
+    │
+    ▼
+prepareForFirestore(data)   ─── strips only `undefined`, keeps `null`
+    │                              (providers/db-firebase/helpers.ts)
+    ▼
+Firestore .update(cleanData)
+
+WRONG:  z.string().optional()          → Zod strips the key entirely when the
+                                          route body sends `null` for it, since
+                                          "optional" only means "may be absent",
+                                          not "may be null". The field silently
+                                          never reaches Firestore — the write
+                                          looks like it succeeded (200 OK) but
+                                          nothing changed. This is exactly how
+                                          shipmentItems.linkedProductId's
+                                          "unlink" action became a no-op: the
+                                          Zod schema never declared the field
+                                          at all, so it was stripped before
+                                          validation even ran.
+
+RIGHT:  z.string().nullable().optional()  → accepts `null` (clears the field
+                                             on write) AND `undefined` (field
+                                             omitted from the patch = leave
+                                             unchanged). Repository callers
+                                             writing `undefined` intending to
+                                             clear a field are ALSO wrong —
+                                             `undefined` gets stripped by
+                                             prepareForFirestore() before it
+                                             ever reaches Firestore; only
+                                             `null` survives the strip.
+```
+
+Rule of thumb: any field that represents an optional *relationship* the
+caller must be able to sever (a link, a reference, a foreign key) needs
+`.nullable().optional()` on the Zod schema AND the repository method must
+write literal `null`, never `undefined`, to actually clear it.
+
+Applies to: `shipmentItems.linkedProductId`/`linkedProductSlug`/
+`linkedProductListingType` (`appkit/src/features/shipments/schemas/validation.ts`,
+`shipment-items.repository.ts`'s `unlink()` method). Check any other
+"unlink"/"clear"/"remove reference" action against this pattern before
+assuming it works from a 200 response alone — verify the field actually
+changed in Firestore, not just that the request didn't error.
