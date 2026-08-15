@@ -91,6 +91,14 @@ export {
   APPKIT_FUNCTIONS_BY_NAME,
 } from "./_internal/server/functions/index.js";
 
+// Narrow repository re-export for consumer Firebase Functions (e.g. invoice
+// PDF generation) — imports directly from the repositories barrel rather
+// than `index.ts`/`server.ts`, whose much broader module graphs pull in
+// Next.js OG-rendering code that fails to bundle under tsup/esbuild's CJS
+// output for the Functions runtime.
+export { orderRepository, siteSettingsRepository } from "./repositories/index.js";
+export type { OrderDocument, OrderDocumentItem } from "./features/orders/index.js";
+
 export type {
   PromotionsCallableResult,
   AdminAnalyticsResult,

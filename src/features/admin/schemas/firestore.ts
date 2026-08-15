@@ -487,6 +487,14 @@ export interface SiteSettingsDocument extends BaseDocument {
     hourlyRatePaise: number;
     maxHoursPerDay: number;
   };
+  /** P-8 GST — Indian tax compliance. Distinct from commissions.gstPercent
+   *  (which is GST on our platform commission) — this is buyer-facing product GST. */
+  gst: {
+    enabled: boolean;
+    gstin: string;
+    legalName: string;
+    address: string;
+  };
   socialLinks: {
     facebook?: string;
     twitter?: string;
@@ -713,6 +721,12 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   laborRate: {
     hourlyRatePaise: 20000,
     maxHoursPerDay: 6,
+  },
+  gst: {
+    enabled: false,
+    gstin: "",
+    legalName: "",
+    address: "",
   },
   featureFlags: {
     chats: true,

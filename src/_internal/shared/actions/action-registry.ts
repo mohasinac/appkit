@@ -757,6 +757,18 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    "cancel-order-items": {
+      id: "user.cancel-order-items",
+      label: "Cancel Selected Items",
+      description: "Cancel a subset of items on a pending or confirmed order and continue with the rest.",
+      kind: "danger",
+      confirmation: {
+        title: "Cancel selected items?",
+        body: "The selected items will be cancelled and refunded within 5–7 business days. The rest of your order will continue as normal.",
+        confirmLabel: "Cancel selected items",
+        confirmKind: "danger",
+      },
+    },
     "request-return": {
       id: "user.request-return",
       label: "Request return",
@@ -1193,6 +1205,14 @@ export const ACTIONS: ActionTree = {
       },
     },
     // ── Payout management ──────────────────────────────────────────────────
+    "calculate-payouts": {
+      id: "admin.calculate-payouts",
+      label: "Calculate Payouts",
+      ariaLabel: "Run the weekly payout eligibility calculation",
+      description: "Runs the same weekly sweep as the scheduled job on demand, generating pending payout records for eligible sellers.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
     "grant-payout": {
       id: "admin.grant-payout",
       label: "Approve payout",

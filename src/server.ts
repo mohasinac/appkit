@@ -1069,6 +1069,9 @@ export { finalizeStagedMediaUrl } from "./features/media/server";
 // cancelOrderForUser - Shared export for cancel order for user.
 export { cancelOrderForUser } from "./features/orders/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// cancelOrderItemsForUser - Cancels a subset of line items on an order and continues with the rest.
+export { cancelOrderItemsForUser } from "./features/orders/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getOrderByIdForUser - Helper for get order by id for user.
 export { getOrderByIdForUser } from "./features/orders/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -1377,6 +1380,10 @@ export { removeFromWishlist } from "./features/wishlist/server";
 export { siteSettingsRepository } from "./repositories/index";
 // storeRepository - Shared export for store repository.
 export { storeRepository } from "./repositories/index";
+// orderRepository - Shared export for order repository (needed by consumer Firebase Functions, e.g. invoice PDF generation).
+export { orderRepository } from "./repositories/index";
+export type { OrderDocument } from "./features/orders/index";
+export type { OrderDocumentItem } from "./features/orders/index";
 // SB-UNI-V — bundlesRepository deleted; use categoriesRepository with categoryType:"bundle".
 
 // -- Monitoring --------------------------------------------------------------

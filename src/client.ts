@@ -206,6 +206,11 @@ export { FirebaseClientRealtimeProvider } from "./providers/firebase-client/inde
 // EventFormDrawer - Component for event form drawer.
 export { EventFormDrawer, EventParticipateView, EventPollWidget } from "./features/events/index";
 export type { EventParticipateViewProps } from "./features/events/index";
+// useBulkEvent - subscribes to an enqueued async job's RTDB progress channel (Async Job Primitive).
+export { useBulkEvent } from "./features/events/index";
+export type { UseBulkEventOptions, UseBulkEventReturn, BulkEventStatus } from "./features/events/index";
+// RTDB_PATHS - realtime database path constants (e.g. RTDB_PATHS.BULK_EVENTS for useBulkEvent).
+export { RTDB_PATHS } from "./providers/db-firebase/index";
 // Lottery feature — client components (safe for client bundles — no server imports)
 export { LotterySlotGrid } from "./_internal/client/features/lottery/LotterySlotGrid";
 export { LotteryPullForm } from "./_internal/client/features/lottery/LotteryPullForm";
@@ -323,6 +328,10 @@ export { AdminDashboardView, AdminAnalyticsView, AdminPrizeDrawsView, AdminCarou
 export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPrizeDrawsViewProps, AdminCarouselViewProps, AdminFulfillmentViewProps, AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/index";
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
 export { ADMIN_ENDPOINTS } from "./constants/index";
+export { SELLER_ENDPOINTS } from "./constants/index";
+// P-16 — Tour system (driver.js-backed onboarding walkthrough).
+export { TourProvider, useTour } from "./_internal/client/features/tour/TourProvider";
+export type { TourContextValue, TourRole } from "./_internal/client/features/tour/TourProvider";
 export { apiClient, ApiClientError } from "./http/index";
 export { UserSidebar } from "./features/account/components/UserSidebar";
 export type { UserSidebarProps, UserNavItem, UserNavGroup } from "./features/account/components/UserSidebar";
@@ -685,6 +694,8 @@ export type {
 
 export { ScamAwarenessModal } from "./features/scams/components/ScamAwarenessModal";
 export type { ScamAwarenessModalProps } from "./features/scams/components/ScamAwarenessModal";
+export { SellerTrustBadge } from "./features/scams/components/SellerTrustBadge";
+export type { SellerTrustBadgeProps } from "./features/scams/components/SellerTrustBadge";
 // [CLIENT-ONLY] — Admin panel components for action/nav permission management.
 export { ActionPermissionsManager } from "./features/site-settings/components/ActionPermissionsManager";
 export type { ActionPermissionsManagerProps } from "./features/site-settings/components/ActionPermissionsManager";

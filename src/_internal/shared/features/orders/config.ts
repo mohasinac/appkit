@@ -1,5 +1,5 @@
 export const ORDERS_PAGE_SIZE = 20;
-export const ORDER_CANCELLABLE_STATUSES = ["pending", "processing"] as const;
+export const ORDER_CANCELLABLE_STATUSES = ["pending", "confirmed"] as const;
 export const ORDER_RETURN_WINDOW_DAYS = 7;
 export const ORDER_AUTO_CONFIRM_DAYS = 14;
 export const ORDER_CANCEL_REASON_MAX_LENGTH = 500;

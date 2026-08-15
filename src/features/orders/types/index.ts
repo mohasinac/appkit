@@ -58,6 +58,8 @@ export interface OrderItem {
   prizeRevealDeadline?: string;
   /** Set after the reveal endpoint picks a winner — the prize item index. */
   revealedItemNumber?: number;
+  /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
+  cancelledQuantity?: number;
   /**
    * SB-UNI-4 2026-05-13 — bundle identifier when this order line represents a
    * bundle purchase. `productId` then points at the bundle category id and

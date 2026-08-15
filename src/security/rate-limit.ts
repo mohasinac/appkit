@@ -163,6 +163,8 @@ export const RateLimitPresets = {
   PASSWORD_RESET: { limit: 3, window: 3600 },
   EMAIL_VERIFICATION: { limit: 5, window: 3600 },
   OAUTH: { limit: 10, window: 60 },
+  /** P-11 — chat message send: 100 per hour per user. */
+  CHAT: { limit: 100, window: 3600 },
 } as const;
 
 /** For testing only: clear the in-memory store. */

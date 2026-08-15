@@ -6915,6 +6915,9 @@ export type { ShippingMethod } from "./features/orders/index";
 // cancelOrderForUser - Shared export for cancel order for user.
 export { cancelOrderForUser } from "./features/orders/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// cancelOrderItemsForUser - Cancels a subset of line items on an order and continues with the rest.
+export { cancelOrderItemsForUser } from "./features/orders/server";
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getOrderByIdForUser - Helper for get order by id for user.
 export { getOrderByIdForUser } from "./features/orders/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -7423,12 +7426,14 @@ export {
   computeCheckoutFees,
   computePayoutDeduction,
   computeCodHandlingFee,
+  calculateGst,
 } from "./_internal/shared/fees/calculator";
 export type {
   FeeCommissionRates,
   CheckoutFees,
   PayoutDeduction,
   CodHandlingFeeRates,
+  GstBreakdown,
 } from "./_internal/shared/fees/calculator";
 // EMI eligibility + schedule computation (pure, client-safe — used for checkout quotes).
 export { checkEmiEligibility, computeEmiSchedule } from "./_internal/shared/features/emi/schedule";
@@ -9531,15 +9536,19 @@ export { ScamProfileView } from "./features/scams/components/ScamProfileView";
 export type { ScamProfileViewProps } from "./features/scams/components/ScamProfileView";
 export { ScamAwarenessModal } from "./features/scams/components/ScamAwarenessModal";
 export type { ScamAwarenessModalProps } from "./features/scams/components/ScamAwarenessModal";
+export { SellerTrustBadge } from "./features/scams/components/SellerTrustBadge";
+export type { SellerTrustBadgeProps } from "./features/scams/components/SellerTrustBadge";
 
 // Scam server actions
 export {
   listVerifiedScammers,
   getPublicScammerById,
   getScammerProfilePageData,
+  getSellerTrustStatus,
 } from "./features/scams/actions/scam-actions";
 export type { ScammerProfilePageData } from "./features/scams/actions/scam-actions";
 export type { ScammerListResult } from "./features/scams/actions/scam-actions";
+export type { SellerTrustResult, SellerTrustStatus } from "./features/scams/actions/scam-actions";
 
 // --- Shell primitives (UX1/UX2/UX3/UX6) ----------------------------------------
 // [CLIENT] SellerProductShell â€" full-flow create/edit shell for standard, auction, and pre-order listings.

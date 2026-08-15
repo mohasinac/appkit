@@ -14,6 +14,13 @@ import { CONVERSATION_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const LIST_ENDPOINT = CONVERSATION_ENDPOINTS.LIST;
 
+export interface UseConversationsOptions {
+  /** Override the list endpoint — e.g. the seller-scoped /api/store/conversations. Defaults to the buyer endpoint. */
+  endpoint?: string;
+  /** Which per-conversation unread counter to sum into totalUnread. Defaults to "unreadBuyer". */
+  unreadField?: "unreadBuyer" | "unreadSeller";
+}
+
 export interface UseConversationsReturn {
   conversations: ConversationDocument[];
   isLoading: boolean;
@@ -22,12 +29,16 @@ export interface UseConversationsReturn {
   refetch: () => Promise<void>;
 }
 
-async function fetchList(): Promise<ConversationDocument[]> {
-  const data = await apiClient.get<{ items?: ConversationDocument[] }>(LIST_ENDPOINT);
+async function fetchList(endpoint: string): Promise<ConversationDocument[]> {
+  const data = await apiClient.get<{ items?: ConversationDocument[] }>(endpoint);
   return data.items ?? [];
 }
 
-export function useConversations(userId: string | null | undefined): UseConversationsReturn {
+export function useConversations(
+  userId: string | null | undefined,
+  opts: UseConversationsOptions = {},
+): UseConversationsReturn {
+  const { endpoint = LIST_ENDPOINT, unreadField = "unreadBuyer" } = opts;
   const [conversations, setConversations] = useState<ConversationDocument[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -40,14 +51,14 @@ export function useConversations(userId: string | null | undefined): UseConversa
     setIsLoading(true);
     setError(null);
     try {
-      setConversations(await fetchList());
+      setConversations(await fetchList(endpoint));
     } catch (e) {
       void normalizeError(e);
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
       setIsLoading(false);
     }
-  }, [userId]);
+  }, [userId, endpoint]);
 
   useEffect(() => {
     void refetch();
@@ -76,7 +87,7 @@ export function useConversations(userId: string | null | undefined): UseConversa
   }, [userId, refetch]);
 
   const totalUnread = conversations.reduce(
-    (sum, c) => sum + (c.unreadBuyer ?? 0),
+    (sum, c) => sum + (c[unreadField] ?? 0),
     0,
   );
 

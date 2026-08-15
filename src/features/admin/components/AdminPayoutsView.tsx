@@ -1,11 +1,11 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
+import { useApiMutation, useBulkEvent, RTDB_PATHS, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Button,
@@ -52,8 +52,48 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
   const [markPaidOpen, setMarkPaidOpen] = useState(false);
   const [selectedPayoutId, setSelectedPayoutId] = useState<string | null>(null);
   const [transactionId, setTransactionId] = useState("");
+  const [calculating, setCalculating] = useState(false);
   const toast = useToast();
   const queryClient = useQueryClient();
+
+  // P-7 — "Calculate Payouts" triggers the payoutsWeekly async job (Async Job
+  // Primitive) and tracks progress via the shared useBulkEvent RTDB channel.
+  const bulkEvent = useBulkEvent({ rtdbPath: RTDB_PATHS.BULK_EVENTS });
+  const handleCalculatePayouts = async () => {
+    setCalculating(true);
+    try {
+      const res = (await apiClient.post(ADMIN_ENDPOINTS.PAYOUTS_WEEKLY, {})) as {
+        data?: { jobId?: string; customToken?: string };
+      };
+      const { jobId, customToken } = res.data ?? {};
+      if (jobId && customToken) {
+        bulkEvent.subscribe(jobId, customToken);
+      } else {
+        setCalculating(false);
+        toast.showToast("Failed to start payout calculation.", "error");
+      }
+    } catch (_err) {
+      void normalizeError(_err);
+      setCalculating(false);
+      toast.showToast("Failed to start payout calculation.", "error");
+    }
+  };
+  useEffect(() => {
+    if (bulkEvent.status === "success") {
+      setCalculating(false);
+      toast.showToast(
+        bulkEvent.result?.summary
+          ? `Payout calculation complete: ${JSON.stringify(bulkEvent.result.summary)}`
+          : "Payout calculation complete.",
+        "success",
+      );
+      void queryClient.invalidateQueries({ queryKey: ["admin", "payouts", "listing"] });
+    } else if (bulkEvent.status === "failed" || bulkEvent.status === "timeout") {
+      setCalculating(false);
+      toast.showToast(bulkEvent.error ?? "Payout calculation failed.", "error");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bulkEvent.status]);
 
   const markPaid = useApiMutation({
     mutationFn: () => {
@@ -135,9 +175,19 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
     buildFilters: (state) =>
       state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
     toolbarExtra: (
-      <Button type="button" variant="outline" size="sm" onClick={handleExportCsv}>
-        {ACTIONS.ADMIN["export-csv"].label}
-      </Button>
+      <>
+        <Button
+          type="button"
+          action={ACTIONS.ADMIN["calculate-payouts"]}
+          size="sm"
+          isLoading={calculating}
+          disabled={calculating}
+          onClick={handleCalculatePayouts}
+        />
+        <Button type="button" variant="outline" size="sm" onClick={handleExportCsv}>
+          {ACTIONS.ADMIN["export-csv"].label}
+        </Button>
+      </>
     ),
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>

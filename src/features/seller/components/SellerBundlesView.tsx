@@ -1,186 +1,186 @@
 "use client";
 
-import { Badge, Span, sortBy, type JsonArray } from "@mohasinac/appkit";
-import React, { useState, useCallback } from "react";
-import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
+import { SIEVE_OP, sieveFilter, sortBy, type JsonArray } from "@mohasinac/appkit";
+import React from "react";
+import { Badge, Button, FilterChipGroup, Stack, Text, TextLink } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { ROUTES } from "../../..";
-import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
-
-const CLS_ITEMS_PILL = "inline-flex items-center rounded-full px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-[length:var(--appkit-text-xs)] font-medium bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300 tabular-nums";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
+import { SELLER_BULK_ACTIONS } from "../../products/constants/action-defs";
+import {
+  BUNDLE_COPY,
+  BUNDLE_STOCK_VARIANT,
+} from "../../../_internal/shared/features/categories/bundle-copy";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 
-interface BundleRow {
-  id: string;
-  title: string;
-  price: string;
-  itemCount: number;
-  status: string;
-  createdAt: string;
+interface BundlesResponse {
+  items?: JsonArray;
+  total?: number;
 }
 
-interface ProductsResponse {
-  products?: JsonArray;
-  meta?: { total: number };
+type BundleRow = {
+  id: string;
+  primary: string;
+  secondary: string;
+  price: string;
+  members: string;
+  stockStatus: string;
+  isActive: boolean;
+  status: string;
+  updatedAt: string;
+};
+
+function formatPrice(paise: unknown): string {
+  if (typeof paise !== "number" || paise <= 0) return "—";
+  return `₹${Math.round(paise / 100).toLocaleString("en-IN")}`;
 }
 
 const COLUMNS: AdminTableColumn<BundleRow>[] = [
-  { key: "title", header: "Bundle", render: (row) => <Text size="sm" weight="medium">{row.title}</Text> },
-  { key: "price", header: "Price", render: (row) => <Text className="tabular-nums" size="sm">{row.price}</Text> },
   {
-    key: "itemCount",
-    header: "Items",
+    key: "primary",
+    header: "Name",
     render: (row) => (
-      <Span className={CLS_ITEMS_PILL}>
-        {row.itemCount}
-      </Span>
+      <Stack gap="xs">
+        <Text weight="medium" color="primary">{row.primary}</Text>
+        <Text size="xs" color="muted">{row.secondary}</Text>
+      </Stack>
+    ),
+  },
+  { key: "price", header: "Price", className: "w-28" },
+  { key: "members", header: "Members", className: "w-24" },
+  {
+    key: "stockStatus",
+    header: "Stock",
+    className: "w-28",
+    render: (row) => (
+      <Badge
+        variant={
+          BUNDLE_STOCK_VARIANT[row.stockStatus as keyof typeof BUNDLE_STOCK_VARIANT] ?? "default"
+        }
+      >
+        {row.stockStatus === "in_stock"
+          ? BUNDLE_COPY.stockBadge.listVariantInStock
+          : BUNDLE_COPY.stockBadge.listVariantOutOfStock}
+      </Badge>
     ),
   },
   {
     key: "status",
     header: "Status",
+    className: "w-24",
     render: (row) => (
-      <Badge variant={row.status === "active" ? "active" : "inactive"} size="xs" className="capitalize">
-        {row.status}
-      </Badge>
+      <Badge variant={row.isActive ? "success" : "default"}>{row.status}</Badge>
     ),
   },
-  {
-    key: "createdAt",
-    header: "Created",
-    render: (row) => (
-      <Text className="text-[var(--appkit-color-text-muted)]" size="sm">{row.createdAt}</Text>
-    ),
-  },
+  { key: "updatedAt", header: "Updated", className: "w-28" },
 ];
 
 export interface SellerBundlesViewProps {
-  onCreateClick?: () => void;
-  onEditClick?: (id: string) => void;
-  onDelete?: (id: string) => Promise<void>;
-  onBulkDelete?: (ids: string[]) => Promise<void>;
+  getEditHref: (row: { id: string }) => string;
+  newHref: string;
 }
 
-export function SellerBundlesView({
-  onCreateClick,
-  onEditClick,
-  onDelete,
-  onBulkDelete,
-}: SellerBundlesViewProps) {
-  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const { deletingId, handleDelete: performDelete } = useEntityDelete({
-    endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
-    deleteFn: onDelete,
-    successMessage: "Bundle deleted.",
-    fetchOptions: { credentials: "include" },
-  });
-
-  const handleDelete = useCallback(
-    async (id: string) => {
-      await performDelete(id);
-      setDeleteTargetId(null);
-    },
-    [performDelete],
-  );
-
-  const handleEdit = useCallback(
-    (id: string) => {
-      if (onEditClick) onEditClick(id);
-      else window.location.href = String(ROUTES.STORE.PRODUCTS_EDIT(id));
-    },
-    [onEditClick],
-  );
-
-  const handleCreate = useCallback(() => {
-    if (onCreateClick) onCreateClick();
-    else window.location.href = String(ROUTES.STORE.PRODUCTS_NEW);
-  }, [onCreateClick]);
-
-  const config: ListingViewConfig<ProductsResponse, BundleRow> = {
+export function SellerBundlesView({ getEditHref, newHref }: SellerBundlesViewProps) {
+  const config: ListingViewConfig<BundlesResponse, BundleRow> = {
     portal: "seller",
     title: "Bundles",
-    searchPlaceholder: "Search bundles...",
-    emptyLabel: "No bundles yet — create a bundle to group multiple products together",
-    filterKeys: [],
-    defaultSort: sortBy("createdAt", "DESC"),
-    queryKey: ["seller", "bundles"],
-    endpoint: SELLER_ENDPOINTS.PRODUCTS,
+    searchPlaceholder: "Search bundles by name or slug…",
+    emptyLabel: "No bundles yet — create a bundle to group multiple of your products together",
+    filterKeys: ["isActive", "bundleStockStatus"],
+    defaultSort: sortBy("name", "ASC"),
+    queryKey: ["seller", "bundles", "listing"],
+    endpoint: SELLER_ENDPOINTS.BUNDLES,
     sortOptions: [
+      { value: sortBy("name", "ASC"), label: "Name A–Z" },
+      { value: sortBy("name", "DESC"), label: "Name Z–A" },
+      { value: sortBy("bundlePriceInPaise", "DESC"), label: "Price high→low" },
+      { value: "bundlePriceInPaise", label: "Price low→high" },
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
-      { value: "productTitle", label: "Name A–Z" },
-      { value: sortBy("productTitle", "DESC"), label: "Name Z–A" },
-      { value: sortBy("price", "ASC"), label: "Price: Low–High" },
-      { value: sortBy("price", "DESC"), label: "Price: High–Low" },
     ],
     columns: COLUMNS,
     mapRows: (response) =>
-      toRecordArray(response.products).map((item, index) => ({
+      toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `bundle-${index}`),
-        title: toStringValue(item.productTitle ?? item.title, "Untitled bundle"),
-        price: toRupees(item.price),
-        itemCount: Array.isArray(item.bundleProductIds)
-          ? (item.bundleProductIds as unknown[]).length
-          : Number(item.bundleItemCount ?? 0),
-        status: toStringValue(item.status, "draft"),
-        createdAt: toRelativeDate(item.createdAt),
+        primary: toStringValue(item.name, "Untitled bundle"),
+        secondary: toStringValue(item.slug, "no-slug"),
+        price: formatPrice(item.bundlePriceInPaise),
+        members: String(Array.isArray(item.bundleProductIds) ? item.bundleProductIds.length : 0),
+        stockStatus: toStringValue(item.bundleStockStatus, "in_stock"),
+        isActive: item.isActive === true,
+        status:
+          item.isActive === true
+            ? BUNDLE_COPY.adminList.activeBadge
+            : BUNDLE_COPY.adminList.inactiveBadge,
+        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
       })),
     getTotal: (response, mappedRows) =>
-      typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-    buildFilters: () => "listingType==bundle",
-    primaryAction: { label: "New Bundle", onClick: () => handleCreate() },
+      typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: (filterState) => {
+      const parts: string[] = [];
+      if (filterState.isActive) parts.push(sieveFilter("isActive", SIEVE_OP.EQ, filterState.isActive));
+      if (filterState.bundleStockStatus)
+        parts.push(sieveFilter("bundleStockStatus", SIEVE_OP.EQ, filterState.bundleStockStatus));
+      return parts.join(",") || undefined;
+    },
+    getRowHref: getEditHref,
+    toolbarExtra: (
+      <Button asChild size="sm" variant="primary">
+        <TextLink href={newHref} layout="flex" align="center" gap="xs">
+          + New Bundle
+        </TextLink>
+      </Button>
+    ),
     // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
-    buildBulkActions: onBulkDelete
-      ? (selection): BulkActionItem[] =>
-          SELLER_BULK_ACTIONS.bundles.map((id) => ({
-            id,
-            label: ROW_ACTION_META[id].label,
-            destructive: ROW_ACTION_META[id].destructive,
-            onClick: async () => {
-              await onBulkDelete(selection.selectedIds);
-              selection.clearSelection();
-            },
-          }))
-      : undefined,
-    renderRowActions: (row) => (
-      <RowActionMenu
-        actions={[
-          { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
-          {
-            label: ACTIONS.STORE["delete-listing"].label,
-            destructive: true,
-            onClick: () => setDeleteTargetId(row.id),
-            disabled: deletingId === row.id,
-          },
-        ]}
-      />
+    buildBulkActions: (selection): BulkActionItem[] => {
+      const handlers: Record<(typeof SELLER_BULK_ACTIONS.bundles)[number], () => Promise<void>> = {
+        [ROW_ACTION_ID.DELETE]: async () => {
+          await Promise.all(
+            selection.selectedIds.map((id) =>
+              fetch(SELLER_ENDPOINTS.BUNDLE_BY_ID(id), { method: "DELETE" }),
+            ),
+          );
+          selection.clearSelection();
+        },
+      };
+      return SELLER_BULK_ACTIONS.bundles.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        destructive: ROW_ACTION_META[id].destructive,
+        onClick: handlers[id],
+      }));
+    },
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <>
+        <FilterChipGroup
+          label="Status"
+          tabs={[
+            { id: "All", label: "All" },
+            { id: "true", label: "Active" },
+            { id: "false", label: "Inactive" },
+          ]}
+          value={pendingFilters.isActive || ""}
+          onChange={(v) => setPendingFilters((p) => ({ ...p, isActive: v }))}
+        />
+        <FilterChipGroup
+          label="Stock"
+          tabs={[
+            { id: "All", label: "All" },
+            { id: "out_of_stock", label: "Sold out" },
+          ]}
+          value={pendingFilters.bundleStockStatus || ""}
+          onChange={(v) => setPendingFilters((p) => ({ ...p, bundleStockStatus: v }))}
+        />
+      </>
     ),
   };
 
-  return (
-    <>
-      <DataListingView config={config} />
-      {deleteTargetId && (
-        <ConfirmDeleteModal
-          isOpen
-          title="Delete Bundle"
-          message="Are you sure you want to delete this bundle? This cannot be undone."
-          onConfirm={() => handleDelete(deleteTargetId)}
-          onClose={() => setDeleteTargetId(null)}
-          isDeleting={deletingId === deleteTargetId}
-        />
-      )}
-    </>
-  );
+  return <DataListingView config={config} />;
 }

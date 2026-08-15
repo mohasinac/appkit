@@ -2,6 +2,8 @@
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { scammerRepository } from "../repository/scammer.repository";
+import { userRepository } from "../../auth/repository/user.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
 import { safeFireAndForget } from "../../../utils/safe-fire-forget";
 import type {
   ScammerDocument,
@@ -92,4 +94,41 @@ export async function getScammerProfilePageData(
   ]);
 
   return { scammer, incidents, comments, relatedScammers };
+}
+
+export type SellerTrustStatus = "clear" | "flagged";
+
+export interface SellerTrustResult {
+  status: SellerTrustStatus;
+  /** seoSlug of matched verified scammer profiles — links to /scams/[slug]. Empty when clear. */
+  matchedProfileSlugs: string[];
+}
+
+const TRUST_STATUS_CLEAR: SellerTrustResult = { status: "clear", matchedProfileSlugs: [] };
+
+/**
+ * P-12 — resolves a store owner's phone/email against the verified (admin-published)
+ * scammer registry only. Never surfaces "under review" reports to buyers — a report
+ * that hasn't been verified must not damage a seller's storefront reputation.
+ */
+export async function getSellerTrustStatus(storeId: string): Promise<SellerTrustResult> {
+  const store = await storeRepository.findById(storeId).catch(() => null);
+  if (!store?.ownerId) return TRUST_STATUS_CLEAR;
+
+  const owner = await userRepository.findById(store.ownerId).catch(() => null);
+  if (!owner) return TRUST_STATUS_CLEAR;
+
+  const lookups: Array<Promise<ScammerDocument[]>> = [];
+  if (owner.phoneNumber) lookups.push(scammerRepository.findByContactField("phones", owner.phoneNumber));
+  if (owner.email) lookups.push(scammerRepository.findByContactField("emails", owner.email));
+  if (lookups.length === 0) return TRUST_STATUS_CLEAR;
+
+  const results = await Promise.all(lookups.map((p) => p.catch(() => [] as ScammerDocument[])));
+  const verified = results.flat().filter((s) => s.status === "verified");
+  if (verified.length === 0) return TRUST_STATUS_CLEAR;
+
+  return {
+    status: "flagged",
+    matchedProfileSlugs: [...new Set(verified.map((s) => s.seoSlug))],
+  };
 }

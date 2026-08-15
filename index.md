@@ -245,6 +245,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 
 | Name | Path | What it does |
 |------|------|-------------|
+| `SellerTrustBadge` | `features/scams/components/SellerTrustBadge.tsx` | P-12 — "✓ Verified Safe" / "⚠ Flagged in Scam Registry" badge on `StoreHeader`, backed by `getSellerTrustStatus(storeId)` (checks only admin-verified scammer profiles). Named `SellerTrustBadge`, not `TrustBadge` — that name is already taken by the unrelated homepage-marketing-section config type in `features/homepage`. |
 | `WishlistView` | `features/wishlist/components/WishlistView.tsx` | User wishlist product grid |
 | `WishlistToggleButton` | `features/wishlist/components/WishlistToggleButton.tsx` | Heart toggle button for wishlisting a product |
 | `ProductsView` | `features/products/components/ProductsView.tsx` | Public standard products listing |

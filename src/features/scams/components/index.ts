@@ -6,3 +6,6 @@ export type { ScamProfileViewProps } from "./ScamProfileView";
 
 export { ScamAwarenessModal } from "./ScamAwarenessModal";
 export type { ScamAwarenessModalProps } from "./ScamAwarenessModal";
+
+export { SellerTrustBadge } from "./SellerTrustBadge";
+export type { SellerTrustBadgeProps } from "./SellerTrustBadge";

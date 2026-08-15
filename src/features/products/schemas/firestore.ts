@@ -244,6 +244,10 @@ export interface ProductDocument extends BaseDocument {
   isSold?: boolean;
   /** When true, an EMI order for this product ships as soon as it's confirmed instead of waiting for every installment to be paid. Default false. */
   allowShipBeforeEmiComplete?: boolean;
+  /** P-8 GST — buyer-facing tax rate on this product (%). Unset/0 = exempt. */
+  gstRate?: 0 | 5 | 12 | 18 | 28;
+  /** P-8 GST — Harmonized System of Nomenclature code for GST-compliant invoices. */
+  hsnCode?: string;
   /** Print-specific metadata for "art" / "stickers" listings — printed-only physical goods. Optional on every listing type; only populated for art/stickers. */
   printMeta?: ProductPrintMeta;
   promotionEndDate?: Date;

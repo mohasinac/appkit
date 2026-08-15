@@ -12,6 +12,8 @@ import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ShareButton } from "../../products/components/ShareButton";
 import { StoreScopedSearch } from "./StoreScopedSearch";
+import { SellerTrustBadge } from "../../scams/components/SellerTrustBadge";
+import type { SellerTrustResult } from "../../scams/actions/scam-actions";
 import type { StoreDetail } from "../types";
 
 const __O = {
@@ -34,6 +36,8 @@ interface StoreHeaderProps {
   };
   onFollow?: (storeSlug: string) => void;
   className?: string;
+  /** P-12 — omitted (undefined) when the scam registry feature is off; no badge renders. */
+  trust?: SellerTrustResult;
 }
 
 export function StoreHeader({
@@ -41,6 +45,7 @@ export function StoreHeader({
   labels = {},
   onFollow,
   className = "",
+  trust,
 }: StoreHeaderProps) {
   return (
     <Section surface="default" border="bottom" className={className}>
@@ -73,6 +78,7 @@ export function StoreHeader({
                   ★ {store.averageRating.toFixed(1)}
                 </Span>
               )}
+              {trust && <SellerTrustBadge trust={trust} />}
             </Row>
             <Row textSize="xs" className="text-[var(--appkit-color-text-muted)] mb-0.5" gap="3">
               {(store as any).category && <Span transform="capitalize">{(store as any).category}</Span>}

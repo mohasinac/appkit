@@ -109,6 +109,13 @@ export interface OrderDocumentItem {
  prizeRevealDeadline?: string;
  /** SB8-F â€" set after the reveal API picks a winner. */
   revealedItemNumber?: number;
+  /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
+  cancelledQuantity?: number;
+  cancelledAt?: Date;
+  cancelledReason?: string;
+  /** P-8 GST — snapshotted from the product at order time so the invoice stays accurate even if the product's HSN/rate later changes. */
+  hsnCode?: string;
+  gstRate?: 0 | 5 | 12 | 18 | 28;
 }
 
 /**
@@ -189,6 +196,17 @@ export interface OrderDocument extends BaseDocument {
   codRemainingAmount?: number;
   /** COD handling fee charged to the buyer: max(codHandlingFeeMinInPaise, subtotal × codHandlingFeePercent / 100). Only set when paymentMethod === "cod". */
   codHandlingFee?: number;
+
+  // ── P-8 GST — buyer-facing tax breakdown, all paise, set when siteSettings.gst.enabled ──
+  /** Order subtotal before GST — the amount GST is computed on. */
+  taxableAmount?: number;
+  /** Total GST charged (cgst + sgst, or igst — never both pairs at once). */
+  gstAmount?: number;
+  /** Intra-state half: buyer and seller/store pickup address share the same state. */
+  cgst?: number;
+  sgst?: number;
+  /** Inter-state: buyer and seller/store pickup address are in different states. */
+  igst?: number;
 
   // ── EMI (installment) fields — only set when paymentMethod === "emi" ────────
   emiEnabled?: boolean;

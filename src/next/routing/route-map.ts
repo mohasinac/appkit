@@ -157,6 +157,7 @@ export const DEFAULT_ROUTE_MAP = {
   },
   STORE: {
     DASHBOARD: "/store",
+    MESSAGES: "/store/messages",
     PRODUCTS: "/store/products",
     PRODUCTS_NEW: "/store/products/new",
     PRODUCTS_EDIT: (id: string) => `/store/products/${id}/edit`,

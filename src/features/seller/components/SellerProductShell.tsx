@@ -69,6 +69,9 @@ export interface SellerProductDraft {
   pickupAddressId?: string;
   insurance?: boolean;
   insuranceCost?: number;
+  // P-8 GST
+  gstRate?: 0 | 5 | 12 | 18 | 28;
+  hsnCode?: string;
   // Publish
   status?: "draft" | "published";
   seoTitle?: string;
@@ -1000,6 +1003,27 @@ function StepShipping({
           placeholder="0"
         />
       )}
+      <FormField
+        name="gstRate"
+        label="GST Rate"
+        type="select"
+        value={String(values.gstRate ?? 0)}
+        onChange={(v) => onChange({ gstRate: Number(v) as 0 | 5 | 12 | 18 | 28 })}
+        options={[
+          { value: "0", label: "Exempt (0%)" },
+          { value: "5", label: "5%" },
+          { value: "12", label: "12%" },
+          { value: "18", label: "18%" },
+          { value: "28", label: "28%" },
+        ]}
+      />
+      <FormField
+        name="hsnCode"
+        label="HSN Code"
+        value={values.hsnCode ?? ""}
+        onChange={(v) => onChange({ hsnCode: v })}
+        placeholder="e.g. 9503"
+      />
     </Stack>
   );
 }

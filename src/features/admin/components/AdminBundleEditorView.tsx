@@ -35,13 +35,14 @@ import {
 import { FieldInput } from "../../../ui/forms";
 import type { UseFormShellStateResult } from "../../../ui/forms/FormShell";
 import { apiClient } from "../../../http";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS, SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { BundleDynamicRuleEditor } from "../../categories/components/BundleDynamicRuleEditor";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 import {
   BUNDLE_MIN_ITEMS,
   BUNDLE_MAX_ITEMS,
+  BUNDLE_KIND_SPECIAL,
 } from "../../../_internal/shared/features/categories/bundle-config";
 import type { BundleQueryRule, CategoryDocument } from "../../categories/schemas";
 
@@ -69,6 +70,13 @@ export interface AdminBundleEditorViewProps {
   onSaved?: (id: string) => void;
   /** Called after a successful delete. */
   onDeleted?: () => void;
+  /**
+   * "admin" (default) hits /api/admin/bundles and lets the product picker
+   * search all products. "store" hits /api/store/bundles (server-scoped to
+   * the caller's own store) and restricts the picker to the seller's own
+   * products.
+   */
+  scope?: "admin" | "store";
 }
 
 interface FormState {
@@ -136,8 +144,16 @@ export function AdminBundleEditorView({
   bundleId,
   onSaved,
   onDeleted,
+  scope = "admin",
 }: AdminBundleEditorViewProps) {
   const isEdit = Boolean(bundleId);
+  const endpoints = React.useMemo(
+    () =>
+      scope === "admin"
+        ? { collection: ADMIN_ENDPOINTS.BUNDLES, byId: ADMIN_ENDPOINTS.BUNDLE_BY_ID }
+        : { collection: SELLER_ENDPOINTS.BUNDLES, byId: SELLER_ENDPOINTS.BUNDLE_BY_ID },
+    [scope],
+  );
 
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [loading, setLoading] = useState(isEdit);
@@ -157,7 +173,7 @@ export function AdminBundleEditorView({
     let cancelled = false;
     setLoading(true);
     apiClient
-      .get(ADMIN_ENDPOINTS.BUNDLE_BY_ID(encodeURIComponent(bundleId)))
+      .get(endpoints.byId(encodeURIComponent(bundleId)))
       .then((res) => {
         if (cancelled) return;
         const json = res as { data?: CategoryDocument };
@@ -178,7 +194,7 @@ export function AdminBundleEditorView({
     return () => {
       cancelled = true;
     };
-  }, [bundleId]);
+  }, [bundleId, endpoints]);
 
   const handleSave = useCallback(async () => {
     clearErrors();
@@ -215,6 +231,7 @@ export function AdminBundleEditorView({
       const body = {
         name: form.name.trim(),
         description: form.description.trim() || undefined,
+        bundleKind: BUNDLE_KIND_SPECIAL,
         bundlePriceInPaise: priceInPaise,
         bundleQueryRule,
         bundleProductIds,
@@ -226,13 +243,13 @@ export function AdminBundleEditorView({
 
       if (isEdit && bundleId) {
         await apiClient.put(
-          ADMIN_ENDPOINTS.BUNDLE_BY_ID(encodeURIComponent(bundleId)),
+          endpoints.byId(encodeURIComponent(bundleId)),
           body,
         );
         showToast("Bundle saved.", "success");
         onSaved?.(bundleId);
       } else {
-        const res = (await apiClient.post(ADMIN_ENDPOINTS.BUNDLES, body)) as {
+        const res = (await apiClient.post(endpoints.collection, body)) as {
           data?: CategoryDocument;
         };
         const newId = res?.data?.id;
@@ -247,7 +264,7 @@ export function AdminBundleEditorView({
     } finally {
       setSaving(false);
     }
-  }, [form, bundleId, isEdit, onSaved, clearErrors, setFieldError, showToast]);
+  }, [form, bundleId, isEdit, onSaved, clearErrors, setFieldError, showToast, endpoints]);
 
   const handleDelete = useCallback(async () => {
     if (!bundleId) return;
@@ -255,7 +272,7 @@ export function AdminBundleEditorView({
     setApiError(null);
     try {
       await apiClient.delete(
-        ADMIN_ENDPOINTS.BUNDLE_BY_ID(encodeURIComponent(bundleId)),
+        endpoints.byId(encodeURIComponent(bundleId)),
       );
       showToast("Bundle deleted.", "success");
       setDeleteConfirmOpen(false);
@@ -268,7 +285,7 @@ export function AdminBundleEditorView({
     } finally {
       setDeleting(false);
     }
-  }, [bundleId, onDeleted, showToast]);
+  }, [bundleId, onDeleted, showToast, endpoints]);
 
   if (loading) {
     return (
@@ -415,7 +432,7 @@ export function AdminBundleEditorView({
                     {BUNDLE_COPY.adminEditor.ruleTypeStatic} products ({BUNDLE_MIN_ITEMS}–{BUNDLE_MAX_ITEMS})
                   </Text>
                   <ProductInlineSelect
-                    scope="admin"
+                    scope={scope}
                     multiple
                     value={form.productIds}
                     onChange={(ids) => setForm((f) => ({ ...f, productIds: ids }))}

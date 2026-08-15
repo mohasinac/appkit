@@ -22,6 +22,9 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
         ...(item.revealedItemNumber != null
           ? { revealedItemNumber: item.revealedItemNumber }
           : {}),
+        ...(item.cancelledQuantity != null
+          ? { cancelledQuantity: item.cancelledQuantity }
+          : {}),
       }))
     : [
         {

@@ -6,6 +6,7 @@ import { ROUTES } from "../../../next";
 import { Container, Main, Section, Text } from "../../../ui";
 import { STORE_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { isListingTypeEnabled, isCategoryTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
+import { getSellerTrustStatus } from "../../scams/actions/scam-actions";
 import { StoreHeader } from "./StoreHeader";
 import { StoreNavTabs } from "./StoreNavTabs";
 import type { StoreDetail } from "../types";
@@ -37,6 +38,13 @@ export interface StoreDetailLayoutViewProps {
   /** The current active tab value: "products" | "auctions" | "reviews" | "about" */
   activeTab: string;
   children: ReactNode;
+  /**
+   * P-12 — gates the trust badge behind the same FEATURE_SCAM_REGISTRY flag
+   * that gates the registry itself (pending legal sign-off). Consumer passes
+   * `getFlag("SCAM_REGISTRY")`; appkit has no access to that env reader.
+   * Defaults to `false` — off unless the consumer explicitly opts in.
+   */
+  scamRegistryEnabled?: boolean;
 }
 
 function tabLabel(base: string, count?: number) {
@@ -48,6 +56,7 @@ export async function StoreDetailLayoutView({
   storeSlug,
   activeTab,
   children,
+  scamRegistryEnabled = false,
 }: StoreDetailLayoutViewProps) {
   const store = await getStoreBySlug(storeSlug);
 
@@ -65,7 +74,12 @@ export async function StoreDetailLayoutView({
 
   const storeId = (store as Record<string, any>)?.id;
 
-  const settings = await siteSettingsRepository.findById("global").catch(() => null);
+  const [settings, trust] = await Promise.all([
+    siteSettingsRepository.findById("global").catch(() => null),
+    scamRegistryEnabled && storeId
+      ? getSellerTrustStatus(storeId).catch(() => undefined)
+      : Promise.resolve(undefined),
+  ]);
 
   const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, classifiedsCount, digitalCodesCount, liveCount, artCount, stickersCount, couponsCount, reviewsCount] = storeId
     ? await Promise.all([
@@ -166,7 +180,7 @@ export async function StoreDetailLayoutView({
 
   return (
     <Main>
-      <StoreHeader store={store as unknown as StoreDetail} />
+      <StoreHeader store={store as unknown as StoreDetail} trust={trust} />
       <Container size="xl" className="mt-6">
         <StoreNavTabs tabs={tabs} activeValue={activeTab} />
         <Section padding="t-lg">{children}</Section>

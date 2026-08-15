@@ -79,3 +79,29 @@ export function computeCodHandlingFee(subtotal: number, rates: CodHandlingFeeRat
   const percentFee = Math.round(subtotal * (percent / 100));
   return Math.max(minInPaise, percentFee);
 }
+
+/**
+ * P-8 GST — buyer-facing product tax, distinct from the platform-commission
+ * GST above. Intra-state orders split the rate evenly between CGST + SGST;
+ * inter-state orders charge the full rate as IGST. All amounts in paise.
+ */
+export interface GstBreakdown {
+  taxableAmount: number;
+  cgst: number;
+  sgst: number;
+  igst: number;
+  gstAmount: number;
+}
+
+export function calculateGst(
+  rate: number,
+  intraState: boolean,
+  taxableAmountInPaise: number,
+): GstBreakdown {
+  const gstAmount = Math.round(taxableAmountInPaise * (rate / 100));
+  if (intraState) {
+    const half = Math.round(gstAmount / 2);
+    return { taxableAmount: taxableAmountInPaise, cgst: half, sgst: half, igst: 0, gstAmount: half * 2 };
+  }
+  return { taxableAmount: taxableAmountInPaise, cgst: 0, sgst: 0, igst: gstAmount, gstAmount };
+}

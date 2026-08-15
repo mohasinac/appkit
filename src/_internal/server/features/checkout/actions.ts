@@ -20,7 +20,11 @@ import {
   couponsRepository,
   notificationRepository,
   claimedCouponsRepository,
+  addressesRepository,
 } from "../../../../repositories";
+import { calculateGst } from "../../../shared/fees/calculator";
+import { computePreOrderDepositAmount } from "../../../shared/checkout/order-math";
+import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import type {
   FailedCheckoutReason,
@@ -259,16 +263,24 @@ function accumulateCouponUsage(
 
 async function resolveShippingCost(
   storeId: string | undefined,
-): Promise<{ shippingFee: number; storeOwnerId: string | undefined; storeEmiEnabled: boolean }> {
-  if (!storeId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled: false };
+): Promise<{ shippingFee: number; storeOwnerId: string | undefined; storeEmiEnabled: boolean; storeState: string | undefined }> {
+  if (!storeId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled: false, storeState: undefined };
   const store = await storeRepository.findById(storeId);
   const storeOwnerId = store?.ownerId;
   const storeEmiEnabled = store?.emiEnabled === true;
-  if (!storeOwnerId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled };
+  const storeState = await resolveStoreState(storeId);
+  if (!storeOwnerId) return { shippingFee: 0, storeOwnerId: undefined, storeEmiEnabled, storeState };
   const sellerUser = await userRepository.findById(storeOwnerId);
   const shippingConfig = sellerUser?.shippingConfig;
-  if (!shippingConfig?.isConfigured) return { shippingFee: 0, storeOwnerId, storeEmiEnabled };
-  return { shippingFee: shippingConfig.customShippingPrice ?? 0, storeOwnerId, storeEmiEnabled };
+  if (!shippingConfig?.isConfigured) return { shippingFee: 0, storeOwnerId, storeEmiEnabled, storeState };
+  return { shippingFee: shippingConfig.customShippingPrice ?? 0, storeOwnerId, storeEmiEnabled, storeState };
+}
+
+/** P-8 GST — the seller's registered/pickup state, used to determine intra- vs inter-state tax. */
+async function resolveStoreState(storeId: string): Promise<string | undefined> {
+  const addresses = await addressesRepository.listByOwner("store", storeId);
+  const pickup = addresses.find((a) => a.isDefault) ?? addresses[0];
+  return pickup?.state;
 }
 
 function buildStockUpdatePayload(
@@ -388,6 +400,10 @@ interface OrderGroupContext {
   outOfStockPolicy: OutOfStockPolicy;
   /** Full session's dropped items ("skip_items" policy) — set on every order created from this checkout batch. */
   droppedItems: NonNullable<CheckoutOrderResult["unavailableItems"]>;
+  /** P-8 GST — buyer's shipping-address state, used to determine intra- vs inter-state tax. Undefined for digital-only carts. */
+  buyerState?: string;
+  /** P-8 GST — undefined/disabled means no GST is computed on this checkout. */
+  gstSettings?: SiteSettingsDocument["gst"];
 }
 
 /**
@@ -422,6 +438,8 @@ async function createOrderForGroup(
     emailsToSend,
     outOfStockPolicy,
     droppedItems,
+    buyerState,
+    gstSettings,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -445,6 +463,10 @@ async function createOrderForGroup(
           }
         : {};
     const unitPrice = unitPriceFor(item, product);
+    const gstFields =
+      product.gstRate != null
+        ? { gstRate: product.gstRate, ...(product.hsnCode ? { hsnCode: product.hsnCode } : {}) }
+        : {};
     const baseLine = {
       productId: item.productId,
       productTitle: item.productTitle,
@@ -452,19 +474,46 @@ async function createOrderForGroup(
       unitPrice,
       totalPrice: unitPrice * item.quantity,
       ...bundleFields,
+      ...gstFields,
     };
     return itemRule.decorateOrderItem(baseLine, product);
   });
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
-  const { shippingFee, storeOwnerId, storeEmiEnabled } = await resolveShippingCost(
+  const { shippingFee, storeOwnerId, storeEmiEnabled, storeState } = await resolveShippingCost(
     firstItem.storeId,
   );
 
+  // P-8 GST — sum per-line-item tax (each product may carry its own gstRate),
+  // then split the group total into a single cgst/sgst/igst breakdown for the
+  // order document. Skipped entirely when GST is off or the buyer's state is
+  // unknown (digital-only carts have no shipping address).
+  let gstBreakdown: { taxableAmount: number; cgst: number; sgst: number; igst: number; gstAmount: number } | undefined;
+  if (gstSettings?.enabled && buyerState) {
+    const intraState = !!storeState && storeState === buyerState;
+    let taxableAmount = 0;
+    let gstAmount = 0;
+    for (const { item, product } of group) {
+      const lineTotal = unitPriceFor(item, product) * item.quantity;
+      const rate = product.gstRate ?? 0;
+      if (rate > 0) {
+        taxableAmount += lineTotal;
+        gstAmount += calculateGst(rate, intraState, lineTotal).gstAmount;
+      }
+    }
+    if (taxableAmount > 0) {
+      gstBreakdown = intraState
+        ? { taxableAmount, cgst: Math.round(gstAmount / 2), sgst: gstAmount - Math.round(gstAmount / 2), igst: 0, gstAmount }
+        : { taxableAmount, cgst: 0, sgst: 0, igst: gstAmount, gstAmount };
+    }
+  }
+
   const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual" || paymentMethod === "cash";
-  const depositAmount = isCodLike
-    ? Math.round(groupTotal * (commissions.codDepositPercent / 100) * 100) / 100
-    : undefined;
+  const depositAmount = !isCodLike
+    ? undefined
+    : orderType === "preorder"
+      ? computePreOrderDepositAmount(group, commissions.codDepositPercent)
+      : Math.round(groupTotal * (commissions.codDepositPercent / 100) * 100) / 100;
   const codRemainingAmount = isCodLike
     ? Math.round((groupTotal - (depositAmount ?? 0)) * 100) / 100
     : undefined;
@@ -542,7 +591,7 @@ async function createOrderForGroup(
 
   couponDiscount = Math.min(couponDiscount, groupTotal);
   const orderTotal =
-    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + (emiSchedule?.surchargeAmount ?? 0);
+    Math.max(0, groupTotal - couponDiscount) + shippingFee + codHandlingFee + (emiSchedule?.surchargeAmount ?? 0) + (gstBreakdown?.gstAmount ?? 0);
 
   const imageUrls = [
     ...new Set(
@@ -588,6 +637,11 @@ async function createOrderForGroup(
     depositAmount: adminBypass ? undefined : depositAmount,
     codRemainingAmount: adminBypass ? undefined : codRemainingAmount,
     codHandlingFee: !adminBypass && codHandlingFee > 0 ? codHandlingFee : undefined,
+    taxableAmount: gstBreakdown?.taxableAmount,
+    gstAmount: gstBreakdown?.gstAmount,
+    cgst: gstBreakdown?.cgst || undefined,
+    sgst: gstBreakdown?.sgst || undefined,
+    igst: gstBreakdown?.igst || undefined,
     emiEnabled: !adminBypass && !!emiSchedule ? true : undefined,
     emiTenureMonths: !adminBypass && emiSchedule ? emiTenureMonths : undefined,
     emiTokenAmount: !adminBypass ? emiSchedule?.tokenAmount : undefined,
@@ -985,6 +1039,8 @@ export async function createCheckoutOrderAction(
     emailsToSend,
     outOfStockPolicy,
     droppedItems: unavailable,
+    buyerState: resolvedAddress?.state,
+    gstSettings: siteSettings?.gst,
   };
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
@@ -1490,6 +1546,15 @@ export async function verifyAndPlaceRazorpayOrderAction(
     const platformFee = rawPlatformFee + gstOnFee;
     const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
     total += orderTotal;
+    // P-8 GST — deliberately NOT wired into this Razorpay-verify path. The
+    // amount-mismatch check above (expectedPaymentAmountRs) compares against
+    // what the buyer already paid via the Razorpay order created earlier in
+    // the flow; adding product GST here without also adding it to that
+    // upstream pre-payment amount calculation would either fail the mismatch
+    // check or silently under/over-charge. Wiring GST through the full
+    // Razorpay create→verify round-trip is separate follow-up work, tracked
+    // alongside P-13 (Razorpay is disabled by default today, so this order
+    // type doesn't currently carry a GST breakdown).
 
     // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
     const orderItems = group.map(({ item, product }) => {
