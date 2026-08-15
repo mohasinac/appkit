@@ -11,7 +11,7 @@ export interface CategoryInlineSelectProps {
   onChange: (v: string) => void;
   placeholder?: string;
   disabled?: boolean;
-  /** Show the "+ Create new category" option. Defaults to false (search-only for sellers). */
+  /** Show the "+ Create new category" option. Defaults to true — sellers can create categories inline. */
   allowCreate?: boolean;
 }
 
@@ -63,7 +63,7 @@ export function CategoryInlineSelect({
   onChange,
   placeholder = "Search categories…",
   disabled,
-  allowCreate = false,
+  allowCreate = true,
 }: CategoryInlineSelectProps) {
   const loadOptions = allowCreate ? loadAdminCategoryOptions : loadPublicCategoryOptions;
   return (
