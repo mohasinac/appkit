@@ -47,7 +47,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
   /**
    * Create new coupon with SEO-friendly ID based on code
    */
-  async create(input: CouponCreateInput | Partial<CouponDocument> | FirestoreDocument): Promise<CouponDocument> {
+  override async create(input: CouponCreateInput | Partial<CouponDocument> | FirestoreDocument): Promise<CouponDocument> {
     // Narrow to the expected create-input shape — the base class accepts a
     // broader union for FieldValue/Date passthrough.
     const data = input as CouponCreateInput;

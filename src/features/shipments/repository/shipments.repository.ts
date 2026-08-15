@@ -40,7 +40,7 @@ export class ShipmentsRepository extends BaseRepository<ShipmentDocument> {
     }
   }
 
-  async create(input: ShipmentCreateInput): Promise<ShipmentDocument> {
+  override async create(input: ShipmentCreateInput): Promise<ShipmentDocument> {
     await this.assertShipmentNumberAvailable(input.shipmentNumber);
     const id = createShipmentId({ supplierName: input.supplierName });
     const data: Omit<ShipmentDocument, "id"> = {

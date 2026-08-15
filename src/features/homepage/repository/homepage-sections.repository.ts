@@ -46,7 +46,7 @@ export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDo
     );
   }
 
-  async create(
+  override async create(
     input: HomepageSectionCreateInput,
   ): Promise<HomepageSectionDocument> {
     const id = createHomepageSectionId(input.type);

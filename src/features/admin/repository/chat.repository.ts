@@ -55,7 +55,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
   /**
    * Create a new chat room (buyer ↔ seller for an order)
    */
-  async create(input: ChatRoomCreateInput): Promise<ChatRoomDocument> {
+  override async create(input: ChatRoomCreateInput): Promise<ChatRoomDocument> {
     const id = input.isGroup
       ? `chat_group_${Date.now()}`
       : `chat_${input.buyerId}_${input.ownerId}_${input.orderId}`;

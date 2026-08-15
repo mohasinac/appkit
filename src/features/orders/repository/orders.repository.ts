@@ -62,7 +62,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return this.decryptOrder(raw) as unknown as D;
   }
 
-  async create(input: OrderCreateInput): Promise<OrderDocument> {
+  override async create(input: OrderCreateInput): Promise<OrderDocument> {
     const orderDate = new Date();
     const id = createOrderId(input.quantity, orderDate);
 

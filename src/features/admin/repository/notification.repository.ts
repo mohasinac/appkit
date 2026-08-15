@@ -186,7 +186,7 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
   /**
    * Create a new notification.
    */
-  async create(input: NotificationCreateInput): Promise<NotificationDocument> {
+  override async create(input: NotificationCreateInput): Promise<NotificationDocument> {
     try {
       const now = new Date();
       const data = prepareForFirestore({
@@ -215,7 +215,7 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
   /**
    * Delete a notification by ID.
    */
-  async delete(id: string): Promise<void> {
+  override async delete(id: string): Promise<void> {
     try {
       await this.getCollection().doc(id).delete();
       serverLogger.info("Notification deleted", { id });
@@ -272,7 +272,7 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
    * Cloud Functions: stage notification creation into a caller-owned WriteBatch.
    * Returns the new DocumentReference synchronously for chaining.
    */
-  createInBatch(
+  override createInBatch(
     batch: WriteBatch,
     input: NotificationCreateInput,
   ): DocumentReference {

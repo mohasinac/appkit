@@ -16,7 +16,7 @@ export class ApiError extends Error {
   readonly status: number;
   readonly issues?: ApiIssue[];
   readonly requestId?: string;
-  readonly cause?: Error;
+  override readonly cause?: Error;
 
   constructor(
     code: string,

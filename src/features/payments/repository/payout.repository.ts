@@ -75,7 +75,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   /**
    * Create a new payout request
    */
-  async create(input: PayoutCreateInput): Promise<PayoutDocument> {
+  override async create(input: PayoutCreateInput): Promise<PayoutDocument> {
     const now = new Date();
     const id = createPayoutId({ sellerName: input.sellerName, date: now });
 

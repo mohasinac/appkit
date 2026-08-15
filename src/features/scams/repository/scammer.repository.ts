@@ -75,7 +75,7 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
     }
   }
 
-  async create(input: ScammerCreateInput): Promise<ScammerDocument> {
+  override async create(input: ScammerCreateInput): Promise<ScammerDocument> {
     try {
       const now = new Date();
       const id = input.displayNames[0]

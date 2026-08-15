@@ -163,7 +163,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     return updated;
   }
 
-  async create(input: ProductCreateInput): Promise<ProductDocument> {
+  override async create(input: ProductCreateInput): Promise<ProductDocument> {
     // Slug = document ID: derive slug from title first, then ensure uniqueness.
     const baseSlug = input.slug || slugify(input.title);
 

@@ -272,7 +272,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
    *
    * @returns Promise<boolean>
    */
-  async exists(): Promise<boolean> {
+  override async exists(): Promise<boolean> {
     try {
       const doc = await this.db
         .collection(this.collection)

@@ -64,7 +64,7 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
   /**
    * Create new carousel slide with SEO-friendly ID
    */
-  async create(
+  override async create(
     input: CarouselSlideCreateInput,
   ): Promise<CarouselSlideDocument> {
     // Generate carousel ID from title

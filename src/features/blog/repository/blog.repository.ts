@@ -44,7 +44,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     }
   }
 
-  async create(input: BlogPostCreateInput): Promise<BlogPostDocument> {
+  override async create(input: BlogPostCreateInput): Promise<BlogPostDocument> {
     try {
       const now = new Date();
       const id = createBlogPostId(input.title, input.category);
@@ -66,7 +66,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     }
   }
 
-  async update(
+  override async update(
     id: string,
     input: BlogPostUpdateInput,
   ): Promise<BlogPostDocument> {
@@ -84,7 +84,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
     }
   }
 
-  async delete(id: string): Promise<void> {
+  override async delete(id: string): Promise<void> {
     try {
       await this.db.collection(this.collection).doc(id).delete();
     } catch (error) {

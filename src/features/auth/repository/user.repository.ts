@@ -96,7 +96,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return super.createWithId(id, encrypted);
   }
 
-  async create(
+  override async create(
     input: Omit<UserDocument, "id" | "createdAt" | "updatedAt">,
   ): Promise<UserDocument> {
     const firstName = input.displayName?.split(" ")[0] || "user";

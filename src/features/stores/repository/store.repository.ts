@@ -70,7 +70,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
    * this enforces that storeSlug is always a unique identifier and is
    * structurally distinct from the owner's Firebase UID.
    */
-  async create(
+  override async create(
     input: Omit<StoreDocument, "id" | "createdAt" | "updatedAt">,
   ): Promise<StoreDocument> {
     // Defense-in-depth: storeSlug must never equal the owner UID so that

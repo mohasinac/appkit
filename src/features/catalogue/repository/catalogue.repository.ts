@@ -22,7 +22,7 @@ export class CatalogueRepository extends BaseRepository<CatalogueItemDocument> {
     super(CATALOGUE_COLLECTION);
   }
 
-  async create(input: CatalogueItemCreateInput): Promise<CatalogueItemDocument> {
+  override async create(input: CatalogueItemCreateInput): Promise<CatalogueItemDocument> {
     const id = createCatalogueItemId({ ownerSlug: input.ownerId, title: input.title });
     const now = new Date();
     const data: Omit<CatalogueItemDocument, "id"> = {

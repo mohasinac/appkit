@@ -94,7 +94,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.log.error("ErrorBoundary caught an error", {
       error: error.message,
       stack: error.stack,
@@ -111,7 +111,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
     this.setState({ hasError: false, error: null });
   };
 
-  render() {
+  override render() {
     if (!this.state.hasError) {
       return this.props.children;
     }

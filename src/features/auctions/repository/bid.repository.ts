@@ -50,7 +50,7 @@ export class BidRepository extends BaseRepository<BidDocument> {
   /**
    * Create new bid with auto-generated ID
    */
-  async create(input: BidCreateInput): Promise<BidDocument> {
+  override async create(input: BidCreateInput): Promise<BidDocument> {
     const bidIdInput = {
       productName: input.productTitle,
       userFirstName: input.userName.split(" ")[0] || input.userName,

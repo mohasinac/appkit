@@ -46,7 +46,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
 
   // --- Create --------------------------------------------------------------
 
-  async create(input: OfferCreateInput): Promise<OfferDocument> {
+  override async create(input: OfferCreateInput): Promise<OfferDocument> {
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 48 * 60 * 60 * 1000); // 48 h
     const id = createOfferId({

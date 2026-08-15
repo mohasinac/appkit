@@ -32,7 +32,7 @@ export class ProductTemplateRepository extends BaseRepository<ProductTemplateDoc
     return `${PRODUCT_TEMPLATE_PREFIX}${base}`;
   }
 
-  async create(input: ProductTemplateCreateInput): Promise<ProductTemplateDocument> {
+  override async create(input: ProductTemplateCreateInput): Promise<ProductTemplateDocument> {
     const id = this.generateId(input.storeId, input.name);
     const doc: Omit<ProductTemplateDocument, "id"> = {
       ...input,
@@ -46,7 +46,7 @@ export class ProductTemplateRepository extends BaseRepository<ProductTemplateDoc
     return { id, ...doc };
   }
 
-  async update(id: string, input: ProductTemplateUpdateInput): Promise<ProductTemplateDocument> {
+  override async update(id: string, input: ProductTemplateUpdateInput): Promise<ProductTemplateDocument> {
     const update = { ...input, updatedAt: new Date() };
     await this.db
       .collection(this.collection)

@@ -99,7 +99,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
     return this.listFiltered({ scope: "store", storeId, isActive: true });
   }
 
-  async create(
+  override async create(
     input: ProductFeatureCreateInput,
   ): Promise<ProductFeatureDocument> {
     if (input.scope === "store" && !input.storeId) {
@@ -142,7 +142,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
     }
   }
 
-  async update(
+  override async update(
     id: string,
     input: ProductFeatureUpdateInput,
   ): Promise<ProductFeatureDocument> {
@@ -165,7 +165,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
    * in product.features[]. Admin/store UIs should surface a "this feature is in
  * use" message instead of silently unlinking.
    */
-  async delete(id: string): Promise<void> {
+  override async delete(id: string): Promise<void> {
     try {
       const referencing = await this.db
         .collection(PRODUCT_COLLECTION)

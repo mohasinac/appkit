@@ -75,7 +75,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     ]) as unknown as D;
   }
 
-  async create(input: ReviewCreateInput): Promise<ReviewDocument> {
+  override async create(input: ReviewCreateInput): Promise<ReviewDocument> {
     const firstName = input.userName.split(" ")[0] || input.userName;
     const id = createReviewId(input.productTitle, firstName, new Date());
 
