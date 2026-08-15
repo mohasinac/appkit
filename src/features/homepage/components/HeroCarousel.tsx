@@ -344,7 +344,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   if (isLoading) {
     return (
       <Div className={`relative w-full ${heightClass} ${HERO_PLACEHOLDER_BG} animate-pulse`}>
-        <Div layout="flex" align="center" justify="start" className={`${POSITION_FILL} p-[var(--appkit-space-4)]`}>
+        <Div layout="flex" align="center" justify="center" className={`${POSITION_FILL} p-[var(--appkit-space-4)]`}>
           <Text variant="secondary">Loading...</Text>
         </Div>
       </Div>

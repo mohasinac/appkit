@@ -75,6 +75,9 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
     };
 
     // Add event listeners for both mouse and touch
+    // audit-touch-handler-ok: single-shot "did a touch start outside this
+    // element" detection, no gesture-in-progress state to leave stale if the
+    // touch is later cancelled.
     document.addEventListener(eventType, handleClickOutside);
     document.addEventListener("touchstart", handleClickOutside);
 

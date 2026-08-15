@@ -19,7 +19,7 @@
  * 2 when called from the stop hook (blocking).
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
@@ -117,13 +117,19 @@ function hasUseClient(content) {
  * Returns the client hooks imported (if any) and which packages they come from.
  * We parse import statements literally rather than using AST for speed.
  *
- * Detects two classes of client-only imports:
+ * Detects three classes of client-only imports:
  *   1. Named hooks from known client-only packages (react, next-intl, next/navigation).
  *   2. Any identifier matching /^use[A-Z]/ from a **local** module (relative path
  *      starting with "./" or "../"). Local hooks named `useX` are React hooks by
  *      convention; importing one from a server-component file would crash at SSR
  *      with "No QueryClient set" / "context not found" / similar provider-missing
  *      errors. Caught: 2026-05-24 TitleBar.tsx missing "use client" → prod 500.
+ *   3. Namespace-qualified calls (`React.useId()`, `React.useState()`, …) when the
+ *      file does `import React from "react"` / `import * as React from "react"`
+ *      instead of destructuring. Root cause: SHARED-BUG-18 (2026-08-15) —
+ *      DateInput.tsx/Textarea.tsx/Select.tsx all called `React.useId()` with no
+ *      "use client" directive and went undetected because this function only
+ *      matched the destructured `import { useId } from "react"` form.
  */
 function findClientImports(content, currentFile = "") {
   const found = [];
@@ -145,6 +151,26 @@ function findClientImports(content, currentFile = "") {
       }
     }
   }
+
+  // Namespace/default imports: `import React from "react"`, `import * as React
+  // from "react"` — then look for `React.useX(` call sites against the same
+  // per-package hook allowlist used for the destructured form above.
+  const nsImportRE = /import\s+(?:\*\s+as\s+)?(\w+)\s+from\s*['"]([^'"]+)['"]/g;
+  while ((m = nsImportRE.exec(content)) !== null) {
+    const localName = m[1];
+    const pkg = m[2];
+    const hooksForPkg = CLIENT_HOOK_IMPORTS[pkg];
+    if (!hooksForPkg) continue;
+    const callRE = new RegExp(`\\b${localName}\\.(use[A-Za-z]+)\\s*\\(`, "g");
+    let callMatch;
+    while ((callMatch = callRE.exec(content)) !== null) {
+      const hookName = callMatch[1];
+      if (hooksForPkg.includes(hookName)) {
+        found.push({ hook: `${localName}.${hookName}`, pkg });
+      }
+    }
+  }
+
   return found;
 }
 

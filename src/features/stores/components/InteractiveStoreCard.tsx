@@ -57,6 +57,7 @@ export function InteractiveStoreCard({
       onMouseLeave={!isSelected ? longPress.onMouseLeave : undefined}
       onTouchStart={!isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={!isSelected ? longPress.onTouchEnd : undefined}
+      onTouchCancel={!isSelected ? longPress.onTouchCancel : undefined}
     >
       {/* Hover/selection checkbox */}
       {onSelect && (

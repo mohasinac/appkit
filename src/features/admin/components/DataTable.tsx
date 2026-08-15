@@ -103,6 +103,7 @@ function SelectableRow<T extends { id: string }>({
       onMouseLeave={selectionEnabled && !isSelected ? longPress.onMouseLeave : undefined}
       onTouchStart={selectionEnabled && !isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={selectionEnabled && !isSelected ? longPress.onTouchEnd : undefined}
+      onTouchCancel={selectionEnabled && !isSelected ? longPress.onTouchCancel : undefined}
       className={`hover:bg-[var(--appkit-color-bg)] dark:hover:bg-[var(--appkit-color-bg)] ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`} border="default"
     >
       {selectionEnabled && (

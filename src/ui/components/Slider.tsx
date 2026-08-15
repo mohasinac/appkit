@@ -98,6 +98,9 @@ export function Slider({
           disabled={disabled}
           onChange={handleChange}
           onMouseUp={handleChangeEnd}
+          // audit-touch-handler-ok: native <input type="range"> owns its own
+          // drag/cancel state; no persisted React state here to leak on a
+          // cancelled touch, onChangeEnd simply not firing is acceptable.
           onTouchEnd={handleChangeEnd}
           className={[
             "appkit-slider relative z-10 bg-transparent",

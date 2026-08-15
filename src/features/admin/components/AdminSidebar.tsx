@@ -58,7 +58,7 @@ function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: bo
  }`}
     >
       {item.icon && <Span size="base" className="shrink-0 opacity-60">{item.icon}</Span>}
-      <Span align="end" className="flex-1 truncate">{item.label}</Span>
+      <Span className="flex-1 truncate">{item.label}</Span>
     </Link>
   );
 }

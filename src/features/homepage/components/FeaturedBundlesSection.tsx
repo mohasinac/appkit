@@ -46,6 +46,7 @@ export function FeaturedBundlesSection({
   onBuyNow,
 }: FeaturedBundlesSectionProps) {
   const items = initialItems.filter((c) => c.categoryType === "bundle");
+  if (items.length === 0) return null;
 
   return (
     <Section className={`${className}`} padding="y-2xl">
@@ -70,17 +71,11 @@ export function FeaturedBundlesSection({
           </Link>
         </Row>
 
-        {items.length === 0 ? (
-          <Div className="border-dashed text-left" padding="y-3xl" rounded="xl" border="default">
-            <Text color="muted">{BUNDLE_COPY.featured.empty}</Text>
-          </Div>
-        ) : (
-          <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-            {items.map((bundle) => (
-              <FeaturedBundleCard key={bundle.id} bundle={bundle} onBuyNow={onBuyNow} />
-            ))}
-          </Div>
-        )}
+        <Div layout="grid" gap="3" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+          {items.map((bundle) => (
+            <FeaturedBundleCard key={bundle.id} bundle={bundle} onBuyNow={onBuyNow} />
+          ))}
+        </Div>
       </Stack>
     </Section>
   );

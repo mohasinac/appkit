@@ -1,7 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
-import Link from "next/link";
 import {
   Container,
   Div,
@@ -10,7 +9,6 @@ import {
   Stack,
   Text,
 } from "../../../ui";
-import { ROUTES } from "../../../next";
 import type { EventRafflesSectionConfig } from "../../homepage/schemas/firestore";
 import { eventRepository } from "../repository/events.repository";
 import { EventCard } from "./EventCard";
@@ -45,6 +43,8 @@ export async function EventRafflesSection({
     events = [];
   }
 
+  if (events.length === 0) return null;
+
   return (
     <Section padding="y-2xl">
       <Container size="xl">
@@ -61,29 +61,11 @@ export async function EventRafflesSection({
             ) : null}
           </Stack>
 
-          {events.length === 0 ? (
-            <Stack
-              align="start"
-              gap="sm"
-              className="border-dashed text-left" border="strong" paddingY="y-3xl" paddingX="x-lg" rounded="2xl"
-            >
-              <Text size="sm" color="muted">
-                No upcoming raffles — keep an eye on the events page.
-              </Text>
-              <Link
-                href={String(ROUTES.PUBLIC.EVENTS)}
-                className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
-              >
-                Browse all events →
-              </Link>
-            </Stack>
-          ) : (
-            <Div gap="3" className="fluid-grid-card">
-              {events.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </Div>
-          )}
+          <Div gap="3" className="fluid-grid-card">
+            {events.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </Div>
         </Stack>
       </Container>
     </Section>

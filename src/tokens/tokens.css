@@ -311,9 +311,16 @@
   --appkit-logo-stop-to:              var(--appkit-color-secondary-400);
 }
 
-/* --- Theme — Dark ([data-theme="dark"]) ----------------------------------- */
-/* Dark mode: both primary & secondary become Hot Pink (Beyblade 2 dominant colour) */
-[data-theme="dark"] {
+/* --- Theme — Dark ([data-theme="default-dark"]) ---------------------------- */
+/* Dark mode: both primary & secondary become Hot Pink (Beyblade 2 dominant colour).
+   Selector MUST match ThemeRecord.id ("default-dark"), not the ThemeMode ("dark") —
+   ThemeProvider.applyTheme() sets data-theme to the record id, never "dark" literally.
+   A prior mismatch here left this whole block unreachable (dead CSS), which also
+   caused a "swamp green" FOUC flash: the anti-FOUC script sets .dark + the correct
+   data-theme id before hydration, but with no matching CSS selector the page kept
+   painting :root's light-mode secondary (lime green) until React's inline styles
+   landed a moment later. */
+[data-theme="default-dark"] {
   --appkit-color-primary:          #e91e8c;
   --appkit-color-primary-50:       #fdf0f8;
   --appkit-color-primary-100:      #fce2f2;

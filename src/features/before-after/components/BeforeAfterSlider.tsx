@@ -19,6 +19,10 @@ export function BeforeAfterSlider({
     move(e.clientX);
   }
 
+  // audit-touch-handler-ok: position is derived fresh from each move event's
+  // coordinates, no "dragging in progress" flag or timer persists across
+  // gestures — a cancelled touch just leaves `position` at its last value,
+  // which is the same outcome as the user simply stopping mid-drag.
   function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
     move(e.touches[0].clientX);
   }

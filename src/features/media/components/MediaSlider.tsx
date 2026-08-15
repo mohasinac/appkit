@@ -35,6 +35,8 @@ export function MediaSlider({
       onMouseUp={(e) =>
         onChangeEnd?.(parseFloat((e.target as HTMLInputElement).value))
       }
+      // audit-touch-handler-ok: native <input type="range"> owns its own
+      // drag/cancel state; nothing here persists across a cancelled touch.
       onTouchEnd={(e) =>
         onChangeEnd?.(parseFloat((e.target as HTMLInputElement).value))
       }

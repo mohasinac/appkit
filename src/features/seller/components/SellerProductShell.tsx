@@ -6,7 +6,7 @@ import { z } from "zod";
 import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
 import { FormShellProvider } from "../../../ui/forms";
-import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, TagInput, Text, Toggle, useToast } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
@@ -266,14 +266,10 @@ function StepBasic({
           placeholder="e.g. Pokémon Company"
         />
       )}
-      <FormField
-        name="tags"
-        label="Tags (comma-separated)"
-        type="text"
-        value={(values.tags ?? []).join(", ")}
-        onChange={(v) =>
-          onChange({ tags: v.split(",").map((t) => t.trim()).filter(Boolean) })
-        }
+      <TagInput
+        label="Tags"
+        value={values.tags ?? []}
+        onChange={(tags) => onChange({ tags })}
         placeholder="pokemon, psa9, charizard, holo"
       />
       <BarcodeField
@@ -321,6 +317,8 @@ function StepMedia({
         onChange={(url) => onChange({ mainImage: url })}
         label="Main Image"
         helperText="Recommended: 800×800px square (JPG, PNG, WebP — max 10 MB)"
+        enableAdvancedCrop
+        cropAspectRatio={1}
       />
       <MediaUploadList
         label="Gallery Images (up to 10)"

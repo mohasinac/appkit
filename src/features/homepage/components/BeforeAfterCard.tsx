@@ -62,11 +62,16 @@ export function BeforeAfterCard({
     window.addEventListener("mouseup", onUp);
     window.addEventListener("touchmove", onMove, { passive: false });
     window.addEventListener("touchend", onUp);
+    // Without this, an interrupted touch (OS/browser gesture takeover)
+    // never fires touchend — `dragging` stays true forever, leaking these
+    // window-level listeners for the rest of the component's lifetime.
+    window.addEventListener("touchcancel", onUp);
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
       window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onUp);
+      window.removeEventListener("touchcancel", onUp);
     };
   }, [dragging, updatePosition]);
 

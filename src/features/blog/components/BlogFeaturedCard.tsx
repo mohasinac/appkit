@@ -70,6 +70,7 @@ export function BlogFeaturedCard({
       onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
       onTouchStart={onSelect && !isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={onSelect && !isSelected ? longPress.onTouchEnd : undefined}
+      onTouchCancel={onSelect && !isSelected ? longPress.onTouchCancel : undefined}
     >
       {onSelect && (
         <BaseListingCard.Checkbox

@@ -145,6 +145,7 @@ export function ImageCropModal({
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
         >
           <img
             src={imageUrl}

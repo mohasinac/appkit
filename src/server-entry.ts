@@ -308,12 +308,10 @@ export {
 // import directly from `@mohasinac/appkit/jobs`.
 
 // S6: client scaffolds (server-side type-aware import; runtime is "use client")
-export { AppShell, DashboardScaffold } from "./_internal/client/scaffolds/index";
+export { AppShell } from "./_internal/client/scaffolds/index";
 export type {
   AppShellProps,
   AppShellRenderContext,
-  DashboardScaffoldProps,
-  DashboardScaffoldRenderContext,
 } from "./_internal/client/scaffolds/index";
 
 // CC-3: hydration helpers

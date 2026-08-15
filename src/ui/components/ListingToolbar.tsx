@@ -155,7 +155,7 @@ export function ListingToolbar({
   return (
     <div
       data-testid="listing-toolbar"
-      className={`sticky top-[var(--header-height,0px)] z-20 border-b border-[var(--appkit-color-border)] bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
+      className={`sticky top-[var(--header-height,0px)] z-20 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
 

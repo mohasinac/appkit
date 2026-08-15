@@ -10,7 +10,7 @@ const COMPONENTS_DIR = join(__dirname, "..");
 // class of violation currently slips past that audit entirely — this test is
 // the actual regression guard until the audit script is widened.
 describe("'use client' directive present on files using React.useId() via namespace import", () => {
-  for (const file of ["DateInput.tsx", "Textarea.tsx", "Select.tsx"]) {
+  for (const file of ["DateInput.tsx", "Textarea.tsx", "Select.tsx", "Input.tsx"]) {
     it(`${file} starts with "use client"`, () => {
       const src = readFileSync(join(COMPONENTS_DIR, file), "utf8");
       const firstLine = src.split("\n")[0].trim();

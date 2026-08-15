@@ -11,7 +11,7 @@ import { normalizeError } from "../../../errors/normalize";
 import { useState, useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
-import { Alert, Button, Div, Label, Progress, Row, Spinner, Stack, Text } from "../../../ui";
+import { Alert, Button, Div, Label, Progress, Row, Spinner, Stack, Text, useToast } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { ImageCropModal } from "../modals/ImageCropModal";
 import type { ImageCropData } from "../modals/ImageCropModal";
@@ -85,6 +85,7 @@ export function ImageUpload({
   const tUpload = useTranslations("upload");
   const tMediaEditor = useTranslations("mediaEditor");
   const { isSupported: isCameraSupported } = useCamera();
+  const { showToast } = useToast();
 
   const showCamera =
     captureSource === "camera-only" ||
@@ -93,7 +94,7 @@ export function ImageUpload({
     captureSource === "file-only" ||
     (captureSource === "both" && captureMode === "file");
 
-  const performUpload = async (file: File, cropData?: ImageCropData) => {
+  const performUpload = async (file: File, cropData?: ImageCropData): Promise<boolean> => {
     try {
       setUploading(true);
       setProgress(30);
@@ -102,11 +103,17 @@ export function ImageUpload({
       setPreview(url);
       onChange?.(url);
       if (cropData) onCropDataChange?.(cropData);
+      return true;
     } catch (err) {
       void normalizeError(err);
       const message = err instanceof Error ? err.message : "Upload failed";
       setError(message);
       setPreview(currentImage || "");
+      // The crop/advanced-editor modal stays open on failure (callers only
+      // close it when this resolves true) — without a toast too, the error
+      // was easy to miss below the button the closed modal used to cover.
+      showToast(message, "error");
+      return false;
     } finally {
       setUploading(false);
       setProgress(0);
@@ -133,11 +140,14 @@ export function ImageUpload({
     reader.readAsDataURL(file);
   };
 
-  const handleCropSave = (cropData: ImageCropData) => {
-    setShowCropModal(false);
-    if (pendingFile) void performUpload(pendingFile, cropData);
-    setCropPreviewUrl(null);
-    setPendingFile(null);
+  const handleCropSave = async (cropData: ImageCropData) => {
+    if (!pendingFile) return;
+    const ok = await performUpload(pendingFile, cropData);
+    if (ok) {
+      setShowCropModal(false);
+      setCropPreviewUrl(null);
+      setPendingFile(null);
+    }
   };
 
   const handleCropClose = () => {
@@ -149,11 +159,13 @@ export function ImageUpload({
     }
   };
 
-  const handleAdvancedEditorSave = (croppedFile: File) => {
-    setShowAdvancedEditor(false);
-    setCropPreviewUrl(null);
-    setPendingFile(null);
-    void performUpload(croppedFile);
+  const handleAdvancedEditorSave = async (croppedFile: File) => {
+    const ok = await performUpload(croppedFile);
+    if (ok) {
+      setShowAdvancedEditor(false);
+      setCropPreviewUrl(null);
+      setPendingFile(null);
+    }
   };
 
   const openEditor = (url: string) => {

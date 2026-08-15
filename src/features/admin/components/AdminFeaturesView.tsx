@@ -23,7 +23,7 @@ const PAGE_SIZE = 50;
 const DEFAULT_SCOPE: ProductFeatureScope = "platform";
 
 const STICKY_TABS_CLASS =
-  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-white/95 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]";
+  "sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]";
 
 interface AdminFeaturesResponse {
   items?: JsonArray;

@@ -124,6 +124,7 @@ export function MarketplacePreorderCard({
       onMouseLeave={!isSelected ? longPress.onMouseLeave : undefined}
       onTouchStart={!isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={!isSelected ? longPress.onTouchEnd : undefined}
+      onTouchCancel={!isSelected ? longPress.onTouchCancel : undefined}
     >
       <BaseListingCard.Hero aspect="square" variant={variant}>
         <TextLink href={detailHref} className="absolute inset-0 block">

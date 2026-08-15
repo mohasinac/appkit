@@ -94,9 +94,14 @@ export function Card({
   hover = false,
   animate,
   surface,
+  paddingX,
+  paddingY,
   rounded,
+  roundedTop,
+  roundedBottom,
   border,
   shadow,
+  overflow,
   className = "",
   style,
   onClick,
@@ -109,7 +114,7 @@ export function Card({
     spacing ? CARD_SPACING_MAP[spacing] : "",
     hover ? "appkit-card--hoverable" : "",
     onClick ? "appkit-card--clickable" : "",
-    buildSurfaceClasses({ surface, rounded, border, shadow }),
+    buildSurfaceClasses({ surface, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }),
     className,
   ]
     .filter(Boolean)

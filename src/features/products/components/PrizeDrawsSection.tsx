@@ -1,7 +1,6 @@
 import { normalizeError } from "../../../errors/normalize";
 import { sieveFilter, sieveAnd, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
-import Link from "next/link";
 import {
   Container,
   Div,
@@ -46,6 +45,8 @@ export async function PrizeDrawsSection({
     draws = [];
   }
 
+  if (draws.length === 0) return null;
+
   return (
     <Section padding="y-2xl">
       <Container size="xl">
@@ -62,33 +63,15 @@ export async function PrizeDrawsSection({
             ) : null}
           </Stack>
 
-          {draws.length === 0 ? (
-            <Stack
-              align="start"
-              gap="sm"
-              className="border-dashed text-left" border="strong" paddingY="y-3xl" paddingX="x-lg" rounded="2xl"
-            >
-              <Text size="sm" color="muted">
-                No active prize draws — new draws are announced regularly.
-              </Text>
-              <Link
-                href={String(ROUTES.PUBLIC.AUCTIONS)}
-                className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
-              >
-                Browse live auctions →
-              </Link>
-            </Stack>
-          ) : (
-            <Div gap="3" className="fluid-grid-card">
-              {draws.map((draw) => (
-                <InteractiveProductCard
-                  key={draw.id}
-                  product={draw as unknown as Parameters<typeof InteractiveProductCard>[0]["product"]}
-                  href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(draw.slug ?? draw.id ?? ""))}
-                />
-              ))}
-            </Div>
-          )}
+          <Div gap="3" className="fluid-grid-card">
+            {draws.map((draw) => (
+              <InteractiveProductCard
+                key={draw.id}
+                product={draw as unknown as Parameters<typeof InteractiveProductCard>[0]["product"]}
+                href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(draw.slug ?? draw.id ?? ""))}
+              />
+            ))}
+          </Div>
         </Stack>
       </Container>
     </Section>

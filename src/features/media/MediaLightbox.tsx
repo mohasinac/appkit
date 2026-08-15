@@ -445,6 +445,13 @@ export function MediaLightbox({
     [zoom, goNext, goPrev],
   );
 
+  // An interrupted gesture (OS/browser takeover) never fires touchend —
+  // without this, stale touchState.current values corrupt the math for the
+  // next unrelated pinch/swipe gesture.
+  const handleTouchCancel = useCallback(() => {
+    touchState.current = {};
+  }, []);
+
   if (!isOpen || items.length === 0) return null;
 
   const current = items[index];
@@ -467,6 +474,7 @@ export function MediaLightbox({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
         style={{
           cursor: zoom > 1 ? (isDragging ? "grabbing" : "grab") : "default",
           touchAction: "none",

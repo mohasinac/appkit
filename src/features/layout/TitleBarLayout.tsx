@@ -306,7 +306,7 @@ export function TitleBarLayout({
   return (
     <BlockHeader
       id={id}
-      className={`sticky top-0 z-50 bg-white/95 bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b border-zinc-100 border-[var(--appkit-color-border-subtle)] shadow-sm ${className}`}
+      className={`sticky top-0 z-50 bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b border-[var(--appkit-color-border-subtle)] shadow-sm ${className}`}
     >
       {/* Promo strip */}
       {promoStripText && (

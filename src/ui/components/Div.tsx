@@ -130,11 +130,11 @@ export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceP
 }
 
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
-  ({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, textSize, textWeight, layout, gap, align, lgAlign, justify, overflow, children, ...props }, ref) => (
+  ({ className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, color, textSize, textWeight, layout, gap, align, lgAlign, justify, overflow, children, ...props }, ref) => (
     <div
       ref={ref}
       className={[
-        buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
+        buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow }),
         color ? DIV_COLOR_MAP[color] : "",
         textSize ? DIV_TEXT_SIZE_MAP[textSize] : "",
         textWeight ? DIV_TEXT_WEIGHT_MAP[textWeight] : "",

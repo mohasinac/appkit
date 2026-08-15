@@ -991,6 +991,7 @@ export function ProductForm({
         value={(product.sublistingCategoryId as string) ?? ""}
         onChange={(id) => update({ sublistingCategoryId: id || undefined })}
         disabled={isReadonly}
+        allowCreate
       />
 
       {/* ── Join existing group — create + edit mode, hidden for auctions ── */}

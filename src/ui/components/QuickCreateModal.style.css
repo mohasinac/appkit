@@ -79,6 +79,6 @@
   }
 }
 
-[data-theme="dark"] .appkit-quick-create-modal__panel {
+[data-theme="default-dark"] .appkit-quick-create-modal__panel {
   background: var(--appkit-color-surface-dark, #1e293b);
 }

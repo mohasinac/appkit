@@ -123,7 +123,7 @@ export function NavbarLayout({
     <Nav border="subtle" 
       id={id}
       aria-label={ariaLabel}
-      className="hidden lg:block bg-white/95 bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b"
+      className="hidden lg:block bg-[var(--appkit-color-bg)]/95 backdrop-blur-md border-b"
     >
       <Row className="container mx-auto sm:px-[var(--appkit-space-6)] lg:px-[var(--appkit-space-8)] max-w-[1920px] h-10" padding="x-md" align="center">
         {/* Scrollable items area */}

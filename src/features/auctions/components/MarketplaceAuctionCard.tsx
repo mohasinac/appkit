@@ -443,6 +443,7 @@ export function MarketplaceAuctionCard({
       onMouseLeave={!isSelected ? longPress.onMouseLeave : undefined}
       onTouchStart={!isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={!isSelected ? longPress.onTouchEnd : undefined}
+      onTouchCancel={!isSelected ? longPress.onTouchCancel : undefined}
     >
       {renderAuctionCardHero({ product, auctionHref, currentSrc, hovered, images, imageIndex, hasVideo, isEnded, isEndingSoon, isSelected, selectable, mergedLabels, onSelect, setHovered, handleSelect })}
       <BaseListingCard.Info variant={baseVariant}>

@@ -12,6 +12,9 @@ export interface BaseListingCardIconOverlayProps {
   position?: string;
 }
 
+// audit-touch-handler-ok: pure passthrough props onto the DOM element, no
+// owned gesture state — callers wiring their own useLongPress() (see the
+// card components) are responsible for their own onTouchCancel.
 export interface BaseListingCardRootProps {
   className?: string;
   isSelected?: boolean;
@@ -24,6 +27,7 @@ export interface BaseListingCardRootProps {
   onMouseLeave?: () => void;
   onTouchStart?: () => void;
   onTouchEnd?: () => void;
+  onTouchCancel?: () => void;
 }
 
 export interface BaseListingCardHeroProps {
@@ -61,6 +65,7 @@ function BaseListingCardRoot({
   onMouseLeave,
   onTouchStart,
   onTouchEnd,
+  onTouchCancel,
   children,
 }: BaseListingCardRootProps) {
   return (
@@ -71,6 +76,7 @@ function BaseListingCardRoot({
       onMouseLeave={onMouseLeave}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchCancel}
       className={[
         "group relative w-full min-w-0 overflow-hidden rounded-xl border bg-[var(--appkit-color-surface)] transition-shadow",
         variant === "list" ? "flex flex-row items-stretch" : "flex flex-col",
@@ -180,7 +186,7 @@ function BaseListingCardCheckbox({
         "focus-visible:ring-2 focus-visible:ring-primary/50",
         selected
           ? "bg-primary border-primary shadow-sm"
-          : "bg-white/80 border-zinc-300/80 hover:border-primary/60 hover:bg-[var(--appkit-color-surface)]/80 border-[var(--appkit-color-border)]",
+          : "bg-white/80 hover:border-primary/60 hover:bg-[var(--appkit-color-surface)]/80 border-[var(--appkit-color-border)]",
         position,
         className,
       ]
@@ -229,7 +235,7 @@ function BaseListingCardIconOverlay({
       <Span
         key={key}
         size="sm"
-        className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-white/80 bg-white/95 bg-[var(--appkit-color-surface)]/95 shadow-sm leading-none"
+        className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-white/80 bg-[var(--appkit-color-surface)]/95 shadow-sm leading-none"
       >
         {icon}
       </Span>

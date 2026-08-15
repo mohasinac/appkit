@@ -953,7 +953,14 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
         },
       },
     ],
-    defaultLightThemeId: "crimson-warrior",
-    defaultDarkThemeId: "shadow-abyss",
+    // Reverted 2026-08-15 — the live site had drifted onto the "Teal Tide" /
+    // "Teal Depths" custom pair (added in a prior session's theme-experiment
+    // sweep), which is not the brand's cobalt+lime/hot-pink identity. The
+    // custom themes above stay available as selectable options (nothing
+    // deleted); this just restores the appkit built-ins as what's live by
+    // default. buildThemeRegistry() always resolves "default-light"/
+    // "default-dark" to the true built-in records regardless of this list.
+    defaultLightThemeId: "default-light",
+    defaultDarkThemeId: "default-dark",
   },
 };

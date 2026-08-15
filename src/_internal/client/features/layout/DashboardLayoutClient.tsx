@@ -24,16 +24,18 @@ import { normalizeError } from "../../../../errors/normalize";
 
 import { useCallback, useEffect, useState, startTransition, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useDashboardNav } from "../../../../features/layout/DashboardNavContext";
 import { AdminSidebar, type AdminNavGroup } from "../../../../features/admin/components/AdminSidebar";
 import { StoreSidebar, type StoreNavGroup } from "../../../../features/seller/components/SellerSidebar";
 import { UserSidebar, type UserNavGroup } from "../../../../features/account/components/UserSidebar";
-import type { DashboardVariant, SidebarNavGroup, SectionResponsive } from "../../../shared/features/layout/types";
+import type { DashboardVariant, SidebarNavGroup, SidebarNavItem, SectionResponsive } from "../../../shared/features/layout/types";
 import { DASHBOARD_DESKTOP_MEDIA_QUERY } from "../../../shared/features/layout/config";
 import { filterNavItems } from "./filterNavItems";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 import { useTheme } from "../../theme";
-import { BackgroundRenderer, Div, type BackgroundConfig } from "../../../../ui";
+import { BackgroundRenderer, Div, Nav, Span, type BackgroundConfig } from "../../../../ui";
+import { useVisualViewportInset } from "../../../../react/hooks/useVisualViewportInset";
 
 export interface DashboardLayoutClientProps {
   /** Drives sidebar component selection + accent colour. */
@@ -154,6 +156,43 @@ function filterGroups<T extends SidebarNavGroup>(
     .filter((group) => group.items.length > 0) as T[];
 }
 
+const MAX_BOTTOM_NAV_ITEMS = 5;
+
+/**
+ * Mobile bottom tab bar (<lg) for the dashboard shells. Admin/store/user
+ * previously had no bottom-nav — this was the source of "hard to navigate
+ * on mobile" (the sidebar's only mobile affordance was an off-canvas drawer
+ * behind a hamburger toggle). Pattern lifted from the unused
+ * `DashboardScaffold` scaffold, which has since been retired in favour of
+ * wiring it directly here where the sidebars already live.
+ */
+function DashboardBottomNav({ items, activeHref }: { items: SidebarNavItem[]; activeHref: string }) {
+  const isKeyboardOpen = useVisualViewportInset();
+  if (items.length === 0) return null;
+  return (
+    <Nav
+      aria-label="Dashboard bottom navigation"
+      aria-hidden={isKeyboardOpen}
+      className={`fixed bottom-0 left-0 right-0 z-[var(--appkit-z-bottom-nav)] flex items-stretch justify-around border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] lg:hidden transition-transform duration-200 ease-out ${isKeyboardOpen ? "translate-y-full pointer-events-none" : "translate-y-0"}`}
+    >
+      {items.slice(0, MAX_BOTTOM_NAV_ITEMS).map((item) => {
+        const isActive = activeHref === item.href || activeHref.startsWith(`${item.href}/`);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex flex-1 flex-col items-center justify-center gap-[var(--appkit-space-0-5)] py-[var(--appkit-space-2)] ${isActive ? "text-[var(--appkit-color-primary)]" : "text-[var(--appkit-color-text-muted)]"}`}
+            aria-current={isActive ? "page" : undefined}
+          >
+            {item.icon && <Span size="base">{item.icon}</Span>}
+            <Span size="xs" className="max-w-full truncate">{item.label}</Span>
+          </Link>
+        );
+      })}
+    </Nav>
+  );
+}
+
 const DEFAULT_CONTENT_PADDING = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10";
 const DEFAULT_CONTENT_MAX_WIDTH = "max-w-screen-2xl";
 
@@ -245,11 +284,13 @@ export function DashboardLayoutClient({
           Inner wrapper caps width on ultra-wide screens so content does not flush to the far left. */}
       <Div className={[
         "w-full flex-1 flex flex-col min-h-[calc(100dvh-var(--header-height,3.5rem))]",
+        "pb-[var(--appkit-space-16)] lg:pb-[0]", // clears the fixed mobile bottom-nav
         contentPadding ?? DEFAULT_CONTENT_PADDING,
         contentSurface,
       ].filter(Boolean).join(" ")}>
         <Div className={["w-full flex-1 mx-auto", contentMaxWidth ?? DEFAULT_CONTENT_MAX_WIDTH].filter(Boolean).join(" ")}>{children}</Div>
       </Div>
+      <DashboardBottomNav items={filteredGroups.flatMap((g) => g.items)} activeHref={activeHref} />
     </>
   );
 }
