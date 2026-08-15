@@ -51,7 +51,7 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-border-subtle": "#f4f4f5",
     "appkit-color-text": "#18181b",
     "appkit-color-text-muted": "#71717a",
-    "appkit-color-text-faint": "#a1a1aa",
+    "appkit-color-text-faint": "#87878f",
     "appkit-color-text-on-primary": "#ffffff",
 
     "appkit-color-success": "#059669",

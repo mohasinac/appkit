@@ -263,7 +263,7 @@
 
   --appkit-color-text:             #18181b;    /* zinc-900 */
   --appkit-color-text-muted:       #71717a;    /* zinc-500 */
-  --appkit-color-text-faint:       #a1a1aa;    /* zinc-400 */
+  --appkit-color-text-faint:       #87878f;    /* zinc-400 darkened for WCAG AA large-text 3:1 on --appkit-color-bg (audit-a11y) */
   --appkit-color-text-on-primary:  #ffffff;
   --appkit-color-text-on-dark:     #ffffff;
 

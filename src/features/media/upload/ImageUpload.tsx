@@ -9,14 +9,25 @@ import { normalizeError } from "../../../errors/normalize";
  */
 
 import { useState, useRef, ChangeEvent } from "react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useCamera } from "../../../react";
 import { Alert, Button, Div, Label, Progress, Row, Spinner, Stack, Text, useToast } from "../../../ui";
 import { MediaImage } from "../MediaImage";
-import { ImageCropModal } from "../modals/ImageCropModal";
 import type { ImageCropData } from "../modals/ImageCropModal";
-import { ImageEditor } from "../modals/ImageEditor";
 import CameraCapture from "./CameraCapture";
+
+// Crop/editor modals pull in image-manipulation libraries (react-advanced-cropper
+// and friends) that most upload sessions never open — lazy-load so that weight
+// isn't in the initial bundle for every page that renders an ImageUpload field.
+const ImageCropModal = dynamic(
+  () => import("../modals/ImageCropModal").then((m) => m.ImageCropModal),
+  { ssr: false },
+);
+const ImageEditor = dynamic(
+  () => import("../modals/ImageEditor").then((m) => m.ImageEditor),
+  { ssr: false },
+);
 
 const __O = {
   hidden: "overflow-hidden",

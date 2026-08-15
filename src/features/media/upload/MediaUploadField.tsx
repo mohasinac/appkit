@@ -12,13 +12,20 @@ import { useCamera } from "../../../react";
 import { Alert, Anchor, Button, Div, Label, Row, Span, Spinner, Stack, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
-import { VideoTrimModal } from "../modals/VideoTrimModal";
+import dynamic from "next/dynamic";
 import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
 import { extractVideoPosterFrame, posterBlobAsFile } from "./video-poster";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
 import { normalizeError } from "../../../errors/normalize";
+
+// Pulls in video-processing libraries most upload sessions never touch —
+// lazy-load rather than bundle into every page rendering a MediaUploadField.
+const VideoTrimModal = dynamic(
+  () => import("../modals/VideoTrimModal").then((m) => m.VideoTrimModal),
+  { ssr: false },
+);
 
 /**
  * SB-UNI-Z5 2026-05-13 — `kind` prop UX sugar. When set, the component
