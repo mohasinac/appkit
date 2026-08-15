@@ -36,34 +36,39 @@ function isSafeHref(href: string): boolean {
   return /^(https?:\/\/|mailto:|\/(?!\/)|#)/i.test(trimmed);
 }
 
+function sanitizeAttribute(el: HTMLElement, attr: Attr): void {
+  const isSafeAnchorHref = el.tagName === "A" && attr.name.toLowerCase() === "href";
+  if (!isSafeAnchorHref) {
+    el.removeAttribute(attr.name);
+    return;
+  }
+  if (!isSafeHref(attr.value)) el.setAttribute("href", "#");
+}
+
+function sanitizeElement(root: DocumentFragment | HTMLElement, el: HTMLElement): void {
+  if (!ALLOWED_TAGS.has(el.tagName)) {
+    root.removeChild(el);
+    return;
+  }
+  Array.from(el.attributes).forEach((attr) => sanitizeAttribute(el, attr));
+  sanitizeChildren(el);
+}
+
+function sanitizeChildren(root: DocumentFragment | HTMLElement): void {
+  Array.from(root.childNodes).forEach((child) => {
+    if (child.nodeType === Node.ELEMENT_NODE) {
+      sanitizeElement(root, child as HTMLElement);
+    } else if (child.nodeType !== Node.TEXT_NODE) {
+      root.removeChild(child);
+    }
+  });
+}
+
 function sanitizeRichTextHtml(html: string): string {
   if (typeof document === "undefined" || !html) return "";
   const template = document.createElement("template");
   template.innerHTML = html;
-
-  const walk = (root: DocumentFragment | HTMLElement) => {
-    Array.from(root.childNodes).forEach((child) => {
-      if (child.nodeType === Node.ELEMENT_NODE) {
-        const el = child as HTMLElement;
-        if (!ALLOWED_TAGS.has(el.tagName)) {
-          root.removeChild(el);
-          return;
-        }
-        Array.from(el.attributes).forEach((attr) => {
-          if (el.tagName === "A" && attr.name.toLowerCase() === "href") {
-            if (!isSafeHref(attr.value)) el.setAttribute("href", "#");
-            return;
-          }
-          el.removeAttribute(attr.name);
-        });
-        walk(el);
-      } else if (child.nodeType !== Node.TEXT_NODE) {
-        root.removeChild(child);
-      }
-    });
-  };
-
-  walk(template.content);
+  sanitizeChildren(template.content);
   return template.innerHTML;
 }
 
