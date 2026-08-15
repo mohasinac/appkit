@@ -37,5 +37,10 @@ export function useLongPress(callback: () => void, ms = 500) {
     onMouseLeave: cancel,
     onTouchStart: start,
     onTouchEnd: cancel,
+    // Browsers fire touchcancel (not touchend) when a touch is reinterpreted
+    // as a scroll — common for cards in a scrollable list. Without this the
+    // pending timer survives and can fire the callback after what was really
+    // just a scroll, contradicting the "quick taps do NOT fire" contract.
+    onTouchCancel: cancel,
   };
 }

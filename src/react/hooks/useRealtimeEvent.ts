@@ -82,6 +82,13 @@ export function useRealtimeEvent<TData = undefined>(
   config: UseRealtimeEventConfig<TData>,
 ): UseRealtimeEventReturn<TData> {
   const configRef = useRef(config);
+  // Re-sync every render — callers commonly pass a fresh config object
+  // (new extractData/messages/onLogError) each render, and subscribe()/
+  // cleanup() only ever read configRef.current, so without this the very
+  // first render's config would be captured forever.
+  useEffect(() => {
+    configRef.current = config;
+  });
 
   const [status, setStatus] = useState<RealtimeEventStatus>(
     RealtimeEventStatus.IDLE,
@@ -144,6 +151,15 @@ export function useRealtimeEvent<TData = undefined>(
             `useRealtimeEvent[${type}]: custom token sign-in failed`,
             authErr,
           );
+          // A newer subscribe() call for a different eventId may have already
+          // superseded this one (and possibly already fully subscribed) while
+          // this sign-in was still in flight. Do NOT call cleanup() here —
+          // cleanup() tears down whatever is *currently* registered in the
+          // shared refs, which by now may be the newer call's live
+          // subscription, not anything this stale call ever set up itself.
+          if (eventIdRef.current !== eventId) {
+            return;
+          }
           setError(msg.tokenFailure);
           setStatus(RealtimeEventStatus.FAILED);
           cleanup();
@@ -151,7 +167,8 @@ export function useRealtimeEvent<TData = undefined>(
         }
 
         if (eventIdRef.current !== eventId) {
-          cleanup();
+          // Same reasoning as the catch branch above — don't tear down a
+          // newer call's already-live subscription via the shared refs.
           return;
         }
 

@@ -35,7 +35,18 @@ export function UnsavedChangesModal({ labels = {} }: UnsavedChangesModalProps) {
       UNSAVED_CHANGES_EVENT,
       (...args: unknown[]) => {
         const resolveFn = args[0] as UnsavedChangesResolve;
-        setResolve(() => resolveFn);
+        setResolve((prevResolve: UnsavedChangesResolve | null) => {
+          // A second UNSAVED_CHANGES_EVENT arrived before the user answered
+          // the first — resolve that abandoned promise with `false` instead
+          // of silently overwriting it and leaving it pending forever.
+          prevResolve?.(false);
+          // Returning `resolveFn` directly (not `() => resolveFn`) is
+          // correct here — the double-wrap trick is only needed when
+          // passing setState a bare function *value* (to stop React from
+          // treating it as an updater); inside an updater callback the
+          // return value already becomes the next state as-is.
+          return resolveFn;
+        });
         setIsOpen(true);
       },
     );

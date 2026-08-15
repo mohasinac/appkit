@@ -42,13 +42,18 @@ function getPageNumbers(
   }
 
   const pages: (number | "...")[] = [];
-  const halfVisible = Math.floor(maxVisible / 2);
+  // Split unevenly (floor/ceil) around (maxVisible - 1) rather than using a
+  // single halved value on both sides — `Math.floor(maxVisible / 2)` on
+  // both sides produces a window of `2*halfVisible + 1`, which is one page
+  // too many whenever maxVisible is even.
+  const before = Math.floor((maxVisible - 1) / 2);
+  const after = Math.ceil((maxVisible - 1) / 2);
 
-  let startPage = Math.max(1, currentPage - halfVisible);
-  let endPage = Math.min(totalPages, currentPage + halfVisible);
+  let startPage = Math.max(1, currentPage - before);
+  let endPage = Math.min(totalPages, currentPage + after);
 
-  if (currentPage <= halfVisible) endPage = maxVisible;
-  if (currentPage >= totalPages - halfVisible)
+  if (currentPage <= before) endPage = maxVisible;
+  if (currentPage >= totalPages - after)
     startPage = totalPages - maxVisible + 1;
 
   if (startPage > 1) {

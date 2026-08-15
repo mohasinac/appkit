@@ -47,15 +47,18 @@ const PADDING_CLS: Record<StickyToolbarPadding, string> = {
   toolbar: "px-3 py-1.5",
 };
 
-function resolveOffset(offset: StickyToolbarOffset): string {
+function resolveOffsetClass(offset: StickyToolbarOffset): string {
   if (offset === "header") {
     return "top-[var(--header-height,0px)]";
   }
   if (offset === "header+nav") {
     return "top-[calc(var(--header-height,0px)+var(--appkit-navbar-height,2.5rem))]";
   }
-  // Numeric pixel offset.
-  return `top-[${offset}px]`;
+  // Numeric offsets are applied via inline style instead (see below) —
+  // Tailwind's static scanner can never see a dynamically-interpolated
+  // `top-[${offset}px]` arbitrary value, so no CSS rule would ever be
+  // generated for it in the compiled stylesheet.
+  return "";
 }
 
 export function StickyToolbar({
@@ -67,12 +70,14 @@ export function StickyToolbar({
   z = "above-content",
   role,
 }: StickyToolbarProps) {
-  const offsetCls = resolveOffset(offset);
+  const offsetCls = resolveOffsetClass(offset);
+  const offsetStyle = typeof offset === "number" ? { top: `${offset}px` } : undefined;
   const borderCls = border ? "border-b border-[var(--appkit-color-border)]" : "";
   const zCls = z === "above-content" ? "z-10" : "z-[5]";
   return (
     <div
       role={role}
+      style={offsetStyle}
       // for the translucent sticky-toolbar pattern. The header offset is
       // sourced from --header-height (set by AppLayoutShell at runtime).
       className={`sticky ${offsetCls} ${zCls} ${TONE_CLS[tone]} ${borderCls} ${PADDING_CLS[padding]}`}

@@ -161,18 +161,20 @@ export function SideDrawer({
 
   // Prevent body scroll when drawer is open
   useEffect(() => {
-    if (isOpen) {
-      const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    } else {
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    }
+    if (!isOpen) return;
+    // Capture and restore the PRIOR values rather than hard-coding "" —
+    // otherwise closing this drawer while another overlay (Modal,
+    // SideModal, a second SideDrawer) is still open underneath wipes out
+    // that overlay's own scroll lock too.
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
     return () => {
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
+      document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
     };
   }, [isOpen]);
 

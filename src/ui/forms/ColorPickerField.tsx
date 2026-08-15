@@ -59,6 +59,12 @@ export function ColorPickerField({
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     onChange?.(e.target.value);
+    // FieldInput/FieldTextarea/FieldSelect/FieldCheckbox all clear the
+    // FormShell error for this field on change — this was the only Field*
+    // wrapper that omitted it, so a picked (valid) color never cleared a
+    // previously-set error until something else called clearErrors/
+    // setFieldError.
+    if (showError) ctx?.clearFieldError(name);
   }
 
   return (

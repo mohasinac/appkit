@@ -17,6 +17,56 @@ type ToolbarAction = {
   run: () => void;
 };
 
+// Matches exactly what this editor's own toolbar (bold/italic/underline/
+// lists/link/clear-formatting) and typing can legitimately produce.
+// Anything else — <script>, <img onerror=...>, <iframe>, <svg>, <style>,
+// <form>, event-handler attributes — can only have arrived via paste, and is
+// dropped entirely rather than risk it either executing live in the editor
+// or being persisted and re-rendered elsewhere as stored XSS.
+const ALLOWED_TAGS = new Set([
+  "B", "STRONG", "I", "EM", "U", "S", "STRIKE",
+  "UL", "OL", "LI", "A", "BR", "DIV", "SPAN", "P",
+]);
+
+function isSafeHref(href: string): boolean {
+  const trimmed = href.trim();
+  // Same rule as string.formatter.ts's applyMark: allow http(s)/mailto, a
+  // single leading "/" (same-site relative path, NOT "//host" protocol-
+  // relative), or "#" — reject everything else including javascript:.
+  return /^(https?:\/\/|mailto:|\/(?!\/)|#)/i.test(trimmed);
+}
+
+function sanitizeRichTextHtml(html: string): string {
+  if (typeof document === "undefined" || !html) return "";
+  const template = document.createElement("template");
+  template.innerHTML = html;
+
+  const walk = (root: DocumentFragment | HTMLElement) => {
+    Array.from(root.childNodes).forEach((child) => {
+      if (child.nodeType === Node.ELEMENT_NODE) {
+        const el = child as HTMLElement;
+        if (!ALLOWED_TAGS.has(el.tagName)) {
+          root.removeChild(el);
+          return;
+        }
+        Array.from(el.attributes).forEach((attr) => {
+          if (el.tagName === "A" && attr.name.toLowerCase() === "href") {
+            if (!isSafeHref(attr.value)) el.setAttribute("href", "#");
+            return;
+          }
+          el.removeAttribute(attr.name);
+        });
+        walk(el);
+      } else if (child.nodeType !== Node.TEXT_NODE) {
+        root.removeChild(child);
+      }
+    });
+  };
+
+  walk(template.content);
+  return template.innerHTML;
+}
+
 export function RichTextEditor({
   value,
   onChange,
@@ -29,7 +79,16 @@ export function RichTextEditor({
 
   const emitChange = () => {
     if (!editorRef.current) return;
-    onChange(editorRef.current.innerHTML);
+    const raw = editorRef.current.innerHTML;
+    const sanitized = sanitizeRichTextHtml(raw);
+    // Only touch the live DOM (which would reset caret position) when
+    // sanitization actually changed something — a no-op for every normal
+    // keystroke/toolbar action, since those only ever produce allowlisted
+    // markup; only a malicious paste triggers this branch.
+    if (sanitized !== raw) {
+      editorRef.current.innerHTML = sanitized;
+    }
+    onChange(sanitized);
   };
 
   const exec = (command: string, commandValue?: string) => {
@@ -77,8 +136,12 @@ export function RichTextEditor({
     const editor = editorRef.current;
     if (!editor) return;
 
-    if (editor.innerHTML !== value) {
-      editor.innerHTML = value;
+    // Sanitize on every incoming `value` too — this is the stored-XSS path:
+    // previously-saved content (e.g. loaded from Firestore) must not be
+    // trusted just because it was already persisted.
+    const safeValue = sanitizeRichTextHtml(value);
+    if (editor.innerHTML !== safeValue) {
+      editor.innerHTML = safeValue;
     }
   }, [value]);
 

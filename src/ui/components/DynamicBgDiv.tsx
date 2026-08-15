@@ -25,9 +25,14 @@ export function DynamicBgDiv({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (background) el.style.background = background;
-    else if (color) el.style.backgroundColor = color;
-    if (textColor) el.style.color = textColor;
+    // Explicitly clear every property this component owns before
+    // (re-)applying — otherwise a value set on a previous render (e.g. a
+    // `background` gradient) stays in the inline style forever once that
+    // prop becomes undefined, even though a sibling prop like `color` is
+    // now supposed to take over.
+    el.style.background = background ?? "";
+    el.style.backgroundColor = !background && color ? color : "";
+    el.style.color = textColor ?? "";
   }, [background, color, textColor]);
   return (
     <div ref={ref} className={className} aria-hidden={ariaHidden}>

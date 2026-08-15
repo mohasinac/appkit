@@ -148,11 +148,11 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement>, Surface
 }
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ tone = "plain", background, color, layout, gap, align, justify, className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, children, ...props }, ref) => (
+  ({ tone = "plain", background, color, layout, gap, align, justify, className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, children, ...props }, ref) => (
     <section
       className={[
         SECTION_TONE_MAP[tone],
-        buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
+        buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }),
         color ? SEMANTIC_COLOR_MAP[color] : "",
         layout ? SECTION_LAYOUT_MAP[layout] : "",
         gap ? SECTION_GAP_MAP[gap] : "",
@@ -190,9 +190,9 @@ export interface ArticleProps extends React.HTMLAttributes<HTMLElement>, Surface
   children?: React.ReactNode;
 }
 
-export function Article({ className = "", surface, padding, rounded, border, shadow, color, children, ...props }: ArticleProps) {
+export function Article({ className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, color, children, ...props }: ArticleProps) {
   return (
-    <article className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
+    <article className={[buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
       {children}
     </article>
   );
@@ -208,9 +208,9 @@ export interface MainProps extends React.HTMLAttributes<HTMLElement>, SurfacePro
   children: React.ReactNode;
 }
 
-export function Main({ className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, color, children, ...props }: MainProps) {
+export function Main({ className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, color, children, ...props }: MainProps) {
   return (
-    <main className={[buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
+    <main className={[buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} {...props}>
       {children}
     </main>
   );
@@ -228,8 +228,8 @@ export interface AsideProps extends React.HTMLAttributes<HTMLElement>, SurfacePr
 }
 
 export const Aside = React.forwardRef<HTMLElement, AsideProps>(
-  ({ className = "", surface, padding, rounded, border, shadow, color, children, ...props }, ref) => (
-    <aside className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} ref={ref} {...props}>
+  ({ className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, color, children, ...props }, ref) => (
+    <aside className={[buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), color ? SEMANTIC_COLOR_MAP[color] : "", className].filter(Boolean).join(" ")} ref={ref} {...props}>
       {children}
     </aside>
   ),
@@ -283,8 +283,8 @@ const NAV_SPACING_MAP: Record<NonNullable<NavProps["spacing"]>, string> = {
 
 const NAV_GAP_MAP: Record<NonNullable<NavProps["gap"]>, string> = {
   none: "",
-  "2xs": "gap-1.5",
-  xs: "gap-1",
+  "2xs": "gap-1",
+  xs: "gap-1.5",
   sm: "gap-2",
   md: "gap-3",
   lg: "gap-4",
@@ -303,11 +303,11 @@ const NAV_COLOR_MAP: Record<NonNullable<NavProps["color"]>, string> = {
   faint: "appkit-color--faint",
 };
 
-export function Nav({ surface, padding, rounded, border, shadow, spacing, gap, layout, color, textSize, className = "", children, ...props }: NavProps) {
+export function Nav({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, spacing, gap, layout, color, textSize, className = "", children, ...props }: NavProps) {
   return (
     <nav
       className={[
-        buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+        buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }),
         spacing ? NAV_SPACING_MAP[spacing] : "",
         gap ? NAV_GAP_MAP[gap] : "",
         layout ? NAV_LAYOUT_MAP[layout] : "",
@@ -344,14 +344,19 @@ export function BlockHeader({
   className = "",
   surface,
   padding,
+  paddingX,
+  paddingY,
   rounded,
+  roundedTop,
+  roundedBottom,
   border,
   shadow,
+  overflow,
   children,
   ...props
 }: BlockHeaderProps) {
   return (
-    <header className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <header className={[buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </header>
   );
@@ -370,14 +375,19 @@ export function BlockFooter({
   className = "",
   surface,
   padding,
+  paddingX,
+  paddingY,
   rounded,
+  roundedTop,
+  roundedBottom,
   border,
   shadow,
+  overflow,
   children,
   ...props
 }: BlockFooterProps) {
   return (
-    <footer className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <footer className={[buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </footer>
   );
@@ -669,10 +679,10 @@ export interface TableProps extends Omit<React.TableHTMLAttributes<HTMLTableElem
   children: React.ReactNode;
 }
 
-export function Table({ variant = "default", size = "md", stickyHeader = false, className = "", surface, padding, rounded, border, shadow, children, ...props }: TableProps) {
+export function Table({ variant = "default", size = "md", stickyHeader = false, className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, children, ...props }: TableProps) {
   return (
     <table
-      className={["appkit-table", TABLE_VARIANT_MAP[variant], TABLE_SIZE_MAP[size], stickyHeader ? "appkit-table--sticky-header" : "", buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")}
+      className={["appkit-table", TABLE_VARIANT_MAP[variant], TABLE_SIZE_MAP[size], stickyHeader ? "appkit-table--sticky-header" : "", buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className].filter(Boolean).join(" ")}
       {...props}
     >
       {children}
@@ -1008,9 +1018,9 @@ export interface PreProps extends React.HTMLAttributes<HTMLPreElement>, SurfaceP
   children: React.ReactNode;
 }
 
-export function Pre({ className = "", surface, padding, rounded, border, shadow, children, ...props }: PreProps) {
+export function Pre({ className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, children, ...props }: PreProps) {
   return (
-    <pre className={["appkit-pre", buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <pre className={["appkit-pre", buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </pre>
   );
@@ -1030,9 +1040,9 @@ const BLOCKQUOTE_COLOR_MAP: Record<NonNullable<BlockquoteProps["color"]>, string
   warning: "appkit-blockquote--warning",
 };
 
-export function Blockquote({ color = "default", className = "", surface, padding, paddingX, paddingY, rounded, border, shadow, children, ...props }: BlockquoteProps) {
+export function Blockquote({ color = "default", className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, children, ...props }: BlockquoteProps) {
   return (
-    <blockquote className={["appkit-blockquote", BLOCKQUOTE_COLOR_MAP[color], buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <blockquote className={["appkit-blockquote", BLOCKQUOTE_COLOR_MAP[color], buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </blockquote>
   );
@@ -1044,9 +1054,9 @@ export interface FigureProps extends React.HTMLAttributes<HTMLElement>, SurfaceP
   children: React.ReactNode;
 }
 
-export function Figure({ className = "", surface, padding, rounded, border, shadow, children, ...props }: FigureProps) {
+export function Figure({ className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, children, ...props }: FigureProps) {
   return (
-    <figure className={["appkit-figure", buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <figure className={["appkit-figure", buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </figure>
   );
@@ -1079,14 +1089,14 @@ export interface DlProps extends React.HTMLAttributes<HTMLDListElement>, Surface
   children: React.ReactNode;
 }
 
-export function Dl({ variant = "stacked", divide, className = "", surface, padding, rounded, border, shadow, children, ...props }: DlProps) {
+export function Dl({ variant = "stacked", divide, className = "", surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow, children, ...props }: DlProps) {
   const divideCls = divide
     ? divide === "subtle"
       ? "appkit-stack--divide-subtle"
       : "appkit-stack--divide"
     : "";
   return (
-    <dl className={["appkit-dl", variant === "inline" ? "appkit-dl--inline" : "appkit-dl--stacked", divideCls, buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
+    <dl className={["appkit-dl", variant === "inline" ? "appkit-dl--inline" : "appkit-dl--stacked", divideCls, buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </dl>
   );

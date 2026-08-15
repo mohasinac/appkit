@@ -74,6 +74,14 @@ export function useGesture<T extends HTMLElement = HTMLElement>(
   const lastTapRef = useRef<number>(0);
   const initialPinchDistanceRef = useRef<number>(0);
   const initialRotationRef = useRef<number>(0);
+  // Real devices lift two fingers in separate touchend events, so by the
+  // final touchend `e.changedTouches` only ever has one entry — tracking
+  // the last-known two-finger positions here lets us compute the true
+  // final pinch distance / rotation angle instead of pairing a touch with
+  // itself (which always yields 0).
+  const lastTwoTouchesRef = useRef<{ x1: number; y1: number; x2: number; y2: number } | null>(
+    null,
+  );
 
   // Store callbacks in refs to avoid event listener churn
   const onTapRef = useRef(onTap);
@@ -106,16 +114,31 @@ export function useGesture<T extends HTMLElement = HTMLElement>(
     const element = ref.current;
     if (!element) return;
 
-    const getDistance = (touch1: Touch, touch2: Touch): number => {
+    const getDistance = (
+      touch1: { clientX: number; clientY: number },
+      touch2: { clientX: number; clientY: number },
+    ): number => {
       const dx = touch1.clientX - touch2.clientX;
       const dy = touch1.clientY - touch2.clientY;
       return Math.sqrt(dx * dx + dy * dy);
     };
 
-    const getAngle = (touch1: Touch, touch2: Touch): number => {
+    const getAngle = (
+      touch1: { clientX: number; clientY: number },
+      touch2: { clientX: number; clientY: number },
+    ): number => {
       const dx = touch1.clientX - touch2.clientX;
       const dy = touch1.clientY - touch2.clientY;
       return Math.atan2(dy, dx) * (180 / Math.PI);
+    };
+
+    const captureTwoTouches = (t1: Touch, t2: Touch) => {
+      lastTwoTouchesRef.current = {
+        x1: t1.clientX,
+        y1: t1.clientY,
+        x2: t2.clientX,
+        y2: t2.clientY,
+      };
     };
 
     const handleTouchStart = (e: TouchEvent) => {
@@ -132,6 +155,7 @@ export function useGesture<T extends HTMLElement = HTMLElement>(
           e.touches[1],
         );
         initialRotationRef.current = getAngle(e.touches[0], e.touches[1]);
+        captureTwoTouches(e.touches[0], e.touches[1]);
       }
     };
 
@@ -145,6 +169,7 @@ export function useGesture<T extends HTMLElement = HTMLElement>(
           onRotatingRef.current)
       ) {
         if (preventDefault) e.preventDefault();
+        captureTwoTouches(e.touches[0], e.touches[1]);
         const currentDistance = getDistance(e.touches[0], e.touches[1]);
         const currentAngle = getAngle(e.touches[0], e.touches[1]);
         if (initialPinchDistanceRef.current > 0) {
@@ -181,27 +206,53 @@ export function useGesture<T extends HTMLElement = HTMLElement>(
       }
 
       if (e.touches.length === 0 && initialPinchDistanceRef.current > 0) {
-        const currentDistance = getDistance(
-          e.changedTouches[0],
-          e.changedTouches[1] || e.changedTouches[0],
-        );
-        onPinchRef.current?.(
-          currentDistance / initialPinchDistanceRef.current,
-          currentDistance,
-        );
+        // `e.changedTouches` only has the LAST-lifted finger at this point
+        // (the other one already ended in a prior touchend event), so pair
+        // it against the last-known two-finger positions instead of
+        // self-pairing it (which always yields a distance of 0).
+        const last = lastTwoTouchesRef.current;
+        if (last) {
+          const currentDistance = getDistance(
+            { clientX: last.x1, clientY: last.y1 },
+            { clientX: last.x2, clientY: last.y2 },
+          );
+          onPinchRef.current?.(
+            currentDistance / initialPinchDistanceRef.current,
+            currentDistance,
+          );
+        }
         initialPinchDistanceRef.current = 0;
       }
 
       if (e.touches.length === 0 && initialRotationRef.current !== 0) {
-        const currentAngle = getAngle(
-          e.changedTouches[0],
-          e.changedTouches[1] || e.changedTouches[0],
-        );
-        onRotateRef.current?.(currentAngle - initialRotationRef.current);
+        const last = lastTwoTouchesRef.current;
+        if (last) {
+          const currentAngle = getAngle(
+            { clientX: last.x1, clientY: last.y1 },
+            { clientX: last.x2, clientY: last.y2 },
+          );
+          onRotateRef.current?.(currentAngle - initialRotationRef.current);
+        }
         initialRotationRef.current = 0;
       }
 
+      if (e.touches.length === 0) {
+        lastTwoTouchesRef.current = null;
+      }
+
       touchStartRef.current = null;
+    };
+
+    const handleTouchCancel = () => {
+      // OS/browser gesture takeover interrupted the touch sequence — reset
+      // all tracked state without firing any callback, matching the "quick
+      // taps don't fire" contract. Without this, stale pinch/rotation refs
+      // survive into the next unrelated tap and spuriously fire onPinch /
+      // onRotate for it.
+      touchStartRef.current = null;
+      initialPinchDistanceRef.current = 0;
+      initialRotationRef.current = 0;
+      lastTwoTouchesRef.current = null;
     };
 
     const handleMouseDown = (e: MouseEvent) => {
@@ -240,6 +291,9 @@ export function useGesture<T extends HTMLElement = HTMLElement>(
     element.addEventListener("touchend", handleTouchEnd, {
       passive: !preventDefault,
     });
+    element.addEventListener("touchcancel", handleTouchCancel, {
+      passive: true,
+    });
     element.addEventListener("mousedown", handleMouseDown);
     element.addEventListener("mouseup", handleMouseUp);
 
@@ -247,6 +301,7 @@ export function useGesture<T extends HTMLElement = HTMLElement>(
       element.removeEventListener("touchstart", handleTouchStart);
       element.removeEventListener("touchmove", handleTouchMove);
       element.removeEventListener("touchend", handleTouchEnd);
+      element.removeEventListener("touchcancel", handleTouchCancel);
       element.removeEventListener("mousedown", handleMouseDown);
       element.removeEventListener("mouseup", handleMouseUp);
     };

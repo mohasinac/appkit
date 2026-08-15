@@ -211,9 +211,14 @@ export function Container({
   as,
   surface,
   padding,
+  paddingX,
+  paddingY,
   rounded,
+  roundedTop,
+  roundedBottom,
   border,
   shadow,
+  overflow,
   className = "",
   children,
   ...props
@@ -221,7 +226,7 @@ export function Container({
   const Tag = (as ?? "div") as React.ElementType;
   return (
     <Tag
-      className={["appkit-container", CONTAINER_MAP[size], buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className]
+      className={["appkit-container", CONTAINER_MAP[size], buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }), className]
         .filter(Boolean)
         .join(" ")}
       {...props}
@@ -332,8 +337,11 @@ export function Stack({
   paddingX,
   paddingY,
   rounded,
+  roundedTop,
+  roundedBottom,
   border,
   shadow,
+  overflow,
   className = "",
   children,
   ...props
@@ -352,7 +360,7 @@ export function Stack({
     wrap ? "flex-wrap" : "",
     smAlign ? STACK_SM_ALIGN_MAP[smAlign] : "",
     resolveDivideClass(divide, "stack"),
-    buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
+    buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }),
     className,
   ]
     .filter(Boolean)
@@ -473,8 +481,11 @@ export function Row({
   paddingX,
   paddingY,
   rounded,
+  roundedTop,
+  roundedBottom,
   border,
   shadow,
+  overflow,
   className = "",
   children,
   ...props
@@ -491,7 +502,7 @@ export function Row({
     textWeight ? TEXT_WEIGHT_MAP[textWeight] : "",
     color ? TEXT_COLOR_MAP[color] : "",
     resolveDivideClass(divide, "row"),
-    buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, border, shadow }),
+    buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }),
     className,
   ]
     .filter(Boolean)
@@ -553,9 +564,14 @@ export function Grid({
   as,
   surface,
   padding,
+  paddingX,
+  paddingY,
   rounded,
+  roundedTop,
+  roundedBottom,
   border,
   shadow,
+  overflow,
   className = "",
   children,
   ...props
@@ -567,7 +583,7 @@ export function Grid({
     GAP_MAP[gap],
     align ? ITEMS_MAP[align] : "",
     justify ? JUSTIFY_MAP[justify] : "",
-    buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
+    buildSurfaceClasses({ surface, padding, paddingX, paddingY, rounded, roundedTop, roundedBottom, border, shadow, overflow }),
     className,
   ]
     .filter(Boolean)

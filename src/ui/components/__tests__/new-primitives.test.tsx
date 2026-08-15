@@ -131,7 +131,14 @@ describe("variant-catalogue primitives", () => {
         </StickyToolbar>,
       );
       const root = container.firstElementChild as HTMLElement;
-      expect(root.className).toContain("top-[calc(var(--header-height,0px)+44px)]");
+      // Regression: this previously expected a hardcoded "+44px" that no
+      // longer matches the source, which resolves the nav height from the
+      // themed --appkit-navbar-height token (with a 2.5rem fallback) instead
+      // of a hardcoded pixel value — a stale assertion left over from before
+      // that token was introduced, causing a false test failure.
+      expect(root.className).toContain(
+        "top-[calc(var(--header-height,0px)+var(--appkit-navbar-height,2.5rem))]",
+      );
     });
 
     it("accepts a numeric offset", () => {
@@ -141,7 +148,14 @@ describe("variant-catalogue primitives", () => {
         </StickyToolbar>,
       );
       const root = container.firstElementChild as HTMLElement;
-      expect(root.className).toContain("top-[56px]");
+      // Regression: a numeric offset used to be interpolated into a
+      // `top-[${offset}px]` Tailwind arbitrary-value className, which the
+      // static JIT scanner can never see, so no CSS rule was ever generated
+      // for it — the element rendered `position: sticky` with no actual top
+      // offset. It's applied via inline style now, which always works
+      // regardless of what Tailwind's scanner extracted at build time.
+      expect(root.style.top).toBe("56px");
+      expect(root.className).not.toContain("top-[56px]");
     });
   });
 

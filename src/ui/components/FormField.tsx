@@ -80,16 +80,26 @@ export function FormField({
   if (type === "image" && onUpload) {
     return (
       <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-505">
-        <ImageUpload
-          currentImage={value || undefined}
-          onUpload={onUpload}
-          onChange={(url) => onChange?.(url)}
-          label={label ? `${label}${required ? " *" : ""}` : undefined}
-          helperText={hint ?? helpText}
-          captureSource={captureSource ?? "file-only"}
-          accept={accept}
-          maxSizeMB={maxSizeMB}
-        />
+        {/* ImageUpload has no disabled prop of its own — every other type
+            branch in this component forwards `disabled` to its underlying
+            control (MediaUploadField/Select/Textarea/Input); this wrapper
+            keeps the same contract for the image branch without requiring
+            ImageUpload's own internals to change. */}
+        <div
+          aria-disabled={disabled || undefined}
+          className={disabled ? "pointer-events-none opacity-60" : undefined}
+        >
+          <ImageUpload
+            currentImage={value || undefined}
+            onUpload={onUpload}
+            onChange={(url) => onChange?.(url)}
+            label={label ? `${label}${required ? " *" : ""}` : undefined}
+            helperText={hint ?? helpText}
+            captureSource={captureSource ?? "file-only"}
+            accept={accept}
+            maxSizeMB={maxSizeMB}
+          />
+        </div>
         {showError ? (
           <Text
             id={errorId}

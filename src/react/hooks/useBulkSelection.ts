@@ -52,7 +52,12 @@ export function useBulkSelection<T>({
 
   const toggleAll = useCallback(() => {
     setSelectedSet((prev) => {
-      const allSelected = prev.size === allIds.length && allIds.length > 0;
+      // Compare actual membership, not just set size — `prev` can hold IDs
+      // from a page that's no longer rendered (e.g. after paginating), in
+      // which case the sizes coincidentally matching would wrongly report
+      // "all selected" and CLEAR the selection instead of selecting the
+      // currently-visible items.
+      const allSelected = allIds.length > 0 && allIds.every((id) => prev.has(id));
       if (allSelected) return new Set();
       return new Set(allIds.slice(0, maxSelection));
     });
@@ -69,8 +74,12 @@ export function useBulkSelection<T>({
   const selectedIds = useMemo(() => Array.from(selectedSet), [selectedSet]);
   const selectedCount = selectedSet.size;
   const isSelecting = selectedCount > 0;
-  const isAllSelected = allIds.length > 0 && selectedCount === allIds.length;
-  const isIndeterminate = selectedCount > 0 && selectedCount < allIds.length;
+  // Membership-based, not cardinality-based — `selectedSet` can hold IDs
+  // from items that are no longer in `allIds` (e.g. the previous page),
+  // so comparing sizes alone can report "all selected" when none of the
+  // *currently rendered* rows are actually selected.
+  const isAllSelected = allIds.length > 0 && allIds.every((id) => selectedSet.has(id));
+  const isIndeterminate = !isAllSelected && allIds.some((id) => selectedSet.has(id));
 
   return {
     selectedIds,

@@ -114,7 +114,10 @@ function applyMark(text: string, mark: ProseMirrorMark): string {
   }
   if (mark.type === "link") {
     const rawHref = String(mark.attrs?.href ?? "#").trim();
-    const safe = /^(https?:\/\/|mailto:|\/|#)/i.test(rawHref) ? rawHref : "#";
+    // `\/(?!\/)` allows a single leading slash (same-site relative path) but
+    // rejects `//host/...` protocol-relative URLs, which browsers resolve to
+    // an arbitrary external origin despite "looking" like a local path.
+    const safe = /^(https?:\/\/|mailto:|\/(?!\/)|#)/i.test(rawHref) ? rawHref : "#";
     const href = safe.replace(
       /[&"<>]/g,
  (c) => ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[c] ?? c,

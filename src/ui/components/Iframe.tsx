@@ -21,7 +21,14 @@ export interface IframeProps
   aspect?: IframeAspect;
   /** Rounded corners preset. Default `"lg"`. */
   rounded?: IframeRounded;
-  /** Sandbox attribute. Default permits same-origin only. */
+  /**
+   * Sandbox attribute. Default is `"allow-same-origin allow-scripts
+   * allow-popups allow-forms"` — permissive enough for trusted third-party
+   * embeds (payment checkout panels, YouTube). Combining `allow-same-origin`
+   * with `allow-scripts` lets same-origin framed content remove its own
+   * sandbox restrictions, so pass a tighter override for any `src` that
+   * isn't a fully-trusted origin.
+   */
   sandbox?: string;
 }
 

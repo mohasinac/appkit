@@ -57,7 +57,12 @@ export function FieldCheckbox({
         onBlur={handleBlur}
         label={label}
         disabled={disabled}
-        error={showError ? error : undefined}
+        // Never forward `error` to Checkbox — it renders its own error Text
+        // block whenever `error` is truthy, and this component already
+        // renders its own below. Passing both duplicated the message (and
+        // the role="alert" announcement) — FieldInput/FieldTextarea/
+        // FieldSelect all withhold `error` from their underlying primitive
+        // for exactly this reason.
         aria-describedby={showError ? errorId : undefined}
       />
       {!showError && hint && (

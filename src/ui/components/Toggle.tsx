@@ -91,13 +91,18 @@ export function Toggle({
       </button>
 
       {label && (
+        // No onClick here — `htmlFor` on a `<label>` already makes the
+        // browser forward a click on the label to the labelable `<button>`
+        // above natively. Also attaching handleToggle here fired it TWICE
+        // per click (once from this handler, once from the native
+        // label→button forwarding), both reading the same stale `checked`
+        // closure, so onChange(true) could fire twice for one click.
         <Label
           id={`${toggleId}-label`}
           htmlFor={toggleId}
           className={
             disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
           }
-          onClick={disabled ? undefined : handleToggle}
         >
           {label}
         </Label>

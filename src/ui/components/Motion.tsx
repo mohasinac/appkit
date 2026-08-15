@@ -320,7 +320,10 @@ export function Draggable({
   ...props
 }: DraggableProps) {
   const reduced = useReducedMotion();
-  const drag = reduced ? false : (axis === true ? true : axis || true);
+  // `axis` defaults to unrestricted (true) when omitted, but an explicit
+  // `axis={false}` must actually disable dragging — `axis || true` always
+  // collapsed a falsy axis back to `true`, making `axis={false}` a no-op.
+  const drag = reduced ? false : (axis ?? true);
   return (
     <motion.div
       drag={drag}

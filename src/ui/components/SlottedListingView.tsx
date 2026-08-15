@@ -58,11 +58,22 @@ export interface SlottedListingViewProps {
    * - `public`: no managed state by default
    */
   portal?: ViewPortal;
-  /** Enable managed search state (default driven by portal, otherwise false). */
+  /**
+   * Currently unused — `renderSearch` is always invoked when provided,
+   * regardless of this flag. Kept as a no-op accepted prop because real
+   * consumers (CategoryProductsView, StoreProductsView, FAQPageContent, …)
+   * already pass their own self-contained `renderSearch` closures that
+   * manage search state externally and would lose their search UI if this
+   * ever started gating the render call. Do not wire this up to gate
+   * `renderSearch` without auditing every consumer's `renderSearch` first.
+   */
   manageSearch?: boolean;
   /** Enable managed selection state (default driven by portal, otherwise false). */
   manageSelection?: boolean;
-  /** Enable managed sort state (default empty string). */
+  /**
+   * Currently unused — see `manageSearch` above; `renderSort` is always
+   * invoked when provided, regardless of this flag, for the same reason.
+   */
   manageSort?: boolean;
   /** Wrap search + sort slots in a flex row. */
   inlineToolbar?: boolean;

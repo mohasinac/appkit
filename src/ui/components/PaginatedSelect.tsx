@@ -140,6 +140,11 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const labelMap = useRef<Map<V, string>>(new Map());
+  // Monotonic counter guarding against out-of-order async responses: a
+  // slower earlier request (e.g. for an already-abandoned search query)
+  // must never overwrite state after a faster, more recent request resolved.
+  const requestIdRef = useRef(0);
+  const wasOpenRef = useRef(false);
 
   const hasCreate = Boolean(
     createLabel && (renderCreateForm ?? (createFields && onCreateSubmit)),
@@ -151,9 +156,14 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
   const load = useCallback(
     async (search: string, nextPage: number, reset = false) => {
       if (!loadOptions) return;
+      const requestId = ++requestIdRef.current;
       setLoading(true);
       try {
         const response = await loadOptions(search, nextPage);
+        // A newer request (new search, or the dropdown reopened) was issued
+        // while this one was in flight — its response is stale, discard it
+        // rather than clobbering state a more recent request already set.
+        if (requestId !== requestIdRef.current) return;
         setAsyncOptions((prev) => {
           const merged = reset ? response.items : [...prev, ...response.items];
           merged.forEach((o) => labelMap.current.set(o.value, o.label));
@@ -162,15 +172,30 @@ export function PaginatedSelect<V = string>(props: PaginatedSelectProps<V>) {
         setPage(nextPage);
         setHasMore(response.hasMore);
       } finally {
-        setLoading(false);
+        if (requestId === requestIdRef.current) setLoading(false);
       }
     },
     [loadOptions],
   );
 
   useEffect(() => {
-    if (!open || !loadOptions) return;
-    void load(query, 1, true);
+    if (!open || !loadOptions) {
+      wasOpenRef.current = false;
+      return;
+    }
+    // Load immediately the moment the dropdown opens; debounce subsequent
+    // reloads triggered by the user typing so every keystroke doesn't fire
+    // a new request.
+    const isFreshOpen = !wasOpenRef.current;
+    wasOpenRef.current = true;
+    if (isFreshOpen) {
+      void load(query, 1, true);
+      return;
+    }
+    const timer = setTimeout(() => {
+      void load(query, 1, true);
+    }, 300);
+    return () => clearTimeout(timer);
   }, [open, query, load, loadOptions]);
 
   useEffect(() => {

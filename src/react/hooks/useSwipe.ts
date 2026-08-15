@@ -186,6 +186,16 @@ export function useSwipe<T extends HTMLElement = HTMLElement>(
       onSwipeEndRef.current?.();
     };
 
+    const handleTouchCancel = () => {
+      // OS/browser gesture takeover interrupted the touch — without this,
+      // isSwiping/touchStartRef stay stuck and onSwipeEnd (which callers
+      // rely on to clear a "dragging" UI flag) never fires.
+      if (!isSwiping.current) return;
+      touchStartRef.current = null;
+      isSwiping.current = false;
+      onSwipeEndRef.current?.();
+    };
+
     const handleMouseDown = (e: MouseEvent) => {
       if (preventDefault) e.preventDefault();
       touchStartRef.current = { x: e.clientX, y: e.clientY, time: Date.now() };
@@ -223,6 +233,9 @@ export function useSwipe<T extends HTMLElement = HTMLElement>(
     element.addEventListener("touchend", handleTouchEnd, {
       passive: !preventDefault,
     });
+    element.addEventListener("touchcancel", handleTouchCancel, {
+      passive: true,
+    });
     element.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
@@ -231,6 +244,7 @@ export function useSwipe<T extends HTMLElement = HTMLElement>(
       element.removeEventListener("touchstart", handleTouchStart);
       element.removeEventListener("touchmove", handleTouchMove);
       element.removeEventListener("touchend", handleTouchEnd);
+      element.removeEventListener("touchcancel", handleTouchCancel);
       element.removeEventListener("mousedown", handleMouseDown);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);

@@ -195,6 +195,16 @@ export function Button({
   ...props
 }: ButtonProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  // React 17+ no longer pools SyntheticEvents, so it's safe to hold onto the
+  // original triggering event across the confirmation dialog's async gap and
+  // forward it to the consumer's onClick once confirmed — not the confirm
+  // button's own click event (a different DOM element, with none of the
+  // data-* attributes the caller may have put on the real trigger). Per the
+  // DOM/React event spec, `currentTarget` itself is reset to null once the
+  // original event's own synchronous dispatch finishes, so it's captured
+  // separately here and restored onto the stored event before forwarding.
+  const pendingEventRef = React.useRef<React.MouseEvent<HTMLButtonElement> | null>(null);
+  const pendingTargetRef = React.useRef<HTMLButtonElement | null>(null);
 
   // Resolve defaults from action registry
   const resolvedVariant = variant ?? (action ? (ACTION_KIND_VARIANT[action.kind] ?? "primary") : "primary");
@@ -262,6 +272,8 @@ export function Button({
       }
       if (action?.confirmation) {
         event.preventDefault();
+        pendingEventRef.current = event;
+        pendingTargetRef.current = event.currentTarget;
         setConfirmOpen(true);
         return;
       }
@@ -270,51 +282,29 @@ export function Button({
     [disabled, isLoading, action, userOnClick, wrapAsync],
   );
 
-  const handleConfirm = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setConfirmOpen(false);
-      wrapAsync(userOnClick)(event);
-    },
-    [userOnClick, wrapAsync],
-  );
-
-  if (asChild && React.isValidElement(resolvedChildren)) {
-    const child = resolvedChildren as React.ReactElement<Record<string, unknown>>;
-    return React.cloneElement(child, {
-      ...props,
-      className: twMerge(String(child.props.className ?? ""), classes),
-      ...(disabled ? { "aria-disabled": true } : {}),
-    });
-  }
+  const handleConfirm = useCallback(() => {
+    setConfirmOpen(false);
+    const originalEvent = pendingEventRef.current;
+    const originalTarget = pendingTargetRef.current;
+    pendingEventRef.current = null;
+    pendingTargetRef.current = null;
+    if (originalEvent) {
+      originalEvent.currentTarget = originalTarget as HTMLButtonElement;
+      wrapAsync(userOnClick)(originalEvent);
+    }
+  }, [userOnClick, wrapAsync]);
 
   const confirmDef = action?.confirmation;
   const confirmVariant = confirmDef?.confirmKind
     ? (ACTION_KIND_VARIANT[confirmDef.confirmKind] ?? "primary")
     : "primary";
 
-  return (
-    <>
-      <button
-        className={classes}
-        disabled={disabled || isLoading}
-        aria-busy={isLoading || undefined}
-        {...props}
-        aria-label={resolvedAriaLabel}
-        onClick={handleClick}
-      >
-        {isLoading && (
-          <Loader2 className="appkit-button__spinner" aria-hidden="true" />
-        )}
-        {isLoading ? (
-          <span className="appkit-button__content appkit-button__content--loading">
-            {resolvedChildren}
-          </span>
-        ) : (
-          <span className="appkit-button__content">{resolvedChildren}</span>
-        )}
-      </button>
-
-      {confirmOpen && confirmDef && typeof document !== "undefined" && createPortal(
+  // Built once and rendered alongside EITHER the asChild clone or the plain
+  // <button> below — this must never live inside an early return for only
+  // one of those two branches, or the other branch can never open a
+  // confirmation dialog at all (this was the actual asChild bug: the early
+  // return happened before this JSX was ever reached).
+  const confirmPortal = confirmOpen && confirmDef && typeof document !== "undefined" && createPortal(
         <div
           role="dialog"
           aria-modal="true"
@@ -355,7 +345,49 @@ export function Button({
           </div>
         </div>,
         document.body,
-      )}
+      );
+
+  if (asChild && React.isValidElement(resolvedChildren)) {
+    const child = resolvedChildren as React.ReactElement<Record<string, unknown>>;
+    // Never spread the caller's raw onClick here — it must go through
+    // handleClick so a configured action.confirmation dialog still gates
+    // the click even when rendering as a cloned child (e.g. next/link).
+    const { onClick: _rawOnClick, ...restProps } = props;
+    return (
+      <>
+        {React.cloneElement(child, {
+          ...restProps,
+          className: twMerge(String(child.props.className ?? ""), classes),
+          ...(disabled ? { "aria-disabled": true } : {}),
+          onClick: handleClick,
+        })}
+        {confirmPortal}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <button
+        className={classes}
+        disabled={disabled || isLoading}
+        aria-busy={isLoading || undefined}
+        {...props}
+        aria-label={resolvedAriaLabel}
+        onClick={handleClick}
+      >
+        {isLoading && (
+          <Loader2 className="appkit-button__spinner" aria-hidden="true" />
+        )}
+        {isLoading ? (
+          <span className="appkit-button__content appkit-button__content--loading">
+            {resolvedChildren}
+          </span>
+        ) : (
+          <span className="appkit-button__content">{resolvedChildren}</span>
+        )}
+      </button>
+      {confirmPortal}
     </>
   );
 }

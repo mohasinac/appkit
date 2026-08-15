@@ -56,8 +56,18 @@ export function formatFileSize(bytes: number): string {
 
 export function formatCompactNumber(num: number): string {
   if (num < 1000) return num.toString();
-  if (num < 1_000_000) return `${(num / 1000).toFixed(1)}K`;
-  if (num < 1_000_000_000) return `${(num / 1_000_000).toFixed(1)}M`;
+  if (num < 1_000_000) {
+    const kValue = (num / 1000).toFixed(1);
+    // Rounding can push a value right up to the next unit's boundary
+    // (e.g. 999950 -> "1000.0K") — escalate instead of displaying "1000.0K".
+    if (kValue === "1000.0") return `${(num / 1_000_000).toFixed(1)}M`;
+    return `${kValue}K`;
+  }
+  if (num < 1_000_000_000) {
+    const mValue = (num / 1_000_000).toFixed(1);
+    if (mValue === "1000.0") return `${(num / 1_000_000_000).toFixed(1)}B`;
+    return `${mValue}M`;
+  }
   return `${(num / 1_000_000_000).toFixed(1)}B`;
 }
 
@@ -92,13 +102,16 @@ export function parseFormattedNumber(str: string): number {
     }
   } else if (lastDotIndex > -1 && lastCommaIndex === -1) {
     const afterDot = cleaned.substring(lastDotIndex + 1);
-    const isThousands = dotCount > 1 || afterDot.length > 3;
+    // A single separator followed by exactly 3 digits is the standard
+    // thousands-grouping width (e.g. "3.500" -> 3500), not a decimal — only
+    // 1-2 trailing digits are treated as a genuine decimal fraction.
+    const isThousands = dotCount > 1 || afterDot.length >= 3;
     if (isThousands) cleaned = cleaned.replace(/\./g, "");
     decimalSeparator = ".";
     thousandsSeparator = "";
   } else if (lastCommaIndex > -1 && lastDotIndex === -1) {
     const afterComma = cleaned.substring(lastCommaIndex + 1);
-    const commaIsThousands = commaCount > 1 || afterComma.length > 3;
+    const commaIsThousands = commaCount > 1 || afterComma.length >= 3;
     if (commaIsThousands) {
       cleaned = cleaned.replace(/,/g, "");
       decimalSeparator = ".";

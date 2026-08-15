@@ -144,7 +144,8 @@ export interface GenerateFAQIdInput {
 }
 export function generateFAQId(input: GenerateFAQIdInput): string {
   if (input.customId?.trim()) return input.customId.trim();
-  return `faq-${slugify(input.category)}-${slugify(input.question).substring(0, 50)}`;
+  const questionSlug = slugify(input.question).substring(0, 50).replace(/-+$/, "");
+  return `faq-${slugify(input.category)}-${questionSlug}`;
 }
 
 // â”€â”€â”€ Coupon â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -729,55 +730,75 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
 }
 
 /**
- * W1-51 — validate that a filename matches the canonical pattern produced
- * by {@link generateMediaFilename}. Called from /api/media/sign before a
+ * W1-51 (regex fixed 2026-08-15 — see bug notes below) — validate that a
+ * filename matches the canonical pattern produced by
+ * {@link generateMediaFilename}. Called from /api/media/sign before a
  * signed-URL is issued so malformed names can never enter storage.
  *
- * Pattern: `<prefix>-<slug parts>-<YYYYMMDD>(-<N>)?(-<rand>)?\.<ext>` where
- * the prefix is one of the known media type tokens.
+ * The generator functions above put the type word (image/video/logo/
+ * banner/avatar) at the END of the slug portion, e.g.
+ * `product-{name}-{category}-{store}-image-{n}.ext`, NOT as a literal
+ * compound prefix like `product-image-{...}`. The previous version of this
+ * validator anchored on the compound-prefix shape and rejected real output
+ * from every generator except invoice/payout-doc/shipping-proof/
+ * refund-proof/catalogue-image — causing /api/media/sign to 500 for
+ * product/review/auction/preorder/store/brand/blog/event/category/user/
+ * carousel/rich-text uploads. Each pattern below mirrors one generator
+ * function's actual output shape. blog-cover/blog-content-image/
+ * blog-additional-image all dispatch to the same generator as blog-image
+ * (and the four event-* variants likewise share one shape), so one pattern
+ * validates all sub-types of that family.
  *
  * Returns true when the filename is acceptable.
  */
-const MEDIA_FILENAME_PREFIXES = [
-  "product-image", "product-video",
-  "review-image", "review-video",
-  "auction-image", "preorder-image",
-  "store-logo", "store-banner",
-  "brand-logo", "brand-banner",
-  "blog-image", "blog-cover", "blog-content-image", "blog-additional-image",
-  "event-image", "event-cover", "event-winner-image", "event-additional-image",
-  "rich-text-image",
-  "category-image",
-  "user-avatar",
-  "carousel-image",
-  "catalogue-image",
-  "invoice", "payout-doc",
-  "shipping-proof", "refund-proof",
-] as const;
+const SLUG_PART = "[a-z0-9]+(?:-[a-z0-9]+)*";
+const EXT_PART = "[a-z0-9]+";
+const DATE_PART = "\\d{8}";
 
-const MEDIA_FILENAME_REGEX = new RegExp(
-  `^(?:${MEDIA_FILENAME_PREFIXES.join("|")})-[a-z0-9]([a-z0-9-]*[a-z0-9])?(?:-\\d+)?\\.[a-z0-9]+$`,
-);
+const MEDIA_FILENAME_PATTERNS: ReadonlyArray<{ context: string; pattern: RegExp }> = [
+  { context: "product-image", pattern: new RegExp(`^product-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "product-video", pattern: new RegExp(`^product-${SLUG_PART}-video-\\d+\\.${EXT_PART}$`) },
+  { context: "review-image", pattern: new RegExp(`^review-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "review-video", pattern: new RegExp(`^review-${SLUG_PART}-video-1\\.${EXT_PART}$`) },
+  { context: "auction-image", pattern: new RegExp(`^auction-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "preorder-image", pattern: new RegExp(`^preorder-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "store-logo", pattern: new RegExp(`^store-${SLUG_PART}-logo\\.${EXT_PART}$`) },
+  { context: "store-banner", pattern: new RegExp(`^store-${SLUG_PART}-banner\\.${EXT_PART}$`) },
+  { context: "brand-logo", pattern: new RegExp(`^brand-${SLUG_PART}-logo\\.${EXT_PART}$`) },
+  { context: "brand-banner", pattern: new RegExp(`^brand-${SLUG_PART}-banner\\.${EXT_PART}$`) },
+  { context: "blog-image", pattern: new RegExp(`^blog-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "event-image", pattern: new RegExp(`^event-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "rich-text-image", pattern: new RegExp(`^rich-text-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "category-image", pattern: new RegExp(`^category-${SLUG_PART}-image\\.${EXT_PART}$`) },
+  { context: "user-avatar", pattern: new RegExp(`^user-${SLUG_PART}-avatar\\.${EXT_PART}$`) },
+  { context: "carousel-image", pattern: new RegExp(`^carousel-${SLUG_PART}-image\\.${EXT_PART}$`) },
+  { context: "catalogue-image", pattern: new RegExp(`^catalogue-image-${SLUG_PART}-\\d+\\.${EXT_PART}$`) },
+  { context: "invoice", pattern: new RegExp(`^invoice-${SLUG_PART}-${DATE_PART}\\.pdf$`) },
+  { context: "payout-doc", pattern: new RegExp(`^payout-doc-${SLUG_PART}-${DATE_PART}\\.pdf$`) },
+  { context: "shipping-proof", pattern: new RegExp(`^shipping-proof-${SLUG_PART}-${DATE_PART}\\.${EXT_PART}$`) },
+  { context: "refund-proof", pattern: new RegExp(`^refund-proof-${SLUG_PART}-${SLUG_PART}-${DATE_PART}\\.${EXT_PART}$`) },
+  { context: "payment-proof", pattern: new RegExp(`^payment-proof-${SLUG_PART}-${SLUG_PART}-${DATE_PART}\\.${EXT_PART}$`) },
+];
 
 export function validateMediaFilename(filename: string): boolean {
   if (!filename || filename.length > 256) return false;
   if (filename.includes("..") || filename.includes("/") || filename.includes("\\")) return false;
-  return MEDIA_FILENAME_REGEX.test(filename);
+  return MEDIA_FILENAME_PATTERNS.some(({ pattern }) => pattern.test(filename));
 }
 
 /**
- * Derives the `MediaFilenameContext["type"]` a filename was generated under
- * (e.g. "catalogue-image") by matching against the same prefix list
- * {@link validateMediaFilename} uses — the longest matching prefix wins so
- * "blog-content-image" isn't mis-derived as "blog-cover"'s sibling "blog-".
+ * Derives the `MediaFilenameContext["type"]` family a filename was
+ * generated under (e.g. "catalogue-image") by matching against the same
+ * shape patterns {@link validateMediaFilename} uses. Sibling context types
+ * that share one generator (e.g. blog-cover/blog-content-image/
+ * blog-additional-image all produce the same shape as blog-image) resolve
+ * to that shared family name — the dispatcher itself can't distinguish them
+ * from the filename alone, since it never encoded the sub-type into the name.
  * Used at /api/media/finalize time to stamp `MediaAssetDocument.contextType`
  * without changing the finalize request contract.
  */
 export function deriveContextTypeFromFilename(filename: string): string | undefined {
-  const stem = filename.replace(/\.[^.]+$/, "");
-  const matches = MEDIA_FILENAME_PREFIXES.filter((prefix) => stem.startsWith(`${prefix}-`) || stem === prefix);
-  if (matches.length === 0) return undefined;
-  return matches.reduce((longest, candidate) => (candidate.length > longest.length ? candidate : longest));
+  return MEDIA_FILENAME_PATTERNS.find(({ pattern }) => pattern.test(filename))?.context;
 }
 
 /**

@@ -67,13 +67,15 @@ export function SideModal({
 
   // Prevent body scroll while open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!isOpen) return;
+    // Capture and restore the PRIOR value rather than hard-coding "" —
+    // otherwise closing this modal while another overlay is still open
+    // underneath (Modal, SideDrawer, a second SideModal) wipes out that
+    // overlay's own scroll lock too.
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
 

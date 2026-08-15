@@ -72,7 +72,7 @@ export function OtpInput({
   return (
     <div className="w-full">
       {label && (
-        <Label htmlFor={`${inputId}-0`} className="appkit-form-field__label mb-2">
+        <Label id={`${inputId}-label`} htmlFor={`${inputId}-0`} className="appkit-form-field__label mb-2">
           {label}
         </Label>
       )}

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Label, Text } from "./Typography";
 

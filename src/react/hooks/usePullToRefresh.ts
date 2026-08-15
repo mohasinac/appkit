@@ -91,6 +91,16 @@ export function usePullToRefresh(
     }
   }, []);
 
+  const handleTouchCancel = useCallback(() => {
+    // Interrupted pull (OS/browser gesture takeover) — reset without
+    // triggering onRefresh. Without this, isPulling/progress stay frozen
+    // mid-animation since only touchend resets them.
+    setIsPulling(false);
+    setProgress(0);
+    startYRef.current = null;
+    thresholdReachedRef.current = false;
+  }, []);
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -98,13 +108,15 @@ export function usePullToRefresh(
     el.addEventListener("touchstart", handleTouchStart, { passive: true });
     el.addEventListener("touchmove", handleTouchMove, { passive: true });
     el.addEventListener("touchend", handleTouchEnd);
+    el.addEventListener("touchcancel", handleTouchCancel, { passive: true });
 
     return () => {
       el.removeEventListener("touchstart", handleTouchStart);
       el.removeEventListener("touchmove", handleTouchMove);
       el.removeEventListener("touchend", handleTouchEnd);
+      el.removeEventListener("touchcancel", handleTouchCancel);
     };
-  }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
+  }, [handleTouchStart, handleTouchMove, handleTouchEnd, handleTouchCancel]);
 
   return { containerRef, isPulling, progress };
 }

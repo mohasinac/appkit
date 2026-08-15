@@ -273,21 +273,30 @@ export function HorizontalScroller<T = unknown>({
   }, [autoScroll, isPaused, autoScrollInterval, containerRef]);
 
   useEffect(() => {
-    if (!perView) return;
+    if (!perView && !loop) return;
     const el = containerRef.current;
     if (!el) return;
     const observer = new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
-      const count = resolvePerView(perView, w);
-      if (count > 0) {
-        setColCount(count);
-        setItemWidth((w - (count - 1) * gap) / count);
+      if (perView) {
+        const count = resolvePerView(perView, w);
+        if (count > 0) {
+          setColCount(count);
+          setItemWidth((w - (count - 1) * gap) / count);
+        }
+      } else {
+        // loop is true but no perView hint was given: items render at their
+        // natural width, so measure a real rendered item to get the scroll
+        // stride the clone-buffer offset / edge teleporter need — without
+        // this, itemWidth never resolves and loop mode never initializes.
+        const item = el.querySelector<HTMLElement>(".appkit-hscroller__item");
+        if (item) setItemWidth(item.getBoundingClientRect().width);
       }
       updateExtents();
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, [perView, gap, containerRef, updateExtents]);
+  }, [perView, loop, gap, containerRef, updateExtents]);
 
   // Recompute extents when content size changes (itemWidth resolved, items count changes).
   useEffect(() => {

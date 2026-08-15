@@ -24,8 +24,10 @@ export function TagInput({
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const normalizeTag = (raw: string) => raw.trim().replace(/,+$/, "").trim();
+
   const addTag = (raw: string) => {
-    const tag = raw.trim().replace(/,+$/, "").trim();
+    const tag = normalizeTag(raw);
     if (!tag || value.includes(tag)) {
       setDraft("");
       return;
@@ -55,7 +57,17 @@ export function TagInput({
     if (inputValue.includes(",")) {
       const parts = inputValue.split(",");
       const last = parts.pop() ?? "";
-      parts.forEach((part) => addTag(part));
+      // Accumulate locally instead of calling addTag() in a loop — addTag
+      // always computes `[...value, tag]` off the current render's `value`
+      // prop, so multiple synchronous calls in the same paste each started
+      // from the SAME stale array and every onChange but the last one got
+      // silently overwritten (only the final comma-segment ever survived).
+      let next = value;
+      for (const part of parts) {
+        const tag = normalizeTag(part);
+        if (tag && !next.includes(tag)) next = [...next, tag];
+      }
+      if (next !== value) onChange(next);
       setDraft(last);
       return;
     }

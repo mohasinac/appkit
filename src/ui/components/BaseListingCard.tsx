@@ -27,7 +27,8 @@ export interface BaseListingCardRootProps {
 }
 
 export interface BaseListingCardHeroProps {
-  aspect?: string;
+  /** Aspect ratio for the hero image — only these two produce a real CSS rule (Tailwind's static scanner can't see a dynamically-interpolated `aspect-[${var}]`). Defaults to `"4/3"`. */
+  aspect?: "square" | "4/3";
   variant?: "grid" | "list";
   className?: string;
   children?: ReactNode;
@@ -114,12 +115,10 @@ function BaseListingCardHero({
     );
   }
 
-  const aspectClass =
-    aspect === "square"
-      ? "aspect-square"
-      : aspect === "4/3" || !aspect
-        ? "aspect-[4/3]"
-        : `aspect-[${aspect}]`;
+  // Literal, statically-scannable class names only — never interpolate an
+  // arbitrary value into `aspect-[...]`, Tailwind's JIT scanner can't see it
+  // and the rule silently never makes it into the compiled CSS.
+  const aspectClass = aspect === "square" ? "aspect-square" : "aspect-[4/3]";
 
   return (
     <div
