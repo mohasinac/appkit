@@ -3,6 +3,15 @@
 .appkit-tabs-list {
   display: flex;
   border-bottom: 1px solid var(--appkit-color-border);
+  /* Consumers with many tabs (e.g. AdminSiteSettingsView's 17 groups) would
+     otherwise overflow past the container with no way to reach the later
+     triggers — found via Playwright driving a real browser at 1440px wide,
+     where tabs 16-17 were positioned off-screen and unreachable even after
+     scrollIntoViewIfNeeded(). Horizontal scroll keeps every tab reachable
+     regardless of trigger count or viewport width. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
 }
 
 .appkit-tabs-trigger {
@@ -12,6 +21,8 @@
   font-size: 0.875rem;
   font-weight: 500;
   transition: color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .appkit-tabs-trigger[aria-selected="true"] {
   border-color: var(--color-primary, #65a30d);
