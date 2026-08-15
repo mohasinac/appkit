@@ -120,11 +120,6 @@ export { AdminCarouselEditorView } from "./AdminCarouselEditorView";
 export type { AdminCarouselEditorViewProps } from "./AdminCarouselEditorView";
 export { AdminDashboardView } from "./AdminDashboardView";
 export type { AdminDashboardViewProps } from "./AdminDashboardView";
-export { QuickActionsPanel } from "./QuickActionsPanel";
-export type {
-  QuickActionItem,
-  QuickActionsPanelProps,
-} from "./QuickActionsPanel";
 export { AdminSiteView } from "./AdminSiteView";
 export type { AdminSiteViewProps } from "./AdminSiteView";
 export { AdminSiteSettingsView } from "./AdminSiteSettingsView";

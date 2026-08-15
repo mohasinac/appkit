@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useApiMutation } from "@mohasinac/appkit/client";
-import { Button, FieldInput, Modal, Row, Stack, Text, Toggle } from "../../../ui";
+import { Button, FieldInput, Modal, Row, Stack, TagInput, Text, Toggle } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
@@ -32,7 +32,7 @@ export function ShipmentItemLinkModal({
 }: ShipmentItemLinkModalProps) {
   const [mode, setMode] = React.useState<"link" | "create">("create");
   const [existingProductId, setExistingProductId] = React.useState<string | null>(null);
-  const [categorySlugs, setCategorySlugs] = React.useState("");
+  const [categorySlugs, setCategorySlugs] = React.useState<string[]>([]);
   const [brandSlug, setBrandSlug] = React.useState("");
 
   const linkMutation = useApiMutation({
@@ -43,7 +43,7 @@ export function ShipmentItemLinkModal({
           ? { mode: "link" as const, productId: existingProductId! }
           : {
               mode: "create" as const,
-              categorySlugs: categorySlugs.split(",").map((s) => s.trim()).filter(Boolean),
+              categorySlugs,
               brandSlug: brandSlug.trim() || undefined,
             };
       return apiClient.post(ADMIN_ENDPOINTS.SHIPMENT_LOT_ITEM_LINK(shipmentId, lotId, itemId), body);
@@ -54,7 +54,7 @@ export function ShipmentItemLinkModal({
     },
   });
 
-  const canSubmit = mode === "link" ? !!existingProductId : categorySlugs.trim().length > 0;
+  const canSubmit = mode === "link" ? !!existingProductId : categorySlugs.length > 0;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Create pre-order link — ${itemTitle}`} size="md">
@@ -77,10 +77,8 @@ export function ShipmentItemLinkModal({
           />
         ) : (
           <Stack gap="sm">
-            <FieldInput
-              name="categorySlugs"
-              label="Category slugs (comma-separated)"
-              required
+            <TagInput
+              label="Category slugs"
               value={categorySlugs}
               onChange={setCategorySlugs}
               placeholder="category-action-figures"

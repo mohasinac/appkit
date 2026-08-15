@@ -12,6 +12,7 @@ import {
   Label,
   RichTextEditor,
   Stack,
+  TagInput,
   Text,
 } from "../../../ui";
 import { CustomSectionsEditor } from "./CustomSectionsEditor";
@@ -325,14 +326,10 @@ export function ProductForm({
                 disabled: isReadonly,
               })
             ) : product.brandMode === "mixed" ? (
-              <FormField
-                name="brands"
-                label="Brands (comma-separated)"
-                type="text"
-                value={(product.brands || []).join(", ")}
-                onChange={(value) =>
-                  update({ brands: value.split(",").map((b) => b.trim()).filter(Boolean) })
-                }
+              <TagInput
+                label="Brands"
+                value={product.brands || []}
+                onChange={(brands) => update({ brands })}
                 disabled={isReadonly}
                 placeholder="e.g. Nike, Adidas, Puma"
               />
@@ -469,19 +466,10 @@ export function ProductForm({
         />
       )}
 
-      <FormField
-        name="tags"
+      <TagInput
         label={t("formTags")}
-        type="text"
-        value={(product.tags || []).join(", ")}
-        onChange={(value) =>
-          update({
-            tags: value
-              .split(",")
-              .map((tag) => tag.trim())
-              .filter(Boolean),
-          })
-        }
+        value={product.tags || []}
+        onChange={(tags) => update({ tags })}
         disabled={isReadonly}
         placeholder={t("formTagsPlaceholder")}
       />

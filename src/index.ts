@@ -3668,9 +3668,6 @@ export { NOTIFICATION_FIELDS } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // NOTIFICATION_PUBLIC_FIELDS - Constant used across modules.
 export { NOTIFICATION_PUBLIC_FIELDS } from "./features/admin/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// QuickActionsPanel - Shared export for quick actions panel.
-export { QuickActionsPanel } from "./features/admin/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // SITE_SETTINGS_COLLECTION - Constant used across modules.
 export { SITE_SETTINGS_COLLECTION } from "./features/admin/index";
@@ -3908,12 +3905,6 @@ export type { NotificationUpdateInput } from "./features/admin/index";
 export type { SendNotificationInput } from "./features/admin/server";
 // SendNotificationResult - Result shape returned by sendNotification.
 export type { SendNotificationResult } from "./features/admin/server";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// QuickActionItem - Type contract for quick action item.
-export type { QuickActionItem } from "./features/admin/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// QuickActionsPanelProps - Type contract for quick actions panel props.
-export type { QuickActionsPanelProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SiteSettingsCredentials - Type contract for site settings credentials.
 export type { SiteSettingsCredentials } from "./features/admin/index";

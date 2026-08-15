@@ -15,7 +15,7 @@
  */
 
 import React, { useCallback } from "react";
-import { Div, Input, Row, Select, Stack, Text } from "../../../ui";
+import { Div, Input, Row, Select, Stack, TagInput, Text } from "../../../ui";
 import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
 import { BrandInlineSelect } from "../../seller/components/BrandInlineSelect";
 import { BUNDLE_MAX_ITEMS } from "../../../_internal/shared/features/categories/bundle-config";
@@ -80,8 +80,6 @@ export function BundleDynamicRuleEditor({
     [rule, onChange],
   );
 
-  const tagsValue = (rule.filter.tags ?? []).join(", ");
-
   return (
     <Stack gap="md">
       <Row gap="sm" align="center" justify="between" wrap>
@@ -123,16 +121,9 @@ export function BundleDynamicRuleEditor({
         <Text size="xs" weight="semibold">
           {BUNDLE_COPY.adminEditor.dynamic.fields.tags}
         </Text>
-        <Input
-          type="text"
-          value={tagsValue}
-          onChange={(e) => {
-            const parsed = e.target.value
-              .split(",")
-              .map((t) => t.trim())
-              .filter(Boolean);
-            patchFilter({ tags: parsed.length ? parsed : undefined });
-          }}
+        <TagInput
+          value={rule.filter.tags ?? []}
+          onChange={(tags) => patchFilter({ tags: tags.length ? tags : undefined })}
           placeholder="pokemon, starter-deck"
           disabled={disabled}
         />

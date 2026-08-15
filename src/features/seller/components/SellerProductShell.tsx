@@ -732,16 +732,12 @@ function StepLiveItemSettings({
           placeholder="0"
         />
       )}
-      <FormField
-        name="liveJurisdictions"
-        label="Jurisdictions where sale is permitted (comma-separated)"
-        type="text"
-        value={(values.liveJurisdictions ?? []).join(", ")}
-        onChange={(v) =>
-          onChange({ liveJurisdictions: v.split(",").map((s) => s.trim()).filter(Boolean) })
-        }
+      <TagInput
+        label="Jurisdictions where sale is permitted"
+        value={values.liveJurisdictions ?? []}
+        onChange={(liveJurisdictions) => onChange({ liveJurisdictions })}
         placeholder="e.g. Maharashtra, Karnataka"
-        helpText="List all Indian states / UTs where you can legally sell"
+        helperText="List all Indian states / UTs where you can legally sell"
       />
       <Toggle
         checked={!!values.liveCites}
