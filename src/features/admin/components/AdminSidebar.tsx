@@ -51,14 +51,14 @@ function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: bo
     <Link
       href={item.href}
       onClick={onClick}
-      className={`flex items-center gap-[var(--appkit-space-2-5)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium leading-tight transition-colors ${
+      className={`flex items-center justify-end gap-[var(--appkit-space-2-5)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium leading-tight transition-colors ${
  isActive
  ? "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)]"
  : "text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)]/60 hover:text-zinc-800 hover:text-[var(--appkit-color-text-muted)]"
  }`}
     >
       {item.icon && <Span size="base" className="shrink-0 opacity-60">{item.icon}</Span>}
-      <Span className="flex-1 truncate">{item.label}</Span>
+      <Span className="truncate">{item.label}</Span>
     </Link>
   );
 }
