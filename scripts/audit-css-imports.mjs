@@ -49,6 +49,14 @@ for (const root of [join(APPKIT_ROOT, "src"), join(REPO_ROOT, "src")]) {
       const target = m[1];
       if (target.startsWith(".") || target.startsWith("/")) continue;
       if (/^https?:/.test(target)) continue;
+      // Tailwind v4's own entry points (`tailwindcss`, `tailwindcss/theme.css`,
+      // `tailwindcss/utilities.css`, etc.) are the documented, correct way to
+      // pull in the framework — they're expanded by the Tailwind CLI/PostCSS
+      // plugin as part of building tailwind-utilities.css, not left for
+      // Turbopack to inline raw. Root Cause #10 is about *precompiled*
+      // third-party package CSS bypassing that processing step, which this
+      // isn't.
+      if (target === "tailwindcss" || target.startsWith("tailwindcss/")) continue;
       violations.push({ file: rel, line: i + 1, target, text: lines[i].trim() });
     }
   }
