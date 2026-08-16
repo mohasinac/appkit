@@ -4,6 +4,21 @@
 // the theme + utilities layers directly in src/tailwind-input.css without
 // importing tailwindcss/preflight.css — see that file for the actual mechanism.
 module.exports = {
+  // `important: true` (2026-08-16): the consumer's tailwind.config.js applies
+  // this same flag with a full explanation — Turbopack's CSS chunk-splitting
+  // (`next build`'s production optimizer) breaks the guarantee that later,
+  // more-specific rules load after earlier ones; the last-loaded chunk wins
+  // regardless of source order. Confirmed here too: `.xl\:text-8xl` (a plain
+  // Tailwind utility from this file's own build) non-deterministically lost
+  // to `.appkit-text--5xl` (a hand-authored component class from
+  // ui/components/index.style.css) across different builds of the *same*
+  // source — one build had the hero heading correctly at its largest
+  // responsive size, another silently fell back to the smallest tier. Since
+  // this file's utilities are consumed both directly by appkit components and
+  // via the consumer's re-export, forcing `!important` here mirrors the
+  // consumer-side fix so appkit's own utility-vs-component-class cascade is
+  // no longer a build-to-build coin flip.
+  important: true,
   darkMode: "class",
   content: ["./src/**/*.{ts,tsx,js,jsx}"],
   theme: {

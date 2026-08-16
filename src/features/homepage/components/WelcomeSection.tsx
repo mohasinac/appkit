@@ -109,7 +109,7 @@ if (isLoading) {
               level={1}
               variant="none"
               gradient="brand-tri"
-              className="mt-4 font-display leading-[1.1] tracking-tight" size="5xl" mdSize="6xl" lgSize="7xl" xlSize="8xl"
+              className="mt-4 font-display leading-[1.1] tracking-tight break-words" size="5xl" mdSize="6xl" lgSize="7xl" xlSize="7xl"
             >
               {title}
             </Heading>

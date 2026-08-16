@@ -417,7 +417,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                     {slide.overlay.title && (
                       <Heading color="inverse"
                         level={1}
-                        className="stagger-2 font-display ! mb-2 md:mb-4" size="4xl" shadow="2xl" mdSize="6xl" lgSize="8xl"
+                        className="stagger-2 font-display ! mb-2 md:mb-4 break-words" size="4xl" shadow="2xl" mdSize="6xl" lgSize="8xl"
                       >
                         {slide.overlay.title}
                       </Heading>

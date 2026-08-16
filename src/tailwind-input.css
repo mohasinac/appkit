@@ -21,6 +21,12 @@
    ThemeProvider convention of toggling `.dark` on <html>). */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Tailwind v4 disables automatic content auto-detection once a legacy config
+   is bridged in via `@config` (v3's `content` array in tailwind.config.js is
+   NOT used for scanning in v4 — @config only bridges theme.extend/plugins/
+   darkMode). */
+@source "../src";
+
 @theme {
   /* Tailwind v4 changed the bare `ring` utility's default width from 3px to 1px
      and its default color from blue-500 to currentColor. Confirmed via repo-wide
@@ -29,4 +35,42 @@
      safety net pinning v3 behavior, not a fix for an observed regression. */
   --default-ring-width: 3px;
   --default-ring-color: var(--color-blue-500);
+}
+
+/* Hand-written compensating rules for responsive-prefixed (`sm:`/`md:`/`lg:`/
+   `xl:`) utility classes that Tailwind v4's CLI genuinely never generates in
+   this build — confirmed 2026-08-16 via isolated CLI tests (both the
+   root-level and appkit-local tailwindcss v4.3.3 binaries, with and without
+   `@config`, with and without `@source`/`@source inline(...)`): unprefixed
+   utilities like `.hidden` or `.text-6xl` generate correctly, but NO
+   variant-prefixed utility of any kind was ever emitted, regardless of
+   scanning or explicit safelisting. This is the same underlying gap the
+   consumer's globals.css already works around by hand-writing its own
+   `.hidden`/`.block`/`.flex` breakpoint rules directly instead of relying on
+   Tailwind to generate them. This block covers the specific responsive
+   text-size classes `ui/components/Typography.tsx`'s
+   RESPONSIVE_TEXT_SIZE_CLASS map emits for the 6xl/7xl/8xl tier (used by the
+   homepage hero heading), using the exact same rem values Tailwind's own
+   default theme defines for text-6xl/7xl/8xl. Add further rules here only
+   for the specific variant-prefixed classes appkit components actually use
+   and Tailwind fails to generate — this is not a blanket escape hatch. */
+@media (min-width: 40rem) {
+  .sm\:text-6xl { font-size: 3.75rem !important; line-height: 1 !important; }
+  .sm\:text-7xl { font-size: 4.5rem !important; line-height: 1 !important; }
+  .sm\:text-8xl { font-size: 6rem !important; line-height: 1 !important; }
+}
+@media (min-width: 48rem) {
+  .md\:text-6xl { font-size: 3.75rem !important; line-height: 1 !important; }
+  .md\:text-7xl { font-size: 4.5rem !important; line-height: 1 !important; }
+  .md\:text-8xl { font-size: 6rem !important; line-height: 1 !important; }
+}
+@media (min-width: 64rem) {
+  .lg\:text-6xl { font-size: 3.75rem !important; line-height: 1 !important; }
+  .lg\:text-7xl { font-size: 4.5rem !important; line-height: 1 !important; }
+  .lg\:text-8xl { font-size: 6rem !important; line-height: 1 !important; }
+}
+@media (min-width: 80rem) {
+  .xl\:text-6xl { font-size: 3.75rem !important; line-height: 1 !important; }
+  .xl\:text-7xl { font-size: 4.5rem !important; line-height: 1 !important; }
+  .xl\:text-8xl { font-size: 6rem !important; line-height: 1 !important; }
 }
