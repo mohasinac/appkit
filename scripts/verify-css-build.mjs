@@ -21,9 +21,13 @@ const REQUIRED_CLASSES = [
   "md\\:block",
   "md\\:flex",
   "md\\:hidden",
-  // Responsive breakpoints must exist as @media rules
-  "min-width:1024px",
-  "min-width:768px",
+  // Responsive breakpoints must exist as @media rules.
+  // Tailwind v4 (2026-08-16 migration) uses rem-based default breakpoints —
+  // 64rem/48rem are the exact same viewport widths as v3's 1024px/768px at the
+  // browser default 16px root font-size (this project does not override
+  // html { font-size }), just expressed in the new unit.
+  "min-width:64rem",
+  "min-width:48rem",
 ];
 
 let css;

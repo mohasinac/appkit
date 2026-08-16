@@ -7,19 +7,22 @@
 
 "use strict";
 
+// NOTE (Tailwind v4 migration, 2026-08-16): `safelist` is NOT supported by the
+// v4 `@config` compat bridge. Safelist classes live in the consumer's CSS entry
+// point via `@source inline("...")` instead — see src/app/globals.css. Do not
+// re-add a `safelist` key here; it would silently no-op under v4.
+
 function defineTailwindConfig(override = {}) {
   const {
     content: consumerContent = [],
     theme: consumerTheme = {},
     plugins: consumerPlugins = [],
-    safelist: consumerSafelist = [],
     ...rest
   } = override;
 
   return {
     darkMode: "class",
     content: [...consumerContent],
-    safelist: [...consumerSafelist],
     theme: {
       extend: {
         colors: {

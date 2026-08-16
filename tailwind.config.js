@@ -1,8 +1,10 @@
 /** @type {import('tailwindcss').Config} */
+// NOTE (Tailwind v4 migration, 2026-08-16): `corePlugins` is NOT supported by
+// the v4 `@config` compat bridge. Preflight is disabled instead by composing
+// the theme + utilities layers directly in src/tailwind-input.css without
+// importing tailwindcss/preflight.css — see that file for the actual mechanism.
 module.exports = {
   darkMode: "class",
-  // No preflight — the host app supplies the browser reset.
-  corePlugins: { preflight: false },
   content: ["./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {

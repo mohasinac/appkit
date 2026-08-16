@@ -1,4 +1,32 @@
 /* Compiled by the appkit build step — do not edit directly.
    Source: appkit/tailwind.config.js + appkit/src/**
-   Output: appkit/dist/tailwind-utilities.css (minified) */
-@tailwind utilities;
+   Output: appkit/dist/tailwind-utilities.css (minified)
+
+   Tailwind v4 migration (2026-08-16):
+   - appkit ships WITHOUT Preflight — the host app supplies the browser reset —
+     so instead of `@import "tailwindcss";` (which bundles preflight.css) the
+     theme + utilities layers are imported directly, skipping preflight.css.
+     v3's equivalent was `corePlugins: { preflight: false }`, which the v4
+     `@config` compat bridge does not support (see appkit/tailwind.config.js).
+   - `@config` keeps content/theme.extend/plugins/darkMode from the existing
+     JS config working exactly as they did under v3 — see
+     appkit/src/configs/tailwind.ts for what that config actually contains. */
+@config "../tailwind.config.js";
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* v3 `darkMode: "class"` equivalent — dark: variant applies when a `.dark`
+   class is present on the element itself or an ancestor (matches the existing
+   ThemeProvider convention of toggling `.dark` on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Tailwind v4 changed the bare `ring` utility's default width from 3px to 1px
+     and its default color from blue-500 to currentColor. Confirmed via repo-wide
+     grep (2026-08-16) that no bare `ring` class (without a numeric suffix) is
+     used anywhere in appkit/src or the consumer's src — this is a zero-cost
+     safety net pinning v3 behavior, not a fix for an observed regression. */
+  --default-ring-width: 3px;
+  --default-ring-color: var(--color-blue-500);
+}

@@ -3,9 +3,19 @@
  *
  * appkit ships pre-compiled dist/tailwind-utilities.css covering every class
  * appkit components emit. The consumer's Tailwind config does NOT need to scan
- * node_modules/@mohasinac/appkit/** and does NOT need a safelist.
+ * node_modules/@mohasinac/appkit/**.
  *
  * Consumer must provide `content` globs for their own source files.
+ *
+ * Loaded via a Tailwind v4 `@config "./tailwind.config.js";` directive in the
+ * consumer's CSS entry point — v4's config-compat bridge still honors
+ * `content`/`theme`/`plugins`/`darkMode` from a JS config exactly like v3 did.
+ *
+ * NOTE (Tailwind v4 migration, 2026-08-16): `safelist` is NOT supported by the
+ * v4 `@config` compat bridge. Any safelist classes must live in the consumer's
+ * CSS entry point via `@source inline("...")` instead — see src/app/globals.css.
+ * Do not add a `safelist` key back to this factory's override shape; it would
+ * silently no-op under v4.
  *
  * @example
  * ```js
@@ -21,7 +31,6 @@ export interface TailwindConfigOverride {
   content?: string[];
   theme?: Record<string, unknown>;
   plugins?: unknown[];
-  safelist?: unknown[];
   [key: string]: unknown;
 }
 
@@ -30,14 +39,12 @@ export function defineTailwindConfig(override: TailwindConfigOverride = {}) {
     content: consumerContent = [],
     theme: consumerTheme = {},
     plugins: consumerPlugins = [],
-    safelist: consumerSafelist = [],
     ...rest
   } = override;
 
   return {
     darkMode: "class" as const,
     content: [...consumerContent],
-    safelist: [...consumerSafelist],
     theme: {
       extend: {
         colors: {
