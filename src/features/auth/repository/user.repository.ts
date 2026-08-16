@@ -92,7 +92,15 @@ export class UserRepository extends BaseRepository<UserDocument> {
     id: string,
     data: Partial<UserDocument>,
   ): Promise<UserDocument> {
-    const encrypted = this.encryptUserData(data);
+    // `uid` is a required UserDocument field read directly off the mapped
+    // object (SessionUser.uid, getServerPermissions(uid), etc.) — mapDoc()
+    // only auto-populates `.id` from the Firestore doc ID, not `.uid`. A
+    // caller passing `data` without `uid` silently produces a user record
+    // that authenticates fine but fails every downstream role/permission
+    // check with no error anywhere (found via a live RBAC bug where an
+    // admin account created this way couldn't access /admin).
+    const withUid: Partial<UserDocument> = { uid: id, ...data };
+    const encrypted = this.encryptUserData(withUid);
     return super.createWithId(id, encrypted);
   }
 
