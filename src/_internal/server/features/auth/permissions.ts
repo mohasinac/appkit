@@ -40,6 +40,8 @@ export async function getServerPermissions(
     permissions?: string[];
   } | null>);
 
+  console.error("[PERM-DIAG] uid:", uid, "user:", user ? JSON.stringify(user) : "null");
+
   if (!user) return { isAdmin: false, permissions: [] };
 
   if (user.role === "admin") return { isAdmin: true, permissions: [] };
