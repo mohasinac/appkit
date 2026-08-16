@@ -144,17 +144,25 @@ export { ErrorBoundary } from "./ErrorBoundary";
 export type { ErrorBoundaryProps } from "./ErrorBoundary";
 
 // Realtime event bridge
+// RealtimeEventType/RealtimeEventStatus/RTDBPayloadStatus/RTDBEventPayload/
+// RealtimeEventMessages come from realtime-event-constants.ts (plain module,
+// no "use client") rather than useRealtimeEvent.ts directly — server code
+// importing these via the main @mohasinac/appkit barrel needs the real
+// values, not the client-reference placeholder Next.js substitutes for
+// "use client" module exports.
+export { useRealtimeEvent } from "./hooks/useRealtimeEvent";
+export type {
+  UseRealtimeEventConfig,
+  UseRealtimeEventReturn,
+} from "./hooks/useRealtimeEvent";
 export {
-  useRealtimeEvent,
   RealtimeEventType,
   RealtimeEventStatus,
   RTDBPayloadStatus,
-} from "./hooks/useRealtimeEvent";
+} from "./hooks/realtime-event-constants";
 export type {
   RTDBEventPayload,
   RealtimeEventMessages,
   RealtimeEventType as RealtimeEventTypeValue,
   RealtimeEventStatus as RealtimeEventStatusValue,
-  UseRealtimeEventConfig,
-  UseRealtimeEventReturn,
-} from "./hooks/useRealtimeEvent";
+} from "./hooks/realtime-event-constants";

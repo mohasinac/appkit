@@ -1,55 +1,31 @@
 "use client"
 import { normalizeError } from "../../errors/normalize";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { JsonValue } from "../../schemas/types";
 import {
   getClientRealtimeProvider,
   type IClientRealtimeProvider,
   type Unsubscribe,
 } from "../../contracts/client-realtime";
+import {
+  RealtimeEventType,
+  RealtimeEventStatus,
+  RTDBPayloadStatus,
+  type RTDBEventPayload,
+  type RealtimeEventMessages,
+} from "./realtime-event-constants";
 
-export const RealtimeEventType = {
-  AUTH: "auth",
-  PAYMENT: "payment",
-  CHAT: "chat",
-  BID: "bid",
-  BULK: "bulk",
-} as const;
-
-export type RealtimeEventType =
-  (typeof RealtimeEventType)[keyof typeof RealtimeEventType];
-
-export const RealtimeEventStatus = {
-  IDLE: "idle",
-  SUBSCRIBING: "subscribing",
-  PENDING: "pending",
-  SUCCESS: "success",
-  FAILED: "failed",
-  TIMEOUT: "timeout",
-} as const;
-
-export type RealtimeEventStatus =
-  (typeof RealtimeEventStatus)[keyof typeof RealtimeEventStatus];
-
-export const RTDBPayloadStatus = {
-  PENDING: "pending",
-  SUCCESS: "success",
-  FAILED: "failed",
-  ERROR: "error",
-} as const;
-
-export interface RTDBEventPayload {
-  status: (typeof RTDBPayloadStatus)[keyof typeof RTDBPayloadStatus];
-  error?: string;
-  [key: string]: JsonValue | undefined;
-}
-
-export interface RealtimeEventMessages {
-  tokenFailure?: string;
-  connectionLost?: string;
-  timedOut?: string;
-  failure?: string;
-}
+// Re-exported for existing client import paths — the canonical definitions
+// now live in realtime-event-constants.ts (a plain, non-"use client" module)
+// so server code can import them without hitting the client-reference
+// substitution Next.js applies to "use client" module exports. See that
+// file's comment for the full story.
+export {
+  RealtimeEventType,
+  RealtimeEventStatus,
+  RTDBPayloadStatus,
+  type RTDBEventPayload,
+  type RealtimeEventMessages,
+};
 
 export interface UseRealtimeEventConfig<TData = undefined> {
   type: RealtimeEventType;
