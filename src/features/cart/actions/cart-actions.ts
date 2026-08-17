@@ -9,6 +9,7 @@ import { serverLogger } from "../../../monitoring";
 import { ValidationError } from "../../../errors";
 import { cartRepository } from "../repository/cart.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import type {
@@ -16,6 +17,21 @@ import type {
   CartDocument,
   UpdateCartItemInput,
 } from "../schemas";
+
+/**
+ * Product documents don't always carry a denormalized `storeName` — the
+ * create routes only set it when the caller explicitly passes one, so
+ * listings created without it leave the field undefined forever. Cart items
+ * built from those products then fell back to displaying the raw `storeId`
+ * slug (e.g. "store-letitrip-official") in the UI. Resolving from the store
+ * document here — the single add-to-cart chokepoint — fixes every caller at
+ * once instead of patching each product-creation call site.
+ */
+async function resolveStoreName(storeId: string, candidate: string | undefined): Promise<string> {
+  if (candidate) return candidate;
+  const store = await storeRepository.findById(storeId).catch(() => null);
+  return store?.storeName ?? storeId;
+}
 
 export async function addItemToCart(
   userId: string,
@@ -33,7 +49,8 @@ export async function addItemToCart(
       `Listings of type "${input.listingType}" cannot be added to the cart.`,
     );
   }
-  return cartRepository.addItem(userId, input);
+  const storeName = await resolveStoreName(input.storeId, input.storeName);
+  return cartRepository.addItem(userId, { ...input, storeName });
 }
 
 export async function updateCartItem(
@@ -69,6 +86,7 @@ export async function mergeGuestCart(
 
     const safeQty = Math.min(item.quantity, product.availableQuantity);
 
+    const storeName = await resolveStoreName(product.storeId, product.storeName);
     await cartRepository.addItem(userId, {
       productId: product.id,
       productTitle: product.title,
@@ -77,7 +95,7 @@ export async function mergeGuestCart(
       currency: product.currency ?? getDefaultCurrency(),
       quantity: safeQty,
       storeId: product.storeId,
-      storeName: product.storeName ?? "",
+      storeName,
       listingType: normalizeListingType(product),
     });
   }

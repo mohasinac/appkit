@@ -2,8 +2,9 @@ import type { ThemeRecord } from "./types";
 import { DEFAULT_DARK_THEME } from "./default-dark";
 
 /**
- * Theme template — Cobalt Night. Keeps the cobalt primary but pairs it with
- * a deep-blue dark surface instead of hot pink. Mirrors the
+ * Theme template — Cobalt Night. Keeps a cobalt-blue primary but pairs it
+ * with a deep-blue dark surface — a distinct alternate dark palette from the
+ * built-in `default-dark` (crimson + cyan since 2026-08-17). Mirrors the
  * `[data-theme="cobalt-night"]` block in `appkit/src/tokens/tokens.css`.
  *
  * Not a built-in (`builtIn: false`) — seeded into `siteSettings.theme.themes`

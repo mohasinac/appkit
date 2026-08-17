@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ROUTES } from "../../../../next/routing/route-map";
+import { DEFAULT_LIGHT_THEME } from "../../../../tokens/themes/default-light";
 
 export interface ManifestOptions {
   name: string;
@@ -16,7 +17,7 @@ export function buildManifest({ name, shortName, description }: ManifestOptions)
     display: "standalone",
     orientation: "portrait",
     background_color: "#ffffff",
-    theme_color: "#3570fc",
+    theme_color: DEFAULT_LIGHT_THEME.tokens["appkit-color-primary"],
     categories: ["shopping", "marketplace", "business"],
     lang: "en",
     dir: "ltr",

@@ -53,9 +53,9 @@
   height: 3px;
   background: linear-gradient(
     to right,
-    var(--appkit-color-primary-700, #1343de) 0%,
-    var(--appkit-color-cobalt, #3570fc)      55%,
-    var(--appkit-color-secondary-400, #84e122) 100%
+    var(--appkit-color-primary-700) 0%,
+    var(--appkit-color-primary)      55%,
+    var(--appkit-color-secondary-400) 100%
   );
   pointer-events: none;
 }
@@ -69,42 +69,42 @@
   border-color: var(--appkit-color-border);
 }
 
-/* create — soft blue-to-lime wash, echoes the wordmark gradient */
+/* create — soft primary-to-secondary wash, echoes the wordmark gradient */
 .appkit-side-drawer__header--create {
   background: linear-gradient(
     135deg,
-    rgba(19, 67, 222, 0.07) 0%,
-    rgba(53, 112, 252, 0.05) 55%,
-    rgba(132, 225, 34, 0.04) 100%
+    color-mix(in srgb, var(--appkit-color-primary) 7%, transparent) 0%,
+    color-mix(in srgb, var(--appkit-color-primary) 5%, transparent) 55%,
+    color-mix(in srgb, var(--appkit-color-secondary) 4%, transparent) 100%
   );
-  border-color: rgba(53, 112, 252, 0.2);
+  border-color: color-mix(in srgb, var(--appkit-color-primary) 20%, transparent);
 }
 :is(.dark) .appkit-side-drawer__header--create {
   background: linear-gradient(
     135deg,
-    rgba(19, 67, 222, 0.18) 0%,
-    rgba(53, 112, 252, 0.12) 55%,
-    rgba(132, 225, 34, 0.06) 100%
+    color-mix(in srgb, var(--appkit-color-primary) 18%, transparent) 0%,
+    color-mix(in srgb, var(--appkit-color-primary) 12%, transparent) 55%,
+    color-mix(in srgb, var(--appkit-color-secondary) 6%, transparent) 100%
   );
-  border-color: rgba(53, 112, 252, 0.25);
+  border-color: color-mix(in srgb, var(--appkit-color-primary) 25%, transparent);
 }
 
-/* edit — warmer blue wash */
+/* edit — warmer primary wash */
 .appkit-side-drawer__header--edit {
   background: linear-gradient(
     135deg,
-    rgba(53, 112, 252, 0.06) 0%,
-    rgba(132, 225, 34, 0.04) 100%
+    color-mix(in srgb, var(--appkit-color-primary) 6%, transparent) 0%,
+    color-mix(in srgb, var(--appkit-color-secondary) 4%, transparent) 100%
   );
-  border-color: rgba(53, 112, 252, 0.15);
+  border-color: color-mix(in srgb, var(--appkit-color-primary) 15%, transparent);
 }
 :is(.dark) .appkit-side-drawer__header--edit {
   background: linear-gradient(
     135deg,
-    rgba(53, 112, 252, 0.14) 0%,
-    rgba(132, 225, 34, 0.06) 100%
+    color-mix(in srgb, var(--appkit-color-primary) 14%, transparent) 0%,
+    color-mix(in srgb, var(--appkit-color-secondary) 6%, transparent) 100%
   );
-  border-color: rgba(53, 112, 252, 0.2);
+  border-color: color-mix(in srgb, var(--appkit-color-primary) 20%, transparent);
 }
 
 .appkit-side-drawer__header--delete {

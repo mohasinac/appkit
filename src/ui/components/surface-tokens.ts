@@ -5,6 +5,7 @@
  * `rounded`, `border`, `shadow`) on Stack, Row, Grid, Container, Section,
  * Article, Main, Aside, Div, BlockHeader, and BlockFooter.
  */
+import { getSurfaceTextClass } from "../../tokens/color-pairs";
 
 export const SURFACE_MAP = {
   none: "",
@@ -319,6 +320,12 @@ export interface SurfaceProps {
 export function buildSurfaceClasses(props: SurfaceProps): string {
   return [
     props.surface ? SURFACE_MAP[props.surface] : "",
+    // Colors as a function, not a convention (appkit/src/tokens/color-pairs.ts):
+    // every `surface` gets a readable default text color from here, resolved
+    // via getSurfaceTextClass — never picked independently. A child element's
+    // own explicit text color class still wins (normal CSS specificity), so
+    // this only fills in a floor, it never overrides an intentional choice.
+    props.surface ? getSurfaceTextClass(props.surface) : "",
     props.padding ? PADDING_MAP[props.padding] : "",
     props.paddingX ? X_ONLY_MAP[props.paddingX] : "",
     props.paddingY ? Y_ONLY_MAP[props.paddingY] : "",

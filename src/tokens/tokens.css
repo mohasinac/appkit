@@ -11,61 +11,65 @@
  *     --appkit-color-secondary: #your-secondary;
  *   }
  *
- * Default values reflect a lime + magenta palette (override --appkit-color-primary etc. to rebrand).
+ * Default values reflect a teal + magenta / crimson + cyan palette (override
+ * --appkit-color-primary etc. to rebrand).
  */
 
 /* --- Colour — Brand ------------------------------------------------------- */
 /*
- * Light mode  (image 1 — cobalt-blue body + lime-green blades):
- *   primary   = Cobalt Blue   (dominant body colour)
- *   secondary = Lime Green    (blade / accent colour)
+ * Rebranded 2026-08-17 to match two Beyblade reference images (silver/chrome
+ * frame shared across both, distinguishing body + energy-ring colours):
  *
- * Dark mode   (image 2 — hot-pink blades + near-black body):
- *   primary   = Hot Pink      (dominant accent colour)   ← overridden in .dark below
- *   secondary = Hot Pink      (same — unified accent)    ← overridden in .dark below
+ * Light mode  (teal/magenta blade — turquoise body + magenta squiggle highlight):
+ *   primary   = Teal      (dominant body colour)
+ *   secondary = Magenta   (energy-ring / accent colour)
+ *
+ * Dark mode   (red/cyan blade — crimson body + cyan squiggle highlight):
+ *   primary   = Crimson Red   (dominant body colour)   ← overridden in [data-theme="default-dark"] below
+ *   secondary = Cyan          (energy-ring / accent colour) ← overridden in [data-theme="default-dark"] below
  */
 :root {
-  /* Primary — Cobalt Blue (light mode dominant, matches Beyblade 1 blue body) */
-  --appkit-color-primary:          #3570fc;
-  --appkit-color-primary-50:       #eef5ff;
-  --appkit-color-primary-100:      #d9e8ff;
-  --appkit-color-primary-200:      #bcd4ff;
-  --appkit-color-primary-300:      #8eb9ff;
-  --appkit-color-primary-400:      #5992ff;
-  --appkit-color-primary-500:      #3570fc;
-  --appkit-color-primary-600:      #1a55f2;
-  --appkit-color-primary-700:      #1343de;
-  --appkit-color-primary-800:      #1536b4;
-  --appkit-color-primary-900:      #18318e;
-  --appkit-color-primary-950:      #111e58;
+  /* Primary — Teal (light mode dominant, matches the teal/magenta Beyblade's turquoise body) */
+  --appkit-color-primary:          #0d9488;
+  --appkit-color-primary-50:       #f0fdfa;
+  --appkit-color-primary-100:      #ccfbf1;
+  --appkit-color-primary-200:      #99f6e4;
+  --appkit-color-primary-300:      #5eead4;
+  --appkit-color-primary-400:      #2dd4bf;
+  --appkit-color-primary-500:      #14b8a6;
+  --appkit-color-primary-600:      #0d9488;
+  --appkit-color-primary-700:      #0f766e;
+  --appkit-color-primary-800:      #115e59;
+  --appkit-color-primary-900:      #134e4a;
+  --appkit-color-primary-950:      #042f2e;
 
-  /* Secondary — Lime Green (light mode accent, matches Beyblade 1 green blades) */
-  --appkit-color-secondary:        #65c408;
-  --appkit-color-secondary-50:     #f3ffe3;
-  --appkit-color-secondary-100:    #e4ffc5;
-  --appkit-color-secondary-200:    #c8ff90;
-  --appkit-color-secondary-300:    #a3f550;
-  --appkit-color-secondary-400:    #84e122;
-  --appkit-color-secondary-500:    #65c408;
-  --appkit-color-secondary-600:    #509c02;
-  --appkit-color-secondary-700:    #3e7708;
-  --appkit-color-secondary-800:    #345e0d;
-  --appkit-color-secondary-900:    #2c5011;
-  --appkit-color-secondary-950:    #142d03;
+  /* Secondary — Magenta (light mode highlight, matches the teal/magenta Beyblade's squiggle accent) */
+  --appkit-color-secondary:        #c026d3;
+  --appkit-color-secondary-50:     #fdf4ff;
+  --appkit-color-secondary-100:    #fae8ff;
+  --appkit-color-secondary-200:    #f5d0fe;
+  --appkit-color-secondary-300:    #f0abfc;
+  --appkit-color-secondary-400:    #e879f9;
+  --appkit-color-secondary-500:    #d946ef;
+  --appkit-color-secondary-600:    #c026d3;
+  --appkit-color-secondary-700:    #a21caf;
+  --appkit-color-secondary-800:    #86198f;
+  --appkit-color-secondary-900:    #701a75;
+  --appkit-color-secondary-950:    #4a044e;
 
-  /* Cobalt — Blue accent (links, nav) */
-  --appkit-color-cobalt:           #3570fc;
-  --appkit-color-cobalt-50:        #eef5ff;
-  --appkit-color-cobalt-100:       #d9e8ff;
-  --appkit-color-cobalt-200:       #bcd4ff;
-  --appkit-color-cobalt-300:       #8eb9ff;
-  --appkit-color-cobalt-400:       #5992ff;
-  --appkit-color-cobalt-500:       #3570fc;
-  --appkit-color-cobalt-600:       #1a55f2;
-  --appkit-color-cobalt-700:       #1343de;
-  --appkit-color-cobalt-800:       #1536b4;
-  --appkit-color-cobalt-900:       #18318e;
-  --appkit-color-cobalt-950:       #111e58;
+  /* Cobalt — legacy alias, now mirrors primary teal (links, nav) */
+  --appkit-color-cobalt:           #0d9488;
+  --appkit-color-cobalt-50:        #f0fdfa;
+  --appkit-color-cobalt-100:       #ccfbf1;
+  --appkit-color-cobalt-200:       #99f6e4;
+  --appkit-color-cobalt-300:       #5eead4;
+  --appkit-color-cobalt-400:       #2dd4bf;
+  --appkit-color-cobalt-500:       #14b8a6;
+  --appkit-color-cobalt-600:       #0d9488;
+  --appkit-color-cobalt-700:       #0f766e;
+  --appkit-color-cobalt-800:       #115e59;
+  --appkit-color-cobalt-900:       #134e4a;
+  --appkit-color-cobalt-950:       #042f2e;
 
   /* Accent — Metallic Steel (frame silver) */
   --appkit-color-accent:           #8393b2;
@@ -267,20 +271,20 @@
   --appkit-color-text-on-primary:  #ffffff;
   --appkit-color-text-on-dark:     #ffffff;
 
-  --appkit-color-success:          #059669;    /* emerald-600 */
-  --appkit-color-success-surface:  #ecfdf5;    /* emerald-50 */
-  --appkit-color-warning:          #d97706;    /* amber-600 */
+  --appkit-color-success:          #15803d;    /* green-700 — 4.5:1 AA against success-surface, distinct from the new teal primary */
+  --appkit-color-success-surface:  #f0fdf4;    /* green-50 */
+  --appkit-color-warning:          #b45309;    /* amber-700 — 4.5:1 AA against warning-surface */
   --appkit-color-warning-surface:  #fffbeb;    /* amber-50 */
-  --appkit-color-error:            #dc2626;    /* red-600 */
+  --appkit-color-error:            #b91c1c;    /* red-700 — 4.5:1 AA against error-surface */
   --appkit-color-error-hover:      #ef4444;    /* red-500 — danger button hover */
   --appkit-color-error-surface:    #fef2f2;    /* red-50 */
   --appkit-color-error-title:      #7f1d1d;    /* red-900 */
   --appkit-color-error-text:       #991b1b;    /* red-800 */
-  --appkit-color-info:             #0284c7;    /* sky-600 */
+  --appkit-color-info:             #0369a1;    /* sky-700 — 4.5:1 AA against info-surface */
   --appkit-color-info-surface:     #f0f9ff;    /* sky-50 */
   --appkit-color-star:             #facc15;    /* yellow-400 — star ratings (decorative convention) */
 
-  --appkit-color-focus-ring:       #3570fc;    /* primary-500 = cobalt blue */
+  --appkit-color-focus-ring:       #0d9488;    /* primary-600 = teal */
 }
 
 /* --- Gradients — default-light defaults (overridden at runtime by ThemeProvider) - */
@@ -312,40 +316,42 @@
 }
 
 /* --- Theme — Dark ([data-theme="default-dark"]) ---------------------------- */
-/* Dark mode: both primary & secondary become Hot Pink (Beyblade 2 dominant colour).
+/* Dark mode: primary = Crimson Red, secondary = Cyan (the red/cyan Beyblade
+   reference art's body + energy-ring highlight). Rebranded 2026-08-17 from
+   the previous unified Hot Pink identity.
    Selector MUST match ThemeRecord.id ("default-dark"), not the ThemeMode ("dark") —
    ThemeProvider.applyTheme() sets data-theme to the record id, never "dark" literally.
    A prior mismatch here left this whole block unreachable (dead CSS), which also
    caused a "swamp green" FOUC flash: the anti-FOUC script sets .dark + the correct
    data-theme id before hydration, but with no matching CSS selector the page kept
-   painting :root's light-mode secondary (lime green) until React's inline styles
-   landed a moment later. */
+   painting :root's light-mode secondary until React's inline styles landed a
+   moment later. */
 [data-theme="default-dark"] {
-  --appkit-color-primary:          #e91e8c;
-  --appkit-color-primary-50:       #fdf0f8;
-  --appkit-color-primary-100:      #fce2f2;
-  --appkit-color-primary-200:      #fac6e6;
-  --appkit-color-primary-300:      #f79dd2;
-  --appkit-color-primary-400:      #f063b9;
-  --appkit-color-primary-500:      #e91e8c;
-  --appkit-color-primary-600:      #d4107a;
-  --appkit-color-primary-700:      #b00d66;
-  --appkit-color-primary-800:      #900f56;
-  --appkit-color-primary-900:      #771249;
-  --appkit-color-primary-950:      #480525;
+  --appkit-color-primary:          #ef4444;
+  --appkit-color-primary-50:       #fef2f2;
+  --appkit-color-primary-100:      #fee2e2;
+  --appkit-color-primary-200:      #fecaca;
+  --appkit-color-primary-300:      #fca5a5;
+  --appkit-color-primary-400:      #f87171;
+  --appkit-color-primary-500:      #ef4444;
+  --appkit-color-primary-600:      #dc2626;
+  --appkit-color-primary-700:      #b91c1c;
+  --appkit-color-primary-800:      #991b1b;
+  --appkit-color-primary-900:      #7f1d1d;
+  --appkit-color-primary-950:      #450a0a;
 
-  --appkit-color-secondary:        #e91e8c;
-  --appkit-color-secondary-50:     #fdf0f8;
-  --appkit-color-secondary-100:    #fce2f2;
-  --appkit-color-secondary-200:    #fac6e6;
-  --appkit-color-secondary-300:    #f79dd2;
-  --appkit-color-secondary-400:    #f063b9;
-  --appkit-color-secondary-500:    #e91e8c;
-  --appkit-color-secondary-600:    #d4107a;
-  --appkit-color-secondary-700:    #b00d66;
-  --appkit-color-secondary-800:    #900f56;
-  --appkit-color-secondary-900:    #771249;
-  --appkit-color-secondary-950:    #480525;
+  --appkit-color-secondary:        #06b6d4;
+  --appkit-color-secondary-50:     #ecfeff;
+  --appkit-color-secondary-100:    #cffafe;
+  --appkit-color-secondary-200:    #a5f3fc;
+  --appkit-color-secondary-300:    #67e8f9;
+  --appkit-color-secondary-400:    #22d3ee;
+  --appkit-color-secondary-500:    #06b6d4;
+  --appkit-color-secondary-600:    #0891b2;
+  --appkit-color-secondary-700:    #0e7490;
+  --appkit-color-secondary-800:    #155e75;
+  --appkit-color-secondary-900:    #164e63;
+  --appkit-color-secondary-950:    #083344;
 
   --appkit-color-bg:               #020617;    /* slate-950 */
   --appkit-color-surface:          #0f172a;    /* slate-900 */
@@ -363,41 +369,41 @@
   --appkit-color-success-surface:  rgba(6, 78, 59, 0.25);
   --appkit-color-warning:          #fbbf24;    /* amber-400 */
   --appkit-color-warning-surface:  #1c1508;    /* dark amber tint */
-  --appkit-color-error:            #f87171;    /* red-400 */
+  --appkit-color-error:            #fb7185;    /* rose-400 — distinct from the new red primary */
   --appkit-color-error-surface:    rgba(127, 29, 29, 0.25);
   --appkit-color-error-title:      #fecaca;    /* red-200 */
   --appkit-color-error-text:       #fca5a5;    /* red-300 */
   --appkit-color-info:             #38bdf8;    /* sky-400 */
   --appkit-color-info-surface:     rgba(12, 74, 110, 0.25);
 
-  --appkit-color-focus-ring:       #f063b9;    /* primary-400 in dark = hot pink */
-  --appkit-shadow-glow:            0 0 0 1px rgba(233,30,140,0.12), 0 4px 16px -4px rgba(233,30,140,0.22);
-  --appkit-shadow-glow-pink:       0 0 0 1px rgba(233,30,140,0.14), 0 4px 20px -4px rgba(233,30,140,0.28);
+  --appkit-color-focus-ring:       #f87171;    /* primary-400 */
+  --appkit-shadow-glow:            0 0 0 1px rgba(239,68,68,0.12), 0 4px 16px -4px rgba(239,68,68,0.22);
+  --appkit-shadow-glow-pink:       0 0 0 1px rgba(6,182,212,0.14), 0 4px 20px -4px rgba(6,182,212,0.28);
 
   /* Dark-mode gradient overrides */
-  --appkit-gradient-brand:           linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-info));
+  --appkit-gradient-brand:           linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
   --appkit-gradient-brand-tri:       linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary), var(--appkit-color-info));
-  --appkit-gradient-accent:          linear-gradient(to right, var(--appkit-color-info), var(--appkit-color-primary));
+  --appkit-gradient-accent:          linear-gradient(to right, var(--appkit-color-secondary), var(--appkit-color-primary));
   --appkit-gradient-accent-divider:  linear-gradient(to right, transparent, var(--appkit-color-primary), transparent);
-  --appkit-gradient-page-header:     linear-gradient(to bottom right, rgba(233,30,140,0.10), transparent 60%, transparent);
+  --appkit-gradient-page-header:     linear-gradient(to bottom right, rgba(239,68,68,0.10), transparent 60%, transparent);
   --appkit-gradient-section-warm:    linear-gradient(to bottom right, var(--appkit-color-warning-surface), transparent);
-  --appkit-gradient-section-cool:    linear-gradient(to bottom right, rgba(56,189,248,0.10), transparent);
-  --appkit-gradient-section-mesh:    radial-gradient(ellipse at top, rgba(233,30,140,0.10), var(--appkit-color-surface), rgba(56,189,248,0.08));
-  --appkit-gradient-accent-banner:   linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-info));
+  --appkit-gradient-section-cool:    linear-gradient(to bottom right, rgba(6,182,212,0.10), transparent);
+  --appkit-gradient-section-mesh:    radial-gradient(ellipse at top, rgba(239,68,68,0.10), var(--appkit-color-surface), rgba(6,182,212,0.08));
+  --appkit-gradient-accent-banner:   linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
   --appkit-gradient-promotion:       linear-gradient(to bottom right, var(--appkit-color-error), var(--appkit-color-primary), var(--appkit-color-warning));
-  --appkit-gradient-spotlight:       linear-gradient(to bottom right, rgba(56,189,248,0.10), var(--appkit-color-bg), rgba(56,189,248,0.10));
+  --appkit-gradient-spotlight:       linear-gradient(to bottom right, rgba(6,182,212,0.10), var(--appkit-color-bg), rgba(6,182,212,0.10));
   --appkit-gradient-whatsapp-card:   linear-gradient(to bottom right, var(--appkit-color-success), var(--appkit-color-success));
   --appkit-gradient-glass:           linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent));
-  --appkit-gradient-card-indigo:     linear-gradient(to bottom right, rgba(233,30,140,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
-  --appkit-gradient-card-teal:       linear-gradient(to bottom right, rgba(56,189,248,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
+  --appkit-gradient-card-indigo:     linear-gradient(to bottom right, rgba(239,68,68,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
+  --appkit-gradient-card-teal:       linear-gradient(to bottom right, rgba(6,182,212,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-amber:      linear-gradient(to bottom right, var(--appkit-color-warning-surface), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-rose:       linear-gradient(to bottom right, var(--appkit-color-error-surface), var(--appkit-color-surface), var(--appkit-color-surface));
-  --appkit-gradient-logo:            linear-gradient(to right, var(--appkit-color-primary-300) 0%, var(--appkit-color-primary-400) 55%, var(--appkit-color-info) 100%);
-  --appkit-gradient-sidebar:         linear-gradient(to bottom, var(--appkit-color-primary), var(--appkit-color-info));
+  --appkit-gradient-logo:            linear-gradient(to right, var(--appkit-color-primary-300) 0%, var(--appkit-color-primary-400) 55%, var(--appkit-color-secondary) 100%);
+  --appkit-gradient-sidebar:         linear-gradient(to bottom, var(--appkit-color-primary), var(--appkit-color-secondary));
   /* Logo stop overrides — lighter shades visible on dark (#020617) background */
   --appkit-logo-stop-from:           var(--appkit-color-primary-300);
   --appkit-logo-stop-mid:            var(--appkit-color-primary-400);
-  --appkit-logo-stop-to:             var(--appkit-color-info);
+  --appkit-logo-stop-to:             var(--appkit-color-secondary);
 
   /* Spacing + font-size scale — identical to :root; declared here only so the
      built-in dark theme record can satisfy audit-theme-drift (which diffs
@@ -494,13 +500,13 @@
   --appkit-color-text-muted:       #9a3412;    /* orange-800 */
   --appkit-color-text-faint:       #c2410c;    /* orange-700 */
 
-  --appkit-color-success:          #16a34a;
+  --appkit-color-success:          #15803d;
   --appkit-color-success-surface:  #f0fdf4;
-  --appkit-color-warning:          #d97706;
+  --appkit-color-warning:          #b45309;
   --appkit-color-warning-surface:  #fef3c7;
-  --appkit-color-error:            #dc2626;
+  --appkit-color-error:            #b91c1c;
   --appkit-color-error-surface:    #fef2f2;
-  --appkit-color-info:             #0284c7;
+  --appkit-color-info:             #0369a1;
   --appkit-color-info-surface:     #f0f9ff;
 
   --appkit-color-focus-ring:       #f59e0b;
@@ -581,8 +587,8 @@
   --appkit-shadow-xl:      0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
   --appkit-shadow-soft:    0 2px 15px -3px rgba(0,0,0,0.07), 0 10px 20px -2px rgba(0,0,0,0.04);
   /* Themed glow: tight ring + soft bloom — no bleed into neighbours */
-  --appkit-shadow-glow:      0 0 0 1px rgba(53,112,252,0.10), 0 4px 16px -4px rgba(53,112,252,0.20);
-  --appkit-shadow-glow-pink: 0 0 0 1px rgba(233,30,140,0.12), 0 4px 16px -4px rgba(233,30,140,0.22);
+  --appkit-shadow-glow:      0 0 0 1px rgba(13,148,136,0.10), 0 4px 16px -4px rgba(13,148,136,0.20);
+  --appkit-shadow-glow-pink: 0 0 0 1px rgba(192,38,211,0.12), 0 4px 16px -4px rgba(192,38,211,0.22);
 }
 
 /* --- Z-index -------------------------------------------------------------- */

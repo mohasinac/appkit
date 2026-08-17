@@ -1,5 +1,6 @@
 import React from "react";
-import { ROUNDED_MAP, PADDING_MAP, X_ONLY_MAP, type RoundedKey, type PaddingKey, type XPaddingKey } from "./surface-tokens";
+import { ROUNDED_MAP, PADDING_MAP, X_ONLY_MAP, type RoundedKey, type PaddingKey, type XPaddingKey, type SurfaceKey } from "./surface-tokens";
+import { getSurfaceTextClass } from "../../tokens/color-pairs";
 
 const TYPOGRAPHY = {
   headingLevel: {
@@ -706,6 +707,12 @@ export const Span = React.forwardRef<HTMLSpanElement, SpanProps>(function Span({
   ...props
 }: SpanProps, ref) {
   const resolvedColor = color ?? variant;
+  // Colors as a function (appkit/src/tokens/color-pairs.ts): only fall back to
+  // the surface's paired default text color when the consumer hasn't already
+  // requested one explicitly (resolvedColor === "inherit", i.e. neither
+  // `color` nor `variant` was passed) — never fights an explicit choice.
+  const surfaceTextFallback =
+    surface && resolvedColor === "inherit" ? getSurfaceTextClass(surface as SurfaceKey) : "";
   const classes = [
     "appkit-span",
     size ? TYPOGRAPHY.textSize[size] : "",
@@ -715,6 +722,7 @@ export const Span = React.forwardRef<HTMLSpanElement, SpanProps>(function Span({
     responsiveSizeClass("xl:", xlSize),
     weight ? TYPOGRAPHY.textWeight[weight] : "",
     TYPOGRAPHY.colorVariant[resolvedColor],
+    surfaceTextFallback,
     ...shapingClasses({ transform, truncate, numeric, italic, family, align, gradient }),
     rounded ? SPAN_ROUNDED_MAP[rounded] : "",
     padding ? SPAN_PADDING_MAP[padding] : "",

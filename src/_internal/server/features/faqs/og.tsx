@@ -1,4 +1,9 @@
 import type { ReactElement } from "react";
+import { DEFAULT_LIGHT_THEME } from "../../../../tokens/themes/default-light";
+
+// Satori (next/og) needs literal color values, not CSS vars — derived from
+// the theme token record so a rebrand doesn't require re-hardcoding here.
+const OG_FAQ_GRADIENT = `linear-gradient(135deg, ${DEFAULT_LIGHT_THEME.tokens["appkit-color-primary"]} 0%, ${DEFAULT_LIGHT_THEME.tokens["appkit-color-primary-700"]} 100%)`;
 
 export interface FaqOgData {
   categoryLabel: string;
@@ -24,7 +29,7 @@ export function renderFaqOgImage(data: FaqOgData): ReactElement {
         display: "flex",
         width: "100%",
         height: "100%",
-        background: "linear-gradient(135deg, #3570fc 0%, #1343de 100%)",
+        background: OG_FAQ_GRADIENT,
         fontFamily: "sans-serif",
         alignItems: "center",
         justifyContent: "center",

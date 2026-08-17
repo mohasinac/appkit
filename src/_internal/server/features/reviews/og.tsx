@@ -1,4 +1,9 @@
 import type { ReactElement } from "react";
+import { DEFAULT_LIGHT_THEME } from "../../../../tokens/themes/default-light";
+
+// Satori (next/og) needs literal color values, not CSS vars — derived from
+// the theme token record so a rebrand doesn't require re-hardcoding here.
+const OG_AVATAR_GRADIENT = `linear-gradient(135deg, ${DEFAULT_LIGHT_THEME.tokens["appkit-color-primary"]}, ${DEFAULT_LIGHT_THEME.tokens["appkit-color-secondary"]})`;
 
 export interface ReviewOgData {
   productTitle: string;
@@ -83,7 +88,7 @@ export function renderReviewOgImage(data: ReviewOgData, siteName: string): React
               width: 80,
               height: 80,
               borderRadius: 40,
-              background: "linear-gradient(135deg, #3570fc, #e91e8c)",
+              background: OG_AVATAR_GRADIENT,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

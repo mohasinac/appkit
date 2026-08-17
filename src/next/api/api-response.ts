@@ -49,7 +49,10 @@ export function errorResponse(
       error,
       ...(details !== undefined && { details }),
     },
-    { status },
+    // `no-store` — without this, Vercel's edge CDN can cache a transient
+    // error response (cold-start 500, not-yet-synced 404) on a public GET
+    // route indefinitely. Same root cause as the /media 404-caching bug.
+    { status, headers: { "Cache-Control": "no-store" } },
   );
 }
 

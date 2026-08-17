@@ -81,7 +81,7 @@ export function Slider({
          data-section="slider-div-610">
           <div
             className={[
-              "h-full rounded-full bg-lime-600 dark:bg-pink-500",
+              "h-full rounded-full bg-primary",
               SIZE_CLASSES[size],
             ].join(" ")}
             style={{ width: `${Math.max(0, Math.min(100, percentage))}%` }}

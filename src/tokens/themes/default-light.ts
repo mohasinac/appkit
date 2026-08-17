@@ -1,7 +1,11 @@
 import type { ThemeRecord } from "./types";
 
 /**
- * Built-in light theme — cobalt blue primary + lime green secondary.
+ * Built-in light theme — teal-blue primary + magenta secondary-highlight.
+ * Rebranded 2026-08-17 from the previous cobalt+lime identity to match the
+ * teal/magenta Beyblade reference art supplied for the rebrand (turquoise
+ * metallic body + magenta energy-ring highlight + silver accents), paired
+ * with the new red/cyan dark theme.
  * Mirrors the `:root` block in `appkit/src/tokens/tokens.css`.
  * Cannot be deleted; can be cloned by the admin into a new theme.
  *
@@ -10,37 +14,37 @@ import type { ThemeRecord } from "./types";
  */
 export const DEFAULT_LIGHT_THEME: ThemeRecord = {
   id: "default-light",
-  name: "Default Light (Cobalt + Lime)",
+  name: "Default Light (Teal + Magenta)",
   mode: "light",
   builtIn: true,
   tokens: {
-    "appkit-color-primary": "#3570fc",
-    "appkit-color-primary-50": "#eef5ff",
-    "appkit-color-primary-100": "#d9e8ff",
-    "appkit-color-primary-200": "#bcd4ff",
-    "appkit-color-primary-300": "#8eb9ff",
-    "appkit-color-primary-400": "#5992ff",
-    "appkit-color-primary-500": "#3570fc",
-    "appkit-color-primary-600": "#1a55f2",
-    "appkit-color-primary-700": "#1343de",
-    "appkit-color-primary-800": "#1536b4",
-    "appkit-color-primary-900": "#18318e",
-    "appkit-color-primary-950": "#111e58",
+    "appkit-color-primary": "#0d9488",
+    "appkit-color-primary-50": "#f0fdfa",
+    "appkit-color-primary-100": "#ccfbf1",
+    "appkit-color-primary-200": "#99f6e4",
+    "appkit-color-primary-300": "#5eead4",
+    "appkit-color-primary-400": "#2dd4bf",
+    "appkit-color-primary-500": "#14b8a6",
+    "appkit-color-primary-600": "#0d9488",
+    "appkit-color-primary-700": "#0f766e",
+    "appkit-color-primary-800": "#115e59",
+    "appkit-color-primary-900": "#134e4a",
+    "appkit-color-primary-950": "#042f2e",
 
-    "appkit-color-secondary": "#65c408",
-    "appkit-color-secondary-50": "#f3ffe3",
-    "appkit-color-secondary-100": "#e4ffc5",
-    "appkit-color-secondary-200": "#c8ff90",
-    "appkit-color-secondary-300": "#a3f550",
-    "appkit-color-secondary-400": "#84e122",
-    "appkit-color-secondary-500": "#65c408",
-    "appkit-color-secondary-600": "#509c02",
-    "appkit-color-secondary-700": "#3e7708",
-    "appkit-color-secondary-800": "#345e0d",
-    "appkit-color-secondary-900": "#2c5011",
-    "appkit-color-secondary-950": "#142d03",
+    "appkit-color-secondary": "#c026d3",
+    "appkit-color-secondary-50": "#fdf4ff",
+    "appkit-color-secondary-100": "#fae8ff",
+    "appkit-color-secondary-200": "#f5d0fe",
+    "appkit-color-secondary-300": "#f0abfc",
+    "appkit-color-secondary-400": "#e879f9",
+    "appkit-color-secondary-500": "#d946ef",
+    "appkit-color-secondary-600": "#c026d3",
+    "appkit-color-secondary-700": "#a21caf",
+    "appkit-color-secondary-800": "#86198f",
+    "appkit-color-secondary-900": "#701a75",
+    "appkit-color-secondary-950": "#4a044e",
 
-    "appkit-color-cobalt": "#3570fc",
+    "appkit-color-cobalt": "#0d9488",
     "appkit-color-accent": "#8393b2",
 
     "appkit-color-bg": "#fafafa",
@@ -54,24 +58,24 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-text-faint": "#87878f",
     "appkit-color-text-on-primary": "#ffffff",
 
-    "appkit-color-success": "#059669",
-    "appkit-color-success-surface": "#ecfdf5",
-    "appkit-color-warning": "#d97706",
+    "appkit-color-success": "#15803d",
+    "appkit-color-success-surface": "#f0fdf4",
+    "appkit-color-warning": "#b45309",
     "appkit-color-warning-surface": "#fffbeb",
-    "appkit-color-error": "#dc2626",
+    "appkit-color-error": "#b91c1c",
     "appkit-color-error-surface": "#fef2f2",
-    "appkit-color-info": "#0284c7",
+    "appkit-color-info": "#0369a1",
     "appkit-color-info-surface": "#f0f9ff",
     "appkit-color-star": "#facc15",
     "appkit-color-whatsapp-light": "#1ebe5d",
     "appkit-color-whatsapp-bg": "#ECE5DD",
 
-    "appkit-color-focus-ring": "#3570fc",
+    "appkit-color-focus-ring": "#0d9488",
 
     "appkit-shadow-glow":
-      "0 0 0 1px rgba(53,112,252,0.10), 0 4px 16px -4px rgba(53,112,252,0.20)",
+      "0 0 0 1px rgba(13,148,136,0.10), 0 4px 16px -4px rgba(13,148,136,0.20)",
     "appkit-shadow-glow-pink":
-      "0 0 0 1px rgba(233,30,140,0.12), 0 4px 16px -4px rgba(233,30,140,0.22)",
+      "0 0 0 1px rgba(192,38,211,0.12), 0 4px 16px -4px rgba(192,38,211,0.22)",
 
     "appkit-font-display":
       "var(--font-display), \"Poppins\", ui-sans-serif, system-ui, sans-serif",

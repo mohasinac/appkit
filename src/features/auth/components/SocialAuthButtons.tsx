@@ -19,7 +19,7 @@ export function SocialAuthButtons({
           <Div className="w-full border-t border-neutral-200" />
         </Row>
         <Row textSize="sm" className="relative" justify="center">
-          <Span className="text-[var(--appkit-color-text-muted)]" padding="x-xs" surface="default">{dividerLabel}</Span>
+          <Span padding="x-xs" surface="default" color="muted">{dividerLabel}</Span>
         </Row>
       </Div>
 

@@ -214,7 +214,16 @@ function errorJson(
       ...(issues ? { issues } : {}),
       requestId,
     },
-    { status, headers: { "X-Request-Id": requestId } },
+    {
+      status,
+      // `no-store` on every error envelope — without this, Vercel's edge CDN
+      // can cache a transient failure (cold-start 500, not-yet-synced 404)
+      // on a public GET route indefinitely, since nothing here ever told it
+      // otherwise. Same root cause as the /media 404-caching bug, but this
+      // chokepoint is shared by every createRouteHandler-based route, so one
+      // fix here closes the gap site-wide instead of route-by-route.
+      headers: { "X-Request-Id": requestId, "Cache-Control": "no-store" },
+    },
   );
 }
 

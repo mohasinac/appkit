@@ -1,6 +1,13 @@
 import { ImageResponse } from "next/og";
+import { DEFAULT_LIGHT_THEME } from "../../../../tokens/themes/default-light";
 
 export const DEFAULT_OG_SIZE = { width: 1200, height: 630 };
+
+// Satori (next/og) cannot resolve CSS custom properties — it needs literal
+// color values baked into the style object. Derived from the theme's own
+// token record (not re-hardcoded) so a future rebrand only requires editing
+// default-light.ts, not hunting down every Satori-rendered image separately.
+const OG_BRAND_GRADIENT = `linear-gradient(135deg, ${DEFAULT_LIGHT_THEME.tokens["appkit-color-primary"]} 0%, ${DEFAULT_LIGHT_THEME.tokens["appkit-color-secondary"]} 50%, ${DEFAULT_LIGHT_THEME.tokens["appkit-color-primary-800"]} 100%)`;
 
 /**
  * Resolves a potentially relative image URL to an absolute URL for use in
@@ -41,7 +48,7 @@ export function buildDefaultOgImage({ siteName, tagline, domain, logoUrl }: Defa
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #3570fc 0%, #65c408 50%, #e91e8c 100%)",
+        background: OG_BRAND_GRADIENT,
         fontFamily: "sans-serif",
         position: "relative",
         overflow: "hidden",

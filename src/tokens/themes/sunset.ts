@@ -41,13 +41,13 @@ export const SUNSET_THEME: ThemeRecord = {
     "appkit-color-text-muted": "#9a3412",
     "appkit-color-text-faint": "#c2410c",
 
-    "appkit-color-success": "#16a34a",
+    "appkit-color-success": "#15803d",
     "appkit-color-success-surface": "#f0fdf4",
-    "appkit-color-warning": "#d97706",
+    "appkit-color-warning": "#b45309",
     "appkit-color-warning-surface": "#fef3c7",
-    "appkit-color-error": "#dc2626",
+    "appkit-color-error": "#b91c1c",
     "appkit-color-error-surface": "#fef2f2",
-    "appkit-color-info": "#0284c7",
+    "appkit-color-info": "#0369a1",
     "appkit-color-info-surface": "#f0f9ff",
 
     "appkit-color-focus-ring": "#f59e0b",

@@ -56,14 +56,14 @@
   border-radius: 0.25rem;
   font-size: 0.875em;
   font-weight: 500;
-  background-color: rgba(53, 112, 252, 0.08);   /* primary cobalt /8 */
-  color: #1343de;                                /* primary-700 cobalt */
-  border: 1px solid rgba(53, 112, 252, 0.18);
+  background-color: color-mix(in srgb, var(--appkit-color-primary) 8%, transparent);
+  color: var(--appkit-color-primary-700);
+  border: 1px solid color-mix(in srgb, var(--appkit-color-primary) 18%, transparent);
 }
 
 .dark .appkit-rich-text :not(pre) > code {
   background-color: rgba(51, 65, 85, 0.6);      /* slate-700/60 */
-  color: #84e122;                                /* lime green — high contrast on dark */
+  color: var(--appkit-color-secondary-400);
   border-color: rgba(71, 85, 105, 0.5);
 }
 
@@ -86,31 +86,31 @@
 
 /* --- Blockquote ----------------------------------------------------------- */
 .appkit-rich-text blockquote {
-  border-left: 3px solid #3570fc;               /* primary cobalt */
+  border-left: 3px solid var(--appkit-color-primary);
   padding: 0.5rem 1rem;
   margin: 1.25rem 0;
   border-radius: 0 0.375rem 0.375rem 0;
-  background-color: rgba(53, 112, 252, 0.06);
+  background-color: color-mix(in srgb, var(--appkit-color-primary) 6%, transparent);
   color: var(--appkit-color-zinc-700);
   font-style: italic;
 }
 
 .dark .appkit-rich-text blockquote {
-  border-left-color: #f063b9;                    /* secondary-400 */
-  background-color: rgba(240, 99, 185, 0.06);
+  border-left-color: var(--appkit-color-secondary-400);
+  background-color: color-mix(in srgb, var(--appkit-color-secondary) 6%, transparent);
   color: var(--appkit-color-text-faint);
 }
 
 /* --- Mark / Highlight ----------------------------------------------------- */
 .appkit-rich-text mark {
-  background-color: rgba(101, 196, 8, 0.25);
+  background-color: color-mix(in srgb, var(--appkit-color-secondary) 25%, transparent);
   color: inherit;
   border-radius: 0.125rem;
   padding: 0 0.1em;
 }
 
 .dark .appkit-rich-text mark {
-  background-color: rgba(101, 196, 8, 0.35);
+  background-color: color-mix(in srgb, var(--appkit-color-secondary) 35%, transparent);
   color: var(--appkit-color-zinc-100);
 }
 
@@ -128,26 +128,26 @@
 
 /* --- Links ---------------------------------------------------------------- */
 .appkit-rich-text a {
-  color: #1a55f2;                               /* primary-600 cobalt */
+  color: var(--appkit-color-primary-600);
   text-decoration: underline;
-  text-decoration-color: rgba(26, 85, 242, 0.6);
+  text-decoration-color: color-mix(in srgb, var(--appkit-color-primary-600) 60%, transparent);
   text-underline-offset: 2px;
   transition: color 150ms, text-decoration-color 150ms;
 }
 
 .appkit-rich-text a:hover {
-  color: #1343de;                               /* primary-700 cobalt */
-  text-decoration-color: rgba(19, 67, 222, 0.7);
+  color: var(--appkit-color-primary-700);
+  text-decoration-color: color-mix(in srgb, var(--appkit-color-primary-700) 70%, transparent);
 }
 
 .dark .appkit-rich-text a {
-  color: #84e122;                               /* lime green — high contrast on dark bg */
-  text-decoration-color: rgba(132, 225, 34, 0.6);
+  color: var(--appkit-color-secondary-400);
+  text-decoration-color: color-mix(in srgb, var(--appkit-color-secondary-400) 60%, transparent);
 }
 
 .dark .appkit-rich-text a:hover {
-  color: #a3f550;                               /* lighter lime green */
-  text-decoration-color: rgba(163, 245, 80, 0.6);
+  color: var(--appkit-color-secondary-300);
+  text-decoration-color: color-mix(in srgb, var(--appkit-color-secondary-300) 60%, transparent);
 }
 
 /* --- Tables --------------------------------------------------------------- */
@@ -274,11 +274,11 @@
 .appkit-rich-text ins {
   text-decoration: underline;
   text-decoration-style: wavy;
-  text-decoration-color: #3570fc;               /* primary cobalt */
+  text-decoration-color: var(--appkit-color-primary);
 }
 
 .dark .appkit-rich-text ins {
-  text-decoration-color: #84e122;               /* lime green on dark */
+  text-decoration-color: var(--appkit-color-secondary-400);
 }
 
 .appkit-rich-text del {

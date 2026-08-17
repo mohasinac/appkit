@@ -114,8 +114,8 @@
 }
 
 .appkit-code--primary {
-  background: var(--appkit-color-primary-50, #eef5ff);
-  color: var(--appkit-color-primary-700, #1343de);
+  background: var(--appkit-color-primary-50);
+  color: var(--appkit-color-primary-700);
 }
 
 .dark .appkit-code--primary {
@@ -179,7 +179,7 @@
 
 .appkit-blockquote--primary {
   border-left-color: var(--appkit-color-primary);
-  color: var(--appkit-color-primary-700, #1343de);
+  color: var(--appkit-color-primary-700);
 }
 
 .dark .appkit-blockquote--primary {

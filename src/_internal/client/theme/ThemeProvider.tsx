@@ -93,7 +93,7 @@ function applyTheme(theme: ThemeRecord): void {
   else root.classList.remove("dark");
 
   // Persist active theme ID so the anti-FOUC script can restore it on return visits,
-  // preventing a flash to the built-in cobalt/hot-pink colors on page load.
+  // preventing a flash to the built-in teal/crimson colors on page load.
   try { window.localStorage.setItem(THEME_ID_STORAGE_KEY, theme.id); } catch (_err) { void normalizeError(_err); /* localStorage unavailable in this context */ }
 
   for (const [name, value] of Object.entries(theme.tokens)) {

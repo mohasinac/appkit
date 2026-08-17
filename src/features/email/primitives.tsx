@@ -14,14 +14,14 @@
  *
  * Brand colours flow through the active light-theme palette
  * (`var(--appkit-color-*)`). Because email clients don't resolve CSS
- * variables, we hard-code the cobalt + lime brand defaults inline; admin
+ * variables, we hard-code the teal + magenta brand defaults inline; admin
  * themes do not affect email rendering.
  */
 import type { ReactNode } from "react";
 
 const BRAND = {
-  primary: "#3570fc",
-  secondary: "#65c408",
+  primary: "#0d9488",
+  secondary: "#c026d3",
   surface: "#ffffff",
   bg: "#fafafa",
   text: "#18181b",
@@ -152,7 +152,7 @@ export function EmailContainer({
 export interface EmailHeaderProps {
   /** Brand name shown in the header. */
   brandName: string;
-  /** Optional brand colour override (defaults to the cobalt primary). */
+  /** Optional brand colour override (defaults to the teal primary). */
   background?: string;
   children?: ReactNode;
 }
