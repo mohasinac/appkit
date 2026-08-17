@@ -1352,16 +1352,10 @@ export { Can } from "./security/index";
 // DEFAULT_ROLES - Constant used across modules.
 export { DEFAULT_ROLES } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// ENC_PREFIX - Constant used across modules.
-export { ENC_PREFIX } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EVENT_ENTRY_PII_FIELDS - Constant used across modules.
 export { EVENT_ENTRY_PII_FIELDS } from "./security/index";
 // LOTTERY_ENTRY_PII_FIELDS - PII fields for lottery entries.
 export { LOTTERY_ENTRY_PII_FIELDS } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HMAC_PREFIX - Constant used across modules.
-export { HMAC_PREFIX } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // NEWSLETTER_PII_FIELDS - Constant used across modules.
 export { NEWSLETTER_PII_FIELDS } from "./security/index";
@@ -1402,9 +1396,6 @@ export { USER_PII_FIELDS } from "./security/index";
 // USER_PII_INDEX_MAP - Constant used across modules.
 export { USER_PII_INDEX_MAP } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// addPiiIndices - Helper for add pii indices.
-export { addPiiIndices } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // applyRateLimit - Helper for apply rate limit.
 export { applyRateLimit } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -1429,59 +1420,14 @@ export { createRequirePermission } from "./security/index";
 // createRequirePermissionSync - Helper for create require permission sync.
 export { createRequirePermissionSync } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// decryptPayoutBankAccount - Helper for decrypt payout bank account.
-export { decryptPayoutBankAccount } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// decryptPayoutDetails - Helper for decrypt payout details.
-export { decryptPayoutDetails } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// decryptPii - Helper for decrypt pii.
-export { decryptPii } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// decryptPiiFields - Helper for decrypt pii fields.
-export { decryptPiiFields } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // decryptSecret - Helper for decrypt secret.
 export { decryptSecret } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// decryptShippingAddress - Helper for decrypt shipping address.
-export { decryptShippingAddress } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// decryptShippingConfig - Helper for decrypt shipping config.
-export { decryptShippingConfig } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// decryptValue - Helper for decrypt value.
-export { decryptValue } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// encryptPayoutBankAccount - Helper for encrypt payout bank account.
-export { encryptPayoutBankAccount } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// encryptPayoutDetails - Helper for encrypt payout details.
-export { encryptPayoutDetails } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// encryptPii - Helper for encrypt pii.
-export { encryptPii } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// encryptPiiFields - Helper for encrypt pii fields.
-export { encryptPiiFields } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // encryptSecret - Helper for encrypt secret.
 export { encryptSecret } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// encryptShippingAddress - Helper for encrypt shipping address.
-export { encryptShippingAddress } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// encryptShippingConfig - Helper for encrypt shipping config.
-export { encryptShippingConfig } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// encryptValue - Helper for encrypt value.
-export { encryptValue } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // generateNonce - Helper for generate nonce.
 export { generateNonce } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// getPiiConfigError - Helper for get pii config error.
-export { getPiiConfigError } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // getRoleLevel - Helper for get role level.
 export { getRoleLevel } from "./security/index";
@@ -1495,38 +1441,11 @@ export { hasAnyPermission } from "./security/index";
 // hasPermission - Model for has permission.
 export { hasPermission } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// hmacBlindIndex - Shared export for hmac blind index.
-export { hmacBlindIndex } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// isPiiEncrypted - Shared export for is pii encrypted.
-export { isPiiEncrypted } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // isSecretEncrypted - Shared export for is secret encrypted.
 export { isSecretEncrypted } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// maskEmail - Helper for mask email.
-export { maskEmail } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// maskName - Helper for mask name.
-export { maskName } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// maskOfferForSeller - Helper for mask offer for seller.
-export { maskOfferForSeller } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// maskPublicBid - Helper for mask public bid.
-export { maskPublicBid } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// maskPublicEventEntry - Helper for mask public event entry.
-export { maskPublicEventEntry } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// maskPublicReview - Helper for mask public review.
-export { maskPublicReview } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // maskSecret - Helper for mask secret.
 export { maskSecret } from "./security/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// piiBlindIndex - Shared export for pii blind index.
-export { piiBlindIndex } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // rateLimit - Shared export for rate limit.
 export { rateLimit } from "./security/index";

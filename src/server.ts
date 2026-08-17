@@ -1425,6 +1425,33 @@ export { rateLimitByIdentifier } from "./security/index";
 export { RateLimitPresets } from "./security/index";
 // maskPublicEventEntry - Redact PII from event entries before public exposure.
 export { maskPublicEventEntry } from "./security/index";
+// PII encryption/masking (server-only -- crypto module via node:module, must never leak into a client bundle; see appkit Export Rules in CLAUDE.md)
+export { encryptValue } from "./security/index";
+export { decryptValue } from "./security/index";
+export { hmacBlindIndex } from "./security/index";
+export { encryptPiiFields } from "./security/index";
+export { decryptPiiFields } from "./security/index";
+export { encryptPii } from "./security/index";
+export { decryptPii } from "./security/index";
+export { isPiiEncrypted } from "./security/index";
+export { piiBlindIndex } from "./security/index";
+export { addPiiIndices } from "./security/index";
+export { getPiiConfigError } from "./security/index";
+export { encryptShippingAddress } from "./security/index";
+export { decryptShippingAddress } from "./security/index";
+export { encryptPayoutDetails } from "./security/index";
+export { decryptPayoutDetails } from "./security/index";
+export { encryptShippingConfig } from "./security/index";
+export { decryptShippingConfig } from "./security/index";
+export { encryptPayoutBankAccount } from "./security/index";
+export { decryptPayoutBankAccount } from "./security/index";
+export { maskName } from "./security/index";
+export { maskEmail } from "./security/index";
+export { maskPublicReview } from "./security/index";
+export { maskPublicBid } from "./security/index";
+export { maskOfferForSeller } from "./security/index";
+export { ENC_PREFIX } from "./security/index";
+export { HMAC_PREFIX } from "./security/index";
 
 // -- Instrumentation ---------------------------------------------------------
 // createInstrumentation - Factory for Next.js instrumentation hooks.
