@@ -53,8 +53,22 @@ export interface DashboardLayoutClientProps {
   activeHref?: string;
   /** Responsive controls — currently only hideAt is honoured. */
   responsive?: SectionResponsive;
-  /** Optional render-prop slot for additional sidebar footer content. */
-  renderSidebarFooter?: () => ReactNode;
+  /**
+   * Cross-dashboard nav links shown in the sidebar footer. Plain hrefs
+   * rather than a render-prop — a Server Component caller (every real
+   * consumer: admin/store/user layout.tsx) cannot legally pass a function
+   * across the RSC boundary to this "use client" component, so the
+   * previous `renderSidebarFooter?: () => ReactNode` shape was never
+   * actually usable from where it needed to be used.
+   */
+  crossNav?: {
+    /** Always-available "My Profile" shortcut — every dashboard user is also a user. */
+    profileHref?: string;
+    /** Admin only: shown when the signed-in admin also owns a store. */
+    storeHref?: string;
+    /** Seller only: shown when the signed-in seller account is also an admin/employee. */
+    adminHref?: string;
+  };
   /** Optional className passed through to the sidebar component. */
   className?: string;
   /** Override the content area padding classes. */
@@ -202,6 +216,7 @@ export function DashboardLayoutClient({
   permissions,
   activeHref: explicitActiveHref,
   responsive: _responsive,
+  crossNav,
   className,
   contentPadding,
   contentSurface,
@@ -233,6 +248,31 @@ export function DashboardLayoutClient({
       ? (filteredGroups as AdminNavGroup[])
       : (groups as AdminNavGroup[]);
 
+  const crossNavLinkClass =
+    "flex items-center gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-surface-elevated)]/60 hover:text-[var(--appkit-color-text)] transition-colors";
+  const hasCrossNav = Boolean(crossNav?.profileHref || crossNav?.storeHref || crossNav?.adminHref);
+  const renderCrossNavFooter = hasCrossNav
+    ? () => (
+        <Nav aria-label="Cross-dashboard links" padding="y-xs">
+          {crossNav?.storeHref && (
+            <Link href={crossNav.storeHref} onClick={closeMobile} className={crossNavLinkClass}>
+              Go to my Store
+            </Link>
+          )}
+          {crossNav?.adminHref && (
+            <Link href={crossNav.adminHref} onClick={closeMobile} className={crossNavLinkClass}>
+              Back to Admin
+            </Link>
+          )}
+          {crossNav?.profileHref && (
+            <Link href={crossNav.profileHref} onClick={closeMobile} className={crossNavLinkClass}>
+              My Profile
+            </Link>
+          )}
+        </Nav>
+      )
+    : undefined;
+
   return (
     <>
       {hasBackground && (
@@ -252,6 +292,7 @@ export function DashboardLayoutClient({
           onCloseMobile={close}
           onToggle={toggle}
           className={className}
+          renderFooter={renderCrossNavFooter}
         />
       )}
       {variant === "store" && (
@@ -265,6 +306,7 @@ export function DashboardLayoutClient({
           onCloseMobile={close}
           onToggle={toggle}
           className={className}
+          renderFooter={renderCrossNavFooter}
         />
       )}
       {variant === "user" && (
@@ -277,6 +319,7 @@ export function DashboardLayoutClient({
           onCloseMobile={close}
           onToggle={toggle}
           className={className}
+          renderFooter={renderCrossNavFooter}
         />
       )}
       {/* Content area — full width on both mobile and desktop.

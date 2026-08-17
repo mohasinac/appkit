@@ -45,6 +45,8 @@ interface StoreSidebarProps {
   /** Toggle callback for the desktop sidebar tab (open ↔ close). */
   onToggle?: () => void;
   className?: string;
+  /** Optional slot rendered below the scrollable nav, e.g. cross-dashboard links. */
+  renderFooter?: () => React.ReactNode;
 }
 
 function isNavItemActive(item: StoreNavItem, activeHref: string): boolean {
@@ -125,13 +127,15 @@ function GroupsContent({
   storeLogoURL?: string;
   onItemClick?: () => void;
 }) {
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(groups.map((g) => [
-      g.title,
-      g.defaultOpen ?? g.items.some((i) => activeHref === i.href),
-    ]))
+  // Accordion — only one group open at a time.
+  const [openGroup, setOpenGroup] = useState<string | null>(() => {
+    const match = groups.find((g) => g.defaultOpen ?? g.items.some((i) => activeHref === i.href));
+    return match?.title ?? null;
+  });
+  const toggle = useCallback(
+    (title: string) => setOpenGroup((p) => (p === title ? null : title)),
+    [],
   );
-  const toggle = useCallback((title: string) => setOpenGroups((p) => ({ ...p, [title]: !p[title] })), []);
 
   return (
     <>
@@ -151,7 +155,7 @@ function GroupsContent({
       )}
       <Nav aria-label="Store navigation" padding="y-xs">
         {groups.map((group) => {
-          const isOpen = openGroups[group.title] ?? false;
+          const isOpen = openGroup === group.title;
           const hasActive = group.items.some((i) => activeHref === i.href);
           return (
             <Div key={group.title} className="mb-0.5">
@@ -237,6 +241,7 @@ export function StoreSidebar({
   variant = "overlay",
   onCloseMobile,
   onToggle,
+  renderFooter,
 }: StoreSidebarProps) {
   const close = onCloseMobile ?? (() => {});
   const [mounted, setMounted] = useState(false);
@@ -290,6 +295,7 @@ export function StoreSidebar({
               </Row>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
+            {renderFooter && <Div border="top" padding="inline">{renderFooter()}</Div>}
           </Stack>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />

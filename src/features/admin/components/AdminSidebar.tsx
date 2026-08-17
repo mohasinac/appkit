@@ -72,18 +72,23 @@ function GroupsContent({
   activePath: string;
   onItemClick?: () => void;
 }) {
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(groups.map((g) => [
-      g.title,
-      g.defaultOpen ?? g.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/")),
-    ]))
+  // Accordion — only one group open at a time. Initial pick: the first group
+  // whose defaultOpen is true, or that contains the active path.
+  const [openGroup, setOpenGroup] = useState<string | null>(() => {
+    const match = groups.find(
+      (g) => g.defaultOpen ?? g.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/")),
+    );
+    return match?.title ?? null;
+  });
+  const toggle = useCallback(
+    (title: string) => setOpenGroup((p) => (p === title ? null : title)),
+    [],
   );
-  const toggle = useCallback((title: string) => setOpenGroups((p) => ({ ...p, [title]: !p[title] })), []);
 
   return (
     <Nav aria-label="Admin navigation" padding="y-xs">
       {groups.map((group) => {
-        const isOpen = openGroups[group.title] ?? false;
+        const isOpen = openGroup === group.title;
         const hasActive = group.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/"));
         return (
           <Div key={group.title} className="mb-0.5">

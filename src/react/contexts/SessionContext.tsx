@@ -63,6 +63,8 @@ export interface SessionUser {
   // Profile extras
   phoneVerified?: boolean;
   avatarMetadata?: AvatarMetadataShape | null;
+  /** Set when this account owns a store — drives the admin sidebar's "Go to my Store" cross-nav link. */
+  storeId?: string;
 
   publicProfile?: FirestoreDocument;
   stats?: FirestoreDocument;
@@ -195,6 +197,7 @@ function buildSessionUser(
       : undefined,
     sessionId: currentSessionId || undefined,
     phoneVerified: serverData.phoneVerified,
+    storeId: serverData.storeId,
     avatarMetadata: serverData.avatarMetadata?.url
       ? {
           url: serverData.avatarMetadata.url,
@@ -286,6 +289,7 @@ export function SessionProvider({
           updatedAt: data.updatedAt ? new Date(data.updatedAt) : undefined,
           sessionId: currentSessionId || undefined,
           phoneVerified: data.phoneVerified,
+          storeId: data.storeId,
           avatarMetadata: data.avatarMetadata?.url
             ? {
                 url: data.avatarMetadata.url,

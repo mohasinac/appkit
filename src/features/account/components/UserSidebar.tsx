@@ -37,6 +37,8 @@ export interface UserSidebarProps {
   className?: string;
   /** "sidebar" = left slide-over panel on desktop; "overlay" = right slide-over portal (default) */
   variant?: "sidebar" | "overlay";
+  /** Optional slot rendered below the scrollable nav, e.g. cross-dashboard links. */
+  renderFooter?: () => React.ReactNode;
 }
 
 function isNavItemActive(item: UserNavItem, activeHref: string): boolean {
@@ -94,20 +96,18 @@ function DrawerContent({
   activeHref: string;
   onItemClick?: () => void;
 }) {
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
-    if (!groups) return {};
-    return Object.fromEntries(groups.map((g) => [
-      g.title,
-      // Auto-expand only the group that contains the active page; collapse all others
-      g.defaultOpen === true
-        ? true
-        : g.items.some((i) => activeHref === i.href || activeHref.startsWith(i.href + "/")),
-    ]));
+  // Accordion — only one group open at a time.
+  const [openGroup, setOpenGroup] = useState<string | null>(() => {
+    if (!groups) return null;
+    const match = groups.find(
+      (g) => g.defaultOpen === true || g.items.some((i) => activeHref === i.href || activeHref.startsWith(i.href + "/")),
+    );
+    return match?.title ?? null;
   });
 
   const toggle = useCallback(
-    (title: string) => setOpenGroups((prev) => ({ ...prev, [title]: !prev[title] })),
-    []
+    (title: string) => setOpenGroup((prev) => (prev === title ? null : title)),
+    [],
   );
 
   if (!groups || groups.length === 0) {
@@ -130,7 +130,7 @@ function DrawerContent({
   return (
     <Nav aria-label="User navigation" padding="y-xs">
       {groups.map((group) => {
-        const isOpen = openGroups[group.title] ?? false;
+        const isOpen = openGroup === group.title;
         const hasActive = group.items.some(
           (i) => activeHref === i.href || activeHref.startsWith(i.href + "/")
         );
@@ -216,7 +216,7 @@ function DrawerPanel({
   );
 }
 
-export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, desktopOpen = false, onToggle, variant = "overlay" }: UserSidebarProps) {
+export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, desktopOpen = false, onToggle, variant = "overlay", renderFooter }: UserSidebarProps) {
   const pathname = usePathname();
   const close = onCloseMobile ?? (() => {});
   const [mounted, setMounted] = useState(false);
@@ -256,6 +256,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
             <Div className={`flex-1 ${__O.yAuto}`}>
               <DrawerContent groups={groups} items={items} activeHref={pathname} />
             </Div>
+            {renderFooter && <Div border="top" padding="inline">{renderFooter()}</Div>}
           </Stack>
 
           <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
