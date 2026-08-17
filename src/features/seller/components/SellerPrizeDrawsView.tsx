@@ -148,7 +148,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
-      { value: "prizeDrawEndDate", label: "Draw Date Soon" },
+      { value: "prizeRevealWindowEnd", label: "Draw Date Soon" },
     ],
     columns: PRIZE_DRAW_COLUMNS,
     mapRows: (response) =>
@@ -160,8 +160,8 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
           secondary: toStringValue(item.condition, ""),
           status: toStringValue(item.status, "draft"),
           entryFee: priceRaw ? toRupees(priceRaw) : "Free",
-          drawDate: item.prizeDrawEndDate
-            ? toRelativeDate(item.prizeDrawEndDate as string)
+          drawDate: item.prizeRevealWindowEnd
+            ? toRelativeDate(item.prizeRevealWindowEnd as string)
             : "TBA",
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),

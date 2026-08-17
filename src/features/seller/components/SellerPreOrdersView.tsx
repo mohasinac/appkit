@@ -149,7 +149,7 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
-      { value: "preorderAvailableDate", label: "Delivery Soon" },
+      { value: "preOrderDeliveryDate", label: "Delivery Soon" },
     ],
     columns: PRE_ORDER_COLUMNS,
     mapRows: (response) =>
@@ -161,8 +161,8 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
           secondary: toStringValue(item.condition, ""),
           status: toStringValue(item.status, "draft"),
           price: priceRaw ? toRupees(priceRaw) : "—",
-          deliveryDate: item.preorderAvailableDate
-            ? toRelativeDate(item.preorderAvailableDate as string)
+          deliveryDate: item.preOrderDeliveryDate
+            ? toRelativeDate(item.preOrderDeliveryDate as string)
             : "TBA",
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),

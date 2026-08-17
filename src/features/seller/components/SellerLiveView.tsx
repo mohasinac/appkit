@@ -144,7 +144,7 @@ export function SellerLiveView({
     sortOptions: [
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
-      { value: "productTitle", label: "Name A–Z" },
+      { value: "title", label: "Name A–Z" },
       { value: sortBy("price", "ASC"), label: "Price: Low–High" },
       { value: sortBy("price", "DESC"), label: "Price: High–Low" },
     ],

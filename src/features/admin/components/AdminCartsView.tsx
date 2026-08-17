@@ -1,12 +1,11 @@
 "use client";
 
-import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
+import { type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
-import { FilterChipGroup, ListingLayout } from "../../../ui";
+import { ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ADMIN_CART_OWNERSHIP_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -33,7 +32,7 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
   title: "Carts",
   searchPlaceholder: "Search by user ID or session",
   emptyLabel: "No carts found",
-  filterKeys: ["type"],
+  filterKeys: [],
   defaultSort: sortBy("updatedAt", "DESC"),
   queryKey: ["admin", "carts", "listing"],
   endpoint: ADMIN_ENDPOINTS.ADMIN_CARTS,
@@ -58,16 +57,7 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
     }),
   getTotal: (response, mappedRows) =>
     typeof response.total === "number" ? response.total : mappedRows.length,
-  buildFilters: (state) =>
-    state.type && state.type !== "All" ? sieveFilter("type", SIEVE_OP.EQ, state.type) : undefined,
-  renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-    <FilterChipGroup
-      label="Type"
-      tabs={ADMIN_CART_OWNERSHIP_TABS}
-      value={pendingFilters.type ?? ""}
-      onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
-    />
-  ),
+  buildFilters: () => undefined,
 };
 
 export type AdminCartsViewProps = ListingLayoutProps;
