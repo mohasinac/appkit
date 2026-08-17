@@ -12,6 +12,7 @@
 import type { JobContext } from "../runtime/types";
 import { runWeeklyPayoutEligibility } from "./weeklyPayoutEligibility";
 import { runHardBanCascade } from "./hardBanCascade";
+import { runResetOtpVerification } from "./resetOtpVerification";
 import type { JsonValue } from "@mohasinac/appkit";
 
 export interface JobRunResult {
@@ -61,7 +62,15 @@ async function runHardBanCascadeJob(
   return runHardBanCascade({ uid, reason, bannedBy }, ctx);
 }
 
+async function runResetOtpVerificationJob(
+  _payload: Record<string, JsonValue>,
+  ctx: JobContext,
+): Promise<JobRunResult> {
+  return runResetOtpVerification(ctx);
+}
+
 export const JOB_RUNNERS: Record<string, JobRunner> = {
   payoutsWeekly: runPayoutsWeeklyJob,
   hardBanCascade: runHardBanCascadeJob,
+  resetOtpVerification: runResetOtpVerificationJob,
 };

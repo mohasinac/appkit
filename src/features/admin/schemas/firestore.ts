@@ -534,12 +534,6 @@ export interface SiteSettingsDocument extends BaseDocument {
     preOrders: boolean;
     /** When true, admin users see a bypass button in checkout that skips OTP and payment. Server-enforced. */
     adminCheckoutBypass?: boolean;
-    /**
-     * Track H — when true and NODE_ENV !== "production", the payment provider
-     * resolver returns MockRazorpayProvider. In production the resolver throws
-     * if this is ever true. Default false.
-     */
-    useMockPayment?: boolean;
     // Single-source flag-key constant so consumers don't reference the field
     // name by string literal (audit-checkout-bypass rule 1).
     // SB-UNI-X4 2026-05-13 — per-type feature flags. Disabled types are
@@ -740,9 +734,6 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     notifications: true,
     sellerRegistration: true,
     preOrders: true,
-    // Track H — both mock-provider flags default to false. Production
-    // deployments must never flip these on (the resolver throws if they are).
-    useMockPayment: false,
     // W1-37 2026-05-23 — Phase 2 listing types enabled by default; all per-type
     // surfaces (seller + admin via W1-29 + public) are now shipped.
     listingTypes: {

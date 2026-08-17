@@ -1636,23 +1636,6 @@ export { toClientLiveItem, type LiveItemClientShape } from "./_internal/server/f
 export { buildLiveItemMetadata, type LiveItemMetadataOptions } from "./_internal/server/features/live/metadata";
 export { renderLiveItemOg, renderLiveItemOgImage, renderLiveItemOgFromDoc, type LiveItemOgData } from "./_internal/server/features/live/og";
 
-// ── Track H — Payment provider abstraction ────────────────────────────────
-// In-process mock implementation. The real provider continues to live in
-// appkit/src/providers/payment-razorpay and is registered separately. The
-// resolver helper sits next to it so consumers can drive selection from
-// siteSettings.featureFlags.useMockPayment. Shipping has no mock/resolver —
-// ManualShippingProvider makes no external API calls, so there's nothing to
-// mock or choose between.
-export {
-  MockRazorpayProvider,
-  resolvePaymentProvider,
-  type MockWebhookEvent,
-  type MockWebhookPayload,
-  type WebhookSink,
-  type PaymentResolutionFactories,
-  type ProviderResolutionContext,
-} from "./_internal/server/providers";
-
 // ── Lottery feature — server data + adapters + actions ──────────────────────────
 export { getLotteryEventCached, listLotteryEvents, getLotteryEntriesForAdmin, getLotteryEntriesForUser } from "./_internal/server/features/lottery/data";
 export type { LotteryEventClient } from "./_internal/server/features/lottery/data";
