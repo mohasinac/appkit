@@ -26,7 +26,6 @@ export {
   decryptPiiFields,
   encryptPii,
   decryptPii,
-  isPiiEncrypted,
   piiBlindIndex,
   addPiiIndices,
   getPiiConfigError,
@@ -38,6 +37,12 @@ export {
   decryptShippingConfig,
   encryptPayoutBankAccount,
   decryptPayoutBankAccount,
+} from "./pii-encrypt";
+// Crypto-free display-masking helpers -- sourced from pii-mask.ts (not
+// pii-encrypt.ts) so this barrel stays safe to re-export from the
+// universal client+server index.ts. See pii-mask.ts's header comment.
+export {
+  isPiiEncrypted,
   maskName,
   maskEmail,
   maskPublicReview,
@@ -46,7 +51,7 @@ export {
   maskOfferForSeller,
   ENC_PREFIX,
   HMAC_PREFIX,
-} from "./pii-encrypt";
+} from "./pii-mask";
 export {
   USER_PII_FIELDS,
   USER_PII_INDEX_MAP,

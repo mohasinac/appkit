@@ -1455,6 +1455,18 @@ export { rateLimitByIdentifier } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // redactPii - Shared export for redact pii.
 export { redactPii, safeDisplayName, safeDisplayEmail } from "./security/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" pure display-masking helpers, no crypto dependency.
+export {
+  isPiiEncrypted,
+  maskName,
+  maskEmail,
+  maskPublicReview,
+  maskPublicBid,
+  maskPublicEventEntry,
+  maskOfferForSeller,
+  ENC_PREFIX,
+  HMAC_PREFIX,
+} from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // requireActiveAccount - Shared export for require active account.
 export { requireActiveAccount } from "./security/index";

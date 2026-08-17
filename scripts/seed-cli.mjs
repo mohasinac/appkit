@@ -117,6 +117,15 @@ if (ACTION === "load" && !PII_KEY_PRESENT) {
 // firebase-admin init
 // ---------------------------------------------------------------------------
 const require = createRequire(import.meta.url);
+// appkit's pii-encrypt.ts calls a bare `require("crypto")` at runtime (not a
+// static import — deliberately, so bundlers like Turbopack never see a
+// node:module dependency and refuse to build the client bundle). A bare
+// `require` identifier resolves via the global scope in Node ESM, so it must
+// exist as a global before the dynamic `import("@mohasinac/appkit")` below
+// ever triggers that code path. Only this standalone-script environment
+// needs it — Next.js's own server bundle (webpack/Turbopack) provides an
+// ambient `require` automatically.
+globalThis.require = require;
 const admin = require("firebase-admin");
 
 function parsePrivateKey(raw) {
