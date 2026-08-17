@@ -1813,6 +1813,12 @@ export { eventRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // faqsRepository - Shared export for faqs repository.
 export { faqsRepository } from "./repositories/index";
+// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// testerChecklistItemRepository - Shared export for the tester checklist catalog repository.
+export { testerChecklistItemRepository } from "./repositories/index";
+// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// testerChecklistResponseRepository - Shared export for the tester checklist response repository.
+export { testerChecklistResponseRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // homepageSectionsRepository - Shared export for homepage sections repository.
 export { homepageSectionsRepository } from "./repositories/index";
@@ -1842,6 +1848,10 @@ export { savedPaymentMethodsRepository, SavedPaymentMethodsRepository } from "./
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // productRepository - Shared export for product repository.
 export { productRepository } from "./repositories/index";
+// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// pageViewsRepository - day-bucketed page-view counters by entity + URL.
+export { pageViewsRepository, PAGE_VIEW_ENTITY_TYPES } from "./repositories/index";
+export type { PageViewDocument, PageViewEntityType } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // reviewRepository - Shared export for review repository.
 export { reviewRepository } from "./repositories/index";
@@ -2025,6 +2035,9 @@ export { eventsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // faqSeedData - Model for faq seed data.
 export { faqSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// testerChecklistSeedData - Model for tester checklist seed data.
+export { testerChecklistSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // formatSeedPrice - Helper for format seed price.
 export { formatSeedPrice } from "./seed/index";
@@ -3466,6 +3479,12 @@ export { AdminFaqsView } from "./features/admin/index";
 // AdminFaqEditorView - Component for admin FAQ create/edit form.
 export { AdminFaqEditorView } from "./features/admin/index";
 export type { AdminFaqEditorViewProps } from "./features/admin/index";
+// AdminTesterChecklistView - Component for the admin tester-checklist catalog list.
+export { AdminTesterChecklistView } from "./features/admin/index";
+export type { AdminTesterChecklistViewProps } from "./features/admin/index";
+// AdminTesterChecklistItemEditorView - Component for admin tester-checklist item create/edit form.
+export { AdminTesterChecklistItemEditorView } from "./features/admin/index";
+export type { AdminTesterChecklistItemEditorViewProps } from "./features/admin/index";
 // AdminNavEditorView - SideDrawer form for nav item create/edit.
 export { AdminNavEditorView } from "./features/admin/index";
 export type { AdminNavEditorViewProps, NavItemData } from "./features/admin/index";
@@ -5719,6 +5738,26 @@ export { FAQS_COLLECTION } from "./features/faq/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // FAQS_INDEXED_FIELDS - Constant used across modules.
 export { FAQS_INDEXED_FIELDS } from "./features/faq/index";
+// [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
+// TESTER_CHECKLIST_ITEM_COLLECTION - Constant used across modules.
+export { TESTER_CHECKLIST_ITEM_COLLECTION } from "./features/tester/index";
+// [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
+// TESTER_CHECKLIST_RESPONSE_COLLECTION - Constant used across modules.
+export { TESTER_CHECKLIST_RESPONSE_COLLECTION } from "./features/tester/index";
+// [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
+// TESTER_CHECKLIST_ITEM_FIELDS - Constant used across modules.
+export { TESTER_CHECKLIST_ITEM_FIELDS } from "./features/tester/index";
+// [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
+// TESTER_CHECKLIST_RESPONSE_FIELDS - Constant used across modules.
+export { TESTER_CHECKLIST_RESPONSE_FIELDS } from "./features/tester/index";
+// TesterChecklistItemDocument - Type contract for tester checklist item document.
+export type { TesterChecklistItemDocument } from "./features/tester/index";
+// TesterChecklistResponseDocument - Type contract for tester checklist response document.
+export type { TesterChecklistResponseDocument } from "./features/tester/index";
+// TesterAnswer - Type contract for tester answer.
+export type { TesterAnswer } from "./features/tester/index";
+// TesterFeedbackStatus - Type contract for tester feedback status.
+export type { TesterFeedbackStatus } from "./features/tester/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // FAQS_PUBLIC_FIELDS - Constant used across modules.
 export { FAQS_PUBLIC_FIELDS } from "./features/faq/index";
@@ -9168,7 +9207,7 @@ export {
   NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, CHAT_ENDPOINTS, AUCTION_ENDPOINTS,
   BID_ENDPOINTS, CART_ENDPOINTS, CATEGORY_ENDPOINTS, CHECKOUT_ENDPOINTS,
   PAYMENT_ENDPOINTS, COPILOT_ENDPOINTS, CORPORATE_ENDPOINTS, EVENT_ENDPOINTS,
-  FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, LOYALTY_ENDPOINTS, MEDIA_ENDPOINTS,
+  FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, LOYALTY_ENDPOINTS, ANALYTICS_ENDPOINTS, MEDIA_ENDPOINTS,
   ORDER_ENDPOINTS, PREORDER_ENDPOINTS, PRODUCT_ENDPOINTS, REVIEW_ENDPOINTS,
   SEARCH_ENDPOINTS, SELLER_ENDPOINTS, BLOG_ENDPOINTS, WISHLIST_ENDPOINTS,
   COLLECTION_CACHE_PATHS, resolveEndpoint, resolveEndpointFn,

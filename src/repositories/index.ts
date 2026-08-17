@@ -80,6 +80,14 @@ export {
   faqsRepository,
 } from "../features/faq/repository/faqs.repository";
 export {
+  TesterChecklistItemRepository,
+  testerChecklistItemRepository,
+} from "../features/tester/repository/tester-checklist-item.repository";
+export {
+  TesterChecklistResponseRepository,
+  testerChecklistResponseRepository,
+} from "../features/tester/repository/tester-checklist-response.repository";
+export {
   BlogRepository,
   blogRepository,
 } from "../features/blog/repository/blog.repository";
@@ -242,3 +250,14 @@ export type {
   MediaAssetDocument,
   MediaAssetCreateInput,
 } from "../features/media/repository/media-assets.repository";
+
+export {
+  PageViewsRepository,
+  pageViewsRepository,
+  PAGE_VIEW_ENTITY_TYPES,
+} from "../features/analytics/repository/page-views.repository";
+export type {
+  PageViewDocument,
+  PageViewEntityType,
+  RecordPageViewInput,
+} from "../features/analytics/repository/page-views.repository";

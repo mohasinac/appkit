@@ -335,8 +335,8 @@ export { ZodSetup } from "./validation/ZodSetup";
 export type { ZodSetupProps } from "./validation/ZodSetup";
 export { AdminSidebar } from "./features/admin/components/AdminSidebar";
 export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/admin/components/AdminSidebar";
-export { AdminDashboardView, AdminAnalyticsView, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, AdminFulfillmentView, DataTable, DataListingView, useAdminListingData, toRecordArray, toStringValue, toRelativeDate, toRupees } from "./features/admin/index";
-export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPrizeDrawsViewProps, AdminCarouselViewProps, AdminFulfillmentViewProps, AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/index";
+export { AdminDashboardView, AdminAnalyticsView, AdminPageViewsReportView, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, AdminFulfillmentView, DataTable, DataListingView, useAdminListingData, toRecordArray, toStringValue, toRelativeDate, toRupees } from "./features/admin/index";
+export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPageViewsReportViewProps, AdminPrizeDrawsViewProps, AdminCarouselViewProps, AdminFulfillmentViewProps, AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/index";
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
 export { ADMIN_ENDPOINTS } from "./constants/index";
 export { SELLER_ENDPOINTS } from "./constants/index";
@@ -358,6 +358,10 @@ export type {
   UseCollapsedSectionsOptions,
   UseCollapsedSectionsResult,
 } from "./features/account/hooks/useCollapsedSections";
+export { PageViewTracker } from "./features/analytics/components/PageViewTracker";
+export type { PageViewTrackerProps } from "./features/analytics/components/PageViewTracker";
+export { PAGE_VIEW_ENTITY_TYPES } from "./features/analytics/types";
+export type { PageViewEntityType } from "./features/analytics/types";
 export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTable";
 export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
 export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";

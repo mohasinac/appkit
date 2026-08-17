@@ -76,6 +76,10 @@ export { AdminFaqsView } from "./AdminFaqsView";
 export type { AdminFaqsViewProps } from "./AdminFaqsView";
 export { AdminFaqEditorView } from "./AdminFaqEditorView";
 export type { AdminFaqEditorViewProps } from "./AdminFaqEditorView";
+export { AdminTesterChecklistView } from "./AdminTesterChecklistView";
+export type { AdminTesterChecklistViewProps } from "./AdminTesterChecklistView";
+export { AdminTesterChecklistItemEditorView } from "./AdminTesterChecklistItemEditorView";
+export type { AdminTesterChecklistItemEditorViewProps } from "./AdminTesterChecklistItemEditorView";
 export { AdminNavEditorView } from "./AdminNavEditorView";
 export type { AdminNavEditorViewProps, NavItemData } from "./AdminNavEditorView";
 export { AdminMediaView } from "./AdminMediaView";
@@ -150,6 +154,8 @@ export type {
   AdminTopProductsTableProps,
   AdminTopProductsTableLabels,
 } from "./analytics/AdminTopProductsTable";
+export { AdminPageViewsReportView } from "./analytics/AdminPageViewsReportView";
+export type { AdminPageViewsReportViewProps } from "./analytics/AdminPageViewsReportView";
 export { AdminFeatureFlagsView } from "./AdminFeatureFlagsView";
 export type { AdminFeatureFlagsViewProps } from "./AdminFeatureFlagsView";
 export { AdminNewsletterView } from "./AdminNewsletterView";

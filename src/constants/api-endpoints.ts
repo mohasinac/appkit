@@ -90,6 +90,10 @@ export const ACCOUNT_ENDPOINTS = {
   CATALOGUE_LIST: (id: string) => `/api/user/catalogue/${id}/list`,
   CATALOGUE_SUBMIT: (id: string) => `/api/user/catalogue/${id}/submit`,
   PUBLIC_CATALOGUE: (ownerSlug: string) => `/api/catalogue/${ownerSlug}`,
+  /** Tester Hub — GET active checklist items joined with the tester's own responses; PUT upserts one item's answer/comment/screenshot. */
+  TESTER_CHECKLIST: "/api/user/tester-checklist",
+  TESTER_CHECKLIST_ITEM_BY_ID: (checklistItemId: string) =>
+    `/api/user/tester-checklist/${encodeURIComponent(checklistItemId)}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -129,6 +133,7 @@ export const ADMIN_ENDPOINTS = {
   STATS: "/api/admin/stats",
   DASHBOARD: "/api/admin/dashboard",
   ANALYTICS: "/api/admin/analytics",
+  ANALYTICS_PAGE_VIEWS: "/api/admin/analytics/pageviews",
   ADS: "/api/admin/ads",
   AD_BY_ID: (id: string) => `/api/admin/ads/${id}`,
   REALTIME_TOKEN: "/api/realtime/token",
@@ -157,6 +162,11 @@ export const ADMIN_ENDPOINTS = {
   BRAND_BY_ID: (id: string) => `/api/admin/brands/${id}`,
   FAQS: "/api/admin/faqs",
   FAQ_BY_ID: (id: string) => `/api/admin/faqs/${id}`,
+  TESTER_CHECKLIST_ITEMS: "/api/admin/tester-checklist-items",
+  TESTER_CHECKLIST_ITEM_BY_ID: (id: string) => `/api/admin/tester-checklist-items/${id}`,
+  TESTER_FEEDBACK: "/api/admin/tester-feedback",
+  TESTER_FEEDBACK_BY_ID: (id: string) => `/api/admin/tester-feedback/${id}`,
+  TESTER_FEEDBACK_REPORT: "/api/admin/tester-feedback/report",
   STORES: "/api/admin/stores",
   STORE_BY_ID: (uid: string) => `/api/admin/stores/${uid}`,
   PAYOUTS: "/api/admin/payouts",
@@ -425,6 +435,14 @@ export const HOMEPAGE_ENDPOINTS = {
 
 export const LOYALTY_ENDPOINTS = {
   BALANCE: (uid: string) => `/api/loyalty/balance?uid=${uid}`,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Analytics — page-view tracking (public pages only)
+// ---------------------------------------------------------------------------
+
+export const ANALYTICS_ENDPOINTS = {
+  PAGE_VIEW: "/api/analytics/pageview",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -725,6 +743,7 @@ export const API_ENDPOINTS = {
   FAQS: FAQ_ENDPOINTS,
   HOMEPAGE: HOMEPAGE_ENDPOINTS,
   LOYALTY: LOYALTY_ENDPOINTS,
+  ANALYTICS: ANALYTICS_ENDPOINTS,
   MEDIA: MEDIA_ENDPOINTS,
   ORDERS: ORDER_ENDPOINTS,
   PREORDERS: PREORDER_ENDPOINTS,
