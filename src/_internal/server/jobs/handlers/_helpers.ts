@@ -23,3 +23,19 @@ export async function batchDelete(
 }
 
 export { getAdminRealtimeDb };
+
+/**
+ * Query docs tagged isTestData:true in a collection. `cutoff: null` returns every
+ * tester-sandbox doc regardless of expiry (manual force-purge); a real Date returns
+ * only the ones past testDataExpiresAt (the scheduled 7-day sweep).
+ */
+export async function getTestDataRefs(
+  db: FirebaseFirestore.Firestore,
+  collection: string,
+  cutoff: Date | null,
+): Promise<FirebaseFirestore.DocumentReference[]> {
+  let q: FirebaseFirestore.Query = db.collection(collection).where("isTestData", "==", true);
+  if (cutoff) q = q.where("testDataExpiresAt", "<=", cutoff);
+  const snap = await q.limit(200).get();
+  return snap.docs.map((d) => d.ref);
+}

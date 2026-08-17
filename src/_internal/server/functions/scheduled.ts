@@ -25,6 +25,7 @@ import {
   prizeRevealReminderHandler,
   productStatsSyncHandler,
   weeklyPayoutEligibilityHandler,
+  testerSandboxCleanupHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -159,6 +160,14 @@ export const draftPrune = defineFunction({
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
+export const testerSandboxCleanup = defineFunction({
+  name: "testerSandboxCleanup",
+  description: "Delete expired tester QA sandbox test data (daily 05:00 UTC).",
+  trigger: { kind: "schedule", cron: "0 5 * * *", timeZone: "UTC" },
+  handler: testerSandboxCleanupHandler,
+  options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
 export const prizeRevealOpen = defineFunction({
   name: "prizeRevealOpen",
   description: "Flip prize-draw reveals pending→open and send opening notifications.",
@@ -232,6 +241,7 @@ export const SCHEDULED_FUNCTIONS = [
   cleanupRtdbEvents,
   mediaTmpCleanup,
   draftPrune,
+  testerSandboxCleanup,
   prizeRevealOpen,
   prizeRevealClose,
   prizeRevealExpiry,

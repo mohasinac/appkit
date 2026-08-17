@@ -969,6 +969,30 @@ export { updateFaq } from "./features/faq/server";
 // voteFaq - Shared export for vote faq.
 export { voteFaq } from "./features/faq/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// createChecklistItem - Admin creates a tester checklist catalog item.
+export { createChecklistItem } from "./features/tester/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// updateChecklistItem - Admin updates a tester checklist catalog item.
+export { updateChecklistItem } from "./features/tester/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// deleteChecklistItem - Admin deletes a tester checklist catalog item.
+export { deleteChecklistItem } from "./features/tester/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// checklistItemCreateSchema - Zod schema for creating a tester checklist item.
+export { checklistItemCreateSchema } from "./features/tester/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// checklistItemUpdateSchema - Zod schema for updating a tester checklist item.
+export { checklistItemUpdateSchema } from "./features/tester/server";
+// [SERVER-ONLY]-Server-only — filters isTestData:true tester-sandbox documents out of public
+// listing responses unless the viewer is a tester or admin. Use in every public store/product/
+// category/blog/event list-and-detail route.
+export {
+  canViewTestData,
+  filterTestDataForViewer,
+  filterSingleTestData,
+} from "./_internal/server/features/tester/visibility";
+export type { ViewerLike, TestDataFlagged } from "./_internal/server/features/tester/visibility";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // carouselGET - Shared export for carousel get.
 export { carouselGET } from "./features/homepage/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

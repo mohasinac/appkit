@@ -26,6 +26,8 @@ export interface AdminUserEditorViewProps {
   currentRole?: string;
   currentIsDisabled?: boolean;
   currentEmailVerified?: boolean;
+  /** Tester program flag — orthogonal to role. Grants access to the Tester Hub and auto-approves the user's store. */
+  currentIsTester?: boolean;
   /** Store the user owns (for sellers/admins). storeId === storeSlug in this project. */
   ownedStoreId?: string;
   ownedStoreName?: string;
@@ -231,6 +233,7 @@ export function AdminUserEditorView({
   currentRole,
   currentIsDisabled: _currentIsDisabled,
   currentEmailVerified,
+  currentIsTester,
   ownedStoreId,
   ownedStoreName,
   currentSoftBans,
@@ -248,6 +251,7 @@ export function AdminUserEditorView({
   // --- General fields -------------------------------------------------------
   const [role, setRole] = React.useState(currentRole ?? "user");
   const [emailVerified, setEmailVerified] = React.useState(currentEmailVerified ?? false);
+  const [isTester, setIsTester] = React.useState(currentIsTester ?? false);
   const [adminNotes, setAdminNotes] = React.useState("");
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
@@ -276,6 +280,7 @@ export function AdminUserEditorView({
     if (open) {
       setRole(currentRole ?? "user");
       setEmailVerified(currentEmailVerified ?? false);
+      setIsTester(currentIsTester ?? false);
       setAdminNotes("");
       setEditDisplayName(displayName ?? "");
       setPhoneNumber(currentPhoneNumber ?? "");
@@ -297,6 +302,7 @@ export function AdminUserEditorView({
     open,
     currentRole,
     currentEmailVerified,
+    currentIsTester,
     displayName,
     currentPhoneNumber,
     currentBio,
@@ -330,6 +336,7 @@ export function AdminUserEditorView({
       await apiClient.patch(ADMIN_ENDPOINTS.USER_BY_ID(userId!), {
         role,
         emailVerified,
+        isTester,
         adminNotes: adminNotes || undefined,
         displayName: editDisplayName.trim() || undefined,
         phoneNumber: phoneNumber.trim() || undefined,
@@ -458,6 +465,14 @@ export function AdminUserEditorView({
       label="Email verified"
       checked={emailVerified}
       onChange={setEmailVerified}
+    />
+  );
+
+  const renderIsTesterSection = () => (
+    <Toggle
+      label="Is Tester"
+      checked={isTester}
+      onChange={setIsTester}
     />
   );
 
@@ -619,6 +634,7 @@ export function AdminUserEditorView({
               renderInfoCard,
               renderRoleSection,
               renderEmailVerifiedSection,
+              renderIsTesterSection,
               renderProfileSection,
               renderAdminNotesSection,
               renderActionsSection,

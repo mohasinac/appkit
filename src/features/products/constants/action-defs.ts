@@ -569,6 +569,8 @@ export const ADMIN_BULK_ACTIONS = {
   deals:               [ROW_ACTION_ID.REMOVE],
   featured:            [ROW_ACTION_ID.REMOVE],
   shipments:           [ROW_ACTION_ID.MARK_RECEIVED, ROW_ACTION_ID.DELETE],
+  testerChecklistItems:[ROW_ACTION_ID.DELETE],
+  testerFeedback:      [ROW_ACTION_ID.MARK_READ],
 } as const satisfies Record<string, readonly RowActionId[]>;
 
 // Seller bulk actions per listing entity

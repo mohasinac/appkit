@@ -153,6 +153,7 @@ export const DEFAULT_ROUTE_MAP = {
     CATALOGUE: "/user/catalogue",
     CATALOGUE_NEW: "/user/catalogue/new",
     CATALOGUE_EDIT: (id: string) => `/user/catalogue/${id}/edit`,
+    TESTER_HUB: "/user/tester",
   },
   STORE: {
     DASHBOARD: "/store",
@@ -273,6 +274,8 @@ export const DEFAULT_ROUTE_MAP = {
     FAQS: "/admin/faqs",
     FAQS_NEW: "/admin/faqs/new",
     FAQS_EDIT: (id: string) => `/admin/faqs/${id}/edit`,
+    TESTER_CHECKLIST: "/admin/tester-checklist",
+    TESTER_FEEDBACK: "/admin/tester-feedback",
     REVIEWS: "/admin/reviews",
     COUPONS: "/admin/coupons",
     COUPONS_NEW: "/admin/coupons/new",

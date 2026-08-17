@@ -1,6 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { BaseRepository } from "../../../providers/db-firebase";
 import { PAGE_VIEW_ENTITY_TYPES, type PageViewEntityType } from "../types";
+import { PAGE_VIEW_FIELDS } from "../../../constants/field-names";
 
 export { PAGE_VIEW_ENTITY_TYPES };
 export type { PageViewEntityType };
@@ -64,10 +65,10 @@ export class PageViewsRepository extends BaseRepository<PageViewDocument> {
     entityType?: PageViewEntityType,
   ): Promise<PageViewDocument[]> {
     let query = this.getCollection()
-      .where("date", ">=", startDate)
-      .where("date", "<=", endDate) as FirebaseFirestore.Query;
+      .where(PAGE_VIEW_FIELDS.DATE, ">=", startDate)
+      .where(PAGE_VIEW_FIELDS.DATE, "<=", endDate) as FirebaseFirestore.Query;
     if (entityType) {
-      query = query.where("entityType", "==", entityType);
+      query = query.where(PAGE_VIEW_FIELDS.ENTITY_TYPE, "==", entityType);
     }
     const snap = await query.get();
     return snap.docs.map((d) => this.mapDoc<PageViewDocument>(d));

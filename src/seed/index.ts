@@ -187,6 +187,16 @@ export { conversationsSeedData } from "./conversations-seed-data";
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
+// Tester sandbox seed fixtures live in ../features/tester/seed-data (isolated from this
+// folder on purpose) — re-exported here so every other seed consumer keeps one import surface.
+export {
+  testerChecklistSeedData,
+  storesTesterSeedData,
+  categoriesTesterSeedData,
+  productsTesterSeedData,
+  blogTesterSeedData,
+  eventsTesterSeedData,
+} from "../features/tester/seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
 export { offersSeedData } from "./offers-seed-data";
 

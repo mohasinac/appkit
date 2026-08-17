@@ -65,7 +65,8 @@ export type ActionResource =
   | "NAV"
   | "MEDIA"
   | "SUPPORT"
-  | "LOTTERY";
+  | "LOTTERY"
+  | "TESTER";
 
 /** Confirmation modal config — when set, <Button action={...}> opens
  *  a confirm dialog before firing the actual handler. */
@@ -1367,6 +1368,45 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    // ── Tester QA management ──────────────────────────────────────────────
+    "mark-feedback-reviewed": {
+      id: "admin.mark-feedback-reviewed",
+      label: "Mark Reviewed",
+      ariaLabel: "Mark this tester feedback as reviewed",
+      description: "Mark a tester feedback submission as reviewed by the dev team.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    "create-checklist-item": {
+      id: "admin.create-checklist-item",
+      label: "Add Test Case",
+      ariaLabel: "Add a new tester checklist item",
+      description: "Create a new test case in the tester QA checklist catalog.",
+      kind: "primary",
+      permissions: ["admin"],
+    },
+    "edit-checklist-item": {
+      id: "admin.edit-checklist-item",
+      label: "Edit",
+      ariaLabel: "Edit this tester checklist item",
+      description: "Edit an existing test case in the tester QA checklist catalog.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
+    "delete-checklist-item": {
+      id: "admin.delete-checklist-item",
+      label: "Delete",
+      ariaLabel: "Delete this tester checklist item",
+      description: "Permanently delete a test case from the tester QA checklist catalog.",
+      kind: "danger",
+      permissions: ["admin"],
+      confirmation: {
+        title: "Delete this checklist item?",
+        body: "This test case will be permanently removed from the tester QA checklist. Any tester answers already recorded for it are kept, but the item will no longer appear on the Tester Hub.",
+        confirmLabel: "Delete",
+        confirmKind: "danger",
+      },
+    },
     "resend-notification": {
       id: "admin.resend-notification",
       label: "Resend",
@@ -2092,6 +2132,15 @@ export const ACTIONS: ActionTree = {
         body: "The ticket will be marked as resolved. You can reopen it later.",
         confirmLabel: "Close ticket",
       },
+    },
+  },
+  TESTER: {
+    "save-note": {
+      id: "tester.save-note",
+      label: "Save Note",
+      ariaLabel: "Save comment and screenshot for this step",
+      description: "Save your comment and screenshot for this checklist step.",
+      kind: "primary",
     },
   },
   LOTTERY: {

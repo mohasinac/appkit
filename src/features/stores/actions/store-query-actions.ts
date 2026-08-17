@@ -7,6 +7,7 @@
 
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { NotFoundError } from "../../../errors";
+import { filterTestDataForViewer, filterSingleTestData, type ViewerLike } from "../../../_internal/server/features/tester/visibility";
 
 const ERR_STORE_NOT_FOUND = "Store not found";
 import { maskPublicReview } from "../../../security";
@@ -47,6 +48,7 @@ export interface StoreReviewsResult {
 
 export async function listStores(
   params: StoreQueryListParams = {},
+  viewer?: ViewerLike | null,
 ): Promise<FirebaseSieveResult<StoreDocument>> {
   const { filters, sorts = "-createdAt", page = 1, pageSize = 24, q } = params;
 
@@ -57,22 +59,26 @@ export async function listStores(
   if (filters) filtersArr.push(filters);
   model.filters = filtersArr.join(",") || undefined;
 
-  return storeRepository.listStores(model);
+  const result = await storeRepository.listStores(model);
+  return { ...result, items: filterTestDataForViewer(result.items, viewer) };
 }
 
 export async function getStoreBySlug(
   storeSlug: string,
+  viewer?: ViewerLike | null,
 ): Promise<StoreDocument | null> {
-  return storeRepository.findBySlug(storeSlug);
+  const store = await storeRepository.findBySlug(storeSlug);
+  return filterSingleTestData(store, viewer);
 }
 
 export async function getStoreProducts(
   storeSlug: string,
   params: StoreContentParams = {},
+  viewer?: ViewerLike | null,
 ): Promise<FirebaseSieveResult<ProductDocument>> {
   const { sorts = "-createdAt", page = 1, pageSize = 24, filters } = params;
 
-  const storeDoc = await storeRepository.findBySlug(storeSlug);
+  const storeDoc = await filterSingleTestData(await storeRepository.findBySlug(storeSlug), viewer);
   if (
     !storeDoc ||
     storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||
@@ -99,10 +105,11 @@ export async function getStoreProducts(
 export async function getStoreAuctions(
   storeSlug: string,
   params: StoreContentParams = {},
+  viewer?: ViewerLike | null,
 ): Promise<FirebaseSieveResult<ProductDocument>> {
   const { sorts = "auctionEndDate", page = 1, pageSize = 24, filters } = params;
 
-  const storeDoc = await storeRepository.findBySlug(storeSlug);
+  const storeDoc = await filterSingleTestData(await storeRepository.findBySlug(storeSlug), viewer);
   if (
     !storeDoc ||
     storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||

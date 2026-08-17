@@ -1,6 +1,110 @@
 {
   "indexes": [
     {
+      "collectionGroup": "categories",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isTestData", "order": "ASCENDING" },
+        { "fieldPath": "testDataExpiresAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "stores",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isTestData", "order": "ASCENDING" },
+        { "fieldPath": "testDataExpiresAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isTestData", "order": "ASCENDING" },
+        { "fieldPath": "testDataExpiresAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "blogPosts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isTestData", "order": "ASCENDING" },
+        { "fieldPath": "testDataExpiresAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isTestData", "order": "ASCENDING" },
+        { "fieldPath": "testDataExpiresAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isActive", "order": "ASCENDING" },
+        { "fieldPath": "order", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "groupKey", "order": "ASCENDING" },
+        { "fieldPath": "order", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "pageKey", "order": "ASCENDING" },
+        { "fieldPath": "order", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistResponses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "testerId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistResponses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistResponses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "answer", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistResponses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "groupKey", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "testerChecklistResponses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "pageKey", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "pageViews",
       "queryScope": "COLLECTION",
       "fields": [

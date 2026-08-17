@@ -148,6 +148,20 @@ export function generateFAQId(input: GenerateFAQIdInput): string {
   return `faq-${slugify(input.category)}-${questionSlug}`;
 }
 
+// ─── Tester Checklist Item ──────────────────────────────────────────────────
+
+export interface GenerateChecklistItemIdInput {
+  groupKey: string;
+  pageKey: string;
+  label: string;
+  customId?: string;
+}
+export function generateChecklistItemId(input: GenerateChecklistItemIdInput): string {
+  if (input.customId?.trim()) return input.customId.trim();
+  const labelSlug = slugify(input.label).substring(0, 40).replace(/-+$/, "");
+  return `checklist-${slugify(input.groupKey)}-${slugify(input.pageKey)}-${labelSlug}`;
+}
+
 // â”€â”€â”€ Coupon â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function generateCouponId(code: string, customId?: string): string {
@@ -643,7 +657,8 @@ export type MediaFilenameContext =
   | { type: "payout-doc"; sellerName: string; date?: Date }
   | { type: "shipping-proof"; orderId: string; ext?: string; date?: Date }
   | { type: "refund-proof"; orderId: string; refundId: string; ext?: string; date?: Date }
-  | { type: "payment-proof"; orderId: string; buyerName: string; ext?: string; date?: Date };
+  | { type: "payment-proof"; orderId: string; buyerName: string; ext?: string; date?: Date }
+  | { type: "tester-screenshot"; testerName: string; checklistItemId: string; ext?: string; date?: Date };
 
 export function generateMediaFilename(ctx: MediaFilenameContext): string {
   switch (ctx.type) {
@@ -726,6 +741,16 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
       const name = ctx.buyerName.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").slice(0, 20);
       return `payment-proof-${ctx.orderId}-${name}-${y}${m}${day}.${ext}`;
     }
+    case "tester-screenshot": {
+      const d = ctx.date ?? new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const ext = ctx.ext ?? "jpg";
+      const name = ctx.testerName.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").slice(0, 20);
+      const item = ctx.checklistItemId.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 40);
+      return `tester-screenshot-${item}-${name}-${y}${m}${day}.${ext}`;
+    }
   }
 }
 
@@ -778,6 +803,7 @@ const MEDIA_FILENAME_PATTERNS: ReadonlyArray<{ context: string; pattern: RegExp 
   { context: "shipping-proof", pattern: new RegExp(`^shipping-proof-${SLUG_PART}-${DATE_PART}\\.${EXT_PART}$`) },
   { context: "refund-proof", pattern: new RegExp(`^refund-proof-${SLUG_PART}-${SLUG_PART}-${DATE_PART}\\.${EXT_PART}$`) },
   { context: "payment-proof", pattern: new RegExp(`^payment-proof-${SLUG_PART}-${SLUG_PART}-${DATE_PART}\\.${EXT_PART}$`) },
+  { context: "tester-screenshot", pattern: new RegExp(`^tester-screenshot-${SLUG_PART}-${SLUG_PART}-${DATE_PART}\\.${EXT_PART}$`) },
 ];
 
 export function validateMediaFilename(filename: string): boolean {

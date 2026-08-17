@@ -55,6 +55,8 @@ export const JOB_ERROR_MESSAGES = {
 export const CART_TTL_DAYS = 60;
 /** Default Notification TTL in days (matches functions/config/constants). */
 export const NOTIFICATION_TTL_DAYS = 30;
+/** Tester sandbox TTL in days — matches testDataExpiresAt() in features/tester/seed-data/tester-ttl.ts. */
+export const TESTER_SANDBOX_TTL_DAYS = 7;
 /** Firestore batch write hard ceiling. */
 export const BATCH_LIMIT = 500;
 /** Firestore single-query soft ceiling for reconcile sweeps. */

@@ -67,6 +67,8 @@ export { onScamReportCreateHandler } from "./onScamReportCreate";
 export { onScamReportUpdateHandler } from "./onScamReportUpdate";
 // SB-UNI-Y-1 — 30-day draft prune
 export { draftPruneHandler } from "./draftPrune";
+// Tester program — 7-day auto-expiry sweep for the shared admin-seeded test sandbox
+export { testerSandboxCleanupHandler } from "./testerSandboxCleanup";
 // EMI — installment reminder + overdue-flagging sweep
 export { emiInstallmentReminderHandler } from "./emiInstallmentReminder";
 // Procurement Shipments — 3-function recompute cascade (item→lot, lot/header→shipment allocation, cascade-delete)

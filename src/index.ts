@@ -2038,6 +2038,21 @@ export { faqSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // testerChecklistSeedData - Model for tester checklist seed data.
 export { testerChecklistSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// storesTesterSeedData - Model for the shared tester sandbox store seed data.
+export { storesTesterSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// categoriesTesterSeedData - Model for the shared tester sandbox category/brand/bundle seed data.
+export { categoriesTesterSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// productsTesterSeedData - Model for the shared tester sandbox product seed data.
+export { productsTesterSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// blogTesterSeedData - Model for the shared tester sandbox blog post seed data.
+export { blogTesterSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// eventsTesterSeedData - Model for the shared tester sandbox event seed data.
+export { eventsTesterSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // formatSeedPrice - Helper for format seed price.
 export { formatSeedPrice } from "./seed/index";
@@ -3485,6 +3500,11 @@ export type { AdminTesterChecklistViewProps } from "./features/admin/index";
 // AdminTesterChecklistItemEditorView - Component for admin tester-checklist item create/edit form.
 export { AdminTesterChecklistItemEditorView } from "./features/admin/index";
 export type { AdminTesterChecklistItemEditorViewProps } from "./features/admin/index";
+// TesterHubView - Component for the tester-facing checklist hub page.
+export { TesterHubView } from "./features/tester/index";
+export type { TesterHubViewProps } from "./features/tester/index";
+// AdminTesterFeedbackView - Component for the admin Tester Feedback report/issues/submissions page.
+export { AdminTesterFeedbackView } from "./features/tester/index";
 // AdminNavEditorView - SideDrawer form for nav item create/edit.
 export { AdminNavEditorView } from "./features/admin/index";
 export type { AdminNavEditorViewProps, NavItemData } from "./features/admin/index";

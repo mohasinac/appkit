@@ -38,6 +38,7 @@ import {
 } from "../../media/finalize";
 import type { UserDocument, SellerPayoutDetails } from "../../auth/schemas/firestore";
 import type { StoreDocument } from "../../stores/schemas/firestore";
+import { StoreStatusValues } from "../../stores/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import type { OrderDocument } from "../../orders/schemas/firestore";
 import type { CouponDocument } from "../../promotions/schemas/firestore";
@@ -191,13 +192,14 @@ export async function becomeSeller(
     };
   }
 
+  const storeStatus = profile?.isTester ? "approved" : "pending";
   await userRepository.update(userId, {
     role: "seller",
-    storeStatus: "pending",
+    storeStatus,
   } as Partial<UserDocument>);
 
-  serverLogger.info("becomeSeller: application submitted", { userId });
-  return { storeStatus: "pending" };
+  serverLogger.info("becomeSeller: application submitted", { userId, storeStatus });
+  return { storeStatus };
 }
 
 // --- Create Store -------------------------------------------------------------
@@ -224,25 +226,29 @@ export async function createStore(
     storeSlug = `${baseSlug.slice(0, 80 - suffix.length)}${suffix}`;
   }
 
+  const profile = await userRepository.findById(userId);
+  const isTester = profile?.isTester === true;
+
   const store = await storeRepository.create({
     storeSlug,
     ownerId: userId,
     storeName,
     storeDescription: storeDescription || undefined,
     storeCategory: storeCategory || undefined,
-    isPublic: false,
-    status: "pending",
+    isPublic: isTester,
+    status: isTester ? StoreStatusValues.ACTIVE : StoreStatusValues.PENDING,
   });
 
   await userRepository.update(userId, {
     storeId: store.id,
     storeSlug: store.storeSlug,
-    storeStatus: "pending",
+    storeStatus: isTester ? "approved" : "pending",
   } as Parameters<typeof userRepository.update>[1]);
 
   serverLogger.info("createStore: store created", {
     userId,
     storeSlug: store.storeSlug,
+    isTester,
   });
   return { store };
 }

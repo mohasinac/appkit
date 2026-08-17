@@ -65,6 +65,15 @@ import { productFeaturesSeedData } from "./product-features-seed-data";
 import { offersSeedData } from "./offers-seed-data";
 import { couponUsageSeedData } from "./coupon-usage-seed-data";
 import { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
+// Tester sandbox seed fixtures live in ../features/tester/seed-data (isolated on purpose).
+import {
+  testerChecklistSeedData,
+  storesTesterSeedData,
+  categoriesTesterSeedData,
+  productsTesterSeedData,
+  blogTesterSeedData,
+  eventsTesterSeedData,
+} from "../features/tester/seed-data";
 
 export interface SeedManifestEntry {
   id: string;
@@ -84,7 +93,7 @@ export type SeedCollectionName =
   | "storeCategories" | "listingTemplates" | "moderationQueue" | "reports"
   | "itemRequests" | "storeWhatsAppConfig" | "storeGoogleConfig" | "roleOverrides"
   | "customRoles" | "adminNotifications" | "lotteryEntries" | "shipments"
-  | "shipmentLots" | "shipmentItems" | "catalogueItems";
+  | "shipmentLots" | "shipmentItems" | "catalogueItems" | "testerChecklistItems";
 
 export type SeedManifest = Record<SeedCollectionName, SeedManifestEntry[]>;
 
@@ -117,7 +126,7 @@ const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
 };
 
 export const SEED_MANIFEST: SeedManifest = {
-  categories: pick(asArr(categoriesSeedData)),
+  categories: pick([...asArr(categoriesSeedData), ...asArr(categoriesTesterSeedData)]),
   users: pick(
     asArr(usersSeedData).map((u) => ({
       ...u,
@@ -125,7 +134,7 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   stores: pick(
-    asArr(storesSeedData).map((s) => ({
+    [...asArr(storesSeedData), ...asArr(storesTesterSeedData)].map((s) => ({
       ...s,
       name: s.storeName ?? s.id,
     })),
@@ -141,6 +150,7 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsLiveItemsSeedData),
       ...asArr(productsArtSeedData),
       ...asArr(productsStickersSeedData),
+      ...asArr(productsTesterSeedData),
     ].map((p) => ({
       ...p,
       type:
@@ -197,13 +207,13 @@ export const SEED_MANIFEST: SeedManifest = {
   shipmentItems: pick(asArr(shipmentItemsSeedData), "title"),
   catalogueItems: pick(asArr(catalogueSeedData), "title"),
   blogPosts: pick(
-    asArr(blogPostsSeedData).map((p) => ({
+    [...asArr(blogPostsSeedData), ...asArr(blogTesterSeedData)].map((p) => ({
       ...p,
       name: p.title ?? p.id,
     })),
   ),
   events: pick(
-    asArr(eventsSeedData).map((e) => ({
+    [...asArr(eventsSeedData), ...asArr(eventsTesterSeedData)].map((e) => ({
       ...e,
       name: e.title ?? e.id,
     })),
@@ -322,4 +332,10 @@ export const SEED_MANIFEST: SeedManifest = {
   roleOverrides: [],
   customRoles: [],
   adminNotifications: [],
+  testerChecklistItems: pick(
+    asArr(testerChecklistSeedData).map((c) => ({
+      ...c,
+      name: c.label ?? c.id,
+    })),
+  ),
 };

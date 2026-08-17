@@ -687,6 +687,20 @@ export const NOTIFICATION_FIELDS = {
 } as const;
 
 // ============================================================================
+// PAGE VIEW FIELDS
+// ============================================================================
+
+export const PAGE_VIEW_FIELDS = {
+  ID: "id",
+  DATE: "date",
+  ENTITY_TYPE: "entityType",
+  ENTITY_ID: "entityId",
+  URL: "url",
+  COUNT: "count",
+  UPDATED_AT: "updatedAt",
+} as const;
+
+// ============================================================================
 // SESSION FIELDS
 // ============================================================================
 
