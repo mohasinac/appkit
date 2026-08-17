@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Text } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, Pagination, Row, Text, StickyToolbar } from "../../../ui";
 import { LiveItemFilters } from "../../live/components/LiveItemFilters";
 import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -73,9 +73,11 @@ export function StoreLiveItemsListing({ storeId, initialData }: StoreLiveItemsLi
       />
 
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       <Div padding="y-lg">

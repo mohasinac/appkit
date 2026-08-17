@@ -24,7 +24,7 @@
 
 import React from "react";
 import { Plus } from "lucide-react";
-import { BulkActionBar, Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer } from "../../../ui";
+import { BulkActionBar, Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, SideDrawer, StickyToolbar } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { useAdminListing } from "../hooks/useAdminListing";
@@ -287,7 +287,8 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
       )}
 
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -296,7 +297,8 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             onPageSizeChange={setPageSize}
             paginationConfig={{ showPageSizeSelector: true, pageSizeOptions: [10, 25, 50, 100] }}
           />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       <Div paddingX="x-sm-md" padding="y-md">

@@ -5,7 +5,7 @@ import React, { useState, useCallback, useMemo } from "react";
 
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
-import { BulkActionBar, Div, ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { BulkActionBar, Div, ListingFilterDrawer, ListingToolbar, Pagination, Text, StickyToolbar } from "../../../ui";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROUTES } from "../../../next";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
@@ -225,13 +225,15 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination
             currentPage={table.getNumber("page", 1)}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       {/* ── Store grid ─────────────────────────────────────────────────── */}

@@ -584,3 +584,12 @@ export { Scrim } from "./components/Scrim";
 export type { ScrimProps, ScrimDirection, ScrimIntensity } from "./components/Scrim";
 export { Kbd } from "./components/Kbd";
 export type { KbdProps, KbdSize, KbdTone } from "./components/Kbd";
+export { StickyToolbar } from "./components/StickyToolbar";
+export type {
+  StickyToolbarProps,
+  StickyToolbarOffset,
+  StickyToolbarTone,
+  StickyToolbarPadding,
+} from "./components/StickyToolbar";
+export { Show, Hide } from "./components/Responsive";
+export type { ShowProps, HideProps } from "./components/Responsive";

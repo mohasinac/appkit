@@ -4,7 +4,7 @@ import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Card, CardBody, Checkbox, ConfirmDeleteModal, Div, Form, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, Card, CardBody, Checkbox, ConfirmDeleteModal, Div, Form, Input, Select, Span, Stack, StackedViewShell, Text, Toggle, useToast, Show, StickyToolbar } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -347,9 +347,11 @@ export function AdminAddressEditorView({
   const twoPanel = (
     <Div layout="grid" gap="6" lgAlign="start" className="lg:grid-cols-[1fr_280px]">
       <CardBody className="min-w-0 space-y-6 p-[var(--appkit-space-0)]">{formContent}</CardBody>
-      <Div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
-        {actionSidebar}
-      </Div>
+      <Show above="lg">
+        <StickyToolbar offset="header" tone="default" border={false} padding="none">
+          {actionSidebar}
+        </StickyToolbar>
+      </Show>
     </Div>
   );
 

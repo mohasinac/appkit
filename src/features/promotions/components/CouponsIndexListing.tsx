@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Button, DateInput, IconButton, Input, ListingFilterDrawer, Pagination, RadioGroup, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
+import { Button, DateInput, IconButton, Input, ListingFilterDrawer, Pagination, RadioGroup, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading, StickyToolbar } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
 import type { CouponType } from "../types";
@@ -128,7 +128,7 @@ export function CouponsIndexListing({
   return (
     <Div className="min-h-[40vh]">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <Div border="default" paddingY="y-xs-tall" className="sticky top-[var(--header-height,0px)] z-20 border-b backdrop-blur-sm" surface="default" padding="x-md">
+      <StickyToolbar offset="header" tone="default" border padding="md" z="above-toolbar" dismissible id="coupons-toolbar">
         <Row gap="xs" className="max-w-full">
           {/* Filters button */}
           <Button
@@ -230,7 +230,7 @@ export function CouponsIndexListing({
             </Button>
           </Row>
         )}
-      </Div>
+      </StickyToolbar>
 
       {/* ── Coupon grid ─────────────────────────────────────────────────── */}
       <Div paddingY="y-lg" paddingX="x-md">

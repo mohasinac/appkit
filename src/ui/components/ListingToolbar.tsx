@@ -13,6 +13,7 @@ import {
 import { SortDropdown } from "./SortDropdown";
 import { Div } from "./Div";
 import { Span } from "./Typography";
+import { StickyToolbar } from "./StickyToolbar";
 
 const CLS_CLEAR_LINK = "text-xs text-zinc-400 hover:text-error text-[var(--appkit-color-text-muted)] transition-colors";
 const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-[var(--appkit-color-border)] p-1.5 sm:p-2 text-[var(--appkit-color-text-muted)] hover:bg-zinc-50 hover:bg-[var(--appkit-color-surface-elevated)] hover:text-error dark:hover:text-error transition-colors";
@@ -153,9 +154,14 @@ export function ListingToolbar({
   const allSelected = bulkTotalCount > 0 && bulkSelectedCount === bulkTotalCount;
 
   return (
-    <div
-      data-testid="listing-toolbar"
-      className={`sticky top-[var(--header-height,0px)] z-20 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
+    <StickyToolbar
+      dataTestId="listing-toolbar"
+      offset="header"
+      tone="translucent"
+      border
+      padding="none"
+      z="above-toolbar"
+      className={`py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
 
@@ -302,6 +308,6 @@ export function ListingToolbar({
           {extra}
         </div>
       </div>
-    </div>
+    </StickyToolbar>
   );
 }

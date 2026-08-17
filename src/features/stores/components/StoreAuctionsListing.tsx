@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
@@ -162,13 +162,15 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
       />
 
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       <Div padding="y-lg">

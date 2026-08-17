@@ -12,7 +12,7 @@ import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingLayout, Pagination, Row, Select, Span, Text, useToast } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingLayout, Pagination, Row, Select, Span, Text, useToast, StickyToolbar } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -470,25 +470,25 @@ export function SellerProductsView({
         <TypeDropdown active={listingKind} onChange={handleKindChange} />
 
         {totalPages > 1 && (
-          <Row
-            className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] py-[0.375rem]" padding="x-sm" justify="center"
-          >
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </Row>
+          <StickyToolbar offset="header+pagination" tone="default" border padding="sm">
+            <Row justify="center">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(p) => table.setPage(p)}
+              />
+            </Row>
+          </StickyToolbar>
         )}
 
         {selection.selectedIds.length > 0 && (
-          <Div paddingX="x-sm-lg-md" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]" padding="y-xs">
+          <StickyToolbar offset="header+bulk-actions" tone="default" border padding="sm" z="above-toolbar">
             <BulkActionBar
               selectedCount={selection.selectedIds.length}
               onClearSelection={selection.clearSelection}
               actions={bulkActions}
             />
-          </Div>
+          </StickyToolbar>
         )}
 
         <Div paddingX="x-sm-lg-md" padding="y-md">

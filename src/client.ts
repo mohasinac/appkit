@@ -156,6 +156,15 @@ export { isAuthError } from "./utils/auth-error";
 // useToast - React hook for use toast.
 export { useToast } from "./ui/components/Toast";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// StickyToolbar - sticky translucent bar under the AppLayoutShell header, with a client-side dismiss/collapse toggle.
+export { StickyToolbar } from "./ui/components/StickyToolbar";
+export type {
+  StickyToolbarProps,
+  StickyToolbarOffset,
+  StickyToolbarTone,
+  StickyToolbarPadding,
+} from "./ui/components/StickyToolbar";
+// [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useAuth - React hook for use auth.
 export { useAuth } from "./react/contexts/SessionContext";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.

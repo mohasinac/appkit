@@ -11,7 +11,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
-import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Span, Stack, Text, useToast } from "../../../ui";
+import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Span, Stack, Text, useToast, StickyToolbar } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps, SelectOption } from "../../../ui";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -689,19 +689,21 @@ export function SellerOrdersView({
       />
 
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       {selection.selectedIds.length > 0 && (
-        <Div border="default" paddingX="x-sm-md" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 backdrop-blur-sm border-b" surface="default" padding="y-xs">
+        <StickyToolbar offset="header+bulk-actions" tone="default" border padding="sm" z="above-toolbar">
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}
             actions={bulkActions}
           />
-        </Div>
+        </StickyToolbar>
       )}
 
       <Div paddingX="x-sm-md" padding="y-md">

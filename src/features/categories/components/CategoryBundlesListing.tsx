@@ -11,7 +11,7 @@
 
 import { Row, Stack, sortBy } from "@mohasinac/appkit";
 import React, { useMemo, useCallback, useState } from "react";
-import { Div, Label, Span, Text, Toggle } from "../../../ui";
+import { Div, Label, Span, Text, Toggle, StickyToolbar } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import type { CategoryDocument } from "../schemas";
@@ -143,13 +143,15 @@ export function CategoryBundlesListing({
       />
 
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination
             currentPage={safePage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       <Div padding="y-lg">

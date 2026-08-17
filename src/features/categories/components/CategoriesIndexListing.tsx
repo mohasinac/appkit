@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo } from "react";
 
 import { useCategoriesFiltered } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
-import { Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text } from "../../../ui";
+import { Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Stack, Text, StickyToolbar } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
@@ -263,9 +263,11 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       {/* ── Category / brand grid ──────────────────────────────────────── */}

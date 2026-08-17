@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, IconButton, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
+import { Badge, Button, ConfirmDeleteModal, Div, Grid, Heading, IconButton, Row, SideDrawer, Span, Stack, Table, Thead, Tbody, Tr, Th, Td, Text, StickyToolbar } from "../../../ui";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
@@ -263,19 +263,18 @@ export function SellerAddressesView({
   return (
     <Div className="min-h-screen">
       {/* Header */}
-      <Row border="default" 
-        justify="between"
-        className="sticky top-[var(--header-height,0px)] z-10 backdrop-blur-sm border-b" surface="default" padding="inline"
-      >
-        <Stack gap="none">
-          <Heading level={2} size="base" weight="semibold" color="primary">Pickup Addresses</Heading>
-          <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>
-        </Stack>
-        <Button gap="sm" size="sm" onClick={openAdd}>
-          <Plus className="h-4 w-4" />
-          <Span>Add Address</Span>
-        </Button>
-      </Row>
+      <StickyToolbar offset="header" tone="default" border padding="md">
+        <Row justify="between">
+          <Stack gap="none">
+            <Heading level={2} size="base" weight="semibold" color="primary">Pickup Addresses</Heading>
+            <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>
+          </Stack>
+          <Button gap="sm" size="sm" onClick={openAdd}>
+            <Plus className="h-4 w-4" />
+            <Span>Add Address</Span>
+          </Button>
+        </Row>
+      </StickyToolbar>
 
       <Div paddingX="x-md-lg" className="max-w-2xl" padding="y-lg">
         {errorMessage && (

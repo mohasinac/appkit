@@ -7,7 +7,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 
-import { Badge, Button, BulkActionBar, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, Span, Text, useToast } from "../../../ui";
+import { Badge, Button, BulkActionBar, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, Span, Text, useToast, StickyToolbar } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -268,19 +268,21 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       />
 
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       {selection.selectedIds.length > 0 && (
-        <Div border="default" paddingX="x-sm-md" className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 backdrop-blur-sm border-b" surface="default" padding="y-xs">
+        <StickyToolbar offset="header+bulk-actions" tone="default" border padding="sm" z="above-toolbar">
           <BulkActionBar
             selectedCount={selection.selectedIds.length}
             onClearSelection={selection.clearSelection}
             actions={bulkActions}
           />
-        </Div>
+        </StickyToolbar>
       )}
 
       <Div paddingX="x-sm-md" padding="y-md">

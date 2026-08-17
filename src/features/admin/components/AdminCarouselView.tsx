@@ -4,7 +4,7 @@ import { useApiMutation, type JsonArray } from "@mohasinac/appkit/client";
 import type { JsonValue } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, ListingFilterDrawer, ListingLayout, ListingToolbar, Pagination, Row, Span, Stack, Text, StickyToolbar } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { MediaImage } from "../../media/MediaImage";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
@@ -236,9 +236,11 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       />
 
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       {selection.selectedCount > 0 && bulkActions.length > 0 && (

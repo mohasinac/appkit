@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Span, Stack, Text } from "../../../ui";
+import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Row, Span, Stack, Text, StickyToolbar } from "../../../ui";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
 import { ReviewFilters, REVIEW_PUBLIC_SORT_OPTIONS } from "../../reviews/components/ReviewFilters";
 import { useStoreReviews } from "../hooks/useStores";
@@ -166,13 +166,15 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <Row border="bottom" className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 backdrop-blur-sm" surface="default" padding="toolbar" justify="center">
+        <StickyToolbar offset="header+pagination" tone="translucent" border padding="toolbar">
+          <Row justify="center">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </Row>
+          </Row>
+        </StickyToolbar>
       )}
 
       {/* ── Reviews grid ───────────────────────────────────────────────── */}
