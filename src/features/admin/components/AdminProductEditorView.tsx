@@ -1,4 +1,7 @@
 "use client";
+// audit-form-mutation-hook-multi-ok: saveMutation is the single combined save
+// across all tabs; deleteMutation is a separate destructive action, not a
+// second per-tab save.
 
 import { Row } from "@mohasinac/appkit/ui";
 import { useApiMutation, type JsonValue, type FirestoreDocument } from "@mohasinac/appkit/client";

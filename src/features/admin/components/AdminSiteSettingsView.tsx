@@ -80,11 +80,14 @@ const PRIORITY_OPTIONS: SelectOption[] = [
   { label: "Critical only", value: "critical" },
 ];
 
-function GroupSaveButton({ isPending }: { isPending: boolean }) {
+/** Single persistent save action for the whole settings form — every tab writes
+ * into the same combined payload, so one save covers whichever tabs were edited
+ * regardless of which one is currently active. */
+function SaveAllBar({ isPending, onSave }: { isPending: boolean; onSave: () => void }) {
   return (
     <FormActions align="right">
-      <Button type="submit" isLoading={isPending} disabled={isPending}>
-        {isPending ? "Saving…" : "Save changes"}
+      <Button type="button" isLoading={isPending} disabled={isPending} onClick={onSave}>
+        {isPending ? "Saving…" : "Save all changes"}
       </Button>
     </FormActions>
   );
@@ -284,6 +287,17 @@ export function AdminSiteSettingsView({
   const [notifFromEmail, setNotifFromEmail] = React.useState("");
   const [notifFromName, setNotifFromName] = React.useState("");
 
+  // Snapshot of the masked placeholder strings the server returned for every
+  // credentials.* field, captured once per load. A combined single-save has
+  // to send the FULL credentials object on every save (not just the group the
+  // admin actually edited), so any untouched field must resolve back to "" —
+  // sending its still-masked display value would re-encrypt the mask itself
+  // and destroy the real secret. Comparing against this snapshot is how we
+  // tell "unedited" from "admin actually typed a new value".
+  const originalMaskedRef = React.useRef<Record<string, string>>({});
+  const maskedOrReal = (field: string, current: string): string =>
+    current !== (originalMaskedRef.current[field] ?? "") ? current : "";
+
   // Populate from query data
   React.useEffect(() => {
     if (!s || !Object.keys(s).length) return;
@@ -439,132 +453,125 @@ export function AdminSiteSettingsView({
     setResendApiKey(s.credentialsMasked?.resendApiKey ?? "");
     setNotifFromEmail(s.emailSettings?.fromEmail ?? "");
     setNotifFromName(s.emailSettings?.fromName ?? "");
+
+    originalMaskedRef.current = {
+      razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
+      razorpaySecret: s.credentialsMasked?.razorpaySecret ?? "",
+      smtpPassword: s.credentialsMasked?.smtpPassword ?? "",
+      metaPageAccessToken: s.credentialsMasked?.metaPageAccessToken ?? "",
+      metaPageId: s.credentialsMasked?.metaPageId ?? "",
+      tiktokClientKey: s.credentialsMasked?.tiktokClientKey ?? "",
+      tiktokClientSecret: s.credentialsMasked?.tiktokClientSecret ?? "",
+      tiktokAccessToken: s.credentialsMasked?.tiktokAccessToken ?? "",
+      deviantartClientId: s.credentialsMasked?.deviantartClientId ?? "",
+      deviantartClientSecret: s.credentialsMasked?.deviantartClientSecret ?? "",
+      whatsappPhoneNumberId: s.credentialsMasked?.whatsappPhoneNumberId ?? "",
+      whatsappCloudApiToken: s.credentialsMasked?.whatsappCloudApiToken ?? "",
+      whatsappAdminNotifyNumbers: s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "",
+      resendApiKey: s.credentialsMasked?.resendApiKey ?? "",
+    };
   }, [data]);
 
-  function useSave(group: string, payload: () => FirestoreDocument) {
-    return useApiMutation({
-      mutationFn: async () => {
-        await apiClient.put(ADMIN_ENDPOINTS.ADMIN_SITE, payload());
+  // Single combined payload — every group's current field values, assembled
+  // into one PUT. Every step/tab is independently jumpable and there is one
+  // save action for the whole form, not 19 per-tab mutations.
+  function buildFullPayload(): FirestoreDocument {
+    return {
+      aboutContent: { title: aboutTitle, subtitle: aboutSubtitle, missionTitle: aboutMissionTitle, missionText: aboutMissionText, ctaTitle: aboutCtaTitle },
+      siteName, tagline, logo: logoUrl, favicon: faviconUrl,
+      maintenance: { enabled: maintenanceMode, message: maintenanceMessage },
+      background: {
+        light: {
+          type: lightBgType,
+          value: lightBgValue,
+          overlay: { enabled: lightBgOverlayEnabled, color: lightBgOverlayColor, opacity: lightBgOverlayOpacity / 100 },
+        },
+        dark: {
+          type: darkBgType,
+          value: darkBgValue,
+          overlay: { enabled: darkBgOverlayEnabled, color: darkBgOverlayColor, opacity: darkBgOverlayOpacity / 100 },
+        },
       },
-      onSuccess: () => {
-        showToast(`${group} saved.`, "success");
-        queryClient.invalidateQueries({ queryKey: ["admin", "site-settings"] });
+      theme: {
+        themes: themeRegistry.themes as unknown as FirestoreDocument[],
+        defaultLightThemeId: themeRegistry.defaultLightThemeId,
+        defaultDarkThemeId: themeRegistry.defaultDarkThemeId,
       },
-      onError: (err: Error) =>
-        showToast((err as Error)?.message ?? `Failed to save ${group}.`, "error"),
-    });
+      announcementBar: { enabled: announcementEnabled, text: announcementText, link: announcementLink, backgroundColor: announcementBg },
+      seo: { defaultTitle: seoTitle, defaultDescription: seoDescription, defaultOgImage: seoOgImage, noIndex: seoNoIndex, canonicalBaseUrl: canonicalUrl },
+      contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp },
+      socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
+      watermark: { type: watermarkType, text: watermarkText, imageUrl: watermarkImageUrl, size: watermarkSize, opacity: watermarkOpacity },
+      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
+      laborRate: { hourlyRatePaise: laborHourlyRatePaise, maxHoursPerDay: laborMaxHoursPerDay },
+      emi: {
+        enabled: emiEnabled,
+        minOrderValueInPaise: emiMinOrderValuePaise,
+        tenureOptions: emiTenureOptionsText
+          .split(",")
+          .map((v) => parseInt(v.trim(), 10))
+          .filter((v) => !isNaN(v) && v > 0),
+        tokenPercent: emiTokenPercent,
+        billingDay: emiBillingDay,
+        surchargePercentPerMonth: emiSurchargePercentPerMonth,
+        surchargeSellerSharePercent: emiSurchargeSellerSharePercent,
+      },
+      gst: {
+        enabled: gstEnabled,
+        gstin: gstin.trim().toUpperCase(),
+        legalName: gstLegalName.trim(),
+        address: gstAddress.trim(),
+      },
+      // Masked credential fields resolve to "" when untouched — the repository's
+      // mergeEncryptedCredentials preserves the existing encrypted value for any
+      // "" field, so an unedited tab never overwrites a real secret with its
+      // own masked display string.
+      credentials: {
+        razorpayKeyId: maskedOrReal("razorpayKeyId", razorpayKeyId),
+        razorpaySecret: maskedOrReal("razorpaySecret", razorpaySecret),
+        smtpPassword: maskedOrReal("smtpPassword", smtpPassword),
+        metaPageAccessToken: maskedOrReal("metaPageAccessToken", metaPageAccessToken),
+        metaPageId: maskedOrReal("metaPageId", metaPageId),
+        tiktokClientKey: maskedOrReal("tiktokClientKey", tiktokClientKey),
+        tiktokClientSecret: maskedOrReal("tiktokClientSecret", tiktokClientSecret),
+        tiktokAccessToken: maskedOrReal("tiktokAccessToken", tiktokAccessToken),
+        deviantartClientId: maskedOrReal("deviantartClientId", deviantartClientId),
+        deviantartClientSecret: maskedOrReal("deviantartClientSecret", deviantartClientSecret),
+        whatsappPhoneNumberId: maskedOrReal("whatsappPhoneNumberId", waPhoneNumberId),
+        whatsappCloudApiToken: maskedOrReal("whatsappCloudApiToken", waCloudApiToken),
+        whatsappAdminNotifyNumbers: maskedOrReal("whatsappAdminNotifyNumbers", waAdminNotifyNumbers),
+        resendApiKey: maskedOrReal("resendApiKey", resendApiKey),
+      },
+      emailSettings: {
+        host: smtpHost, port: Number(smtpPort), user: smtpUser, fromAddress: smtpFrom,
+        fromEmail: notifFromEmail, fromName: notifFromName,
+      },
+      integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
+      shipping: { freeShippingThreshold: freeShippingThreshold * 100, defaultCarrier, maxDeliveryRadius },
+      payment: { razorpayEnabled, upiManualEnabled, codEnabled },
+      auctionConfig: { minBidIncrement: minBidIncrement * 100, autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
+      platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
+      legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
+      notificationChannels: {
+        inApp: { enabled: true, readOnly: true },
+        email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority },
+        whatsapp: { enabled: notifWhatsappEnabled, minPriority: notifWhatsappMinPriority, otpEnabled: notifWhatsappOtpEnabled },
+        sms: { enabled: notifSmsEnabled, minPriority: notifSmsMinPriority },
+      },
+    };
   }
 
-  const brandingMutation = useSave("Branding", () => ({
-    siteName, tagline, logo: logoUrl, favicon: faviconUrl,
-    maintenance: { enabled: maintenanceMode, message: maintenanceMessage },
-  }));
-  const appearanceMutation = useSave("Appearance", () => ({
-    background: {
-      light: {
-        type: lightBgType,
-        value: lightBgValue,
-        overlay: { enabled: lightBgOverlayEnabled, color: lightBgOverlayColor, opacity: lightBgOverlayOpacity / 100 },
-      },
-      dark: {
-        type: darkBgType,
-        value: darkBgValue,
-        overlay: { enabled: darkBgOverlayEnabled, color: darkBgOverlayColor, opacity: darkBgOverlayOpacity / 100 },
-      },
+  const saveAllMutation = useApiMutation({
+    mutationFn: async () => {
+      await apiClient.put(ADMIN_ENDPOINTS.ADMIN_SITE, buildFullPayload());
     },
-  }));
-  const themeMutation = useSave("Themes", () => ({
-    theme: {
-      themes: themeRegistry.themes as unknown as FirestoreDocument[],
-      defaultLightThemeId: themeRegistry.defaultLightThemeId,
-      defaultDarkThemeId: themeRegistry.defaultDarkThemeId,
+    onSuccess: () => {
+      showToast("Site settings saved.", "success");
+      queryClient.invalidateQueries({ queryKey: ["admin", "site-settings"] });
     },
-  }));
-  const announcementMutation = useSave("Announcement", () => ({
-    announcementBar: { enabled: announcementEnabled, text: announcementText, link: announcementLink, backgroundColor: announcementBg },
-  }));
-  const seoMutation = useSave("SEO", () => ({
-    seo: { defaultTitle: seoTitle, defaultDescription: seoDescription, defaultOgImage: seoOgImage, noIndex: seoNoIndex, canonicalBaseUrl: canonicalUrl },
-  }));
-  const contactMutation = useSave("Contact & Social", () => ({
-    contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp },
-    socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
-  }));
-  const watermarkMutation = useSave("Watermark", () => ({
-    watermark: { type: watermarkType, text: watermarkText, imageUrl: watermarkImageUrl, size: watermarkSize, opacity: watermarkOpacity },
-  }));
-  const feesMutation = useSave("Fees", () => ({
-    commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
-  }));
-  const laborRateMutation = useSave("Procurement", () => ({
-    laborRate: { hourlyRatePaise: laborHourlyRatePaise, maxHoursPerDay: laborMaxHoursPerDay },
-  }));
-  const emiSettingsMutation = useSave("EMI", () => ({
-    emi: {
-      enabled: emiEnabled,
-      minOrderValueInPaise: emiMinOrderValuePaise,
-      tenureOptions: emiTenureOptionsText
-        .split(",")
-        .map((v) => parseInt(v.trim(), 10))
-        .filter((v) => !isNaN(v) && v > 0),
-      tokenPercent: emiTokenPercent,
-      billingDay: emiBillingDay,
-      surchargePercentPerMonth: emiSurchargePercentPerMonth,
-      surchargeSellerSharePercent: emiSurchargeSellerSharePercent,
-    },
-  }));
-  const gstSettingsMutation = useSave("GST", () => ({
-    gst: {
-      enabled: gstEnabled,
-      gstin: gstin.trim().toUpperCase(),
-      legalName: gstLegalName.trim(),
-      address: gstAddress.trim(),
-    },
-  }));
-  const integrationsMutation = useSave("Integrations", () => ({
-    credentials: {
-      razorpayKeyId, razorpaySecret, smtpPassword,
-      metaPageAccessToken, metaPageId,
-      tiktokClientKey, tiktokClientSecret, tiktokAccessToken,
-      deviantartClientId, deviantartClientSecret,
-    },
-    emailSettings: { host: smtpHost, port: Number(smtpPort), user: smtpUser, fromAddress: smtpFrom },
-    integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
-  }));
-  const shippingMutation = useSave("Shipping", () => ({
-    shipping: { freeShippingThreshold: freeShippingThreshold * 100, defaultCarrier, maxDeliveryRadius },
-    payment: { razorpayEnabled, upiManualEnabled, codEnabled },
-  }));
-  const auctionMutation = useSave("Auction Config", () => ({
-    auctionConfig: { minBidIncrement: minBidIncrement * 100, autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
-  }));
-  const limitsMutation = useSave("Platform Limits", () => ({
-    platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
-  }));
-  const whatsappMutation = useSave("WhatsApp", () => ({
-    credentials: {
-      whatsappPhoneNumberId: waPhoneNumberId,
-      whatsappCloudApiToken: waCloudApiToken,
-      whatsappAdminNotifyNumbers: waAdminNotifyNumbers,
-    },
-  }));
-
-  const legalMutation = useSave("Legal Policies", () => ({
-    legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
-  }));
-  const aboutMutation = useSave("About Page", () => ({
-    aboutContent: { title: aboutTitle, subtitle: aboutSubtitle, missionTitle: aboutMissionTitle, missionText: aboutMissionText, ctaTitle: aboutCtaTitle },
-  }));
-  const notifChannelsMutation = useSave("Notification Channels", () => ({
-    notificationChannels: {
-      inApp: { enabled: true, readOnly: true },
-      email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority },
-      whatsapp: { enabled: notifWhatsappEnabled, minPriority: notifWhatsappMinPriority, otpEnabled: notifWhatsappOtpEnabled },
-      sms: { enabled: notifSmsEnabled, minPriority: notifSmsMinPriority },
-    },
-    credentials: { resendApiKey },
-    emailSettings: { fromEmail: notifFromEmail, fromName: notifFromName },
-  }));
+    onError: (err: Error) =>
+      showToast((err as Error)?.message ?? "Failed to save site settings.", "error"),
+  });
 
   const BG_TYPE_OPTIONS: SelectOption[] = [
     { label: "Solid color", value: "color" },
@@ -627,7 +634,7 @@ export function AdminSiteSettingsView({
 
           {/* ⓪ About Page */}
           <TabsContent value="about">
-            <Form onSubmit={(e) => { e.preventDefault(); aboutMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Override the About page hero and mission text. Leave blank to use the platform defaults.
               </Text>
@@ -644,13 +651,12 @@ export function AdminSiteSettingsView({
                 />
               </>
               <Input label="CTA banner title" value={aboutCtaTitle} onChange={(e) => setAboutCtaTitle(e.target.value)} placeholder="Ready to get started?" />
-              <GroupSaveButton isPending={aboutMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ① Branding */}
           <TabsContent value="branding">
-            <Form onSubmit={(e) => { e.preventDefault(); brandingMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder="LetItRip" />
               <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
@@ -659,13 +665,12 @@ export function AdminSiteSettingsView({
                 <Toggle label="Maintenance mode" checked={maintenanceMode} onChange={setMaintenanceMode} />
                 <Input label="Maintenance message" value={maintenanceMessage} onChange={(e) => setMaintenanceMessage(e.target.value)} placeholder="We're back soon." disabled={!maintenanceMode} />
               </Stack>
-              <GroupSaveButton isPending={brandingMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ② Appearance — site-wide background (homepage/nav/dashboard shells) */}
           <TabsContent value="appearance">
-            <Form onSubmit={(e) => { e.preventDefault(); appearanceMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Sets the background behind the public shell, dashboard sidebars, and any
                 Section/Card that opts into it. Leave the value blank for a plain surface.
@@ -755,7 +760,6 @@ export function AdminSiteSettingsView({
                   </Div>
                 </Stack>
               </Grid>
-              <GroupSaveButton isPending={appearanceMutation.isPending} />
             </Form>
           </TabsContent>
 
@@ -764,7 +768,7 @@ export function AdminSiteSettingsView({
             <Form
               onSubmit={(e) => {
                 e.preventDefault();
-                themeMutation.mutate();
+                saveAllMutation.mutate();
               }}
               className="pt-[var(--appkit-space-4)]" spacing="md"
             >
@@ -773,13 +777,12 @@ export function AdminSiteSettingsView({
                 onChange={setThemeRegistry}
                 previewOrigin="/"
               />
-              <GroupSaveButton isPending={themeMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ③ Announcement */}
           <TabsContent value="announcement">
-            <Form onSubmit={(e) => { e.preventDefault(); announcementMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} />
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
@@ -787,25 +790,23 @@ export function AdminSiteSettingsView({
                 <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
                 <Input type="color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 cursor-pointer" bare disabled={!announcementEnabled} /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
               </Stack>
-              <GroupSaveButton isPending={announcementMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ④ SEO */}
           <TabsContent value="seo">
-            <Form onSubmit={(e) => { e.preventDefault(); seoMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="LetItRip — Buy, Sell & Auction Collectibles in India" maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
               <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
               <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
               <Input label="Canonical base URL" value={canonicalUrl} onChange={(e) => setCanonicalUrl(e.target.value)} placeholder="https://letitrip.in" />
               <Toggle label="Robots noindex (disables search indexing — use carefully)" checked={seoNoIndex} onChange={setSeoNoIndex} />
-              <GroupSaveButton isPending={seoMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑤ Contact & Social */}
           <TabsContent value="contact">
-            <Form onSubmit={(e) => { e.preventDefault(); contactMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder="support@letitrip.in" />
                 <Input label="Support phone" value={supportPhone} onChange={(e) => setSupportPhone(e.target.value)} placeholder="+91 XXXXX XXXXX" />
@@ -822,13 +823,12 @@ export function AdminSiteSettingsView({
                 <Input label="LinkedIn URL" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/letitrip" />
                 <Input label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} placeholder="https://pinterest.com/letitrip" />
               </Grid>
-              <GroupSaveButton isPending={contactMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑥ Watermark */}
           <TabsContent value="watermark">
-            <Form onSubmit={(e) => { e.preventDefault(); watermarkMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Select
                 label="Watermark type"
                 options={[{ label: "Text", value: "text" }, { label: "Image", value: "image" }]}
@@ -856,13 +856,12 @@ export function AdminSiteSettingsView({
                   </Span>
                 </Row>
               </Stack>
-              <GroupSaveButton isPending={watermarkMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑦ Fees & Commissions */}
           <TabsContent value="fees">
-            <Form onSubmit={(e) => { e.preventDefault(); feesMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
@@ -875,13 +874,12 @@ export function AdminSiteSettingsView({
                 <Input label="Featured slot fee (₹)" value={String(featuredSlotFee)} onChange={(e) => setFeaturedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Promoted slot fee (₹)" value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
               </Grid>
-              <GroupSaveButton isPending={feesMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑮ Procurement — labor rate feeding Feature A shipment cost calc */}
           <TabsContent value="procurement">
-            <Form onSubmit={(e) => { e.preventDefault(); laborRateMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Used to compute each procurement shipment's labor cost (hours spent × hourly rate) and its
                 estimated processing time (hours spent ÷ max hours/day).
@@ -905,13 +903,12 @@ export function AdminSiteSettingsView({
                   max={24}
                 />
               </Grid>
-              <GroupSaveButton isPending={laborRateMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑯ EMI — site-wide installment financing settings */}
           <TabsContent value="emi">
-            <Form onSubmit={(e) => { e.preventDefault(); emiSettingsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 A seller must also opt in via their own Payout Settings for EMI to appear at
                 checkout on their items. See the "How EMI Works" public page for buyer-facing copy.
@@ -972,13 +969,12 @@ export function AdminSiteSettingsView({
                   max={100}
                 />
               </Grid>
-              <GroupSaveButton isPending={emiSettingsMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑰ GST — Indian tax compliance settings */}
           <TabsContent value="gst">
-            <Form onSubmit={(e) => { e.preventDefault(); gstSettingsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Required before enabling GST-inclusive checkout (P-8). Also set a GST rate + HSN
                 code on each taxable product for the tax breakdown to appear.
@@ -1014,13 +1010,12 @@ export function AdminSiteSettingsView({
                   rows={3}
                 />
               </Stack>
-              <GroupSaveButton isPending={gstSettingsMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑧ Integrations & Keys */}
           <TabsContent value="integrations">
-            <Form onSubmit={(e) => { e.preventDefault(); integrationsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <Stack gap="sm">
                 <Text size="sm" weight="medium" color="muted">Razorpay</Text>
@@ -1072,13 +1067,12 @@ export function AdminSiteSettingsView({
                   <MaskedInput label="Client Secret" value={deviantartClientSecret} onChange={setDeviantartClientSecret} placeholder="••••••••" />
                 </Grid>
               </Stack>
-              <GroupSaveButton isPending={integrationsMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑨ Shipping Defaults */}
           <TabsContent value="shipping">
-            <Form onSubmit={(e) => { e.preventDefault(); shippingMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
               <Toggle label="Razorpay (online card/UPI) enabled — disabled by default, manual payment is the default" checked={razorpayEnabled} onChange={setRazorpayEnabled} />
               <Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} />
@@ -1086,23 +1080,21 @@ export function AdminSiteSettingsView({
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />
               <Select label="Default carrier" options={CARRIER_OPTIONS} value={defaultCarrier} onValueChange={setDefaultCarrier} />
               <Input label="Max delivery radius (km, 0 = no limit)" value={String(maxDeliveryRadius)} onChange={(e) => setMaxDeliveryRadius(parseInt(e.target.value) || 0)} type="number" min={0} />
-              <GroupSaveButton isPending={shippingMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑩ Auction Config */}
           <TabsContent value="auction">
-            <Form onSubmit={(e) => { e.preventDefault(); auctionMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Input label="Minimum bid increment (₹)" value={String(minBidIncrement)} onChange={(e) => setMinBidIncrement(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Global default — individual auctions may override." />
               <Input label="Auto-extend window (minutes before end)" value={String(autoExtendWindow)} onChange={(e) => setAutoExtendWindow(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Extend auction end time if a bid arrives within this window." />
               <Input label="Settlement grace period (hours)" value={String(settlementGrace)} onChange={(e) => setSettlementGrace(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Time winner has to pay before the auction is re-listed." />
-              <GroupSaveButton isPending={auctionMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑪ Platform Limits */}
           <TabsContent value="limits">
-            <Form onSubmit={(e) => { e.preventDefault(); limitsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Grid cols={2} gap="md">
                 <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max images per product" value={String(maxImagesPerProduct)} onChange={(e) => setMaxImagesPerProduct(parseInt(e.target.value) || 0)} type="number" min={1} />
@@ -1111,13 +1103,12 @@ export function AdminSiteSettingsView({
                 <Input label="Max custom sections per product" value={String(maxCustomSections)} onChange={(e) => setMaxCustomSections(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Order cancellation window (hours)" value={String(orderCancelWindow)} onChange={(e) => setOrderCancelWindow(parseInt(e.target.value) || 0)} type="number" min={0} />
               </Grid>
-              <GroupSaveButton isPending={limitsMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑬ WhatsApp Business Cloud API */}
           <TabsContent value="whatsapp">
-            <Form onSubmit={(e) => { e.preventDefault(); whatsappMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
                 Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
                 announcements to admin numbers when orders are placed. Store owners configure their
@@ -1144,13 +1135,12 @@ export function AdminSiteSettingsView({
                 placeholder="919876543210,918765432109"
                 helperText="Comma-separated, digits-only, include country code. These receive a WhatsApp message when any order is placed."
               />
-              <GroupSaveButton isPending={whatsappMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑭ Notification Channels */}
           <TabsContent value="notifications">
-            <Form onSubmit={(e) => { e.preventDefault(); notifChannelsMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="lg">
               <Text size="xs" color="muted">
                 In-app notifications are always on. Enable external channels below to let the platform
                 fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
@@ -1227,13 +1217,12 @@ export function AdminSiteSettingsView({
                 )}
               </Stack>
 
-              <GroupSaveButton isPending={notifChannelsMutation.isPending} />
             </Form>
           </TabsContent>
 
           {/* ⑫ Legal Policies */}
           <TabsContent value="legal">
-            <Form onSubmit={(e) => { e.preventDefault(); legalMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
+            <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               {[
                 ["Terms of Service", termsHtml, setTermsHtml],
                 ["Privacy Policy", privacyHtml, setPrivacyHtml],
@@ -1251,10 +1240,10 @@ export function AdminSiteSettingsView({
                   className="font-mono"
                 />
               ))}
-              <GroupSaveButton isPending={legalMutation.isPending} />
             </Form>
           </TabsContent>
         </Tabs>,
+        <SaveAllBar key="save-all" isPending={saveAllMutation.isPending} onSave={() => saveAllMutation.mutate()} />,
       ]}
     />
   );

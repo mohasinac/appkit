@@ -106,19 +106,19 @@ export function StepIndicator({
             <Button
               variant="ghost"
               type="button"
-              disabled={!isDone && !isActive}
-              onClick={() => isDone && onStepClick?.(i)}
+              onClick={() => onStepClick?.(i)}
               gap="sm"
               rounded="lg"
               paddingX="sm"
               paddingY="xs"
               textSize="sm"
               className={classNames(
+                "cursor-pointer",
                 isActive
                   ? "font-semibold text-[var(--appkit-color-primary)]"
                   : isDone
-                    ? "text-[var(--appkit-color-text-muted)] cursor-pointer hover:text-[var(--appkit-color-text)]"
-                    : "text-[var(--appkit-color-text-faint)] cursor-default",
+                    ? "text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-text)]"
+                    : "text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)]",
               )}
             >
               <Span className="relative flex-shrink-0">
@@ -230,7 +230,7 @@ export function StepForm<T extends object = Record<string, JsonValue>>({
         steps={steps}
         currentStep={currentStep}
         stepErrors={stepErrors}
-        onStepClick={(i) => { if (i < currentStep) { setStepError(null); onStepChange(i); } }}
+        onStepClick={(i) => { if (i !== currentStep) { setStepError(null); onStepChange(i); } }}
       />
 
       <Div className="flex-1">
