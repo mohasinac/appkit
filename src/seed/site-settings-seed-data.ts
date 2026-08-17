@@ -438,7 +438,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     notifications: true,
     sellerRegistration: true,
     preOrders: false,
-    seedPanel: true,
     adminCheckoutBypass: false,
     // P-1 MVP: only standard listing type active; others unlocked in later patches.
     listingTypes: {

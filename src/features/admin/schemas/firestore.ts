@@ -532,7 +532,6 @@ export interface SiteSettingsDocument extends BaseDocument {
     notifications: boolean;
     sellerRegistration: boolean;
     preOrders: boolean;
-    seedPanel: boolean;
     /** When true, admin users see a bypass button in checkout that skips OTP and payment. Server-enforced. */
     adminCheckoutBypass?: boolean;
     /**
@@ -741,7 +740,6 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     notifications: true,
     sellerRegistration: true,
     preOrders: true,
-    seedPanel: true,
     // Track H — both mock-provider flags default to false. Production
     // deployments must never flip these on (the resolver throws if they are).
     useMockPayment: false,

@@ -2263,9 +2263,6 @@ export type { SeedLocaleData } from "./seed/index";
 // SeedNotificationDocument - Type contract for seed notification document.
 export type { SeedNotificationDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SeedOperationResult - Type contract for seed operation result.
-export type { SeedOperationResult } from "./seed/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SeedPayoutDocument - Type contract for seed payout document.
 export type { SeedPayoutDocument } from "./seed/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.

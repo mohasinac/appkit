@@ -1,12 +1,11 @@
 /**
  * Seed Manifest
  *
- * Lightweight index of every seeded document across all collections.
- * Imported by SeedPanel to render previews without loading full seed data.
+ * Lightweight index of every seeded document across all collections —
+ * name/id pairs without loading the full seed data payload.
  * Auto-derived from the live seed data files — stays in sync automatically.
  */
 
-import type { SeedCollectionName } from "./actions/demo-seed-actions";
 import type { FirestoreDocument, JsonValue } from "../schemas/types";
 import type { ListingType } from "../features/products/types/index";
 import {
@@ -72,6 +71,20 @@ export interface SeedManifestEntry {
   name: string;
   type?: string;
 }
+
+/** Every collection name the CLI seeder (appkit/scripts/seed-cli.mjs) and this manifest cover. */
+export type SeedCollectionName =
+  | "users" | "addresses" | "categories" | "stores" | "products" | "orders"
+  | "reviews" | "bids" | "coupons" | "carousels" | "carouselSlides"
+  | "homepageSections" | "siteSettings" | "faqs" | "notifications" | "payouts"
+  | "blogPosts" | "events" | "eventEntries" | "sessions" | "carts" | "wishlists"
+  | "history" | "conversations" | "groupedListings" | "scammerProfiles"
+  | "supportTickets" | "productFeatures" | "offers" | "couponUsage" | "claimedCoupons"
+  | "payoutMethods" | "shippingConfigs" | "analyticsCards" | "analyticsAlerts"
+  | "storeCategories" | "listingTemplates" | "moderationQueue" | "reports"
+  | "itemRequests" | "storeWhatsAppConfig" | "storeGoogleConfig" | "roleOverrides"
+  | "customRoles" | "adminNotifications" | "lotteryEntries" | "shipments"
+  | "shipmentLots" | "shipmentItems" | "catalogueItems";
 
 export type SeedManifest = Record<SeedCollectionName, SeedManifestEntry[]>;
 

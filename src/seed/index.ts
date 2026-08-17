@@ -1,8 +1,9 @@
 // appkit/src/seed/index.ts
 //
-// Pure fixture data + factories. Server-only seed runner / demoSeed action
-// live in `./server.ts` so client-bundles that touch the main appkit barrel
-// for fixtures do not transitively reach firebase-admin via the runner.
+// Pure fixture data + factories, consumed by appkit/scripts/seed-cli.mjs
+// (direct-to-Firestore CLI seeding, no web route). The admin seed-panel web
+// UI + its API route were removed — see CLAUDE.md Phase 4 (demo seed panel
+// removal).
 
 export type { SeedCollection, SeedConfig, SeedResult } from "./types";
 
@@ -14,12 +15,6 @@ export {
   formatSeedPrice,
   makeSeedPhone,
 } from "./seed-market-config";
-
-// Demo seed action — type only here (the runtime action is in ./server)
-export type {
-  SeedCollectionName,
-  SeedOperationResult,
-} from "./actions/demo-seed-actions";
 
 // Factories — user
 export type { SeedBaseUserDocument } from "./factories/user.factory";
@@ -210,8 +205,8 @@ export {
   storeGoogleConfigSeedData,
 } from "./store-extensions-seed-data";
 
-// Seed manifest — lightweight index for SeedPanel previews
-export type { SeedManifest, SeedManifestEntry } from "./manifest";
+// Seed manifest — lightweight per-collection name/id index
+export type { SeedManifest, SeedManifestEntry, SeedCollectionName } from "./manifest";
 export { SEED_MANIFEST } from "./manifest";
 
 // Firestore index helpers

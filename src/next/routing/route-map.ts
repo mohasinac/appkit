@@ -9,7 +9,6 @@ export interface RouteMap {
   /** Store management dashboard (requires seller role). Replaces the old SELLER section. */
   STORE: Record<string, RoutePath>;
   ADMIN: Record<string, RoutePath>;
-  DEMO: Record<string, RoutePath>;
   BLOG: Record<string, RoutePath>;
 }
 
@@ -375,9 +374,6 @@ export const DEFAULT_ROUTE_MAP = {
     PAYMENT_METHODS: "/admin/payment-methods",
     PAYMENT_METHODS_CLUSTERS: "/admin/payment-methods/clusters",
   },
-  DEMO: {
-    SEED: "/demo/seed",
-  },
   BLOG: {
     LIST: "/blog",
     ARTICLE: (slug: string) => `/blog/${slug}`,
@@ -411,10 +407,6 @@ export function createRouteMap(overrides: Partial<RouteMap> = {}): RouteMap {
     ADMIN: {
       ...DEFAULT_ROUTE_MAP.ADMIN,
       ...(overrides.ADMIN ?? {}),
-    },
-    DEMO: {
-      ...DEFAULT_ROUTE_MAP.DEMO,
-      ...(overrides.DEMO ?? {}),
     },
     BLOG: {
       ...DEFAULT_ROUTE_MAP.BLOG,
