@@ -1,6 +1,11 @@
 /*
- * WHY: Seeds 6 carousel slides for YGO marketplace homepage hero carousel.
- * WHAT: 5 active + 1 inactive. YGO card art backgrounds with dim overlay, CTAs for shop/auctions/bundles/pre-orders/graded.
+ * WHY: Seeds 6 carousel slides for the marketplace homepage hero carousel.
+ * WHAT: 5 active + 1 inactive. Picsum.photos placeholder backgrounds (deterministic,
+ * free, no API key) with dim overlay, CTAs for shop/auctions/bundles/pre-orders/graded.
+ * One slide (slide-blue-eyes-auction) uses background.type:"video" with a direct,
+ * Creative-Commons-licensed MP4 URL — HeroCarousel renders video backgrounds via a
+ * native <video> element (MediaVideo), not a YouTube iframe embed, so this needs a
+ * playable video file URL rather than a YouTube video ID.
  *
  * EXPORTS:
  *   carouselSlidesSeedData — Array of Partial<CarouselSlideDocument> for seed runner
@@ -23,12 +28,12 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const _rawSlides: Partial<CarouselSlideDocument>[] = [
   {
     id: "slide-hero-homepage",
-    title: "India's #1 YGO Collectibles Marketplace",
+    title: "India's Largest Collectibles Marketplace",
     order: 1,
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/46986414.jpg"),
+      url: seedExtMedia("https://picsum.photos/seed/carousel-hero-homepage-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     settings: { autoplayDelayMs: 5000, height: "tall" },
@@ -38,12 +43,13 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   },
   {
     id: "slide-blue-eyes-auction",
-    title: "Blue-Eyes White Dragon Auctions Live",
+    title: "Rare Auctions Live Now",
     order: 2,
     active: true,
     background: {
-      type: "image",
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89631139.jpg"),
+      type: "video",
+      url: seedExtMedia("https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
+      thumbnail: seedExtMedia("https://picsum.photos/seed/carousel-auctions-live-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
     link: { url: String(ROUTES.PUBLIC.AUCTIONS), openInNewTab: false },
@@ -54,15 +60,15 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   },
   {
     id: "slide-exodia-hunt",
-    title: "Complete Your Exodia Set",
+    title: "Complete Your Collection",
     order: 3,
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/33396948.jpg"),
+      url: seedExtMedia("https://picsum.photos/seed/carousel-complete-collection-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.45 },
     },
-    link: { url: `${String(ROUTES.PUBLIC.PRODUCTS)}?q=exodia`, openInNewTab: false },
+    link: { url: String(ROUTES.PUBLIC.PRODUCTS), openInNewTab: false },
     settings: { autoplayDelayMs: 5000, height: "tall" },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(50),
@@ -70,12 +76,12 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   },
   {
     id: "slide-gx-era",
-    title: "GX Era Pre-Orders Now Open",
+    title: "Pre-Orders Now Open",
     order: 4,
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/89943723.jpg"),
+      url: seedExtMedia("https://picsum.photos/seed/carousel-preorders-open-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.4 },
     },
     link: { url: "/pre-orders", openInNewTab: false },
@@ -86,12 +92,12 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   },
   {
     id: "slide-psa-graded",
-    title: "PSA Graded Slabs — Authenticated Cards",
+    title: "Graded Slabs — Authenticated Collectibles",
     order: 5,
     active: true,
     background: {
       type: "image",
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/38033121.jpg"),
+      url: seedExtMedia("https://picsum.photos/seed/carousel-graded-slabs-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     link: { url: "/categories/category-graded-cards", openInNewTab: false },
@@ -107,7 +113,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
     active: false,
     background: {
       type: "image",
-      url: seedExtMedia("https://images.ygoprodeck.com/images/cards/cropped/83764718.jpg"),
+      url: seedExtMedia("https://picsum.photos/seed/carousel-tournament-promo-20260101/1600/700"),
       dimOverlay: { enabled: true, opacity: 0.5 },
     },
     settings: { autoplayDelayMs: 5000, height: "tall" },
