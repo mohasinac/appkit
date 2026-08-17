@@ -104,7 +104,7 @@ export function NavbarLayout({
     return (
       <Ul
         aria-label={ariaLabel}
-        className="hidden xl:flex items-center justify-end gap-[var(--appkit-space-0-5)] xl:gap-[var(--appkit-space-1)] w-full"
+        className="hidden xl:flex items-center justify-center gap-[var(--appkit-space-0-5)] xl:gap-[var(--appkit-space-1)] w-full"
       >
         {items.map((item) => (
           <Li key={item.href}>
@@ -134,7 +134,7 @@ export function NavbarLayout({
 
           <Ul
             ref={scrollRef}
-            className="flex items-center justify-end gap-[var(--appkit-space-0-5)] lg:gap-[var(--appkit-space-1)] overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="flex items-center justify-center gap-[var(--appkit-space-0-5)] lg:gap-[var(--appkit-space-1)] overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {items.map((item) => (
               <Li key={item.href} className="shrink-0">

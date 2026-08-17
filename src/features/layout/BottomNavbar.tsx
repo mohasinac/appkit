@@ -107,7 +107,7 @@ export function BottomNavbar({
     more: "More",
   } as const;
 
-  const slotClassName = "relative flex h-full w-full flex-col items-end justify-center gap-[var(--appkit-space-1)] pr-[var(--appkit-space-1)] text-right transition-colors duration-200";
+  const slotClassName = "relative flex h-full w-full flex-col items-center justify-center gap-[var(--appkit-space-1)] text-center transition-colors duration-200";
   const defaultIcon = (
     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />

@@ -14,6 +14,24 @@ export interface NavSuggestionRecord {
 const SUGGESTIONS_ENDPOINT = SEARCH_ENDPOINTS.SUGGESTIONS;
 
 /**
+ * /api/search/suggestions only understands the 4 content categories it can
+ * actually produce typeahead rows for (singular: product/category/blog/event)
+ * — it has no dedicated suggestion category for the other 10 SearchResourceType
+ * values (auctions, stores, brands, …). Map the ones it does support; for
+ * everything else, omit `type` entirely so the endpoint returns its
+ * unfiltered "all" set rather than zero results. Previously this sent the
+ * plural resource-type value verbatim (e.g. "products", the search bar's
+ * own default), which matched none of the route's singular checks and made
+ * every default-state search return empty suggestions.
+ */
+const SUGGESTION_TYPE_PARAM_MAP: Record<string, string> = {
+  products: "product",
+  categories: "category",
+  blog: "blog",
+  events: "event",
+};
+
+/**
  * W1-19 — wired to `/api/search/suggestions` 2026-05-23. Fetches up to 20
  * matches (5 per resource type) and surfaces them as typeahead rows.
  */
@@ -45,7 +63,8 @@ export function useNavSuggestions(
       try {
         const params = new URLSearchParams({ q: trimmed });
         if (selectedType && selectedType !== "all") {
-          params.set("type", selectedType);
+          const mappedType = SUGGESTION_TYPE_PARAM_MAP[selectedType];
+          if (mappedType) params.set("type", mappedType);
         }
         const res = await fetch(
           `${SUGGESTIONS_ENDPOINT}?${params.toString()}`,

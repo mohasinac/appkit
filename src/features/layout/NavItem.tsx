@@ -40,7 +40,7 @@ export function NavItem({
       <Link
         href={href}
         className={[
-          "relative flex h-full w-full flex-col items-end justify-center gap-[var(--appkit-space-1)] py-[var(--appkit-space-1)] pr-[var(--appkit-space-1)] text-right transition-colors",
+          "relative flex h-full w-full flex-col items-center justify-center gap-[var(--appkit-space-1)] py-[var(--appkit-space-1)] text-center transition-colors",
           stateClass,
           className,
         ]

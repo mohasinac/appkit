@@ -82,9 +82,10 @@ export function CouponsIndexListing({
     setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
   }, []);
 
-  // Build Sieve filter string from committed URL table values
+  // Build Sieve filter string from committed URL table values. `validity.isActive==true`
+  // is enforced server-side by /api/coupons itself — don't duplicate it here.
   const buildFilters = () => {
-    const parts: string[] = [`${COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE}==true`];
+    const parts: string[] = [];
     const typeFilter = table.get(TABLE_KEYS.TYPE);
     if (typeFilter) parts.push(`${COUPON_FIELDS.TYPE}==${typeFilter}`);
     const dateFrom = table.get(TABLE_KEYS.DATE_FROM);
@@ -103,12 +104,27 @@ export function CouponsIndexListing({
   });
 
   // Use initial data on first load if available and no search/filter active
-  const displayCoupons =
+  const baseCoupons =
     !isLoading && coupons.length > 0
       ? coupons
       : !isLoading && initialCoupons && !table.get(TABLE_KEYS.QUERY) && !table.get(TABLE_KEYS.TYPE)
         ? initialCoupons
         : coupons;
+
+  // The coupons dataset is always small (a handful to a few dozen per scope), and
+  // neither the sieve schema nor the listingProcessor "coupons" collection support
+  // substring/full-text search server-side — so the toolbar search filters the
+  // already-fetched page client-side against code/name/description instead of
+  // silently doing nothing (the search input previously wrote to the URL but was
+  // never read by buildFilters()).
+  const committedQuery = table.get(TABLE_KEYS.QUERY).trim().toLowerCase();
+  const displayCoupons = committedQuery
+    ? baseCoupons.filter((c: any) =>
+        [c.code, c.name, c.description]
+          .filter(Boolean)
+          .some((field: string) => field.toLowerCase().includes(committedQuery)),
+      )
+    : baseCoupons;
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());

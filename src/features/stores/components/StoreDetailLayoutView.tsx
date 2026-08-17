@@ -126,7 +126,7 @@ export async function StoreDetailLayoutView({
           .then((r) => r.total)
           .catch(() => 0),
         couponsRepository
-          .list({ filters: sieveAnd(sieveFilter("sellerId", SIEVE_OP.EQ, storeId), sieveFilter("validity.isActive", SIEVE_OP.EQ, "true")), page: 1, pageSize: 1 })
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("validity.isActive", SIEVE_OP.EQ, "true")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         reviewRepository

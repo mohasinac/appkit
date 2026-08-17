@@ -212,7 +212,7 @@ export function ListingToolbar({
         ) : null}
 
         {/* Filters + Sort + View + Reset + Extra */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 sm:shrink-0">
 
           {onFiltersClick && (
             <button
