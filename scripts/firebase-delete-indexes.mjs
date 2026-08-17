@@ -66,19 +66,33 @@ console.log("Got fresh access token.");
 console.log(`Project: ${projectId}`);
 console.log("Fetching all Firestore indexes via REST API...");
 
-const listUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/collectionGroups/-/indexes`;
-const listRes = await fetch(listUrl, {
-  headers: { Authorization: `Bearer ${accessToken}` },
-});
-
-if (!listRes.ok) {
-  const body = await listRes.text();
-  console.error(`Failed to list indexes: ${listRes.status} ${body}`);
+// The `collectionGroups/-/indexes` wildcard returns HTTP 200 with an empty
+// `indexes` array in this API version — it looks like a legitimate "zero
+// indexes" response but isn't one. Found 2026-08-17 after this script
+// reported "0 indexes" while a reset had 9000+ indexes still CREATING.
+// Enumerate the real collection groups from firestore.indexes.json instead.
+const indexesJsonPath = resolve(repoRoot, "firestore.indexes.json");
+if (!existsSync(indexesJsonPath)) {
+  console.error(`Missing firestore.indexes.json: ${indexesJsonPath}`);
   process.exit(1);
 }
+const indexesJson = require(indexesJsonPath);
+const collectionGroups = [...new Set(indexesJson.indexes.map((i) => i.collectionGroup))];
 
-const listData = await listRes.json();
-const indexes = listData.indexes ?? [];
+const indexes = [];
+for (const group of collectionGroups) {
+  const listUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/collectionGroups/${group}/indexes`;
+  const listRes = await fetch(listUrl, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!listRes.ok) {
+    const body = await listRes.text();
+    console.error(`Failed to list indexes for "${group}": ${listRes.status} ${body}`);
+    process.exit(1);
+  }
+  const listData = await listRes.json();
+  indexes.push(...(listData.indexes ?? []));
+}
 console.log(`Found ${indexes.length} indexes.`);
 
 if (indexes.length === 0) {

@@ -167,6 +167,9 @@ const {
   wishlistsSeedData, historySeedData, conversationsSeedData,
   groupedListingsSeedData,
   scammersSeedData, productFeaturesSeedData,
+  testerChecklistSeedData,
+  storesTesterSeedData, categoriesTesterSeedData, productsTesterSeedData,
+  blogTesterSeedData, eventsTesterSeedData,
   // collection constants
   USER_COLLECTION, ADDRESS_SUBCOLLECTION, STORE_ADDRESS_SUBCOLLECTION,
   BRANDS_COLLECTION, CATEGORIES_COLLECTION, STORE_COLLECTION,
@@ -178,6 +181,7 @@ const {
   CART_COLLECTION, CONVERSATIONS_COLLECTION,
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
   WISHLIST_COLLECTION, HISTORY_COLLECTION, PRODUCT_FEATURES_COLLECTION,
+  TESTER_CHECKLIST_ITEM_COLLECTION,
   // PII helpers
   encryptPiiFields, addPiiIndices,
   encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig,
@@ -222,6 +226,7 @@ const COLLECTION_MAP = {
   groupedListings: GROUPED_LISTINGS_COLLECTION,
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
+  testerChecklistItems: TESTER_CHECKLIST_ITEM_COLLECTION,
 };
 
 const SEED_DATA_MAP = {
@@ -229,9 +234,9 @@ const SEED_DATA_MAP = {
   addresses: addressesSeedData,
   storeAddresses: storeAddressesSeedData,
   brands: brandsSeedData,
-  categories: categoriesSeedData,
-  stores: storesSeedData,
-  products: [...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || [])],
+  categories: [...(categoriesSeedData || []), ...(categoriesTesterSeedData || [])],
+  stores: [...(storesSeedData || []), ...(storesTesterSeedData || [])],
+  products: [...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []), ...(productsTesterSeedData || [])],
   orders: ordersSeedData,
   reviews: reviewsSeedData,
   bids: bidsSeedData,
@@ -244,8 +249,8 @@ const SEED_DATA_MAP = {
   faqs: faqSeedData,
   notifications: notificationsSeedData,
   payouts: payoutsSeedData,
-  blogPosts: blogPostsSeedData,
-  events: eventsSeedData,
+  blogPosts: [...(blogPostsSeedData || []), ...(blogTesterSeedData || [])],
+  events: [...(eventsSeedData || []), ...(eventsTesterSeedData || [])],
   eventEntries: eventEntriesSeedData,
   sessions: sessionsSeedData,
   carts: cartsSeedData,
@@ -255,6 +260,7 @@ const SEED_DATA_MAP = {
   groupedListings: groupedListingsSeedData,
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,
+  testerChecklistItems: testerChecklistSeedData,
 };
 
 const ALL_COLLECTIONS = Object.keys(COLLECTION_MAP);
@@ -323,15 +329,15 @@ async function countExisting(colName) {
   if (seed.length === 0) return 0;
 
   if (colName === "addresses") {
-    const refs = seed.filter((d) => d.userId && d.id).map((d) =>
-      db.collection(USER_COLLECTION).doc(d.userId).collection(ADDRESS_SUBCOLLECTION).doc(d.id));
+    // SB-UNI-A: top-level `addresses` collection, not users/{uid}/addresses.
+    const refs = seed.filter((d) => d.id).map((d) => db.collection("addresses").doc(d.id));
     if (refs.length === 0) return 0;
     const snaps = await db.getAll(...refs);
     return snaps.filter((s) => s.exists).length;
   }
   if (colName === "storeAddresses") {
-    const refs = seed.filter((d) => d.storeSlug && d.id).map((d) =>
-      db.collection(STORE_COLLECTION).doc(d.storeSlug).collection(STORE_ADDRESS_SUBCOLLECTION).doc(d.id));
+    // Also lands in the top-level `addresses` collection (see loadStoreAddresses).
+    const refs = seed.filter((d) => d.id).map((d) => db.collection("addresses").doc(d.id));
     if (refs.length === 0) return 0;
     const snaps = await db.getAll(...refs);
     return snaps.filter((s) => s.exists).length;
@@ -360,15 +366,18 @@ async function countExisting(colName) {
     return snaps.filter((s) => s.exists).length;
   }
   if (colName === "faqs") {
+    // Mirrors loadGeneric: prefer the explicit id (every current faq record has
+    // one), only derive via generateFAQId for a record that genuinely lacks one.
     const refs = seed.map((faq) => {
-      const id = generateFAQId({ category: faq.category, question: faq.question });
+      const id = faq.id ?? generateFAQId({ category: faq.category, question: faq.question });
       return db.collection(COLLECTION_MAP[colName]).doc(id);
     });
     if (refs.length === 0) return 0;
     const snaps = await db.getAll(...refs);
     return snaps.filter((s) => s.exists).length;
   }
-  const refs = seed.filter((d) => d.id).map((d) => db.collection(COLLECTION_MAP[colName]).doc(d.id));
+  // Mirrors loadGeneric's docId = id ?? slug resolution.
+  const refs = seed.filter((d) => d.id ?? d.slug).map((d) => db.collection(COLLECTION_MAP[colName]).doc(d.id ?? d.slug));
   if (refs.length === 0) return 0;
   const snaps = await db.getAll(...refs);
   return snaps.filter((s) => s.exists).length;
@@ -430,7 +439,18 @@ async function loadUsers(seed, stats) {
       const authUserData = { displayName, emailVerified, disabled };
       if (email && typeof email === "string") authUserData.email = email;
       if (phoneNumber && typeof phoneNumber === "string") authUserData.phoneNumber = phoneNumber;
-      if (photoURL && typeof photoURL === "string" && photoURL.trim() !== "") authUserData.photoURL = photoURL;
+      // Firebase Auth's photoURL field requires an absolute URL. Seed data's
+      // photoURL is wrapped by seedExtMedia() into a relative /media/ext?url=...
+      // app-proxy path — valid for Firestore + the app's own avatar rendering,
+      // but auth.createUser()/updateUser() reject it with "must be a valid URL"
+      // and abort the WHOLE user record (Auth + Firestore both skipped) before
+      // ever reaching the Firestore write below. The app never reads Auth's own
+      // photoURL copy anyway — it always resolves avatars via the Firestore
+      // users doc — so just skip setting it on the Auth record for relative
+      // paths instead of failing the entire seed row.
+      if (photoURL && typeof photoURL === "string" && /^https?:\/\//.test(photoURL)) {
+        authUserData.photoURL = photoURL;
+      }
 
       if (!userExists) {
         await resolveAuthConflicts(uid, authUserData);
@@ -496,9 +516,14 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
       id = generateFAQId({ category: docData.category, question: docData.question });
       if (!id) { stats.errors++; continue; }
     } else if (!id) { stats.errors++; continue; }
-    const slug = docData.slug;
-    const docId = slug ?? id;
-    if (!data.slug) data.slug = docId;
+    // `id` already carries the project's mandatory slug prefix (blog-, event-,
+    // faq-, etc. — see CLAUDE.md's Slug Prefix System). Preferring the bare
+    // `slug` field here (as this used to) wrote every blogPosts/events doc
+    // under its unprefixed slug instead, e.g. "auction-feature-launch"
+    // instead of "blog-auction-feature-launch" — found 2026-08-17 auditing
+    // real Firestore doc IDs after a full reseed.
+    const docId = id ?? docData.slug;
+    if (!data.slug) data.slug = docData.slug ?? docId;
     items.push({
       ref: db.collection(firestoreCollection).doc(docId),
       data: encryptSeedPii(colName, stripUndefined(data)),
@@ -530,9 +555,38 @@ async function cmdLoad() {
       if (colName === "users") {
         await loadUsers(seed, stats);
       } else if (colName === "addresses") {
-        await loadSubcollection(seed, USER_COLLECTION, "userId", ADDRESS_SUBCOLLECTION, "id", ADDRESS_PII_FIELDS, stats);
+        // SB-UNI-A (2026-05-13) unified addresses into one top-level collection
+        // with an ownerType/ownerId discriminator, replacing the two prior
+        // subcollections (users/{uid}/addresses, stores/{slug}/addresses) this
+        // loader used to write to. addressesSeedData already carries
+        // ownerType/ownerId directly — write it straight to the top-level
+        // collection instead of nesting under USER_COLLECTION's old subcollection.
+        for (const d of seed) {
+          try {
+            const { id, ownerType, ownerId, ...data } = d;
+            if (!id || !ownerType || !ownerId) { stats.errors++; continue; }
+            const payload = encryptPiiFields(stripUndefined({ ownerType, ownerId, ...data }), [...ADDRESS_PII_FIELDS]);
+            await db.collection("addresses").doc(id).set(payload, { merge: true });
+            stats.created++;
+          } catch (err) { console.error(`    ✗ ${err.message}`); stats.errors++; }
+        }
       } else if (colName === "storeAddresses") {
-        await loadSubcollection(seed, STORE_COLLECTION, "storeSlug", STORE_ADDRESS_SUBCOLLECTION, "id", ADDRESS_PII_FIELDS, stats);
+        // storeAddressesSeedData predates the SB-UNI-A unification and still
+        // carries the old storeSlug field instead of ownerType/ownerId — derive
+        // the unified shape at load time rather than writing to the deleted
+        // stores/{slug}/addresses subcollection.
+        for (const d of seed) {
+          try {
+            const { id, storeSlug, ...data } = d;
+            if (!id || !storeSlug) { stats.errors++; continue; }
+            const payload = encryptPiiFields(
+              stripUndefined({ ownerType: "store", ownerId: storeSlug, ...data }),
+              [...ADDRESS_PII_FIELDS],
+            );
+            await db.collection("addresses").doc(id).set(payload, { merge: true });
+            stats.created++;
+          } catch (err) { console.error(`    ✗ ${err.message}`); stats.errors++; }
+        }
       } else if (colName === "couponUsage") {
         // shape: { userId, couponId, ... } — no PII
         for (const d of seed) {

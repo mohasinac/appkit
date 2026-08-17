@@ -10,12 +10,21 @@
  * Blind index format: "hmac-sha256:<sha256_hex>"
  */
 
+import { createRequire } from "node:module";
 import type { FirestoreValue } from "../schemas/types";
 
 // crypto is a Node.js built-in. Use require() to keep it out of the static
-// import graph so Next.js Edge bundler does not warn about this file.
-
-function nodeCrypto() { return require("crypto") as typeof import("crypto"); }
+// import graph so Next.js Edge bundler does not warn about this file. A bare
+// top-level `require(...)` call only works when the compiled dist output is
+// loaded via CommonJS (or a bundler that polyfills `require`) — under a
+// plain Node ESM `import()` (e.g. appkit/scripts/seed-cli.mjs and any other
+// standalone script importing @mohasinac/appkit directly), there is no
+// ambient `require` global, so that call threw `ReferenceError: require is
+// not defined`. createRequire(import.meta.url) works in both: it's still a
+// runtime function call a bundler's static analysis won't follow into the
+// client graph, but it resolves correctly under Node's own ESM loader too.
+const nodeRequire = createRequire(import.meta.url);
+function nodeCrypto() { return nodeRequire("crypto") as typeof import("crypto"); }
  
 
 const ALGO = "aes-256-gcm";
