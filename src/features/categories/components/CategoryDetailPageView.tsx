@@ -213,6 +213,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 <Link
                   key={child.id}
                   href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug))}
+                  // audit-responsive-wrap-ok: deliberate horizontal-scroll chip row (parent has overflow-x-auto) — each chip staying single-line is the intended design, not hidden content
                   className="flex-shrink-0 flex items-center gap-[var(--appkit-space-1-5)] rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-elevated)] px-[var(--appkit-space-4)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-sm)] font-medium text-[var(--appkit-color-text-muted)] hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
                 >
                   {child.display?.icon && (
