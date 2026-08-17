@@ -1,11 +1,18 @@
 "use client"
 import React, { createContext, useContext, useMemo, useState } from "react";
+import { Select } from "./Select";
 
 const UI_TABS = {
   list: "appkit-tabs-list",
+  listDropdown: "appkit-tabs-list--dropdown",
   trigger: "appkit-tabs-trigger",
   content: "appkit-tabs-content",
 } as const;
+
+/** Past this many items, TabsList renders a <Select> dropdown instead of a
+ * horizontal row — a scrollable row of 6+ tabs is unreadable/unreachable on
+ * mobile widths. */
+const TABS_DROPDOWN_THRESHOLD = 5;
 
 interface TabsContextValue {
   active: string;
@@ -74,6 +81,31 @@ export function Tabs({
 }
 
 export function TabsList({ className = "", children }: TabsListProps) {
+  const { active, setActive } = useContext(TabsContext);
+
+  const items = React.Children.toArray(children).filter(
+    (child): child is React.ReactElement<TabsTriggerProps> => React.isValidElement(child),
+  );
+
+  if (items.length > TABS_DROPDOWN_THRESHOLD) {
+    const options = items.map((item) => ({
+      value: item.props.value,
+      label: typeof item.props.children === "string" ? item.props.children : item.props.value,
+      disabled: item.props.disabled,
+    }));
+    return (
+      <Select
+        bare
+        aria-label="Tabs"
+        role="tablist"
+        options={options}
+        value={active}
+        onValueChange={setActive}
+        className={[UI_TABS.list, UI_TABS.listDropdown, className].filter(Boolean).join(" ")}
+      />
+    );
+  }
+
   return (
     <div
       role="tablist"

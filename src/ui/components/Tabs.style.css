@@ -14,6 +14,16 @@
   scrollbar-width: thin;
 }
 
+/* Past TABS_DROPDOWN_THRESHOLD triggers, TabsList renders a <Select bare>
+   instead of the flex row above — override the row-specific layout rules
+   that don't apply to a native <select>. */
+.appkit-tabs-list--dropdown {
+  display: block;
+  overflow: visible;
+  border-bottom: none;
+  max-width: 20rem;
+}
+
 .appkit-tabs-trigger {
   margin-bottom: -1px;
   border-bottom: 2px solid transparent;
