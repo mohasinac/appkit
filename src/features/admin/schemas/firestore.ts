@@ -723,8 +723,12 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   },
   featureFlags: {
     chats: true,
-    smsVerification: true,
-    translations: false,
+    // Real per-SMS cost via the Firebase phone-auth quota — kept off by
+    // default even though every other flag defaults on. Admin opts in
+    // explicitly; PATCH /api/site-settings resets all users' phoneVerified +
+    // rate-limit state on the false->true transition (resetOtpVerification job).
+    smsVerification: false,
+    translations: true,
     wishlists: true,
     auctions: true,
     reviews: true,
