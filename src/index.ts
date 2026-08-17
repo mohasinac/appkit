@@ -279,6 +279,10 @@ export type {
   StickyToolbarProps,
   StickyToolbarTone,
 } from "./ui/components/StickyToolbar";
+// CollapsibleSection — persisted, accordion-scoped collapse wrapper for
+// dashboard sections. Pair with useCollapsedSections for the state.
+export { CollapsibleSection } from "./ui/components/CollapsibleSection";
+export type { CollapsibleSectionProps } from "./ui/components/CollapsibleSection";
 // Fieldset + Legend — primitives for grouped form controls.
 export { Fieldset, Legend } from "./ui/components/Fieldset";
 export type {

@@ -164,6 +164,8 @@ export type {
   StickyToolbarTone,
   StickyToolbarPadding,
 } from "./ui/components/StickyToolbar";
+export { CollapsibleSection } from "./ui/components/CollapsibleSection";
+export type { CollapsibleSectionProps } from "./ui/components/CollapsibleSection";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useAuth - React hook for use auth.
 export { useAuth } from "./react/contexts/SessionContext";
@@ -351,6 +353,11 @@ export { NotificationPreferencesPanel } from "./features/account/components/Noti
 export type { NotificationPreferencesPanelProps } from "./features/account/components/NotificationPreferencesPanel";
 export { LinkedAccountsSection } from "./features/account/components/LinkedAccountsSection";
 export type { LinkedAccountsSectionProps } from "./features/account/components/LinkedAccountsSection";
+export { useCollapsedSections } from "./features/account/hooks/useCollapsedSections";
+export type {
+  UseCollapsedSectionsOptions,
+  UseCollapsedSectionsResult,
+} from "./features/account/hooks/useCollapsedSections";
 export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTable";
 export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
 export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";

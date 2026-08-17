@@ -593,3 +593,5 @@ export type {
 } from "./components/StickyToolbar";
 export { Show, Hide } from "./components/Responsive";
 export type { ShowProps, HideProps } from "./components/Responsive";
+export { CollapsibleSection } from "./components/CollapsibleSection";
+export type { CollapsibleSectionProps } from "./components/CollapsibleSection";

@@ -15,6 +15,9 @@ export interface UserProfile {
   updatedAt: Date;
   googleLinked?: boolean;
   googleLinkedEmail?: string | null;
+  uiPreferences?: {
+    collapsedSections?: string[];
+  };
 }
 
 export interface UpdateCurrentProfileInput {
@@ -28,6 +31,9 @@ export interface UpdateCurrentProfileInput {
   };
   bio?: string;
   profileIsPublic?: boolean;
+  uiPreferences?: {
+    collapsedSections?: string[];
+  };
 }
 
 export function useCurrentProfile(options?: {

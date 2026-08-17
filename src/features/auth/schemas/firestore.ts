@@ -69,6 +69,11 @@ export interface UserDocument extends BaseDocument {
   storeSlug?: string;
   storeStatus?: "pending" | "approved" | "rejected";
 
+  // Tester program — orthogonal to `role`. A tester's `role` stays "seller" so every
+  // existing seller-gated dashboard/API check works unmodified; this flag only unlocks
+  // the Tester Hub and auto-approves their store (see becomeSeller/createStore).
+  isTester?: boolean;
+
   // Public profile settings
   publicProfile?: {
     isPublic: boolean;
@@ -147,6 +152,15 @@ export interface UserDocument extends BaseDocument {
   googleLinked?: boolean;
   /** The Google account email this profile is linked to, once linked. */
   googleLinkedEmail?: string | null;
+
+  // ── UI preferences ───────────────────────────────────────────────────────
+  uiPreferences?: {
+    /** IDs of collapsible dashboard sections currently collapsed, flat across
+     * every page (IDs are page-prefixed, e.g. "admin-dashboard:alerts", to
+     * stay unique). Absent/missing IDs default to collapsed for a section the
+     * user has never interacted with. See useCollapsedSections. */
+    collapsedSections?: string[];
+  };
 }
 
 // ── Soft ban entry ─────────────────────────────────────────────────────────────
@@ -245,6 +259,7 @@ export const USER_INDEXED_FIELDS = [
   "phoneVerified",
   "storeSlug",
   "storeStatus",
+  "isTester",
 ] as const;
 
 export const USER_PUBLIC_FIELDS = [
@@ -323,6 +338,7 @@ export const USER_FIELDS = {
   STORE_ID: "storeId",
   STORE_SLUG: "storeSlug",
   STORE_STATUS: "storeStatus",
+  IS_TESTER: "isTester",
   AVATAR: {
     URL: "avatarMetadata.url",
     POSITION: "avatarMetadata.position",

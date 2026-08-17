@@ -65,6 +65,8 @@ export interface SessionUser {
   avatarMetadata?: AvatarMetadataShape | null;
   /** Set when this account owns a store — drives the admin sidebar's "Go to my Store" cross-nav link. */
   storeId?: string;
+  /** Tester program flag — orthogonal to `role`. Unlocks the Tester Hub nav item/page. */
+  isTester?: boolean;
 
   publicProfile?: FirestoreDocument;
   stats?: FirestoreDocument;
@@ -198,6 +200,7 @@ function buildSessionUser(
     sessionId: currentSessionId || undefined,
     phoneVerified: serverData.phoneVerified,
     storeId: serverData.storeId,
+    isTester: serverData.isTester,
     avatarMetadata: serverData.avatarMetadata?.url
       ? {
           url: serverData.avatarMetadata.url,
@@ -290,6 +293,7 @@ export function SessionProvider({
           sessionId: currentSessionId || undefined,
           phoneVerified: data.phoneVerified,
           storeId: data.storeId,
+          isTester: data.isTester,
           avatarMetadata: data.avatarMetadata?.url
             ? {
                 url: data.avatarMetadata.url,

@@ -7,6 +7,7 @@ export * from "./hooks/useAddressForm";
 export * from "./hooks/useAddressSelector";
 export * from "./hooks/useNotifications";
 export * from "./hooks/useProfileStats";
+export * from "./hooks/useCollapsedSections";
 export {
   useCurrentProfile as useProfile,
   useUpdateCurrentProfile as useUpdateProfile,
