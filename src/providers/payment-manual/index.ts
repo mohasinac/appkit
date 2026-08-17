@@ -9,8 +9,8 @@
  * that go through `getProviders().payment` get a real implementation
  * instead of `undefined`.
  *
- * In-memory bookkeeping only (like `MockRazorpayProvider`) — there is no
- * external system of record. The order document itself (`paymentStatus`,
+ * In-memory bookkeeping only — there is no external system of record.
+ * The order document itself (`paymentStatus`,
  * `paymentTransactionId`, `paymentProofUrl`) is the actual source of truth;
  * this provider is a thin, self-consistent adapter for code that talks to
  * `IPaymentProvider` generically rather than the order repository directly.

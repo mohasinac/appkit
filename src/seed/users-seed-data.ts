@@ -10,7 +10,7 @@
  * @tag layer:seed
  * @tag pattern:none
  * @tag access:server-only
- * @tag consumers:seed/runner.ts,SeedPanel
+ * @tag consumers:seed/runner.ts
  * @tag sideEffects:none
  */
 
