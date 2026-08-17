@@ -14,6 +14,7 @@
 - [Hooks](#hooks--appkitsrcfeatureshooks)
 - [Repositories](#repositories--appkitsrcrepositories)
 - [Utilities](#utilities--appkitsrcutils)
+- [Security / PII](#security--pii--appkitsrcsecurity)
 - [Constants](#constants--appkitsrcconstants)
 
 ---
@@ -491,6 +492,23 @@ Import: `import { x } from "@mohasinac/appkit"` or `"@mohasinac/appkit/client"`
 | `buildMediaField`, `isMediaField` | `media-field.ts` | Media field type guards |
 | `sanitizeProductForPublic`, `sanitizeProductsForPublic` | `features/products/utils/sanitize.ts` | Strip `sellerId`/`sellerName`/`sellerEmail`/`ownerId` from a product before returning it in a public API response (ARCH1). |
 | `normalizeListingType` | `features/products/utils/listing-type.ts` | Coerce `listingType` field to canonical value. |
+
+---
+
+## Security / PII — `appkit/src/security/`
+
+| Name / Export | File | What it does | Barrel |
+|--------------|------|--------------|--------|
+| `encryptValue`, `decryptValue`, `hmacBlindIndex`, `encryptPiiFields`, `decryptPiiFields`, `encryptPii`, `decryptPii`, `piiBlindIndex`, `addPiiIndices`, `encrypt/decryptShippingAddress`, `encrypt/decryptPayoutDetails`, `encrypt/decryptShippingConfig`, `encrypt/decryptPayoutBankAccount` | `pii-encrypt.ts` | AES-256-GCM + HMAC-SHA256 PII encryption. Uses a bare runtime `require("crypto")` (never a static import) so Turbopack never sees a Node-builtin dependency to fail on. | `"@mohasinac/appkit/server"` **only** |
+| `isPiiEncrypted`, `maskName`, `maskEmail`, `maskPublicReview`, `maskPublicBid`, `maskPublicEventEntry`, `maskOfferForSeller`, `ENC_PREFIX`, `HMAC_PREFIX` | `pii-mask.ts` *(new, 3.8.2)* | Crypto-free display-masking helpers — safe for `"use client"` components (`ReviewModal`, `ReviewDetailShell`, `ReviewsList`) | `"@mohasinac/appkit"` (universal) |
+| `redactPii`, `safeDisplayName`, `safeDisplayEmail`, `maskIp` | `pii-redact.ts` | Log/error PII redaction | `"@mohasinac/appkit"` (universal) |
+| `applyRateLimit`, `rateLimit`, `RateLimitPresets` | `rate-limit.ts` | Request rate limiting | `"@mohasinac/appkit"` (universal) |
+| `requireAuth`, `requireRole`, `requireOwnership`, `canChangeRole` | `authorization.ts` | RBAC guard functions | `"@mohasinac/appkit"` (universal) |
+| `DEFAULT_ROLES`, `resolvePermissions`, `hasPermission`, `Can` | `rbac.ts` | Permission resolution | `"@mohasinac/appkit"` (universal) |
+
+**Never import anything from `pii-encrypt.ts` (or anything that re-exports it) into `index.ts` /
+`client.ts`.** Its exports must only ever reach a Turbopack browser-target build through
+`server.ts`. See CLAUDE.md Root Cause Pattern #24 for the production incident this caused.
 
 ---
 
