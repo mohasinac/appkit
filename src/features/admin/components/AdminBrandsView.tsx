@@ -73,11 +73,11 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
   searchPlaceholder: "Search brands by name or slug",
   emptyLabel: "No brands found",
   filterKeys: ["isActive"],
-  defaultSort: sortBy("displayOrder", "ASC"),
+  defaultSort: sortBy("order", "ASC"),
   queryKey: ["admin", "brands", "listing"],
   endpoint: ADMIN_ENDPOINTS.BRANDS,
   sortOptions: [
-    { value: sortBy("displayOrder", "ASC"), label: "Display order" },
+    { value: sortBy("order", "ASC"), label: "Display order" },
     { value: sortBy("name", "ASC"), label: "Name A–Z" },
     { value: sortBy("name", "DESC"), label: "Name Z–A" },
     { value: sortBy("createdAt", "DESC"), label: "Newest" },

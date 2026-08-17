@@ -65,7 +65,7 @@ function numParam(url: URL, key: string): number | null {
 }
 
 const SAFE_CATEGORY_FILTER_FIELDS = new Set([
-  "type", "parentIds", "isFeatured", "showOnHomepage",
+  "categoryType", "parentIds", "isFeatured", "showOnHomepage",
   "tier", "isActive", "isLeaf", "isBrand", "isSearchable",
 ]);
 
@@ -130,7 +130,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     // -- Build Sieve filter string from query params ----------------------------
     const parts: string[] = [];
-    if (type) parts.push(`type==${type}`);
+    if (type) parts.push(`categoryType==${type}`);
     if (parentId) parts.push(`parentIds@=${parentId}`);
     if (featured === "true") parts.push("isFeatured==true");
     if (isBrand === "true") parts.push("categoryType==brand");

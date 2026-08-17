@@ -289,6 +289,8 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
   async findAllForAdmin(options?: {
     userId?: string;
     limit?: number;
+    isActive?: boolean;
+    sortAscending?: boolean;
   }): Promise<{
     sessions: SessionDocument[];
     stats: {
@@ -301,7 +303,7 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
     try {
       let query = this.getCollection().orderBy(
         SESSION_FIELDS.LAST_ACTIVITY,
-        "desc",
+        options?.sortAscending ? "asc" : "desc",
       );
 
       if (options?.userId) {
@@ -309,6 +311,14 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
           SESSION_FIELDS.USER_ID,
           "==",
           options.userId,
+        ) as typeof query;
+      }
+
+      if (options?.isActive !== undefined) {
+        query = query.where(
+          SESSION_FIELDS.IS_ACTIVE,
+          "==",
+          options.isActive,
         ) as typeof query;
       }
 

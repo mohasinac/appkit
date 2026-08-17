@@ -25,7 +25,7 @@ export const listRootCategories = cache(
 export const listFeaturedCategories = cache(
   async (): Promise<CategoryDocument[]> => {
     return categoriesRepository
-      .list({ filters: "isActive==true,isFeatured==true", sorts: "displayOrder", page: 1, pageSize: CATEGORIES_FEATURED_LIMIT })
+      .list({ filters: "isActive==true,showOnHomepage==true", sorts: "order", page: 1, pageSize: CATEGORIES_FEATURED_LIMIT })
       .then((r) => (r as { data?: CategoryDocument[] }).data ?? [])
       .catch(() => []);
   },
@@ -35,7 +35,7 @@ export const listFeaturedCategories = cache(
 export const listMenuCategories = cache(
   async (): Promise<CategoryDocument[]> => {
     return categoriesRepository
-      .list({ filters: "isActive==true,display.showInMenu==true", sorts: "displayOrder", page: 1, pageSize: CATEGORIES_MENU_LIMIT })
+      .list({ filters: "isActive==true,display.showInMenu==true", sorts: "order", page: 1, pageSize: CATEGORIES_MENU_LIMIT })
       .then((r) => (r as { data?: CategoryDocument[] }).data ?? [])
       .catch(() => []);
   },

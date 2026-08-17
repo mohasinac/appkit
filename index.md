@@ -149,6 +149,8 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `AdminBlogEditorView` | `AdminBlogEditorView.tsx` | Admin blog post create/edit with RichTextEditor |
 | `AdminFaqsView` | `AdminFaqsView.tsx` | Admin FAQs listing — RowActionMenu (Edit→/admin/faqs/[id]/edit, Delete→ConfirmDeleteModal) (A5/VA5) |
 | `AdminFaqEditorView` | `AdminFaqEditorView.tsx` | Admin FAQ create/edit page — dedicated route /admin/faqs/new + /admin/faqs/[id]/edit; fields: question, slug, answer (RichText), category, tags, order, priority, 4 visibility toggles (A5/VA5) |
+| `AdminTesterChecklistView` | `AdminTesterChecklistView.tsx` | Admin tester QA checklist catalog listing — DataListingView, direct clone of AdminFaqsView (2026-08-17) |
+| `AdminTesterChecklistItemEditorView` | `AdminTesterChecklistItemEditorView.tsx` | Admin tester checklist test-case create/edit form — group/page/label/description/href/order/isActive, direct clone of AdminFaqEditorView (2026-08-17) |
 | `AdminBrandsView` | `AdminBrandsView.tsx` | Admin brands listing |
 | `AdminBrandEditorView` | `AdminBrandEditorView.tsx` | Admin brand create/edit form |
 | `AdminCategoriesView` | `AdminCategoriesView.tsx` | Admin categories listing — row click + RowActionMenu navigate to dedicated editor routes (RC4) |
@@ -315,6 +317,11 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `PublicCatalogueView` | `features/catalogue/components/PublicCatalogueView.tsx` | Read-only public catalogue for one owner (`visibility:"public"` items only) |
 | `AdminCatalogueApprovalsView` | `features/catalogue/components/AdminCatalogueApprovalsView.tsx` | Admin approval queue for buyer "Request to sell" submissions — Approve/Reject with reason |
 | `OrderPaymentSummary` | `features/orders/components/OrderPaymentSummary.tsx` | Shared payment-detail display reading `order.paymentRecord`, with a legacy-field fallback for pre-Feature-C orders |
+| `TesterHubView` | `features/tester/components/TesterHubView.tsx` | `/user/tester` — searchable, grouped-accordion QA checklist; Yes/No per case + inline comment/screenshot, deterministic-ID upsert so state survives reloads (2026-08-17) |
+| `TesterChecklistStepRow` | `features/tester/components/TesterChecklistStepRow.tsx` | One checklist step — Yes/No button pair + expandable note/screenshot form (2026-08-17) |
+| `TesterFeedbackChart` | `features/tester/components/TesterFeedbackChart.tsx` | Recharts bar chart of pass/fail per group, dynamic-imported like `AdminAnalyticsCharts.tsx` (2026-08-17) |
+| `AdminTesterFeedbackView` | `features/tester/components/AdminTesterFeedbackView.tsx` | `/admin/tester-feedback` — Report / Main Issues / All Submissions tabs (2026-08-17) |
+| `AdminTesterFeedbackReportView` / `AdminTesterFeedbackIssuesView` / `AdminTesterFeedbackListView` | `features/tester/components/AdminTesterFeedback{Report,Issues,List}View.tsx` | The three tab bodies — chart+stats, every "No" answer with screenshot, and the full `DataListingView` submissions table with Mark Reviewed (2026-08-17) |
 
 ---
 
@@ -452,6 +459,8 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `shipmentItemsRepository` | singleton | `shipmentItems` | Main items (≤500/lot) — `bulkCreate()` single `WriteBatch`, `unlink()` writes `null` not `undefined` |
 | `catalogueRepository` | singleton | `catalogueItems` | Personal catalogue items — `stampImageUpdate()` on every `images[]` write, `listPublicByOwner()`, `listPendingApproval()` |
 | `jobsRepository` | singleton | `jobs` | Background job queue (`enqueueJob()`/`onJobCreated` Firebase Function pattern, Rule #6 heavy-work offload) |
+| `testerChecklistItemRepository` | singleton | `testerChecklistItems` | Tester QA program (2026-08-17) — admin-managed test-case catalog, `createItem()`/`listActive()`/`list()` (Sieve) |
+| `testerChecklistResponseRepository` | singleton | `testerChecklistResponses` | Tester QA program — one doc per (tester, case), `upsertResponse()` (deterministic ID `${testerId}__${checklistItemId}`), `getCoverageReport()` (powers the admin Report + Main Issues tabs) |
 
 ---
 

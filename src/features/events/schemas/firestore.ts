@@ -73,6 +73,8 @@ export type EventEntryDocument = {
   reviewedBy?: string;
   reviewedAt?: Date;
   reviewNote?: string;
+  /** RSVP-style status, distinct from `reviewStatus` (moderation workflow). Drives raffle eligibility + admin confirm/waitlist/cancel actions. */
+  status?: "CONFIRMED" | "WAITLISTED" | "CANCELLED";
   points?: number;
   raffleEligible?: boolean;
   spinUsed?: boolean;
@@ -94,6 +96,7 @@ export const EVENT_ENTRY_INDEXED_FIELDS = [
   "eventId",
   "userId",
   "reviewStatus",
+  "status",
   "submittedAt",
   "points",
 ] as const;

@@ -115,7 +115,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: "title", label: "Title A–Z" },
-      { value: "prizeDrawEndDate", label: "Draw Date Soon" },
+      { value: "prizeRevealWindowEnd", label: "Draw Date Soon" },
     ],
     columns: PRIZE_DRAW_COLUMNS,
     mapRows: (response) =>
@@ -129,8 +129,8 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
           status: toStringValue(item.status, "draft"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           entryFee: priceRaw ? toRupees(priceRaw) : "Free",
-          drawDate: item.prizeDrawEndDate
-            ? toRelativeDate(item.prizeDrawEndDate as string)
+          drawDate: item.prizeRevealWindowEnd
+            ? toRelativeDate(item.prizeRevealWindowEnd as string)
             : "TBA",
         };
       }),

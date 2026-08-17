@@ -93,11 +93,13 @@ export const PREORDER_SORT_OPTIONS = [
 // Bundles
 // ---------------------------------------------------------------------------
 
+// "Most Savings" / "Most Items" sorts were removed (2026-08-17) — they
+// referenced `savingsAmount`/`bundleItemCount`, fields that were never added
+// to ProductDocument, so the sorts silently no-opped. Re-add once those
+// fields are computed and written at bundle create/update time.
 export const BUNDLE_SORT_OPTIONS = [
   ...BASE_TIME_SORTS.slice(0, 1), // Newest First
   ...BASE_PRICE_SORTS,
-  { value: sortBy("savingsAmount", "DESC"), label: "Most Savings" },
-  { value: sortBy("bundleItemCount", "DESC"), label: "Most Items" },
 ] as const satisfies readonly SortOption[];
 
 // ---------------------------------------------------------------------------

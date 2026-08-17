@@ -114,7 +114,7 @@ export function SellerCouponsView({
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) =>
-      state.isActive ? sieveFilter("isActive", SIEVE_OP.EQ, state.isActive) : undefined,
+      state.isActive ? sieveFilter("validity.isActive", SIEVE_OP.EQ, state.isActive) : undefined,
     primaryAction: onCreateClick
       ? { label: "Add Coupon", onClick: () => onCreateClick() }
       : undefined,

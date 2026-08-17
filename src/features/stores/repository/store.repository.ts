@@ -168,6 +168,9 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       [STORE_FIELDS.STATUS]: { canFilter: true, canSort: false },
       [STORE_FIELDS.IS_PUBLIC]: { canFilter: true, canSort: false },
       [STORE_FIELDS.CREATED_AT]: { canFilter: false, canSort: true },
+      "stats.itemsSold": { canFilter: false, canSort: true },
+      "stats.averageRating": { canFilter: false, canSort: true },
+      "stats.totalProducts": { canFilter: true, canSort: false },
     };
 
     let baseQuery = this.getCollection() as FirebaseFirestore.Query;

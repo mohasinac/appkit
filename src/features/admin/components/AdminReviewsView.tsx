@@ -90,12 +90,12 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       comment: toStringValue(raw.body ?? raw.comment, ""),
       userName: toStringValue(raw.userName ?? raw.sellerName, "Unknown"),
       userAvatar: toStringValue(raw.userAvatar, "") || undefined,
-      verified: Boolean(raw.isVerifiedPurchase),
+      verified: Boolean(raw.verified),
       images: Array.isArray(raw.images)
         ? (raw.images as Array<{ url: string; thumbnailUrl?: string }>)
         : [],
       helpfulCount: Number(raw.helpfulCount ?? 0),
-      createdAt: toStringValue(raw.createdAt ?? raw.publishedAt, "") || undefined,
+      createdAt: toStringValue(raw.createdAt, "") || undefined,
     });
   }, []);
 
@@ -113,12 +113,12 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
     searchPlaceholder: "Search reviews, products, or seller names",
     emptyLabel: "No reviews found",
     filterKeys: ["status", "rating"],
-    defaultSort: sortBy("publishedAt", "DESC"),
+    defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "reviews", "listing"],
     endpoint: ADMIN_ENDPOINTS.REVIEWS,
     sortOptions: [
-      { value: sortBy("publishedAt", "DESC"), label: "Newest" },
-      { value: "publishedAt", label: "Oldest" },
+      { value: sortBy("createdAt", "DESC"), label: "Newest" },
+      { value: sortBy("createdAt", "ASC"), label: "Oldest" },
       { value: sortBy("rating", "DESC"), label: "Highest rating" },
       { value: sortBy("rating", "ASC"), label: "Lowest rating" },
     ],

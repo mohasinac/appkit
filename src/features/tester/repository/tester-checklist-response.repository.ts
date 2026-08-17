@@ -7,6 +7,7 @@ import {
   type TesterAnswer,
   type TesterChecklistResponseDocument,
 } from "../schemas/firestore";
+import { testerChecklistItemRepository } from "./tester-checklist-item.repository";
 
 export interface UpsertResponseInput {
   testerId: string;
@@ -32,6 +33,16 @@ export interface CoverageReport {
   itemCoverage: ChecklistItemCoverage[];
   issues: TesterChecklistResponseDocument[]; // every answer === "no"
   totals: { totalAnswered: number; totalYes: number; totalNo: number };
+}
+
+function escapeMd(text: string | undefined): string {
+  return (text ?? "").replace(/\r?\n/g, " ").trim();
+}
+
+function screenshotLink(screenshotUrl: string | undefined, siteOrigin: string): string {
+  if (!screenshotUrl) return "(none)";
+  const abs = screenshotUrl.startsWith("http") ? screenshotUrl : `${siteOrigin}${screenshotUrl}`;
+  return `[view](${abs})`;
 }
 
 export class TesterChecklistResponseRepository extends BaseRepository<TesterChecklistResponseDocument> {
@@ -138,6 +149,105 @@ export class TesterChecklistResponseRepository extends BaseRepository<TesterChec
       issues,
       totals: { totalAnswered: totalYes + totalNo, totalYes, totalNo },
     };
+  }
+
+  /**
+   * Markdown dump of every answered case, joined against the checklist item
+   * catalog for the human-readable label/href — optimized for a future dev
+   * (or Claude session) to read directly and go fix the reported issues.
+   * Mirrors appkit/scripts/export-tester-feedback.mjs's CLI output exactly;
+   * keep the two in sync.
+   */
+  async getMarkdownReport(siteOrigin: string): Promise<string> {
+    const [items, snapshot] = await Promise.all([
+      testerChecklistItemRepository.list({ page: "1", pageSize: "1000" }),
+      this.db.collection(this.collection).get(),
+    ]);
+    const itemById = new Map(items.items.map((item) => [item.id, item]));
+
+    const responses = snapshot.docs
+      .map((d) => this.mapDoc<TesterChecklistResponseDocument>(d))
+      .filter((r) => r.answer === "yes" || r.answer === "no");
+
+    interface GroupBucket {
+      groupLabel: string;
+      pageLabel: string;
+      items: (TesterChecklistResponseDocument & { label: string; href?: string })[];
+    }
+    const grouped = new Map<string, GroupBucket>();
+    for (const r of responses) {
+      const item = itemById.get(r.checklistItemId);
+      const groupLabel = item?.groupLabel ?? r.groupKey ?? "Unknown group";
+      const pageLabel = item?.pageLabel ?? r.pageKey ?? "Unknown page";
+      const key = `${groupLabel}␟${pageLabel}`;
+      if (!grouped.has(key)) grouped.set(key, { groupLabel, pageLabel, items: [] });
+      grouped.get(key)!.items.push({ ...r, label: item?.label ?? r.checklistItemId, href: item?.href });
+    }
+    const sortedGroups = Array.from(grouped.values()).sort(
+      (a, b) => a.groupLabel.localeCompare(b.groupLabel) || a.pageLabel.localeCompare(b.pageLabel),
+    );
+
+    const issues = responses.filter((r) => r.answer === "no");
+    const passingWithNotes = responses.filter((r) => r.answer === "yes" && r.comment?.trim());
+
+    const lines: string[] = [];
+    lines.push("# Tester Feedback Report");
+    lines.push("");
+    lines.push(
+      `Generated ${new Date().toISOString()} — ${issues.length} issue(s) ("No" answers) across ${responses.length} answered case(s), plus ${passingWithNotes.length} note(s) on passing cases.`,
+    );
+    lines.push("");
+    lines.push("---");
+    lines.push("");
+    lines.push('## Issues ("No" answers) — fix these');
+    lines.push("");
+
+    if (issues.length === 0) {
+      lines.push("_No issues reported yet._");
+      lines.push("");
+    } else {
+      for (const group of sortedGroups) {
+        const groupIssues = group.items.filter((r) => r.answer === "no");
+        if (groupIssues.length === 0) continue;
+        lines.push(`### ${group.groupLabel} › ${group.pageLabel}`);
+        lines.push("");
+        for (const r of groupIssues) {
+          lines.push(`- [ ] **${escapeMd(r.label)}**`);
+          lines.push(`  - Tester: ${escapeMd(r.testerDisplayName)}`);
+          if (r.comment) lines.push(`  - Comment: ${escapeMd(r.comment)}`);
+          lines.push(`  - Screenshot: ${screenshotLink(r.screenshotUrl, siteOrigin)}`);
+          if (r.href) lines.push(`  - Test this: ${r.href}`);
+          lines.push(`  - Status: ${r.status === "reviewed" ? "reviewed" : "new"}`);
+          lines.push("");
+        }
+      }
+    }
+
+    lines.push("---");
+    lines.push("");
+    lines.push('## Notes on passing cases ("Yes" with a comment)');
+    lines.push("");
+
+    if (passingWithNotes.length === 0) {
+      lines.push("_No notes on passing cases._");
+      lines.push("");
+    } else {
+      for (const group of sortedGroups) {
+        const groupNotes = group.items.filter((r) => r.answer === "yes" && r.comment?.trim());
+        if (groupNotes.length === 0) continue;
+        lines.push(`### ${group.groupLabel} › ${group.pageLabel}`);
+        lines.push("");
+        for (const r of groupNotes) {
+          lines.push(`- **${escapeMd(r.label)}** (works)`);
+          lines.push(`  - Tester: ${escapeMd(r.testerDisplayName)}`);
+          lines.push(`  - Comment: ${escapeMd(r.comment)}`);
+          lines.push(`  - Screenshot: ${screenshotLink(r.screenshotUrl, siteOrigin)}`);
+          lines.push("");
+        }
+      }
+    }
+
+    return lines.join("\n");
   }
 }
 

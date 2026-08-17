@@ -71,25 +71,25 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
     searchPlaceholder: "Search bids, products, or bidder IDs",
     emptyLabel: "No bids found",
     filterKeys: ["status"],
-    defaultSort: sortBy("bidTime", "DESC"),
+    defaultSort: sortBy("bidDate", "DESC"),
     queryKey: ["admin", "bids", "listing"],
     endpoint: ADMIN_ENDPOINTS.BIDS,
     sortOptions: [
-      { value: sortBy("bidTime", "DESC"), label: "Newest" },
-      { value: "bidTime", label: "Oldest" },
-      { value: sortBy("amount", "DESC"), label: "Highest amount" },
+      { value: sortBy("bidDate", "DESC"), label: "Newest" },
+      { value: "bidDate", label: "Oldest" },
+      { value: sortBy("bidAmount", "DESC"), label: "Highest amount" },
     ],
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `bid-${index}`),
         primary: [
           toStringValue(item.productName ?? item.productTitle, "Unknown item"),
-          toRupees(item.amount),
+          toRupees(item.bidAmount ?? item.amount),
         ].join(" · "),
         secondary: toStringValue(item.bidderId ?? item.bidderName ?? item.userId, "Unknown bidder"),
         status: toStringValue(item.status, "active"),
         updatedAt: toRelativeDate(
-          item.bidTime ?? item.bidDate ?? item.updatedAt ?? item.createdAt,
+          item.bidDate ?? item.updatedAt ?? item.createdAt,
         ),
       })),
     getTotal: (response, mappedRows) =>

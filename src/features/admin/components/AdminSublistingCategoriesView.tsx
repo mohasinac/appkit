@@ -46,7 +46,7 @@ export function AdminSublistingCategoriesView({
     sortOptions: [
       { value: sortBy("name", "ASC"), label: "Name A–Z" },
       { value: sortBy("name", "DESC"), label: "Name Z–A" },
-      { value: sortBy("productCount", "DESC"), label: "Most listings" },
+      { value: sortBy("metrics.productCount", "DESC"), label: "Most listings" },
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
     ],
     mapRows: (response) =>

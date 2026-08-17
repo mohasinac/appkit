@@ -1377,6 +1377,14 @@ export const ACTIONS: ActionTree = {
       kind: "secondary",
       permissions: ["admin"],
     },
+    "export-tester-feedback": {
+      id: "admin.export-tester-feedback",
+      label: "Download Report",
+      ariaLabel: "Download tester feedback as a Markdown report",
+      description: "Download every tester checklist response as a Markdown file, grouped by feature area, for offline triage.",
+      kind: "ghost",
+      permissions: ["admin"],
+    },
     "create-checklist-item": {
       id: "admin.create-checklist-item",
       label: "Add Test Case",

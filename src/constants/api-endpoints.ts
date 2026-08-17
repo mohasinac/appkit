@@ -167,6 +167,7 @@ export const ADMIN_ENDPOINTS = {
   TESTER_FEEDBACK: "/api/admin/tester-feedback",
   TESTER_FEEDBACK_BY_ID: (id: string) => `/api/admin/tester-feedback/${id}`,
   TESTER_FEEDBACK_REPORT: "/api/admin/tester-feedback/report",
+  TESTER_FEEDBACK_EXPORT: "/api/admin/tester-feedback/export",
   STORES: "/api/admin/stores",
   STORE_BY_ID: (uid: string) => `/api/admin/stores/${uid}`,
   PAYOUTS: "/api/admin/payouts",

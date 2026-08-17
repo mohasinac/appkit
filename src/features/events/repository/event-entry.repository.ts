@@ -29,6 +29,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     userId: { canFilter: true, canSort: false },
     userDisplayName: { canFilter: false, canSort: false },
     reviewStatus: { canFilter: true, canSort: false },
+    status: { canFilter: true, canSort: false },
     submittedAt: { canFilter: true, canSort: true },
     points: { canFilter: true, canSort: true },
   };
