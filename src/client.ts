@@ -349,6 +349,8 @@ export type { CouponsIndexListingProps } from "./features/promotions/components/
 export { NotificationBell } from "./features/account/components/NotificationBell";
 export { NotificationPreferencesPanel } from "./features/account/components/NotificationPreferencesPanel";
 export type { NotificationPreferencesPanelProps } from "./features/account/components/NotificationPreferencesPanel";
+export { LinkedAccountsSection } from "./features/account/components/LinkedAccountsSection";
+export type { LinkedAccountsSectionProps } from "./features/account/components/LinkedAccountsSection";
 export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTable";
 export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
 export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";
@@ -362,7 +364,7 @@ export type {
 	ResetPasswordViewProps,
 	VerifyEmailViewProps,
 } from "./features/auth/index";
-export { useLogout, useLogin, useGoogleLogin, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangePassword, useChangeEmail } from "./features/auth/index";
+export { useLogout, useLogin, useGoogleLogin, useLinkGoogleAccount, useRegister, useForgotPassword, useResetPassword, useVerifyEmail, useChangePassword, useChangeEmail } from "./features/auth/index";
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData, ChangePasswordData, ChangeEmailData } from "./features/auth/index";
 export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";

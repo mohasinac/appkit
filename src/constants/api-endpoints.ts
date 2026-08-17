@@ -683,15 +683,6 @@ export const BEFORE_AFTER_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Demo / Seed
-// ---------------------------------------------------------------------------
-
-export const DEMO_ENDPOINTS = {
-  SEED: "/api/demo/seed",
-  SEED_EVENT_INIT: "/api/demo/seed/event/init",
-} as const;
-
-// ---------------------------------------------------------------------------
 // WhatsApp Business (store-level settings + catalog sync)
 // ---------------------------------------------------------------------------
 
@@ -749,7 +740,6 @@ export const API_ENDPOINTS = {
   SUBLISTING_CATEGORIES: SUBLISTING_CATEGORY_ENDPOINTS,
   WISHLIST: WISHLIST_ENDPOINTS,
   PROFILE_STATS: PROFILE_STATS_ENDPOINTS,
-  DEMO: DEMO_ENDPOINTS,
   WHATSAPP_SELLER: WHATSAPP_SELLER_ENDPOINTS,
   SUPPORT: SUPPORT_ENDPOINTS,
   SCAMMERS: SCAMMER_ENDPOINTS,

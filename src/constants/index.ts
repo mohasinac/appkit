@@ -46,7 +46,6 @@ export {
   STORE_ENDPOINTS,
   WISHLIST_ENDPOINTS,
   PROFILE_STATS_ENDPOINTS,
-  DEMO_ENDPOINTS,
 } from "./api-endpoints";
 
 export { COLLECTION_CACHE_PATHS } from "./cache-invalidation";

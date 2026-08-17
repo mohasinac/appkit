@@ -13,6 +13,8 @@ export interface UserProfile {
   emailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
+  googleLinked?: boolean;
+  googleLinkedEmail?: string | null;
 }
 
 export interface UpdateCurrentProfileInput {

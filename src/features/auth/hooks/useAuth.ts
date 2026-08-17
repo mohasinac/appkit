@@ -279,6 +279,147 @@ export function useGoogleLogin(options?: {
   return { mutate, isLoading };
 }
 
+/** Connects the current (already-logged-in) user's account to a Google account,
+ * without switching sessions. Reuses the same popup + RTDB/postMessage signal
+ * mechanism as useGoogleLogin, but POSTs { mode: "link" } to EVENT_INIT so the
+ * server callback records the link on the caller's own profile instead of
+ * resolving/creating a separate Firebase Auth user. */
+export function useLinkGoogleAccount(options?: {
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
+}) {
+  const authEvent = useAuthEvent();
+  const [initiating, setInitiating] = useState(false);
+  const [popupPending, setPopupPending] = useState(false);
+  const calledRef = useRef(false);
+  const closePollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearClosePoll = useCallback(() => {
+    if (closePollRef.current !== null) {
+      clearInterval(closePollRef.current);
+      closePollRef.current = null;
+    }
+  }, []);
+
+  const onSuccessRef = useRef(options?.onSuccess);
+  const onErrorRef = useRef(options?.onError);
+  const authEventResetRef = useRef(authEvent.reset);
+
+  useEffect(() => { onSuccessRef.current = options?.onSuccess; }, [options?.onSuccess]);
+  useEffect(() => { onErrorRef.current = options?.onError; }, [options?.onError]);
+  useEffect(() => { authEventResetRef.current = authEvent.reset; }, [authEvent.reset]);
+
+  useEffect(() => clearClosePoll, [clearClosePoll]);
+
+  useEffect(() => {
+    if (authEvent.status === RealtimeEventStatus.SUCCESS) {
+      setPopupPending(false);
+      if (calledRef.current) return;
+      calledRef.current = true;
+      clearClosePoll();
+      onSuccessRef.current?.();
+    } else if (authEvent.status === RealtimeEventStatus.TIMEOUT) {
+      setPopupPending(false);
+      if (calledRef.current) return;
+      calledRef.current = true;
+      clearClosePoll();
+      onErrorRef.current?.(
+        new Error(authEvent.error ?? "Linking timed out. Please try again."),
+      );
+    }
+  }, [authEvent.status, authEvent.error, clearClosePoll]);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (!event.data || event.data.type !== "letitrip_auth_close") return;
+      if (calledRef.current) return;
+
+      calledRef.current = true;
+      setPopupPending(false);
+      clearClosePoll();
+      authEventResetRef.current();
+
+      if (event.data.status === "success") {
+        onSuccessRef.current?.();
+      } else {
+        onErrorRef.current?.(
+          new Error((event.data.error as string | undefined) ?? "Linking failed. Please try again."),
+        );
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [clearClosePoll]);
+
+  const mutate = useCallback(async () => {
+    calledRef.current = false;
+    const popup = window.open(
+      `${window.location.origin}/auth.html`,
+      "oauth_google_link",
+      "width=500,height=660,left=400,top=100",
+    );
+
+    if (!popup) {
+      onErrorRef.current?.(
+        new Error("Popup blocked. Please allow popups for this site."),
+      );
+      return;
+    }
+
+    setPopupPending(true);
+
+    clearClosePoll();
+    closePollRef.current = setInterval(() => {
+      if (popup.closed && !calledRef.current) {
+        calledRef.current = true;
+        clearClosePoll();
+        setPopupPending(false);
+        authEventResetRef.current();
+        onErrorRef.current?.(new Error("Linking was cancelled."));
+      }
+    }, 500);
+
+    try {
+      setInitiating(true);
+      authEvent.reset();
+
+      const { eventId, customToken, rtdbEnabled } = await apiClient.post<{
+        eventId: string;
+        customToken: string;
+        expiresAt: number;
+        rtdbEnabled?: boolean;
+      }>(AUTH_ENDPOINTS.EVENT_INIT, { mode: "link" });
+
+      const url = `${window.location.origin}${AUTH_ENDPOINTS.GOOGLE_START}?eventId=${encodeURIComponent(eventId)}`;
+      localStorage.setItem("letitrip_oauth_redirect", url);
+
+      if (rtdbEnabled !== false) {
+        authEvent.subscribe(eventId, customToken);
+      }
+    } catch (err) {
+      void normalizeError(err);
+      clearClosePoll();
+      popup.close();
+      setPopupPending(false);
+      onErrorRef.current?.(
+        err instanceof Error ? err : new Error("Failed to start account linking."),
+      );
+    } finally {
+      setInitiating(false);
+    }
+  }, [authEvent, clearClosePoll]);
+
+  const isLoading =
+    initiating ||
+    popupPending ||
+    authEvent.status === RealtimeEventStatus.SUBSCRIBING ||
+    authEvent.status === RealtimeEventStatus.PENDING;
+
+  return { mutate, isLoading };
+}
+
 export function useRegister(options?: {
   onSuccess?: (data: JsonValue) => void;
   onError?: (error: Error) => void;

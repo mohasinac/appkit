@@ -138,6 +138,15 @@ export interface UserDocument extends BaseDocument {
 
   // ── Banner dismissal ────────────────────────────────────────────────────────
   dismissedBannerHash?: string;
+
+  // ── Linked auth providers ─────────────────────────────────────────────────
+  /** True once this account has completed Google sign-in/linking at least once.
+   * Set from the server-side OAuth callback — Firebase Auth's own providerData
+   * is NOT populated here because the app uses a server-side custom-token
+   * exchange rather than the client SDK's linkWithCredential(). */
+  googleLinked?: boolean;
+  /** The Google account email this profile is linked to, once linked. */
+  googleLinkedEmail?: string | null;
 }
 
 // ── Soft ban entry ─────────────────────────────────────────────────────────────
