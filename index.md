@@ -461,7 +461,9 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `catalogueRepository` | singleton | `catalogueItems` | Personal catalogue items — `stampImageUpdate()` on every `images[]` write, `listPublicByOwner()`, `listPendingApproval()` |
 | `jobsRepository` | singleton | `jobs` | Background job queue (`enqueueJob()`/`onJobCreated` Firebase Function pattern, Rule #6 heavy-work offload) |
 | `testerChecklistItemRepository` | singleton | `testerChecklistItems` | Tester QA program (2026-08-17) — admin-managed test-case catalog, `createItem()`/`listActive()`/`list()` (Sieve) |
-| `testerChecklistResponseRepository` | singleton | `testerChecklistResponses` | Tester QA program — one doc per (tester, case), `upsertResponse()` (deterministic ID `${testerId}__${checklistItemId}`), `getCoverageReport()` (powers the admin Report + Main Issues tabs) |
+| `testerChecklistResponseRepository` | singleton | `testerChecklistResponses` | Tester QA program — one doc per (tester, case), `upsertResponse()` (deterministic ID `${testerId}__${checklistItemId}`), `getCoverageReport()` (powers the admin Report + Main Issues tabs), `getMarkdownReport(siteOrigin)` (2026-08-17 — Markdown dump of every answered case, joined against the checklist catalog for readable labels; consumed by both `appkit/scripts/export-tester-feedback.mjs` and `GET /api/admin/tester-feedback/export`; keep the two output shapes in sync) |
+
+**`appkit/scripts/export-tester-feedback.mjs`** (`npm run tester:export-feedback`, 2026-08-17) — standalone CLI, mirrors `getMarkdownReport()`'s output exactly. Queries Firestore directly via `getAdminDb()`, writes `tester-feedback-report.md` at the repo root (gitignored). Two sections: **Issues** (every "No" answer — checkbox list with tester name, comment, screenshot link, deep link, review status) and **Notes on passing cases** (every "Yes" that still left a comment — usually styling/readability feedback). Purpose-built so a future dev or Claude session can `Read` the file directly and go fix what's reported, without a live Firestore query.
 
 ---
 
