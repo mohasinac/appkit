@@ -315,7 +315,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
     userId: string,
     itemId: string,
     providerId: string,
-    feeInPaise: number,
+    fee: number,
   ): Promise<CartDocument> {
     try {
       const cart = await this.findByUserId(userId);
@@ -328,7 +328,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       items[itemIndex] = {
         ...items[itemIndex],
         chosenShippingProviderId: providerId,
-        chosenShippingFeeInPaise: feeInPaise,
+        chosenShippingFee: fee,
         updatedAt: new Date(),
       };
 

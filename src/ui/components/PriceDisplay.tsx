@@ -1,9 +1,7 @@
 import { Span } from "./Typography";
 import { Row } from "./Layout";
-import {
-  getDefaultCurrency,
-  getDefaultLocale,
-} from "../../core/baseline-resolver";
+import { getDefaultCurrency } from "../../core/baseline-resolver";
+import { formatCurrency, formatPercentage } from "../../utils/number.formatter";
 
 export interface PriceDisplayProps {
   amount: number;
@@ -11,18 +9,6 @@ export interface PriceDisplayProps {
   originalAmount?: number;
   variant?: "compact" | "detail";
   className?: string;
-}
-
-function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat(getDefaultLocale(), {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
-
-function formatPercent(value: number): string {
-  return `${Math.round(value * 100)}%`;
 }
 
 export function PriceDisplay({
@@ -61,7 +47,7 @@ export function PriceDisplay({
             {formatCurrency(originalAmount, currency)}
           </Span>
           <Span className="appkit-price-display__discount">
-            -{formatPercent(discountPct)}
+            -{formatPercentage(discountPct, 0)}
           </Span>
         </>
       )}

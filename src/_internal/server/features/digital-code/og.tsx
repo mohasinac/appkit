@@ -29,7 +29,7 @@ export function renderDigitalCodeOg(
           style: "currency",
           currency: doc.currency ?? "INR",
           maximumFractionDigits: 0,
-        }).format(doc.price / 100)
+        }).format(doc.price)
       : null;
 
   const deliveryMethod =

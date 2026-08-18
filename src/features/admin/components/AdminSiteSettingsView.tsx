@@ -184,12 +184,12 @@ export function AdminSiteSettingsView({
   }, [watermarkSize, watermarkOpacity]);
 
   // ⑦ Fees — all read/written under commissions key
-  const [laborHourlyRatePaise, setLaborHourlyRatePaise] = React.useState(20000);
+  const [laborHourlyRate, setLaborHourlyRate] = React.useState(200);
   const [laborMaxHoursPerDay, setLaborMaxHoursPerDay] = React.useState(6);
 
   // ⑯ EMI — site-wide installment settings
   const [emiEnabled, setEmiEnabled] = React.useState(false);
-  const [emiMinOrderValuePaise, setEmiMinOrderValuePaise] = React.useState(1000000);
+  const [emiMinOrderValue, setEmiMinOrderValue] = React.useState(10000);
   const [emiTenureOptionsText, setEmiTenureOptionsText] = React.useState("2,3,4,5,6");
   const [emiTokenPercent, setEmiTokenPercent] = React.useState(20);
   const [emiBillingDay, setEmiBillingDay] = React.useState(5);
@@ -374,11 +374,11 @@ export function AdminSiteSettingsView({
     setFeaturedSlotFee(s.commissions?.featuredSlotFee ?? 999);
     setPromotedSlotFee(s.commissions?.promotedSlotFee ?? 499);
 
-    setLaborHourlyRatePaise(s.laborRate?.hourlyRatePaise ?? 20000);
+    setLaborHourlyRate(s.laborRate?.hourlyRate ?? 200);
     setLaborMaxHoursPerDay(s.laborRate?.maxHoursPerDay ?? 6);
 
     setEmiEnabled(s.emi?.enabled ?? false);
-    setEmiMinOrderValuePaise(s.emi?.minOrderValueInPaise ?? 1000000);
+    setEmiMinOrderValue(s.emi?.minOrderValue ?? 10000);
     setEmiTenureOptionsText((s.emi?.tenureOptions ?? [2, 3, 4, 5, 6]).join(","));
     setEmiTokenPercent(s.emi?.tokenPercent ?? 20);
     setEmiBillingDay(s.emi?.billingDay ?? 5);
@@ -408,7 +408,7 @@ export function AdminSiteSettingsView({
     setDeviantartClientId(s.credentialsMasked?.deviantartClientId ?? "");
     setDeviantartClientSecret(s.credentialsMasked?.deviantartClientSecret ?? "");
 
-    setFreeShippingThreshold(Math.round((s.shipping?.freeShippingThreshold ?? 99900) / 100));
+    setFreeShippingThreshold(s.shipping?.freeShippingThreshold ?? 999);
     setDefaultCarrier(s.shipping?.defaultCarrier ?? "custom");
     setMaxDeliveryRadius(s.shipping?.maxDeliveryRadius ?? 0);
 
@@ -416,7 +416,7 @@ export function AdminSiteSettingsView({
     setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
     setCodEnabled(s.payment?.codEnabled ?? true);
 
-    setMinBidIncrement(Math.round((s.auctionConfig?.minBidIncrement ?? 5000) / 100));
+    setMinBidIncrement(s.auctionConfig?.minBidIncrement ?? 50);
     setAutoExtendWindow(s.auctionConfig?.autoExtendWindowMinutes ?? 5);
     setSettlementGrace(s.auctionConfig?.settlementGracePeriodHours ?? 24);
 
@@ -503,10 +503,10 @@ export function AdminSiteSettingsView({
       socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
       watermark: { type: watermarkType, text: watermarkText, imageUrl: watermarkImageUrl, size: watermarkSize, opacity: watermarkOpacity },
       commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
-      laborRate: { hourlyRatePaise: laborHourlyRatePaise, maxHoursPerDay: laborMaxHoursPerDay },
+      laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
-        minOrderValueInPaise: emiMinOrderValuePaise,
+        minOrderValue: emiMinOrderValue,
         tenureOptions: emiTenureOptionsText
           .split(",")
           .map((v) => parseInt(v.trim(), 10))
@@ -547,9 +547,9 @@ export function AdminSiteSettingsView({
         fromEmail: notifFromEmail, fromName: notifFromName,
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
-      shipping: { freeShippingThreshold: freeShippingThreshold * 100, defaultCarrier, maxDeliveryRadius },
+      shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
       payment: { razorpayEnabled, upiManualEnabled, codEnabled },
-      auctionConfig: { minBidIncrement: minBidIncrement * 100, autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
+      auctionConfig: { minBidIncrement, autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
       notificationChannels: {
@@ -888,8 +888,8 @@ export function AdminSiteSettingsView({
                 <Input
                   label="Hourly rate (₹)"
                   helperText="Your effective hourly wage for sorting/categorizing/listing a shipment."
-                  value={String(laborHourlyRatePaise / 100)}
-                  onChange={(e) => setLaborHourlyRatePaise(Math.round((parseFloat(e.target.value) || 0) * 100))}
+                  value={String(laborHourlyRate)}
+                  onChange={(e) => setLaborHourlyRate(Math.round((parseFloat(e.target.value) || 0) * 100) / 100)}
                   type="number"
                   min={0}
                 />
@@ -922,8 +922,8 @@ export function AdminSiteSettingsView({
                 <Input
                   label="Minimum order value (₹)"
                   helperText="A seller's cart subtotal must exceed this for EMI to appear as an option."
-                  value={String(emiMinOrderValuePaise / 100)}
-                  onChange={(e) => setEmiMinOrderValuePaise(Math.round((parseFloat(e.target.value) || 0) * 100))}
+                  value={String(emiMinOrderValue)}
+                  onChange={(e) => setEmiMinOrderValue(Math.round((parseFloat(e.target.value) || 0) * 100) / 100)}
                   type="number"
                   min={0}
                 />

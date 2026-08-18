@@ -13,12 +13,14 @@
  * payment across `tenureMonths`, split between platform and seller per
  * `surchargeSellerSharePercent`) across equal monthly installments, each
  * due on `billingDay` (1–10) of the month, starting the month after
- * purchase. All money amounts are in paise (integer).
+ * purchase. All money amounts are in decimal rupees.
  */
+
+import { roundRupees } from "../../../../utils/number.formatter";
 
 export interface EmiSettings {
   enabled: boolean;
-  minOrderValueInPaise: number;
+  minOrderValue: number;
   tenureOptions: readonly number[];
   tokenPercent: number;
   /** Day of month (1–10) each installment is due. */
@@ -41,25 +43,25 @@ export type EmiEligibility =
 export function checkEmiEligibility(
   sellerSubtotal: number,
   sellerEmiEnabled: boolean,
-  settings: Pick<EmiSettings, "enabled" | "minOrderValueInPaise">,
+  settings: Pick<EmiSettings, "enabled" | "minOrderValue">,
 ): EmiEligibility {
   if (!settings.enabled) return { eligible: false, reason: "site_disabled" };
   if (!sellerEmiEnabled) return { eligible: false, reason: "seller_disabled" };
-  if (sellerSubtotal <= settings.minOrderValueInPaise) return { eligible: false, reason: "below_minimum" };
+  if (sellerSubtotal <= settings.minOrderValue) return { eligible: false, reason: "below_minimum" };
   return { eligible: true };
 }
 
 export interface EmiInstallmentPlan {
   index: number;
   dueDate: Date;
-  /** Paise. */
+  /** Decimal rupees. */
   amount: number;
 }
 
 export interface EmiScheduleResult {
-  /** Down payment collected at checkout, in paise. */
+  /** Down payment collected at checkout, decimal rupees. */
   tokenAmount: number;
-  /** Total surcharge across the whole tenure, in paise. */
+  /** Total surcharge across the whole tenure, decimal rupees. */
   surchargeAmount: number;
   surchargeSellerShare: number;
   surchargePlatformShare: number;
@@ -79,17 +81,17 @@ export function computeEmiSchedule(
   settings: Pick<EmiSettings, "tokenPercent" | "billingDay" | "surchargePercentPerMonth" | "surchargeSellerSharePercent">,
   purchaseDate: Date = new Date(),
 ): EmiScheduleResult {
-  const tokenAmount = Math.round(sellerSubtotal * (settings.tokenPercent / 100));
+  const tokenAmount = roundRupees(sellerSubtotal * (settings.tokenPercent / 100));
   const principalRemaining = sellerSubtotal - tokenAmount;
-  const surchargeAmount = Math.round(
+  const surchargeAmount = roundRupees(
     principalRemaining * (settings.surchargePercentPerMonth / 100) * tenureMonths,
   );
-  const surchargeSellerShare = Math.round(surchargeAmount * (settings.surchargeSellerSharePercent / 100));
-  const surchargePlatformShare = surchargeAmount - surchargeSellerShare;
+  const surchargeSellerShare = roundRupees(surchargeAmount * (settings.surchargeSellerSharePercent / 100));
+  const surchargePlatformShare = roundRupees(surchargeAmount - surchargeSellerShare);
 
-  const totalToInstall = principalRemaining + surchargeAmount;
-  const baseInstallment = Math.floor(totalToInstall / tenureMonths);
-  const remainder = totalToInstall - baseInstallment * tenureMonths;
+  const totalToInstall = roundRupees(principalRemaining + surchargeAmount);
+  const baseInstallment = roundRupees(Math.floor((totalToInstall / tenureMonths) * 100) / 100);
+  const remainder = roundRupees(totalToInstall - baseInstallment * tenureMonths);
 
   const billingDay = Math.min(Math.max(settings.billingDay, 1), 10);
   const installments: EmiInstallmentPlan[] = [];

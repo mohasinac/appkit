@@ -35,7 +35,8 @@ export type NotificationType =
   | "prize_reveal_expired"
   | "prize_reveal_reminder"
   | "emi_installment_due_soon"
-  | "emi_installment_overdue";
+  | "emi_installment_overdue"
+  | "payment_review";
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
@@ -438,12 +439,14 @@ export interface SiteSettingsDocument extends BaseDocument {
     razorpayEnabled: boolean;
     upiManualEnabled: boolean;
     codEnabled: boolean;
+    /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. */
+    otpCheckoutThreshold: number;
   };
   /** Site-wide EMI (installment) settings. A seller must ALSO have `StoreDocument.emiEnabled` on for EMI to appear at checkout for their items. */
   emi: {
     enabled: boolean;
-    /** Paise — a seller's cart subtotal must exceed this for EMI to appear as an option. */
-    minOrderValueInPaise: number;
+    /** Decimal rupees — a seller's cart subtotal must exceed this for EMI to appear as an option. */
+    minOrderValue: number;
     tenureOptions: number[];
     /** Down payment % collected at checkout. */
     tokenPercent: number;
@@ -464,8 +467,8 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** Razorpay gateway cost % (absorbed by platform, not passed through separately). */
     gatewayFeePercent: number;
     codDepositPercent: number;
-    /** COD handling fee charged to the buyer: max(codHandlingFeeMinInPaise, subtotal × codHandlingFeePercent / 100). */
-    codHandlingFeeMinInPaise: number;
+    /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). */
+    codHandlingFeeMin: number;
     codHandlingFeePercent: number;
     sellerShippingFixed: number;
     platformShippingPercent: number;
@@ -481,10 +484,10 @@ export interface SiteSettingsDocument extends BaseDocument {
     promotedSlotFee?: number;
   };
   /** Procurement Shipments (Feature A) — the hourly rate used to compute a
-   *  shipment's laborCostPaise, and the daily-hour cap used to project
+   *  shipment's laborCost, and the daily-hour cap used to project
    *  estimatedProcessingDays. */
   laborRate: {
-    hourlyRatePaise: number;
+    hourlyRate: number;
     maxHoursPerDay: number;
   };
   /** P-8 GST — Indian tax compliance. Distinct from commissions.gstPercent
@@ -682,10 +685,11 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     razorpayEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
+    otpCheckoutThreshold: 5000,
   },
   emi: {
     enabled: false,
-    minOrderValueInPaise: 1000000,
+    minOrderValue: 10000,
     tenureOptions: [2, 3, 4, 5, 6],
     tokenPercent: 10,
     billingDay: 5,
@@ -698,7 +702,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     minimumTransactionFee: 0,
     gatewayFeePercent: 2,
     codDepositPercent: 10,
-    codHandlingFeeMinInPaise: 20000,
+    codHandlingFeeMin: 200,
     codHandlingFeePercent: 10,
     sellerShippingFixed: 0,
     platformShippingPercent: 10,
@@ -712,7 +716,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     promotedSlotFee: 499,
   },
   laborRate: {
-    hourlyRatePaise: 20000,
+    hourlyRate: 200,
     maxHoursPerDay: 6,
   },
   gst: {

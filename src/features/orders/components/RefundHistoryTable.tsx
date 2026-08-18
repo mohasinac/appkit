@@ -55,7 +55,7 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
         )}
       </Stack>
       <Text size="sm" weight="semibold" className="shrink-0">
-        {formatCurrency(event.amount / 100, currency)}
+        {formatCurrency(event.amount, currency)}
       </Text>
     </Row>
   );

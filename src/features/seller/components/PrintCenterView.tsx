@@ -75,7 +75,7 @@ function ProductLabel({ product }: { product: PrintCenterProduct }) {
         <Text size="xs" color="muted">No barcode</Text>
       )}
       <Text size="xs" weight="medium" truncate={1}>{product.name}</Text>
-      <Text size="xs" color="muted">₹{(product.price / 100).toLocaleString("en-IN")}</Text>
+      <Text size="xs" color="muted">₹{product.price.toLocaleString("en-IN")}</Text>
       {product.physicalLocation && (
         <Text size="xs" color="muted">{product.physicalLocation}</Text>
       )}
@@ -105,7 +105,7 @@ function PackingSlip({ order, brandName }: { order: PrintCenterOrder; brandName:
             </Stack>
             <Stack className="text-right">
               <Text size="xs">×{item.quantity}</Text>
-              <Text size="xs" color="muted">₹{(item.price / 100).toLocaleString("en-IN")}</Text>
+              <Text size="xs" color="muted">₹{item.price.toLocaleString("en-IN")}</Text>
             </Stack>
           </Row>
         ))}

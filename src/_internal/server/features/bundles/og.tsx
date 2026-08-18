@@ -29,14 +29,13 @@ interface BundleDocLike {
   name?: string | null;
   description?: string | null;
   display?: { coverImage?: string | null } | null;
-  bundlePriceInPaise?: number | null;
+  bundlePrice?: number | null;
   bundleProductIds?: string[] | null;
   bundleStockStatus?: "in_stock" | "partial" | "out_of_stock" | null;
 }
 
-function formatPriceInr(paise: number): string {
-  const rupees = Math.round(paise / 100);
-  return `₹${rupees.toLocaleString("en-IN")}`;
+function formatPriceInr(amount: number): string {
+  return `₹${amount.toLocaleString("en-IN")}`;
 }
 
 export function renderBundleOg(
@@ -45,8 +44,8 @@ export function renderBundleOg(
 ): ReactElement {
   const name = doc?.name ?? "Bundle";
   const priceLabel =
-    typeof doc?.bundlePriceInPaise === "number" && doc.bundlePriceInPaise > 0
-      ? formatPriceInr(doc.bundlePriceInPaise)
+    typeof doc?.bundlePrice === "number" && doc.bundlePrice > 0
+      ? formatPriceInr(doc.bundlePrice)
       : null;
   return renderBundleOgImage(
     {

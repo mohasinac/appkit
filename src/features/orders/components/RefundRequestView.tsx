@@ -83,7 +83,7 @@ export function RefundRequestView({
     <Stack gap="md" className={className}>
       <Text size="sm" color="muted">
         {REFUND_COPY.request.orderTotalLabel}{" "}
-        <Span weight="bold">{formatCurrency(order.totalPrice / 100, order.currency ?? "INR")}</Span>
+        <Span weight="bold">{formatCurrency(order.totalPrice, order.currency ?? "INR")}</Span>
       </Text>
 
       <Stack gap="xs">

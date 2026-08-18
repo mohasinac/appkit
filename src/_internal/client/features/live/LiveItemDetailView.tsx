@@ -115,8 +115,8 @@ export function LiveItemDetailView({
               <Text weight="medium">Transport</Text>
               <Text className="text-muted-foreground">
                 Method: {transport.method}
-                {transport.handlingFeeInPaise !== undefined &&
-                  ` · Handling: ${formatCurrency(transport.handlingFeeInPaise, "INR")}`}
+                {transport.handlingFee !== undefined &&
+                  ` · Handling: ${formatCurrency(transport.handlingFee, "INR")}`}
                 {transport.insuranceIncluded && " · Insurance included"}
               </Text>
             </Div>

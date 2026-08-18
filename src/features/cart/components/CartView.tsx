@@ -11,8 +11,8 @@ export interface CartOrderGroup {
   storeName: string;
   orderType: string;
   items: JsonArray;
-  subtotalInPaise: number;
-  shippingFeeInPaise: number;
+  subtotal: number;
+  shippingFee: number;
 }
 
 export interface CartViewProps {

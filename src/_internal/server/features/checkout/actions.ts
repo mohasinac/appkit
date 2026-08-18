@@ -1,5 +1,6 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { safeFireAndForget } from "../../../../utils/safe-fire-forget";
+import { roundRupees } from "../../../../utils/number.formatter";
 /**
  * Checkout server actions (appkit).
  *
@@ -85,6 +86,9 @@ import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "@mohasinac/appkit";
 import { processRefundAction } from "../refunds/actions";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { resolveDisplayedUpiId } from "./upi-resolution";
+import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment-window";
+import { isCheckoutValueOtpVerified } from "../../../../features/checkout/actions/checkout-value-otp-actions";
 
 const AUDIT_LOG_FAIL_MSG = "checkout: audit log failed (non-critical)";
 
@@ -404,6 +408,8 @@ interface OrderGroupContext {
   buyerState?: string;
   /** P-8 GST — undefined/disabled means no GST is computed on this checkout. */
   gstSettings?: SiteSettingsDocument["gst"];
+  /** Site-wide UPI VPA fallback (`siteSettings.contact.upiVpa`) — used by `resolveDisplayedUpiId` when a seller has no UPI configured, or the store is admin-owned. */
+  siteContactUpiVpa?: string;
 }
 
 /**
@@ -440,6 +446,7 @@ async function createOrderForGroup(
     droppedItems,
     buyerState,
     gstSettings,
+    siteContactUpiVpa,
   } = ctx;
 
   const firstItem = group[0].item;
@@ -513,9 +520,9 @@ async function createOrderForGroup(
     ? undefined
     : orderType === "preorder"
       ? computePreOrderDepositAmount(group, commissions.codDepositPercent)
-      : Math.round(groupTotal * (commissions.codDepositPercent / 100) * 100) / 100;
+      : roundRupees(groupTotal * (commissions.codDepositPercent / 100));
   const codRemainingAmount = isCodLike
-    ? Math.round((groupTotal - (depositAmount ?? 0)) * 100) / 100
+    ? roundRupees(groupTotal - (depositAmount ?? 0))
     : undefined;
 
   let emiSchedule: ReturnType<typeof computeEmiSchedule> | undefined;
@@ -523,7 +530,7 @@ async function createOrderForGroup(
     const eligibility = checkEmiEligibility(groupTotal, storeEmiEnabled, emiSettings);
     if (!eligibility.eligible) {
       throw new ValidationError(
-        `EMI is not available for this order (${eligibility.reason}). Minimum order value per seller is ₹${Math.round(emiSettings.minOrderValueInPaise / 100)}.`,
+        `EMI is not available for this order (${eligibility.reason}). Minimum order value per seller is ₹${emiSettings.minOrderValue}.`,
       );
     }
     emiSchedule = computeEmiSchedule(groupTotal, emiTenureMonths, emiSettings);
@@ -556,7 +563,7 @@ async function createOrderForGroup(
         couponGroupDiscount =
           eligibleTotal > 0
             ? Math.min(
-                Math.round((eligibleTotal / groupTotal) * coupon.discountAmount * 100) / 100,
+                roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
                 eligibleTotal,
               )
             : 0;
@@ -566,7 +573,7 @@ async function createOrderForGroup(
     } else {
       if (cartSubtotal > 0) {
         couponGroupDiscount = Math.min(
-          Math.round((groupTotal / cartSubtotal) * coupon.discountAmount * 100) / 100,
+          roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
           groupTotal,
         );
       }
@@ -611,6 +618,22 @@ async function createOrderForGroup(
       : {}),
   };
 
+  // ── 15-minute payment window + seller UPI resolution (Tier PP) ──────────
+  // Deadline + displayed UPI apply only to methods with a buyer-uploaded
+  // proof step — never cod (paid on delivery), razorpay (paid before order
+  // creation), or admin_bypass (already marked paid above).
+  const hasPaymentWindow =
+    !adminBypass &&
+    (paymentMethod === PaymentMethodValues.UPI_MANUAL ||
+      paymentMethod === PaymentMethodValues.CASH ||
+      paymentMethod === PaymentMethodValues.EMI);
+  const paymentDeadline = hasPaymentWindow
+    ? new Date(Date.now() + PAYMENT_WINDOW_MS)
+    : undefined;
+  const displayedUpiId = hasPaymentWindow
+    ? await resolveDisplayedUpiId(firstItem.storeId, siteContactUpiVpa)
+    : undefined;
+
   const order = await unitOfWork.orders.create({
     productId: firstItem.productId,
     productTitle: firstItem.productTitle,
@@ -630,6 +653,8 @@ async function createOrderForGroup(
     paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
     paymentMethod: adminBypass ? PaymentMethodValues.ADMIN_BYPASS : paymentMethod,
     paymentId: adminBatchId,
+    paymentDeadline,
+    displayedUpiId,
     adminBypassBy: adminBypassBy,
     shippingAddress,
     notes,
@@ -778,6 +803,25 @@ export async function createCheckoutOrderAction(
   );
   if (cartItems.length === 0) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
+  }
+
+  // Tier PP — OTP gate for high-value checkouts. Evaluated against the
+  // WHOLE checkout batch's total (not each resulting per-seller order),
+  // otherwise a buyer could dodge it by splitting a big cart across
+  // sellers. Skipped for COD (physical hand-off at the door is its own
+  // verification) and admin-bypass checkouts.
+  const otpThreshold = siteSettings?.payment?.otpCheckoutThreshold;
+  if (!adminBypass && paymentMethod !== "cod" && typeof otpThreshold === "number" && otpThreshold > 0) {
+    const cartTotalForOtpCheck = cartItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+    if (cartTotalForOtpCheck >= otpThreshold) {
+      const verified = await isCheckoutValueOtpVerified(uid);
+      if (!verified) {
+        throw new ApiError(403, "CHECKOUT_VALUE_OTP_REQUIRED");
+      }
+    }
   }
 
   const isDigitalCart = cartIsDigitalOnly(cartItems);
@@ -1041,6 +1085,7 @@ export async function createCheckoutOrderAction(
     droppedItems: unavailable,
     buyerState: resolvedAddress?.state,
     gstSettings: siteSettings?.gst,
+    siteContactUpiVpa: siteSettings?.contact?.upiVpa,
   };
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
@@ -1141,11 +1186,11 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
   const { unavailablePaid, orderIds, productByIdPaid, razorpayPaymentId } = input;
   if (unavailablePaid.length === 0 || orderIds.length === 0) return;
 
-  const droppedValueInPaise = unavailablePaid.reduce(
+  const droppedValue = unavailablePaid.reduce(
     (sum, u) => sum + (productByIdPaid.get(u.productId)?.price ?? 0) * u.requestedQty,
     0,
   );
-  if (droppedValueInPaise <= 0) return;
+  if (droppedValue <= 0) return;
 
   const primaryOrderId = orderIds[0];
   try {
@@ -1157,12 +1202,12 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
     // FIRST order created in this batch is used as the refund's book-
     // keeping anchor).
     const refundAmount = primaryOrder
-      ? Math.min(droppedValueInPaise, primaryOrder.totalPrice)
-      : droppedValueInPaise;
+      ? Math.min(droppedValue, primaryOrder.totalPrice)
+      : droppedValue;
     const refundResult = await processRefundAction({
       orderId: primaryOrderId,
       type: "partial",
-      amountInPaise: refundAmount,
+      amount: refundAmount,
       reason: `Automatic refund — ${unavailablePaid.length} item(s) unavailable at checkout: ${unavailablePaid.map((u) => u.productTitle).join(", ")}`,
       method: "razorpay",
       razorpayPaymentId,
@@ -1178,7 +1223,7 @@ async function refundDroppedItemsForRazorpayCheckout(input: {
       "verifyAndPlaceRazorpayOrderAction: automatic partial refund for dropped items failed — flagging for manual follow-up",
       {
         orderId: primaryOrderId,
-        droppedValueInPaise,
+        droppedValue,
         err: refundErr instanceof Error ? refundErr.message : String(refundErr),
       },
     );
@@ -1416,7 +1461,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
 
   {
     // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked
-    // bundlePriceInPaise) instead of the representative member's product.price.
+    // bundlePrice) instead of the representative member's product.price.
     const cartSubtotalRs = productChecks.reduce((sum, { item, product }) => {
       const isBundle = Boolean(
         item.bundleCategorySlug && item.bundleProductIds?.length,
@@ -1425,8 +1470,8 @@ export async function verifyAndPlaceRazorpayOrderAction(
       return sum + unit * item.quantity;
     }, 0);
     const expectedPlatformFee =
-      Math.round(cartSubtotalRs * (platformFeePercent / 100) * 100) / 100;
-    const expectedGstOnFee = Math.round(expectedPlatformFee * (gstPercent / 100) * 100) / 100;
+      roundRupees(cartSubtotalRs * (platformFeePercent / 100));
+    const expectedGstOnFee = roundRupees(expectedPlatformFee * (gstPercent / 100));
     const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee + expectedGstOnFee;
     const rzpOrderRecord = await fetchRazorpayOrder(razorpay_order_id);
     const paidAmountRs = paiseToRupees(rzpOrderRecord.amount);
@@ -1513,7 +1558,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
           couponGroupDiscount =
             eligibleTotal > 0
               ? Math.min(
-                  Math.round((eligibleTotal / groupTotal) * coupon.discountAmount * 100) / 100,
+                  roundRupees((eligibleTotal / groupTotal) * coupon.discountAmount),
                   eligibleTotal,
                 )
               : 0;
@@ -1522,7 +1567,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
         }
       } else if (cartSubtotal > 0) {
         couponGroupDiscount = Math.min(
-          Math.round((groupTotal / cartSubtotal) * coupon.discountAmount * 100) / 100,
+          roundRupees((groupTotal / cartSubtotal) * coupon.discountAmount),
           groupTotal,
         );
       }
@@ -1541,8 +1586,8 @@ export async function verifyAndPlaceRazorpayOrderAction(
     }
 
     couponDiscount = Math.min(couponDiscount, groupTotal);
-    const rawPlatformFee = Math.round(groupTotal * (platformFeePercent / 100) * 100) / 100;
-    const gstOnFee = Math.round(rawPlatformFee * (gstPercent / 100) * 100) / 100;
+    const rawPlatformFee = roundRupees(groupTotal * (platformFeePercent / 100));
+    const gstOnFee = roundRupees(rawPlatformFee * (gstPercent / 100));
     const platformFee = rawPlatformFee + gstOnFee;
     const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
     total += orderTotal;
@@ -1561,7 +1606,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
       const lt = (product?.listingType ?? "standard") as ListingType;
       const itemRule = getListingRule(lt);
       // SB-UNI-5 2026-05-13 — bundle cart-lines surface the locked
-      // bundlePriceInPaise (item.price), not the representative member's
+      // bundlePrice (item.price), not the representative member's
       // product.price. Stock decrement still runs per member elsewhere.
       const isBundle = Boolean(
         item.bundleCategorySlug && item.bundleProductIds?.length,
@@ -1625,7 +1670,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
       paymentRecord: {
         method: "razorpay",
         transactionId: razorpay_payment_id,
-        amountPaise: orderTotal,
+        amount: orderTotal,
         paidAt: new Date(),
         verifiedBy: "razorpay-webhook",
         verificationMethod: "webhook",

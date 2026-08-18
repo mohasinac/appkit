@@ -69,7 +69,7 @@ function toGalleryImages(items: PrizeDrawItem[]): LightboxImage[] {
     caption: it.title || `Prize #${it.itemNumber}`,
     sub:
       it.estimatedValue != null
-        ? `est. ₹${(it.estimatedValue / 100).toLocaleString("en-IN")}`
+        ? `est. ₹${it.estimatedValue.toLocaleString("en-IN")}`
         : undefined,
   }));
 }
@@ -157,7 +157,7 @@ export function PrizeDrawCollage({
                 </Text>
                 {it.estimatedValue != null ? (
                   <Text className="text-[var(--appkit-color-text-muted)]" size="xs">
-                    est. ₹{(it.estimatedValue / 100).toLocaleString("en-IN")}
+                    est. ₹{it.estimatedValue.toLocaleString("en-IN")}
                   </Text>
                 ) : null}
               </Div>

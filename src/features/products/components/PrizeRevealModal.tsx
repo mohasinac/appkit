@@ -288,7 +288,7 @@ export function PrizeRevealModal({
             {winner.estimatedValue != null ? (
               <Text className="mt-2 text-[var(--appkit-color-text-muted)]" size="sm">
                 Estimated value: ₹
-                {(winner.estimatedValue / 100).toLocaleString("en-IN")}
+                {winner.estimatedValue.toLocaleString("en-IN")}
               </Text>
             ) : null}
           </Div>

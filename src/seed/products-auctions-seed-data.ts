@@ -45,9 +45,9 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryNames: ["Beyblade Original", "Spinning Tops"],
     brandSlug: "brand-beyblade",
     brand: "Beyblade",
-    startingBid: 299900, // ₹2,999
-    buyItNowPriceInPaise: 599900, // ₹5,999
-    currentBid: 349900,
+    startingBid: 2999,
+    buyItNowPrice: 5999,
+    currentBid: 3499,
     currency: "INR",
     auctionEndDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
     bidCount: 3,
@@ -71,9 +71,9 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryNames: ["Beyblade Metal Fight", "Spinning Tops"],
     brandSlug: "brand-takara-tomy",
     brand: "Takara-Tomy",
-    startingBid: 199900, // ₹1,999
-    buyItNowPriceInPaise: 449900, // ₹4,499
-    currentBid: 229900,
+    startingBid: 1999,
+    buyItNowPrice: 4499,
+    currentBid: 2299,
     currency: "INR",
     auctionEndDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
     bidCount: 5,

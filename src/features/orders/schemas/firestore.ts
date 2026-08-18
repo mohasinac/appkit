@@ -113,6 +113,9 @@ export interface OrderDocumentItem {
   cancelledQuantity?: number;
   cancelledAt?: Date;
   cancelledReason?: string;
+  /** SB-UNI-5 — forwarded from the cart line when this order item is an expanded bundle, so the order-detail UI can collapse it back under a "Bundle: <name>" header and stock-restore logic can fan back out to member products. */
+  bundleCategorySlug?: string;
+  bundleProductIds?: string[];
   /** P-8 GST — snapshotted from the product at order time so the invoice stays accurate even if the product's HSN/rate later changes. */
   hsnCode?: string;
   gstRate?: 0 | 5 | 12 | 18 | 28;
@@ -194,7 +197,7 @@ export interface OrderDocument extends BaseDocument {
   platformFee?: number;
   depositAmount?: number;
   codRemainingAmount?: number;
-  /** COD handling fee charged to the buyer: max(codHandlingFeeMinInPaise, subtotal × codHandlingFeePercent / 100). Only set when paymentMethod === "cod". */
+  /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). Only set when paymentMethod === "cod". */
   codHandlingFee?: number;
 
   // ── P-8 GST — buyer-facing tax breakdown, all paise, set when siteSettings.gst.enabled ──
@@ -309,6 +312,56 @@ export interface OrderDocument extends BaseDocument {
   /** When the buyer submitted the proof. */
   paymentProofUploadedAt?: Date;
 
+  // ── 15-minute payment window (Tier PP) ───────────────────────────────────
+  /**
+   * Deadline for the buyer to pay/upload proof. Set only at creation for
+   * `upi_manual`/`cash`/`emi` orders — never for `cod`, `razorpay`, or
+   * `admin_bypass` (those either pay before order creation or have no proof
+   * step). `paymentWindowTimeout` cancels + restocks any order still
+   * `pending`/`pending` with no `paymentProofUrl` past this timestamp.
+   * Extended by 15 more minutes when admin requests a proof re-upload.
+   */
+  paymentDeadline?: Date;
+  /** True once a cancellation path has restored `availableQuantity` for this order's items. Guards against double-restock. */
+  stockRestored?: boolean;
+  stockRestoredAt?: Date;
+
+  /**
+   * UPI VPA resolved and shown to the buyer at order-creation time — the
+   * seller's own `payoutDetails.upiId` for seller-owned stores (falling back
+   * to `siteSettings.contact.upiVpa` if unconfigured), or the site UPI
+   * directly for admin-owned stores. Immutable "ground truth" for the
+   * cross-check below; never client-supplied.
+   */
+  displayedUpiId?: string;
+  /** UPI VPA the buyer says they actually paid from/to, per their own UPI app — the real cross-check signal against `displayedUpiId`. */
+  buyerReportedUpiId?: string;
+  /** True when `buyerReportedUpiId` doesn't match `displayedUpiId` — surfaced prominently in the admin review UI. */
+  paymentUpiMismatch?: boolean;
+  /** Buyer's explicit "I have paid" declaration, distinct from admin's own verification. */
+  buyerMarkedPaid?: boolean;
+  buyerMarkedPaidAt?: Date;
+  /** Buyer's required "this payment is genuine, no fraudulent tricks/chargebacks" agreement — server-validated, not just a client-side disable. */
+  buyerFraudAgreementAccepted?: boolean;
+  buyerFraudAgreementAcceptedAt?: Date;
+
+  /** Which of the three admin review actions was taken on this order's payment proof. */
+  paymentReviewOutcome?: "approved" | "reupload_requested" | "rejected_fraud";
+  /** Admin's reason text — required for both `reupload_requested` and `rejected_fraud`. */
+  paymentReviewNote?: string;
+  paymentReviewedBy?: string;
+  paymentReviewedAt?: Date;
+
+  /** True when `paymentReviewAutoApprove` approved this order after 2 hours of no manual admin review. */
+  autoApproved?: boolean;
+  autoApprovedAt?: Date;
+  /** Buyer/seller/admin dispute raised against an auto-approved order — surfaces to the admin queue, does not itself reverse payment/order status. */
+  disputeRaised?: boolean;
+  disputeRaisedBy?: string;
+  disputeRaisedAt?: Date;
+  disputeReason?: string;
+  disputeStatus?: "open" | "resolved";
+
   // ── Payment Detail Parity (Feature C) ───────────────────────────────────
   /**
    * Same-shape payment record regardless of how the buyer paid — manual
@@ -349,7 +402,7 @@ export interface OrderPaymentRecord {
   transactionId?: string;
   /** Manual proof upload | COD collection receipt photo (optional) | n/a for razorpay. */
   proofUrl?: string;
-  amountPaise: number;
+  amount: number;
   paidAt?: Date;
   /** Admin/seller uid (manual/COD) | "razorpay-webhook" (razorpay, automatic). */
   verifiedBy?: string;

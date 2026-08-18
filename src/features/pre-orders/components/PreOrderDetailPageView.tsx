@@ -16,7 +16,7 @@ const CLS_PREORDER_BADGE = "inline-block rounded-full bg-indigo-100 dark:bg-indi
 const CLS_STATUS_BADGE = "inline-block rounded-full bg-warning-surface dark:bg-warning-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-warning dark:text-warning";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import { formatCurrency } from "../../../utils/number.formatter";
+import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { ProgressBarFill } from "../../../ui/components/ProgressBarFill";
@@ -437,7 +437,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
     typeof p.preOrderDepositAmount === "number"
       ? p.preOrderDepositAmount
       : price !== null && depositPercent !== null
-        ? Math.round((price * depositPercent) / 100)
+        ? roundRupees((price * depositPercent) / 100)
         : null;
 
   const deliveryDate = p.preOrderDeliveryDate

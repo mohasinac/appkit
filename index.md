@@ -79,7 +79,7 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `PageLoader` | `PageLoader.tsx` | Full-page centered loading state (spinner + "Loading…"); 15s timeout shows "Something went wrong" + Refresh button; replaces all `loading.tsx` skeletons (X5) |
 | `Pagination` | `Pagination.tsx` | Page number nav bar |
 | `PasswordStrengthIndicator` | `PasswordStrengthIndicator.tsx` | Visual password strength meter |
-| `PriceDisplay` | `PriceDisplay.tsx` | Formats paise → ₹ with strike-through sale price |
+| `PriceDisplay` | `PriceDisplay.tsx` | Formats decimal-rupee amounts → ₹ with strike-through sale price |
 | `Progress` | `Progress.tsx` | Linear progress bar |
 | `Quote` | `Quote.tsx` | `<q>`/`<blockquote>` primitive with `tone` and `block` flag — replaces raw quote tags |
 | `Radio` | `Radio.tsx` | Radio input group |
@@ -474,7 +474,7 @@ Import: `import { x } from "@mohasinac/appkit"` or `"@mohasinac/appkit/client"`
 | Name / Export | File | What it does |
 |--------------|------|-------------|
 | `slugify`, `toTitleCase`, `truncate`, `formatPhoneNumber` | `string.formatter.ts` | String manipulation |
-| `formatPrice`, `formatPaise`, `formatNumber`, `paise`, `rupees` | `number.formatter.ts` | Number/currency formatting (paise ↔ ₹) |
+| `formatCurrency`, `formatNumber`, `roundRupees`, `formatPercentage` | `number.formatter.ts` | Number/currency formatting — amounts are decimal rupees, `roundRupees(amount)` rounds to 2dp |
 | `formatDate`, `formatRelativeTime`, `formatDateRange` | `date.formatter.ts` | Date display formatting |
 | `generateMediaFilename` | `id-generators.ts` | SEO slug filename generator for all media types |
 | `generateOrderId`, `generateBidId`, `generateReviewId`, `generatePayoutId` | `id-generators.ts` | Semantic ID generators |

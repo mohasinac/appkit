@@ -52,14 +52,14 @@ function makeLotteryConfig(overrides: Partial<LotteryConfig> = {}): LotteryConfi
   return {
     totalSlots: 3,
     pricingMode: "uniform",
-    uniformPriceInPaise: 100_00,
+    uniformPrice: 100,
     drawWindowDurationMinutes: 5,
     maxPullsPerTransaction: 1,
     maxPullsPerUser: 1,
     slots: [
-      { slotNumber: 1, name: "Slot 1", priceInPaise: 100_00, weight: 50, isBooked: false },
-      { slotNumber: 2, name: "Slot 2", priceInPaise: 100_00, weight: 50, isBooked: false },
-      { slotNumber: 3, name: "Slot 3", priceInPaise: 100_00, weight: 50, isBooked: false },
+      { slotNumber: 1, name: "Slot 1", price: 100, weight: 50, isBooked: false },
+      { slotNumber: 2, name: "Slot 2", price: 100, weight: 50, isBooked: false },
+      { slotNumber: 3, name: "Slot 3", price: 100, weight: 50, isBooked: false },
     ],
     ...overrides,
   };
@@ -98,8 +98,8 @@ describe("Lottery entry submission logic (guarded checks only)", () => {
     it("detects all slots booked", () => {
       const config = makeLotteryConfig({
         slots: [
-          { slotNumber: 1, name: "S1", priceInPaise: 100_00, weight: 50, isBooked: true },
-          { slotNumber: 2, name: "S2", priceInPaise: 100_00, weight: 50, isBooked: true },
+          { slotNumber: 1, name: "S1", price: 100, weight: 50, isBooked: true },
+          { slotNumber: 2, name: "S2", price: 100, weight: 50, isBooked: true },
         ],
       });
       const unclaimed = config.slots.filter((s) => !s.isBooked);
@@ -115,8 +115,8 @@ describe("Lottery entry submission logic (guarded checks only)", () => {
     it("counts booked slots correctly after partial fill", () => {
       const config = makeLotteryConfig({
         slots: [
-          { slotNumber: 1, name: "S1", priceInPaise: 100_00, weight: 50, isBooked: true },
-          { slotNumber: 2, name: "S2", priceInPaise: 100_00, weight: 50, isBooked: false },
+          { slotNumber: 1, name: "S1", price: 100, weight: 50, isBooked: true },
+          { slotNumber: 2, name: "S2", price: 100, weight: 50, isBooked: false },
         ],
       });
       expect(config.slots.filter((s) => s.isBooked).length).toBe(1);

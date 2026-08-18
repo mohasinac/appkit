@@ -13,7 +13,7 @@ import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -35,6 +35,11 @@ interface OrderRow {
   paymentTransactionId?: string;
   paymentMethod?: string;
   paymentStatus?: string;
+  displayedUpiId?: string;
+  buyerReportedUpiId?: string;
+  paymentUpiMismatch?: boolean;
+  buyerMarkedPaid?: boolean;
+  buyerFraudAgreementAccepted?: boolean;
 }
 
 export type AdminOrdersViewProps = ListingLayoutProps;
@@ -84,7 +89,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         primary: `Order ${toStringValue(item.orderNumber ?? item.id, "-")}`,
         secondary: [
           toStringValue(item.buyerName ?? item.customerName, "Unknown buyer"),
-          toRupees(item.totalAmount ?? item.total ?? item.amount),
+          toCurrency(item.totalAmount ?? item.total ?? item.amount),
         ].join(" · "),
         status: toStringValue(item.status, "Unknown"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
@@ -92,6 +97,11 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         paymentTransactionId: toStringValue(item.paymentTransactionId, "") || undefined,
         paymentMethod: toStringValue(item.paymentMethod, "") || undefined,
         paymentStatus: toStringValue(item.paymentStatus, "") || undefined,
+        displayedUpiId: toStringValue(item.displayedUpiId, "") || undefined,
+        buyerReportedUpiId: toStringValue(item.buyerReportedUpiId, "") || undefined,
+        paymentUpiMismatch: Boolean(item.paymentUpiMismatch),
+        buyerMarkedPaid: Boolean(item.buyerMarkedPaid),
+        buyerFraudAgreementAccepted: Boolean(item.buyerFraudAgreementAccepted),
       })),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
@@ -174,6 +184,11 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         paymentTransactionId={selectedRow?.paymentTransactionId}
         paymentMethod={selectedRow?.paymentMethod}
         paymentStatus={selectedRow?.paymentStatus}
+        displayedUpiId={selectedRow?.displayedUpiId}
+        buyerReportedUpiId={selectedRow?.buyerReportedUpiId}
+        paymentUpiMismatch={selectedRow?.paymentUpiMismatch}
+        buyerMarkedPaid={selectedRow?.buyerMarkedPaid}
+        buyerFraudAgreementAccepted={selectedRow?.buyerFraudAgreementAccepted}
       />
     </>
   );

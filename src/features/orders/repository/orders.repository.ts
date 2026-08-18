@@ -156,7 +156,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       paymentRecord: {
         method: "cod",
         transactionId: note,
-        amountPaise: order.totalPrice,
+        amount: order.totalPrice,
         paidAt: new Date(),
         verifiedBy,
         verificationMethod: "cod_collection",
@@ -462,6 +462,64 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       ref: d.ref as DocumentReference,
       data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
     }));
+  }
+
+  /**
+   * Cloud Functions: 15-minute payment-window sweep — orders past their
+   * `paymentDeadline` with no proof uploaded yet. Filters out orders that
+   * already have `paymentProofUrl` set in-memory (the 2-hour auto-approve
+   * sweep owns those instead) rather than as a Firestore inequality, since a
+   * `paymentProofUrl != null` filter would silently exclude every doc where
+   * the field isn't set at all — the opposite of what's needed here.
+   */
+  async getExpiredPaymentDeadlines(): Promise<
+    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
+  > {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.PENDING)
+      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "pending")
+      .where(ORDER_FIELDS.PAYMENT_DEADLINE, "<=", new Date())
+      .limit(500)
+      .get();
+
+    return snap.docs
+      .map((d) => ({
+        id: d.id,
+        ref: d.ref as DocumentReference,
+        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+      }))
+      .filter((entry) => !entry.data.paymentProofUrl);
+  }
+
+  /**
+   * Cloud Functions: 2-hour auto-approve sweep — orders with a submitted
+   * proof that no admin has acted on yet (`paymentReviewOutcome` unset).
+   * Filters that in-memory rather than as a Firestore inequality for the
+   * same reason as `getExpiredPaymentDeadlines` — a `!= null` filter would
+   * silently exclude every doc where the field was never set at all.
+   */
+  async getUnreviewedProofPastDeadline(
+    hours = 2,
+  ): Promise<Array<{ id: string; ref: DocumentReference; data: OrderDocument }>> {
+    const cutoff = new Date();
+    cutoff.setHours(cutoff.getHours() - hours);
+
+    const snap = await this.db
+      .collection(this.collection)
+      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.PENDING)
+      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "pending")
+      .where(ORDER_FIELDS.PAYMENT_PROOF_UPLOADED_AT, "<=", cutoff)
+      .limit(500)
+      .get();
+
+    return snap.docs
+      .map((d) => ({
+        id: d.id,
+        ref: d.ref as DocumentReference,
+        data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+      }))
+      .filter((entry) => !!entry.data.paymentProofUrl && !entry.data.paymentReviewOutcome);
   }
 
   /**

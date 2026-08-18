@@ -30,6 +30,8 @@ export const DEFAULT_LISTING_RULE: Omit<ListingCheckoutRule, "orderType"> = {
 
   stockDecrementExtras: (_product: ProductDocument, _qty: number) => ({}),
 
+  stockIncrementExtras: (_product: ProductDocument, _qty: number) => ({}),
+
   decorateOrderItem: (line: OrderItemInput, product: ProductDocument): OrderItemInput => ({
     ...line,
     ...(product.listingType ? { listingType: product.listingType } : {}),

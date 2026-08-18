@@ -89,8 +89,8 @@ export function CategoryBundlesListing({
       list = list.filter((c) => c.name.toLowerCase().includes(q));
     }
     list = [...list].sort((a, b) => {
-      if (sort === "price") return (a.bundlePriceInPaise ?? 0) - (b.bundlePriceInPaise ?? 0);
-      if (sort === "-price") return (b.bundlePriceInPaise ?? 0) - (a.bundlePriceInPaise ?? 0);
+      if (sort === "price") return (a.bundlePrice ?? 0) - (b.bundlePrice ?? 0);
+      if (sort === "-price") return (b.bundlePrice ?? 0) - (a.bundlePrice ?? 0);
       if (sort === "createdAt") {
         const aT = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
         const bT = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;

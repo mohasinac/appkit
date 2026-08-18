@@ -1,6 +1,6 @@
 export const CHECKOUT_DEFAULT_COMMISSIONS = {
   codDepositPercent: 10,
-  codHandlingFeeMinInPaise: 20000,
+  codHandlingFeeMin: 200,
   codHandlingFeePercent: 10,
   sellerShippingFixed: 50,
   platformShippingPercent: 10,
@@ -12,8 +12,8 @@ export type CheckoutPaymentMethod = (typeof CHECKOUT_PAYMENT_METHODS)[number];
 
 export const CHECKOUT_DEFAULT_EMI_SETTINGS = {
   enabled: false,
-  /** ₹10,000 in paise — a seller's cart subtotal must exceed this for EMI to appear. */
-  minOrderValueInPaise: 1000000,
+  /** ₹10,000 — a seller's cart subtotal must exceed this for EMI to appear. */
+  minOrderValue: 10000,
   tenureOptions: [2, 3, 4, 5, 6],
   tokenPercent: 10,
   /** Day of the month (1–10) the first (and every) installment is due. */

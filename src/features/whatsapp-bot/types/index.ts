@@ -60,7 +60,7 @@ export interface CatalogSyncProduct {
   id: string;
   title: string;
   description: string;
-  /** Price in paise (will be converted to INR: price/100) */
+  /** Price in decimal rupees */
   price: number;
   currency: string;
   /** URL of the first product image */
@@ -95,6 +95,15 @@ export interface PurchaseAnnouncementInput {
   /** Total order amount in paise */
   totalAmount: number;
   orderId: string;
+}
+
+/** Tier PP — input for building the payment-proof fast-review WhatsApp message (admin push + buyer/seller share link). */
+export interface PaymentProofReviewMessageInput {
+  orderId: string;
+  buyerName: string;
+  productTitle: string;
+  totalAmount: number;
+  reviewUrl: string;
 }
 
 /** Known order status values — extend as needed per project. */

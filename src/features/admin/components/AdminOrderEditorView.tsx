@@ -22,6 +22,11 @@ export interface AdminOrderEditorViewProps {
   paymentTransactionId?: string;
   paymentMethod?: string;
   paymentStatus?: string;
+  displayedUpiId?: string;
+  buyerReportedUpiId?: string;
+  paymentUpiMismatch?: boolean;
+  buyerMarkedPaid?: boolean;
+  buyerFraudAgreementAccepted?: boolean;
 }
 
 const STATUS_OPTIONS = [
@@ -56,6 +61,11 @@ export function AdminOrderEditorView({
   paymentTransactionId,
   paymentMethod,
   paymentStatus,
+  displayedUpiId,
+  buyerReportedUpiId,
+  paymentUpiMismatch,
+  buyerMarkedPaid,
+  buyerFraudAgreementAccepted,
 }: AdminOrderEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -66,6 +76,9 @@ export function AdminOrderEditorView({
   const [notes, setNotes] = React.useState("");
   const [refundAmount, setRefundAmount] = React.useState("");
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+  const [reviewNote, setReviewNote] = React.useState("");
+  const [isRequestingReupload, setIsRequestingReupload] = useState(false);
+  const [isRejectingFraud, setIsRejectingFraud] = useState(false);
 
   const isCashOrUpi = paymentMethod === "cash" || paymentMethod === "upi_manual";
   const needsVerification = isCashOrUpi && paymentStatus === "pending";
@@ -77,6 +90,7 @@ export function AdminOrderEditorView({
       setCarrier("");
       setNotes("");
       setRefundAmount("");
+      setReviewNote("");
     }
   }, [open, currentStatus]);
 
@@ -89,8 +103,8 @@ export function AdminOrderEditorView({
       if (trackingNumber) payload.trackingNumber = trackingNumber;
       if (carrier) payload.carrier = carrier;
       if (refundAmount) {
-        const paise = Math.round(parseFloat(refundAmount) * 100);
-        if (!isNaN(paise) && paise > 0) payload.refundAmount = paise;
+        const amount = Math.round(parseFloat(refundAmount) * 100) / 100;
+        if (!isNaN(amount) && amount > 0) payload.refundAmount = amount;
       }
       await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId!), payload);
     },
@@ -117,6 +131,38 @@ export function AdminOrderEditorView({
       showToast((err as Error)?.message ?? "Failed to verify payment.", "error");
     } finally {
       setIsVerifyingPayment(false);
+    }
+  };
+
+  const handleRequestReupload = async () => {
+    if (!orderId || !reviewNote.trim()) return;
+    setIsRequestingReupload(true);
+    try {
+      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_PAYMENT_REUPLOAD(orderId), { note: reviewNote });
+      showToast("Re-upload requested. The buyer has 15 more minutes.", "success");
+      queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
+      onClose();
+    } catch (err) {
+      void normalizeError(err);
+      showToast((err as Error)?.message ?? "Failed to request re-upload.", "error");
+    } finally {
+      setIsRequestingReupload(false);
+    }
+  };
+
+  const handleRejectFraud = async () => {
+    if (!orderId || !reviewNote.trim()) return;
+    setIsRejectingFraud(true);
+    try {
+      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_PAYMENT_REJECT_FRAUD(orderId), { note: reviewNote });
+      showToast("Order cancelled and account suspended for 7 days.", "success");
+      queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
+      onClose();
+    } catch (err) {
+      void normalizeError(err);
+      showToast((err as Error)?.message ?? "Failed to reject payment.", "error");
+    } finally {
+      setIsRejectingFraud(false);
     }
   };
 
@@ -192,15 +238,65 @@ export function AdminOrderEditorView({
                   <Text size="xs" color="muted">UTR: <Text as="span" size="xs" weight="medium">{paymentTransactionId}</Text></Text>
                 )}
                 {needsVerification && (
-                  <Button
-                    type="button"
-                    action={ACTIONS.ADMIN["verify-payment"]}
-                    onClick={handleVerifyPayment}
-                    isLoading={isVerifyingPayment}
-                    disabled={isVerifyingPayment}
-                    variant="primary"
-                    className="mt-1 w-full"
-                  />
+                  <Stack gap="xs">
+                    {(displayedUpiId || buyerReportedUpiId) && (
+                      <Stack gap="xs">
+                        <Text size="xs" color="muted">
+                          Expected UPI: <Text as="span" size="xs" weight="medium">{displayedUpiId || "—"}</Text>
+                          {" · "}Buyer reported: <Text as="span" size="xs" weight="medium">{buyerReportedUpiId || "—"}</Text>
+                        </Text>
+                        {paymentUpiMismatch && (
+                          <Div rounded="lg" padding="inlineSm" className="border border-error/20" surface="danger-surface">
+                            <Text size="xs" className="text-error" weight="semibold">
+                              UPI mismatch — buyer-reported ID doesn't match the one shown for this order.
+                            </Text>
+                          </Div>
+                        )}
+                      </Stack>
+                    )}
+                    <Text size="xs" color="muted">
+                      Buyer marked as paid: <Text as="span" size="xs" weight="medium">{buyerMarkedPaid ? "Yes" : "No"}</Text>
+                      {" · "}Fraud agreement accepted: <Text as="span" size="xs" weight="medium">{buyerFraudAgreementAccepted ? "Yes" : "No"}</Text>
+                    </Text>
+                    <Stack gap="xs">
+                      <Label size="sm" weight="medium" color="primary">
+                        Review note (required for re-upload / reject)
+                      </Label>
+                      <Textarea
+                        value={reviewNote}
+                        onChange={(e) => setReviewNote(e.target.value)}
+                        rows={2}
+                        placeholder="e.g. Screenshot is blurry — amount not readable / UPI ID doesn't match order"
+                      />
+                    </Stack>
+                    <Button
+                      type="button"
+                      action={ACTIONS.ADMIN["verify-payment"]}
+                      onClick={handleVerifyPayment}
+                      isLoading={isVerifyingPayment}
+                      disabled={isVerifyingPayment}
+                      variant="primary"
+                      className="w-full"
+                    />
+                    <Button
+                      type="button"
+                      action={ACTIONS.ADMIN["request-payment-reupload"]}
+                      onClick={handleRequestReupload}
+                      isLoading={isRequestingReupload}
+                      disabled={isRequestingReupload || !reviewNote.trim()}
+                      variant="secondary"
+                      className="w-full"
+                    />
+                    <Button
+                      type="button"
+                      action={ACTIONS.ADMIN["reject-payment-fraud"]}
+                      onClick={handleRejectFraud}
+                      isLoading={isRejectingFraud}
+                      disabled={isRejectingFraud || !reviewNote.trim()}
+                      variant="danger"
+                      className="w-full"
+                    />
+                  </Stack>
                 )}
                 {!needsVerification && paymentStatus === "paid" && (
                   <Div rounded="lg" padding="inlineSm" className="border border-success/20" surface="success-surface">

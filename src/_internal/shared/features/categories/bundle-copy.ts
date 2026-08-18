@@ -100,8 +100,6 @@ export const BUNDLE_COPY = {
         "One paragraph describing what's in the bundle and who it's for.",
       priceLabel: "Bundle price (₹) *",
       pricePlaceholder: "6499",
-      pricePaiseHint: (paise: number | null) =>
-        `Stored as paise: ${paise ?? "—"}`,
       coverImageLabel: "Cover image URL",
       activeLabel: "Bundle is active (visible to buyers)",
     },

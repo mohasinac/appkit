@@ -79,21 +79,21 @@ function buildLadder(params: {
 }
 
 const _rawBidsSeedData: Partial<BidDocument>[] = [
-  // auction-beyblade-original-dragoon-storm — bidCount: 3, currentBid: 349900
+  // auction-beyblade-original-dragoon-storm — bidCount: 3, currentBid: 3499
   ...buildLadder({
     productId: "auction-beyblade-original-dragoon-storm",
     productTitle: "Beyblade Original — Dragoon Storm (Rare Sealed)",
-    startingBid: 299900,
-    currentBid: 349900,
+    startingBid: 2999,
+    currentBid: 3499,
     bidderIds: ["user-rohit-collector", "user-ananya-collector", "user-meera-bey"],
   }),
 
-  // auction-beyblade-metal-lightning-l-drago — bidCount: 5, currentBid: 229900
+  // auction-beyblade-metal-lightning-l-drago — bidCount: 5, currentBid: 2299
   ...buildLadder({
     productId: "auction-beyblade-metal-lightning-l-drago",
     productTitle: "Metal Fight Beyblade BB-99 Lightning L-Drago",
-    startingBid: 199900,
-    currentBid: 229900,
+    startingBid: 1999,
+    currentBid: 2299,
     bidderIds: [
       "user-meera-bey",
       "user-rohit-collector",

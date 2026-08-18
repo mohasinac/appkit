@@ -160,7 +160,7 @@ export interface CategoryDocument extends BaseDocument {
    */
   bundleKind?: "special" | "brand";
   /** Discounted bundle price in paise. */
-  bundlePriceInPaise?: number;
+  bundlePrice?: number;
   /** Rule resolving the bundle's member products — static list or live query. */
   bundleQueryRule?: BundleQueryRule;
   /** Snapshot stock state — recomputed by onProductStockChange. */

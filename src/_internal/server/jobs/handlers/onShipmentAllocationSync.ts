@@ -5,12 +5,12 @@
  *   (a) any write to shipmentLots/{lotId} (itemCount/revenue changed via
  *       Function #1, or the admin edited weight/cost/remainder fields)
  *   (b) any write to procurementShipments/{shipmentId} (admin edited
- *       customsTotalPaise/shippingTotalPaise/laborHoursSpent/status)
+ *       customsTotal/shippingTotal/laborHoursSpent/status)
  *
  * Both re-run the same cross-lot allocation: read every sibling lot
  * (bounded ≤10), call the shared pure allocateShipmentCosts(), batch-write
- * each lot's customsAllocatedPaise/shippingAllocatedPaise/totalLandedCostPaise/
- * projectedRevenuePaise/projectedProfitPaise plus the shipment's persisted
+ * each lot's customsAllocated/shippingAllocated/totalLandedCost/
+ * projectedRevenue/projectedProfit plus the shipment's persisted
  * `totals` + `totalsComputedAt`. Also keeps ShipmentLot.shipmentStatus in
  * sync with its parent so the Projections list can filter on it directly.
  *
@@ -37,25 +37,25 @@ async function recomputeShipmentAllocation(shipmentId: string, ctx: JobContext):
 
   const allocationInputs: LotAllocationInput[] = lots.map((lot) => ({
     id: lot.id,
-    purchaseCostPaise: (lot.purchaseCostPaise as number) ?? 0,
+    purchaseCost: (lot.purchaseCost as number) ?? 0,
     weightGrams: (lot.weightGrams as number) ?? 0,
-    mainItemsProjectedRevenuePaise: (lot.mainItemsProjectedRevenuePaise as number) ?? 0,
-    remainderEstimatedValuePaise: lot.remainderEstimatedValuePaise as number | undefined,
+    mainItemsProjectedRevenue: (lot.mainItemsProjectedRevenue as number) ?? 0,
+    remainderEstimatedValue: lot.remainderEstimatedValue as number | undefined,
     itemCount: (lot.itemCount as number) ?? 0,
   }));
 
   // Site-settings labor rate could be read here; falls back to the
   // shipment's own snapshot rate + a fixed max-hours-per-day default,
   // matching what the admin editor's preview also uses.
-  const laborRatePaisePerHour = (shipment.laborRatePaisePerHour as number) ?? 0;
+  const laborRatePerHour = (shipment.laborRatePerHour as number) ?? 0;
   const laborHoursSpent = (shipment.laborHoursSpent as number) ?? 0;
 
   const { perLot, totals } = allocateShipmentCosts({
     lots: allocationInputs,
-    customsTotalPaise: (shipment.customsTotalPaise as number) ?? 0,
-    shippingTotalPaise: (shipment.shippingTotalPaise as number) ?? 0,
+    customsTotal: (shipment.customsTotal as number) ?? 0,
+    shippingTotal: (shipment.shippingTotal as number) ?? 0,
     laborHoursSpent,
-    laborRatePaisePerHour,
+    laborRatePerHour,
     maxHoursPerDay: DEFAULT_MAX_HOURS_PER_DAY,
   });
 
@@ -66,11 +66,11 @@ async function recomputeShipmentAllocation(shipmentId: string, ctx: JobContext):
     const computed = perLot[lot.id];
     const statusChanged = lot.shipmentStatus !== shipment.status;
     const valuesChanged =
-      lot.customsAllocatedPaise !== computed.customsAllocatedPaise ||
-      lot.shippingAllocatedPaise !== computed.shippingAllocatedPaise ||
-      lot.totalLandedCostPaise !== computed.totalLandedCostPaise ||
-      lot.projectedRevenuePaise !== computed.projectedRevenuePaise ||
-      lot.projectedProfitPaise !== computed.projectedProfitPaise;
+      lot.customsAllocated !== computed.customsAllocated ||
+      lot.shippingAllocated !== computed.shippingAllocated ||
+      lot.totalLandedCost !== computed.totalLandedCost ||
+      lot.projectedRevenue !== computed.projectedRevenue ||
+      lot.projectedProfit !== computed.projectedProfit;
 
     if (statusChanged || valuesChanged) {
       anyLotChanged = true;

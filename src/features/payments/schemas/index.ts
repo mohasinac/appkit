@@ -2,7 +2,7 @@ export * from "./firestore";
 export * from "./saved-methods-firestore";
 import { z } from "zod";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import { auditTimestampsShape, firestoreDateSchema, paiseSchema } from "../../../schemas/firestore-helpers";
+import { auditTimestampsShape, firestoreDateSchema, rupeesSchema } from "../../../schemas/firestore-helpers";
 
 // ─── Firestore document schema (W2) ───────────────────────────────────────────
 // Mirrors PayoutDocument + PayoutRefundDeduction + PayoutBankAccount in
@@ -21,8 +21,8 @@ export const payoutBankAccountSchema = z.object({
 export const payoutRefundDeductionSchema = z.object({
   orderId: z.string(),
   refundId: z.string(),
-  refundedAmount: paiseSchema,
-  deductedAmount: paiseSchema,
+  refundedAmount: rupeesSchema,
+  deductedAmount: rupeesSchema,
   reason: z.string(),
   appliedAt: firestoreDateSchema,
 });
@@ -32,9 +32,9 @@ export const payoutFirestoreSchema = z.object({
   storeId: z.string(),
   sellerName: z.string(),
   sellerEmail: z.string(),
-  amount: paiseSchema,
-  grossAmount: paiseSchema,
-  platformFee: paiseSchema,
+  amount: rupeesSchema,
+  grossAmount: rupeesSchema,
+  platformFee: rupeesSchema,
   platformFeeRate: z.number().min(0).max(1),
   currency: z.string(),
   status: payoutStatusEnumSchema,
@@ -44,13 +44,13 @@ export const payoutFirestoreSchema = z.object({
   notes: z.string().optional(),
   adminNote: z.string().optional(),
   orderIds: z.array(z.string()),
-  gatewayFee: paiseSchema.optional(),
+  gatewayFee: rupeesSchema.optional(),
   gatewayFeeRate: z.number().optional(),
-  gstAmount: paiseSchema.optional(),
+  gstAmount: rupeesSchema.optional(),
   gstRate: z.number().optional(),
   isAutomatic: z.boolean().optional(),
   refundDeductions: z.array(payoutRefundDeductionSchema).optional(),
-  netAmount: paiseSchema.optional(),
+  netAmount: rupeesSchema.optional(),
   requestedAt: firestoreDateSchema,
   processedAt: firestoreDateSchema.optional(),
   ...auditTimestampsShape,

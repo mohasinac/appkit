@@ -16,6 +16,7 @@ import type {
   CatalogSyncInput,
   CatalogSyncResult,
   PurchaseAnnouncementInput,
+  PaymentProofReviewMessageInput,
 } from "../types";
 
 const META_GRAPH_BASE = "https://graph.facebook.com/v20.0";
@@ -202,7 +203,7 @@ export async function syncProductsToCatalog(
         name: p.title,
         description: p.description,
         // Meta expects "<amount> <ISO_CURRENCY>" e.g. "450.00 INR"
-        price: `${(p.price / 100).toFixed(2)} ${p.currency}`,
+        price: `${p.price.toFixed(2)} ${p.currency}`,
         image_url: p.imageUrl,
         availability: p.availability,
         condition: p.condition,
@@ -251,7 +252,7 @@ export function buildPurchaseAnnouncementMessage(
     input;
   const extra =
     additionalItemCount > 0 ? ` + ${additionalItemCount} more item${additionalItemCount > 1 ? "s" : ""}` : "";
-  const amount = (totalAmount / 100).toLocaleString("en-IN");
+  const amount = totalAmount.toLocaleString("en-IN");
   return `🛍️ New order! ${buyerName} purchased ${firstItemName}${extra} for ₹${amount}. Order #${orderId}`;
 }
 
@@ -262,6 +263,20 @@ export function buildPurchaseAnnouncementMessage(
  */
 export function buildGroupShareLink(message: string): string {
   return `https://wa.me/?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Tier PP — message for the payment-proof fast-review WhatsApp push (sent
+ * to every `whatsappAdminNotifyNumbers` number when a buyer uploads proof)
+ * and for the buyer/seller "share for review" wa.me link (same message,
+ * routed through `buildGroupShareLink` instead of the Cloud API push).
+ */
+export function buildPaymentProofReviewMessage(
+  input: PaymentProofReviewMessageInput,
+): string {
+  const { orderId, buyerName, productTitle, totalAmount, reviewUrl } = input;
+  const amount = totalAmount.toLocaleString("en-IN");
+  return `💳 Payment proof submitted! ${buyerName} uploaded proof for "${productTitle}" (₹${amount}). Order #${orderId}. Please review within 2 hours or it auto-confirms: ${reviewUrl}`;
 }
 
 /**

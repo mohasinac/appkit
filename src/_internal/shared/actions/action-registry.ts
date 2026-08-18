@@ -1114,6 +1114,33 @@ export const ACTIONS: ActionTree = {
         confirmLabel: "Yes, verify",
       },
     },
+    "request-payment-reupload": {
+      id: "admin.request-payment-reupload",
+      label: "Request Re-upload",
+      ariaLabel: "Ask the buyer to re-upload a corrected payment proof",
+      description: "Clears the current proof and gives the buyer 15 more minutes to resubmit — for honest mistakes (blurry screenshot, wrong amount), not fraud.",
+      kind: "secondary",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Request a proof re-upload?",
+        body: "The buyer's current proof will be cleared and they'll get 15 more minutes to resubmit. Use this for honest mistakes, not suspected fraud.",
+        confirmLabel: "Request re-upload",
+      },
+    },
+    "reject-payment-fraud": {
+      id: "admin.reject-payment-fraud",
+      label: "Reject as Fraudulent",
+      ariaLabel: "Reject this payment proof as fraudulent, cancel the order, and ban the account",
+      description: "Cancels the order, restores stock, and triggers a temporary 7-day full-account ban. Use only for suspected deliberate fraud, not honest mistakes.",
+      kind: "danger",
+      permissions: ["admin", "moderator"],
+      confirmation: {
+        title: "Reject as fraudulent?",
+        body: "This cancels the order, returns the item to stock, and suspends the buyer's account for 7 days. This is severe — use only for suspected deliberate fraud, not an honest mistake.",
+        confirmLabel: "Reject and ban 7 days",
+        confirmKind: "danger",
+      },
+    },
     "verify-vendor": {
       id: "admin.verify-vendor",
       label: "Verify vendor",

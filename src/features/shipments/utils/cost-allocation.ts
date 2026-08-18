@@ -9,23 +9,24 @@
  */
 
 import type { ShipmentLot, ShipmentTotals } from "../schemas/firestore";
+import { roundRupees } from "../../../utils/number.formatter";
 
 export type LotAllocationInput = Pick<
   ShipmentLot,
-  "id" | "purchaseCostPaise" | "weightGrams" | "mainItemsProjectedRevenuePaise" | "remainderEstimatedValuePaise" | "itemCount"
+  "id" | "purchaseCost" | "weightGrams" | "mainItemsProjectedRevenue" | "remainderEstimatedValue" | "itemCount"
 >;
 
 export type LotAllocationResult = Pick<
   ShipmentLot,
-  "customsAllocatedPaise" | "shippingAllocatedPaise" | "totalLandedCostPaise" | "projectedRevenuePaise" | "projectedProfitPaise"
+  "customsAllocated" | "shippingAllocated" | "totalLandedCost" | "projectedRevenue" | "projectedProfit"
 >;
 
 export interface AllocateShipmentCostsInput {
   lots: LotAllocationInput[];
-  customsTotalPaise: number;
-  shippingTotalPaise: number;
+  customsTotal: number;
+  shippingTotal: number;
   laborHoursSpent: number;
-  laborRatePaisePerHour: number;
+  laborRatePerHour: number;
   maxHoursPerDay: number;
 }
 
@@ -35,17 +36,17 @@ export interface AllocateShipmentCostsResult {
 }
 
 /**
- * Splits `totalPaise` across `weights` proportionally, with the remainder
+ * Splits `total` across `weights` proportionally, with the remainder
  * corrected onto the last non-zero-weight entry so the sum always
- * reconciles exactly to `totalPaise` (integer-paise-safe).
+ * reconciles exactly to `total` (rupee-2dp-safe).
  */
-function allocateProportionally(totalPaise: number, weights: number[]): number[] {
+function allocateProportionally(total: number, weights: number[]): number[] {
   const totalWeight = weights.reduce((s, w) => s + w, 0);
-  if (totalWeight <= 0 || totalPaise === 0) return weights.map(() => 0);
+  if (totalWeight <= 0 || total === 0) return weights.map(() => 0);
 
-  const shares = weights.map((w) => Math.round((totalPaise * w) / totalWeight));
+  const shares = weights.map((w) => roundRupees((total * w) / totalWeight));
   const allocated = shares.reduce((s, v) => s + v, 0);
-  const remainder = totalPaise - allocated;
+  const remainder = roundRupees(total - allocated);
 
   if (remainder !== 0) {
     let lastPositiveIndex = -1;
@@ -55,64 +56,64 @@ function allocateProportionally(totalPaise: number, weights: number[]): number[]
         break;
       }
     }
-    if (lastPositiveIndex >= 0) shares[lastPositiveIndex] += remainder;
+    if (lastPositiveIndex >= 0) shares[lastPositiveIndex] = roundRupees(shares[lastPositiveIndex] + remainder);
   }
 
   return shares;
 }
 
 export function allocateShipmentCosts(input: AllocateShipmentCostsInput): AllocateShipmentCostsResult {
-  const { lots, customsTotalPaise, shippingTotalPaise, laborHoursSpent, laborRatePaisePerHour, maxHoursPerDay } = input;
+  const { lots, customsTotal, shippingTotal, laborHoursSpent, laborRatePerHour, maxHoursPerDay } = input;
 
-  const costWeights = lots.map((lot) => lot.purchaseCostPaise);
+  const costWeights = lots.map((lot) => lot.purchaseCost);
   const weightWeights = lots.map((lot) => lot.weightGrams);
 
-  const customsShares = allocateProportionally(customsTotalPaise, costWeights);
-  const shippingShares = allocateProportionally(shippingTotalPaise, weightWeights);
+  const customsShares = allocateProportionally(customsTotal, costWeights);
+  const shippingShares = allocateProportionally(shippingTotal, weightWeights);
 
   const perLot: Record<string, LotAllocationResult> = {};
-  let totalProjectedRevenuePaise = 0;
+  let totalProjectedRevenue = 0;
   let totalItemCount = 0;
 
   lots.forEach((lot, i) => {
-    const customsAllocatedPaise = customsShares[i];
-    const shippingAllocatedPaise = shippingShares[i];
-    const totalLandedCostPaise = lot.purchaseCostPaise + customsAllocatedPaise + shippingAllocatedPaise;
-    const projectedRevenuePaise = lot.mainItemsProjectedRevenuePaise + (lot.remainderEstimatedValuePaise ?? 0);
-    const projectedProfitPaise = projectedRevenuePaise - totalLandedCostPaise;
+    const customsAllocated = customsShares[i];
+    const shippingAllocated = shippingShares[i];
+    const totalLandedCost = roundRupees(lot.purchaseCost + customsAllocated + shippingAllocated);
+    const projectedRevenue = lot.mainItemsProjectedRevenue + (lot.remainderEstimatedValue ?? 0);
+    const projectedProfit = roundRupees(projectedRevenue - totalLandedCost);
 
     perLot[lot.id] = {
-      customsAllocatedPaise,
-      shippingAllocatedPaise,
-      totalLandedCostPaise,
-      projectedRevenuePaise,
-      projectedProfitPaise,
+      customsAllocated,
+      shippingAllocated,
+      totalLandedCost,
+      projectedRevenue,
+      projectedProfit,
     };
 
-    totalProjectedRevenuePaise += projectedRevenuePaise;
+    totalProjectedRevenue += projectedRevenue;
     totalItemCount += lot.itemCount;
   });
 
-  const lotsCostPaise = costWeights.reduce((s, v) => s + v, 0);
-  const laborCostPaise = Math.round(laborHoursSpent * laborRatePaisePerHour);
-  const totalShipmentCostPaise = lotsCostPaise + customsTotalPaise + shippingTotalPaise;
-  const projectedProfitPaise = totalProjectedRevenuePaise - totalShipmentCostPaise;
-  const projectedProfitAfterLaborPaise = projectedProfitPaise - laborCostPaise;
+  const lotsCost = costWeights.reduce((s, v) => s + v, 0);
+  const laborCost = roundRupees(laborHoursSpent * laborRatePerHour);
+  const totalShipmentCost = roundRupees(lotsCost + customsTotal + shippingTotal);
+  const projectedProfit = roundRupees(totalProjectedRevenue - totalShipmentCost);
+  const projectedProfitAfterLabor = roundRupees(projectedProfit - laborCost);
   const totalWeightGrams = weightWeights.reduce((s, v) => s + v, 0);
 
   const totals: ShipmentTotals = {
-    lotsCostPaise,
-    customsTotalPaise,
-    shippingTotalPaise,
-    laborCostPaise,
-    totalShipmentCostPaise,
-    totalProjectedRevenuePaise,
-    projectedProfitPaise,
-    projectedProfitAfterLaborPaise,
+    lotsCost,
+    customsTotal,
+    shippingTotal,
+    laborCost,
+    totalShipmentCost,
+    totalProjectedRevenue,
+    projectedProfit,
+    projectedProfitAfterLabor,
     projectedMarginPercent:
-      totalProjectedRevenuePaise > 0 ? (projectedProfitPaise / totalProjectedRevenuePaise) * 100 : 0,
+      totalProjectedRevenue > 0 ? (projectedProfit / totalProjectedRevenue) * 100 : 0,
     projectedRoiPercent:
-      totalShipmentCostPaise > 0 ? (projectedProfitPaise / totalShipmentCostPaise) * 100 : 0,
+      totalShipmentCost > 0 ? (projectedProfit / totalShipmentCost) * 100 : 0,
     totalWeightGrams,
     totalItemCount,
     lotCount: lots.length,

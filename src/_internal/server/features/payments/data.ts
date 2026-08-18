@@ -1,4 +1,5 @@
 import { siteSettingsRepository } from "../../../../repositories";
+import { roundRupees } from "../../../../utils/number.formatter";
 import {
   PAYMENTS_DEFAULT_PLATFORM_FEE_PERCENT,
   PAYMENTS_DEFAULT_GST_PERCENT,
@@ -26,8 +27,8 @@ export async function resolvePaymentFee(baseAmount: number): Promise<ResolvedPay
   const minimumTransactionFee =
     Math.max(0, siteSettings?.commissions?.minimumTransactionFee ?? 0);
 
-  const platformFee = Math.round(baseAmount * (platformFeePercent / 100) * 100) / 100;
-  const gstOnFee = Math.round(platformFee * (gstPercent / 100) * 100) / 100;
+  const platformFee = roundRupees(baseAmount * (platformFeePercent / 100));
+  const gstOnFee = roundRupees(platformFee * (gstPercent / 100));
   const rawTotal = baseAmount + platformFee + gstOnFee;
   const totalAmount = Math.max(rawTotal, baseAmount + minimumTransactionFee);
   return { baseAmount, platformFee, gstOnFee, totalAmount };

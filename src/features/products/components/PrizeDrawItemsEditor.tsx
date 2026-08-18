@@ -241,12 +241,12 @@ export function PrizeDrawItemsEditor({
                       type="number"
                       value={
                         it.estimatedValue != null
-                          ? String(Math.round(it.estimatedValue / 100))
+                          ? String(it.estimatedValue)
                           : ""
                       }
                       onChange={(v) =>
                         update(index, {
-                          estimatedValue: Math.round((parseFloat(v) || 0) * 100),
+                          estimatedValue: Math.round((parseFloat(v) || 0) * 100) / 100,
                         })
                       }
                       disabled={locked}

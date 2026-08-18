@@ -25,6 +25,12 @@ export const ORDER_MESSAGES = {
   CANCELLED_TITLE: "Order cancelled",
   CANCELLED_TIMEOUT_MESSAGE: (productTitle: string, hours: number): string =>
     `Your order for "${productTitle}" was cancelled because payment was not received within ${hours} hours.`,
+  CANCELLED_PAYMENT_WINDOW_TITLE: "Payment window expired",
+  CANCELLED_PAYMENT_WINDOW_MESSAGE: (productTitle: string): string =>
+    `Your order for "${productTitle}" was cancelled because payment wasn't completed within the 15-minute window. The item is back in stock — you're welcome to order again.`,
+  AUTO_APPROVED_TITLE: "Payment auto-confirmed",
+  AUTO_APPROVED_MESSAGE: (productTitle: string): string =>
+    `Your payment proof for "${productTitle}" was auto-confirmed after 2 hours without manual review. If something looks wrong, you can raise a dispute from your order.`,
   CONFIRMED_TITLE: "Order confirmed ✅",
   CONFIRMED_MESSAGE: (productTitle: string): string =>
     `Your order for "${productTitle}" has been confirmed and is being prepared.`,

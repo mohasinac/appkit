@@ -27,8 +27,8 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 function payoutAmounts(grossINR: number) {
-  const grossAmount = Math.round(grossINR * 100);
-  const platformFee = Math.round(grossAmount * DEFAULT_PLATFORM_FEE_RATE);
+  const grossAmount = grossINR;
+  const platformFee = Math.round(grossAmount * DEFAULT_PLATFORM_FEE_RATE * 100) / 100;
   const amount = grossAmount - platformFee;
   return { grossAmount, platformFee, amount };
 }
@@ -36,12 +36,12 @@ function payoutAmounts(grossINR: number) {
 function seedDeduction(
   orderId: string,
   refundId: string,
-  refundedAmountInPaise: number,
+  refundedAmount: number,
   reason: string,
   daysAgoN: number,
 ): PayoutRefundDeduction {
-  const deductedAmount = Math.round(refundedAmountInPaise * (1 - DEFAULT_PLATFORM_FEE_RATE));
-  return { orderId, refundId, refundedAmount: refundedAmountInPaise, deductedAmount, reason, appliedAt: daysAgo(daysAgoN) };
+  const deductedAmount = Math.round(refundedAmount * (1 - DEFAULT_PLATFORM_FEE_RATE) * 100) / 100;
+  return { orderId, refundId, refundedAmount, deductedAmount, reason, appliedAt: daysAgo(daysAgoN) };
 }
 
 export const payoutsSeedData: Partial<PayoutDocument>[] = [
@@ -210,12 +210,12 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
       seedDeduction(
         "order-7-20260515-s1t2u3",
         "refund-order-7-partial-001",
-        50000,
+        500,
         "Card arrived with damaged top-loader — buyer requested partial refund",
         1,
       ),
     ],
-    netAmount: payoutAmounts(12000).amount - 47500,
+    netAmount: payoutAmounts(12000).amount - 475,
     requestedAt: daysAgo(1),
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),

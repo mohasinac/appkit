@@ -30,7 +30,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import type { BulkShipmentItemsInput } from "../schemas/validation";
-import { formatPaise } from "../../../utils/number.formatter";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface AdminShipmentLotItemsViewProps {
   shipmentId: string;
@@ -56,7 +56,7 @@ function parseBulkText(text: string): ParsedBulkRow[] {
       return {
         title: title ?? "",
         quantity: Number(quantityStr) || 1,
-        price: isForSelfUse ? undefined : priceStr ? Math.round(Number(priceStr) * 100) : undefined,
+        price: isForSelfUse ? undefined : priceStr ? Math.round(Number(priceStr) * 100) / 100 : undefined,
         isForSelfUse,
       };
     })
@@ -87,7 +87,7 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
         title,
         quantity: Number(quantity),
         isForSelfUse,
-        price: isForSelfUse ? undefined : Math.round(Number(priceRupees) * 100),
+        price: isForSelfUse ? undefined : Math.round(Number(priceRupees) * 100) / 100,
       }),
     onSuccess: () => {
       setTitle("");
@@ -202,7 +202,7 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
               <Tr key={item.id}>
                 <Td>{item.title}</Td>
                 <Td>{item.quantity}</Td>
-                <Td>{item.isForSelfUse ? "—" : formatPaise(item.price ?? 0)}</Td>
+                <Td>{item.isForSelfUse ? "—" : formatCurrency(item.price ?? 0)}</Td>
                 <Td>
                   {item.isForSelfUse ? (
                     <Badge variant="secondary">Self use</Badge>

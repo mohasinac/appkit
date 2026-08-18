@@ -1,10 +1,10 @@
 /**
- * Lottery adapters — strips server-only fields (priceInPaise, weight)
+ * Lottery adapters — strips server-only fields (price, weight)
  * before any slot/config data leaves the server.
  */
 import type { LotteryConfig, LotterySlot, ClientLotteryConfig, ClientLotterySlot } from "../../../../features/lottery/types";
 
-/** Strip priceInPaise and weight from a single slot for client consumption. */
+/** Strip price and weight from a single slot for client consumption. */
 export function toClientLotterySlot(slot: LotterySlot): ClientLotterySlot {
   return {
     slotNumber: slot.slotNumber,

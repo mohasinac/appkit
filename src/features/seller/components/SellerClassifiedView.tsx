@@ -12,7 +12,7 @@ import { ROUTES } from "../../..";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -138,7 +138,7 @@ export function SellerClassifiedView({
         return {
           id: toStringValue(item.id, `classified-${index}`),
           title: toStringValue(item.productTitle ?? item.title, "Untitled"),
-          price: toRupees(item.price),
+          price: toCurrency(item.price),
           city: toStringValue(meetupArea.city ?? classified.city, ""),
           acceptsShipping: Boolean(classified.acceptsShipping),
           status: toStringValue(item.status, "draft"),

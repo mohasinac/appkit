@@ -28,8 +28,8 @@ export interface SellerPayoutRequestViewProps {
   onRequested?: () => void;
 }
 
-function rupees(paise: number) {
-  return `₹${(paise / 100).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+function rupees(amount: number) {
+  return `₹${amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 }
 
 export function SellerPayoutRequestView({

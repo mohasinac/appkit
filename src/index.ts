@@ -5066,6 +5066,12 @@ export { sendCheckoutConsentOtp } from "./features/checkout/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyCheckoutConsentOtp - Shared export for verify checkout consent otp.
 export { verifyCheckoutConsentOtp } from "./features/checkout/server";
+// [SERVER-ONLY] Tier PP — high-value checkout OTP gate (distinct from the shipping-consent OTP above).
+export {
+  sendCheckoutValueOtp,
+  verifyCheckoutValueOtp,
+  isCheckoutValueOtpVerified,
+} from "./features/checkout/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // FailedCheckoutMeta - Type contract for failed checkout meta.
 export type { FailedCheckoutMeta } from "./features/checkout/server";
@@ -8926,6 +8932,12 @@ export { buildStatusMessage } from "./features/whatsapp-bot/server";
 // buildStatusNotificationURL - Helper for build status notification url.
 export { buildStatusNotificationURL } from "./features/whatsapp-bot/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// buildGroupShareLink - Helper for build group share link.
+export { buildGroupShareLink } from "./features/whatsapp-bot/server";
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// buildPaymentProofReviewMessage - Helper for build payment proof review message (Tier PP).
+export { buildPaymentProofReviewMessage } from "./features/whatsapp-bot/server";
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // isAdminNumber - Shared export for is admin number.
 export { isAdminNumber } from "./features/whatsapp-bot/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -9273,7 +9285,7 @@ export {
 
 // -- Missing utils
 export { buildSieveFilters } from "./utils/filter.helper";
-export { formatFileSize, formatPaise } from "./utils/number.formatter";
+export { formatFileSize } from "./utils/number.formatter";
 export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
 export { deriveContextTypeFromFilename } from "./utils/id-generators";
@@ -9417,7 +9429,7 @@ export type { AdminFilterTab } from "./features/admin/constants/filter-tabs";
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
 // SB-UNI-D + V â€" BundleDocument + bundlesRepository + features/bundles/
 // folder all deleted. Bundles are now `categoryType:"bundle"` rows on the
-// categories collection with `bundlePriceInPaise` / `bundleQueryRule` /
+// categories collection with `bundlePrice` / `bundleQueryRule` /
 // `bundleStockStatus` / `bundleQueryResolvedAt` / `bundleProductIds[]`.
 // Replacement component: CategoryBundlesListing in features/categories/components.
 export { CategoryBundlesListing } from "./features/categories/components/CategoryBundlesListing";

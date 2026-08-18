@@ -12,8 +12,10 @@
  *  - `computePayoutDeduction` — what's deducted from the SELLER's payout
  *    (platform fee + gateway fee + GST on the platform fee).
  *
- * All money amounts are in paise (integer).
+ * All money amounts are in decimal rupees.
  */
+
+import { roundRupees } from "../../../utils/number.formatter";
 
 export interface FeeCommissionRates {
   platformFeePercent: number;
@@ -33,10 +35,9 @@ export interface CheckoutFees {
 }
 
 export function computeCheckoutFees(subtotal: number, commissions: FeeCommissionRates): CheckoutFees {
-  const platformFee = Math.round(subtotal * (commissions.platformFeePercent / 100));
-  const gstOnFee = Math.round(platformFee * (commissions.gstPercent / 100));
-  const minimumTransactionFeeInPaise = Math.round((commissions.minimumTransactionFee ?? 0) * 100);
-  const totalFee = Math.max(platformFee + gstOnFee, minimumTransactionFeeInPaise);
+  const platformFee = roundRupees(subtotal * (commissions.platformFeePercent / 100));
+  const gstOnFee = roundRupees(platformFee * (commissions.gstPercent / 100));
+  const totalFee = Math.max(platformFee + gstOnFee, commissions.minimumTransactionFee ?? 0);
   return { platformFee, gstOnFee, totalFee };
 }
 
@@ -54,36 +55,36 @@ export interface PayoutDeduction {
 }
 
 export function computePayoutDeduction(grossAmount: number, commissions: FeeCommissionRates): PayoutDeduction {
-  const platformFee = Math.round(grossAmount * (commissions.platformFeePercent / 100));
-  const gatewayFee = Math.round(grossAmount * ((commissions.gatewayFeePercent ?? 0) / 100));
-  const gstOnFee = Math.round(platformFee * (commissions.gstPercent / 100));
-  const totalDeduction = platformFee + gatewayFee + gstOnFee;
-  const netAmount = Math.max(0, grossAmount - totalDeduction);
+  const platformFee = roundRupees(grossAmount * (commissions.platformFeePercent / 100));
+  const gatewayFee = roundRupees(grossAmount * ((commissions.gatewayFeePercent ?? 0) / 100));
+  const gstOnFee = roundRupees(platformFee * (commissions.gstPercent / 100));
+  const totalDeduction = roundRupees(platformFee + gatewayFee + gstOnFee);
+  const netAmount = Math.max(0, roundRupees(grossAmount - totalDeduction));
   return { platformFee, gatewayFee, gstOnFee, totalDeduction, netAmount };
 }
 
 export interface CodHandlingFeeRates {
-  /** Optional so existing `siteSettings` documents saved before this field existed don't produce NaN — falls back to ₹200 (20000 paise). */
-  codHandlingFeeMinInPaise?: number;
+  /** Optional so existing `siteSettings` documents saved before this field existed don't produce NaN — falls back to ₹200. */
+  codHandlingFeeMin?: number;
   /** Optional for the same reason — falls back to 10%. */
   codHandlingFeePercent?: number;
 }
 
-const DEFAULT_COD_HANDLING_FEE_MIN_IN_PAISE = 20000;
+const DEFAULT_COD_HANDLING_FEE_MIN = 200;
 const DEFAULT_COD_HANDLING_FEE_PERCENT = 10;
 
 /** COD handling fee charged to the buyer: max(fixed floor, subtotal × percent). */
 export function computeCodHandlingFee(subtotal: number, rates: CodHandlingFeeRates): number {
-  const minInPaise = rates.codHandlingFeeMinInPaise ?? DEFAULT_COD_HANDLING_FEE_MIN_IN_PAISE;
+  const min = rates.codHandlingFeeMin ?? DEFAULT_COD_HANDLING_FEE_MIN;
   const percent = rates.codHandlingFeePercent ?? DEFAULT_COD_HANDLING_FEE_PERCENT;
-  const percentFee = Math.round(subtotal * (percent / 100));
-  return Math.max(minInPaise, percentFee);
+  const percentFee = roundRupees(subtotal * (percent / 100));
+  return Math.max(min, percentFee);
 }
 
 /**
  * P-8 GST — buyer-facing product tax, distinct from the platform-commission
  * GST above. Intra-state orders split the rate evenly between CGST + SGST;
- * inter-state orders charge the full rate as IGST. All amounts in paise.
+ * inter-state orders charge the full rate as IGST. All amounts in decimal rupees.
  */
 export interface GstBreakdown {
   taxableAmount: number;
@@ -96,12 +97,12 @@ export interface GstBreakdown {
 export function calculateGst(
   rate: number,
   intraState: boolean,
-  taxableAmountInPaise: number,
+  taxableAmount: number,
 ): GstBreakdown {
-  const gstAmount = Math.round(taxableAmountInPaise * (rate / 100));
+  const gstAmount = roundRupees(taxableAmount * (rate / 100));
   if (intraState) {
-    const half = Math.round(gstAmount / 2);
-    return { taxableAmount: taxableAmountInPaise, cgst: half, sgst: half, igst: 0, gstAmount: half * 2 };
+    const half = roundRupees(gstAmount / 2);
+    return { taxableAmount, cgst: half, sgst: half, igst: 0, gstAmount: roundRupees(half * 2) };
   }
-  return { taxableAmount: taxableAmountInPaise, cgst: 0, sgst: 0, igst: gstAmount, gstAmount };
+  return { taxableAmount, cgst: 0, sgst: 0, igst: gstAmount, gstAmount };
 }

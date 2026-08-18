@@ -6,7 +6,7 @@ import { normalizeError } from "../../../errors/normalize";
  *
  * Unified create + edit view for categoryType:"bundle" rows. When `bundleId`
  * is set, loads + edits; when omitted, runs as a "new" form. Delegates to
- * /api/admin/bundles. Owns: name + description + bundlePriceInPaise +
+ * /api/admin/bundles. Owns: name + description + bundlePrice +
  * static-only product picker + isActive. Dynamic-rule editing is out of scope
  * for this session (the API accepts dynamic rules but the form only writes
  * static rules; admins editing a pre-existing dynamic bundle see its members
@@ -121,8 +121,8 @@ function bundleToForm(bundle: CategoryDocument | null): FormState {
     name: bundle.name ?? "",
     description: bundle.description ?? "",
     priceRupees:
-      typeof bundle.bundlePriceInPaise === "number"
-        ? String(Math.round(bundle.bundlePriceInPaise / 100))
+      typeof bundle.bundlePrice === "number"
+        ? String(bundle.bundlePrice)
         : "",
     ruleType: isDynamic ? "dynamic" : "static",
     productIds: fromRule.length ? fromRule : idsFromMirror,
@@ -137,7 +137,7 @@ function parsePriceRupees(input: string): number | null {
   if (!trimmed) return null;
   const n = Number(trimmed);
   if (!Number.isFinite(n) || n <= 0) return null;
-  return Math.round(n * 100);
+  return Math.round(n * 100) / 100;
 }
 
 export function AdminBundleEditorView({
@@ -199,13 +199,13 @@ export function AdminBundleEditorView({
   const handleSave = useCallback(async () => {
     clearErrors();
     setApiError(null);
-    const priceInPaise = parsePriceRupees(form.priceRupees);
+    const price = parsePriceRupees(form.priceRupees);
     let hasError = false;
     if (!form.name.trim()) {
       setFieldError("name", BUNDLE_COPY.adminEditor.errors.nameRequired);
       hasError = true;
     }
-    if (priceInPaise === null) {
+    if (price === null) {
       setFieldError("price", BUNDLE_COPY.adminEditor.errors.priceInvalid);
       hasError = true;
     }
@@ -232,7 +232,7 @@ export function AdminBundleEditorView({
         name: form.name.trim(),
         description: form.description.trim() || undefined,
         bundleKind: BUNDLE_KIND_SPECIAL,
-        bundlePriceInPaise: priceInPaise,
+        bundlePrice: price,
         bundleQueryRule,
         bundleProductIds,
         display: form.coverImage.trim()
@@ -380,11 +380,6 @@ export function AdminBundleEditorView({
                   disabled={saving}
                   required
                 />
-                <Text size="xs" color="muted">
-                  {BUNDLE_COPY.adminEditor.fields.pricePaiseHint(
-                    parsePriceRupees(form.priceRupees),
-                  )}
-                </Text>
               </Stack>
 
               <Stack gap="xs">

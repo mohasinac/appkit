@@ -378,7 +378,7 @@ describe("createCheckoutOrderAction — COD gate", () => {
           platformShippingPercent: 2,
           platformShippingFixedMin: 50,
           codDepositPercent: 10,
-          codHandlingFeeMinInPaise: 100,
+          codHandlingFeeMin: 100,
           codHandlingFeePercent: 10,
         },
       }),
@@ -401,7 +401,7 @@ describe("createCheckoutOrderAction — COD gate", () => {
 describe("createCheckoutOrderAction — EMI", () => {
   const emiSettings = {
     enabled: true,
-    minOrderValueInPaise: 1000, // ₹10 — below the 5000-paise test cart total so the fixture stays eligible
+    minOrderValue: 1000, // below the test cart total so the fixture stays eligible
     tenureOptions: [2, 3, 4, 5, 6],
     tokenPercent: 10,
     billingDay: 5,
@@ -439,7 +439,7 @@ describe("createCheckoutOrderAction — EMI", () => {
 
   it("below the minimum order value → ValidationError mentioning below_minimum", async () => {
     mockSiteSettingsGetSingleton.mockResolvedValue(
-      makeSiteSettings({ emi: { ...emiSettings, minOrderValueInPaise: 999999999 } }),
+      makeSiteSettings({ emi: { ...emiSettings, minOrderValue: 999999999 } }),
     );
     await expect(
       createCheckoutOrderAction(makeInput({ paymentMethod: "emi", emiTenureMonths: 3 })),

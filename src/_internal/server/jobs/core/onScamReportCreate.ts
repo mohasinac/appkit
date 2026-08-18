@@ -54,7 +54,7 @@ export async function handleScamReportCreate(
     });
 
     const scamTypeLabel = scamType ? (SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS] ?? scamType) : "Unknown";
-    const amountStr = amountLost ? ` ₹${(amountLost / 100).toLocaleString("en-IN")}` : "";
+    const amountStr = amountLost ? ` ₹${amountLost.toLocaleString("en-IN")}` : "";
     const platformStr = scamPlatform ? ` via ${scamPlatform}` : "";
 
     await Promise.all(

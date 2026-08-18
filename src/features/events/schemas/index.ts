@@ -89,7 +89,7 @@ export const spinPrizeSchema = z.object({
   isActive: z.boolean(),
 });
 
-/** Lottery slot schema — client-safe shape (no priceInPaise/weight sent to clients). */
+/** Lottery slot schema — client-safe shape (no price/weight sent to clients). */
 export const lotterySlotClientSchema = z.object({
   slotNumber: z.number().int().min(1),
   name: z.string(),

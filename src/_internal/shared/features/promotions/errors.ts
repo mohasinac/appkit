@@ -30,7 +30,7 @@ export class CouponPerUserLimitError extends ConflictError {
 
 export class CouponMinPurchaseError extends ValidationError {
   constructor(minAmount: number) {
-    super(`Minimum purchase of ₹${(minAmount / 100).toLocaleString("en-IN")} required for this coupon`, "total");
+    super(`Minimum purchase of ₹${minAmount.toLocaleString("en-IN")} required for this coupon`, "total");
     this.name = "CouponMinPurchaseError";
   }
 }

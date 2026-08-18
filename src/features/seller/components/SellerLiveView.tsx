@@ -12,7 +12,7 @@ import { ROUTES } from "../../..";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -155,7 +155,7 @@ export function SellerLiveView({
         return {
           id: toStringValue(item.id, `live-${index}`),
           title: toStringValue(item.productTitle ?? item.title, "Untitled"),
-          price: toRupees(item.price),
+          price: toCurrency(item.price),
           species: toStringValue(live.species, ""),
           ageMonths: typeof live.ageMonths === "number" ? live.ageMonths : null,
           vendorVerified: Boolean(live.vendorVerified),

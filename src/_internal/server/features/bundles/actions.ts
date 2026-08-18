@@ -34,7 +34,7 @@ export async function addBundleToCartAction(
   if (bundle.bundleStockStatus === "out_of_stock") {
     throw new ValidationError("Bundle is currently out of stock");
   }
-  if (!bundle.bundlePriceInPaise || bundle.bundlePriceInPaise < 1) {
+  if (!bundle.bundlePrice || bundle.bundlePrice < 1) {
     throw new ValidationError("Bundle price is not configured");
   }
 
@@ -42,7 +42,7 @@ export async function addBundleToCartAction(
     productId: bundle.id,
     productTitle: bundle.name,
     productImage: bundle.display?.coverImage ?? "",
-    price: bundle.bundlePriceInPaise,
+    price: bundle.bundlePrice,
     currency: getDefaultCurrency(),
     quantity: 1,
     storeId: bundle.createdByStoreId ?? "",

@@ -193,6 +193,10 @@ export const ORDER_FIELDS = {
   BUNDLE_ID: "bundleId",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
+  PAYMENT_DEADLINE: "paymentDeadline",
+  PAYMENT_PROOF_URL: "paymentProofUrl",
+  PAYMENT_PROOF_UPLOADED_AT: "paymentProofUploadedAt",
+  PAYMENT_REVIEW_OUTCOME: "paymentReviewOutcome",
 
   STATUS_VALUES: {
     PENDING: "pending",

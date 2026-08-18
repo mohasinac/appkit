@@ -67,6 +67,9 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
     trackingNumber: doc.trackingNumber,
     shippingCarrier: doc.shippingCarrier,
     notes: doc.notes,
+    autoApproved: doc.autoApproved,
+    disputeRaised: doc.disputeRaised,
+    disputeStatus: doc.disputeStatus,
     createdAt:
       doc.createdAt instanceof Date
         ? doc.createdAt.toISOString()

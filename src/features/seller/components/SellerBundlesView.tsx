@@ -37,9 +37,9 @@ type BundleRow = {
   updatedAt: string;
 };
 
-function formatPrice(paise: unknown): string {
-  if (typeof paise !== "number" || paise <= 0) return "—";
-  return `₹${Math.round(paise / 100).toLocaleString("en-IN")}`;
+function formatPrice(value: unknown): string {
+  if (typeof value !== "number" || value <= 0) return "—";
+  return `₹${value.toLocaleString("en-IN")}`;
 }
 
 const COLUMNS: AdminTableColumn<BundleRow>[] = [
@@ -100,8 +100,8 @@ export function SellerBundlesView({ getEditHref, newHref }: SellerBundlesViewPro
     sortOptions: [
       { value: sortBy("name", "ASC"), label: "Name A–Z" },
       { value: sortBy("name", "DESC"), label: "Name Z–A" },
-      { value: sortBy("bundlePriceInPaise", "DESC"), label: "Price high→low" },
-      { value: "bundlePriceInPaise", label: "Price low→high" },
+      { value: sortBy("bundlePrice", "DESC"), label: "Price high→low" },
+      { value: "bundlePrice", label: "Price low→high" },
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("createdAt", "ASC"), label: "Oldest" },
     ],
@@ -111,7 +111,7 @@ export function SellerBundlesView({ getEditHref, newHref }: SellerBundlesViewPro
         id: toStringValue(item.id, `bundle-${index}`),
         primary: toStringValue(item.name, "Untitled bundle"),
         secondary: toStringValue(item.slug, "no-slug"),
-        price: formatPrice(item.bundlePriceInPaise),
+        price: formatPrice(item.bundlePrice),
         members: String(Array.isArray(item.bundleProductIds) ? item.bundleProductIds.length : 0),
         stockStatus: toStringValue(item.bundleStockStatus, "in_stock"),
         isActive: item.isActive === true,

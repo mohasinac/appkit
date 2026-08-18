@@ -764,12 +764,12 @@ export function ProductForm({
               type="number"
               value={
                 product.pricePerEntry != null
-                  ? String(Math.round(product.pricePerEntry / 100))
+                  ? String(product.pricePerEntry)
                   : ""
               }
               onChange={(value) =>
                 update({
-                  pricePerEntry: Math.round((parseFloat(value) || 0) * 100),
+                  pricePerEntry: Math.round((parseFloat(value) || 0) * 100) / 100,
                 })
               }
               disabled={fieldDisabled}

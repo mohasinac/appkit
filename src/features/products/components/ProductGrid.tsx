@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
-import { BaseListingCard, Button, Div, Grid, Row, Span, Stack, Text } from "../../../ui";
+import { BaseListingCard, Button, Div, Grid, PriceDisplay, Row, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
 import type { ViewMode } from "../../../ui";
@@ -316,16 +316,12 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
         {/* Price row */}
         <Div className="mt-auto" padding="t-xs">
-          <Row align="baseline" gap="sm">
-            <Span size="base" weight="bold" className="text-primary dark:text-primary-400">
-              {formatCurrency(product.price, getDefaultCurrency())}
-            </Span>
-            {product.originalPrice && product.originalPrice > product.price && (
-              <Span size="xs" className="line-through" color="faint">
-                {formatCurrency(product.originalPrice, getDefaultCurrency())}
-              </Span>
-            )}
-          </Row>
+          <PriceDisplay
+            amount={product.price}
+            originalAmount={product.originalPrice}
+            currency={getDefaultCurrency()}
+            variant="compact"
+          />
 
           {(() => {
             const stock =

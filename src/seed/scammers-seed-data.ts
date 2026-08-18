@@ -37,7 +37,7 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
     scamPlatform: "whatsapp",
     description:
       "Seller listed a Blue-Eyes White Dragon LOB 1st Edition PSA 9 on a Facebook group for ₹25,000 — significantly below market. When I messaged, he asked for ₹5,000 advance to 'hold' the card before shipping. After I paid via UPI (9876543210@paytm), he went silent. The account name on UPI matched 'YGO King'. Later found 2 more people in the same group who had the same experience with the same UPI ID.",
-    amountLost: 500000,
+    amountLost: 5000,
     itemInvolved: "Blue-Eyes White Dragon LOB 1st Edition PSA 9 (Yu-Gi-Oh!)",
     evidence: [seedExtMedia("https://picsum.photos/seed/scammer-evidence-ygoking-chat-screenshot-20260402/800/600")],
     reportedBy: "user-yugi-muto",
@@ -74,7 +74,7 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
     scamPlatform: "instagram",
     description:
       "Account posed as an authorized pre-order agent for the upcoming Konami 25th Anniversary Ultimate Collection booster box. Collected ₹4,500 from me for a 'guaranteed allocation slot' via UPI. Instagram profile had ~4,000 followers (likely bought) and fake order screenshots. After payment, the account blocked me. Similar reports found on Reddit r/YuGiOhIndia.",
-    amountLost: 450000,
+    amountLost: 4500,
     itemInvolved: "Konami 25th Anniversary Ultimate Collection (fake pre-order)",
     evidence: [],
     reportedBy: "user-seto-kaiba",

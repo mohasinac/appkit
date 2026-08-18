@@ -141,7 +141,7 @@ export const onScamReportUpdate = defineFunction({
 // files for the full data-flow explanation.
 export const onShipmentItemWrite = defineFunction({
   name: "onShipmentItemWrite",
-  description: "Recompute a shipment lot's itemCount + mainItemsProjectedRevenuePaise on any item write.",
+  description: "Recompute a shipment lot's itemCount + mainItemsProjectedRevenue on any item write.",
   trigger: { kind: "documentWritten", pathPattern: "shipmentItems/{itemId}" },
   handler: onShipmentItemWriteHandler,
   options: { region: REGION },

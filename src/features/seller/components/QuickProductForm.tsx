@@ -20,11 +20,11 @@ export interface QuickProductFormProps {
   onUploadImage?: (file: File) => Promise<string>;
 }
 
-function toRupees(paise?: number): string {
-  return paise != null && paise > 0 ? String(Math.round(paise / 100)) : "";
+function toRupeesString(price?: number): string {
+  return price != null && price > 0 ? String(price) : "";
 }
-function toPaise(rupeeStr: string): number {
-  return Math.round((parseFloat(rupeeStr) || 0) * 100);
+function fromRupeesString(rupeeStr: string): number {
+  return Math.round((parseFloat(rupeeStr) || 0) * 100) / 100;
 }
 
 interface ValidationErrors {
@@ -134,8 +134,8 @@ export function QuickProductForm({
         name="price"
         label="Price (₹)"
         type="number"
-        value={toRupees(values.price)}
-        onChange={(v) => onChange({ price: toPaise(v) })}
+        value={toRupeesString(values.price)}
+        onChange={(v) => onChange({ price: fromRupeesString(v) })}
         placeholder="e.g. 499"
         required
         error={touched ? errors.price : undefined}

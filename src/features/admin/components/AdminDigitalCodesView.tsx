@@ -13,7 +13,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -54,7 +54,7 @@ const ADMIN_DIGITAL_CODES_CONFIG: ListingViewConfig<AdminProductsResponse, Digit
         primary: toStringValue(item.title ?? item.productTitle, "Untitled digital code"),
         secondary: [
           toStringValue(item.sellerName, "Unknown seller"),
-          toRupees(item.price),
+          toCurrency(item.price),
           typeof dc.codesAvailable === "number"
             ? `${dc.codesAvailable} avail`
             : null,

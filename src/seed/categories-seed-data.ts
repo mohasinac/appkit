@@ -248,7 +248,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Both original-generation Beyblades — Dranzer S and Driger V — bundled at a discount.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePriceInPaise: 299900,
+    bundlePrice: 2999,
     bundleQueryRule: {
       type: "static",
       productIds: ["product-beyblade-original-dranzer-s", "product-beyblade-original-driger-v", "product-beyblade-metal-storm-pegasus"],
@@ -280,7 +280,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Storm Pegasus and Flame Sagittario — the classic Metal Fight rivalry, together.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePriceInPaise: 349900,
+    bundlePrice: 3499,
     bundleQueryRule: {
       type: "static",
       productIds: ["product-beyblade-metal-storm-pegasus", "product-beyblade-metal-flame-sagittario", "product-beyblade-original-dranzer-s"],
@@ -312,7 +312,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Valkyrie and Regalia Genesis — top-tier Burst-era attackers in one set.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePriceInPaise: 379900,
+    bundlePrice: 3799,
     bundleQueryRule: {
       type: "static",
       productIds: ["product-beyblade-burst-valkyrie", "product-beyblade-burst-regalia-genesis", "product-beyblade-metal-flame-sagittario"],
@@ -344,7 +344,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "Wizard Arrow and Knife Shinobi — the newest X-series tops for new battlers.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePriceInPaise: 249900,
+    bundlePrice: 2499,
     bundleQueryRule: {
       type: "static",
       productIds: ["product-beyblade-x-wizard-arrow", "product-beyblade-x-knife-shinobi", "product-beyblade-burst-valkyrie"],
@@ -376,7 +376,7 @@ const bundleRows: Partial<CategoryDocument>[] = [
     description: "One top from every Beyblade generation — Original, Metal Fight, Burst, and X — the ultimate collector's starter pack.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePriceInPaise: 599900,
+    bundlePrice: 5999,
     bundleQueryRule: {
       type: "static",
       productIds: [

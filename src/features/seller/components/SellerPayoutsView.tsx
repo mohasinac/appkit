@@ -11,7 +11,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -67,7 +67,7 @@ export function SellerPayoutsView({
         id: toStringValue(item.id, `payout-${index}`),
         primary: `Payout #${toStringValue(item.payoutNumber ?? item.id, "Unknown")}`,
         secondary: [
-          toRupees(item.amount ?? item.totalAmount),
+          toCurrency(item.amount ?? item.totalAmount),
           `Requested: ${toRelativeDate(item.requestedAt ?? item.createdAt)}`,
         ].join(" · "),
         status: toStringValue(item.status, "Pending"),

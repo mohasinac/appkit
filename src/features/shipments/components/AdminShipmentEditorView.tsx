@@ -30,7 +30,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { createShipmentSchema } from "../schemas/validation";
 import { useShipment } from "../hooks/useShipments";
 import type { ShipmentDocument, ShipmentLot } from "../schemas/firestore";
-import { formatPaise } from "../../../utils/number.formatter";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 const STATUS_OPTIONS = [
   { label: "Planning", value: "planning" },
@@ -76,8 +76,8 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
     setCarrier(shipment.carrier ?? "");
     setEtaDate(shipment.etaDate ? new Date(shipment.etaDate).toISOString().slice(0, 10) : "");
     setNotes(shipment.notes ?? "");
-    setCustomsTotalRupees(String(shipment.customsTotalPaise / 100));
-    setShippingTotalRupees(String(shipment.shippingTotalPaise / 100));
+    setCustomsTotalRupees(String(shipment.customsTotal));
+    setShippingTotalRupees(String(shipment.shippingTotal));
     setLaborHoursSpent(String(shipment.laborHoursSpent ?? 0));
   }, [shipment]);
 
@@ -93,8 +93,8 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
         carrier: carrier || undefined,
         etaDate: etaDate || undefined,
         notes: notes || undefined,
-        customsTotalPaise: Math.round(Number(customsTotalRupees) * 100),
-        shippingTotalPaise: Math.round(Number(shippingTotalRupees) * 100),
+        customsTotal: Math.round(Number(customsTotalRupees) * 100) / 100,
+        shippingTotal: Math.round(Number(shippingTotalRupees) * 100) / 100,
         laborHoursSpent: Number(laborHoursSpent),
       };
       if (isCreate) {
@@ -121,8 +121,8 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
             <FieldInput name="carrier" label="Carrier" value={carrier} onChange={setCarrier} />
             <FieldInput name="etaDate" label="ETA Date" type="date" value={etaDate} onChange={setEtaDate} />
             <FieldInput name="laborHoursSpent" label="Labor Hours Spent" type="number" min="0" value={laborHoursSpent} onChange={setLaborHoursSpent} />
-            <FieldInput name="customsTotalPaise" label="Customs Total (₹)" type="number" min="0" value={customsTotalRupees} onChange={setCustomsTotalRupees} hint="Split across lots by declared value" />
-            <FieldInput name="shippingTotalPaise" label="Shipping Total (₹)" type="number" min="0" value={shippingTotalRupees} onChange={setShippingTotalRupees} hint="Split across lots by weight" />
+            <FieldInput name="customsTotal" label="Customs Total (₹)" type="number" min="0" value={customsTotalRupees} onChange={setCustomsTotalRupees} hint="Split across lots by declared value" />
+            <FieldInput name="shippingTotal" label="Shipping Total (₹)" type="number" min="0" value={shippingTotalRupees} onChange={setShippingTotalRupees} hint="Split across lots by weight" />
           </Grid>
           <FieldTextarea name="notes" label="Notes" value={notes} onChange={setNotes} rows={3} />
 
@@ -134,8 +134,8 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
                 shipmentNumber,
                 supplierName,
                 status,
-                customsTotalPaise: Math.round(Number(customsTotalRupees) * 100),
-                shippingTotalPaise: Math.round(Number(shippingTotalRupees) * 100),
+                customsTotal: Math.round(Number(customsTotalRupees) * 100) / 100,
+                shippingTotal: Math.round(Number(shippingTotalRupees) * 100) / 100,
                 laborHoursSpent: Number(laborHoursSpent),
               });
               if (!parsed.success) {
@@ -177,7 +177,7 @@ function ShipmentLotsSection({
       apiClient.post(ADMIN_ENDPOINTS.SHIPMENT_LOTS(shipmentId), {
         lotName,
         weightGrams: Number(weightGrams),
-        purchaseCostPaise: Math.round(Number(purchaseCostRupees) * 100),
+        purchaseCost: Math.round(Number(purchaseCostRupees) * 100) / 100,
       }),
     onSuccess: () => {
       setLotName("");
@@ -209,7 +209,7 @@ function ShipmentLotsSection({
         <Grid cols={3} gap="sm">
           <FieldInput name="lotName" label="Lot Name" value={lotName} onChange={setLotName} />
           <FieldInput name="weightGrams" label="Weight (g)" type="number" min="0" value={weightGrams} onChange={setWeightGrams} />
-          <FieldInput name="purchaseCostPaise" label="Purchase Cost (₹)" type="number" min="0" value={purchaseCostRupees} onChange={setPurchaseCostRupees} />
+          <FieldInput name="purchaseCost" label="Purchase Cost (₹)" type="number" min="0" value={purchaseCostRupees} onChange={setPurchaseCostRupees} />
           <Button
             type="button"
             size="sm"
@@ -241,7 +241,7 @@ function ShipmentLotsSection({
                 <Td>{lot.lotName}</Td>
                 <Td>{lot.weightGrams}</Td>
                 <Td>{lot.itemCount}</Td>
-                <Td>{formatPaise(lot.projectedProfitPaise)}</Td>
+                <Td>{formatCurrency(lot.projectedProfit)}</Td>
                 <Td className="flex gap-[var(--appkit-space-2)]">
                   <TextLink href={ROUTES.ADMIN.SHIPMENT_LOT_ITEMS(shipmentId, lot.id)}>
                     Manage Items →

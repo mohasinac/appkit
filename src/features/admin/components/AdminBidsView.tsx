@@ -14,7 +14,7 @@ import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -84,7 +84,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
         id: toStringValue(item.id, `bid-${index}`),
         primary: [
           toStringValue(item.productName ?? item.productTitle, "Unknown item"),
-          toRupees(item.bidAmount ?? item.amount),
+          toCurrency(item.bidAmount ?? item.amount),
         ].join(" · "),
         secondary: toStringValue(item.bidderId ?? item.bidderName ?? item.userId, "Unknown bidder"),
         status: toStringValue(item.status, "active"),

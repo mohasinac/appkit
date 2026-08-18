@@ -56,7 +56,7 @@ export async function runEmiInstallmentReminder(ctx: JobContext): Promise<void> 
           title: isOverdue ? "EMI installment overdue" : "EMI installment due soon",
           message: isOverdue
             ? `Installment ${inst.index} for order ${id} is overdue. Pay now to avoid delaying your shipment.`
-            : `Installment ${inst.index} for order ${id} (₹${(inst.amount / 100).toFixed(2)}) is due on ${dueDate.toDateString()}.`,
+            : `Installment ${inst.index} for order ${id} (₹${inst.amount.toFixed(2)}) is due on ${dueDate.toDateString()}.`,
           relatedId: id,
           relatedType: "order",
           actionUrl: `/user/orders/view/${id}`,

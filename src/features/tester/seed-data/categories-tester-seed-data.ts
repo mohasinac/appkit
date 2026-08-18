@@ -152,7 +152,7 @@ export const categoriesTesterSeedData: Partial<CategoryDocument>[] = [
     description: "Two disposable test products bundled at a discount — for testing the bundle flow.",
     categoryType: "bundle",
     bundleKind: "special",
-    bundlePriceInPaise: 19900,
+    bundlePrice: 199,
     bundleQueryRule: {
       type: "static",
       productIds: ["product-tester-standard-1", "product-tester-standard-2"],

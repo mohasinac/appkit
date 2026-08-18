@@ -33,7 +33,7 @@ function toGalleryImages(members: ProductDocument[]): LightboxImage[] {
     alt: p.title,
     badge: `#${i + 1}`,
     caption: p.title,
-    sub: formatCurrency((p.price ?? 0) / 100, p.currency ?? "INR"),
+    sub: formatCurrency(p.price ?? 0, p.currency ?? "INR"),
   }));
 }
 
@@ -110,7 +110,7 @@ export function BundleCollage({ members, onItemClick }: BundleCollageProps) {
                   {p.title}
                 </Link>
                 <Text className="mt-0.5 text-[var(--appkit-color-text-muted)]" size="xs">
-                  {formatCurrency((p.price ?? 0) / 100, p.currency ?? "INR")}
+                  {formatCurrency(p.price ?? 0, p.currency ?? "INR")}
                 </Text>
               </Div>
             </Div>

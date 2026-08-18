@@ -13,7 +13,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -52,7 +52,7 @@ const ADMIN_STICKERS_CONFIG: ListingViewConfig<AdminProductsResponse, StickersRo
       primary: toStringValue(item.title ?? item.productTitle, "Untitled sticker listing"),
       secondary: [
         toStringValue(item.sellerName, "Unknown seller"),
-        toRupees(item.price),
+        toCurrency(item.price),
       ].join(" · "),
       status: toStringValue(item.status, "draft"),
       updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),

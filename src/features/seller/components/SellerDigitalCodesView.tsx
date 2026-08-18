@@ -12,7 +12,7 @@ import { ROUTES } from "../../..";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -144,7 +144,7 @@ export function SellerDigitalCodesView({
         return {
           id: toStringValue(item.id, `dc-${index}`),
           title: toStringValue(item.productTitle ?? item.title, "Untitled"),
-          price: toRupees(item.price),
+          price: toCurrency(item.price),
           codePoolSize: typeof dc.codePoolSize === "number" ? dc.codePoolSize : null,
           codesAvailable: typeof dc.codesAvailable === "number" ? dc.codesAvailable : null,
           deliveryMethod: toStringValue(dc.codeDeliveryMethod, "auto-claim"),

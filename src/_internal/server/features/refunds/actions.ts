@@ -18,6 +18,7 @@ import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 
 import { randomUUID } from "crypto";
 import { getProviders } from "../../../../contracts/registry";
+import { rupeesToPaise } from "../../../../providers/payment-razorpay/index";
 import { orderRepository } from "../../../..";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { NotFoundError, ValidationError } from "../../../../errors";
@@ -93,8 +94,8 @@ function revokeFirstSnapDoc(snap: FirebaseFirestore.QuerySnapshot): void {
 export type ProcessRefundInput = {
   orderId: string;
   type: RefundType;
-  /** Amount in paise. Must be > 0 and ≤ remaining refundable amount on the order. */
-  amountInPaise: number;
+  /** Decimal rupees. Must be > 0 and ≤ remaining refundable amount on the order. */
+  amount: number;
   reason: string;
   /** Product/item ids affected (for partial refunds). */
   itemIds?: string[];
@@ -127,8 +128,8 @@ export async function processRefundAction(
     const order = await orderRepository.findById(input.orderId);
       if (!order) throw new NotFoundError(`Order ${input.orderId} not found`);
     
-      if (input.amountInPaise <= 0) throw new ValidationError("Refund amount must be positive");
-      if (input.amountInPaise > order.totalPrice) {
+      if (input.amount <= 0) throw new ValidationError("Refund amount must be positive");
+      if (input.amount > order.totalPrice) {
         throw new ValidationError("Refund amount exceeds order total");
       }
     
@@ -150,16 +151,16 @@ export async function processRefundAction(
       if (input.method === "razorpay") {
         const payment = getProviders().payment;
         if (!payment) throw new ValidationError("Payment provider not configured");
-        const result = await payment.refund(input.razorpayPaymentId, input.amountInPaise);
+        const result = await payment.refund(input.razorpayPaymentId, rupeesToPaise(input.amount));
         razorpayRefundId = result.id;
       }
-    
-      const isFull = input.amountInPaise >= order.totalPrice;
-    
+
+      const isFull = input.amount >= order.totalPrice;
+
       const event: OrderRefundEvent = {
         refundId,
         type: input.type,
-        amount: input.amountInPaise,
+        amount: input.amount,
         ...(input.itemIds?.length ? { itemIds: input.itemIds } : {}),
         reason: input.reason,
         refundedAt: now,
@@ -188,7 +189,7 @@ export async function processRefundAction(
           storeId: order.storeId,
           orderId: input.orderId,
           refundId,
-          refundedAmountInPaise: input.amountInPaise,
+          refundedAmount: input.amount,
           reason: input.reason,
         }).catch(() => {/* payout deduction is best-effort */});
       }

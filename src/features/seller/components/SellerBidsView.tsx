@@ -16,7 +16,7 @@ import { SELLER_BID_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
   useSellerListingData,
 } from "../hooks/useSellerListingData";
@@ -176,7 +176,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       className: "w-28 text-right",
       render: (row) => (
         <Span size="sm" weight="semibold" color="primary">
-          {toRupees(row.bidAmount)}
+          {toCurrency(row.bidAmount)}
         </Span>
       ),
     },

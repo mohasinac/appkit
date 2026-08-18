@@ -32,7 +32,7 @@ export function renderProductOg(doc: ProductDocLike | null | undefined, opts: Og
 }
 
 export function renderProductOgImage(data: ProductOgData, siteName: string): ReactElement {
-  const priceLabel = data.price ? `₹${(data.price / 100).toLocaleString("en-IN")}` : null;
+  const priceLabel = data.price ? `₹${data.price.toLocaleString("en-IN")}` : null;
   return renderOgLayout({
     title: data.title,
     imageUrl: data.imageUrl,

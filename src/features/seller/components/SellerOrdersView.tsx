@@ -22,7 +22,7 @@ import { ROUTES } from "../../../constants";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
   useSellerListingData,
 } from "../hooks/useSellerListingData";
@@ -264,7 +264,7 @@ function OrderDetailDrawer({
                         <Text size="sm" className="truncate" weight="medium">{item.title ?? item.productId ?? "Item"}</Text>
                         <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
                       </Div>
-                      <Text size="sm" className="shrink-0" weight="medium">{toRupees(item.price ?? 0)}</Text>
+                      <Text size="sm" className="shrink-0" weight="medium">{toCurrency(item.price ?? 0)}</Text>
                     </Row>
                   ))}
                 </Div>
@@ -274,7 +274,7 @@ function OrderDetailDrawer({
             {/* Total */}
             <Row surface="muted" padding="inline" align="center" justify="between" rounded="lg">
               <Text size="sm" weight="semibold">Total</Text>
-              <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toRupees(order.totalAmount ?? 0)}</Text>
+              <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toCurrency(order.totalAmount ?? 0)}</Text>
             </Row>
 
             {/* Shipping address */}
@@ -308,18 +308,18 @@ function OrderDetailDrawer({
                 </Row>
                 <Row align="center" justify="between" className="mb-2">
                   <Text size="xs" color="muted">Token collected</Text>
-                  <Text size="xs" weight="medium">{toRupees(order.emiTokenAmount ?? 0)}</Text>
+                  <Text size="xs" weight="medium">{toCurrency(order.emiTokenAmount ?? 0)}</Text>
                 </Row>
                 <Row align="center" justify="between" className="mb-3">
                   <Text size="xs" color="muted">Remaining balance</Text>
-                  <Text size="xs" weight="medium">{toRupees(order.emiRemainingBalance ?? 0)}</Text>
+                  <Text size="xs" weight="medium">{toCurrency(order.emiRemainingBalance ?? 0)}</Text>
                 </Row>
                 <Div className="divide-y divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
                   {(order.emiInstallments ?? []).map((inst) => (
                     <Row key={inst.index} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
                       <Div className="min-w-0">
                         <Text size="sm" weight="medium">
-                          Installment {inst.index} · {toRupees(inst.amount)}
+                          Installment {inst.index} · {toCurrency(inst.amount)}
                         </Text>
                         <Text size="xs" color="muted">
                           {inst.status === "paid" && inst.paidAt
@@ -487,7 +487,7 @@ export function SellerOrdersView({
       key: "totalAmount",
       header: "Total",
       className: "w-28",
-      render: (row) => <Span size="sm" weight="semibold">{toRupees(row.totalAmount)}</Span>,
+      render: (row) => <Span size="sm" weight="semibold">{toCurrency(row.totalAmount)}</Span>,
     },
     {
       key: "status",

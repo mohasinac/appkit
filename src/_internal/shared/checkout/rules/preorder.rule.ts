@@ -36,4 +36,11 @@ export const preOrderRule: ListingCheckoutRule = {
       preOrderCurrentCount: (product.preOrderCurrentCount ?? 0) + quantity,
     };
   },
+
+  stockIncrementExtras: (product: ProductDocument, quantity: number): Record<string, JsonValue> => {
+    if (product.listingType !== "pre-order") return {};
+    return {
+      preOrderCurrentCount: Math.max(0, (product.preOrderCurrentCount ?? 0) - quantity),
+    };
+  },
 };

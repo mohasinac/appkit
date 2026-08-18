@@ -114,8 +114,8 @@ function FeaturedBundleCard({ bundle, onBuyNow }: FeaturedBundleCardProps) {
         <Text className="line-clamp-2" size="sm" weight="semibold">{bundle.name}</Text>
         <Row gap="sm" align="center" className="mt-1" wrap>
           <Text size="sm" weight="bold">
-            {bundle.bundlePriceInPaise
-              ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
+            {bundle.bundlePrice
+              ? formatCurrency(bundle.bundlePrice, "INR")
               : BUNDLE_COPY.featured.priceFallback}
           </Text>
           <Text size="xs" color="muted">

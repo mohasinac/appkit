@@ -2,6 +2,7 @@ import { Span, sortBy } from "@mohasinac/appkit";
 import React from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 const CLS_ICON_SM = "h-3 w-3 shrink-0";
 const CLS_ROW_CHEVRON = "h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-error text-[var(--appkit-color-text-faint)]";
@@ -43,11 +44,6 @@ type SearchParams = Record<string, string | string[]>;
 function sp(params: SearchParams, key: string): string {
   const v = params[key];
   return Array.isArray(v) ? (v[0] ?? "") : (v ?? "");
-}
-
-function formatPaise(paise: number | undefined): string {
-  if (!paise) return "";
-  return `₹${(paise / 100).toLocaleString("en-IN")}`;
 }
 
 function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
@@ -104,7 +100,7 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
               {scammer.incidentCount > 0
                 ? `${scammer.incidentCount + 1} victims reported`
                 : "1 victim reported"}
-              {scammer.amountLost ? ` · ${formatPaise(scammer.amountLost)} lost` : ""}
+              {scammer.amountLost ? ` · ${formatCurrency(scammer.amountLost)} lost` : ""}
             </Text>
             <ChevronRight className={CLS_ROW_CHEVRON} />
           </Row>

@@ -19,7 +19,7 @@ import type { UseFormShellStateResult } from "../../../../ui/forms";
 interface LotterySlotRow {
   slotNumber: number;
   name: string;
-  priceInPaise: number;
+  price: number;
 }
 
 interface LotteryEventFormData {
@@ -30,13 +30,13 @@ interface LotteryEventFormData {
     slots: Array<{
       slotNumber: number;
       name: string;
-      priceInPaise: number;
+      price: number;
       weight: number;
       isBooked: boolean;
     }>;
     totalSlots: number;
     pricingMode: "uniform" | "variable";
-    uniformPriceInPaise?: number;
+    uniformPrice?: number;
     drawWindowDurationMinutes: number;
     maxPullsPerTransaction: number;
     maxPullsPerUser: number;
@@ -50,7 +50,7 @@ interface LotteryAdminEditViewProps {
     description?: string;
     totalSlots: number;
     pricingMode: "uniform" | "variable";
-    uniformPriceInPaise?: number;
+    uniformPrice?: number;
     drawWindowDurationMinutes: number;
     maxPullsPerTransaction: number;
     maxPullsPerUser: number;
@@ -70,18 +70,18 @@ export function LotteryAdminEditView({
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [description, setDescription] = useState(initialData?.description ?? "");
   const [pricingMode, setPricingMode] = useState<"uniform" | "variable">(initialData?.pricingMode ?? "uniform");
-  const [uniformPrice, setUniformPrice] = useState(String((initialData?.uniformPriceInPaise ?? 0) / 100));
+  const [uniformPrice, setUniformPrice] = useState(String(initialData?.uniformPrice ?? 0));
   const [drawWindowMinutes, setDrawWindowMinutes] = useState(String(initialData?.drawWindowDurationMinutes ?? 5));
   const [maxPullsPerTx, setMaxPullsPerTx] = useState(String(initialData?.maxPullsPerTransaction ?? 1));
   const [maxPullsPerUser, setMaxPullsPerUser] = useState(String(initialData?.maxPullsPerUser ?? 1));
   const [slots, setSlots] = useState<LotterySlotRow[]>(
-    initialData?.slots ?? [{ slotNumber: 1, name: "", priceInPaise: 0 }],
+    initialData?.slots ?? [{ slotNumber: 1, name: "", price: 0 }],
   );
 
   const addSlot = () => {
     setSlots((prev) => [
       ...prev,
-      { slotNumber: prev.length + 1, name: "", priceInPaise: 0 },
+      { slotNumber: prev.length + 1, name: "", price: 0 },
     ]);
   };
 
@@ -91,11 +91,11 @@ export function LotteryAdminEditView({
     );
   };
 
-  const updateSlot = (idx: number, field: "name" | "priceInPaise", value: string) => {
+  const updateSlot = (idx: number, field: "name" | "price", value: string) => {
     setSlots((prev) =>
       prev.map((s, i) =>
         i === idx
-          ? { ...s, [field]: field === "priceInPaise" ? Math.round(parseFloat(value) * 100) || 0 : value }
+          ? { ...s, [field]: field === "price" ? Math.round(parseFloat(value) * 100) / 100 || 0 : value }
           : s,
       ),
     );
@@ -109,13 +109,13 @@ export function LotteryAdminEditView({
           slots: slots.map((s) => ({
             slotNumber: s.slotNumber,
             name: s.name,
-            priceInPaise: s.priceInPaise,
+            price: s.price,
             weight: 0,
             isBooked: false,
           })),
           totalSlots: slots.length,
           pricingMode,
-          uniformPriceInPaise: pricingMode === "uniform" ? Math.round(parseFloat(uniformPrice) * 100) || 0 : undefined,
+          uniformPrice: pricingMode === "uniform" ? Math.round(parseFloat(uniformPrice) * 100) / 100 || 0 : undefined,
           drawWindowDurationMinutes: parseInt(drawWindowMinutes, 10) || 5,
           maxPullsPerTransaction: parseInt(maxPullsPerTx, 10) || 1,
           maxPullsPerUser: parseInt(maxPullsPerUser, 10) || 1,
@@ -152,15 +152,15 @@ export function LotteryAdminEditView({
     ...(pricingMode === "variable"
       ? [
           {
-            key: "priceInPaise" as const,
+            key: "price" as const,
             header: "Price (₹)",
             render: (s: LotterySlotRow & { _idx: number }) => (
               <Input
                 type="number"
                 className="w-24"
                 placeholder="0"
-                value={s.priceInPaise / 100}
-                onChange={(e) => updateSlot(s._idx, "priceInPaise", e.target.value)}
+                value={s.price}
+                onChange={(e) => updateSlot(s._idx, "price", e.target.value)}
                 aria-label={`Slot ${s.slotNumber} price`}
               />
             ),

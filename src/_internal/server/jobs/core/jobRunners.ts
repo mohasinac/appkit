@@ -59,7 +59,9 @@ async function runHardBanCascadeJob(
   const uid = String(payload.uid ?? "");
   const reason = String(payload.reason ?? "");
   const bannedBy = String(payload.bannedBy ?? "");
-  return runHardBanCascade({ uid, reason, bannedBy }, ctx);
+  const expiresAt = typeof payload.expiresAt === "string" ? new Date(payload.expiresAt) : undefined;
+  const fraudOrderId = typeof payload.fraudOrderId === "string" ? payload.fraudOrderId : undefined;
+  return runHardBanCascade({ uid, reason, bannedBy, expiresAt, fraudOrderId }, ctx);
 }
 
 async function runResetOtpVerificationJob(

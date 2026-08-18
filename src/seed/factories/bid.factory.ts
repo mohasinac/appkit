@@ -19,7 +19,7 @@ export function makeBid(
     id: overrides.id ?? `bid-${n}`,
     auctionId: overrides.auctionId ?? "auction-1",
     userId: overrides.userId ?? `user-${n}`,
-    amount: overrides.amount ?? n * 100,
+    amount: overrides.amount ?? n,
     timestamp: overrides.timestamp ?? new Date(),
     isWinning: overrides.isWinning ?? false,
     retracted: overrides.retracted ?? false,

@@ -11,7 +11,7 @@ function makeSlot(overrides: Partial<LotterySlot> = {}): LotterySlot {
   return {
     slotNumber: 1,
     name: "Test Slot",
-    priceInPaise: 1000_00,
+    price: 1000,
     weight: 50,
     isBooked: false,
     ...overrides,
@@ -32,7 +32,7 @@ describe("computeWeight", () => {
     expect(computeWeight(5000, 10000)).toBe(51);
   });
 
-  it("returns 50 when maxPriceInPaise is 0 (uniform mode fallback)", () => {
+  it("returns 50 when maxPrice is 0 (uniform mode fallback)", () => {
     expect(computeWeight(0, 0)).toBe(50);
     expect(computeWeight(1000, 0)).toBe(50);
   });
@@ -47,13 +47,13 @@ describe("assignSlotWeights — uniform mode", () => {
   it("assigns weight 50 to all slots in uniform mode", () => {
     const config: LotteryConfig = {
       slots: [
-        makeSlot({ slotNumber: 1, priceInPaise: 1000_00, weight: 0 }),
-        makeSlot({ slotNumber: 2, priceInPaise: 5000_00, weight: 0 }),
-        makeSlot({ slotNumber: 3, priceInPaise: 10000_00, weight: 0 }),
+        makeSlot({ slotNumber: 1, price: 1000, weight: 0 }),
+        makeSlot({ slotNumber: 2, price: 5000, weight: 0 }),
+        makeSlot({ slotNumber: 3, price: 10000, weight: 0 }),
       ],
       totalSlots: 3,
       pricingMode: "uniform",
-      uniformPriceInPaise: 1000_00,
+      uniformPrice: 1000,
       drawWindowDurationMinutes: 5,
       maxPullsPerTransaction: 1,
       maxPullsPerUser: 1,
@@ -70,8 +70,8 @@ describe("assignSlotWeights — variable mode", () => {
   it("gives lower-priced slots higher weight than higher-priced slots", () => {
     const config: LotteryConfig = {
       slots: [
-        makeSlot({ slotNumber: 1, priceInPaise: 100_00, weight: 0 }),   // cheap → high weight
-        makeSlot({ slotNumber: 2, priceInPaise: 5000_00, weight: 0 }),  // expensive → low weight
+        makeSlot({ slotNumber: 1, price: 100, weight: 0 }),   // cheap → high weight
+        makeSlot({ slotNumber: 2, price: 5000, weight: 0 }),  // expensive → low weight
       ],
       totalSlots: 2,
       pricingMode: "variable",

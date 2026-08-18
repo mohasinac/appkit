@@ -33,7 +33,7 @@ function legacyFallback(order: OrderDocument): OrderPaymentRecord | null {
     method,
     transactionId: order.paymentTransactionId ?? order.paymentId,
     proofUrl: order.paymentProofUrl,
-    amountPaise: order.totalPrice,
+    amount: order.totalPrice,
     verificationMethod:
       method === "razorpay" ? "webhook" : method === "cod" ? "cod_collection" : "manual_review",
   };
@@ -73,7 +73,7 @@ export function OrderPaymentSummary({ order, className = "" }: OrderPaymentSumma
         </Row>
         <Row justify="between">
           <Text size="sm" color="muted">Amount</Text>
-          <Text size="sm" weight="medium">{formatCurrency(record.amountPaise / 100, order.currency ?? "INR")}</Text>
+          <Text size="sm" weight="medium">{formatCurrency(record.amount, order.currency ?? "INR")}</Text>
         </Row>
         {record.transactionId && (
           <Row justify="between">

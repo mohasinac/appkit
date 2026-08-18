@@ -42,7 +42,7 @@ function makeInput(overrides: Partial<{
   storeId: string;
   orderId: string;
   refundId: string;
-  refundedAmountInPaise: number;
+  refundedAmount: number;
   platformFeeRate: number;
   reason: string;
 }> = {}) {
@@ -50,7 +50,7 @@ function makeInput(overrides: Partial<{
     storeId: "store-seller-1",
     orderId: "order-1-20260629-abc",
     refundId: "refund-xyz123",
-    refundedAmountInPaise: 100000,
+    refundedAmount: 100000,
     reason: "Customer returned item",
     ...overrides,
   };
@@ -63,14 +63,14 @@ describe("applyRefundDeductionAction — validation", () => {
     mockPayoutApplyRefundDeduction.mockResolvedValue({ id: "payout-seller-1-20260629-xyz", amount: 900000 });
   });
 
-  it("refundedAmountInPaise === 0 → { ok: false, error: /must be positive/i }", async () => {
-    const result = await applyRefundDeductionAction(makeInput({ refundedAmountInPaise: 0 }));
+  it("refundedAmount === 0 → { ok: false, error: /must be positive/i }", async () => {
+    const result = await applyRefundDeductionAction(makeInput({ refundedAmount: 0 }));
     expect(result.ok).toBe(false);
     expect((result as { error: string }).error).toMatch(/must be positive/i);
   });
 
-  it("refundedAmountInPaise < 0 → { ok: false, error: /must be positive/i }", async () => {
-    const result = await applyRefundDeductionAction(makeInput({ refundedAmountInPaise: -500 }));
+  it("refundedAmount < 0 → { ok: false, error: /must be positive/i }", async () => {
+    const result = await applyRefundDeductionAction(makeInput({ refundedAmount: -500 }));
     expect(result.ok).toBe(false);
     expect((result as { error: string }).error).toMatch(/must be positive/i);
   });
@@ -120,25 +120,25 @@ describe("applyRefundDeductionAction — fee rate calculation", () => {
   });
 
   it("platformFeeRate not provided → defaults to 0.05; deductedAmount = round(1000 * 0.95) = 950", async () => {
-    await applyRefundDeductionAction(makeInput({ refundedAmountInPaise: 1000 }));
+    await applyRefundDeductionAction(makeInput({ refundedAmount: 1000 }));
     const callArg = mockPayoutApplyRefundDeduction.mock.calls[0][1];
     expect(callArg.deductedAmount).toBe(950);
   });
 
   it("platformFeeRate = 0.10 → deductedAmount = round(1000 * 0.90) = 900", async () => {
-    await applyRefundDeductionAction(makeInput({ refundedAmountInPaise: 1000, platformFeeRate: 0.10 }));
+    await applyRefundDeductionAction(makeInput({ refundedAmount: 1000, platformFeeRate: 0.10 }));
     const callArg = mockPayoutApplyRefundDeduction.mock.calls[0][1];
     expect(callArg.deductedAmount).toBe(900);
   });
 
   it("platformFeeRate = 0.00 → deductedAmount = round(1000 * 1.00) = 1000", async () => {
-    await applyRefundDeductionAction(makeInput({ refundedAmountInPaise: 1000, platformFeeRate: 0.0 }));
+    await applyRefundDeductionAction(makeInput({ refundedAmount: 1000, platformFeeRate: 0.0 }));
     const callArg = mockPayoutApplyRefundDeduction.mock.calls[0][1];
     expect(callArg.deductedAmount).toBe(1000);
   });
 
   it("deductedAmount is an integer (Math.round applied; 333 * 0.95 = 316.35 → 316)", async () => {
-    await applyRefundDeductionAction(makeInput({ refundedAmountInPaise: 333 }));
+    await applyRefundDeductionAction(makeInput({ refundedAmount: 333 }));
     const callArg = mockPayoutApplyRefundDeduction.mock.calls[0][1];
     expect(Number.isInteger(callArg.deductedAmount)).toBe(true);
     expect(callArg.deductedAmount).toBe(316);
@@ -153,7 +153,7 @@ describe("applyRefundDeductionAction — success", () => {
 
   it("valid → payoutRepository.applyRefundDeduction called with orderId, refundId, refundedAmount, deductedAmount, reason", async () => {
     mockPayoutApplyRefundDeduction.mockResolvedValue({ id: "payout-1", amount: 900000, netAmount: 895000 });
-    await applyRefundDeductionAction(makeInput({ refundedAmountInPaise: 100000 }));
+    await applyRefundDeductionAction(makeInput({ refundedAmount: 100000 }));
     expect(mockPayoutApplyRefundDeduction).toHaveBeenCalledWith(
       "payout-seller-1-20260629-xyz",
       expect.objectContaining({

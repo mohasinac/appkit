@@ -161,6 +161,12 @@ console.log(`✓ Connected to project: ${process.env.FIREBASE_ADMIN_PROJECT_ID |
 // Pull seed data + helpers from @mohasinac/appkit
 // ---------------------------------------------------------------------------
 const appkit = await import("@mohasinac/appkit");
+// PII crypto functions moved server-only in appkit 3.8.1 (they touch
+// firebase-admin's crypto chain) — no longer exported from the main
+// client-safe barrel, only from "@mohasinac/appkit/server". The *_PII_FIELDS
+// / *_PII_INDEX_MAP constants are plain data and stay in the main barrel.
+const appkitServer = await import("@mohasinac/appkit/server");
+const { encryptPiiFields, addPiiIndices, encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig } = appkitServer;
 
 const {
   // seed data
@@ -191,9 +197,8 @@ const {
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
   WISHLIST_COLLECTION, HISTORY_COLLECTION, PRODUCT_FEATURES_COLLECTION,
   TESTER_CHECKLIST_ITEM_COLLECTION,
-  // PII helpers
-  encryptPiiFields, addPiiIndices,
-  encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig,
+  // PII field/index constants (plain data, still in the main barrel — the
+  // crypto functions themselves come from appkitServer above)
   USER_PII_FIELDS, USER_PII_INDEX_MAP,
   ADDRESS_PII_FIELDS, ORDER_PII_FIELDS, BID_PII_FIELDS, PAYOUT_PII_FIELDS,
   REVIEW_PII_FIELDS, OFFER_PII_FIELDS, EVENT_ENTRY_PII_FIELDS, CHAT_PII_FIELDS,

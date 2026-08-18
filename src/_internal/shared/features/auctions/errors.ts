@@ -16,7 +16,7 @@ export class AuctionEndedError extends ExpiredError {
 
 export class BidTooLowError extends ValidationError {
   constructor(minBid: number) {
-    super(`Bid must be at least ₹${(minBid / 100).toLocaleString("en-IN")} (${minBid} paise)`, "amount");
+    super(`Bid must be at least ₹${minBid.toLocaleString("en-IN")}`, "amount");
     this.name = "BidTooLowError";
   }
 }

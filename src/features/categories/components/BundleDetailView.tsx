@@ -66,8 +66,8 @@ export function BundleDetailView({
   const memberCount = members.length || bundle.bundleProductIds?.length || 0;
   const stock = bundle.bundleStockStatus ?? "in_stock";
   const cover = bundle.display?.coverImage;
-  const priceLabel = bundle.bundlePriceInPaise
-    ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
+  const priceLabel = bundle.bundlePrice
+    ? formatCurrency(bundle.bundlePrice, "INR")
     : BUNDLE_COPY.detail.priceFallback;
 
   return (

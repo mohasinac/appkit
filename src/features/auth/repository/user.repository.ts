@@ -181,6 +181,25 @@ export class UserRepository extends BaseRepository<UserDocument> {
     }
   }
 
+  /**
+   * Cloud Functions: temporary hard-bans past their `hardBanExpiresAt` —
+   * the `hardBanReinstatement` sweep re-enables Auth login for these.
+   * Permanent bans (`hardBanExpiresAt` null/absent) never match this query.
+   */
+  async getExpiredHardBans(): Promise<UserDocument[]> {
+    try {
+      const snapshot = await this.getCollection()
+        .where(USER_FIELDS.IS_DISABLED, "==", true)
+        .where(USER_FIELDS.HARD_BAN_EXPIRES_AT, "<=", new Date())
+        .limit(500)
+        .get();
+      return snapshot.docs.map((doc) => this.mapDoc<UserDocument>(doc));
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError("Failed to fetch expired hard bans", error);
+    }
+  }
+
   override async update(
     uid: string,
     data: Partial<UserDocument>,

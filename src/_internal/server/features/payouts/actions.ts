@@ -17,13 +17,14 @@ import { wrapAction, type ActionResult } from "@mohasinac/appkit/server";
 
 import { payoutRepository } from "../../../../repositories";
 import { ValidationError } from "../../../../errors";
+import { roundRupees } from "../../../../utils/number.formatter";
 
 export type ApplyRefundDeductionInput = {
   storeId: string;
   orderId: string;
   refundId: string;
-  /** Gross refund amount in paise. */
-  refundedAmountInPaise: number;
+  /** Gross refund amount, decimal rupees. */
+  refundedAmount: number;
   /** Platform fee rate (0–1). Defaults to DEFAULT_PLATFORM_FEE_RATE (0.05). */
   platformFeeRate?: number;
   reason: string;
@@ -37,26 +38,26 @@ export async function applyRefundDeductionAction(
   input: ApplyRefundDeductionInput,
 ): Promise<ActionResult<ApplyRefundDeductionResult>> {
   return wrapAction(async () => {
-    if (input.refundedAmountInPaise <= 0) {
+    if (input.refundedAmount <= 0) {
         throw new ValidationError("Refund amount must be positive");
       }
-    
+
       const feeRate = input.platformFeeRate ?? 0.05;
-      const deductedAmount = Math.round(input.refundedAmountInPaise * (1 - feeRate));
-    
+      const deductedAmount = roundRupees(input.refundedAmount * (1 - feeRate));
+
       const pending = await payoutRepository.findPendingByStore(input.storeId);
       if (!pending) {
         return { applied: false, reason: "no_pending_payout" };
       }
-    
+
       if (!pending.orderIds.includes(input.orderId)) {
         return { applied: false, reason: "order_not_in_payout" };
       }
-    
+
       const updated = await payoutRepository.applyRefundDeduction(pending.id, {
         orderId: input.orderId,
         refundId: input.refundId,
-        refundedAmount: input.refundedAmountInPaise,
+        refundedAmount: input.refundedAmount,
         deductedAmount,
         reason: input.reason,
       });

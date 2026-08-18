@@ -1,6 +1,7 @@
 /*
  * WHY: Provides 18 seed user accounts covering all marketplace roles and demographics.
- * WHAT: Exports 18 UserDocument partials — 1 admin, 7 sellers (store owners), 10 buyers.
+ * WHAT: Exports 18 UserDocument partials — 1 admin, 7 sellers (store owners, one of which
+ *       is also the dedicated isTester QA account), 10 buyers.
  *       All passwords are TempPass123! in the Firebase Auth emulator. UIDs match slugs.
  *
  * EXPORTS:
@@ -531,5 +532,42 @@ export const usersSeedData: Partial<UserDocument>[] = [
     metadata: { lastSignInTime: daysAgo(3), creationTime: daysAgo(110).toISOString(), loginCount: 50 },
     createdAt: daysAgo(110),
     updatedAt: daysAgo(3),
+  },
+
+  // ── Tester QA account (role stays "seller" — isTester unlocks Tester Hub + auto-approved store) ──
+  {
+    uid: "user-tester-qa",
+    email: "tester@letitrip.in",
+    phoneNumber: `${_ph}9999900018`,
+    phoneVerified: true,
+    displayName: "QA Tester",
+    photoURL: seedExtMedia("https://picsum.photos/seed/user-avatar-qa-tester-20260101/400/400"),
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
+    isTester: true,
+    emailVerified: true,
+    disabled: false,
+    storeId: "store-tester-qa-seller",
+    storeSlug: "store-tester-qa-seller",
+    storeStatus: "approved",
+    payoutDetails: {
+      method: "upi",
+      upiId: "tester-qa@upi",
+      isConfigured: true,
+    },
+    publicProfile: {
+      isPublic: true,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "Dedicated QA tester account for the Tester QA Program — runs through the checklist against the shared test sandbox.",
+      location: "Bengaluru, Karnataka",
+      storeName: "Tester QA Seller Store",
+      storeCategory: "trading-cards",
+    },
+    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
+    metadata: { lastSignInTime: daysAgo(1), creationTime: daysAgo(1).toISOString(), loginCount: 5 },
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
   },
 ];

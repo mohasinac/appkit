@@ -151,7 +151,7 @@ export interface ScammerDocument extends BaseDocument {
   /** Reporter's narrative for the first/primary incident. */
   description: string;
 
-  /** Amount lost in INR paise (0 if none). Optional. */
+  /** Amount lost in INR, decimal rupees (0 if none). Optional. */
   amountLost?: number;
 
   /** Item involved in the scam (e.g. "Charizard PSA 9"). Optional. */

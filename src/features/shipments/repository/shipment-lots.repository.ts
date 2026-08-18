@@ -34,12 +34,12 @@ export class ShipmentLotsRepository extends BaseRepository<ShipmentLot> {
       shipmentId,
       shipmentStatus,
       itemCount: 0,
-      mainItemsProjectedRevenuePaise: 0,
-      customsAllocatedPaise: 0,
-      shippingAllocatedPaise: 0,
-      totalLandedCostPaise: input.purchaseCostPaise,
-      projectedRevenuePaise: input.remainderEstimatedValuePaise ?? 0,
-      projectedProfitPaise: (input.remainderEstimatedValuePaise ?? 0) - input.purchaseCostPaise,
+      mainItemsProjectedRevenue: 0,
+      customsAllocated: 0,
+      shippingAllocated: 0,
+      totalLandedCost: input.purchaseCost,
+      projectedRevenue: input.remainderEstimatedValue ?? 0,
+      projectedProfit: (input.remainderEstimatedValue ?? 0) - input.purchaseCost,
     });
   }
 
@@ -64,8 +64,8 @@ export class ShipmentLotsRepository extends BaseRepository<ShipmentLot> {
     shipmentId: { canFilter: true, canSort: false },
     shipmentStatus: { canFilter: true, canSort: false },
     lotName: { canFilter: true, canSort: true },
-    projectedProfitPaise: { canFilter: true, canSort: true },
-    projectedRevenuePaise: { canFilter: true, canSort: true },
+    projectedProfit: { canFilter: true, canSort: true },
+    projectedRevenue: { canFilter: true, canSort: true },
     createdAt: { canFilter: true, canSort: true },
   };
 }

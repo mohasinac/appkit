@@ -7,6 +7,7 @@ import type { CouponType } from "../types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 
 export interface DiscountConfig {
+  /** Percentage (0-100) when type === "percentage"; decimal rupees when type === "fixed". */
   value: number;
   maxDiscount?: number;
   minPurchase?: number;
@@ -21,6 +22,7 @@ export interface BXGYConfig {
 
 export interface TieredDiscount {
   minAmount: number;
+  /** Percentage (0-100) when the coupon type === "percentage"; decimal rupees when type === "fixed". */
   discountValue: number;
 }
 
@@ -312,6 +314,7 @@ export function calculateDiscount(
   let discountAmount = 0;
   switch (coupon.type) {
     case "percentage":
+      // audit-money-units-ok: percentage divisor (coupon.discount.value is 0-100), not paise
       discountAmount = (orderTotal * coupon.discount.value) / 100;
       if (
         coupon.discount.maxDiscount &&

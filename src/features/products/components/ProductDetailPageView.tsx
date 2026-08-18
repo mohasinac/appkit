@@ -16,7 +16,6 @@ const CLS_STAR_EMPTY = "text-[var(--appkit-color-text-faint)] text-[length:var(-
 const CLS_STOCK_IN = "bg-success-surface text-success dark:bg-success-surface dark:text-success";
 const CLS_STOCK_OUT = "bg-error-surface text-error dark:bg-error-surface dark:text-error";
 const CLS_BUNDLE_PILL = "inline-flex items-center gap-[var(--appkit-space-1)] rounded-full border border-success bg-success-surface px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-semibold text-success transition-colors hover:border-success hover:bg-success-surface dark:border-success/60 dark:bg-success-surface dark:text-success dark:hover:border-success dark:hover:bg-success-surface";
-const CLS_DISCOUNT_BADGE = "rounded-full bg-error-surface px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] text-white";
 const CLS_FREE_SHIPPING_ICON = "mt-0.5 flex-shrink-0 text-success";
 const CLS_BUNDLE_BOX = "rounded-xl border border-success dark:border-success/60 bg-success-surface dark:bg-success-surface p-[var(--appkit-space-5)]";
 const CLS_BUNDLE_ICON = "text-success dark:text-success";
@@ -33,6 +32,7 @@ import {
   Heading,
   Main,
   Nav,
+  PriceDisplay,
   RichText,
   Row,
   Section,
@@ -47,7 +47,6 @@ import {
   Dd,
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
-import { formatCurrency } from "../../../utils/number.formatter";
 import { safeDisplayName } from "../../../security";
 import type { ProductItem } from "../types";
 import type { Review } from "../../reviews/types";
@@ -265,10 +264,6 @@ export async function ProductDetailPageView({
     typeof p.price === "number" ? (p.price as number) : null;
   const originalPrice =
     typeof p.originalPrice === "number" ? (p.originalPrice as number) : null;
-  const discount =
-    price && originalPrice && originalPrice > price
-      ? Math.round(((originalPrice - price) / originalPrice) * 100)
-      : null;
 
   const images: string[] = Array.isArray(p.images)
     ? (p.images as string[])
@@ -413,10 +408,6 @@ export async function ProductDetailPageView({
     })
     .slice(0, 8)
     .map(toProductItem);
-
-  const formattedPrice = price !== null ? formatCurrency(price, currency) : null;
-  const formattedOriginal =
-    originalPrice !== null ? formatCurrency(originalPrice, currency) : null;
 
   return (
     <Main>
@@ -672,23 +663,14 @@ export async function ProductDetailPageView({
           renderActions={() => (
             <Stack className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
               {/* Price + discount */}
-              {formattedPrice && (
+              {price !== null && (
                 <Div>
-                  <Row align="baseline" gap="sm" wrap>
-                    <Text size="2xl" weight="bold" color="primary">
-                      {formattedPrice}
-                    </Text>
-                    {formattedOriginal && discount && (
-                      <>
-                        <Span size="sm" className="line-through" color="faint">
-                          {formattedOriginal}
-                        </Span>
-                        <Span size="xs" weight="bold" className={CLS_DISCOUNT_BADGE}>
-                          -{discount}%
-                        </Span>
-                      </>
-                    )}
-                  </Row>
+                  <PriceDisplay
+                    amount={price}
+                    originalAmount={originalPrice ?? undefined}
+                    currency={currency}
+                    variant="detail"
+                  />
                   {inStock && effectiveStock !== null && effectiveStock <= 10 && (
                     <Text className="mt-1 text-warning" size="xs">
                       Only {effectiveStock} left — order soon!

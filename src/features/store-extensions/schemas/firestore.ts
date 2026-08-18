@@ -73,10 +73,10 @@ export interface ShippingConfigDocument extends BaseDocument {
   method: ShippingMethod;
   isDefault: boolean;
   isActive: boolean;
-  flatRateInPaise?: number;
-  pricePerKgInPaise?: number;
-  freeAbovePaise?: number;
-  expressSurchargeInPaise?: number;
+  flatRate?: number;
+  pricePerKg?: number;
+  freeAbove?: number;
+  expressSurcharge?: number;
   estimatedDays?: number;
   zones?: string[];
 }
@@ -348,7 +348,7 @@ export interface ItemRequestDocument extends BaseDocument {
   description: string;
   category?: string;
   brand?: string;
-  maxBudgetInPaise?: number;
+  maxBudget?: number;
   imageUrls: string[];
   status: ItemRequestStatus;
   replyCount: number;

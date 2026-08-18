@@ -35,7 +35,7 @@ function makeBundle(overrides: Record<string, unknown> = {}) {
     name: "Pokémon Starter Bundle",
     isActive: true,
     bundleStockStatus: "in_stock",
-    bundlePriceInPaise: 150000,
+    bundlePrice: 150000,
     bundleProductIds: ["product-charmander", "product-squirtle", "product-bulbasaur"],
     createdByStoreId: "store-pokemon-palace",
     createdByStoreName: "Pokemon Palace",
@@ -75,13 +75,13 @@ describe("addBundleToCartAction — validation", () => {
     await expect(addBundleToCartAction("user-buyer-1", "bundle-pokemon-starter")).rejects.toThrow(/out of stock/i);
   });
 
-  it("bundle.bundlePriceInPaise === 0 → throws ValidationError(/price is not configured/i)", async () => {
-    mockCategoriesFindBySlugAndType.mockResolvedValue(makeBundle({ bundlePriceInPaise: 0 }));
+  it("bundle.bundlePrice === 0 → throws ValidationError(/price is not configured/i)", async () => {
+    mockCategoriesFindBySlugAndType.mockResolvedValue(makeBundle({ bundlePrice: 0 }));
     await expect(addBundleToCartAction("user-buyer-1", "bundle-pokemon-starter")).rejects.toThrow(/price is not configured/i);
   });
 
-  it("bundle.bundlePriceInPaise < 1 → throws ValidationError(/price is not configured/i)", async () => {
-    mockCategoriesFindBySlugAndType.mockResolvedValue(makeBundle({ bundlePriceInPaise: -100 }));
+  it("bundle.bundlePrice < 1 → throws ValidationError(/price is not configured/i)", async () => {
+    mockCategoriesFindBySlugAndType.mockResolvedValue(makeBundle({ bundlePrice: -100 }));
     await expect(addBundleToCartAction("user-buyer-1", "bundle-pokemon-starter")).rejects.toThrow(/price is not configured/i);
   });
 });
@@ -111,7 +111,7 @@ describe("addBundleToCartAction — success path", () => {
     expect(item.bundleProductIds).toEqual(["product-charmander", "product-squirtle", "product-bulbasaur"]);
   });
 
-  it("valid bundle → addItem called with price = bundle.bundlePriceInPaise", async () => {
+  it("valid bundle → addItem called with price = bundle.bundlePrice", async () => {
     await addBundleToCartAction("user-buyer-1", "bundle-pokemon-starter");
     const item = mockCartAddItem.mock.calls[0][1];
     expect(item.price).toBe(150000);

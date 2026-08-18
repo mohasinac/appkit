@@ -28,7 +28,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     slug: "preorder-beyblade-x-bx-08-wave",
     description:
       "Reserve the next Beyblade X booster wave (BX-08) ahead of its India release. Includes randomized top + Xtreme Gear accessory.",
-    price: 79900, // ₹799
+    price: 799,
     currency: "INR",
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,

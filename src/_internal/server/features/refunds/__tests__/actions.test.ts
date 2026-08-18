@@ -97,7 +97,7 @@ function refundInput(overrides: Partial<Record<string, unknown>> = {}): Paramete
   return {
     orderId: "order-1",
     type: "partial",
-    amountInPaise: 5000,
+    amount: 5000,
     reason: "damaged item",
     confirmIrrevocable: true,
     refundedBy: "admin-uid",
@@ -126,23 +126,23 @@ describe("processRefundAction — validation guards", () => {
   });
 
   it("amount <= 0 → ok: false (validation)", async () => {
-    const result = await processRefundAction(refundInput({ amountInPaise: 0 }));
+    const result = await processRefundAction(refundInput({ amount: 0 }));
     expect(result.ok).toBe(false);
   });
 
   it("negative amount → ok: false (validation)", async () => {
-    const result = await processRefundAction(refundInput({ amountInPaise: -100 }));
+    const result = await processRefundAction(refundInput({ amount: -100 }));
     expect(result.ok).toBe(false);
   });
 
   it("amount > order.totalPrice → ok: false", async () => {
-    const result = await processRefundAction(refundInput({ amountInPaise: 10001 }));
+    const result = await processRefundAction(refundInput({ amount: 10001 }));
     expect(result.ok).toBe(false);
     expect((result as { error: string }).error).toMatch(/exceeds/i);
   });
 
   it("amount === order.totalPrice → ok: true (full refund, not exceeds)", async () => {
-    const result = await processRefundAction(refundInput({ amountInPaise: 10000 }));
+    const result = await processRefundAction(refundInput({ amount: 10000 }));
     expect(result.ok).toBe(true);
   });
 
@@ -202,7 +202,7 @@ describe("processRefundAction — Razorpay path", () => {
     const result = await processRefundAction(refundInput({
       method: "razorpay",
       razorpayPaymentId: "pay_abc123",
-      amountInPaise: 5000,
+      amount: 5000,
     }));
     expect(result.ok).toBe(true);
     expect(mockPaymentRefund).toHaveBeenCalledWith("pay_abc123", 5000);
@@ -262,13 +262,13 @@ describe("processRefundAction — success path", () => {
   });
 
   it("partial amount: isFull = false passed to postRefundEvent", async () => {
-    await processRefundAction(refundInput({ amountInPaise: 5000 }));
+    await processRefundAction(refundInput({ amount: 5000 }));
     const isFull = mockPostRefundEvent.mock.calls[0][2] as boolean;
     expect(isFull).toBe(false);
   });
 
   it("full amount: isFull = true passed to postRefundEvent", async () => {
-    await processRefundAction(refundInput({ amountInPaise: 10000 }));
+    await processRefundAction(refundInput({ amount: 10000 }));
     const isFull = mockPostRefundEvent.mock.calls[0][2] as boolean;
     expect(isFull).toBe(true);
   });
@@ -292,12 +292,12 @@ describe("processRefundAction — success path", () => {
 
 describe("processRefundAction — payout deduction", () => {
   it("triggers applyRefundDeductionAction when order has storeId", async () => {
-    await processRefundAction(refundInput({ amountInPaise: 5000 }));
+    await processRefundAction(refundInput({ amount: 5000 }));
     expect(mockApplyRefundDeduction).toHaveBeenCalledWith(
       expect.objectContaining({
         storeId: "store-A",
         orderId: "order-1",
-        refundedAmountInPaise: 5000,
+        refundedAmount: 5000,
       }),
     );
   });

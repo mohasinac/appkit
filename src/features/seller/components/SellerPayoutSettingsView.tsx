@@ -90,7 +90,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           businessType: res?.data?.taxInfo?.businessType ?? "",
           autoPayout: res?.data?.preferences?.autoPayout ?? true,
           minimumThreshold: res?.data?.preferences?.minimumThreshold
-            ? String(res.data.preferences.minimumThreshold / 100)
+            ? String(res.data.preferences.minimumThreshold)
             : "",
           emiEnabled: res?.data?.emiEnabled ?? false,
         });
@@ -131,7 +131,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         },
         preferences: {
           autoPayout: draft.autoPayout,
-          minimumThreshold: Math.round(parseFloat(draft.minimumThreshold || "0") * 100),
+          minimumThreshold: Math.round(parseFloat(draft.minimumThreshold || "0") * 100) / 100,
         },
       };
 

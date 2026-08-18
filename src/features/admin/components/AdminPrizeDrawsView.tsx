@@ -13,7 +13,7 @@ import { ROUTES } from "../../../constants";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -128,7 +128,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
           storeName: toStringValue(item.sellerName ?? item.storeId, "Unknown store"),
           status: toStringValue(item.status, "draft"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-          entryFee: priceRaw ? toRupees(priceRaw) : "Free",
+          entryFee: priceRaw ? toCurrency(priceRaw) : "Free",
           drawDate: item.prizeRevealWindowEnd
             ? toRelativeDate(item.prizeRevealWindowEnd as string)
             : "TBA",

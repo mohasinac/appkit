@@ -15,7 +15,7 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { AdminShipmentEditorView } from "./AdminShipmentEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
-import { formatPaise } from "../../../utils/number.formatter";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 const STATUS_OPTIONS = [
   { id: "All", label: "All" },
@@ -70,7 +70,7 @@ export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewPro
     sortOptions: [
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
       { value: sortBy("etaDate", "ASC"), label: "ETA soonest" },
-      { value: sortBy("projectedProfitPaise", "DESC"), label: "Highest projected profit" },
+      { value: sortBy("projectedProfit", "DESC"), label: "Highest projected profit" },
       { value: "shipmentNumber", label: "Shipment # A–Z" },
     ],
     mapRows: (response) =>
@@ -86,8 +86,8 @@ export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewPro
             .join(" · "),
           status: toStringValue(item.status, "planning"),
           updatedAt: toRelativeDate(updatedAt),
-          totalCost: formatPaise(Number(totals.totalShipmentCostPaise ?? 0)),
-          projectedProfit: formatPaise(Number(totals.projectedProfitPaise ?? 0)),
+          totalCost: formatCurrency(Number(totals.totalShipmentCost ?? 0)),
+          projectedProfit: formatCurrency(Number(totals.projectedProfit ?? 0)),
           recalculating: !totalsComputedAt || (!!updatedAt && String(updatedAt) > String(totalsComputedAt)),
         };
       }),

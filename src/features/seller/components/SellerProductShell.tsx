@@ -188,11 +188,11 @@ const PRODUCTION_STATUS_OPTIONS = [
   { value: "ready_to_ship", label: "Ready to Ship" },
 ];
 
-function toRupees(paise?: number): string {
-  return paise != null ? String(Math.round(paise / 100)) : "";
+function toRupeesString(price?: number): string {
+  return price != null ? String(price) : "";
 }
-function toPaise(rupeeStr: string): number {
-  return Math.round((parseFloat(rupeeStr) || 0) * 100);
+function fromRupeesString(rupeeStr: string): number {
+  return Math.round((parseFloat(rupeeStr) || 0) * 100) / 100;
 }
 
 // ── Step 1: Basic ─────────────────────────────────────────────────────────────
@@ -402,8 +402,8 @@ function StepAuctionSettings({
           name="startingBid"
           label="Starting Bid (₹)"
           type="number"
-          value={toRupees(values.startingBid)}
-          onChange={(v) => onChange({ startingBid: toPaise(v) })}
+          value={toRupeesString(values.startingBid)}
+          onChange={(v) => onChange({ startingBid: fromRupeesString(v) })}
           placeholder="100"
         />
         <FormField
@@ -419,8 +419,8 @@ function StepAuctionSettings({
           name="reservePrice"
           label="Reserve Price (₹, optional)"
           type="number"
-          value={toRupees(values.reservePrice)}
-          onChange={(v) => onChange({ reservePrice: v ? toPaise(v) : undefined })}
+          value={toRupeesString(values.reservePrice)}
+          onChange={(v) => onChange({ reservePrice: v ? fromRupeesString(v) : undefined })}
           placeholder="0"
           helpText="Minimum price below which you won't sell"
         />
@@ -428,8 +428,8 @@ function StepAuctionSettings({
           name="buyNowPrice"
           label="Buy Now Price (₹, optional)"
           type="number"
-          value={toRupees(values.buyNowPrice)}
-          onChange={(v) => onChange({ buyNowPrice: v ? toPaise(v) : undefined })}
+          value={toRupeesString(values.buyNowPrice)}
+          onChange={(v) => onChange({ buyNowPrice: v ? fromRupeesString(v) : undefined })}
           placeholder="0"
           helpText="Allows instant purchase before auction ends"
         />
@@ -438,8 +438,8 @@ function StepAuctionSettings({
         name="minBidIncrement"
         label="Minimum Bid Increment (₹)"
         type="number"
-        value={toRupees(values.minBidIncrement)}
-        onChange={(v) => onChange({ minBidIncrement: toPaise(v) })}
+        value={toRupeesString(values.minBidIncrement)}
+        onChange={(v) => onChange({ minBidIncrement: fromRupeesString(v) })}
         placeholder="50"
       />
       <FormField
@@ -730,8 +730,8 @@ function StepLiveItemSettings({
           name="liveHandlingFee"
           label="Handling / Transport Fee (₹, optional)"
           type="number"
-          value={toRupees(values.liveHandlingFee)}
-          onChange={(v) => onChange({ liveHandlingFee: v ? toPaise(v) : undefined })}
+          value={toRupeesString(values.liveHandlingFee)}
+          onChange={(v) => onChange({ liveHandlingFee: v ? fromRupeesString(v) : undefined })}
           placeholder="0"
         />
       )}
@@ -907,16 +907,16 @@ function StepPricing({
           name="price"
           label={priceLabel}
           type="number"
-          value={toRupees(values.price)}
-          onChange={(v) => onChange({ price: toPaise(v) })}
+          value={toRupeesString(values.price)}
+          onChange={(v) => onChange({ price: fromRupeesString(v) })}
           placeholder="999"
         />
         <FormField
           name="compareAtPrice"
           label="Compare-at Price (₹, optional)"
           type="number"
-          value={toRupees(values.compareAtPrice)}
-          onChange={(v) => onChange({ compareAtPrice: v ? toPaise(v) : undefined })}
+          value={toRupeesString(values.compareAtPrice)}
+          onChange={(v) => onChange({ compareAtPrice: v ? fromRupeesString(v) : undefined })}
           placeholder="1299"
           helpText="Original price shown as strikethrough"
         />
@@ -998,8 +998,8 @@ function StepShipping({
           name="insuranceCost"
           label="Insurance Cost (₹)"
           type="number"
-          value={toRupees(values.insuranceCost)}
-          onChange={(v) => onChange({ insuranceCost: toPaise(v) })}
+          value={toRupeesString(values.insuranceCost)}
+          onChange={(v) => onChange({ insuranceCost: fromRupeesString(v) })}
           placeholder="0"
         />
       )}

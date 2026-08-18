@@ -26,7 +26,7 @@ import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/ac
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -160,7 +160,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
     mapRows: (response) =>
       toRecordArray(response.payouts).map((item, index) => ({
         id: toStringValue(item.id, `payout-${index}`),
-        primary: [`Payout ${toStringValue(item.id, "-")}`, toRupees(item.amount)].join(" · "),
+        primary: [`Payout ${toStringValue(item.id, "-")}`, toCurrency(item.amount)].join(" · "),
         secondary: toStringValue(
           (item as Record<string, JsonValue>).storeName ?? (item as Record<string, JsonValue>).sellerName,
           "Unknown store",

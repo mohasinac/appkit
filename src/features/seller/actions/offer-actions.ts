@@ -62,8 +62,8 @@ export async function makeOffer(
     throw new ValidationError("This product does not accept offers.");
 
   const minAllowed = Math.ceil(
-    product.price * ((product.minOfferPercent ?? 70) / 100),
-  );
+    product.price * ((product.minOfferPercent ?? 70) / 100) * 100,
+  ) / 100;
   if (offerAmount < minAllowed)
     throw new ValidationError(
       `Minimum offer is ₹${minAllowed} (${product.minOfferPercent ?? 70}% of listing price).`,

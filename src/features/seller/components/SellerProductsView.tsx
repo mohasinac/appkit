@@ -324,7 +324,7 @@ export function SellerProductsView({
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
           listingKind: kind,
-          price: priceRaw ? `₹${(priceRaw / 100).toLocaleString("en-IN")}` : "—",
+          price: priceRaw ? `₹${priceRaw.toLocaleString("en-IN")}` : "—",
           physicalLocation:
             item.physicalLocation &&
             typeof (item.physicalLocation as Record<string, JsonValue>).zone === "string"

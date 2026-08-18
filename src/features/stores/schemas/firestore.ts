@@ -23,16 +23,16 @@ export interface ShippingProviderConfig {
   label: string;
   type: ShippingProviderType;
   fee: {
-    /** Flat fee in paise. */
-    flatInPaise?: number;
-    /** Per-kg surcharge in paise. */
-    perKgInPaise?: number;
+    /** Flat fee, decimal rupees. */
+    flat?: number;
+    /** Per-kg surcharge, decimal rupees. */
+    perKg?: number;
     /** Percentage of order subtotal (0–100). */
     percentOfOrder?: number;
     /** If order subtotal exceeds this threshold, shipping is free. */
-    freeAboveInPaise?: number;
-    /** Minimum charge in paise (floor after all other rules). */
-    minInPaise?: number;
+    freeAbove?: number;
+    /** Minimum charge, decimal rupees (floor after all other rules). */
+    min?: number;
   };
   etaDaysMin: number;
   etaDaysMax: number;

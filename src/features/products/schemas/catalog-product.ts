@@ -54,8 +54,8 @@ export interface CatalogProductDocument {
   identifiers?: CatalogIdentifiers;
   /** Denormalised — count of active offers linking to this catalog row. */
   offerCount: number;
-  /** Denormalised — minimum priceInPaise across active linked offers. */
-  minOfferPriceInPaise?: number;
+  /** Denormalised — minimum price (rupees) across active linked offers. */
+  minOfferPrice?: number;
   /** Catalog is searchable / showable on `/catalog/{slug}`. */
   isActive: boolean;
   createdAt: Date;
@@ -78,7 +78,7 @@ export const CATALOG_PUBLIC_FIELDS = [
   "images",
   "identifiers",
   "offerCount",
-  "minOfferPriceInPaise",
+  "minOfferPrice",
   "isActive",
   "createdAt",
   "updatedAt",
@@ -98,10 +98,10 @@ export const CATALOG_UPDATABLE_FIELDS = [
 
 export type CatalogProductCreateInput = Omit<
   CatalogProductDocument,
-  "id" | "createdAt" | "updatedAt" | "offerCount" | "minOfferPriceInPaise"
+  "id" | "createdAt" | "updatedAt" | "offerCount" | "minOfferPrice"
 > & {
   offerCount?: number;
-  minOfferPriceInPaise?: number;
+  minOfferPrice?: number;
 };
 
 export type CatalogProductUpdateInput = Partial<

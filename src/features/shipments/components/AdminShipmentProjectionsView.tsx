@@ -4,14 +4,14 @@ import React from "react";
 import { Button, Div, Heading, Modal, Pagination, Select, Skeleton, Stack, Table, Thead, Tbody, Tr, Th, Td, Text } from "../../../ui";
 import { useShipmentProjections, useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
-import { formatPaise } from "../../../utils/number.formatter";
+import { formatCurrency } from "../../../utils/number.formatter";
 import { sortBy } from "../../../constants/sort";
 import type { ShipmentLot } from "../schemas/firestore";
 
 const SORT_OPTIONS: { value: string; label: string }[] = [
-  { value: sortBy("projectedProfitPaise", "DESC"), label: "Highest projected profit" },
-  { value: sortBy("projectedProfitPaise", "ASC"), label: "Lowest projected profit" },
-  { value: sortBy("projectedRevenuePaise", "DESC"), label: "Highest projected revenue" },
+  { value: sortBy("projectedProfit", "DESC"), label: "Highest projected profit" },
+  { value: sortBy("projectedProfit", "ASC"), label: "Lowest projected profit" },
+  { value: sortBy("projectedRevenue", "DESC"), label: "Highest projected revenue" },
   { value: sortBy("createdAt", "DESC"), label: "Newest" },
 ];
 
@@ -67,10 +67,10 @@ export function AdminShipmentProjectionsView() {
               <Tr key={lot.id}>
                 <Td>{lot.lotName}</Td>
                 <Td>{lot.itemCount}</Td>
-                <Td>{formatPaise(lot.totalLandedCostPaise)}</Td>
-                <Td>{formatPaise(lot.projectedRevenuePaise)}</Td>
-                <Td className={lot.projectedProfitPaise < 0 ? "text-error" : "text-success"}>
-                  {formatPaise(lot.projectedProfitPaise)}
+                <Td>{formatCurrency(lot.totalLandedCost)}</Td>
+                <Td>{formatCurrency(lot.projectedRevenue)}</Td>
+                <Td className={lot.projectedProfit < 0 ? "text-error" : "text-success"}>
+                  {formatCurrency(lot.projectedProfit)}
                 </Td>
                 <Td>
                   <Button size="sm" variant="ghost" onClick={() => setPickerLot(lot)}>

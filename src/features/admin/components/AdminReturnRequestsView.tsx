@@ -10,7 +10,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -92,7 +92,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
         primary: toStringValue(item.id, "Unknown order"),
         secondary: [
           toStringValue(item.buyerName ?? item.buyerId, "Unknown buyer"),
-          toRupees(item.totalAmount),
+          toCurrency(item.totalAmount),
         ].join(" · "),
         status: toStringValue(item.status, "return_requested"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),

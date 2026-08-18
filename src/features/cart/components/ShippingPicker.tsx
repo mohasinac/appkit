@@ -10,7 +10,7 @@
 
 import React, { useState } from "react";
 import { Button, Div, Row, Stack, Text } from "../../../ui";
-import { formatCurrency } from "../../../utils/number.formatter";
+import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import type { ShippingProviderConfig } from "../../stores/schemas/firestore";
 
@@ -18,30 +18,30 @@ export interface ShippingPickerProps {
   providers: ShippingProviderConfig[];
   /** Currently persisted provider id (from CartItemDocument.chosenShippingProviderId). */
   selectedProviderId?: string;
-  /** Order subtotal in paise — used to evaluate freeAboveInPaise + percentOfOrder rules. */
-  subtotalInPaise?: number;
+  /** Order subtotal, decimal rupees — used to evaluate freeAbove + percentOfOrder rules. */
+  subtotal?: number;
   /** Called when the buyer picks (or changes) a provider. */
-  onPickProvider: (providerId: string, feeInPaise: number) => void | Promise<void>;
+  onPickProvider: (providerId: string, fee: number) => void | Promise<void>;
   isLoading?: boolean;
   className?: string;
 }
 
 /** Resolve the effective flat fee for a provider given the current subtotal. */
-function resolveProviderFee(p: ShippingProviderConfig, subtotalInPaise: number): number {
+function resolveProviderFee(p: ShippingProviderConfig, subtotal: number): number {
   const { fee } = p;
-  if (fee.freeAboveInPaise !== undefined && subtotalInPaise >= fee.freeAboveInPaise) return 0;
-  let total = fee.flatInPaise ?? 0;
+  if (fee.freeAbove !== undefined && subtotal >= fee.freeAbove) return 0;
+  let total = fee.flat ?? 0;
   if (fee.percentOfOrder !== undefined) {
-    total += Math.round((fee.percentOfOrder / 100) * subtotalInPaise);
+    total += roundRupees((fee.percentOfOrder / 100) * subtotal);
   }
-  if (fee.minInPaise !== undefined) total = Math.max(total, fee.minInPaise);
+  if (fee.min !== undefined) total = Math.max(total, fee.min);
   return total;
 }
 
 export function ShippingPicker({
   providers,
   selectedProviderId,
-  subtotalInPaise = 0,
+  subtotal = 0,
   onPickProvider,
   isLoading = false,
   className = "",
@@ -57,7 +57,7 @@ export function ShippingPicker({
   }
 
   const handleSelect = async (p: ShippingProviderConfig) => {
-    const fee = resolveProviderFee(p, subtotalInPaise);
+    const fee = resolveProviderFee(p, subtotal);
     setPending(true);
     try {
       await onPickProvider(p.providerId, fee);
@@ -69,7 +69,7 @@ export function ShippingPicker({
   return (
     <Stack gap="xs" className={className} role="radiogroup" aria-label="Shipping options">
       {providers.map((p) => {
-        const fee = resolveProviderFee(p, subtotalInPaise);
+        const fee = resolveProviderFee(p, subtotal);
         const selected = p.providerId === selectedProviderId;
         const disabled = isLoading || pending;
         return (
@@ -94,7 +94,7 @@ export function ShippingPicker({
                 </Text>
               </Div>
               <Text size="sm" weight="semibold">
-                {fee === 0 ? REFUND_COPY.shipping.freeLabel : formatCurrency(fee / 100, "INR")}
+                {fee === 0 ? REFUND_COPY.shipping.freeLabel : formatCurrency(fee, "INR")}
               </Text>
             </Row>
           </Button>

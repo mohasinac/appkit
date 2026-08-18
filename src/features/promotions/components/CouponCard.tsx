@@ -89,7 +89,7 @@ function formatDateSafe(value: string | Date | undefined): string | null {
 
 function formatDiscount(n: Normalized, labels: Required<CouponCardLabels>): string {
   if (n.type === "percentage") return `${n.discountValue}% ${labels.off}`;
-  if (n.type === "fixed") return `₹${(n.discountValue / 100).toFixed(0)} ${labels.off}`;
+  if (n.type === "fixed") return `₹${n.discountValue.toFixed(0)} ${labels.off}`;
   if (n.type === "free_shipping") return labels.freeShipping;
   if (n.type === "buy_x_get_y") return `BOGO`;
   return `${n.discountValue} ${labels.off}`;
@@ -337,7 +337,7 @@ export function CouponCard({
       {/* Meta row */}
       <Row textSize="xs" wrap gap="sm" className="opacity-60 mt-2">
         {n.minOrderAmount ? (
-          <Span>{labels.minOrder}: ₹{(n.minOrderAmount / 100).toFixed(0)}</Span>
+          <Span>{labels.minOrder}: ₹{n.minOrderAmount.toFixed(0)}</Span>
         ) : null}
         {expiry && (
           <Span>{labels.expires}: {expiry}</Span>

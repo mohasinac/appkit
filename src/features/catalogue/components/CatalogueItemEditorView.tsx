@@ -36,7 +36,7 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
   const [title, setTitle] = React.useState(item?.title ?? "");
   const [description, setDescription] = React.useState(item?.description ?? "");
   const [condition, setCondition] = React.useState(item?.condition ?? "");
-  const [price, setPrice] = React.useState(item?.price ? String(item.price / 100) : "0");
+  const [price, setPrice] = React.useState(item?.price ? String(item.price) : "0");
   const [quantity, setQuantity] = React.useState(String(item?.quantity ?? 1));
   const [visibility, setVisibility] = React.useState<"public" | "private">(item?.visibility ?? "public");
   const [images, setImages] = React.useState<string[]>(item?.images ?? []);
@@ -59,7 +59,7 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
         title,
         description: description || undefined,
         condition: condition || undefined,
-        price: Math.round(Number(price) * 100),
+        price: Math.round(Number(price) * 100) / 100,
         quantity: Number(quantity),
         visibility,
         images,
@@ -114,7 +114,7 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
               const parsed = createCatalogueItemSchema.safeParse({
                 title,
                 images,
-                price: Math.round(Number(price) * 100),
+                price: Math.round(Number(price) * 100) / 100,
                 quantity: Number(quantity),
                 visibility,
               });

@@ -40,7 +40,7 @@ export type FailedPaymentDocument = {
   uid: string;
   gatewayOrderId?: string;
   gatewayPaymentId?: string;
-  /** Amount in smallest currency unit (e.g. paise). */
+  /** Amount in decimal rupees. */
   amountRs?: number;
   addressId?: string;
   reason: FailedPaymentReason;

@@ -598,7 +598,7 @@ function OrderItemsPanel(props: {
                           {it.productTitle}
                         </Text>
                         <Text size="xs" color="muted">
-                          {it.productId} · ₹{(it.unitPrice / 100).toFixed(2)}/ea
+                          {it.productId} · ₹{it.unitPrice.toFixed(2)}/ea
                         </Text>
                       </Div>
                       <Input

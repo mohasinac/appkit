@@ -1,5 +1,6 @@
 import { productRepository } from "../../../../repositories";
 import { isPreOrderListing } from "../../../../features/products/utils/listing-type";
+import { roundRupees } from "../../../../utils/number.formatter";
 import {
   PreOrderNotFoundError,
   PreOrderSoldOutError,
@@ -20,11 +21,11 @@ export async function assertPreOrderAvailable(preOrderId: string, requestedQty =
   return product as unknown as ProductDocument;
 }
 
-/** Compute deposit amount in paise. */
+/** Compute deposit amount, decimal rupees. */
 export function computeDeposit(product: ProductDocument): number {
   if ((product as any).preOrderDepositAmount) return (product as any).preOrderDepositAmount;
   const percent = (product as any).preOrderDepositPercent ?? 20;
-  return Math.round(((product as any).price * percent) / 100);
+  return roundRupees(((product as any).price * percent) / 100);
 }
 
 /** Determine if the pre-order is still open for new reservations. */

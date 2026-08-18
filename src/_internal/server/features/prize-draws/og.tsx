@@ -28,22 +28,22 @@ interface PrizeDrawDocLike {
   prizeCurrentEntries?: number | null;
 }
 
-function formatPriceInr(paise: number, currency: string): string {
+function formatPriceInr(amount: number, currency: string): string {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency,
     maximumFractionDigits: 0,
-  }).format(paise / 100);
+  }).format(amount);
 }
 
 export function renderPrizeDrawOg(
   doc: PrizeDrawDocLike | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
-  const entryPaise = doc?.pricePerEntry ?? doc?.price ?? null;
+  const entryPrice = doc?.pricePerEntry ?? doc?.price ?? null;
   const pricePerEntryLabel =
-    typeof entryPaise === "number" && entryPaise > 0
-      ? `${formatPriceInr(entryPaise, doc?.currency ?? "INR")} / entry`
+    typeof entryPrice === "number" && entryPrice > 0
+      ? `${formatPriceInr(entryPrice, doc?.currency ?? "INR")} / entry`
       : "Free entry";
 
   const max = doc?.prizeMaxEntries ?? null;

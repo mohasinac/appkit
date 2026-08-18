@@ -10,7 +10,7 @@
  * Item-request-specific accents:
  *  - Header pill says "Wanted" with cyan accent.
  *  - Status badge (Open / Closed).
- *  - Budget chip when maxBudgetInPaise is set.
+ *  - Budget chip when maxBudget is set.
  *  - Reply count chip.
  */
 
@@ -30,16 +30,15 @@ export interface ItemRequestOgData {
 interface ItemRequestDocLike {
   title?: string | null;
   opDisplayName?: string | null;
-  maxBudgetInPaise?: number | null;
+  maxBudget?: number | null;
   imageUrls?: (string | null | undefined)[] | null;
   status?: string | null;
   replyCount?: number | null;
   category?: string | null;
 }
 
-function formatPriceInr(paise: number): string {
-  const rupees = Math.round(paise / 100);
-  return `≤ ₹${rupees.toLocaleString("en-IN")}`;
+function formatPriceInr(amount: number): string {
+  return `≤ ₹${amount.toLocaleString("en-IN")}`;
 }
 
 function normalizeStatus(s: string | null | undefined): ItemRequestOgData["status"] {
@@ -52,8 +51,8 @@ export function renderItemRequestOg(
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const budgetLabel =
-    typeof doc?.maxBudgetInPaise === "number" && doc.maxBudgetInPaise > 0
-      ? formatPriceInr(doc.maxBudgetInPaise)
+    typeof doc?.maxBudget === "number" && doc.maxBudget > 0
+      ? formatPriceInr(doc.maxBudget)
       : null;
 
   return renderItemRequestOgImage(

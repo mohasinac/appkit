@@ -14,7 +14,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -159,7 +159,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
           primary: toStringValue(item.title ?? item.name, "Untitled prize draw"),
           secondary: toStringValue(item.condition, ""),
           status: toStringValue(item.status, "draft"),
-          entryFee: priceRaw ? toRupees(priceRaw) : "Free",
+          entryFee: priceRaw ? toCurrency(priceRaw) : "Free",
           drawDate: item.prizeRevealWindowEnd
             ? toRelativeDate(item.prizeRevealWindowEnd as string)
             : "TBA",

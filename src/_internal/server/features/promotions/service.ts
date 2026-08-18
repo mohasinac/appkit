@@ -1,4 +1,5 @@
 import { couponsRepository } from "../../../../repositories";
+import { roundRupees } from "../../../../utils/number.formatter";
 import {
   CouponNotFoundError,
   CouponExpiredError,
@@ -44,7 +45,8 @@ export function computeDiscount(coupon: Awaited<ReturnType<typeof validateCoupon
 
   let discount = 0;
   if (type === "percentage") {
-    discount = Math.round((cartTotal * value) / 100);
+    // audit-money-units-ok: percentage divisor (value is 0-100), not paise
+    discount = roundRupees((cartTotal * value) / 100);
     if (maxDiscount) discount = Math.min(discount, maxDiscount);
   } else if (type === "fixed") {
     discount = Math.min(value, cartTotal);

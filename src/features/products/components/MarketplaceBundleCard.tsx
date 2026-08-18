@@ -21,7 +21,7 @@ export type MarketplaceBundleCardData = Pick<
   | "slug"
   | "bundleItemDetails"
   | "bundleProductIds"
-  | "bundlePriceInPaise"
+  | "bundlePrice"
   | "bundleStockStatus"
   | "display"
 >;
@@ -83,7 +83,7 @@ export function MarketplaceBundleCard({
   const memberCount = bundle.bundleProductIds?.length ?? 0;
   const stock = bundle.bundleStockStatus ?? "in_stock";
   const cover = bundle.display?.coverImage;
-  const price = bundle.bundlePriceInPaise;
+  const price = bundle.bundlePrice;
 
   const collageTiles = (bundle.bundleItemDetails ?? [])
     .filter((d) => Boolean(d.imageURL))
@@ -192,7 +192,7 @@ export function MarketplaceBundleCard({
         <Row justify="between" className="mt-1" gap="sm">
           <Text size="sm" weight="semibold" color="primary">
             {price
-              ? formatCurrency(price / 100, getDefaultCurrency())
+              ? formatCurrency(price, getDefaultCurrency())
               : "—"}
           </Text>
           <Text className="text-[var(--appkit-color-text-muted)]" size="xs">

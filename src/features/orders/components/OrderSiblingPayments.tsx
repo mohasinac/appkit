@@ -55,7 +55,7 @@ export function OrderSiblingPayments({
                   {o.status}
                 </Text>
                 <Text size="xs" weight="semibold">
-                  {formatCurrency(o.totalPrice / 100, o.currency ?? "INR")}
+                  {formatCurrency(o.totalPrice, o.currency ?? "INR")}
                 </Text>
               </Row>
             </Row>

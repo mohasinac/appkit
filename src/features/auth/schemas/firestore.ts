@@ -63,6 +63,8 @@ export interface UserDocument extends BaseDocument {
   passwordHash?: string;
   emailVerified: boolean;
   disabled: boolean;
+  /** Hard-ban flag — disables Firebase Auth login. Distinct from `disabled` (used elsewhere); read alongside `hardBanReason`/`hardBannedAt`/`hardBannedBy`. Set by `hardBanCascade`, cleared by `hardBanReinstatement` for temporary bans. */
+  isDisabled?: boolean;
 
   // Store identity (populated when user is granted seller role)
   storeId?: string;
@@ -132,6 +134,12 @@ export interface UserDocument extends BaseDocument {
   hardBanReason?: string;
   hardBannedAt?: Date;
   hardBannedBy?: string;
+  /** Null/absent = permanent hard ban (the default). A future Date makes this a temporary ban, auto-reinstated by the `hardBanReinstatement` sweep — mirrors `UserSoftBan.expiresAt`'s null-vs-past-date convention. Set only by the payment-fraud-reject path today. */
+  hardBanExpiresAt?: Date | null;
+  /** Order that triggered a fraud-rejection ban, for traceability. */
+  hardBanFraudOrderId?: string;
+  /** Stamped by `hardBanReinstatement` when a temporary ban's `hardBanExpiresAt` passes and login is re-enabled. `hardBanReason`/`hardBannedAt`/`hardBannedBy`/`hardBanExpiresAt` are left in place as historical record — not cleared. */
+  hardBanReinstatedAt?: Date;
 
   // ── Scam awareness acknowledgement ──────────────────────────────────────────
   /** Timestamp when user confirmed they read the scam awareness guide. Required before full platform access. */
@@ -333,6 +341,8 @@ export const USER_FIELDS = {
   PASSWORD_HASH: "passwordHash",
   EMAIL_VERIFIED: "emailVerified",
   DISABLED: "disabled",
+  IS_DISABLED: "isDisabled",
+  HARD_BAN_EXPIRES_AT: "hardBanExpiresAt",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
   STORE_ID: "storeId",

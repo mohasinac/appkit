@@ -23,7 +23,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysFromNow = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
-const SEED_LABOR_RATE_PAISE_PER_HOUR = 20_000; // ₹200/hr
+const SEED_LABOR_RATE_PER_HOUR = 200; // ₹200/hr
 const SEED_MAX_HOURS_PER_DAY = 4;
 
 interface RawItem {
@@ -45,9 +45,9 @@ interface RawLot {
   lotName: string;
   supplierOrderRef: string;
   weightGrams: number;
-  purchaseCostPaise: number;
+  purchaseCost: number;
   remainderItemCount?: number;
-  remainderEstimatedValuePaise?: number;
+  remainderEstimatedValue?: number;
 }
 
 interface RawShipment {
@@ -61,8 +61,8 @@ interface RawShipment {
   etaDate: Date;
   receivedDate?: Date;
   notes?: string;
-  customsTotalPaise: number;
-  shippingTotalPaise: number;
+  customsTotal: number;
+  shippingTotal: number;
   laborHoursSpent: number;
 }
 
@@ -75,8 +75,8 @@ const rawShipments: RawShipment[] = [
     status: "planning",
     etaDate: daysFromNow(21),
     notes: "Base Set booster boxes + a graded Charizard for the owner's personal collection.",
-    customsTotalPaise: 45_000_00,
-    shippingTotalPaise: 18_000_00,
+    customsTotal: 45000,
+    shippingTotal: 18000,
     laborHoursSpent: 0,
   },
   {
@@ -88,8 +88,8 @@ const rawShipments: RawShipment[] = [
     trackingNumber: "1Z999AA10123456784",
     carrier: "UPS",
     etaDate: daysFromNow(9),
-    customsTotalPaise: 30_000_00,
-    shippingTotalPaise: 22_000_00,
+    customsTotal: 30000,
+    shippingTotal: 22000,
     laborHoursSpent: 0,
   },
   {
@@ -102,8 +102,8 @@ const rawShipments: RawShipment[] = [
     carrier: "SF Express",
     etaDate: daysAgo(3),
     receivedDate: daysAgo(3),
-    customsTotalPaise: 15_000_00,
-    shippingTotalPaise: 9_000_00,
+    customsTotal: 15000,
+    shippingTotal: 9000,
     laborHoursSpent: 6,
   },
   {
@@ -116,24 +116,24 @@ const rawShipments: RawShipment[] = [
     carrier: "China Post",
     etaDate: daysAgo(30),
     receivedDate: daysAgo(28),
-    customsTotalPaise: 8_000_00,
-    shippingTotalPaise: 6_000_00,
+    customsTotal: 8000,
+    shippingTotal: 6000,
     laborHoursSpent: 5,
   },
 ];
 
 const rawLots: RawLot[] = [
-  { id: "lot-tokyo-01", shipmentId: rawShipments[0].id, lotName: "Base Set Booster Boxes", supplierOrderRef: "TTC-88213", weightGrams: 6000, purchaseCostPaise: 4_50_000_00 },
-  { id: "lot-tokyo-02", shipmentId: rawShipments[0].id, lotName: "Charizard PSA 9 — personal", supplierOrderRef: "TTC-88214", weightGrams: 400, purchaseCostPaise: 2_20_000_00 },
+  { id: "lot-tokyo-01", shipmentId: rawShipments[0].id, lotName: "Base Set Booster Boxes", supplierOrderRef: "TTC-88213", weightGrams: 6000, purchaseCost: 450000 },
+  { id: "lot-tokyo-02", shipmentId: rawShipments[0].id, lotName: "Charizard PSA 9 — personal", supplierOrderRef: "TTC-88214", weightGrams: 400, purchaseCost: 220000 },
 
-  { id: "lot-vault-01", shipmentId: rawShipments[1].id, lotName: "Redline Hot Wheels lot", supplierOrderRef: "VV-4471", weightGrams: 3200, purchaseCostPaise: 1_80_000_00 },
-  { id: "lot-vault-02", shipmentId: rawShipments[1].id, lotName: "Diecast Trucks lot", supplierOrderRef: "VV-4472", weightGrams: 5400, purchaseCostPaise: 95_000_00, remainderItemCount: 120, remainderEstimatedValuePaise: 3_60_000_00 },
+  { id: "lot-vault-01", shipmentId: rawShipments[1].id, lotName: "Redline Hot Wheels lot", supplierOrderRef: "VV-4471", weightGrams: 3200, purchaseCost: 180000 },
+  { id: "lot-vault-02", shipmentId: rawShipments[1].id, lotName: "Diecast Trucks lot", supplierOrderRef: "VV-4472", weightGrams: 5400, purchaseCost: 95000, remainderItemCount: 120, remainderEstimatedValue: 360000 },
 
-  { id: "lot-gundam-01", shipmentId: rawShipments[2].id, lotName: "MG Gunpla lot", supplierOrderRef: "GG-9021", weightGrams: 8000, purchaseCostPaise: 1_20_000_00 },
-  { id: "lot-gundam-02", shipmentId: rawShipments[2].id, lotName: "HG Gunpla assorted", supplierOrderRef: "GG-9022", weightGrams: 3000, purchaseCostPaise: 40_000_00 },
+  { id: "lot-gundam-01", shipmentId: rawShipments[2].id, lotName: "MG Gunpla lot", supplierOrderRef: "GG-9021", weightGrams: 8000, purchaseCost: 120000 },
+  { id: "lot-gundam-02", shipmentId: rawShipments[2].id, lotName: "HG Gunpla assorted", supplierOrderRef: "GG-9022", weightGrams: 3000, purchaseCost: 40000 },
 
-  { id: "lot-beyblade-01", shipmentId: rawShipments[3].id, lotName: "Burst Series lot", supplierOrderRef: "BA-3301", weightGrams: 4500, purchaseCostPaise: 60_000_00 },
-  { id: "lot-beyblade-02", shipmentId: rawShipments[3].id, lotName: "Launchers + stadiums", supplierOrderRef: "BA-3302", weightGrams: 2200, purchaseCostPaise: 25_000_00 },
+  { id: "lot-beyblade-01", shipmentId: rawShipments[3].id, lotName: "Burst Series lot", supplierOrderRef: "BA-3301", weightGrams: 4500, purchaseCost: 60000 },
+  { id: "lot-beyblade-02", shipmentId: rawShipments[3].id, lotName: "Launchers + stadiums", supplierOrderRef: "BA-3302", weightGrams: 2200, purchaseCost: 25000 },
 ];
 
 const rawItems: RawItem[] = [
@@ -172,19 +172,19 @@ for (const shipment of rawShipments) {
 
   const allocationInputs: LotAllocationInput[] = lotsForShipment.map((lot) => ({
     id: lot.id,
-    purchaseCostPaise: lot.purchaseCostPaise,
+    purchaseCost: lot.purchaseCost,
     weightGrams: lot.weightGrams,
-    mainItemsProjectedRevenuePaise: mainItemsRevenue(lot.id),
-    remainderEstimatedValuePaise: lot.remainderEstimatedValuePaise,
+    mainItemsProjectedRevenue: mainItemsRevenue(lot.id),
+    remainderEstimatedValue: lot.remainderEstimatedValue,
     itemCount: rawItems.filter((item) => item.lotId === lot.id).length,
   }));
 
   const { perLot, totals } = allocateShipmentCosts({
     lots: allocationInputs,
-    customsTotalPaise: shipment.customsTotalPaise,
-    shippingTotalPaise: shipment.shippingTotalPaise,
+    customsTotal: shipment.customsTotal,
+    shippingTotal: shipment.shippingTotal,
     laborHoursSpent: shipment.laborHoursSpent,
-    laborRatePaisePerHour: SEED_LABOR_RATE_PAISE_PER_HOUR,
+    laborRatePerHour: SEED_LABOR_RATE_PER_HOUR,
     maxHoursPerDay: SEED_MAX_HOURS_PER_DAY,
   });
 
@@ -197,12 +197,12 @@ for (const shipment of rawShipments) {
       lotName: lot.lotName,
       supplierOrderRef: lot.supplierOrderRef,
       weightGrams: lot.weightGrams,
-      purchaseCostPaise: lot.purchaseCostPaise,
+      purchaseCost: lot.purchaseCost,
       images: [],
       remainderItemCount: lot.remainderItemCount,
-      remainderEstimatedValuePaise: lot.remainderEstimatedValuePaise,
+      remainderEstimatedValue: lot.remainderEstimatedValue,
       itemCount: rawItems.filter((item) => item.lotId === lot.id).length,
-      mainItemsProjectedRevenuePaise: mainItemsRevenue(lot.id),
+      mainItemsProjectedRevenue: mainItemsRevenue(lot.id),
       ...computed,
     });
   }
@@ -218,10 +218,10 @@ for (const shipment of rawShipments) {
     etaDate: shipment.etaDate,
     receivedDate: shipment.receivedDate,
     notes: shipment.notes,
-    customsTotalPaise: shipment.customsTotalPaise,
-    shippingTotalPaise: shipment.shippingTotalPaise,
+    customsTotal: shipment.customsTotal,
+    shippingTotal: shipment.shippingTotal,
     laborHoursSpent: shipment.laborHoursSpent,
-    laborRatePaisePerHour: SEED_LABOR_RATE_PAISE_PER_HOUR,
+    laborRatePerHour: SEED_LABOR_RATE_PER_HOUR,
     totals,
     totalsComputedAt: daysAgo(1),
     createdBy: "user-admin-mohsin-c",

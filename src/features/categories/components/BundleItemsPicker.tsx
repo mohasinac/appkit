@@ -36,7 +36,7 @@ export interface BundleItemSearchResult {
   id: string;
   title: string;
   image?: string;
-  priceInPaise?: number;
+  price?: number;
   storeId?: string;
 }
 
@@ -103,7 +103,7 @@ function renderBundleSearchResults(props: {
                   <Text size="sm" weight="medium">{r.title}</Text>
                   <Row gap="sm">
                     <Text size="xs" color="muted">{r.id}</Text>
-                    {typeof r.priceInPaise === "number" && <Text size="xs" color="muted">· ₹{Math.round(r.priceInPaise / 100).toLocaleString("en-IN")}</Text>}
+                    {typeof r.price === "number" && <Text size="xs" color="muted">· ₹{r.price.toLocaleString("en-IN")}</Text>}
                   </Row>
                 </Stack>
               </Row>
@@ -259,7 +259,7 @@ export async function defaultBundleItemsFetch(
             : Array.isArray(rec.images) && typeof rec.images[0] === "string"
               ? (rec.images[0] as string)
               : undefined,
-        priceInPaise: typeof rec.price === "number" ? (rec.price as number) : undefined,
+        price: typeof rec.price === "number" ? (rec.price as number) : undefined,
         storeId: typeof rec.storeId === "string" ? (rec.storeId as string) : undefined,
       };
     })

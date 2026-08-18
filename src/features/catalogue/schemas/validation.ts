@@ -20,7 +20,7 @@ export const createCatalogueItemSchema = z.object({
   condition: productConditionSchema.optional(),
   categorySlugs: z.array(z.string()).optional(),
   brandSlug: z.string().optional(),
-  price: z.number().int().min(0).optional(),
+  price: z.number().min(0).optional(),
   quantity: z.number().int().min(1).default(1),
   visibility: z.enum(["public", "private"]).default("public"),
 });

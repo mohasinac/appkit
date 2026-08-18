@@ -11,7 +11,7 @@
  *   1. ONE order row whose `bundleCategorySlug` + `bundleProductIds[]` set
  *      describe the bundle (this is what S-SBUNI-4's checkout writes — the
  *      bundle stays a single row in the order with the locked
- *      bundlePriceInPaise as its line total).
+ *      bundlePrice as its line total).
  *   2. (Future) Expanded N rows, each tagged with the same
  *      `bundleCategorySlug`. The grouping handles this too in case a future
  *      session pivots to row expansion.

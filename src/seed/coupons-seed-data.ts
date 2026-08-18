@@ -30,14 +30,14 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     description: "10% off your first order on LetItRip. Maximum discount ₹200. First-time buyers only.",
     type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
     scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
-    discount: { value: 10, maxDiscount: 20000, minPurchase: 50000 },
+    discount: { value: 10, maxDiscount: 200, minPurchase: 500 },
     usage: { totalLimit: undefined, perUserLimit: 1, currentUsage: 312 },
     validity: { startDate: daysAgo(90), endDate: daysAhead(180), isActive: true },
     restrictions: { firstTimeUserOnly: true, combineWithSellerCoupons: true },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(90),
     updatedAt: daysAgo(5),
-    stats: { totalUses: 312, totalRevenue: 156000000, totalDiscount: 3120000 },
+    stats: { totalUses: 312, totalRevenue: 1560000, totalDiscount: 31200 },
   },
 
   {
@@ -47,14 +47,14 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     description: "₹500 off on orders above ₹2,000. All categories. Limited to 500 total uses.",
     type: COUPON_FIELDS.TYPE_VALUES.FIXED,
     scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
-    discount: { value: 50000, maxDiscount: 50000, minPurchase: 200000 },
+    discount: { value: 500, maxDiscount: 500, minPurchase: 2000 },
     usage: { totalLimit: 500, perUserLimit: 2, currentUsage: 187 },
     validity: { startDate: daysAgo(30), endDate: daysAhead(60), isActive: true },
     restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: true },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(30),
     updatedAt: daysAgo(3),
-    stats: { totalUses: 187, totalRevenue: 93500000, totalDiscount: 9350000 },
+    stats: { totalUses: 187, totalRevenue: 935000, totalDiscount: 93500 },
   },
 
   {
@@ -64,14 +64,14 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     description: "Free shipping on all orders above ₹499. No category restrictions.",
     type: COUPON_FIELDS.TYPE_VALUES.FREE_SHIPPING,
     scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
-    discount: { value: 0, maxDiscount: 0, minPurchase: 49900 },
+    discount: { value: 0, maxDiscount: 0, minPurchase: 499 },
     usage: { totalLimit: undefined, perUserLimit: 5, currentUsage: 1024 },
     validity: { startDate: daysAgo(60), endDate: daysAhead(120), isActive: true },
     restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: true },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(60),
     updatedAt: daysAgo(1),
-    stats: { totalUses: 1024, totalRevenue: 512000000, totalDiscount: 15360000 },
+    stats: { totalUses: 1024, totalRevenue: 5120000, totalDiscount: 153600 },
   },
 
   {
@@ -81,14 +81,14 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     description: "20% off your first order. Maximum discount ₹400. First-time buyers only.",
     type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
     scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
-    discount: { value: 20, maxDiscount: 40000, minPurchase: 100000 },
+    discount: { value: 20, maxDiscount: 400, minPurchase: 1000 },
     usage: { totalLimit: undefined, perUserLimit: 1, currentUsage: 89 },
     validity: { startDate: daysAgo(14), endDate: daysAhead(90), isActive: true },
     restrictions: { firstTimeUserOnly: true, combineWithSellerCoupons: false },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(14),
     updatedAt: daysAgo(2),
-    stats: { totalUses: 89, totalRevenue: 44500000, totalDiscount: 3560000 },
+    stats: { totalUses: 89, totalRevenue: 445000, totalDiscount: 35600 },
   },
 
   {
@@ -98,14 +98,14 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     description: "₹200 off on any purchase ₹1,000+. Valid during 2026 tournament season.",
     type: COUPON_FIELDS.TYPE_VALUES.FIXED,
     scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
-    discount: { value: 20000, maxDiscount: 20000, minPurchase: 100000 },
+    discount: { value: 200, maxDiscount: 200, minPurchase: 1000 },
     usage: { totalLimit: 1000, perUserLimit: 3, currentUsage: 456 },
     validity: { startDate: daysAgo(45), endDate: daysAhead(45), isActive: true },
     restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: true },
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(45),
     updatedAt: daysAgo(1),
-    stats: { totalUses: 456, totalRevenue: 228000000, totalDiscount: 9120000 },
+    stats: { totalUses: 456, totalRevenue: 2280000, totalDiscount: 91200 },
   },
 
   // ── Seller coupons (Kaiba Corp) ────────────────────────────────────────────
@@ -118,14 +118,14 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
     scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-kaiba-corp-cards",
-    discount: { value: 25, maxDiscount: 50000, minPurchase: 100000 },
+    discount: { value: 25, maxDiscount: 500, minPurchase: 1000 },
     usage: { totalLimit: 200, perUserLimit: 2, currentUsage: 67 },
     validity: { startDate: daysAgo(20), endDate: daysAhead(40), isActive: true },
     restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: false },
     createdBy: "user-seto-kaiba",
     createdAt: daysAgo(20),
     updatedAt: daysAgo(4),
-    stats: { totalUses: 67, totalRevenue: 33500000, totalDiscount: 3350000 },
+    stats: { totalUses: 67, totalRevenue: 335000, totalDiscount: 33500 },
   },
 
   {
@@ -136,7 +136,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
     scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-kaiba-corp-cards",
-    discount: { value: 15, maxDiscount: 75000, minPurchase: 200000 },
+    discount: { value: 15, maxDiscount: 750, minPurchase: 2000 },
     usage: { totalLimit: 50, perUserLimit: 1, currentUsage: 12 },
     validity: { startDate: daysAgo(10), endDate: daysAhead(60), isActive: true },
     restrictions: {
@@ -147,7 +147,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     createdBy: "user-seto-kaiba",
     createdAt: daysAgo(10),
     updatedAt: daysAgo(3),
-    stats: { totalUses: 12, totalRevenue: 6000000, totalDiscount: 900000 },
+    stats: { totalUses: 12, totalRevenue: 60000, totalDiscount: 9000 },
   },
 
   {
@@ -158,7 +158,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     type: COUPON_FIELDS.TYPE_VALUES.BUY_X_GET_Y,
     scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-kaiba-corp-cards",
-    discount: { value: 10, maxDiscount: 30000, minPurchase: 0 },
+    discount: { value: 10, maxDiscount: 300, minPurchase: 0 },
     bxgy: {
       buyQuantity: 3,
       getQuantity: 0,
@@ -170,7 +170,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     createdBy: "user-seto-kaiba",
     createdAt: daysAgo(15),
     updatedAt: daysAgo(2),
-    stats: { totalUses: 34, totalRevenue: 17000000, totalDiscount: 1700000 },
+    stats: { totalUses: 34, totalRevenue: 170000, totalDiscount: 17000 },
   },
 
   {
@@ -181,7 +181,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
     scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-kaiba-corp-cards",
-    discount: { value: 20, maxDiscount: 100000, minPurchase: 100000 },
+    discount: { value: 20, maxDiscount: 1000, minPurchase: 1000 },
     usage: { totalLimit: 75, perUserLimit: 2, currentUsage: 28 },
     validity: { startDate: daysAgo(7), endDate: daysAhead(30), isActive: true },
     restrictions: {
@@ -192,7 +192,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     createdBy: "user-seto-kaiba",
     createdAt: daysAgo(7),
     updatedAt: daysAgo(1),
-    stats: { totalUses: 28, totalRevenue: 14000000, totalDiscount: 2800000 },
+    stats: { totalUses: 28, totalRevenue: 140000, totalDiscount: 28000 },
   },
 
   {
@@ -203,7 +203,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
     scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-kaiba-corp-cards",
-    discount: { value: 12, maxDiscount: 60000, minPurchase: 150000 },
+    discount: { value: 12, maxDiscount: 600, minPurchase: 1500 },
     usage: { totalLimit: 100, perUserLimit: 2, currentUsage: 19 },
     validity: { startDate: daysAgo(5), endDate: daysAhead(55), isActive: true },
     restrictions: {
@@ -214,6 +214,6 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     createdBy: "user-seto-kaiba",
     createdAt: daysAgo(5),
     updatedAt: daysAgo(1),
-    stats: { totalUses: 19, totalRevenue: 9500000, totalDiscount: 1140000 },
+    stats: { totalUses: 19, totalRevenue: 95000, totalDiscount: 11400 },
   },
 ];

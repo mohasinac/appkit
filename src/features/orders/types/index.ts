@@ -100,6 +100,10 @@ export interface Order {
   physicalLocation?: { zone: string; shelf: string; bin: string };
   createdAt?: string;
   updatedAt?: string;
+  /** Tier PP — true when the 2-hour auto-approve sweep confirmed this order's payment instead of a manual admin review. Drives the "Raise a dispute" CTA. */
+  autoApproved?: boolean;
+  disputeRaised?: boolean;
+  disputeStatus?: "open" | "resolved";
   /**
    * Reveal-mode prize-draw fields (SB4-H/SB8-C). Set once the reveal
    * endpoint has assigned a prize to this order; used to drive the

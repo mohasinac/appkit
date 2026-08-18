@@ -38,6 +38,10 @@ export interface HardBanCascadeInput {
   uid: string;
   reason: string;
   bannedBy: string;
+  /** Tier PP — omitted/undefined = permanent (today's only caller, the manual admin hard-ban route). A Date makes this a temporary ban, auto-reinstated by `hardBanReinstatement` — set by `adminRejectPaymentAsFraudAction`. */
+  expiresAt?: Date;
+  /** Tier PP — the order whose payment proof was rejected as fraudulent, for traceability. Only set alongside `expiresAt`. */
+  fraudOrderId?: string;
 }
 
 async function cascadeAddressClusterBan(
@@ -79,7 +83,7 @@ export async function runHardBanCascade(
   input: HardBanCascadeInput,
   ctx: JobContext,
 ): Promise<JobRunResult> {
-  const { uid, reason, bannedBy } = input;
+  const { uid, reason, bannedBy, expiresAt, fraudOrderId } = input;
   const target = await userRepository.findById(uid);
   if (!target) {
     return {
@@ -109,6 +113,8 @@ export async function runHardBanCascade(
     hardBanReason: reason,
     hardBannedAt: new Date(),
     hardBannedBy: bannedBy,
+    hardBanExpiresAt: expiresAt ?? null,
+    ...(fraudOrderId ? { hardBanFraudOrderId: fraudOrderId } : {}),
   } as never);
 
   // 3. Delete active sessions
@@ -156,7 +162,12 @@ export async function runHardBanCascade(
     });
   }
 
-  // 6. Cascade address ban + cross-account cluster ban
+  // 6. Cascade address ban + cross-account cluster ban. Note: this bans the
+  // ADDRESS record for other accounts sharing a hash cluster, not those
+  // accounts' full status — `AddressDocument.banStatus` has no expiry
+  // concept, so a temporary hard-ban's cluster cascade is scoped the same
+  // as a permanent one's; only the primary `uid`'s account-level ban is
+  // ever time-bound.
   try {
     const banData = { banReason: `User hard-banned: ${reason}`, bannedBy };
     await addressesRepository.banAllForOwner("user", uid, banData);
@@ -186,12 +197,16 @@ export async function runHardBanCascade(
   try {
     const siteSettings = await siteSettingsRepository.getSingleton();
     const supportEmail = siteSettings.contact?.email || "support@example.com";
+    const title = expiresAt ? "Account temporarily suspended" : "Account permanently suspended";
+    const message = expiresAt
+      ? `Your account has been suspended for 7 days. Reason: ${reason}. Access will be automatically restored on ${expiresAt.toDateString()}. You may appeal sooner by emailing ${supportEmail}.`
+      : `Your account has been permanently suspended. Reason: ${reason}. You may appeal by emailing ${supportEmail}.`;
     await sendNotification({
       userId: uid,
       type: "account_action",
       priority: "high",
-      title: "Account permanently suspended",
-      message: `Your account has been permanently suspended. Reason: ${reason}. You may appeal by emailing ${supportEmail}.`,
+      title,
+      message,
       relatedId: uid,
       relatedType: "user",
     });

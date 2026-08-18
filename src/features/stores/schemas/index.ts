@@ -2,7 +2,7 @@ export * from "./firestore";
 
 import { z } from "zod";
 import { StoreStatusValues } from "./firestore";
-import { auditTimestampsShape, firestoreDateSchema, paiseSchema } from "../../../schemas/firestore-helpers";
+import { auditTimestampsShape, firestoreDateSchema, rupeesSchema } from "../../../schemas/firestore-helpers";
 
 // ─── Firestore document schema (W2) ───────────────────────────────────────────
 // Mirrors StoreDocument in ./firestore.ts. Registered into SCHEMAS.firestore.stores.
@@ -18,11 +18,11 @@ export const shippingProviderConfigSchema = z.object({
   label: z.string(),
   type: shippingProviderTypeSchema,
   fee: z.object({
-    flatInPaise: paiseSchema.optional(),
-    perKgInPaise: paiseSchema.optional(),
+    flat: rupeesSchema.optional(),
+    perKg: rupeesSchema.optional(),
     percentOfOrder: z.number().min(0).max(100).optional(),
-    freeAboveInPaise: paiseSchema.optional(),
-    minInPaise: paiseSchema.optional(),
+    freeAbove: rupeesSchema.optional(),
+    min: rupeesSchema.optional(),
   }),
   etaDaysMin: z.number().int().nonnegative(),
   etaDaysMax: z.number().int().nonnegative(),

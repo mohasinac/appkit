@@ -40,6 +40,9 @@ export type { ActionResult } from "./_internal/shared/types/action-result";
 export {
   attachPaymentProofAction,
   adminVerifyPaymentAction,
+  adminRequestProofReuploadAction,
+  adminRejectPaymentAsFraudAction,
+  raiseOrderDisputeAction,
 } from "./_internal/server/features/orders/actions";
 
 // [SERVER-ONLY] Cloud Function handler wrappers — persist exceptions to
@@ -819,6 +822,12 @@ export { sendCheckoutConsentOtp } from "./features/checkout/server";
 export { verifyCheckoutConsentOtp } from "./features/checkout/server";
 // grantAdminCheckoutBypass - Admin bypass that skips OTP + payment for admin-placed orders.
 export { grantAdminCheckoutBypass } from "./features/checkout/server";
+// [SERVER-ONLY] Tier PP — high-value checkout OTP gate (distinct from the shipping-consent OTP above).
+export {
+  sendCheckoutValueOtp,
+  verifyCheckoutValueOtp,
+  isCheckoutValueOtpVerified,
+} from "./features/checkout/server";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components
 // that render email-client-compatible HTML via renderToStaticMarkup. Use
 // these instead of authoring raw <table>/<tr>/<td> in email templates.

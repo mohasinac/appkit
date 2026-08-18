@@ -41,7 +41,7 @@ export interface CartItemDocument {
    * SB-UNI-4 2026-05-13 — bundle identifier when this cart line represents a
    * bundle (categoryType:"bundle" row on the categories collection). When set,
    * `productId` points at the bundle category's id, `price` is the locked
-   * bundlePriceInPaise, and `bundleProductIds` snapshots the member product
+   * bundlePrice, and `bundleProductIds` snapshots the member product
    * ids at add-to-cart time. Order-side fan-out into per-product OrderItem
    * entries lands in S-SBUNI-5 (checkout-side stock decrement + per-store
    * grouping); until then the foundation is here but BundleDetailView keeps
@@ -57,7 +57,7 @@ export interface CartItemDocument {
    */
   chosenShippingProviderId?: string;
   /** Fee in paise for the chosen provider, snapshotted at cart time. */
-  chosenShippingFeeInPaise?: number;
+  chosenShippingFee?: number;
   addedAt: Date;
   updatedAt: Date;
 }

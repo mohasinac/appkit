@@ -13,7 +13,7 @@ import { ROUTES } from "../../../constants";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -99,7 +99,7 @@ export function SellerAuctionsView({
         id: toStringValue(item.id, `auction-${index}`),
         primary: toStringValue(item.productTitle ?? item.title, "Untitled auction"),
         secondary: [
-          `Reserve: ${toRupees(item.reservePrice)}`,
+          `Reserve: ${toCurrency(item.reservePrice)}`,
           `Bids: ${item.bidCount ?? 0}`,
         ].join(" · "),
         status: toStringValue(item.status, "Unknown"),

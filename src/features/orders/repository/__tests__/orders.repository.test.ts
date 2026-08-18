@@ -205,7 +205,7 @@ describe("OrderRepository.postRefundEvent", () => {
       refunds: [],
       totalPrice: 10000,
     }));
-    const event = { type: "partial", amountInPaise: 5000, reason: "damaged", refundedBy: "admin-1", refundedAt: new Date() };
+    const event = { type: "partial", amount: 5000, reason: "damaged", refundedBy: "admin-1", refundedAt: new Date() };
     await repo.postRefundEvent("order-1", event as never);
     expect(mockDocRef.update).toHaveBeenCalledWith(
       expect.objectContaining({ contestable: false, refunds: [event] }),
@@ -214,7 +214,7 @@ describe("OrderRepository.postRefundEvent", () => {
 
   it("becomeRefunded=true → sets status: refunded", async () => {
     mockDocRef.get.mockResolvedValue(makeSnap({ status: "delivered", refunds: [], totalPrice: 10000 }));
-    const event = { type: "full", amountInPaise: 10000, reason: "return", refundedBy: "admin-1", refundedAt: new Date() };
+    const event = { type: "full", amount: 10000, reason: "return", refundedBy: "admin-1", refundedAt: new Date() };
     await repo.postRefundEvent("order-1", event as never, true);
     expect(mockDocRef.update).toHaveBeenCalledWith(
       expect.objectContaining({ status: "refunded" }),

@@ -53,13 +53,13 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
         setCurrent(cfg);
         setDraft({
           customCarrierName: cfg.customCarrierName ?? "",
-          customShippingPrice: cfg.customShippingPrice ? String(cfg.customShippingPrice / 100) : "",
+          customShippingPrice: cfg.customShippingPrice ? String(cfg.customShippingPrice) : "",
           pickupAddressId: "",
           freeShippingThreshold: (res?.data?.freeShippingThreshold ?? 0)
-            ? String(res.data.freeShippingThreshold / 100)
+            ? String(res.data.freeShippingThreshold)
             : "",
           fragileSurcharge: (res?.data?.fragileSurcharge ?? 0)
-            ? String(res.data.fragileSurcharge / 100)
+            ? String(res.data.fragileSurcharge)
             : "",
         });
       })
@@ -79,10 +79,10 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
     try {
       const body = {
         customCarrierName: draft.customCarrierName.trim(),
-        customShippingPrice: Math.round(parseFloat(draft.customShippingPrice || "0") * 100),
+        customShippingPrice: Math.round(parseFloat(draft.customShippingPrice || "0") * 100) / 100,
         ...(draft.pickupAddressId ? { pickupAddressId: draft.pickupAddressId } : {}),
-        freeShippingThreshold: Math.round(parseFloat(draft.freeShippingThreshold || "0") * 100),
-        fragileSurcharge: Math.round(parseFloat(draft.fragileSurcharge || "0") * 100),
+        freeShippingThreshold: Math.round(parseFloat(draft.freeShippingThreshold || "0") * 100) / 100,
+        fragileSurcharge: Math.round(parseFloat(draft.fragileSurcharge || "0") * 100) / 100,
       };
 
       const res = await fetch(apiBase, {

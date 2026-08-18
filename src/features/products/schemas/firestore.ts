@@ -126,7 +126,7 @@ export interface ProductLiveItemMeta {
   /** Transport details — carrier method, fees, insurance flag. */
   transport: {
     method: "courier" | "in-person" | "specialist";
-    handlingFeeInPaise?: number;
+    handlingFee?: number;
     insuranceIncluded?: boolean;
   };
   /** Allowed buyer-state ISO 3166-2 codes (e.g. "IN-MH"). */
@@ -215,8 +215,8 @@ export interface ProductDocument extends BaseDocument {
   // SB-UNI-H 2026-05-13 — eBay-style hybrid auction + Buy It Now.
   // BIN is offered while the auction has zero bids; once `bidsHaveStarted`
   // flips to true the PDP hides the BIN button per eBay rules. Sellers
-  // can leave `buyItNowPriceInPaise` unset to disable BIN entirely.
-  buyItNowPriceInPaise?: number;
+  // can leave `buyItNowPrice` unset to disable BIN entirely.
+  buyItNowPrice?: number;
   bidsHaveStarted?: boolean;
   // SB-UNI-G 2026-05-13 — TCGPlayer-style grading + card metadata.
   // Applies to listingType:"standard" + "auction". Composite indices
@@ -356,7 +356,7 @@ export interface ProductDocument extends BaseDocument {
      */
     overrides?: Array<{
       providerId: string;
-      feeInPaise?: number;
+      fee?: number;
       etaDaysMin?: number;
       etaDaysMax?: number;
     }>;
@@ -473,7 +473,7 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "auctionExtensionMinutes",
   "auctionShippingPaidBy",
   // SB-UNI-H 2026-05-13 — eBay hybrid BIN.
-  "buyItNowPriceInPaise",
+  "buyItNowPrice",
   "bidsHaveStarted",
   // SB-UNI-G 2026-05-13 — TCGPlayer grading + card metadata.
   "grading",
@@ -540,7 +540,7 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "buyNowPrice",
   "minBidIncrement",
   // SB-UNI-H 2026-05-13 — eBay hybrid BIN updatable.
-  "buyItNowPriceInPaise",
+  "buyItNowPrice",
   "bidsHaveStarted",
   // SB-UNI-G 2026-05-13 — TCGPlayer grading + card metadata updatable.
   "grading",

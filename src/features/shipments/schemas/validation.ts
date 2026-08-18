@@ -49,10 +49,10 @@ export const createShipmentSchema = z.object({
   etaDate: z.union([z.string(), z.date()]).optional(),
   receivedDate: z.union([z.string(), z.date()]).optional(),
   notes: z.string().optional(),
-  customsTotalPaise: z.number().int().min(0),
-  shippingTotalPaise: z.number().int().min(0),
+  customsTotal: z.number().min(0),
+  shippingTotal: z.number().min(0),
   laborHoursSpent: z.number().min(0).optional(),
-  laborRatePaisePerHour: z.number().int().min(0).optional(),
+  laborRatePerHour: z.number().min(0).optional(),
 });
 export const updateShipmentSchema = createShipmentSchema.partial();
 
@@ -60,10 +60,10 @@ export const createShipmentLotSchema = z.object({
   lotName: z.string().min(1, "Lot name is required"),
   supplierOrderRef: z.string().optional(),
   weightGrams: z.number().min(0),
-  purchaseCostPaise: z.number().int().min(0),
+  purchaseCost: z.number().min(0),
   images: z.array(mediaFieldSchema).optional().default([]),
   remainderItemCount: z.number().int().min(0).optional(),
-  remainderEstimatedValuePaise: z.number().int().min(0).optional(),
+  remainderEstimatedValue: z.number().min(0).optional(),
 });
 export const updateShipmentLotSchema = createShipmentLotSchema.partial();
 
@@ -71,7 +71,7 @@ const shipmentItemBaseSchema = z.object({
   title: z.string().min(1, "Item title is required"),
   quantity: z.number().int().min(1),
   isForSelfUse: z.boolean(),
-  price: z.number().int().min(0).optional(),
+  price: z.number().min(0).optional(),
   condition: productConditionSchema.optional(),
   categorySlugs: z.array(z.string()).optional(),
   brandSlug: z.string().optional(),

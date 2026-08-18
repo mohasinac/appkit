@@ -14,7 +14,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -160,7 +160,7 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
           primary: toStringValue(item.title ?? item.name, "Untitled pre-order"),
           secondary: toStringValue(item.condition, ""),
           status: toStringValue(item.status, "draft"),
-          price: priceRaw ? toRupees(priceRaw) : "—",
+          price: priceRaw ? toCurrency(priceRaw) : "—",
           deliveryDate: item.preOrderDeliveryDate
             ? toRelativeDate(item.preOrderDeliveryDate as string)
             : "TBA",

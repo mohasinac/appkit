@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient, ApiClientError } from "../../../http";
 import type { JsonValue } from "../../../schemas/types";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 /**
  * Listing-row record. Items come from JSON API responses, so values are
@@ -96,11 +97,11 @@ export function toStringValue(value: unknown, fallback = "-"): string {
   return fallback;
 }
 
-export function toRupees(value: unknown): string {
+export function toCurrency(value: unknown): string {
   if (typeof value !== "number" || Number.isNaN(value)) {
     return "-";
   }
-  return `INR ${value.toLocaleString("en-IN")}`;
+  return formatCurrency(value);
 }
 
 export function toRelativeDate(value: unknown): string {

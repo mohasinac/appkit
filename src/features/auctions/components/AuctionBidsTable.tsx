@@ -8,12 +8,12 @@ const __O = {
   hidden: "overflow-hidden",
 } as const;
 
-function paise(amount: number) {
+function formatBidAmount(amount: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
-  }).format(amount / 100);
+  }).format(amount);
 }
 
 function relDate(d: Date | string) {
@@ -107,7 +107,7 @@ function AuctionRow({
             {auction.bids.length} bid{auction.bids.length !== 1 ? "s" : ""}
           </Text>
           <Text className="text-[var(--appkit-color-text)]" size="sm" weight="semibold">
-            {paise(highest)}
+            {formatBidAmount(highest)}
           </Text>
         </Row>
       </Button>
@@ -141,7 +141,7 @@ function AuctionRow({
                 </Text>
               )}
               <Text className="text-[var(--appkit-color-text)]" size="sm" weight="medium">
-                {paise(bid.bidAmount)}
+                {formatBidAmount(bid.bidAmount)}
               </Text>
               <Badge variant={STATUS_VARIANT[bid.status] ?? "pending"} className="capitalize">
                 {bid.status}

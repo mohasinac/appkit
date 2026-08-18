@@ -118,6 +118,18 @@ export interface ListingCheckoutRule {
   stockDecrementExtras(product: ProductDocument, quantity: number): Record<string, JsonValue>;
 
   /**
+   * Return extra Firestore field updates to merge alongside the standard
+   * `availableQuantity` restore, when an order's payment window expires (or
+   * its proof is rejected as fraudulent) and its stock must be returned to
+   * the public pool. The symmetric inverse of `stockDecrementExtras` — NOT
+   * simply the same extras with a negated quantity, since decrement extras
+   * bump a counter UP as stock goes down (e.g. `prizeCurrentEntries`), so
+   * the restore side must bump that same counter back DOWN. Pure — works
+   * from product data already fetched by the calling job/action.
+   */
+  stockIncrementExtras(product: ProductDocument, quantity: number): Record<string, JsonValue>;
+
+  /**
    * Transform a raw order-line input (built from cart item data) before it
    * is written to the OrderDocument.  Adds type-specific fields such as
    * prize-draw reveal status and deadline.

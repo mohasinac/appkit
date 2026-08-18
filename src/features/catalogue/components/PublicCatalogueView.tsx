@@ -6,7 +6,7 @@ import { Div, Grid, Heading, Skeleton, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
-import { formatPaise } from "../../../utils/number.formatter";
+import { formatCurrency } from "../../../utils/number.formatter";
 import type { CatalogueItemDocument } from "../schemas/firestore";
 
 export interface PublicCatalogueViewProps {
@@ -43,7 +43,7 @@ export function PublicCatalogueView({ ownerSlug }: PublicCatalogueViewProps) {
             <Heading level={4} size="sm">{item.title}</Heading>
           </Div>
           {typeof item.price === "number" && item.price > 0 && (
-            <Text size="sm" color="muted">{formatPaise(item.price)}</Text>
+            <Text size="sm" color="muted">{formatCurrency(item.price)}</Text>
           )}
         </Div>
       ))}

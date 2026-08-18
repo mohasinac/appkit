@@ -5,7 +5,7 @@ import { Stack, Text, Heading, Badge, Section, Container, DataTable, type DataTa
 import type { ClientLotterySlot } from "../../../../features/lottery/types";
 
 interface AdminLotterySlot extends ClientLotterySlot {
-  priceInPaise: number;
+  price: number;
   weight: number;
 }
 
@@ -32,10 +32,10 @@ export function LotteryAdminSlotView({ slots }: LotteryAdminSlotViewProps) {
       render: (s) => <Text size="sm">{s.name}</Text>,
     },
     {
-      key: "priceInPaise",
+      key: "price",
       header: "Price (₹)",
       render: (s) => (
-        <Text size="sm" family="mono">₹{(s.priceInPaise / 100).toLocaleString("en-IN")}</Text>
+        <Text size="sm" family="mono">₹{s.price.toLocaleString("en-IN")}</Text>
       ),
     },
     {

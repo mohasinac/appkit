@@ -63,7 +63,7 @@ export const bundleCreateSchema = z.object({
    * "brand" — brand discovery collection; does not touch product reverse pointers.
    */
   bundleKind: z.enum([BUNDLE_KIND_SPECIAL, BUNDLE_KIND_BRAND]),
-  bundlePriceInPaise: z.number().int().min(100),
+  bundlePrice: z.number().min(1),
   bundleQueryRule: bundleQueryRuleSchema,
   bundleProductIds: productIdsSchema,
   /** Richer per-member metadata (draw counts for prize-draws). */
@@ -76,7 +76,7 @@ export const bundleUpdateSchema = z.object({
   name: z.string().min(2).max(120).optional(),
   description: z.string().max(2000).optional(),
   bundleKind: z.enum([BUNDLE_KIND_SPECIAL, BUNDLE_KIND_BRAND]).optional(),
-  bundlePriceInPaise: z.number().int().min(100).optional(),
+  bundlePrice: z.number().min(1).optional(),
   bundleQueryRule: bundleQueryRuleSchema.optional(),
   bundleProductIds: productIdsSchema.optional(),
   bundleItemDetails: z.array(bundleItemDetailSchema).optional(),

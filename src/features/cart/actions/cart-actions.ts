@@ -114,11 +114,11 @@ export async function updateCartItemShipping(
   userId: string,
   itemId: string,
   providerId: string,
-  feeInPaise: number,
+  fee: number,
 ): Promise<CartDocument> {
   if (!itemId || !providerId) throw new ValidationError("itemId and providerId are required");
-  if (!Number.isFinite(feeInPaise) || feeInPaise < 0) {
-    throw new ValidationError("feeInPaise must be a non-negative number");
+  if (!Number.isFinite(fee) || fee < 0) {
+    throw new ValidationError("fee must be a non-negative number");
   }
-  return cartRepository.updateItemShipping(userId, itemId, providerId, feeInPaise);
+  return cartRepository.updateItemShipping(userId, itemId, providerId, fee);
 }

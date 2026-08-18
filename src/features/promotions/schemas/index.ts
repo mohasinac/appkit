@@ -1,6 +1,6 @@
 export * from "./firestore";
 import { z } from "zod";
-import { auditTimestampsShape, firestoreDateSchema, paiseSchema } from "../../../schemas/firestore-helpers";
+import { auditTimestampsShape, firestoreDateSchema, rupeesSchema } from "../../../schemas/firestore-helpers";
 
 // ─── Firestore document schemas (W2) ──────────────────────────────────────────
 // Mirrors CouponDocument + CouponUsageDocument + ClaimedCouponDocument in
@@ -18,8 +18,8 @@ export const couponTypeEnumSchema = z.enum([
 
 export const discountConfigSchema = z.object({
   value: z.number(),
-  maxDiscount: paiseSchema.optional(),
-  minPurchase: paiseSchema.optional(),
+  maxDiscount: rupeesSchema.optional(),
+  minPurchase: rupeesSchema.optional(),
 });
 
 export const bxgyConfigSchema = z.object({
@@ -30,7 +30,7 @@ export const bxgyConfigSchema = z.object({
 });
 
 export const tieredDiscountSchema = z.object({
-  minAmount: paiseSchema,
+  minAmount: rupeesSchema,
   discountValue: z.number(),
 });
 
@@ -58,8 +58,8 @@ export const restrictionsConfigSchema = z.object({
 
 export const couponStatsSchema = z.object({
   totalUses: z.number().int().nonnegative(),
-  totalRevenue: paiseSchema,
-  totalDiscount: paiseSchema,
+  totalRevenue: rupeesSchema,
+  totalDiscount: rupeesSchema,
 });
 
 export const couponFirestoreSchema = z.object({

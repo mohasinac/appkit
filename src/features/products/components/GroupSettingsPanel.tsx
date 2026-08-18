@@ -180,7 +180,7 @@ export function GroupSettingsPanel({
       await apiClient.post(childrenEndpoint, {
         mode: "create",
         title: createForm.title,
-        price: Math.round(parseFloat(createForm.price) * 100),
+        price: Math.round(parseFloat(createForm.price) * 100) / 100,
         condition: createForm.condition,
         parentId: productId,
       });

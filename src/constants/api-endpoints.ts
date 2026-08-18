@@ -144,6 +144,8 @@ export const ADMIN_ENDPOINTS = {
   ORDER_BY_ID: (id: string) => `/api/admin/orders/${id}`,
   ORDER_REFUND: (id: string) => `/api/admin/orders/${id}/refund`,
   ORDER_PAYMENT_VERIFY: (id: string) => `/api/admin/orders/${id}/payment-verify`,
+  ORDER_PAYMENT_REUPLOAD: (id: string) => `/api/admin/orders/${id}/payment-reupload`,
+  ORDER_PAYMENT_REJECT_FRAUD: (id: string) => `/api/admin/orders/${id}/payment-reject-fraud`,
   USERS: "/api/admin/users",
   USERS_BULK: "/api/admin/users/bulk",
   USER_BY_ID: (uid: string) => `/api/admin/users/${uid}`,
@@ -471,6 +473,7 @@ export const ORDER_ENDPOINTS = {
   BY_ID: (id: string) => `/api/orders/${id}`,
   TRACK: (trackingId: string) => `/api/orders/track/${trackingId}`,
   PAYMENT_PROOF: (id: string) => `/api/orders/${id}/payment-proof`,
+  DISPUTE: (id: string) => `/api/orders/${id}/dispute`,
 } as const;
 
 // ---------------------------------------------------------------------------

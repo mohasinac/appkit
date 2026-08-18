@@ -13,7 +13,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -54,7 +54,7 @@ const ADMIN_LIVE_CONFIG: ListingViewConfig<AdminProductsResponse, LiveRow> = {
         primary: toStringValue(item.title ?? item.productTitle, "Untitled live item"),
         secondary: [
           toStringValue(item.sellerName, "Unknown seller"),
-          toRupees(item.price),
+          toCurrency(item.price),
           toStringValue(live.species, ""),
           Boolean(live.vendorVerified) ? "verified" : "pending",
         ]

@@ -9,7 +9,7 @@ export interface LotterySlot {
   slotNumber: number; // 1..totalSlots
   name: string; // prize item name shown to users
   // FUTURE_FINANCIAL_DB: external_tx_id → lottery_transactions.external_tx_id
-  priceInPaise: number; // NEVER sent to client — determines weight
+  price: number; // NEVER sent to client — determines weight (decimal rupees)
   weight: number; // computed server-side; NEVER sent to client
   isBooked: boolean;
   bookedByUserLotteryNumber?: number;
@@ -27,14 +27,14 @@ export interface ClientLotterySlot {
 }
 
 export type LotteryPricingMode = "uniform" | "variable";
-// uniform: all slots cost the same (uniformPriceInPaise); all slots equal weight (no weighting)
-// variable: each slot has its own priceInPaise; weight computed per slot (lower price = higher chance)
+// uniform: all slots cost the same (uniformPrice); all slots equal weight (no weighting)
+// variable: each slot has its own price; weight computed per slot (lower price = higher chance)
 
 export interface LotteryConfig {
   slots: LotterySlot[];
   totalSlots: number; // 1..200
   pricingMode: LotteryPricingMode;
-  uniformPriceInPaise?: number; // set when pricingMode === "uniform"; all slots cost this
+  uniformPrice?: number; // set when pricingMode === "uniform"; all slots cost this (decimal rupees)
   drawWindowDurationMinutes: number;
   maxPullsPerTransaction: number; // max pulls one TX ID is valid for (default 1)
   maxPullsPerUser: number; // max total pulls one user may make in this lottery (default 1)
@@ -83,11 +83,11 @@ export class LotteryError extends Error {
  * For uniform pricing: all slots get weight 50.
  */
 export function computeWeight(
-  priceInPaise: number,
-  maxPriceInPaise: number,
+  price: number,
+  maxPrice: number,
 ): number {
-  if (maxPriceInPaise === 0) return 50;
-  return Math.max(1, Math.round((1 - priceInPaise / maxPriceInPaise) * 99) + 1);
+  if (maxPrice === 0) return 50;
+  return Math.max(1, Math.round((1 - price / maxPrice) * 99) + 1);
 }
 
 /**
@@ -129,9 +129,9 @@ export function assignSlotWeights(config: LotteryConfig): LotterySlot[] {
   if (config.pricingMode === "uniform") {
     return config.slots.map((sl) => ({ ...sl, weight: 50 }));
   }
-  const maxPrice = Math.max(...config.slots.map((sl) => sl.priceInPaise), 0);
+  const maxPrice = Math.max(...config.slots.map((sl) => sl.price), 0);
   return config.slots.map((sl) => ({
     ...sl,
-    weight: computeWeight(sl.priceInPaise, maxPrice),
+    weight: computeWeight(sl.price, maxPrice),
   }));
 }

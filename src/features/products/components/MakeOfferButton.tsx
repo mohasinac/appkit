@@ -3,7 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { Button, Div, Input, LoginRequiredModal, Modal, Span, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
-import { formatCurrency } from "../../../utils/number.formatter";
+import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
 
 import { normalizeError } from "../../../errors/normalize";
 export interface MakeOfferButtonProps {
@@ -40,8 +40,8 @@ export function MakeOfferButton({
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const minOffer = Math.round(listedPrice * (minOfferPercent / 100));
-  const defaultOffer = Math.round(listedPrice * 0.9);
+  const minOffer = roundRupees(listedPrice * (minOfferPercent / 100));
+  const defaultOffer = roundRupees(listedPrice * 0.9);
   const [offerAmount, setOfferAmount] = useState(Math.max(defaultOffer, minOffer));
   const [buyerNote, setBuyerNote] = useState("");
 

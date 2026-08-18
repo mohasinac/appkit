@@ -11,7 +11,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -69,7 +69,7 @@ export function SellerOffersView({
         id: toStringValue(item.id, `offer-${index}`),
         primary: toStringValue(item.productTitle ?? item.title, "Untitled product"),
         secondary: [
-          `Offer: ${toRupees(item.offerAmount ?? item.amount)}`,
+          `Offer: ${toCurrency(item.offerAmount ?? item.amount)}`,
           toStringValue(item.buyerName ?? "Unknown buyer", "Unknown buyer"),
         ].join(" · "),
         status: toStringValue(item.status, "Pending"),

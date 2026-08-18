@@ -41,14 +41,14 @@ export const MAX_ITEMS_PER_LOT = 500;
 export const MAX_LOTS_PER_SHIPMENT = 10;
 
 export interface ShipmentTotals {
-  lotsCostPaise: number;
-  customsTotalPaise: number;
-  shippingTotalPaise: number;
-  laborCostPaise: number;
-  totalShipmentCostPaise: number;
-  totalProjectedRevenuePaise: number;
-  projectedProfitPaise: number;
-  projectedProfitAfterLaborPaise: number;
+  lotsCost: number;
+  customsTotal: number;
+  shippingTotal: number;
+  laborCost: number;
+  totalShipmentCost: number;
+  totalProjectedRevenue: number;
+  projectedProfit: number;
+  projectedProfitAfterLabor: number;
   projectedMarginPercent: number;
   projectedRoiPercent: number;
   totalWeightGrams: number;
@@ -58,14 +58,14 @@ export interface ShipmentTotals {
 }
 
 export const DEFAULT_SHIPMENT_TOTALS: ShipmentTotals = {
-  lotsCostPaise: 0,
-  customsTotalPaise: 0,
-  shippingTotalPaise: 0,
-  laborCostPaise: 0,
-  totalShipmentCostPaise: 0,
-  totalProjectedRevenuePaise: 0,
-  projectedProfitPaise: 0,
-  projectedProfitAfterLaborPaise: 0,
+  lotsCost: 0,
+  customsTotal: 0,
+  shippingTotal: 0,
+  laborCost: 0,
+  totalShipmentCost: 0,
+  totalProjectedRevenue: 0,
+  projectedProfit: 0,
+  projectedProfitAfterLabor: 0,
   projectedMarginPercent: 0,
   projectedRoiPercent: 0,
   totalWeightGrams: 0,
@@ -85,10 +85,10 @@ export interface ShipmentDocument extends BaseDocument {
   receivedDate?: Date;
   notes?: string;
 
-  customsTotalPaise: number;
-  shippingTotalPaise: number;
+  customsTotal: number;
+  shippingTotal: number;
   laborHoursSpent?: number;
-  laborRatePaisePerHour?: number;
+  laborRatePerHour?: number;
 
   // Persisted rollup — written only by the Function cascade. Never computed
   // inline at read time; compare totalsComputedAt vs updatedAt for a
@@ -105,24 +105,24 @@ export interface ShipmentLot extends BaseDocument {
   lotName: string;
   supplierOrderRef?: string;
   weightGrams: number;
-  purchaseCostPaise: number;
+  purchaseCost: number;
   images: MediaField[];
 
   // "Main items" tracking — only individually notable items get a
   // shipmentItems doc; everything else is this lump estimate.
   remainderItemCount?: number;
-  remainderEstimatedValuePaise?: number;
+  remainderEstimatedValue?: number;
 
   // Recomputed by the item-write trigger —
   itemCount: number;
-  mainItemsProjectedRevenuePaise: number;
+  mainItemsProjectedRevenue: number;
 
   // Recomputed by the lot/shipment allocation trigger —
-  customsAllocatedPaise: number;
-  shippingAllocatedPaise: number;
-  totalLandedCostPaise: number;
-  projectedRevenuePaise: number;
-  projectedProfitPaise: number;
+  customsAllocated: number;
+  shippingAllocated: number;
+  totalLandedCost: number;
+  projectedRevenue: number;
+  projectedProfit: number;
 }
 
 /**
@@ -181,7 +181,7 @@ export const SHIPMENT_LOT_FIELDS = {
   ID: "id",
   SHIPMENT_ID: "shipmentId",
   SHIPMENT_STATUS: "shipmentStatus",
-  PROJECTED_PROFIT_PAISE: "projectedProfitPaise",
+  PROJECTED_PROFIT: "projectedProfit",
   CREATED_AT: "createdAt",
 } as const;
 
@@ -209,12 +209,12 @@ export type ShipmentLotCreateInput = Omit<
   | "shipmentId"
   | "shipmentStatus"
   | "itemCount"
-  | "mainItemsProjectedRevenuePaise"
-  | "customsAllocatedPaise"
-  | "shippingAllocatedPaise"
-  | "totalLandedCostPaise"
-  | "projectedRevenuePaise"
-  | "projectedProfitPaise"
+  | "mainItemsProjectedRevenue"
+  | "customsAllocated"
+  | "shippingAllocated"
+  | "totalLandedCost"
+  | "projectedRevenue"
+  | "projectedProfit"
 >;
 export type ShipmentLotUpdateInput = Partial<
   Omit<ShipmentLot, "id" | "createdAt" | "shipmentId">

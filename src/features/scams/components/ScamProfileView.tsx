@@ -1,4 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
+import { formatCurrency } from "../../../utils/number.formatter";
 import React from "react";
 
 const CLS_OUTLINE_BTN = "appkit-button appkit-button--outline appkit-button--md flex w-full items-center gap-[var(--appkit-space-2)]";
@@ -61,11 +62,6 @@ function formatDate(d: Date | string | undefined): string {
     void normalizeError(_err);
     return String(d);
   }
-}
-
-function formatPaise(paise: number | undefined): string {
-  if (!paise) return "";
-  return `₹${(paise / 100).toLocaleString("en-IN")}`;
 }
 
 function IdentityChip({
@@ -151,7 +147,7 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
           </Text>
           {scammer.amountLost ? (
             <Text className="text-[color:var(--appkit-color-danger,theme(colors.red.600))]" size="sm" weight="medium">
-              {formatPaise(scammer.amountLost)} lost (primary incident)
+              {formatCurrency(scammer.amountLost)} lost (primary incident)
             </Text>
           ) : null}
         </Row>
@@ -197,7 +193,7 @@ function ScammerIncidentsSection({ incidents }: { incidents: ScammerIncidentDocu
                 )}
                 {inc.amountLost ? (
                   <Text className="text-[color:var(--appkit-color-danger,theme(colors.red.600))]" size="xs" weight="medium">
-                    {formatPaise(inc.amountLost)} lost
+                    {formatCurrency(inc.amountLost)} lost
                   </Text>
                 ) : null}
                 <Text variant="secondary" className="leading-relaxed" size="sm">

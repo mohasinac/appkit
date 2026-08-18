@@ -25,8 +25,11 @@ export const auditTimestampsShape = {
   updatedAt: firestoreDateSchema,
 } as const;
 
-/** Money amount in paise — positive integer. */
-export const paiseSchema = z.number().int().nonnegative();
+/** Money amount in decimal rupees — non-negative, at most 2 decimal places. */
+export const rupeesSchema = z.number().nonnegative().refine(
+  (n) => Number.isInteger(Math.round(n * 100)),
+  { message: "Amount must have at most 2 decimal places" },
+);
 
 /** ISO currency code (we use "INR" everywhere). */
 export const currencyCodeSchema = z.string().length(3);

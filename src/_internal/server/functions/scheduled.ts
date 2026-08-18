@@ -17,6 +17,9 @@ import {
   notificationPruneHandler,
   offerExpiryHandler,
   payoutBatchHandler,
+  paymentWindowTimeoutHandler,
+  hardBanReinstatementHandler,
+  paymentReviewAutoApproveHandler,
   pendingOrderTimeoutHandler,
   positionsReconcileHandler,
   prizeRevealCloseHandler,
@@ -42,9 +45,33 @@ export const auctionSettlement = defineFunction({
 
 export const pendingOrderTimeout = defineFunction({
   name: "pendingOrderTimeout",
-  description: "Cancel pending orders that exceeded their timeout window.",
+  description: "Cancel pending COD orders that exceeded the 24h timeout window (orders with a paymentDeadline are paymentWindowTimeout's domain instead).",
   trigger: { kind: "schedule", cron: "0 */2 * * *" },
   handler: pendingOrderTimeoutHandler,
+  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
+});
+
+export const paymentWindowTimeout = defineFunction({
+  name: "paymentWindowTimeout",
+  description: "Cancel + restock orders whose 15-minute manual-payment window expired without proof.",
+  trigger: { kind: "schedule", cron: EVERY_5_MIN },
+  handler: paymentWindowTimeoutHandler,
+  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
+});
+
+export const hardBanReinstatement = defineFunction({
+  name: "hardBanReinstatement",
+  description: "Re-enable Auth login for temporary hard-bans past their expiry.",
+  trigger: { kind: "schedule", cron: "*/15 * * * *" },
+  handler: hardBanReinstatementHandler,
+  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
+});
+
+export const paymentReviewAutoApprove = defineFunction({
+  name: "paymentReviewAutoApprove",
+  description: "Auto-approve manual payment proofs unreviewed after 2 hours.",
+  trigger: { kind: "schedule", cron: "*/15 * * * *" },
+  handler: paymentReviewAutoApproveHandler,
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -227,6 +254,9 @@ export const catalogueImageStalenessReminder = defineFunction({
 export const SCHEDULED_FUNCTIONS = [
   auctionSettlement,
   pendingOrderTimeout,
+  paymentWindowTimeout,
+  hardBanReinstatement,
+  paymentReviewAutoApprove,
   couponExpiry,
   offerExpiry,
   productStatsSync,

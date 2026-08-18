@@ -16,7 +16,7 @@ import { ROUTES } from "../../..";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
@@ -127,7 +127,7 @@ export function SellerStickersView({
         return {
           id: toStringValue(item.id, `stickers-${index}`),
           title: toStringValue(item.productTitle ?? item.title, "Untitled"),
-          price: toRupees(item.price),
+          price: toCurrency(item.price),
           size: toStringValue(printMeta.size, ""),
           status: toStringValue(item.status, "draft"),
           createdAt: toRelativeDate(item.createdAt),

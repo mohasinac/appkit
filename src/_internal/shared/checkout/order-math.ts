@@ -6,6 +6,7 @@
  */
 import type { CartItemDocument } from "../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../features/products/schemas/firestore";
+import { roundRupees } from "../../../utils/number.formatter";
 
 // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle price
 // at add-time); regular lines use product.price (current Firestore). Prevents
@@ -31,7 +32,7 @@ export function computePreOrderDepositAmount(
   const raw = group.reduce((sum, { item, product }) => {
     const lineTotal = unitPriceFor(item, product) * item.quantity;
     const pct = product.preOrderDepositPercent ?? defaultDepositPercent;
-    return sum + lineTotal * (pct / 100);
+    return sum + lineTotal * (pct / 100); // audit-money-units-ok: percentage divisor, not paise
   }, 0);
-  return Math.round(raw * 100) / 100;
+  return roundRupees(raw);
 }

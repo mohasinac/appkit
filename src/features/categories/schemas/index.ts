@@ -1,7 +1,7 @@
 export * from "./firestore";
 
 import { z } from "zod";
-import { auditTimestampsShape, firestoreDateSchema, paiseSchema } from "../../../schemas/firestore-helpers";
+import { auditTimestampsShape, firestoreDateSchema, rupeesSchema } from "../../../schemas/firestore-helpers";
 
 // ─── Firestore document schema (W2) ───────────────────────────────────────────
 // Mirrors CategoryDocument + nested types in ./firestore.ts.
@@ -87,7 +87,7 @@ export const categoryFirestoreSchema = z.object({
   brandFounded: z.number().int().optional(),
   brandBannerImage: z.string().optional(),
   bundleKind: z.enum(["special", "brand"]).optional(),
-  bundlePriceInPaise: paiseSchema.optional(),
+  bundlePrice: rupeesSchema.optional(),
   bundleQueryRule: bundleQueryRuleSchema.optional(),
   bundleStockStatus: z.enum(["in_stock", "out_of_stock"]).optional(),
   bundleQueryResolvedAt: firestoreDateSchema.optional(),

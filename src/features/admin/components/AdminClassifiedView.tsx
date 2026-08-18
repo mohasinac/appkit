@@ -13,7 +13,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
+  toCurrency,
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
@@ -52,7 +52,7 @@ const ADMIN_CLASSIFIED_CONFIG: ListingViewConfig<AdminProductsResponse, Classifi
       primary: toStringValue(item.title ?? item.productTitle, "Untitled classified"),
       secondary: [
         toStringValue(item.sellerName, "Unknown seller"),
-        toRupees(item.price),
+        toCurrency(item.price),
       ].join(" · "),
       status: toStringValue(item.status, "draft"),
       updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
