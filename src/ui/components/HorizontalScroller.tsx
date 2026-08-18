@@ -295,13 +295,19 @@ export function HorizontalScroller<T = unknown>({
     children
   );
 
-  const hoverHandlers = pauseOnHover
+  // Pauses autoScroll for the duration of any user interaction — hover, touch,
+  // keyboard focus (arrow-key nav), or an active wheel/drag scroll — so autoplay
+  // never fights a scroll the user is in the middle of driving themselves.
+  const interactionHandlers = pauseOnHover
     ? {
         onMouseEnter: () => setIsPaused(true),
         onMouseLeave: () => setIsPaused(false),
         onTouchStart: () => setIsPaused(true),
         onTouchEnd: () => setIsPaused(false),
         onTouchCancel: () => setIsPaused(false),
+        onFocus: () => setIsPaused(true),
+        onBlur: () => setIsPaused(false),
+        onWheel: () => setIsPaused(true),
       }
     : {};
 
@@ -321,7 +327,7 @@ export function HorizontalScroller<T = unknown>({
           .join(" ")}
         tabIndex={0}
         onKeyDown={handleKeyDown}
-        {...hoverHandlers}
+        {...interactionHandlers}
         data-section="horizontalscroller-div-511"
       >
         {showFadeEdges && (
@@ -372,7 +378,7 @@ export function HorizontalScroller<T = unknown>({
       className={["appkit-hscroller", className].filter(Boolean).join(" ")}
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      {...hoverHandlers}
+      {...interactionHandlers}
       data-section="horizontalscroller-div-513"
     >
       {showFadeEdges && (
