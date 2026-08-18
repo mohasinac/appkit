@@ -41,7 +41,7 @@ export interface HorizontalScrollerProps<T = unknown> {
   minItemWidth?: number;
   pauseOnHover?: boolean;
   itemClassName?: string;
-  /** Infinite-loop mode: circular slot rendering with scroll teleport — no array cloning */
+  /** When the scroller reaches the last item, snap instantly back to the first instead of stopping. */
   loop?: boolean;
 }
 
@@ -103,135 +103,66 @@ export function HorizontalScroller<T = unknown>({
   const autoScrollTimer = useRef<ReturnType<typeof setInterval> | undefined>(
     undefined,
   );
-  // Prevents re-entrant teleports during the instantaneous scrollLeft reset
-  const isJumping = useRef(false);
-  // Prevents re-running the initial scroll-to-real-start on every itemWidth update
-  const loopInitialized = useRef(false);
+  // Tracks the pending "restore smooth scrolling" rAF so a fast reset (autoScroll
+  // firing again, or a manual arrow click) can't leave a stale callback that fires
+  // after — and clobbers — a newer scroll-behavior change.
+  const instantScrollRaf = useRef<number | undefined>(undefined);
 
   const normalizedItems = Array.isArray(items) ? items : [];
   const itemsMode = Array.isArray(items) && renderItem != null;
   const itemCount = normalizedItems.length;
 
-  // Number of clone slots on each side — fixed size, computed once from perView hint.
-  // Using Math.min so tiny lists don't double-render more slots than they have items.
-  const loopCloneCount =
-    loop && itemsMode && rows <= 1 && itemCount > 0
-      ? Math.min(itemCount, typeof perView === "number" ? perView : 3)
-      : 0;
-
-  // Grid mode (rows > 1): items are grouped into full-width "slides". Looping here
-  // clones exactly one slide on each side (the slide itself is the full stride, so a
-  // single buffer slide is enough) and teleports across a full cycle at the boundary —
-  // same technique as the single-item loop above, just at slide granularity.
   const gridMode = itemsMode && rows > 1;
   const gridCols = colCount > 0 ? colCount : 3;
   const gridCardsPerSlide = rows * gridCols;
   const gridSlideCount = gridMode
     ? Math.ceil(itemCount / gridCardsPerSlide)
     : 0;
-  const gridLoopActive = loop && gridMode && gridSlideCount > 1;
 
-  // On first paint after itemWidth resolves, scroll to the first *real* item
-  // (skipping the left clone slots that provide backward-wrap buffer).
-  useEffect(() => {
-    if (!loop || loopCloneCount === 0 || itemWidth === undefined) return;
-    const el = containerRef.current;
-    if (!el || loopInitialized.current) return;
-    loopInitialized.current = true;
-    el.style.scrollBehavior = "auto";
-    el.scrollLeft = loopCloneCount * (itemWidth + gap);
-    requestAnimationFrame(() => {
-      el.style.scrollBehavior = "";
-    });
-  }, [loop, loopCloneCount, itemWidth, gap, containerRef]);
-
-  // Circular teleporter: when scroll enters a clone zone, jump by exactly one
-  // full cycle so the viewport content is unchanged but we're back in real territory.
-  const handleScrollLoop = useCallback(() => {
-    if (!loop || loopCloneCount === 0 || itemWidth === undefined) return;
-    const el = containerRef.current;
-    if (!el || isJumping.current) return;
-    const stride = itemWidth + gap;
-    const cycleWidth = itemCount * stride;
-    // scrollLeft where real items start and end
-    const realStart = loopCloneCount * stride;
-    const realEnd = realStart + cycleWidth;
-
-    if (el.scrollLeft < realStart - stride * 0.5) {
-      // Entered left clone zone — jump forward one cycle
-      isJumping.current = true;
-      el.style.scrollBehavior = "auto";
-      el.scrollLeft += cycleWidth;
-      requestAnimationFrame(() => {
-        isJumping.current = false;
-        el.style.scrollBehavior = "";
-      });
-    } else if (el.scrollLeft > realEnd - el.clientWidth + stride * 0.5) {
-      // Entered right clone zone — jump backward one cycle
-      isJumping.current = true;
-      el.style.scrollBehavior = "auto";
-      el.scrollLeft -= cycleWidth;
-      requestAnimationFrame(() => {
-        isJumping.current = false;
-        el.style.scrollBehavior = "";
-      });
+  // Instantly jumps to a scroll position — used to wrap the loop back to the start
+  // (or to the end, for prev-at-start) instead of layering a teleport on top of an
+  // in-flight smooth scroll, which is what produced the old flicker/oscillation.
+  // Cancels any previously-scheduled "restore smooth scrolling" rAF first so a
+  // rapid-fire reset (autoScroll ticking again, or an arrow click) can't leave a
+  // stale callback that fires later and clobbers a newer scroll-behavior change.
+  const instantScrollTo = useCallback((el: HTMLDivElement, left: number) => {
+    if (instantScrollRaf.current !== undefined) {
+      cancelAnimationFrame(instantScrollRaf.current);
     }
-  }, [loop, loopCloneCount, itemWidth, gap, itemCount, containerRef]);
-
-  // Prevents re-running the initial scroll-to-real-start on every resize in grid loop mode
-  const gridLoopInitialized = useRef(false);
-
-  // On first paint, scroll past the prepended clone slide to the first *real* slide.
-  useEffect(() => {
-    if (!gridLoopActive) return;
-    const el = containerRef.current;
-    if (!el || gridLoopInitialized.current) return;
-    gridLoopInitialized.current = true;
-    const stride = el.clientWidth + gap;
     el.style.scrollBehavior = "auto";
-    el.scrollLeft = stride;
-    requestAnimationFrame(() => {
+    el.scrollLeft = left;
+    instantScrollRaf.current = requestAnimationFrame(() => {
       el.style.scrollBehavior = "";
+      instantScrollRaf.current = undefined;
     });
-  }, [gridLoopActive, gap, containerRef]);
+  }, []);
 
-  // Circular teleporter for grid mode — same idea as handleScrollLoop, at slide granularity.
-  const handleGridScrollLoop = useCallback(() => {
-    if (!gridLoopActive) return;
-    const el = containerRef.current;
-    if (!el || isJumping.current) return;
-    const stride = el.clientWidth + gap;
-    const cycleWidth = gridSlideCount * stride;
-    const realStart = stride; // after the 1 prepended clone slide
-    const realEnd = realStart + cycleWidth;
-
-    if (el.scrollLeft < realStart - stride * 0.5) {
-      isJumping.current = true;
-      el.style.scrollBehavior = "auto";
-      el.scrollLeft += cycleWidth;
-      requestAnimationFrame(() => {
-        isJumping.current = false;
-        el.style.scrollBehavior = "";
-      });
-    } else if (el.scrollLeft > realEnd - el.clientWidth + stride * 0.5) {
-      isJumping.current = true;
-      el.style.scrollBehavior = "auto";
-      el.scrollLeft -= cycleWidth;
-      requestAnimationFrame(() => {
-        isJumping.current = false;
-        el.style.scrollBehavior = "";
-      });
-    }
-  }, [gridLoopActive, gap, gridSlideCount, containerRef]);
+  // Cancel any pending rAF on unmount so it never fires against a detached node.
+  useEffect(() => {
+    return () => {
+      if (instantScrollRaf.current !== undefined) {
+        cancelAnimationFrame(instantScrollRaf.current);
+      }
+    };
+  }, []);
 
   const scrollBy = useCallback(
     (direction: 1 | -1) => {
       const el = containerRef.current;
       if (!el) return;
       const width = el.clientWidth;
+      const maxScroll = el.scrollWidth - width;
+      if (loop && direction === 1 && el.scrollLeft >= maxScroll - 1) {
+        instantScrollTo(el, 0);
+        return;
+      }
+      if (loop && direction === -1 && el.scrollLeft <= 1) {
+        instantScrollTo(el, maxScroll);
+        return;
+      }
       el.scrollBy({ left: direction * width * 0.8, behavior: "smooth" });
     },
-    [containerRef],
+    [containerRef, loop, instantScrollTo],
   );
 
   const updateExtents = useCallback(() => {
@@ -266,37 +197,33 @@ export function HorizontalScroller<T = unknown>({
     autoScrollTimer.current = setInterval(() => {
       const el = containerRef.current;
       if (!el) return;
-      // Always advance; handleScrollLoop teleports when clone zone is reached
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const atRealEnd = maxScroll <= 1 || el.scrollLeft >= maxScroll - 1;
+      if (atRealEnd) {
+        if (loop) instantScrollTo(el, 0);
+        return;
+      }
       el.scrollBy({ left: el.clientWidth * 0.8, behavior: "smooth" });
     }, autoScrollInterval);
     return () => clearInterval(autoScrollTimer.current);
-  }, [autoScroll, isPaused, autoScrollInterval, containerRef]);
+  }, [autoScroll, isPaused, autoScrollInterval, loop, instantScrollTo, containerRef]);
 
   useEffect(() => {
-    if (!perView && !loop) return;
+    if (!perView) return;
     const el = containerRef.current;
     if (!el) return;
     const observer = new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
-      if (perView) {
-        const count = resolvePerView(perView, w);
-        if (count > 0) {
-          setColCount(count);
-          setItemWidth((w - (count - 1) * gap) / count);
-        }
-      } else {
-        // loop is true but no perView hint was given: items render at their
-        // natural width, so measure a real rendered item to get the scroll
-        // stride the clone-buffer offset / edge teleporter need — without
-        // this, itemWidth never resolves and loop mode never initializes.
-        const item = el.querySelector<HTMLElement>(".appkit-hscroller__item");
-        if (item) setItemWidth(item.getBoundingClientRect().width);
+      const count = resolvePerView(perView, w);
+      if (count > 0) {
+        setColCount(count);
+        setItemWidth((w - (count - 1) * gap) / count);
       }
       updateExtents();
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, [perView, loop, gap, containerRef, updateExtents]);
+  }, [perView, gap, containerRef, updateExtents]);
 
   // Recompute extents when content size changes (itemWidth resolved, items count changes).
   useEffect(() => {
@@ -306,96 +233,42 @@ export function HorizontalScroller<T = unknown>({
   const content = itemsMode ? (
     rows > 1 ? (
       // Grid mode: group items into slides of (rows × colCount) cards.
-      // Loop mode prepends a clone of the last slide and appends a clone of the
-      // first slide; handleGridScrollLoop teleports across a full cycle at the
-      // boundary so the strip appears to scroll infinitely.
-      (() => {
-        const renderSlide = (slideIndex: number, key: string, isClone: boolean) => {
-          const slideItems = normalizedItems.slice(
-            slideIndex * gridCardsPerSlide,
-            (slideIndex + 1) * gridCardsPerSlide,
-          );
-          return (
-            <div
-              key={key}
-              className="appkit-hscroller__slide"
-              style={{
-                display: "grid",
-                gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-                gap: `${gap}px`,
-                width: "100%",
-                flexShrink: 0,
-              }}
-              aria-hidden={isClone ? true : undefined}
-            >
-              {slideItems.map((item, idx) => (
-                <div
-                  key={keyExtractor ? keyExtractor(item, slideIndex * gridCardsPerSlide + idx) : slideIndex * gridCardsPerSlide + idx}
-                  className={[
-                    "appkit-hscroller__item",
-                    snapToItems ? "appkit-hscroller__item--snap" : "",
-                    itemClassName,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  style={minItemWidth ? { minWidth: minItemWidth } : undefined}
-                >
-                  {renderItem(item, slideIndex * gridCardsPerSlide + idx)}
-                </div>
-              ))}
-            </div>
-          );
-        };
-        const realSlides = Array.from({ length: gridSlideCount }, (_, slideIndex) =>
-          renderSlide(slideIndex, `slide-${slideIndex}`, false),
+      Array.from({ length: gridSlideCount }, (_, slideIndex) => {
+        const slideItems = normalizedItems.slice(
+          slideIndex * gridCardsPerSlide,
+          (slideIndex + 1) * gridCardsPerSlide,
         );
-        if (!gridLoopActive) return realSlides;
-        return [
-          renderSlide(gridSlideCount - 1, "slide-clone-start", true),
-          ...realSlides,
-          renderSlide(0, "slide-clone-end", true),
-        ];
-      })()
-    ) : loop && itemCount > 0 ? (
-      // Circular loop: fixed (itemCount + 2×loopCloneCount) DOM slots.
-      // Each slot maps to a real item via modulo — no array cloning, no list growth.
-      // Left slots  [0 .. loopCloneCount-1]              → tail of real list (left buffer)
-      // Real slots  [loopCloneCount .. loopCloneCount+n-1] → items[0..n-1]
-      // Right slots [loopCloneCount+n .. end]             → head of real list (right buffer)
-      Array.from(
-        { length: itemCount + 2 * loopCloneCount },
-        (_, i) => {
-          const realIndex =
-            ((i - loopCloneCount) % itemCount + itemCount) % itemCount;
-          const item = normalizedItems[realIndex];
-          const isClone =
-            i < loopCloneCount || i >= loopCloneCount + itemCount;
-          return (
-            <div
-              key={`loop-slot-${i}`}
-              className={[
-                "appkit-hscroller__item",
-                snapToItems ? "appkit-hscroller__item--snap" : "",
-                itemClassName,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              style={
-                itemWidth !== undefined
-                  ? { width: itemWidth, flexShrink: 0 }
-                  : minItemWidth
-                  ? { minWidth: minItemWidth }
-                  : undefined
-              }
-              aria-hidden={isClone ? true : undefined}
-            >
-              {renderItem(item, realIndex)}
-            </div>
-          );
-        },
-      )
+        return (
+          <div
+            key={`slide-${slideIndex}`}
+            className="appkit-hscroller__slide"
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
+              gap: `${gap}px`,
+              width: "100%",
+              flexShrink: 0,
+            }}
+          >
+            {slideItems.map((item, idx) => (
+              <div
+                key={keyExtractor ? keyExtractor(item, slideIndex * gridCardsPerSlide + idx) : slideIndex * gridCardsPerSlide + idx}
+                className={[
+                  "appkit-hscroller__item",
+                  snapToItems ? "appkit-hscroller__item--snap" : "",
+                  itemClassName,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                style={minItemWidth ? { minWidth: minItemWidth } : undefined}
+              >
+                {renderItem(item, slideIndex * gridCardsPerSlide + idx)}
+              </div>
+            ))}
+          </div>
+        );
+      })
     ) : (
-      // Normal single row (no loop)
       normalizedItems.map((item, i) => (
         <div
           key={keyExtractor ? keyExtractor(item, i) : i}
@@ -433,21 +306,14 @@ export function HorizontalScroller<T = unknown>({
     : {};
 
   const combinedOnScroll = () => {
-    if (gridMode) {
-      if (gridLoopActive) handleGridScrollLoop();
-      else updateExtents();
-    } else {
-      if (loop) handleScrollLoop();
-      if (!loop) updateExtents();
-    }
+    updateExtents();
     onScroll?.();
   };
 
   if (showArrows) {
-    const effectiveLoop = gridMode ? gridLoopActive : loop;
-    const prevDisabled = !effectiveLoop && atStart;
-    const nextDisabled = !effectiveLoop && atEnd;
-    const arrowsHidden = !effectiveLoop && atStart && atEnd; // no scrollable overflow
+    const prevDisabled = !loop && atStart;
+    const nextDisabled = !loop && atEnd;
+    const arrowsHidden = !loop && atStart && atEnd; // no scrollable overflow
     return (
       <div
         className={["appkit-hscroller appkit-hscroller--with-arrows", className]

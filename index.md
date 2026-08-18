@@ -107,9 +107,8 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `StatusBadge` | `StatusBadge.tsx` | Order/product/auction status coloured badge |
 | `StepperNav` | `StepperNav.tsx` | Multi-step progress indicator |
 | `SummaryCard` | `SummaryCard.tsx` | Summary metric card with label + value |
-| `TabStrip` | `TabStrip.tsx` | Horizontal tab strip (lightweight, no panel) |
 | `TablePagination` | `TablePagination.tsx` | Pagination bar sized for data tables |
-| `Tabs` | `Tabs.tsx` | Full tab component with panels |
+| `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent` | `Tabs.tsx` | Canonical tab primitive — `TabsList` collapses to a colored `<Select>` dropdown past 5 triggers; `TabsTrigger` takes an optional `badge` count. The only tab-strip implementation in the app as of 2026-08-19 (absorbed CategoryDetailTabs/BrandDetailTabs/DetailPageTabs/TabStrip/FAQCategoryTabs/homepage FAQ tabs — `TabStrip.tsx`+`useVisibleItems` deleted, zero remaining consumers) |
 | `TagInput` | `TagInput.tsx` | Free-form tag entry field |
 | `Textarea` | `Textarea.tsx` | Multi-line text input |
 | `TextLink` | `TextLink.tsx` | Inline text hyperlink (navigation only, uses ROUTES.*) |
@@ -351,6 +350,8 @@ Import: `import { useX } from "@mohasinac/appkit/client"`
 | `useGuestWishlist` | `features/wishlist/hooks/useGuestWishlist.ts` | localStorage guest wishlist |
 | `useUserWishlist` | `features/wishlist/hooks/useUserWishlist.ts` | User wishlist data fetcher |
 | `useProfile` | `features/account/hooks/useProfile.ts` | Current user profile read/update |
+| `useCollapsedSections` | `features/account/hooks/useCollapsedSections.ts` | Persisted, accordion-scoped dashboard-section collapse state (`uiPreferences.collapsedSections`), debounced PATCH to profile. Wired into admin dashboard, store dashboard, and user profile page as of 2026-08-19 |
+| `useDataViewMode` | `features/account/hooks/useDataViewMode.ts` | Persisted "last saved" listing view-mode preference (`table`/`grid`/`list`, `uiPreferences.dataViewMode`) — mobile defaults to `list` (full-row cards) below 768px absent an explicit saved choice. Drives `useAdminListing`'s `view` state; internal only, not re-exported publicly (2026-08-19) |
 | `useChangePassword` | `features/auth/hooks/useAuth.ts` | Reauthenticate + change password (also exported from `client.ts`) |
 | `useChangeEmail` | `features/auth/hooks/useAuth.ts` | Reauthenticate + `verifyBeforeUpdateEmail`; sends verification link to new address (also exported from `client.ts`) |
 | `useSetDefaultAddress` | `features/account/hooks/useAddresses.ts` | Set an address as default (`{ addressId }`) |
