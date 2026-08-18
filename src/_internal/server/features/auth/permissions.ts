@@ -12,6 +12,7 @@
 import { userRepository } from "../../../../repositories";
 import type { Permission } from "../../../../features/auth/permissions/constants";
 import { ROUTES } from "../../../../next/routing/route-map";
+import { isEffectiveAdminUser } from "../../../../features/auth/role-predicates";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -72,7 +73,9 @@ export function checkAnyPermission(
 
 // ── RSC layout factory ────────────────────────────────────────────────────────
 
-type GetUser = () => Promise<{ uid: string; role: string } | null>;
+type GetUser = () => Promise<
+  { uid: string; role: string; isTester?: boolean; canTestAdmin?: boolean } | null
+>;
 
 export interface AdminSectionLayoutOpts {
   getUser: GetUser;
@@ -108,8 +111,9 @@ export function makeAdminSectionLayout(
       return null;
     }
 
-    // admin role passes without a permission check
-    if (user.role === "admin") return children;
+    // admin role, or a tester explicitly flagged to test admin areas
+    // (isTester && canTestAdmin), passes without a permission check
+    if (isEffectiveAdminUser(user)) return children;
 
     // non-employee non-admin roles have no business in /admin
     if (user.role !== "employee") {

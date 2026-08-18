@@ -6,6 +6,7 @@ import { GRID_COLS_6_LG } from "../../../_internal/shared/styles/grid";
 import { useMediaQuery } from "../../../react";
 import { Button, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
+import { resolveMediaUrl } from "../../../utils/media-url";
 import type { CharacterHotspotConfig, HotspotPin as HotspotPinData } from "../types";
 
 const __O = {
@@ -347,7 +348,7 @@ function HotspotImageLayer({
   return (
     <Div className={`absolute inset-0 ${__O.hidden}`}>
       <Image
-        src={panoramicImage}
+        src={resolveMediaUrl(panoramicImage)!}
         alt={panoramicAlt}
         fill
         className="object-cover object-top"

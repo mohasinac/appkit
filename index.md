@@ -129,7 +129,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 |------|------|-------------|
 | `AdminListingScaffold` | `AdminListingScaffold.tsx` | Base scaffold for all admin listing pages (search/sort/filter/pagination wired); props: `renderRowActions` (per-row ⋮ menu), `actionsSlot` (toolbar right-side buttons) |
 | `AdminDashboardView` | `AdminDashboardView.tsx` | Admin home dashboard with stats + quick actions |
-| `AdminSidebar` | `AdminSidebar.tsx` | Left navigation sidebar for admin area |
+| `AdminSidebar` | `AdminSidebar.tsx` | Left navigation sidebar for admin area. 2026-08-19: inline search via shared `useSidebarSearch` hook (also used by `UserSidebar`/`SellerSidebar`) |
 | `AdminTopBar` | `AdminTopBar.tsx` | Top bar with breadcrumbs for admin pages |
 | `AdminPageHeader` | `AdminPageHeader.tsx` | Page-level header with title + action buttons |
 | `AdminFilterBar` | `AdminFilterBar.tsx` | Admin-specific filter bar wrapper |
@@ -317,7 +317,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `PublicCatalogueView` | `features/catalogue/components/PublicCatalogueView.tsx` | Read-only public catalogue for one owner (`visibility:"public"` items only) |
 | `AdminCatalogueApprovalsView` | `features/catalogue/components/AdminCatalogueApprovalsView.tsx` | Admin approval queue for buyer "Request to sell" submissions — Approve/Reject with reason |
 | `OrderPaymentSummary` | `features/orders/components/OrderPaymentSummary.tsx` | Shared payment-detail display reading `order.paymentRecord`, with a legacy-field fallback for pre-Feature-C orders |
-| `TesterHubView` | `features/tester/components/TesterHubView.tsx` | `/user/tester` — searchable, grouped-accordion QA checklist; Yes/No per case + inline comment/screenshot, deterministic-ID upsert so state survives reloads (2026-08-17) |
+| `TesterHubView` | `features/tester/components/TesterHubView.tsx` | `/user/tester` — searchable (title or route) grouped-accordion QA checklist; Yes/No per case + inline comment/screenshot, deterministic-ID upsert so state survives reloads. Access gate is `isTester \|\| isAdminUser` (2026-08-19) |
 | `TesterChecklistStepRow` | `features/tester/components/TesterChecklistStepRow.tsx` | One checklist step — Yes/No button pair + expandable note/screenshot form (2026-08-17) |
 | `TesterFeedbackChart` | `features/tester/components/TesterFeedbackChart.tsx` | Recharts bar chart of pass/fail per group, dynamic-imported like `AdminAnalyticsCharts.tsx` (2026-08-17) |
 | `AdminTesterFeedbackView` | `features/tester/components/AdminTesterFeedbackView.tsx` | `/admin/tester-feedback` — Report / Main Issues / All Submissions tabs (2026-08-17) |

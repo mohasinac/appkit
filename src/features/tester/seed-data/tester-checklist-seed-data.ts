@@ -1,8 +1,9 @@
 /*
  * WHY: Seeds the initial tester QA checklist catalog — DB-backed, admin-manageable (mirrors faq-seed-data.ts).
- * WHAT: ~55 default test cases across 6 groups (Account & Auth, Buying, Selling, Content & Discovery,
+ * WHAT: ~65 default test cases across 6 groups (Account & Auth, Buying, Selling, Content & Discovery,
  *       Community & Support, Design & UX). Admins add/edit further cases via /admin/tester-checklist —
- *       this array is a starting point, not the source of truth.
+ *       this array is a starting point, not the source of truth. Every case is searchable by title or
+ *       route in the Tester Hub (/user/tester), which any isTester account OR admin can open.
  *
  * EXPORTS:
  *   testerChecklistSeedData — Array of Partial<TesterChecklistItemDocument> for seed runner
@@ -28,6 +29,7 @@ function group(
   groupKey: string,
   groupLabel: string,
   pages: { pageKey: string; pageLabel: string; cases: CaseInput[] }[],
+  opts?: { adminOnly?: boolean; orderOffset?: number },
 ): Partial<TesterChecklistItemDocument>[] {
   const items: Partial<TesterChecklistItemDocument>[] = [];
   pages.forEach((page, pageIdx) => {
@@ -41,8 +43,9 @@ function group(
         label: c.label,
         description: c.description,
         href: c.href,
-        order: pageIdx * 10 + caseIdx,
+        order: (opts?.orderOffset ?? 0) + pageIdx * 10 + caseIdx,
         isActive: true,
+        adminOnly: opts?.adminOnly ?? false,
       });
     });
   });
@@ -73,6 +76,17 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
         { key: "public-profile-toggle", label: "Public profile visibility toggle works" },
       ],
     },
+    {
+      pageKey: "testing-program",
+      pageLabel: "Tester Hub",
+      cases: [
+        { key: "tester-hub-loads", label: "Tester Hub loads the full checklist grouped by section", href: "/user/tester" },
+        { key: "tester-hub-search", label: "Tester Hub search finds test cases by typing part of the title or the route (e.g. \"/store/payouts\")", href: "/user/tester" },
+        { key: "tester-hub-answer-saves", label: "Answering Yes/No and adding a comment on a test case saves without reloading" },
+        { key: "admin-tester-access", label: "Signed-in admin accounts can open the Tester Hub and see the same checklist as testers", href: "/user/tester" },
+        { key: "admin-testing-section", label: "Admin dashboard's Testing section shows both the Tester Checklist and Tester Feedback (results) links", href: "/admin/tester-feedback" },
+      ],
+    },
   ]),
 
   ...group("buying", "Buying", [
@@ -95,6 +109,11 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
         { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly" },
         { key: "image-gallery", label: "Product image gallery / zoom works" },
         { key: "video-playback", label: "Product video (YouTube embed) plays correctly" },
+        { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry, then the reveal, correctly shows win/lose and auto-refunds non-winners" },
+        { key: "bundle-purchase", label: "Purchasing a bundle/grouped-listing works and shows all included items in the order" },
+        { key: "classified-contact-flow", label: "A classified listing shows a contact-seller flow with deliberately no checkout/buy button" },
+        { key: "digitalcode-delivery", label: "Purchasing a digital-code listing delivers the code to the buyer post-purchase" },
+        { key: "live-item-detail", label: "A live-item listing's detail page shows the livestream link correctly" },
       ],
     },
     {
@@ -155,6 +174,22 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "start-conversation", label: "Starting a conversation with a seller works" },
         { key: "receive-reply", label: "Receiving and reading a seller's reply works" },
+        { key: "message-realtime-update", label: "A new message appears in the recipient's thread without a manual page refresh (realtime ping-channel)", href: "/user/messages" },
+        { key: "messages-list-thread", label: "The messages list and individual thread view both load correctly", href: "/user/messages" },
+      ],
+    },
+    {
+      pageKey: "user-dashboard-extras",
+      pageLabel: "User Dashboard — Addresses, Catalogue, Settings, My Orders-by-Type",
+      cases: [
+        { key: "addresses-crud", label: "Adding, editing, and listing delivery addresses works", href: "/user/addresses" },
+        { key: "catalogue-crud", label: "Adding, editing, and deleting a personal catalogue item works", href: "/user/catalogue" },
+        { key: "settings-page", label: "The user settings page loads and saves correctly", href: "/user/settings" },
+        { key: "my-prize-draws", label: "\"My Prize Draw Entries\" shows accurate entries and outcomes", href: "/user/prize-draws" },
+        { key: "my-digital-codes", label: "\"My Digital Codes\" shows purchased codes correctly", href: "/user/digital-codes" },
+        { key: "my-offers", label: "\"My Offers\" list shows accurate offer history", href: "/user/offers" },
+        { key: "my-returns", label: "Requesting and viewing a return works", href: "/user/returns" },
+        { key: "my-reviews", label: "\"My Reviews\" shows reviews the user has left", href: "/user/reviews" },
       ],
     },
   ]),
@@ -199,6 +234,9 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "view-analytics", label: "Seller analytics dashboard shows accurate sales data", href: "/store/analytics" },
         { key: "view-payouts", label: "Seller payouts list shows accurate payout history", href: "/store/payouts" },
+        { key: "payouts-checkbox-select", label: "Selecting payouts with the row checkboxes shows a working bulk action bar (Export Selected)", href: "/store/payouts" },
+        { key: "payouts-detail-panel", label: "Opening \"View Details\" on a payout shows a side panel with status progress, transaction ID, and expected payout date" },
+        { key: "payouts-reminder-toggle", label: "Toggling the payout reminder flag in the detail panel saves correctly" },
       ],
     },
   ]),
@@ -227,6 +265,10 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "view-claimed-coupons", label: "Claimed coupons list shows accurate coupons", href: "/user/coupons" },
         { key: "coupon-discount-applied", label: "Coupon discount is correctly reflected in the order total" },
+        { key: "coupon-expired-rejected", label: "Applying an expired coupon at checkout shows a specific expiry rejection message, not a generic error" },
+        { key: "coupon-below-min-purchase", label: "Applying a coupon below its minPurchase threshold is rejected with a clear message" },
+        { key: "coupon-not-combinable", label: "A seller-scoped coupon that isn't combinable with another seller's coupon is rejected when both are applied" },
+        { key: "coupon-per-user-limit", label: "Re-applying a coupon after hitting its perUserLimit is rejected" },
       ],
     },
     {
@@ -235,6 +277,15 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "receive-notification", label: "In-app notifications appear for order/bid/message events", href: "/user/notifications" },
         { key: "mark-read", label: "Marking a notification as read works" },
+      ],
+    },
+    {
+      pageKey: "faq-help",
+      pageLabel: "FAQ & Help",
+      cases: [
+        { key: "faq-bottom-borders", label: "FAQ question rows show a clear bottom-border divider on the homepage and the FAQs page", href: "/faqs" },
+        { key: "faq-mobile-count", label: "Homepage FAQ section shows a good number of questions on mobile, not just 1-2", href: "/" },
+        { key: "tabs-mobile-dropdown", label: "Tabs on category/brand/product/event detail pages collapse into a colored dropdown on mobile once there are more than 5 tabs" },
       ],
     },
   ]),
@@ -269,6 +320,24 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
         { key: "loading-states", label: "Loading/skeleton states look correct while data fetches" },
         { key: "empty-states", label: "Empty states (no results, empty cart) look correct" },
         { key: "error-states", label: "Error states (404, form validation) look correct" },
+      ],
+    },
+    {
+      pageKey: "dashboard-layout",
+      pageLabel: "Dashboards — Collapsible Sections & Mobile Tables",
+      cases: [
+        { key: "collapsible-admin", label: "Admin dashboard sections expand/collapse and remember their state on reload", href: "/admin/dashboard" },
+        { key: "collapsible-store", label: "Store dashboard sections expand/collapse and remember their state on reload", href: "/store" },
+        { key: "collapsible-user", label: "User profile dashboard sections expand/collapse and remember their state on reload", href: "/user/profile" },
+        { key: "mobile-table-cards", label: "Admin/seller listing tables show full-row cards by default on mobile, with a working switch back to table view" },
+        { key: "view-mode-persist", label: "Switching the dashboard table/card view mode is remembered on your next visit (filters/search/sort are not)" },
+      ],
+    },
+    {
+      pageKey: "footer-theme",
+      pageLabel: "Footer & Dark Mode",
+      cases: [
+        { key: "footer-dark-mode", label: "Footer background and all link/text colors switch correctly between light and dark mode", href: "/" },
       ],
     },
     {

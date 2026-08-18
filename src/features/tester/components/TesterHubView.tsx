@@ -7,6 +7,7 @@ import { apiClient } from "../../../http";
 import { useApiMutation } from "../../../client";
 import { useSession } from "../../../react";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { isAdminUser } from "../../auth/role-predicates";
 import { TesterChecklistStepRow } from "./TesterChecklistStepRow";
 import type { TesterAnswer } from "../schemas/firestore";
 import type { JsonValue } from "../../../schemas/types";
@@ -32,7 +33,7 @@ interface TesterChecklistResponse {
 
 function matchesQuery(item: RawChecklistItem, query: string): boolean {
   if (!query) return true;
-  const haystack = `${item.label} ${item.description ?? ""} ${item.groupLabel} ${item.pageLabel}`.toLowerCase();
+  const haystack = `${item.label} ${item.description ?? ""} ${item.groupLabel} ${item.pageLabel} ${item.href ?? ""}`.toLowerCase();
   return haystack.includes(query.toLowerCase());
 }
 
@@ -61,10 +62,10 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
     },
   });
 
-  if (!user?.isTester) {
+  if (!user?.isTester && !isAdminUser(user)) {
     return (
       <Alert variant="warning" title="Testers only">
-        This page is only available to accounts flagged as testers. Contact an admin if you believe this is a mistake.
+        This page is only available to accounts flagged as testers (and admins). Contact an admin if you believe this is a mistake.
       </Alert>
     );
   }
@@ -111,7 +112,7 @@ export function TesterHubView({ sandboxExpiresAt }: TesterHubViewProps) {
         label="Search test cases"
         value={search}
         onChange={setSearch}
-        placeholder="e.g. checkout, google, bidding..."
+        placeholder="Search by title or route, e.g. checkout, /store/payouts..."
       />
 
       {query.isLoading && <Text color="muted">Loading checklist…</Text>}

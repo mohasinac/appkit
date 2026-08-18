@@ -55,6 +55,16 @@ class EventRepository extends BaseRepository<EventDocument> {
     return this.sieveQuery<EventDocument>(model, EventRepository.SIEVE_FIELDS);
   }
 
+  async findBySlug(slug: string): Promise<EventDocument | null> {
+    return this.findOneBy(EVENT_FIELDS.SLUG, slug);
+  }
+
+  async findByIdOrSlug(idOrSlug: string): Promise<EventDocument | null> {
+    const bySlug = await this.findBySlug(idOrSlug);
+    if (bySlug) return bySlug;
+    return this.findById(idOrSlug);
+  }
+
   async listActive(): Promise<EventDocument[]> {
     try {
       const now = new Date();

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { Button, Div, Heading, HorizontalScroller, Row, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
+import { resolveMediaUrl } from "../../../utils/media-url";
 import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
@@ -79,7 +80,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
     >
       {iconSrc || coverImage ? (
         <Image
-          src={iconSrc ?? coverImage!}
+          src={resolveMediaUrl(iconSrc ?? coverImage!)!}
           alt={brand.name}
           width={64}
           height={64}

@@ -22,6 +22,9 @@ export interface TesterChecklistItemDocument extends BaseDocument {
   order: number;
   isActive: boolean;
   searchTokens: string[];
+  // true = only shown to isTester && canTestAdmin testers (or real admins) —
+  // gates cases that exercise /admin/** areas.
+  adminOnly?: boolean;
 }
 
 export const TESTER_CHECKLIST_ITEM_COLLECTION = "testerChecklistItems" as const;
@@ -40,6 +43,7 @@ export const DEFAULT_TESTER_CHECKLIST_ITEM_DATA: Partial<TesterChecklistItemDocu
   order: 0,
   isActive: true,
   searchTokens: [],
+  adminOnly: false,
 };
 
 export type TesterChecklistItemCreateInput = Omit<
@@ -59,6 +63,7 @@ export type TesterChecklistItemUpdateInput = Partial<
     | "href"
     | "order"
     | "isActive"
+    | "adminOnly"
   >
 >;
 
@@ -141,6 +146,7 @@ export const TESTER_CHECKLIST_ITEM_FIELDS = {
   ORDER: "order",
   IS_ACTIVE: "isActive",
   SEARCH_TOKENS: "searchTokens",
+  ADMIN_ONLY: "adminOnly",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 } as const;

@@ -2,6 +2,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { Div, Row, Span, Text } from "../../../ui";
+import { resolveMediaUrl } from "../../../utils/media-url";
 import type { BeforeAfterItem } from "../types";
 
 const __P = {
@@ -101,7 +102,7 @@ export function BeforeAfterCard({
       >
         {/* After image — full, behind */}
         <Image
-          src={item.afterImage}
+          src={resolveMediaUrl(item.afterImage)!}
           alt={afterLabel}
           fill
           sizes="(max-width: 640px) 100vw, 50vw"
@@ -114,7 +115,7 @@ export function BeforeAfterCard({
           className="absolute inset-0 overflow-hidden"
         >
           <Image
-            src={item.beforeImage}
+            src={resolveMediaUrl(item.beforeImage)!}
             alt={beforeLabel}
             fill
             sizes="(max-width: 640px) 100vw, 50vw"

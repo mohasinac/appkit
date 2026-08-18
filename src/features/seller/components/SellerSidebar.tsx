@@ -2,10 +2,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Button, Div, IconButton, Li, Nav, Row, Span, Stack, Text, Ul } from "../../../ui";
+import { Button, Div, IconButton, Input, Li, Nav, Row, Span, Stack, Text, Ul } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
+import { useSidebarSearch } from "../../../_internal/client/features/layout/useSidebarSearch";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -132,9 +133,13 @@ function GroupsContent({
     const match = groups.find((g) => g.defaultOpen ?? g.items.some((i) => activeHref === i.href));
     return match?.title ?? null;
   });
+  const { query, setQuery, isSearching, filteredGroups } = useSidebarSearch(groups);
   const toggle = useCallback(
-    (title: string) => setOpenGroup((p) => (p === title ? null : title)),
-    [],
+    (title: string) => {
+      if (isSearching) return;
+      setOpenGroup((p) => (p === title ? null : title));
+    },
+    [isSearching],
   );
 
   return (
@@ -154,8 +159,21 @@ function GroupsContent({
         </Row>
       )}
       <Nav aria-label="Store navigation" padding="y-xs">
-        {groups.map((group) => {
-          const isOpen = openGroup === group.title;
+        <Div padding="x-md" paddingY="y-sm">
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search navigation…"
+            aria-label="Search navigation"
+          />
+        </Div>
+        {isSearching && filteredGroups.length === 0 && (
+          <Div padding="x-md" paddingY="y-sm">
+            <Span size="xs" color="muted">No matches for &ldquo;{query}&rdquo;.</Span>
+          </Div>
+        )}
+        {filteredGroups.map((group) => {
+          const isOpen = isSearching || openGroup === group.title;
           const hasActive = group.items.some((i) => activeHref === i.href);
           return (
             <Div key={group.title} className="mb-0.5">

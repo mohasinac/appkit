@@ -122,13 +122,14 @@ async function fetchEventUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
     const snap = await db
       .collection(EVENTS_COLLECTION)
       .where(EVENT_FIELDS.STATUS, "==", EVENT_FIELDS.STATUS_VALUES.ACTIVE)
-      .select(EVENT_FIELDS.UPDATED_AT)
+      .select(EVENT_FIELDS.UPDATED_AT, EVENT_FIELDS.SLUG)
       .limit(500)
       .get();
     return snap.docs.map((doc) => {
       const data = doc.data();
+      const slug = typeof data[EVENT_FIELDS.SLUG] === "string" ? (data[EVENT_FIELDS.SLUG] as string) : undefined;
       return {
-        url: `${baseUrl}${ROUTES.PUBLIC.EVENT_DETAIL(doc.id)}`,
+        url: `${baseUrl}${ROUTES.PUBLIC.EVENT_DETAIL(slug ?? doc.id)}`,
         lastModified: (data[EVENT_FIELDS.UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ?? new Date(),
         changeFrequency: "daily" as const,
         priority: 0.7,

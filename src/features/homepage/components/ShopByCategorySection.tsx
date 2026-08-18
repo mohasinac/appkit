@@ -5,6 +5,7 @@ import Link from "next/link";
 import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 import { Button, Div, Heading, HorizontalScroller, Row, Section, Span, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
+import { resolveMediaUrl } from "../../../utils/media-url";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
@@ -54,7 +55,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
       {coverImage && isImageUrl(coverImage) ? (
         <Div className={`aspect-video w-full ${__O.hidden}`} surface="subtle">
           <Image
-            src={coverImage}
+            src={resolveMediaUrl(coverImage)!}
             alt={category.name}
             width={320}
             height={180}
@@ -69,7 +70,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
         <Row textWeight="bold" textSize="sm" className="mb-2 h-9 w-9 bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300" align="center" justify="center" rounded="lg">
           {iconSrc && isImageUrl(iconSrc) ? (
             <Image
-              src={iconSrc}
+              src={resolveMediaUrl(iconSrc)!}
               alt=""
               width={24}
               height={24}

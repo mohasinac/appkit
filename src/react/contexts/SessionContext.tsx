@@ -67,6 +67,8 @@ export interface SessionUser {
   storeId?: string;
   /** Tester program flag — orthogonal to `role`. Unlocks the Tester Hub nav item/page. */
   isTester?: boolean;
+  /** Orthogonal to isTester — unlocks admin-only checklist items and real /admin/** RBAC access. */
+  canTestAdmin?: boolean;
 
   publicProfile?: FirestoreDocument;
   stats?: FirestoreDocument;
@@ -201,6 +203,7 @@ function buildSessionUser(
     phoneVerified: serverData.phoneVerified,
     storeId: serverData.storeId,
     isTester: serverData.isTester,
+    canTestAdmin: serverData.canTestAdmin,
     avatarMetadata: serverData.avatarMetadata?.url
       ? {
           url: serverData.avatarMetadata.url,
@@ -294,6 +297,7 @@ export function SessionProvider({
           phoneVerified: data.phoneVerified,
           storeId: data.storeId,
           isTester: data.isTester,
+          canTestAdmin: data.canTestAdmin,
           avatarMetadata: data.avatarMetadata?.url
             ? {
                 url: data.avatarMetadata.url,

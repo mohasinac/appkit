@@ -3,9 +3,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button, ConfirmDeleteModal, Div, IconButton, Li, Nav, Row, Span, Stack, Ul } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, IconButton, Input, Li, Nav, Row, Span, Stack, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
+import { useSidebarSearch } from "../../../_internal/client/features/layout/useSidebarSearch";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -104,10 +105,14 @@ function DrawerContent({
     );
     return match?.title ?? null;
   });
+  const { query, setQuery, isSearching, filteredGroups } = useSidebarSearch(groups ?? []);
 
   const toggle = useCallback(
-    (title: string) => setOpenGroup((prev) => (prev === title ? null : title)),
-    [],
+    (title: string) => {
+      if (isSearching) return;
+      setOpenGroup((prev) => (prev === title ? null : title));
+    },
+    [isSearching],
   );
 
   if (!groups || groups.length === 0) {
@@ -129,8 +134,21 @@ function DrawerContent({
 
   return (
     <Nav aria-label="User navigation" padding="y-xs">
-      {groups.map((group) => {
-        const isOpen = openGroup === group.title;
+      <Div padding="x-md" paddingY="y-sm">
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search navigation…"
+          aria-label="Search navigation"
+        />
+      </Div>
+      {isSearching && filteredGroups.length === 0 && (
+        <Div padding="x-md" paddingY="y-sm">
+          <Span size="xs" color="muted">No matches for &ldquo;{query}&rdquo;.</Span>
+        </Div>
+      )}
+      {filteredGroups.map((group) => {
+        const isOpen = isSearching || openGroup === group.title;
         const hasActive = group.items.some(
           (i) => activeHref === i.href || activeHref.startsWith(i.href + "/")
         );

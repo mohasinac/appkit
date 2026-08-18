@@ -3,6 +3,7 @@ import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Button, Details, Div, Heading, Input, Label, Li, Row, Span, Stack, Summary, Text, Textarea, Ul } from "../../../ui";
+import { resolveMediaUrl } from "../../../utils/media-url";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 import { DEFAULT_ACCENT_HEX } from "../lib/franchise-colors";
 
@@ -295,7 +296,7 @@ export function CharacterHotspotForm({
                 style={{ paddingTop: "37.5%" }}
               >
                 <Image
-                  src={imageUrl}
+                  src={resolveMediaUrl(imageUrl)!}
                   alt={imageAlt}
                   fill
                   className="object-cover"
@@ -399,7 +400,7 @@ export function CharacterHotspotForm({
             onClick={handleImageClick}
           >
             <Image
-              src={imageUrl}
+              src={resolveMediaUrl(imageUrl)!}
               alt={imageAlt}
               fill
               className="object-cover"
@@ -817,7 +818,7 @@ export function CharacterHotspotForm({
             style={{ paddingTop: "56.25%", background: "black" }}
           >
             <Image
-              src={imageUrl}
+              src={resolveMediaUrl(imageUrl)!}
               alt={imageAlt}
               fill
               className="object-cover"

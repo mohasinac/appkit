@@ -31,9 +31,10 @@ import { normalizeError } from "../../errors/normalize";
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../contracts";
-import { isAdminUser } from "../../features/auth/role-predicates";
+import { isEffectiveAdminUser } from "../../features/auth/role-predicates";
 import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
 import { serverErrorsRepository } from "../../features/server-errors/repository/server-errors.repository";
+import { userRepository } from "../../repositories";
 import { SCHEMAS } from "../../schemas/registry";
 import type { RegisteredApiRouteKey } from "../../schemas/registry";
 import type { ApiRouteKey, FirestoreValue } from "../../schemas/types";
@@ -227,6 +228,25 @@ function errorJson(
   );
 }
 
+/**
+ * A tester explicitly flagged for admin testing (isTester && canTestAdmin) gets the
+ * same access as "admin" on routes that allow it. isTester/canTestAdmin never appear
+ * in the session-cookie JWT claims (only `role` does), so this requires one live
+ * Firestore read — paid only on the role-mismatch rejection path, never on the common
+ * case (matching role, or a real admin whose JWT role already says "admin").
+ */
+async function isTesterEligibleForAdminRoute(
+  user: { uid: string } | null | undefined,
+  effectiveRoles: readonly string[],
+): Promise<boolean> {
+  if (!user || !effectiveRoles.includes("admin")) return false;
+  const profile = await userRepository.findById(user.uid);
+  return Boolean(
+    (profile as { isTester?: boolean; canTestAdmin?: boolean } | null)?.isTester &&
+      (profile as { isTester?: boolean; canTestAdmin?: boolean } | null)?.canTestAdmin,
+  );
+}
+
 export function createRouteHandler<
   TInput = unknown,
   TParams = Record<string, string>,
@@ -278,12 +298,19 @@ export function createRouteHandler<
 
       if (effectiveRoles.length > 0) {
         if (!user || !effectiveRoles.includes(user.role ?? "")) {
-          return errorJson(403, HTTP_ERROR_CODES.FORBIDDEN, "Insufficient permissions", requestId);
+          const testerEligible = await isTesterEligibleForAdminRoute(user, effectiveRoles);
+
+          if (testerEligible && user) {
+            user.isTester = true;
+            user.canTestAdmin = true;
+          } else {
+            return errorJson(403, HTTP_ERROR_CODES.FORBIDDEN, "Insufficient permissions", requestId);
+          }
         }
       }
 
       // -- Permission check (employee fine-grained) --------------------------
-      if (options.permission && user && !isAdminUser(user)) {
+      if (options.permission && user && !isEffectiveAdminUser(user)) {
         const { rbac } = getProviders();
         if (!rbac) {
           return errorJson(503, HTTP_ERROR_CODES.UNAVAILABLE, "RBAC provider not configured", requestId);

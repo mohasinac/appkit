@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { resolveMediaUrl } from "../../../utils/media-url";
 import type { PromoBanner } from "../types";
 
 const __P = {
@@ -64,7 +65,7 @@ export function PromoGrid({
               className={`group relative block overflow-hidden bg-[var(--dark-section-card)] ${i === 0 ? "sm:row-span-2 min-h-[clamp(220px,32vh,480px)]" : "min-h-[clamp(130px,16vh,240px)]"}`}
             >
               <Image
-                src={banner.image}
+                src={resolveMediaUrl(banner.image)!}
                 alt={banner.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"

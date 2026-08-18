@@ -300,6 +300,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
         currentRole={toStringValue(selectedRow?._raw?.role, "user")}
         currentEmailVerified={Boolean(selectedRow?._raw?.emailVerified)}
         currentIsTester={Boolean(selectedRow?._raw?.isTester)}
+        currentCanTestAdmin={Boolean(selectedRow?._raw?.canTestAdmin)}
         ownedStoreId={toStringValue(selectedRow?._raw?.storeId, "") || undefined}
         ownedStoreName={toStringValue(selectedRow?._raw?.storeName, "") || undefined}
         currentIsHardBanned={Boolean(

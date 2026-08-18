@@ -74,6 +74,7 @@ export function AdminTesterChecklistItemEditorView({
   const [href, setHref] = React.useState("");
   const [order, setOrder] = React.useState(0);
   const [isActive, setIsActive] = React.useState(true);
+  const [adminOnly, setAdminOnly] = React.useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
@@ -99,6 +100,7 @@ export function AdminTesterChecklistItemEditorView({
     setHref(item.href ?? "");
     setOrder(typeof item.order === "number" ? item.order : 0);
     setIsActive(item.isActive ?? true);
+    setAdminOnly(item.adminOnly ?? false);
   }, [itemQuery.data]);
 
   const handleGroupLabelChange = (value: string) => {
@@ -123,6 +125,7 @@ export function AdminTesterChecklistItemEditorView({
         href: href || "",
         order,
         isActive,
+        adminOnly,
       };
       if (isEdit) {
         return apiClient.put(ADMIN_ENDPOINTS.TESTER_CHECKLIST_ITEM_BY_ID(itemId!), payload);
@@ -238,6 +241,11 @@ export function AdminTesterChecklistItemEditorView({
             <Stack className={`${__P.p4}`} gap="3" rounded="lg" border="default">
               <Text size="sm" weight="medium" color="muted">Visibility</Text>
               <Toggle label="Active (visible to testers)" checked={isActive} onChange={setIsActive} />
+              <Toggle
+                label="Admin-only (requires canTestAdmin)"
+                checked={adminOnly}
+                onChange={setAdminOnly}
+              />
             </Stack>
 
             <Row gap="3" padding="t-xs">

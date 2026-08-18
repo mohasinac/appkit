@@ -76,6 +76,11 @@ export interface UserDocument extends BaseDocument {
   // the Tester Hub and auto-approves their store (see becomeSeller/createStore).
   isTester?: boolean;
 
+  // Orthogonal to isTester — unlocks admin-only checklist items in the Tester Hub AND
+  // real /admin/** RBAC access (both API routes and admin layouts) without changing
+  // `role`. Meaningless unless isTester is also true.
+  canTestAdmin?: boolean;
+
   // Public profile settings
   publicProfile?: {
     isPublic: boolean;
@@ -349,6 +354,7 @@ export const USER_FIELDS = {
   STORE_SLUG: "storeSlug",
   STORE_STATUS: "storeStatus",
   IS_TESTER: "isTester",
+  CAN_TEST_ADMIN: "canTestAdmin",
   AVATAR: {
     URL: "avatarMetadata.url",
     POSITION: "avatarMetadata.position",

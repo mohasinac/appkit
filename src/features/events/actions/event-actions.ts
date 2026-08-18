@@ -280,7 +280,7 @@ export async function listPublicEvents(
 export async function getPublicEventById(
   id: string,
 ): Promise<EventDocument | null> {
-  const event = await eventRepository.findById(id);
+  const event = await eventRepository.findByIdOrSlug(id);
   if (!event || event.status !== "active") return null;
   return event;
 }
@@ -288,7 +288,9 @@ export async function getPublicEventById(
 export async function getEventLeaderboard(
   eventId: string,
 ): Promise<import("../types").LeaderboardEntry[]> {
-  return eventEntryRepository.getLeaderboard(eventId);
+  const event = await eventRepository.findByIdOrSlug(eventId);
+  if (!event) return [];
+  return eventEntryRepository.getLeaderboard(event.id);
 }
 
 export async function adminListEvents(params?: {
@@ -353,10 +355,14 @@ export async function enterEvent(
   input: EnterEventInput,
   user?: { uid: string; displayName?: string; email?: string },
 ): Promise<{ entryId: string }> {
-  const event = await eventRepository.findById(eventId);
+  const event = await eventRepository.findByIdOrSlug(eventId);
   if (!event || event.status !== "active") {
     throw new NotFoundError(ERROR_MESSAGES.EVENT.ENTRIES_CLOSED);
   }
+  // eventId may have arrived as a slug (public URLs link by slug) — resolve
+  // to the real doc ID once here and use it for every downstream write, so
+  // entries/increments always land against the actual document.
+  const resolvedEventId = event.id;
 
   const now = new Date();
   const endsAt = resolveDate(event.endsAt);
@@ -375,7 +381,7 @@ export async function enterEvent(
 
   if (user && event.type === "survey" && event.surveyConfig) {
     const userEntryCount = await eventEntryRepository.countUserEntries(
-      eventId,
+      resolvedEventId,
       user.uid,
     );
     if (userEntryCount >= (event.surveyConfig as any).maxEntriesPerUser) {
@@ -422,7 +428,7 @@ export async function enterEvent(
   const reviewStatus = autoApprove ? "approved" : "pending";
 
   const entry = await eventEntryRepository.createEntry({
-    eventId,
+    eventId: resolvedEventId,
     userId: user?.uid,
     userDisplayName: user?.displayName,
     userEmail: user?.email,
@@ -432,14 +438,14 @@ export async function enterEvent(
     reviewStatus,
   });
 
-  await eventRepository.incrementTotalEntries(eventId);
+  await eventRepository.incrementTotalEntries(resolvedEventId);
   if (autoApprove) {
-    await eventRepository.incrementApprovedEntries(eventId);
+    await eventRepository.incrementApprovedEntries(resolvedEventId);
   }
 
   serverLogger.info("enterEvent", {
     entryId: entry.id,
-    eventId,
+    eventId: resolvedEventId,
     type: event.type,
     userId: user?.uid,
   });

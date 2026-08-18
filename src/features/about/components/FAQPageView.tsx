@@ -1,18 +1,33 @@
 import { ROUTES } from "../../../constants";
 import type { JsonValue } from "@mohasinac/appkit";
 import { FLEX_ROW } from "../../../_internal/shared/styles/themed";
-import { Aside, Container, Details, Div, Heading, Nav, RichTextRenderer, Row, Section, Span, Stack, Summary, Text } from "../../../ui";
+import { Aside, Container, Div, Heading, Nav, Row, Section, Span, Stack, Text } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
-
+import { FAQSearchableList } from "../../faq/components/FAQSearchableList";
+import type { FAQ } from "../../faq/types";
+import type { FAQDocument } from "../../faq/schemas/firestore";
 
 export interface FAQPageViewProps {
   /** If provided, filter to this category slug */
   category?: string;
+  /** Active FAQs fetched server-side by the caller (Firestore-backed). */
+  faqs?: FAQDocument[];
+}
+
+function toDisplayFaq(doc: FAQDocument): FAQ {
+  return {
+    id: doc.id,
+    question: doc.question,
+    answer: typeof doc.answer === "string" ? { text: doc.answer, format: "plain" } : doc.answer,
+    category: doc.category,
+    tags: doc.tags,
+  };
 }
 
 export async function FAQPageView({
   category,
+  faqs = [],
 }: FAQPageViewProps = {}) {
   const flex = { row: FLEX_ROW };
   const { getTranslations, getMessages } = await import("next-intl/server");
@@ -20,20 +35,14 @@ export async function FAQPageView({
   const messages = await getMessages();
 
   const faqMessages = (messages as Record<string, JsonValue>).faqs as
-    | {
-        categories: Array<{ slug: string; label: string; icon: string }>;
-        items: Array<{ category: string; question: string; answer: string }>;
-      }
+    | { categories: Array<{ slug: string; label: string; icon: string }> }
     | undefined;
 
   const categories = Array.isArray(faqMessages?.categories)
     ? faqMessages.categories
     : [];
-  const allItems = Array.isArray(faqMessages?.items) ? faqMessages.items : [];
 
-  const visibleItems = category
-    ? allItems.filter((item) => item.category === category)
-    : allItems;
+  const visibleFaqs = (category ? faqs.filter((f) => f.category === category) : faqs).map(toDisplayFaq);
 
   const activeCategory = categories.find((c) => c.slug === category);
 
@@ -100,7 +109,7 @@ export async function FAQPageView({
 
           {/* FAQ items */}
           <Div className="flex-1 min-w-0">
-            {visibleItems.length === 0 ? (
+            {visibleFaqs.length === 0 ? (
               <Section
                 className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="y-4xl"
               >
@@ -113,31 +122,13 @@ export async function FAQPageView({
                 </Text>
               </Section>
             ) : (
-              <Stack gap="sm">
-                {visibleItems.map((item, i) => (
-                  <Details
-                    key={i}
-                    tone="card"
-                    className="group overflow-hidden"
-                  >
-                    <Summary
-                      paddingX="x-5" paddingY="y-md"
-                      size="sm" weight="medium"
-                      layout="flex" align="center" justify="between"
-                      className="hover:bg-neutral-50 hover:bg-[var(--appkit-color-surface-elevated)]/50 transition-colors"
-                    >
-                      <Span>{item.question}</Span>
-                      <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
-                    </Summary>
-                    <Div padding="x-md" paddingY="b-md-lg" className="pt-[0.25rem]">
-                      <RichTextRenderer
-                        html={item.answer}
-                        proseClass="prose prose-sm max-w-none dark:prose-invert"
-                      />
-                    </Div>
-                  </Details>
-                ))}
-              </Stack>
+              <FAQSearchableList
+                faqs={visibleFaqs}
+                labels={{
+                  searchPlaceholder: t("searchPlaceholder"),
+                  noResults: t("searchNoResults"),
+                }}
+              />
             )}
 
             {/* Still need help? */}

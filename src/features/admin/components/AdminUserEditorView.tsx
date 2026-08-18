@@ -28,6 +28,8 @@ export interface AdminUserEditorViewProps {
   currentEmailVerified?: boolean;
   /** Tester program flag — orthogonal to role. Grants access to the Tester Hub and auto-approves the user's store. */
   currentIsTester?: boolean;
+  /** Orthogonal to isTester — grants real /admin/** RBAC access + admin-only checklist items. Meaningless unless currentIsTester is also true. */
+  currentCanTestAdmin?: boolean;
   /** Store the user owns (for sellers/admins). storeId === storeSlug in this project. */
   ownedStoreId?: string;
   ownedStoreName?: string;
@@ -234,6 +236,7 @@ export function AdminUserEditorView({
   currentIsDisabled: _currentIsDisabled,
   currentEmailVerified,
   currentIsTester,
+  currentCanTestAdmin,
   ownedStoreId,
   ownedStoreName,
   currentSoftBans,
@@ -252,6 +255,7 @@ export function AdminUserEditorView({
   const [role, setRole] = React.useState(currentRole ?? "user");
   const [emailVerified, setEmailVerified] = React.useState(currentEmailVerified ?? false);
   const [isTester, setIsTester] = React.useState(currentIsTester ?? false);
+  const [canTestAdmin, setCanTestAdmin] = React.useState(currentCanTestAdmin ?? false);
   const [adminNotes, setAdminNotes] = React.useState("");
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
@@ -281,6 +285,7 @@ export function AdminUserEditorView({
       setRole(currentRole ?? "user");
       setEmailVerified(currentEmailVerified ?? false);
       setIsTester(currentIsTester ?? false);
+      setCanTestAdmin(currentCanTestAdmin ?? false);
       setAdminNotes("");
       setEditDisplayName(displayName ?? "");
       setPhoneNumber(currentPhoneNumber ?? "");
@@ -303,6 +308,7 @@ export function AdminUserEditorView({
     currentRole,
     currentEmailVerified,
     currentIsTester,
+    currentCanTestAdmin,
     displayName,
     currentPhoneNumber,
     currentBio,
@@ -337,6 +343,7 @@ export function AdminUserEditorView({
         role,
         emailVerified,
         isTester,
+        canTestAdmin: isTester ? canTestAdmin : false,
         adminNotes: adminNotes || undefined,
         displayName: editDisplayName.trim() || undefined,
         phoneNumber: phoneNumber.trim() || undefined,
@@ -469,11 +476,23 @@ export function AdminUserEditorView({
   );
 
   const renderIsTesterSection = () => (
-    <Toggle
-      label="Is Tester"
-      checked={isTester}
-      onChange={setIsTester}
-    />
+    <Stack gap="sm">
+      <Toggle
+        label="Is Tester"
+        checked={isTester}
+        onChange={(next) => {
+          setIsTester(next);
+          if (!next) setCanTestAdmin(false);
+        }}
+      />
+      {isTester && (
+        <Toggle
+          label="Can Test Admin Areas"
+          checked={canTestAdmin}
+          onChange={setCanTestAdmin}
+        />
+      )}
+    </Stack>
   );
 
   const renderProfileSection = () => (

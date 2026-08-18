@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button, Div, Heading, Row, Span, Stack } from "../../../ui";
+import { resolveMediaUrl } from "../../../utils/media-url";
 import type { Banner } from "../types";
 
 export interface HeroBannerProps {
@@ -64,7 +65,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
         >
           {b.backgroundImage && (
             <Image
-              src={b.backgroundImage}
+              src={resolveMediaUrl(b.backgroundImage)!}
               alt={b.title}
               fill
               className="object-cover object-center"

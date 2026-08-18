@@ -103,6 +103,7 @@ export const EVENT_ENTRY_INDEXED_FIELDS = [
 
 export const EVENT_FIELDS = {
   ID: "id",
+  SLUG: "slug",
   TYPE: "type",
   TITLE: "title",
   DESCRIPTION: "description",

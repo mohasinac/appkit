@@ -32,3 +32,20 @@ export const isEmployeeUser = (input: RoleCarrier): boolean =>
 
 export const isBuyerUser = (input: RoleCarrier): boolean =>
   normalizeRole(input) === "user";
+
+/**
+ * True for real admins OR a tester explicitly flagged to test admin areas
+ * (`isTester && canTestAdmin`). Used at the two RBAC chokepoints — the API route
+ * guard (`createRouteHandler`) and the admin layout guard (`makeAdminSectionLayout`)
+ * — so a flagged tester gets real read/write access to `/admin/**` without changing
+ * their `role`. Callers must supply `isTester`/`canTestAdmin` from a live Firestore
+ * read; these are never present in the session-cookie JWT claims (only `role` is).
+ */
+type EffectiveAdminCarrier =
+  | { role?: string | null; isTester?: boolean; canTestAdmin?: boolean }
+  | null
+  | undefined;
+
+export const isEffectiveAdminUser = (
+  input: EffectiveAdminCarrier,
+): boolean => isAdminUser(input) || Boolean(input?.isTester && input?.canTestAdmin);
