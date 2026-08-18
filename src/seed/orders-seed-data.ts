@@ -251,22 +251,26 @@ const productPool = [
 
 const statuses = [
   "pending",
+  "confirmed",
   "processing",
   "shipped",
   "delivered",
   "cancelled",
   "refunded",
   "return_requested",
+  "returned",
 ] as const;
 
 const paymentStatuses: Record<string, string> = {
   pending: "pending",
+  confirmed: "paid",
   processing: "processing",
   shipped: "paid",
   delivered: "paid",
   cancelled: "refunded",
   refunded: "refunded",
   return_requested: "paid",
+  returned: "refunded",
 };
 
 const buyerStoreMatrix = [

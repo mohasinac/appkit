@@ -73,6 +73,9 @@ import {
   productsTesterSeedData,
   blogTesterSeedData,
   eventsTesterSeedData,
+  couponsTesterSeedData,
+  bidsTesterSeedData,
+  ordersTesterSeedData,
 } from "../features/tester/seed-data";
 
 export interface SeedManifestEntry {
@@ -160,11 +163,11 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
     "title",
   ),
-  orders: pick(asArr(ordersSeedData)),
+  orders: pick([...asArr(ordersSeedData), ...asArr(ordersTesterSeedData)]),
   reviews: pick(asArr(reviewsSeedData), "title"),
-  bids: pick(asArr(bidsSeedData)),
+  bids: pick([...asArr(bidsSeedData), ...asArr(bidsTesterSeedData)]),
   coupons: pick(
-    asArr(couponsSeedData).map((c) => ({
+    [...asArr(couponsSeedData), ...asArr(couponsTesterSeedData)].map((c) => ({
       ...c,
       name: c.code ?? c.id,
     })),

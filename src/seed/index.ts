@@ -196,6 +196,9 @@ export {
   productsTesterSeedData,
   blogTesterSeedData,
   eventsTesterSeedData,
+  couponsTesterSeedData,
+  bidsTesterSeedData,
+  ordersTesterSeedData,
 } from "../features/tester/seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
 export { offersSeedData } from "./offers-seed-data";
