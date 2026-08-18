@@ -296,17 +296,13 @@ export function createRouteHandler<
           ? ["admin", "employee"]
           : [];
 
-      if (effectiveRoles.length > 0) {
-        if (!user || !effectiveRoles.includes(user.role ?? "")) {
-          const testerEligible = await isTesterEligibleForAdminRoute(user, effectiveRoles);
-
-          if (testerEligible && user) {
-            user.isTester = true;
-            user.canTestAdmin = true;
-          } else {
-            return errorJson(403, HTTP_ERROR_CODES.FORBIDDEN, "Insufficient permissions", requestId);
-          }
+      if (effectiveRoles.length > 0 && (!user || !effectiveRoles.includes(user.role ?? ""))) {
+        const testerEligible = await isTesterEligibleForAdminRoute(user, effectiveRoles);
+        if (!testerEligible || !user) {
+          return errorJson(403, HTTP_ERROR_CODES.FORBIDDEN, "Insufficient permissions", requestId);
         }
+        user.isTester = true;
+        user.canTestAdmin = true;
       }
 
       // -- Permission check (employee fine-grained) --------------------------
