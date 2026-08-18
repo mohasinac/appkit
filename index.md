@@ -288,6 +288,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `HowEmiWorksView` | `features/about/components/HowEmiWorksView.tsx` | EMI eligibility, token payment, and installment schedule explainer |
 | `ContactForm` | `features/contact/components/ContactForm.tsx` | Contact form |
 | `ContactPageView` | `features/contact/components/ContactPageView.tsx` | Contact page with form + info |
+| `FAQPageView` | `features/about/components/FAQPageView.tsx` | Public `/faqs` page. 2026-08-19: takes a `faqs` prop (Firestore-backed, fetched by the caller via `listPublicFaqs`) instead of static translation-file content, so admin-managed FAQs now actually appear on the live page; renders search via `FAQSearchableList` |
 | `FAQCategorySidebar` | `features/faq/components/FAQCategorySidebar.tsx` | FAQ category filter sidebar |
 | `RelatedFAQs` | `features/faq/components/RelatedFAQs.tsx` | Related FAQs section |
 | `ForgotPasswordView` | `features/auth/components/ForgotPasswordView.tsx` | Forgot password flow |
