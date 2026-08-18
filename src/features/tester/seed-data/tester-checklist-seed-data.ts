@@ -271,5 +271,16 @@ export const testerChecklistSeedData: Partial<TesterChecklistItemDocument>[] = [
         { key: "error-states", label: "Error states (404, form validation) look correct" },
       ],
     },
+    {
+      pageKey: "homepage-carousels",
+      pageLabel: "Homepage Carousels",
+      cases: [
+        { key: "carousel-loops", label: "Homepage carousels (Shop by Category, Top Brands, Featured Products, Live Auctions, Reserve Before It Ships, Verified Stores, Tournaments & Events, Collector Reviews) loop back to the first item after reaching the last instead of getting stuck at the end", href: "/" },
+        { key: "carousel-no-flicker", label: "Homepage carousel auto-scroll does not flash/flicker when looping back to the first item" },
+        { key: "carousel-pause-on-interaction", label: "Homepage carousel auto-scroll pauses while hovering, touching, keyboard-focusing (Tab + arrow keys), or scrolling it, and resumes afterward" },
+        { key: "carousel-arrows-work", label: "Homepage carousel prev/next arrow buttons work and wrap around at both ends" },
+        { key: "hero-banner-loops", label: "Hero banner at the top of the homepage rotates through all slides and loops back to the first without getting stuck" },
+      ],
+    },
   ]),
 ];
