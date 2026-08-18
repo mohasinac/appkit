@@ -423,11 +423,11 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 
 | Name | Instance | Collection | Notes |
 |------|----------|-----------|-------|
-| `userRepository` | singleton | `users` | Auth + profile reads/writes |
+| `userRepository` | singleton | `users` | Auth + profile reads/writes. Tier PP (2026-08-18): `getExpiredHardBans()` (`isDisabled==true AND hardBanExpiresAt<=now`, powers `hardBanReinstatement`) |
 | `sessionRepository` | singleton | `sessions` | User session management |
 | `addressRepository` | singleton | `addresses` | User shipping addresses |
 | `productRepository` | singleton | `products` | Standard + auction + pre-order products |
-| `orderRepository` | singleton | `orders` | Orders |
+| `orderRepository` | singleton | `orders` | Orders. Tier PP (2026-08-18): `getExpiredPaymentDeadlines()` (15-min payment window sweep) + `getUnreviewedProofPastDeadline(hours)` (2h auto-approve sweep) |
 | `reviewRepository` | singleton | `reviews` | Product/store reviews |
 | `bidRepository` | singleton | `bids` | Auction bids |
 | `cartRepository` | singleton | `carts` | Shopping carts (auth + guest) |
@@ -524,7 +524,7 @@ Import: `import { ADMIN_ENDPOINTS } from "@mohasinac/appkit"` (or `/client`)
 | `STORE_ENDPOINTS` | `api-endpoints.ts` | All `/api/stores/*` route strings |
 | `SELLER_ENDPOINTS` | `api-endpoints.ts` | All `/api/seller/*` / store-management route strings |
 | `USER_ENDPOINTS` | `api-endpoints.ts` | All `/api/user/*` route strings |
-| `ORDER_ENDPOINTS` | `api-endpoints.ts` | All `/api/orders/*` route strings |
+| `ORDER_ENDPOINTS` | `api-endpoints.ts` | All `/api/orders/*` route strings. Tier PP (2026-08-18) adds `ORDER_PAYMENT_REUPLOAD`/`ORDER_PAYMENT_REJECT_FRAUD` (admin) and `ORDER_ENDPOINTS.DISPUTE` (buyer/seller/admin) |
 | `PRODUCT_ENDPOINTS` | `api-endpoints.ts` | All `/api/products/*` route strings |
 | `AUCTION_ENDPOINTS` | `api-endpoints.ts` | All `/api/auctions/*` route strings |
 | `BID_ENDPOINTS` | `api-endpoints.ts` | All `/api/bids/*` route strings |
