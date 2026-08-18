@@ -7137,12 +7137,6 @@ export { PreorderBadge } from "./features/pre-orders/index";
 // [SERVER-RSC]-Self-fetching index/detail page views for pre-orders.
 export { PreOrdersIndexListing } from "./features/pre-orders/index";
 export type { PreOrdersIndexListingProps } from "./features/pre-orders/index";
-export { ClassifiedIndexListing } from "./features/classified/components/index";
-export type { ClassifiedIndexListingProps } from "./features/classified/components/index";
-export { DigitalCodesIndexListing } from "./features/digital-codes/components/index";
-export type { DigitalCodesIndexListingProps } from "./features/digital-codes/components/index";
-export { LiveItemsIndexListing } from "./features/live/components/index";
-export type { LiveItemsIndexListingProps } from "./features/live/components/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // buildPreorderColumns - Helper for build preorder columns.
 export { buildPreorderColumns } from "./features/pre-orders/index";
@@ -8931,9 +8925,6 @@ export { buildStatusMessage } from "./features/whatsapp-bot/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildStatusNotificationURL - Helper for build status notification url.
 export { buildStatusNotificationURL } from "./features/whatsapp-bot/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// buildGroupShareLink - Helper for build group share link.
-export { buildGroupShareLink } from "./features/whatsapp-bot/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildPaymentProofReviewMessage - Helper for build payment proof review message (Tier PP).
 export { buildPaymentProofReviewMessage } from "./features/whatsapp-bot/server";

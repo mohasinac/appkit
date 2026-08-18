@@ -23,10 +23,9 @@ const STORE_LISTING_HREF: Record<
   classifieds: (slug) => String(ROUTES.PUBLIC.STORE_CLASSIFIEDS(slug)),
   "digital-codes": (slug) => String(ROUTES.PUBLIC.STORE_DIGITAL_CODES(slug)),
   live: (slug) => String(ROUTES.PUBLIC.STORE_LIVE(slug)),
-  // Art / stickers have no dedicated storefront tab page — they're browsable
+  // Art & Stickers has no dedicated storefront tab page — browsable
   // (alongside everything else the store sells) on the "Products" tab.
   art: (slug) => String(ROUTES.PUBLIC.STORE_PRODUCTS(slug)),
-  stickers: (slug) => String(ROUTES.PUBLIC.STORE_PRODUCTS(slug)),
 };
 
 export const getStoreBySlug = cache((slug: string) =>
@@ -81,7 +80,7 @@ export async function StoreDetailLayoutView({
       : Promise.resolve(undefined),
   ]);
 
-  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, classifiedsCount, digitalCodesCount, liveCount, artCount, stickersCount, couponsCount, reviewsCount] = storeId
+  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, classifiedsCount, digitalCodesCount, liveCount, artStickersCount, couponsCount, reviewsCount] = storeId
     ? await Promise.all([
         productRepository
           .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "standard")), page: 1, pageSize: 1 })
@@ -118,11 +117,7 @@ export async function StoreDetailLayoutView({
           .then((r) => r.total)
           .catch(() => 0),
         productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "art")), page: 1, pageSize: 1 })
-          .then((r) => r.total)
-          .catch(() => 0),
-        productRepository
-          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "stickers")), page: 1, pageSize: 1 })
+          .list({ filters: sieveAnd(sieveFilter("storeId", SIEVE_OP.EQ, storeId), sieveFilter("status", SIEVE_OP.EQ, "published"), sieveFilter("listingType", SIEVE_OP.EQ, "art|stickers")), page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         couponsRepository
@@ -134,7 +129,7 @@ export async function StoreDetailLayoutView({
           .then((r) => r.total)
           .catch(() => 0),
       ])
-    : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   const listingCounts: Record<(typeof STORE_PAGE_TABS)[number]["id"], number> = {
     products: productsCount,
@@ -145,8 +140,7 @@ export async function StoreDetailLayoutView({
     classifieds: classifiedsCount,
     "digital-codes": digitalCodesCount,
     live: liveCount,
-    art: artCount,
-    stickers: stickersCount,
+    art: artStickersCount,
   };
 
   const TAB_LISTING_TYPE: Record<string, string> = {
@@ -157,12 +151,14 @@ export async function StoreDetailLayoutView({
     classifieds: "classified",
     "digital-codes": "digital-code",
     live: "live",
-    art: "art",
-    stickers: "stickers",
   };
 
   const visibleStoreTabs = STORE_PAGE_TABS.filter((tab) => {
     if (tab.id === "bundles") return isCategoryTypeEnabled("bundle", settings);
+    // Combined tab — visible if either underlying listing type is enabled.
+    if (tab.id === "art") {
+      return isListingTypeEnabled("art", settings) || isListingTypeEnabled("stickers", settings);
+    }
     const lt = TAB_LISTING_TYPE[tab.id];
     return lt ? isListingTypeEnabled(lt as Parameters<typeof isListingTypeEnabled>[0], settings) : true;
   });

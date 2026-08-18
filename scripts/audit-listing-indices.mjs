@@ -64,7 +64,9 @@ const ENDPOINT_TO_COLLECTION = {
   "ADMIN_ENDPOINTS.REVIEWS":                { collection: "reviews",             implicit: [] },
   "ADMIN_ENDPOINTS.BIDS":                   { collection: "bids",                implicit: [] },
   "ADMIN_ENDPOINTS.BLOG":                   { collection: "blogPosts",           implicit: [] },
-  "ADMIN_ENDPOINTS.BUNDLES":                { collection: "bundles",             implicit: [] },
+  // Bundles are a categoryType on `categories`, not a literal `bundles`
+  // collection (SB-UNI-D — the literal collection is dead, zero indices).
+  "ADMIN_ENDPOINTS.BUNDLES":                { collection: "categories",          implicit: ["categoryType==bundle"] },
   "ADMIN_ENDPOINTS.CATEGORIES":             { collection: "categories",          implicit: ["categoryType==category"] },
   "ADMIN_ENDPOINTS.FAQS":                   { collection: "faqs",                implicit: [] },
   "ADMIN_ENDPOINTS.STORES":                 { collection: "stores",              implicit: [] },
@@ -72,7 +74,9 @@ const ENDPOINT_TO_COLLECTION = {
   "ADMIN_ENDPOINTS.EVENTS":                 { collection: "events",              implicit: [] },
   "ADMIN_ENDPOINTS.COUPONS":                { collection: "coupons",             implicit: [] },
   "ADMIN_ENDPOINTS.SECTIONS":               { collection: "homepageSections",    implicit: [] },
-  "ADMIN_ENDPOINTS.NEWSLETTER":             { collection: "newsletter",          implicit: [] },
+  // newsletterRepository actually targets newsletterSubscribers — the
+  // literal `newsletter` collection is a dead duplicate, zero indices.
+  "ADMIN_ENDPOINTS.NEWSLETTER":             { collection: "newsletterSubscribers", implicit: [] },
   "ADMIN_ENDPOINTS.CONTACT_SUBMISSIONS":    { collection: "contactSubmissions",  implicit: [] },
   "ADMIN_ENDPOINTS.SESSIONS":               { collection: "sessions",            implicit: [] },
   "ADMIN_ENDPOINTS.ADMIN_EVENT_ENTRIES":    { collection: "eventEntries",        implicit: [] },
@@ -87,13 +91,34 @@ const ENDPOINT_TO_COLLECTION = {
   "ADMIN_ENDPOINTS.PRODUCT_FEATURES":       { collection: "productFeatures",     implicit: [] },
   "ADMIN_ENDPOINTS.TEAM":                   { collection: "users",               implicit: ["role==employee"] },
   "ADMIN_ENDPOINTS.SUPPORT_TICKETS":        { collection: "supportTickets",      implicit: [] },
-  "ADMIN_ENDPOINTS.SCAMMERS":               { collection: "scammers",            implicit: [] },
+  // scammerRepository actually targets scammerProfiles — the literal
+  // `scammers` collection is a dead duplicate, zero indices.
+  "ADMIN_ENDPOINTS.SCAMMERS":               { collection: "scammerProfiles",     implicit: [] },
   "ADMIN_ENDPOINTS.ADDRESSES":              { collection: "addresses",           implicit: [] },
   "ADMIN_ENDPOINTS.GROUPED_LISTINGS":       { collection: "groupedListings",     implicit: [] },
   "ADMIN_ENDPOINTS.ADS":                    { collection: "ads",                 implicit: [] },
   // Implicit categoryType filters
   "ADMIN_ENDPOINTS.BRANDS":                 { collection: "categories",          implicit: ["categoryType==brand"] },
   "ADMIN_ENDPOINTS.SUBLISTING_CATEGORIES":  { collection: "categories",          implicit: ["categoryType==sublisting"] },
+
+  // SELLER_ENDPOINTS.* — previously entirely missing, so every Seller*View.tsx
+  // was silently skipped as [UNKNOWN_ENDPOINT] (informational-only) instead
+  // of being checked. This was the actual reason the productTitle/endsAt/
+  // prizeDrawEndDate field-name bugs across 8 seller views went undetected.
+  "SELLER_ENDPOINTS.PRODUCTS":              { collection: "products",            implicit: [] },
+  "SELLER_ENDPOINTS.AUCTIONS":              { collection: "products",            implicit: [] },
+  "SELLER_ENDPOINTS.COUPONS":               { collection: "coupons",             implicit: [] },
+  "SELLER_ENDPOINTS.OFFERS":                { collection: "offers",              implicit: [] },
+  "SELLER_ENDPOINTS.PAYOUTS":               { collection: "payouts",             implicit: [] },
+  "SELLER_ENDPOINTS.ORDERS":                { collection: "orders",              implicit: [] },
+  "SELLER_ENDPOINTS.GROUPED_LISTINGS":      { collection: "groupedListings",     implicit: [] },
+  "SELLER_ENDPOINTS.PAYOUT_METHODS":        { collection: "payoutMethods",       implicit: [] },
+  "SELLER_ENDPOINTS.SHIPPING_CONFIGS":      { collection: "shippingConfigs",     implicit: [] },
+  "SELLER_ENDPOINTS.STORE_CATEGORIES":      { collection: "storeCategories",     implicit: [] },
+  // Real collection is snake_case `product_templates` — the camelCase
+  // `productTemplates` is a dead naming-bug duplicate, zero indices.
+  "SELLER_ENDPOINTS.TEMPLATES":             { collection: "product_templates",   implicit: [] },
+  "SELLER_ENDPOINTS.BUNDLES":               { collection: "categories",          implicit: ["categoryType==bundle"] },
 };
 
 // repository variable name → collection  (for repository-driven views/actions)
@@ -111,18 +136,30 @@ const REPO_TO_COLLECTION = {
   eventEntryRepository:        "eventEntries",
   faqsRepository:              "faqs",
   notificationRepository:      "notifications",
-  scammerRepository:           "scammers",
+  // Real collection is scammerProfiles — literal `scammers` is a dead
+  // duplicate, zero indices.
+  scammerRepository:           "scammerProfiles",
   homepageSectionsRepository:  "homepageSections",
   productFeaturesRepository:   "productFeatures",
-  productTemplateRepository:   "productTemplates",
+  // Real collection is snake_case `product_templates` — camelCase
+  // `productTemplates` is a dead naming-bug duplicate, zero indices.
+  productTemplateRepository:   "product_templates",
   userRepository:              "users",
   addressesRepository:         "addresses",
-  bundlesRepository:           "bundles",
-  classifiedRepository:        "classifiedListings",
-  digitalCodesRepository:      "digitalCodes",
-  liveItemsRepository:         "liveItems",
-  prizeDrawsRepository:        "prizeDraws",
   conversationsRepository:     "conversations",
+  // Previously UNKNOWN_REPO (informational-only, unscanned).
+  newsletterRepository:        "newsletterSubscribers",
+  contactSubmissionsRepository: "contactSubmissions",
+  cartRepository:              "carts",
+  shipmentsRepository:         "procurementShipments",
+  testerChecklistItemRepository: "testerChecklistItems",
+  testerChecklistResponseRepository: "testerChecklistResponses",
+  // classifiedRepository / digitalCodesRepository / liveItemsRepository /
+  // prizeDrawsRepository / bundlesRepository removed — none of these exist
+  // as real exports. classified/digital-code/live/prize-draw are listingType
+  // values on the unified `products` collection (via productRepository);
+  // bundles are a categoryType on `categories` (via categoriesRepository).
+  // These 5 entries never matched any real call site.
 };
 
 // ───────────────────────────────────────────────────────────────────────────────

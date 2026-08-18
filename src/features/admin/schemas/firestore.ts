@@ -439,8 +439,8 @@ export interface SiteSettingsDocument extends BaseDocument {
     razorpayEnabled: boolean;
     upiManualEnabled: boolean;
     codEnabled: boolean;
-    /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. */
-    otpCheckoutThreshold: number;
+    /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. Optional — falls back to no OTP gate when unset. */
+    otpCheckoutThreshold?: number;
   };
   /** Site-wide EMI (installment) settings. A seller must ALSO have `StoreDocument.emiEnabled` on for EMI to appear at checkout for their items. */
   emi: {

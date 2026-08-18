@@ -104,6 +104,12 @@ export const DEFAULT_ROUTE_MAP = {
     DIGITAL_CODE_DETAIL: (slug: string) => `/digital-codes/${slug}`,
     LIVE: "/live",
     LIVE_DETAIL: (slug: string) => `/live/${slug}`,
+    // Combined art + stickers browse page (Workstream 1c) — one page for both
+    // listing types. No dedicated detail route: art/stickers use the standard
+    // checkout flow (not classified's contact-seller/meetup flow), so their
+    // detail page stays PRODUCT_DETAIL (`/products/{slug}`), already wired in
+    // `_internal/shared/listing-types/{art,stickers}/config.ts`.
+    ART: "/art",
   },
   ERRORS: {
     UNAUTHORIZED: "/unauthorized",

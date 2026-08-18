@@ -23,6 +23,7 @@ export type SearchResourceType =
   | "classified"
   | "digital-codes"
   | "live"
+  | "art"
   | "stores"
   | "categories"
   | "brands"

@@ -4,7 +4,7 @@ import { ShoppingCart, Heart, Columns } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { BulkActionBar, Div, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
+import { BulkActionBar, Div, FilterChipGroup, FilterDrawer, ListingToolbar, LoginRequiredModal, Pagination, Row, Stack, useToast, StickyToolbar } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -23,6 +23,7 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { useBottomActions } from "../../layout";
+import { GENERIC_PRODUCT_LISTING_TYPES, PRODUCT_TYPE_FILTER_TABS } from "../constants/listing-tabs";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -39,9 +40,23 @@ const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_P
 
 export interface ProductsIndexListingProps {
   initialData?: any;
+  /** Listing types this page's "All" tab spans. Defaults to the consolidated
+   * generic set (standard/classified/digital-code/live). Pass a narrower set
+   * (e.g. `["art", "stickers"]`) to reuse this component for a different
+   * combined browse page. */
+  listingTypes?: readonly string[];
+  /** Type-filter chip tabs shown above the grid. Defaults to the generic
+   * Products tabs; pass a matching set when overriding `listingTypes`. */
+  typeTabs?: readonly { id: string; label: string }[];
+  searchPlaceholder?: string;
 }
 
-export function ProductsIndexListing({ initialData }: ProductsIndexListingProps) {
+export function ProductsIndexListing({
+  initialData,
+  listingTypes = GENERIC_PRODUCT_LISTING_TYPES,
+  typeTabs = PRODUCT_TYPE_FILTER_TABS,
+  searchPlaceholder = "Search products...",
+}: ProductsIndexListingProps) {
   const router = useRouter();
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
@@ -53,6 +68,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const [view, setView] = useState<ViewMode>(
     (table.get(TABLE_KEYS.VIEW) as ViewMode) || VIEW_MODE.GRID,
   );
+  const productType = table.get(TABLE_KEYS.LISTING_TYPE) || "All";
 
   const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
@@ -100,7 +116,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
-    listingType: "standard" as const,
+    listingType: productType === "All" ? listingTypes.join("|") : productType,
     // Hide sold-out items by default. Uses stockQuantity>0 (always-present field)
     // instead of status=="published" because sellers don't actively transition status.
     inStock: showSold ? undefined : true,
@@ -228,7 +244,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
-        searchPlaceholder="Search products..."
+        searchPlaceholder={searchPlaceholder}
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
@@ -253,6 +269,16 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
           { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
         ]}
       />
+
+      {/* ── Product-type chips — narrows the consolidated generic tab ───── */}
+      <Div padding="y-sm">
+        <FilterChipGroup
+          label="Type"
+          tabs={typeTabs}
+          value={productType}
+          onChange={(v) => table.set(TABLE_KEYS.LISTING_TYPE, v === "All" ? "" : v)}
+        />
+      </Div>
 
       {/* ── Bulk action bar (inline, replaces fixed bottom bar) ────────── */}
       <BulkActionBar

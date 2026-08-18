@@ -1,5 +1,6 @@
 import { orderRepository } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { normalizeError } from "../../../../errors/normalize";
 import { ORDER_MESSAGES } from "../handlers/messages";
 import type { JobContext } from "../runtime/types";
 
@@ -33,7 +34,7 @@ export async function runPaymentReviewAutoApprove(ctx: JobContext): Promise<void
           method: "manual",
           transactionId: entry.data.paymentTransactionId,
           proofUrl: entry.data.paymentProofUrl,
-          amountPaise: entry.data.totalPrice,
+          amount: entry.data.totalPrice,
           paidAt: ctx.now,
           verifiedBy: "system:auto-approve",
           verificationMethod: "manual_review",
@@ -43,6 +44,7 @@ export async function runPaymentReviewAutoApprove(ctx: JobContext): Promise<void
       } as never);
       approved += 1;
     } catch (err) {
+      void normalizeError(err);
       ctx.logger.error("Failed to auto-approve payment proof", err, { orderId: entry.id });
     }
   }

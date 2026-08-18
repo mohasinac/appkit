@@ -218,8 +218,11 @@ export interface ProductListParams {
   minPrice?: number;
   maxPrice?: number;
   inStock?: boolean;
-  /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: ListingType;
+  /** Canonical listing-kind discriminator (SB1-G Phase 4). Accepts a single
+   * `ListingType`, or a `|`-joined multi-value string (sievejs OR-group,
+   * e.g. `"standard|classified|digital-code|live"`) for the consolidated
+   * generic Products browse page. */
+  listingType?: ListingType | string;
   storeId?: string;
   sort?: string;
   page?: number;

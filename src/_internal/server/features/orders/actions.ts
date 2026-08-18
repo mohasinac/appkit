@@ -17,6 +17,8 @@ import { restoreStockForOrder } from "../checkout/stock-restore";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { enqueueJob } from "../../../../features/jobs/actions/enqueue-job";
 import { PAYMENT_WINDOW_MS, PAYMENT_FRAUD_REJECTED_REASON } from "../../../../features/orders/constants/payment-window";
+import { normalizeError } from "../../../../errors/normalize";
+import { serverLogger } from "../../../../monitoring";
 
 export async function createOrderAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
@@ -75,6 +77,8 @@ function normalizeUpi(vpa: string | undefined): string {
   return (vpa ?? "").trim().toLowerCase();
 }
 
+const REASON_REQUIRED_MSG = "A reason is required";
+
 /**
  * Fast-review WhatsApp push — fans out to every configured admin number so
  * a payment proof can be acted on within the 2-hour auto-approve window
@@ -97,7 +101,10 @@ function notifyAdminsOfPaymentProof(order: { id: string; userName: string; produ
         .filter(Boolean);
       if (adminNumbers.length === 0) return;
 
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://letitrip.in";
+      // No hardcoded domain fallback here (audit-ssr-in-appkit) — every
+      // consumer sets NEXT_PUBLIC_SITE_URL; skip the review link rather than
+      // guessing a brand-specific domain from inside appkit/_internal/.
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
       const message = buildPaymentProofReviewMessage({
         orderId: order.id,
         buyerName: order.userName,
@@ -116,8 +123,14 @@ function notifyAdminsOfPaymentProof(order: { id: string; userName: string; produ
           }),
         ),
       );
-    } catch {
-      // Non-fatal — the order itself already saved successfully.
+    } catch (err) {
+      void normalizeError(err);
+      // Non-fatal — the order itself already saved successfully; a WhatsApp
+      // Cloud API hiccup here must never surface as a proof-upload failure.
+      serverLogger.warn("Payment-proof admin WhatsApp push failed (non-fatal)", {
+        orderId: order.id,
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
   })();
 }
@@ -226,7 +239,7 @@ export async function adminRequestProofReuploadAction(
     if (!isAdminUser(user) && !isModeratorUser(user)) {
       throw new ValidationError("Only admin or moderator can request a proof re-upload");
     }
-    if (!note.trim()) throw new ValidationError("A reason is required");
+    if (!note.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId).catch(() => null);
     if (!order) throw new OrderNotFoundError(orderId);
     if (order.paymentStatus === "paid") {
@@ -277,7 +290,7 @@ export async function adminRejectPaymentAsFraudAction(
     if (!isAdminUser(user) && !isModeratorUser(user)) {
       throw new ValidationError("Only admin or moderator can reject a payment as fraudulent");
     }
-    if (!note.trim()) throw new ValidationError("A reason is required");
+    if (!note.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId).catch(() => null);
     if (!order) throw new OrderNotFoundError(orderId);
     if (order.paymentStatus === "paid") {
@@ -323,7 +336,7 @@ export async function raiseOrderDisputeAction(
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["buyer", "seller", "admin"]);
-    if (!reason.trim()) throw new ValidationError("A reason is required");
+    if (!reason.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId).catch(() => null);
     if (!order) throw new OrderNotFoundError(orderId);
 
