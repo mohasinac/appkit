@@ -564,6 +564,7 @@ export const SELLER_ENDPOINTS = {
   COUPON_BY_ID: (id: string) => `/api/store/coupons/${id}`,
   OFFERS: "/api/store/offers",
   PAYOUTS: "/api/store/payouts",
+  PAYOUT_BY_ID: (id: string) => `/api/store/payouts/${id}`,
   PAYOUT_SETTINGS: "/api/store/payout-settings",
   PAYOUT_REQUEST: "/api/store/payouts/request",
   REVIEWS: "/api/store/reviews",

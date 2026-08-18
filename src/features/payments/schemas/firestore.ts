@@ -76,6 +76,10 @@ export interface PayoutDocument extends BaseDocument {
   netAmount?: number;
   requestedAt: Date;
   processedAt?: Date;
+  /** UTR / UPI ref / bank transfer ID entered by admin when marking paid. */
+  transactionId?: string;
+  /** Seller-set personal follow-up flag — surfaced only to the owning seller, never mutated by admin. */
+  sellerReminderFlag?: boolean;
 }
 
 export const PAYOUT_COLLECTION = "payouts" as const;
@@ -128,6 +132,9 @@ export const PAYOUT_ADMIN_UPDATEABLE_FIELDS = [
   "adminNote",
   "processedAt",
 ] as const;
+
+/** The only field a seller may write on their own payout doc. */
+export const PAYOUT_SELLER_UPDATEABLE_FIELDS = ["sellerReminderFlag"] as const;
 
 export type PayoutCreateInput = Omit<
   PayoutDocument,

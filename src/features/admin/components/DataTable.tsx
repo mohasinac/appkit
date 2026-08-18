@@ -44,7 +44,15 @@ interface DataTableProps<T extends { id: string }> {
   columns?: AdminTableColumn<T>[];
   rows: T[];
   isLoading?: boolean;
-  getRowHref?: (row: T) => string;
+  /**
+   * Row link target. Prefer a plain string containing an `{id}` placeholder
+   * (e.g. "/admin/products/{id}/edit") — it's the only form safe to construct
+   * inside a Server Component page.tsx, since React Server Components cannot
+   * pass function values to Client Components. A function is only safe when
+   * both the caller and DataTable are already client-side (e.g. conditional
+   * per-row routing inside an already-"use client" view).
+   */
+  rowHrefTemplate?: string | ((row: T) => string);
   onRowClick?: (row: T) => void;
   renderRowActions?: (row: T) => React.ReactNode;
   sortKey?: string;
@@ -147,7 +155,7 @@ export function DataTable<T extends { id: string }>({
   currentPage = 1,
   onPageChange,
   emptyLabel = "No records found",
-  getRowHref,
+  rowHrefTemplate,
   onRowClick,
   renderRowActions,
   selectedIds,
@@ -229,7 +237,11 @@ export function DataTable<T extends { id: string }>({
                   onToggle={onToggleSelect}
                   renderRowActions={renderRowActions}
                   onRowClick={onRowClick}
-                  rowHref={getRowHref?.(row)}
+                  rowHref={
+                    typeof rowHrefTemplate === "function"
+                      ? rowHrefTemplate(row)
+                      : rowHrefTemplate?.replace("{id}", encodeURIComponent(row.id))
+                  }
                   selectionEnabled={selectionEnabled}
                 />
               ))

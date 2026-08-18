@@ -17,6 +17,7 @@ export interface UserProfile {
   googleLinkedEmail?: string | null;
   uiPreferences?: {
     collapsedSections?: string[];
+    dataViewMode?: "table" | "grid" | "list";
   };
 }
 
@@ -33,6 +34,7 @@ export interface UpdateCurrentProfileInput {
   profileIsPublic?: boolean;
   uiPreferences?: {
     collapsedSections?: string[];
+    dataViewMode?: "table" | "grid" | "list";
   };
 }
 

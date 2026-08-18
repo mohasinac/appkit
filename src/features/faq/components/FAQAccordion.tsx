@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { Button, Div, RichText, Row, Span, Text } from "../../../ui";
+import { Button, Div, RichText, Row, Span, Tabs, TabsList, TabsTrigger, Text } from "../../../ui";
 import type { FAQ, FAQCategory } from "../types";
 
 interface FAQAccordionItemProps {
@@ -122,6 +122,8 @@ interface FAQCategoryTabsProps {
   labels?: Partial<Record<FAQCategory | "all", string>>;
 }
 
+const ALL_TAB_VALUE = "__all__";
+
 export function FAQCategoryTabs({
   categories,
   active,
@@ -129,22 +131,18 @@ export function FAQCategoryTabs({
   labels = {},
 }: FAQCategoryTabsProps) {
   return (
-    <Row wrap gap="sm" className="scrollbar-none">
-      <Button
-        onClick={() => onSelect(null)}
-        className={`rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] transition ${!active ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
-      >
-        {labels.all ?? "All"}
-      </Button>
-      {categories.map((cat) => (
-        <Button
-          key={cat}
-          onClick={() => onSelect(cat)}
-          className={`whitespace-nowrap rounded-[9999px] px-[1rem] py-[0.375rem] text-[0.875rem] font-[500] capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-[var(--appkit-color-surface)] bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)] dark:text-[var(--appkit-color-text-faint)] hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
-        >
-          {labels[cat] ?? cat.replace(/_/g, " ")}
-        </Button>
-      ))}
-    </Row>
+    <Tabs
+      value={active ?? ALL_TAB_VALUE}
+      onChange={(next) => onSelect(next === ALL_TAB_VALUE ? null : (next as FAQCategory))}
+    >
+      <TabsList>
+        <TabsTrigger value={ALL_TAB_VALUE}>{labels.all ?? "All"}</TabsTrigger>
+        {categories.map((cat) => (
+          <TabsTrigger key={cat} value={cat}>
+            {labels[cat] ?? cat.replace(/_/g, " ")}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
   );
 }

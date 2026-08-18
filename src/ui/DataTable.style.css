@@ -190,3 +190,13 @@
     display: none;
   }
 }
+
+/* When mobileCardRender is supplied, the desktop table wrapper must hide
+   below the same breakpoint the mobile-cards block uses above — otherwise
+   both render simultaneously on small screens. Wrapper has no modifier
+   (and always renders) when mobileCardRender is absent. */
+@media (max-width: 767px) {
+  .appkit-data-table__wrapper--has-mobile-cards {
+    display: none;
+  }
+}

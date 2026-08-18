@@ -293,8 +293,6 @@ export { HorizontalScroller } from "./components/HorizontalScroller";
 
 
 // Tab strip with ResizeObserver-driven overflow scroll
-export type { TabStripProps, TabStripTab } from "./components/TabStrip";
-export { TabStrip } from "./components/TabStrip";
 
 // Fluid form layout
 export type { FormGridProps, FormFieldProps } from "./components/FormGrid";

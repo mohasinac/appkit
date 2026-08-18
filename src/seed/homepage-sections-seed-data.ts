@@ -321,7 +321,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       title: "Frequently Asked Questions",
       subtitle: "Quick answers about buying, selling, and collecting on LetItRip",
       showOnHomepage: true,
-      displayCount: 10,
+      displayCount: 16,
       linkToFullPage: true,
       showCategoryTabs: true,
       visibleTabs: ["general", "shipping_delivery", "returns_refunds", "orders_payment", "product_information", "account_security"],

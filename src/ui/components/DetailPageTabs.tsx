@@ -1,11 +1,7 @@
 "use client";
-import React, { useState, type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { Div } from "./Div";
-import { Span } from "./Typography";
-
-const __O = {
-  xAuto: "overflow-x-auto",
-} as const;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs";
 
 export interface DetailPageTab {
   /** Stable tab id used for the URL `tab=` param and ARIA wiring. */
@@ -43,73 +39,33 @@ export interface DetailPageTabsProps {
  */
 export function DetailPageTabs({
   tabs,
-  activeTab: activeTabProp,
+  activeTab,
   defaultTab,
   onTabChange,
   className,
 }: DetailPageTabsProps) {
-  const [internalActive, setInternalActive] = useState(
-    defaultTab ?? tabs[0]?.id ?? "",
-  );
-  const activeTab = activeTabProp ?? internalActive;
-  const active = tabs.find((t) => t.id === activeTab) ?? tabs[0];
-
-  const handleChange = (id: string) => {
-    if (activeTabProp === undefined) setInternalActive(id);
-    onTabChange?.(id);
-  };
-
   return (
-    <Div
-      className={[
-        "appkit-detail-tabs",
-        "space-y-4",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+    <Tabs
+      value={activeTab}
+      defaultValue={defaultTab ?? tabs[0]?.id ?? ""}
+      onChange={onTabChange}
+      className={["appkit-detail-tabs", "space-y-4", className].filter(Boolean).join(" ")}
     >
-      <Div role="tablist" aria-orientation="horizontal" className={`flex gap-2 border-b border-[var(--appkit-color-border)] ${__O.xAuto}`}>
+      <TabsList>
         {tabs.map((tab) => {
-          const isActive = tab.id === active?.id;
+          const label = typeof tab.label === "string" ? tab.label : undefined;
           return (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`detail-tab-panel-${tab.id}`}
-              id={`detail-tab-trigger-${tab.id}`}
-              disabled={tab.disabled}
-              onClick={() => handleChange(tab.id)}
-              className={[
-                "flex-shrink-0 px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
-                isActive
-                  ? "border-[var(--appkit-color-primary)] text-[var(--appkit-color-text)]"
-                  : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-700 hover:text-[var(--appkit-color-text-muted)]",
-                tab.disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
-              ].join(" ")}
-            >
+            <TabsTrigger key={tab.id} value={tab.id} disabled={tab.disabled} badge={tab.count} label={label}>
               {tab.label}
-              {typeof tab.count === "number" ? (
-                <Span size="xs" className="ml-2 inline-flex items-center justify-center rounded-full bg-[var(--appkit-color-surface)] px-2 py-0.5">
-                  {tab.count}
-                </Span>
-              ) : null}
-            </button>
+            </TabsTrigger>
           );
         })}
-      </Div>
-
-      {active ? (
-        <Div
-          role="tabpanel"
-          id={`detail-tab-panel-${active.id}`}
-          aria-labelledby={`detail-tab-trigger-${active.id}`}
-        >
-          {active.content}
-        </Div>
-      ) : null}
-    </Div>
+      </TabsList>
+      {tabs.map((tab) => (
+        <TabsContent key={tab.id} value={tab.id}>
+          <Div>{tab.content}</Div>
+        </TabsContent>
+      ))}
+    </Tabs>
   );
 }

@@ -43,9 +43,7 @@ interface EventRow {
   updatedAt: string;
 }
 
-export interface AdminEventsViewProps extends ListingLayoutProps {
-  getRowHref?: (row: { id: string }) => string;
-}
+export type AdminEventsViewProps = ListingLayoutProps;
 
 export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
   if (React.Children.count(children) > 0) {

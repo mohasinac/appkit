@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Div } from "../../../ui";
+import { Tabs, TabsList, TabsTrigger } from "../../../ui";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
@@ -10,15 +10,6 @@ import { CategoryStoresListing } from "./CategoryStoresListing";
 import { CATEGORY_PAGE_TABS, type CategoryTabId } from "../../products/constants/listing-tabs";
 import type { CategoryDocument } from "../schemas";
 import type { StoreListItem } from "../../stores/types";
-
-const __O = {
-  xAuto: "overflow-x-auto",
-} as const;
-
-function tabLabel(label: string, count?: number) {
-  if (!count) return label;
-  return `${label} (${count.toLocaleString()})`;
-}
 
 /** Maps CATEGORY_PAGE_TABS id → listing type / category type key for flag filtering. */
 const TAB_TYPE_MAP: Record<string, { kind: "listing" | "category" | "entity"; type: string }> = {
@@ -90,27 +81,15 @@ export function CategoryDetailTabs({
 
   return (
     <>
-      <Div layout="flex" border="default" className={`border-b mb-6 ${__O.xAuto}`}>
-        {visibleTabs.map((t) => (
-          <Button
-            variant="ghost"
-            key={t.id}
-            type="button"
-            onClick={() => setActiveTab(t.id as CategoryTabId)}
-            paddingX="lg"
-            paddingY="y-xs-tall"
-            textSize="sm"
-            weight="medium"
-            className={`whitespace-nowrap transition-colors -mb-px border-b-2 rounded-none ${
- activeTab === t.id
- ? "border-primary text-primary"
- : "border-transparent text-[var(--appkit-color-text-muted)] hover:text-zinc-900 dark:hover:text-zinc-100"
- }`}
-          >
-            {tabLabel(t.label, countFor(t.id as CategoryTabId))}
-          </Button>
-        ))}
-      </Div>
+      <Tabs value={activeTab} onChange={(v) => setActiveTab(v as CategoryTabId)} className="mb-6">
+        <TabsList>
+          {visibleTabs.map((t) => (
+            <TabsTrigger key={t.id} value={t.id} badge={countFor(t.id as CategoryTabId)}>
+              {t.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       {activeTab === "products" && (
         <CategoryProductsListing

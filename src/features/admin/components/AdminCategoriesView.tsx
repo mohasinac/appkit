@@ -156,13 +156,10 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
   resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Category" : "Edit Category"),
 };
 
-export interface AdminCategoriesViewProps extends ListingLayoutProps {
-  getRowHref?: (row: { id: string }) => string;
-}
+export type AdminCategoriesViewProps = ListingLayoutProps;
 
 export function AdminCategoriesView({
   children,
-  getRowHref: _getRowHref,
   ...props
 }: AdminCategoriesViewProps) {
   if (React.Children.count(children) > 0) {

@@ -174,7 +174,7 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==pre-order", status].filter(Boolean).join(",");
     },
-    getRowHref: (row) => String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)),
+    rowHrefTemplate: String(ROUTES.STORE.PRE_ORDERS_EDIT("{id}")),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

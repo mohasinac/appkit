@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useMemo } from "react";
 import { THEMED_BG_PRIMARY, THEMED_BG_TERTIARY, THEMED_BORDER, THEMED_TEXT_PRIMARY, THEMED_TEXT_SECONDARY, FLEX_BETWEEN } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Heading, RichText, Row, Section, Span, Stack, Text, TextLink } from "../../../ui";
+import { Button, Div, Heading, RichText, Section, Span, Stack, Tabs, TabsList, TabsTrigger, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
 
 const __O = {
@@ -146,44 +146,35 @@ const flex = { between: FLEX_BETWEEN };
           )}
         </Div>
 
-        {/* Category Tabs — appkit Button with ghost variant */}
+        {/* Category Tabs — collapses to a colored dropdown past 5 items on mobile */}
         {showTabs && (
-          <Row align="center" justify="start" gap="sm" wrap className={`mb-8`}>
-            <Button rounded="full" 
-              variant={activeTab === "all" ? "primary" : "ghost"}
-              size="sm"
-              onClick={() => setActiveTab("all")}
-            >
-              All
-            </Button>
-            {derivedTabs.map((tab) => (
-              <Button rounded="full" 
-                key={tab.value}
-                variant={activeTab === tab.value ? "primary" : "ghost"}
-                size="sm"
-                onClick={() => setActiveTab(tab.value)}
-              >
-                {tab.label}
-              </Button>
-            ))}
-          </Row>
+          <Tabs value={activeTab} onChange={setActiveTab} className="mb-8">
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              {derivedTabs.map((tab) => (
+                <TabsTrigger key={tab.value} value={tab.value}>{tab.label}</TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         )}
 
-        {/* FAQ Accordion */}
-        <Stack gap="sm">
+        {/* FAQ list — bottom-border divider between questions, matching the
+            dedicated /faqs page's FAQAccordion convention (easier to scan
+            where one question ends and the next begins). */}
+        <Stack gap="none" rounded="xl" className={`${themed.bgPrimary} ${__O.hidden} border ${themed.border}`}>
           {visibleItems.length === 0 && (
             <Text paddingY="3xl" align="start" className={themed.textSecondary}>
               No FAQs in this category yet.
             </Text>
           )}
-          {visibleItems.map((faq) => {
+          {visibleItems.map((faq, index) => {
             const isOpen = openIds.has(faq.id);
             return (
               <Div
                 key={faq.id}
-                className={`${themed.bgPrimary} rounded-xl overflow-hidden border transition-all duration-200 ${
- isOpen ? "border-primary/40 shadow-sm" : `${themed.border}`
- }`}
+                className={`transition-colors duration-200 ${
+ index < visibleItems.length - 1 ? "border-b border-[var(--appkit-color-border)]" : ""
+ } ${isOpen ? "bg-[var(--appkit-color-surface-elevated)]" : ""}`}
               >
                 {/* Question trigger */}
                 <Button

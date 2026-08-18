@@ -24,12 +24,12 @@ export function RelatedFAQs({
         {labels?.title ?? "Related Questions"}
       </Heading>
 
-      <Stack gap="3">
+      <Stack gap="none" className="divide-y divide-[var(--appkit-color-border)]">
         {relatedFAQs.map((faq) => (
-          <TextLink rounded="lg"
+          <TextLink
             key={faq.id}
             href={hrefForFaq ? hrefForFaq(faq) : `/faqs#${faq.id}`}
-            className="group block bg-[var(--appkit-color-surface-elevated)] p-[1rem] transition-colors hover:bg-[var(--appkit-color-border-subtle)]"
+            className="group block p-[1rem] transition-colors hover:bg-[var(--appkit-color-surface-elevated)]"
           >
             <Row align="start" gap="3">
               <svg

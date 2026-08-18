@@ -140,7 +140,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==prize-draw", status].filter(Boolean).join(",");
     },
-    getRowHref: (row) => String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id)),
+    rowHrefTemplate: String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT("{id}")),
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>
       ADMIN_BULK_ACTIONS.prizeDraws.map((id) => ({

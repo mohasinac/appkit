@@ -45,9 +45,7 @@ interface ShipmentRow {
   recalculating: boolean;
 }
 
-export interface AdminShipmentsViewProps extends ListingLayoutProps {
-  getRowHref?: (row: { id: string }) => string;
-}
+export type AdminShipmentsViewProps = ListingLayoutProps;
 
 export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewProps) {
   if (React.Children.count(children) > 0) {

@@ -426,7 +426,9 @@ export function DataTable<T extends object>({
 
       {/* Desktop table */}
       {activeViewMode === "table" && (
-        <Div className="appkit-data-table__wrapper">
+        <Div
+          className={`appkit-data-table__wrapper ${mobileCardRender ? "appkit-data-table__wrapper--has-mobile-cards" : ""}`}
+        >
           <Div
             className={`appkit-data-table__scroll ${stickyHeader ? "appkit-data-table__scroll--sticky" : ""}`}
           >

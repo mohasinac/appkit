@@ -74,7 +74,7 @@ export function FooterLayout({
   return (
     <BlockFooter
       id={id}
-      className="bg-zinc-50 bg-[var(--appkit-color-bg)] border-t border-[var(--appkit-color-border-subtle)]"
+      className="bg-[var(--appkit-color-bg)] border-t border-[var(--appkit-color-border-subtle)]"
     >
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (
@@ -154,7 +154,7 @@ export function FooterLayout({
                   type="button"
                   variant="ghost"
                   onClick={() => toggleGroup(idx)}
-                  className="w-full justify-between border-b border-zinc-200 py-[var(--appkit-space-3)] text-left text-[length:var(--appkit-text-sm)] font-semibold text-zinc-800 transition-colors hover:text-zinc-950 border-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text)] dark:hover:text-white lg:hidden"
+                  className="w-full justify-between border-b py-[var(--appkit-space-3)] text-left text-[length:var(--appkit-text-sm)] font-semibold transition-colors border-[var(--appkit-color-border-subtle)] text-[var(--appkit-color-text)] hover:text-primary dark:hover:text-secondary lg:hidden"
                   aria-expanded={!!openGroups[idx]}
                 >
                   {group.heading}

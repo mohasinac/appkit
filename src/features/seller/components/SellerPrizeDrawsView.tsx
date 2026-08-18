@@ -173,7 +173,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==prize-draw", status].filter(Boolean).join(",");
     },
-    getRowHref: (row) => String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id)),
+    rowHrefTemplate: String(ROUTES.STORE.PRIZE_DRAWS_EDIT("{id}")),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[

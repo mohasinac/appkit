@@ -262,7 +262,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
           columns={columns as any}
           isLoading={isLoading}
           emptyLabel="No carousel slides — use 'New slide' to add one"
-          getRowHref={(row) => `/admin/carousel/${row.id}/edit`}
+          rowHrefTemplate="/admin/carousel/{id}/edit"
         />
       </Div>
 

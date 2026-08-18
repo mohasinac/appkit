@@ -68,7 +68,6 @@ const COLUMNS: AdminTableColumn<FaqRow>[] = [
 
 export interface AdminFaqsViewProps extends ListingLayoutProps {
   actionHref?: string;
-  getRowHref?: (row: AdminListingScaffoldRow) => string;
   onBulkArchive?: (ids: string[]) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
 }

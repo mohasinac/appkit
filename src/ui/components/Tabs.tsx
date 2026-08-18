@@ -7,6 +7,7 @@ const UI_TABS = {
   listDropdown: "appkit-tabs-list--dropdown",
   trigger: "appkit-tabs-trigger",
   content: "appkit-tabs-content",
+  badge: "appkit-tabs-trigger__badge",
 } as const;
 
 /** Past this many items, TabsList renders a <Select> dropdown instead of a
@@ -42,6 +43,14 @@ export interface TabsTriggerProps {
   disabled?: boolean;
   className?: string;
   children?: React.ReactNode;
+  /** Optional count badge rendered as a small pill after the label. */
+  badge?: number;
+  /**
+   * Plain-text label to use for the collapsed mobile dropdown's option text
+   * when `children` isn't a plain string (e.g. it renders a badge pill).
+   * Falls back to `value` when omitted and `children` isn't a string.
+   */
+  label?: string;
 }
 
 export interface TabsContentProps {
@@ -88,11 +97,16 @@ export function TabsList({ className = "", children }: TabsListProps) {
   );
 
   if (items.length > TABS_DROPDOWN_THRESHOLD) {
-    const options = items.map((item) => ({
-      value: item.props.value,
-      label: typeof item.props.children === "string" ? item.props.children : item.props.value,
-      disabled: item.props.disabled,
-    }));
+    const options = items.map((item) => {
+      const baseLabel =
+        item.props.label ??
+        (typeof item.props.children === "string" ? item.props.children : item.props.value);
+      return {
+        value: item.props.value,
+        label: item.props.badge ? `${baseLabel} (${item.props.badge})` : baseLabel,
+        disabled: item.props.disabled,
+      };
+    });
     return (
       <Select
         bare
@@ -121,6 +135,7 @@ export function TabsTrigger({
   disabled,
   className = "",
   children,
+  badge,
 }: TabsTriggerProps) {
   const { active, setActive } = useContext(TabsContext);
   const isActive = active === value;
@@ -135,6 +150,9 @@ export function TabsTrigger({
       className={[UI_TABS.trigger, className].filter(Boolean).join(" ")}
     >
       {children}
+      {typeof badge === "number" && badge > 0 && (
+        <span className={UI_TABS.badge}>{badge > 99 ? "99+" : badge}</span>
+      )}
     </button>
   );
 }

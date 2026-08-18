@@ -85,11 +85,12 @@ const COLUMNS: AdminTableColumn<BundleRow>[] = [
 ];
 
 export interface AdminBundlesViewProps {
-  getEditHref: (row: { id: string }) => string;
+  /** Plain string with an `{id}` placeholder — safe to build in a Server Component page.tsx. */
+  editHrefTemplate: string;
   newHref: string;
 }
 
-export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps) {
+export function AdminBundlesView({ editHrefTemplate, newHref }: AdminBundlesViewProps) {
   const [rebuildingId, setRebuildingId] = useState<string | null>(null);
   const toast = useToast();
 
@@ -152,7 +153,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
         parts.push(sieveFilter("bundleStockStatus", SIEVE_OP.EQ, filterState.bundleStockStatus));
       return parts.join(",") || undefined;
     },
-    getRowHref: getEditHref,
+    rowHrefTemplate: editHrefTemplate,
     toolbarExtra: (
       <Button asChild size="sm" variant="primary">
         <TextLink href={newHref} layout="flex" align="center" gap="xs">

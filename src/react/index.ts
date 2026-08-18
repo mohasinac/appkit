@@ -128,13 +128,6 @@ export type {
   UseContainerGridResult,
 } from "./hooks/useContainerGrid";
 
-// Visible-items counter for tab strips and overflow scrollers
-export { useVisibleItems } from "./hooks/useVisibleItems";
-export type {
-  UseVisibleItemsOptions,
-  UseVisibleItemsResult,
-} from "./hooks/useVisibleItems";
-
 // Modal stack management
 export { useModalStack } from "./useModalStack";
 export type { ModalEntry } from "./useModalStack";

@@ -148,8 +148,14 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
     panel: { openEditPanel: (id: string) => void },
   ) => void;
 
-  /** When set, the table renders rows as anchor links to this href. */
-  getRowHref?: (row: TRow) => string;
+  /**
+   * When set, the table renders rows as anchor links to this href. Prefer a
+   * plain string with an `{id}` placeholder (e.g. "/admin/x/{id}/edit") —
+   * it's the only form safe to build inside a Server Component page.tsx,
+   * since RSC cannot pass function values across the server/client boundary.
+   * A function is only safe when the config itself is assembled client-side.
+   */
+  rowHrefTemplate?: string | ((row: TRow) => string);
 
   /** Hide the table toggle in the toolbar; views with no table column set should use this. */
   hideTableView?: boolean;
@@ -307,7 +313,10 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             {errorMessage}
           </Div>
         )}
-        {view === "table" ? (
+        {/* The view-mode preference is global (persisted across every listing
+            page, not just this one) — a "table" choice made elsewhere must
+            never leak into a hideTableView-only view like Coupons. */}
+        {view === "table" && !config.hideTableView ? (
           <DataTable
             columns={config.columns}
             rows={rows}
@@ -320,7 +329,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
                 ? selection.setSelectedIds(rows.map((r) => r.id))
                 : selection.clearSelection()
             }
-            getRowHref={config.getRowHref}
+            rowHrefTemplate={config.rowHrefTemplate}
             onRowClick={
               config.onRowClick
                 ? (row) =>
@@ -334,11 +343,14 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
             renderRowActions={config.renderRowActions}
           />
         ) : config.renderCards ? (
-          config.renderCards(rows, view as "grid" | "list", selectionContext, isLoading)
+          // The persisted view-mode preference is global, so a "table"
+          // value can still reach here on a hideTableView-only view (see
+          // the DataTable branch's guard above) — fall back to "grid".
+          config.renderCards(rows, view === "table" ? "grid" : view, selectionContext, isLoading)
         ) : (
           <AdminViewCards
             rows={rows as unknown as Parameters<typeof AdminViewCards>[0]["rows"]}
-            view={view}
+            view={view === "table" ? "grid" : view}
             isLoading={isLoading}
             emptyLabel={config.emptyLabel ?? `No ${config.title.toLowerCase()} found`}
             onRowClick={(row) => panel.openEditPanel(row.id)}

@@ -403,12 +403,6 @@ export type { UsePullToRefreshOptions } from "./react/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UsePullToRefreshReturn - Type contract for use pull to refresh return.
 export type { UsePullToRefreshReturn } from "./react/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UseVisibleItemsOptions - Type contract for use visible items options.
-export type { UseVisibleItemsOptions } from "./react/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// UseVisibleItemsResult - Type contract for use visible items result.
-export type { UseVisibleItemsResult } from "./react/index";
 // CONFIRMATION_MESSAGES - Constant used across modules.
 export { CONFIRMATION_MESSAGES } from "./values/index";
 // [CONFIG]-Application configuration constant â€" route path, API endpoint, design token, or feature flag.
@@ -9142,9 +9136,9 @@ export { Button } from "./ui/index";
 export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Pagination, PageLoader } from "./ui/index";
 export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } from "./ui/index";
 export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, SummaryCard } from "./ui/index";
-export { CountdownDisplay, ItemRow, HorizontalScroller, TabStrip } from "./ui/index";
+export { CountdownDisplay, ItemRow, HorizontalScroller } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
-export { TabsList, TabsContent, PasswordStrengthIndicator, TablePagination } from "./ui/index";
+export { Tabs, TabsList, TabsTrigger, TabsContent, PasswordStrengthIndicator, TablePagination } from "./ui/index";
 export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText, RichTextRenderer } from "./ui/index";
 export type { RichTextRendererProps } from "./ui/index";
 export { SlottedListingView, DetailViewShell, StackedViewShell } from "./ui/index";
@@ -9206,7 +9200,7 @@ export {
   useGesture, useSwipe, useSession, useAuth, useCountdown,
   useCamera, useBulkSelection, useUrlTable, usePendingFilters, usePendingTable,
   useUnsavedChanges, UNSAVED_CHANGES_EVENT, useBulkAction, useEntityDelete, useContainerGrid,
-  useMessage, useVisibleItems, useModalStack, RTDBPayloadStatus,
+  useMessage, useModalStack, RTDBPayloadStatus,
 } from "./react/index";
 
 // Missing core types (already exported above; skipped to avoid duplicates)

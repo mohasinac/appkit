@@ -203,6 +203,11 @@ const ALLOWLIST_FILES = new Set([
   // AdminProductsView.tsx — `values: Record<string, unknown>` for a generic
   // multi-field product form update callback; the field set varies per product type
   "appkit/src/features/admin/components/AdminProductsView.tsx",
+  // SellerPayoutsView.tsx — same rawByIdRef<Record<string, Record<string, unknown>>>
+  // pattern as AdminProductsView.tsx: the raw payout API record is stashed per row
+  // id so the detail SideDrawer can open instantly from data already in memory,
+  // without a second fetch. The payout record shape isn't a typed model here.
+  "appkit/src/features/seller/components/SellerPayoutsView.tsx",
 
   // ── Cloud Functions / Job runtime ─────────────────────────────────────────
   // Pub/Sub Firebase adapter — message body is `{ json?: unknown; data?: string }`;

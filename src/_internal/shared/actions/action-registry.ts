@@ -414,6 +414,14 @@ export const ACTIONS: ActionTree = {
       kind: "ghost",
       permissions: ["seller", "admin"],
     },
+    "set-payout-reminder": {
+      id: "store.set-payout-reminder",
+      label: "Remind Me",
+      ariaLabel: "Toggle a follow-up reminder on this payout",
+      description: "Flag this payout for a personal follow-up reminder.",
+      kind: "ghost",
+      permissions: ["seller"],
+    },
     // ── Review management ───────────────────────────────────────────────
     "reply-review": {
       id: "store.reply-review",

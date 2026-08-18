@@ -113,7 +113,8 @@ export { Skeleton } from "./ui/components/Skeleton";
 export { Alert } from "./ui/components/Alert";
 export type { SkeletonProps } from "./ui/components/Skeleton";
 export { Divider } from "./ui/components/Divider";
-export { TabStrip } from "./ui/components/TabStrip";
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/components/Tabs";
+export type { TabsProps, TabsListProps, TabsTriggerProps, TabsContentProps } from "./ui/components/Tabs";
 export { SellerProductsView } from "./features/seller/components/SellerProductsView";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // Drawer - Component for drawer.
@@ -204,9 +205,6 @@ export type {
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useUnsavedChanges - React hook for use unsaved changes.
 export { useUnsavedChanges } from "./react/hooks/useUnsavedChanges";
-// [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
-// useVisibleItems - React hook for use visible items.
-export { useVisibleItems } from "./react/hooks/useVisibleItems";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // FirebaseClientAuthProvider - Component for firebase client auth provider.
 export { FirebaseClientAuthProvider } from "./providers/firebase-client/index";

@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
+import { useDataViewMode } from "../../account/hooks/useDataViewMode";
 import { useAdminListingData } from "./useAdminListingData";
 
 export interface AdminListingConfig<TResponse, TRow extends { id: string }> {
@@ -32,7 +33,11 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
     buildFilters,
   } = config;
 
-  const [view, setView] = useState<"grid" | "list" | "table">(config.initialView ?? "table");
+  // Persisted, viewport-aware view-mode: below 768px defaults to "list"
+  // (AdminViewCards' one-full-width-card-per-row layout) unless the caller
+  // explicitly pins hideTableView (grid-only views like coupons); the user's
+  // own explicit choice, once made, always wins and persists across visits.
+  const { view, setView } = useDataViewMode(config.initialView ?? "table");
   const table = useUrlTable({ defaults: { pageSize: String(defaultPageSize), sort: defaultSort } });
   // Reactive — table.getNumber reads the URL param, so a page-size selector
   // (Pagination's pageSize/onPageSizeChange) actually takes effect instead

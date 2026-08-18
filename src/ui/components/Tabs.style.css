@@ -49,6 +49,25 @@
   opacity: 0.5;
 }
 
+.appkit-tabs-trigger__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  padding: 0 0.4rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: var(--appkit-color-surface-elevated);
+  color: var(--appkit-color-text-muted);
+}
+.appkit-tabs-trigger[aria-selected="true"] .appkit-tabs-trigger__badge {
+  background: color-mix(in srgb, var(--appkit-color-primary) 15%, transparent);
+  color: var(--appkit-color-primary);
+}
+
 .appkit-tabs-content {
   padding-top: 1rem;
   padding-bottom: 1rem;

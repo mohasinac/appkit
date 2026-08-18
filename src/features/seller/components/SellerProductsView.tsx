@@ -27,6 +27,7 @@ import {
   useSellerListingData,
 } from "../hooks/useSellerListingData";
 import { DataTable } from "../../admin/components/DataTable";
+import { useDataViewMode } from "../../account/hooks/useDataViewMode";
 import type { AdminTableColumn } from "../../admin/types";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
@@ -215,7 +216,7 @@ export function SellerProductsView({
   ...props
 }: SellerProductsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
+  const { view, setView } = useDataViewMode("table");
   const dispatch = useActionDispatch();
   const { showToast } = useToast();
 
@@ -522,8 +523,11 @@ export function SellerProductsView({
             selectedIds={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
             onToggleSelectAll={() => selection.toggleAll()}
-            getRowHref={(row) =>
+            rowHrefTemplate={(row) =>
               // S-STORE-2-D — row click → public detail/preview, not edit.
+              // A function is safe here: both this view and DataTable are
+              // already client components, and the target varies per row
+              // (not expressible as a single {id} template string).
               row.listingKind === "auction"
                 ? `/auctions/${row.id}`
                 : row.listingKind === "pre-order"

@@ -83,11 +83,12 @@ const COLUMNS: AdminTableColumn<BundleRow>[] = [
 ];
 
 export interface SellerBundlesViewProps {
-  getEditHref: (row: { id: string }) => string;
+  /** Plain string with an `{id}` placeholder — safe to build in a Server Component page.tsx. */
+  editHrefTemplate: string;
   newHref: string;
 }
 
-export function SellerBundlesView({ getEditHref, newHref }: SellerBundlesViewProps) {
+export function SellerBundlesView({ editHrefTemplate, newHref }: SellerBundlesViewProps) {
   const config: ListingViewConfig<BundlesResponse, BundleRow> = {
     portal: "seller",
     title: "Bundles",
@@ -130,7 +131,7 @@ export function SellerBundlesView({ getEditHref, newHref }: SellerBundlesViewPro
         parts.push(sieveFilter("bundleStockStatus", SIEVE_OP.EQ, filterState.bundleStockStatus));
       return parts.join(",") || undefined;
     },
-    getRowHref: getEditHref,
+    rowHrefTemplate: editHrefTemplate,
     toolbarExtra: (
       <Button asChild size="sm" variant="primary">
         <TextLink href={newHref} layout="flex" align="center" gap="xs">
