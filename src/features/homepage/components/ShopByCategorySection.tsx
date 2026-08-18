@@ -32,6 +32,9 @@ export interface ShopByCategorySectionProps {
     rootOnly?: boolean;
     rootCategoryId?: string;
   };
+  autoScroll?: boolean;
+  scrollInterval?: number;
+  loop?: boolean;
 }
 
 function isImageUrl(s: string): boolean {
@@ -140,6 +143,9 @@ export function ShopByCategorySection({
   initialItems,
   cta,
   filters,
+  autoScroll = true,
+  scrollInterval = 3500,
+  loop = true,
 }: ShopByCategorySectionProps) {
 const themed = { textPrimary: THEMED_TEXT_PRIMARY };
 const { data: allCategories = [], isLoading } = useTopCategories(limit, { initialData: initialItems });
@@ -216,13 +222,13 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
             perView={CAROUSEL_PER_VIEW.standard}
             gap={16}
             keyExtractor={(cat) => cat.id}
-            autoScroll
-            autoScrollInterval={3500}
+            autoScroll={autoScroll}
+            autoScrollInterval={scrollInterval}
             showArrows
             snapToItems
             showFadeEdges
             showScrollbar={false}
-            loop
+            loop={loop}
             pauseOnHover
           />
         )}

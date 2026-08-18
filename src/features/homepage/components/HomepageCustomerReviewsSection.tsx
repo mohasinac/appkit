@@ -11,6 +11,9 @@ export interface HomepageCustomerReviewsSectionProps {
   viewMoreHref?: string;
   viewMoreLabel?: string;
   className?: string;
+  autoScroll?: boolean;
+  scrollInterval?: number;
+  loop?: boolean;
 }
 
 export function HomepageCustomerReviewsSection({
@@ -19,6 +22,9 @@ export function HomepageCustomerReviewsSection({
   viewMoreHref,
   viewMoreLabel = "See all reviews →",
   className = "",
+  autoScroll = true,
+  scrollInterval = 4500,
+  loop = true,
 }: HomepageCustomerReviewsSectionProps) {
   const { data: reviews = [], isLoading } = useHomepageReviews();
 
@@ -38,6 +44,9 @@ export function HomepageCustomerReviewsSection({
       isLoading={isLoading}
       keyExtractor={(review: Review) => review.id}
       className={className}
+      autoScroll={autoScroll}
+      scrollInterval={scrollInterval}
+      loop={loop}
     />
   );
 }

@@ -272,6 +272,8 @@ export interface CategoriesSectionConfig {
   maxCategories: 4;
   autoScroll: boolean;
   scrollInterval: number;
+  /** Circular auto-rotate at the carousel edges. Default: true. */
+  loop?: boolean;
   /** Optional CTA button rendered below the scroller. */
   cta?: SectionCTA;
   /** Optional client-side filter chips above the scroller. */
@@ -290,6 +292,8 @@ export interface BrandsSectionConfig {
   maxBrands: number;
   autoScroll: boolean;
   scrollInterval: number;
+  /** Circular auto-rotate at the carousel edges. Default: true. */
+  loop?: boolean;
   /** Optional CTA button rendered below the scroller. */
   cta?: SectionCTA;
   /** Optional client-side filter chips above the scroller. */
@@ -407,6 +411,8 @@ export interface ReviewsSectionConfig {
   mobileItemsPerView: 1;
   autoScroll: boolean;
   scrollInterval: number;
+  /** Circular auto-rotate at the carousel edges. Default: true. */
+  loop?: boolean;
   source?: "platform" | "google";
   placeId?: string;
 }
@@ -616,6 +622,8 @@ export interface CustomCardsSectionConfig {
   cards: CustomCardsCard[];
   autoScroll?: boolean;
   scrollIntervalMs?: number;
+  /** Circular auto-rotate at the carousel edges. Default: true. */
+  loop?: boolean;
 }
 
 export type CollectionCardType =

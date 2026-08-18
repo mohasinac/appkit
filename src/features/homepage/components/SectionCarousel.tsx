@@ -65,6 +65,9 @@ export interface SectionCarouselProps<T = unknown> {
   /** Interval between auto-scroll steps in ms. Default: 3500 */
   autoScrollInterval?: number;
 
+  /** Circular auto-rotate at the carousel edges. Default: true */
+  loop?: boolean;
+
   /** Key extractor for the HorizontalScroller. */
   keyExtractor?: (item: T, index: number) => string;
 
@@ -139,6 +142,7 @@ export function SectionCarousel<T = unknown>({
   gap = 16,
   autoScroll = false,
   autoScrollInterval = 3500,
+  loop = true,
   keyExtractor,
   rows = 1,
   className = "",
@@ -256,7 +260,7 @@ const headingGradient: "none" | "brand" =
             gap={gap}
             autoScroll={autoScroll}
             autoScrollInterval={autoScrollInterval}
-            loop
+            loop={loop}
             keyExtractor={keyExtractor}
             rows={rows}
             minItemWidth={minItemWidth}

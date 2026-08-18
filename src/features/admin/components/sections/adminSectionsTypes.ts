@@ -191,6 +191,7 @@ export interface CategoriesBuilderState {
   maxCategories: number;
   autoScroll: boolean;
   scrollInterval: number;
+  loop: boolean;
 }
 
 export interface BrandsBuilderState {
@@ -199,6 +200,7 @@ export interface BrandsBuilderState {
   maxBrands: number;
   autoScroll: boolean;
   scrollInterval: number;
+  loop: boolean;
 }
 
 export interface BannerBuilderState {
@@ -226,6 +228,7 @@ export interface ReviewsBuilderState {
   itemsPerView: number;
   autoScroll: boolean;
   scrollInterval: number;
+  loop: boolean;
   source: "platform" | "google";
   placeId: string;
 }
@@ -298,6 +301,7 @@ export interface CustomCardsBuilderState {
   columns: 1 | 2 | 3 | 4;
   autoScroll: boolean;
   scrollIntervalMs: number;
+  loop: boolean;
   cards: CustomCardsCardBuilderEntry[];
 }
 
@@ -387,7 +391,7 @@ export const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   manualResourceIds: "",
   filterByCategory: "",
   maxCount: 10,
-  loop: false,
+  loop: true,
 };
 
 export const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
@@ -403,7 +407,7 @@ export const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
   manualResourceIds: "",
   filterByCategory: "",
   maxCount: 10,
-  loop: false,
+  loop: true,
 };
 
 const DEFAULT_STAT_ROW = {
@@ -438,7 +442,7 @@ export const DEFAULT_PRE_ORDERS_BUILDER: PreOrdersBuilderState = {
   manualResourceIds: "",
   filterByCategory: "",
   maxCount: 10,
-  loop: false,
+  loop: true,
 };
 
 export const DEFAULT_STORES_BUILDER: StoresBuilderState = {
@@ -455,7 +459,7 @@ export const DEFAULT_STORES_BUILDER: StoresBuilderState = {
   manualResourceIds: "",
   filterByCategory: "",
   maxCount: 10,
-  loop: false,
+  loop: true,
 };
 
 export const DEFAULT_EVENTS_BUILDER: EventsBuilderState = {
@@ -472,7 +476,7 @@ export const DEFAULT_EVENTS_BUILDER: EventsBuilderState = {
   manualResourceIds: "",
   filterByCategory: "",
   maxCount: 10,
-  loop: false,
+  loop: true,
 };
 
 export const DEFAULT_SOCIAL_FEED_BUILDER: SocialFeedBuilderState = {
@@ -511,6 +515,7 @@ export const DEFAULT_CATEGORIES_BUILDER: CategoriesBuilderState = {
   maxCategories: 8,
   autoScroll: false,
   scrollInterval: 5000,
+  loop: true,
 };
 
 export const DEFAULT_BRANDS_BUILDER: BrandsBuilderState = {
@@ -519,6 +524,7 @@ export const DEFAULT_BRANDS_BUILDER: BrandsBuilderState = {
   maxBrands: 13,
   autoScroll: true,
   scrollInterval: 4000,
+  loop: true,
 };
 
 export const DEFAULT_BANNER_BUILDER: BannerBuilderState = {
@@ -546,6 +552,7 @@ export const DEFAULT_REVIEWS_BUILDER: ReviewsBuilderState = {
   itemsPerView: 3,
   autoScroll: true,
   scrollInterval: 5000,
+  loop: true,
   source: "platform",
   placeId: "",
 };
@@ -602,6 +609,7 @@ export const DEFAULT_CUSTOM_CARDS_BUILDER: CustomCardsBuilderState = {
   columns: 3,
   autoScroll: false,
   scrollIntervalMs: 4000,
+  loop: true,
   cards: [],
 };
 

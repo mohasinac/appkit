@@ -1509,6 +1509,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Select label="Items per view" value={String(reviewsBuilder.itemsPerView)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, itemsPerView: Number(v) }))} options={[{ label: "1", value: "1" }, { label: "2", value: "2" }, { label: "3", value: "3" }]} />
         <Checkbox checked={reviewsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
         <Input label={LBL_SCROLL_INTERVAL} type="number" min={1000} step={500} value={String(reviewsBuilder.scrollInterval)} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+        <Checkbox checked={reviewsBuilder.loop} label="Loop carousel" onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
       </Div>
     );
   }
@@ -1584,6 +1585,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Input label="Max categories (4–12)" type="number" min={4} max={12} value={String(categoriesBuilder.maxCategories)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, maxCategories: Math.min(12, Math.max(4, Number(e.target.value) || 4)) }))} />
         <Checkbox checked={categoriesBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
         <Input label={LBL_SCROLL_INTERVAL} type="number" min={1000} step={500} value={String(categoriesBuilder.scrollInterval)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+        <Checkbox checked={categoriesBuilder.loop} label="Loop carousel" onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
       </Div>
     );
   }
@@ -1597,6 +1599,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Input label="Max brands" type="number" min={1} max={30} value={String(brandsBuilder.maxBrands)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, maxBrands: Math.max(1, Number(e.target.value) || 1) }))} />
         <Checkbox checked={brandsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
         <Input label={LBL_SCROLL_INTERVAL} type="number" min={1000} step={500} value={String(brandsBuilder.scrollInterval)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+        <Checkbox checked={brandsBuilder.loop} label="Loop carousel" onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
       </Div>
     );
   }
@@ -1801,6 +1804,12 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
               scrollIntervalMs: Math.max(1000, Number(e.target.value) || 4000),
             }))
           }
+        />
+
+        <Checkbox
+          checked={customCardsBuilder.loop}
+          label="Loop carousel"
+          onChange={(e) => setCustomCardsBuilder((prev) => ({ ...prev, loop: e.target.checked }))}
         />
 
         <Stack gap="3">

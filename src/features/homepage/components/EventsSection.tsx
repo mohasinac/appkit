@@ -15,6 +15,9 @@ export interface EventsSectionProps {
   limit?: number;
   className?: string;
   initialItems?: EventItem[];
+  autoScroll?: boolean;
+  scrollInterval?: number;
+  loop?: boolean;
 }
 
 export function EventsSection({
@@ -25,6 +28,9 @@ export function EventsSection({
   limit = 6,
   className = "",
   initialItems,
+  autoScroll = false,
+  scrollInterval = 5000,
+  loop = true,
 }: EventsSectionProps) {
   const { data: items = [], isLoading } = useHomepageEvents(limit, { initialData: initialItems });
 
@@ -41,6 +47,9 @@ export function EventsSection({
       skeletonCount={3}
       perView={CAROUSEL_PER_VIEW.events}
       gap={16}
+      autoScroll={autoScroll}
+      autoScrollInterval={scrollInterval}
+      loop={loop}
       keyExtractor={(event: EventItem) => event.id}
       renderItem={(event: EventItem) => (
         <EventCard event={event} />

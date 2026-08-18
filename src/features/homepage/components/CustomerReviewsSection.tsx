@@ -31,6 +31,9 @@ export interface CustomerReviewsSectionProps<T = unknown> {
   isLoading?: boolean;
   keyExtractor?: (item: T) => string;
   className?: string;
+  autoScroll?: boolean;
+  scrollInterval?: number;
+  loop?: boolean;
 }
 
 // --- Section -----------------------------------------------------------------
@@ -45,6 +48,9 @@ export function CustomerReviewsSection<T = unknown>({
   isLoading = false,
   keyExtractor,
   className = "",
+  autoScroll = true,
+  scrollInterval = 4500,
+  loop = true,
 }: CustomerReviewsSectionProps<T>) {
 const themed = { textPrimary: THEMED_TEXT_PRIMARY, textSecondary: THEMED_TEXT_SECONDARY };
 if (isLoading) {
@@ -91,13 +97,13 @@ if (isLoading) {
           renderItem={(item) => renderItem(item)}
           perView={CAROUSEL_PER_VIEW.reviews}
           gap={24}
-          autoScroll
-          autoScrollInterval={4500}
+          autoScroll={autoScroll}
+          autoScrollInterval={scrollInterval}
           pauseOnHover
           snapToItems
           showArrows
           keyExtractor={keyExtractor}
-          loop
+          loop={loop}
         />
 
         {/* See all link */}

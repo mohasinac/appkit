@@ -18,6 +18,7 @@ export interface FeaturedAuctionsSectionProps {
   rows?: number;
   autoScroll?: boolean;
   scrollInterval?: number;
+  loop?: boolean;
 }
 
 export function FeaturedAuctionsSection({
@@ -31,6 +32,7 @@ export function FeaturedAuctionsSection({
   rows = 1,
   autoScroll = false,
   scrollInterval = 5000,
+  loop = true,
 }: FeaturedAuctionsSectionProps) {
   const { data: items = [], isLoading } = useFeaturedAuctions({ filterByBrand, initialData: initialItems });
 
@@ -50,6 +52,7 @@ export function FeaturedAuctionsSection({
       rows={Math.min(Math.max(rows, 1), 4)}
       autoScroll={autoScroll}
       autoScrollInterval={scrollInterval}
+      loop={loop}
       keyExtractor={(product: ProductItem) => product.id}
       renderItem={(product: ProductItem) => (
         <MarketplaceAuctionCard product={product} />

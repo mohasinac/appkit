@@ -263,7 +263,7 @@ export function parseProductsBuilder(config: JsonObjectWithUndefined): ProductsB
     manualResourceIds: toStringArray(resources.ids).join(", "),
     filterByCategory: toStringValue(config.filterByCategory),
     maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
+    loop: toBooleanValue(config.loop, DEFAULT_PRODUCTS_BUILDER.loop),
   };
 }
 
@@ -284,7 +284,7 @@ export function parseAuctionsBuilder(config: JsonObjectWithUndefined): AuctionsB
     manualResourceIds: toStringArray(resources.ids).join(", "),
     filterByCategory: toStringValue(config.filterByCategory),
     maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
+    loop: toBooleanValue(config.loop, DEFAULT_AUCTIONS_BUILDER.loop),
   };
 }
 
@@ -350,7 +350,7 @@ export function parsePreOrdersBuilder(config: JsonObjectWithUndefined): PreOrder
     manualResourceIds: toStringArray(resources.ids).join(", "),
     filterByCategory: toStringValue(config.filterByCategory),
     maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
+    loop: toBooleanValue(config.loop, DEFAULT_PRE_ORDERS_BUILDER.loop),
   };
 }
 
@@ -372,7 +372,7 @@ export function parseStoresBuilder(config: JsonObjectWithUndefined): StoresBuild
     manualResourceIds: toStringArray(resources.ids).join(", "),
     filterByCategory: toStringValue(config.filterByCategory),
     maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
+    loop: toBooleanValue(config.loop, DEFAULT_STORES_BUILDER.loop),
   };
 }
 
@@ -394,7 +394,7 @@ export function parseEventsBuilder(config: JsonObjectWithUndefined): EventsBuild
     manualResourceIds: toStringArray(resources.ids).join(", "),
     filterByCategory: toStringValue(config.filterByCategory),
     maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
+    loop: toBooleanValue(config.loop, DEFAULT_EVENTS_BUILDER.loop),
   };
 }
 
@@ -483,6 +483,7 @@ export function buildCategoriesConfig(builder: CategoriesBuilderState): JsonObje
     maxCategories: builder.maxCategories,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
+    loop: builder.loop,
   };
 }
 
@@ -492,6 +493,7 @@ export function parseCategoriesBuilder(config: JsonObjectWithUndefined): Categor
     maxCategories: toNumberValue(config.maxCategories, DEFAULT_CATEGORIES_BUILDER.maxCategories),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CATEGORIES_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_CATEGORIES_BUILDER.scrollInterval),
+    loop: toBooleanValue(config.loop, DEFAULT_CATEGORIES_BUILDER.loop),
   };
 }
 
@@ -502,6 +504,7 @@ export function buildBrandsConfig(builder: BrandsBuilderState): JsonObjectWithUn
     maxBrands: builder.maxBrands,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
+    loop: builder.loop,
   };
 }
 
@@ -512,6 +515,7 @@ export function parseBrandsBuilder(config: JsonObjectWithUndefined): BrandsBuild
     maxBrands: toNumberValue(config.maxBrands, DEFAULT_BRANDS_BUILDER.maxBrands),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_BRANDS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_BRANDS_BUILDER.scrollInterval),
+    loop: toBooleanValue(config.loop, DEFAULT_BRANDS_BUILDER.loop),
   };
 }
 
@@ -582,6 +586,7 @@ export function buildReviewsConfig(builder: ReviewsBuilderState): JsonObjectWith
     mobileItemsPerView: 1,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
+    loop: builder.loop,
     source: builder.source,
     placeId: builder.source === "google" ? builder.placeId || undefined : undefined,
   };
@@ -594,6 +599,7 @@ export function parseReviewsBuilder(config: JsonObjectWithUndefined): ReviewsBui
     itemsPerView: toNumberValue(config.itemsPerView, DEFAULT_REVIEWS_BUILDER.itemsPerView),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_REVIEWS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_REVIEWS_BUILDER.scrollInterval),
+    loop: toBooleanValue(config.loop, DEFAULT_REVIEWS_BUILDER.loop),
     source: toStringValue(config.source, "platform") as ReviewsBuilderState["source"],
     placeId: toStringValue(config.placeId),
   };
@@ -721,6 +727,7 @@ export function buildCustomCardsConfig(builder: CustomCardsBuilderState): JsonOb
     columns: builder.columns,
     autoScroll: builder.autoScroll,
     scrollIntervalMs: builder.scrollIntervalMs,
+    loop: builder.loop,
     cards: builder.cards.map((card, index) => ({
       id: card.id || `card-${index + 1}`,
       image: card.image || undefined,
@@ -748,6 +755,7 @@ export function parseCustomCardsBuilder(config: JsonObjectWithUndefined): Custom
     columns: ([1, 2, 3, 4].includes(cols) ? cols : DEFAULT_CUSTOM_CARDS_BUILDER.columns) as CustomCardsBuilderState["columns"],
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CUSTOM_CARDS_BUILDER.autoScroll),
     scrollIntervalMs: toNumberValue(config.scrollIntervalMs, DEFAULT_CUSTOM_CARDS_BUILDER.scrollIntervalMs),
+    loop: toBooleanValue(config.loop, DEFAULT_CUSTOM_CARDS_BUILDER.loop),
     cards: cardsRaw.map((item, index) => {
       const c = (item ?? {}) as JsonObjectWithUndefined;
       const br = toStringValue(c.borderRadius, "none");

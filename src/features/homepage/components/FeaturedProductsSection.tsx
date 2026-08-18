@@ -19,6 +19,7 @@ export interface FeaturedProductsSectionProps {
   maxItems?: number;
   autoScroll?: boolean;
   scrollInterval?: number;
+  loop?: boolean;
 }
 
 export function FeaturedProductsSection({
@@ -32,6 +33,7 @@ export function FeaturedProductsSection({
   rows = 1,
   autoScroll = false,
   scrollInterval = 5000,
+  loop = true,
 }: FeaturedProductsSectionProps) {
   const { data, isLoading } = useFeaturedProducts({
     filterByBrand,
@@ -57,6 +59,7 @@ export function FeaturedProductsSection({
       rows={Math.min(Math.max(rows, 1), 4)}
       autoScroll={autoScroll}
       autoScrollInterval={scrollInterval}
+      loop={loop}
       keyExtractor={(product: ProductItem) => product.id}
       renderItem={(product: ProductItem) => (
         <InteractiveProductCard

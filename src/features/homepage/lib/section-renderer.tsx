@@ -143,6 +143,9 @@ function renderSectionElement(
           initialItems={sectionData.categories}
           cta={cfg?.cta}
           filters={cfg?.filters}
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -193,6 +196,7 @@ function renderSectionElement(
           maxItems={cfg?.maxItems}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -209,6 +213,7 @@ function renderSectionElement(
           rows={cfg?.rows}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -225,6 +230,7 @@ function renderSectionElement(
           rows={cfg?.rows}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -237,6 +243,9 @@ function renderSectionElement(
           viewMoreHref={ROUTES.PUBLIC.STORES}
           viewMoreLabel="View all stores →"
           initialItems={sectionData.stores}
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -249,6 +258,9 @@ function renderSectionElement(
           viewMoreHref={ROUTES.PUBLIC.EVENTS}
           viewMoreLabel="View all events →"
           initialItems={sectionData.events}
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -260,6 +272,9 @@ function renderSectionElement(
           title={cleanTitle(cfg?.title) || "What Our Customers Say"}
           viewMoreHref={ROUTES.PUBLIC.REVIEWS}
           viewMoreLabel="See all reviews →"
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -391,6 +406,9 @@ function renderSectionElement(
           initialItems={sectionData.brands}
           cta={cfg?.cta}
           filters={cfg?.filters}
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
+          loop={cfg?.loop}
         />
       );
     }
@@ -426,6 +444,7 @@ function renderSectionElement(
           cards={cfg.cards}
           autoScroll={cfg.autoScroll}
           scrollIntervalMs={cfg.scrollIntervalMs}
+          loop={cfg.loop}
         />
       );
     }

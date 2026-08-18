@@ -63,6 +63,9 @@ export interface BrandsSectionProps {
     featuredOnly?: boolean;
     byCountry?: string;
   };
+  autoScroll?: boolean;
+  scrollInterval?: number;
+  loop?: boolean;
 }
 
 function BrandLogo({ brand }: { brand: CategoryItem }) {
@@ -104,6 +107,9 @@ export function BrandsSection({
   initialItems,
   cta,
   filters,
+  autoScroll = true,
+  scrollInterval = 4000,
+  loop = true,
 }: BrandsSectionProps) {
 const themed = { textPrimary: THEMED_TEXT_PRIMARY };
 const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: initialItems });
@@ -162,7 +168,10 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
             gap={12}
             showArrows
             showScrollbar={false}
-            loop
+            autoScroll={autoScroll}
+            autoScrollInterval={scrollInterval}
+            pauseOnHover
+            loop={loop}
           />
         )}
 

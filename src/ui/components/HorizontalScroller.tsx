@@ -426,6 +426,9 @@ export function HorizontalScroller<T = unknown>({
     ? {
         onMouseEnter: () => setIsPaused(true),
         onMouseLeave: () => setIsPaused(false),
+        onTouchStart: () => setIsPaused(true),
+        onTouchEnd: () => setIsPaused(false),
+        onTouchCancel: () => setIsPaused(false),
       }
     : {};
 

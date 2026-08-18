@@ -16,6 +16,9 @@ export interface FeaturedStoresSectionProps {
   limit?: number;
   className?: string;
   initialItems?: StoreListItem[];
+  autoScroll?: boolean;
+  scrollInterval?: number;
+  loop?: boolean;
 }
 
 export function FeaturedStoresSection({
@@ -26,6 +29,9 @@ export function FeaturedStoresSection({
   limit = 8,
   className = "",
   initialItems,
+  autoScroll = false,
+  scrollInterval = 5000,
+  loop = true,
 }: FeaturedStoresSectionProps) {
   const { data: items = [], isLoading } = useFeaturedStores(limit, { initialData: initialItems });
 
@@ -42,6 +48,9 @@ export function FeaturedStoresSection({
       skeletonCount={4}
       perView={CAROUSEL_PER_VIEW.standard}
       gap={16}
+      autoScroll={autoScroll}
+      autoScrollInterval={scrollInterval}
+      loop={loop}
       keyExtractor={(store: StoreListItem) => store.id}
       renderItem={(store: StoreListItem) => (
         <InteractiveStoreCard

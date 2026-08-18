@@ -18,6 +18,7 @@ export interface FeaturedPreOrdersSectionProps {
   rows?: number;
   autoScroll?: boolean;
   scrollInterval?: number;
+  loop?: boolean;
 }
 
 export function FeaturedPreOrdersSection({
@@ -31,6 +32,7 @@ export function FeaturedPreOrdersSection({
   rows = 1,
   autoScroll = false,
   scrollInterval = 5000,
+  loop = true,
 }: FeaturedPreOrdersSectionProps) {
   const { data: items = [], isLoading } = useFeaturedPreOrders({ filterByBrand, initialData: initialItems });
 
@@ -50,6 +52,7 @@ export function FeaturedPreOrdersSection({
       rows={Math.min(Math.max(rows, 1), 4)}
       autoScroll={autoScroll}
       autoScrollInterval={scrollInterval}
+      loop={loop}
       keyExtractor={(product: ProductItem) => product.id}
       renderItem={(product: ProductItem) => (
         <MarketplacePreorderCard product={product} />

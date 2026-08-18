@@ -142,7 +142,7 @@ if (!title) return null;
 export type CustomCardsSectionProps = CustomCardsSectionConfig;
 
 export function CustomCardsSection(config: CustomCardsSectionProps) {
-  const { title, layout, columns = 3, cards, autoScroll, scrollIntervalMs } = config;
+  const { title, layout, columns = 3, cards, autoScroll, scrollIntervalMs, loop = true } = config;
 if (!cards?.length) return null;
 
   // autoScroll: wrap all cards in SectionCarousel (client carousel)
@@ -157,6 +157,7 @@ if (!cards?.length) return null;
             keyExtractor={(card) => card.id}
             autoScroll
             autoScrollInterval={scrollIntervalMs ?? 3500}
+            loop={loop}
             perView={{ base: 1, sm: 2, md: columns as 1 | 2 | 3 | 4 }}
           />
         </Div>
@@ -174,7 +175,7 @@ if (!cards?.length) return null;
             gap={16}
             showArrows
             snapToItems
-            loop
+            loop={loop}
             items={cards}
             keyExtractor={(card) => card.id}
             renderItem={(card) => (
