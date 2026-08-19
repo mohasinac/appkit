@@ -85,6 +85,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "avatar-upload", label: "Uploading a profile avatar works" },
         { key: "notification-prefs", label: "Notification preferences save correctly" },
         { key: "public-profile-toggle", label: "Public profile visibility toggle works" },
+        {
+          key: "own-public-profile-quick-links",
+          label: "\"View public profile\" is easy to find and works from three places: the My Account dashboard header, the My Account quick-links grid (\"My Public Profile\" tile), and the /user/profile page (next to \"Manage Addresses\")",
+          description: "Each of the three links should open your own public-facing profile page (/profile/[your uid]) — not the edit-profile page. If your profile visibility is set to Private, confirm the page still loads for you (the owner) even though other users would get a 404.",
+          href: "/user",
+        },
       ],
     },
     {
@@ -109,6 +115,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "search", label: "Search returns relevant results", href: "/search" },
         { key: "filters", label: "Search/listing filters (price, brand, condition) work correctly" },
         { key: "pagination", label: "Pagination / infinite scroll works on listing pages" },
+        {
+          key: "default-listing-not-empty",
+          label: "Products, Auctions, Pre-Orders, Art & Stickers, and Prize Draws listing pages show real items by default — not an empty \"no products found\" state or a toast about a missing Firestore index",
+          description: "A 2026-08-19 index-shape bug (2-field composite left in place of the 3-field one the actual sort-inclusive query needed) silently broke the default \"hide sold/ended/closed\" query on several listing pages and dashboards, returning zero results with a swallowed FAILED_PRECONDITION error. Load each listing page fresh (no filters applied) and confirm it's populated, not blank.",
+          href: "/products",
+        },
+        {
+          key: "show-sold-toggle-reveals-items",
+          label: "The \"Show sold\" / \"Show ended\" / \"Show closed\" toggle on Products/Auctions/Prize Draws listing pages is off by default (hiding sold-out/ended/closed items) and reveals them when switched on",
+          description: "Verify against the seeded fixtures: \"Test Collectible — Sold Out\" (standard, hidden until \"Show sold\" is on), \"Test Auction — Already Won\" (hidden until \"Show ended\" is on), \"Test Prize Draw — Already Closed\" (hidden until \"Show closed\" is on). All three should be genuinely absent by default, not just from an unrelated broken query.",
+          href: "/products",
+        },
       ],
     },
     {
@@ -118,8 +136,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "standard-detail", label: "Standard product detail page loads correctly" },
         { key: "auction-detail", label: "Auction detail page shows current bid + countdown correctly" },
         { key: "preorder-detail", label: "Pre-order detail page shows expected ship date correctly" },
-        { key: "image-gallery", label: "Product image gallery / zoom works" },
-        { key: "video-playback", label: "Product video (YouTube embed) plays correctly" },
+        {
+          key: "image-gallery",
+          label: "Product image gallery thumbnails load reliably (no broken-image icons) and click-to-zoom/rotate works in the lightbox",
+          description: "The thumbnail strip occasionally showed a broken-image icon instead of the photo (transient 3rd-party fetch failures with no retry, fixed 2026-08-19). Reload an auction or product detail page a few times and confirm every thumbnail — not just the main image — renders correctly each time.",
+        },
+        {
+          key: "video-playback",
+          label: "A product's video slide opens in theater mode with playback, zoom, and rotate controls",
+          description: "Product video is no longer a YouTube embed — when a product has a video, it appears as a trailing gallery slide (poster image + play badge) alongside the photos. Clicking it opens the full-screen lightbox in theater mode, plays the video with native controls, and the zoom (+/-) and rotate (R) buttons in the top bar still apply. Test on the two seeded fixtures: \"Beyblade Original — Dragoon F (Video Demo)\" and \"Beyblade X BX-02 Dran Sword (Video Demo)\".",
+        },
         { key: "prizedraw-buy-reveal", label: "Buying a prize-draw entry, then the reveal, correctly shows win/lose and auto-refunds non-winners" },
         { key: "bundle-purchase", label: "Purchasing a bundle/grouped-listing works and shows all included items in the order" },
         { key: "classified-contact-flow", label: "A classified listing shows a contact-seller flow with deliberately no checkout/buy button" },
@@ -142,7 +168,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "shipping-address-edit", label: "Editing an existing shipping address from checkout works" },
         { key: "shipping-method-selection", label: "Selecting a shipping method/provider at checkout recalculates the shipping fee correctly" },
         { key: "gst-breakdown-display", label: "When GST is enabled in Site Settings, checkout shows the correct CGST/SGST or IGST breakdown based on buyer vs seller state" },
-        { key: "checkout-otp-highvalue", label: "Carts ≥ the OTP threshold prompt for email verification before placing the order (except COD)" },
+        { key: "checkout-identity-verification-step", label: "The always-on \"Identity Verification\" step (step 2 of 3, right after selecting an address) appears on every checkout regardless of cart value, sends an email OTP, and correctly advances to Payment once verified", href: "/checkout" },
+        { key: "checkout-otp-highvalue", label: "Separately from the Identity Verification step above: carts ≥ the admin-configured high-value OTP threshold (Site Settings → Shipping → \"High-value checkout OTP threshold\") additionally prompt a \"Verify this order\" email OTP right before payment (except COD)" },
         { key: "payment-method-selection", label: "Choosing between COD, UPI/manual, and Razorpay (when enabled) at checkout works" },
         { key: "payment-window-countdown", label: "Manual-payment orders show a 15-minute countdown timer on the payment page" },
         { key: "payment-proof-upload", label: "Uploading manual payment proof (screenshot, UTR, mark-as-paid + agreement checkboxes) works" },
@@ -158,13 +185,38 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       ],
     },
     {
+      pageKey: "my-orders",
+      pageLabel: "My Orders — List & Dashboard",
+      cases: [
+        {
+          key: "orders-item-summary",
+          label: "Each row on My Orders shows the order's items (thumbnail, title, quantity) instead of just an order ID — and orders with more than 3 items show a \"+N more\" summary for the rest",
+          description: "Verify against the seeded \"order-tester-sandbox-multi-item\" fixture (5 items: Test Gadget — Standard Listing #1, Test Collectible — Standard Listing #2, Test Accessory — Carry Case, Display Stand ×2, Sticker Set ×3) — its card should show the first 3 items and a \"+2 more\" badge, plus the correct ₹602 total and delivered status.",
+          href: "/user/orders",
+        },
+        {
+          key: "orders-view-details-button",
+          label: "Each order row has a visible \"View Details\" button (in addition to the row itself being clickable) that opens that exact order's detail page",
+          href: "/user/orders",
+        },
+        {
+          key: "dashboard-recent-orders-linked",
+          label: "The My Account dashboard's \"Recent Orders\" widget rows are clickable and each shows a \"View Details\" button linking to the correct order — not a dead, non-interactive preview",
+          href: "/user",
+        },
+      ],
+    },
+    {
       pageKey: "bidding",
       pageLabel: "Bidding",
       cases: [
         { key: "place-bid", label: "Placing a bid on an auction works", href: "/user/bids" },
+        { key: "place-bid-live-self", label: "After placing a bid, the current bid amount and bid count update immediately on the auction page for the bidder — no manual page refresh needed" },
+        { key: "place-bid-live-other-viewer", label: "Opening the same auction in two browser tabs (or two accounts) and placing a bid in one updates the current bid and bid count in the other within a few seconds, without a manual refresh (realtime SSE)" },
         { key: "outbid-notification", label: "Getting outbid triggers a notification" },
         { key: "win-auction", label: "Winning an auction creates a payable order correctly" },
-        { key: "bid-history", label: "My Bids page shows accurate bid history" },
+        { key: "bid-history", label: "My Bids page shows accurate bid history, paginated with the most recent bid first", href: "/user/bids" },
+        { key: "bid-history-auction-detail-pagination", label: "An auction detail page's Bid History section shows the most recent bid first and paginates once there are more bids than fit on one page (try the L-Drago auction — 13 seeded bids)" },
       ],
     },
     {
@@ -200,6 +252,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "cart-persists-across-session", label: "Cart contents persist across a page reload and across login/logout for the same account" },
         { key: "cart-guest-to-login-merge", label: "A guest cart's items merge correctly into the account's cart after logging in" },
         { key: "cart-price-revalidated", label: "If a product's price changes after it was added to the cart, checkout uses the current price and shows the buyer the updated total" },
+        { key: "cart-checkout-button-visible", label: "The \"Proceed to Checkout\" button renders as a clearly visible, prominently-colored primary button — not a dull/near-invisible one blending into the page background", href: "/cart" },
       ],
     },
     {
@@ -231,7 +284,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "my-prize-draws", label: "\"My Prize Draw Entries\" shows accurate entries and outcomes", href: "/user/prize-draws" },
         { key: "my-digital-codes", label: "\"My Digital Codes\" shows purchased codes correctly", href: "/user/digital-codes" },
         { key: "my-offers", label: "\"My Offers\" list shows accurate offer history", href: "/user/offers" },
-        { key: "my-returns", label: "Requesting and viewing a return works", href: "/user/returns" },
+        {
+          key: "my-returns",
+          label: "Requesting and viewing a return works",
+          description: "Also confirm the page itself loads without an empty/error state on a fresh visit — it queries orders by status, which was silently broken site-wide by a 2026-08-19 missing-index bug (now fixed).",
+          href: "/user/returns",
+        },
         { key: "my-reviews", label: "\"My Reviews\" shows reviews the user has left", href: "/user/reviews" },
       ],
     },
@@ -317,6 +375,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "seller-live-crud", label: "Seller can create, edit, and list live-item listings", href: "/store/live" },
         { key: "seller-prizedraws-crud", label: "Seller can create, edit, and list prize-draw listings, and view entries", href: "/store/prize-draws" },
         { key: "seller-art-stickers-crud", label: "Seller can create, edit, and list art and sticker listings", href: "/store/art" },
+        {
+          key: "seller-products-auctions-default-load",
+          label: "The seller Products, Auctions, and Prize Draws dashboards each show real listings by default (not empty), and their \"Show sold\"/\"Show ended\"/\"Show closed\" toggles work",
+          description: "A 2026-08-19 index-shape bug broke the default storeId-scoped queries on these three seller dashboards. Confirm each loads populated on first visit and its toggle reveals the corresponding hidden fixture.",
+          href: "/store/products",
+        },
       ],
     },
     {
@@ -343,7 +407,12 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageKey: "seller-marketing-extras",
       pageLabel: "Seller Offers, Features, Google Reviews & WhatsApp Catalog",
       cases: [
-        { key: "seller-offers-list", label: "Seller offers list shows accurate buyer offers", href: "/store/offers" },
+        {
+          key: "seller-offers-list",
+          label: "Seller offers list shows accurate buyer offers",
+          description: "Also confirm each status tab (Pending/Countered/Accepted/Declined/etc.) actually filters correctly rather than showing an empty or unchanged list — a 2026-08-19 missing-index bug affected the status-tab query.",
+          href: "/store/offers",
+        },
         { key: "seller-features-crud", label: "Seller can create and edit product features", href: "/store/features" },
         { key: "seller-google-reviews-sync", label: "Google Reviews sync pulls in real reviews correctly", href: "/store/google-reviews" },
         { key: "seller-whatsapp-catalog", label: "WhatsApp catalog import/push works", href: "/store/whatsapp" },
@@ -380,6 +449,8 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       cases: [
         { key: "read-post", label: "Reading a blog post renders correctly (images, formatting)" },
         { key: "blog-listing", label: "Blog listing page shows all published posts" },
+        { key: "blog-cover-image-display", label: "A blog post's cover image displays on both its listing card and its detail page" },
+        { key: "blog-youtube-embed", label: "A blog post with a YouTube video ID set shows a working embedded video player above the article content" },
       ],
     },
     {
@@ -387,11 +458,16 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Events, Raffles & Spin Wheel",
       cases: [
         { key: "view-event", label: "Viewing an event detail page works", href: "/user/events" },
-        { key: "raffle-entry", label: "Entering an open_raffle event works" },
+        { key: "events-listing-cards-images", label: "The events listing page shows each event's real cover image (not a generic icon placeholder) when one is set, and all cards in a row are the same height", href: "/events" },
+        { key: "poll-vote-inline", label: "Voting in a poll event from the Overview tab works, shows a confirmation, and a repeat visit shows the already-voted state" },
+        { key: "survey-feedback-submit", label: "Submitting a survey or feedback event's Participate form works, enforces required fields, and shows a success confirmation" },
+        { key: "offer-coupon-display-copy", label: "An offer event shows its coupon code prominently on the Overview tab, and the \"Copy code\" button copies it to the clipboard with visible confirmation" },
+        { key: "raffle-entry", label: "Entering an open_raffle event works and the Participate tab shows the prize hero, eligibility copy, and optional message field (not a blank form)" },
         { key: "raffle-entry-top-n-scorers", label: "Entering a top_n_scorers raffle event works and the leaderboard reflects entries" },
         { key: "raffle-entry-top-n-participants", label: "Entering a top_n_participants raffle event works" },
         { key: "spin-wheel", label: "Spinning the spin-wheel event works and shows the prize immediately (realtime)" },
         { key: "spin-wheel-window-blocked", label: "A second spin attempt within the same spinWindow is blocked with a clear message" },
+        { key: "leaderboard-live-refresh", label: "After voting/entering an event, navigating to its Leaderboard tab shows the updated standings immediately rather than a stale cached ranking" },
       ],
     },
     {
@@ -458,6 +534,9 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "loading-states", label: "Loading/skeleton states look correct while data fetches" },
         { key: "empty-states", label: "Empty states (no results, empty cart) look correct" },
         { key: "error-states", label: "Error states (404, form validation) look correct" },
+        { key: "card-row-heights-aligned", label: "Product/auction/pre-order/event cards in the same row are the same height, with their action button (Reserve now, Place bid, View details, etc.) aligned along a common bottom edge even when one card's description is longer than another's" },
+        { key: "image-watermark-subtle", label: "Product and listing images show a small, subtle watermark (not oversized or fully opaque, doesn't obscure the image)" },
+        { key: "section-cta-buttons-visible", label: "Homepage section \"View all →\" / \"Go to…\" buttons use a solid primary-colored fill so they're clearly identifiable as clickable CTAs, not a plain white/outline box that blends into the page" },
       ],
     },
     {
@@ -492,6 +571,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         { key: "sections-live-reserve-render", label: "Live auctions and \"Reserve Before It Ships\" (pre-orders) sections show real listings" },
         { key: "sections-social-proof-render", label: "Verified stores, tournaments & events, and collector reviews sections render correctly" },
         { key: "sections-social-feed-hidden", label: "The social-feed section type is correctly hidden on the homepage since it's disabled in Site Settings" },
+        { key: "hero-welcome-logo-sized-padded", label: "The homepage welcome hero's brand mark/logo panel (desktop, right side) is appropriately sized and padded inside its card — not oversized, cramped, or touching/overflowing the card edges", href: "/" },
       ],
     },
   ]),
@@ -515,7 +595,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
       pageLabel: "Store & Seller Directories",
       cases: [
         { key: "store-directory", label: "The store directory page loads correctly", href: "/stores" },
-        { key: "store-detail-tabs", label: "A store detail page's auctions/bundles/coupons/pre-orders/prize-draws/reviews tabs all load correctly" },
+        { key: "store-detail-tabs", label: "A store detail page's listing-type dropdown (Products/Auctions/Pre-Orders/Prize Draws/Bundles/Classifieds/Digital Codes/Live Items/Art & Stickers) switches correctly between listing types, and the separate Coupons/Reviews/About tabs next to it all load correctly", description: "The listing-type dropdown is always a dropdown (not just on narrow/mobile widths, unlike category/brand/product/event tabs) since a store can have up to 9 listing types — Coupons, Reviews, and About stay as standalone tabs beside it, never folded into the dropdown." },
         { key: "sellers-directory", label: "The sellers directory page loads correctly", href: "/sellers" },
         { key: "seller-detail-page", label: "An individual seller's public detail page loads correctly" },
         { key: "scams-registry", label: "The scams registry page and an individual scam detail page load correctly", href: "/scams" },
@@ -564,6 +644,18 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "brands-crud", label: "Admin can create, edit, and list brands", href: "/admin/brands" },
           { key: "categories-crud", label: "Admin can create, edit, and list categories", href: "/admin/categories" },
           { key: "products-crud", label: "Admin can create, edit, and list products", href: "/admin/products" },
+          {
+            key: "products-default-listing-not-empty",
+            label: "The admin Products list loads real products by default (not empty), and the \"Show sold\" toggle + Auctions/Prize Draws type tabs each load correctly with their own \"Show ended\"/\"Show closed\" toggle",
+            description: "A 2026-08-19 index-shape bug broke the default isSold==false query (and its listingType/auctionEndDate/prizeRevealWindowEnd variants) — now fixed. Confirm the list isn't blank on first load and each Type tab + toggle combination returns results.",
+            href: "/admin/products",
+          },
+          {
+            key: "categories-toggle-filters",
+            label: "The admin Categories \"Active\" and \"Featured\" toggle filters both show results in either state",
+            description: "Verify against the seeded \"Test Inactive Category\" fixture (isActive:false) — it should only appear when the Active filter is switched to show inactive categories.",
+            href: "/admin/categories",
+          },
           { key: "sublisting-categories-crud", label: "Admin can create, edit, and list sublisting categories", href: "/admin/sublisting-categories" },
           { key: "carousel-crud", label: "Admin can create, edit, and reorder carousel slides", href: "/admin/carousel" },
           { key: "sections-crud", label: "Admin can create, edit, and reorder homepage sections", href: "/admin/sections" },
@@ -630,6 +722,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageLabel: "Blog & FAQs",
         cases: [
           { key: "blog-create-edit-publish", label: "Admin can create, edit, and publish a blog post", href: "/admin/blog" },
+          { key: "blog-media-step-save", label: "On the blog editor's Media step, setting a Cover Image and/or a YouTube Video ID and saving succeeds (no validation error) and both persist correctly when reopening the post for edit" },
           { key: "faq-create-edit-category", label: "Admin can create and edit an FAQ, including category assignment", href: "/admin/faqs" },
         ],
       },
@@ -683,6 +776,7 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
         pageLabel: "Site & System",
         cases: [
           { key: "site-settings-admin", label: "Admin site settings page saves correctly", href: "/admin/site" },
+          { key: "identity-otp-toggle-admin", label: "Toggling \"Require identity verification OTP at checkout\" off in Site Settings → Shipping saves correctly, and every subsequent checkout then skips the Identity Verification step entirely (address advances straight to Payment); toggling it back on restores the step for all buyers", href: "/admin/site" },
           { key: "admin-dashboard-widgets", label: "Admin dashboard widgets show accurate data", href: "/admin/dashboard" },
           { key: "analytics-admin", label: "Admin analytics dashboard shows accurate data", href: "/admin/analytics" },
           { key: "maintenance-pages-admin", label: "The maintenance pages (analysis, client-errors, cloud-logs, function-errors, payment-rollbacks, server-errors + detail) all load correctly", href: "/admin/maintenance" },
@@ -705,6 +799,17 @@ const rawTesterChecklistItems: Partial<TesterChecklistItemDocument>[] = [
           { key: "store-addresses-admin", label: "Admin store-addresses view shows accurate data", href: "/admin/store-addresses" },
           { key: "addresses-crud-admin", label: "Admin can create and edit addresses", href: "/admin/addresses" },
           { key: "stores-admin-view", label: "Admin stores view shows accurate data", href: "/admin/stores" },
+        ],
+      },
+      {
+        pageKey: "media-watermark",
+        pageLabel: "Media Watermark Settings",
+        cases: [
+          { key: "watermark-size-opacity-controls", label: "Adjusting the watermark Size and Opacity sliders in Site Settings → Watermark visibly changes how prominent the watermark is on newly-loaded product images", href: "/admin/site" },
+          { key: "watermark-position-presets", label: "Each of the 5 watermark Position presets (Center, Top left, Top right, Bottom left, Bottom right) correctly repositions the watermark on newly-loaded images" },
+          { key: "watermark-custom-offset", label: "Enabling \"Use a custom X/Y offset instead\" and entering positive/negative X/Y values moves the watermark the correct direction and distance from center" },
+          { key: "watermark-theme-recolor", label: "The default bundled watermark mark recolors to match the active site theme's brand gradient rather than a fixed hardcoded color" },
+          { key: "watermark-video-overlay-parity", label: "A product video's live watermark overlay appears at the same position, size, and opacity as the image watermark pipeline" },
         ],
       },
     ],

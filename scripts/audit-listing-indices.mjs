@@ -156,6 +156,43 @@ const REPO_TO_COLLECTION = {
   shipmentsRepository:         "procurementShipments",
   testerChecklistItemRepository: "testerChecklistItems",
   testerChecklistResponseRepository: "testerChecklistResponses",
+  // 2026-08-19 sweep — 23 previously-UNKNOWN_REPO entries closed. Every
+  // collection name below was verified against the repository's own
+  // `super(<CONSTANT>)` call + the constant's definition in the matching
+  // schemas/firestore.ts (or schemas/rbac.ts), not guessed from the
+  // repository's variable name.
+  sessionRepository:           "sessions",
+  chatRepository:              "chatRooms",
+  carouselRepository:          "carouselSlides",
+  jobsRepository:              "jobs",
+  offerRepository:             "offers",
+  // Singleton doc (id "global") — SiteSettingsRepository, no list-style
+  // Sieve queries expected, mapped for completeness.
+  siteSettingsRepository:      "siteSettings",
+  // Singleton doc (id "dashboardRollup") — AnalyticsRollupRepository, no
+  // list-style Sieve queries expected, mapped for completeness.
+  analyticsRollupRepository:   "analytics",
+  supportRepository:           "supportTickets",
+  adminNotificationsRepository: "adminNotifications",
+  customRolesRepository:       "customRoles",
+  shipmentLotsRepository:      "shipmentLots",
+  itemRequestsRepository:      "itemRequests",
+  reportsRepository:           "reports",
+  analyticsAlertsRepository:   "analyticsAlerts",
+  analyticsCardsRepository:    "analyticsCards",
+  storeCategoriesRepository:   "storeCategories",
+  storeGoogleConfigRepository: "storeGoogleConfig",
+  groupedListingsRepository:   "groupedListings",
+  listingTemplatesRepository:  "listingTemplates",
+  payoutMethodsRepository:     "payoutMethods",
+  shippingConfigsRepository:   "shippingConfigs",
+  catalogueRepository:         "catalogueItems",
+  claimedCouponsRepository:    "claimedCoupons",
+  // Not currently seen as UNKNOWN_REPO (no filters/sorts call site found
+  // yet), but the same store-extensions/rbac repo families as the ones
+  // above — mapped proactively so a future call site doesn't regress.
+  roleOverridesRepository:     "roleOverrides",
+  storeWhatsAppConfigRepository: "storeWhatsAppConfig",
   // classifiedRepository / digitalCodesRepository / liveItemsRepository /
   // prizeDrawsRepository / bundlesRepository removed — none of these exist
   // as real exports. classified/digital-code/live/prize-draw are listingType

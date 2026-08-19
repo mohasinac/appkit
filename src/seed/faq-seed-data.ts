@@ -1247,7 +1247,11 @@ export const faqSeedData: Partial<FAQDocument>[] = [
     relatedFAQs: [],
     stats: makeStats(210, 10),
     seo: { slug: "faq-what-are-procurement-shipments", metaTitle: "Procurement Shipments for Sellers", metaDescription: "How LetItRip's seller procurement shipment tracking tool works." },
-    isActive: true,
+    // Deliberately isActive:false — every other FAQ in this file (and all 63
+    // previously seeded) was isActive:true, so the admin FAQs dashboard's
+    // isActive toggle (backed by the faqs(isActive, priority ASC) composite
+    // index) had nothing to show when toggled to the inactive branch.
+    isActive: false,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(10),
     updatedAt: daysAgo(1),
