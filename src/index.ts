@@ -2797,10 +2797,10 @@ export { createRazorpayRefund } from "./providers/payment-razorpay/index";
 // fetchRazorpayOrder - Shared export for fetch razorpay order.
 export { fetchRazorpayOrder } from "./providers/payment-razorpay/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// paiseToRupees - Shared export for paise to rupees.
+// paiseToRupees - Shared export for paise to rupees. // audit-money-units-ok: names the boundary conversion function itself
 export { paiseToRupees } from "./providers/payment-razorpay/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// rupeesToPaise - Shared export for rupees to paise.
+// rupeesToPaise - Shared export for rupees to paise. // audit-money-units-ok: names the boundary conversion function itself
 export { rupeesToPaise } from "./providers/payment-razorpay/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyPaymentSignature - Shared export for verify payment signature.
@@ -2920,6 +2920,12 @@ export type { AboutValueItem } from "./features/about/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AboutViewProps - Type contract for about view props.
 export type { AboutViewProps } from "./features/about/index";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// AboutTeamMember - Type contract for about team member.
+export type { AboutTeamMember } from "./features/about/index";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// AboutContentDocument - Firestore document shape for siteSettings.aboutContent.
+export type { AboutContentDocument } from "./features/about/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // FAQPageViewProps - Type contract for faqpage view props.
 export type { FAQPageViewProps } from "./features/about/index";
@@ -3543,6 +3549,12 @@ export { AdminCartsView } from "./features/admin/index";
 export { AdminWishlistsView } from "./features/admin/index";
 // AdminHistoryView - Admin read-only history insights listing (S44 follow-up).
 export { AdminHistoryView } from "./features/admin/index";
+// AdminGroupedListingsView - Admin cross-store grouped-listings moderation view (W1-29).
+export { AdminGroupedListingsView } from "./features/admin/index";
+export type { AdminGroupedListingsViewProps } from "./features/admin/index";
+// AdminCarouselGroupEditorView - Create form for named carousel groups (EX2 nav-wiring fix).
+export { AdminCarouselGroupEditorView } from "./features/admin/index";
+export type { AdminCarouselGroupEditorViewProps } from "./features/admin/index";
 // AdminContactEditorView - Admin contact submission detail SideDrawer (B7/VA15).
 export { AdminContactEditorView } from "./features/admin/index";
 export type { AdminContactEditorViewProps } from "./features/admin/index";
@@ -3611,6 +3623,14 @@ export { DashboardStatsGrid } from "./features/admin/index";
 export { AdminTeamView } from "./features/admin/index";
 // AdminEmployeeEditorView - Invite/edit employee permissions SideDrawer.
 export { AdminEmployeeEditorView } from "./features/admin/index";
+// PERMISSION_GROUPS - Preset employee-group -> Permission[] bundles (S-ADMIN-7).
+export { PERMISSION_GROUPS } from "./features/auth/permissions/constants";
+// PERMISSION_DOMAINS - Domain label/prefix groupings for the permissions catalog page.
+export { PERMISSION_DOMAINS } from "./features/auth/permissions/constants";
+// getPermissionsForDomain - Every distinct permission across PERMISSION_GROUPS matching a domain prefix.
+export { getPermissionsForDomain } from "./features/auth/permissions/constants";
+// formatPermLabel - "admin:orders:read" -> "Read" display formatting.
+export { formatPermLabel } from "./features/auth/permissions/constants";
 // AdminSupportTicketsView - Admin support ticket list view.
 export { AdminSupportTicketsView } from "./features/admin/index";
 // AdminSupportTicketDetailView - Admin support ticket detail/reply SideDrawer.
@@ -9271,7 +9291,7 @@ export {
 
 // -- Missing utils
 export { buildSieveFilters } from "./utils/filter.helper";
-export { formatFileSize } from "./utils/number.formatter";
+export { formatCurrency, formatFileSize } from "./utils/number.formatter";
 export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
 export { deriveContextTypeFromFilename } from "./utils/id-generators";
@@ -9746,8 +9766,6 @@ export type {
 // ── Wave 4 Seller management views ───────────────────────────────────────────
 export { SellerStoreCategoriesView } from "./features/seller/components/SellerStoreCategoriesView";
 export type { SellerStoreCategoriesViewProps } from "./features/seller/components/SellerStoreCategoriesView";
-export { SellerTemplatesView } from "./features/seller/components/SellerTemplatesView";
-export type { SellerTemplatesViewProps } from "./features/seller/components/SellerTemplatesView";
 export { SellerPayoutMethodsView } from "./features/seller/components/SellerPayoutMethodsView";
 export type { SellerPayoutMethodsViewProps } from "./features/seller/components/SellerPayoutMethodsView";
 export { SellerShippingConfigsView } from "./features/seller/components/SellerShippingConfigsView";

@@ -3,7 +3,7 @@ import { COUPON_CODE_PATTERN } from "./config";
 
 export const applyCouponSchema = z.object({
   code: z.string().regex(COUPON_CODE_PATTERN, "Invalid coupon code format").toUpperCase(),
-  cartTotal: z.number().int().min(0),
+  cartTotal: z.number().min(0),
   productIds: z.array(z.string()).optional(),
   categoryIds: z.array(z.string()).optional(),
   isFirstTimeUser: z.boolean().default(false),
@@ -17,8 +17,8 @@ export const createCouponSchema = z.object({
   sellerId: z.string().optional(),
   discount: z.object({
     value: z.number().min(0),
-    maxDiscount: z.number().int().min(0).optional(),
-    minPurchase: z.number().int().min(0).default(0),
+    maxDiscount: z.number().min(0).optional(),
+    minPurchase: z.number().min(0).default(0),
   }),
   usage: z.object({
     totalLimit: z.number().int().min(1).optional(),

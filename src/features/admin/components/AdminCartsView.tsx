@@ -1,9 +1,9 @@
 "use client";
 
-import { type JsonArray } from "@mohasinac/appkit";
+import { type JsonArray, SIEVE_OP, sieveFilter } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
-import { ListingLayout } from "../../../ui";
+import { FilterChipGroup, ListingLayout } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -32,7 +32,7 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
   title: "Carts",
   searchPlaceholder: "Search by user ID or session",
   emptyLabel: "No carts found",
-  filterKeys: [],
+  filterKeys: ["ownership"],
   defaultSort: sortBy("updatedAt", "DESC"),
   queryKey: ["admin", "carts", "listing"],
   endpoint: ADMIN_ENDPOINTS.ADMIN_CARTS,
@@ -57,7 +57,27 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
     }),
   getTotal: (response, mappedRows) =>
     typeof response.total === "number" ? response.total : mappedRows.length,
-  buildFilters: () => undefined,
+  buildFilters: (state) =>
+    // Guest carts store userId as an empty string (CartDocument.userId is a
+    // required string, not optional, see mapRows below). Only the guest-only
+    // direction is offered: an authenticated-only filter would need a NEQ
+    // on userId combined with the default updatedAt sort, which Firestore
+    // rejects (inequality filters require orderBy to match the same
+    // field), and CartRepository Sieve config marks userId as not
+    // sortable, so no safe workaround sort exists.
+    state.ownership === "guest" ? sieveFilter("userId", SIEVE_OP.EQ, "") : undefined,
+  renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+    <FilterChipGroup
+      label="Ownership"
+      tabs={[
+        { id: "", label: "All" },
+        { id: "guest", label: "Guest only" },
+      ]}
+      value={pendingFilters.ownership ?? ""}
+      onChange={(id) => setPendingFilters((p) => ({ ...p, ownership: id }))}
+      allId=""
+    />
+  ),
 };
 
 export type AdminCartsViewProps = ListingLayoutProps;

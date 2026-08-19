@@ -59,7 +59,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     status: PAYOUT_FIELDS.STATUS_VALUES.PAID,
     paymentMethod: "bank_transfer",
     bankAccount: {
-      accountHolderName: "Tyson Granger",
+      accountHolderName: "Mock User 6",
       accountNumberMasked: "****3724",
       ifscCode: "HDFC0001122",
       bankName: "HDFC Bank",
@@ -106,7 +106,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     status: PAYOUT_FIELDS.STATUS_VALUES.PAID,
     paymentMethod: "bank_transfer",
     bankAccount: {
-      accountHolderName: "Tyson Granger",
+      accountHolderName: "Mock User 6",
       accountNumberMasked: "****3724",
       ifscCode: "HDFC0001122",
       bankName: "HDFC Bank",
@@ -199,7 +199,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     status: PAYOUT_FIELDS.STATUS_VALUES.PENDING,
     paymentMethod: "bank_transfer",
     bankAccount: {
-      accountHolderName: "Tyson Granger",
+      accountHolderName: "Mock User 6",
       accountNumberMasked: "****3724",
       ifscCode: "HDFC0001122",
       bankName: "HDFC Bank",
@@ -254,7 +254,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     status: PAYOUT_FIELDS.STATUS_VALUES.FAILED,
     paymentMethod: "bank_transfer",
     bankAccount: {
-      accountHolderName: "LetItRip Admin",
+      accountHolderName: "Mock User 1",
       accountNumberMasked: "****1234",
       ifscCode: "SBIN0001234",
       bankName: "State Bank of India",

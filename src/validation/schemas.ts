@@ -54,9 +54,6 @@ export const dateStringSchema = z.string().datetime();
 // Use these instead of redefining the same validators in feature schemas.
 // ============================================
 
-/** Monetary value in paise — non-negative integer. Use for `price`, `mrp`, `discount`, etc. */
-export const priceSchema = z.number().int().min(0, "Price must be non-negative (paise)");
-
 /** Discount percentage — 0–100. */
 export const discountPercentSchema = z.number().min(0).max(100);
 

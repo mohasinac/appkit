@@ -13,7 +13,7 @@ export const eventInputSchema = z.object({
   imageUrl: z.string().url().optional(),
   location: z.string().max(300).optional(),
   isOnline: z.boolean().default(false),
-  entryFee: z.number().int().min(0).default(0),
+  entryFee: z.number().min(0).default(0),
 });
 
 export const eventUpdateSchema = eventInputSchema.partial().omit({ slug: true });

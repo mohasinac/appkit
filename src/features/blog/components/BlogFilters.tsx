@@ -135,19 +135,6 @@ export function BlogFilters({ table, variant = "admin" }: BlogFiltersProps) {
         defaultCollapsed={true}
       />
 
-      <RangeFilter
-        title={t("votesRange")}
-        minValue={table.get("minVotes")}
-        maxValue={table.get("maxVotes")}
-        onMinChange={(v) => table.set("minVotes", v)}
-        onMaxChange={(v) => table.set("maxVotes", v)}
-        minBound={0}
-        maxBound={100000}
-        step={10}
-        minPlaceholder={t("minVotes")}
-        maxPlaceholder={t("maxVotes")}
-        defaultCollapsed={true}
-      />
     </Div>
   );
 }

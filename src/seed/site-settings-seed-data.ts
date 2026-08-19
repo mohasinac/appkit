@@ -109,6 +109,90 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     alt: "LetItRip Logo",
     format: "svg",
   },
+  aboutContent: {
+    title: "Every collection has a story. Let It Rip.",
+    subtitle:
+      "We built India's marketplace for people who chase the thrill of the find — action figures, trading cards, spinning tops, model kits, and everything in between.",
+    missionTitle: "Our Mission",
+    missionText:
+      "Collectibles are more than objects — they're the Saturday-morning cartoons we grew up on, the cards we traded at recess, the tops we battled on the playground. LetItRip exists to give India's collectors a place built specifically for that obsession: verified sellers, live auctions that actually feel alive, pre-orders for the drops you can't miss, and an escrow-backed checkout so a rare find never turns into a rare regret. We're not trying to be everything to everyone — we're trying to be the best place on the internet to buy, sell, and obsess over the things you collect.",
+    howItWorksTitle: "How It Works",
+    howItems: [
+      {
+        title: "Browse & Discover",
+        text: "Search thousands of listings across action figures, trading cards, spinning tops, model kits, and vintage rarities — filtered by category, brand, condition, and price so you find exactly what you're hunting for.",
+        icon: "🛒",
+        tone: "indigo",
+      },
+      {
+        title: "Sell With Confidence",
+        text: "Open a store in minutes, list with our SEO-friendly slugging and media tools, and get paid through escrow-protected orders — no chasing buyers, no guessing games.",
+        icon: "🏪",
+        tone: "teal",
+      },
+      {
+        title: "Bid, Win, Rip",
+        text: "Live auctions with real-time bidding, transparent history, and instant outbid alerts. When the gavel falls, checkout and shipping are already lined up.",
+        icon: "⚡",
+        tone: "amber",
+      },
+    ],
+    valuesTitle: "Our Values",
+    valueItems: [
+      {
+        title: "Trust First",
+        text: "Every seller is verified, every payment is escrow-protected, and every listing is held to the same authenticity bar we'd want as buyers ourselves.",
+        icon: "🛡️",
+      },
+      {
+        title: "Built By Collectors",
+        text: "We're not a generic marketplace with a collectibles tab bolted on — every feature, from grading fields to condition tags, exists because a real collector asked for it.",
+        icon: "🤝",
+      },
+      {
+        title: "Move Fast, Ship Fast",
+        text: "Rare drops don't wait, and neither do we — from pre-order alerts to 3-7 day delivery, we optimise for the moment you finally get to unbox it.",
+        icon: "🚀",
+      },
+    ],
+    milestonesTitle: "Our Journey",
+    milestones: [
+      { year: "2024", text: "LetItRip started as a weekend project — a single developer, a spinning-top collection outgrowing its shelf, and a conviction that India's collectors deserved a marketplace built just for them." },
+      { year: "2025", text: "Live auctions, seller storefronts, and escrow-backed checkout shipped — turning a side project into a real marketplace with verified sellers across action figures, trading cards, and model kits." },
+      { year: "2026", text: "Pre-orders, events, raffles, and a mobile-first redesign — built for the community that showed up, bid, sold, and kept coming back." },
+    ],
+    teamTitle: "Who's Behind LetItRip",
+    teamSubtitle: "A small team obsessed with the same thing you are — the hunt for the next piece of the collection.",
+    teamMembers: [
+      {
+        name: "Arjun Verma",
+        role: "Founder & Developer",
+        bio: "Started LetItRip after one too many afternoons hunting for a specific 1st-edition card across a dozen disconnected forums and marketplaces. Built the entire platform — Next.js front end, Firebase backend, the auction engine, the whole thing — the same way most great collections start: one late night at a time. Still personally answers the support inbox.",
+        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-arjun-verma-20260819/400/400"),
+        isFounder: true,
+        isDeveloper: true,
+      },
+      {
+        name: "Ananya Rao",
+        role: "Community & Trust",
+        bio: "Keeps the marketplace honest — seller verification, dispute resolution, and the reason LetItRip's escrow system actually works the way it's supposed to. Collects vintage diecast when she isn't reviewing seller applications.",
+        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-ananya-rao-20260819/400/400"),
+        isFounder: false,
+        isDeveloper: false,
+      },
+      {
+        name: "Devansh Mehta",
+        role: "Seller Success",
+        bio: "Helps new stores go from zero listings to their first sale — onboarding, storefront setup, and the occasional 2 a.m. \"why isn't my auction showing up\" message. Runs a Beyblade collection that has outgrown two apartments.",
+        photoUrl: seedExtMedia("https://picsum.photos/seed/letitrip-team-devansh-mehta-20260819/400/400"),
+        isFounder: false,
+        isDeveloper: false,
+      },
+    ],
+    ctaTitle: "Ready to Let It Rip?",
+    ctaSell: "Start selling in minutes",
+    ctaShop: "Browse the marketplace",
+  },
   background: {
     light: {
       type: "gradient",

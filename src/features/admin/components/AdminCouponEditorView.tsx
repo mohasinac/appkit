@@ -128,23 +128,23 @@ function CouponDiscountFields({
       )}
       {type === "percentage" && (
         <Input
-          label="Max discount cap (paise, optional)"
+          label="Max discount cap (₹, optional)"
           value={maxDiscount}
           onChange={(e) => setMaxDiscount(e.target.value)}
           type="number"
           min={0}
-          placeholder="e.g. 20000"
+          placeholder="e.g. 200"
           helperText="Leave blank for no cap."
         />
       )}
       {(type === "percentage" || type === "fixed") && (
         <Input
-          label="Min order value (paise, optional)"
+          label="Min order value (₹, optional)"
           value={minPurchase}
           onChange={(e) => setMinPurchase(e.target.value)}
           type="number"
           min={0}
-          placeholder="e.g. 50000"
+          placeholder="e.g. 500"
           helperText="Leave blank for no minimum."
         />
       )}
@@ -368,7 +368,7 @@ export function AdminCouponEditorView({
     type === "percentage"
       ? "Discount percentage (%)"
       : type === "fixed"
-        ? "Discount amount (paise)"
+        ? "Discount amount (₹)"
         : "Discount value";
 
   const formSection = (

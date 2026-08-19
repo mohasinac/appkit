@@ -1,23 +1,8 @@
 import React from "react";
-import { Card, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import { Avatar, Badge, Card, Div, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
+import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../schemas/firestore";
 
-export interface AboutHowItem {
-  title: string;
-  text: string;
-  icon: string;
-  tone?: "indigo" | "teal" | "amber" | "rose";
-}
-
-export interface AboutValueItem {
-  title: string;
-  text: string;
-  icon: string;
-}
-
-export interface AboutMilestone {
-  year: string;
-  text: string;
-}
+export type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../schemas/firestore";
 
 export interface AboutViewProps {
   labels?: {
@@ -28,6 +13,8 @@ export interface AboutViewProps {
     howItWorksTitle?: string;
     valuesTitle?: string;
     milestonesTitle?: string;
+    teamTitle?: string;
+    teamSubtitle?: string;
     ctaTitle?: string;
     ctaSell?: string;
     ctaShop?: string;
@@ -35,6 +22,7 @@ export interface AboutViewProps {
   howItems?: AboutHowItem[];
   valueItems?: AboutValueItem[];
   milestones?: AboutMilestone[];
+  teamMembers?: AboutTeamMember[];
   ctaBannerClass?: string;
   /** Render the CTA action buttons  */
   renderCtaButtons?: () => React.ReactNode;
@@ -45,6 +33,7 @@ export function AboutView({
   howItems = [],
   valueItems = [],
   milestones = [],
+  teamMembers = [],
   ctaBannerClass = "",
   renderCtaButtons,
 }: AboutViewProps) {
@@ -123,6 +112,35 @@ export function AboutView({
             ))}
           </Stack>
         </Section>
+
+        {teamMembers.length > 0 && (
+          <Section>
+            <Heading level={2} className="mb-2" align="center">{labels.teamTitle}</Heading>
+            {labels.teamSubtitle && (
+              <Text size="lg" variant="secondary" align="center" className="mb-12 max-w-2xl mx-auto">
+                {labels.teamSubtitle}
+              </Text>
+            )}
+            <Div className="grid md:grid-cols-3" gap="6">
+              {teamMembers.map((member) => (
+                <Stack key={member.name} gap="3" surface="default" padding="lg" rounded="xl" border="default" align="center" className="text-center">
+                  <Avatar src={member.photoUrl} name={member.name} alt={member.name} size="lg" />
+                  <Heading level={3}>{member.name}</Heading>
+                  <Row gap="xs" wrap justify="center">
+                    <Span size="xs" weight="bold" className="text-primary tracking-wide" transform="uppercase">
+                      {member.role}
+                    </Span>
+                    {member.isFounder && <Badge variant="primary" size="xs">Founder</Badge>}
+                    {member.isDeveloper && <Badge variant="secondary" size="xs">Developer</Badge>}
+                  </Row>
+                  <Text size="sm" variant="secondary" className="leading-relaxed">
+                    {member.bio}
+                  </Text>
+                </Stack>
+              ))}
+            </Div>
+          </Section>
+        )}
 
         <Section color="inverse" tone="accent-banner" className={`text-center ${ctaBannerClass}`} padding="xl" rounded="2xl">
           <Heading color="inverse" level={2} variant="none" className="mb-8" size="3xl" weight="bold">

@@ -77,7 +77,7 @@ export const payoutMethodsSeedData: Partial<PayoutMethodDocument>[] = [
     label: "SBI Current Account",
     accountNumber: "00112233445566",
     ifscCode: "SBIN0001234",
-    accountHolderName: "LetItRip Admin",
+    accountHolderName: "Mock User 1",
     bankName: "State Bank of India",
     isDefault: false,
     isActive: true,
@@ -231,7 +231,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
   {
     id: "irq-l-drago-sealed",
     opUserId: "user-yugi-muto",
-    opDisplayName: "Rehan Sheikh",
+    opDisplayName: "Mock User 3",
     title: "Looking for sealed Metal Lightning L-Drago",
     description: "Hunting a sealed Metal Lightning L-Drago, tournament-grade tip. Budget ₹8,000.",
     category: "spinning-tops",
@@ -247,7 +247,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
   {
     id: "irq-original-complete-set",
     opUserId: "user-yugi-muto",
-    opDisplayName: "Rehan Sheikh",
+    opDisplayName: "Mock User 3",
     title: "Complete Original Series Set — Sealed",
     description: "Need all 5 original starter beyblades in sealed condition. Willing to pay premium for a matching set.",
     category: "spinning-tops",
@@ -263,7 +263,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
   {
     id: "irq-x-bx08-sealed",
     opUserId: "user-admin-letitrip",
-    opDisplayName: "LetItRip Admin",
+    opDisplayName: "Mock User 1",
     title: "Beyblade X BX-08 Wave — any launcher combo",
     description: "Sealed only. For platform demo.",
     category: "spinning-tops",
@@ -280,7 +280,7 @@ export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [
   {
     id: "irq-rejected-replica-driver",
     opUserId: "user-yugi-muto",
-    opDisplayName: "Rehan Sheikh",
+    opDisplayName: "Mock User 3",
     title: "Looking for cheap metal drivers",
     description: "Cheapest possible metal drivers, any condition.",
     category: "spinning-tops",

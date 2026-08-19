@@ -46,11 +46,13 @@ export {
   ServerErrorDetailView,
   MaintenanceDashboardView,
   AnalysisRunnerView,
+  CloudLogsListView,
 } from "./_internal/client/features/maintenance";
 export type {
   ServerErrorsListViewProps,
   ServerErrorDetailViewProps,
   MaintenanceDashboardViewProps,
+  CloudLogsListViewProps,
 } from "./_internal/client/features/maintenance";
 
 // Provider registration — pure contract modules with zero server dependencies.
@@ -274,6 +276,7 @@ export type { UseEntityDeleteOptions, UseEntityDeleteReturn } from "./react/hook
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./constants/index";
 export { SORT_DIR, sortBy } from "./constants/sort";
 export { SIEVE_OP, sieveFilter, sieveAnd, sieveMultiEq } from "./utils/sieve-builder";
+export { formatCurrency } from "./utils/number.formatter";
 export { Container, Grid, Row, Stack } from "./ui/components/Layout";
 export { Div } from "./ui/components/Div";
 export { DynamicBgDiv } from "./ui/components/DynamicBgDiv";
@@ -336,6 +339,8 @@ export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/
 export { AdminDashboardView, AdminAnalyticsView, AdminPageViewsReportView, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, AdminFulfillmentView, DataTable, DataListingView, useAdminListingData, toRecordArray, toStringValue, toRelativeDate } from "./features/admin/index";
 export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPageViewsReportViewProps, AdminPrizeDrawsViewProps, AdminCarouselViewProps, AdminFulfillmentViewProps, AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/index";
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
+// S-ADMIN-7 — permission catalog data, shared by AdminEmployeeEditorView and the read-only /admin/permissions page.
+export { PERMISSION_GROUPS, PERMISSION_DOMAINS, getPermissionsForDomain, formatPermLabel } from "./features/auth/permissions/constants";
 export { ADMIN_ENDPOINTS } from "./constants/index";
 export { SELLER_ENDPOINTS } from "./constants/index";
 // P-16 — Tour system (driver.js-backed onboarding walkthrough).
@@ -743,8 +748,6 @@ export type { ToggleProps } from "./ui/components/Toggle";
 // [CLIENT] Wave 4 seller management views.
 export { SellerStoreCategoriesView } from "./features/seller/components/SellerStoreCategoriesView";
 export type { SellerStoreCategoriesViewProps } from "./features/seller/components/SellerStoreCategoriesView";
-export { SellerTemplatesView } from "./features/seller/components/SellerTemplatesView";
-export type { SellerTemplatesViewProps } from "./features/seller/components/SellerTemplatesView";
 export { SellerPayoutMethodsView } from "./features/seller/components/SellerPayoutMethodsView";
 export type { SellerPayoutMethodsViewProps } from "./features/seller/components/SellerPayoutMethodsView";
 export { SellerShippingConfigsView } from "./features/seller/components/SellerShippingConfigsView";

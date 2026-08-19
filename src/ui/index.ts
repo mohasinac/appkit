@@ -114,6 +114,9 @@ export { PageLoader } from "./components/PageLoader";
 export type { SiteLogoProps } from "./components/SiteLogo";
 export { SiteLogo } from "./components/SiteLogo";
 
+export type { SiteMarkProps } from "./components/SiteMark";
+export { SiteMark } from "./components/SiteMark";
+
 export type { SkeletonProps } from "./components/Skeleton";
 export { Skeleton } from "./components/Skeleton";
 

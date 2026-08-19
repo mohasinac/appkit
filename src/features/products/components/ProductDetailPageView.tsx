@@ -110,7 +110,13 @@ export interface ProductDetailPageViewProps {
   productFeatures?: ProductFeatureDocument[];
   /** Site-wide COD availability (`siteSettings.payment.codEnabled`), threaded from the page's data layer. Drives the "Cash on Delivery" feature badge. */
   codEnabled?: boolean;
-  /** Site-wide EMI availability (`siteSettings.emi.enabled`), threaded from the page's data layer. Drives the "EMI Available" feature badge. */
+  /**
+   * Fully-resolved EMI eligibility for this product — site-wide flag AND the
+   * seller's `StoreDocument.emiEnabled` opt-in AND price above
+   * `siteSettings.emi.minOrderValue`, computed by the page's data layer
+   * (mirrors `checkEmiEligibility()`'s checkout-time rule). Drives the "EMI
+   * Available" feature badge.
+   */
   emiEnabled?: boolean;
 }
 

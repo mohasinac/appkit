@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const priceSchema = z.number().int().min(0, "Price must be non-negative (paise)");
+const priceSchema = z.number().min(0, "Price must be non-negative");
 
 const conditionSchema = z.enum(["new", "like_new", "good", "fair", "poor", "used", "refurbished", "broken"]);
 
@@ -24,7 +24,7 @@ export const productInputSchema = z.object({
   returnPolicy: z.string().max(1000).optional(),
   shippingPaidBy: z.enum(["seller", "buyer"]).optional(),
   insurance: z.boolean().optional(),
-  insuranceCost: z.number().int().min(0).optional(),
+  insuranceCost: z.number().min(0).optional(),
   allowOffers: z.boolean().optional(),
   minOfferPercent: z.number().min(0).max(100).optional(),
   features: z.array(z.string()).max(50).optional(),
@@ -38,7 +38,7 @@ export const auctionInputSchema = productInputSchema.extend({
   startingBid: priceSchema,
   reservePrice: priceSchema.optional(),
   buyNowPrice: priceSchema.optional(),
-  minBidIncrement: z.number().int().min(1).optional(),
+  minBidIncrement: z.number().min(1).optional(),
   auctionEndDate: z.string().datetime({ offset: true }),
   autoExtendable: z.boolean().default(false),
   auctionExtensionMinutes: z.number().int().min(1).max(30).optional(),

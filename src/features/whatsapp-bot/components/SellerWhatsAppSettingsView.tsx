@@ -396,7 +396,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             buyerName: "Ravi K.",
             firstItemName: "Charizard PSA 9",
             additionalItemCount: 2,
-            totalAmount: 450000,
+            totalAmount: 4500,
             orderId: "order-3-20260510-a1b2c3",
           })}
         </Div>

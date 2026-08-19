@@ -225,6 +225,8 @@ export const ADMIN_ENDPOINTS = {
   CAROUSEL: "/api/admin/carousel",
   CAROUSEL_BY_ID: (id: string) => `/api/admin/carousel/${id}`,
   CAROUSEL_REORDER: "/api/admin/carousel/reorder",
+  CAROUSELS: "/api/admin/carousels",
+  CAROUSELS_BY_ID: (id: string) => `/api/admin/carousels/${id}`,
   NAVIGATION: "/api/admin/navigation",
   NAVIGATION_BY_ID: (id: string) => `/api/admin/navigation/${id}`,
   ADMIN_SITE: "/api/admin/site",
@@ -254,6 +256,7 @@ export const ADMIN_ENDPOINTS = {
   ADMIN_FULFILLMENT: (storeId: string) => `/api/store/fulfillment?storeId=${encodeURIComponent(storeId)}`,
   CHECKOUT_BYPASS: "/api/admin/checkout-bypass",
   MAINTENANCE_ANALYSIS: "/api/admin/maintenance/analysis",
+  MAINTENANCE_CLOUD_LOGS: "/api/admin/maintenance/cloud-logs",
   MEDIA_LIST: "/api/admin/media",
 } as const;
 
@@ -589,8 +592,6 @@ export const SELLER_ENDPOINTS = {
   ANALYTICS_ALERT_BY_ID: (id: string) => `/api/store/analytics/alerts/${id}`,
   STORE_CATEGORIES: "/api/store/categories",
   STORE_CATEGORY_BY_ID: (id: string) => `/api/store/categories/${id}`,
-  TEMPLATES: "/api/store/templates",
-  TEMPLATE_BY_ID: (id: string) => `/api/store/templates/${id}`,
   PAYOUT_METHODS: "/api/store/payout-methods",
   PAYOUT_METHOD_BY_ID: (id: string) => `/api/store/payout-methods/${id}`,
   SHIPPING_CONFIGS: "/api/store/shipping-configs",

@@ -21,7 +21,7 @@ export const createOrderSchema = z.object({
     z.object({
       productId: z.string().min(1),
       quantity: z.number().int().min(1),
-      price: z.number().int().min(0),
+      price: z.number().min(0),
     }),
   ).min(1, "Order must have at least one item"),
   shippingAddress: addressSchema,

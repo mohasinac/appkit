@@ -4,10 +4,12 @@ import { Row, SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/ap
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { Badge, ConfirmDeleteModal, Div, FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { TABLE_KEYS } from "../../../constants/table-keys";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -38,11 +40,13 @@ interface SellerProductsResponse {
   meta?: { total: number };
 }
 
+// Real ProductStatus is draft|published|in_review|archived — "active"
+// fixed to "published"; "ended"/"cancelled" removed since status never
+// holds those values (ended is derived from prizeRevealWindowEnd, shown
+// via the "Show closed" toolbar toggle below).
 const STATUS_VARIANT: Record<string, "default" | "primary" | "secondary" | "success" | "warning" | "danger"> = {
-  active: "success",
+  published: "success",
   draft: "default",
-  ended: "secondary",
-  cancelled: "danger",
 };
 
 const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
@@ -111,6 +115,10 @@ export interface SellerPrizeDrawsViewProps extends ListingLayoutProps {
 
 export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPrizeDrawsViewProps) {
   const dispatch = useActionDispatch();
+  // Independent of DataListingView's own internal useUrlTable() — see the
+  // same pattern in SellerAuctionsView.tsx.
+  const toggleTable = useUrlTable({});
+  const showClosed = toggleTable.get(TABLE_KEYS.SHOW_CLOSED) === "true";
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
@@ -140,7 +148,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
     title: "Prize Draws",
     searchPlaceholder: "Search prize draws by name…",
     emptyLabel: "No prize draws listed yet",
-    filterKeys: ["status"],
+    filterKeys: ["status", TABLE_KEYS.SHOW_CLOSED],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "prize-draws", "listing"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
@@ -171,8 +179,19 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     buildFilters: (state) => {
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
-      return ["listingType==prize-draw", status].filter(Boolean).join(",");
+      const closed =
+        state[TABLE_KEYS.SHOW_CLOSED] !== "true"
+          ? sieveFilter("prizeRevealWindowEnd", SIEVE_OP.GTE, new Date().toISOString())
+          : null;
+      return ["listingType==prize-draw", status, closed].filter(Boolean).join(",");
     },
+    toggles: [
+      {
+        label: "Show closed",
+        active: showClosed,
+        onChange: (next) => toggleTable.set(TABLE_KEYS.SHOW_CLOSED, next ? "true" : ""),
+      },
+    ],
     rowHrefTemplate: String(ROUTES.STORE.PRIZE_DRAWS_EDIT("{id}")),
     renderRowActions: (row) => (
       <RowActionMenu

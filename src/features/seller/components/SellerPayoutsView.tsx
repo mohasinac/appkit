@@ -9,7 +9,7 @@ import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_PAYOUT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { SELLER_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { apiClient } from "../../../http";
 import {
   toRecordArray,
@@ -122,7 +122,7 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
     title: "Payouts",
     searchPlaceholder: "Search payouts by payout # or amount",
     emptyLabel: "No payouts found",
-    filterKeys: ["status"],
+    filterKeys: ["status", "showAllPayouts"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["seller", "payouts", "listing"],
     endpoint: SELLER_ENDPOINTS.PAYOUTS,
@@ -149,18 +149,28 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
       typeof response.meta?.total === "number"
         ? response.meta.total
         : mappedRows.length,
-    buildFilters: (state) =>
-      state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
-    // Rule #7: bulk-action array sourced from the CTA registry, not inline objects.
-    buildBulkActions: (selection): BulkActionItem[] => [
-      buildBulkAction(ACTIONS.STORE["export-payout"], () => {
-        const rows = selection.selectedIds
-          .map((id) => rawByIdRef.current[id])
-          .filter((r): r is Record<string, unknown> => Boolean(r));
-        handleExport(rows);
-        selection.clearSelection();
-      }),
-    ],
+    buildFilters: (state) => {
+      // An explicit status chip always wins. Otherwise, hide already-paid
+      // payouts by default — mirrors the isSold-hide-by-default precedent.
+      // Pipe-joined EQ (not !=) — see AdminPayoutsView.tsx for why.
+      if (state.status && state.status !== "All") return sieveFilter("status", SIEVE_OP.EQ, state.status);
+      return state.showAllPayouts !== "true"
+        ? sieveFilter("status", SIEVE_OP.EQ, "pending|processing|failed|cancelled")
+        : undefined;
+    },
+    // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      SELLER_BULK_ACTIONS.payouts.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        onClick: () => {
+          const rows = selection.selectedIds
+            .map((rowId) => rawByIdRef.current[rowId])
+            .filter((r): r is Record<string, unknown> => Boolean(r));
+          handleExport(rows);
+          selection.clearSelection();
+        },
+      })),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
@@ -176,12 +186,24 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <>
       <FilterChipGroup
         label="Status"
         tabs={ADMIN_PAYOUT_STATUS_TABS}
         value={pendingFilters.status ?? ""}
         onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
       />
+      <FilterChipGroup
+        label="Paid payouts"
+        tabs={[
+          { id: "", label: "Hide paid" },
+          { id: "true", label: "Show all" },
+        ]}
+        value={pendingFilters.showAllPayouts ?? ""}
+        onChange={(id) => setPendingFilters((p) => ({ ...p, showAllPayouts: id }))}
+        allId=""
+      />
+      </>
     ),
   };
 

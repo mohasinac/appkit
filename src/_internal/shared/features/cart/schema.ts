@@ -4,7 +4,7 @@ const cartItemBaseSchema = z.object({
   productId: z.string().min(1),
   productTitle: z.string(),
   productImage: z.string().default(""),
-  price: z.number().int().min(0),
+  price: z.number().min(0),
   currency: z.string().default("INR"),
   storeId: z.string(),
   storeName: z.string().default(""),
@@ -22,7 +22,7 @@ const cartItemBaseSchema = z.object({
   ]),
   isOffer: z.boolean().optional(),
   offerId: z.string().optional(),
-  lockedPrice: z.number().int().optional(),
+  lockedPrice: z.number().optional(),
 });
 
 export const addToCartSchema = cartItemBaseSchema;

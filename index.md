@@ -158,7 +158,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `AdminCarouselView` | `AdminCarouselView.tsx` | Admin carousel slides listing |
 | `AdminCarouselEditorView` | `AdminCarouselEditorView.tsx` | Admin carousel slide create/edit |
 | `AdminSectionsView` | `AdminSectionsView.tsx` | Admin homepage sections listing + builder; toolbar has Reset seed data (ConfirmDeleteModal→POST /api/demo/seed) + Manage Sections buttons (I3) |
-| `AdminOrdersView` | `AdminOrdersView.tsx` | Admin orders listing — RowActionMenu "Update order" → AdminOrderEditorView SideDrawer (B2/VA9) |
+| `AdminOrdersView` | `AdminOrdersView.tsx` | Admin orders listing — RowActionMenu "Update order" → AdminOrderEditorView SideDrawer, plus "Open full page" → `/admin/orders/[id]/view` (B2/VA9; page-nav added 2026-08-19) |
 | `AdminOrderEditorView` | `AdminOrderEditorView.tsx` | Admin order status + tracking SideDrawer — status select (7 statuses), trackingNumber, carrier select, refundAmount (conditional), notes; PATCH /api/admin/orders/[id] (B2/VA9) |
 | `AdminUsersView` | `AdminUsersView.tsx` | Admin users listing — RowActionMenu "Manage" → AdminUserEditorView SideDrawer (B1/VA10) |
 | `AdminUserEditorView` | `AdminUserEditorView.tsx` | Admin user management SideDrawer — role select, isDisabled+banReason, emailVerified, adminNotes; Delete→ConfirmDeleteModal; PATCH+DELETE /api/admin/users/[uid] (B1/VA10) |
@@ -524,6 +524,7 @@ Import: `import { ADMIN_ENDPOINTS } from "@mohasinac/appkit"` (or `/client`)
 | Name | File | Notable keys / What it does |
 |------|------|-------------|
 | `ADMIN_ENDPOINTS` | `api-endpoints.ts` | All `/api/admin/*` strings. Notable: `PAYOUT_BY_ID(id)` → `/api/admin/payouts/${id}`; `PAYOUTS_EXPORT` → `/api/admin/payouts/export` (CSV download); `PAYOUTS_WEEKLY` → weekly payout trigger; `NAVIGATION` → `/api/admin/navigation` |
+| `PERMISSION_GROUPS`, `PERMISSION_DOMAINS`, `getPermissionsForDomain`, `formatPermLabel` | `features/auth/permissions/constants.ts` | S-ADMIN-7 (2026-08-19) — moved out of `AdminEmployeeEditorView.tsx` (was a local, non-exported duplicate) and newly exported from `index.ts`/`client.ts` so both the employee-permission editor and the read-only `/admin/permissions` catalog page consume one source. `PERMISSION_DOMAINS` groups permission-string prefixes into display labels; `getPermissionsForDomain(prefix)` returns every distinct `PERMISSION_GROUPS` permission matching a domain. **Not yet resolvable from a consumer pinned to the published npm dist** until the next appkit publish — see `src/constants/admin-permissions.ts` in letitrip.in for the interim mirror. |
 | `STORE_ENDPOINTS` | `api-endpoints.ts` | All `/api/stores/*` route strings |
 | `SELLER_ENDPOINTS` | `api-endpoints.ts` | All `/api/seller/*` / store-management route strings |
 | `USER_ENDPOINTS` | `api-endpoints.ts` | All `/api/user/*` route strings |

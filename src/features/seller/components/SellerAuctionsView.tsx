@@ -4,9 +4,11 @@ import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { TABLE_KEYS } from "../../../constants/table-keys";
 import { SELLER_AUCTION_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../../constants";
@@ -47,6 +49,12 @@ export function SellerAuctionsView({
   onBulkDelete,
   ...props
 }: SellerAuctionsViewProps) {
+  // Independent of DataListingView's own internal useUrlTable() — both read
+  // and write the same URL, useUrlTable has no local state, so they stay in
+  // sync (same pattern SellerProductsView already uses for its "Show sold"
+  // toggle).
+  const toggleTable = useUrlTable({});
+  const showEnded = toggleTable.get(TABLE_KEYS.SHOW_ENDED) === "true";
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: SELLER_ENDPOINTS.PRODUCT_BY_ID,
@@ -84,7 +92,7 @@ export function SellerAuctionsView({
     title: "Auctions",
     searchPlaceholder: "Search auctions by product name",
     emptyLabel: "No auctions found",
-    filterKeys: ["status"],
+    filterKeys: ["status", TABLE_KEYS.SHOW_ENDED],
     defaultSort: sortBy("auctionEndDate", "ASC"),
     queryKey: ["seller", "auctions", "listing"],
     endpoint: SELLER_ENDPOINTS.AUCTIONS,
@@ -109,8 +117,23 @@ export function SellerAuctionsView({
       typeof response.meta?.total === "number"
         ? response.meta.total
         : mappedRows.length,
-    buildFilters: (state) =>
-      state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
+    buildFilters: (state) => {
+      // Previously missing entirely — the seller Auctions tab silently
+      // listed the entire seller catalog, not just auctions.
+      const parts = ["listingType==auction"];
+      if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
+      if (state[TABLE_KEYS.SHOW_ENDED] !== "true") {
+        parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, new Date().toISOString()));
+      }
+      return parts.join(",");
+    },
+    toggles: [
+      {
+        label: "Show ended",
+        active: showEnded,
+        onChange: (next) => toggleTable.set(TABLE_KEYS.SHOW_ENDED, next ? "true" : ""),
+      },
+    ],
     // Rule #7: bulk-action array sourced from the SELLER_BULK_ACTIONS preset.
     buildBulkActions: onBulkDelete
       ? (selection): BulkActionItem[] =>

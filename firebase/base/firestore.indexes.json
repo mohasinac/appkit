@@ -3625,6 +3625,50 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "storeId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "listingType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "auctionEndDate",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "storeId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "listingType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "prizeRevealWindowEnd",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "listingType",
           "order": "ASCENDING"
         },
@@ -3648,6 +3692,24 @@
         },
         {
           "fieldPath": "prizeRevealWindowEnd",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isSold",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "listingType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "title",
           "order": "ASCENDING"
         }
       ]
@@ -6365,6 +6427,20 @@
         {
           "fieldPath": "bundlePrice",
           "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "carts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
+          "order": "DESCENDING"
         }
       ]
     }

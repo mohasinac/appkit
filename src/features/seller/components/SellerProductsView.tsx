@@ -119,7 +119,7 @@ function TypeDropdown({
         options={options}
         value={active}
         onValueChange={(v) => onChange(v as ListingKind)}
-        className="sm:max-w-xs"
+        wrapperClassName="sm:max-w-xs"
         aria-label="Filter by listing type"
       />
     </Row>
@@ -171,14 +171,16 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     header: "Status",
     className: "w-28",
     render: (row) => {
+      // Real ProductStatus is draft|published|in_review|archived — "active"
+      // and "sold" are not stored status values (sold is tracked separately
+      // via isSold, shown via the "Show sold" toolbar toggle, not this
+      // column), so those two branches never matched and were dead code.
       const variant =
-        row.status === "active"
+        row.status === "published"
           ? "success"
           : row.status === "draft"
             ? "default"
-            : row.status === "sold"
-              ? "secondary"
-              : "danger";
+            : "danger";
       return (
         <Badge variant={variant}>
           {row.status}
@@ -353,7 +355,7 @@ export function SellerProductsView({
     const ids = selection.selectedIds.join(",");
     void dispatch({
       type: "NAVIGATE",
-      href: `${String(ROUTES.STORE.INVENTORY_PRINT)}?type=product&ids=${ids}&autoprint=1`,
+      href: `${String(ROUTES.STORE.PRINT_CENTER)}?type=product&ids=${ids}&autoprint=1`,
     });
   }, [selection.selectedIds, dispatch]);
 

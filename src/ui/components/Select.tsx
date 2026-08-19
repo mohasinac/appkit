@@ -28,6 +28,13 @@ export interface SelectProps<V extends string = string> extends Omit<
    * chrome. For call sites that already own their own label/wrapper markup.
    */
   bare?: boolean;
+  /**
+   * className applied to the outer wrapper div — the real flex/grid child
+   * when this Select sits inside a Row/flex container. `className` only
+   * reaches the inner `<select>` element, so sizing utilities like
+   * `flex-shrink-0` / `min-w-*` / `max-w-*` must go here instead.
+   */
+  wrapperClassName?: string;
 }
 
 export function Select<V extends string = string>({
@@ -45,6 +52,7 @@ export function Select<V extends string = string>({
   id,
   variant = "default",
   bare = false,
+  wrapperClassName,
   ...props
 }: SelectProps<V>) {
   const generatedId = React.useId();
@@ -110,7 +118,7 @@ export function Select<V extends string = string>({
   }
 
   return (
-    <div className="appkit-select" data-section="select-div-592">
+    <div className={["appkit-select", wrapperClassName].filter(Boolean).join(" ")} data-section="select-div-592">
       {label && (
         <Label
           htmlFor={inputId}

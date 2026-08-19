@@ -4,10 +4,12 @@ import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FilterChipGroup, ListingLayout, RowActionMenu, Span, Stack, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_SCAMMER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -79,6 +81,7 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
 export type AdminScammersViewProps = ListingLayoutProps;
 
 export function AdminScammersView({ children, ...props }: AdminScammersViewProps) {
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ScammerRow | null>(null);
 
@@ -139,6 +142,10 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
               setSelectedRow(row);
               setDrawerOpen(true);
             },
+          },
+          {
+            label: "Open full page",
+            onClick: () => router.push(String(ROUTES.ADMIN.SCAMMER_BY_ID(row.id))),
           },
         ]}
       />

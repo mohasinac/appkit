@@ -4,10 +4,12 @@ import { SIEVE_OP, Stack, sieveFilter, type JsonArray } from "@mohasinac/appkit"
 import type { JsonValue } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FilterChipGroup, ListingLayout, RowActionMenu, Span, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
+import { ROUTES } from "../../../next/routing/route-map";
 import {
   ADMIN_SUPPORT_TICKET_STATUS_TABS,
   ADMIN_SUPPORT_TICKET_PRIORITY_TABS,
@@ -98,6 +100,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
 export type AdminSupportTicketsViewProps = ListingLayoutProps;
 
 export function AdminSupportTicketsView({ children, ...props }: AdminSupportTicketsViewProps) {
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<TicketRow | null>(null);
 
@@ -114,7 +117,7 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
     title: "Support Tickets",
     searchPlaceholder: "Search by subject",
     emptyLabel: "No support tickets found",
-    filterKeys: ["status", "priority"],
+    filterKeys: ["status", "priority", "showResolved"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "support-tickets", "listing"],
     endpoint: ADMIN_ENDPOINTS.SUPPORT_TICKETS,
@@ -147,7 +150,18 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
     },
     buildFilters: (f) => {
       const parts: string[] = [];
-      if (f.status && f.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
+      if (f.status && f.status !== "All") {
+        parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
+      } else if (f.showResolved !== "true") {
+        // Hide resolved and closed tickets by default (open-only quick
+        // view). Pipe-joined EQ, not NEQ: sievejs parses a same-field pipe
+        // as an OR group, upgraded by the Firestore adapter to an IN query.
+        // Unlike NEQ, IN has no orderBy-must-match-filtered-field
+        // restriction, so this stays compatible with the default createdAt
+        // sort. See sieve.ts for the documented Sieve/Firestore
+        // incompatibility this avoids.
+        parts.push(sieveFilter("status", SIEVE_OP.EQ, "open|in_progress|waiting_on_user"));
+      }
       if (f.priority && f.priority !== "All") parts.push(sieveFilter("priority", SIEVE_OP.EQ, f.priority));
       return parts.join(",") || undefined;
     },
@@ -160,6 +174,10 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
               setSelectedRow(row);
               setDrawerOpen(true);
             },
+          },
+          {
+            label: "Open full page",
+            onClick: () => router.push(String(ROUTES.ADMIN.SUPPORT_TICKET_BY_ID(row.id))),
           },
         ]}
       />

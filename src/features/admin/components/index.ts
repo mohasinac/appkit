@@ -56,6 +56,8 @@ export { AdminStickersView } from "./AdminStickersView";
 export type { AdminStickersViewProps } from "./AdminStickersView";
 export { AdminGroupedListingsView } from "./AdminGroupedListingsView";
 export type { AdminGroupedListingsViewProps } from "./AdminGroupedListingsView";
+export { AdminCarouselGroupEditorView } from "./AdminCarouselGroupEditorView";
+export type { AdminCarouselGroupEditorViewProps } from "./AdminCarouselGroupEditorView";
 // S-SBUNI-4 2026-05-13 — admin bundle CRUD views.
 export { AdminBundlesView } from "./AdminBundlesView";
 export type { AdminBundlesViewProps } from "./AdminBundlesView";

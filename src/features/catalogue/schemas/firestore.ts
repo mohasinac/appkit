@@ -34,7 +34,7 @@ export interface CatalogueItemDocument
   // already uses converts at the form boundary.
   images: string[];
   mainImage?: string;
-  // `price` (paise, from ProductDraftFields) plays "estimated resale price."
+  // `price` (decimal rupees, from ProductDraftFields) plays "estimated resale price."
   quantity: number;
 
   visibility: CatalogueVisibility;

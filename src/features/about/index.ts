@@ -4,7 +4,9 @@ export type {
   AboutHowItem,
   AboutValueItem,
   AboutMilestone,
+  AboutTeamMember,
 } from "./components/AboutView";
+export type { AboutContentDocument } from "./schemas/firestore";
 
 export { TrackOrderView } from "./components/TrackOrderView";
 export type { TrackOrderViewProps } from "./components/TrackOrderView";

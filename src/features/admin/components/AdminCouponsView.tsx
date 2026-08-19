@@ -93,7 +93,7 @@ export function AdminCouponsView({
     title: "Coupons",
     searchPlaceholder: "Search codes, campaigns, or seller scopes",
     emptyLabel: "No coupons found",
-    filterKeys: ["type"],
+    filterKeys: ["type", "showExpired"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "coupons", "listing"],
     endpoint: ADMIN_ENDPOINTS.COUPONS,
@@ -110,8 +110,12 @@ export function AdminCouponsView({
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
-    buildFilters: (state) =>
-      state.type && state.type !== "All" ? sieveFilter("type", SIEVE_OP.EQ, state.type) : undefined,
+    buildFilters: (state) => {
+      const parts: string[] = [];
+      if (state.type && state.type !== "All") parts.push(sieveFilter("type", SIEVE_OP.EQ, state.type));
+      if (state.showExpired !== "true") parts.push(sieveFilter("validity.isActive", SIEVE_OP.EQ, true));
+      return parts.join(",") || undefined;
+    },
     primaryAction: {
       label: "Add Coupon",
       onClick: ({ openCreatePanel }) => openCreatePanel(),
@@ -138,12 +142,24 @@ export function AdminCouponsView({
         }));
     },
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <FilterChipGroup
-        label="Type"
-        tabs={ADMIN_COUPON_TYPE_TABS}
-        value={pendingFilters.type ?? ""}
-        onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
-      />
+      <>
+        <FilterChipGroup
+          label="Type"
+          tabs={ADMIN_COUPON_TYPE_TABS}
+          value={pendingFilters.type ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
+        />
+        <FilterChipGroup
+          label="Expired coupons"
+          tabs={[
+            { id: "", label: "Hide expired" },
+            { id: "true", label: "Show all" },
+          ]}
+          value={pendingFilters.showExpired ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, showExpired: id }))}
+          allId=""
+        />
+      </>
     ),
     renderCards: (rows, _view, selectionCtx, isLoading) => {
       rowsRef.current = rows;

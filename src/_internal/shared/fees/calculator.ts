@@ -20,15 +20,15 @@ import { roundRupees } from "../../../utils/number.formatter";
 export interface FeeCommissionRates {
   platformFeePercent: number;
   gstPercent: number;
-  /** Rupee floor (not paise) — matches the existing `minimumTransactionFee` doc convention. */
+  /** Rupee floor (not paise) — matches the existing `minimumTransactionFee` doc convention. */ // audit-money-units-ok: clarifies this is NOT paise
   minimumTransactionFee?: number;
   gatewayFeePercent?: number;
 }
 
 export interface CheckoutFees {
-  /** Platform commission in paise. */
+  /** Platform commission in decimal rupees. */
   platformFee: number;
-  /** GST on the platform fee, in paise. */
+  /** GST on the platform fee, in decimal rupees. */
   gstOnFee: number;
   /** platformFee + gstOnFee, floored at minimumTransactionFee. */
   totalFee: number;
@@ -42,11 +42,11 @@ export function computeCheckoutFees(subtotal: number, commissions: FeeCommission
 }
 
 export interface PayoutDeduction {
-  /** Platform commission in paise. */
+  /** Platform commission in decimal rupees. */
   platformFee: number;
-  /** Payment gateway cost, absorbed by the platform from the seller's share, in paise. */
+  /** Payment gateway cost, absorbed by the platform from the seller's share, in decimal rupees. */
   gatewayFee: number;
-  /** GST on the platform fee, in paise. */
+  /** GST on the platform fee, in decimal rupees. */
   gstOnFee: number;
   /** platformFee + gatewayFee + gstOnFee. */
   totalDeduction: number;

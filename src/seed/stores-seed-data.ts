@@ -82,6 +82,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     },
     isPublic: true,
     isVacationMode: false,
+    emiEnabled: true,
 
     stats: {
       totalProducts: 0,
@@ -133,6 +134,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     },
     isPublic: true,
     isVacationMode: false,
+    emiEnabled: true,
     stats: { totalProducts: 0, itemsSold: 0, totalReviews: 6, averageRating: 4.8 },
     capabilities: ["host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
     createdAt: daysAgo(150),

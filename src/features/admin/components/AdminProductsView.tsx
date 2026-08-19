@@ -178,7 +178,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     title: "Products",
     searchPlaceholder: "Search products, SKUs, or seller names",
     emptyLabel: "No products found",
-    filterKeys: ["status", "type", "showSold"],
+    filterKeys: ["status", "type", "showSold", "showEnded", "showClosed"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "products", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
@@ -218,6 +218,15 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
       const typeFilter = TYPE_FILTER_MAP[state.type];
       if (typeFilter) parts.push(typeFilter);
+      // Ended/closed only apply to auctions/prize-draws — auctionEndDate
+      // and prizeRevealWindowEnd do not exist on other listing types, so
+      // these are no-ops unless the matching Type tab is also selected.
+      if (typeFilter === "listingType==auction" && state.showEnded !== "true") {
+        parts.push(sieveFilter("auctionEndDate", SIEVE_OP.GTE, new Date().toISOString()));
+      }
+      if (typeFilter === "listingType==prize-draw" && state.showClosed !== "true") {
+        parts.push(sieveFilter("prizeRevealWindowEnd", SIEVE_OP.GTE, new Date().toISOString()));
+      }
       return parts.join(",") || undefined;
     },
     primaryAction: {
@@ -313,6 +322,26 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
           ]}
           value={pendingFilters.showSold ?? ""}
           onChange={(id) => setPendingFilters((p) => ({ ...p, showSold: id }))}
+          allId=""
+        />
+        <FilterChipGroup
+          label="Ended"
+          tabs={[
+            { id: "", label: "Hide ended" },
+            { id: "true", label: "Show ended" },
+          ]}
+          value={pendingFilters.showEnded ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, showEnded: id }))}
+          allId=""
+        />
+        <FilterChipGroup
+          label="Closed"
+          tabs={[
+            { id: "", label: "Hide closed" },
+            { id: "true", label: "Show closed" },
+          ]}
+          value={pendingFilters.showClosed ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, showClosed: id }))}
           allId=""
         />
       </>

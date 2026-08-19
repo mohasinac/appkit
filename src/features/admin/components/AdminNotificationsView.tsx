@@ -9,7 +9,7 @@ import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, useT
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
+import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { useBulkAction } from "../../../react";
 import {
   toRecordArray,
@@ -100,7 +100,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
     title: "Notifications",
     searchPlaceholder: "Search by title or user ID",
     emptyLabel: "No notifications found",
-    filterKeys: ["type"],
+    filterKeys: ["type", "readState"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "notifications", "listing"],
     endpoint: ADMIN_ENDPOINTS.ADMIN_NOTIFICATIONS,
@@ -122,26 +122,30 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
-    buildFilters: (state) =>
-      state.type && state.type !== "All" ? sieveFilter("type", SIEVE_OP.EQ, state.type) : undefined,
-    buildBulkActions: (selection): BulkActionItem[] => [
-      {
-        id: ROW_ACTION_ID.MARK_READ,
-        label: ACTIONS.ADMIN["mark-read"].label,
-        variant: "primary",
-        loading: bulkNotifs.isLoading,
+    buildFilters: (state) => {
+      const parts: string[] = [];
+      if (state.type && state.type !== "All") parts.push(sieveFilter("type", SIEVE_OP.EQ, state.type));
+      if (state.readState === "unread") parts.push(sieveFilter("isRead", SIEVE_OP.EQ, false));
+      else if (state.readState === "read") parts.push(sieveFilter("isRead", SIEVE_OP.EQ, true));
+      return parts.join(",") || undefined;
+    },
+    // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
+    buildBulkActions: (selection): BulkActionItem[] =>
+      ADMIN_BULK_ACTIONS.notifications.map((id) => ({
+        id,
+        label: ROW_ACTION_META[id].label,
+        destructive: ROW_ACTION_META[id].destructive,
+        variant: id === ROW_ACTION_ID.MARK_READ ? ("primary" as const) : ("secondary" as const),
+        loading: id === ROW_ACTION_ID.MARK_READ ? bulkNotifs.isLoading : undefined,
         onClick: () => {
-          void bulkNotifs.execute({ action: "mark_read", ids: selection.selectedIds });
-          selection.clearSelection();
+          if (id === ROW_ACTION_ID.MARK_READ) {
+            void bulkNotifs.execute({ action: "mark_read", ids: selection.selectedIds });
+            selection.clearSelection();
+          } else {
+            setBulkDeleteIds(selection.selectedIds);
+          }
         },
-      },
-      {
-        id: ROW_ACTION_ID.DELETE,
-        label: ACTIONS.ADMIN["delete-notification"].label,
-        variant: "secondary",
-        onClick: () => setBulkDeleteIds(selection.selectedIds),
-      },
-    ],
+      })),
     renderRowActions: (row) => (
       <RowActionMenu
         actions={[
@@ -158,12 +162,25 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <FilterChipGroup
-        label="Type"
-        tabs={NOTIF_TYPES.map((opt) => ({ id: opt, label: opt }))}
-        value={pendingFilters.type || "All"}
-        onChange={(v) => setPendingFilters((p) => ({ ...p, type: v }))}
-      />
+      <>
+        <FilterChipGroup
+          label="Type"
+          tabs={NOTIF_TYPES.map((opt) => ({ id: opt, label: opt }))}
+          value={pendingFilters.type || "All"}
+          onChange={(v) => setPendingFilters((p) => ({ ...p, type: v }))}
+        />
+        <FilterChipGroup
+          label="Read state"
+          tabs={[
+            { id: "", label: "All" },
+            { id: "unread", label: "Unread" },
+            { id: "read", label: "Read" },
+          ]}
+          value={pendingFilters.readState ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, readState: id }))}
+          allId=""
+        />
+      </>
     ),
   };
 

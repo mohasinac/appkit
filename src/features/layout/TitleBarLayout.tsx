@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { Avatar, BlockHeader, Button, Div, Row, Section, SiteLogo, Span } from "../../ui";
+import { Avatar, BlockHeader, Button, Div, Row, Section, SiteLogo, SiteMark, Span } from "../../ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {
@@ -74,7 +74,7 @@ const countBadge =
  * TitleBarLayout — generic top sticky title-bar shell.
  *
  * Layout:
- *  TB1 (h-14, all screens): logo | navSlot? | [secondary actions lg+] | search | deals | theme | hamburger
+ *  TB1 (h-14, all screens): wordmark (+ mark on mobile) | centred mark (md+) | [secondary actions lg+] | search | deals | theme | hamburger
  *  TB2 (h-10, below lg only): wishlist | cart | profile  — mirrors what TB1 hides below lg
  *
  * Receives all domain data as props — zero domain imports.
@@ -102,7 +102,7 @@ export function TitleBarLayout({
   user,
   notificationSlot,
   devSlot,
-  navSlot,
+  navSlot: _navSlot,
   promoStripText,
   isDark = false,
   onToggleTheme,
@@ -322,32 +322,34 @@ export function TitleBarLayout({
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
         {/* TB1 — primary row, always visible */}
         <Row justify="between" gap="none" className="relative h-14">
-          {/* Left: #1 — wordmark, always shown */}
+          {/* Left: #1 — wordmark, always shown. Mobile also gets the icon
+              mark prefixed before the text (md:hidden) since the centred
+              mark below has no room on narrow viewports. */}
           <Row gap="3">
+            <Link
+              href={logoHref}
+              aria-label={brandName}
+              className="flex items-center gap-[var(--appkit-space-2)] transition-opacity hover:opacity-80"
+            >
+              <Div className="flex md:hidden">
+                <SiteMark title={brandName} size="sm" />
+              </Div>
+              <SiteLogo title={brandName} size="md" />
+            </Link>
+          </Row>
+
+          {/* Centre: #2 — icon mark, always centred on desktop. `src` falls
+              back to the theme-aware inline mark when no admin logo image is
+              configured, and swaps to the admin's raster upload when one is. */}
+          <Row className="hidden md:flex absolute inset-y-0 left-1/2 -translate-x-1/2" align="center">
             <Link
               href={logoHref}
               aria-label={brandName}
               className="flex items-center transition-opacity hover:opacity-80"
             >
-              <SiteLogo title={brandName} size="md" />
+              <SiteMark src={siteLogoUrl} title={brandName} size="lg" />
             </Link>
           </Row>
-
-          {/* Centre: #2 — admin logo image (absolutely centred when present),
-              or nav slot (desktop only) when no logo image is configured */}
-          {siteLogoUrl ? (
-            <Row className="absolute inset-y-0 left-1/2 -translate-x-1/2" align="center">
-              <Link
-                href={logoHref}
-                aria-label={brandName}
-                className="flex items-center transition-opacity hover:opacity-80"
-              >
-                <SiteLogo src={siteLogoUrl} title={brandName} size="md" />
-              </Link>
-            </Row>
-          ) : (
-            navSlot && <Div className="hidden md:flex ml-auto">{navSlot}</Div>
-          )}
 
           {/* Right: #3 — all action buttons.
               wishlist/cart/profile shown only on lg+ here — TB2 carries them on mobile. */}

@@ -24,13 +24,13 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 const _rawAddressesSeedData: Partial<AddressDocument>[] = [
-  // Rehan Sheikh — Home
+  // Mock User 3 — Home
   {
     id: "addr-yugi-home",
     ownerType: "user",
     ownerId: "user-yugi-muto",
     label: "Home",
-    fullName: "Rehan Sheikh",
+    fullName: "Mock User 3",
     phone: "+91-99999-10001",
     addressLine1: "123 Stadium Lane",
     addressLine2: "Vijay Nagar",
@@ -43,13 +43,13 @@ const _rawAddressesSeedData: Partial<AddressDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // Vivaan Kapoor — Home
+  // Mock User 2 — Home
   {
     id: "addr-kaiba-mansion",
     ownerType: "user",
     ownerId: "user-seto-kaiba",
     label: "Home",
-    fullName: "Vivaan Kapoor",
+    fullName: "Mock User 2",
     phone: "+91-99999-20001",
     addressLine1: "1000 Civil Lines Drive",
     addressLine2: "Sitabuldi",
@@ -68,7 +68,7 @@ const _rawAddressesSeedData: Partial<AddressDocument>[] = [
     ownerType: "user",
     ownerId: "user-admin-letitrip",
     label: "LetItRip HQ",
-    fullName: "LetItRip Admin",
+    fullName: "Mock User 1",
     phone: "+91-99999-30001",
     addressLine1: "100 Collectibles Plaza",
     addressLine2: "Mumbai Central",

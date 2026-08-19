@@ -18,6 +18,7 @@ import {
   type ThemeManagerValue,
 } from "../../site-settings/components/ThemeManagerView";
 import { DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from "../../../tokens/themes";
+import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../../about/schemas/firestore";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -272,7 +273,18 @@ export function AdminSiteSettingsView({
   const [aboutSubtitle, setAboutSubtitle] = React.useState("");
   const [aboutMissionTitle, setAboutMissionTitle] = React.useState("");
   const [aboutMissionText, setAboutMissionText] = React.useState("");
+  const [aboutHowItWorksTitle, setAboutHowItWorksTitle] = React.useState("");
+  const [aboutHowItems, setAboutHowItems] = React.useState<AboutHowItem[]>([]);
+  const [aboutValuesTitle, setAboutValuesTitle] = React.useState("");
+  const [aboutValueItems, setAboutValueItems] = React.useState<AboutValueItem[]>([]);
+  const [aboutMilestonesTitle, setAboutMilestonesTitle] = React.useState("");
+  const [aboutMilestones, setAboutMilestones] = React.useState<AboutMilestone[]>([]);
+  const [aboutTeamTitle, setAboutTeamTitle] = React.useState("");
+  const [aboutTeamSubtitle, setAboutTeamSubtitle] = React.useState("");
+  const [aboutTeamMembers, setAboutTeamMembers] = React.useState<AboutTeamMember[]>([]);
   const [aboutCtaTitle, setAboutCtaTitle] = React.useState("");
+  const [aboutCtaSell, setAboutCtaSell] = React.useState("");
+  const [aboutCtaShop, setAboutCtaShop] = React.useState("");
 
   // ⑭ Notification channels
   const [notifEmailEnabled, setNotifEmailEnabled] = React.useState(false);
@@ -437,7 +449,18 @@ export function AdminSiteSettingsView({
     setAboutSubtitle(s.aboutContent?.subtitle ?? "");
     setAboutMissionTitle(s.aboutContent?.missionTitle ?? "");
     setAboutMissionText(s.aboutContent?.missionText ?? "");
+    setAboutHowItWorksTitle(s.aboutContent?.howItWorksTitle ?? "");
+    setAboutHowItems(s.aboutContent?.howItems ?? []);
+    setAboutValuesTitle(s.aboutContent?.valuesTitle ?? "");
+    setAboutValueItems(s.aboutContent?.valueItems ?? []);
+    setAboutMilestonesTitle(s.aboutContent?.milestonesTitle ?? "");
+    setAboutMilestones(s.aboutContent?.milestones ?? []);
+    setAboutTeamTitle(s.aboutContent?.teamTitle ?? "");
+    setAboutTeamSubtitle(s.aboutContent?.teamSubtitle ?? "");
+    setAboutTeamMembers(s.aboutContent?.teamMembers ?? []);
     setAboutCtaTitle(s.aboutContent?.ctaTitle ?? "");
+    setAboutCtaSell(s.aboutContent?.ctaSell ?? "");
+    setAboutCtaShop(s.aboutContent?.ctaShop ?? "");
 
     setWaPhoneNumberId(s.credentialsMasked?.whatsappPhoneNumberId ?? "");
     setWaCloudApiToken(s.credentialsMasked?.whatsappCloudApiToken ?? "");
@@ -477,7 +500,24 @@ export function AdminSiteSettingsView({
   // save action for the whole form, not 19 per-tab mutations.
   function buildFullPayload(): FirestoreDocument {
     return {
-      aboutContent: { title: aboutTitle, subtitle: aboutSubtitle, missionTitle: aboutMissionTitle, missionText: aboutMissionText, ctaTitle: aboutCtaTitle },
+      aboutContent: {
+        title: aboutTitle,
+        subtitle: aboutSubtitle,
+        missionTitle: aboutMissionTitle,
+        missionText: aboutMissionText,
+        howItWorksTitle: aboutHowItWorksTitle,
+        howItems: aboutHowItems as unknown as FirestoreDocument[],
+        valuesTitle: aboutValuesTitle,
+        valueItems: aboutValueItems as unknown as FirestoreDocument[],
+        milestonesTitle: aboutMilestonesTitle,
+        milestones: aboutMilestones as unknown as FirestoreDocument[],
+        teamTitle: aboutTeamTitle,
+        teamSubtitle: aboutTeamSubtitle,
+        teamMembers: aboutTeamMembers as unknown as FirestoreDocument[],
+        ctaTitle: aboutCtaTitle,
+        ctaSell: aboutCtaSell,
+        ctaShop: aboutCtaShop,
+      },
       siteName, tagline, logo: logoUrl, favicon: faviconUrl,
       maintenance: { enabled: maintenanceMode, message: maintenanceMessage },
       background: {
@@ -636,7 +676,7 @@ export function AdminSiteSettingsView({
           <TabsContent value="about">
             <Form onSubmit={(e) => { e.preventDefault(); saveAllMutation.mutate(); }} className="pt-[var(--appkit-space-4)]" spacing="md">
               <Text size="xs" color="muted">
-                Override the About page hero and mission text. Leave blank to use the platform defaults.
+                Override the About page content. Leave blank to use the platform defaults.
               </Text>
               <Input label="Hero title" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} placeholder="About LetItRip" />
               <Input label="Hero subtitle" value={aboutSubtitle} onChange={(e) => setAboutSubtitle(e.target.value)} placeholder="Connecting buyers, sellers, and bidders in one vibrant marketplace" />
@@ -650,7 +690,84 @@ export function AdminSiteSettingsView({
                   rows={4}
                 />
               </>
+
+              <Stack gap="sm" rounded="lg" border="default" padding="md">
+                <Input label={'"How it works" section title'} value={aboutHowItWorksTitle} onChange={(e) => setAboutHowItWorksTitle(e.target.value)} placeholder="How It Works" />
+                {aboutHowItems.map((item, i) => (
+                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
+                    <Row justify="between" align="center">
+                      <Text size="xs" weight="medium" color="muted">Step {i + 1}</Text>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutHowItems(aboutHowItems.filter((_, idx) => idx !== i))}>✕</Button>
+                    </Row>
+                    <Input label="Icon (emoji)" value={item.icon} onChange={(e) => { const next = [...aboutHowItems]; next[i] = { ...item, icon: e.target.value }; setAboutHowItems(next); }} placeholder="🛒" />
+                    <Input label="Title" value={item.title} onChange={(e) => { const next = [...aboutHowItems]; next[i] = { ...item, title: e.target.value }; setAboutHowItems(next); }} />
+                    <Textarea value={item.text} onChange={(e) => { const next = [...aboutHowItems]; next[i] = { ...item, text: e.target.value }; setAboutHowItems(next); }} rows={2} />
+                  </Stack>
+                ))}
+                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutHowItems([...aboutHowItems, { title: "", text: "", icon: "✨", tone: "indigo" }])}>+ Add step</Button>
+              </Stack>
+
+              <Stack gap="sm" rounded="lg" border="default" padding="md">
+                <Input label="Values section title" value={aboutValuesTitle} onChange={(e) => setAboutValuesTitle(e.target.value)} placeholder="Our Values" />
+                {aboutValueItems.map((item, i) => (
+                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
+                    <Row justify="between" align="center">
+                      <Text size="xs" weight="medium" color="muted">Value {i + 1}</Text>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutValueItems(aboutValueItems.filter((_, idx) => idx !== i))}>✕</Button>
+                    </Row>
+                    <Input label="Icon (emoji)" value={item.icon} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, icon: e.target.value }; setAboutValueItems(next); }} placeholder="🛡️" />
+                    <Input label="Title" value={item.title} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, title: e.target.value }; setAboutValueItems(next); }} />
+                    <Textarea value={item.text} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, text: e.target.value }; setAboutValueItems(next); }} rows={2} />
+                  </Stack>
+                ))}
+                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutValueItems([...aboutValueItems, { title: "", text: "", icon: "✨" }])}>+ Add value</Button>
+              </Stack>
+
+              <Stack gap="sm" rounded="lg" border="default" padding="md">
+                <Input label="Milestones section title" value={aboutMilestonesTitle} onChange={(e) => setAboutMilestonesTitle(e.target.value)} placeholder="Our Journey" />
+                {aboutMilestones.map((item, i) => (
+                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
+                    <Row justify="between" align="center">
+                      <Text size="xs" weight="medium" color="muted">Milestone {i + 1}</Text>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutMilestones(aboutMilestones.filter((_, idx) => idx !== i))}>✕</Button>
+                    </Row>
+                    <Input label="Year" value={item.year} onChange={(e) => { const next = [...aboutMilestones]; next[i] = { ...item, year: e.target.value }; setAboutMilestones(next); }} placeholder="2024" />
+                    <Textarea value={item.text} onChange={(e) => { const next = [...aboutMilestones]; next[i] = { ...item, text: e.target.value }; setAboutMilestones(next); }} rows={2} />
+                  </Stack>
+                ))}
+                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutMilestones([...aboutMilestones, { year: "", text: "" }])}>+ Add milestone</Button>
+              </Stack>
+
+              <Stack gap="sm" rounded="lg" border="default" padding="md">
+                <Input label="Team section title" value={aboutTeamTitle} onChange={(e) => setAboutTeamTitle(e.target.value)} placeholder="Meet the Team" />
+                <Input label="Team section subtitle" value={aboutTeamSubtitle} onChange={(e) => setAboutTeamSubtitle(e.target.value)} placeholder="The people building LetItRip" />
+                {aboutTeamMembers.map((member, i) => (
+                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
+                    <Row justify="between" align="center">
+                      <Text size="xs" weight="medium" color="muted">Team member {i + 1}</Text>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutTeamMembers(aboutTeamMembers.filter((_, idx) => idx !== i))}>✕</Button>
+                    </Row>
+                    <ImageUpload
+                      label="Photo"
+                      currentImage={member.photoUrl}
+                      onUpload={(file) => upload(file, "store")}
+                      onChange={(url) => { const next = [...aboutTeamMembers]; next[i] = { ...member, photoUrl: url }; setAboutTeamMembers(next); }}
+                    />
+                    <Input label="Name" value={member.name} onChange={(e) => { const next = [...aboutTeamMembers]; next[i] = { ...member, name: e.target.value }; setAboutTeamMembers(next); }} />
+                    <Input label="Role" value={member.role} onChange={(e) => { const next = [...aboutTeamMembers]; next[i] = { ...member, role: e.target.value }; setAboutTeamMembers(next); }} placeholder="Founder & Developer" />
+                    <Textarea value={member.bio} onChange={(e) => { const next = [...aboutTeamMembers]; next[i] = { ...member, bio: e.target.value }; setAboutTeamMembers(next); }} rows={3} />
+                    <Row gap="md">
+                      <Toggle label="Founder" checked={!!member.isFounder} onChange={(v) => { const next = [...aboutTeamMembers]; next[i] = { ...member, isFounder: v }; setAboutTeamMembers(next); }} />
+                      <Toggle label="Developer" checked={!!member.isDeveloper} onChange={(v) => { const next = [...aboutTeamMembers]; next[i] = { ...member, isDeveloper: v }; setAboutTeamMembers(next); }} />
+                    </Row>
+                  </Stack>
+                ))}
+                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutTeamMembers([...aboutTeamMembers, { name: "", role: "", bio: "" }])}>+ Add team member</Button>
+              </Stack>
+
               <Input label="CTA banner title" value={aboutCtaTitle} onChange={(e) => setAboutCtaTitle(e.target.value)} placeholder="Ready to get started?" />
+              <Input label="Sell CTA copy" value={aboutCtaSell} onChange={(e) => setAboutCtaSell(e.target.value)} placeholder="Start selling in minutes" />
+              <Input label="Shop CTA copy" value={aboutCtaShop} onChange={(e) => setAboutCtaShop(e.target.value)} placeholder="Browse the marketplace" />
             </Form>
           </TabsContent>
 

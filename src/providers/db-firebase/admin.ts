@@ -71,7 +71,7 @@ function loadDatabase() {
 // OpenSSL 3 (Node 18+) rejects malformed PEM — ensure the key is normalised
 // before passing it to `cert()`.
 //
-function parsePrivateKey(raw: string): string {
+export function parsePrivateKey(raw: string): string {
   return raw
     .replace(/^﻿/, "")    // strip UTF-8 BOM (PowerShell pipe artefact)
     .replace(/^["']|["']$/g, "") // strip optional surrounding quotes

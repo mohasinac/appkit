@@ -74,7 +74,7 @@ export interface EmiInstallment {
   /** 1-based installment number. */
   index: number;
   dueDate: Date;
-  /** Installment amount in paise (principal share + surcharge share for this installment). */
+  /** Installment amount in decimal rupees (principal share + surcharge share for this installment). */
   amount: number;
   status: EmiInstallmentStatus;
   paidAt?: Date;
@@ -130,7 +130,7 @@ export interface OrderDocumentItem {
 export interface OrderRefundEvent {
   refundId: string;
   type: RefundType;
-  /** Amount in paise. */
+  /** Amount in decimal rupees. */
   amount: number;
   /** ProductIds / itemIds that were refunded (for partial refunds). */
   itemIds?: string[];
@@ -200,7 +200,7 @@ export interface OrderDocument extends BaseDocument {
   /** COD handling fee charged to the buyer: max(codHandlingFeeMin, subtotal × codHandlingFeePercent / 100). Only set when paymentMethod === "cod". */
   codHandlingFee?: number;
 
-  // ── P-8 GST — buyer-facing tax breakdown, all paise, set when siteSettings.gst.enabled ──
+  // ── P-8 GST — buyer-facing tax breakdown, all decimal rupees, set when siteSettings.gst.enabled ──
   /** Order subtotal before GST — the amount GST is computed on. */
   taxableAmount?: number;
   /** Total GST charged (cgst + sgst, or igst — never both pairs at once). */
@@ -215,12 +215,12 @@ export interface OrderDocument extends BaseDocument {
   emiEnabled?: boolean;
   /** Number of monthly installments the buyer chose (2–6). */
   emiTenureMonths?: number;
-  /** Down payment collected at checkout, in paise (emiTokenPercent × seller subtotal). */
+  /** Down payment collected at checkout, in decimal rupees (emiTokenPercent × seller subtotal). */
   emiTokenAmount?: number;
-  /** Extra cost of choosing EMI over full payment, in paise — split between platform and seller. */
+  /** Extra cost of choosing EMI over full payment, in decimal rupees — split between platform and seller. */
   emiSurchargeAmount?: number;
   emiInstallments?: EmiInstallment[];
-  /** Sum of unpaid installment amounts, in paise. 0 once all installments are paid. */
+  /** Sum of unpaid installment amounts, in decimal rupees. 0 once all installments are paid. */
   emiRemainingBalance?: number;
   /** True once every installment's status is "paid". Gates shipment unless the product's `allowShipBeforeEmiComplete` flag is set. */
   emiComplete?: boolean;

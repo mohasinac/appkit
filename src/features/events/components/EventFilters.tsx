@@ -79,6 +79,8 @@ export function EventFilters({ table, variant = "admin" }: EventFiltersProps) {
     { value: "poll", label: t("eventTypePoll") },
     { value: "survey", label: t("eventTypeSurvey") },
     { value: "feedback", label: t("eventTypeFeedback") },
+    { value: "raffle", label: t("eventTypeRaffle") },
+    { value: "spin_wheel", label: t("eventTypeSpinWheel") },
   ];
 
   const adminStatusOptions = [

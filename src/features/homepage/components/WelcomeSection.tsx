@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEMED_TEXT_SECONDARY, FLEX_CENTER } from "../../../_internal/shared/styles/themed";
-import { Button, Div, Grid, Heading, Row, Section, SiteLogo, Span, Text, TextLink } from "../../../ui";
+import { Button, Div, Grid, Heading, Row, Section, SiteLogo, SiteMark, Span, Stack, Text, TextLink } from "../../../ui";
 
 // --- Props -------------------------------------------------------------------
 export interface WelcomeSectionChip {
@@ -191,12 +191,13 @@ if (isLoading) {
               className={`relative overflow-hidden aspect-[4/3] bg-[image:var(--appkit-gradient-section-mesh)]`} shadow="2xl" border="default" rounded="3xl"
             >
               <Div className="absolute inset-0 bg-[image:var(--appkit-gradient-glass)]" />
-              <Row centered className={`absolute inset-0 ${flex.center} px-[2.5rem]`}>
+              <Stack centered gap="sm" className={`absolute inset-0 ${flex.center} px-[2.5rem]`}>
+                <SiteMark title={brandLogoText || "LetItRip.in"} size="hero" />
                 <SiteLogo
                   title={brandLogoText || "LetItRip.in"}
                   size="hero"
                 />
-              </Row>
+              </Stack>
             </Div>
           </Div>
         </Grid>

@@ -38,7 +38,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-yugi-order-001",
     userId: "user-yugi-muto",
     userEmail: "rehan.sheikh@example.com",
-    userDisplayName: "Rehan Sheikh",
+    userDisplayName: "Mock User 3",
     category: "order_issue",
     subject: "Order delivered but item is missing from the box",
     description:
@@ -47,7 +47,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.IN_PROGRESS,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
     assignedTo: "user-admin-letitrip",
-    assignedToName: "LetItRip Admin",
+    assignedToName: "Mock User 1",
     messages: [
       msg(
         "msg-yugi-001-u1",
@@ -80,7 +80,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-yugi-refund-001",
     userId: "user-yugi-muto",
     userEmail: "rehan.sheikh@example.com",
-    userDisplayName: "Rehan Sheikh",
+    userDisplayName: "Mock User 3",
     category: "refund_request",
     subject: "Requesting refund for cancelled pre-order",
     description:
@@ -105,7 +105,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-kaiba-account-001",
     userId: "user-seto-kaiba",
     userEmail: "vivaan.kapoor@example.com",
-    userDisplayName: "Vivaan Kapoor",
+    userDisplayName: "Mock User 2",
     category: "account",
     subject: "Cannot log in — OTP not arriving on new phone number",
     description:
@@ -113,7 +113,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.WAITING_ON_USER,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
     assignedTo: "user-admin-letitrip",
-    assignedToName: "LetItRip Admin",
+    assignedToName: "Mock User 1",
     messages: [
       msg(
         "msg-kaiba-001-u1",
@@ -139,7 +139,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-yugi-dispute-001",
     userId: "user-yugi-muto",
     userEmail: "rehan.sheikh@example.com",
-    userDisplayName: "Rehan Sheikh",
+    userDisplayName: "Mock User 3",
     category: "listing_dispute",
     subject: "Product description says mint but tip is heavily worn",
     description:
@@ -147,7 +147,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.RESOLVED,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
     assignedTo: "user-admin-letitrip",
-    assignedToName: "LetItRip Admin",
+    assignedToName: "Mock User 1",
     messages: [
       msg(
         "msg-yugi-003-u1",
@@ -181,7 +181,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-yugi-auction-001",
     userId: "user-yugi-muto",
     userEmail: "rehan.sheikh@example.com",
-    userDisplayName: "Rehan Sheikh",
+    userDisplayName: "Mock User 3",
     category: "auction_dispute",
     subject: "Winning bid was removed from Dragoon Storm auction",
     description:
@@ -221,7 +221,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-kaiba-general-001",
     userId: "user-seto-kaiba",
     userEmail: "vivaan.kapoor@example.com",
-    userDisplayName: "Vivaan Kapoor",
+    userDisplayName: "Mock User 2",
     category: "general",
     subject: "How do I list a sealed limited-edition beyblade?",
     description:
@@ -246,7 +246,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-yugi-fraud-001",
     userId: "user-yugi-muto",
     userEmail: "rehan.sheikh@example.com",
-    userDisplayName: "Rehan Sheikh",
+    userDisplayName: "Mock User 3",
     category: "scam_report",
     subject: "Seller sent empty box and is now unreachable",
     description:
@@ -254,7 +254,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.RESOLVED,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
     assignedTo: "user-admin-letitrip",
-    assignedToName: "LetItRip Admin",
+    assignedToName: "Mock User 1",
     messages: [
       msg("msg-yugi-005-u1", "user-yugi-muto", "user",
         "I have the weight receipt from Delhivery. 40g is impossible for a sealed beyblade. The seller is not replying on messages or phone.",
@@ -279,7 +279,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     id: "ticket-kaiba-ban-appeal-001",
     userId: "user-seto-kaiba",
     userEmail: "vivaan.kapoor@example.com",
-    userDisplayName: "Vivaan Kapoor",
+    userDisplayName: "Mock User 2",
     category: "account",
     subject: "My account was flagged — I believe it was a mistake",
     description:
@@ -287,7 +287,7 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.IN_PROGRESS,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
     assignedTo: "user-admin-letitrip",
-    assignedToName: "LetItRip Admin",
+    assignedToName: "Mock User 1",
     messages: [
       msg("msg-kaiba-003-u1", "user-seto-kaiba", "user",
         "I'm a legitimate buyer. I have a clean order history and never had a single complaint. Please explain the flag.",

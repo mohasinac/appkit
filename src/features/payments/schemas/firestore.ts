@@ -26,9 +26,9 @@ export type PayoutStatus = "pending" | "processing" | "paid" | "failed";
 export interface PayoutRefundDeduction {
   orderId: string;
   refundId: string;
-  /** Gross refund amount in paise (for audit trail). */
+  /** Gross refund amount in decimal rupees (for audit trail). */
   refundedAmount: number;
-  /** Net amount deducted from the seller payout in paise. */
+  /** Net amount deducted from the seller payout in decimal rupees. */
   deductedAmount: number;
   reason: string;
   appliedAt: Date;

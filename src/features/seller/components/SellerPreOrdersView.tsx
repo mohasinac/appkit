@@ -77,14 +77,14 @@ const PRE_ORDER_COLUMNS: AdminTableColumn<PreOrderRow>[] = [
     header: "Status",
     className: "w-28",
     render: (row) => {
+      // Real ProductStatus is draft|published|in_review|archived — "active"
+      // fixed to "published"; "cancelled" is not a stored status value.
       const variant =
-        row.status === "active"
+        row.status === "published"
           ? "success"
           : row.status === "draft"
             ? "default"
-            : row.status === "cancelled"
-              ? "danger"
-              : "warning";
+            : "warning";
       return <Badge variant={variant}>{row.status}</Badge>;
     },
   },
@@ -170,6 +170,14 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
       }),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
+    // No "Show closed" toggle here (unlike Auctions/Prize Draws): the public
+    // PreOrdersIndexListing equivalent filters on stockQuantity>0, a range
+    // filter, which cannot be combined with this view's title/
+    // preOrderDeliveryDate/createdAt sort options without violating
+    // Firestore's orderBy-must-match-the-range-field rule (confirmed by
+    // appkit/scripts/audit-listing-indices.mjs QUERY_UNSATISFIABLE). Fixing
+    // this properly would mean constraining sort choices per toggle state,
+    // out of scope for this pass — left as a real gap, not silently broken.
     buildFilters: (state) => {
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
       return ["listingType==pre-order", status].filter(Boolean).join(",");

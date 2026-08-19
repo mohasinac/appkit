@@ -56,7 +56,7 @@ export interface CartItemDocument {
    * ShippingPicker writes this when the buyer selects a provider.
    */
   chosenShippingProviderId?: string;
-  /** Fee in paise for the chosen provider, snapshotted at cart time. */
+  /** Fee in decimal rupees for the chosen provider, snapshotted at cart time. */
   chosenShippingFee?: number;
   addedAt: Date;
   updatedAt: Date;

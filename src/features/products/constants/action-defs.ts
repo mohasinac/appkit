@@ -576,6 +576,7 @@ export const ADMIN_BULK_ACTIONS = {
 // Seller bulk actions per listing entity
 export const SELLER_BULK_ACTIONS = {
   products:       [ROW_ACTION_ID.PUBLISH, ROW_ACTION_ID.ARCHIVE, ROW_ACTION_ID.DELETE],
+  payouts:        [ROW_ACTION_ID.EXPORT],
   coupons:        [ROW_ACTION_ID.ARCHIVE, ROW_ACTION_ID.DELETE],
   bids:           [ROW_ACTION_ID.CANCEL],
   bundles:        [ROW_ACTION_ID.DELETE],

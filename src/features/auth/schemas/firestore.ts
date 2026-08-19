@@ -244,6 +244,7 @@ export const DEFAULT_USER_DATA: Partial<UserDocument> = {
   emailVerified: false,
   phoneVerified: false,
   disabled: false,
+  isTester: false,
   photoURL: null,
   displayName: null,
   publicProfile: {

@@ -77,7 +77,7 @@ export async function placeBid(
       ? product.currentBid!
       : (product.startingBid ?? product.price);
 
-  const minIncrement = product.minBidIncrement ?? 100;
+  const minIncrement = product.minBidIncrement ?? 1;
 
   // Proxy-bid semantics (eBay style): the buyer's `bidAmount` is treated as
   // their **maximum** they're willing to pay; the visible price only steps up

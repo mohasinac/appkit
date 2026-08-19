@@ -54,7 +54,10 @@ export function AvatarUpload({
     currentPhotoURL || null,
   );
   const [cropData, setCropData] = useState<ImageCropData | null>(
-    currentCropData || null,
+    currentCropData ||
+      (currentPhotoURL
+        ? { url: currentPhotoURL, position: { x: 50, y: 50 }, zoom: 1 }
+        : null),
   );
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
   const [showCropModal, setShowCropModal] = useState(false);
@@ -121,10 +124,11 @@ export function AvatarUpload({
         },
       );
 
-      await onUploadSuccess?.(downloadURL, pendingCropData);
+      const finalizedCropData: ImageCropData = { ...pendingCropData, url: downloadURL };
+      await onUploadSuccess?.(downloadURL, finalizedCropData);
 
       setPreviewUrl(downloadURL);
-      setCropData(pendingCropData);
+      setCropData(finalizedCropData);
       setPendingCropData(null);
       setPendingUploadFile(null);
 

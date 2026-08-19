@@ -382,7 +382,7 @@ export function Search({
 
     return (
       <Row className={`relative ${className ?? ""}`} gap="sm">
-        <Row className="relative flex-1">
+        <Row className="relative flex-1 min-w-0">
           <svg
             className="absolute left-3 w-4 h-4 text-zinc-400 pointer-events-none"
             aria-hidden="true"
@@ -449,7 +449,7 @@ export function Search({
             value={selectedType}
             onValueChange={handleTypeChange}
             aria-label={labels.resourceTypeLabel ?? "Search in"}
-            className="flex-shrink-0"
+            wrapperClassName="flex-shrink-0"
           />
         )}
         {deferred && (
@@ -650,7 +650,7 @@ export function Search({
     <Div border="bottom-subtle" className="animate-[fadeIn_150ms_ease-out]" surface="default" shadow="md">
       <Div className="container mx-auto md:py-[1rem] relative" padding="inline">
         <Row gap="sm" className="md:gap-[0.75rem]">
-          <Div className="flex-1 relative">
+          <Div className="flex-1 relative min-w-0">
             <Input
               ref={inputRef}
               bare
@@ -669,7 +669,7 @@ export function Search({
               value={selectedType}
               onValueChange={handleTypeChange}
               aria-label={labels.resourceTypeLabel ?? "Search in"}
-              className="flex-shrink-0"
+              wrapperClassName="flex-shrink-0"
             />
           )}
           <Button gap="md" 

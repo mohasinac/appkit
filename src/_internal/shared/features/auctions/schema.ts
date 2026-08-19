@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const placeBidSchema = z.object({
   auctionId: z.string().min(1),
-  amount: z.number().int().positive("Bid amount must be a positive integer (paise)"),
+  amount: z.number().positive("Bid amount must be a positive number"),
 });
 
 export const cancelBidSchema = z.object({

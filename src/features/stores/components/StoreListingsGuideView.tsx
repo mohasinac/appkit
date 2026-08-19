@@ -118,7 +118,8 @@ const STANDARD_STEPS = [
   {
     step: "Pricing",
     items: [
-      "Price — enter in Indian Rupees (₹). Stored in paise internally.",
+      // audit-money-units-ok: instructs sellers there is NO paise conversion, not a stale reference
+      "Price — enter in Indian Rupees (₹). Stored as decimal rupees — no paise conversion.",
       "isOnSale + salePrice — enable the sale badge and show a strikethrough price on the listing.",
       "customFields — add any extra key/value pairs buyers find useful (e.g. PSA cert number, card number, print run).",
     ],

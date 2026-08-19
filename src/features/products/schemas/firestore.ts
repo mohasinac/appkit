@@ -391,7 +391,7 @@ export interface PrizeDrawItem {
   condition: string;
   estimatedValue?: number;
   // FUTURE_FINANCIAL_DB: external_tx_id → lottery_transactions.external_tx_id
-  /** Per-slot price in paise for lottery mode. Lower price = higher weight = higher chance. */
+  /** Per-slot price in decimal rupees for lottery mode. Lower price = higher weight = higher chance. */
   prizeSlotPrice?: number;
   isWon: boolean;
 }

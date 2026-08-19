@@ -18,6 +18,7 @@
 
 import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";
+import { SiteMark } from "../../ui/components/SiteMark";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
 
 import { Stack } from "@mohasinac/appkit";
@@ -40,6 +41,7 @@ export function NotFoundView({
 }: NotFoundViewProps) {
   return (
     <Stack justify="center" className="min-h-[60vh] text-center" padding="x-xl" align="center">
+      <SiteMark size="xl" />
       <Heading level={1} variant="primary" size="7xl" className="mb-2" weight="bold">
         404
       </Heading>

@@ -8,7 +8,7 @@ import {
   BidOnOwnAuctionError,
 } from "../../../shared/features/auctions/errors";
 import {
-  AUCTION_MIN_BID_INCREMENT_PAISE,
+  AUCTION_MIN_BID_INCREMENT,
   AUCTION_SNIPING_WINDOW_SECONDS,
   AUCTION_DEFAULT_EXTENSION_MINUTES,
 } from "../../../shared/features/auctions/config";
@@ -32,7 +32,7 @@ export async function assertAuctionActive(auctionId: string): Promise<ProductDoc
 /** Compute the minimum valid bid given the current state. */
 export function computeMinBid(product: ProductDocument): number {
   const current = (product as any).currentBid ?? (product as any).startingBid ?? 0;
-  const increment = (product as any).minBidIncrement ?? AUCTION_MIN_BID_INCREMENT_PAISE;
+  const increment = (product as any).minBidIncrement ?? AUCTION_MIN_BID_INCREMENT;
   return current + increment;
 }
 

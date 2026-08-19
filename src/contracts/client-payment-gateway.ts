@@ -28,7 +28,7 @@ export interface OpenGatewayOptions {
   gatewayOrderId: string;
   /** Public key / publishable key for the gateway SDK. */
   publicKey: string;
-  /** Amount in the gateway's smallest currency unit (e.g. paise, cents). */
+  /** Amount in the gateway's smallest currency unit (e.g. paise, cents). */ // audit-money-units-ok: describes third-party gateway wire format, not our storage convention
   amount: number;
   /** ISO 4217 currency code. */
   currency: string;

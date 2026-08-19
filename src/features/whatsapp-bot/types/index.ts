@@ -92,7 +92,7 @@ export interface PurchaseAnnouncementInput {
   firstItemName: string;
   /** 0 if only one item in the order */
   additionalItemCount: number;
-  /** Total order amount in paise */
+  /** Total order amount in decimal rupees */
   totalAmount: number;
   orderId: string;
 }

@@ -148,7 +148,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
     title: "Payouts",
     searchPlaceholder: "Search stores, payout IDs, or order groups",
     emptyLabel: "No payouts found",
-    filterKeys: ["status"],
+    filterKeys: ["status", "showAllPayouts"],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "payouts", "listing"],
     endpoint: ADMIN_ENDPOINTS.PAYOUTS,
@@ -172,8 +172,18 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       })),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-    buildFilters: (state) =>
-      state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
+    buildFilters: (state) => {
+      // An explicit status chip always wins. Otherwise, hide the noise
+      // (already-paid payouts) by default — mirrors the isSold-hide-by-
+      // default precedent — with an escape hatch to see everything.
+      // Pipe-joined EQ, not NEQ — the Firestore rule requiring orderBy to
+      // match the inequality field does not apply to IN queries, so this
+      // stays compatible with the default createdAt sort.
+      if (state.status && state.status !== "All") return sieveFilter("status", SIEVE_OP.EQ, state.status);
+      return state.showAllPayouts !== "true"
+        ? sieveFilter("status", SIEVE_OP.EQ, "pending|processing|failed|cancelled")
+        : undefined;
+    },
     toolbarExtra: (
       <>
         <Button
@@ -213,12 +223,24 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <FilterChipGroup
-        label="Status"
-        tabs={ADMIN_PAYOUT_STATUS_TABS}
-        value={pendingFilters.status ?? ""}
-        onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-      />
+      <>
+        <FilterChipGroup
+          label="Status"
+          tabs={ADMIN_PAYOUT_STATUS_TABS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+        />
+        <FilterChipGroup
+          label="Paid payouts"
+          tabs={[
+            { id: "", label: "Hide paid" },
+            { id: "true", label: "Show all" },
+          ]}
+          value={pendingFilters.showAllPayouts ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, showAllPayouts: id }))}
+          allId=""
+        />
+      </>
     ),
   };
 

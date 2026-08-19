@@ -118,8 +118,6 @@ export { SellerAnalyticsAlertsView as StoreAnalyticsAlertsView } from "./SellerA
 export type { SellerAnalyticsAlertsViewProps as StoreAnalyticsAlertsViewProps } from "./SellerAnalyticsAlertsView";
 export { SellerStoreCategoriesView } from "./SellerStoreCategoriesView";
 export type { SellerStoreCategoriesViewProps } from "./SellerStoreCategoriesView";
-export { SellerTemplatesView } from "./SellerTemplatesView";
-export type { SellerTemplatesViewProps } from "./SellerTemplatesView";
 export { SellerPayoutMethodsView } from "./SellerPayoutMethodsView";
 export type { SellerPayoutMethodsViewProps } from "./SellerPayoutMethodsView";
 export { SellerShippingConfigsView } from "./SellerShippingConfigsView";

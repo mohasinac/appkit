@@ -395,6 +395,7 @@ function StepAuctionSettings({
   return (
     <Stack gap="md">
       <Alert variant="info">
+        {/* audit-money-units-ok: instructs the seller NOT to enter paise, not a stale reference */}
         Prices are in Indian Rupees (₹). Enter the rupee value — no paise.
       </Alert>
       <FormGroup columns={2}>

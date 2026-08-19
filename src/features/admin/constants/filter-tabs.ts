@@ -20,10 +20,12 @@ export interface AdminFilterTab {
 
 export const ALL_TAB = { id: "All", label: "All" } as const;
 
-/** Admin > Products — listing status filter chip set. */
+/** Admin > Products — listing status filter chip set. Real `ProductStatus`
+ *  is draft|published|in_review|archived — "pending" fixed to "in_review"
+ *  (its real meaning); the previous id never matched any document. */
 export const ADMIN_PRODUCT_STATUS_TABS = [
   ALL_TAB,
-  { id: "pending", label: "Pending" },
+  { id: "in_review", label: "Pending" },
   { id: "published", label: "Published" },
   { id: "draft", label: "Draft" },
   { id: "archived", label: "Archived" },
@@ -153,10 +155,14 @@ export const ADMIN_EVENT_ENTRY_STATUS_TABS = [
   { id: "CANCELLED", label: "Cancelled" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Admin > Events — event-state filter chip set. */
+/** Admin > Events — event-state filter chip set. Real `EventStatus` is
+ *  draft|active|paused|ended|cancelled — there is no "published" value
+ *  (field-names.ts's copy of this enum is stale; verified against the
+ *  feature's own events/types/index.ts). A "Published" chip previously
+ *  returned zero rows every time — removed rather than aliased since
+ *  "Active" already covers the intended meaning. */
 export const ADMIN_EVENT_STATUS_TABS = [
   ALL_TAB,
-  { id: "published", label: "Published" },
   { id: "draft", label: "Draft" },
   { id: "active", label: "Active" },
   { id: "ended", label: "Ended" },
@@ -216,61 +222,83 @@ export const ADMIN_COUPON_TYPE_TABS = [
  *  stays a single shape across queries. */
 export const EMPTY_TAB = { id: "", label: "All" } as const;
 
-/** Seller > Products — listing-state filter chip set. */
+/** Seller > Products — listing-state filter chip set. Real `ProductStatus`
+ *  is draft|published|in_review|archived — there is no "active" or "sold"
+ *  value on the `status` field. "Active" was fixed to "published" (its real
+ *  meaning); "Sold" was removed since sold-filtering already has its own
+ *  correct, working mechanism (the `isSold`-driven "Show sold" toolbar
+ *  toggle in SellerProductsView.tsx) — the status chip duplicated it with
+ *  a broken `status=="sold"` query that always returned zero rows. */
 export const SELLER_PRODUCT_STATUS_TABS = [
   ALL_TAB,
-  { id: "active", label: "Active" },
+  { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
   { id: "archived", label: "Archived" },
-  { id: "sold", label: "Sold" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Seller > Auctions — auction-state filter chip set. */
+/** Seller > Auctions — auction-state filter chip set. Real `ProductStatus`
+ *  has no "active"/"ended"/"cancelled" values. "Active" fixed to
+ *  "published". "Ended" and "Cancelled" removed — "ended" is a derived
+ *  state (auctionEndDate vs now), not a stored status, and is now handled
+ *  by SellerAuctionsView's "Show ended" toolbar toggle; there is no stored
+ *  "cancelled" state for auctions at all (an auction that expires with no
+ *  bids becomes `archived`, indistinguishable in storage from a listing the
+ *  seller archived for any other reason — aliasing "Cancelled" to
+ *  `status==archived` would be misleading, so it's dropped rather than
+ *  reintroduced under a wrong mapping). */
 export const SELLER_AUCTION_STATUS_TABS = [
   ALL_TAB,
-  { id: "active", label: "Active" },
+  { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
-  { id: "ended", label: "Ended" },
-  { id: "cancelled", label: "Cancelled" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Seller > Pre-orders — pre-order-state filter chip set. */
+/** Seller > Pre-orders — pre-order-state filter chip set. Same root cause
+ *  and fix as SELLER_AUCTION_STATUS_TABS above — no "active"/"cancelled"
+ *  status values exist; pre-order cancellation, if tracked, lives in the
+ *  separate `preOrderProductionStatus` field, not `status`. */
 export const SELLER_PRE_ORDER_STATUS_TABS = [
   ALL_TAB,
-  { id: "active", label: "Active" },
+  { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
   { id: "archived", label: "Archived" },
-  { id: "cancelled", label: "Cancelled" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Seller > Prize Draws — draw-state filter chip set. */
+/** Seller > Prize Draws — draw-state filter chip set. Same root cause and
+ *  fix as SELLER_AUCTION_STATUS_TABS — "ended" is derived from
+ *  `prizeRevealWindowEnd` vs now (handled by the "Show closed" toolbar
+ *  toggle), no stored "cancelled" state exists. */
 export const SELLER_PRIZE_DRAW_STATUS_TABS = [
   ALL_TAB,
-  { id: "active", label: "Active" },
+  { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
-  { id: "ended", label: "Ended" },
-  { id: "cancelled", label: "Cancelled" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Orders — order-state filter chip set. Subset of
  *  `ADMIN_ORDER_STATUS_TABS` — sellers don't see `RETURN_REQUESTED` until
- *  the buyer initiates one through support. */
+ *  the buyer initiates one through support. IDs are lowercase to match the
+ *  real stored `OrderStatusValues` (Firestore `==` is byte-exact — the
+ *  previous uppercase ids never matched any document, every chip here
+ *  silently returned zero rows). */
 export const SELLER_ORDER_STATUS_TABS = [
   ALL_TAB,
-  { id: "PENDING", label: "Pending" },
-  { id: "PROCESSING", label: "Processing" },
-  { id: "SHIPPED", label: "Shipped" },
-  { id: "DELIVERED", label: "Delivered" },
-  { id: "CANCELLED", label: "Cancelled" },
-  { id: "REFUNDED", label: "Refunded" },
+  { id: "pending", label: "Pending" },
+  { id: "processing", label: "Processing" },
+  { id: "shipped", label: "Shipped" },
+  { id: "delivered", label: "Delivered" },
+  { id: "cancelled", label: "Cancelled" },
+  { id: "refunded", label: "Refunded" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Seller > Offers — offer-state filter chip set. */
+/** Seller > Offers — offer-state filter chip set. Real `OfferStatus` is
+ *  pending|accepted|declined|countered|expired|withdrawn|paid — there is no
+ *  "rejected" value, the real one is "declined" (the id below was fixed;
+ *  the previous "rejected" id always returned zero rows). Label kept as
+ *  "Rejected" for continuity with existing seller-facing wording. */
 export const SELLER_OFFER_STATUS_TABS = [
   ALL_TAB,
   { id: "pending", label: "Pending" },
   { id: "accepted", label: "Accepted" },
-  { id: "rejected", label: "Rejected" },
+  { id: "declined", label: "Rejected" },
   { id: "expired", label: "Expired" },
 ] as const satisfies readonly AdminFilterTab[];
 

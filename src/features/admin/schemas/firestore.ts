@@ -3,6 +3,8 @@
  * Covers: notifications, chat rooms, site settings
  */
 
+import type { AboutContentDocument } from "../../about/schemas/firestore";
+
 // Flag-key constants. Consumers MUST reference the bypass flag via this
 // constant so audit-checkout-bypass rule 1 (substring scan) only sees a
 // single occurrence in schemas. Splitting the literal makes the substring
@@ -582,6 +584,10 @@ export interface SiteSettingsDocument extends BaseDocument {
       codDeposit: number;
     };
   };
+  /** About Us page content, admin-editable via Site Settings. Optional so
+   * pre-existing docs without it still type-check; `about/page.tsx` falls
+   * back to i18n defaults when absent. */
+  aboutContent?: AboutContentDocument;
   navbarConfig?: {
     hiddenNavItems?: string[];
   };

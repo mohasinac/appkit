@@ -1,12 +1,20 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Badge, BulkActionBar, Button, Checkbox, Div, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, Checkbox, Div, Input, Modal, Row, Select, SideDrawer, Span, Stack, Text, Textarea } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { sortBy } from "../../../constants/sort";
+
+const SORT_OPTIONS = [
+  { value: sortBy("createdAt", "DESC"), label: "Newest" },
+  { value: sortBy("createdAt", "ASC"), label: "Oldest" },
+  { value: sortBy("rating", "DESC"), label: "Highest rating" },
+  { value: sortBy("rating", "ASC"), label: "Lowest rating" },
+];
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -75,6 +83,8 @@ export function SellerReviewsView({
   // Filters
   const [rating, setRating] = useState("");
   const [replied, setReplied] = useState("");
+  const [sort, setSort] = useState(SORT_OPTIONS[0].value);
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
   // Reply drawer
@@ -154,7 +164,7 @@ export function SellerReviewsView({
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ page: String(page), pageSize: "20" });
+      const params = new URLSearchParams({ page: String(page), pageSize: "20", sorts: sort });
       if (rating) params.set("rating", rating);
       if (replied) params.set("replied", replied);
 
@@ -169,7 +179,22 @@ export function SellerReviewsView({
     } finally {
       setLoading(false);
     }
-  }, [reviewsApiBase, rating, replied, page]);
+  }, [reviewsApiBase, rating, replied, sort, page]);
+
+  // The API route has no ?q= support (only rating/replied/sorts) — filter
+  // the fetched page client-side, same category of post-fetch narrowing the
+  // route itself already does for `replied`.
+  const visibleReviews = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return reviews;
+    return reviews.filter(
+      (r) =>
+        r.productTitle?.toLowerCase().includes(q) ||
+        r.userName?.toLowerCase().includes(q) ||
+        r.comment?.toLowerCase().includes(q) ||
+        r.title?.toLowerCase().includes(q),
+    );
+  }, [reviews, search]);
 
   useEffect(() => { fetchReviews(); }, [fetchReviews]);
   useEffect(() => { fetchReviewsRef.current = fetchReviews; }, [fetchReviews, fetchReviewsRef]);
@@ -216,6 +241,13 @@ export function SellerReviewsView({
         <Stack key="reviews" gap="lg">
           {/* Filters */}
           <Row align="center" gap="3" wrap>
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search product, reviewer, or comment…"
+              aria-label="Search reviews"
+              className="min-w-[220px]"
+            />
             <Select
               value={rating}
               onChange={(e) => { setRating(e.target.value); setPage(1); }}
@@ -238,6 +270,12 @@ export function SellerReviewsView({
                 { value: "true", label: "Store replied" },
                 { value: "false", label: "Awaiting reply" },
               ]}
+            />
+            <Select
+              value={sort}
+              onChange={(e) => { setSort(e.target.value); setPage(1); }}
+              aria-label="Sort reviews"
+              options={SORT_OPTIONS}
             />
             {meta && (
               <Text className="text-[var(--appkit-color-text-muted)] ml-auto" size="sm">
@@ -268,13 +306,13 @@ export function SellerReviewsView({
             <Div className="text-center" padding="y-xl">
               <Text className="text-[var(--appkit-color-text-muted)]">Loading reviews…</Text>
             </Div>
-          ) : reviews.length === 0 ? (
+          ) : visibleReviews.length === 0 ? (
             <Div className="text-center" padding="y-3xl">
               <Text className="text-[var(--appkit-color-text-muted)]">No reviews found.</Text>
             </Div>
           ) : (
             <Stack gap="md">
-              {reviews.map((review) => (
+              {visibleReviews.map((review) => (
                 <Div
                   key={review.id}
                   className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="lg" padding="md"

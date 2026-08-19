@@ -1,9 +1,24 @@
 "use client";
 
 import React from "react";
-import { Spinner } from "./Spinner";
 import { Button } from "./Button";
 import { Text } from "./Typography";
+import { SiteMark } from "./SiteMark";
+import { AnimatedDiv } from "./Motion";
+
+const SPIN_TRANSITION = { repeat: Infinity, duration: 1.8, ease: "linear" as const };
+
+function SpinningMark() {
+  return (
+    <AnimatedDiv
+      initial={{ rotate: 0 }}
+      animate={{ rotate: 360 }}
+      transition={SPIN_TRANSITION}
+    >
+      <SiteMark size="lg" title="Loading" />
+    </AnimatedDiv>
+  );
+}
 
 export interface PageLoaderProps {
   /**
@@ -39,7 +54,7 @@ export function PageLoader({ children }: PageLoaderProps) {
     }
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
-        <Spinner size="lg" />
+        <SpinningMark />
         <Text className="text-sm text-[var(--appkit-color-text-muted)]">Loading…</Text>
       </div>
     );
@@ -67,7 +82,7 @@ export function PageLoader({ children }: PageLoaderProps) {
           </>
         ) : (
           <>
-            <Spinner size="lg" />
+            <SpinningMark />
             <Text className="text-sm text-[var(--appkit-color-text-muted)]">Loading…</Text>{/* audit-spinner-defaults-ok — PageLoader primitive: spinner + label by design */}
           </>
         )}

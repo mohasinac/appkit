@@ -3,11 +3,13 @@
 import { sieveFilter, SIEVE_OP, type JsonArray } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React, { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { FilterChipGroup, ListingLayout, useToast } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
 import {
@@ -46,6 +48,7 @@ export type AdminOrdersViewProps = ListingLayoutProps;
 
 export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const { showToast } = useToast();
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<OrderRow | null>(null);
 
@@ -137,6 +140,10 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
               setSelectedRow(row);
               setDrawerOpen(true);
             },
+          },
+          {
+            label: "Open full page",
+            onClick: () => router.push(String(ROUTES.ADMIN.ORDER_DETAIL(row.id))),
           },
           {
             label: "Update status",

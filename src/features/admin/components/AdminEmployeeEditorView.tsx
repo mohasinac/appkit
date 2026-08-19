@@ -8,7 +8,9 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   PERMISSION_GROUPS,
-  type Permission,
+  PERMISSION_DOMAINS,
+  getPermissionsForDomain,
+  formatPermLabel,
   type EmployeeGroup,
 } from "../../auth/permissions/constants";
 
@@ -51,51 +53,6 @@ const GROUP_OPTIONS: { label: string; value: string }[] = [
   { label: "Scam Moderator", value: "scam_moderator" },
   { label: "Custom", value: "custom" },
 ];
-
-const PERMISSION_DOMAINS: { label: string; prefix: string }[] = [
-  { label: "Dashboard", prefix: "admin:dashboard:" },
-  { label: "Users & Bans", prefix: "admin:users:|admin:user-bans:" },
-  { label: "Products", prefix: "admin:products:" },
-  { label: "Orders & Returns", prefix: "admin:orders:|admin:returns:" },
-  { label: "Stores", prefix: "admin:stores:|admin:store-addresses:" },
-  { label: "Finance", prefix: "admin:analytics:|admin:payouts:" },
-  { label: "Catalog", prefix: "admin:categories:|admin:brands:|admin:coupons:|admin:deals:|admin:featured:" },
-  {
-    label: "Content",
-    prefix: "admin:reviews:|admin:blog:|admin:bids:|admin:media:",
-  },
-  {
-    label: "Site / CMS",
-    prefix: "admin:site:|admin:navigation:|admin:sections:|admin:carousel:|admin:ads:|admin:faqs:|admin:newsletter:|admin:contact:",
-  },
-  { label: "Events", prefix: "admin:events:|admin:event-entries:" },
-  { label: "Support & Safety", prefix: "admin:support-tickets:|admin:scammers:" },
-  { label: "System", prefix: "admin:sessions:|admin:notifications:|admin:carts:|admin:wishlists:|admin:feature-flags:|admin:copilot:|admin:team:" },
-];
-
-function matchesDomain(perm: string, prefix: string): boolean {
-  return prefix.split("|").some((p) => perm.startsWith(p));
-}
-
-function getPermissionsForDomain(prefix: string): Permission[] {
-  const allPerms = Object.values(PERMISSION_GROUPS).flat();
-  const seen = new Set<string>();
-  const result: Permission[] = [];
-  for (const p of allPerms) {
-    if (matchesDomain(p, prefix) && !seen.has(p)) {
-      seen.add(p);
-      result.push(p);
-    }
-  }
-  return result;
-}
-
-function formatPermLabel(perm: string): string {
-  const parts = perm.split(":");
-  return parts[parts.length - 1]
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-}
 
 interface PermissionDomainsPanelProps {
   permissions: Set<string>;

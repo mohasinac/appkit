@@ -614,3 +614,61 @@ export function hasCapability(
 ): boolean {
   return capabilities.includes(required);
 }
+
+// ============================================================================
+// PERMISSION DOMAINS — display grouping (S-ADMIN-7, 2026-08-19)
+// ============================================================================
+
+/**
+ * Groups permission prefixes into human-labeled domains for display —
+ * used by the employee-permission editor and the read-only permissions
+ * catalog page. `prefix` may hold multiple `|`-separated prefixes when a
+ * domain spans more than one resource namespace.
+ */
+export const PERMISSION_DOMAINS: { label: string; prefix: string }[] = [
+  { label: "Dashboard", prefix: "admin:dashboard:" },
+  { label: "Users & Bans", prefix: "admin:users:|admin:user-bans:" },
+  { label: "Products", prefix: "admin:products:" },
+  { label: "Orders & Returns", prefix: "admin:orders:|admin:returns:" },
+  { label: "Stores", prefix: "admin:stores:|admin:store-addresses:" },
+  { label: "Finance", prefix: "admin:analytics:|admin:payouts:" },
+  { label: "Catalog", prefix: "admin:categories:|admin:brands:|admin:coupons:|admin:deals:|admin:featured:" },
+  {
+    label: "Content",
+    prefix: "admin:reviews:|admin:blog:|admin:bids:|admin:media:",
+  },
+  {
+    label: "Site / CMS",
+    prefix: "admin:site:|admin:navigation:|admin:sections:|admin:carousel:|admin:ads:|admin:faqs:|admin:newsletter:|admin:contact:",
+  },
+  { label: "Events", prefix: "admin:events:|admin:event-entries:" },
+  { label: "Support & Safety", prefix: "admin:support-tickets:|admin:scammers:" },
+  { label: "System", prefix: "admin:sessions:|admin:notifications:|admin:carts:|admin:wishlists:|admin:feature-flags:|admin:copilot:|admin:team:" },
+];
+
+/** True when `perm` starts with any of the `|`-separated prefixes in `prefix`. */
+export function matchesDomain(perm: string, prefix: string): boolean {
+  return prefix.split("|").some((p) => perm.startsWith(p));
+}
+
+/** Every distinct permission (across all PERMISSION_GROUPS presets) belonging to a domain. */
+export function getPermissionsForDomain(prefix: string): Permission[] {
+  const allPerms = Object.values(PERMISSION_GROUPS).flat();
+  const seen = new Set<string>();
+  const result: Permission[] = [];
+  for (const p of allPerms) {
+    if (matchesDomain(p, prefix) && !seen.has(p)) {
+      seen.add(p);
+      result.push(p);
+    }
+  }
+  return result;
+}
+
+/** "admin:orders:mark-shipped" -> "Mark Shipped" */
+export function formatPermLabel(perm: string): string {
+  const parts = perm.split(":");
+  return parts[parts.length - 1]
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}

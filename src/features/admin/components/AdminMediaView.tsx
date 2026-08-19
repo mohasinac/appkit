@@ -97,7 +97,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
           onChange={(e) => setPrefix(e.target.value)}
           options={PREFIX_OPTIONS}
           aria-label="Prefix filter"
-          className="min-w-[140px]"
+          wrapperClassName="min-w-[140px]"
         />
         <Input
           type="text"

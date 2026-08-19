@@ -29,6 +29,9 @@ export interface WishlistProductData {
   isFeatured?: boolean;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
   listingType?: ListingType;
+  /** Already present on the wire — GET /api/user/wishlist spreads the full
+   *  ProductDocument into `product`, this was just untyped. */
+  isSold?: boolean;
 }
 
 /** WishlistItem enriched with inline product details returned by the wishlist GET endpoint. */

@@ -159,7 +159,7 @@ export interface CategoryDocument extends BaseDocument {
    * Does NOT update `partOfBundleIds`; used as a discovery surface only.
    */
   bundleKind?: "special" | "brand";
-  /** Discounted bundle price in paise. */
+  /** Discounted bundle price in decimal rupees. */
   bundlePrice?: number;
   /** Rule resolving the bundle's member products — static list or live query. */
   bundleQueryRule?: BundleQueryRule;

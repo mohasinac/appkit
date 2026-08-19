@@ -119,7 +119,7 @@ export function ConsultationForm({
           value={form.preferredTime}
           onValueChange={(value) => handleValueChange("preferredTime", value)}
           options={TIME_SLOTS.map((t) => ({ value: t, label: t }))}
-          className="flex-1"
+          wrapperClassName="flex-1"
         />
       </Row>
       <Select

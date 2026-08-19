@@ -610,7 +610,7 @@ export function SellerOrdersView({
     const ids = selection.selectedIds.join(",");
     void dispatch({
       type: "NAVIGATE",
-      href: `${String(ROUTES.STORE.INVENTORY_PRINT)}?type=order&ids=${ids}&autoprint=1`,
+      href: `${String(ROUTES.STORE.PRINT_CENTER)}?type=order&ids=${ids}&autoprint=1`,
     });
   }, [selection.selectedIds, dispatch]);
 

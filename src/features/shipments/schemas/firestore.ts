@@ -146,8 +146,8 @@ export interface ShipmentItem
   title: string; // required — reused product field name
   quantity: number;
   isForSelfUse: boolean;
-  // `price` (paise, from ProductDraftFields, optional via Partial) plays the
-  // "projected sale price" role — required unless isForSelfUse (Zod refine).
+  // `price` (decimal rupees, from ProductDraftFields, optional via Partial)
+  // plays the "projected sale price" role — required unless isForSelfUse (Zod refine).
   notes?: string;
   // Nullable (not just optional) so an unlink write can explicitly clear the
   // field — Firestore writes with `undefined` are stripped before they ever

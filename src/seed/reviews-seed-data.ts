@@ -78,11 +78,11 @@ const products = [
 ];
 
 const buyers = [
-  { id: "user-yugi-muto", name: "Rehan Sheikh" },
-  { id: "user-admin-letitrip", name: "LetItRip Admin" },
-  { id: "user-seto-kaiba", name: "Vivaan Kapoor" },
-  { id: "user-meera-bey", name: "Meera Nair" },
-  { id: "user-rohit-collector", name: "Rohit Agarwal" },
+  { id: "user-yugi-muto", name: "Mock User 3" },
+  { id: "user-admin-letitrip", name: "Mock User 1" },
+  { id: "user-seto-kaiba", name: "Mock User 2" },
+  { id: "user-meera-bey", name: "Mock User 11" },
+  { id: "user-rohit-collector", name: "Mock User 14" },
 ];
 
 const _rawReviewsSeedData: Partial<ReviewDocument>[] = [];

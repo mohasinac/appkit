@@ -22,7 +22,7 @@ import {
   BidOnOwnAuctionError,
 } from "../../../../shared/features/auctions/errors";
 import {
-  AUCTION_MIN_BID_INCREMENT_PAISE,
+  AUCTION_MIN_BID_INCREMENT,
   AUCTION_SNIPING_WINDOW_SECONDS,
   AUCTION_DEFAULT_EXTENSION_MINUTES,
 } from "../../../../shared/features/auctions/config";
@@ -49,12 +49,12 @@ beforeEach(() => {
 describe("computeMinBid", () => {
   it("no current bid → returns startingBid + default increment", () => {
     const product = makeAuction({ startingBid: 10000, currentBid: undefined });
-    expect(computeMinBid(product)).toBe(10000 + AUCTION_MIN_BID_INCREMENT_PAISE);
+    expect(computeMinBid(product)).toBe(10000 + AUCTION_MIN_BID_INCREMENT);
   });
 
   it("currentBid set → returns currentBid + default increment", () => {
     const product = makeAuction({ currentBid: 50000 });
-    expect(computeMinBid(product)).toBe(50000 + AUCTION_MIN_BID_INCREMENT_PAISE);
+    expect(computeMinBid(product)).toBe(50000 + AUCTION_MIN_BID_INCREMENT);
   });
 
   it("uses the product's configured minBidIncrement when present", () => {
@@ -64,7 +64,7 @@ describe("computeMinBid", () => {
 
   it("no currentBid and no startingBid → 0 + increment", () => {
     const product = makeAuction({ currentBid: undefined, startingBid: undefined });
-    expect(computeMinBid(product)).toBe(AUCTION_MIN_BID_INCREMENT_PAISE);
+    expect(computeMinBid(product)).toBe(AUCTION_MIN_BID_INCREMENT);
   });
 });
 

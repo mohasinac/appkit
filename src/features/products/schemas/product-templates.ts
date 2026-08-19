@@ -17,7 +17,7 @@ export interface ProductTemplateDocument {
   brand?: string;
   condition?: string;
   tags?: string[];
-  /** Price hint in paise (INR × 100) */
+  /** Price hint in decimal rupees */
   price?: number;
   currency?: string;
   shippingPaidBy?: "buyer" | "seller";

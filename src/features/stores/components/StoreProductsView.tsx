@@ -88,7 +88,7 @@ export function StoreProductsView({
                 { value: sortBy("price", "ASC"), label: "Price: Low to High" },
                 { value: sortBy("price", "DESC"), label: "Price: High to Low" },
               ]}
-              className="min-w-44"
+              wrapperClassName="min-w-44"
             />
           )
         }

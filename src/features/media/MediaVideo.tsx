@@ -54,6 +54,8 @@ export interface MediaVideoProps {
 
 interface SiteSettingsWithWatermark {
   watermark?: MediaVideoWatermark;
+  /** Resolved (marker → wordmark → text) watermark from `GET /api/site-settings` — preferred over the raw `watermark` field when present. */
+  effectiveWatermark?: MediaVideoWatermark;
 }
 
 export function MediaVideo({
@@ -103,7 +105,7 @@ export function MediaVideo({
   const effectiveWatermark =
     watermark === null
       ? null
-      : (watermark ?? siteSettings?.watermark ?? null);
+      : (watermark ?? siteSettings?.effectiveWatermark ?? siteSettings?.watermark ?? null);
 
   if (!resolvedSrc) {
     return (

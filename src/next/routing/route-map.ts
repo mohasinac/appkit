@@ -124,6 +124,7 @@ export const DEFAULT_ROUTE_MAP = {
     CLOSE: "/auth/close",
   },
   USER: {
+    DASHBOARD: "/user",
     PROFILE: "/user/profile",
     SETTINGS: "/user/settings",
     ORDERS: "/user/orders",
@@ -178,9 +179,6 @@ export const DEFAULT_ROUTE_MAP = {
     COUPONS: "/store/coupons",
     COUPONS_NEW: "/store/coupons/new",
     COUPONS_EDIT: (id: string) => `/store/coupons/${id}/edit`,
-    TEMPLATES: "/store/templates",
-    TEMPLATES_NEW: "/store/templates/new",
-    TEMPLATES_EDIT: (id: string) => `/store/templates/${id}/edit`,
     ANALYTICS: "/store/analytics",
     PAYOUTS: "/store/payouts",
     STOREFRONT: "/store/storefront",
@@ -225,7 +223,6 @@ export const DEFAULT_ROUTE_MAP = {
     STICKERS_NEW: "/store/stickers/new",
     STICKERS_EDIT: (id: string) => `/store/stickers/${id}/edit`,
     PRINT_CENTER: "/store/print-center",
-    INVENTORY_PRINT: "/store/inventory/print",
     FULFILLMENT: "/store/fulfillment",
     // S-STORE Tier — new extension routes
     PAYOUT_METHODS: "/store/payout-methods",
@@ -354,6 +351,7 @@ export const DEFAULT_ROUTE_MAP = {
     SETTINGS_ACTIONS: "/admin/settings/actions",
     SETTINGS_NAVIGATION: "/admin/settings/navigation",
     PRINT_CENTER: "/admin/print-center",
+    MAINTENANCE: "/admin/maintenance",
     FULFILLMENT: "/admin/fulfillment",
     // S-STORE Tier — admin moderation + reports + item requests
     MODERATION: "/admin/moderation",

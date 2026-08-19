@@ -136,7 +136,20 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (f) => {
       const parts: string[] = [];
-      if (f.status && f.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
+      // Default (f.status === "") to pending-only — hides the moderation
+      // noise (already-approved/rejected reviews) without a redundant
+      // separate toggle, since Status is already a 1-click 3-value chip
+      // group. Explicit "All" is reachable via renderFilterPanel allId
+      // override below, which makes the FilterChipGroup write the literal
+      // string "All" (not "") when clicked — otherwise "never touched" and
+      // "explicitly chose All" are indistinguishable.
+      if (f.status === "All") {
+        // explicit "show everything" — no status filter
+      } else if (f.status) {
+        parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
+      } else {
+        parts.push(sieveFilter("status", SIEVE_OP.EQ, "pending"));
+      }
       if (f.rating && f.rating !== "All") parts.push(sieveFilter("rating", SIEVE_OP.EQ, f.rating));
       return parts.join(",") || undefined;
     },
@@ -189,10 +202,11 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
         <FilterChipGroup
-          label="Status"
+          label="Status (defaults to Pending)"
           tabs={ADMIN_REVIEW_STATUS_TABS}
           value={pendingFilters.status ?? ""}
           onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          allId="__all__"
         />
         <FilterChipGroup
           label="Rating"

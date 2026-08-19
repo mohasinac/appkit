@@ -5,7 +5,7 @@
  *       auction-beyblade-metal-lightning-l-drago) — bid counts and final amounts match
  *       each auction's `bidCount`/`currentBid` fields exactly, so the product card's
  *       "N bids" summary and the detail page's bid-history list agree. Bidders: 3 buyer
- *       personas (Meera Nair, Rohit Agarwal, Ananya Patel), never the store's own seller
+ *       personas (Mock User 11, Mock User 14, Mock User 9), never the store's own seller
  *       (user-tyson-blader owns store-beyblade-arena). Status: newest bid per auction is
  *       "active", the rest "outbid". Bid IDs: bid-{productSlug}-{userName}-{YYYYMMDD}-{rand6}.
  *
@@ -34,9 +34,9 @@ const BIDDER_EMAILS: Record<string, string> = {
 };
 
 const BIDDER_NAMES: Record<string, string> = {
-  "user-meera-bey": "Meera Nair",
-  "user-rohit-collector": "Rohit Agarwal",
-  "user-ananya-collector": "Ananya Patel",
+  "user-meera-bey": "Mock User 11",
+  "user-rohit-collector": "Mock User 14",
+  "user-ananya-collector": "Mock User 9",
 };
 
 function withBidDefaults(b: FirestoreDocument): Partial<BidDocument> {

@@ -137,23 +137,23 @@ const rawLots: RawLot[] = [
 ];
 
 const rawItems: RawItem[] = [
-  { id: "item-tokyo-01a", lotId: "lot-tokyo-01", shipmentId: rawShipments[0].id, title: "Base Set Booster Box (Japanese)", quantity: 6, isForSelfUse: false, price: 95_000_00 },
+  { id: "item-tokyo-01a", lotId: "lot-tokyo-01", shipmentId: rawShipments[0].id, title: "Base Set Booster Box (Japanese)", quantity: 6, isForSelfUse: false, price: 95_000 },
   { id: "item-tokyo-02a", lotId: "lot-tokyo-02", shipmentId: rawShipments[0].id, title: "Charizard Base Set PSA 9", quantity: 1, isForSelfUse: true },
 
-  { id: "item-vault-01a", lotId: "lot-vault-01", shipmentId: rawShipments[1].id, title: "Redline Custom Camaro", quantity: 4, isForSelfUse: false, price: 18_000_00 },
-  { id: "item-vault-01b", lotId: "lot-vault-01", shipmentId: rawShipments[1].id, title: "Redline Python", quantity: 3, isForSelfUse: false, price: 22_000_00 },
-  { id: "item-vault-02a", lotId: "lot-vault-02", shipmentId: rawShipments[1].id, title: "Matchbox Superfast Truck (sample)", quantity: 2, isForSelfUse: false, price: 6_500_00 },
+  { id: "item-vault-01a", lotId: "lot-vault-01", shipmentId: rawShipments[1].id, title: "Redline Custom Camaro", quantity: 4, isForSelfUse: false, price: 18_000 },
+  { id: "item-vault-01b", lotId: "lot-vault-01", shipmentId: rawShipments[1].id, title: "Redline Python", quantity: 3, isForSelfUse: false, price: 22_000 },
+  { id: "item-vault-02a", lotId: "lot-vault-02", shipmentId: rawShipments[1].id, title: "Matchbox Superfast Truck (sample)", quantity: 2, isForSelfUse: false, price: 6_500 },
 
-  { id: "item-gundam-01a", lotId: "lot-gundam-01", shipmentId: rawShipments[2].id, title: "MG RX-78-2 Gundam Ver 3.0", quantity: 8, isForSelfUse: false, price: 21_000_00 },
+  { id: "item-gundam-01a", lotId: "lot-gundam-01", shipmentId: rawShipments[2].id, title: "MG RX-78-2 Gundam Ver 3.0", quantity: 8, isForSelfUse: false, price: 21_000 },
   {
-    id: "item-gundam-01b", lotId: "lot-gundam-01", shipmentId: rawShipments[2].id, title: "MG Sazabi Ver Ka", quantity: 5, isForSelfUse: false, price: 28_000_00,
+    id: "item-gundam-01b", lotId: "lot-gundam-01", shipmentId: rawShipments[2].id, title: "MG Sazabi Ver Ka", quantity: 5, isForSelfUse: false, price: 28_000,
     linkedProductId: "product-gundam-mg-sazabi-ver-ka", linkedProductSlug: "product-gundam-mg-sazabi-ver-ka", linkedProductListingType: "standard",
   },
-  { id: "item-gundam-02a", lotId: "lot-gundam-02", shipmentId: rawShipments[2].id, title: "HG Gunpla assorted mecha", quantity: 20, isForSelfUse: false, price: 3_500_00 },
+  { id: "item-gundam-02a", lotId: "lot-gundam-02", shipmentId: rawShipments[2].id, title: "HG Gunpla assorted mecha", quantity: 20, isForSelfUse: false, price: 3_500 },
 
-  { id: "item-beyblade-01a", lotId: "lot-beyblade-01", shipmentId: rawShipments[3].id, title: "Beyblade Burst Turbo Achilles", quantity: 15, isForSelfUse: false, price: 5_500_00 },
-  { id: "item-beyblade-01b", lotId: "lot-beyblade-01", shipmentId: rawShipments[3].id, title: "Beyblade Burst Genesis Valtryek", quantity: 12, isForSelfUse: false, price: 6_000_00 },
-  { id: "item-beyblade-02a", lotId: "lot-beyblade-02", shipmentId: rawShipments[3].id, title: "Beystadium Extreme", quantity: 6, isForSelfUse: false, price: 4_800_00 },
+  { id: "item-beyblade-01a", lotId: "lot-beyblade-01", shipmentId: rawShipments[3].id, title: "Beyblade Burst Turbo Achilles", quantity: 15, isForSelfUse: false, price: 5_500 },
+  { id: "item-beyblade-01b", lotId: "lot-beyblade-01", shipmentId: rawShipments[3].id, title: "Beyblade Burst Genesis Valtryek", quantity: 12, isForSelfUse: false, price: 6_000 },
+  { id: "item-beyblade-02a", lotId: "lot-beyblade-02", shipmentId: rawShipments[3].id, title: "Beystadium Extreme", quantity: 6, isForSelfUse: false, price: 4_800 },
 ];
 
 function mainItemsRevenue(lotId: string): number {
