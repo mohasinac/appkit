@@ -94,14 +94,23 @@ function DrawerContent({
   activeHref: string;
   onItemClick?: () => void;
 }) {
-  // Accordion — only one group open at a time.
+  // Accordion — only one group open at a time. Initial pick: the group
+  // containing the active path, else the first group with defaultOpen.
   const [openGroup, setOpenGroup] = useState<string | null>(() => {
     if (!groups) return null;
-    const match = groups.find(
-      (g) => g.defaultOpen === true || g.items.some((i) => activeHref === i.href || activeHref.startsWith(i.href + "/")),
-    );
-    return match?.title ?? null;
+    const active = findActiveNavGroup(groups, activeHref);
+    if (active) return active.title;
+    return groups.find((g) => g.defaultOpen === true)?.title ?? null;
   });
+  // Re-sync whenever the route changes — the sidebar stays mounted across
+  // client-side navigation, so the lazy initializer above only fires once.
+  useEffect(() => {
+    if (!groups) return;
+    const active = findActiveNavGroup(groups, activeHref);
+    if (active) setOpenGroup(active.title);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeHref]);
+  const activeItem = findActiveNavItem(groups ? groups.flatMap((g) => g.items) : items, activeHref);
   const { query, setQuery, isSearching, filteredGroups } = useSidebarSearch(groups ?? []);
 
   const toggle = useCallback(
@@ -117,7 +126,7 @@ function DrawerContent({
       <Nav aria-label="User navigation" padding="y-sm">
         <Ul paddingX="x-sm" spacing="2xs">
           {items.map((item) => {
-            const isActive = activeHref === item.href || activeHref.startsWith(item.href + "/");
+            const isActive = activeItem?.href === item.href;
             return (
               <Li key={item.href}>
                 <NavLink item={item} isActive={isActive} onClick={onItemClick} />
@@ -146,9 +155,7 @@ function DrawerContent({
       )}
       {filteredGroups.map((group) => {
         const isOpen = isSearching || openGroup === group.title;
-        const hasActive = group.items.some(
-          (i) => activeHref === i.href || activeHref.startsWith(i.href + "/")
-        );
+        const hasActive = !!findActiveNavItem(group.items, activeHref);
         return (
           <Div key={group.title} className="mb-0.5">
             <Button
@@ -179,7 +186,7 @@ function DrawerContent({
               <Ul paddingX="x-sm" paddingY="y-bottom-xs" spacing="2xs">
                 {group.items.map((item) => (
                   <Li key={item.href}>
-                    <NavLink item={item} isActive={isNavItemActive(item, activeHref)} onClick={onItemClick} />
+                    <NavLink item={item} isActive={activeItem?.href === item.href} onClick={onItemClick} />
                   </Li>
                 ))}
               </Ul>

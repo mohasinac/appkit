@@ -29,6 +29,7 @@ import { TitleBar } from "./TitleBar";
 import { BackToTop } from "./BackToTop";
 import { useDashboardNav } from "./DashboardNavContext";
 import { usePathname } from "next/navigation";
+import { findActiveNavItem } from "../../_internal/client/features/layout/navActive";
 
 /** A single sidebar link. */
 export interface AppLayoutShellSidebarLink {
@@ -148,12 +149,20 @@ const CLS_LOGOUT_BTN = "flex w-full items-center justify-end gap-[var(--appkit-s
 /** Collapsible accordion section for the public sidebar. */
 function CollapsibleNavGroup({
   title,
+  hasActive = false,
   children,
 }: {
   title: string;
+  /** True when the active route matches one of this group's links — auto-expands and re-expands on navigation. */
+  hasActive?: boolean;
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(hasActive);
+  // Re-sync whenever the route changes — the sidebar stays mounted across
+  // client-side navigation, so the lazy initial state above only fires once.
+  useEffect(() => {
+    if (hasActive) setOpen(true);
+  }, [hasActive]);
   return (
     <Stack gap="none" className="">
       <button
@@ -180,28 +189,47 @@ function CollapsibleNavGroup({
 function CollapsibleSidebarSection({
   section,
   navItemClass,
+  navItemActiveClass,
+  activeHref,
 }: {
   section: AppLayoutShellSidebarSection;
   navItemClass: string;
+  navItemActiveClass: string;
+  activeHref: string;
 }) {
-  const [open, setOpen] = useState(section.defaultOpen ?? false);
+  const activeItem = findActiveNavItem(section.items, activeHref);
+  const hasActive = !!activeItem;
+  const [open, setOpen] = useState((section.defaultOpen ?? false) || hasActive);
+  // Re-sync whenever the route changes — the sidebar stays mounted across
+  // client-side navigation, so the lazy initial state above only fires once.
+  useEffect(() => {
+    if (hasActive) setOpen(true);
+  }, [hasActive]);
   const hasTitle = !!section.title;
 
   if (!hasTitle) {
     return (
       <Ul spacing="2xs">
-        {section.items.map((item) => (
-          <Li key={`${item.href}-${item.label}`}>
-            <TextLink href={item.href} variant="none" className={navItemClass}>
-              {item.icon && (
-                <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
-                  {item.icon}
-                </Span>
-              )}
-              {item.label}
-            </TextLink>
-          </Li>
-        ))}
+        {section.items.map((item) => {
+          const isActive = activeItem?.href === item.href;
+          return (
+            <Li key={`${item.href}-${item.label}`}>
+              <TextLink
+                href={item.href}
+                variant="none"
+                className={isActive ? navItemActiveClass : navItemClass}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.icon && (
+                  <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                    {item.icon}
+                  </Span>
+                )}
+                {item.label}
+              </TextLink>
+            </Li>
+          );
+        })}
       </Ul>
     );
   }
@@ -226,18 +254,26 @@ function CollapsibleSidebarSection({
       </button>
       {open && (
         <Ul spacing="2xs">
-          {section.items.map((item) => (
-            <Li key={`${item.href}-${item.label}`}>
-              <TextLink href={item.href} variant="none" className={navItemClass}>
-                {item.icon && (
-                  <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
-                    {item.icon}
-                  </Span>
-                )}
-                {item.label}
-              </TextLink>
-            </Li>
-          ))}
+          {section.items.map((item) => {
+            const isActive = activeItem?.href === item.href;
+            return (
+              <Li key={`${item.href}-${item.label}`}>
+                <TextLink
+                  href={item.href}
+                  variant="none"
+                  className={isActive ? navItemActiveClass : navItemClass}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {item.icon && (
+                    <Span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                      {item.icon}
+                    </Span>
+                  )}
+                  {item.label}
+                </TextLink>
+              </Li>
+            );
+          })}
         </Ul>
       )}
     </Stack>
@@ -338,6 +374,8 @@ interface SidebarContentProps {
   sidebarSections?: AppLayoutShellSidebarSection[];
   sidebarPrimaryActions?: Array<{ href: string; label: string; variant?: "primary" | "outline" }>;
   user?: BottomNavbarUser | null;
+  /** Current pathname — drives active-item highlighting and auto-expand of the containing section. */
+  activeHref: string;
   profileHref: string;
   userOrdersHref?: string;
   userWishlistHref?: string;
@@ -360,6 +398,7 @@ function SidebarContent({
   sidebarSections,
   sidebarPrimaryActions,
   user,
+  activeHref,
   profileHref,
   userOrdersHref,
   userWishlistHref,
@@ -397,6 +436,22 @@ function SidebarContent({
 
   const navItemClass =
     "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 text-[var(--appkit-color-text-muted)] dark:hover:bg-[var(--appkit-color-surface-elevated)] dark:hover:text-secondary-300";
+  const navItemActiveClass =
+    "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium bg-primary-50 text-primary-800 dark:bg-primary-900/25 dark:text-primary-300";
+
+  const profileLinks = [
+    { href: profileHref },
+    ...(userOrdersHref ? [{ href: userOrdersHref }] : []),
+    ...(userWishlistHref ? [{ href: userWishlistHref }] : []),
+    ...(userSettingsHref ? [{ href: userSettingsHref }] : []),
+  ];
+  const activeProfileLink = findActiveNavItem(profileLinks, activeHref);
+
+  const dashboardLinks = [
+    ...(adminHref ? [{ href: adminHref }] : []),
+    ...(resolvedStoreHref ? [{ href: resolvedStoreHref }] : []),
+  ];
+  const activeDashboardLink = findActiveNavItem(dashboardLinks, activeHref);
 
   const normalizedSections: AppLayoutShellSidebarSection[] = hasSections
     ? (sidebarSections as AppLayoutShellSidebarSection[])
@@ -427,19 +482,53 @@ function SidebarContent({
       )}
 
       {isAuthenticated && (
-        <CollapsibleNavGroup title={labels.sectionTitle}>
+        <CollapsibleNavGroup title={labels.sectionTitle} hasActive={!!activeProfileLink}>
           <Ul spacing="2xs">
             <Li>
-              <TextLink href={profileHref} variant="none" className={navItemClass}>{labels.profile}</TextLink>
+              <TextLink
+                href={profileHref}
+                variant="none"
+                className={activeProfileLink?.href === profileHref ? navItemActiveClass : navItemClass}
+                aria-current={activeProfileLink?.href === profileHref ? "page" : undefined}
+              >
+                {labels.profile}
+              </TextLink>
             </Li>
             {userOrdersHref && (
-              <Li><TextLink href={userOrdersHref} variant="none" className={navItemClass}>{labels.orders}</TextLink></Li>
+              <Li>
+                <TextLink
+                  href={userOrdersHref}
+                  variant="none"
+                  className={activeProfileLink?.href === userOrdersHref ? navItemActiveClass : navItemClass}
+                  aria-current={activeProfileLink?.href === userOrdersHref ? "page" : undefined}
+                >
+                  {labels.orders}
+                </TextLink>
+              </Li>
             )}
             {userWishlistHref && (
-              <Li><TextLink href={userWishlistHref} variant="none" className={navItemClass}>{labels.wishlist}</TextLink></Li>
+              <Li>
+                <TextLink
+                  href={userWishlistHref}
+                  variant="none"
+                  className={activeProfileLink?.href === userWishlistHref ? navItemActiveClass : navItemClass}
+                  aria-current={activeProfileLink?.href === userWishlistHref ? "page" : undefined}
+                >
+                  {labels.wishlist}
+                </TextLink>
+              </Li>
             )}
             {userSettingsHref && (
-              <Li><TextLink href={userSettingsHref} variant="none" className={navItemClass}>{labels.settings}</TextLink></Li>
+              <Li>
+                <TextLink
+                  href={userSettingsHref}
+                  variant="none"
+                  className={activeProfileLink?.href === userSettingsHref ? navItemActiveClass : navItemClass}
+                  aria-current={activeProfileLink?.href === userSettingsHref ? "page" : undefined}
+                >
+                  {labels.settings}
+                </TextLink>
+              </Li>
             )}
           </Ul>
         </CollapsibleNavGroup>
@@ -475,16 +564,30 @@ function SidebarContent({
       )}
 
       {isAuthenticated && isAdminOrSeller && (adminHref || resolvedStoreHref) && (
-        <CollapsibleNavGroup title={labels.dashboardSectionTitle}>
+        <CollapsibleNavGroup title={labels.dashboardSectionTitle} hasActive={!!activeDashboardLink}>
           <Ul spacing="2xs">
             {adminHref && role === "admin" && (
               <Li>
-                <TextLink href={adminHref} variant="none" className={navItemClass}>{labels.adminDashboard}</TextLink>
+                <TextLink
+                  href={adminHref}
+                  variant="none"
+                  className={activeDashboardLink?.href === adminHref ? navItemActiveClass : navItemClass}
+                  aria-current={activeDashboardLink?.href === adminHref ? "page" : undefined}
+                >
+                  {labels.adminDashboard}
+                </TextLink>
               </Li>
             )}
             {resolvedStoreHref && isAdminOrSeller && (
               <Li>
-                <TextLink href={resolvedStoreHref} variant="none" className={navItemClass}>{labels.storeDashboard}</TextLink>
+                <TextLink
+                  href={resolvedStoreHref}
+                  variant="none"
+                  className={activeDashboardLink?.href === resolvedStoreHref ? navItemActiveClass : navItemClass}
+                  aria-current={activeDashboardLink?.href === resolvedStoreHref ? "page" : undefined}
+                >
+                  {labels.storeDashboard}
+                </TextLink>
               </Li>
             )}
           </Ul>
@@ -496,6 +599,8 @@ function SidebarContent({
           key={`sidebar-section-${sectionIndex}`}
           section={section}
           navItemClass={navItemClass}
+          navItemActiveClass={navItemActiveClass}
+          activeHref={activeHref}
         />
       ))}
 
@@ -633,6 +738,7 @@ export function AppLayoutShell({
       sidebarSections={sidebarSections}
       sidebarPrimaryActions={sidebarPrimaryActions}
       user={user}
+      activeHref={pathname ?? ""}
       profileHref={profileHref}
       userOrdersHref={userOrdersHref}
       userWishlistHref={userWishlistHref}

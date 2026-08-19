@@ -57,3 +57,5 @@ export { StoreCapabilitiesGuideView } from "./StoreCapabilitiesGuideView";
 export type { StoreCapabilitiesGuideViewProps } from "./StoreCapabilitiesGuideView";
 export { StoreSettingsGuideView } from "./StoreSettingsGuideView";
 export type { StoreSettingsGuideViewProps } from "./StoreSettingsGuideView";
+export { StoreWhatsAppGuideView } from "./StoreWhatsAppGuideView";
+export type { StoreWhatsAppGuideViewProps } from "./StoreWhatsAppGuideView";

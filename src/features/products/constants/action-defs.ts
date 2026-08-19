@@ -458,7 +458,6 @@ export const DASHBOARD_QUICK_ACTION_ID = {
   ADMIN_EVENTS:       "dqa-admin-events",
   ADMIN_SUPPORT:      "dqa-admin-support",
   ADMIN_MODERATION:   "dqa-admin-moderation",
-  ADMIN_INTEGRATION_GUIDES: "dqa-admin-integration-guides",
   ADMIN_USERS:        "dqa-admin-users",
   ADMIN_CATEGORIES:   "dqa-admin-categories",
   ADMIN_REVIEWS:      "dqa-admin-reviews",
@@ -524,7 +523,6 @@ export const DASHBOARD_QUICK_ACTION_META: Record<DashboardQuickActionId, Dashboa
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_EVENTS]:       { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_EVENTS,       label: "Events",         variant: "outline",  iconName: "Calendar",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "events.read" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_SUPPORT]:      { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_SUPPORT,      label: "Support Tickets", variant: "outline", iconName: "LifeBuoy",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "support.read" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_MODERATION]:   { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_MODERATION,   label: "Moderation",     variant: "outline",  iconName: "ShieldAlert",  requiresAuth: true, requiredRole: "admin",  requiredPermission: "moderation.read" },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_INTEGRATION_GUIDES]: { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_INTEGRATION_GUIDES, label: "Integration Guides", variant: "ghost", iconName: "BookOpen", requiresAuth: true, requiredRole: "admin", requiredPermission: "admin:site:read" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_USERS]:        { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_USERS,        label: "Users",          variant: "outline",  iconName: "Users",        requiresAuth: true, requiredRole: "admin",  requiredPermission: "admin.users.read" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_CATEGORIES]:   { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_CATEGORIES,   label: "Categories",     variant: "outline",  iconName: "Tag",          requiresAuth: true, requiredRole: "admin",  requiredPermission: "categories.read" },
   [DASHBOARD_QUICK_ACTION_ID.ADMIN_REVIEWS]:      { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_REVIEWS,      label: "Reviews",        variant: "outline",  iconName: "Star",         requiresAuth: true, requiredRole: "admin",  requiredPermission: "reviews.read" },
@@ -575,7 +573,6 @@ export const DASHBOARD_QUICK_ACTIONS = {
     DASHBOARD_QUICK_ACTION_ID.ADMIN_SECTIONS,
     DASHBOARD_QUICK_ACTION_ID.ADMIN_SUPPORT,
     DASHBOARD_QUICK_ACTION_ID.ADMIN_MODERATION,
-    DASHBOARD_QUICK_ACTION_ID.ADMIN_INTEGRATION_GUIDES,
     DASHBOARD_QUICK_ACTION_ID.ADMIN_SETTINGS,
   ],
   seller: [

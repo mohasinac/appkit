@@ -10,6 +10,8 @@ import {
   BarChart2,
   AlertTriangle,
   BookOpen,
+  MessageSquare,
+  CreditCard,
 } from "lucide-react";
 import { Alert, Div, Heading, Row, Section, Stack, Text, TextLink } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
@@ -91,6 +93,20 @@ const GUIDE_CARDS: AdminGuideCard[] = [
     description: "Bans (soft/hard), scam registry, support tickets, moderation queue, and reports.",
     href: String(ROUTES.ADMIN.GUIDE_TRUST),
     permission: "admin:moderation:read",
+  },
+  {
+    Icon: MessageSquare,
+    title: "WhatsApp Integration",
+    description: "Connect Meta's WhatsApp Business Cloud API — Business Manager setup, phone registration, access tokens, and message templates.",
+    href: String(ROUTES.ADMIN.GUIDE_WHATSAPP),
+    permission: "admin:site:read",
+  },
+  {
+    Icon: CreditCard,
+    title: "Payments (Razorpay)",
+    description: "Enable and configure Razorpay — API keys, webhooks, and going live from test mode.",
+    href: String(ROUTES.ADMIN.GUIDE_PAYMENTS),
+    permission: "admin:site:read",
   },
 ];
 

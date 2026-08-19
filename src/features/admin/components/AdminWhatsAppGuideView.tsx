@@ -114,7 +114,7 @@ export function AdminWhatsAppGuideView() {
       ))}
 
       <Alert variant="info">
-        <Row align="center" gap="2">
+        <Row align="center" gap="sm">
           <FlaskConical className="w-4 h-4 flex-shrink-0" />
           <Text size="sm">
             Store-level Meta Commerce Catalog sync (product catalog on WhatsApp) uses separate, per-store credentials — see the Seller Guide&apos;s &quot;WhatsApp Catalog Sync&quot; page (Store dashboard → Guides). It shares the same Meta Business Manager account but not the same access token. The inbound-reply webhook (buyer messages the business number within 24h) uses the free-text send path and doesn&apos;t need a template.

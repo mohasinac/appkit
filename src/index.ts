@@ -8700,6 +8700,10 @@ export { AdminTeamGuideView } from "./features/admin/components/AdminTeamGuideVi
 export { AdminAnalyticsGuideView } from "./features/admin/components/AdminAnalyticsGuideView";
 // [CLIENT-SSR]-Admin trust & safety guide — static view, no firebase-admin.
 export { AdminTrustGuideView } from "./features/admin/components/AdminTrustGuideView";
+// [CLIENT-SSR]-Admin WhatsApp integration guide — static view, no firebase-admin.
+export { AdminWhatsAppGuideView } from "./features/admin/components/AdminWhatsAppGuideView";
+// [CLIENT-SSR]-Admin payments (Razorpay) guide — static view, no firebase-admin.
+export { AdminPaymentsGuideView } from "./features/admin/components/AdminPaymentsGuideView";
 // [CLIENT-SSR]-Buyer shopping guide — static view, no firebase-admin.
 export { BuyerShoppingGuideView } from "./features/account/components/BuyerShoppingGuideView";
 // [CLIENT-SSR]-Buyer auctions & pre-orders guide — static view, no firebase-admin.
@@ -8726,6 +8730,9 @@ export type { StoreCapabilitiesGuideViewProps } from "./features/stores/componen
 // [CLIENT-SSR]-Store settings guide — static view, no firebase-admin.
 export { StoreSettingsGuideView } from "./features/stores/components/StoreSettingsGuideView";
 export type { StoreSettingsGuideViewProps } from "./features/stores/components/StoreSettingsGuideView";
+// [CLIENT-SSR]-Store WhatsApp catalog sync guide — static view, no firebase-admin.
+export { StoreWhatsAppGuideView } from "./features/stores/components/StoreWhatsAppGuideView";
+export type { StoreWhatsAppGuideViewProps } from "./features/stores/components/StoreWhatsAppGuideView";
 export { StorePreOrdersListing } from "./features/stores/components/StorePreOrdersListing";
 export type { StorePreOrdersListingProps } from "./features/stores/components/StorePreOrdersListing";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
