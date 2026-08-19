@@ -41,6 +41,9 @@ export type { UnauthorizedViewProps } from "./components/UnauthorizedView";
 export { PolicyPageView } from "./components/PolicyPageView";
 export type { PolicyPageViewProps } from "./components/PolicyPageView";
 
+export { DeveloperView } from "./components/DeveloperView";
+export type { DeveloperViewProps } from "./components/DeveloperView";
+
 export { FAQPageView } from "./components/FAQPageView";
 export type { FAQPageViewProps } from "./components/FAQPageView";
 

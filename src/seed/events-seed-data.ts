@@ -39,6 +39,9 @@ export const eventsSeedData: EventDocument[] = [
     endsAt: daysAhead(10),
     coverImage: { type: "image", url: seedExtMedia("https://picsum.photos/seed/event-cover-favourite-blader-poll-20260101/1200/600"), alt: "Original series Beyblade lineup" },
     tags: ["poll", "original-series", "season-1"],
+    // Demo fixture for the guest-participation toggle (2026-08-20) — polls
+    // are otherwise login-gated, so this event demonstrates the override.
+    allowGuestParticipation: true,
     pollConfig: {
       options: [
         { id: "tyson", label: "Mock User 6" },
@@ -150,7 +153,11 @@ export const eventsSeedData: EventDocument[] = [
       { id: "spin-grip", label: "Free Launcher Grip Tape", weight: 10, isActive: true },
       { id: "spin-try-again", label: "Try Again Tomorrow!", weight: 50, isActive: true },
     ],
-    spinMaxPerUser: 1,
+    // spinMaxPerUser: 2 (not the default 1) so the per-identity spin-count
+    // enforcement added 2026-08-20 has a real demo case, and
+    // allowGuestParticipation lets a signed-out visitor spin too.
+    spinMaxPerUser: 2,
+    allowGuestParticipation: true,
     spinWindowStart: daysAgo(7),
     spinWindowEnd: daysAhead(23),
     stats: { totalEntries: 534, approvedEntries: 534, flaggedEntries: 0 },
@@ -382,11 +389,58 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     userDisplayName: "Mock User 2",
     userEmail: "vivaan.kapoor@gmail.com",
     spinUsed: true,
+    spinCount: 1,
     spinPrizeId: "spin-10pct",
     spinPrizeCouponCode: "REHAN10",
     spinWonAt: daysAgo(1),
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(1),
     createdAt: daysAgo(1),
+  } as EventEntryDocument,
+
+  // Rehan spun the wheel twice (spinMaxPerUser: 2 on this event) — demo
+  // fixture for the per-identity spin-count enforcement added 2026-08-20.
+  {
+    id: "entry-spin-yugi-001",
+    eventId: "event-daily-beyblade-pull-wheel",
+    userId: "user-yugi-muto",
+    userDisplayName: "Mock User 3",
+    userEmail: "rehan.sheikh@gmail.com",
+    spinUsed: true,
+    spinCount: 2,
+    spinPrizeId: "spin-grip",
+    spinWonAt: daysAgo(1),
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(2),
+    createdAt: daysAgo(2),
+  } as EventEntryDocument,
+
+  // A guest (not logged in) spun the wheel — demo fixture for the
+  // guest-participation toggle added 2026-08-20. This event's
+  // allowGuestParticipation is true, so no userId is set; guestIpHash is a
+  // deterministic-looking placeholder (real values are HMAC-SHA256 hex).
+  {
+    id: "entry-spin-guest-001",
+    eventId: "event-daily-beyblade-pull-wheel",
+    guestIpHash: "hmac-sha256:seed-placeholder-guest-spin-001",
+    spinUsed: true,
+    spinCount: 1,
+    spinPrizeId: "spin-5pct",
+    spinWonAt: daysAgo(3),
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(3),
+    createdAt: daysAgo(3),
+  } as EventEntryDocument,
+
+  // A guest voted in the poll — demo fixture for allowGuestParticipation on
+  // a non-spin event type (poll).
+  {
+    id: "entry-poll-guest-001",
+    eventId: "event-favourite-blader-poll",
+    guestIpHash: "hmac-sha256:seed-placeholder-guest-poll-001",
+    pollVotes: ["max"],
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(2),
+    createdAt: daysAgo(2),
   } as EventEntryDocument,
 ];

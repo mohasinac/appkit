@@ -322,6 +322,8 @@ export { Heading } from "./ui/components/Typography";
 export { Label, Text, Span, Caption } from "./ui/components/Typography";
 export { TextLink } from "./ui/components/TextLink";
 export type { TextLinkProps } from "./ui/components/TextLink";
+export { Anchor } from "./ui/components/Anchor";
+export { IconButton } from "./ui/index";
 export { Textarea } from "./ui/components/Textarea";
 export { GlobalError } from "./next/components/GlobalError";
 export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, useBottomActions, DashboardNavProvider, LayoutClient } from "./features/layout/index";
@@ -827,3 +829,148 @@ export type {
   NormalizedUnknownThrownValue,
   NormalizedZodError,
 } from "./errors/normalize";
+
+// [CLIENT-SAFE] Pure wa.me share-link message builder — imported directly
+// from its isolated file (not ./whatsapp-bot/server) so this barrel's graph
+// never touches the sibling crypto-importing helpers.
+export { buildPaymentProofReviewMessage } from "./features/whatsapp-bot/helpers/payment-proof-message";
+export type { PaymentProofReviewMessageInput } from "./features/whatsapp-bot/types";
+
+// [CLIENT-SAFE] Verified 2026-08-20 (webpack-migration audit): every symbol
+// below is a "use client" component/hook, or a pure function/constant/type
+// with no server-only or crypto import in its own module. Added so the
+// consumer app's client components can import them via
+// "@mohasinac/appkit/client" instead of the bare package (audit-client-server-only-leak).
+export type {
+  AdminNotificationDocument,
+  ItemRequestDocument,
+  ModerationQueueDocument,
+  ReportDocument,
+  CustomRoleDocument,
+  AnalyticsCardDocument,
+  ListingTemplateDocument,
+} from "./features/store-extensions/index";
+export { CommandPalette, useCommandPaletteHotkey } from "./features/shell/index";
+export type { CommandPaletteGroup } from "./features/shell/index";
+export {
+  AdminBlogEditorView,
+  AdminBundleEditorView,
+  AdminCarouselEditorView,
+  AdminCategoryEditorView,
+  AdminCouponEditorView,
+  AdminFaqEditorView,
+  AdminOrderEditorView,
+  AdminProductEditorView,
+  AdminScammerEditorView,
+  AdminSublistingCategoryEditorView,
+  AdminSupportTicketDetailView,
+} from "./features/admin/index";
+export { ADMIN_CHECKOUT_BYPASS_FLAG_KEY } from "./features/admin/schemas/firestore";
+export { SpinWheelView, EventRaffleEntryForm } from "./features/events/index";
+export { Card, CardBody } from "./ui/index";
+export {
+  SellerCouponsView,
+  SellerCreateProductView,
+  SellerEditProductView,
+  useBecomeSeller,
+} from "./features/seller/index";
+export type {
+  BecomeSellerResult,
+  SellerCreateProductViewProps,
+  SellerEditProductViewProps,
+} from "./features/seller/index";
+export { BecomeSellerView } from "./features/account/index";
+export type { BidDocument } from "./features/auctions/index";
+export type { ClaimedCouponDocument } from "./features/promotions/schemas";
+export { groupOrderItemsByBundle } from "./features/orders/index";
+export type { BundleOrderGroup, OutOfStockPolicy } from "./features/orders/index";
+export { MediaUploadField } from "./features/media/index";
+export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";
+export { useProduct } from "./features/products/index";
+export type { ProductDocument } from "./features/products/index";
+export { BUNDLE_COPY } from "./_internal/shared/features/categories/bundle-copy";
+export { useSiteSettings } from "./core/index";
+export {
+  checkEmiEligibility,
+  computeEmiSchedule,
+} from "./_internal/shared/features/emi/schedule";
+export type { EmiSettings } from "./_internal/shared/features/emi/schedule";
+export { computeCodHandlingFee } from "./_internal/shared/fees/calculator"; // reexport-from-internal-ok: pure fee-calc utility consumed directly by public checkout UI (CheckoutRouteClient.tsx), same category as the sibling computeEmiSchedule/checkEmiEligibility re-export two lines above
+export type {
+  CodHandlingFeeRates,
+  WhatsAppNotifyFeeRates,
+  GiftWrapFeeRates,
+  ShipmentProtectionFeeRates,
+} from "./_internal/shared/fees/calculator";
+export { FAQPageContent } from "./features/faq/index";
+export type { FAQCategory, FAQCategoryItem, FAQSortOption } from "./features/faq/index";
+export { CategoryInlineSelect } from "./features/seller/components/CategoryInlineSelect";
+export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
+export { API_ENDPOINTS } from "./constants/index";
+
+// [CLIENT-SAFE] Pure, zero-import constant files — dashboard filter-tab
+// sets and Firestore field-name maps. No server dependency of any kind.
+export {
+  SELLER_LISTING_TABS,
+  type SellerListingTabId,
+} from "./features/products/constants/listing-tabs";
+export {
+  ALL_TAB,
+  EMPTY_TAB,
+  ADMIN_PRODUCT_STATUS_TABS,
+  ADMIN_PRODUCT_LISTING_TYPE_TABS,
+  ADMIN_BLOG_STATUS_TABS,
+  ADMIN_USER_STATUS_TABS,
+  ADMIN_USER_ROLE_TABS,
+  ADMIN_STORE_STATUS_TABS,
+  ADMIN_PAYOUT_STATUS_TABS,
+  ADMIN_ORDER_STATUS_TABS,
+  ADMIN_REVIEW_STATUS_TABS,
+  ADMIN_REVIEW_RATING_TABS,
+  ADMIN_BID_STATUS_TABS,
+  ADMIN_CONTACT_STATUS_TABS,
+  ADMIN_NEWSLETTER_STATUS_TABS,
+  ADMIN_EVENT_ENTRY_STATUS_TABS,
+  ADMIN_EVENT_STATUS_TABS,
+  ADMIN_CART_OWNERSHIP_TABS,
+  ADMIN_COUPON_TYPE_TABS,
+  SELLER_PRODUCT_STATUS_TABS,
+  SELLER_AUCTION_STATUS_TABS,
+  SELLER_ORDER_STATUS_TABS,
+  SELLER_OFFER_STATUS_TABS,
+  SELLER_BID_STATUS_TABS,
+} from "./features/admin/constants/filter-tabs";
+export {
+  PRODUCT_FIELDS,
+  PRODUCT_STATUS_TRANSITIONS,
+  ORDER_FIELDS,
+  REVIEW_FIELDS,
+  BID_FIELDS,
+  AD_FIELDS,
+  EVENT_FIELDS,
+  EVENT_ENTRY_FIELDS,
+  PAYOUT_FIELDS,
+  STORE_FIELDS,
+  CATEGORY_FIELDS,
+  BLOG_FIELDS,
+  USER_FIELDS,
+  ADDRESS_FIELDS,
+  BRAND_FIELDS,
+  CART_FIELDS,
+  WISHLIST_FIELDS,
+  HISTORY_FIELDS,
+  NOTIFICATION_FIELDS,
+  SESSION_FIELDS,
+  COUPON_USAGE_FIELDS,
+  CONVERSATION_FIELDS,
+  SCAMMER_FIELDS,
+  SUPPORT_TICKET_FIELDS,
+  CAROUSEL_FIELDS,
+  COUPON_FIELDS,
+  FAQ_FIELDS,
+  HOMEPAGE_SECTION_FIELDS,
+  SITE_SETTINGS_FIELDS,
+  COMMON_FIELDS,
+  OAUTH_STATE_VALUES,
+  SCHEMA_DEFAULTS,
+} from "./constants/field-names";

@@ -71,6 +71,8 @@ export const ACCOUNT_ENDPOINTS = {
   WISHLIST: "/api/user/wishlist",
   WISHLIST_ITEM_BY_ID: (itemId: string) =>
     `/api/user/wishlist/${encodeURIComponent(itemId)}`,
+  WISHLIST_ITEM_SYNC: (itemId: string) =>
+    `/api/user/wishlist/${encodeURIComponent(itemId)}/sync`,
   WISHLIST_VALIDATE: "/api/user/wishlist/validate",
   HISTORY: "/api/user/history",
   HISTORY_ITEM: (productId: string) =>
@@ -197,6 +199,7 @@ export const ADMIN_ENDPOINTS = {
   EVENT_STATUS: (id: string) => `/api/admin/events/${id}/status`,
   EVENT_STATS: (id: string) => `/api/admin/events/${id}/stats`,
   EVENT_ENTRIES: (id: string) => `/api/admin/events/${id}/entries`,
+  EVENT_ENTRIES_EXPORT: (id: string) => `/api/admin/events/${id}/entries/export`,
   EVENT_ENTRY_BY_ID: (eventId: string, entryId: string) =>
     `/api/admin/events/${eventId}/entries/${entryId}`,
   // SB9-D — admin manual raffle trigger

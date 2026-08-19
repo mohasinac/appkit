@@ -198,6 +198,13 @@ export const ACTIONS: ActionTree = {
       description: "Remove this listing from the buyer's wishlist.",
       kind: "ghost",
     },
+    "sync-wishlist-item": {
+      id: "product.sync-wishlist-item",
+      label: "Sync",
+      ariaLabel: "Sync this wishlist item with the latest product data",
+      description: "Refreshes the wishlist entry's stored price/title/image against the live listing, removing it if the listing is no longer available.",
+      kind: "ghost",
+    },
     "share": {
       id: "product.share",
       label: "Share",
@@ -1425,6 +1432,14 @@ export const ACTIONS: ActionTree = {
       label: "Download Report",
       ariaLabel: "Download tester feedback as a Markdown report",
       description: "Download every tester checklist response as a Markdown file, grouped by feature area, for offline triage.",
+      kind: "ghost",
+      permissions: ["admin"],
+    },
+    "export-event-entries": {
+      id: "admin.export-event-entries",
+      label: "Download Report",
+      ariaLabel: "Download this event's entries as a Markdown report",
+      description: "Download an event's entries as a Markdown file — a per-option vote tally for polls, or individual entries (submitter, status, points, responses) for every other event type.",
       kind: "ghost",
       permissions: ["admin"],
     },

@@ -374,6 +374,8 @@ export const EVENT_FIELDS = {
   SPIN_MAX_PER_USER: "spinMaxPerUser",
   SPIN_WINDOW_START: "spinWindowStart",
   SPIN_WINDOW_END: "spinWindowEnd",
+  // Guest participation toggle (2026-08-20)
+  ALLOW_GUEST_PARTICIPATION: "allowGuestParticipation",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 
@@ -417,9 +419,11 @@ export const EVENT_ENTRY_FIELDS = {
   STATUS: "status",
   RAFFLE_ELIGIBLE: "raffleEligible",
   SPIN_USED: "spinUsed",
+  SPIN_COUNT: "spinCount",
   SPIN_PRIZE_ID: "spinPrizeId",
   SPIN_PRIZE_COUPON_CODE: "spinPrizeCouponCode",
   SPIN_WON_AT: "spinWonAt",
+  GUEST_IP_HASH: "guestIpHash",
   CREATED_AT: "createdAt",
 
   STATUS_VALUES: {

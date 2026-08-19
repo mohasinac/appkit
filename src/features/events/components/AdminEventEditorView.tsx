@@ -2,7 +2,7 @@
 import { normalizeError } from "../../../errors/normalize";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
-import type { JsonObjectWithUndefined } from "@mohasinac/appkit";
+import type { JsonObjectWithUndefined } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -203,6 +203,9 @@ interface EventDraft {
   tags: string[];
   status: EventStatus;
   createdBy: string;
+  // Guest participation — one uniform admin toggle applied across every
+  // event type (poll/survey/feedback/raffle/spin_wheel), not a per-type rule.
+  allowGuestParticipation: boolean;
   // Sale
   discountPercent: string;
   saleBannerText: string;
@@ -284,6 +287,7 @@ const DEFAULT_DRAFT: EventDraft = {
   tags: [],
   status: "draft",
   createdBy: "",
+  allowGuestParticipation: false,
   discountPercent: "10",
   saleBannerText: "",
   couponId: "",
@@ -344,6 +348,58 @@ function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
   return fields;
 }
 
+// Extracted out of the raffle/spin step's render() so that closure stays
+// under the LARGE_COMPONENT line-count threshold — purely a line-count
+// split, no behavior change from when this was inline.
+function SpinPrizesEditor({
+  values,
+  onChange,
+}: {
+  values: Pick<EventDraft, "spinPrizes" | "spinMaxPerUser" | "spinWindowStart" | "spinWindowEnd">;
+  onChange: (patch: Partial<EventDraft>) => void;
+}) {
+  return (
+    <Stack gap="sm" rounded="lg" border="default" padding="sm">
+      <Text size="xs" weight="medium" color="muted">Spin prizes (weighted random)</Text>
+      {values.spinPrizes.length === 0 && (
+        <Text size="xs" color="muted">No spin prizes yet. Add at least one to enable spinning.</Text>
+      )}
+      {values.spinPrizes.map((p) => (
+        <Grid align="end" key={p.id} gap="xs" className="grid-cols-12">
+          <Div className="col-span-5">
+            <Input label="Label" value={p.label} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, label: e.target.value } : sp) })} placeholder="₹100 off" />
+          </Div>
+          <Div className="col-span-3">
+            <Text size="xs" weight="medium" className="mb-1">Coupon</Text>
+            <CouponInlineSelect
+              scope="admin"
+              value={p.couponId ?? ""}
+              onChange={(id) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, couponId: id || undefined } : sp) })}
+              placeholder="Search…"
+              allowCreate={false}
+            />
+          </Div>
+          <Div className="col-span-2">
+            <Input label="Weight" type="number" value={String(p.weight)} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, weight: Number(e.target.value) || 0 } : sp) })} />
+          </Div>
+          <Row centered className="col-span-1" padding="b-xs">
+            <Toggle checked={p.isActive} onChange={(v) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, isActive: v } : sp) })} label="" />
+          </Row>
+          <Row centered className="col-span-1" padding="b-xs">
+            <Button variant="ghost" type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className={CLS_REMOVE_BTN_LG} aria-label="Remove prize">×</Button>
+          </Row>
+        </Grid>
+      ))}
+      <Button type="button" variant="outline" size="sm" onClick={() => onChange({ spinPrizes: [...values.spinPrizes, { id: `prize-${Date.now()}`, label: "", couponId: undefined, weight: 1, isActive: true }] })}>+ Add spin prize</Button>
+      <Input label="Max spins per user" type="number" value={values.spinMaxPerUser} onChange={(e) => onChange({ spinMaxPerUser: e.target.value })} placeholder="1" />
+      <Grid cols={2} gap="sm">
+        <Input label="Spin window start" type="datetime-local" value={values.spinWindowStart} onChange={(e) => onChange({ spinWindowStart: e.target.value })} />
+        <Input label="Spin window end" type="datetime-local" value={values.spinWindowEnd} onChange={(e) => onChange({ spinWindowEnd: e.target.value })} />
+      </Grid>
+    </Stack>
+  );
+}
+
 // --- Component ---------------------------------------------------------------
 
 export function AdminEventEditorView({
@@ -390,6 +446,7 @@ export function AdminEventEditorView({
       tags: Array.isArray(event.tags) ? event.tags : [],
       status: event.status || "draft",
       createdBy: event.createdBy || "",
+      allowGuestParticipation: Boolean(event.allowGuestParticipation),
       discountPercent: String(event.saleConfig?.discountPercent ?? 10),
       saleBannerText: event.saleConfig?.bannerText || "",
       couponId: event.offerConfig?.couponId || "",
@@ -439,6 +496,7 @@ export function AdminEventEditorView({
         startsAt: toISOString(draft.startsAt),
         endsAt: toISOString(draft.endsAt),
         coverImageUrl: draft.coverImageUrl || undefined,
+        allowGuestParticipation: draft.allowGuestParticipation,
         ...buildEventTypeConfig(draft),
         ...buildEventRaffleFields(draft),
       };
@@ -567,6 +625,17 @@ export function AdminEventEditorView({
               <Text size="sm" color="muted">{values.createdBy}</Text>
             </Stack>
           )}
+
+          <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
+            <Toggle
+              checked={values.allowGuestParticipation}
+              onChange={(v) => onChange({ allowGuestParticipation: v })}
+              label="Allow guest participation (no login required)"
+            />
+            <Text size="xs" color="muted">
+              When enabled, unauthenticated visitors can participate in this event (poll vote, survey/feedback response, raffle entry, or wheel spin), identified by a hashed IP address instead of an account. Applies uniformly to whatever entry mechanism this event type uses.
+            </Text>
+          </Stack>
 
           {/* Sale config */}
           {values.type === "sale" && (
@@ -707,46 +776,7 @@ export function AdminEventEditorView({
                   <Text size="xs" color="muted" className="mt-1">Products shown to winners or displayed as the prize showcase.</Text>
                 </Div>
 
-                {isSpinMode && (
-                  <Stack gap="sm" rounded="lg" border="default" padding="sm">
-                    <Text size="xs" weight="medium" color="muted">Spin prizes (weighted random)</Text>
-                    {values.spinPrizes.length === 0 && (
-                      <Text size="xs" color="muted">No spin prizes yet. Add at least one to enable spinning.</Text>
-                    )}
-                    {values.spinPrizes.map((p) => (
-                      <Grid align="end" key={p.id} gap="xs" className="grid-cols-12">
-                        <Div className="col-span-5">
-                          <Input label="Label" value={p.label} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, label: e.target.value } : sp) })} placeholder="₹100 off" />
-                        </Div>
-                        <Div className="col-span-3">
-                          <Text size="xs" weight="medium" className="mb-1">Coupon</Text>
-                          <CouponInlineSelect
-                            scope="admin"
-                            value={p.couponId ?? ""}
-                            onChange={(id) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, couponId: id || undefined } : sp) })}
-                            placeholder="Search…"
-                            allowCreate={false}
-                          />
-                        </Div>
-                        <Div className="col-span-2">
-                          <Input label="Weight" type="number" value={String(p.weight)} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, weight: Number(e.target.value) || 0 } : sp) })} />
-                        </Div>
-                        <Row centered className="col-span-1" padding="b-xs">
-                          <Toggle checked={p.isActive} onChange={(v) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, isActive: v } : sp) })} label="" />
-                        </Row>
-                        <Row centered className="col-span-1" padding="b-xs">
-                          <Button variant="ghost" type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className={CLS_REMOVE_BTN_LG} aria-label="Remove prize">×</Button>
-                        </Row>
-                      </Grid>
-                    ))}
-                    <Button type="button" variant="outline" size="sm" onClick={() => onChange({ spinPrizes: [...values.spinPrizes, { id: `prize-${Date.now()}`, label: "", couponId: undefined, weight: 1, isActive: true }] })}>+ Add spin prize</Button>
-                    <Input label="Max spins per user" type="number" value={values.spinMaxPerUser} onChange={(e) => onChange({ spinMaxPerUser: e.target.value })} placeholder="1" />
-                    <Grid cols={2} gap="sm">
-                      <Input label="Spin window start" type="datetime-local" value={values.spinWindowStart} onChange={(e) => onChange({ spinWindowStart: e.target.value })} />
-                      <Input label="Spin window end" type="datetime-local" value={values.spinWindowEnd} onChange={(e) => onChange({ spinWindowEnd: e.target.value })} />
-                    </Grid>
-                  </Stack>
-                )}
+                {isSpinMode && <SpinPrizesEditor values={values} onChange={onChange} />}
 
                 {/* Manual trigger + winner (edit mode only) */}
                 {isEdit && (

@@ -1,7 +1,7 @@
 import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
 import { sortBy } from "@mohasinac/appkit";
 import React from "react";
-import { Main } from "../../../ui";
+import { Div, Main } from "../../../ui";
 import { carouselRepository, faqsRepository, siteSettingsRepository } from "../../../repositories";
 import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { renderSection, AnnouncementBar, type SectionData } from "../lib/section-renderer";
@@ -160,10 +160,14 @@ export async function MarketplaceHomepageView({
 
   return (
     <Main>
-      {showAnnouncement ? <AnnouncementBar message={announcementMessage} onDismiss={onBannerDismiss} /> : null}
-      {orderedSections.map((section) =>
-        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData),
-      )}
+      <Div className="relative">
+        {showAnnouncement ? (
+          <AnnouncementBar overlay message={announcementMessage} onDismiss={onBannerDismiss} />
+        ) : null}
+        {orderedSections.map((section) =>
+          renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData),
+        )}
+      </Div>
     </Main>
   );
 }

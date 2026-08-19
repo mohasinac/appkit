@@ -13,6 +13,7 @@
  */
 
 import type { NextRequest } from "next/server.js";
+import { hmacBlindIndex } from "./pii-encrypt";
 
 export interface RateLimitConfig {
   /** Maximum requests allowed in the window */
@@ -33,12 +34,27 @@ export interface RateLimitResult {
 
 // --- IP extraction ------------------------------------------------------------
 
-function getClientIP(request: NextRequest | Request): string {
+export function getClientIP(request: NextRequest | Request): string {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0].trim();
   const realIP = request.headers.get("x-real-ip");
   if (realIP) return realIP;
   return "unknown";
+}
+
+/**
+ * Deterministic, non-reversible identity hash for an unauthenticated
+ * ("guest") caller, scoped to an entity (e.g. an event id) so the same
+ * physical visitor can't be correlated across unrelated entities from the
+ * hash alone. Reuses the same HMAC-SHA256 blind-index primitive already
+ * used for PII lookups (`emailIndex`/`phoneIndex`) — the raw IP is never
+ * persisted, only this hash.
+ */
+export function hashGuestIdentity(
+  scope: string,
+  request: NextRequest | Request,
+): string {
+  return hmacBlindIndex(`${scope}:${getClientIP(request)}`);
 }
 
 // --- Upstash-backed limiter ---------------------------------------------------

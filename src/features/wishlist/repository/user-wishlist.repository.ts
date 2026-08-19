@@ -207,6 +207,42 @@ export class UserWishlistRepository {
     }
   }
 
+  /**
+   * Overwrites the stored `productSnapshot` (title/thumb/currentPrice) for
+   * one or more surviving items in place — used by the "sync" feature to
+   * refresh what's persisted on the wishlist doc against the live product,
+   * distinct from `getWishlistItems`'s existing behaviour of just joining in
+   * live product data for *display* without ever writing it back.
+   */
+  async syncSnapshots(
+    userSlug: string,
+    updates: { productId: string; snapshot: WishlistItemSnapshot }[],
+  ): Promise<void> {
+    if (updates.length === 0) return;
+    const db = getAdminDb();
+    const ref = this.docRef(userSlug);
+    const byId = new Map(updates.map((u) => [u.productId, u.snapshot]));
+    try {
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists) return;
+        const items = normaliseItems(snap.data()?.items);
+        const next = items.map((item) =>
+          byId.has(item.productId)
+            ? { ...item, productSnapshot: byId.get(item.productId) }
+            : item,
+        );
+        tx.set(ref, { userId: userSlug, items: next, updatedAt: new Date() });
+      });
+    } catch (error) {
+      serverLogger.error("UserWishlistRepository.syncSnapshots error", {
+        userSlug,
+        error,
+      });
+      throw error;
+    }
+  }
+
   async clearWishlist(userSlug: string): Promise<void> {
     try {
       await this.docRef(userSlug).set({

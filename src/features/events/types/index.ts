@@ -135,6 +135,8 @@ export interface EventItem {
   spinMaxPerUser?: number;
   spinWindowStart?: string;
   spinWindowEnd?: string;
+  /** Per-event admin toggle — unauthenticated visitors may participate when true. */
+  allowGuestParticipation?: boolean;
   /** Lottery config — slots have price/weight stripped for client consumption. */
   lotteryConfig?: ClientLotteryConfig;
   stats: {
@@ -175,6 +177,32 @@ export interface LeaderboardEntry {
   /** Sum of all approved entry points for this user in the event */
   totalPoints: number;
   entryCount: number;
+}
+
+/**
+ * Tallied vote count for a single poll option — used in place of
+ * LeaderboardEntry for event.type === "poll" (a voter-ranked leaderboard is
+ * meaningless for a poll; this is a per-option result instead).
+ */
+export interface PollResultEntry {
+  optionId: string;
+  label: string;
+  count: number;
+  percent: number;
+}
+
+/**
+ * One row of the public "Last 10 Spin Results" feed for a spin_wheel event.
+ * `userDisplayName` is undefined for guest spins (`isGuest: true`) — callers
+ * should render a generic "Guest" label in that case, never a raw hash.
+ */
+export interface SpinResultEntry {
+  id: string;
+  userDisplayName?: string;
+  isGuest: boolean;
+  spinPrizeId?: string;
+  spinPrizeTitle?: string;
+  spinWonAt?: string;
 }
 
 // --- List response ------------------------------------------------------------

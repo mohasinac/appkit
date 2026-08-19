@@ -50,6 +50,16 @@ export interface EventDocument extends BaseDocument {
   spinMaxPerUser?: number;
   spinWindowStart?: Date;
   spinWindowEnd?: Date;
+  /**
+   * Per-event admin toggle — when true, `enterEvent()` (and the spin-prize
+   * find-or-create step) allow an unauthenticated caller to participate,
+   * identified by a hashed IP instead of a `userId`. Default/undefined
+   * preserves the prior per-type login rules (poll/survey require login;
+   * non-anonymous feedback requires login; raffle/spin_wheel now also
+   * require login unless this flag is set — see Root Cause callout in
+   * CLAUDE.md "SSR Architecture" era docs / event-actions.ts `enterEvent`).
+   */
+  allowGuestParticipation?: boolean;
   /** Full lottery config including server-only price/weight fields. */
   lotteryConfig?: LotteryConfig;
   stats: {
@@ -78,10 +88,20 @@ export type EventEntryDocument = {
   points?: number;
   raffleEligible?: boolean;
   spinUsed?: boolean;
+  /** Count of spins consumed by this identity, enforced against `EventDocument.spinMaxPerUser`. `spinUsed` is kept as a cheap boolean mirror (count > 0) for existing readers. */
+  spinCount?: number;
   spinPrizeId?: string;
   spinPrizeCouponCode?: string | null;
   spinWonAt?: Date;
   ipAddress?: string;
+  /**
+   * HMAC-SHA256 blind index of a guest (non-logged-in) participant's IP,
+   * scoped per event — `hmacBlindIndex(eventId + ":" + rawIp)`. Set only
+   * when `userId` is absent and the event's `allowGuestParticipation` is
+   * true. Never the raw IP — see `ipAddress` above, which is a separate,
+   * currently-unused field; do not repurpose it for this hash.
+   */
+  guestIpHash?: string;
   submittedAt: Date;
 }
 
@@ -95,10 +115,12 @@ export const EVENT_INDEXED_FIELDS = [
 export const EVENT_ENTRY_INDEXED_FIELDS = [
   "eventId",
   "userId",
+  "guestIpHash",
   "reviewStatus",
   "status",
   "submittedAt",
   "points",
+  "spinWonAt",
 ] as const;
 
 export const EVENT_FIELDS = {
@@ -116,6 +138,7 @@ export const EVENT_FIELDS = {
   WINNER_IMAGES: "winnerImages",
   ADDITIONAL_IMAGES: "additionalImages",
   TAGS: "tags",
+  ALLOW_GUEST_PARTICIPATION: "allowGuestParticipation",
   CREATED_BY: "createdBy",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
@@ -151,6 +174,12 @@ export const EVENT_ENTRY_FIELDS = {
   REVIEWED_AT: "reviewedAt",
   SUBMITTED_AT: "submittedAt",
   POINTS: "points",
+  GUEST_IP_HASH: "guestIpHash",
+  SPIN_USED: "spinUsed",
+  SPIN_COUNT: "spinCount",
+  SPIN_PRIZE_ID: "spinPrizeId",
+  SPIN_PRIZE_COUPON_CODE: "spinPrizeCouponCode",
+  SPIN_WON_AT: "spinWonAt",
   REVIEW_STATUS_VALUES: {
     PENDING: "pending" as EntryReviewStatus,
     APPROVED: "approved" as EntryReviewStatus,

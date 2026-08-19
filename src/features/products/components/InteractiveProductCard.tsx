@@ -32,12 +32,19 @@ export function InteractiveProductCard({
   onBuyNow,
 }: InteractiveProductCardProps) {
   // When selection is enabled, render ProductCard directly so its built-in
-  // checkbox + long-press (BaseListingCard.Checkbox) work; wrap with Link
-  // only outside of selection mode.
+  // checkbox + long-press (BaseListingCard.Checkbox) work. `href` is still
+  // forwarded here (not just in the plain-Link branch below) — ProductCard's
+  // own `if (href && !selectionMode) return <Link>...` only wraps in a Link
+  // when nothing is actively selected, so passing href unconditionally keeps
+  // the card navigable whenever a selection handler is merely wired but not
+  // active, instead of silently losing all click/tap navigation the instant
+  // `onSelect` is provided at all (see Root Cause Pattern: selectable-card
+  // navigation must not depend on a selection callback being present).
   if (onSelect) {
     return (
       <ProductCard
         product={product}
+        href={href}
         className={className}
         isWishlisted={isWishlisted}
         onAddToWishlist={onToggleWishlist}

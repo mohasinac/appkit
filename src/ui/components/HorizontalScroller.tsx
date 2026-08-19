@@ -27,6 +27,12 @@ export interface HorizontalScrollerProps<T = unknown> {
   snapToItems?: boolean;
   showArrows?: boolean;
   arrowSize?: "sm" | "md" | "lg";
+  /**
+   * "circle" (default) — small centered circular buttons.
+   * "full-height" — a thin sliver spanning the whole track height, flush to
+   * each edge. Easier to hit on tall / double-row grids (`rows > 1`).
+   */
+  arrowStyle?: "circle" | "full-height";
   showScrollbar?: boolean;
   showFadeEdges?: boolean;
   scrollContainerRef?: RefObject<HTMLDivElement | null>;
@@ -75,6 +81,7 @@ export function HorizontalScroller<T = unknown>({
   snapToItems,
   showArrows,
   arrowSize = "md",
+  arrowStyle = "circle",
   showScrollbar,
   showFadeEdges,
   scrollContainerRef: externalRef,
@@ -343,7 +350,7 @@ export function HorizontalScroller<T = unknown>({
           aria-label="Previous"
           aria-disabled={prevDisabled || undefined}
           disabled={prevDisabled}
-          className={`appkit-hscroller__arrow appkit-hscroller__arrow--prev appkit-hscroller__arrow--${arrowSize}`}
+          className={`appkit-hscroller__arrow appkit-hscroller__arrow--prev appkit-hscroller__arrow--${arrowSize} ${arrowStyle === "full-height" ? "appkit-hscroller__arrow--full-height" : ""}`}
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -364,7 +371,7 @@ export function HorizontalScroller<T = unknown>({
           aria-label="Next"
           aria-disabled={nextDisabled || undefined}
           disabled={nextDisabled}
-          className={`appkit-hscroller__arrow appkit-hscroller__arrow--next appkit-hscroller__arrow--${arrowSize}`}
+          className={`appkit-hscroller__arrow appkit-hscroller__arrow--next appkit-hscroller__arrow--${arrowSize} ${arrowStyle === "full-height" ? "appkit-hscroller__arrow--full-height" : ""}`}
         >
           <ChevronRight className="w-4 h-4" />
         </button>

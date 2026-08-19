@@ -14,8 +14,11 @@ import { ROUTES } from "../../../next";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";
+import { getGuestCartItems } from "../../cart/utils/guest-cart";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
-import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
+import { pushCartOp, pushWishlistOp, dispatchCartUpdated, formatCartAddedMessage } from "../../cart/utils/pending-ops";
+import { formatCurrency } from "../../../utils/number.formatter";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
@@ -169,7 +172,14 @@ export function ProductsIndexListing({
     };
     localCart.add(product.id, 1, snapshot);
     pushCartOp({ op: "add", productId: product.id, quantity: 1, ...snapshot });
-    showToast("Added to cart", "success");
+    const items = getGuestCartItems();
+    const detail = {
+      productTitle: product.title,
+      itemCount: items.reduce((sum, it) => sum + it.quantity, 0),
+      totalValue: items.reduce((sum, it) => sum + (it.price ?? 0) * it.quantity, 0),
+    };
+    showToast(formatCartAddedMessage(detail, (amount) => formatCurrency(amount, getDefaultCurrency())), "success");
+    dispatchCartUpdated(detail);
   }, [localCart, showToast]);
 
   const handleBuyNow = useCallback((product: any) => {

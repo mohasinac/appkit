@@ -197,14 +197,22 @@ function resolveWatermarkPlacementStyle(config: MediaVideoWatermark): React.CSSP
  * play/pause toggling.
  */
 function MediaVideoWatermarkLayer({ config }: { config: MediaVideoWatermark }) {
-  const widthPct = Math.max(0, Math.min(100, config.size ?? 30));
-  const opacity = Math.max(0, Math.min(100, config.opacity ?? 20)) / 100;
+  // Fallbacks match the server-side Sharp pipeline's DEFAULT_SIZE/DEFAULT_OPACITY
+  // (resolve-effective-watermark.ts) — these only kick in if no config is passed
+  // at all; in practice callers read siteSettings.effectiveWatermark, which
+  // always carries the real size/opacity.
+  const widthPct = Math.max(0, Math.min(100, config.size ?? 10));
+  const opacity = Math.max(0, Math.min(100, config.opacity ?? 10)) / 100;
   if (widthPct === 0 || opacity === 0) return null;
   // Width is a percentage of the container so the watermark scales with the
-  // video, just like the server-side Sharp pipeline scales images.
+  // video, just like the server-side Sharp pipeline scales images — capped at
+  // an absolute max so a large player (hero banner, carousel) doesn't render
+  // an oversized mark just because the percentage of a big box is a big
+  // number. Mirrors MAX_WATERMARK_PX in src/app/api/media/_watermark.ts.
   const containerStyle: React.CSSProperties = {
     position: "absolute",
     width: `${widthPct}%`,
+    maxWidth: "180px",
     pointerEvents: "none",
     opacity,
     ...resolveWatermarkPlacementStyle(config),

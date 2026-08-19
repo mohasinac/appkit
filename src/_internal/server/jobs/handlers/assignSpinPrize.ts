@@ -19,8 +19,14 @@ export const assignSpinPrizeHandler: CallableHandler<
   if (result.reason === "event_not_found") {
     throw httpError("Event not found", 404);
   }
-  if (result.reason === "entry_not_found") {
-    throw httpError("No event entry found for this user", 404);
+  if (result.reason === "identity_required") {
+    throw httpError("No user or guest identity provided", 400);
+  }
+  if (result.reason === "login_required") {
+    throw httpError("You must be logged in to spin this wheel", 401);
+  }
+  if (result.reason === "outside_spin_window") {
+    throw httpError("This spin wheel is not open right now", 403);
   }
   if (result.reason === "no_prizes_configured") {
     throw httpError("No spin prizes configured for this event", 422);

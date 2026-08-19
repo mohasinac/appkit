@@ -5,6 +5,8 @@ export {
   rateLimitByIdentifier,
   RateLimitPresets,
   clearRateLimitStore,
+  getClientIP,
+  hashGuestIdentity,
 } from "./rate-limit";
 export type { RateLimitConfig, RateLimitResult } from "./rate-limit";
 export {

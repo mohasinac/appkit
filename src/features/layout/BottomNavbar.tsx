@@ -5,6 +5,7 @@ import { AvatarDisplay, Li, Span, TextLink } from "../../ui";
 import { BottomNavLayout } from "./BottomNavLayout";
 import { NavItem } from "./NavItem";
 import { useWishlistCount } from "../wishlist/hooks/useWishlistCount";
+import { useCartCount } from "../cart/hooks/useCartCount";
 
 export interface BottomNavItem {
   key: string;
@@ -95,6 +96,7 @@ export function BottomNavbar({
 }: BottomNavbarProps) {
   const pathname = usePathname();
   const wishlistCount = useWishlistCount(userId);
+  const cartCount = useCartCount(!!userId);
 
   const labels = {
     mobileNav: "Mobile navigation",
@@ -115,11 +117,11 @@ export function BottomNavbar({
   );
 
   if (navItems && navItems.length > 0) {
-    // When a wishlist href is available, trade one nav-item slot for a
-    // dedicated wishlist slot so mobile has the same 1-click wishlist
-    // access desktop's TitleBar already has (previously: More → sidebar →
-    // Shopping group, 2 taps).
-    const visibleItems = navItems.slice(0, wishlistHref ? 3 : 4);
+    // Trade one nav-item slot for a dedicated Cart slot so mobile has
+    // 1-click cart access with a live item-count badge (previously this
+    // slot was Wishlist — Wishlist remains reachable from the header/app
+    // bar, it's just no longer duplicated in the bottom tab bar).
+    const visibleItems = navItems.slice(0, cartHref ? 3 : 4);
     return (
       <BottomNavLayout ariaLabel={labels.mobileNav}>
         {visibleItems.map((item) => (
@@ -137,27 +139,27 @@ export function BottomNavbar({
             />
           </Li>
         ))}
-        {wishlistHref && (
+        {cartHref && (
           <Li className="flex-1">
             <TextLink
-              href={wishlistHref}
+              href={cartHref}
               variant="none"
               className={`${slotClassName} ${
- pathname === wishlistHref ? activeClassName : inactiveClassName
+ pathname === cartHref ? activeClassName : inactiveClassName
  }`}
-              aria-label={wishlistCount > 0 ? `${labels.wishlist}, ${wishlistCount} items` : labels.wishlist}
+              aria-label={cartCount > 0 ? `${labels.cart}, ${cartCount} items` : labels.cart}
             >
               <Span className="relative">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                {wishlistCount > 0 && (
+                {cartCount > 0 && (
                   <Span size="xs" weight="semibold" className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--appkit-color-error)] px-[var(--appkit-space-1)] leading-none text-[var(--appkit-color-text-on-primary)]">
-                    {wishlistCount > 9 ? "9+" : wishlistCount}
+                    {cartCount > 9 ? "9+" : cartCount}
                   </Span>
                 )}
               </Span>
-              <Span className={labelClassName}>{labels.wishlist}</Span>
+              <Span className={labelClassName}>{labels.cart}</Span>
             </TextLink>
           </Li>
         )}

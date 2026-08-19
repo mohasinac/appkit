@@ -1,6 +1,6 @@
 import React from "react";
 import { Div, Row, Span, Stack, Text } from "../../../ui";
-import type { LeaderboardEntry } from "../types";
+import type { LeaderboardEntry, PollResultEntry } from "../types";
 
 export interface EventLeaderboardProps {
   isLoading?: boolean;
@@ -11,6 +11,15 @@ export interface EventLeaderboardProps {
   renderEntry?: (entry: LeaderboardEntry, index: number) => React.ReactNode;
   /** Entries — used only when renderEntry is provided */
   entries?: LeaderboardEntry[];
+  /**
+   * When provided, renders a per-option vote-tally view instead of the
+   * ranked voter list — use for event.type === "poll", where a
+   * voter-by-points ranking is meaningless. Takes priority over
+   * `renderList`/`entries` when set.
+   */
+  pollResults?: PollResultEntry[];
+  /** Render a single poll-result row; used when caller wants item-level control */
+  renderPollResult?: (result: PollResultEntry, index: number) => React.ReactNode;
   /** Empty state node */
   renderEmpty?: () => React.ReactNode;
   /** Loading spinner / skeleton */
@@ -19,6 +28,7 @@ export interface EventLeaderboardProps {
     title?: string;
     noEntries?: string;
     points?: string;
+    votes?: string;
   };
   className?: string;
 }
@@ -29,6 +39,8 @@ export function EventLeaderboard({
   renderList,
   renderEntry,
   entries = [],
+  pollResults,
+  renderPollResult,
   renderEmpty,
   renderSkeleton,
   labels = {},
@@ -45,6 +57,35 @@ export function EventLeaderboard({
       <Text paddingY="md" variant="secondary" size="sm" align="start">
         {labels.noEntries ?? "No entries yet."}
       </Text>
+    );
+  }
+
+  if (pollResults) {
+    return (
+      <Stack className={className} gap="sm">
+        {pollResults.map((result, i) =>
+          renderPollResult ? (
+            <React.Fragment key={result.optionId}>
+              {renderPollResult(result, i)}
+            </React.Fragment>
+          ) : (
+            <Div
+              key={result.optionId}
+              layout="flex"
+              align="center"
+              justify="between"
+              rounded="xl"
+              padding="sm"
+              className="border"
+             data-section="eventleaderboard-pollresult-div">
+              <Span weight="medium">{result.label}</Span>
+              <Span size="sm" color="muted">
+                {result.count} {labels.votes ?? "votes"} ({result.percent}%)
+              </Span>
+            </Div>
+          ),
+        )}
+      </Stack>
     );
   }
 

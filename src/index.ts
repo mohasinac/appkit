@@ -2908,6 +2908,10 @@ export { HowPreOrdersWorkView } from "./features/about/index";
 export { HowReviewsWorkView } from "./features/about/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PolicyPageView - Component for policy page view.
+export { PolicyPageView } from "./features/about/index";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// DeveloperView - Component for developer intro/portfolio view.
+export { DeveloperView } from "./features/about/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PublicProfileView - Component for public profile view.
 export { PublicProfileView } from "./features/about/index";
@@ -2973,6 +2977,7 @@ export type { HowReviewsWorkViewProps } from "./features/about/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PolicyPageViewProps - Type contract for policy page view props.
 export type { PolicyPageViewProps } from "./features/about/index";
+export type { DeveloperViewProps } from "./features/about/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PublicProfileViewProps - Type contract for public profile view props.
 export type { PublicProfileViewProps } from "./features/about/index";
@@ -4224,6 +4229,15 @@ export type { PlaceBidResult } from "./features/auctions/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
 export { CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/checkout-value-otp";
+// [SERVER-ONLY] Tier PP — high-value checkout OTP gate. "use server" actions
+// belong in both index.ts and server.ts per the appkit Export Rules table;
+// these were only in server.ts, leaving src/actions/checkout.actions.ts's
+// `import { sendCheckoutValueOtp, verifyCheckoutValueOtp } from "@mohasinac/appkit"`
+// unresolved.
+export {
+  sendCheckoutValueOtp,
+  verifyCheckoutValueOtp,
+} from "./features/checkout/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // authMeGET - Shared export for auth me get.
 export { authMeGET } from "./features/auth/server";
@@ -5031,26 +5045,6 @@ export { listTopLevelCategories } from "./features/categories/server";
 // updateCategory - Helper for update category.
 export { updateCategory } from "./features/categories/server";
 
-// ./features/checkout/server
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// FailedCheckoutRepository - Shared export for failed checkout repository.
-export { FailedCheckoutRepository } from "./features/checkout/server";
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// failedCheckoutRepository - Shared export for failed checkout repository.
-export { failedCheckoutRepository } from "./features/checkout/server";
-// [SERVER-ONLY] Tier PP — high-value checkout OTP gate.
-export {
-  sendCheckoutValueOtp,
-  verifyCheckoutValueOtp,
-  isCheckoutValueOtpVerified,
-} from "./features/checkout/server";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// FailedCheckoutMeta - Type contract for failed checkout meta.
-export type { FailedCheckoutMeta } from "./features/checkout/server";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// FailedPaymentMeta - Type contract for failed payment meta.
-export type { FailedPaymentMeta } from "./features/checkout/server";
-
 // ./features/checkout/schemas/index
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // FAILED_CHECKOUTS_COLLECTION - Constant used across modules.
@@ -5179,29 +5173,6 @@ export type { ContactInfoSidebarProps } from "./features/contact/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UseContactSubmitOptions - Type contract for use contact submit options.
 export type { UseContactSubmitOptions } from "./features/contact/index";
-
-// ./features/contact/server
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendContactEmail - Shared export for send contact email.
-export { sendContactEmail } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendEmail - Shared export for send email.
-export { sendEmail } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendOrderConfirmationEmail - Shared export for send order confirmation email.
-export { sendOrderConfirmationEmail } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendPasswordResetEmailWithLink - Shared export for send password reset email with link.
-export { sendPasswordResetEmailWithLink } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendSiteSettingsChangedEmail - Shared export for send site settings changed email.
-export { sendSiteSettingsChangedEmail } from "./features/contact/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// sendVerificationEmailWithLink - Shared export for send verification email with link.
-export { sendVerificationEmailWithLink } from "./features/contact/server";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// OrderConfirmationEmailParams - Type contract for order confirmation email params.
-export type { OrderConfirmationEmailParams } from "./features/contact/server";
 
 // ./features/copilot/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -5568,6 +5539,9 @@ export type { FormFieldType } from "./features/events/index";
 // LeaderboardEntry - Type contract for leaderboard entry.
 export type { LeaderboardEntry } from "./features/events/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// PollResultEntry - Type contract for a tallied poll-option result.
+export type { PollResultEntry } from "./features/events/index";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // OfferConfig - Type contract for offer config.
 export type { OfferConfig } from "./features/events/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -5629,6 +5603,12 @@ export { eventsGET } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventLeaderboard - Helper for get event leaderboard.
 export { getEventLeaderboard } from "./features/events/server";
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getEventPollResults - Helper for get event poll results (per-option vote tally).
+export { getEventPollResults } from "./features/events/server";
+// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getEventSpinResults - Last N winning spins for a spin_wheel event, most recent first.
+export { getEventSpinResults } from "./features/events/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBugHunterLeaderboard - Ranks testers by confirmed-bug count.
 export { getBugHunterLeaderboard } from "./features/tester/server";

@@ -22,6 +22,38 @@ const WL_OPS_KEY = () => `${APP_ID()}_wl_ops`;
 export const CART_OPS_CHANGE_EVENT = "appkit/cart/ops-changed";
 export const WISHLIST_OPS_CHANGE_EVENT = "appkit/wishlist/ops-changed";
 
+/** Fired whenever an item is successfully added to the cart (server or guest
+ *  path), carrying the resulting totals — so any layout chrome (header cart
+ *  badge, a UPI-quick-pay widget, etc.) can react to the exact new
+ *  itemCount/totalValue without re-fetching, instead of just knowing "the
+ *  cart changed" like `CART_OPS_CHANGE_EVENT` (which carries no payload). */
+export const CART_UPDATED_EVENT = "appkit/cart/updated";
+export interface CartUpdatedEventDetail {
+  itemCount: number;
+  totalValue: number;
+  productTitle?: string;
+}
+
+export function dispatchCartUpdated(detail: CartUpdatedEventDetail): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent<CartUpdatedEventDetail>(CART_UPDATED_EVENT, { detail }));
+}
+
+/**
+ * Shared "added to cart" toast copy — every add-to-cart entry point (the
+ * server-backed `useAddToCart` hook, and the local-first quick-add actions
+ * on listing grids) shows the same item + updated count/total message
+ * instead of a bare "Added to cart", so callers only need to format
+ * currency, not compose the sentence twice.
+ */
+export function formatCartAddedMessage(
+  detail: CartUpdatedEventDetail,
+  formatCurrency: (amount: number) => string,
+): string {
+  const itemLabel = detail.productTitle ? `"${detail.productTitle}"` : "Item";
+  return `${itemLabel} added to cart — ${detail.itemCount} item${detail.itemCount !== 1 ? "s" : ""}, ${formatCurrency(detail.totalValue)} total`;
+}
+
 function dispatchCartOpsChange(): void {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new Event(CART_OPS_CHANGE_EVENT));

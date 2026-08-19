@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { Div } from "../../../ui/components/Div";
 
-import { IconButton, Row, Span } from "@mohasinac/appkit";
+import { IconButton, Row, Span } from "@mohasinac/appkit/client";
 const STORAGE_KEY = "letitrip:announcement-dismissed";
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -41,9 +41,17 @@ export interface AnnouncementBarProps {
   className?: string;
   /** Called when the user dismisses — consumer wires this to a server action to persist. */
   onDismiss?: (hash: string) => void;
+  /**
+   * Renders as a translucent, backdrop-blurred strip pinned to the top edge
+   * of the nearest positioned ancestor, instead of the default full-bleed
+   * in-flow bar. Used on the homepage to overlay the banner over the first
+   * section (e.g. the Welcome hero) rather than pushing it down with extra
+   * vertical space.
+   */
+  overlay?: boolean;
 }
 
-export function AnnouncementBar({ message, className = "", onDismiss }: AnnouncementBarProps) {
+export function AnnouncementBar({ message, className = "", onDismiss, overlay = false }: AnnouncementBarProps) {
   const { user } = useAuth();
   const bannerHash = hashBannerMessage(message);
   const userAlreadyDismissed = !!user?.dismissedBannerHash && user.dismissedBannerHash === bannerHash;
@@ -61,8 +69,11 @@ export function AnnouncementBar({ message, className = "", onDismiss }: Announce
   }, [message, userAlreadyDismissed]);
 
   if (dismissed) return null;
+  const positionCls = overlay
+    ? "absolute inset-x-0 top-0 z-20 bg-primary-700/85 backdrop-blur-sm"
+    : "relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700";
   return (
-    <Div className={`relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-primary-700 transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
+    <Div className={`${positionCls} transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`} role="banner">
       <Div paddingX="x-page" className="container mx-auto max-w-[1920px]">
         <Row textWeight="medium" textSize="sm" className="relative text-left text-white" padding="y-xs" align="center" justify="start">
           <Span>{message}</Span>

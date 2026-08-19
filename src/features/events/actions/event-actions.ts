@@ -18,6 +18,7 @@ import {
   NotFoundError,
 } from "../../../errors";
 import { resolveDate } from "../../../utils";
+import { hashGuestIdentity } from "../../../security/rate-limit";
 
 const ERR_EVENT_NOT_FOUND = "Event not found";
 
@@ -293,6 +294,73 @@ export async function getEventLeaderboard(
   return eventEntryRepository.getLeaderboard(event.id);
 }
 
+/**
+ * Last N spins that actually won a prize, most recent first — powers the
+ * public "Last 10 Spin Results" tab on spin_wheel events. Joins each entry's
+ * `spinPrizeId` against the event's `spinPrizes` config for a human label
+ * (the entries repository has no access to the events collection, mirroring
+ * `getEventPollResults`' join pattern above) and marks guest spins so the
+ * caller can render a generic "Guest" label instead of a raw hash.
+ */
+export async function getEventSpinResults(
+  eventId: string,
+  limit = 10,
+): Promise<import("../types").SpinResultEntry[]> {
+  const event = await eventRepository.findByIdOrSlug(eventId);
+  if (!event || event.type !== "spin_wheel") return [];
+
+  const prizeTitleById = new Map(
+    (event.spinPrizes ?? []).map((p) => [p.id, p.label]),
+  );
+
+  const entries = await eventEntryRepository.getRecentSpinResults(event.id, limit);
+  return entries.map((entry) => ({
+    id: entry.id,
+    userDisplayName: entry.userId ? entry.userDisplayName : undefined,
+    isGuest: !entry.userId,
+    spinPrizeId: entry.spinPrizeId,
+    spinPrizeTitle: entry.spinPrizeId ? prizeTitleById.get(entry.spinPrizeId) : undefined,
+    spinWonAt: entry.spinWonAt ? new Date(entry.spinWonAt).toISOString() : undefined,
+  }));
+}
+
+/**
+ * Per-option vote tally for a poll event — replaces the voter-ranked
+ * leaderboard for event.type === "poll", where ranking "who happened to
+ * vote" is meaningless. Mirrors the resultsVisibility gating already used by
+ * the /api/events/[id] live-tally response: results are only surfaced when
+ * pollConfig.resultsVisibility is "always", or "after_end" once the event
+ * has actually ended. ("after_vote" visibility needs per-viewer vote state,
+ * which this public/cached read path has no user context for, so it's
+ * treated as not-yet-visible here.)
+ */
+export async function getEventPollResults(
+  eventId: string,
+): Promise<import("../types").PollResultEntry[]> {
+  const event = await eventRepository.findByIdOrSlug(eventId);
+  if (!event || event.type !== "poll" || !event.pollConfig) return [];
+
+  const visibility = event.pollConfig.resultsVisibility;
+  const canShow =
+    visibility === "always" ||
+    (visibility === "after_end" && event.status === "ended");
+  if (!canShow) return [];
+
+  const tally = await eventEntryRepository.getPollResults(event.id);
+  const countByOption = new Map(tally.map((t) => [t.optionId, t.count]));
+  const total = tally.reduce((sum, t) => sum + t.count, 0) || 1;
+
+  return event.pollConfig.options.map((opt) => {
+    const count = countByOption.get(opt.id) ?? 0;
+    return {
+      optionId: opt.id,
+      label: opt.label,
+      count,
+      percent: Math.round((count / total) * 100),
+    };
+  });
+}
+
 /** Related events — other active events sharing at least one tag, excluding this one. */
 export async function getRelatedEvents(
   tags: string[],
@@ -364,6 +432,7 @@ export async function enterEvent(
   eventId: string,
   input: EnterEventInput,
   user?: { uid: string; displayName?: string; email?: string },
+  request?: Request,
 ): Promise<{ entryId: string }> {
   const event = await eventRepository.findByIdOrSlug(eventId);
   if (!event || event.status !== "active") {
@@ -380,13 +449,43 @@ export async function enterEvent(
     throw new ValidationError(ERROR_MESSAGES.EVENT.ENTRIES_CLOSED);
   }
 
-  const requiresLogin =
+  // Baseline per-type login requirement, before the admin's per-event
+  // `allowGuestParticipation` override is applied. Anonymous feedback is a
+  // distinct opt-in concept (the event itself declares no identity is ever
+  // collected) so it stays open regardless of the guest-participation flag.
+  const perTypeRequiresLogin =
     event.type === "poll" ||
     event.type === "survey" ||
-    (event.type === "feedback" && !(event.feedbackConfig as any)?.anonymous);
+    (event.type === "feedback" && !(event.feedbackConfig as any)?.anonymous) ||
+    event.type === "raffle" ||
+    event.type === "spin_wheel";
+
+  // Every event type that reaches enterEvent() is now gated by the single
+  // admin-controlled flag — raffle/spin_wheel no longer get accidental free
+  // guest access just because they were absent from the old per-type list.
+  const requiresLogin = !event.allowGuestParticipation && perTypeRequiresLogin;
 
   if (requiresLogin && !user) {
     throw new AuthorizationError(ERROR_MESSAGES.EVENT.LOGIN_REQUIRED);
+  }
+
+  // Guest path: dedupe by a hashed IP scoped to this event so an anonymous
+  // visitor can't submit unlimited entries. The raw IP is never persisted.
+  let guestIpHash: string | undefined;
+  if (!user && event.allowGuestParticipation) {
+    if (!request) {
+      // Every real HTTP caller passes the incoming Request — fail closed
+      // rather than silently letting an untracked guest entry through.
+      throw new AuthorizationError(ERROR_MESSAGES.EVENT.LOGIN_REQUIRED);
+    }
+    guestIpHash = hashGuestIdentity(resolvedEventId, request);
+    const alreadyEntered = await eventEntryRepository.hasGuestEntered(
+      resolvedEventId,
+      guestIpHash,
+    );
+    if (alreadyEntered) {
+      throw new ValidationError(ERROR_MESSAGES.EVENT.ALREADY_ENTERED);
+    }
   }
 
   if (user && event.type === "survey" && event.surveyConfig) {
@@ -442,6 +541,7 @@ export async function enterEvent(
     userId: user?.uid,
     userDisplayName: user?.displayName,
     userEmail: user?.email,
+    guestIpHash,
     pollVotes: input.pollVotes,
     pollComment: input.pollComment,
     formResponses: input.formResponses,

@@ -3,9 +3,11 @@
 import { useApiMutation } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Input, Row, Select, Stack, StackedViewShell, Text } from "../../../ui";
+import { Alert, Button, Div, Input, Row, Select, Stack, StackedViewShell, Text, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
+import { normalizeError } from "../../../errors/normalize";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -15,9 +17,13 @@ const __P = {
   p4: "p-[var(--appkit-space-4)]",
 } as const;
 
+const CLS_RESPONSE_TEXT = "whitespace-pre-wrap break-words";
+
 interface AdminEventStatsResponse {
   event?: {
     title?: string;
+    type?: string;
+    pollConfig?: { options?: { id: string; label: string }[] };
   };
   stats?: {
     totalEntries?: number;
@@ -72,6 +78,7 @@ export function AdminEventEntriesView({
   ...rest
 }: AdminEventEntriesViewProps) {
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
   const [page, setPage] = React.useState(1);
   const [pageSize] = React.useState(20);
   const [statusFilter, setStatusFilter] = React.useState<EntryReviewStatus | "all">("all");
@@ -230,7 +237,8 @@ export function AdminEventEntriesView({
           >
             Flag
           </Button>
-          {row.formResponses && Object.keys(row.formResponses).length > 0 && (
+          {((row.formResponses && Object.keys(row.formResponses).length > 0) ||
+            (row.pollVotes && row.pollVotes.length > 0)) && (
             <Button
               size="sm"
               variant="outline"
@@ -243,6 +251,28 @@ export function AdminEventEntriesView({
       ),
     },
   ], [reviewMutation, pointsMutation, pointsInputs, expandedEntryId]);
+
+  const handleExportReport = async () => {
+    if (!eventId) return;
+    try {
+      const blob = await apiClient.blob(ADMIN_ENDPOINTS.EVENT_ENTRIES_EXPORT(eventId));
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `event-entries-${eventId}-${new Date().toISOString().slice(0, 10)}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (_err) {
+      void normalizeError(_err);
+      showToast("Report export failed.", "error");
+    }
+  };
+
+  const exportSection = eventId ? (
+    <Row justify="end">
+      <Button variant="ghost" action={ACTIONS.ADMIN["export-event-entries"]} onClick={handleExportReport} />
+    </Row>
+  ) : null;
 
   const statsSection = (
     <Div layout="grid" gap="3" className="grid-cols-1 sm:grid-cols-3">
@@ -281,23 +311,53 @@ export function AdminEventEntriesView({
     </Div>
   );
 
-  const expandedEntry = expandedEntryId ? rows.find((r) => r.id === expandedEntryId) : null;
+  const pollOptionLabels = React.useMemo(() => {
+    const map = new Map<string, string>();
+    for (const opt of statsQuery.data?.event?.pollConfig?.options ?? []) {
+      map.set(opt.id, opt.label);
+    }
+    return map;
+  }, [statsQuery.data]);
 
-  const responsesPanelSection = expandedEntry?.formResponses && Object.keys(expandedEntry.formResponses).length > 0 ? (
+  const expandedEntry = expandedEntryId ? rows.find((r) => r.id === expandedEntryId) : null;
+  const expandedHasFormResponses = Boolean(
+    expandedEntry?.formResponses && Object.keys(expandedEntry.formResponses).length > 0,
+  );
+  const expandedHasPollVotes = Boolean(expandedEntry?.pollVotes && expandedEntry.pollVotes.length > 0);
+
+  const responsesPanelSection = expandedEntry && (expandedHasFormResponses || expandedHasPollVotes) ? (
     <Stack className={`${__P.p4}`} gap="3" rounded="xl" surface="muted" border="default">
       <Text size="sm" weight="semibold" color="primary">
         Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
       </Text>
-      <Stack gap="sm">
-        {Object.entries(expandedEntry.formResponses).map(([key, value]) => (
-          <Stack gap="none" key={key} className="">
-            <Text size="xs" weight="medium" color="muted">{key}</Text>
-            <Text className="whitespace-pre-wrap break-words" color="primary" size="sm">
-              {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}
-            </Text>
-          </Stack>
-        ))}
-      </Stack>
+      {expandedHasPollVotes && (
+        <Stack gap="sm">
+          <Text size="xs" weight="medium" color="muted">Poll votes</Text>
+          <Text className={CLS_RESPONSE_TEXT} color="primary" size="sm">
+            {expandedEntry!.pollVotes!.map((id) => pollOptionLabels.get(id) ?? id).join(", ")}
+          </Text>
+          {expandedEntry!.pollComment && (
+            <>
+              <Text size="xs" weight="medium" color="muted">Comment</Text>
+              <Text className={CLS_RESPONSE_TEXT} color="primary" size="sm">
+                {expandedEntry!.pollComment}
+              </Text>
+            </>
+          )}
+        </Stack>
+      )}
+      {expandedHasFormResponses && (
+        <Stack gap="sm">
+          {Object.entries(expandedEntry!.formResponses!).map(([key, value]) => (
+            <Stack gap="none" key={key} className="">
+              <Text size="xs" weight="medium" color="muted">{key}</Text>
+              <Text className={CLS_RESPONSE_TEXT} color="primary" size="sm">
+                {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}
+              </Text>
+            </Stack>
+          ))}
+        </Stack>
+      )}
     </Stack>
   ) : null;
 
@@ -337,6 +397,7 @@ export function AdminEventEntriesView({
             {statsQuery.error instanceof Error ? statsQuery.error.message : "Unknown error"}
           </Alert>
         ) : null,
+        exportSection,
         renderStats?.() ?? statsSection,
         renderFilters?.() ?? filtersSection,
         renderTable?.() ?? tableSection,

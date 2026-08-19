@@ -58,8 +58,10 @@ export function ProductDetailActions({
   const [busy, setBusy] = useState<"buy" | "cart" | "wish" | null>(null);
   const [wishlisted, setWishlisted] = useState(false);
 
+  // Success toast (item + updated count/total) is now shown by useAddToCart
+  // itself — centralised so every add-to-cart call site gets the same
+  // richer toast, not just this one.
   const addCart = useAddToCart({
-    onSuccess: () => showToast("Added to cart", "success"),
     onError: (err) =>
       showToast(err?.message ?? "Could not add to cart", "error"),
   });

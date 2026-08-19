@@ -265,6 +265,10 @@ const headingGradient: "none" | "brand" =
             rows={rows}
             minItemWidth={minItemWidth}
             showArrows
+            // Double-row grids (e.g. the homepage Auctions section's
+            // rows:2 config) get the full-height sliver arrows — much
+            // easier to hit than a small circle when the track is tall.
+            arrowStyle={rows > 1 ? "full-height" : "circle"}
             snapToItems
             showFadeEdges
             showScrollbar={false}

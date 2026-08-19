@@ -61,6 +61,10 @@ export interface CompareProductLike {
   /** Canonical discriminator (SB1-G Phase 4). */
   listingType?: ListingType;
   features?: string[];
+  /** Seller-defined spec fields (dimensions, material, edition, etc.) — the
+   * per-listing-type field *set* varies, so the overlay unions the keys
+   * present across all compared items rather than assuming a fixed schema. */
+  customFields?: { key: string; type: string; value: string; unit?: string }[];
 }
 
 interface CompareFieldLabels {
@@ -160,15 +164,28 @@ function FieldRow({ label, children }: FieldRowProps) {
   );
 }
 
+type CompareCustomField = NonNullable<CompareProductLike["customFields"]>[number];
+
+/** Formats a single custom-field value for display, appending its unit when present. */
+function customFieldValue(field: CompareCustomField | undefined): string {
+  if (!field) return "—";
+  if (field.type === "boolean") return field.value === "true" ? "Yes" : "No";
+  return field.unit ? `${field.value} ${field.unit}` : field.value;
+}
+
 interface ColumnProps {
   item: CompareProductLike;
   productType: CompareOverlayProps["productType"];
   labels: ResolvedLabels;
   onRemove?: (id: string) => void;
   onClose: () => void;
+  /** Union of `customFields[].key` across every compared item, in first-seen
+   * order — computed once by the parent so every column renders the same
+   * row set even when an item is missing a given field. */
+  customFieldKeys: string[];
 }
 
-function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnProps) {
+function CompareColumn({ item, productType, labels, onRemove, onClose, customFieldKeys }: ColumnProps) {
   const href = detailHref(item, productType);
   const img = item.mainImage ?? item.images?.[0];
   return (
@@ -235,6 +252,14 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
           {item.storeName ?? "—"}
         </Text>
       </FieldRow>
+
+      {customFieldKeys.map((key) => (
+        <FieldRow key={key} label={key}>
+          <Text size="sm">
+            {customFieldValue(item.customFields?.find((f) => f.key === key))}
+          </Text>
+        </FieldRow>
+      ))}
 
       <Button asChild variant="primary" size="sm" className="mt-auto">
         <Link href={href} target="_blank" rel={REL_NOOPENER} onClick={onClose}>
@@ -307,6 +332,24 @@ export function CompareOverlay({
   const { items, isLoading } = useFetchedProducts(productIds, passedItems, isOpen);
   const trimmed = useMemo(() => items.slice(0, COMPARE_MAX_ITEMS), [items]);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Union (not intersection) of custom-field keys across every compared
+  // item, first-seen order — a field only one item has still gets its own
+  // row, showing "—" for items that lack it, rather than silently dropping
+  // fields that aren't shared by every compared listing type.
+  const customFieldKeys = useMemo(() => {
+    const seen = new Set<string>();
+    const keys: string[] = [];
+    for (const item of trimmed) {
+      for (const field of item.customFields ?? []) {
+        if (!seen.has(field.key)) {
+          seen.add(field.key);
+          keys.push(field.key);
+        }
+      }
+    }
+    return keys;
+  }, [trimmed]);
 
   // Keep activeIndex in range as items shrink (e.g. user removes a column).
   useEffect(() => {
@@ -388,6 +431,7 @@ export function CompareOverlay({
                   labels={labels}
                   onRemove={onRemove ? handleRemove : undefined}
                   onClose={onClose}
+                  customFieldKeys={customFieldKeys}
                 />
               ))}
             </Div>
@@ -402,6 +446,7 @@ export function CompareOverlay({
                     labels={labels}
                     onRemove={onRemove ? handleRemove : undefined}
                     onClose={onClose}
+                    customFieldKeys={customFieldKeys}
                   />
                 )}
               </Div>

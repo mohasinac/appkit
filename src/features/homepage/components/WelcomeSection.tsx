@@ -51,7 +51,7 @@ const flex = { center: FLEX_CENTER };
 if (isLoading) {
     return (
       <Section
-        className={`relative overflow-hidden md:py-[6rem] ${className}`} paddingY="y-4xl" paddingX="x-md"
+        className={`relative overflow-hidden pt-[0px] pb-[var(--appkit-space-16)] md:pt-[0px] md:pb-[6rem] ${className}`} paddingX="x-md"
       >
         <Div className="animate-pulse max-w-4xl mx-auto text-left">
           <Div className="h-6 w-52 mb-6" surface="subtle" rounded="full" />
@@ -68,7 +68,7 @@ if (isLoading) {
 
   return (
     <Section
-      className={`relative overflow-hidden md:py-[7rem] ${className}`} paddingY="y-5xl" paddingX="x-md"
+      className={`relative overflow-hidden pt-[0px] pb-[var(--appkit-space-20)] md:pt-[0px] md:pb-[7rem] ${className}`} paddingX="x-md"
     >
       {/* Decorative ambient glows */}
       <Div

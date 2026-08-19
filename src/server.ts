@@ -784,6 +784,8 @@ export {
   verifyCheckoutValueOtp,
   isCheckoutValueOtpVerified,
 } from "./features/checkout/server";
+export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/checkout/server";
+export type { FailedCheckoutMeta, FailedPaymentMeta } from "./features/checkout/server";
 // [SERVER-ONLY] Email primitives — table-based, inline-styled components
 // that render email-client-compatible HTML via renderToStaticMarkup. Use
 // these instead of authoring raw <table>/<tr>/<td> in email templates.
@@ -830,6 +832,7 @@ export { sendSiteSettingsChangedEmail } from "./features/contact/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendVerificationEmailWithLink - Shared export for send verification email with link.
 export { sendVerificationEmailWithLink } from "./features/contact/server";
+export type { OrderConfirmationEmailParams } from "./features/contact/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // adminGetEventById - Shared export for admin get event by id.
 export { adminGetEventById } from "./features/events/server";
@@ -866,6 +869,9 @@ export { eventsGET } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getEventLeaderboard - Helper for get event leaderboard.
 export { getEventLeaderboard } from "./features/events/server";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// getEventPollResults - Helper for get event poll results (per-option vote tally).
+export { getEventPollResults } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBugHunterLeaderboard - Ranks testers by confirmed-bug count.
 export { getBugHunterLeaderboard } from "./features/tester/server";
@@ -1397,6 +1403,10 @@ export { applyRateLimit } from "./security/index";
 export { rateLimitByIdentifier } from "./security/index";
 // RateLimitPresets - Preset configurations for common rate-limit scenarios.
 export { RateLimitPresets } from "./security/index";
+// getClientIP - Extract the caller's IP from x-forwarded-for/x-real-ip.
+export { getClientIP } from "./security/index";
+// hashGuestIdentity - Deterministic, non-reversible hash of a guest caller's IP scoped to an entity (never persists the raw IP).
+export { hashGuestIdentity } from "./security/index";
 // maskPublicEventEntry - Redact PII from event entries before public exposure.
 export { maskPublicEventEntry } from "./security/index";
 // PII encryption/masking (server-only -- crypto module via node:module, must never leak into a client bundle; see appkit Export Rules in CLAUDE.md)
